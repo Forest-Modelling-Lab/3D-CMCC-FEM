@@ -34,7 +34,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
     {
         s->counter[N_TREE] -= 1;
         deadtree += 1;
-        layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * tree_number / SIZECELL;
+        layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * tree_number / sizeCell;
     }
     oldNtree -= s->counter[N_TREE];
     //s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);

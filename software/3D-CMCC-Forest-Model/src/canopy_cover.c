@@ -29,7 +29,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	/*Density*/
 
-	s->value[DENSITY] = (float)s->counter[N_TREE] / SIZECELL;
+	s->value[DENSITY] = (float)s->counter[N_TREE] / sizeCell;
 	Log("Tree Number = %d trees/ha\n", s->counter[N_TREE]);
 	Log("Density = %g trees/ha\n", s->value[DENSITY]);
 
@@ -59,7 +59,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	/*Canopy Cover using DBH-DC*/
 
-	s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / SIZECELL;
+	s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / sizeCell;
 
 
 	/*
@@ -89,7 +89,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
-			s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / SIZECELL;
+			s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / sizeCell;
 		}
 		oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);

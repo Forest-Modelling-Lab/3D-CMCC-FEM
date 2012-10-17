@@ -158,6 +158,7 @@ enum {
     COARSERTTOVER,                  //Average monthly coarse root turnover rate
     SAPWOODTTOVER,	                //Average yearly sapwood turnover rate
     BRANCHTTOVER,	                //Average yearly branch turnover rate
+	RTTOVER,                    //Average monthly root turnover rate
 
     STEMCONST,                  //Constant in the Stem Mass v. diameter relationship
     STEMPOWER,                  //Power in the Stem Mass v. diameter raltionship
@@ -533,7 +534,7 @@ typedef struct {
 	char *species;
 	ePhenology phenology;
 	eManagement management;
-	PREC lai;
+	//PREC lai;
 	int n;
 	int stump;
 	PREC avdbh;
@@ -652,6 +653,7 @@ typedef struct {
 	PREC ts_f;
 	PREC rain;
 	PREC swc;
+	PREC lai;
 } MET_DATA;
 
 typedef struct
@@ -712,7 +714,10 @@ typedef struct {
 
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 //DENSITY
-#define SIZECELL                 10000       //10000 m^2 = 1ha
+// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
+// 100   for pixels of 10x10   meters resolution
+// 10000 for pixels of 100x100 meters resolution
+int sizeCell;
 
 //LAYER LIMIT
 #define DOMINANT                   15
@@ -744,11 +749,25 @@ typedef struct {
 #define LIGHT_ESTAB_INTERMEDIATE    2.0
 #define LIGHT_ESTAB_INTOLERANT      3.0
 
+
+
+//CONTROL LAI IN SPATIAL VERSION
+#define MAXLAI 8
+#define DEFAULTLAI 4
+
+//CONTROL MET DATA
+#define MAXDAYS  31
+#define MAXRG 40
+#define MAXTAV 40
+#define MAXVPD 40
+#define MAXPRECIP 500
+
+
 /*from LPJ_Guess*/
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 
 #define LOGFILE		"output.txt"
-#define BUFFER_SIZE	1024
+#define BUFFER_SIZE	4096
 
 // Store site.txt data
 site_t *site;
@@ -797,9 +816,10 @@ extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, float, float);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 extern void M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
+extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall (HEIGHT *, float, const int, const int, int);
 extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float);
-extern float Get_canopy_interception (SPECIES *const);
+extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern float Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, int, float, float, int, float);
 extern void Get_initial_month_lai (SPECIES *const s);
 extern void Get_end_month_lai (SPECIES *const );

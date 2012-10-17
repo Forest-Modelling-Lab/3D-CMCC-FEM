@@ -122,7 +122,7 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
     Log("year %d PEAK LAI from Kostner = %g \n",years, s->value[PEAK_Y_LAI]);
 
 
-    s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * SIZECELL))/ s->value[SLAmkg]) / 1000;
+    s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * sizeCell))/ s->value[SLAmkg]) / 1000;
     Log("Maximum foliage biomass = %g tDM/ha \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 
 

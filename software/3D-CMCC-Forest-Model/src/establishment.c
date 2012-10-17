@@ -46,7 +46,7 @@ int Get_Establishment_LPJ (SPECIES *const s, float Light_Absorb_for_establishmen
 
 	Nsapling = s->counter[N_SEED] * EstabRate ;
 	Log("Annual Number of Saplings per hectare using LPJ = %d Saplings/year hectare\n", Nsapling);
-	Log("Annual Number of Saplings using LPJ = %g Saplings/year m^2\n", (float) Nsapling / SIZECELL );
+	Log("Annual Number of Saplings using LPJ = %g Saplings/year m^2\n", (float) Nsapling / sizeCell );
 	Log("Percentage of seeds survived using LPJ = %g %% seeds/year hectare\n", ((float)Nsapling * 100)/(float)s->counter[N_SEED] );
 
 

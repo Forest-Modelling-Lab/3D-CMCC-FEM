@@ -11,7 +11,7 @@
 				<Option object_output="obj/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-i input -o output/output.txt -d input.txt -m 2001.txt,2002.txt,2003.txt,2004.txt,2005.txt,2006.txt,2007.txt,2008.txt -s site.txt" />
+				<Option parameters="-i input -o output/output.txt -d input/1526_962_input.txt -m input/1526_962_2007.txt,input/1526_962_2008.txt -s input/site.txt -r 10" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -105,6 +105,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/soil_evaporation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/sp_v_monthly_partitioning-allocation.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/structure.c">

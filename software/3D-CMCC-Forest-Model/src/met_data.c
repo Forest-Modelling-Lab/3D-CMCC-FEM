@@ -38,14 +38,16 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, float dayl
         "-vpd = %g mbar\n"
         "-ts_f = %g °C\n"
         "-rain = %g mm\n"
-        "-swc = %g %vol\n",
+        "-swc = %g %vol\n"
+        "-lai = %g %vol\n",
         met[month].solar_rad,
         met[month].tav,
         met[month].rh,
         vpd,
         met[month].ts_f,
         met[month].rain,
-        met[month].swc);
+        met[month].swc,
+        met[month].lai);
     Log("-Day length = %g hours \n", daylength);
     Log("***************\n");
 

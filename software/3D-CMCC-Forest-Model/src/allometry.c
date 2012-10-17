@@ -141,7 +141,7 @@ void Get_allometry (SPECIES *const s, int years)
 
 
 
-	WFkgm2 = s->value[BIOMASS_FOLIAGE_CTEM]* (1000 / (s->value[CANOPY_COVER_DBHDC] * SIZECELL));
+	WFkgm2 = s->value[BIOMASS_FOLIAGE_CTEM]* (1000 / (s->value[CANOPY_COVER_DBHDC] * sizeCell));
 	Log("Foliage Biomass to LAI function = %g Kg/m^2\n", WFkgm2);
 	Log("SLA-3D-CMCC Model = %g cm^2/g\n", s->value[SLA]);
 	Log("SLA-3D-CMCC Model = %g m^2/Kg\n", SLAmkg);
@@ -177,7 +177,7 @@ void Get_allometry (SPECIES *const s, int years)
 	s->value[SLA_LPJ] = ((2 * pow (10 , (-4))) * ((exp (6.15) / (pow (12 , 0.46))))) * 10000;
 	Log("Specific Leaf Area (SLA) from LPJ = %g cm^2/gC\n", s->value[SLA_LPJ]);
 	Log("Specific Leaf Area (SLA) from LPJ = %g m^2/Kg\n", s->value[SLA_LPJ] * 0.1);
-	s->value[LAI_LPJ] = ( s->value[SLA_LPJ] * 0.1) * (s->value[BIOMASS_FOLIAGE_CTEM] * (1000 / (s->value[CANOPY_COVER_DBHDC] * SIZECELL))) / s->value[CROWN_AREA];
+	s->value[LAI_LPJ] = ( s->value[SLA_LPJ] * 0.1) * (s->value[BIOMASS_FOLIAGE_CTEM] * (1000 / (s->value[CANOPY_COVER_DBHDC] * sizeCell))) / s->value[CROWN_AREA];
 	Log("LAI-LPJ = %g\n", s->value[LAI_LPJ]);
 
 	//LAI NASACASA
@@ -188,7 +188,7 @@ void Get_allometry (SPECIES *const s, int years)
 	Log("Nasa Casa Wf Foliage Biomass from previous year = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_NASA_CASA]);
 
 
-	s->value[LAI_NASA_CASA] = s->value[BIOMASS_FOLIAGE_NASA_CASA] * (1000 / (s->value[CANOPY_COVER_DBHDC] * SIZECELL)) * s->value[SLAmkg] ;
+	s->value[LAI_NASA_CASA] = s->value[BIOMASS_FOLIAGE_NASA_CASA] * (1000 / (s->value[CANOPY_COVER_DBHDC] * sizeCell)) * s->value[SLAmkg] ;
 	Log("LAI-NASACASA = %g\n", s->value[LAI_NASA_CASA]);
 
 	//LAI CTEM
@@ -198,6 +198,6 @@ void Get_allometry (SPECIES *const s, int years)
 	Log("**CTEM LAI Function**\n");
 	Log("CTEM Wf Foliage Biomass from previous year = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-	s->value[LAI_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM] * (1000 / (s->value[CANOPY_COVER_DBHDC] * SIZECELL)) * s->value[SLAmkg] ;
+	s->value[LAI_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM] * (1000 / (s->value[CANOPY_COVER_DBHDC] * sizeCell)) * s->value[SLAmkg] ;
 	Log("LAI-CTEM = %g\n", s->value[LAI_CTEM]);
 }

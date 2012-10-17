@@ -244,7 +244,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
                 Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
 
                 //recompute LAI
-                s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * SIZECELL) * s->value[SLAmkg];
+                s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
                 Log("++Lai = %g\n", s->value[LAI]);
 
             }
@@ -326,7 +326,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 
 
                     //recompute LAI
-                    s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * SIZECELL) * s->value[SLAmkg];
+                    s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
                     Log("++Lai = %g\n", s->value[LAI]);
 
 

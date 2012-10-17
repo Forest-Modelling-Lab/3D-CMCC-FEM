@@ -212,6 +212,10 @@ FILES *get_files(const char *const program_path, char *string, int *const count,
 	     *p2,
 	     *p3;
 
+//	token_by_comma = malloc(sizeof(char)*1024);
+//	token_by_plus = malloc(sizeof(char)*1024);
+
+
 	FILE *f;
 
 	FILES *files,

@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <stdarg.h>
 #include <math.h>
+#include <string.h>
 #include "compiler.h"
 #include "types.h"
 
@@ -24,6 +25,8 @@ enum {	MONTH = 0,
 	TS_F,
 	PRECIP,
 	SWC,
+	Lai,
+
 
 	MET_COLUMNS };
 
@@ -45,7 +48,8 @@ char *program_path	=	NULL,	// mandatory
      *site_path		=	NULL,	// mandatory
      *output_path	=	NULL,	// mandatory
      *out_filename	=	NULL,	// mandatory
-     *output_file	= 	NULL;	// mandatory
+     *output_file	= 	NULL,	// mandatory
+	 *resolution	= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
     years_of_simulation	=	0;	// default is none
@@ -94,7 +98,9 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 						"RH_f",
 						"Ts_f",
 						"Precip",
-						"SWC"};
+						"SWC",
+						"LAI"
+						};
 
 /* messages */
 static const char msg_dataset_not_specified[] =
@@ -134,6 +140,7 @@ static const char msg_dataset_not_specified[] =
 	static const char err_unable_open_output_path[] = "unable to open output path.\n";
 	static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
 	static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
+	static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
 	static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
 	static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
 	static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
@@ -202,6 +209,26 @@ int get_site_path(char *arg, char *param, void *p) {
 	else
 	{
 		site_path = param;
+	}
+
+	/* ok */
+	return 1;
+}
+
+int get_resolution(char *arg, char *param, void *p) {
+	if ( !param )
+	{
+		printf(err_arg_needs_param, arg);
+		return 0;
+	}
+
+	if ( resolution )
+	{
+		printf(err_resolution_already_specified, resolution, param);
+	}
+	else
+	{
+		resolution = param;
 	}
 
 	/* ok */
@@ -357,17 +384,18 @@ int show_help(char *arg, char *param, void *p)
 void usage(void)
 {
 	fprintf(stderr, "\nUsage:\n");
-	fprintf(stderr, "\t./3D-CMCCModel -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME [-h]\n");
+	fprintf(stderr, "\t./3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME [-h]\n");
 	fprintf(stderr, "\nMandatory options:\n");
 	fprintf(stderr, "\t-i\tinput directory\t\t\t\t\t(i.e.: -i /path/to/input/directory/)\n");
 	fprintf(stderr, "\t-o\toutput filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
 	fprintf(stderr, "\t-d\tdataset filename stored into input directory\t(i.e.: -d input.txt)\n");
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
 	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
+	fprintf(stderr, "\t-r\tresolution of point to process: must be 10 or 100 to indicate cells of 10x10 or 100x100 meters\t(i.e.: -r 10)\n");
 	fprintf(stderr, "\nOptional options:\n");
 	fprintf(stderr, "\t-h\tprint this help\n");
 	fprintf(stderr, "\nLaunch example:\n");
-	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -d input.txt -m 1999.txt,2003.txt,2009.txt -s site.txt\n");
+	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -d /path/to/input.txt -m /path/to/1999.txt,/path/to/2003.txt,/path/to/2009.txt -s /path/to/site.txt -r 10\n");
 	exit(1);
 }
 
@@ -465,8 +493,29 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		bzero(filename, BUFFER_SIZE-1);
 		// Get only filename.txt from /this/is/the/complete/path/of/filename.txt
 		filename = (strrchr(token, '/'))+1;
-		// Get year from filename
-		strncpy(year, filename, 4); // this works only if filename = 1999.txt
+		// Get year from filename: file name is like 123_4567_2007.txt where
+		// 123 is the x coordinate of the cell,
+		// 4567 is the y coordinate of the cell,
+		// 2007 is the year
+
+		char *pch,
+		     *tmp_filename;
+
+		tmp_filename = (char*)malloc(sizeof(char)*1024);
+		if( !tmp_filename )
+		{
+			fprintf(stderr, "Cannot allocate memory for tmp_filename.\n");
+			exit(1);
+		}
+
+		// Copy of filename because strtok cut it
+		strcpy(tmp_filename, filename);
+
+		pch = strtok (tmp_filename, "_");
+		pch = strtok (NULL, "_");
+		pch = strtok (NULL, "_.");
+
+		strcpy(year, pch);
 		year[4] = '\0';
 
 		yos[*yos_count-1].year = convert_string_to_int(year, &error);
@@ -576,6 +625,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].n_days > MAXDAYS)
+								{
+                                                                        Log("ERROR IN N_DAYS DATA!!\n");
+								}
 								break;
 
 							case RG_F: //Rg_f - solar_rad -daily average solar radiation
@@ -600,6 +654,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
 									}
 								}
+								//CONTROL
+                                                                if (yos[*yos_count-1].m[month].solar_rad > MAXRG )
+                                                                    {
+                                                                        Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
+                                                                    }
 								//convert daily average solar radiation to monthly solar radiation
 								//m[month].solar_rad *= m[month].n_days;
 								break;
@@ -622,6 +681,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
 									}
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].tav > MAXTAV)
+								{
+								        Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 								}
 								break;
 
@@ -693,6 +757,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								yos[*yos_count-1].m[month].rain *= yos[*yos_count-1].m[month].n_days;
 								}
 								 */
+								 //CONTROL
+								 if (yos[*yos_count-1].m[month].rain > MAXPRECIP)
+								 {
+								         Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								 }
 								break;
 
 							case SWC: //Soil Water Content (%)
@@ -714,6 +783,56 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* SWC -NO DATA- in previous year!!!!\n" );
 										yos[*yos_count-1].m[month].swc = NO_DATA;
 									}
+								}
+								break;
+                                                        case Lai: //Get LAI in spatial version
+								yos[*yos_count-1].m[month].lai = convert_string_to_prec(token2, &error_flag);
+
+
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								//if is not the first year the model get the previous year value
+								if (*yos_count > 1)
+								{
+
+                                                                        //control in lai data if is an invalid value
+                                                                        if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
+                                                                        {
+                                                                                Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+                                                                                //Log("Getting previous years values !!\n");
+                                                                                yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+                                                                                if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
+                                                                                {
+                                                                                        Log ("* LAI -NO DATA- in previous year!!!!\n" );
+                                                                                        yos[*yos_count-1].m[month].lai = NO_DATA;
+                                                                                }
+                                                                        }
+                                                                        //control lai data in spatial version if value is higher than MAXLAI
+                                                                        if(yos[*yos_count-1].m[month].lai > MAXLAI)
+                                                                        {
+                                                                                Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+                                                                                Log("Getting previous years values !!\n");
+                                                                                yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+                                                                        }
+								}
+								//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
+								else
+								{
+								        if(yos[*yos_count-1].m[month].lai > MAXLAI)
+                                                                        {
+                                                                                //RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+                                                                                //
+                                                                                //
+                                                                                //
+                                                                                Log("**********First Year without a valid LAI value set to default value LAI\n");
+                                                                                yos[*yos_count-1].m[month].lai = DEFAULTLAI;
+                                                                                Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
+                                                                        }
 								}
 								break;
 						}
@@ -763,6 +882,7 @@ void met_summary(MET_DATA *met) {
 			"ts_f = %g\n"
 			"rain = %g\n"
 			"swc = %g\n",
+			"lai = %g\n",
 			i+1,
 			met[i].n_days,
 			met[i].solar_rad,
@@ -770,7 +890,9 @@ void met_summary(MET_DATA *met) {
 			met[i].rh,
 			met[i].ts_f,
 			met[i].rain,
-			met[i].swc);
+			met[i].swc,
+			met[i].lai
+			);
 	}
 }
 
@@ -878,6 +1000,16 @@ int main(int argc, char *argv[])
 				bzero(site_path, BUFFER_SIZE-1);
 				strcpy(site_path, argv[i+1]);
 				break;
+			case 'r': // Resolution (must be 10 or 100)
+				resolution = malloc(sizeof(*resolution)*BUFFER_SIZE);
+				if( !resolution )
+				{
+					fprintf(stderr, "Cannot allocate memory for resolution.\n");
+					return 1;
+				}
+				bzero(resolution, BUFFER_SIZE-1);
+				strcpy(resolution, argv[i+1]);
+				break;
 			case 'h': // Print help
 				usage();
 			default:
@@ -930,7 +1062,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(input_path, BUFFER_SIZE-1);
-		strcat(input_path, input_dir);
+
 		strcat(input_path, dataset_filename);
 	}
 
@@ -955,7 +1087,7 @@ int main(int argc, char *argv[])
 		// Add to every met filename its relative path
 		for(pch = strtok(input_met_path, ","); pch != NULL; pch = strtok (NULL, ","))
 		{
-			sprintf(tmp_input_met_path, "%s%s%s,", tmp_input_met_path, input_dir, pch);
+			sprintf(tmp_input_met_path, "%s%s,", tmp_input_met_path, pch); // line 1
 		}
 
 
@@ -983,9 +1115,43 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(tmp, BUFFER_SIZE-1);
+//vedere
 		strcpy(tmp, input_dir);
 		strcat(tmp, site_path);
 		strcpy(site_path, tmp);
+
+		free(tmp);
+	}
+
+	if( resolution == NULL )
+	{
+		fprintf(stderr, "Error: resolution option is missing!\n");
+		usage();
+	}
+	else
+	{
+		char *tmp = NULL;
+		tmp = malloc(sizeof(*tmp)*BUFFER_SIZE);
+		if( !tmp )
+		{
+			fprintf(stderr, "Cannot allocate memory for tmp.\n");
+			return 1;
+		}
+		bzero(tmp, BUFFER_SIZE-1);
+		strcat(tmp, resolution);
+		strcpy(resolution, tmp);
+		sizeCell = atoi(resolution);
+
+		if( (sizeCell != 10) && (sizeCell != 100) )
+		{
+			fprintf(stderr, "Error: resolution of the point must be 10 or 100!\n");
+			exit(2);
+		}
+
+		// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
+		// 100   for pixels of 10x10   meters resolution
+		// 10000 for pixels of 100x100 meters resolution
+		sizeCell = sizeCell*sizeCell;
 
 		free(tmp);
 	}
@@ -1066,7 +1232,12 @@ int main(int argc, char *argv[])
 
 	/* get files */
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
-	if ( error ) return 1;
+	if ( error )
+	{
+		Log("Error reading input files!\n\n");
+
+		return 1;
+	}
 
 	/* reset */
 	files_processed_count = 0;
@@ -1124,7 +1295,8 @@ int main(int argc, char *argv[])
 		/*TREEMODEL*/
 		Log("\nTREEMODEL START\n");
 		Log("***************************************************\n");
-		Log("Cell resolution = %d m^2\n", SIZECELL);
+//vedere
+		Log("Cell resolution = %d m^2\n", sizeCell);
 		/*Site definition*/
 		Log("Site Name = %s\n", site->sitename);
 		Log("Latitude = %g \n", site->lat);

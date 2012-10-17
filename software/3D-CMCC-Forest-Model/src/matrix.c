@@ -254,7 +254,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].name = mystrdup(row->species);
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stump;
-	a->species[a->species_count-1].value[LAI] = row->lai;
+	//a->species[a->species_count-1].value[LAI] = row->lai;
 	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
 	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_CTEM] = row->wf;
 	a->species[a->species_count-1].value[BIOMASS_ROOTS_COARSE_CTEM] = row->wrc;
@@ -506,7 +506,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 						// GET VARIABLE NAME
 						token = mystrtok(buffer, species_values_delimiter, &p);
 						if ( !token ) {
-							Log("unable to get value token in \"%s\".\n", filename);
+							Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
 							matrix_free(m);
 							return NULL;
 						}
@@ -578,12 +578,18 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	int species;
 	int age;
 	int height;
+	int resol;
 
 
 	//check parameter
 	assert (m);
 
 	Log ("FOREST DATASET\n");
+
+	if(sizeCell == 100)   resol = 10;
+	if(sizeCell == 10000) resol = 100;
+		
+	Log ("Cell resolution = %dx%d = %d m^2\n", resol, resol, sizeCell);
 
 	Log("Years of simulation = %d (%d)\n", years + 1, yos[years].year);
 

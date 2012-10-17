@@ -8,7 +8,7 @@
 
 //compute fraction of rain intercpted by canopy
 
-float Get_canopy_interception (SPECIES *const s)
+float Get_canopy_interception (SPECIES *const s, const MET_DATA *const met, int month)
 {
     float Interception;
     if (s->value[LAIMAXINTCPTN] <= 0)
@@ -19,7 +19,7 @@ float Get_canopy_interception (SPECIES *const s)
     }
     else
     {
-        Interception = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
+        Interception = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].lai / s->value[LAIMAXINTCPTN]);
         Log("Rain Interception not use MAXINTCPTN\n");
         Log("Rain Interception = %g \n", Interception);
     }
