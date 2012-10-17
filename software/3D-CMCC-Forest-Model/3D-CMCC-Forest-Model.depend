@@ -10049,3 +10049,215 @@
 	"math.h"
 	"types.h"
 
+1343302483 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/G-Function.c
+	<math.h>
+	"types.h"
+
+1350379148 /home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/types.h
+	"common.h"
+
+1317718304 /home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/common.h
+	<math.h>
+
+1333448243 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/allometry.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"types.h"
+
+1342685837 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/biomass_increment.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342694703 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/canopy_cover.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1341996247 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/canopy_interception.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1349433565 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/canopy_transpiration.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1336987208 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/common.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<time.h>
+	<errno.h>
+	<assert.h>
+	"common.h"
+	<windows.h>
+	<unistd.h>
+	<dirent.h>
+	<sys/param.h>
+
+1342686593 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/crowding-competition.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1341304629 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/dataset.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"types.h"
+
+1342600501 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/dendrometry.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343299539 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/establishment.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342714616 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/garbage.c
+
+1338556038 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/lai.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343303511 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/light.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342692962 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/litterfall.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1317718304 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/log.c
+	<stdio.h>
+	<stdarg.h>
+	"types.h"
+
+1342782625 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<assert.h>
+	<errno.h>
+	<stdarg.h>
+	<math.h>
+	"compiler.h"
+	"types.h"
+
+1317718304 /home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/compiler.h
+
+1341304701 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/management.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"math.h"
+	"types.h"
+
+1342785301 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/matrix.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	"types.h"
+
+1343301818 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/met_data.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1350465896 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/modifiers.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343300354 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/monthly_partitioning-allocation.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342781590 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/mortality.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342688872 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/parameters.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343299539 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/partitioning-allocation.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1342618410 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/peak_lai.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343303118 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/photosynthesis.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343302638 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/soil_evaporation.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343115703 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/structure.c
+	<stdio.h>
+	<stdlib.h>
+	<assert.h>
+	"math.h"
+	"types.h"
+
+1349433880 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/treemodel.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	<assert.h>
+	"types.h"
+
+1338302747 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/turnover.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
+1343299539 source:/home/candini/Repos/forSE/software/3D-CMCC-Forest-Model/src/utility.c
+	<stdio.h>
+	<stdlib.h>
+	"math.h"
+	"types.h"
+
