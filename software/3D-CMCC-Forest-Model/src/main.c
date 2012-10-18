@@ -1115,8 +1115,6 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(tmp, BUFFER_SIZE-1);
-//vedere
-		strcpy(tmp, input_dir);
 		strcat(tmp, site_path);
 		strcpy(site_path, tmp);
 
