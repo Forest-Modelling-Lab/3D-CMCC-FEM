@@ -843,6 +843,8 @@ extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_top_layer (CELL *const, int, HEIGHT *);
 
+extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int);
+extern void Get_stool_mortality (SPECIES *const, int);
 
 
 

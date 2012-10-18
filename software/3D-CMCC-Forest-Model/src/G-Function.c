@@ -41,7 +41,7 @@ return acos(cosH0) / Pi;
 
 void GetDayLength ( CELL * c,  int MonthLength)
 {
-    int cell;
+    //int cell;
 	//Log("MonthLenght = %d \n", MonthLength);
 
 

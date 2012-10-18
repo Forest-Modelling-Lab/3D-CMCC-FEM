@@ -47,8 +47,8 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
     int age;
     int species;
     float DBHDCeffective;
-    int oldNtree;
-    int deadtree;
+    //int oldNtree;
+    //int deadtree;
     int tree_number;
     float layer_cover;
 

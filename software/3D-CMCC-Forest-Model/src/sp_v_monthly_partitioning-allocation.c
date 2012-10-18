@@ -20,17 +20,17 @@ void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, 
     float NPP_residual;  //NPP less LAI biomass
 	float  s0Ctem = s->value[S0CTEM];
 	float  r0Ctem = s->value[R0CTEM];
-	float  f0Ctem = s->value[F0CTEM];
+	//float  f0Ctem = s->value[F0CTEM];
 	float const omegaCtem = s->value[OMEGA_CTEM];
 
     float pS_CTEM;
 	float pR_CTEM;
-	float pF_CTEM;
+	//float pF_CTEM;
 
 	//determines the maximum amount of drymatter to allocate to foliage
               //CURRENTLY NOT USED
-    float const epsilon = s->value[EPSILON_CTEM];      //in KgC/m^2)^-0.6  allocation parameter see also Frankfurt biosphere model
-	float const kappa = s->value[KAPPA];               //(dimensionless) allocation parameter
+    //float const epsilon = s->value[EPSILON_CTEM];      //in KgC/m^2)^-0.6  allocation parameter see also Frankfurt biosphere model
+	//float const kappa = s->value[KAPPA];               //(dimensionless) allocation parameter
 
 
     float Perc_fine;

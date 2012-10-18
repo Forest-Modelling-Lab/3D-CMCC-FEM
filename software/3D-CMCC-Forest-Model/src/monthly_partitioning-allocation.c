@@ -24,13 +24,13 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 
 	//determines the maximum amount of drymatter to allocate to foliage
               //CURRENTLY NOT USED
-    float const epsilon = s->value[EPSILON_CTEM];      //in KgC/m^2)^-0.6  allocation parameter see also Frankfurt biosphere model
-	float const kappa = s->value[KAPPA];               //(dimensionless) allocation parameter
+    //float const epsilon = s->value[EPSILON_CTEM];      //in KgC/m^2)^-0.6  allocation parameter see also Frankfurt biosphere model
+	//float const kappa = s->value[KAPPA];               //(dimensionless) allocation parameter
 
     float pS_CTEM;
 	float pR_CTEM;
 	float pF_CTEM;
-	float max_DM_foliage;
+	//float max_DM_foliage;
 	float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	float oldW;

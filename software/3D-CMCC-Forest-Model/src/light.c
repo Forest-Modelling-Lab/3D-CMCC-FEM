@@ -46,7 +46,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
     float LightAbsorb;
     float Month_Radiation;
     //float DailyPar;
-    float Gap_Cover;
+    float Gap_Cover = 0;
 
 
     LightTrasmitted = (exp(- s->value[K] * met[month].lai));
