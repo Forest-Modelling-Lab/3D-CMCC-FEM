@@ -15,7 +15,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
     float Optimum_GPP_gC;
     float GPPmolC;
     float DailyGPPgC;
-    float DailyGPPmolC;
+    //float DailyGPPmolC;
     float StandGPPtC;
 
     Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
@@ -73,7 +73,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
         Log("Efficiency in GPP = %g %\n", (GPPmolC * 100) / Optimum_GPP);
 
 
-        DailyGPPmolC = GPPmolC / DaysInMonth;
+        //DailyGPPmolC = GPPmolC / DaysInMonth;
         //Log("Daily GPP in mols of C for this layer = %g molC/m^2 day\n", DailyGPPmolC);
 
         //Monthy layer GPP in grammes of C/m^2

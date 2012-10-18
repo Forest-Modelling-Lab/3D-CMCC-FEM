@@ -10,9 +10,9 @@
 
 void Get_turnover (SPECIES *const s)
 {
-    int oldWs;
-    int oldWrf;
-    int oldWrc;
+    //int oldWs;
+    //int oldWrf;
+    //int oldWrc;
 
     Log("****TURNOVER****\n");
     Log("****fine root turnover****\n");
@@ -26,7 +26,7 @@ void Get_turnover (SPECIES *const s)
          s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROOTS_FINE_CTEM];
     }
 
-    oldWrf = s->value[BIOMASS_ROOTS_FINE_CTEM];
+    //oldWrf = s->value[BIOMASS_ROOTS_FINE_CTEM];
 
     // Fine Root Biomass less root turnover
 

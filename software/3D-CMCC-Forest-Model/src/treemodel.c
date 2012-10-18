@@ -24,12 +24,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 	static int top_layer;
-    static int tree_soil;
+    //static int tree_soil;
 	/*counter for numbers of layer*/
 	static int number_of_layers;
 
 
-	static int DominantLightIndex;
+	//static int DominantLightIndex;
 	//dominanza anche se non si è l'albero piu alto:
 	//caso: due strati, il piu alto è deciduo il piu basso è sempreverde.
 	//il piu alto ha z = 1 il piu basso z = 0
@@ -51,7 +51,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static float Yearly_Temp;
 	static float Yearly_Vpd;
 	static float Yearly_Rain;
-	static float Total_Rain;
+	//static float Total_Rain;
 
 
 	//compute VPD
@@ -65,20 +65,20 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static float Interception;
 	static float RainIntercepted;
 
-	static float oldWf;
-	static float oldWrf;
-	static float oldWrc;
-	static float oldWs;
+	//static float oldWf;
+	//static float oldWrf;
+	//static float oldWrc;
+	//static float oldWs;
 
 	/*control*/
-	static float oldavDBH;
-	static float oldTreeHeight;
+	//static float oldavDBH;
+	//static float oldTreeHeight;
 
 
 
 
 	//static float Gap_Cover;
-	static float thermic_sum;
+	//static float thermic_sum;
 	//static float veg_index;     //counter of vegetative months
 	static float MassDensity;
 	static float lessrain;
@@ -98,12 +98,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	/*establishment*/
 	//static int Saplings_Number;
 
-	static int strata;
+	//static int strata;
 
 	//SOIL NITROGEN CONTENT see Peng et al., 2002
-    static float N_avl;  //Total nitrogen available for ttree growth see Peng et al., 2002
-	const float Ka = 0.6;  //see Peng et al., 2002
-	const float Kb = 0.0005; //see Peng et al., 2002
+    //static float N_avl;  //Total nitrogen available for ttree growth see Peng et al., 2002
+	//const float Ka = 0.6;  //see Peng et al., 2002
+	//const float Kb = 0.0005; //see Peng et al., 2002
 
 		// check paramenters
 	assert(m && yos);
@@ -127,7 +127,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 	/*somma termica per l'inizio della stagione vegetativa*/
-	thermic_sum = met[month].tav * DaysInMonth [month];
+	//thermic_sum = met[month].tav * DaysInMonth [month];
 
 
     //*************FOREST STRUCTURE*********************

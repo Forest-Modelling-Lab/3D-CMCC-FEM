@@ -10,7 +10,7 @@
 
 void Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearly_Rain, float canopy_cover_dominant )
 {
-	static float WseedTree;    //fruit biomass per Tree
+	//static float WseedTree;    //fruit biomass per Tree
 	static int NseedTree;      //Number of fruits per Tree
 
 	//static float FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -35,7 +35,7 @@ void Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearly_
 	Log("Annual NPP to Seeds Biomass Compart = %g tDM/ha/year\n", s->value[W_SEED]);
 
 
-	WseedTree = s->value[W_SEED] / s->counter[N_TREE];
+	//WseedTree = s->value[W_SEED] / s->counter[N_TREE];
 
 
 

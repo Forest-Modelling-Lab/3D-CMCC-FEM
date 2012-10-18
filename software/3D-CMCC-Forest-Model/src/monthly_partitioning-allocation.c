@@ -19,7 +19,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 	//allocation parameter. their sum must be = 1
 	float  s0Ctem = s->value[S0CTEM];
 	float  r0Ctem = s->value[R0CTEM];
-	float  f0Ctem = s->value[F0CTEM];
+	//float  f0Ctem = s->value[F0CTEM];
 	float const omegaCtem = s->value[OMEGA_CTEM];
 
 	//determines the maximum amount of drymatter to allocate to foliage
@@ -31,7 +31,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 	float pR_CTEM;
 	float pF_CTEM;
 	//float max_DM_foliage;
-	float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
+	//float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	float oldW;
 
@@ -41,7 +41,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 
 	float Perc_fine;
 	float Perc_coarse;
-	float Perc_leaves;              //percentage of leaves in first growing season
+	//float Perc_leaves;              //percentage of leaves in first growing season
 
 
 	float Biomass_exceeding;
@@ -63,14 +63,14 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 
 
         //allocation ratio to foliage
-        f0Ctem = 1.0 - (r0Ctem + s0Ctem);
+        //f0Ctem = 1.0 - (r0Ctem + s0Ctem);
         //Log ("F0CTEM  = %g \n", f0Ctem);
 
         //I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
         //reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
         //I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
         //reductor = Minimum (s->value[F_SW], s->value[F_NUTR]);
-        reductor = s->value[F_SW];
+        //reductor = s->value[F_SW];
         /*
 
         if (reductor == s->value[F_SW])
@@ -116,7 +116,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 
         //23 May 2012
         //percentage of leaves against fine roots
-        Perc_leaves =  1 - (s->value[FINE_ROOT_LEAF]  / (s->value[FINE_ROOT_LEAF] + 1));
+        //Perc_leaves =  1 - (s->value[FINE_ROOT_LEAF]  / (s->value[FINE_ROOT_LEAF] + 1));
         //Log("Percentage of leaves against fine roots = %g %%\n", Perc_leaves * 100);
         //Log("Percentage of fine roots against leaves = %g %%\n", (1 - Perc_leaves) * 100);
 
@@ -1159,7 +1159,7 @@ void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int 
 
 void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearly_Rain, float canopy_cover_dominant )
 {
-	static float WseedTree;    //fruit biomass per Tree
+	//static float WseedTree;    //fruit biomass per Tree
 	static int NseedTree;      //Number of fruits per Tree
 
 	//static float FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -1184,7 +1184,7 @@ void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearl
 	Log("Annual NPP to Seeds Biomass Compart = %g tDM/ha/year\n", s->value[W_SEED]);
 
 
-	WseedTree = s->value[W_SEED] / s->counter[N_TREE];
+	//WseedTree = s->value[W_SEED] / s->counter[N_TREE];
 
 
 
