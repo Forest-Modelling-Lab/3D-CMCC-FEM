@@ -58,5 +58,7 @@ float Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const m
     //Log("Moist Ratio = %g\n", MoistRatio);
     c->soil_evaporation = PotEvap * EvapoCoeff * MoistRatio * 24 * DaysInMonth;
 
+    return 0.1; // If you define a float returning function, you must return a float!!!
+
 }
 
