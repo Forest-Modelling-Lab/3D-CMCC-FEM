@@ -22,7 +22,7 @@ AC_CHECK_HEADERS([stdlib.h string.h sys/param.h unistd.h math.h])
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([atexit bzero getcwd strcspn strrchr strspn pow])
+AC_CHECK_FUNCS([atexit bzero getcwd strcspn strrchr strspn strtod scanf pow])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
