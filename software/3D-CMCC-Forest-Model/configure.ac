@@ -11,9 +11,10 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 
 # Checks for libraries.
+AC_SEARCH_LIBS([pow], [m])
 
 # Checks for header files.
-AC_CHECK_HEADERS([stdlib.h string.h sys/param.h unistd.h])
+AC_CHECK_HEADERS([stdlib.h string.h sys/param.h unistd.h math.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 
@@ -21,7 +22,7 @@ AC_CHECK_HEADERS([stdlib.h string.h sys/param.h unistd.h])
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([atexit bzero getcwd pow strcspn strrchr strspn])
+AC_CHECK_FUNCS([atexit bzero getcwd strcspn strrchr strspn pow])
 
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
