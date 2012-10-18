@@ -126,6 +126,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 
+
+
+
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
@@ -804,6 +807,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             /*AVERAGE STEM MASS*/
 
                             m->cells[cell].heights[height].ages[age].species[species].value[AV_STEM_MASS] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+                                                                                                            1000 / m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE];
+/*
+                            m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]
+                                                                                                            + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM];
+                                                                                                            */
+
+                            m->cells[cell].heights[height].ages[age].species[species].value[AV_ROOT_MASS] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] *
                                                                                                             1000 / m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE];
 
                             Log("Average Stem Mass = %g kgDM stem /tree\n", m->cells[cell].heights[height].ages[age].species[species].value[AV_STEM_MASS]);

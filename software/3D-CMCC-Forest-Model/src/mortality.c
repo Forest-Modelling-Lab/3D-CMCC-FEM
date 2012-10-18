@@ -24,8 +24,9 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
     s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
     //Log(" Av stem mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
-    s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM])
-                                                                         / (float)s->counter[N_TREE];
+
+    // levato
+    //s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM])/ (float)s->counter[N_TREE];
     //Log(" Av root mass = %g tDM/tree\n", s->value[AV_ROOT_MASS] );
 
     oldNtree = s->counter[N_TREE];
