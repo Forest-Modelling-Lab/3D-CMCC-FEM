@@ -10,9 +10,10 @@
 
 
 //VERSION CURRENTLY USED
+
 void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg)
 {
-	/*CTEM VERSION*/
+	//CTEM VERSION
 
 
 

@@ -422,6 +422,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             //for spatial version
                             if (met[month].lai > 0.1)
                             {
+                                Veg_UnVeg = 1;
 
                                 if (Veg_UnVeg == 1)    //vegetative period for deciduous
                                 {
@@ -638,6 +639,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             else
                                 //unvegetative period for deciduous
                             {
+                                Veg_UnVeg = 0;
+
                                 Log("**UN-VEGETATIVE PERIOD FOR %s SPECIES in layer %d **\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].z);
 
                                 //Productivity
