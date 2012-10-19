@@ -158,7 +158,7 @@ enum {
     COARSERTTOVER,                  //Average monthly coarse root turnover rate
     SAPWOODTTOVER,	                //Average yearly sapwood turnover rate
     BRANCHTTOVER,	                //Average yearly branch turnover rate
-	RTTOVER,                    //Average monthly root turnover rate
+	//RTTOVER,                    //Average monthly root turnover rate
 
     STEMCONST,                  //Constant in the Stem Mass v. diameter relationship
     STEMPOWER,                  //Power in the Stem Mass v. diameter raltionship
