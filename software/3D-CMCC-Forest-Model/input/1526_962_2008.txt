@@ -1,4 +1,4 @@
-Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	VPD_f	VPD_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
+Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	VPD_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
 1	31	6.1	1	4.8	1	3.36743	1	-9999	1	43.8182	-9999	0.001
 2	29	9.1	1	4.5231	1	3.62599	1	-9999	1	20.4472	-9999	0.001
 3	31	13.15	1	6.36916	1	3.58621	1	-9999	1	211.016	-9999	0.371752
