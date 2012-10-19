@@ -14,8 +14,10 @@ make
 make clean
 - to launch unit test, to check if the executable produced is working or not:
 make check
+##### NOT WORKING YET!!! #####
 - to move executable produced from src directory into bin directory:
 make install
+##############################
 
 # Notes:
 - When you run "autoreconf -i", a lot of files and dirs are produced.
