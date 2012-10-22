@@ -17,7 +17,7 @@ void Get_canopy_evapotranspiration (SPECIES *const s,  const MET_DATA *const met
     float duv;
     float Etransp;
     float CanopyTranspiration;
-    float DailyTransp;
+    //float DailyTransp;
 
     float Interception;
 
