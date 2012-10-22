@@ -40,17 +40,17 @@ const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", 
 
 
 /* global variables */
-char *program_path	=	NULL,	// mandatory
-     *input_dir		=	NULL,	// mandatory
-     *input_path	=	NULL,	// mandatory
+char *program_path		=	NULL,	// mandatory
+     *input_dir			=	NULL,	// mandatory
+     *input_path		=	NULL,	// mandatory
      *dataset_filename	=	NULL,	// mandatory
      *input_met_path	=	NULL,	// mandatory
-     *site_path		=	NULL,	// mandatory
-     *output_path	=	NULL,	// mandatory
-     *out_filename	=	NULL,	// mandatory
-     *output_file	= 	NULL,	// mandatory
-	 *resolution	= 	NULL;	// mandatory
-	 *version	= 	NULL;	// mandatory
+     *site_path			=	NULL,	// mandatory
+     *output_path		=	NULL,	// mandatory
+     *out_filename		=	NULL,	// mandatory
+     *output_file		= 	NULL,	// mandatory
+	 *resolution		= 	NULL;	// mandatory
+	 *version			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
     years_of_simulation	=	0;	// default is none
@@ -111,13 +111,13 @@ static const char msg_dataset_not_specified[] =
 #endif
 	"\n";
 	static const char msg_dataset_path[]	=	"dataset path = %s\n";
-	static const char msg_site_path[]	=	"site path = %s\n";
-	static const char msg_output_path[]	=	"output path = %s\n";
-	static const char msg_output_file[]	=	"output file = %s\n\n";
-	static const char msg_processing[]	=	"processing %s...\n";
-	static const char msg_ok[]		=	"ok";
-	static const char msg_summary[]		=	"\n%d file%s found: %d processed, %d skipped.\n\n";
-	static const char msg_usage[]		=	"usage: 3dvt parameters\n\n"
+	static const char msg_site_path[]		=	"site path = %s\n";
+	static const char msg_output_path[]		=	"output path = %s\n";
+	static const char msg_output_file[]		=	"output file = %s\n\n";
+	static const char msg_processing[]		=	"processing %s...\n";
+	static const char msg_ok[]				=	"ok";
+	static const char msg_summary[]			=	"\n%d file%s found: %d processed, %d skipped.\n\n";
+	static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
 	"  allowed parameters:\n\n"
 	"    -dataset=XXXXX_YYYY.txt -> file to be processed"
 	"    -met=XXXXX -> met file\n"
@@ -823,39 +823,39 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if (*yos_count > 1)
 								{
 
-                                                                        //control in lai data if is an invalid value
-                                                                        if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
-                                                                        {
-                                                                                Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-                                                                                //Log("Getting previous years values !!\n");
-                                                                                yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
-                                                                                if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
-                                                                                {
-                                                                                        Log ("* LAI -NO DATA- in previous year!!!!\n" );
-                                                                                        yos[*yos_count-1].m[month].lai = NO_DATA;
-                                                                                }
-                                                                        }
-                                                                        //control lai data in spatial version if value is higher than MAXLAI
-                                                                        if(yos[*yos_count-1].m[month].lai > MAXLAI)
-                                                                        {
-                                                                                Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
-                                                                                Log("Getting previous years values !!\n");
-                                                                                yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
-                                                                        }
+									//control in lai data if is an invalid value
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
+									{
+											Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+											//Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+											if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
+											{
+													Log ("* LAI -NO DATA- in previous year!!!!\n" );
+													yos[*yos_count-1].m[month].lai = NO_DATA;
+											}
+									}
+									//control lai data in spatial version if value is higher than MAXLAI
+									if(yos[*yos_count-1].m[month].lai > MAXLAI)
+									{
+											Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+											Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+									}
 								}
 								//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
 								else
 								{
 								        if(yos[*yos_count-1].m[month].lai > MAXLAI)
-                                                                        {
-                                                                                //RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
-                                                                                //
-                                                                                //
-                                                                                //
-                                                                                Log("**********First Year without a valid LAI value set to default value LAI\n");
-                                                                                yos[*yos_count-1].m[month].lai = DEFAULTLAI;
-                                                                                Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
-                                                                        }
+										{
+												//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+												//
+												//
+												//
+												Log("**********First Year without a valid LAI value set to default value LAI\n");
+												yos[*yos_count-1].m[month].lai = DEFAULTLAI;
+												Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
+										}
 								}
 								break;
 						}
