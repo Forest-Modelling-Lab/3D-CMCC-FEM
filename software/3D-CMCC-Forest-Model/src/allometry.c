@@ -8,6 +8,7 @@
 
 void Get_allometry (SPECIES *const, int);
 
+
 void Get_allometry (SPECIES *const s, int years)
 {
 	float WFkgm2;
