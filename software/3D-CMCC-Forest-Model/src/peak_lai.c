@@ -70,6 +70,7 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 {
     static float oldBasalArea;
 
+
     static float sapwood_perc;
 
     //compute Basal Area

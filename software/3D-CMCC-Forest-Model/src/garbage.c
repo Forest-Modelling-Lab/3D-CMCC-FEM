@@ -24,7 +24,6 @@ Log("LAI from Wang et al 2010 = %g m^2\n", ((sapwood_basal_area / 10000) * m->ce
 
 /*
 
-
         //routine to split tree layers and soil
         //for ( strata = m->cells[cell].heights_count  ; strata >= 0; strata-- )
 		//{
