@@ -50,7 +50,7 @@ char *program_path		=	NULL,	// mandatory
      *out_filename		=	NULL,	// mandatory
      *output_file		= 	NULL,	// mandatory
 	 *resolution		= 	NULL;	// mandatory
-	 *version			= 	NULL;	// mandatory
+	 *vers_arg			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
     years_of_simulation	=	0;	// default is none
@@ -244,13 +244,13 @@ int get_version(char *arg, char *param, void *p) {
 		return 0;
 	}
 
-	if ( version )
+	if ( vers_arg )
 	{
-		printf(err_version_already_specified, version, param);
+		printf(err_version_already_specified, vers_arg, param);
 	}
 	else
 	{
-		version = param;
+		vers_arg = param;
 	}
 
 	/* ok */
@@ -1034,14 +1034,14 @@ int main(int argc, char *argv[])
 				strcpy(resolution, argv[i+1]);
 				break;
 			case 'v': // Version (must be 'u' or 's')
-				version = malloc(sizeof(*version)*BUFFER_SIZE);
-				if( !version )
+				vers_arg = malloc(sizeof(*vers_arg)*BUFFER_SIZE);
+				if( !vers_arg )
 				{
 					fprintf(stderr, "Cannot allocate memory for version.\n");
 					return 1;
 				}
-				bzero(version, BUFFER_SIZE-1);
-				strcpy(version, argv[i+1]);
+				bzero(vers_arg, BUFFER_SIZE-1);
+				strcpy(vers_arg, argv[i+1]);
 				break;
 			case 'h': // Print help
 				usage();
@@ -1189,7 +1189,7 @@ int main(int argc, char *argv[])
 	}
 
 	//
-	if( version == NULL )
+	if( vers_arg == NULL )
 	{
 		fprintf(stderr, "Error: version option is missing!\n");
 		usage();
@@ -1204,11 +1204,10 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(tmp, BUFFER_SIZE-1);
-		strcat(tmp, version);
-		strcpy(version, tmp);
-		//version = atoi(resolution);
-		printf(version);
-		if( (version != "s") && (version != "u") )
+		strcat(tmp, vers_arg);
+		strcpy(vers_arg, tmp);
+		version = *vers_arg;
+		if( (version != 's') && (version != 'u') )
 		{
 			fprintf(stderr, "Error: version must be 's' or 'u'!\n");
 			exit(2);
@@ -1290,124 +1289,124 @@ int main(int argc, char *argv[])
 	printf(msg_site_path, site_path);
 	printf(msg_output_file, output_file);
 
-//	/* get files */
-//	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
-//	if ( error )
-//	{
-//		Log("Error reading input files!\n\n");
-//
-//		return 1;
-//	}
-//
-//	/* reset */
-//	files_processed_count = 0;
-//	files_not_processed_count = 0;
-//	total_files_count = 0;
-//
-//	// import site file
-//	error = importSiteFile(site_path);
-//	if ( error )
-//	{
-//		Log("Site File not imported!!\n\n");
-//		return -1;
-//	}
-//
-//	/* loop for searching file */
-//	for ( i = 0; i < files_founded_count; i++)
-//	{
-//		/* inc */
-//		++total_files_count;
-//
-//		/* processing */
-//		printf(msg_processing, files_founded[i].list[0].name);
-//
-//		/* import dataset */
-//		rows = import_dataset(files_founded[i].list[0].fullpath, &rows_count);
-//		if ( !rows )
-//		{
-//			++files_not_processed_count;
-//			continue;
-//		}
-//		puts(msg_ok);
-//
-//		/* build matrix */
-//		m = matrix_create(rows, rows_count, input_dir);
-//
-//		/* free rows */
-//		free(rows);
-//
-//		/* check matrix */
-//		if ( !m )
-//		{
-//			Log("Matrix not created!!\n\n");
-//			return 1;
-//		}
-//
-//		// import Years Of Simulation (years met files)
-//		yos = ImportYosFiles(input_met_path, &years_of_simulation);
-//		if ( !yos )
-//		{
-//			Log("Met File not imported!!\n\n");
-//			matrix_free(m);
-//			return -1;
-//		}
-//
-//		/*TREEMODEL*/
-//		Log("\nTREEMODEL START\n");
-//		Log("***************************************************\n");
-////vedere
-//		Log("Cell resolution = %d m^2\n", sizeCell);
-//		/*Site definition*/
-//		Log("Site Name = %s\n", site->sitename);
-//		Log("Latitude = %g \n", site->lat);
-//		Log("Longitude = %g \n", site->lon);
-//		Log("Years of Simulations = %d \n", years_of_simulation );
-//		Log("***************************************************\n");
-//		for ( years = 0; years < years_of_simulation; years++)
-//		{
-//			/* model */
-//			matrix_summary (m, years, yos );
-//
-//			/*set vegetative period*/
-//
-//			for ( month = 0; month < MONTHS; month++)
-//			{
-//				//met_summary(met);
-//				if ( !tree_model (m, yos, years, month, years_of_simulation) )
-//				{
-//					Log("tree model failed.");
-//				}
-//				else
-//				{
-//					puts(msg_ok);
-//				}
-//				Log("****************END OF MONTH*******************\n\n\n");
-//			}
-//			Log("****************END OF YEAR*******************\n\n\n\n\n\n");
-//
-//			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
-//		}
-//
-//		/* free memory */
-//		free(yos);
-//		matrix_free(m);
-//
-//		/* increment processed files count */
-//		++files_processed_count;
-//	}
-//
-//	/* summary */
-//	printf(	msg_summary,
-//		total_files_count,
-//		total_files_count > 1 ? "s" : "",
-//		files_processed_count,
-//		files_not_processed_count );
-//
-//		logClose();
-//
-//	// Free memory
-//	free(output_file);
-//
-//	/* free memory at exit */
+	/* get files */
+	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
+	if ( error )
+	{
+		Log("Error reading input files!\n\n");
+
+		return 1;
+	}
+
+	/* reset */
+	files_processed_count = 0;
+	files_not_processed_count = 0;
+	total_files_count = 0;
+
+	// import site file
+	error = importSiteFile(site_path);
+	if ( error )
+	{
+		Log("Site File not imported!!\n\n");
+		return -1;
+	}
+
+	/* loop for searching file */
+	for ( i = 0; i < files_founded_count; i++)
+	{
+		/* inc */
+		++total_files_count;
+
+		/* processing */
+		printf(msg_processing, files_founded[i].list[0].name);
+
+		/* import dataset */
+		rows = import_dataset(files_founded[i].list[0].fullpath, &rows_count);
+		if ( !rows )
+		{
+			++files_not_processed_count;
+			continue;
+		}
+		puts(msg_ok);
+
+		/* build matrix */
+		m = matrix_create(rows, rows_count, input_dir);
+
+		/* free rows */
+		free(rows);
+
+		/* check matrix */
+		if ( !m )
+		{
+			Log("Matrix not created!!\n\n");
+			return 1;
+		}
+
+		// import Years Of Simulation (years met files)
+		yos = ImportYosFiles(input_met_path, &years_of_simulation);
+		if ( !yos )
+		{
+			Log("Met File not imported!!\n\n");
+			matrix_free(m);
+			return -1;
+		}
+
+		/*TREEMODEL*/
+		Log("\nTREEMODEL START\n");
+		Log("***************************************************\n");
+//vedere
+		Log("Cell resolution = %d m^2\n", sizeCell);
+		/*Site definition*/
+		Log("Site Name = %s\n", site->sitename);
+		Log("Latitude = %g \n", site->lat);
+		Log("Longitude = %g \n", site->lon);
+		Log("Years of Simulations = %d \n", years_of_simulation );
+		Log("***************************************************\n");
+		for ( years = 0; years < years_of_simulation; years++)
+		{
+			/* model */
+			matrix_summary (m, years, yos );
+
+			/*set vegetative period*/
+
+			for ( month = 0; month < MONTHS; month++)
+			{
+				//met_summary(met);
+				if ( !tree_model (m, yos, years, month, years_of_simulation) )
+				{
+					Log("tree model failed.");
+				}
+				else
+				{
+					puts(msg_ok);
+				}
+				Log("****************END OF MONTH*******************\n\n\n");
+			}
+			Log("****************END OF YEAR*******************\n\n\n\n\n\n");
+
+			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*");
+		}
+
+		/* free memory */
+		free(yos);
+		matrix_free(m);
+
+		/* increment processed files count */
+		++files_processed_count;
+	}
+
+	/* summary */
+	printf(	msg_summary,
+		total_files_count,
+		total_files_count > 1 ? "s" : "",
+		files_processed_count,
+		files_not_processed_count );
+
+		logClose();
+
+	// Free memory
+	free(output_file);
+
+	/* free memory at exit */
 	return 0;
 }

@@ -718,6 +718,7 @@ typedef struct {
 // 100   for pixels of 10x10   meters resolution
 // 10000 for pixels of 100x100 meters resolution
 int sizeCell;
+char version;
 
 //LAYER LIMIT
 #define DOMINANT                   15
