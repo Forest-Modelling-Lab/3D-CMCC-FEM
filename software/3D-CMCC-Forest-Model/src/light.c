@@ -31,7 +31,7 @@ void Get_Light_Recruitment (SPECIES *const s, float Av_Yearly_Par_Soil,  float a
 
 
 
-void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int z,  int month, int top_layer, float daylength, int DaysInMonth)
+void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int z,  int month, int top_layer, float daylength, int DaysInMonth, char version)
 {
 
 	Log("\nGET_LIGHT_ROUTINE\n\n");
@@ -48,8 +48,17 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	//float DailyPar;
 	float Gap_Cover = 0;
 
+	if (version == 's')
+	{
+		LightTrasmitted = (exp(- s->value[K] * met[month].lai));
+	}
+	else
+	{
+		LightTrasmitted = (exp(- s->value[K] * s->value[CANOPY_COVER_DBHDC]));
+	}
 
-	LightTrasmitted = (exp(- s->value[K] * met[month].lai));
+
+
 	Log("Light Trasmitted = %g\n", LightTrasmitted);
 	Log("Vertical Percentage of Light Trasmitted through this layer = %g %%\n", LightTrasmitted * 100);
 
@@ -446,7 +455,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				else
 				{
 					Log("More height classes in layer dominated\n");
-					if (c->subdominated_veg_counter == 1 ) //first height class proccessess
+					if (c->subdominated_veg_counter == 1 ) //first height class processed
 					{
 						Log("First height class processed\n");
 						Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];

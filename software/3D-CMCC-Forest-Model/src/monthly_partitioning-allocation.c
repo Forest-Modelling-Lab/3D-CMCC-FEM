@@ -11,7 +11,7 @@
 
 //VERSION CURRENTLY USED
 
-void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg)
+void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg, char version)
 {
 	//CTEM VERSION
 
@@ -55,6 +55,11 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 	//Log ("OMEGA_CTEM  = %g \n", omegaCtem);
 	//Log ("EPSILON_CTEM  = %g \n", epsilon);
 	//Log ("KAPPA_CTEM  = %g \n", kappa);
+
+	if (version == 's')
+	{
+		Log("Lai computed by the model is an output, not a proxy! \n");
+	}
 
 
 
@@ -196,7 +201,7 @@ void M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const
 				Log("allocating only into foliage pools\n");
 
 				//all reserves go to foliage Wf
-				//first vegetatve month
+				//first vegetative month
 				if (s->counter[VEG_MONTHS] == 1)
 				{
 					s->value[DEL_FOLIAGE_CTEM] =  s->value[NPP];

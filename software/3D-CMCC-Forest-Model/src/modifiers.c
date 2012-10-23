@@ -83,8 +83,8 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
         //AGE FOR TIMBER IS THE EFFECTIVE AGE
         RelAge = (float)s->counter[TREE_AGE] / s->value[MAXAGE];
         s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
-        //Log("--Rel Age = %g years\n", RelAge);
-        //Log("--Age = %d years\n", s->counter[TREE_AGE]);
+        Log("--Rel Age = %g years\n", RelAge);
+        Log("--Age = %d years\n", s->counter[TREE_AGE]);
         Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
      }
      else
@@ -93,8 +93,8 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
         //AGE FOR COPPICE IS THE AGE FROM THE COPPICING
         RelAge = (float)s->counter[TREE_AGE] / s->value[MAXAGE_S];
         s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
-        //Log("--Rel Age = %g years\n", RelAge);
-        //Log("--Age = %d years\n", s->counter[TREE_AGE]);
+        Log("--Rel Age = %g years\n", RelAge);
+        Log("--Age = %d years\n", s->counter[TREE_AGE]);
         Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
 
      }

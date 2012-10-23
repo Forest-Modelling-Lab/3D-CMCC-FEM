@@ -103,7 +103,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		Log("***************************** NPP *************************** \n");
 
-		//Log("Assimilate Use Efficinecy Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
+		//Log("Assimilate Use Efficiency Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
 
 		//Monthly layer NPP
 		//* 2 to convert gC in DM
@@ -114,7 +114,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	else //Un Veg period
 	{
 		s->value[GPP_g_C] = 0;
-		Log("Monthly GPP in grammes of C for layer %d = %g \n", z , s->value[GPP_g_C]);
+		Log("Monthly GPP in grams of C for layer %d = %g \n", z , s->value[GPP_g_C]);
 		s->value[NPP] = 0;
 		Log("Monthly NPP for layer %d = %g \n", z, s->value[NPP]);
 	}

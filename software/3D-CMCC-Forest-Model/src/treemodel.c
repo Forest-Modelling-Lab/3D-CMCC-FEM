@@ -348,13 +348,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						Log("- ASW layer %d month %d  = %g mm\n",  m->cells[cell].heights[height].z, month + 1, m->cells[cell].available_soil_water);
 
-						/*modifiers*/
-						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].soil_moist_ratio, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
 
 
 						//Log("- Dominance = %d\n", m->cells[cell].heights[height].dominance);
 
-						if ( !month )
+						if (month == 0)
 						{
 							Reset_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 
@@ -397,7 +395,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT] = m->cells[cell].heights[height].value;
 							//Log("Height = %g m\n", m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT]);
 							m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE] = m->cells[cell].heights[height].ages[age].value;
-							//Log("Age = %d years\n", m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE] );
+							Log("Age = %d years\n", m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE] );
 							//Log("+ Lai = %g\n",       m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 							Log("+ AvDBH = %g cm\n",  m->cells[cell].heights[height].ages[age].species[species].value[AVDBH]);
 							if (version == 'u')
@@ -412,6 +410,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 						}
+
+						/*modifiers*/
+						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].soil_moist_ratio, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
+
 
 
 
@@ -441,13 +443,16 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
-							if ( version == 's' && met[month].lai > 0.1)
+							if ( version == 's')
 							{
-								Veg_UnVeg = 1;
-							}
-							else
-							{
-								Veg_UnVeg = 0;
+								if (met[month].lai > 0.1)
+								{
+									Veg_UnVeg = 1;
+								}
+								else
+								{
+									Veg_UnVeg = 0;
+								}
 							}
 
 							if (Veg_UnVeg == 1)    //vegetative period for deciduous
@@ -465,14 +470,16 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
+								if (version == 'u')
+								{
+									Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								}
 
-								//Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
-
-								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
+								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month], version);
 
 
-								MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation);
-								//compute traspiration for area
+								MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation, version);
+								//compute transpiration for area
 								//Log("Monthly Canopy Transpiration per area = %g mm-Kg H2o/ha^-1/month\n", MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] * SIZECELL);
 
 
@@ -515,7 +522,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								if ( met[month].rain > 0 )
 								{
-									Interception = Get_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
+									Interception = Get_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month, version);
 
 									//see also CLM model for rain interception
 									/*
@@ -579,7 +586,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									//dominated layers
 									else
 									{
-										Interception = Get_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
+										Interception = Get_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month, version);
 
 										Log("Rain Interception rate for dominated layer = %g\n", Interception);
 
@@ -648,7 +655,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
 
-								//M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
+								M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, version);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -662,8 +669,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								}
 							}
+							//unvegetative period for deciduous
 							else
-								//unvegetative period for deciduous
 							{
 								Veg_UnVeg = 0;
 
@@ -672,10 +679,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//Productivity
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
 
-								//M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
+								M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, version);
 
-								//m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-								Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].lai);
+								m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
+								if (version == 's')
+								{
+									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].lai);
+								}
 
 								/* Soil Water Balance*/
 
@@ -710,8 +720,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							}
 						}
+						//evergreen
 						else
-							//evergreen
 						{
 							Log("NO RUN FOR EVERGREEN\n");
 						}
