@@ -12,6 +12,7 @@ extern int DaysInMonth[];
 extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
+
 /* */
 int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
