@@ -698,7 +698,7 @@ typedef struct {
 
 #define MOLPAR_MJ               2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
 #define GDM_MOL                  24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
-#define GC_MOL                   12      //Convert molC to gramms of C
+#define GC_MOL                   12      //Convert molC to grams of C
 #define W_MJ                1000000      //convert Watt to MegaJoule/sec m^2
 
 //COSTANT

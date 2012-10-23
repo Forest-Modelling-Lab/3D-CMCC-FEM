@@ -143,5 +143,11 @@ inserito soil evaporation per veg period
 
 16 October 2012
 
--inserito in modifier.c 'F_DROUGHT' soil drought modifier (Angelo Nolè)
+-inserito in modifier.c 'F_DROUGHT' soil drought modifier (Angelo Nolè), ma non è attivo
+
+23 October 2012
+
+-definita versione spatial and unspatial negli argomenti ( -v )passati per il run
+-d'ora in poi usare una sola versione definendo all'inizio di ogni run la versione da utilizzare
+-la variabile LAI dipenderà dal tipo di scelta effettuata
 

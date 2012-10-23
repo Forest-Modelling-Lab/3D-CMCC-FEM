@@ -1181,7 +1181,7 @@ int main(int argc, char *argv[])
 		}
 
 		// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
-		// 100   for pixels of 10x10   meters resolution
+		// 100   for pixels of 10x10   meters resolutionsu
 		// 10000 for pixels of 100x100 meters resolution
 		sizeCell = sizeCell*sizeCell;
 
