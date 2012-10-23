@@ -140,7 +140,7 @@ int Get_Fruit_Allocation_TREEMIG (SPECIES *const s)
 
 	//numero semi prodotti
 	NumberSeed = (float)s->counter[N_TREE] * s->value[MAXSEED] * heigthdependence * 0.51 *
-		( 1 + sin((2 * Pi * (float)s->counter[TREE_AGE] ) / s->value[MASTSEED]));
+			( 1 + sin((2 * Pi * (float)s->counter[TREE_AGE] ) / s->value[MASTSEED]));
 	Log("Nseed per cell at the End of the This Year = %d seeds per cell\n", NumberSeed);
 
 	//Biomassa allocata nei semi in tDM/ha
@@ -169,89 +169,89 @@ void Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int ma
 
 	Log("\n-- (3PG) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z, years);
 
-	 if (management == 0)
-             {
-                Log("Management type = TIMBER\n");
-             }
-        else
-             {
-                Log("Management type = COPPICE\n");
-             }
+	if (management == 0)
+	{
+		Log("Management type = TIMBER\n");
+	}
+	else
+	{
+		Log("Management type = COPPICE\n");
+	}
 
 
 	oldW = s->value[WF] + s->value[WS] + s->value[WRT];
 
-        /*annual average of physiological modifier for partitioning*/
+	/*annual average of physiological modifier for partitioning*/
 	s->value[AVERAGE_PHYS_MOD] = s->value[YEARLY_PHYS_MOD] / s->counter[VEG_MONTHS];
 	Log("Average Physmod = %g \n", s->value[AVERAGE_PHYS_MOD]);
 
-        emme = site->m0 + (1 - site->m0) * site->fr;
+	emme = site->m0 + (1 - site->m0) * site->fr;
 	//Log("emme = %g\n", emme );
 
-        /* Calculate Partitioning Coefficients */
+	/* Calculate Partitioning Coefficients */
 	// il driver del partitioning sono: fSW-fVPD-fAGE
 	// 'emme' è omogeneo per tutte le celle
 
-        /*timber routine*/
-        if (management == 0)
-        {
-                pfsPower = log (s->value[PFS20] / s->value[PFS2]) / log (10.0);
-                //Log("PFS20 = %g\n", s->value[PFS20]);
-                //Log("PFS2 = %g\n", s->value[PFS2]);
-                //Log("M0 = %d\n", site->m0);
-                //Log("FR = %g\n", site->fr);
-                //Log("pfsPower = %g\n", pfsPower );
+	/*timber routine*/
+	if (management == 0)
+	{
+		pfsPower = log (s->value[PFS20] / s->value[PFS2]) / log (10.0);
+		//Log("PFS20 = %g\n", s->value[PFS20]);
+		//Log("PFS2 = %g\n", s->value[PFS2]);
+		//Log("M0 = %d\n", site->m0);
+		//Log("FR = %g\n", site->fr);
+		//Log("pfsPower = %g\n", pfsPower );
 
-                pfsConst = s->value[PFS2] / pow ( 2, pfsPower);
-                //Log("pfsConst = %g\n", pfsConst );
+		pfsConst = s->value[PFS2] / pow ( 2, pfsPower);
+		//Log("pfsConst = %g\n", pfsConst );
 
 
-                pFS = pfsConst * pow( s->value[AVDBH], pfsPower);     //Foliage:Stem Partitioning Ratio uguale per tutte le celle fisso per ogni anno
-                Log("pFS = %g\n", pFS);
+		pFS = pfsConst * pow( s->value[AVDBH], pfsPower);     //Foliage:Stem Partitioning Ratio uguale per tutte le celle fisso per ogni anno
+		Log("pFS = %g\n", pFS);
 
-                // % di NPP to roots
-                pR = s->value[PRX] * s->value[PRN] / (s->value[PRN] + (s->value[PRX] - s->value[PRN]) * s->value[AVERAGE_PHYS_MOD] * emme);
-                Log("pR = %g\n", pR);
-                Log("EOY average PHYS_MOD = %g \n",  s->value[AVERAGE_PHYS_MOD]);
-                //Log("PRX = %g\n", s->value[PRX]);
-                //Log("PRN = %g\n", s->value[PRN]);
-                Log("3PG ratio to roots for timber= %g %%\n", pR * 100);
+		// % di NPP to roots
+		pR = s->value[PRX] * s->value[PRN] / (s->value[PRN] + (s->value[PRX] - s->value[PRN]) * s->value[AVERAGE_PHYS_MOD] * emme);
+		Log("pR = %g\n", pR);
+		Log("EOY average PHYS_MOD = %g \n",  s->value[AVERAGE_PHYS_MOD]);
+		//Log("PRX = %g\n", s->value[PRX]);
+		//Log("PRN = %g\n", s->value[PRN]);
+		Log("3PG ratio to roots for timber= %g %%\n", pR * 100);
 	}
 	//end of timber routine
 	/*coppice routine*/
 	else
-        {
-                //per ora la routine per i cedui non è dinamica, non considera infatti che
-                //all'aumentare degli anni dal taglio i valori di PF2, PF20, PRX e PRN si
-                //devono avvicinare a quelli della routine della fustaia
-                //manca una variabile che tenga conto degli anni dal taglio tra i dati di
-                //inizializzazione, forse si puo ovviare considerando gli anni dal taglio
-                //considerandola come se fosse l'età
+	{
+		//per ora la routine per i cedui non è dinamica, non considera infatti che
+		//all'aumentare degli anni dal taglio i valori di PF2, PF20, PRX e PRN si
+		//devono avvicinare a quelli della routine della fustaia
+		//manca una variabile che tenga conto degli anni dal taglio tra i dati di
+		//inizializzazione, forse si puo ovviare considerando gli anni dal taglio
+		//considerandola come se fosse l'età
 
-                pfsPower = log (s->value[PFS20_C] / s->value[PFS2_C]) / log (10.0);
-                //Log("PFS20_C = %g\n", s->value[PFS20_C]);
-                //Log("PFS2_C = %g\n", s->value[PFS2_C]);
-                //Log("M0 = %d\n", site->m0);
-                //Log("FR = %g\n", site->fr);
+		pfsPower = log (s->value[PFS20_C] / s->value[PFS2_C]) / log (10.0);
+		//Log("PFS20_C = %g\n", s->value[PFS20_C]);
+		//Log("PFS2_C = %g\n", s->value[PFS2_C]);
+		//Log("M0 = %d\n", site->m0);
+		//Log("FR = %g\n", site->fr);
 
-                //Log("pfsPower = %g\n", pfsPower );
+		//Log("pfsPower = %g\n", pfsPower );
 
-                pfsConst = s->value[PFS2_C] / pow ( 2, pfsPower);
-                //Log("pfsConst = %g\n", pfsConst );
+		pfsConst = s->value[PFS2_C] / pow ( 2, pfsPower);
+		//Log("pfsConst = %g\n", pfsConst );
 
 
-                pFS = pfsConst * pow( s->value[AVDBH], pfsPower);     //Foliage:Stem Partitioning Ratio uguale per tutte le celle fisso per ogni anno
-                Log("pFS = %g\n", pFS);
+		pFS = pfsConst * pow( s->value[AVDBH], pfsPower);     //Foliage:Stem Partitioning Ratio uguale per tutte le celle fisso per ogni anno
+		Log("pFS = %g\n", pFS);
 
-                // % di NPP to roots
-                pR = s->value[PRX_C] * s->value[PRN_C] / (s->value[PRN_C] + (s->value[PRX_C] - s->value[PRN_C]) * s->value[AVERAGE_PHYS_MOD] * emme);
-                //Log("pR = %g\n", pR);
-                //Log("PRX_C = %g\n", s->value[PRX_C]);
-                //Log("PRN_C = %g\n", s->value[PRN_C]);
-                Log("3PG ratio to roots for coppice = %g %%\n", pR * 100);
-        }
+		// % di NPP to roots
+		pR = s->value[PRX_C] * s->value[PRN_C] / (s->value[PRN_C] + (s->value[PRX_C] - s->value[PRN_C]) * s->value[AVERAGE_PHYS_MOD] * emme);
+		//Log("pR = %g\n", pR);
+		//Log("PRX_C = %g\n", s->value[PRX_C]);
+		//Log("PRN_C = %g\n", s->value[PRN_C]);
+		Log("3PG ratio to roots for coppice = %g %%\n", pR * 100);
+	}
 
-        //end of coppice routine
+	//end of coppice routine
 
 
 	//if (fabs(APAR) < 0.000001) APAR = 0.000001  da 3PG ma che è????????????
@@ -342,11 +342,11 @@ void Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int ma
 	//Total Stem Biomass
 	//remove the part allocated to the branch and bark
 	s->value[DEL_BB] = s->value[DEL_WS] * s->value[FRACBB];
-    //Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
+	//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
 	//Log("Branch and bark Biomass (del_BB)= %g tDM/ha\n", s->value[DEL_BB]);
 
 	//allocation to stem
-    s->value[DEL_WS] -= s->value[DEL_BB];
+	s->value[DEL_WS] -= s->value[DEL_BB];
 	s->value[WS] = s->value[WS] + s->value[DEL_WS];
 	Log("Increment Yearly Biomass allocated (delWs) = %g tDM/ha\n", s->value[DEL_WS]);
 	Log("Stem Biomass without branch and bark (Ws) = %g tDM/ha\n", s->value[WS]);

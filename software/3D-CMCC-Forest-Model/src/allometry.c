@@ -162,7 +162,7 @@ void Get_allometry (SPECIES *const s, int years)
 	Log("LAI-3PG  = %g \n", s->value[LAI_3PG] );
 	//dovrei aggiungere la canopycover.....
 
-	*/
+	 */
 
 
 

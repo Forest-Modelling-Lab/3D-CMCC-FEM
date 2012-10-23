@@ -519,7 +519,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 									//see also CLM model for rain interception
 									/*
-                                        Interception = 1 - exp (-0.5 * m->cells[cell].heights[height].ages[age].species[species].value[LAI])
+									Interception = 1 - exp (-0.5 * m->cells[cell].heights[height].ages[age].species[species].value[LAI])
 									 */
 
 

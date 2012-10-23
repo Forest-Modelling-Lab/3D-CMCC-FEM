@@ -20,7 +20,7 @@ Log("Leaf Area from LPJ = %g m^2\n", (sapwood_basal_area / 10000) * m->cells[cel
 Log("Crown diameter = %g m^2\n", m->cells[cell].heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 Log("Crown Area = %g m^2\n", m->cells[cell].heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
 Log("LAI from Wang et al 2010 = %g m^2\n", ((sapwood_basal_area / 10000) * m->cells[cell].heights[height].ages[age].species[species].value[SAP_LEAF]) / m->cells[cell].heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
-*/
+ */
 
 /*
 
@@ -43,4 +43,4 @@ Log("LAI from Wang et al 2010 = %g m^2\n", ((sapwood_basal_area / 10000) * m->ce
 
             //if (tree_soil > 0)
             //{
-*/
+ */

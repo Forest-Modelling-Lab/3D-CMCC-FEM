@@ -46,21 +46,21 @@ static const char err_unknown_argument[] = "unknown argument: \"%s\"\n\n";
 const char err_out_of_memory[] = "out of memory";
 
 /* */
-	static int scan_path(const char *const path) {
+static int scan_path(const char *const path) {
 #if defined (_WIN32)
-		handle = FindFirstFile(path, &wfd);
-		if ( INVALID_HANDLE_VALUE == handle ) {
-			return 0;
-		}
-#elif defined (_linux) || defined (__linux__)
-		dir = opendir(path);
-		if ( !dir ) {
-			return 0;
-		}
-#endif
-		/*ok */
-		return 1;
+	handle = FindFirstFile(path, &wfd);
+	if ( INVALID_HANDLE_VALUE == handle ) {
+		return 0;
 	}
+#elif defined (_linux) || defined (__linux__)
+	dir = opendir(path);
+	if ( !dir ) {
+		return 0;
+	}
+#endif
+	/*ok */
+	return 1;
+}
 
 /* */
 static int get_files_from_path(const char *const path, FILES **files, int *const count, const int grouped) {
@@ -203,23 +203,23 @@ CHECK: on ubuntu fopen erroneously open a path (maybe a bug on NTFS partition dr
 FILES *get_files(const char *const program_path, char *string, int *const count, int *const error)
 {
 	int i,
-	    y,
-	    plusses_count;
+	y,
+	plusses_count;
 
 	char *token_by_comma,
-	     *token_by_plus,
-	     *p,
-	     *p2,
-	     *p3;
+	*token_by_plus,
+	*p,
+	*p2,
+	*p3;
 
-//	token_by_comma = malloc(sizeof(char)*1024);
-//	token_by_plus = malloc(sizeof(char)*1024);
+	//	token_by_comma = malloc(sizeof(char)*1024);
+	//	token_by_plus = malloc(sizeof(char)*1024);
 
 
 	FILE *f;
 
 	FILES *files,
-	      *files_no_leak;
+	*files_no_leak;
 
 	LIST *list_no_leak;
 
@@ -635,8 +635,8 @@ int get_random_number(int max) {
 static int check_for_argument(const char *const string , const char *const pattern, char **param)
 {
 	char *pptr	=	NULL,
-	     *sptr	=	NULL,
-	     *start	=	NULL;
+			*sptr	=	NULL,
+			*start	=	NULL;
 
 	/* reset */
 	*param = NULL;
@@ -688,7 +688,7 @@ static int check_for_argument(const char *const string , const char *const patte
 int parse_arguments(int argc, char *argv[], const ARGUMENT *const args, const int arg_count)
 {
 	int i,
-	    ok;
+	ok;
 
 	char *param;
 
@@ -906,25 +906,25 @@ int mystrcat(char *const string, const char *const string_to_add, const int size
 }
 
 /* */
-	int path_exists(const char *const path) {
+int path_exists(const char *const path) {
 #if defined (_WIN32)
-		DWORD dwResult;
+	DWORD dwResult;
 #endif
-		if ( !path ) {
-			return 0;
-		}
-#if defined (_WIN32)
-		dwResult = GetFileAttributes(path);
-		if (dwResult != INVALID_FILE_ATTRIBUTES && (dwResult & FILE_ATTRIBUTE_DIRECTORY)) {
-			return 1;
-		}
-#elif defined (linux)
-		if ( !access(path, W_OK) ) {
-			return 1;
-		}
-#endif
+	if ( !path ) {
 		return 0;
 	}
+#if defined (_WIN32)
+	dwResult = GetFileAttributes(path);
+	if (dwResult != INVALID_FILE_ATTRIBUTES && (dwResult & FILE_ATTRIBUTE_DIRECTORY)) {
+		return 1;
+	}
+#elif defined (linux)
+	if ( !access(path, W_OK) ) {
+		return 1;
+	}
+#endif
+	return 0;
+}
 
 /* */
 PREC get_mean(const PREC *const values, const int count) {

@@ -64,67 +64,67 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
         }
     }
 }
-*/
+ */
 
 void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 {
-    static float oldBasalArea;
+	static float oldBasalArea;
 
 
-    static float sapwood_perc;
+	static float sapwood_perc;
 
-    //compute Basal Area
-    if (years == 0)
-    {
-        s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
-        s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-    }
-    else
-    {
-        oldBasalArea = s->value[BASAL_AREA];
-        s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
-        s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-        Log("old basal area = %g \n", oldBasalArea);
-        Log(" Basal Area Increment= %g m^2/tree \n", s->value[BASAL_AREA] - oldBasalArea);
-        Log(" Basal Area Increment= %g cm^2/tree \n", (s->value[BASAL_AREA] - oldBasalArea) * 10000);
+	//compute Basal Area
+	if (years == 0)
+	{
+		s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
+		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+	}
+	else
+	{
+		oldBasalArea = s->value[BASAL_AREA];
+		s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
+		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+		Log("old basal area = %g \n", oldBasalArea);
+		Log(" Basal Area Increment= %g m^2/tree \n", s->value[BASAL_AREA] - oldBasalArea);
+		Log(" Basal Area Increment= %g cm^2/tree \n", (s->value[BASAL_AREA] - oldBasalArea) * 10000);
 
-    }
+	}
 
-    Log("Basal Area for this layer = %g m^2/tree\n", s->value[BASAL_AREA]);
-    Log("Stand Basal Area for this layer = %g m^2/ha\n", s->value[STAND_BASAL_AREA]);
-
-
-    //Log("**Kostner eq** \n");
-    //sapwood area
-    //see Kostner et al in Biogeochemistry of Forested Catchments in a Changing Environment, Matzner, Springer for Q. petraea
-    s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
-
-    Log("sapwood from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
-    s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
-    Log("heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
-
-    sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
-    Log("Sapwood/Basal Area = %g \n", sapwood_perc );
-    Log("Sapwood/Basal Area = %g %%\n",sapwood_perc * 100 );
+	Log("Basal Area for this layer = %g m^2/tree\n", s->value[BASAL_AREA]);
+	Log("Stand Basal Area for this layer = %g m^2/ha\n", s->value[STAND_BASAL_AREA]);
 
 
-    //compute sapwood pools and heatwood pool
-    s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
-    Log("Stem biomass = %g tDM/ha \n", s->value[BIOMASS_STEM_CTEM]);
-    Log("Sapwood biomass = %g tDM/ha \n", s->value[WS_sap]);
-    s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
-    Log("Heartwood biomass = %g tDM/ha \n", s->value[WS_heart]);
+	//Log("**Kostner eq** \n");
+	//sapwood area
+	//see Kostner et al in Biogeochemistry of Forested Catchments in a Changing Environment, Matzner, Springer for Q. petraea
+	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 
-    Log("Leaf Area from Kostner-LPJ = %g m^2\n", (s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]);
-    Log("Crown diameter = %g m^2\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
-    Log("Crown Area for Kostner = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+	Log("sapwood from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
+	s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
+	Log("heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
 
-    s->value[PEAK_Y_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
-    Log("year %d PEAK LAI from Kostner = %g \n",years, s->value[PEAK_Y_LAI]);
+	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
+	Log("Sapwood/Basal Area = %g \n", sapwood_perc );
+	Log("Sapwood/Basal Area = %g %%\n",sapwood_perc * 100 );
 
 
-    s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * sizeCell))/ s->value[SLAmkg]) / 1000;
-    Log("Maximum foliage biomass = %g tDM/ha \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+	//compute sapwood pools and heatwood pool
+	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
+	Log("Stem biomass = %g tDM/ha \n", s->value[BIOMASS_STEM_CTEM]);
+	Log("Sapwood biomass = %g tDM/ha \n", s->value[WS_sap]);
+	s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
+	Log("Heartwood biomass = %g tDM/ha \n", s->value[WS_heart]);
+
+	Log("Leaf Area from Kostner-LPJ = %g m^2\n", (s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]);
+	Log("Crown diameter = %g m^2\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+	Log("Crown Area for Kostner = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+
+	s->value[PEAK_Y_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
+	Log("year %d PEAK LAI from Kostner = %g \n",years, s->value[PEAK_Y_LAI]);
+
+
+	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * sizeCell))/ s->value[SLAmkg]) / 1000;
+	Log("Maximum foliage biomass = %g tDM/ha \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 
 
 

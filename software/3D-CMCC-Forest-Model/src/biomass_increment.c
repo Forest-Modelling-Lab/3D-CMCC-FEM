@@ -9,47 +9,47 @@
 
 void Get_biomass_increment ( SPECIES *const s,  int z, int heights_count, float dominant_prec_volume, float dominated_prec_volume )
 {
-     /*CURRENT ANNUAL INCREMENT-CAI*/
-    Log("***CAI & MAI***\n");
+	/*CURRENT ANNUAL INCREMENT-CAI*/
+	Log("***CAI & MAI***\n");
 
-    //in m^3/ha/yr
-    //Cai = Volume t1 - Volume t0
-    if (heights_count >= 3)//3 heights classes or more
-    {
-        if (z == 2)
-        {
-            s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
-            Log("Previous year volume = %g\n", dominant_prec_volume);
-            Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
-            s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-            Log("MAI-Mean Annual Increment = %g m^3/ha/yr \n", s->value[MAI] );
-        }
-        else
-        {
-            s->value[CAI] = s->value[STAND_VOLUME] - dominated_prec_volume;
+	//in m^3/ha/yr
+	//Cai = Volume t1 - Volume t0
+	if (heights_count >= 3)//3 heights classes or more
+	{
+		if (z == 2)
+		{
+			s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
+			Log("Previous year volume = %g\n", dominant_prec_volume);
+			Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
+			Log("MAI-Mean Annual Increment = %g m^3/ha/yr \n", s->value[MAI] );
+		}
+		else
+		{
+			s->value[CAI] = s->value[STAND_VOLUME] - dominated_prec_volume;
 
-            Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
-            s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-            Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
-        }
+			Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
+			Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+		}
 
-    }
-    else
-    {
-        if (z == 1)
-        {
-            s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
-            Log("Previous year volume = %g\n", dominant_prec_volume);
-            Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
-            s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-            Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
-        }
-        else
-        {
-            s->value[CAI] = s->value[STAND_VOLUME] - dominated_prec_volume;
-            Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
-            s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-            Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
-        }
-    }
+	}
+	else
+	{
+		if (z == 1)
+		{
+			s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
+			Log("Previous year volume = %g\n", dominant_prec_volume);
+			Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
+			Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+		}
+		else
+		{
+			s->value[CAI] = s->value[STAND_VOLUME] - dominated_prec_volume;
+			Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
+			Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+		}
+	}
 }

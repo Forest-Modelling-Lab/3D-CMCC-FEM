@@ -10,29 +10,29 @@
 
 void Get_turnover (SPECIES *const s)
 {
-    //int oldWs;
-    //int oldWrf;
-    //int oldWrc;
+	//int oldWs;
+	//int oldWrf;
+	//int oldWrc;
 
-    Log("****TURNOVER****\n");
-    Log("****fine root turnover****\n");
-    s->value[DEL_ROSS_FINE] =  s->value[BIOMASS_ROOTS_FINE_CTEM] * s->value[FINERTTOVER];
-    Log("Average yearly fine Root turnover rate  = %g\n", s->value[FINERTTOVER]);
-    Log("Fine Root Biomass lost = %g tDM/ha\n", s->value[DEL_ROSS_FINE]);
+	Log("****TURNOVER****\n");
+	Log("****fine root turnover****\n");
+	s->value[DEL_ROSS_FINE] =  s->value[BIOMASS_ROOTS_FINE_CTEM] * s->value[FINERTTOVER];
+	Log("Average yearly fine Root turnover rate  = %g\n", s->value[FINERTTOVER]);
+	Log("Fine Root Biomass lost = %g tDM/ha\n", s->value[DEL_ROSS_FINE]);
 
-    if (s->value[DEL_ROSS_FINE] > s->value[BIOMASS_ROOTS_FINE_CTEM])
-    {
-         Log("ATTENTION fine root turnover exceed DEL_WR !!! \n");
-         s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROOTS_FINE_CTEM];
-    }
+	if (s->value[DEL_ROSS_FINE] > s->value[BIOMASS_ROOTS_FINE_CTEM])
+	{
+		Log("ATTENTION fine root turnover exceed DEL_WR !!! \n");
+		s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROOTS_FINE_CTEM];
+	}
 
-    //oldWrf = s->value[BIOMASS_ROOTS_FINE_CTEM];
+	//oldWrf = s->value[BIOMASS_ROOTS_FINE_CTEM];
 
-    // Fine Root Biomass less root turnover
+	// Fine Root Biomass less root turnover
 
-    s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROSS_FINE];
+	s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROSS_FINE];
 
-    /*
+	/*
 
     Log("****   coarse root turnover****\n");
     s->value[DEL_ROSS_COARSE] =  s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[COARSERTTOVER];
@@ -72,6 +72,6 @@ void Get_turnover (SPECIES *const s)
     // Fine Root Biomass less root turnover
 
     s->value[BIOMASS_STEM_CTEM] -= s->value[DEL_ROSS_STEM];
-    */
+	 */
 
 }

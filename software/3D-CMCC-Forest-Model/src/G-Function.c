@@ -41,17 +41,17 @@ return acos(cosH0) / Pi;
 
 void GetDayLength ( CELL * c,  int MonthLength)
 {
-    //int cell;
+	//int cell;
 	//Log("MonthLenght = %d \n", MonthLength);
 
 
 
-    float ampl;  //seasonal variation in Day Length from 12 h
-    ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+	float ampl;  //seasonal variation in Day Length from 12 h
+	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
 
 
-    c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
+	c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
 
 
-    Log("daylength = %g \n", c->daylength);
+	Log("daylength = %g \n", c->daylength);
 }

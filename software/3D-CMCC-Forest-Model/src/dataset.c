@@ -52,22 +52,22 @@ extern const char err_unable_open_file[];
 /* */
 //version 3D-CMCC Forest Model "pre-spatial"
 static const char *header[COLUMNS] = {
-	"X",
-	"Y",
-	"AGE",
-	"SPECIES",
-	"PHENOLOGY",
-	"MANAGEMENT",
-	//"LAI",
-	"N",
-	"STOOL",
-	"AVDBH",
-	"HEIGHT",
-	"WF",
-	"WRC",
-	"WRF",
-	"WS",
-	"WRES",
+		"X",
+		"Y",
+		"AGE",
+		"SPECIES",
+		"PHENOLOGY",
+		"MANAGEMENT",
+		//"LAI",
+		"N",
+		"STOOL",
+		"AVDBH",
+		"HEIGHT",
+		"WF",
+		"WRC",
+		"WRF",
+		"WS",
+		"WRES",
 };
 
 /* */
@@ -261,68 +261,68 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 
 						/* assign value */
 						switch ( i ) {
-							case X_COLUMN:
-								rows[*rows_count-1].x = (int)value;
+						case X_COLUMN:
+							rows[*rows_count-1].x = (int)value;
 							break;
 
-							case Y_COLUMN:
-								rows[*rows_count-1].y = (int)value;
+						case Y_COLUMN:
+							rows[*rows_count-1].y = (int)value;
 							break;
 
-							case AGE_COLUMN:
-								rows[*rows_count-1].age = (int)value;
+						case AGE_COLUMN:
+							rows[*rows_count-1].age = (int)value;
 							break;
 							/*
 
 							case LAI_COLUMN:
 								rows[*rows_count-1].lai = value;
 							break;
-							*/
+							 */
 
-							case N_COLUMN:
-								rows[*rows_count-1].n = (int)value;
+						case N_COLUMN:
+							rows[*rows_count-1].n = (int)value;
 							break;
 
-                            case STOOL_COLUMN:
-								rows[*rows_count-1].stump = (int)value;
+						case STOOL_COLUMN:
+							rows[*rows_count-1].stump = (int)value;
 							break;
 
-							case AVDBH_COLUMN:
-								rows[*rows_count-1].avdbh = value;
+						case AVDBH_COLUMN:
+							rows[*rows_count-1].avdbh = value;
 							break;
 
-							case HEIGHT_COLUMN:
-								rows[*rows_count-1].height = value;
+						case HEIGHT_COLUMN:
+							rows[*rows_count-1].height = value;
 							break;
 
-							case WF_COLUMN:
-								rows[*rows_count-1].wf = value;
+						case WF_COLUMN:
+							rows[*rows_count-1].wf = value;
 							break;
 
-							case WRC_COLUMN:
-								rows[*rows_count-1].wrc = value;
+						case WRC_COLUMN:
+							rows[*rows_count-1].wrc = value;
 							break;
 
-                            case WRF_COLUMN:
-								rows[*rows_count-1].wrf = value;
+						case WRF_COLUMN:
+							rows[*rows_count-1].wrf = value;
 							break;
 
-							case WS_COLUMN:
-								rows[*rows_count-1].ws = value;
+						case WS_COLUMN:
+							rows[*rows_count-1].ws = value;
 							break;
 
-                            case WRES_COLUMN:
-								rows[*rows_count-1].wres = value;
+						case WRES_COLUMN:
+							rows[*rows_count-1].wres = value;
 							break;
 
 
 
-							default:
-								printf(err_too_many_column, *rows_count);
-								free(columns);
-								free(rows);
-								fclose(f);
-								return NULL;
+						default:
+							printf(err_too_many_column, *rows_count);
+							free(columns);
+							free(rows);
+							fclose(f);
+							return NULL;
 
 						}
 					}
@@ -366,7 +366,7 @@ int importSiteFile(char *fileName)
 	else //Read the file
 	{
 		char *getRet = NULL,
-		     *buffer = malloc(sizeof(*buffer)*1024);
+				*buffer = malloc(sizeof(*buffer)*1024);
 
 		site = malloc(sizeof(site_t));
 		float *tmpPointer = &(site->lat);
@@ -392,13 +392,13 @@ int importSiteFile(char *fileName)
 
 					switch(i)
 					{
-						case 0:
-							strcpy(site->sitename, pch); // Convert in a double
-							break;
-						default:
-							*tmpPointer = atof(pch); // Convert each token in a integer
-							tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
-							break;
+					case 0:
+						strcpy(site->sitename, pch); // Convert in a double
+						break;
+					default:
+						*tmpPointer = atof(pch); // Convert each token in a integer
+						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
+						break;
 					}
 					i++;
 				}
@@ -412,21 +412,21 @@ int importSiteFile(char *fileName)
 		ret = 3;
 	}
 
-//	fprintf(stderr, "%s\n", site->sitename);
-//	fprintf(stderr, "%f\n", site->lat);
-//	fprintf(stderr, "%f\n", site->lon);
-//	fprintf(stderr, "%f\n", site->initialAvailableSoilWater);
-//	fprintf(stderr, "%f\n", site->co2Conc);
-//	fprintf(stderr, "%f\n", site->initialLitter);
-//	fprintf(stderr, "%f\n", site->swConst);
-//	fprintf(stderr, "%f\n", site->swPower);
-//	fprintf(stderr, "%f\n", site->maxAsw);
-//	fprintf(stderr, "%f\n", site->minAsw);
-//	fprintf(stderr, "%f\n", site->fr);
-//	fprintf(stderr, "%f\n", site->fn0);
-//	fprintf(stderr, "%f\n", site->fnn);
-//	fprintf(stderr, "%f\n", site->m0);
-//	fprintf(stderr, "%f\n", site->cutTree);
+	//	fprintf(stderr, "%s\n", site->sitename);
+	//	fprintf(stderr, "%f\n", site->lat);
+	//	fprintf(stderr, "%f\n", site->lon);
+	//	fprintf(stderr, "%f\n", site->initialAvailableSoilWater);
+	//	fprintf(stderr, "%f\n", site->co2Conc);
+	//	fprintf(stderr, "%f\n", site->initialLitter);
+	//	fprintf(stderr, "%f\n", site->swConst);
+	//	fprintf(stderr, "%f\n", site->swPower);
+	//	fprintf(stderr, "%f\n", site->maxAsw);
+	//	fprintf(stderr, "%f\n", site->minAsw);
+	//	fprintf(stderr, "%f\n", site->fr);
+	//	fprintf(stderr, "%f\n", site->fn0);
+	//	fprintf(stderr, "%f\n", site->fnn);
+	//	fprintf(stderr, "%f\n", site->m0);
+	//	fprintf(stderr, "%f\n", site->cutTree);
 
 	return ret;
 }
