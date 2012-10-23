@@ -143,7 +143,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
             Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
         }
     }
-    //montlhy forest structure
+    //monthly forest structure
 
     for ( cell = 0; cell < m->cells_count; cell++)
     {
@@ -337,7 +337,14 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                         Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
                         Log("- Height = %g m\n", m->cells[cell].heights[height].value);
                         Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
-                        Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].lai);
+                        if (version == 's')
+                        {
+                        	Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].lai);
+                        }
+                        else
+                        {
+                        	Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+                        }
                         Log("- ASW layer %d month %d  = %g mm\n",  m->cells[cell].heights[height].z, month + 1, m->cells[cell].available_soil_water);
 
                         /*modifiers*/
@@ -349,17 +356,21 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                         if ( !month )
                         {
                             Reset_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
-                            /*
 
-                            //reset foliage biomass for deciduous
-                            if ( m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
-                            {
-                                m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
 
-                                //reset LAI
-                                m->cells[cell].heights[height].ages[age].species[species].value[WF] = 0;
-                            }
-                            */
+                            //reset only in unspatial version
+							if (version == 'u')
+							{
+								//reset foliage biomass for deciduous
+								if ( m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
+
+									//reset LAI
+									m->cells[cell].heights[height].ages[age].species[species].value[WF] = 0;
+								}
+							}
+
                             /*Phenology*/
                             if ( m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
                             {
@@ -388,11 +399,14 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             //Log("Age = %d years\n", m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE] );
                             //Log("+ Lai = %g\n",       m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
                             Log("+ AvDBH = %g cm\n",  m->cells[cell].heights[height].ages[age].species[species].value[AVDBH]);
-                            //Log("+ Wf = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
+							if (version == 'u')
+							{
+								Log("+ Wf = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
+							}
                             Log("+ Ws = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]);
                             Log("+ Wrc = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]);
                             Log("+ Wrf = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]);
-                            //Log("+ Wr Tot = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM]);
+                            Log("+ Wr Tot = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM]);
                             Log("+ Wres = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM]);
 
 
@@ -403,29 +417,37 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                         //deciduous
                         if ( m->cells[cell].heights[height].ages[age].species[species].phenology == D )
                         {
+                        	//for unspatial version growth start, growth end and month drives start and end of growing season
+
                             //PEAK LAI
                             //Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
+							if (version == 'u')
+							{
+								//31 May 2012
+								if (month == 0)
+								{
+								   Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
+								}
 
-/*
-                            //31 May 2012
-                            if (month == 0)
-                            {
-                               Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
-                            }
 
-                            if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+								if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+								{
+									Veg_UnVeg = 1;
+								}
+								else
+								{
+									Veg_UnVeg = 0;
+								}
+							}
+                            //for spatial version start of growing season is driven by NDVI-LAI
+                            if ( version == 's' && met[month].lai > 0.1)
                             {
                                 Veg_UnVeg = 1;
                             }
-                            else
-                            {
-                                Veg_UnVeg = 0;
-                            }
-*/
-                            //for spatial version
-                            if (met[month].lai > 0.1)
-                            {
-                                Veg_UnVeg = 1;
+							else
+							{
+								Veg_UnVeg = 0;
+							}
 
                                 if (Veg_UnVeg == 1)    //vegetative period for deciduous
                                 {
