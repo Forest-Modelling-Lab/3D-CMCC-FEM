@@ -14,7 +14,7 @@
 #include "types.h"
 
 /* constants */
-#define PROGRAM_VERSION	"v3.0 monthly allocation"
+#define PROGRAM_VERSION	"v4.0 "
 
 /* */
 enum {	MONTH = 0,
@@ -1354,8 +1354,7 @@ int main(int argc, char *argv[])
 		/*TREEMODEL*/
 		Log("\nTREEMODEL START\n");
 		Log("***************************************************\n");
-//vedere
-		Log("Cell resolution = %d m^2\n", sizeCell);
+
 		/*Site definition*/
 		Log("Site Name = %s\n", site->sitename);
 		Log("Latitude = %g \n", site->lat);

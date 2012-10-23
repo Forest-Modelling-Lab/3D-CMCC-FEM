@@ -13,7 +13,7 @@ extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
 /* */
-int tree_model (MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
+int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
 	MET_DATA *met;
 
@@ -147,7 +147,7 @@ int tree_model (MATRIX *const m, const YOS *const yos, const int years, const in
 
     for ( cell = 0; cell < m->cells_count; cell++)
     {
-        Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+        Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month, version);
     }
 
     //*************************************************
@@ -208,7 +208,7 @@ int tree_model (MATRIX *const m, const YOS *const yos, const int years, const in
         Log("YEAR SIMULATED = %d (%d)\n", years + 1, yos[years].year );
         Log("MONTH SIMULATED = %s\n", szMonth[month]);
 
-        Print_met_data (met, vpd,  month,  m->cells[cell].daylength);
+        Print_met_data (met, vpd,  month,  m->cells[cell].daylength, version);
 
         //for each month of simulation the model recomputes the number of classes in veg period
         m->cells[cell].dominant_veg_counter = 0;

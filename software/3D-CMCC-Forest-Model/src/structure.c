@@ -444,7 +444,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 
 
-void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DATA *const met, int month )
+void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DATA *const met, int month, char version)
 {
 
     //compute if is in veg period
@@ -461,6 +461,8 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 
     Log("Determines if is in Veg Period \n");
 
+
+
     for (height = c->heights_count - 1; height >= 0; height -- )
     {
         for (age = c->heights[height].ages_count - 1; age >= 0; age --)
@@ -470,18 +472,44 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
                 //deciduous
                 if ( c->heights[height].ages[age].species[species].phenology == D )
                 {
-                    //Veg period
-                    if ((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+                	//spatial version
+                    if (version == 's')
                     {
-                        c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
-                        Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+                    	Log("Spatial version \n");
+
+                    	//veg period
+                    	if (met[month].lai > 0.1)
+						{
+
+							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
+							Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+						}
+                    	//unveg period
+						else
+						{
+							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
+							Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+
+						}
                     }
-                    //UnVeg period
+                    //unspatial version
                     else
                     {
-                        c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
-                        Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+                    	Log("Un-spatial version \n");
 
+						//Veg period
+						if ((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						{
+							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
+							Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+						}
+						//UnVeg period
+						else
+						{
+							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
+							Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
+
+						}
                     }
                 }
                 //evergreen

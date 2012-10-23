@@ -28,7 +28,7 @@ float Get_vpd (const MET_DATA *const met, int month)
     return vpd;
 }
 
-void Print_met_data (const MET_DATA *const met, float vpd, int month, float daylength)
+void Print_met_data (const MET_DATA *const met, float vpd, int month, float daylength, char version)
 {
     Log("***************\n");
 	Log("**Monthly MET DATA**\n");
@@ -38,16 +38,20 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, float dayl
         "-vpd = %g mbar\n"
         "-ts_f = %g °C\n"
         "-rain = %g mm\n"
-        "-swc = %g %vol\n"
-        "-lai = %g %vol\n",
+        "-swc = %g %vol\n",
         met[month].solar_rad,
         met[month].tav,
         met[month].rh,
         vpd,
         met[month].ts_f,
         met[month].rain,
-        met[month].swc,
-        met[month].lai);
+        met[month].swc);
+
+    if (version == 's')
+    {
+    	Log("-lai from NDVI = %g \n", met[month].lai);
+    }
+
     Log("-Day length = %g hours \n", daylength);
     Log("***************\n");
 

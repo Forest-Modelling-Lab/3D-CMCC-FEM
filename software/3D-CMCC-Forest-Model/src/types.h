@@ -844,14 +844,14 @@ extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_top_layer (CELL *const, int, HEIGHT *);
 
-extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int);
+extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int, char);
 extern void Get_stool_mortality (SPECIES *const, int);
 
 
 
 extern void Get_annual_forest_structure (CELL *, HEIGHT * );
 
-void Print_met_data (const MET_DATA *const , float , int , float);
+void Print_met_data (const MET_DATA *const , float , int , float, char);
 
 
 void Print_parameters (SPECIES *const, int, int, int);
