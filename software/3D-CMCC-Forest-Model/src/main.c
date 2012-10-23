@@ -36,121 +36,121 @@ int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 }
 //Days in Months
 int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY",
-				"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
+		"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 
 
 /* global variables */
 char *program_path		=	NULL,	// mandatory
-     *input_dir			=	NULL,	// mandatory
-     *input_path		=	NULL,	// mandatory
-     *dataset_filename	=	NULL,	// mandatory
-     *input_met_path	=	NULL,	// mandatory
-     *site_path			=	NULL,	// mandatory
-     *output_path		=	NULL,	// mandatory
-     *out_filename		=	NULL,	// mandatory
-     *output_file		= 	NULL,	// mandatory
-	 *resolution		= 	NULL;	// mandatory
-	 *vers_arg			= 	NULL;	// mandatory
+		*input_dir			=	NULL,	// mandatory
+		*input_path		=	NULL,	// mandatory
+		*dataset_filename	=	NULL,	// mandatory
+		*input_met_path	=	NULL,	// mandatory
+		*site_path			=	NULL,	// mandatory
+		*output_path		=	NULL,	// mandatory
+		*out_filename		=	NULL,	// mandatory
+		*output_file		= 	NULL,	// mandatory
+		*resolution		= 	NULL;	// mandatory
+*vers_arg			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
-    years_of_simulation	=	0;	// default is none
+		years_of_simulation	=	0;	// default is none
 
 /* static global variables */
 static FILES *files_founded;
 
 /* strings */
 static const char banner[] =	"\n\n3D-CMCC Forest Model "PROGRAM_VERSION"\n\n"
-"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
-"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
-"(use -h parameter for more information)\n\n\n";
+		"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
+		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
+		"(use -h parameter for more information)\n\n\n";
 
 static char copyright[] =
-"\n\n\n\n"
-"This version of 3D-CMCC Forest Model has been developed by:\n"
-"Alessio Collalti [a.collalti@unitus.it - alessiocollalti@hotmail.com],\n"
-"Alessio Ribeca.\n"
-"euroMediterranean Center for Climate Changes (CMCC),\n"
-"IAFENT division,\n"
-"Via A. Pacinotti 5, 01100 - Viterbo, Italy,\n"
-"and University of Tuscia ,\n"
-"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
-"Forest Ecology Lab\n"
-"\n"
-"Programmers: Alessio Collalti - Alessio Ribeca \n"
-"\n"
-"\"DISCLAIMER\" \n"
-"--------------------------------------------------------------------------------------------------------\n"
-"CMCC and University of Tuscia\n"
-"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
-"the form supplied or as subsequently modified by third parties. CMCC and University of Tuscia disclaims\n"
-"liability for all losses, damages and costs incurred by any person as a result\n"
-"of relying on this software. Use of this software assumes agreement to this condition of use.\n"
-"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
-"was released by CMCC-UNITUS. \n"
-"\n";
+		"\n\n\n\n"
+		"This version of 3D-CMCC Forest Model has been developed by:\n"
+		"Alessio Collalti [a.collalti@unitus.it - alessiocollalti@hotmail.com],\n"
+		"Alessio Ribeca.\n"
+		"euroMediterranean Center for Climate Changes (CMCC),\n"
+		"IAFENT division,\n"
+		"Via A. Pacinotti 5, 01100 - Viterbo, Italy,\n"
+		"and University of Tuscia ,\n"
+		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
+		"Forest Ecology Lab\n"
+		"\n"
+		"Programmers: Alessio Collalti - Alessio Ribeca \n"
+		"\n"
+		"\"DISCLAIMER\" \n"
+		"--------------------------------------------------------------------------------------------------------\n"
+		"CMCC and University of Tuscia\n"
+		"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
+		"the form supplied or as subsequently modified by third parties. CMCC and University of Tuscia disclaims\n"
+		"liability for all losses, damages and costs incurred by any person as a result\n"
+		"of relying on this software. Use of this software assumes agreement to this condition of use.\n"
+		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
+		"was released by CMCC-UNITUS. \n"
+		"\n";
 
 
 static const char comma_delimiter[] = ",\r\n";
 static const char met_delimiter[] = " ,\t\r\n";
 static const char *met_columns[MET_COLUMNS] = {	"Month",
-						"n_days",
-						"Rg_f",
-						"Ta_f",
-						"RH_f",
-						"Ts_f",
-						"Precip",
-						"SWC",
-						"LAI"
-						};
+		"n_days",
+		"Rg_f",
+		"Ta_f",
+		"RH_f",
+		"Ts_f",
+		"Precip",
+		"SWC",
+		"LAI"
+};
 
 /* messages */
 static const char msg_dataset_not_specified[] =
-	"dataset not specified."
+		"dataset not specified."
 #if defined (_WIN32) || defined (linux)
-	" searching..."
+		" searching..."
 #endif
-	"\n";
-	static const char msg_dataset_path[]	=	"dataset path = %s\n";
-	static const char msg_site_path[]		=	"site path = %s\n";
-	static const char msg_output_path[]		=	"output path = %s\n";
-	static const char msg_output_file[]		=	"output file = %s\n\n";
-	static const char msg_processing[]		=	"processing %s...\n";
-	static const char msg_ok[]				=	"ok";
-	static const char msg_summary[]			=	"\n%d file%s found: %d processed, %d skipped.\n\n";
-	static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
-	"  allowed parameters:\n\n"
-	"    -dataset=XXXXX_YYYY.txt -> file to be processed"
-	"    -met=XXXXX -> met file\n"
+		"\n";
+static const char msg_dataset_path[]	=	"dataset path = %s\n";
+static const char msg_site_path[]		=	"site path = %s\n";
+static const char msg_output_path[]		=	"output path = %s\n";
+static const char msg_output_file[]		=	"output file = %s\n\n";
+static const char msg_processing[]		=	"processing %s...\n";
+static const char msg_ok[]				=	"ok";
+static const char msg_summary[]			=	"\n%d file%s found: %d processed, %d skipped.\n\n";
+static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
+		"  allowed parameters:\n\n"
+		"    -dataset=XXXXX_YYYY.txt -> file to be processed"
+		"    -met=XXXXX -> met file\n"
 #if defined (_WIN32) || defined (linux)
-	" (optional)"
+		" (optional)"
 #endif
-	"\n"
-	"    -output=path where result files are created\n"
-	"    -outname=output filename\n"
-	"    -site=site filename\n"
-	"    -log -> enable log to file\n";
+		"\n"
+		"    -output=path where result files are created\n"
+		"    -outname=output filename\n"
+		"    -site=site filename\n"
+		"    -log -> enable log to file\n";
 
-	/* error messages */
-	extern const char err_out_of_memory[];
-	const char err_unable_open_file[] = "unable to open file.";
-	const char err_empty_file[] = "empty file ?";
-	const char err_window_size_too_big[] = "window size too big.";
-	static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
-	static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
-	static const char err_output_path_no_delimiter[] = "output path must end with a \"%c\"\n\n";
-	static const char err_unable_open_output_path[] = "unable to open output path.\n";
-	static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
-	static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
-	static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
-	static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
-	static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
-	static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
-	static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
-	static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
-	static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
-	static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
-	static const char err_met_not_specified[] = "met not specified.";
-	static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
+/* error messages */
+extern const char err_out_of_memory[];
+const char err_unable_open_file[] = "unable to open file.";
+const char err_empty_file[] = "empty file ?";
+const char err_window_size_too_big[] = "window size too big.";
+static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
+static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
+static const char err_output_path_no_delimiter[] = "output path must end with a \"%c\"\n\n";
+static const char err_unable_open_output_path[] = "unable to open output path.\n";
+static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
+static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
+static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
+static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
+static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
+static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
+static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
+static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
+static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
+static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
+static const char err_met_not_specified[] = "met not specified.";
+static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
 
 int sort_by_years(const void *a, const void *b)
 {
@@ -297,7 +297,7 @@ int get_output_path(char *arg, char *param, void *p)
 
 		output_path = param;
 		strcpy(output_file, output_path);
-//		strcat(output_file, LOGFILE);
+		//		strcat(output_file, LOGFILE);
 	}
 
 	return 1;
@@ -452,24 +452,24 @@ int is_valid_met(const char *const input_file)
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {
 	int i = 0,
-	    column = 0,
-	    month = 0,
-	    error_flag = 0,
-	    error,
-	    columns[MET_COLUMNS];
+			column = 0,
+			month = 0,
+			error_flag = 0,
+			error,
+			columns[MET_COLUMNS];
 
 	char year[5],
-	     *filename,
-	     *token = NULL,
-	     *token2 = NULL,
-	     *p,
-	     *p2,
-	     buffer[BUFFER_SIZE] = { 0 };
+	*filename,
+	*token = NULL,
+	*token2 = NULL,
+	*p,
+	*p2,
+	buffer[BUFFER_SIZE] = { 0 };
 
 	FILE *f = NULL;
 
 	YOS *yos = NULL, // mandatory
-	    *yos_no_leak;
+			*yos_no_leak;
 
 	if ( !file ) return NULL;
 
@@ -522,7 +522,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// 2007 is the year
 
 		char *pch,
-		     *tmp_filename;
+		*tmp_filename;
 
 		tmp_filename = (char*)malloc(sizeof(char)*1024);
 		if( !tmp_filename )
@@ -639,225 +639,225 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 					{
 						switch ( i )
 						{
-							case N_DAYS:
-								yos[*yos_count-1].m[month].n_days = convert_string_to_int(token2, &error_flag);
-								if ( error_flag )
-								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
-								}
-								//CONTROL
-								if (yos[*yos_count-1].m[month].n_days > MAXDAYS)
-								{
-                                                                        Log("ERROR IN N_DAYS DATA!!\n");
-								}
-								break;
+						case N_DAYS:
+							yos[*yos_count-1].m[month].n_days = convert_string_to_int(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							//CONTROL
+							if (yos[*yos_count-1].m[month].n_days > MAXDAYS)
+							{
+								Log("ERROR IN N_DAYS DATA!!\n");
+							}
+							break;
 
-							case RG_F: //Rg_f - solar_rad -daily average solar radiation
-								yos[*yos_count-1].m[month].solar_rad = convert_string_to_prec(token2, &error_flag);
-								//for feudozzo data are in KJ
-								//convert KJ to MJ
-								//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
-								if ( error_flag )
+						case RG_F: //Rg_f - solar_rad -daily average solar radiation
+							yos[*yos_count-1].m[month].solar_rad = convert_string_to_prec(token2, &error_flag);
+							//for feudozzo data are in KJ
+							//convert KJ to MJ
+							//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].solar_rad))
+							{
+								Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								Log("Getting previous years values !!\n");
+								yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-2].m[month].solar_rad;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].solar_rad))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].solar_rad))
-								{
-									Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-2].m[month].solar_rad;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].solar_rad))
-									{
-										Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
-									}
-								}
-								//CONTROL
-                                                                if (yos[*yos_count-1].m[month].solar_rad > MAXRG )
-                                                                    {
-                                                                        Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
-                                                                    }
-								//convert daily average solar radiation to monthly solar radiation
-								//m[month].solar_rad *= m[month].n_days;
-								break;
+							}
+							//CONTROL
+							if (yos[*yos_count-1].m[month].solar_rad > MAXRG )
+							{
+								Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
+							}
+							//convert daily average solar radiation to monthly solar radiation
+							//m[month].solar_rad *= m[month].n_days;
+							break;
 
-							case TA_F: //Ta_f -  temperature average
-								yos[*yos_count-1].m[month].tav = convert_string_to_prec(token2, &error_flag);
-								if ( error_flag )
+						case TA_F: //Ta_f -  temperature average
+							yos[*yos_count-1].m[month].tav = convert_string_to_prec(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tav))
+							{
+								Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								Log("Getting previous years values !!\n");
+								yos[*yos_count-1].m[month].tav = yos[*yos_count-2].m[month].tav;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tav))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									Log ("********* TAV -NO DATA- in previous year!!!!\n" );
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tav))
-								{
-									Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].tav = yos[*yos_count-2].m[month].tav;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tav))
-									{
-										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
-									}
-								}
-								//CONTROL
-								if (yos[*yos_count-1].m[month].tav > MAXTAV)
-								{
-								        Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								}
-								break;
+							}
+							//CONTROL
+							if (yos[*yos_count-1].m[month].tav > MAXTAV)
+							{
+								Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+							}
+							break;
 
-							case RH_F: //RH_f - RH
-								yos[*yos_count-1].m[month].rh = convert_string_to_prec(token2, &error_flag);
-								if ( error_flag )
+						case RH_F: //RH_f - RH
+							yos[*yos_count-1].m[month].rh = convert_string_to_prec(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rh))
+							{
+								Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								yos[*yos_count-1].m[month].rh = yos[*yos_count-2].m[month].rh;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rh))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									Log ("********* VPD -NO DATA- in previous year!!!!\n" );
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rh))
-								{
-									Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									yos[*yos_count-1].m[month].rh = yos[*yos_count-2].m[month].rh;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rh))
-									{
-										Log ("********* VPD -NO DATA- in previous year!!!!\n" );
-									}
-								}
-								break;
+							}
+							break;
 
-							case TS_F: // ts_f   Soil temperature
-								yos[*yos_count-1].m[month].ts_f = convert_string_to_prec(token2, &error_flag);
-								if ( error_flag )
+						case TS_F: // ts_f   Soil temperature
+							yos[*yos_count-1].m[month].ts_f = convert_string_to_prec(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ts_f))
+							{
+								//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								yos[*yos_count-1].m[month].ts_f = yos[*yos_count-2].m[month].ts_f;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ts_f))
-								{
-									//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									yos[*yos_count-1].m[month].ts_f = yos[*yos_count-2].m[month].ts_f;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
-									{
-										//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
-									}
-								}
-								break;
+							}
+							break;
 
-							case PRECIP:  //Precip - rain
-								yos[*yos_count-1].m[month].rain = convert_string_to_prec(token2, &error_flag);
-								if ( error_flag )
+						case PRECIP:  //Precip - rain
+							yos[*yos_count-1].m[month].rain = convert_string_to_prec(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rain))
+							{
+								Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								Log("Getting previous years values !!\n");
+								yos[*yos_count-1].m[month].rain = yos[*yos_count-2].m[month].rain;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rain))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
-								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rain))
-								{
-									Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].rain = yos[*yos_count-2].m[month].rain;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rain))
-									{
-										Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+									Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 
-									}
-									//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
 								}
-								/*
+								//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
+							}
+							/*
 								   else
 								   {
 								//convert daily average to monthly rain precipitation
 								yos[*yos_count-1].m[month].rain *= yos[*yos_count-1].m[month].n_days;
 								}
-								 */
-								 //CONTROL
-								 if (yos[*yos_count-1].m[month].rain > MAXPRECIP)
-								 {
-								         Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								 }
-								break;
+							 */
+							//CONTROL
+							if (yos[*yos_count-1].m[month].rain > MAXPRECIP)
+							{
+								Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
+							}
+							break;
 
-							case SWC: //Soil Water Content (%)
-								yos[*yos_count-1].m[month].swc = convert_string_to_prec(token2, &error_flag);
-								if ( error_flag )
+						case SWC: //Soil Water Content (%)
+							yos[*yos_count-1].m[month].swc = convert_string_to_prec(token2, &error_flag);
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].swc))
+							{
+								//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								//Log("Getting previous years values !!\n");
+								yos[*yos_count-1].m[month].swc = yos[*yos_count-2].m[month].swc;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].swc))
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									//Log ("* SWC -NO DATA- in previous year!!!!\n" );
+									yos[*yos_count-1].m[month].swc = NO_DATA;
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].swc))
+							}
+							break;
+						case Lai: //Get LAI in spatial version
+							yos[*yos_count-1].m[month].lai = convert_string_to_prec(token2, &error_flag);
+
+
+							if ( error_flag )
+							{
+								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+								free(yos);
+								fclose(f);
+								return NULL;
+							}
+							//if is not the first year the model get the previous year value
+							if (*yos_count > 1)
+							{
+
+								//control in lai data if is an invalid value
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
 								{
-									//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									//Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].swc = yos[*yos_count-2].m[month].swc;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].swc))
+									yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
 									{
-										//Log ("* SWC -NO DATA- in previous year!!!!\n" );
-										yos[*yos_count-1].m[month].swc = NO_DATA;
+										Log ("* LAI -NO DATA- in previous year!!!!\n" );
+										yos[*yos_count-1].m[month].lai = NO_DATA;
 									}
 								}
-								break;
-                                                        case Lai: //Get LAI in spatial version
-								yos[*yos_count-1].m[month].lai = convert_string_to_prec(token2, &error_flag);
-
-
-								if ( error_flag )
+								//control lai data in spatial version if value is higher than MAXLAI
+								if(yos[*yos_count-1].m[month].lai > MAXLAI)
 								{
-									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-									free(yos);
-									fclose(f);
-									return NULL;
+									Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
 								}
-								//if is not the first year the model get the previous year value
-								if (*yos_count > 1)
+							}
+							//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
+							else
+							{
+								if(yos[*yos_count-1].m[month].lai > MAXLAI)
 								{
-
-									//control in lai data if is an invalid value
-									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
-									{
-											Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-											//Log("Getting previous years values !!\n");
-											yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
-											if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
-											{
-													Log ("* LAI -NO DATA- in previous year!!!!\n" );
-													yos[*yos_count-1].m[month].lai = NO_DATA;
-											}
-									}
-									//control lai data in spatial version if value is higher than MAXLAI
-									if(yos[*yos_count-1].m[month].lai > MAXLAI)
-									{
-											Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
-											Log("Getting previous years values !!\n");
-											yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
-									}
+									//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+									//
+									//
+									//
+									Log("**********First Year without a valid LAI value set to default value LAI\n");
+									yos[*yos_count-1].m[month].lai = DEFAULTLAI;
+									Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
 								}
-								//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
-								else
-								{
-								        if(yos[*yos_count-1].m[month].lai > MAXLAI)
-										{
-												//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
-												//
-												//
-												//
-												Log("**********First Year without a valid LAI value set to default value LAI\n");
-												yos[*yos_count-1].m[month].lai = DEFAULTLAI;
-												Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
-										}
-								}
-								break;
+							}
+							break;
 						}
 					}
 				}
@@ -898,24 +898,24 @@ void met_summary(MET_DATA *met) {
 	for ( i=0; i<MONTHS; i++ )
 	{
 		Log(	"MET DATA - month %02d:\n"
-			"n_days = %d\n"
-			"solar_rad = %g\n"
-			"tav = %g\n"
-			"rh = %g\n"
-			"ts_f = %g\n"
-			"rain = %g\n"
-			"swc = %g\n",
-			"lai = %g\n",
-			i+1,
-			met[i].n_days,
-			met[i].solar_rad,
-			met[i].tav,
-			met[i].rh,
-			met[i].ts_f,
-			met[i].rain,
-			met[i].swc,
-			met[i].lai
-			);
+				"n_days = %d\n"
+				"solar_rad = %g\n"
+				"tav = %g\n"
+				"rh = %g\n"
+				"ts_f = %g\n"
+				"rain = %g\n"
+				"swc = %g\n",
+				"lai = %g\n",
+				i+1,
+				met[i].n_days,
+				met[i].solar_rad,
+				met[i].tav,
+				met[i].rh,
+				met[i].ts_f,
+				met[i].rain,
+				met[i].swc,
+				met[i].lai
+		);
 	}
 }
 
@@ -929,43 +929,43 @@ void met_summary(MET_DATA *met) {
 int main(int argc, char *argv[])
 {
 	int i,
-	    error,
-	    rows_count,
-	    files_founded_count,
-	    files_processed_count,
-	    files_not_processed_count,
-	    total_files_count;
+	error,
+	rows_count,
+	files_founded_count,
+	files_processed_count,
+	files_not_processed_count,
+	total_files_count;
 
 	int years,
-	    month;
+	month;
 
 	YOS *yos;
 	ROW *rows;
 	MATRIX *m;
-//	const ARGUMENT args[] = {
-//		{ "dataset",	get_input_path,		NULL },
-//		{ "site",	get_site_path,		NULL },
-//		{ "met",	get_met_path,		NULL },
-//		{ "output",	get_output_path,	NULL },
-//		{ "outname",	get_output_filename,	NULL },
-//		{ "log",	set_log_file,		NULL },
-//		{ "h",		show_help,		NULL },
-//		{ "?",		show_help,		NULL },
-//		{ "help",	show_help,		NULL },
-//	};
-//
+	//	const ARGUMENT args[] = {
+	//		{ "dataset",	get_input_path,		NULL },
+	//		{ "site",	get_site_path,		NULL },
+	//		{ "met",	get_met_path,		NULL },
+	//		{ "output",	get_output_path,	NULL },
+	//		{ "outname",	get_output_filename,	NULL },
+	//		{ "log",	set_log_file,		NULL },
+	//		{ "h",		show_help,		NULL },
+	//		{ "?",		show_help,		NULL },
+	//		{ "help",	show_help,		NULL },
+	//	};
+	//
 	/* register atexit */
 	if ( -1 == atexit(clean_up) )
 	{
 		puts(err_unable_to_register_atexit);
 		return 1;
 	}
-//
-//	/* parse arguments */
-//	if ( !parse_arguments(argc, argv, args, SIZE_OF_ARRAY(args)) )
-//	{
-//		return 1;
-//	}
+	//
+	//	/* parse arguments */
+	//	if ( !parse_arguments(argc, argv, args, SIZE_OF_ARRAY(args)) )
+	//	{
+	//		return 1;
+	//	}
 
 	// Parsing argumets
 	for(i=1; i<argc; i++)
@@ -973,83 +973,83 @@ int main(int argc, char *argv[])
 		if ( argv[i][0] != '-' ) continue;
 		switch(argv[i][1])
 		{
-			case 'i': // Directory where input files are stored
-				input_dir = malloc(sizeof(*input_dir)*BUFFER_SIZE);
-				if( !input_dir )
-				{
-					fprintf(stderr, "Cannot allocate memory for input_dir.\n");
-					return 1;
-				}
-				bzero(input_dir, BUFFER_SIZE-1);
-				strcpy(input_dir, argv[i+1]);
-				break;
-			case 'o': // Output file name (with path)
-				out_filename = malloc(sizeof(*out_filename)*BUFFER_SIZE);
-				if( !out_filename )
-				{
-					fprintf(stderr, "Cannot allocate memory for out_filename.\n");
-					return 1;
-				}
-				bzero(out_filename, BUFFER_SIZE-1);
-				strcpy(out_filename, argv[i+1]);
-				break;
-			case 'd': // Dataset filename
-				dataset_filename = malloc(sizeof(*dataset_filename)*BUFFER_SIZE);
-				if( !dataset_filename )
-				{
-					fprintf(stderr, "Cannot allocate memory for dataset_filename.\n");
-					return 1;
-				}
-				bzero(dataset_filename, BUFFER_SIZE-1);
-				strcpy(dataset_filename, argv[i+1]);
-				break;
-			case 'm': // Met filename list
-				input_met_path = malloc(sizeof(*input_met_path)*BUFFER_SIZE);
-				if( !input_met_path )
-				{
-					fprintf(stderr, "Cannot allocate memory for input_met_path.\n");
-					return 1;
-				}
-				bzero(input_met_path, BUFFER_SIZE-1);
-				strcpy(input_met_path, argv[i+1]);
-				break;
-			case 's': // Site filename
-				site_path = malloc(sizeof(*site_path)*BUFFER_SIZE);
-				if( !site_path )
-				{
-					fprintf(stderr, "Cannot allocate memory for site_path.\n");
-					return 1;
-				}
-				bzero(site_path, BUFFER_SIZE-1);
-				strcpy(site_path, argv[i+1]);
-				break;
-			case 'r': // Resolution (must be 10 or 100)
-				resolution = malloc(sizeof(*resolution)*BUFFER_SIZE);
-				if( !resolution )
-				{
-					fprintf(stderr, "Cannot allocate memory for resolution.\n");
-					return 1;
-				}
-				bzero(resolution, BUFFER_SIZE-1);
-				strcpy(resolution, argv[i+1]);
-				break;
-			case 'v': // Version (must be 'u' or 's')
-				vers_arg = malloc(sizeof(*vers_arg)*BUFFER_SIZE);
-				if( !vers_arg )
-				{
-					fprintf(stderr, "Cannot allocate memory for version.\n");
-					return 1;
-				}
-				bzero(vers_arg, BUFFER_SIZE-1);
-				strcpy(vers_arg, argv[i+1]);
-				break;
-			case 'h': // Print help
-				usage();
-				break;
-			default:
-				printf("Invalid option (%s)!\n", argv[i]);
-				usage();
+		case 'i': // Directory where input files are stored
+			input_dir = malloc(sizeof(*input_dir)*BUFFER_SIZE);
+			if( !input_dir )
+			{
+				fprintf(stderr, "Cannot allocate memory for input_dir.\n");
 				return 1;
+			}
+			bzero(input_dir, BUFFER_SIZE-1);
+			strcpy(input_dir, argv[i+1]);
+			break;
+		case 'o': // Output file name (with path)
+			out_filename = malloc(sizeof(*out_filename)*BUFFER_SIZE);
+			if( !out_filename )
+			{
+				fprintf(stderr, "Cannot allocate memory for out_filename.\n");
+				return 1;
+			}
+			bzero(out_filename, BUFFER_SIZE-1);
+			strcpy(out_filename, argv[i+1]);
+			break;
+		case 'd': // Dataset filename
+			dataset_filename = malloc(sizeof(*dataset_filename)*BUFFER_SIZE);
+			if( !dataset_filename )
+			{
+				fprintf(stderr, "Cannot allocate memory for dataset_filename.\n");
+				return 1;
+			}
+			bzero(dataset_filename, BUFFER_SIZE-1);
+			strcpy(dataset_filename, argv[i+1]);
+			break;
+		case 'm': // Met filename list
+			input_met_path = malloc(sizeof(*input_met_path)*BUFFER_SIZE);
+			if( !input_met_path )
+			{
+				fprintf(stderr, "Cannot allocate memory for input_met_path.\n");
+				return 1;
+			}
+			bzero(input_met_path, BUFFER_SIZE-1);
+			strcpy(input_met_path, argv[i+1]);
+			break;
+		case 's': // Site filename
+			site_path = malloc(sizeof(*site_path)*BUFFER_SIZE);
+			if( !site_path )
+			{
+				fprintf(stderr, "Cannot allocate memory for site_path.\n");
+				return 1;
+			}
+			bzero(site_path, BUFFER_SIZE-1);
+			strcpy(site_path, argv[i+1]);
+			break;
+		case 'r': // Resolution (must be 10 or 100)
+			resolution = malloc(sizeof(*resolution)*BUFFER_SIZE);
+			if( !resolution )
+			{
+				fprintf(stderr, "Cannot allocate memory for resolution.\n");
+				return 1;
+			}
+			bzero(resolution, BUFFER_SIZE-1);
+			strcpy(resolution, argv[i+1]);
+			break;
+		case 'v': // Version (must be 'u' or 's')
+			vers_arg = malloc(sizeof(*vers_arg)*BUFFER_SIZE);
+			if( !vers_arg )
+			{
+				fprintf(stderr, "Cannot allocate memory for version.\n");
+				return 1;
+			}
+			bzero(vers_arg, BUFFER_SIZE-1);
+			strcpy(vers_arg, argv[i+1]);
+			break;
+		case 'h': // Print help
+			usage();
+			break;
+		default:
+			printf("Invalid option (%s)!\n", argv[i]);
+			usage();
+			return 1;
 		}
 
 	}
@@ -1108,7 +1108,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		char *pch = NULL,
-		     *tmp_input_met_path = NULL;
+				*tmp_input_met_path = NULL;
 
 		tmp_input_met_path = malloc(sizeof(*tmp_input_met_path)*BUFFER_SIZE);
 		if( !tmp_input_met_path )
@@ -1225,53 +1225,53 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-//	/* dataset specified ? */
-//	if ( !input_path )
-//	{
-//		puts(msg_dataset_not_specified);
-//		input_path = program_path;
-//	}
-//
-//	/* output path specified ? */
-//	if ( output_path )
-//	{
-//		/* check if last char is a FOLDER_DELIMITER */
-//		if ( output_path[strlen(output_path)-1] != FOLDER_DELIMITER )
-//		{
-//			printf(err_output_path_no_delimiter, FOLDER_DELIMITER);
-//			return 1;
-//		}
-//
-//		/* check if output path exists */
-//		if ( !path_exists(output_path) )
-//		{
-//			puts(err_unable_open_output_path);
-//			return 1;
-//		}
-//	}
-//	else // if output path is not specified in CMCC launch
-//	{
-//		output_path = malloc(sizeof(*output_path)*BUFFER_SIZE);
-//		output_file = malloc(sizeof(*output_file)*BUFFER_SIZE);
-//
-//		output_path = program_path;
-//		strcpy(output_file, output_path);
-//		strcat(output_file, LOGFILE);
-//	}
-//
-//	if ( !out_filename )
-//	{
-//		printf("No output filename specified!\n");
-//		return 1;
-//	}
-//
-//	/* met path specified ? */
-//	if ( !input_met_path )
-//	{
-//		puts(err_met_not_specified);
-//		return 1;
-//	}
-//
+	//	/* dataset specified ? */
+	//	if ( !input_path )
+	//	{
+	//		puts(msg_dataset_not_specified);
+	//		input_path = program_path;
+	//	}
+	//
+	//	/* output path specified ? */
+	//	if ( output_path )
+	//	{
+	//		/* check if last char is a FOLDER_DELIMITER */
+	//		if ( output_path[strlen(output_path)-1] != FOLDER_DELIMITER )
+	//		{
+	//			printf(err_output_path_no_delimiter, FOLDER_DELIMITER);
+	//			return 1;
+	//		}
+	//
+	//		/* check if output path exists */
+	//		if ( !path_exists(output_path) )
+	//		{
+	//			puts(err_unable_open_output_path);
+	//			return 1;
+	//		}
+	//	}
+	//	else // if output path is not specified in CMCC launch
+	//	{
+	//		output_path = malloc(sizeof(*output_path)*BUFFER_SIZE);
+	//		output_file = malloc(sizeof(*output_file)*BUFFER_SIZE);
+	//
+	//		output_path = program_path;
+	//		strcpy(output_file, output_path);
+	//		strcat(output_file, LOGFILE);
+	//	}
+	//
+	//	if ( !out_filename )
+	//	{
+	//		printf("No output filename specified!\n");
+	//		return 1;
+	//	}
+	//
+	//	/* met path specified ? */
+	//	if ( !input_met_path )
+	//	{
+	//		puts(err_met_not_specified);
+	//		return 1;
+	//	}
+	//
 	if ( !logInit(output_file) )
 	{
 		log_enabled = 0;
@@ -1396,12 +1396,12 @@ int main(int argc, char *argv[])
 
 	/* summary */
 	printf(	msg_summary,
-		total_files_count,
-		total_files_count > 1 ? "s" : "",
-		files_processed_count,
-		files_not_processed_count );
+			total_files_count,
+			total_files_count > 1 ? "s" : "",
+					files_processed_count,
+					files_not_processed_count );
 
-		logClose();
+	logClose();
 
 	// Free memory
 	free(output_file);

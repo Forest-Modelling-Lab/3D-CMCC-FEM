@@ -39,12 +39,12 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	Log("DBHDC effective to apply = %g\n", DBHDCeffective);
 
 
-    if (DBHDCeffective > s->value[DBHDCMAX])
-    {
-        //Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
-        DBHDCeffective = s->value[DBHDCMAX];
-        Log("DBHDC effective applied = %g\n", DBHDCeffective);
-    }
+	if (DBHDCeffective > s->value[DBHDCMAX])
+	{
+		//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
+		DBHDCeffective = s->value[DBHDCMAX];
+		Log("DBHDC effective applied = %g\n", DBHDCeffective);
+	}
 
 
 	/*Crown Diameter using DBH-DC*/
@@ -74,14 +74,14 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	if (s->value[CANOPY_COVER_DBHDC] >= 1)
 	{
-	        Log ("MORTALITY BASED ON HIGH CANOPY COVER!!!\n");
+		Log ("MORTALITY BASED ON HIGH CANOPY COVER!!!\n");
 
-	        //compute average biomass
-                Av_stem_mass = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
-                Log(" Av stem mass = %g tDM/tree\n", Av_stem_mass );
+		//compute average biomass
+		Av_stem_mass = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
+		Log(" Av stem mass = %g tDM/tree\n", Av_stem_mass );
 
-                Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM]) / (float)s->counter[N_TREE];
-                Log(" Av root mass = %g tDM/tree\n", Av_root_mass );
+		Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM]) / (float)s->counter[N_TREE];
+		Log(" Av root mass = %g tDM/tree\n", Av_root_mass );
 
 		oldNtree = s->counter[N_TREE];
 
@@ -98,7 +98,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (Av_root_mass * deadtree);
-        Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
