@@ -658,7 +658,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                         Log("PAR OVER CANOPY = %g \n",  m->cells[cell].par_over_dominant_canopy);
                                         Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
                                         Log("Average Light Asorbed for establishment = %g \n", Light_Absorb_for_establishment);
-                                    }
+
 
                                 }
                             }
