@@ -124,6 +124,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 
+
 	//class level
 	s->value[YEARLY_POINT_GPP_G_C] += s->value[POINT_GPP_g_C];
 	s->value[YEARLY_NPP] += s->value[NPP];
