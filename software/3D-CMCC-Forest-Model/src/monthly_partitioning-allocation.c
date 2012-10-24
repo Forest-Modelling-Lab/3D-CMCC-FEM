@@ -1259,19 +1259,9 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	float Perc_fine;
 	float Perc_coarse;
 	//float Perc_leaves;              //percentage of leaves in first growing season
-
-
 	float oldW;
-
 	float gammaF;
 	float oldWf;
-
-
-
-
-
-
-
 
 	//Log ("S0CTEM  = %g \n", s0Ctem);
 	//Log ("R0CTEM  = %g \n", r0Ctem);
