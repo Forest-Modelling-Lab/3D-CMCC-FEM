@@ -13,7 +13,7 @@ INITIALLITTER "2" //Initial Litter
 SWCONST "1" //Moisture ratio deficit for fq = 0.5
 // SW constants are 0.7 for sand,0.6 for sandy-loam, 0.5 for clay-loam, 0.4 for clay
 SWPOWER "5" //Power of moisture ratio deficit
-// Powers in the eqn for SW modifiers are 9 for sand, 7 for sandy-loam, 5 for clay-loam and 3 for clay
+// Powers in the equation for SW modifiers are 9 for sand, 7 for sandy-loam, 5 for clay-loam and 3 for clay
 MAXASW "350" //Maximum Available soil water in mm
 MINASW "0.0"
 

@@ -188,6 +188,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
+		Log("********MAX available soil W = %g \n",site->maxAsw);
+		Log("********MAX available soil W = %g \n",site->maxAsw);
+
 		//control
 		if (m->cells[cell].available_soil_water > site->maxAsw)
 		{
@@ -348,8 +351,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						Log("- ASW layer %d month %d  = %g mm\n",  m->cells[cell].heights[height].z, month + 1, m->cells[cell].available_soil_water);
 
-						/*modifiers*/
-						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].soil_moist_ratio, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
+
 
 
 						//Log("- Dominance = %d\n", m->cells[cell].heights[height].dominance);
@@ -412,6 +414,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 						}
+
+						/*modifiers*/
+						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].soil_moist_ratio, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
 
 
 
