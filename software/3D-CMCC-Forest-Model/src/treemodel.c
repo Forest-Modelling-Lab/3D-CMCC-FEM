@@ -446,13 +446,22 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
-							if ( version == 's' && met[month].lai > 0.1)
+							if ( version == 's')
 							{
-								Veg_UnVeg = 1;
-							}
-							else
-							{
-								Veg_UnVeg = 0;
+								//compute peak lai only for biomass foliage partitioning
+								if (month == 0)
+								{
+									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
+								}
+
+								if ( met[month].lai > 0.1)
+								{
+									Veg_UnVeg = 1;
+								}
+								else
+								{
+									Veg_UnVeg = 0;
+								}
 							}
 
 							if (Veg_UnVeg == 1)    //vegetative period for deciduous
@@ -653,7 +662,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
 
-								//M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
+								M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, version);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -677,7 +686,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//Productivity
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
 
-								//M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
+								M_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, version);
 
 								//m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 								Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].lai);

@@ -62,7 +62,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Optimum GPP (alpha max * apar) = %g molC/m^2 month\n", Optimum_GPP);
 
 		Optimum_GPP_gC = Optimum_GPP * GC_MOL;
-		Log("Monthly Optimum GPP in grammes of C for this layer = %g gC/m^2 month\n", Optimum_GPP_gC );
+		Log("Monthly Optimum GPP in grams of C for this layer = %g gC/m^2 month\n", Optimum_GPP_gC );
 
 
 		//Monthly GPP in mol of Carbon
@@ -76,20 +76,20 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		//DailyGPPmolC = GPPmolC / DaysInMonth;
 		//Log("Daily GPP in mols of C for this layer = %g molC/m^2 day\n", DailyGPPmolC);
 
-		//Monthy layer GPP in grammes of C/m^2
-		//Convert molC into grammes
+		//Monthy layer GPP in grams of C/m^2
+		//Convert molC into grams
 		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		Log("Monthly GPP in grammes of C for layer %d = %g \n", z , s->value[POINT_GPP_g_C] );
+		Log("Monthly GPP in grams of C for layer %d = %g \n", z , s->value[POINT_GPP_g_C] );
 
 		//Yearly_GPP +=  GPPgC;
 		//Log("Yearly Cumulated GPP  = %g gC/m^2\n",  Yearly_GPP);
 
 
 		DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
-		Log("Daily GPP in grammes of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+		Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
 
 
-		//Monthly Stand (area covered by canopy) GPP in grammes of C
+		//Monthly Stand (area covered by canopy) GPP in grams of C
 		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C]  * (sizeCell * s->value[CANOPY_COVER_DBHDC]);
 		//Log("CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
 		Log("Monthly  Stand GPP = %g gC/ha covered month\n", s->value[GPP_g_C]);

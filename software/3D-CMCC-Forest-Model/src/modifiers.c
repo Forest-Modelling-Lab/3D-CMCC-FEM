@@ -113,7 +113,7 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
 
 	/*SOIL NUTRIENT MODIFIER*/
 	//rev 16 May 2012
-	Log("Soil Nitrogen Content = %g g m^-2 \n", site->sN);
+	//Log("Soil Nitrogen Content = %g g m^-2 \n", site->sN);
 
 
 	/*SOIL WATER MODIFIER*/
