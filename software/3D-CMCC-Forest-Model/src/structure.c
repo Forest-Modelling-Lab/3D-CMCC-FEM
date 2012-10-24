@@ -81,7 +81,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 					c->heights[height].z = 1;
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
 					c->density_dominant = c->tree_number_dominant / sizeCell;
-					Log("Tree number in layer %d = %d \n",c->heights[height].z,  c->tree_number_dominant);
+					Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
 
 				}
 				else
@@ -150,7 +150,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 	}
-
 	Log("Number of adult height classes in layer 2 = %d\n", c->height_class_in_layer_dominant_counter);
 	Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominated_counter);
 	Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_subdominated_counter);
@@ -158,7 +157,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 	Log("Tree number in layer 2 = %d \n", c->tree_number_dominant);
 	Log("Tree number in layer 1 = %d \n", c->tree_number_dominated);
 	Log("Tree number in layer 0 = %d \n", c->tree_number_subdominated);
-
 
 	Log("Density in layer 2 = %g trees/ha\n", c->density_dominant);
 	Log("Density in layer 1 = %g trees/ha\n", c->density_dominated);
@@ -484,14 +482,12 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 						{
 
 							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
-							Log ("Lai from NDVI = %g \n", met[month].lai);
 							Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
 						}
 						//unveg period
 						else
 						{
 							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
-							Log ("Lai from NDVI = %g \n", met[month].lai);
 							Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
 
 						}

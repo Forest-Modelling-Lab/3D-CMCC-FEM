@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, int month, float daylength, int DaysInMonth, float vpd, float Net_Radiation, char version)
+float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, int month, float daylength, int DaysInMonth, float vpd, float Net_Radiation)
 {
 	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
@@ -28,15 +28,7 @@ float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, in
 	//Lai is different among layers so CanCond is different
 	//Log("Lai for Can Cond = %g\n", s->value[LAI]);
 
-
-	if (version == 's')
-	{
-		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].lai / s->value[LAIGCX]);
-	}
-	else
-	{
-		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
-	}
+	CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].lai / s->value[LAIGCX]);
 
 	//Log("Canopy Conductance  = %g\n", CanCond);
 

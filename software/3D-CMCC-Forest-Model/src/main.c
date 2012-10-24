@@ -30,7 +30,6 @@ enum {	MONTH = 0,
 
 	MET_COLUMNS };
 
-
 //For Daylength computing
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
 
@@ -42,16 +41,16 @@ const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", 
 
 /* global variables */
 char *program_path		=	NULL,	// mandatory
-		*input_dir			=	NULL,	// mandatory
-		*input_path		=	NULL,	// mandatory
-		*dataset_filename	=	NULL,	// mandatory
-		*input_met_path	=	NULL,	// mandatory
-		*site_path			=	NULL,	// mandatory
-		*output_path		=	NULL,	// mandatory
-		*out_filename		=	NULL,	// mandatory
-		*output_file		= 	NULL,	// mandatory
-		*resolution		= 	NULL;	// mandatory
-*vers_arg			= 	NULL;	// mandatory
+	 *input_dir			=	NULL,	// mandatory
+	 *input_path		=	NULL,	// mandatory
+	 *dataset_filename	=	NULL,	// mandatory
+	 *input_met_path	=	NULL,	// mandatory
+	 *site_path			=	NULL,	// mandatory
+	 *output_path		=	NULL,	// mandatory
+	 *out_filename		=	NULL,	// mandatory
+	 *output_file		= 	NULL,	// mandatory
+	 *resolution		= 	NULL,	// mandatory
+	 *vers_arg			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
 		years_of_simulation	=	0;	// default is none

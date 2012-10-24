@@ -816,11 +816,11 @@ extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const);
 extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, float, float);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
-extern void M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, char);
+extern void M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall (HEIGHT *, float, const int, const int, int);
-extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float, char);
-extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int, char);
+extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float);
+extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern float Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, int, float, float, int, float);
 extern void Get_initial_month_lai (SPECIES *const s);
 extern void Get_end_month_lai (SPECIES *const );
@@ -832,7 +832,7 @@ extern void Get_Light_Recruitment (SPECIES *const, float, float);
 
 
 
-extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, char);
+extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int, int);
 extern void Get_biomass_increment ( SPECIES *const, int, int, float, float);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
