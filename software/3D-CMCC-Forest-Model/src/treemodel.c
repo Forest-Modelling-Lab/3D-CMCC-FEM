@@ -189,7 +189,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		}
 
 		Log("********MAX available soil W = %g \n",site->maxAsw);
-		Log("********MAX available soil W = %g \n",site->maxAsw);
+		Log("********MAX available soil W = %g \n",site->minAsw);
 
 		//control
 		if (m->cells[cell].available_soil_water > site->maxAsw)

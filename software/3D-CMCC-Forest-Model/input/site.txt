@@ -1,27 +1,25 @@
-SITENAME " Parco dei Monti Sibillini" //Site Name
+SITENAME "Feudozzo (AQ) - Italy" //Site Name
 
-LAT "42.901" //Site Latitude 
-LONG "13.205" //Site Longitude 
+LAT "41.47" //Site Latitude for Feudozzo
+LONG "14.10" //Site Longitude for Feudozzo
 
-INITIALAVAILABLESOILWATER "40" //Initial Available soil water in mm
+INITIALAVAILABLESOILWATER "300" //Initial Available soil water in mm
 
 CO2CONC "387.0" //CO2 concentration
 
 INITIALLITTER "2" //Initial Litter
 
-//SOIL WATER
-SWCONST "1" //Moisture ratio deficit for fq = 0.5
-// SW constants are 0.7 for sand,0.6 for sandy-loam, 0.5 for clay-loam, 0.4 for clay
-SWPOWER "5" //Power of moisture ratio deficit
-// Powers in the equation for SW modifiers are 9 for sand, 7 for sandy-loam, 5 for clay-loam and 3 for clay
-MAXASW "350" //Maximum Available soil water in mm
-MINASW "0.0"
+
+MAXASW "300" //Maximum Available soil water in mm
+MINASW "0.0" It should be the 10% of the maxasw
 
 //SITE NUTRITION
-FR "0.42" //Fertility rating as seen in KEI
+FR "0.8" //Fertility rating
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
+
+SN "1.76"	//Soil Mineral Nitrogen Content gN/m^2
 
 //MANAGMENT
 CUTTREE "100" //Cutted Trees for Pixel
