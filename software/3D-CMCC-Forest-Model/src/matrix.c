@@ -586,10 +586,10 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 
 	Log ("RUN DATASET\n");
 
-	if(sizeCell == 100)   resol = 10;
-	if(sizeCell == 10000) resol = 100;
+	//cell MUST be squares
+	resol = sqrt (sizeCell);
 		
-	Log ("Cell resolution = %dx%d = %d m^2\n", resol, resol, sizeCell);
+	Log ("Cell resolution = %d x %d = %d m^2\n", resol, resol, sizeCell);
 
 	if (version == 's')
 	{
