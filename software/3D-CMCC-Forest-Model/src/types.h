@@ -816,7 +816,7 @@ extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const);
 extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, float, float);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
-extern void M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, char);
+extern void M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall (HEIGHT *, float, const int, const int, int);
 extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float);
