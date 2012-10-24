@@ -1174,13 +1174,13 @@ int main(int argc, char *argv[])
 		strcpy(resolution, tmp);
 		sizeCell = atoi(resolution);
 
-		/*
-		if( (sizeCell != 10) && (sizeCell != 100) )
+
+		if( (sizeCell < 10) || (sizeCell > 100) )
 		{
-			fprintf(stderr, "Error: resolution of the point must be 10 or 100!\n");
+			fprintf(stderr, "Error: resolution of the point must be included 10 or 100 meters!\n");
 			exit(2);
 		}
-		*/
+
 
 		// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
 		// 100   for pixels of 10x10   meters resolutionsu

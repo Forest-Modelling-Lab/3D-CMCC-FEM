@@ -723,8 +723,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							}
 						}
+						//evergreen
 						else
-							//evergreen
 						{
 							Log("NO RUN FOR EVERGREEN\n");
 						}
