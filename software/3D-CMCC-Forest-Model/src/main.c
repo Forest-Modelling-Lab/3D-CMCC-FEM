@@ -951,9 +951,6 @@ void met_summary(MET_DATA *met) {
 
 int main(int argc, char *argv[])
 {
-	printf("Prima.\n");
-	printf("Dopo.\n");
-
 	int i,
 	error,
 	rows_count,
