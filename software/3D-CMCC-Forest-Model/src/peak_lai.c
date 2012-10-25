@@ -120,7 +120,7 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 	Log("Crown Area for Kostner = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 	s->value[PEAK_Y_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
-	Log("year %d PEAK LAI from Kostner = %g \n",years, s->value[PEAK_Y_LAI]);
+	Log("year %d PEAK LAI from Kostner = %g m^2 m^-2\n",years, s->value[PEAK_Y_LAI]);
 
 
 	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * sizeCell))/ s->value[SLAmkg]) / 1000;
