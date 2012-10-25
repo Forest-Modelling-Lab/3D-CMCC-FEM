@@ -11,7 +11,7 @@ INITIALLITTER "2" //Initial Litter
 
 
 MAXASW "300" //Maximum Available soil water in mm
-MINASW "0.0" It should be the 10% of the maxasw
+MINASW "0.0" //It should be the 10% of the maxasw
 
 //SITE NUTRITION
 FR "0.8" //Fertility rating
