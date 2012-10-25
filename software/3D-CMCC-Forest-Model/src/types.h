@@ -720,23 +720,19 @@ typedef struct {
 int sizeCell;
 char version;
 
+/*
 //LAYER LIMIT
 #define DOMINANT                   15
 #define DOMINATED                   5
 #define SUBDOMINAED                 1
 
-
 //LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
 #define MAX_LAYER_COVER	           1
-
-
 
 //AGE LIMIT
 #define ADULT_AGE                   5     //year limit at which consider trees adult
 
 //#define YEARSOFSIMULATION        6//years of simulation
-
-
 
 //INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 #define AVDBH_SAPLING              0.5
@@ -766,6 +762,7 @@ char version;
 #define MAXTAV 40
 #define MAXVPD 40
 #define MAXPRECIP 500
+*/
 
 
 /*from LPJ_Guess*/
