@@ -564,7 +564,7 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 				else
 				{
 					if (c->heights_count >= 3 )//3 heights classes or more
-							{
+					{
 						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
 						{
 							//DOMINANT
@@ -585,7 +585,7 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 						{
 							Log("No species in veg period \n");
 						}
-							}
+					}
 					else //2 height classes
 					{
 						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
@@ -732,20 +732,20 @@ extern void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const 
 
 					if((met[month].tav >= heights[height].ages[age].species[species].value[GROWTHSTART] && month < JULY) || (met[month].tav >=heights[height].ages[age].species[species].value[GROWTHEND] && month >= JULY))
 						//vegetative period for deciduous
-						{
-							c->Veg_Counter += 1 ;
+					{
+						c->Veg_Counter += 1 ;
 
-							if (!stop || top_layer == z)
-							{
-								heights[height].dominance = 1;
-								stop = 1;
-								top_layer = z;
-								Light_codominance += 1;
-								//Log("Height = %g m \n", heights[height].value);
-								//Log("dominance = %d\n", heights[height].dominance);
-								//Log("TOP _LAYER = %d\n", top_layer);
-							}
+						if (!stop || top_layer == z)
+						{
+							heights[height].dominance = 1;
+							stop = 1;
+							top_layer = z;
+							Light_codominance += 1;
+							//Log("Height = %g m \n", heights[height].value);
+							//Log("dominance = %d\n", heights[height].dominance);
+							//Log("TOP _LAYER = %d\n", top_layer);
 						}
+					}
 					else
 					{
 						heights[height].dominance = -1;
@@ -859,17 +859,25 @@ extern void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const 
 	Log("-Number of Height Class in vegetative period = %d\n", c->Veg_Counter);
 	if (c->Veg_Counter != 0)
 	{
-		if (count >= 3)
+		if (count == 1)
 		{
 			Log("-Number of Height Class in vegetative period in Dominant Layer = %d\n", dominant_veg_counter);
-			Log("-Number of Height Class in vegetative period in Dominated Layer = %d\n", dominated_veg_counter);
-			Log("-Number of Height Class in vegetative period in Subdominated Layer = %d\n", subdominated_veg_counter);
 		}
 		else
 		{
-			Log("-Number of Height Class in vegetative period in Dominant Layer = %d\n", dominant_veg_counter);
-			Log("-Number of Height Class in vegetative period in Dominated Layer = %d\n", dominated_veg_counter);
+			if (count >= 3)
+			{
+				Log("-Number of Height Class in vegetative period in Dominant Layer = %d\n", dominant_veg_counter);
+				Log("-Number of Height Class in vegetative period in Dominated Layer = %d\n", dominated_veg_counter);
+				Log("-Number of Height Class in vegetative period in Subdominated Layer = %d\n", subdominated_veg_counter);
+			}
+			else
+			{
+				Log("-Number of Height Class in vegetative period in Dominant Layer = %d\n", dominant_veg_counter);
+				Log("-Number of Height Class in vegetative period in Dominated Layer = %d\n", dominated_veg_counter);
+			}
 		}
+
 
 
 		/*compute number of layers*/
