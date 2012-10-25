@@ -80,9 +80,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 					c->height_class_in_layer_dominant_counter = 1;
 					c->heights[height].z = 1;
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-					c->density_dominant = c->tree_number_dominant / sizeCell;
-					Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
-
+					c->density_dominant = c->tree_number_dominant / (float)sizeCell;
 				}
 				else
 				{
@@ -150,17 +148,35 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 	}
-	Log("Number of adult height classes in layer 2 = %d\n", c->height_class_in_layer_dominant_counter);
-	Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominated_counter);
-	Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_subdominated_counter);
 
-	Log("Tree number in layer 2 = %d \n", c->tree_number_dominant);
-	Log("Tree number in layer 1 = %d \n", c->tree_number_dominated);
-	Log("Tree number in layer 0 = %d \n", c->tree_number_subdominated);
+	if (c->heights_count == 1)
+	{
+		Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominant_counter);
+		Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
+		Log("Density in layer 1 = %g trees/ha\n", c->density_dominant);
+	}
+	if (c->heights_count == 2)
+	{
+		Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominant_counter);
+		Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominated_counter);
+		Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
+		Log("Tree number in layer 0 = %d \n", c->tree_number_dominated);
+		Log("Density in layer 1 = %g trees/ha\n", c->density_dominant);
+		Log("Density in layer 0 = %g trees/ha\n", c->density_dominated);
+	}
+	if (c->heights_count > 2)
+	{
+		Log("Number of adult height classes in layer 2 = %d\n", c->height_class_in_layer_dominant_counter);
+		Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominated_counter);
+		Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_subdominated_counter);
+		Log("Tree number in layer 2 = %d \n", c->tree_number_dominant);
+		Log("Tree number in layer 1 = %d \n", c->tree_number_dominated);
+		Log("Tree number in layer 0 = %d \n", c->tree_number_subdominated);
+		Log("Density in layer 2 = %g trees/ha\n", c->density_dominant);
+		Log("Density in layer 1 = %g trees/ha\n", c->density_dominated);
+		Log("Density in layer 0 = %g trees/ha\n", c->density_subdominated);
+	}
 
-	Log("Density in layer 2 = %g trees/ha\n", c->density_dominant);
-	Log("Density in layer 1 = %g trees/ha\n", c->density_dominated);
-	Log("Density in layer 0 = %g trees/ha\n", c->density_subdominated);
 
 	height = 0;
 
@@ -256,8 +272,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 				c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / sizeCell;
 
-
-
 			}
 		}
 	}
@@ -322,9 +336,23 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 			}
 		}
 	}
-	Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-	Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-	Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+
+	if (c->heights_count == 1)
+	{
+		Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+	}
+	if (c->heights_count == 2)
+	{
+		Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+	}
+	if (c->heights_count > 2)
+	{
+		Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+	}
+
 
 	//the model makes die trees of the lower height class for that layer because
 	//it passes throught the function sort_by_height_desc the height classes starting from the lowest
@@ -579,9 +607,21 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 			}
 		}
 	}
-	Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-	Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-	Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+	if (c->heights_count == 1)
+	{
+		Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+	}
+	if (c->heights_count == 2)
+	{
+		Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+	}
+	if (c->heights_count > 2)
+	{
+		Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+	}
 	Log("*************************************************** \n");
 
 }

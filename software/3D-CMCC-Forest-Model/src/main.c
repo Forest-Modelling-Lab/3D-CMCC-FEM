@@ -69,7 +69,7 @@ static char copyright[] =
 		"This version of 3D-CMCC Forest Model has been developed by:\n"
 		"Alessio Collalti [a.collalti@unitus.it - alessiocollalti@hotmail.com],\n"
 		"Alessio Ribeca.\n"
-		"euroMediterranean Center for Climate Changes (CMCC),\n"
+		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFENT division,\n"
 		"Via A. Pacinotti 5, 01100 - Viterbo, Italy,\n"
 		"and University of Tuscia ,\n"
