@@ -16,7 +16,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//CTEM VERSION
 
 	Log("Carbon allocation routine for deciduous\n");
-	Log("version = %c \n", version);
+	Log("Version = %c \n", settings->version);
 
 
 
@@ -82,9 +82,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-	if (version == 'u')
+	if (settings->version == 'u')
 	{
-		Log("UNspatial version \n");
+		Log("Unspatial version \n");
 
 		if (Veg_UnVeg == 1)
 		{
@@ -235,7 +235,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
 
 					//recompute LAI
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
 					Log("++Lai = %g\n", s->value[LAI]);
 
 				}
@@ -317,7 +317,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 						//recompute LAI
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
 						Log("++Lai = %g\n", s->value[LAI]);
 
 
@@ -647,7 +647,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			}
 		}
 	}
-	if (version == 's')
+	if (settings->version == 's')
 	{
 		Log("Spatial version \n");
 
@@ -808,7 +808,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
 
 					//recompute LAI
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
 					Log("MODEL-Lai = %g\n", s->value[LAI]);
 
 				}
@@ -890,7 +890,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 						//recompute LAI
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * sizeCell) * s->value[SLAmkg];
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
 						Log("MODEL-Lai = %g\n", s->value[LAI]);
 
 
@@ -1230,7 +1230,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//CTEM VERSION
 
 	Log("Carbon allocation routine for evergreen\n");
-	Log("version = %c \n", version);
+	Log("Version = %c \n", settings->version);
 
 
 
@@ -1293,9 +1293,9 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-	if (version == 'u')
+	if (settings->version == 'u')
 	{
-		Log("UNspatial version \n");
+		Log("Unspatial version \n");
 
 		if (Veg_UnVeg == 1)
 		{
@@ -1398,7 +1398,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 		}
 	}
-	if (version == 's')
+	if (settings->version == 's')
 	{
 		Log("Spatial version \n");
 

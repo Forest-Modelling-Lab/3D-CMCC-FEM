@@ -147,7 +147,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month, version);
+		Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 	}
 
 	//*************************************************
@@ -211,7 +211,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Log("YEAR SIMULATED = %d (%d)\n", years + 1, yos[years].year );
 		Log("MONTH SIMULATED = %s\n", szMonth[month]);
 
-		Print_met_data (met, vpd,  month,  m->cells[cell].daylength, version);
+		Print_met_data (met, vpd,  month,  m->cells[cell].daylength);
 
 		//for each month of simulation the model recomputes the number of classes in veg period
 		m->cells[cell].dominant_veg_counter = 0;
@@ -269,7 +269,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 					}
 				}
 				/*Set Tree period*/
-				if ( m->cells[cell].heights[height].ages[age].value >= ADULT_AGE)
+				if ( m->cells[cell].heights[height].ages[age].value >= settings->adult_age)
 				{
 					if ( m->cells[cell].heights[height].ages[age].period == 1)
 					{
@@ -289,7 +289,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 				}
 
 				/*Loop for adult trees*/
-				if (m->cells[cell].heights[height].ages[age].value >= ADULT_AGE)
+				if (m->cells[cell].heights[height].ages[age].value >= settings->adult_age)
 				{
 					//loop on each species
 					for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
@@ -341,7 +341,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 						Log("- Height = %g m\n", m->cells[cell].heights[height].value);
 						Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
-						if (version == 's')
+						if (settings->version == 's')
 						{
 							Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].lai);
 						}
@@ -362,7 +362,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 							//reset only in unspatial version
-							if (version == 'u')
+							if (settings->version == 'u')
 							{
 								//reset foliage biomass for deciduous
 								if ( m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
@@ -402,7 +402,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//Log("Age = %d years\n", m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE] );
 							//Log("+ Lai = %g\n",       m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 							Log("+ AvDBH = %g cm\n",  m->cells[cell].heights[height].ages[age].species[species].value[AVDBH]);
-							if (version == 'u')
+							if (settings->version == 'u')
 							{
 								Log("+ Wf = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
 							}
@@ -427,7 +427,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							//PEAK LAI
 							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
-							if (version == 'u')
+							if (settings->version == 'u')
 							{
 								//31 May 2012
 								if (month == 0)
@@ -446,7 +446,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
-							if ( version == 's')
+							if ( settings->version == 's')
 							{
 								//compute peak lai only for biomass foliage partitioning
 								if (month == 0)
@@ -1514,13 +1514,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
                                 //SET VALUES
                                 m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE_SAP] = 0;
-                                m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP] = LAI_SAPLING;
+                                m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP] = settings->lai_sapling;
                                 //m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP] = AVDBH_SAPLING;
-                                m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAP] = HEIGHT_SAPLING;
-                                m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP] = WF_SAPLING * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP] = WR_SAPLING * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP] = WS_SAPLING * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP] = settings->avdbh_sapling;
+                                m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAP] = settings->height_sapling;
+                                m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP] = settings->wf_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP] = settings->wr_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP] = settings->ws_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
 
 
 
@@ -1612,7 +1612,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 Log("*****************************\n");
                                 Log("*****************************\n");
                             }
-                            if (m->cells[cell].heights[height].ages[age].value == ADULT_AGE)
+                            if (m->cells[cell].heights[height].ages[age].value == settings->adult_age)
                             {
                                 Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
@@ -1654,7 +1654,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 						if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
 						{
-							if ( Light_for_establishment < LIGHT_ESTAB_VERY_TOLERANT)
+							if ( Light_for_establishment < settings->light_estab_very_tolerant)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 								Log("NO Light for Establishment\n");
@@ -1662,7 +1662,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
 						{
-							if ( Light_for_establishment < LIGHT_ESTAB_TOLERANT)
+							if ( Light_for_establishment < settings->light_estab_tolerant)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 								Log("NO Light for Establishment\n");
@@ -1670,7 +1670,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
 						{
-							if ( Light_for_establishment < LIGHT_ESTAB_INTERMEDIATE)
+							if ( Light_for_establishment < settings->light_estab_intermediate)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 								Log("NO Light for Establishment\n");
@@ -1678,7 +1678,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						else
 						{
-							if ( Light_for_establishment < LIGHT_ESTAB_INTOLERANT)
+							if ( Light_for_establishment < settings->light_estab_intolerant)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 								Log("NO Light for Establishment\n");
@@ -1687,7 +1687,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 						/*
-                        if (m->cells[cell].heights[height].ages[age].value == ADULT_AGE)
+                        if (m->cells[cell].heights[height].ages[age].value == settings->adult_age)
                         {
                         Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 

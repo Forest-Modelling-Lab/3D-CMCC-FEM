@@ -49,8 +49,9 @@ char *program_path		=	NULL,	// mandatory
 	 *output_path		=	NULL,	// mandatory
 	 *out_filename		=	NULL,	// mandatory
 	 *output_file		= 	NULL,	// mandatory
-	 *resolution		= 	NULL,	// mandatory
-	 *vers_arg			= 	NULL;	// mandatory
+	 *settings_path		=	NULL;	// mandatory
+	 //*resolution		= 	NULL,	// mandatory
+	 //*vers_arg			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
 		years_of_simulation	=	0;	// default is none
@@ -112,6 +113,7 @@ static const char msg_dataset_not_specified[] =
 		"\n";
 static const char msg_dataset_path[]	=	"dataset path = %s\n";
 static const char msg_site_path[]		=	"site path = %s\n";
+static const char msg_settings_path[]	=	"settings path = %s\n";
 static const char msg_output_path[]		=	"output path = %s\n";
 static const char msg_output_file[]		=	"output file = %s\n\n";
 static const char msg_processing[]		=	"processing %s...\n";
@@ -128,6 +130,7 @@ static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
 		"    -output=path where result files are created\n"
 		"    -outname=output filename\n"
 		"    -site=site filename\n"
+		"    -settings=settings filename\n"
 		"    -log -> enable log to file\n";
 
 /* error messages */
@@ -141,7 +144,8 @@ static const char err_output_path_no_delimiter[] = "output path must end with a 
 static const char err_unable_open_output_path[] = "unable to open output path.\n";
 static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
 static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
-static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
+static const char err_settings_already_specified[] = "settings already specified (%s)! \"%s\" skipped.\n";
+//static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
 static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
 static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
 static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
@@ -217,7 +221,27 @@ int get_site_path(char *arg, char *param, void *p) {
 	return 1;
 }
 
-int get_resolution(char *arg, char *param, void *p) {
+int get_settings_path(char *arg, char *param, void *p) {
+	if ( !param )
+	{
+		printf(err_arg_needs_param, arg);
+		return 0;
+	}
+
+	if ( settings_path )
+	{
+		printf(err_settings_already_specified, settings_path, param);
+	}
+	else
+	{
+		settings_path = param;
+	}
+
+	/* ok */
+	return 1;
+}
+
+/*int get_resolution(char *arg, char *param, void *p) {
 	if ( !param )
 	{
 		printf(err_arg_needs_param, arg);
@@ -233,7 +257,7 @@ int get_resolution(char *arg, char *param, void *p) {
 		resolution = param;
 	}
 
-	/* ok */
+	// ok
 	return 1;
 }
 
@@ -253,9 +277,9 @@ int get_version(char *arg, char *param, void *p) {
 		vers_arg = param;
 	}
 
-	/* ok */
+	// ok
 	return 1;
-}
+}*/
 
 /* */
 int get_met_path(char *arg, char *param, void *p)
@@ -406,19 +430,18 @@ int show_help(char *arg, char *param, void *p)
 void usage(void)
 {
 	fprintf(stderr, "\nUsage:\n");
-	fprintf(stderr, "\t./3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME [-h]\n");
+	fprintf(stderr, "\t./3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-h]\n");
 	fprintf(stderr, "\nMandatory options:\n");
 	fprintf(stderr, "\t-i\tinput directory\t\t\t\t\t(i.e.: -i /path/to/input/directory/)\n");
 	fprintf(stderr, "\t-o\toutput filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
 	fprintf(stderr, "\t-d\tdataset filename stored into input directory\t(i.e.: -d input.txt)\n");
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
 	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
-	fprintf(stderr, "\t-r\tresolution of point to process: must be 10 or 100 to indicate cells of 10x10 or 100x100 meters\t(i.e.: -r 10)\n");
-	fprintf(stderr, "\t-r\tversion of processing: must be 's' or 'u' for spatial or unspatial execution\t(i.e.: -v s)\n");
+	fprintf(stderr, "\t-s\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
 	fprintf(stderr, "\nOptional options:\n");
 	fprintf(stderr, "\t-h\tprint this help\n");
 	fprintf(stderr, "\nLaunch example:\n");
-	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -d /path/to/input.txt -m /path/to/1999.txt,/path/to/2003.txt,/path/to/2009.txt -s /path/to/site.txt -r 10\n");
+	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -d /path/to/input.txt -m /path/to/1999.txt,/path/to/2003.txt,/path/to/2009.txt -s /path/to/site.txt -c /path/to/settings.txt\n");
 	exit(1);
 }
 
@@ -649,7 +672,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								return NULL;
 							}
 							//CONTROL
-							if (yos[*yos_count-1].m[month].n_days > MAXDAYS)
+							if (yos[*yos_count-1].m[month].n_days > (int)settings->maxdays)
 							{
 								Log("ERROR IN N_DAYS DATA!!\n");
 							}
@@ -678,7 +701,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 							}
 							//CONTROL
-							if (yos[*yos_count-1].m[month].solar_rad > MAXRG )
+							if (yos[*yos_count-1].m[month].solar_rad > settings->maxrg )
 							{
 								Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
 							}
@@ -706,7 +729,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 							}
 							//CONTROL
-							if (yos[*yos_count-1].m[month].tav > MAXTAV)
+							if (yos[*yos_count-1].m[month].tav > settings->maxtav)
 							{
 								Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 							}
@@ -781,7 +804,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 							 */
 							//CONTROL
-							if (yos[*yos_count-1].m[month].rain > MAXPRECIP)
+							if (yos[*yos_count-1].m[month].rain > settings->maxprecip)
 							{
 								Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
 							}
@@ -836,7 +859,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 								}
 								//control lai data in spatial version if value is higher than MAXLAI
-								if(yos[*yos_count-1].m[month].lai > MAXLAI)
+								if(yos[*yos_count-1].m[month].lai > settings->maxlai)
 								{
 									Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
 									Log("Getting previous years values !!\n");
@@ -846,15 +869,15 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
 							else
 							{
-								if(yos[*yos_count-1].m[month].lai > MAXLAI)
+								if(yos[*yos_count-1].m[month].lai > settings->maxlai)
 								{
 									//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
 									//
 									//
 									//
 									Log("**********First Year without a valid LAI value set to default value LAI\n");
-									yos[*yos_count-1].m[month].lai = DEFAULTLAI;
-									Log("**DEFAULT LAI VALUE SET TO %d\n", DEFAULTLAI);
+									yos[*yos_count-1].m[month].lai = settings->defaultlai;
+									Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
 								}
 							}
 							break;
@@ -928,6 +951,9 @@ void met_summary(MET_DATA *met) {
 
 int main(int argc, char *argv[])
 {
+	printf("Prima.\n");
+	printf("Dopo.\n");
+
 	int i,
 	error,
 	rows_count,
@@ -1023,7 +1049,17 @@ int main(int argc, char *argv[])
 			bzero(site_path, BUFFER_SIZE-1);
 			strcpy(site_path, argv[i+1]);
 			break;
-		case 'r': // Resolution (must be 10 or 100)
+		case 'c': // Settings filename
+			settings_path = malloc(sizeof(*settings_path)*BUFFER_SIZE);
+			if( !settings_path )
+			{
+				fprintf(stderr, "Cannot allocate memory for settings_path.\n");
+				return 1;
+			}
+			bzero(settings_path, BUFFER_SIZE-1);
+			strcpy(settings_path, argv[i+1]);
+			break;
+		/*case 'r': // Resolution (must be 10 or 100)
 			resolution = malloc(sizeof(*resolution)*BUFFER_SIZE);
 			if( !resolution )
 			{
@@ -1042,7 +1078,7 @@ int main(int argc, char *argv[])
 			}
 			bzero(vers_arg, BUFFER_SIZE-1);
 			strcpy(vers_arg, argv[i+1]);
-			break;
+			break;*/
 		case 'h': // Print help
 			usage();
 			break;
@@ -1155,7 +1191,28 @@ int main(int argc, char *argv[])
 		free(tmp);
 	}
 
-	if( resolution == NULL )
+	if( settings_path == NULL )
+	{
+		fprintf(stderr, "Error: settings filename option is missing!\n");
+		usage();
+	}
+	else
+	{
+		char *tmp = NULL;
+		tmp = malloc(sizeof(*tmp)*BUFFER_SIZE);
+		if( !tmp )
+		{
+			fprintf(stderr, "Cannot allocate memory for tmp.\n");
+			return 1;
+		}
+		bzero(tmp, BUFFER_SIZE-1);
+		strcat(tmp, settings_path);
+		strcpy(settings_path, tmp);
+
+		free(tmp);
+	}
+
+/*	if( resolution == NULL )
 	{
 		fprintf(stderr, "Error: resolution option is missing!\n");
 		usage();
@@ -1191,7 +1248,7 @@ int main(int argc, char *argv[])
 		free(tmp);
 	}
 
-	//
+
 	if( vers_arg == NULL )
 	{
 		fprintf(stderr, "Error: version option is missing!\n");
@@ -1216,7 +1273,7 @@ int main(int argc, char *argv[])
 			exit(2);
 			free(tmp);
 		}
-	}
+	}*/
 
 
 
@@ -1290,6 +1347,7 @@ int main(int argc, char *argv[])
 	/* show paths */
 	printf(msg_dataset_path, input_path);
 	printf(msg_site_path, site_path);
+	printf(msg_settings_path, settings_path);
 	printf(msg_output_file, output_file);
 
 	/* get files */
@@ -1306,11 +1364,19 @@ int main(int argc, char *argv[])
 	files_not_processed_count = 0;
 	total_files_count = 0;
 
-	// import site file
+	// Import site.txt file
 	error = importSiteFile(site_path);
 	if ( error )
 	{
 		Log("Site File not imported!!\n\n");
+		return -1;
+	}
+
+	// Import settings.txt file
+	error = importSettingsFile(settings_path);
+	if ( error )
+	{
+		Log("Settings File not imported!!\n\n");
 		return -1;
 	}
 

@@ -353,12 +353,13 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 	return rows;
 }
 
+// Store site.txt variables inside global struct site_t site
 int importSiteFile(char *fileName)
 {
 	int ret = 0;
 	FILE *site_fd = fopen(fileName, "r");
 
-	if( !site_fd ) // error openng file
+	if( !site_fd ) // error opening file
 	{
 		fprintf(stderr, "Error while open %s\n", fileName);
 		ret = 2;
@@ -393,10 +394,10 @@ int importSiteFile(char *fileName)
 					switch(i)
 					{
 					case 0:
-						strcpy(site->sitename, pch); // Convert in a double
+						strcpy(site->sitename, pch);
 						break;
 					default:
-						*tmpPointer = atof(pch); // Convert each token in a integer
+						*tmpPointer = atof(pch); // Convert each token in a float
 						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
 						break;
 					}
@@ -427,6 +428,95 @@ int importSiteFile(char *fileName)
 	//	fprintf(stderr, "%f\n", site->fnn);
 	//	fprintf(stderr, "%f\n", site->m0);
 	//	fprintf(stderr, "%f\n", site->cutTree);
+
+	return ret;
+}
+
+
+// Store settings.txt variables inside global struct settings_t settings
+int importSettingsFile(char *fileName)
+{
+	int ret = 0;
+	FILE *settings_fd = fopen(fileName, "r");
+
+	if( !settings_fd ) // error opening file
+	{
+		fprintf(stderr, "Error while open %s\n", fileName);
+		ret = 2;
+	}
+	else //Read the file
+	{
+		char	*getRet = NULL,
+				*buffer = malloc(sizeof(*buffer)*1024);
+
+		settings = malloc(sizeof(settings_t));
+		float *tmpPointer = &(settings->sizeCell);
+
+		if(!buffer)
+		{
+			fprintf(stderr, "Failed malloc for temporary buffer to read settings file\n");
+			ret = 2;
+		}
+		else
+		{
+			char *pch = NULL;
+			int i = 0;
+
+			while((getRet = fgets(buffer, 1024, settings_fd)) != NULL)
+			{
+				if( getRet[0] == '\n' || getRet[0] == '/' ) // Skip empty and commented lines
+					continue;
+				else
+				{
+					pch = strtok(buffer, " \"");
+					pch = strtok(NULL, "\"");
+
+					switch(i)
+					{
+					case 0:
+						settings->version = *pch;
+						break;
+					default:
+						*tmpPointer = atof(pch); // Convert each token in a float
+						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
+						break;
+					}
+					i++;
+				}
+			}
+		}
+		free(buffer);
+	}
+	if( fclose(settings_fd) != 0 ) //Close the file
+	{
+		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);
+		ret = 3;
+	}
+
+		/*fprintf(stderr, "%c\n", settings->version);
+		fprintf(stderr, "%f\n", settings->sizeCell);
+		fprintf(stderr, "%f\n", settings->dominant);
+		fprintf(stderr, "%f\n", settings->dominated);
+		fprintf(stderr, "%f\n", settings->subdominated);
+		fprintf(stderr, "%f\n", settings->max_layer_cover);
+		fprintf(stderr, "%f\n", settings->adult_age);
+		fprintf(stderr, "%f\n", settings->avdbh_sapling);
+		fprintf(stderr, "%f\n", settings->lai_sapling);
+		fprintf(stderr, "%f\n", settings->height_sapling);
+		fprintf(stderr, "%f\n", settings->ws_sapling);
+		fprintf(stderr, "%f\n", settings->wr_sapling);
+		fprintf(stderr, "%f\n", settings->wf_sapling);
+		fprintf(stderr, "%f\n", settings->light_estab_very_tolerant);
+		fprintf(stderr, "%f\n", settings->light_estab_tolerant);
+    	fprintf(stderr, "%f\n", settings->light_estab_intermediate);
+		fprintf(stderr, "%f\n", settings->light_estab_intolerant);
+		fprintf(stderr, "%f\n", settings->maxlai);
+		fprintf(stderr, "%f\n", settings->defaultlai);
+		fprintf(stderr, "%f\n", settings->maxdays);
+		fprintf(stderr, "%f\n", settings->maxrg);
+		fprintf(stderr, "%f\n", settings->maxtav);
+		fprintf(stderr, "%f\n", settings->maxvpd);
+		fprintf(stderr, "%f\n", settings->maxprecip);*/
 
 	return ret;
 }

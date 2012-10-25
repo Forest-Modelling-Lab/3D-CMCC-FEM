@@ -656,6 +656,7 @@ typedef struct {
 	PREC lai;
 } MET_DATA;
 
+// Struct representing site.txt content
 typedef struct
 {
 	char sitename[1024];
@@ -673,6 +674,36 @@ typedef struct
 	sN,
 	cutTree;
 } site_t;
+
+
+// Struct representing settings.txt content
+typedef struct
+{
+	char version;
+	float sizeCell,
+	dominant,
+	dominated,
+	subdominated,
+	max_layer_cover,
+	adult_age,
+	avdbh_sapling,
+	lai_sapling,
+	height_sapling,
+	ws_sapling,
+	wr_sapling,
+	wf_sapling,
+	light_estab_very_tolerant,
+	light_estab_tolerant,
+	light_estab_intermediate,
+	light_estab_intolerant,
+	maxlai,
+	defaultlai,
+	maxdays,
+	maxrg,
+	maxtav,
+	maxvpd,
+	maxprecip;
+} settings_t;
 
 /* */
 typedef struct {
@@ -717,8 +748,9 @@ typedef struct {
 // DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
 // 100   for pixels of 10x10   meters resolution
 // 10000 for pixels of 100x100 meters resolution
-int sizeCell;
-char version;
+
+
+
 
 /*
 //LAYER LIMIT
@@ -771,8 +803,9 @@ char version;
 #define LOGFILE		"output.txt"
 #define BUFFER_SIZE	4096
 
-// Store site.txt data
+// Store site.txt and settings.txt data
 site_t *site;
+settings_t *settings;
 
 // External functions
 extern int tree_model(MATRIX *const, const YOS *const, const int, const int, const int);
@@ -782,6 +815,7 @@ extern float Get_canopy_cover (SPECIES *const, int, int, int);
 extern void Get_crowding_competition (SPECIES *const, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
+extern int importSettingsFile(char *);
 extern void GetDayLength (CELL *, int);
 extern int Get_Establishment_LPJ (SPECIES *const, float, float);
 extern int logInit(char*);
@@ -848,14 +882,14 @@ extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_top_layer (CELL *const, int, HEIGHT *);
 
-extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int, char);
+extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
 
 
 
 extern void Get_annual_forest_structure (CELL *, HEIGHT * );
 
-void Print_met_data (const MET_DATA *const , float , int , float, char);
+void Print_met_data (const MET_DATA *const , float , int , float);
 
 
 void Print_parameters (SPECIES *const, int, int, int);

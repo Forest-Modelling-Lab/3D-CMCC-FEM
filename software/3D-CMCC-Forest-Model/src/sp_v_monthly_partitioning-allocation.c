@@ -59,7 +59,7 @@ void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, 
     //Log("Percentage of coarse root against total root= %g %%\n", Perc_coarse * 100 );
 
 
-	s->value[BIOMASS_FOLIAGE_CTEM] = (met[month].lai / 1000) * ((s->value[CANOPY_COVER_DBHDC] * sizeCell)/s->value[SLAmkg]);
+	s->value[BIOMASS_FOLIAGE_CTEM] = (met[month].lai / 1000) * ((s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/s->value[SLAmkg]);
 	Log("Biomass foliage from LAI-NDVI = %g tDM/cell resolution \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 	NPP_residual = s->value[NPP] - s->value[BIOMASS_FOLIAGE_CTEM];
