@@ -476,6 +476,10 @@ int importSettingsFile(char *fileName)
 					case 0:
 						settings->version = *pch;
 						break;
+					case 1:
+						*tmpPointer = atof(pch)*atof(pch); // sizeCell
+						tmpPointer++;
+						break;
 					default:
 						*tmpPointer = atof(pch); // Convert each token in a float
 						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
