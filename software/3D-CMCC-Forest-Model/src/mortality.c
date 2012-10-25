@@ -31,7 +31,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 
 	oldNtree = s->counter[N_TREE];
 
-	while (layer_cover >= 1 )
+	while (layer_cover >= MAX_LAYER_COVER )
 	{
 		s->counter[N_TREE] -= 1;
 		deadtree += 1;

@@ -227,6 +227,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//Get_monthly_forest_structure ();
 		//Get_Layer_Cover
 
+
 		Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);

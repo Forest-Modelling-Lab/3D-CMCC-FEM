@@ -726,6 +726,10 @@ char version;
 #define SUBDOMINAED                 1
 
 
+//LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
+#define MAX_LAYER_COVER	           1
+
+
 
 //AGE LIMIT
 #define ADULT_AGE                   5     //year limit at which consider trees adult

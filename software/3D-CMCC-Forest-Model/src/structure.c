@@ -370,7 +370,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 				if (c->heights_count == 1)
 				{
-					if (c->layer_cover_dominant >= 1)
+					if (c->layer_cover_dominant >= MAX_LAYER_COVER)
 					{
 						//mortality
 						layer_cover = c->layer_cover_dominant;
@@ -388,7 +388,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 						//Log("3 Height classes or more \n");
 						if (c->heights[height].value >= DOMINANT)
 						{
-							if (c->layer_cover_dominant >= 1)
+							if (c->layer_cover_dominant >= MAX_LAYER_COVER)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -403,7 +403,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 						}
 						else if (c->heights[height].value < DOMINANT && c->heights[height].value >= DOMINATED)
 						{
-							if (c->layer_cover_dominated >= 1)
+							if (c->layer_cover_dominated >= MAX_LAYER_COVER)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -417,7 +417,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 						}
 						else
 						{
-							if (c->layer_cover_subdominated >= 1)
+							if (c->layer_cover_subdominated >= MAX_LAYER_COVER)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -435,7 +435,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 						//Log("2 Height classes \n");
 						if (c->heights[height].value >= DOMINANT)
 						{
-							if (c->layer_cover_dominant >= 1)
+							if (c->layer_cover_dominant >= MAX_LAYER_COVER)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -449,7 +449,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 						}
 						else
 						{
-							if (c->layer_cover_subdominated >= 1)
+							if (c->layer_cover_subdominated >= MAX_LAYER_COVER)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
