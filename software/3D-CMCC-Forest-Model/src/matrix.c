@@ -589,7 +589,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	//cell MUST be squares
 	resol = sqrt (settings->sizeCell);
 		
-	Log ("Cell resolution = %d x %d = %d m^2\n", resol, resol, settings->sizeCell);
+	Log ("Cell resolution = %d x %d = %g m^2\n", resol, resol, settings->sizeCell);
 
 	if (settings->version == 's')
 	{
