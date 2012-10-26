@@ -101,7 +101,7 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 		"Ts_f",
 		"Precip",
 		"SWC",
-		"NDVI_LAI"
+		"LAI"
 };
 
 /* messages */
