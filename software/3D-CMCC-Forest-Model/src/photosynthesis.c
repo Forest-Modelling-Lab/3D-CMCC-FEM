@@ -107,7 +107,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		//Monthly layer NPP
 		//* 2 to convert gC in DM
-		s->value[NPP] = (StandGPPtC * 2) * s->value[Y];    // assumes respiratory rate is constant
+		s->value[NPP] = (StandGPPtC * 2) * site->Y;    // assumes respiratory rate is constant
+		Log("Respiration rate = %g \n", site->Y);
 		Log("Monthly NPP for layer %d = %g \n", z, s->value[NPP]);
 
 	}

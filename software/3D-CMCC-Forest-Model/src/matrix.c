@@ -18,7 +18,7 @@ static const char *species_values[] = {
 
 	"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
 	"EPSILONgCPAR",               // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)
-	"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
+	//"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
 	//"EPSILONgCMJ",                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 
 
