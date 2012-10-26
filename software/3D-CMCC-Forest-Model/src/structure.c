@@ -506,7 +506,7 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 						Log("Spatial version \n");
 
 						//veg period
-						if (met[month].lai > 0.1)
+						if (met[month].ndvi_lai > 0.1)
 						{
 
 							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;

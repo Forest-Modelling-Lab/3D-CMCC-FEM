@@ -49,7 +49,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	float Gap_Cover = 0;
 
 
-	LightTrasmitted = (exp(- s->value[K] * met[month].lai));
+	if (settings->version == 's')
+	{
+		LightTrasmitted = (exp(- s->value[K] * met[month].ndvi_lai));
+	}
+	else
+	{
+		LightTrasmitted = (exp(- s->value[K] * s->value[LAI]));
+	}
 	Log("Light Trasmitted = %g\n", LightTrasmitted);
 	Log("Vertical Percentage of Light Trasmitted through this layer = %g %%\n", LightTrasmitted * 100);
 

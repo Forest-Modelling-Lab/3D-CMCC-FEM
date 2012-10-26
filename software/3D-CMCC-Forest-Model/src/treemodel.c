@@ -341,9 +341,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 						Log("- Height = %g m\n", m->cells[cell].heights[height].value);
 						Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
+						Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 						if (settings->version == 's')
 						{
-							Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].lai);
+							Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].ndvi_lai);
 						}
 						else
 						{
@@ -454,7 +455,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 								}
 
-								if ( met[month].lai > 0.1)
+								if ( met[month].ndvi_lai > 0.1)
 								{
 									Veg_UnVeg = 1;
 								}
@@ -689,7 +690,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
 
 								//m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-								Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].lai);
+								Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
 
 								/* Soil Water Balance*/
 

@@ -745,16 +745,16 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			}
 
 
-			if (met[month].lai <= s->value[PEAK_Y_LAI])
+			if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI])
 			{
 				Log("NDVI-LAI <= PEAK_Y_LAY\n");
-				Log("NDVI-LAI = %g \n", met[month].lai);
+				Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
 
-				if (met[month].lai <= (s->value[PEAK_Y_LAI] * 0.5 ))
+				if (met[month].ndvi_lai <= (s->value[PEAK_Y_LAI] * 0.5 ))
 				{
 					Log("FASE FENOLOGICA = 1 \n");
 					Log("NDVI-LAI < PEAK_Y_LAI * 0.5 \n");
-					Log("NDVI-LAI = %g \n", met[month].lai);
+					Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
 					Log("**Maximum Growth**\n");
 					Log("allocating only into foliage pools\n");
 
@@ -812,7 +812,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					Log("MODEL-Lai = %g\n", s->value[LAI]);
 
 				}
-				else if (met[month].lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].lai < s->value[PEAK_Y_LAI])
+				else if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI])
 				{
 					if (daylength > s->value[MINDAYLENGTH] )
 					{
@@ -1002,7 +1002,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					//Log("Total Biomass = %g tDM/ha\n", s->value[TOTAL_W]);
 				}
 				//LAI = PEAK_Y_LAI
-				else if (fabs (met[month].lai - s->value[PEAK_Y_LAI]) < 0.1)
+				else if (fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1)
 				{
 
 					Log("NDVI-LAI == PEAK LAI \n");
@@ -1089,10 +1089,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			}
 			//LAI > PEAK_Y_LAI
 			//Exceeding foliar biomass is partitioned among others pools
-			if (met[month].lai > s->value[PEAK_Y_LAI])
+			if (met[month].ndvi_lai > s->value[PEAK_Y_LAI])
 			{
 				Log("FASE FENOLOGICA = 4 \n");
-				Log("NDVI-LAI = %g \n", met[month].lai);
+				Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
 				s->value[LAI] = s->value[PEAK_Y_LAI];
 				Log("MODEL-LAI setted to Peak Lai= %g \n", s->value[LAI]);
 

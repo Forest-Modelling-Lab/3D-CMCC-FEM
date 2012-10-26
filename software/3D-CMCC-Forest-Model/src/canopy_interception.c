@@ -19,7 +19,14 @@ float Get_canopy_interception (SPECIES *const s, const MET_DATA *const met, int 
 	}
 	else
 	{
-		Interception = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].lai / s->value[LAIMAXINTCPTN]);
+		if (settings->version == 's')
+		{
+			Interception = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+		}
+		else
+		{
+			Interception = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
+		}
 		Log("Rain Interception not use MAXINTCPTN\n");
 		Log("Rain Interception = %g \n", Interception);
 	}

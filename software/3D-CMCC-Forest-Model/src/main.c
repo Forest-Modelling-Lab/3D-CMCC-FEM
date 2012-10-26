@@ -25,7 +25,7 @@ enum {	MONTH = 0,
 	TS_F,
 	PRECIP,
 	SWC,
-	Lai,
+	Ndvi_Lai,
 
 
 	MET_COLUMNS };
@@ -101,7 +101,7 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 		"Ts_f",
 		"Precip",
 		"SWC",
-		"LAI"
+		"NDVI_LAI"
 };
 
 /* messages */
@@ -831,8 +831,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 							}
 							break;
-						case Lai: //Get LAI in spatial version
-							yos[*yos_count-1].m[month].lai = convert_string_to_prec(token2, &error_flag);
+						case Ndvi_Lai: //Get LAI in spatial version
+							yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
 
 
 							if ( error_flag )
@@ -847,36 +847,36 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							{
 
 								//control in lai data if is an invalid value
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].lai))
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ndvi_lai))
 								{
 									Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									//Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].lai))
+									yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ndvi_lai))
 									{
 										Log ("* LAI -NO DATA- in previous year!!!!\n" );
-										yos[*yos_count-1].m[month].lai = NO_DATA;
+										yos[*yos_count-1].m[month].ndvi_lai = NO_DATA;
 									}
 								}
 								//control lai data in spatial version if value is higher than MAXLAI
-								if(yos[*yos_count-1].m[month].lai > settings->maxlai)
+								if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
 								{
 									Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
 									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].lai = yos[*yos_count-2].m[month].lai;
+									yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
 								}
 							}
 							//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
 							else
 							{
-								if(yos[*yos_count-1].m[month].lai > settings->maxlai)
+								if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
 								{
 									//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
 									//
 									//
 									//
 									Log("**********First Year without a valid LAI value set to default value LAI\n");
-									yos[*yos_count-1].m[month].lai = settings->defaultlai;
+									yos[*yos_count-1].m[month].ndvi_lai = settings->defaultlai;
 									Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
 								}
 							}
@@ -937,7 +937,7 @@ void met_summary(MET_DATA *met) {
 				met[i].ts_f,
 				met[i].rain,
 				met[i].swc,
-				met[i].lai
+				met[i].ndvi_lai
 		);
 	}
 }

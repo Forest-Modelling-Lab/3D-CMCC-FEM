@@ -15,7 +15,7 @@ enum {
 	SPECIES_COLUMN,
 	PHENOLOGY_COLUMN,
 	MANAGEMENT_COLUMN,
-	//LAI_COLUMN,
+	LAI_COLUMN,
 	N_COLUMN,
 	STOOL_COLUMN,
 	AVDBH_COLUMN,
@@ -58,7 +58,7 @@ static const char *header[COLUMNS] = {
 		"SPECIES",
 		"PHENOLOGY",
 		"MANAGEMENT",
-		//"LAI",
+		"LAI",
 		"N",
 		"STOOL",
 		"AVDBH",
@@ -272,12 +272,12 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						case AGE_COLUMN:
 							rows[*rows_count-1].age = (int)value;
 							break;
-							/*
 
-							case LAI_COLUMN:
-								rows[*rows_count-1].lai = value;
-							break;
-							 */
+
+						case LAI_COLUMN:
+							rows[*rows_count-1].lai = value;
+						break;
+
 
 						case N_COLUMN:
 							rows[*rows_count-1].n = (int)value;

@@ -49,8 +49,9 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, float dayl
 
 	if (settings->version == 's')
 	{
-		Log("-lai from NDVI = %g \n", met[month].lai);
+		Log("-lai from NDVI = %g \n", met[month].ndvi_lai);
 	}
+
 
 	Log("-Day length = %g hours \n", daylength);
 	Log("***************\n");

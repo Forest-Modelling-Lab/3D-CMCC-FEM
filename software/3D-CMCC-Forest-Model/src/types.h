@@ -653,7 +653,7 @@ typedef struct {
 	PREC ts_f;
 	PREC rain;
 	PREC swc;
-	PREC lai;
+	PREC ndvi_lai;
 } MET_DATA;
 
 // Struct representing site.txt content
