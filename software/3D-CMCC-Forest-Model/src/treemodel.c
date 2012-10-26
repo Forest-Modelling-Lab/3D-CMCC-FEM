@@ -361,6 +361,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						{
 							Reset_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 
+							if (!years)
+							{
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
+																														  + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
+							}
+
 
 							//reset only in unspatial version
 							if (settings->version == 'u')
