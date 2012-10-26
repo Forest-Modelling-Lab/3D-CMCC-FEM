@@ -534,7 +534,7 @@ typedef struct {
 	char *species;
 	ePhenology phenology;
 	eManagement management;
-	//PREC lai;
+	PREC lai;
 	int n;
 	int stump;
 	PREC avdbh;
