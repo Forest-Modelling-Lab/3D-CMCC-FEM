@@ -10,7 +10,7 @@ MODULES=(getInputCMCC wrapCMCC "${CMCC}"  getOutputCMCC mergeImg)
 usage() {
 	echo "Usage: ${PROGNAME} INPUTDATASET RESOLUTION OUTPUTDIR [PREFIX]"
 	echo " - INPUTDATASET is the tar.bz2 of the dataset to be processed, given with absolute path."
-	echo " - REOLUTION must be 10 or 100 and means at which resolution the CMCC model has to work (in meters)."
+	echo " - REOLUTION must be within 10 and 100 and means at which resolution the CMCC model has to work (in meters)."
 	echo " - OUTPUTDIR is the output directory given with absolute path; be shure that it exists."
 	echo " - PREFIX is an optional parameter to set the beginning of output filename."
 	exit 1
@@ -195,6 +195,7 @@ SPEC_STR=${SPEC_STR:1:${#SPEC_STR}}
 YEAR_STR=${YEAR_STR:1:${#YEAR_STR}}
 
 SITE="${INPUTDATASETDIR}/${LOCATION}/txt/site.txt"
+SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
 
 if [ ! -f "${SITE}" ] ; then
     log "Site file for CMCC not found..."
@@ -202,11 +203,8 @@ if [ ! -f "${SITE}" ] ; then
     exit 2
 fi
 
-# In this case 3D-CMCC is launched in spatial version
-VERSION="s"
-
 log "Starting execution of wrapCMCC..."
-${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SITE}" -r "${RESOLUTION}" -ve "${VERSION}" -o ${WORK_CMCC} 1> /dev/null
+${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SITE}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
 if [ "$?" -ne "0" ] ; then
 	log "Execution of wrapCMCC failed"
 	echo "Invalid or corrupted data: execution of wrapCMCC failed"
@@ -358,8 +356,8 @@ log "...done"
 
 log "${PROGNAME} successfully ended."
 
-# Synthetic outputs for KEO purposes
-echo "<synthetic name=\"output_dataset\" value=\"${OUTPUTDIR}/${OUTDATASETNAME}.tar.bz2\"/>"
-echo "<synthetic name=\"logFile\" value=\"${OUTPUTDIR}/${CMCC}-${RESOLUTION}m.log\"/>" 
+echo "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.tar.bz2"
+echo "Produced ${OUTPUTDIR}/${CMCC}-${RESOLUTION}m.log" 
+echo "${PROGNAME} successfully ended."
 
 exit 0
