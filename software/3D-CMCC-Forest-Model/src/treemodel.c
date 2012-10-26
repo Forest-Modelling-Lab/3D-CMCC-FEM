@@ -689,8 +689,16 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
 
-								//m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-								Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
+								if (settings->version == 'u')
+								{
+									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
+									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+								}
+								else
+								{
+									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
+								}
+
 
 								/* Soil Water Balance*/
 
