@@ -314,18 +314,31 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						//Log("Mass Density = %g\n", MassDensity);
 
 
-
-						if (!month && m->cells[cell].heights[height].z == 2)
+						if (m->cells[cell].heights_count == 2)
+						{
+							if (!month && m->cells[cell].heights[height].z == 2)
+							{
+								dominant_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+										(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
+								Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
+							}
+							if (!month && m->cells[cell].heights[height].z < 2)
+							{
+								dominated_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+										(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
+								Log("DominatedVolume = %g m^3/cell resolution\n", dominated_prec_volume);
+							}
+						}
+						if (m->cells[cell].heights_count < 2)
 						{
 							dominant_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
 									(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
 							Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
+
 						}
-						if (!month && m->cells[cell].heights[height].z < 2)
+						if (m->cells[cell].heights_count > 2)
 						{
-							dominated_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
-									(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
-							Log("DominatedVolume = %g m^3/cell resolution\n", dominated_prec_volume);
+							Log("FARE ROUTINE = \n");
 						}
 						Log("******************************************************\n\n");
 
