@@ -40,16 +40,16 @@ void Get_biomass_increment ( SPECIES *const s,  int z, int heights_count, float 
 		{
 			s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
 			Log("Previous year volume = %g\n", dominant_prec_volume);
-			Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			Log("Yearly Stand CAI = %g m^3/ha/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-			Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+			Log("Yearly Stand MAI = %g m^3/ha/yr\n", s->value[MAI] );
 		}
 		else
 		{
 			s->value[CAI] = s->value[STAND_VOLUME] - dominated_prec_volume;
 			Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
-			Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+			Log("Stand MAI = %g m^3/ha/yr\n", s->value[MAI] );
 		}
 	}
 }
