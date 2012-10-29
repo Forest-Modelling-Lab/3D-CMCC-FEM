@@ -13,7 +13,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 	int deadtree;
 
 	//the model makes die trees of the lower height class for that layer because
-	//it passes throught the function sort_by_height_desc the height classes starting from the lowest
+	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
 
 	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", z);
