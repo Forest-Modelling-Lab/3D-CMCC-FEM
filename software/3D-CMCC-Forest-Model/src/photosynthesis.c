@@ -81,6 +81,12 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
 		Log("Monthly GPP in grams of C for layer %d = %g \n", z , s->value[POINT_GPP_g_C] );
 
+
+		if (settings->version == 's');
+		{
+			Log("Monthly Ecosystem GPP = %g \n", s->value[POINT_GPP_g_C] );
+		}
+
 		//Yearly_GPP +=  GPPgC;
 		//Log("Yearly Cumulated GPP  = %g gC/m^2\n",  Yearly_GPP);
 
@@ -116,6 +122,10 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	{
 		s->value[GPP_g_C] = 0;
 		Log("Monthly GPP in grams of C for layer %d = %g \n", z , s->value[GPP_g_C]);
+		if (settings->version == 's');
+		{
+			Log("Monthly Ecosystem GPP = %g \n", s->value[POINT_GPP_g_C] );
+		}
 		s->value[NPP] = 0;
 		Log("Monthly NPP for layer %d = %g \n", z, s->value[NPP]);
 	}
