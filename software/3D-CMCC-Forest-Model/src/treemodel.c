@@ -505,13 +505,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
 
 
-								MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation);
+								MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation, m->cells[cell].soil_moist_ratio);
 								//compute traspiration for area
 								//Log("Monthly Canopy Transpiration per area = %g mm-Kg H2o/ha^-1/month\n", MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] * SIZECELL);
 
 
 								/////////////////////////////////////////////////////////////////////////////////////
-
+/*
 								//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
 								//alpha e beta andranno inserite come specie specifiche!!!!
 
@@ -526,7 +526,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								MonthTransp_Angelo = MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO];
 								Log("ANGELO MonthTransp = %g \n", MonthTransp_Angelo);
-
+*/
 
 
 								//////////////////////////////////////////////////////////////////////////////////////
@@ -776,13 +776,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
 
 
-							MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation);
+							MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation, m->cells[cell].soil_moist_ratio);
 							//compute traspiration for area
 							//Log("Monthly Canopy Transpiration per area = %g mm-Kg H2o/ha^-1/month\n", MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] * SIZECELL);
 
 
 							/////////////////////////////////////////////////////////////////////////////////////
-
+/*
 							//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
 							//alpha e beta andranno inserite come specie specifiche!!!!
 
@@ -798,7 +798,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							MonthTransp_Angelo = MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO];
 							Log("ANGELO MonthTransp = %g \n", MonthTransp_Angelo);
 
-
+*/
 
 							//////////////////////////////////////////////////////////////////////////////////////
 
@@ -845,7 +845,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 										/*Evapotranspiration*/
 
-										m->cells[cell].evapotranspiration = (met[month].rain * Interception + MonthTransp) * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+										m->cells[cell].evapotranspiration = ((met[month].rain * Interception) + MonthTransp) * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 										Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 										//control
 										if (RainIntercepted >= met[month].rain)

@@ -858,7 +858,7 @@ extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const 
 extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall (HEIGHT *, float, const int, const int, int);
-extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float);
+extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float, float);
 extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern float Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, int, float, float, int, float);
 extern void Get_initial_month_lai (SPECIES *const s);

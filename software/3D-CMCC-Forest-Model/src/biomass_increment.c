@@ -39,9 +39,9 @@ void Get_biomass_increment ( SPECIES *const s,  int z, int heights_count, float 
 		if (z == 1)
 		{
 			s->value[CAI] = s->value[STAND_VOLUME] - dominant_prec_volume;
-			Log("Previous year volume = %g\n", dominant_prec_volume);
-			Log("Current year volume = %g\n", s->value[STAND_VOLUME]);
-			Log("Yearly Stand CAI = %g m^3/ha/yr\n", s->value[CAI]);
+			Log("Previous year volume = %.20g\n", dominant_prec_volume);
+			Log("Current year volume = %.20g\n", s->value[STAND_VOLUME]);
+			Log("Yearly Stand CAI = %.20g m^3/ha/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[STAND_VOLUME] / (float)s->counter[TREE_AGE] ;
 			Log("Yearly Stand MAI = %g m^3/ha/yr\n", s->value[MAI] );
 		}

@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, int month, float daylength, int DaysInMonth, float vpd, float Net_Radiation)
+float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, int month, float daylength, int DaysInMonth, float vpd, float Net_Radiation, float soil_moist_ratio)
 {
 	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
@@ -22,6 +22,10 @@ float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, in
 	static float Etransp;
 	static float DailyTransp;
 	static float MonthTransp;
+
+
+	float alpha_evapo = 0.65;
+	float beta_evapo = 0.95;
 
 	/*Canopy Conductance*/
 
@@ -69,6 +73,19 @@ float Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, in
 	//initial transpiration from Penman-Monteith (mm/day converted to mm/month)
 	MonthTransp = CanopyTranspiration * DaysInMonth;
 	Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/month\n", MonthTransp);
+
+	//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
+	//alpha e beta andranno inserite come specie specifiche!!!!
+
+
+
+
+	s->value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (soil_moist_ratio, beta_evapo));
+	Log("ANGELO F_EVAPO = %g \n", s->value[F_EVAPO] );
+
+
+	MonthTransp = MonthTransp * s->value[F_EVAPO];
+	Log("ANGELO MonthTransp = %g \n", MonthTransp);
 
 
 
