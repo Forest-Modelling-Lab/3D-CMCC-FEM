@@ -124,6 +124,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	}
 
 
+
+
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
@@ -381,7 +383,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 						Log("- Height = %g m\n", m->cells[cell].heights[height].value);
 						Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
-						Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+						//Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 						if (settings->version == 's')
 						{
 							Log("- Monthly LAI from NDVI = %g \n",m->cells[cell].heights[height].z, met[month].ndvi_lai);
