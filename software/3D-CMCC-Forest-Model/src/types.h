@@ -903,6 +903,10 @@ extern void Get_layer_cover_mortality (SPECIES *const , float , int, int );
 
 extern void Reset_cumulative_variables (CELL *, const int);
 
+extern void Get_initialization_biomass_data (SPECIES *const);
+
+
+
 
 
 #endif /* COMMON_H */

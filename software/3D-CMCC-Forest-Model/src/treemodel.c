@@ -124,14 +124,36 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	}
 
 
-
-
-
-
-
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
+
+	//*************FOREST INITIALIZATION DATA***********
+	//IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES
+
+	if (!month && !years)
+	{
+		for ( cell = 0; cell < m->cells_count; cell++)
+		{
+			for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+			{
+				for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+				{
+					for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+					{
+						if (m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]== 0 &&
+							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
+							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
+							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
+							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
+						{
+						   Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species]);
+						}
+					}
+				}
+			}
+		}
+	}
 
 	//*************FOREST STRUCTURE*********************
 
@@ -140,14 +162,19 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	{
 		for ( cell = 0; cell < m->cells_count; cell++)
 		{
-			Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
+			for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+			{
+				Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
+			}
 		}
 	}
 	//monthly forest structure
-
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+		{
+			Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+		}
 	}
 
 	//*************************************************
