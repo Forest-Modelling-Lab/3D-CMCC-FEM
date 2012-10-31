@@ -642,6 +642,17 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				// loop on each species
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 				{
+					//*************FOREST INITIALIZATION DATA***********
+
+					//IF NO BIOMASS INITIALIZATION DATA ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH)
+					if (m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]== 0 &&
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
+					{
+					   Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species]);
+					}
 					Log(
 							"---- species n.%02d is %s (%c), management type is %c and has\n"
 							"----- n = %d trees\n"

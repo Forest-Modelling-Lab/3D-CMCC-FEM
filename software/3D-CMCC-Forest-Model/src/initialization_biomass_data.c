@@ -41,12 +41,13 @@ void Get_initialization_biomass_data (SPECIES *const s)
 
 
 	//compute reserve "biomass"
+
 	s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
 	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
 
-	//these values are taken from: Schwalm and Ek, 2004 Ecological Modelling
+	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	if (s->phenology == 0)
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.11;
@@ -55,5 +56,7 @@ void Get_initialization_biomass_data (SPECIES *const s)
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.05;
 	}
+
+
 
 }
