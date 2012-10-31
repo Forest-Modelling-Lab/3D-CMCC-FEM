@@ -14,8 +14,8 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	dataset.c\
 	dendrometry.c\
 	establishment.c\
-	garbage.c\
 	G-Function.c\
+	initialization_biomass_data.c\
 	lai.c\
 	layer_cover.c\
 	light.c\
@@ -48,7 +48,7 @@ check_SCRIPTS = test_1.sh
 TESTS = $(check_SCRIPTS)
 
 test_1.sh:
-	echo "./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -r 10" > test_1.sh
+	echo "./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -c ../input/settings.txt" > test_1.sh
 	chmod +x test_1.sh
 
 CLEANFILES = $(check_SCRIPTS)
