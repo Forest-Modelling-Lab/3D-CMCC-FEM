@@ -65,14 +65,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static float Interception;
 	static float RainIntercepted;
 
-	//static float oldWf;
-	//static float oldWrf;
-	//static float oldWrc;
-	//static float oldWs;
-
-	/*control*/
-	//static float oldavDBH;
-	//static float oldTreeHeight;
+	static float abscission_day_length;
 
 
 
@@ -168,7 +161,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		/*DayLength*/
 		GetDayLength (&m->cells[cell], MonthLength[month]);
-
+		/*Abscission DayLength*/
+		Get_Abscission_DayLength (&m->cells[cell]);
 		//compute vpd from RH
 		vpd = Get_vpd (met, month);
 

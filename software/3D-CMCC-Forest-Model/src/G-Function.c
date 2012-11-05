@@ -55,3 +55,12 @@ void GetDayLength ( CELL * c,  int MonthLength)
 
 	Log("daylength = %g \n", c->daylength);
 }
+
+
+void Get_Abscission_DayLength ( CELL * c)
+{
+	//from Schwalm and Ek, 2004
+	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
+	Log("Abscission day length = %g \n", c->abscission_daylength);
+
+}
