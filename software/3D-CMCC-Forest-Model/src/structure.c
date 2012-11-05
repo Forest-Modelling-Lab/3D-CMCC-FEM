@@ -47,8 +47,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 	int age;
 	int species;
 	float DBHDCeffective;
-	//int oldNtree;
-	//int deadtree;
 	int tree_number;
 	float layer_cover;
 
@@ -355,7 +353,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 
 	//the model makes die trees of the lower height class for that layer because
-	//it passes throught the function sort_by_height_desc the height classes starting from the lowest
+	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
