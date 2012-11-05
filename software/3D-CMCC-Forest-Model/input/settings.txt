@@ -2,6 +2,7 @@ VERSION "s"		//Must be 's' or 'u', spatial or unspatial
 SIZECELL "10"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 
 //LAYER LIMIT
+//to modify removing imposed limits 
 DOMINANT "15"
 DOMINATED "5"
 SUBDOMINATED "1"
