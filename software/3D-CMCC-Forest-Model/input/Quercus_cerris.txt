@@ -138,8 +138,6 @@ CRC	1.104
 //CROWDING COMPETITION FUNCTION
 HDMAX	1.4             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN	0.7             //Height to Base diameter ratio MIN  (Portoghesi)
-CANCOVERMAX	0.95    //Maximum Canopy Cover
-CANCOVERMIN	0.0001  //Minimum Canopy Cover
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
 DENMIN	0.01           //Minimum density (trees/10000 m^2)

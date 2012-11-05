@@ -200,8 +200,6 @@ enum {
 	//CROWDING COMPETITION FUNCTION
 	HDMAX,                      //Height to Base diameter ratio MAX
 	HDMIN,                      //Height to Base diameter ratio MIN
-	CANCOVERMAX,                //Maximum Canopy Cover
-	CANCOVERMIN,                //Minimum Canopy Cover
 
 	//DENSITY FUNCTION
 	DENMAX,                     //Maximum density (trees/10000 m^2)
@@ -685,6 +683,7 @@ typedef struct
 	dominant,
 	dominated,
 	subdominated,
+	min_layer_cover,
 	max_layer_cover,
 	adult_age,
 	avdbh_sapling,

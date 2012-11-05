@@ -44,8 +44,8 @@ void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer
 
 		// Compute and use H/D effective
 
-		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (s->value[CANCOVERMAX] - s->value[CANCOVERMIN])) *
-				( s->value[CANOPY_COVER_DBHDC] - s->value[CANCOVERMIN]) + s->value[HDMIN];
+		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (settings->max_layer_cover - settings->min_layer_cover)) *
+				( s->value[CANOPY_COVER_DBHDC] - settings->min_layer_cover) + s->value[HDMIN];
 		Log("H/D Ratio Effective = %g\n", s->value[HD_EFF]);
 
 
@@ -123,7 +123,7 @@ void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer
 
 		// Compute DBH increment
 
-		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (s->value[CANCOVERMAX] - s->value[CANCOVERMIN])) * ( s->value[CANOPY_COVER_DBHDC] - s->value[CANCOVERMIN]) + s->value[HDMIN];
+		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (settings->max_layer_cover - settings->min_layer_cover)) * ( s->value[CANOPY_COVER_DBHDC] - settings->min_layer_cover) + s->value[HDMIN];
 		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS_CTEM];
 
 
