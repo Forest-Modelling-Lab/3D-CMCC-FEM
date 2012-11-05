@@ -1,0 +1,2 @@
+# Convert a NETCDF precipitation image to GeoTiff:
+gdal_translate -of GTiff NETCDF:"3b43.101201.6a.nc":pcp 3b43.101201.6a.tif
