@@ -12,7 +12,7 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
 
 
 
-	Log("****MODIFIERS****\n");
+	Log("\n GET_MODIFIERS\n\n");
 
 	/*TEMPERATURE MODIFIER*/
 

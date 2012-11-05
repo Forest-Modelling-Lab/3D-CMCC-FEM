@@ -15,6 +15,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 {
 	//CTEM VERSION
 
+	Log("\n GET_ALLOCATION_ROUTINE\n\n");
+
 	Log("Carbon allocation routine for deciduous\n");
 	Log("Version = %c \n", settings->version);
 
@@ -241,12 +243,12 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				}
 				else if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
 				{
-					if (daylength > s->value[MINDAYLENGTH] )
+					if (daylength > c->abscission_daylength/*s->value[MINDAYLENGTH]*/ )
 					{
 
 						Log("FASE FENOLOGICA = 2.1 \n");
 						Log("**Normal Growth**\n");
-						Log("Day length > %g \n", s->value[MINDAYLENGTH] );
+						Log("Day length > %g \n", c->abscission_daylength/*s->value[MINDAYLENGTH]*/ );
 						Log("LAI MAX * 0.5 < LAI < LAI MAX \n");
 						Log("allocating into the three pools Ws+Wr+Wf\n");
 
@@ -343,6 +345,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					{
 						Log("FASE FENOLOGICA = 2.2 \n");
 						Log("**Leaf fall**\n");
+						Log("Day length < %g \n", c->abscission_daylength/*s->value[MINDAYLENGTH]*/ );
 						Log("allocating into the three pools Ws+Wr+Wreserve\n");
 
 						pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -814,12 +817,12 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				}
 				else if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI])
 				{
-					if (daylength > s->value[MINDAYLENGTH] )
+					if (daylength > c->abscission_daylength/*s->value[MINDAYLENGTH]*/)
 					{
 
 						Log("FASE FENOLOGICA = 2.1 \n");
 						Log("**Normal Growth**\n");
-						Log("Day length > %g \n", s->value[MINDAYLENGTH] );
+						Log("Day length > %g \n", c->abscission_daylength/*s->value[MINDAYLENGTH]*/ );
 						Log("LAI MAX * 0.5 < NDVI-LAI < LAI MAX \n");
 						Log("allocating into the three pools Ws+Wr+Wf\n");
 
@@ -911,7 +914,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 					}
-					//daylength < s->value[MINDAYLENGTH]
+					//daylength < c->abscission_daylength /*s->value[MINDAYLENGTH]*/
 					else
 					{
 						Log("FASE FENOLOGICA = 2.2 \n");
@@ -1228,6 +1231,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg)
 {
 	//CTEM VERSION
+
+	Log("\n GET_ALLOCATION_ROUTINE\n\n");
 
 	Log("Carbon allocation routine for evergreen\n");
 	Log("Version = %c \n", settings->version);

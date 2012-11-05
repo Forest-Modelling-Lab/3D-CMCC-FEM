@@ -454,6 +454,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 								if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+								//to change: the vegetative period should be stopped when LAI values fall under 0
 								{
 									Veg_UnVeg = 1;
 								}
