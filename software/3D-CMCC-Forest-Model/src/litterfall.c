@@ -1,4 +1,4 @@
-/*litterfall.c.c*/
+/*litterfall.c*/
 
 /* includes */
 #include <stdio.h>
@@ -7,8 +7,17 @@
 #include "types.h"
 
 
+void Get_litterfall_deciduous (SPECIES *const s)
+{
+	//height->ages[age].species[species].value[BIOME_LITTERFALL_FRAC]
+	s->counter[MONTH_FRAC_FOLIAGE_REMOVE] = floor ( 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 
-void Get_litterfall (HEIGHT *height, float oldWf, const int age, const int species, int years)
+	Log("Months of litterfall for deciduous = %d \n", s->counter[MONTH_FRAC_FOLIAGE_REMOVE]);
+
+}
+
+
+void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const int species, int years)
 {
 	float gammaF;
 

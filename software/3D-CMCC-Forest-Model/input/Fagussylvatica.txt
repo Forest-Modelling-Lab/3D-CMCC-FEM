@@ -3,8 +3,8 @@ LIGHT_TOL	3   	//4 = very shade intollerant
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA   0.0297		// 0.0297   (Waring et al 2005)  // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   0.364 	// 0.3564     // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)
+ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 //Y              0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
@@ -51,8 +51,8 @@ NAGE_S	4               //Power of relative Age in function for Age
 GROWTHTMIN	0       //Minimum temperature for growth
 GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	10      //Optimum temperature for growth
-GROWTHSTART	5       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008)
-GROWTHEND	5       //average temperature for ending growth in °C
+GROWTHSTART	8       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008)
+GROWTHEND	8       //average temperature for ending growth in °C
 MINDAYLENGTH  11      //minimum day length for deciduous
 
 //SOIL WATER

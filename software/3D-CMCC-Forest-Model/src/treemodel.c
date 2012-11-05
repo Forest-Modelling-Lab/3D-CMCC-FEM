@@ -67,6 +67,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 	static float abscission_day_length;
 
+	static float oldWf;
+
 
 
 
@@ -458,12 +460,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//to change: the vegetative period should be stopped when LAI values fall under 0
 								{
 									Veg_UnVeg = 1;
-									Log("OK****************************************************************\n");
 								}
 								else
 								{
 									Veg_UnVeg = 0;
-									Log("NO****************************************************************\n");
 								}
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
@@ -509,29 +509,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation, m->cells[cell].soil_moist_ratio);
 								//compute traspiration for area
 								//Log("Monthly Canopy Transpiration per area = %g mm-Kg H2o/ha^-1/month\n", MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] * SIZECELL);
-
-
-								/////////////////////////////////////////////////////////////////////////////////////
-/*
-								//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
-								//alpha e beta andranno inserite come specie specifiche!!!!
-
-								float alpha_evapo = 0.65;
-								float beta_evapo = 0.95;
-								float MonthTransp_Angelo;
-
-
-								m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (m->cells[cell].soil_moist_ratio, beta_evapo));
-								Log("ANGELO F_EVAPO = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO]);
-
-
-								MonthTransp_Angelo = MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO];
-								Log("ANGELO MonthTransp = %g \n", MonthTransp_Angelo);
-*/
-
-
-								//////////////////////////////////////////////////////////////////////////////////////
-
 
 
 								//compute soil evaporation in the last loop of height
@@ -709,6 +686,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
 
+
+
 								if (settings->version == 'u')
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
@@ -778,30 +757,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							MonthTransp = Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], met, month, m->cells[cell].daylength, DaysInMonth[month], vpd, m->cells[cell].net_radiation, m->cells[cell].soil_moist_ratio);
 							//compute traspiration for area
 							//Log("Monthly Canopy Transpiration per area = %g mm-Kg H2o/ha^-1/month\n", MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] * SIZECELL);
-
-
-							/////////////////////////////////////////////////////////////////////////////////////
-/*
-							//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
-							//alpha e beta andranno inserite come specie specifiche!!!!
-
-							float alpha_evapo = 0.65;
-							float beta_evapo = 0.95;
-							float MonthTransp_Angelo;
-
-
-							m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (m->cells[cell].soil_moist_ratio, beta_evapo));
-							Log("ANGELO F_EVAPO = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO]);
-
-
-							MonthTransp_Angelo = MonthTransp * m->cells[cell].heights[height].ages[age].species[species].value[F_EVAPO];
-							Log("ANGELO MonthTransp = %g \n", MonthTransp_Angelo);
-
-*/
-
-							//////////////////////////////////////////////////////////////////////////////////////
-
-
 
 							//compute soil evaporation in the last loop of height
 							if( height == 0)
@@ -954,6 +909,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg);
 
+							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 
 
 							Log("--------------------------------------------------------------------------\n\n\n");
