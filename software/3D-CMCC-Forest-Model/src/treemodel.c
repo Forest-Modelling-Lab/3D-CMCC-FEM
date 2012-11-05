@@ -185,7 +185,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		}
 
 		Log("********MAX available soil W = %g \n",site->maxAsw);
-		Log("********MAX available soil W = %g \n",site->minAsw);
+		Log("********MIN available soil W = %g \n",site->minAsw);
 
 		//control
 		if (m->cells[cell].available_soil_water > site->maxAsw)
@@ -351,6 +351,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 						Log("- Height = %g m\n", m->cells[cell].heights[height].value);
 						Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
+						Log("- Vegetative Months %d months for year %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE], yos[years].year);
 						//Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 						if (settings->version == 's')
 						{
@@ -387,7 +388,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
 
 									//reset LAI
-									m->cells[cell].heights[height].ages[age].species[species].value[WF] = 0;
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = 0;
 								}
 							}
 
@@ -457,10 +458,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//to change: the vegetative period should be stopped when LAI values fall under 0
 								{
 									Veg_UnVeg = 1;
+									Log("OK****************************************************************\n");
 								}
 								else
 								{
 									Veg_UnVeg = 0;
+									Log("NO****************************************************************\n");
 								}
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
@@ -498,7 +501,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
 
-								//Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
 
@@ -768,8 +771,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 							Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
-
-							//Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
 

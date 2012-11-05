@@ -522,6 +522,9 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 					else
 					{
 						Log("Un-spatial version \n");
+						Log("growth start %g \n",  c->heights[height].ages[age].species[species].value[GROWTHSTART]);
+						Log("month %d \n",  month);
+						Log("tav %g \n",  met[month].tav);
 
 						//Veg period
 						if ((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))

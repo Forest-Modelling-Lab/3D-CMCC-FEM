@@ -1432,7 +1432,15 @@ int main(int argc, char *argv[])
 			/* model */
 			matrix_summary (m, years, yos );
 
-			/*set vegetative period*/
+			/*compute number of vegetative months*/
+			if (settings->version == 'u')
+			{
+				for (month = 0; month < MONTHS; month ++)
+				{
+					Get_Veg_Months (m, yos, month, years);
+				}
+			}
+
 
 			for ( month = 0; month < MONTHS; month++)
 			{

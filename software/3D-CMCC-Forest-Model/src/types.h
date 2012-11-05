@@ -488,6 +488,7 @@ enum {
 
 
 
+
 	//SAPLINGS
 
 	LAI_SAP,
@@ -519,6 +520,8 @@ enum {
 
 
 	VEG_MONTHS,
+
+	MONTH_VEG_FOR_LITTERFALL_RATE,
 
 	COUNTERS
 };
@@ -810,6 +813,7 @@ settings_t *settings;
 
 // External functions
 extern int tree_model(MATRIX *const, const YOS *const, const int, const int, const int);
+extern void Get_Veg_Months (MATRIX *const, const YOS *const, const int, const int);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
 extern float Get_canopy_cover (SPECIES *const, int, int, int);

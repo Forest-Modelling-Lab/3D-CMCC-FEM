@@ -4,6 +4,58 @@
 
 
 
+
+
+extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int month, const int years)
+{
+	MET_DATA *met;
+	static int cell;
+	static int height;
+	static int age;
+	static int species;
+
+	met = (MET_DATA*) yos[years].m;
+
+
+	for ( cell = 0; cell < m->cells_count; cell++)
+	{
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+		{
+			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+			{
+				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+				{
+
+					if (!month)
+					{
+						m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+					}
+					if (m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
+					{
+						if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+								|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						{
+							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+							//Log("MONTH_VEG_FOR_LITTERFALL_RATE = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						}
+					}
+					else
+					{
+						m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+						//Log("MONTH_VEG_FOR_LITTERFALL_RATE = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					}
+					if (month == 11)
+					{
+						Log("----- MONTHS_VEG_FOR_LITTERFALL_RATE = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
 //----------------------------------------------------------------------------//
 //                                                                            //
 //                             GetDayLength                                   //

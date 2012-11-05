@@ -660,7 +660,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 							"----- wr coarse = %g tDM/ha\n"
 							"----- wr fine = %g tDM/ha\n"
 							"----- ws = %g tDM/ha\n"
-							"----- wres = %g tDM/ha\n\n\n",
+							"----- wres = %g tDM/ha\n",
 							species + 1,
 							m->cells[cell].heights[height].ages[age].species[species].name,
 							((m->cells[cell].heights[height].ages[age].species[species].phenology == D) ? 'D' : 'E'),
