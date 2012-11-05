@@ -103,12 +103,14 @@ SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 STEMCONST	0.095   //Constant in the Stem Mass v. diameter relationship
 STEMPOWER	2.69    //Power in the Stem Mass v. diameter raltionship
+
 //MORTALITY
 WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
 THINPOWER	2       //Power in self-thinning rule
 MF	0               //Fraction mean single tree foliage biomass lost per dead tree
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
+
 //ALLOMETRIC RELATIONSHIPS
 DBHDC	0.35            //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
                                         //DBHDC = 20/100
@@ -126,21 +128,25 @@ HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubr
 RPOWER	0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
 FORMFACT	0.6     //Form Factor for Sessil Oak (MJ Tarp-Johansen, Ann For Sci, 1997)
+
 //LPJ allometric relationships
 KALLOMA	100
 KALLOMB	40
 KALLOMC	0.5
 KRP	1.6
+
 //CHAPMAN-RICHARDS relationships
 CRA	34.597
 CRB	0.038
 CRC	1.104
+
 //CROWDING COMPETITION FUNCTION
 HDMAX	1.4             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN	0.7             //Height to Base diameter ratio MIN  (Portoghesi)
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
 DENMIN	0.01           //Minimum density (trees/10000 m^2)
+
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                                         //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
@@ -155,6 +161,7 @@ SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.)
 MINTEMP	20              //Minimum temperature for germination in °C
 ESTMAX	0.24            //Potential Establishment rate in the absence of competition
+
 //SEEDS PRODUCTION FROM LPJ
 FRACFRUIT	0.05    //Fraction of NPP to Fruit Production
 
