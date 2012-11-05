@@ -15,7 +15,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 {
 	//CTEM VERSION
 
-	Log("\n GET_ALLOCATION_ROUTINE\n\n");
+	Log("\n GET_ALLOCATION_ROUTINE*********************************************************************************************************************************\n\n");
 
 	Log("Carbon allocation routine for deciduous\n");
 	Log("Version = %c \n", settings->version);
@@ -421,12 +421,14 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 						//COMPUTE LITTERFALL
 						//compute months of leaf fall
 						s->counter[MONTH_FRAC_FOLIAGE_REMOVE] = floor ( 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("Months of leaf fall for deciduous = %g \n", 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						Log("Months of leaf fall for deciduous = %d \n", s->counter[MONTH_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 						foliage_reduction_rate = 1.0 /  s->counter[MONTH_FRAC_FOLIAGE_REMOVE];
 						Log("foliage reduction rate = %g \n", foliage_reduction_rate);
 						s->value[BIOMASS_FOLIAGE_CTEM] = 1.0 - foliage_reduction_rate;
 						Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
 
 
 
@@ -522,6 +524,21 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
 					Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
 					Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+
+
+
+
+					//COMPUTE LITTERFALL
+					//compute months of leaf fall
+					s->counter[MONTH_FRAC_FOLIAGE_REMOVE] = floor ( 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					Log("Months of leaf fall for deciduous = %g \n", 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					Log("Months of leaf fall for deciduous = %d \n", s->counter[MONTH_FRAC_FOLIAGE_REMOVE]);
+					//monthly rate of foliage reduction
+					foliage_reduction_rate = 1.0 /  s->counter[MONTH_FRAC_FOLIAGE_REMOVE];
+					Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+					s->value[BIOMASS_FOLIAGE_CTEM] = 1.0 - foliage_reduction_rate;
+					Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
 
 				}
 
@@ -664,6 +681,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("delta_S %d = 0 \n", z);
 				Log("delta_Res %d = 0 \n", z);
 			}
+		}
+		else
+		{
+			Log("Unvegetative period \n");
 		}
 	}
 	if (settings->version == 's')

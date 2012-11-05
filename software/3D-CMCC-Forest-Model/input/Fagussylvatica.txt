@@ -118,8 +118,8 @@ DBHDCMAX	0.24    //Low Density
 DBHDCMIN	0.16    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.043         //a value from Kostner for Q. petreae in cm
-SAP_B         2.384         //b value from Kostner for Q. petreae in cm
+SAP_A         0.674         //a value from Kostner for Q. petreae in cm
+SAP_B         1.992         //b value from Kostner for Q. petreae in cm
 SAP_LEAF      2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
 HMAX	40              //35  //Max Height in m for QUERCUS CERRIS for Chapman-Richards Function (Nocetti M. 2007)
 DMAX	80              //Max Stem Diameter in cm QUERCUS CERRIS
