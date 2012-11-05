@@ -35,10 +35,6 @@ void Get_initialization_biomass_data (SPECIES *const s)
 	s->value[BIOMASS_ROOTS_FINE_CTEM] = 0;
 	Log("--Coarse Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 
-	//compute foliage biomass for evergreen
-	s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_STEM_CTEM] * (1.0/s->value[STEM_LEAF]);
-	Log("--Foliage Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
-
 
 	//compute reserve "biomass"
 
@@ -51,10 +47,19 @@ void Get_initialization_biomass_data (SPECIES *const s)
 	if (s->phenology == 0)
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.11;
+		//compute foliage biomass for evergreen
+		s->value[BIOMASS_FOLIAGE_CTEM] = 0;
+		Log("--Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g \n", s->value[BIOMASS_RESERVE_CTEM]);
+
 	}
 	else
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.05;
+		//compute foliage biomass for evergreen
+		s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_STEM_CTEM] * (1.0/s->value[STEM_LEAF]);
+		Log("--Foliage Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g \n", s->value[BIOMASS_RESERVE_CTEM]);
 	}
 
 
