@@ -1290,7 +1290,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							//CUMULATIVE BALANCE FOR ENTIRE LAYER
 							Log("**CUMULATIVE BALANCE for layer %d ** \n", m->cells[cell].heights[height].z);
-							Log("END of Year Yearly Cumulated GPP for layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]);
+							Log("END of Year Yearly Cumulated GPP for layer %d  = %g gCm^2 year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]);
 							Log("END of Year Yearly Cumulated NPP for layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP]);
 							Log("END of Year Yearly Cumulated DEL STEM layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WS]);
 							//Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WF]);
