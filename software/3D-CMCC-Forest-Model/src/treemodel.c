@@ -669,9 +669,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
 									Log("PAR OVER CANOPY = %g \n",  m->cells[cell].par_over_dominant_canopy);
 									Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
-									Log("Average Light Asorbed for establishment = %g \n", Light_Absorb_for_establishment);
+									Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
 
 
+								}
+								if (settings->version == 'u')
+								{
+									Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 							}
 							//unvegetative period for deciduous
@@ -686,6 +690,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 								else
 								{
