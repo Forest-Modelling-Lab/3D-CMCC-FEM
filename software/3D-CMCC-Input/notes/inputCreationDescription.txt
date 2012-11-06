@@ -38,13 +38,6 @@ Collecting data produced by 3D-CMCCModel, in the end it has been created 6 image
  6 - Current Annual Increment  . . . . (1 band   - CAI_yyyy.tif)
  
 
-
-
-
-
-
- 
-
 NPP and GPP images has monthly values, AGB, BGB, MAI and CAI yearly values.
 
 The creation of the 150 images in input (10 + 5 * 10 years) are described in the following paragraphs.
