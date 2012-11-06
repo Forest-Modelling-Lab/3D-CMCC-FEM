@@ -498,8 +498,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
-
-								Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] == 1)
+								{
+									Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								}
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].heights[height].z, month,  top_layer, m->cells[cell].daylength, DaysInMonth[month]);
 

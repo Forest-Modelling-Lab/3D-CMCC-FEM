@@ -21,6 +21,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	Log("Version = %c \n", settings->version);
 
 
+	int phenology_phase;
+
+
 
 	//allocation parameter. their sum must be = 1
 	float  s0Ctem = s->value[S0CTEM];
@@ -84,7 +87,33 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	}
 	 */
 
+	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
+	Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
 
+	//defining phenological phase
+	if (daylength > c->abscission_daylength)
+	{
+		//Beginning of growing season
+		if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
+		{
+			phenology_phase = 1;
+		}
+		//Half of beginning of growing season
+		if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
+		{
+			phenology_phase = 2;
+		}
+		//Full growing season
+		if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
+		{
+			phenology_phase = 3;
+		}
+	}
+	else
+	{
+		//Leaf fall
+		phenology_phase = 0;
+	}
 
 	if (settings->version == 'u')
 	{
@@ -123,8 +152,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 			//(Arora V. K., Boer G. J., GCB, 2005)
 
-			Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
-			Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
+
 
 			if (management == 0)
 			{
@@ -176,12 +204,55 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				}
 
 			}
+			/*
+
+			switch (phenology_phase)
+					{
+						case 1:
+							Log("")
+							break;
+
+					}
+					*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 			if (s->value[LAI] <= s->value[PEAK_Y_LAI])
 			{
 				Log("LAI <= PEAK_Y_LAY\n");
 				Log("LAI = %g \n", s->value[LAI]);
 
-				if ( s->value[LAI] <= (s->value[PEAK_Y_LAI] * 0.5 ))
+				if ( (s->value[LAI] <= (s->value[PEAK_Y_LAI] * 0.5 )) && daylength > c->abscission_daylength)
 				{
 					Log("FASE FENOLOGICA = 1 \n");
 					Log("LAI < PEAK_Y_LAI * 0.5 \n");
@@ -429,6 +500,21 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 						s->value[BIOMASS_FOLIAGE_CTEM] = 1.0 - foliage_reduction_rate;
 						Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
+						Log("***LEAF FALL**\n");
+						//COMPUTE LITTERFALL using BIOME_BGC approach
+						//compute months of leaf fall taking an integer value
+						s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
+						foliage_reduction_rate = 1.0 /  s->value[MONTH_FRAC_FOLIAGE_REMOVE];
+						Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+						s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
+						Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+						//recompute LAI
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+						Log("++Lai = %g\n", s->value[LAI]);
+
 
 
 
@@ -455,7 +541,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 					Log("LAI == PEAK LAI \n");
 					Log("FASE FENOLOGICA = 2.3 \n");
-					Log("**Leaf fall**\n");
 					Log("allocating into the three pools Ws+Wr+Wreserve\n");
 
 					pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -510,6 +595,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
 					Log("Coarse Root Biomass (Wrc) = %g tDM/ha\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
+					Log("Foliage Biomass (Wf) = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
 					s->value[DEL_FOLIAGE_CTEM] = 0;
 
 					Log("aF %d = 0 \n", z);
@@ -527,17 +614,23 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
+					if (daylength < c->abscission_daylength/*s->value[MINDAYLENGTH]*/ )
+					{
+						Log("***LEAF FALL**\n");
+						//COMPUTE LITTERFALL using BIOME_BGC approach
+						//compute months of leaf fall taking an integer value
+						s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
+						foliage_reduction_rate = 1.0 /  s->value[MONTH_FRAC_FOLIAGE_REMOVE];
+						Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+						s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
+						Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-					//COMPUTE LITTERFALL using BIOME_BGC approach
-					//compute months of leaf fall taking an integer value
-					s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-					Log("Months of leaf fall for deciduous = %g \n", s->value[LEAF_FALL_FRAC_GROWING] * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-					Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
-					//monthly rate of foliage reduction
-					foliage_reduction_rate = 1.0 /  s->value[MONTH_FRAC_FOLIAGE_REMOVE];
-					Log("foliage reduction rate = %g \n", foliage_reduction_rate);
-					s->value[BIOMASS_FOLIAGE_CTEM] = 1.0 - foliage_reduction_rate;
-					Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+						//recompute LAI
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+						Log("++Lai = %g\n", s->value[LAI]);
+					}
 
 
 				}
@@ -554,7 +647,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			//Exceeding foliar biomass is partitioned among others pools
 			if (s->value[LAI] > s->value[PEAK_Y_LAI])
 			{
-				Log("FASE FENOLOGICA = 4 \n");
+				Log("FASE FENOLOGICA = 4 \n TOO MUCH BIOMASS INTO FOLIAGE\n");
 				Log("LAI = %g \n", s->value[LAI]);
 				s->value[LAI] = s->value[PEAK_Y_LAI];
 				Log("LAI setted to Peak Lai= %g \n", s->value[LAI]);
@@ -664,27 +757,22 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 			}
-
-			else
-			{
-
-
-				Log("aF %d = 0 \n", z);
-				Log("afR %d = 0 \n", z);
-				Log("acR %d = 0 \n", z);
-				Log("aS %d = 0 \n", z);
-				Log("aRes %d = 0 \n", z);
-
-				Log("delta_F %d = 0 \n", z);
-				Log("delta_fR %d = 0 \n", z);
-				Log("delta_cR %d = 0 \n", z);
-				Log("delta_S %d = 0 \n", z);
-				Log("delta_Res %d = 0 \n", z);
-			}
 		}
 		else
 		{
 			Log("Unvegetative period \n");
+
+			Log("aF %d = 0 \n", z);
+			Log("afR %d = 0 \n", z);
+			Log("acR %d = 0 \n", z);
+			Log("aS %d = 0 \n", z);
+			Log("aRes %d = 0 \n", z);
+
+			Log("delta_F %d = 0 \n", z);
+			Log("delta_fR %d = 0 \n", z);
+			Log("delta_cR %d = 0 \n", z);
+			Log("delta_S %d = 0 \n", z);
+			Log("delta_Res %d = 0 \n", z);
 		}
 	}
 	if (settings->version == 's')
