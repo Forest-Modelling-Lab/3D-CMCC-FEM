@@ -528,10 +528,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-					//COMPUTE LITTERFALL
-					//compute months of leaf fall
-					s->counter[MONTH_FRAC_FOLIAGE_REMOVE] = floor ( 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-					Log("Months of leaf fall for deciduous = %g \n", 0.2 * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					//COMPUTE LITTERFALL using BIOME_BGC approach
+					//compute months of leaf fall takin an integer value
+					s->counter[MONTH_FRAC_FOLIAGE_REMOVE] = floor ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+					Log("Months of leaf fall for deciduous = %g \n", s->value[LEAF_FALL_FRAC_GROWING] * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 					Log("Months of leaf fall for deciduous = %d \n", s->counter[MONTH_FRAC_FOLIAGE_REMOVE]);
 					//monthly rate of foliage reduction
 					foliage_reduction_rate = 1.0 /  s->counter[MONTH_FRAC_FOLIAGE_REMOVE];

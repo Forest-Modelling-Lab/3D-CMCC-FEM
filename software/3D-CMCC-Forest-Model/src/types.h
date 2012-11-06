@@ -149,6 +149,8 @@ enum {
 
 	//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 	//LITTERFALL
+	//FOLLOWING BIOME-BGC
+	LEAF_FALL_FRAC_GROWING,		//proportions of the growing season of leaf fall
 	GAMMAFX,                    //Maximum Litterfall rate (month^-1)
 	GAMMAF0,                    //Litterfall rate at t = 0 (month^-1)
 	TGAMMAF,                    //Age at which litterfall rate has median value
