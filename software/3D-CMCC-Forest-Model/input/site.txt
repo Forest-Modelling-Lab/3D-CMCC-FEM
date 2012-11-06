@@ -5,7 +5,7 @@ LONG "14.10" //Site Longitude for Feudozzo
 
 Y	"0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
-INITIALAVAILABLESOILWATER "300" //Initial Available soil water in mm
+INITIALAVAILABLESOILWATER "150" //Initial Available soil water in mm
 
 CO2CONC "387.0" //CO2 concentration
 

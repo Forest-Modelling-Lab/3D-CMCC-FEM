@@ -478,12 +478,13 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 	int age;
 	int species;
 
+
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
 
 
-	Log("\nGET_MONTHLY_FOREST_STRUCTURE_ROUTINE \n");
+	Log("\nGET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = %d\n", month+1);
 
 	Log("Determines if is in Veg Period \n");
 

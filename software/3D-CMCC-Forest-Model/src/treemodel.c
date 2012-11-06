@@ -186,8 +186,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
-		Log("********MAX available soil W = %g \n",site->maxAsw);
-		Log("********MIN available soil W = %g \n",site->minAsw);
 
 		//control
 		if (m->cells[cell].available_soil_water > site->maxAsw)
@@ -345,7 +343,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Get_number_of_layers (&m->cells[cell]);
 
 
-						Log("\n\n\n\ncell = \n");
+						Log("cell = \n");
 						Log("- x = %g\n", m->cells[cell].x);
 						Log("- y = %g\n", m->cells[cell].y);
 						Log("- z = %d\n", m->cells[cell].heights[height].z);

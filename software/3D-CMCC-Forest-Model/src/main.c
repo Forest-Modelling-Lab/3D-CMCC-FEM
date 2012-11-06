@@ -1453,7 +1453,7 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
-				Log("****************END OF MONTH*******************\n\n\n");
+				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 			Log("****************END OF YEAR*******************\n\n\n\n\n\n");
 
