@@ -1,0 +1,52 @@
+3D-CMCCModel is a model to simulate a forest evolution, producing several forestal and biological parameters
+which describes how a single point of a forest could evolve.
+To obtain biomass data for Parco delle Madonìe and Comunità Montana del Titerno ed ALto Tammaro,
+the 3D-CMCCModel has been launched for every pixel of several species inside the area of interest.
+That area is represented by a 4 edges polygon having the following lat/lon coordinates: x, y; x, y ; x, y ; x, y.
+To make possible a launch of 3D-CMCCModel on every pixel of interest, it has been created an image for every
+parameter needed in input by the model:
+
+ 1 - Year Planted  . . . . . . . . . . (5 bands  - Y_planted.tif)
+ 2 - Species . . . . . . . . . . . . . (5 bands  - Species.tif)
+ 3 - Phenology . . . . . . . . . . . . (5 bands  - Phenology.tif)
+ 4 - Management  . . . . . . . . . . . (5 bands  - Management.tif)
+ 5 - Number of trees . . . . . . . . . (5 bands  - NumHa.tif)
+ 6 - Average Diameter at Breast Height (5 bands  - AvDBH.tif)
+ 7 - Height  . . . . . . . . . . . . . (5 bands  - Height.tif)
+ 8 - Foliage Biomass . . . . . . . . . (5 bands  - Wf.tif)
+ 9 - Coarse Root Biomass . . . . . . . (5 bands  - Wrc.tif)
+10 - Stem Biomass  . . . . . . . . . . (5 bands  - Ws.tif)
+11 - Average Solar Radiation . . . . . (12 bands - SolarRad_yyyy.tif)
+12 - Average Temperature . . . . . . . (12 bands - Avg_Temp_yyyy.tif)
+13 - Vapour Pression Deficit . . . . . (12 bands - VPD_yyyy.tif)
+14 - Precipitations  . . . . . . . . . (12 bands - Precip_yyyy.tif)
+15 - Leaf Area Index . . . . . . . . . (12 bands - LAI_yyyy.tif)
+
+Since the period covered by this study is for years from 2000 to 2010, for the last 5 parameters it has been
+created an image per year (yyyy characters stand for year digits like 2000, 2001, 2002, etc).
+The first 10 images have 5 layers or bands, because it has been decided to work with 5 different layers of
+vegetation per pixel.
+The remaining 5 images have 12 layers instead, because they represent climatological data taken once a month
+where every band represent a month of data.
+
+Collecting data produced by 3D-CMCCModel, in the end it has been created 6 images per year:
+ 1 - Net Primary Production  . . . . . (12 bands - NPP_yyyy.tif)
+ 2 - Gross Primary Production  . . . . (12 bands - GPP_yyyy.tif)
+ 3 - Above Ground Biomass  . . . . . . (1 band   - AGB_yyyy.tif)
+ 4 - Below Ground Biomass  . . . . . . (1 band   - BGB_yyyy.tif)
+ 5 - Mean Annual Increment . . . . . . (1 band   - MAI_yyyy.tif)
+ 6 - Current Annual Increment  . . . . (1 band   - CAI_yyyy.tif)
+ 
+
+
+
+
+
+
+ 
+
+NPP and GPP images has monthly values, AGB, BGB, MAI and CAI yearly values.
+
+The creation of the 150 images in input (10 + 5 * 10 years) are described in the following paragraphs.
+
+----------------------------------------------------------------------------------------------------------------------------
