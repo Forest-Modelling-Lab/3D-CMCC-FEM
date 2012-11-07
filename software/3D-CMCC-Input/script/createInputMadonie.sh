@@ -78,73 +78,139 @@ if [ ${DEBUG} != "y" ] && [ ${DEBUG} != "n" ] ; then
 fi
 
 # Check input parameters
-for PARAM in "${@}" ; do
+if [ -z ${1} ] ; then # If I have no input parameters, create every image
 	for IMG in "${IMG_ALL[@]}" ; do
-		if [ "${IMG}" == "${PARAM}" ] ; then
-    		IMG_SELECTED+=("${PARAM}")
-    	fi
+		IMG_SELECTED+=("${IMG}")
 	done
-done
+else
+	for PARAM in "${@}" ; do
+		for IMG in "${IMG_ALL[@]}" ; do
+			if [ "${IMG}" == "${PARAM}" ] ; then
+    			IMG_SELECTED+=("${PARAM}")
+    		fi
+		done
+	done
+fi
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Checking input arguments and configurations }
 
 ### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Y_planted" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Y_planted execution }
 
 ### Species execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Species" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Species execution }
 
 ### Phenology execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Phenology" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Phenology execution }
 
 ### Management execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Management" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Management execution }
 
 ### NumHa execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "NumHa" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NumHa execution }
 
 ### AvDBH execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "AvDBH" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - AvDBH execution }
 
 ### Height execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Height" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Height execution }
 
 ### Wf execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Wf" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Wf execution }
 
 ### Wrc execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Wrc" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Wrc execution }
 
 ### Ws execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Ws" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Ws execution }
 
 ### SolarRad execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "SolarRad" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  SolarRad execution }
 
 ### Avg_Temp execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Avg_Temp" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Avg_Temp execution }
 
 ### VPD execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "VPD" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - VPD execution }
 
 ### Precip execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Precip" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Precip execution }
 
 ### LAI execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "LAI" ] ; then
+    	echo "Go ${IMG}!"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+exit 0
