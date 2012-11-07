@@ -227,6 +227,7 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
+    	${BIN_DIR}/getLAI
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
