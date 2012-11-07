@@ -24,7 +24,7 @@ IMG_SELECTED=()
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
-DEBUG="n"
+DEBUG="y"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global variables definitions }
 
 ### Global functions definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -227,7 +227,10 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
-    	${BIN_DIR}/getLAI
+    	IMAGES=(
+    	)
+	
+    	${BIN_DIR}/getLAI -i ${OUT_NDV}/${SCENE_ID}-${PROD_DATE}-NDVI.tif -o ${OUT_LAI}/${SCENE_ID}-${PROD_DATE}-LAI.tif &>> "${LOGFILE}"
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
