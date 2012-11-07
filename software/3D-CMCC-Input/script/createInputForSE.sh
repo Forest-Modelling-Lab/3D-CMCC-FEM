@@ -15,6 +15,8 @@
 VERSION="0.1"
 BIN_DIR="$( dirname ${0} )/../bin"
 MODULES=(remap getLAI applyMask)
+IMG_ALL=(Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
+IMG_SELECTED=()
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
@@ -24,10 +26,11 @@ DEBUG="n"
 ### Global functions definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 usage(){
 	echo ""
-	echo "Usage: ${0}"
-	#echo "	- INPUTDIR is the directory in which the image is supposed to be"
-	#echo "	- IMAGE is the zipped AVNIR2 L1B2G image to process"
-	#echo "Remeber to set up correctly the BIN_DIR, directory where the C modules are stored"
+	echo "Usage: ${0} [IMG_TO_PROCESS]"
+	echo "       - IMG_TO_PROCESS is an optional array to define which images to process. If omitted, every image will be created."
+	echo "       - Accepted values for the array are (every other value it is ignored):"
+	echo "             Y_planted, Species, Phenology, Management, NumHa, AvDBH, Height, Wf, Wrc, Ws, SolarRad, Avg_Temp, VPD, Precip, LAI"
+	echo "       - NOTE: Remeber to set up and fill correctly the BIN_DIR, directory where the C modules are stored."
 	echo ""
 	exit 40
 }
@@ -58,7 +61,7 @@ error() {
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global functions definitions }
 
 ### Checking input arguments and configurations - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-if [ ! -d "${BIN_DIR}" ] || [ -z ${1} ] || [ -z ${2} ] || [ ! -d ${1} ] ; then
+if [ ! -d "${BIN_DIR}" ]; then
 	usage
 fi
 
@@ -73,4 +76,75 @@ done
 if [ ${DEBUG} != "y" ] && [ ${DEBUG} != "n" ] ; then
 	usage
 fi
+
+# Check input parameters
+for PARAM in "${@}" ; do
+	for IMG in "${IMG_ALL[@]}" ; do
+		if [ "${IMG}" == "${PARAM}" ] ; then
+    		IMG_SELECTED+=("${PARAM}")
+    	fi
+	done
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Checking input arguments and configurations }
+
+### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Y_planted execution }
+
+### Species execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Species execution }
+
+### Phenology execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Phenology execution }
+
+### Management execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Management execution }
+
+### NumHa execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NumHa execution }
+
+### AvDBH execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - AvDBH execution }
+
+### Height execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Height execution }
+
+### Wf execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Wf execution }
+
+### Wrc execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Wrc execution }
+
+### Ws execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Ws execution }
+
+### SolarRad execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  SolarRad execution }
+
+### Avg_Temp execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Avg_Temp execution }
+
+### VPD execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - VPD execution }
+
+### Precip execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Precip execution }
+
+### LAI execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
