@@ -13,10 +13,12 @@
 
 ### Global variables definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 VERSION="0.1"
+SCRIPT_NAME="${0:2:-3}"
 BIN_DIR="$( dirname ${0} )/../bin"
 MODULES=(remap getLAI applyMask)
 IMG_ALL=(Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
 IMG_SELECTED=()
+
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
@@ -94,8 +96,8 @@ fi
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Checking input arguments and configurations }
 
 ### Pre-execution settings- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Chain log filename with and without path
-LOGFILENAME="${0}.log"
+# Processing log filename with and without path
+LOGFILENAME="${SCRIPT_NAME}.log"
 LOGFILE="${OUTPUT_PATH}/${LOGFILENAME}"
 echo "${LOGFILENAME}"
 
