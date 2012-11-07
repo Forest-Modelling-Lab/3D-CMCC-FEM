@@ -14,7 +14,9 @@
 ### Global variables definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
+AOI="Parco delle Madonie (Sicily)"
 BIN_DIR="$( dirname ${0} )/../bin"
+WORK_DIR="$( dirname ${0} )/../output/working"
 MODULES=(remap getLAI applyMask)
 IMG_ALL=(Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
 IMG_SELECTED=()
@@ -38,27 +40,8 @@ usage(){
 }
 
 log() {
-	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" >> "${LOGFILE}"
-}
-
-error() {
-	# Copy the log file (with reported error) into output directory
-	cp "${LOGFILE}" "${WORK_DIR}/${LOGFILENAME}.err"
-	if [ ${?} -ne "0" ] ; then
-		echo "Copy of logfile into "${OUTPUT_DIR}" failed\n"
-		exit 4
-	fi
-
-	# Clean input dir
-	if [ ${DEBUG} == "n" ] ; then
-		rm -r ${WORK_DIR}/*
-		if [ ${?} -ne "0" ] ; then
-			echo "Cleaning "${WORK_DIR}" failed\n"
-			exit 4
-		fi
-	fi
-
-	exit 4
+	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" | tee -a "${LOGFILE}"
+	#echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" >> "${LOGFILE}"
 }
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global functions definitions }
 
@@ -98,22 +81,27 @@ fi
 ### Pre-execution settings- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Processing log filename with and without path
 LOGFILENAME="${SCRIPT_NAME}.log"
-LOGFILE="${OUTPUT_PATH}/${LOGFILENAME}"
-echo "${LOGFILENAME}"
+LOGFILE="${WORK_DIR}/${LOGFILENAME}"
 
-#if [ -f "${LOGFILE}" ] ; then
-	#rm -f "${LOGFILE}"
-	#if [ ${?} -ne "0" ] ; then
-		#echo "Removing of previous "${LOGFILE}" failed."
-		#exit 1
-	#fi
-#fi
+# Remove logfile if already existent
+if [ -f "${LOGFILE}" ] ; then
+	rm -f "${LOGFILE}"
+	if [ ${?} -ne "0" ] ; then
+		echo "Removing of existing "${LOGFILE}" failed."
+		exit 1
+	fi
+fi
+
+log "Starting data processing for ForSE project (version ${VERSION})\n"
+log "Area Of Interest: ${AOI}\n"
+log "\n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Pre-execution settings }
 
 ### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Y_planted" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images.... ###\n"
+    	log "### .....stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Y_planted execution }
@@ -121,7 +109,8 @@ done
 ### Species execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Species" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images...... ###\n"
+    	log "### .......stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Species execution }
@@ -129,7 +118,8 @@ done
 ### Phenology execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Phenology" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images.... ###\n"
+    	log "### .....stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Phenology execution }
@@ -137,7 +127,8 @@ done
 ### Management execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Management" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images... ###\n"
+    	log "### ....stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Management execution }
@@ -145,7 +136,8 @@ done
 ### NumHa execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "NumHa" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images........ ###\n"
+    	log "### .........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NumHa execution }
@@ -153,7 +145,8 @@ done
 ### AvDBH execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "AvDBH" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images........ ###\n"
+    	log "### .........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - AvDBH execution }
@@ -161,7 +154,8 @@ done
 ### Height execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Height" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images....... ###\n"
+    	log "### ........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Height execution }
@@ -169,7 +163,8 @@ done
 ### Wf execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Wf" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images........... ###\n"
+    	log "### ............stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Wf execution }
@@ -177,7 +172,8 @@ done
 ### Wrc execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Wrc" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images.......... ###\n"
+    	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Wrc execution }
@@ -185,7 +181,8 @@ done
 ### Ws execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Ws" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images........... ###\n"
+    	log "### ............stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Ws execution }
@@ -193,7 +190,8 @@ done
 ### SolarRad execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images..... ###\n"
+    	log "### ......stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  SolarRad execution }
@@ -201,7 +199,8 @@ done
 ### Avg_Temp execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Avg_Temp" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images..... ###\n"
+    	log "### ......stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Avg_Temp execution }
@@ -209,7 +208,8 @@ done
 ### VPD execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "VPD" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images.......... ###\n"
+    	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - VPD execution }
@@ -217,7 +217,8 @@ done
 ### Precip execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images....... ###\n"
+    	log "### ........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Precip execution }
@@ -225,7 +226,8 @@ done
 ### LAI execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
-    	echo "Go ${IMG}!"
+    	log "### { Start creating ${IMG} images.......... ###\n"
+    	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
