@@ -93,6 +93,21 @@ else
 fi
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Checking input arguments and configurations }
 
+### Pre-execution settings- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+# Chain log filename with and without path
+LOGFILENAME="${0}.log"
+LOGFILE="${OUTPUT_PATH}/${LOGFILENAME}"
+echo "${LOGFILENAME}"
+
+#if [ -f "${LOGFILE}" ] ; then
+	#rm -f "${LOGFILE}"
+	#if [ ${?} -ne "0" ] ; then
+		#echo "Removing of previous "${LOGFILE}" failed."
+		#exit 1
+	#fi
+#fi
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Pre-execution settings }
+
 ### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Y_planted" ] ; then
