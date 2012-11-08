@@ -27,7 +27,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 	//Veg period
-	if (Veg_UnVeg == 1)
+	if (Veg_UnVeg == 1 || s->phenology == E)
 	{
 		if (s->value[ALPHA] > 0)
 		{
@@ -123,6 +123,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	}
 	else //Un Veg period
 	{
+		Log("Unvegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
 		Log("Monthly GPP in grams of C for layer %d = %g \n", z , s->value[GPP_g_C]);

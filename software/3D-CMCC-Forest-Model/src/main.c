@@ -105,16 +105,18 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 };
 
 /* messages */
+/*
 static const char msg_dataset_not_specified[] =
 		"dataset not specified."
 #if defined (_WIN32) || defined (linux)
 		" searching..."
 #endif
 		"\n";
+*/
 static const char msg_dataset_path[]	=	"dataset path = %s\n";
 static const char msg_site_path[]		=	"site path = %s\n";
 static const char msg_settings_path[]	=	"settings path = %s\n";
-static const char msg_output_path[]		=	"output path = %s\n";
+//static const char msg_output_path[]		=	"output path = %s\n";
 static const char msg_output_file[]		=	"output file = %s\n\n";
 static const char msg_processing[]		=	"processing %s...\n";
 static const char msg_ok[]				=	"ok";
@@ -134,27 +136,27 @@ static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
 		"    -log -> enable log to file\n";
 
 /* error messages */
-extern const char err_out_of_memory[];
+//extern const char err_out_of_memory[];
 const char err_unable_open_file[] = "unable to open file.";
 const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
-static const char err_output_path_no_delimiter[] = "output path must end with a \"%c\"\n\n";
-static const char err_unable_open_output_path[] = "unable to open output path.\n";
+//static const char err_output_path_no_delimiter[] = "output path must end with a \"%c\"\n\n";
+//static const char err_unable_open_output_path[] = "unable to open output path.\n";
 static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
 static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
 static const char err_settings_already_specified[] = "settings already specified (%s)! \"%s\" skipped.\n";
 //static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
-static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
+//static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
 static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
 static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
 static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
 static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
 static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
 static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
-static const char err_met_not_specified[] = "met not specified.";
-static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
+//static const char err_met_not_specified[] = "met not specified.";
+//static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
 
 int sort_by_years(const void *a, const void *b)
 {
@@ -1433,13 +1435,12 @@ int main(int argc, char *argv[])
 			matrix_summary (m, years, yos );
 
 			/*compute number of vegetative months*/
-			if (settings->version == 'u')
+			Log("compute vegetative months.....\n");
+			for (month = 0; month < MONTHS; month ++)
 			{
-				for (month = 0; month < MONTHS; month ++)
-				{
-					Get_Veg_Months (m, yos, month, years);
-				}
+				Get_Veg_Months (m, yos, month, years);
 			}
+
 
 
 			for ( month = 0; month < MONTHS; month++)

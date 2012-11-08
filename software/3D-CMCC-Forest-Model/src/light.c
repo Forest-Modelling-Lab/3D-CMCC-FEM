@@ -52,11 +52,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	if (settings->version == 's')
 	{
 		LightTrasmitted = (exp(- s->value[K] * met[month].ndvi_lai));
+		Log("NDVI-LAI = %g \n", met[month].ndvi_lai );
 	}
 	else
 	{
 		LightTrasmitted = (exp(- s->value[K] * s->value[LAI]));
+		Log("MODEL_LAI = %g \n", s->value[LAI] );
 	}
+
 	Log("Light Trasmitted = %g\n", LightTrasmitted);
 	Log("Vertical Percentage of Light Trasmitted through this layer = %g %%\n", LightTrasmitted * 100);
 
@@ -66,7 +69,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 
 
-	Log("dominant contatore %d", c->dominant_veg_counter);
+	Log("dominant contatore %d \n", c->dominant_veg_counter);
 
 
 

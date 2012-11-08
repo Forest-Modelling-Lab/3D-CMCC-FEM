@@ -9,7 +9,7 @@
 extern  const char *szMonth[MONTHS];
 extern int MonthLength[];
 extern int DaysInMonth[];
-extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
+//extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
 /* */
@@ -65,9 +65,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static float Interception;
 	static float RainIntercepted;
 
-	static float abscission_day_length;
-
-	static float oldWf;
+	//static float oldWf;
 
 
 
@@ -351,6 +349,14 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("- Species = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 						Log("- Height = %g m\n", m->cells[cell].heights[height].value);
 						Log("- Number of trees = %d trees \n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
+						if ( m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
+						{
+							Log("- Vegetative Months %d months for year %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE], yos[years].year);
+						}
+						else
+						{
+							Log("- Vegetative Months %d months for year %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE], yos[years].year);
+						}
 						Log("- Vegetative Months %d months for year %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE], yos[years].year);
 						//Log("- Monthly LAI from Model= %g \n",m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 						if (settings->version == 's')
