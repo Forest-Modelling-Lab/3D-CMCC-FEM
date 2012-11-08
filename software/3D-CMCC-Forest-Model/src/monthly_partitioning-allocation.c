@@ -859,8 +859,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("BiomassFoliage CTEM = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM] );
 
 				//recompute LAI
-				//s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
-				//Log("++Lai = %g\n", s->value[LAI]);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+				Log("++Lai = %g\n", s->value[LAI]);
 
 				s->value[DEL_STEMS_CTEM] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
@@ -932,6 +932,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				//allocation to foliage
 				s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 				Log("Foliage Biomass (Wf) = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+				//recompute LAI
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+				Log("++Lai = %g\n", s->value[LAI]);
 
 
 
