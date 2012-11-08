@@ -6,7 +6,6 @@
 #include "math.h"
 #include "types.h"
 
-
 void Get_biomass_increment ( SPECIES *const s,  int z, int heights_count, float dominant_prec_volume, float dominated_prec_volume )
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
