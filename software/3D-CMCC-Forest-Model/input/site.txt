@@ -1,7 +1,7 @@
-SITENAME "Feudozzo (AQ) - Italy" //Site Name
+SITENAME "Sibillini (AQ) - Italy" //Site Name
 
-LAT "41.47" //Site Latitude for Feudozzo
-LONG "14.10" //Site Longitude for Feudozzo
+LAT "42.901" //Site Latitude 
+LONG "13.205" //Site Longitude 
 
 Y	"0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
 

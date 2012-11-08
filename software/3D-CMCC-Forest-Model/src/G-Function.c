@@ -14,6 +14,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	static int age;
 	static int species;
 
+
 	met = (MET_DATA*) yos[years].m;
 
 
@@ -36,7 +37,8 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 								|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
-							//Log("MONTH_VEG_FOR_LITTERFALL_RATE = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+							//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+							Log("----- Vegetative month = %d \n", month + 1);
 						}
 					}
 					else
@@ -46,7 +48,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 					}
 					if (month == 11)
 					{
-						Log("----- MONTHS_VEG_FOR_LITTERFALL_RATE = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 					}
 				}
 			}

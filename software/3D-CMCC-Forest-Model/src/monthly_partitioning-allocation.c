@@ -95,7 +95,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	if (settings->version == 'u')
 	{
 		//defining phenological phase
-		if (daylength > c->abscission_daylength)
+		if (daylength > s->value[MINDAYLENGTH] /*c->abscission_daylength*/)
 		{
 			//Beginning of growing season
 			if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
@@ -337,7 +337,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 				Log("FASE FENOLOGICA = 2 \n");
 				Log("**Normal Growth**\n");
-				Log("Day length > %g \n", c->abscission_daylength/*s->value[MINDAYLENGTH]*/ );
+				Log("Day length > %g \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
 				Log("LAI MAX * 0.5 < LAI < LAI MAX \n");
 				Log("allocating into the three pools Ws+Wr+Wf\n");
 
@@ -875,7 +875,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 				Log("FASE FENOLOGICA = 2 \n");
 				Log("**Normal Growth**\n");
-				Log("Day length > %g \n", c->abscission_daylength/*s->value[MINDAYLENGTH]*/ );
+				Log("Day length > %g \n", /*c->abscission_daylength*/ s->value[MINDAYLENGTH] );
 				Log("LAI MAX * 0.5 < NDVI-LAI < LAI MAX \n");
 				Log("allocating into the three pools Ws+Wr+Wf\n");
 

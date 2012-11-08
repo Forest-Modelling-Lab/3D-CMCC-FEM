@@ -50,9 +50,9 @@ NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth
 GROWTHTMAX	30      //Maximum temperature for growth
-GROWTHTOPT	10      //Optimum temperature for growth
-GROWTHSTART	8       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008)
-GROWTHEND	8       //average temperature for ending growth in °C
+GROWTHTOPT	20      //Optimum temperature for growth
+GROWTHSTART	14       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008)
+GROWTHEND	5       //average temperature for ending growth in °C
 MINDAYLENGTH  11      //minimum day length for deciduous
 
 //SOIL WATER
