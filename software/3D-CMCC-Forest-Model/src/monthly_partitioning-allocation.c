@@ -1253,10 +1253,10 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 		Log("OldWf = %g\n", oldWf);
 		s->value[DEL_LITTER] = gammaF * oldWf;
-		Log("Yearly Foliage Biomass to litter from evergreen population = %g tDM/ha\n", s->value[DEL_LITTER]);
+		Log("Foliage Biomass to litter from evergreen population = %g tDM/ha\n", s->value[DEL_LITTER]);
 
 		s->value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - s->value[DEL_LITTER]);
-		Log("Yearly Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
 		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
@@ -1354,17 +1354,18 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 		//leaf litterfall
 
-		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0]) * exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * s->value[TREE_AGE] / s->value[TGAMMAF]));
+		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0])
+				* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * s->value[TREE_AGE] / s->value[TGAMMAF]));
 		//Log("Litterfall rate = %g\n", gammaF);
 
 		oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
 
 		Log("OldWf = %g\n", oldWf);
 		s->value[DEL_LITTER] = gammaF * oldWf;
-		Log("Yearly Foliage Biomass to litter from evergreen population = %g tDM/ha\n", s->value[DEL_LITTER]);
+		Log("Foliage Biomass to litter from evergreen population = %g tDM/ha\n", s->value[DEL_LITTER]);
 
 		s->value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - s->value[DEL_LITTER]);
-		Log("Yearly Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
 		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];

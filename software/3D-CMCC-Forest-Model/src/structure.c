@@ -284,7 +284,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				//define numbers of hight classes for each layer and determines the 'z' value
+				//define numbers of height classes for each layer and determines the 'z' value
 
 				if (c->heights_count == 1)
 				{
@@ -467,6 +467,63 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 	Log("*************************************************** \n");
 }
 
+
+
+
+
+
+extern int Get_monthly_numbers_of_layers (CELL *const c)
+{
+	//determines number of layer in function of:
+	//-differences between tree height classes
+	//-vegetative or un-vegetative period
+	int height;
+	int layer_counter;
+	float current_height;
+	float previous_height;
+
+	//height differences in meter to consider trees in two different layers
+
+
+	Log("--GET NUMBER OF LAYERS based on differences in tree height(currently it is not yet used)\n");
+
+	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		current_height = c->heights[height].value;
+		if (c->heights_count > 1)
+		{
+			if (height == c->heights_count - 1)
+			{
+				layer_counter = 1;
+				previous_height = current_height;
+			}
+			else
+			{
+				if ((previous_height -current_height ) > settings->layer_limit)
+				{
+					layer_counter += 1;
+					previous_height = current_height;
+				}
+				else
+				{
+					previous_height = current_height;
+				}
+			}
+		}
+		else
+		{
+			layer_counter = 1;
+			Log("ONE HEIGHT CLASS ONE LAYER \n");
+		}
+	}
+
+	Log("NUMBER OF DIFFERENT LAYERS = %d\n", layer_counter);
+
+	return layer_counter;
+
+}
 
 
 

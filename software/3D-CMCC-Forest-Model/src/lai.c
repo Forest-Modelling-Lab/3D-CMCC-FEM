@@ -50,9 +50,4 @@ void Get_initial_month_lai (SPECIES *const s)
 
 }
 
-void Get_end_month_lai (SPECIES *const s)
-{
-	Log("GET_END_MONTH_LAI\n");
-	s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM]) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
-	Log("++Lai = %g\n", s->value[LAI]);
-}
+

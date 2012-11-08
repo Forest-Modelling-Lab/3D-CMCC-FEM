@@ -692,6 +692,7 @@ typedef struct
 	dominant,
 	dominated,
 	subdominated,
+	layer_limit,
 	min_layer_cover,
 	max_layer_cover,
 	adult_age,
@@ -873,32 +874,22 @@ extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, in
 extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern float Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, int, float, float, int, float);
 extern void Get_initial_month_lai (SPECIES *const s);
-extern void Get_end_month_lai (SPECIES *const );
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , int, int );
 extern void Get_turnover (SPECIES *const);
 extern float Get_Net_Radiation (const MET_DATA *const, int,  int, float);
 extern void Get_Light_Recruitment (SPECIES *const, float, float);
-
-
-
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int, int);
 extern void Get_biomass_increment ( SPECIES *const, int, int, float, float);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
 extern void Get_Layer_Density (CELL *cells, const int );
-
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
-
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_top_layer (CELL *const, int, HEIGHT *);
-
 extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
-
-
-
 extern void Get_annual_forest_structure (CELL *, HEIGHT * );
 
 void Print_met_data (const MET_DATA *const , float , int , float);
@@ -907,6 +898,7 @@ void Print_met_data (const MET_DATA *const , float , int , float);
 void Print_parameters (SPECIES *const, int, int, int);
 
 extern int Get_number_of_layers (CELL *);
+extern int Get_monthly_numbers_of_layers (CELL *const c);
 
 
 extern void Get_layer_cover_mortality (SPECIES *const , float , int, int );

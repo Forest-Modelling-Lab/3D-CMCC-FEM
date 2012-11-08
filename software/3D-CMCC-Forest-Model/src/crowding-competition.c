@@ -14,6 +14,12 @@
 //(A. Collalti, 2009 not published)(J. H. M. Thornley, 1999, Annals of Botany)
 
 
+// per determinare l'incremento di Height e DBH in funzione della densità di popolazione
+//alta densità maggior altezza
+//bassa densità maggior dbh
+// in the first year avdbh and height are from input data
+
+
 void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer)
 {
 

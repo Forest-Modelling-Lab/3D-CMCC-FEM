@@ -28,6 +28,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	/*counter for numbers of layer*/
 	static int number_of_layers;
 
+	static int numero_di_strati;
+
 
 	//static int DominantLightIndex;
 	//dominanza anche se non si è l'albero piu alto:
@@ -137,11 +139,20 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			}
 		}
 	}
+
+
+
+
+
 	//monthly forest structure
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
 		{
+			// todo: TAKE INTO ACCOUNT THE VEG PERIOD
+			//compute number of layers
+			numero_di_strati = Get_monthly_numbers_of_layers (&m->cells[cell]);
+
 			Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 		}
 	}
@@ -962,23 +973,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Log("Available Soil Water month %d year %d = %g mm H2o/m^2\n",month, years, m->cells[cell].available_soil_water);
 
 
-							/*
-                            if(!years)
-                            {
-                                if ( m->cells[cell].heights[height].z != top_layer)
-                                {
-                                    //reset
-                                    oldWf = 0;
-                                }
-                                oldWf = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
-                            }
-                            else
-                            {
-                                oldWf = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
-                            }
-
-							 */
-
 							/*FRUIT ALLOCATION*/
 							//Only for dominant layer
 
@@ -1045,13 +1039,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							/*WATER USE EFFICIENCY*/
 
-							/*
+
                             m->cells[cell].heights[height].ages[age].species[species].value[WUE] = 100 * ( m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP] /
                                                                                                     m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]) /
                                                                                                     (m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] /
                                                                                                     m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
                             //Log("Average Water use efficiency = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
-							 */
+
 
 							/*AVERAGE STEM MASS*/
 
@@ -1192,15 +1186,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							/*DBH + Tree Height*/
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
-
-							// per determinare l'incremento di Height e DBH in funzione della densità di popolazione
-							//alta densità maggior altezza
-							//bassa densità maggior dbh
-							// in the first year avdbh and height are from input data
 							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, top_layer);
 
 							//ABG and BGB
-
 							Log("**AGB & BGB**\n");
 							Log("-for Class\n");
 							m->cells[cell].heights[height].ages[age].species[species].value[CLASS_AGB] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
