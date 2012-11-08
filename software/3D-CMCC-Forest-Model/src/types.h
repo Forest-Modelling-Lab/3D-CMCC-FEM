@@ -522,7 +522,7 @@ enum {
 	TREE_AGE_SAP,
 	N_TREE_SAP,
 
-
+	VEG_UNVEG,
 	VEG_MONTHS,
 
 	MONTH_VEG_FOR_LITTERFALL_RATE,
@@ -642,6 +642,7 @@ typedef struct {
 	float total_yearly_soil_evaporation;
 	float soil_moist_ratio;
 	float av_soil_moist_ratio;
+	int monthly_layer_number;
 
 } CELL;
 
@@ -896,9 +897,9 @@ void Print_met_data (const MET_DATA *const , float , int , float);
 
 
 void Print_parameters (SPECIES *const, int, int, int);
-
+void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const , int);
 extern int Get_number_of_layers (CELL *);
-extern int Get_monthly_numbers_of_layers (CELL *const c);
+void Get_monthly_numbers_of_layers (CELL *const c);
 
 
 extern void Get_layer_cover_mortality (SPECIES *const , float , int, int );

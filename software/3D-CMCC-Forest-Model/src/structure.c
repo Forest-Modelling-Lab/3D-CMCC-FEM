@@ -468,61 +468,104 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 }
 
 
+void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, int month)
+{
+
+	static int height;
+	static int age;
+	static int species;
+
+	Log("--GET VEGETATIVE PERIOD(currently it is not yet used)\n");
+
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			{
+				if (c->heights[height].ages[age].species[species].phenology == D)
+				{
+					if((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+							|| (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+					{
+						c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+						Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					}
+					else
+					{
+						c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+						Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					}
+				}
+				else
+				{
+					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+				}
+			}
+		}
+	}
+}
 
 
 
 
-extern int Get_monthly_numbers_of_layers (CELL *const c)
+void Get_monthly_numbers_of_layers (CELL *const c)
 {
 	//determines number of layer in function of:
 	//-differences between tree height classes
 	//-vegetative or un-vegetative period
-	int height;
-	int layer_counter;
+	static int height;
+	static int age;
+	static int species;
 	float current_height;
 	float previous_height;
 
 	//height differences in meter to consider trees in two different layers
 
 
-	Log("--GET NUMBER OF LAYERS based on differences in tree height(currently it is not yet used)\n");
+	Log("--GET NUMBER OF MONTHLY LAYERS based on differences in tree height(currently it is not yet used)\n");
 
 	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
-		current_height = c->heights[height].value;
-		if (c->heights_count > 1)
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{
-			if (height == c->heights_count - 1)
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				layer_counter = 1;
-				previous_height = current_height;
-			}
-			else
-			{
-				if ((previous_height -current_height ) > settings->layer_limit)
+				current_height = c->heights[height].value;
+				if (c->heights_count > 1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 0)
 				{
-					layer_counter += 1;
-					previous_height = current_height;
+					if (height == c->heights_count - 1 )
+					{
+						c->monthly_layer_number = 1;
+						previous_height = current_height;
+					}
+					else
+					{
+						if ((previous_height -current_height ) > settings->layer_limit)
+						{
+							c->monthly_layer_number += 1;
+							previous_height = current_height;
+						}
+						else
+						{
+							previous_height = current_height;
+						}
+					}
 				}
-				else
+				else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 0)
 				{
-					previous_height = current_height;
+					c->monthly_layer_number = 1;
+					Log("ONE HEIGHT CLASS ONE LAYER \n");
 				}
 			}
-		}
-		else
-		{
-			layer_counter = 1;
-			Log("ONE HEIGHT CLASS ONE LAYER \n");
 		}
 	}
 
-	Log("NUMBER OF DIFFERENT LAYERS = %d\n", layer_counter);
-
-	return layer_counter;
-
+	Log("NUMBER OF DIFFERENT LAYERS = %d\n", c->monthly_layer_number);
 }
 
 

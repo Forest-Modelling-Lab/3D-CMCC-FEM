@@ -147,14 +147,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//monthly forest structure
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
-		{
-			// todo: TAKE INTO ACCOUNT THE VEG PERIOD
-			//compute number of layers
-			numero_di_strati = Get_monthly_numbers_of_layers (&m->cells[cell]);
-
-			Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
-		}
+		// todo: TAKE INTO ACCOUNT THE VEG PERIOD
+		//compute number of layers
+		Get_monthly_vegetative_period (&m->cells[cell], met, month);
+		Get_monthly_numbers_of_layers (&m->cells[cell]);
+		Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 	}
 
 	//*************************************************
