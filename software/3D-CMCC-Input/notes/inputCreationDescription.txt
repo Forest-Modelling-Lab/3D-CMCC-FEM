@@ -6,16 +6,16 @@ That area is represented by a 4 edges polygon having the following lat/lon coord
 To make possible a launch of 3D-CMCCModel on every pixel of interest, it has been created an image for every
 parameter needed in input by the model:
 
- 1 - Year Planted  . . . . . . . . . . (5 bands  - Y_planted.tif)
- 2 - Species . . . . . . . . . . . . . (5 bands  - Species.tif)
- 3 - Phenology . . . . . . . . . . . . (5 bands  - Phenology.tif)
- 4 - Management  . . . . . . . . . . . (5 bands  - Management.tif)
- 5 - Number of trees . . . . . . . . . (5 bands  - NumHa.tif)
- 6 - Average Diameter at Breast Height (5 bands  - AvDBH.tif)
- 7 - Height  . . . . . . . . . . . . . (5 bands  - Height.tif)
- 8 - Foliage Biomass . . . . . . . . . (5 bands  - Wf.tif)
- 9 - Coarse Root Biomass . . . . . . . (5 bands  - Wrc.tif)
-10 - Stem Biomass  . . . . . . . . . . (5 bands  - Ws.tif)
+ 1 - Year Planted  . . . . . . . . . . (5  bands - Y_planted.tif)
+ 2 - Species . . . . . . . . . . . . . (5  bands - Species.tif)
+ 3 - Phenology . . . . . . . . . . . . (5  bands - Phenology.tif)
+ 4 - Management  . . . . . . . . . . . (5  bands - Management.tif)
+ 5 - Number of trees . . . . . . . . . (5  bands - NumHa.tif)
+ 6 - Average Diameter at Breast Height (5  bands - AvDBH.tif)
+ 7 - Height  . . . . . . . . . . . . . (5  bands - Height.tif)
+ 8 - Foliage Biomass . . . . . . . . . (5  bands - Wf.tif)
+ 9 - Coarse Root Biomass . . . . . . . (5  bands - Wrc.tif)
+10 - Stem Biomass  . . . . . . . . . . (5  bands - Ws.tif)
 11 - Average Solar Radiation . . . . . (12 bands - SolarRad_yyyy.tif)
 12 - Average Temperature . . . . . . . (12 bands - Avg_Temp_yyyy.tif)
 13 - Vapour Pression Deficit . . . . . (12 bands - VPD_yyyy.tif)
@@ -32,10 +32,10 @@ where every band represent a month of data.
 Collecting data produced by 3D-CMCCModel, in the end it has been created 6 images per year:
 1 - Net Primary Production   . . . . . (12 bands - NPP_yyyy.tif)
 2 - Gross Primary Production . . . . . (12 bands - GPP_yyyy.tif)
-3 - Above Ground Biomass . . . . . . . (1 band   - AGB_yyyy.tif)
-4 - Below Ground Biomass . . . . . . . (1 band   - BGB_yyyy.tif)
-5 - Mean Annual Increment  . . . . . . (1 band   - MAI_yyyy.tif)
-6 - Current Annual Increment . . . . . (1 band   - CAI_yyyy.tif)
+3 - Above Ground Biomass . . . . . . . (1  band  - AGB_yyyy.tif)
+4 - Below Ground Biomass . . . . . . . (1  band  - BGB_yyyy.tif)
+5 - Mean Annual Increment  . . . . . . (1  band  - MAI_yyyy.tif)
+6 - Current Annual Increment . . . . . (1  band  - CAI_yyyy.tif)
  
 NPP and GPP images has monthly values, AGB, BGB, MAI and CAI yearly values.
 
@@ -295,102 +295,172 @@ The creation of the 150 images in input (10 + 5 * 10 years) are described in the
 +-----------+------------+------------+
 
 
-           
-
-
-
-
-
-           
-           
-
-           
-
-
-
-
-           
-           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
- 
-
-
- 
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 +-------------------------------------+
 | NDVI_YearlyLambda500_year2002       |
 +-----------+------------+------------+
 | Month     | Landsat    | Modis      |
 +-----------+------------+------------+
-| January   |            |            |
-|           |            |            |
+| January   |            | 2002-01-06 |
+|           | 2002-01-10 |            |
+|           |            | 2002-01-14 |
+|           |            | 2002-01-22 |
+|           | 2002-01-24 |            |
+|           |            | 2002-01-30 |
 |-----------+------------+------------|
-| February  |            |            |
-|           |            |            |
+| February  | 2002-02-07 | 2002-02-07 |
+|           |            | 2002-02-15 |
+|           | 2002-02-21 |            |
+|           |            | 2002-02-23 |
 |-----------+------------+------------|
-| March     |            |            |
-|           |            |            |
+| March     |            | 2002-03-03 |
+|           | 2002-03-07 |            |
+|           |            | 2002-03-11 |
+|           |            | 2002-03-19 |
+|           | 2002-03-21 |            |
+|           |            | 2002-03-27 |
 |-----------+------------+------------|
-| April     |            |            |
-|           |            |            |
+| April     | 2002-04-04 | 2002-04-04 |
+|           |            | 2002-04-12 |
+|           | 2002-04-18 |            |
+|           |            | 2002-04-20 |
+|           |            | 2002-04-28 |
 |-----------+------------+------------|
-| May       |            |            |
-|           |            |            |
+| May       | 2002-05-02 |            |
+|           |            | 2002-05-06 |
+|           |            | 2002-05-14 |
+|           | 2002-05-16 |            |
+|           |            | 2002-05-22 |
+|           | 2002-05-30 | 2002-05-30 |
 |-----------+------------+------------|
-| June      |            |            |
-|           |            |            |
+| June      |            | 2002-06-07 |
+|           | 2002-06-13 |            |
+|           |            | 2002-06-15 |
+|           |            | 2002-06-23 |
+|           | 2002-06-27 |            |
 |-----------+------------+------------|
-| July      |            |            |
-|           |            |            |
+| July      |            | 2002-07-01 |
+|           |            | 2002-07-09 |
+|           | 2002-07-11 |            |
+|           |            | 2002-07-17 |
+|           | 2002-07-25 | 2002-07-25 |
 |-----------+------------+------------|
-| August    |            |            |
-|           |            |            |
+| August    |            | 2002-08-02 |
+|           | 2002-08-08 |            |
+|           |            | 2002-08-10 |
+|           |            | 2002-08-18 |
+|           | 2002-08-22 |            |
+|           |            | 2002-08-26 |
 |-----------+------------+------------|
-| September |            |            |
-|           |            |            |
+| September |            | 2002-09-03 |
+|           | 2002-09-05 |            |
+|           |            | 2002-09-11 |
+|           | 2002-09-19 | 2002-09-19 |
+|           |            | 2002-09-27 |
 |-----------+------------+------------|
-| October   |            |            |
-|           |            |            |
+| October   | 2002-10-03 |            |
+|           |            | 2002-10-05 |
+|           |            | 2002-10-13 |
+|           | 2002-10-17 |            |
+|           |            | 2002-10-21 |
+|           |            | 2002-10-29 |
+|           | 2002-10-31 |            |
 |-----------+------------+------------|
-| November  |            |            |
-|           |            |            |
+| November  |            | 2002-11-06 |
+|           | 2002-11-14 | 2002-11-14 |
+|           |            | 2002-11-22 |
+|           | 2002-11-28 |            |
+|           |            | 2002-11-30 |
 |-----------+------------+------------|
-| December  |            |            |
-|           |            |            |
+| December  |            | 2002-12-08 |
+|           | 2002-12-12 |            |
+|           |            | 2002-12-16 |
+|           |            | 2002-12-24 |
+|           | 2002-12-26 |            |
 +-----------+------------+------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 +-------------------------------------+
 | NDVI_YearlyLambda500_year2003       |
