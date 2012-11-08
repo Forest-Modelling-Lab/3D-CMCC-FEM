@@ -1,2 +1,6 @@
 # Convert a NETCDF precipitation image to GeoTiff:
 gdal_translate -of GTiff NETCDF:"3b43.101201.6a.nc":pcp 3b43.101201.6a.tif
+
+# Obtain Landsat and Modis data formatted in a useful way to create a comparison table:
+cat LS/LayerDates_NDVI_YearlyLambda500_year2001    | tr -d '\r' | sed -e 's/$/ |           /'
+cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/           | /'
