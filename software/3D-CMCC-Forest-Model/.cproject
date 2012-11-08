@@ -137,17 +137,14 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="3D_CMCC_Forest_Model.cdt.managedbuild.target.gnu.cross.exe.394907790" name="Executable" projectType="cdt.managedbuild.target.gnu.cross.exe"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103;cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.;cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502;cdt.managedbuild.tool.gnu.c.compiler.input.1555993536">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="0.1380882308">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.cross.exe.release.684187710;cdt.managedbuild.config.gnu.cross.exe.release.684187710.;cdt.managedbuild.tool.gnu.cross.c.compiler.907446945;cdt.managedbuild.tool.gnu.c.compiler.input.25162279">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>
