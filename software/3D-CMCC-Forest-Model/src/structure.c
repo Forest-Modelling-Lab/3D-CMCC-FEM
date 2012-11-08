@@ -486,16 +486,32 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 			{
 				if (c->heights[height].ages[age].species[species].phenology == D)
 				{
-					if((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-							|| (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+					if (settings->version == 's')
 					{
-						c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-						Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+						Log("Spatial version \n");
+
+						//veg period
+						if (met[month].ndvi_lai > 0.1)
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+						}
+						//unveg period
+						else
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+						}
 					}
 					else
 					{
-						c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-						Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+						if((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+								|| (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+						}
+						else
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+						}
 					}
 				}
 				else
@@ -586,72 +602,6 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 
 	Log("\nGET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = %d\n", month+1);
 
-	Log("Determines if is in Veg Period \n");
-
-
-
-	for (height = c->heights_count - 1; height >= 0; height -- )
-	{
-		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
-		{
-			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
-			{
-				//deciduous
-				if ( c->heights[height].ages[age].species[species].phenology == D )
-				{
-					//spatial version
-					if (settings->version == 's')
-					{
-						Log("Spatial version \n");
-
-						//veg period
-						if (met[month].ndvi_lai > 0.1)
-						{
-
-							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
-							Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
-						}
-						//unveg period
-						else
-						{
-							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
-							Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
-
-						}
-					}
-					//unspatial version
-					else
-					{
-						Log("Un-spatial version \n");
-						Log("growth start %g \n",  c->heights[height].ages[age].species[species].value[GROWTHSTART]);
-						Log("month %d \n",  month);
-						Log("tav %g \n",  met[month].tav);
-
-						//Veg period
-						if ((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
-						{
-							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
-							Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
-						}
-						//UnVeg period
-						else
-						{
-							c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 0;
-							Log ("height %g, age %d, species %s is in UN-veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
-
-						}
-					}
-				}
-				//evergreen
-				else
-				{
-					c->heights[height].ages[age].species[species].value[VEG_PERIOD] = 1;
-					Log ("height %g, age %d, species %s is in veg period \n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name );
-				}
-			}
-		}
-	}
-
 	Log("Determines Effective Layer Cover \n");
 	for (height = c->heights_count - 1; height >= 0; height -- )
 	{
@@ -659,7 +609,7 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				if (c->heights_count == 1 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+				if (c->heights_count == 1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 				}
@@ -667,17 +617,17 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 				{
 					if (c->heights_count >= 3 )//3 heights classes or more
 					{
-						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 						{
 							//settings->dominant
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}
-						else if (c->heights[height].z == 1 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+						else if (c->heights[height].z == 1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 						{
 							//settings->dominated
-							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].counter[CANOPY_COVER_DBHDC];
 						}
-						else if (c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+						else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 						{
 							//SUBDOMINATED
 							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
@@ -690,12 +640,12 @@ void Get_monthly_forest_structure (CELL *const c, HEIGHT *const h, const MET_DAT
 					}
 					else //2 height classes
 					{
-						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+						if (c->heights[height].z == 2 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 						{
 							//settings->dominant
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}
-						else if (c->heights[height].ages[age].species[species].value[VEG_PERIOD] == 1)
+						else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 						{
 							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}

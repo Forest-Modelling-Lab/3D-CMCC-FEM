@@ -235,7 +235,7 @@ enum {
 
 
 
-	VEG_PERIOD,
+	//VEG_PERIOD,
 
 
 	//LIGHT

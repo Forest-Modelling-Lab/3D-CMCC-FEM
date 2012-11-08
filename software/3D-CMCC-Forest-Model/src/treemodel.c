@@ -133,16 +133,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	{
 		for ( cell = 0; cell < m->cells_count; cell++)
 		{
-			for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
-			{
-				Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
-			}
+			Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
 		}
 	}
-
-
-
-
 
 	//monthly forest structure
 	for ( cell = 0; cell < m->cells_count; cell++)
