@@ -5,3 +5,11 @@ gdal_translate -of GTiff NETCDF:"3b43.101201.6a.nc":pcp 3b43.101201.6a.tif
 cat LS/LayerDates_NDVI_YearlyLambda500_year2001    | tr -d '\r' | sed -e 's/$/ |           /' > a.txt
 cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/           | /' >> a.txt
 sort a.txt > b.txt && rm a.txt
+
+# Conversion from CORINE Land Cover to GeoTiff:
+gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=33N +datum=WGS84' CORINE_322.asc CORINE_322.tif
+
+# Rasterization with unit, unit/2 and unit/4
+gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.017453292519943295 0.017453292519943295 Sicily.shp Sicily.tif
+gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00872664625997164750 0.00872664625997164750 Sicily.shp Sicily.tif
+gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00436332312998582375 0.00436332312998582375 Sicily.shp Sicily.tif
