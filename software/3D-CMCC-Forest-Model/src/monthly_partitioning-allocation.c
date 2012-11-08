@@ -87,7 +87,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	}
 	 */
 
-	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
+	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , Phenology %d --\n", z, s->phenology);
 	Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
 
 
