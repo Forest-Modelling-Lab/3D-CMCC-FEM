@@ -142,14 +142,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
 		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
-
-
-
-
-
+		//todo: a better function
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
-
-
 		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
 		{
 			if (m->cells[cell].heights[height].dominance == 1)
@@ -165,13 +159,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 				break;
 			}
 		}
-
-
-
-
-
-
-
 
 		Log("***************************************************\n");
 

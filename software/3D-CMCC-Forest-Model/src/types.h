@@ -692,9 +692,9 @@ typedef struct
 {
 	char version;
 	float sizeCell,
-	dominant,
-	dominated,
-	subdominated,
+	//dominant,
+	//dominated,
+	//subdominated,
 	layer_limit,
 	min_layer_cover,
 	max_layer_cover,
@@ -890,7 +890,7 @@ extern float Get_vpd (const MET_DATA *const, int);
 extern void Get_Layer_Density (CELL *cells, const int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
-extern void Get_top_layer (CELL *const, int, HEIGHT *);
+//extern void Get_top_layer (CELL *const, int, HEIGHT *);
 extern void Get_monthly_layer_cover (CELL *, HEIGHT *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
 extern void Get_annual_forest_structure (CELL *, HEIGHT *);
