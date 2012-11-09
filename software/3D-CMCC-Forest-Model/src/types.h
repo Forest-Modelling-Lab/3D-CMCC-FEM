@@ -853,7 +853,7 @@ extern void Clearcut_Coppice (SPECIES *const, int, int, int);
 extern MATRIX *matrix_create(ROW *const, const int, char *);
 extern void matrix_free(MATRIX *);
 extern void matrix_summary(const MATRIX *const, int, const YOS *const);
-extern void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
+void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
 //yearly allocation
 extern void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
 extern int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const);
@@ -892,7 +892,7 @@ extern void Get_Layer_Density (CELL *cells, const int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 //extern void Get_top_layer (CELL *const, int, HEIGHT *);
-extern void Get_monthly_layer_cover (CELL *, HEIGHT *, const MET_DATA *const, int);
+extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
 extern void Get_annual_forest_structure (CELL *, HEIGHT *);
 void Print_met_data (const MET_DATA *const, float, int, float);
@@ -900,7 +900,7 @@ void Print_parameters (SPECIES *const, int, int, int);
 void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const, int);
 extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *const c);
-extern void Get_monthly_numbers_of_layers (CELL *const c);
+void Get_monthly_numbers_of_layers (CELL *);
 extern void Get_layer_cover_mortality (SPECIES *const, float, int, int );
 
 

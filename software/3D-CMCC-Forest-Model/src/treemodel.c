@@ -28,7 +28,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	/*counter for numbers of layer*/
 	static int number_of_layers;
 
-	static int numero_di_strati;
+	//static int numero_di_strati;
 
 
 	//static int DominantLightIndex;
@@ -140,7 +140,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
 		Get_monthly_vegetative_period (&m->cells[cell], met, month);
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
-		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+		Get_monthly_layer_cover (&m->cells[cell],  met, month);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
