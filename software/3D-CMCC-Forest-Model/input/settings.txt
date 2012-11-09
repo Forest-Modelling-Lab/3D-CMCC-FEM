@@ -3,9 +3,9 @@ SIZECELL "10"	//Its value must be within 10 and 100 (unity measure is "meter": 1
 
 //LAYER LIMIT
 //to modify removing imposed limits 
-DOMINANT "15"
-DOMINATED "5"
-SUBDOMINATED "1"
+//DOMINANT "15"
+//DOMINATED "5"
+//SUBDOMINATED "1"
 
 LAYER_LIMIT "2"  //define differences among tree height in meters classes to define number of layers
 
