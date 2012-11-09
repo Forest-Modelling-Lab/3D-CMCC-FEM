@@ -133,6 +133,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	{
 		for ( cell = 0; cell < m->cells_count; cell++)
 		{
+			Get_annual_numbers_of_layers (&m->cells[cell]);
 			Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
 		}
 	}
@@ -140,11 +141,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//monthly forest structure
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		// todo: TAKE INTO ACCOUNT THE VEG PERIOD
-		//compute number of layers
 		Get_monthly_vegetative_period (&m->cells[cell], met, month);
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
-		Get_monthly_forest_structure (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
+
 	}
 
 	//*************************************************
@@ -220,7 +220,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//loop on each heights starting from higher to lower
 		// get dominant index
 		Log("*****************CELL x = %g, y = %g STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
-		//Get_monthly_forest_structure ();
+		//Get_monthly_layer_cover ();
 		//Get_Layer_Cover
 
 
@@ -339,7 +339,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("******************************************************\n\n");
 
 						//compute number of layers
-						Get_number_of_layers (&m->cells[cell]);
+						//Get_number_of_layers (&m->cells[cell]);
 
 
 						Log("cell = \n");

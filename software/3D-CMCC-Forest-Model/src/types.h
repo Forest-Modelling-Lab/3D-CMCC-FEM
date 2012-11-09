@@ -642,7 +642,9 @@ typedef struct {
 	float total_yearly_soil_evaporation;
 	float soil_moist_ratio;
 	float av_soil_moist_ratio;
+	int annual_layer_number;
 	int monthly_layer_number;
+
 
 } CELL;
 
@@ -885,24 +887,20 @@ extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int,
 extern void Get_biomass_increment ( SPECIES *const, int, int, float, float);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
-extern void Get_Layer_Density (CELL *cells, const int );
+extern void Get_Layer_Density (CELL *cells, const int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_top_layer (CELL *const, int, HEIGHT *);
-extern void Get_monthly_forest_structure (CELL *, HEIGHT *, const MET_DATA *const, int);
+extern void Get_monthly_layer_cover (CELL *, HEIGHT *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
-extern void Get_annual_forest_structure (CELL *, HEIGHT * );
-
-void Print_met_data (const MET_DATA *const , float , int , float);
-
-
+extern void Get_annual_forest_structure (CELL *, HEIGHT *);
+void Print_met_data (const MET_DATA *const, float, int, float);
 void Print_parameters (SPECIES *const, int, int, int);
-void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const , int);
+void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const, int);
 extern int Get_number_of_layers (CELL *);
-void Get_monthly_numbers_of_layers (CELL *const c);
-
-
-extern void Get_layer_cover_mortality (SPECIES *const , float , int, int );
+extern void Get_annual_numbers_of_layers (CELL *const c);
+extern void Get_monthly_numbers_of_layers (CELL *const c);
+extern void Get_layer_cover_mortality (SPECIES *const, float, int, int );
 
 
 extern void Reset_cumulative_variables (CELL *, const int);
