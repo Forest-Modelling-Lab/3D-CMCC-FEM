@@ -124,11 +124,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
-
-
-	//*************FOREST STRUCTURE*********************
+	//monthly loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
+		//*************FOREST STRUCTURE*********************
 		if (!month)
 		{
 			//annual forest structure
@@ -142,17 +141,36 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Get_monthly_vegetative_period (&m->cells[cell], met, month);
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
 		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
-
-	}
-	//*************************************************
-
-
-
-
-	//monthly loop on each cell
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
+
+
+
+
+
+		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+
+
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+		{
+			if (m->cells[cell].heights[height].dominance == 1)
+			{
+				top_layer = m->cells[cell].heights[height].z ;
+				Log("-Top layer and in Dominant Light is layer with z = %d\n", top_layer);
+				break;
+			}
+			if ( top_layer == -1)
+			{
+				Log("- %s -NO TREES IN VEGETATIVE PERIOD!!!\n", szMonth[month]);
+				Log("**********************************************\n");
+				break;
+			}
+		}
+
+
+
+
+
+
 
 
 		Log("***************************************************\n");
@@ -195,7 +213,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 		//compute moist ratio
-		//this function currently doesn't have effect
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / site->maxAsw;
 		Log("Moist ratio outside modifier = %g\n", m->cells[cell].soil_moist_ratio);
 
@@ -223,24 +240,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 
-		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
-
-		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
-		{
-			if (m->cells[cell].heights[height].dominance == 1)
-			{
-				top_layer = m->cells[cell].heights[height].z ;
-				Log("-Top layer and in Dominant Light is layer with z = %d\n", top_layer);
-				break;
-			}
-			if ( top_layer == -1)
-			{
-				Log("- %s -NO TREES IN VEGETATIVE PERIOD!!!\n", szMonth[month]);
-				Log("**********************************************\n");
-				break;
-			}
-		}
 
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )

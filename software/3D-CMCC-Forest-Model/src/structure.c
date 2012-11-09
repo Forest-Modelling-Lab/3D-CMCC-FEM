@@ -92,6 +92,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 			}
 		}
 	}
+	Log("ANNUAL LAYERS NUMBER = %d\n", c->annual_layer_number);
 
 
 	//ASSIGN ANNUAL Z VALUE
@@ -638,6 +639,18 @@ void Get_monthly_numbers_of_layers (CELL *const c)
 		}
 	}
 
+	//ASSIGN MONTHLY Z VALUE
+	for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+	{
+		for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+		{
+			for ( height = c->heights_count - 1; height >= 0; height-- )
+			{
+
+			}
+		}
+	}
+
 	Log("NUMBER OF DIFFERENT LAYERS = %d\n", c->monthly_layer_number);
 }
 
@@ -844,7 +857,8 @@ extern void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const 
 				{
 					//Log("Phenology = Deciduous \n");
 
-					if((met[month].tav >= heights[height].ages[age].species[species].value[GROWTHSTART] && month < JULY) || (met[month].tav >=heights[height].ages[age].species[species].value[GROWTHEND] && month >= JULY))
+					if((met[month].tav >= heights[height].ages[age].species[species].value[GROWTHSTART] && month < JULY)
+							|| (met[month].tav >=heights[height].ages[age].species[species].value[GROWTHEND] && month >= JULY))
 						//vegetative period for deciduous
 					{
 						c->Veg_Counter += 1 ;
