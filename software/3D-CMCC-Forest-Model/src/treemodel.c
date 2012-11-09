@@ -127,26 +127,23 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 	//*************FOREST STRUCTURE*********************
-
-	//annual forest structure
-	if (!month)
+	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		for ( cell = 0; cell < m->cells_count; cell++)
+		if (!month)
 		{
+			//annual forest structure
+			Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
 			Get_annual_numbers_of_layers (&m->cells[cell]);
 			Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
 		}
-	}
 
-	//monthly forest structure
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
+		//monthly forest structure
+		Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
 		Get_monthly_vegetative_period (&m->cells[cell], met, month);
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
 		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 
 	}
-
 	//*************************************************
 
 

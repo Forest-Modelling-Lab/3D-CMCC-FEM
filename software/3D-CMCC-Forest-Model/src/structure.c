@@ -55,16 +55,12 @@ void Get_annual_numbers_of_layers (CELL *const c)
 	float current_height;
 	float previous_height;
 
-	int dominant_height;
-	int dominated_height;
-
-	int counter = c->heights_count;
 
 
 	//height differences in meter to consider trees in two different layers
 
 
-	Log("--GET NUMBER OF ANNUAL LAYERS based on differences in tree height\n");
+	Log("--GET NUMBER OF ANNUAL LAYERS--\n");
 
 	//the model sorts starting from highest tree
 	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -104,65 +100,51 @@ void Get_annual_numbers_of_layers (CELL *const c)
 		switch (c->annual_layer_number)
 		{
 		case 1:
-			Log("ONE LAYER\n");
-
-			c->heights[height].z = 0;
-			Log("height %g, z %d\n\n", c->heights[height].value, c->heights[height].z);
+			c->heights[height].z = c->annual_layer_number - 1;
+			Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
 			break;
 		case 2:
-
-			current_height = c->heights[height].value;
-			//FIRST HEIGHT CLASS
 			if (height == c->heights_count - 1 )
 			{
-				Log("TWO LAYERS\n");
-				dominant_height = current_height;
-				c->heights[height].z = 1;
-				Log("height %g, z %d\n\n", c->heights[height].value, c->heights[height].z);
+				c->heights[height].z = c->annual_layer_number - 1;
+				Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
 			}
 			else
 			{
-
 				if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
 				{
 					c->heights[height].z = c->heights[height+1].z - 1;
-					Log("height = %g, z = %d\n\n", c->heights[height].value, c->heights[height].z);
+					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					c->heights[height].z = c->heights[height+1].z;
-					Log("height = %g, z = %d\n\n", c->heights[height].value, c->heights[height].z);
+					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 			}
 			break;
 		case 3:
 			if (height == c->heights_count - 1)
 			{
-				Log("THREE LAYERS\n");
-				//dominant_height = current_height;
-				c->heights[height].z = 2;
-				Log("height = %g, z = %d\n\n", c->heights[height].value, c->heights[height].z);
-				counter -= 1;
+				c->heights[height].z = c->annual_layer_number - 1;
+				Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 			}
 			else
 			{
-
 				if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
 				{
 					c->heights[height].z = c->heights[height+1].z - 1;
-					Log("height = %g, z = %d\n\n", c->heights[height].value, c->heights[height].z);
+					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					c->heights[height].z = c->heights[height+1].z;
-					Log("height = %g, z = %d\n\n", c->heights[height].value, c->heights[height].z);
+					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 			}
 			break;
-
 		}
 	}
-
 	Log("NUMBER OF DIFFERENT LAYERS = %d\n", c->annual_layer_number);
 }
 
@@ -175,8 +157,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 	float DBHDCeffective;
 	int tree_number;
 	float layer_cover;
-
-	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
@@ -196,82 +176,51 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-
-				//define numbers of height classes for each layer and determines the 'z' value
-
-				if (c->annual_layer_number == 1)
+				//define numbers of height classes, tree number and density for each layer
+				switch (c->annual_layer_number)
 				{
-					Log("-One height class \n");
-					c->height_class_in_layer_dominant_counter = 1;
-					c->heights[height].z = 1;
+				case 1:
+					c->height_class_in_layer_dominant_counter += 1;
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
 					c->density_dominant = c->tree_number_dominant / settings->sizeCell;
-				}
-				else
-				{
-					if (c->annual_layer_number >= 3)//3 heights classes or more
+					break;
+				case 2:
+					if (c->heights[height].z == c->annual_layer_number- 1)
 					{
-						Log("3 Height classes or more \n");
-						if (c->heights[height].value >= settings->dominant)
-						{
-							//settings->dominant
-							c->height_class_in_layer_dominant_counter += 1;
-							c->heights[height].z = 2;
-							c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominant = c->tree_number_dominant / settings->sizeCell;
-							//Log("Tree number in layer %d = %d \n", c->heights[height].z,  c->tree_number_dominant);
-						}
-						else if (c->heights[height].value < settings->dominant && c->heights[height].value >= settings->dominated)
-						{
-							//settings->dominated
-							c->height_class_in_layer_dominated_counter += 1;
-							c->heights[height].z = 1;
-							c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominated = c->tree_number_dominated / settings->sizeCell;
-							//Log("Tree number in layer %d = %d \n", c->heights[height].z,  c->tree_number_dominated);
-						}
-						else
-						{
-							//SUBDOMINATED
-							c->height_class_in_layer_subdominated_counter += 1;
-							c->heights[height].z = 0;
-							c->tree_number_subdominated  += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_subdominated = c->tree_number_subdominated / settings->sizeCell;
-							//Log("Tree number in layer %d = %d \n", c->heights[height].z,  c->tree_number_subdominated);
-
-						}
+						c->height_class_in_layer_dominant_counter += 1;
+						c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
+						c->density_dominant = c->tree_number_dominant / settings->sizeCell;
 					}
-					else //2 height classes
+					else
 					{
-						//Log("2 Height classes \n");
-						if (c->heights[height].value >= settings->dominant)
-						{
-
-							//settings->dominant
-							c->height_class_in_layer_dominant_counter += 1;
-							c->heights[height].z = 2;
-							c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominant = c->tree_number_dominant / settings->sizeCell;
-							//Log("Height = %g \n", c->heights[height].value);
-							//Log("Tree number  = %d \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
-						}
-						else
-						{
-							//settings->dominated
-							c->height_class_in_layer_dominated_counter += 1 ;
-							c->heights[height].z = 1;
-							c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominated = c->tree_number_dominated / settings->sizeCell;
-							//Log("Height = %g \n", c->heights[height].value);
-							//Log("Tree number  = %d \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
-
-						}
+						c->height_class_in_layer_dominated_counter += 1;
+						c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
+						c->density_dominated = c->tree_number_dominated / settings->sizeCell;
 					}
+					break;
+				case 3:
+					if (c->heights[height].z == c->annual_layer_number - 1)
+					{
+						c->height_class_in_layer_dominant_counter += 1;
+						c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
+						c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+					}
+					else if (c->heights[height].z == c->annual_layer_number - 2)
+					{
+						c->height_class_in_layer_dominated_counter += 1;
+						c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
+						c->density_dominated = c->tree_number_dominated / settings->sizeCell;
+					}
+					else
+					{
+						c->height_class_in_layer_subdominated_counter += 1;
+						c->tree_number_subdominated  += c->heights[height].ages[age].species[species].counter[N_TREE];
+						c->density_subdominated = c->tree_number_subdominated / settings->sizeCell;
+					}
+					break;
 				}
 			}
-		}
-
-		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
+		}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 	}
 
 	if (c->heights_count == 1)
@@ -402,7 +351,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 	}
 
 	//compute layer cover
-
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
 		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -411,55 +359,39 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				//define numbers of height classes for each layer and determines the 'z' value
-
-				if (c->heights_count == 1)
+				//define numbers of height classes, tree number and density for each layer
+				switch (c->annual_layer_number)
 				{
-					Log("-One height class \n");
-					c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
-				}
-				else
-				{
-					if (c->heights_count >= 3)//3 heights classes or more
-					{
-						//Log("3 Height classes or more \n");
-						if (c->heights[height].value >= settings->dominant)
+				case 1:
+						c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+					break;
+				case 2:
+						if (c->heights[height].z == c->annual_layer_number- 1)
 						{
-							//settings->dominant
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
 						}
-						else if (c->heights[height].value < settings->dominant && c->heights[height].value >= settings->dominated)
+						else
 						{
-							//settings->dominated
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						}
+					break;
+				case 3:
+						if (c->heights[height].z == c->annual_layer_number - 1)
+						{
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						}
+						else if (c->heights[height].z == c->annual_layer_number - 2)
+						{
 							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}
 						else
 						{
-							//SUBDOMINATED
 							c->layer_cover_subdominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
 						}
-					}
-					else //2 height classes
-					{
-						//Log("2 Height classes \n");
-						if (c->heights[height].value >= settings->dominant)
-						{
-
-							//settings->dominant
-							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						}
-						else
-						{
-							//settings->dominated
-							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						}
-					}
+					break;
 				}
 			}
-		}
+		}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 	}
 
 	if (c->heights_count == 1)
@@ -481,8 +413,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
-
-
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
 		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
@@ -491,10 +421,10 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				//define numbers of hight classes for each layer and determines the 'z' value
-
-				if (c->heights_count == 1)
+				//define numbers of height classes, tree number and density for each layer
+				switch (c->annual_layer_number)
 				{
+				case 1:
 					if (c->layer_cover_dominant >= settings->max_layer_cover)
 					{
 						//mortality
@@ -504,14 +434,11 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 					}
 					else
 					{
+						Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 					}
-				}
-				else
-				{
-					if (c->heights_count >= 3)//3 heights classes or more
-					{
-						//Log("3 Height classes or more \n");
-						if (c->heights[height].value >= settings->dominant)
+					break;
+				case 2:
+						if (c->heights[height].z == c->annual_layer_number- 1)
 						{
 							if (c->layer_cover_dominant >= settings->max_layer_cover)
 							{
@@ -523,16 +450,15 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 							else
 							{
 								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
-
 							}
 						}
-						else if (c->heights[height].value < settings->dominant && c->heights[height].value >= settings->dominated)
+						else
 						{
 							if (c->layer_cover_dominated >= settings->max_layer_cover)
 							{
 								//mortality
-								layer_cover = c->layer_cover_dominant;
-								tree_number = c->tree_number_dominant;
+								layer_cover = c->layer_cover_dominated;
+								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
 							}
 							else
@@ -540,56 +466,55 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 							}
 						}
-						else
-						{
-							if (c->layer_cover_subdominated >= settings->max_layer_cover)
-							{
-								//mortality
-								layer_cover = c->layer_cover_dominant;
-								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
-							}
-							else
-							{
-								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
-							}
-						}
-					}
-					else //2 height classes
+
+					break;
+				case 3:
+					if (c->heights[height].z == c->annual_layer_number- 1)
 					{
-						//Log("2 Height classes \n");
-						if (c->heights[height].value >= settings->dominant)
+						if (c->layer_cover_dominant >= settings->max_layer_cover)
 						{
-							if (c->layer_cover_dominant >= settings->max_layer_cover)
-							{
-								//mortality
-								layer_cover = c->layer_cover_dominant;
-								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
-							}
-							else
-							{
-								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
-							}
+							//mortality
+							layer_cover = c->layer_cover_dominant;
+							tree_number = c->tree_number_dominant;
+							Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
 						}
 						else
 						{
-							if (c->layer_cover_subdominated >= settings->max_layer_cover)
-							{
-								//mortality
-								layer_cover = c->layer_cover_dominant;
-								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
-							}
-							else
-							{
-								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
-							}
+							Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 						}
 					}
+					else if (c->heights[height].z == c->annual_layer_number - 2)
+					{
+						if (c->layer_cover_dominated >= settings->max_layer_cover)
+						{
+							//mortality
+							layer_cover = c->layer_cover_dominated;
+							tree_number = c->tree_number_dominated;
+							Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+						}
+						else
+						{
+							Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
+						}
+					}
+					else
+					{
+						if (c->layer_cover_subdominated >= settings->max_layer_cover)
+						{
+							//mortality
+							layer_cover = c->layer_cover_subdominated;
+							tree_number = c->tree_number_subdominated;
+							Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+						}
+						else
+						{
+							Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
+						}
+					}
+					break;
 				}
 			}
-		}
+		}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 	}
 	Log("*************************************************** \n");
 }
@@ -601,8 +526,9 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 	static int height;
 	static int age;
 	static int species;
+	int counter;
 
-	Log("--GET VEGETATIVE PERIOD(currently it is not yet used)\n");
+	Log("--GET VEGETATIVE PERIOD--\n");
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -615,12 +541,13 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 				{
 					if (settings->version == 's')
 					{
-						Log("Spatial version \n");
+						//Log("Spatial version \n");
 
 						//veg period
 						if (met[month].ndvi_lai > 0.1)
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							counter += 1;
 						}
 						//unveg period
 						else
@@ -634,6 +561,7 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 								|| (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							counter += 1;
 						}
 						else
 						{
@@ -645,10 +573,12 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 				{
 					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					counter += 1;
 				}
 			}
 		}
 	}
+	Log("species in veg period = %d\n", counter);
 }
 
 
@@ -668,7 +598,7 @@ void Get_monthly_numbers_of_layers (CELL *const c)
 	//height differences in meter to consider trees in two different layers
 
 
-	Log("--GET NUMBER OF MONTHLY LAYERS based on differences in tree height(currently it is not yet used)\n");
+	Log("--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--\n");
 
 	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
@@ -679,7 +609,7 @@ void Get_monthly_numbers_of_layers (CELL *const c)
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
 				current_height = c->heights[height].value;
-				if (c->heights_count > 1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 0)
+				if (c->heights_count > 1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					if (height == c->heights_count - 1 )
 					{
@@ -699,7 +629,7 @@ void Get_monthly_numbers_of_layers (CELL *const c)
 						}
 					}
 				}
-				else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 0)
+				else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					c->monthly_layer_number = 1;
 					Log("ONE HEIGHT CLASS ONE LAYER \n");
