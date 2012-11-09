@@ -1,6 +1,9 @@
 # Convert a NETCDF precipitation image to GeoTiff:
 gdal_translate -of GTiff NETCDF:"3b43.101201.6a.nc":pcp 3b43.101201.6a.tif
 
+# Get only one landsat band:
+gdal_translate -b 1 NDVI_YearlyLambda500_year2000.tif NDVI_YearlyLambda500_year2000_b1.tif
+
 # Obtain Landsat and Modis data formatted in a useful way to create a comparison table:
 cat LS/LayerDates_NDVI_YearlyLambda500_year2001    | tr -d '\r' | sed -e 's/$/ |           /' > a.txt
 cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/           | /' >> a.txt
@@ -9,7 +12,25 @@ sort a.txt > b.txt && rm a.txt
 # Conversion from CORINE Land Cover to GeoTiff:
 gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=33N +datum=WGS84' CORINE_322.asc CORINE_322.tif
 
-# Rasterization with unit, unit/2 and unit/4
-gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.017453292519943295 0.017453292519943295 Sicily.shp Sicily.tif
-gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00872664625997164750 0.00872664625997164750 Sicily.shp Sicily.tif
-gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00436332312998582375 0.00436332312998582375 Sicily.shp Sicily.tif
+# Rasterization of Parco delle Madonie AOI shapefile (pixel size -tr obtained as described below)
+gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte Sicily.shp Sicily.tif
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33N +datum=WGS84 +units=m' -tr 30 -30 Sicily.tif Madonie.tif
+
+# Parco delle Madonie shapefile rasterization:
+# Its extent is:
+Lon/Lat Lower Left:  13.855128, 37.738570
+Lon/Lat Upper Right: 14.293904, 38.051145
+Central latitude is (38.051145+37.738570)/2 = 37.8948575
+Unit of measure: 0.017453292519943295 degrees
+*** So, how many meters is the resolution?
+Correspondance of one degree in meters vary relatively to latitude, for instance:
+- At the equator (0  lat degrees): 1 degree is about 111300 meters
+- At Bordeaux    (45 lat degrees): 1 degree is about  78700 meters
+So, making a simple proportion:
+78700 : 45 = x : 37.8948575 --> x = (37.8948575 * 78700)/45 --> x = 66273.895227 meters is one degree at Madonie center latitude
+*** The resolution is about:
+1 : 66273.895227 = 0.017453292519943295 : x --> x = 0.017453292519943295 * 66273.895227 --> x = 1156.69767983290474081115
+Resolution is more or less 1000x1000 meters
+So a resolution of 30x30 meters is in this area a resolution of:
+0.017453292519943295 : 1156.69767983290474081115 = x : 30 --> x = (0.017453292519943295 * 30) / 1156.69767983290474081115
+x = 0.00045266691956530711
