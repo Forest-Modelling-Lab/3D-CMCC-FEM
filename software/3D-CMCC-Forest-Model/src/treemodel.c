@@ -142,26 +142,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Get_monthly_numbers_of_layers (&m->cells[cell]);
 		Get_monthly_layer_cover (&m->cells[cell], &m->cells[cell].heights[height], met, month);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
-		//todo: a better function
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
-		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
-		{
-			if (m->cells[cell].heights[height].dominance == 1)
-			{
-				top_layer = m->cells[cell].heights[height].z ;
-				Log("-Top layer and in Dominant Light is layer with z = %d\n", top_layer);
-				break;
-			}
-			if ( top_layer == -1)
-			{
-				Log("- %s -NO TREES IN VEGETATIVE PERIOD!!!\n", szMonth[month]);
-				Log("**********************************************\n");
-				break;
-			}
-		}
 
 		Log("***************************************************\n");
+	}
 
+	for ( cell = 0; cell < m->cells_count; cell++)
+	{
 		/*DayLength*/
 		GetDayLength (&m->cells[cell], MonthLength[month]);
 		/*Abscission DayLength*/
@@ -505,7 +492,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//compute soil evaporation in the last loop of height
 								if( height == 0)
 								{
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,DaysInMonth[month], m->cells[cell].net_radiation, top_layer, m->cells[cell].heights[height].z, number_of_layers,
+									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z, number_of_layers,
 											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
 									Log("Monthly Soil Evaporation at month %s = %g \n", szMonth[month],  m->cells[cell].soil_evaporation );
 								}
@@ -527,7 +514,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 									//taking into account cell coverage
-									if ( m->cells[cell].heights[height].z == top_layer)
+									if ( m->cells[cell].heights[height].z == m->cells[cell].top_layer)
 									{
 
 										//Rainfall intercepted
@@ -1160,7 +1147,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							/*DBH + Tree Height*/
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
-							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, top_layer);
+							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, m->cells[cell].heights[height].top_layer);
 
 							//ABG and BGB
 							Log("**AGB & BGB**\n");

@@ -644,6 +644,7 @@ typedef struct {
 	float av_soil_moist_ratio;
 	int annual_layer_number;
 	int monthly_layer_number;
+	int top_layer;
 
 
 } CELL;
