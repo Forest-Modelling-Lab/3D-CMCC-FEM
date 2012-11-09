@@ -9,12 +9,15 @@ cat LS/LayerDates_NDVI_YearlyLambda500_year2001    | tr -d '\r' | sed -e 's/$/ |
 cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/           | /' >> a.txt
 sort a.txt > b.txt && rm a.txt
 
-# Conversion from CORINE Land Cover to GeoTiff:
-gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=33N +datum=WGS84 +units=m' CORINE_322.asc CORINE_322.tif
+# Conversion from CORINE Land Cover to GeoTiff (corine covers zones 32 and 33, but Lower Left is zone 32!):
+gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -a_ullr 31300 5230000 1031300 3930000 CORINE_3211.asc CORINE_3211.tif
+for I in $( ls *.asc ); do gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${I} $( echo ${I} | sed s/.asc/.tif/ ) ; done
+for I in $( ls *.tif); do gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 ${I} $( echo ${I} | sed s/.tif/_30m.tif/ ) ; done
+./remap -i CORINE_3211.tif -o CORINE_3211_remap.tif -s 30 -m -l 4212108.248 399125.520 -e 4177008.248,438065.520 -w 5x5 -n 0.0
 
 # Rasterization of Parco delle Madonie AOI shapefile (pixel size -tr obtained as described below)
 gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte Sicily.shp Sicily.tif
-gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33N +datum=WGS84 +units=m' -tr 30 -30 Sicily.tif Madonie.tif
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 Sicily.tif Madonie.tif
 
 # Parco delle Madonie shapefile rasterization:
 # Its extent is:
@@ -34,3 +37,4 @@ Resolution is more or less 1000x1000 meters
 So a resolution of 30x30 meters is in this area a resolution of:
 0.017453292519943295 : 1156.69767983290474081115 = x : 30 --> x = (0.017453292519943295 * 30) / 1156.69767983290474081115
 x = 0.00045266691956530711
+
