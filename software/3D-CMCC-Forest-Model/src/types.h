@@ -692,9 +692,9 @@ typedef struct
 {
 	char version;
 	float sizeCell,
-	//dominant,
-	//dominated,
-	//subdominated,
+	dominant,
+	dominated,
+	subdominated,
 	layer_limit,
 	min_layer_cover,
 	max_layer_cover,
