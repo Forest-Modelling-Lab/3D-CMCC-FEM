@@ -540,6 +540,7 @@ typedef struct {
 	char *species;
 	ePhenology phenology;
 	eManagement management;
+	// todo remove LAI
 	PREC lai;
 	int n;
 	int stump;
@@ -751,67 +752,6 @@ typedef struct {
 #define ln2              0.693147181
 #define eps                   0.0001
 
-//NOTE: The following conversion factors are used:
-//
-//    1 MJ  = 2.3 mol PAR
-//    1 mol = 24 gDM
-//----------------------------CONVERSION FACTOR--------------------------------- This was conversion.h
-
-//-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
-//DENSITY
-// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
-// 100   for pixels of 10x10   meters resolution
-// 10000 for pixels of 100x100 meters resolution
-
-
-
-
-/*
-//LAYER LIMIT
-#define DOMINANT                   15
-#define DOMINATED                   5
-#define SUBDOMINAED                 1
-
-//LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
-#define MAX_LAYER_COVER	           1
-
-//AGE LIMIT
-#define ADULT_AGE                   5     //year limit at which consider trees adult
-
-//#define YEARSOFSIMULATION        6//years of simulation
-
-//INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
-#define AVDBH_SAPLING              0.5
-#define LAI_SAPLING                2
-#define HEIGHT_SAPLING             0.5
-#define WS_SAPLING                 0.00001
-#define WR_SAPLING                 0.000005
-#define WF_SAPLING                 0.0000001
-
-
-
-//MINIMUM PAR AT FOREST FLOOR FOR ESATBLISHMENT (W/m^2)
-#define LIGHT_ESTAB_VERY_TOLERANT   0.3
-#define LIGHT_ESTAB_TOLERANT        1.0
-#define LIGHT_ESTAB_INTERMEDIATE    2.0
-#define LIGHT_ESTAB_INTOLERANT      3.0
-
-
-
-//CONTROL LAI IN SPATIAL VERSION
-#define MAXLAI 8
-#define DEFAULTLAI 4
-
-//CONTROL MET DATA
-#define MAXDAYS  31
-#define MAXRG 40
-#define MAXTAV 40
-#define MAXVPD 40
-#define MAXPRECIP 500
-*/
-
-
-/*from LPJ_Guess*/
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 
 #define LOGFILE		"output.txt"

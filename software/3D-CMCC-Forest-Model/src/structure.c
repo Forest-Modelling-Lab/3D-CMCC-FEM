@@ -656,8 +656,6 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 
 	Log("Determines Effective Layer Cover \n");
 
-	//todo: solve bug
-
 	for (height = c->heights_count - 1; height >= 0; height -- )
 	{
 		for (age = c->heights[height].ages_count - 1; age >= 0; age --)

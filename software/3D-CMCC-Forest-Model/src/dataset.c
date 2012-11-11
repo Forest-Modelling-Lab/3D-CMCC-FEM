@@ -273,7 +273,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							rows[*rows_count-1].age = (int)value;
 							break;
 
-
+							//todo remove LAI
 						case LAI_COLUMN:
 							rows[*rows_count-1].lai = value;
 						break;
