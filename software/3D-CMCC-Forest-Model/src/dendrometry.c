@@ -9,9 +9,6 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	float oldavDBH;
 	float oldTreeHeight;
 
-	int height;
-
-
 	Log("\nGET_DENDROMETRY_ROUTINE\n");
 
 	Log("\n**Average DBH 3PG**\n");

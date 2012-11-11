@@ -11,7 +11,8 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg)
+void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,
+											float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
 {
 	//CTEM VERSION
 
@@ -61,6 +62,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
 	Par_over = c->par - s->value[APAR];
 	Light_trasm = Par_over / Monthly_solar_radiation;
+
+	s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
+	//Log("fracBB = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]);
 
 	//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
@@ -1084,7 +1088,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
 {
 	//CTEM VERSION
 
@@ -1127,6 +1131,9 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
 	Par_over = c->par - s->value[APAR];
 	Light_trasm = Par_over / Monthly_solar_radiation;
+
+	s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
+	//Log("fracBB = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]);
 
 	//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);

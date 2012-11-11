@@ -103,7 +103,8 @@ void Clearcut_Timber (SPECIES *const s, int years, int z, int number_of_layers)
 		if (number_of_layers >= 3)
 		{
 
-			while ( 1 )  {
+			while ( 1 )
+			{
 				puts( "Layer from which remove trees = ?\n"
 						"-2 = dominant\n"
 						"-1 = dominated\n"
