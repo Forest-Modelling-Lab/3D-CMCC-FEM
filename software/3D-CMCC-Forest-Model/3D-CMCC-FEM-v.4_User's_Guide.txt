@@ -1,0 +1,713 @@
+Nov 2012
+User’s Guide for 3D-CMCC-FEM, Version 4
+Source:
+
+Alessio Collalti
+Riccardo Valentini
+Monia Santini
+Alessio Ribeca
+Lucia Perugini
+Angelo Nolè
+
+euroMediterranean Center for Climate Changes (CMCC)
+http://.cmcc.it/ Via Augusto Imperatore 16 - 73100 Lecce (Italy)
+Division Impact on Agriculture, Forest and Natural Ecosystems (IAFENT)
+email: alessio.collalti@cmcc.it
+_________________________________________________________
+Forest Ecology Lab.
+Department for innovation in biological, agro-food and forest systems (DIBAF)
+University of Tuscia Viterbo, ITALY
+ email: a.collalti@unitus.it
+Mobile +393299841220
+Skype alessio.collalti 
+
+General notes on 3D-CMCC-FEM, Version 4
+3D-CMCC Forest Model is a computer model that simulates the storage and fluxes of water, carbon, within the
+vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
+versions have been developed for particular purposes. The CMCC and the
+University ofTuscia- Viterbo maintain benchmark code versions for
+public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
+The code and executables accompanying this file represent the most recent benchmark version.
+IMPORTANT NOTE: COPYING
+The 3D-CMCC-FEM, Version 4 code is copyrighted. You may not make copies of any part of the code for distribution to
+any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
+The purpose for this restriction is to keep track of who has what version of the public release benchmark code, so that
+we can let our user community know when there are updates. We appreciate your cooperation with this policy.
+Referencing 3D-CMCC-FEM:
+If you use 3D-CMCC-FEM in your research, we request that you include the following acknowledgement in the relevant
+manuscripts:
+"3D-CMCC-FEM, Version 4 was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
+Please also reference the following citation as the most recent and complete description of the current model version:
+A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model in a deciduous forest in Central Italy
+Alessio Collalti, Lucia Perugini, Tommaso Chiti, Angelo Nolè, Giorgio Matteucci, Riccardo Valentini
+ (in press).
+(this citation will be updated as soon as possible).
+If you have made any significant modifications to the code, please mention them in your manuscript.
+This User’s Guide is the only documentation released with 3D-CMCC-FE. The code itself contains extensive internal
+documentation, and users with specific questions about the algorithms used to estimate particular processes should read
+the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
+and is a good starting point for this kind of inquiry. The files matrix.c and types.h define the data structures that are used to
+pass information between the process modules, and includes both a short text description and the units for each internal
+variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
+please read this entire guide first, then feel free to contact:
+Alessio Collalti (alessio.collalti@cmcc.it)
+
+SETTING MODEL:
+The file "settings.txt" permits to set the model run, choosing between "s" or "u" the version spatial or unspatial of the model,
+its cell resolution and other parameters to run the model.
+
+INPUT FILES: OVERVIEW
+The first required input file is called the "input.txt". It provides general information about the stand site conditions.
+
+The second required input file is the meteorological data file called using the year of simulation, e.g. "2007.txt" contains the monthly 
+meteorological data information for that year. Years of simulation depends on the number of the met data file that the model find inside the folder
+Same met data are mandatory for the model: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
+Others are optional: soil temperature and soil water content.
+If the model runs in "spatial version" monthly LAI values are mandatory.
+Columns with ".._sqc" have not to be considered.
+
+The third required input file is the eco-physiological constants file called with the species names to simulated "Fagussylvatica.txt".
+It contains parameters such as  Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
+IMPORTANT: use the same characters used within input.txt file to rename this file
+
+The fourth required input file is "site.txt". It contains information about the soil and fertility test site.
+
+OUTPUT FILES: OVERVIEW
+The model create or rewrite for each simulation a file called "output.txt" into the folder output.
+This file contains all simulation results to check the model algorithms used. 
+These results can be obtained at stand level or for each type of class level (layer, age or diametric class)
+If you need to extrapolate one variable then is advised 
+use in Unix platform the function "grep".  
+
+OUTPUT FILES: OVERVIEW
+There are two different styles of output produced by Biome-BGC. The first type includes the binary output files
+controlled through the initialization file with information from the OUTPUT_CONTROL, DAILY_OUTPUT, and
+ANNUAL_OUTPUT sections. This is the most flexible output mechanism, since the user can control exactly which
+model variables to include in the output files, and what level of averaging to perform. The second type of output is a
+very simple formatted text file that contains annual summary information for each year of the simulation. This text
+output file is produced for all non-spinup simulations, and it uses a fixed list of output variables.
+These two output types are described in greater detail below.
+BINARY OUTPUT FILES: DETAILS
+These are not text files, and you will not be able to read them with a text editor or word processor. Instead, they are
+data files containing binary representations of the values of the output variables. Each value is written as a single-
+precision IEEE floating point binary number (using 4 bytes of storage per number). These values can be read directly
+using simple code written in C/C++, FORTRAN, BASIC, PASCAL, and other programming languages. They can also
+be read by many commercially available software packages, typically those that specialize in manipulating large multi-
+dimensional data sets. One good example of a commercially available package for display and analysis of binary data
+files is IDL, from Research Systems, Inc. (www.rsinc.com). The current cost is about $500 for a single PC/Mac license,
+and about $900 for a single workstation license (U.S. educational institution pricing). We will be making a package of
+simple plotting routines for IDL users available in the near future on the NTSG website. There are lots of other
+possibilities for reading these files, and you might want to consult with a computer programmer about the methods best
+suited for the kind of analysis you want to do.
+In order to read the binary files, you need to know how output values are ordered in the file. Consider a single
+simulation over 100 years, for which the user requested three daily output variables and two annual ouput variables,
+and requested that in addition to the daily output, the three variables also be summarized as monthly averages and
+annual averages. Below is a corresponding example of the OUTPUT_CONTROL, DAILY_OUTPUT, and
+ANNUAL_OUTPUT sections of the ini file:
+<EXAMPLE>
+OUTPUT_CONTROL
+(keyword - do not remove)
+outputs/enf_test1
+(text) prefix for output files
+1
+(flag) 1 = write daily output
+0 = no daily output1
+1
+1
+1
+(flag)
+(flag)
+(flag)
+(flag)
+1 =
+1 =
+1 =
+for
+monthly avg of daily variables 0 = no monthly avg
+annual avg of daily variables
+0 = no annual avg
+write annual output 0 = no annual output
+on-screen progress indicator
+DAILY_OUTPUT
+(keyword)
+3
+(int) number of daily variables to output
+43
+5 wf.soilw_trans
+509
+8 epv.proj_lai
+620
+10 summary.daily_npp
+ANNUAL_OUTPUT
+(keyword)
+2
+(int)
+number of annual output variables
+545
+0 annual maximum projected LAI
+636
+1 vegetation C
+<END EXAMPLE>
+Four binary output files will be created for this simulation, and each file can be considered as a multi-dimensional array
+of values. The first dimension in each output file is the number of variables (3 in the case of daily variables, 2 in the
+case of annual variables). The last dimension is the number of years of simulation (100 in this case). Daily and monthly
+files have another dimension which is either the number of days per year (365) or the number of months per year (12).
+The values in parentheses beside the filenames below show the dimensions for each file in this example:
+outputs/enf_test1.dayout
+(3 x 365 x 100)
+outputs/enf_test1.monavgout
+(3 x 12 x 100)
+outputs/enf_test1.annavgout
+(3 x 100)
+outputs/enf_test1.annout
+(2 x 100)
+Values are stored sequentially in the file as dictated by these dimensions. As an example, for the *.dayout file, the first
+three values in the file are the three daily output variables for the first day of the first year of the simulation. The next
+three values in the file will be the three daily output variables for the second day of the first year of simulation, etc.
+The units for all variables are defined in the bgc_struct.h file.
+ANNUAL TEXT OUTPUT: DETAILS
+Because it can take some time to get used to the binary output formats, we also include a formatted text output file with
+annual summary information. For many applications this may be all the information required. In any case it allows a
+quick look at the results before proceeding with more detailed analyses. The name of the file is the user-supplied
+output prefix plus the following suffix "_ann.txt". The file is self-documenting, and an example is shown below:
+<EXAMPLE>
+Annual summary output from Biome-BGC version 4.1.2
+ann PRCP = annual total precipitation (mm/yr)
+ann Tavg = annual average air temperature (deg C)
+max LAI = annual maximum value of projected leaf area index (m2/m2)
+ann ET = annual total evapotranspiration (mm/yr)
+ann OF = annual total outflow (mm/yr)
+ann NPP = annual total net primary production (gC/m2/yr)
+ann NPB = annual total net biome production (gC/m2/yr)
+year ann PRCP
+1996
+869.4
+1997
+475.6
+1998
+727.5
+1999
+524.3
+2000
+869.4
+<END EXAMPLE>
+ann Tavg
+8.4
+8.4
+8.6
+8.1
+8.4
+max LAI
+2.0
+2.0
+2.0
+2.0
+2.0
+ann ET
+359.7
+347.7
+380.3
+332.7
+359.7
+ann OF
+483.0
+182.8
+310.7
+199.9
+483.0
+ann NPP
+385.7
+405.5
+405.7
+376.5
+385.6
+ann NBP
+-20.8
+11.1
+7.1
+0.0
+-20.8
+With just a little bit of simple programming, the formatting of this file can be changed to include whatever variables
+might be of interest, if the binary output options are not feasible.RUNNING THE EXAMPLES
+This release of the Biome-BGC code comes with a simple set of example input and output files that illustrate the
+recommended procedure for running a simulation at a new site. The example simulation is for a site in Missoula, MT,
+using 44 years of meteorological data as processed by the MTCLIM program. The vegetation type is assumed to be a
+generic evergreen needleleaf forest. Instructions are given below for both PC and UNIX users.
+The first step is to run a spinup simulation that will start with very low initial levels of soil carbon and nitrogen and
+loop through the 44-year meteorological data file many times until the total carbon levels stabilize. This simulation
+does not use a restart input file, but it produces a restart output file for use in the next step. The second step is to run a
+normal simulation, which runs for one pass through the 44-year met data file.
+To run the spinup simulation:
+(UNIX) From the unixbgc412 directory, enter the following text at the command line and press enter:
+bgc412 ini/enf_test1_spinup.ini
+(PC – except Windows 2000) In the pcbgc412 directory, double-click the icon for bgc412.bat (NOT the bgc412.exe
+icon...). This opens a window that contains some text asking you to enter the name of an initialization file. Enter the
+following line of text and press enter
+ini/enf_test1_spinup.ini
+(Windows 2000): The supplied *.bat files do not work in Windows 2000. I recommend you use the Command Prompt
+utility, from Start, Programs, Accessories. This is essentially a DOS prompt, and you can navigate to the appropriate
+directory and enter the following command:
+bgc412.exe ini/enf_test1_spinup.ini
+(UNIX and PC) At this point the program is launched and you should see a progression of numbers scrolling down the
+left side of the screen or window. These record the number of years of simulation that have been completed. This
+particular spinup run should take 2112 years to reach a steady state, after which the following message will be
+displayed and the program will exit:
+SPINUP: residual trend = -0.001184
+SPINUP: number of years = 2112
+This indicates that the steady state requirement was met after 2112 years, and that there is still a slight trend in the total
+system carbon, in this case a change of -0.001184 kg C m-2 yr-1.
+The spinup run does not produce any output files except a restart file that is stored in the restart subdirectory. This is
+used in the next step to initialize a normal simulation that will produce a range of output files.
+To run the 44-year simulation:
+(UNIX) Again from the unixbgc411 directory, enter the following line of text and press enter:
+bgc412 ini/enf_test1.ini
+(PC – except Windows 2000) In the pcbgc412 directory, double-click the icon for bgc412.bat (NOT the bgc412.exe
+icon...). This opens a window that contains some text asking you to enter the name of an initialization file. Enter the
+following line of text and press enter
+ini/enf_test1.ini
+(Windows 2000): The supplied *.bat files do not work in Windows 2000. I recommend you use the Command Prompt
+utility, from Start, Programs, Accessories. This is essentially a DOS prompt, and you can navigate to the appropriate
+directory and enter the following command:
+bgc412.exe ini/enf_test1.ini
+(UNIX and PC) At this point the program is launched and you should again see a progression of numbers scrolling
+down the left side of the screen or window. This simulation is set to run once through the 44 years of meteorological
+data. In this case, the scrolling numbers start with 1950 and end with 1993, since 1950 was given as the starting year
+for the met data in the ini file.
+This simulation will produce a complete set of output files, in the outputs directory, all having filenames beginning
+with enf_test1. Consult the enf_test1.ini file to see which variables are being output for the binary files. The simpleannual text file (enf_test1_ann.txt) is also created, and it is reproduced below in its entirety so that you can check your
+results.
+Contents of enf_test1_ann.txt
+Annual summary output from Biome-BGC version 4.1.2
+ann PRCP = annual total precipitation (mm/yr)
+ann Tavg = annual average air temperature (deg C)
+max LAI = annual maximum value of projected leaf area index (m2/m2)
+ann ET = annual total evapotranspiration (mm/yr)
+ann OF = annual total outflow (mm/yr)
+ann NPP = annual total net primary production (gC/m2/yr)
+ann NPB = annual total net biome production (gC/m2/yr)
+year
+1950
+1951
+1952
+1953
+1954
+1955
+1956
+1957
+1958
+1959
+1960
+1961
+1962
+1963
+1964
+1965
+1966
+1967
+1968
+1969
+1970
+1971
+1972
+1973
+1974
+1975
+1976
+1977
+1978
+1979
+1980
+1981
+1982
+1983
+1984
+1985
+1986
+1987
+1988
+1989
+1990
+1991
+1992
+ann PRCP
+376.0
+390.0
+226.0
+302.0
+356.0
+415.0
+409.0
+318.0
+439.0
+422.0
+261.0
+366.0
+315.0
+388.0
+399.0
+374.0
+291.0
+318.0
+324.0
+341.0
+394.0
+343.0
+351.0
+233.0
+283.0
+476.0
+241.0
+338.0
+311.0
+273.0
+499.0
+450.0
+400.0
+433.0
+345.0
+328.0
+432.0
+265.0
+288.0
+363.0
+350.0
+308.0
+300.0
+ann Tavg
+5.9
+5.8
+6.8
+8.2
+6.8
+5.2
+6.8
+6.9
+8.2
+6.4
+6.1
+6.8
+6.0
+6.6
+5.0
+6.0
+7.8
+7.9
+7.1
+6.0
+6.7
+7.2
+6.6
+7.6
+7.6
+6.0
+7.3
+6.9
+6.2
+6.9
+7.1
+7.6
+6.4
+6.8
+6.9
+5.8
+7.4
+7.6
+7.8
+6.8
+7.6
+7.3
+8.0
+max LAI
+1.4
+1.5
+1.6
+1.5
+1.5
+1.5
+1.6
+1.7
+1.7
+1.7
+1.7
+1.6
+1.6
+1.5
+1.6
+1.7
+1.8
+1.7
+1.6
+1.6
+1.7
+1.7
+1.6
+1.6
+1.5
+1.5
+1.6
+1.5
+1.5
+1.5
+1.7
+1.8
+1.9
+2.0
+2.0
+1.9
+1.9
+1.9
+1.8
+1.6
+1.5
+1.5
+1.5
+ann ET
+338.8
+372.3
+294.1
+296.5
+361.9
+339.7
+461.6
+317.3
+412.9
+425.4
+287.7
+338.1
+344.4
+392.9
+347.9
+426.4
+293.2
+294.3
+341.0
+348.7
+380.4
+327.7
+365.2
+182.3
+358.9
+397.2
+330.0
+253.3
+364.3
+281.5
+490.0
+418.4
+438.2
+406.7
+364.9
+328.5
+422.6
+292.9
+281.4
+368.8
+330.4
+298.4
+314.0
+ann OF
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+ann NPP
+160.1
+211.4
+95.6
+119.4
+220.1
+138.3
+280.3
+121.6
+183.4
+234.4
+85.5
+145.7
+154.1
+256.6
+177.9
+274.3
+108.5
+95.9
+213.0
+154.3
+197.2
+123.5
+223.2
+29.6
+210.6
+244.6
+141.4
+106.4
+227.0
+99.2
+314.3
+236.7
+226.3
+244.5
+158.5
+146.9
+247.9
+94.9
+91.8
+199.7
+174.7
+105.8
+177.5
+ann NBP
+-6.9
+20.0
+-76.9
+-42.6
+54.8
+-21.5
+60.2
+-42.6
+9.0
+28.1
+-83.0
+-24.9
+-19.8
+80.0
+31.7
+86.3
+-61.0
+-68.1
+42.5
+-20.3
+9.4
+-53.6
+23.5
+-129.0
+10.1
+58.5
+-31.2
+-42.8
+38.5
+-71.8
+118.5
+72.1
+20.9
+93.6
+-13.6
+-23.7
+50.5
+-68.0
+-70.4
+30.9
+11.1
+-57.5
+10.01993
+358.0
+6.1
+1.5
+361.0
+0.0
+195.2
+33.9
+Looking at the example binary output in IDL
+For users with access to the IDL software, there is an example IDL procedure in the main directory that will read and
+display the output stored in the enf_test1.dayout file. For UNIX users, start IDL in the unixbgc411 directory, then enter
+the command example_plot on the command line. For PC users, after starting IDL it may be necessary to change the
+working directory (under File, preferences menu) to the pcbgc411 directory. Then open the example_plot.pro file,
+compile, and execute. In both cases, a window will be created that will display three different plots for each of the 23
+output variables requested in the enf_test1.ini file. You scroll through these plots by pressing any key. The first plot
+for each variable shows all the daily data for 44 years as a time series. The second plot for each variable shows one
+average year of daily data (the average of the 44 individual years). The third plot shows the average value for each year
+as a 44-year timeseries. This example IDL procedure is included to give you some ideas on how to read and display
+the binary data.
+Compiling Biome-BGC source code
+If you are working on an operating system other than IBM AIX or Windows 9x/2000, or if you want to make any
+changes to the code, you will need to recompile to get a new executable. The process is different on PC and UNIX
+systems, so two sets of instructions are given below.
+UNIX compilation
+This code release comes with a set of makefiles that need some alteration before you use them. The main makefile is in
+the subdirectory src, and this should not have to be changed. There are two other makefiles, one in the
+src/bgclib_v4.1.2 subdirectory and another in the src/pointbgc_v4.1.2 subdirectory that both need to be modified as
+follows:
+1) Change the ROOTDIR variable so that it reflects the pathname for the src subdirectory. For example, if the src
+subdirectory is located at /u1/yourname/bgc/src, then you would replace the current text
+(/ntsg/peter/pointbgc_v4.1.2/src) with the new path.
+2) Change the name of the C compiler to a valid name for your system. Do this by editing the line in both subdirectory
+makefiles that begins with ‘CC=’, replacing the text ‘xlC’ with the name of your C/C++ compiler. Some possible
+examples for the compiler name are ‘cc’ and ‘gcc’.
+3) From the src directory, issue the protect_user_off command, which removes write protections.
+4) From the src directory, issue the command make. This executes the makefiles in both subdirectories and if successful
+produces a new executable called pointbgc in the parent directory to the src directory. The name of the new executable
+is different from the original executable supplied with this release so that the original is not overwritten.
+5) In order to protect the code from accidental changes, issue the protect_on command from the src directory after the
+new executable has been created.
+PC compilation
+For the PC model release, all of the source code is located in the src directory. The executable provided with this
+release was generated by compiling the source code with the Microsoft Visual C/C++ compiler (version 6.0). All the
+project files used by MS Visual C/C++ are located in the subdirectory src/bgc412, and users with the Visual C/C++
+software installed can open the bgc412.dsw file to access this project. Selecting “rebuild all” from the “Build” menu
+will recompile the code, putting a new executable called bgc412.exe in the src/bgc412/Release directory. There are
+many other compilers to choose from - contact your local PC system manager for more information.
+Code History
+The Biome-BGC ecosystem process model has a long heritage, and many people have contributed extensively to its
+development over many years. The following is a short synopsis of some of the most prominent code versions
+preceding the current version 4.1.2 benchmark code for public release.
+•
+•
+•
+•
+Biome-BGC version 4.1.1, Peter E. Thornton, 2001 (C/C++)
+Biome-BGC version 4.1, Peter E. Thornton, 2000 (C/C++)
+Biome-BGC version 2.0 (CRB-BGC), Peter E. Thornton, 1995 (C/C++)
+Biome-BGC version 1.37, E. Raymond Hunt, Jr., 1993 (Pascal)•
+•
+•
+Forest-BGC, Joseph C. Coughlan, 1986 (Pascal)
+DAYTRANS-PSN, Steven W. Running, 1981
+DAYTRANS, Steven W. Running, 1975
+Others who have contributed to the code in various ways and at various stages include: Galina Churkina, Tom Gower,
+Kathy Hibbard, Bob Keane, John Kimball, Lars Pierce, Joseph White, and Michael White.
+Questions or comments?
+If you have problems with the code, or if you have suggestions on how it could be improved, we’d love to hear from
+you. Also, please send us copies of any manuscripts or reports that include the use of Biome-BGC, especially if you
+have compared Biome-BGC estimates to measurements. This information helps us to better understand model
+performance, and improve it where we can. For questions on how to parameterize or run the code, please read
+everything in this file first.
+Contact:
+Peter E. Thornton
+E-mail: thornton@ucar.edu

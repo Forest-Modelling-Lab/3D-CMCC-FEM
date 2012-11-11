@@ -1,4 +1,4 @@
-# Under Linux/MacOS You can build and run this project using autotools instead of Code::Blocks:
+# Under Linux/MacOS You can build and run this project using autotools instead of Code::Blocks: or Eclipse IDE Platform
 
 - be shure to have installed autoconf, automake and libtool packages
 - go into top level project directory

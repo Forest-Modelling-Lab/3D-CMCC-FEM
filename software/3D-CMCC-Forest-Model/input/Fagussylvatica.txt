@@ -17,12 +17,12 @@ MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from
 //these Data are still not used
 MAXALB	0.20            //Maximum albedo for Quercus spp Breuer et al 2003
 MINALB	0.10            //Minimum albedo for Quercus spp Breuer et al 2003
-//SPECIFIC LEAF AREA 3PG
+//SPECIFIC LEAF AREA
 
 SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
 SLA1	7               //Specific Laef Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
-//SPECIFIC LEAF AREA 3DVTModel
+//SPECIFIC LEAF AREA 
 INITIAL_M_LAI	0.5     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
 SLA	240             //Specific Leaf Area cm^2/gC  					
 SLAmkg	0.1             //Convert SLA in m^2/Kg

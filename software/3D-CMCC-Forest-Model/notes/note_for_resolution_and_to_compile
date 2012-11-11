@@ -1,7 +1,0 @@
-per cambiare la risoluzione spaziale a cui il modello lavora bisogna intervenire sulle variabili:
-
--SIZECELL (che è una define) in types.h
-
--WSX1000 (che è settato su un valore definito per l'ettaro) in "species".txt ???????????
-
--il codice è stato compilato su macchina 64 bit, se si decide di compilare su macchina 32 bit allora andare in obj>src e cancellare tutti i file .o dopodichè ricompilare oppure fare "rebuild"
