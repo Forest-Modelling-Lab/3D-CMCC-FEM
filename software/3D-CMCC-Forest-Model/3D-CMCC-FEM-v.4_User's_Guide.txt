@@ -69,6 +69,10 @@ RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 be sure to set the right arguments passed to the project 
 
+example:
+
+-i input -o output/output.txt -d input/0_0_input.txt -m input/0_0_2007.txt,input/0_0_2008.txt -s input/site.txt -c input/settings.txt
+
 the model runs monthly starting from the row 0,0 -> 0,n and then starts to process a new row
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
