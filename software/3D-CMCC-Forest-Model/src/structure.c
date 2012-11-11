@@ -756,6 +756,7 @@ void Get_top_layer (CELL *const c, int heights_count, HEIGHT *heights)
 				}
 			}
 		}
+		Log("Monthly Dominant layer is z = %d\n", c->top_layer);
 		//Log("-Species in veg period = %d\n", c->Veg_Counter);
 	}
 

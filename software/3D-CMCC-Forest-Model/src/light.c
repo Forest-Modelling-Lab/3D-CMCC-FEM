@@ -70,6 +70,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 
 	Log("dominant contatore %d \n", c->dominant_veg_counter);
+	Log("Top_layer = %d\n", top_layer);
 
 
 
@@ -220,11 +221,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	}
 	else //DOMINATED LAYER
 	{
-		Log("**LIGHT DOMINATED**\n");
-
 		//dominated layer
 		if (z == top_layer - 1)
 		{
+			Log("**LIGHT DOMINATED**\n");
 			Log("Height Classes in Dominated Layer = %d\n", c->height_class_in_layer_dominated_counter);
 
 			//Net Radiation
@@ -377,6 +377,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		//subdominated layer
 		else
 		{
+			Log("**LIGHT SUB-DOMINATED**\n");
 			Log("Height Classes in Sub-Dominated Layer = %d\n", c->height_class_in_layer_subdominated_counter);
 
 			//Net Radiation

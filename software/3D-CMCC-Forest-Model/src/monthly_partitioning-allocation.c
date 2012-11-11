@@ -15,7 +15,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 {
 	//CTEM VERSION
 
-	Log("\n GET_ALLOCATION_ROUTINE*********************************************************************************************************************************\n\n");
+	Log("GET_ALLOCATION_ROUTINE*********************************************************************************************************************************\n\n");
 
 	Log("Carbon allocation routine for deciduous\n");
 	Log("Version = %c \n", settings->version);
@@ -30,12 +30,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	float  r0Ctem = s->value[R0CTEM];
 	//float  f0Ctem = s->value[F0CTEM];
 	float const omegaCtem = s->value[OMEGA_CTEM];
-
-	//determines the maximum amount of drymatter to allocate to foliage
-	//CURRENTLY NOT USED
-	//float const epsilon = s->value[EPSILON_CTEM];      //in KgC/m^2)^-0.6  allocation parameter see also Frankfurt biosphere model
-	//float const kappa = s->value[KAPPA];               //(dimensionless) allocation parameter
-
 	float pS_CTEM;
 	float pR_CTEM;
 	float pF_CTEM;
@@ -43,11 +37,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	float oldW;
-
 	float Monthly_solar_radiation;
 	float Light_trasm;
 	float Par_over;
-
 	float Perc_fine;
 	float Perc_coarse;
 	//float Perc_leaves;              //percentage of leaves in first growing season
@@ -92,36 +84,37 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-	if (settings->version == 'u')
-	{
-		//defining phenological phase
-		if (daylength > s->value[MINDAYLENGTH] /*c->abscission_daylength*/)
-		{
-			//Beginning of growing season
-			if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
-			{
-				phenology_phase = 1;
-			}
-			//Half of beginning of growing season
-			if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
-			{
-				phenology_phase = 2;
-			}
-			//Full growing season
-			if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
-			{
-				phenology_phase = 3;
-			}
-		}
-		else
-		{
-			//Leaf fall
-			phenology_phase = 0;
-		}
-		Log("Unspatial version \n");
 
-		if (Veg_UnVeg == 1)
+
+	if (Veg_UnVeg == 1)
+	{
+		if (settings->version == 'u')
 		{
+			//defining phenological phase
+			if (daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
+			{
+				//Leaf fall
+				phenology_phase = 0;
+			}
+			else
+			{
+				//Beginning of growing season
+				if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
+				{
+					phenology_phase = 1;
+				}
+				//Half of beginning of growing season
+				if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
+				{
+					phenology_phase = 2;
+				}
+				//Full growing season
+				if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
+				{
+					phenology_phase = 3;
+				}
+			}
+			Log("Unspatial version \n");
 			oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
 
 			//Log ("PEAK_Y_LAI  = %g \n", s->value[PEAK_Y_LAI]);
@@ -364,7 +357,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				//comnpute fine and coarse root biomass
 				s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM]  * Perc_fine;
 				Log("BiomassRoots increment into fine roots = %g tDM/ha\n", s->value[DEL_ROOTS_FINE_CTEM]);
-				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_coarse;
+				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM]  - s->value[DEL_ROOTS_FINE_CTEM] ;
 				Log("BiomassRoots increment into coarse roots = %g tDM/ha\n", s->value[DEL_ROOTS_COARSE_CTEM]);
 
 				if(( s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]) != s->value[DEL_ROOTS_TOT_CTEM])
@@ -744,28 +737,29 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	{
 		Log("Spatial version \n");
 
-		//defining phenological phase from NDVI values of LAI
-
-		//Beginning of growing season
-		if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
-		{
-			phenology_phase = 1;
-		}
-		//Half of beginning of growing season
-		if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
-		{
-			phenology_phase = 2;
-		}
-		//Full growing season or "||" end of growing season
-		if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
-		{
-			phenology_phase = 3;
-		}
 
 
 
 		if (Veg_UnVeg == 1)
 		{
+			//defining phenological phase from NDVI values of LAI
+
+			//Beginning of growing season
+			if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
+			{
+				phenology_phase = 1;
+			}
+			//Half of beginning of growing season
+			if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
+			{
+				phenology_phase = 2;
+			}
+			//Full growing season or "||" end of growing season
+			if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
+			{
+				phenology_phase = 3;
+			}
+
 			oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
 
 			//7 May 2012
@@ -1094,7 +1088,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 {
 	//CTEM VERSION
 
-	Log("\n GET_ALLOCATION_ROUTINE\n\n");
+	Log("GET_ALLOCATION_ROUTINE\n\n");
 
 	Log("Carbon allocation routine for evergreen\n");
 	Log("Version = %c \n", settings->version);
@@ -1129,13 +1123,6 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	float oldW;
 	float gammaF;
 	float oldWf;
-
-	//Log ("S0CTEM  = %g \n", s0Ctem);
-	//Log ("R0CTEM  = %g \n", r0Ctem);
-	//Log ("F0CTEM  = %g \n", f0Ctem );
-	//Log ("OMEGA_CTEM  = %g \n", omegaCtem);
-	//Log ("EPSILON_CTEM  = %g \n", epsilon);
-	//Log ("KAPPA_CTEM  = %g \n", kappa);
 
 	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
 	Par_over = c->par - s->value[APAR];
