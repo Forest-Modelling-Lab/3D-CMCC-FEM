@@ -9,9 +9,9 @@
 
 
 
-void Get_Management (SPECIES *const s, int years)
+void Get_Management (SPECIES *const s, AGE * const a, int years)
 {
-	if ( s->counter[TREE_AGE] >= s->counter[MINAGEMANAG] /* && MINDBHMANAG*/)
+	if ( a->value >= s->counter[MINAGEMANAG] /* && MINDBHMANAG*/)
 	{
 		if ( years && !(years % s->counter[ROTATION]))
 		{

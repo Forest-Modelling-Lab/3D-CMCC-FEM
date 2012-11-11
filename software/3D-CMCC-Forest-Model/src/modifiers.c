@@ -6,7 +6,7 @@
 #include "math.h"
 #include "types.h"
 
-void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int month, int daysinmonth, float available_soil_water, float vpd, float Soil_Moist_Ratio, int z, int management )
+void Get_modifiers (SPECIES *const s,  AGE *const a, const MET_DATA *const met, int year,  int month, int daysinmonth, float available_soil_water, float vpd, float Soil_Moist_Ratio, int z, int management )
 {
 	float RelAge;
 
@@ -64,7 +64,7 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
 	//Convert to mbar
 	//1 Kpa = 10 mbar
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
-	//convert also COEFFCOND moltiply it for
+	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
 	Log("fVPD - VPD modifier = %g\n", s->value[F_VPD]);
 
@@ -81,20 +81,20 @@ void Get_modifiers (SPECIES *const s,  const MET_DATA *const met, int year,  int
      {
         //for TIMBER
         //AGE FOR TIMBER IS THE EFFECTIVE AGE
-        RelAge = (float)s->counter[TREE_AGE] / s->value[MAXAGE];
+        RelAge = (float)a->value / s->value[MAXAGE];
         s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
         //Log("--Rel Age = %g years\n", RelAge);
-        //Log("--Age = %d years\n", s->counter[TREE_AGE]);
+        Log("--Age = %d years\n", a->value);
         Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
      }
      else
      {
         //for SHOOTS
         //AGE FOR COPPICE IS THE AGE FROM THE COPPICING
-        RelAge = (float)s->counter[TREE_AGE] / s->value[MAXAGE_S];
+        RelAge = (float)a->value / s->value[MAXAGE_S];
         s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
         //Log("--Rel Age = %g years\n", RelAge);
-        //Log("--Age = %d years\n", s->counter[TREE_AGE]);
+        //Log("--Age = %d years\n", a->value);
         Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
 
      }

@@ -6,10 +6,8 @@
 #include <math.h>
 #include "types.h"
 
-void Get_allometry (SPECIES *const, int);
 
-
-void Get_allometry (SPECIES *const s, int years)
+void Get_allometry (SPECIES *const s, AGE *const a, int years)
 {
 	float WFkgm2;
 
@@ -158,7 +156,7 @@ void Get_allometry (SPECIES *const s, int years)
 
 	//This function convert Biomass allocated in foliage compart from tDM/ha in KgDM/Area Effectively covered by Trees
 	Log("Wf Foliage Biomass from previous year = %g tDM/ha\n", s->value[WF]);
-	s->value[SLA] = s->value[SLA1] + (s->value[SLA0] - s->value[SLA1]) * exp (-ln2 * pow((s->counter[TREE_AGE]  / s->value[TSLA]), 2));
+	s->value[SLA] = s->value[SLA1] + (s->value[SLA0] - s->value[SLA1]) * exp (-ln2 * pow((a->value]  / s->value[TSLA]), 2));
 	Log("3PG Specific Leaf Area (SLA) = %g cm^2/g\n", s->value[SLA] );
 	s->value[LAI_3PG] = s->value[WF] * s->value[SLA] * 0.1;
 	Log("LAI-3PG  = %g \n", s->value[LAI_3PG] );

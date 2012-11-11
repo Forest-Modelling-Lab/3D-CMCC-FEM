@@ -98,7 +98,7 @@ void Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearly_
 
 
 /**/
-int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
+int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 {
 	/*USING A LOGISTIC EQUATION*/
 	static int NumberSeed;                  //Number of Seeds per tree
@@ -112,7 +112,7 @@ int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
 
 
 
-	NumberSeed = (MaxSeed/ (1 + OptSexAge * exp (-0.1 * (s->counter[TREE_AGE] - MinSexAge))));
+	NumberSeed = (MaxSeed/ (1 + OptSexAge * exp (-0.1 * (a->value - MinSexAge))));
 	Log("Annual Number of Seeds for Tree from Logistic Equation = %d seeds/tree/year\n", NumberSeed);
 
 	PopNumberSeeds = NumberSeed * s->counter[N_TREE];
@@ -127,7 +127,7 @@ int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
 }
 /**/
 
-int Get_Fruit_Allocation_TREEMIG (SPECIES *const s)
+int Get_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
 {
 	static int NumberSeed;
 	static float heigthdependence;
@@ -140,7 +140,7 @@ int Get_Fruit_Allocation_TREEMIG (SPECIES *const s)
 
 	//numero semi prodotti
 	NumberSeed = (float)s->counter[N_TREE] * s->value[MAXSEED] * heigthdependence * 0.51 *
-			( 1 + sin((2 * Pi * (float)s->counter[TREE_AGE] ) / s->value[MASTSEED]));
+			( 1 + sin((2 * Pi * (float)a->value ) / s->value[MASTSEED]));
 	Log("Nseed per cell at the End of the This Year = %d seeds per cell\n", NumberSeed);
 
 	//Biomassa allocata nei semi in tDM/ha

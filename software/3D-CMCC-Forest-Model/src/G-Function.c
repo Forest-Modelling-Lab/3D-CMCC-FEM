@@ -143,3 +143,85 @@ void Get_Abscission_DayLength ( CELL * c)
 	Log("Abscission day length = %g \n", c->abscission_daylength);
 
 }
+
+extern void Print_stand_data (CELL *c, const MET_DATA *const met, const int month, const int years)
+{
+	int height;
+	int age;
+	int species;
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			{
+				Log("******************************************************\n\n");
+				Log("cell = \n");
+				Log("- x = %g\n", c->x);
+				Log("- y = %g\n", c->y);
+				Log("- z = %d\n", c->heights[height].z);
+				Log("- Class Age = %d years \n", c->heights[height].ages[age].value);
+				Log("- Species = %s\n", c->heights[height].ages[age].species[species].name);
+				Log("- Height = %g m\n", c->heights[height].value);
+				Log("- Number of trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
+
+				if ( c->heights[height].ages[age].species[species].phenology == D)
+				{
+					Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+				}
+				else
+				{
+					Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+				}
+				Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+
+				if (settings->version == 's')
+				{
+					Log("- Monthly LAI from NDVI = %g \n",c->heights[height].z, met[month].ndvi_lai);
+				}
+				else
+				{
+					Log("- Monthly LAI from Model= %g \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+				}
+				Log("- ASW layer %d month %d  = %g mm\n",  c->heights[height].z, month + 1, c->available_soil_water);
+
+				if (!month)
+				{
+					/*Phenology*/
+					if ( c->heights[height].ages[age].species[species].phenology == D)
+					{
+						Log("- Phenology = DECIDUOUS\n");
+					}
+					else
+					{
+						Log("- Phenology = EVERGREEN\n");
+					}
+
+
+					/*Management*/
+					if ( c->heights[height].ages[age].species[species].management == T)
+					{
+						Log("- Management type = TIMBER\n");
+					}
+					else
+					{
+						Log("- Management type = COPPICE\n");
+					}
+					//Log("+ Lai = %g\n", c->heights[height].ages[age].species[species].value[LAI]);
+					Log("+ AvDBH = %g cm\n",  c->heights[height].ages[age].species[species].value[AVDBH]);
+					if (settings->version == 'u')
+					{
+						Log("+ Wf = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
+					}
+					Log("+ Ws = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]);
+					Log("+ Wrc = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]);
+					Log("+ Wrf = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]);
+					Log("+ Wr Tot = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM]);
+					Log("+ Wres = %g tDM/ha\n", c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM]);
+				}
+			}
+		}
+	}
+
+}

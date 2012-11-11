@@ -1088,7 +1088,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
 {
 	//CTEM VERSION
 
@@ -1240,7 +1240,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 		//leaf litterfall
 
-		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0]) * exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * s->value[TREE_AGE] / s->value[TGAMMAF]));
+		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0]) * exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
 		//Log("Litterfall rate = %g\n", gammaF);
 
 		oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
@@ -1349,7 +1349,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		//leaf litterfall
 
 		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0])
-				* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * s->value[TREE_AGE] / s->value[TGAMMAF]));
+				* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
 		//Log("Litterfall rate = %g\n", gammaF);
 
 		oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
@@ -1959,7 +1959,7 @@ void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearl
 
 
 /**/
-int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
+int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 {
 	/*USING A LOGISTIC EQUATION*/
 	static int NumberSeed;                  //Number of Seeds per tree
@@ -1973,7 +1973,7 @@ int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
 
 
 
-	NumberSeed = (MaxSeed/ (1 + OptSexAge * exp (-0.1 * (s->counter[TREE_AGE] - MinSexAge))));
+	NumberSeed = (MaxSeed/ (1 + OptSexAge * exp (-0.1 * (a->value - MinSexAge))));
 	Log("Annual Number of Seeds for Tree from Logistic Equation = %d seeds/tree/year\n", NumberSeed);
 
 	PopNumberSeeds = NumberSeed * s->counter[N_TREE];
@@ -1988,11 +1988,11 @@ int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s)
 }
 /**/
 
-int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const s)
+int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
 {
 	static int NumberSeed;
 	static float heigthdependence;
-	static float WseedT;            //heigth dependence factor
+	static float WseedT;            //height dependence factor
 
 	Log("------TREEMIG FRUIT ALLOCATION------\n");
 
@@ -2001,7 +2001,7 @@ int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const s)
 
 	//numero semi prodotti
 	NumberSeed = (float)s->counter[N_TREE] * s->value[MAXSEED] * heigthdependence * 0.51 *
-			( 1 + sin((2 * Pi * (float)s->counter[TREE_AGE] ) / s->value[MASTSEED]));
+			( 1 + sin((2 * Pi * (float)a->value ) / s->value[MASTSEED]));
 	Log("Nseed per cell at the End of the This Year = %d seeds per cell\n", NumberSeed);
 
 	//Biomassa allocata nei semi in tDM/ha

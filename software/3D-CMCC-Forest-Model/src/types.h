@@ -261,7 +261,6 @@ enum {
 	CROWN_AREA_SORTIE,              //Crown Area from Sortie diameter
 	CROWN_HEIGHT_SORTIE,            //Crown Height in m from Sortie Standard
 	TREE_HEIGHT_SORTIE,             //Tree Height in m from Sortie function
-	TREE_HEIGHT,
 	TREE_HEIGHT_UDC,
 	TREE_HEIGHT_FL,
 	TREE_HEIGHT_LPJ,                //Tree Height in m from LPJ
@@ -509,7 +508,6 @@ enum {
 /* enum for counters */
 enum {
 
-	TREE_AGE = 0,
 	N_TREE,                         //Numbers of Tree per cell
 	N_STUMP,                        //Number of stumps for coppice
 	N_SEED,                        //Seeds number for cell
@@ -767,7 +765,7 @@ extern void Get_Veg_Months (MATRIX *const, const YOS *const, const int, const in
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
 extern float Get_canopy_cover (SPECIES *const, int, int, int);
-extern void Get_crowding_competition (SPECIES *const, int, int , int);
+extern void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
@@ -782,12 +780,12 @@ extern void Get_Lai_3PG (SPECIES *const);
 extern void Get_Lai_NASACASA (SPECIES *const);
 extern void Get_Lai_LPJ (SPECIES *const);
 extern void Get_Lai_CTEM (SPECIES *const);
-extern void Get_Age_Mortality (SPECIES *const);
+extern void Get_Age_Mortality (SPECIES *const, AGE *const);
 extern void Get_Greff_Mortality (SPECIES *const);
 extern void Get_Mortality (SPECIES *const, int);
 //extern void Get_stool_mortality (SPECIES *const, int);
-extern void Get_modifiers (SPECIES *const, const MET_DATA *const, int, int, int, float, float, float, int, int);
-extern void Get_Management (SPECIES *const, int);
+extern void Get_modifiers (SPECIES *const, AGE *const, const MET_DATA *const, int, int, int, float, float, float, int, int);
+extern void Get_Management (SPECIES *const, AGE *const, int);
 extern void Clearcut_Timber (SPECIES *const, int, int, int);
 extern void Clearcut_Coppice (SPECIES *const, int, int, int);
 extern MATRIX *matrix_create(ROW *const, const int, char *);
@@ -796,21 +794,21 @@ extern void matrix_summary(const MATRIX *const, int, const YOS *const);
 void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
 //yearly allocation
 extern void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
-extern int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const);
-extern int Get_Fruit_Allocation_TREEMIG (SPECIES *const);
+extern int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
+extern int Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 extern void Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int);
 extern void Get_Partitioning_Allocation_NASACASA (SPECIES *const, int);
 extern void Get_Partitioning_Allocation_CTEM (SPECIES *const, int);
 //monthly allocation
 extern void M_Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
-extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const);
-extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const);
+extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
+extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, float, float);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 //deciduous routine for carbon allocation
 extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int, int);
 //evergreen routine for carbon allocation
-extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int, int);
+extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
@@ -836,6 +834,7 @@ extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
 extern void Get_annual_forest_structure (CELL *, HEIGHT *);
 void Print_met_data (const MET_DATA *const, float, int, float);
+extern void Print_stand_data (CELL *c, const MET_DATA *const, const int, const int);
 void Print_parameters (SPECIES *const, int, int, int);
 void Get_monthly_vegetative_period (CELL *const, const MET_DATA *const, int);
 extern int Get_number_of_layers (CELL *);

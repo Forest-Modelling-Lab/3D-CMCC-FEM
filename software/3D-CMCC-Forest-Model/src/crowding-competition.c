@@ -20,7 +20,7 @@
 // in the first year avdbh and height are from input data
 
 
-void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer)
+void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int top_layer)
 {
 
 	static float delHeight;    //height increment
@@ -35,7 +35,7 @@ void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer
 
 	if ( !years )
 	{
-		s->value[CC_TREE_HEIGHT] = s->value[TREE_HEIGHT];
+		s->value[CC_TREE_HEIGHT] = h->value;
 		s->value[CC_AVDBH] = s->value[AVDBH];
 	}
 
@@ -64,13 +64,7 @@ void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer
 		s->value[CC_TREE_HEIGHT] = s->value[CC_TREE_HEIGHT] + delHeight;
 		Log("Height from CC Func = %g m\n", s->value[CC_TREE_HEIGHT]);
 
-		/*control*/
-		/*
-		   if ( s->value[CC_TREE_HEIGHT] < s->value[TREE_HEIGHT] )
-		   {
-		   Log("ERROR IN H/D STEM PARTITIONING!! HEIGHT ERROR!!\n");
-		   }
-		 */
+
 
 		// Compute DBH increment
 		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) +
@@ -117,14 +111,6 @@ void Get_crowding_competition (SPECIES *const s, int z, int years, int top_layer
 		// Compute Height
 		s->value[CC_TREE_HEIGHT] = s->value[CC_TREE_HEIGHT] + delHeight;
 		Log("Height from CC Func  = %g m\n", s->value[CC_TREE_HEIGHT]);
-
-		/*control*/
-		/*
-		   if ( s->value[CC_TREE_HEIGHT] < s->value[TREE_HEIGHT] )
-		   {
-		   Log("ERROR IN H/D STEM PARTITIONING!! HEIGHT ERROR!!\n");
-		   }
-		 */
 
 
 		// Compute DBH increment

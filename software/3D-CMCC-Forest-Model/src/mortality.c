@@ -103,7 +103,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 
 /*Age mortality function from LPJ*/
 
-void Get_Age_Mortality (SPECIES *const s)
+void Get_Age_Mortality (SPECIES *const s, AGE *const a)
 {
 
 	static int Dead_trees;
@@ -112,13 +112,13 @@ void Get_Age_Mortality (SPECIES *const s)
 
 
 	//Age probability function
-	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((float)s->counter[TREE_AGE]/s->value[MAXAGE]), 2);
+	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((float)a->value /s->value[MAXAGE]), 2);
 
 
 	if ((s->counter[N_TREE] * s->value[AGEMORT]) > 1)
 	{
 		Log("**MORTALITY based on Tree Age (LPJ)**\n");
-		Log("Age = %d years\n", s->counter[TREE_AGE]);
+		Log("Age = %d years\n", a->value);
 		Log("Age Mortality based on Tree Age (LPJ) = %g\n", s->value[AGEMORT]);
 		Dead_trees = s->counter[N_TREE] * s->value[AGEMORT];
 		Log("DEAD TREES = %d\n", Dead_trees);
