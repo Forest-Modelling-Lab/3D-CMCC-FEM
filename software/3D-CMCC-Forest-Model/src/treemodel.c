@@ -93,9 +93,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		}
 	}
 
-
-
-
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
@@ -181,7 +178,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
 		//loop on each heights starting from higher to lower
-		// get dominant index
+
 		Log("*****************CELL x = %g, y = %g STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
 
 		Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
@@ -189,10 +186,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
 			//Log("*RUN FOR TREE LAYERS\n");
-
-			/*Set layer*/
-			//Set_z_value (&m->cells[cell], m->cells[cell].heights[height].value , m->cells[cell].heights_count);
-
 			//loop on each ages
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
@@ -234,26 +227,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 						if ( !month )
 						{
-							Reset_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
+							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 
 							if (!years)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
 																														  + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
-							}
-
-
-							//reset only in unspatial version
-							if (settings->version == 'u')
-							{
-								//reset foliage biomass for deciduous
-								if ( m->cells[cell].heights[height].ages[age].species[species].phenology == D)
-								{
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
-
-									//reset LAI
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = 0;
-								}
 							}
 						}
 
@@ -277,7 +256,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 								}
 
-
+								//todo decidere se utlizzare growthend o mindaylenght
+								//todo levare veg_unveg ed utilizzare quello nella struct
 								if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 								//to change: the vegetative period should be stopped when LAI values fall under 0
 								{

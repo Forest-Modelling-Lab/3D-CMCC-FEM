@@ -34,6 +34,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						}
 						if (m->cells[cell].heights[height].ages[age].species[species].phenology == D)
 						{
+							//todo decidere se utlizzare growthend o mindaylenght
 							if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 									|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 							{

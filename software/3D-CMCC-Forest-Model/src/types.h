@@ -513,7 +513,7 @@ enum {
 	N_SEED,                        //Seeds number for cell
 	DEL_STEMS,                      //Dead Trees
 	REM_TREES,                      //Yearly Total dead-removed Trees
-	CUT_TREES,                      //Cut trees for Managment
+	CUT_TREES,                      //Cut trees for Management
 	TOT_REM_TREES,                  //Total dead-removed Trees from the beginning of simulation
 
 	N_SAPLINGS,
@@ -843,7 +843,7 @@ void Get_monthly_numbers_of_layers (CELL *);
 extern void Get_layer_cover_mortality (SPECIES *const, float, int, int );
 
 
-extern void Reset_cumulative_variables (CELL *, const int);
+extern void Reset_annual_cumulative_variables (CELL *, const int);
 
 extern void Get_initialization_biomass_data (SPECIES *const);
 
