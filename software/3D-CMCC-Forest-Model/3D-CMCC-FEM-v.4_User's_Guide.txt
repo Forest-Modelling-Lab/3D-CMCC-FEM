@@ -52,6 +52,8 @@ variable. If you have questions about the code, appropriate model applications, 
 please read this entire guide first, then feel free to contact:
 Alessio Collalti (alessio.collalti@cmcc.it)
 
+IMPORTANT: before execute clean all object file and rebuild the code
+
 SETTING MODEL:
 The file "settings.txt" permits to set the model run, choosing between "s" or "u" the version spatial or unspatial of the model,
 its cell resolution and other parameters to run the model.
@@ -61,7 +63,7 @@ The first required input file is called the "input.txt". It provides general inf
 
 The second required input file is the meteorological data file called using the year of simulation, e.g. "2007.txt" contains the monthly 
 meteorological data information for that year. Years of simulation depends on the number of the met data file that the model find inside the folder
-Same met data are mandatory for the model: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
+Some met data are mandatory for the model: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
 Others are optional: soil temperature and soil water content.
 If the model runs in "spatial version" monthly LAI values are mandatory.
 Columns with ".._sqc" have not to be considered.
@@ -70,14 +72,17 @@ The third required input file is the eco-physiological constants file called wit
 It contains parameters such as  Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
 IMPORTANT: use the same characters used within input.txt file to rename this file
 
-The fourth required input file is "site.txt". It contains information about the soil and fertility test site.
+The fourth required input file is "site.txt". It contains information about the soil and fertility of the test site.
 
 OUTPUT FILES: OVERVIEW
-The model create or rewrite for each simulation a file called "output.txt" into the folder output.
-This file contains all simulation results to check the model algorithms used. 
+The model create or rewrite for each simulation a file called "output.txt" into the output folder.
+This file contains all simulation results also for check the model algorithms used. 
 These results can be obtained at stand level or for each type of class level (layer, age or diametric class)
-If you need to extrapolate one variable then is advised 
-use in Unix platform the function "grep".  
+If you need to extrapolate one variable then is advised to use in Unix platform the function "grep".  
+e.g. into the output folder open a terminal and for the variable GPP write:
+"cat output.txt | grep 'Stand NPP' " if you want to see the grep into terminal or
+"cat output.txt | grep 'Stand NPP' > NPP.txt" if you want to create through the grep a NPP file into the output folder
+important:	be sure to use within the grep function the correct declaration of the output
 
 OUTPUT FILES: OVERVIEW
 There are two different styles of output produced by Biome-BGC. The first type includes the binary output files
