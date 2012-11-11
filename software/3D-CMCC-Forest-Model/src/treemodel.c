@@ -89,6 +89,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static int Saplings_counter;
 	static float dominant_prec_volume;
 	static float dominated_prec_volume;
+	static float subdominated_prec_volume;
 
 	/*establishment*/
 	//static int Saplings_Number;
@@ -305,7 +306,24 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 						if (m->cells[cell].heights_count > 2)
 						{
-							Log("FARE ROUTINE = \n");
+							if (!month && m->cells[cell].heights[height].z == 2)
+							{
+								dominant_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+										(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
+								Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
+							}
+							else if (!month && m->cells[cell].heights[height].z == 1)
+							{
+								dominated_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+										(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
+								Log("DominatedVolume = %g m^3/cell resolution\n", dominated_prec_volume);
+							}
+							else
+							{
+								subdominated_prec_volume = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
+										(1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]) /	MassDensity;
+								Log("SubDominatedVolume = %g m^3/cell resolution\n", dominated_prec_volume);
+							}
 						}
 						Log("******************************************************\n\n");
 
@@ -1215,7 +1233,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 
-							Get_biomass_increment ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z,   m->cells[cell].heights_count, dominant_prec_volume,  dominated_prec_volume );
+							Get_biomass_increment ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z,   m->cells[cell].heights_count, dominant_prec_volume,  dominated_prec_volume, subdominated_prec_volume );
 
 
 

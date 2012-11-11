@@ -16,6 +16,7 @@ void Get_turnover (SPECIES *const s)
 
 	Log("****TURNOVER****\n");
 	Log("****fine root turnover****\n");
+	Log("Fine Root Biomass  = %g tDM/ha\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 	s->value[DEL_ROSS_FINE] =  s->value[BIOMASS_ROOTS_FINE_CTEM] * s->value[FINERTTOVER];
 	Log("Average yearly fine Root turnover rate  = %g\n", s->value[FINERTTOVER]);
 	Log("Fine Root Biomass lost = %g tDM/ha\n", s->value[DEL_ROSS_FINE]);

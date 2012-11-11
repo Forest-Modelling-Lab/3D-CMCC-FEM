@@ -825,7 +825,7 @@ extern float Get_Net_Radiation (const MET_DATA *const, int,  int, float);
 extern void Get_Light_Recruitment (SPECIES *const, float, float);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int, int);
-extern void Get_biomass_increment ( SPECIES *const, int, int, float, float);
+extern void Get_biomass_increment ( SPECIES *const, int, int, int, float, float, float);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
 extern void Get_Layer_Density (CELL *cells, const int);
