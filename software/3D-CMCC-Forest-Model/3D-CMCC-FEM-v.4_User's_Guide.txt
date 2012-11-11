@@ -56,9 +56,11 @@ please read this entire guide first, then feel free to contact:
 Alessio Collalti (alessio.collalti@cmcc.it)
 
 
+
+
 CODE CHARACTERISTIC
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-The source code of the model is written in C language and can be compiled using GNU C 4.7.2
+3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Code::Blocks or Eclipse IDE Platforms and is compiled using GNU C 4.7.2
 
 IMPORTANT: before execute clean all object  (.o) files and rebuild the code
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -66,7 +68,23 @@ IMPORTANT: before execute clean all object  (.o) files and rebuild the code
 RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 be sure to set the right arguments passed to the project 
+
+the model runs monthly starting from the row 0,0 -> 0,n and then starts to process a new row
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Usage
+~~~~~
+
+3D-CMCC-FEM is a command line program, and its behaviour is controlled by
+several command line options, specified in unix style.  
+
+3D-CMCC-FEM reads input parameters from five text files:
+
+-settings.txt
+-X_Y_input.txt
+-"species.txt"
+-X_Y_year.txt
+-"species.txt"
 
 SETTING MODEL:
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -78,13 +96,20 @@ The file "settings.txt" permits to set the model run, choosing:
 
 INPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+INITIALIZATION DATA
 The first required input file is called the "input.txt". It provides general information about the stand site conditions.
-example for a cell resolution of 10x10 meters cell X = 1526, Y = 962:
+example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
 
 x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres
-1526,962,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.221171,0,0.81,0.02
-1526,962,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.221171,0,0.42,0.01
-1526,962,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.221171,0,0.23,0.006
+0,0,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02
+0,0,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01
+0,0,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006
+..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
+..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
+150,87,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02
+150,87,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01
+150,87,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006
 
 the text file must be created following this logic architecture
 -for each tree height class define the number of age classes and their values
@@ -104,13 +129,16 @@ the text file must be created following this logic architecture
 ----Wres = non structural carbon in tDM per area for that class
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+METEOROLOGICAL DATA
 The second required input file is the meteorological data file named using the cell position (x, y points) and the year of simulation, 
 e.g. "1526_962_2007.txt" contains the monthly meteorological data information for that year.
 Years of simulation depends on the number of the met data file passed as argument into the run configuration tool
-Some met data are mandatory for the model: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
-Others are optional: soil temperature and soil water content.
-If the model runs in "spatial version" monthly LAI values are mandatory.
+Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
+Others are optional: soil temperature (Ts) and soil water content (SWC).
+If the model runs in "spatial version" monthly LAI values are mandatory otherwise they are not considered in processes.
 Columns with ".._sqc" have not to be considered.
+
+Each variable must be separated by one tab
 
 example for year 2007 in spatial version 
 Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	RH_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
@@ -129,14 +157,27 @@ Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	RH_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SPECIES PARAMETERIZATION
 The third required input file is the eco-physiological constants file named with the species names to simulate e.g."Fagussylvatica.txt".
 It contains parameters such as  Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
 IMPORTANT: use the same characters used within input.txt file to rename this file
 
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//',at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+SITE PARAMETERIZATION
+The fourth required input file is "site.txt". It contains information about the soil and fertility of the test site.
+
+Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
+'//',at the end of the line. Example parameter files are provided.
+
+The format of the parameter file is, in general, one parameter per line, with the parameter name being enclosed in double quotes, and
+white one tab seperating the parameter name and its value.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The fourth required input file is "site.txt". It contains information about the soil and fertility of the test site.
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IMPORTANT: If any required parameter is left unset by all files an error will be written and the program terminates.
+
 
 OUTPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
