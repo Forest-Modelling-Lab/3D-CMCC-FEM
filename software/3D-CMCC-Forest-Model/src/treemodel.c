@@ -260,12 +260,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
-								//Log("Growth Start = %g °C\n", m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART]);
-								//Log("Growth End = %g °C\n", m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND]);
 
-
-								/*counter for vegetative months*/
-								//veg_index = 1;
 								Log("Month = %s\n", szMonth[month]);
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
