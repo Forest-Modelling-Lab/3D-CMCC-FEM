@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-float Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int DaysInMonth, float Net_Radiation, int top_layer, int z,
+extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int DaysInMonth, float Net_Radiation, int top_layer, int z,
 		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter, float daylength)
 {
 	Log ("\n GET_SOIL_EVAPORATION_ROUTINE\n");
@@ -49,10 +49,6 @@ float Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const m
 		Net_Radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / daylength;
 	}
 
-
-
-
-
 	PotEvap = (e20 / (e20 + PsycConst )) * Net_Radiation / lambda;
 	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
 
@@ -62,10 +58,10 @@ float Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const m
 	//Log("Daily Potential Evapotranspiration from LPJ = %g mm H2O/day\n", PotEvap * 24 );
 	//Log("Monthly Potential Evapotranspiration from LPJ = %g mm H2O/month\n", PotEvap * 24 * DaysInMonth [month]);
 	MoistRatio = c->available_soil_water / site->maxAsw;
+
+	Log("Monthly Soil Evaporation = %g \n", c->soil_evaporation );
 	//Log("Moist Ratio = %g\n", MoistRatio);
 	c->soil_evaporation = PotEvap * EvapoCoeff * MoistRatio * 24 * DaysInMonth;
-
-	return 0.1; // If you define a float returning function, you must return a float!!!
 
 }
 

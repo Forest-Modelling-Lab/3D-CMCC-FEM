@@ -26,8 +26,7 @@ Skype alessio.collalti
 General notes on 3D-CMCC-FEM, Version 4
 3D-CMCC Forest Evolution Model (FEM) is a software model that simulates the storage and fluxes of water, carbon, within the
 vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
-versions have been developed for particular purposes. The CMCC and the
-University of Tuscia (Viterbo) maintain benchmark code versions for
+versions have been developed for particular purposes. The CMCC and the University of Tuscia (Viterbo) maintain benchmark code versions for
 public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
 The code and executables accompanying this file represent the most recent benchmark version.
 IMPORTANT NOTE: COPYING

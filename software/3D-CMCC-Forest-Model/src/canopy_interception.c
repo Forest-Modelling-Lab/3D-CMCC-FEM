@@ -6,30 +6,36 @@
 #include "math.h"
 #include "types.h"
 
-//compute fraction of rain intercpted by canopy
+//compute fraction of rain intercepted by canopy
 
-float Get_canopy_interception (SPECIES *const s, const MET_DATA *const met, int month)
+extern void Get_frac_canopy_interception (SPECIES *const s, const MET_DATA *const met, int month)
 {
-	float Interception;
+
+	//interception is a rate not a quantity
+
+
+	//see also CLM model for rain interception
+	/*
+	Interception = 1 - exp (-0.5 * m->cells[cell].heights[height].ages[age].species[species].value[LAI])
+	 */
+
 	if (s->value[LAIMAXINTCPTN] <= 0)
 	{
-		Interception = s->value[MAXINTCPTN];
-		Log("Rain Interception = MAXINTCPTN\n");
-		Log("Rain Interception = %g \n", Interception);
+		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN];
+		Log("Frac Rain Interception = MAXINTCPTN\n");
+		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
 	}
 	else
 	{
 		if (settings->version == 's')
 		{
-			Interception = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 		}
 		else
 		{
-			Interception = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
+			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
 		}
-		Log("Rain Interception not use MAXINTCPTN\n");
-		Log("Rain Interception = %g \n", Interception);
+		Log("Frac Rain Interception not use MAXINTCPTN\n");
+		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
 	}
-
-	return Interception;
 }

@@ -101,3 +101,25 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 		Log("Yearly Stand MAI = %g m^3/ha/yr \n", s->value[MAI] );
 	}
 }
+
+void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
+{
+
+	Log("**AGB & BGB**\n");
+	Log("-for Class\n");
+	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
+																	 + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
+	Log("Yearly Class AGB = %g tDM/ha year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
+	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM];
+	Log("Yearly Class BGB = %g tDM/ha year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
+
+
+	Log("-for Stand\n");
+	c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB];
+	Log("Yearly Stand AGB = %g tDM/ha year\n", c->stand_agb);
+	c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB];
+	Log("Yearly Stand BGB = %g tDM/ha year\n", c->stand_bgb);
+	c->heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
+	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
+
+}

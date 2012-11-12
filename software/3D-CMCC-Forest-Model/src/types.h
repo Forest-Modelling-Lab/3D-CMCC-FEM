@@ -297,8 +297,10 @@ enum {
 	F_VPD,                          //VPD modifier
 	//ALTER_VPD,                    //Alternative VPD
 	//ALTER_F_VPD,                  //Alternative VPD Modifier
+	MONTH_TRANSP,
+	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
+	RAIN_INTERCEPTED,
 	CANOPY_CONDUCTANCE,
-	INTERCEPTION,                   //Rain Interception
 	EVAPOTRANSPIRATION,             //Evapotranspiration (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
 	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
@@ -810,9 +812,9 @@ extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *,
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
-extern float Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float, float);
-extern float Get_canopy_interception (SPECIES *const, const MET_DATA *const, int);
-extern float Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, float, float, int, float);
+extern void Get_canopy_transpiration (SPECIES *const, const MET_DATA *const, int, float,  int, float, float, float);
+extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
+extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, float, int, int, float, float, int, float);
 extern void Get_initial_month_lai (SPECIES *const s);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , int, int );
@@ -822,6 +824,7 @@ extern void Get_Light_Recruitment (SPECIES *const, float, float);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int);
 extern void Get_biomass_increment ( CELL *const, SPECIES *const, int, int, int, int);
+void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
 extern void Get_Layer_Density (CELL *cells, const int);
@@ -832,7 +835,8 @@ extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *const, int);
 extern void Get_annual_forest_structure (CELL *, HEIGHT *);
 void Print_met_data (const MET_DATA *const, float, int, float);
-extern void Print_stand_data (CELL *c, const MET_DATA *const, const int, const int);
+extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const, const int, const int, int, int, int);
+extern void Print_end_month_stand_data (CELL *c, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
 void Get_monthly_vegetative_period (CELL *const, const MET_DATA *const, int);
 extern int Get_number_of_layers (CELL *);
