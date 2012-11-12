@@ -63,20 +63,7 @@ CODE CHARACTERISTIC
 IMPORTANT: before execute clean all object (.o) files and rebuild the code
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-RUN THE MODEL
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Be sure to set the right arguments passed to the project 
-
-example:
-Example usage into bin directory (cd bin):
-./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -c ../input/settings.txt
-
-
-the model runs monthly starting from the row 0,0 -> 0,n and then starts to process a new row
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 Usage
-~~~~~
 
 3D-CMCC-FEM is a command line program, and its behaviour is controlled by
 several command line options, specified in unix style.  
@@ -84,10 +71,22 @@ several command line options, specified in unix style.
 3D-CMCC-FEM reads input parameters from five text files:
 
 -settings.txt
--X_Y_input.txt
--"species.txt"
--X_Y_year.txt
--"site.txt"
+-input.txt
+-species.txt
+-year.txt
+-site.txt
+
+RUN THE MODEL
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Be sure to set the right arguments passed to the project 
+
+Example usage:
+into bin directory:
+./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/input.txt -m ../input/2007.txt,../input/2008.txt -s ../input/site.txt -c ../input/settings.txt
+
+
+the model runs monthly starting from the row 0,0 -> 0,n and then starts to process a new row
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 SETTING MODEL:
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -135,9 +134,9 @@ The text file must be created following this logic architecture
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
-The second required input file is the meteorological data file named using the cell position (x, y points) and the year of simulation, 
-(e.g. "1526_962_2007.txt") containing the monthly meteorological data information for that year.
-Years of simulation depends on the number of the met data file passed as argument into the run configuration tool.
+The second required input file is the meteorological data file named using the year of simulation, 
+(e.g. "2007.txt") containing the monthly meteorological data information for that year.
+Years of simulation depends on the number of the met data file passed as argument.
 Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
 Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
 If the model runs in "spatial version" monthly LAI values are mandatory otherwise they are not considered in processes.
@@ -159,6 +158,15 @@ Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	RH_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
 10	31	10.5	1	10.2385	1	3.20476	1	-9999	1	159.262	-9999	3.44075
 11	30	6.61	1	5.29226	1	3.0913	1	-9999	1	63.6759	-9999	1.72087
 12	31	5.1	1	2.09226	1	2.1539	1	-9999	1	144.279	-9999	0.001
+
+-Units:
+-Rg_f = Mean monthly global radiation (MJ m^-2 day^-1)
+-Ta_f = Monthly average temperature (°C)
+-RH_f = Relative humidity (%)
+-Ts_f = Soil temperature (°C)
+-Precip = Cumulated monthly precipitation (mm month^-1)
+-SWC = Soil water content (mm month^-1)
+-LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
