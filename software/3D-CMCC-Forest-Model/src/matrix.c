@@ -254,8 +254,6 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].name = mystrdup(row->species);
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stump;
-	//todo remove LAI from input data
-	a->species[a->species_count-1].value[LAI] = row->lai;
 	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
 	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_CTEM] = row->wf;
 	a->species[a->species_count-1].value[BIOMASS_ROOTS_COARSE_CTEM] = row->wrc;

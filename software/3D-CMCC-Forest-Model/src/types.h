@@ -538,8 +538,6 @@ typedef struct {
 	char *species;
 	ePhenology phenology;
 	eManagement management;
-	// todo remove LAI
-	PREC lai;
 	int n;
 	int stump;
 	PREC avdbh;
