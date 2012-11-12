@@ -182,6 +182,15 @@ IMPORTANT: use the same characters used within input.txt file to rename this fil
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
 '//', at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab character.
 
+example:
+ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 
+LAIGCX	8               //LAI for maximum canopy conductance
+LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
+MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy 
+
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SITE PARAMETRIZATION
 The fourth required input file is "site.txt". It contains information about soil and fertility of the test site.
