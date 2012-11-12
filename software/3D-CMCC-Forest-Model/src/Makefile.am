@@ -14,12 +14,12 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	dataset.c\
 	dendrometry.c\
 	establishment.c\
+	garbage.c\
 	G-Function.c\
 	initialization_biomass_data.c\
 	lai.c\
 	layer_cover.c\
 	light.c\
-	light_dominance.c\
 	litterfall.c\
 	log.c\
 	main.c\
