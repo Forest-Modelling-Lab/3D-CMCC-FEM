@@ -35,7 +35,6 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	photosynthesis.c\
 	soil_evaporation.c\
 	sort.c\
-	sp_v_monthly_partitioning-allocation.c\
 	structure.c\
 	treemodel.c\
 	turnover.c\
