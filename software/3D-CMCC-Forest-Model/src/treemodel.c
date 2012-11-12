@@ -383,24 +383,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								/* Soil Water Balance*/
 								Log("\n\n-----------------------------------------------\n");
-								Log("*********MONTHLY SOIL WATER BALACE************\n");
 
-								/*Take off Evapotranspiration*/
-								m->cells[cell].available_soil_water -= m->cells[cell].evapotranspiration;
-
-								Log("ASW at the END of %s year %d less Evapotraspiration = %g mm\n",szMonth[month] ,years, m->cells[cell].available_soil_water);
-								if ( m->cells[cell].available_soil_water < 0)
-								{
-									Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-									m->cells[cell].available_soil_water = site->minAsw;
-									Log("ASW = %g\n", m->cells[cell].available_soil_water);
-								}
-								if ( m->cells[cell].available_soil_water > site->maxAsw)
-								{
-									Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-									m->cells[cell].available_soil_water = site->maxAsw;
-									Log("Available soil water = %g\n", m->cells[cell].available_soil_water);
-								}
+								Get_soil_water_balance (&m->cells[cell]);
 
 								/*reset Evapotranspiration*/
 								m->cells[cell].evapotranspiration = 0;
@@ -580,10 +564,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 									lessrain -= RainIntercepted;
 
-
-									//Assuming No Rain Intercpetion for Lower Layers
-									//Interception = 0.01;
-									//Log("No Rain Interception for Lower Layer = %g\n", Interception);
 								}
 							}
 							else
@@ -612,24 +592,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							/* Soil Water Balance*/
 							Log("\n\n-----------------------------------------------\n");
-							Log("*********MONTHLY SOIL WATER BALACE************\n");
 
-							/*Take off Evapotranspiration*/
-							m->cells[cell].available_soil_water -= m->cells[cell].evapotranspiration ;
-
-							Log("ASW at the END of %s year %d less Evapotraspiration = %g mm\n",szMonth[month] ,years, m->cells[cell].available_soil_water);
-							if ( m->cells[cell].available_soil_water < 0)
-							{
-								Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-								m->cells[cell].available_soil_water = site->minAsw;
-								Log("ASW = %g\n", m->cells[cell].available_soil_water);
-							}
-							if ( m->cells[cell].available_soil_water > site->maxAsw)
-							{
-								Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-								m->cells[cell].available_soil_water = site->maxAsw;
-								Log("Available soil water = %g\n", m->cells[cell].available_soil_water);
-							}
+							Get_soil_water_balance (&m->cells[cell]);
 
 							/*reset Evapotranspiration*/
 							m->cells[cell].evapotranspiration = 0;

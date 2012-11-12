@@ -1358,6 +1358,7 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+
 	/* reset */
 	files_processed_count = 0;
 	files_not_processed_count = 0;

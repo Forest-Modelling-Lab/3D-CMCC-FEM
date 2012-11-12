@@ -843,6 +843,7 @@ extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *const);
 void Get_monthly_numbers_of_layers (CELL *);
 extern void Get_layer_cover_mortality (SPECIES *const, float, int, int );
+extern void Get_soil_water_balance (CELL *const);
 
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
