@@ -10,7 +10,7 @@ Lucia Perugini
 Angelo Nolè
 
 euroMediterranean Center for Climate Changes (CMCC)
-http://.cmcc.it/ 
+http://www.cmcc.it/ 
 Via Augusto Imperatore 16 - 73100 Lecce (Italy)
 Division Impact on Agriculture, Forest and Natural Ecosystems (IAFENT)
 Via Pacinotti 5 - 01100 Viterbo (Italy)
@@ -24,17 +24,17 @@ Mobile +393299841220
 Skype alessio.collalti 
 
 General notes on 3D-CMCC-FEM, Version 4
-3D-CMCC Forest Model is a computer model that simulates the storage and fluxes of water, carbon, within the
+3D-CMCC Forest Evolution Model (FEM) is a software model that simulates the storage and fluxes of water, carbon, within the
 vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
 versions have been developed for particular purposes. The CMCC and the
-University ofTuscia- Viterbo maintain benchmark code versions for
+University of Tuscia (Viterbo) maintain benchmark code versions for
 public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
 The code and executables accompanying this file represent the most recent benchmark version.
 IMPORTANT NOTE: COPYING
 The 3D-CMCC-FEM, Version 4 code is copyrighted. You may not make copies of any part of the code for distribution to
 any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
-The purpose for this restriction is to keep track of who has what version of the public release benchmark code, so that
-we can let our user community know when there are updates. We appreciate your cooperation with this policy.
+The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
+we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
 Referencing 3D-CMCC-FEM:
 If you use 3D-CMCC-FEM in your research, we request that you include the following acknowledgement in the relevant
 manuscripts:
@@ -46,7 +46,7 @@ Alessio Collalti, Lucia Perugini, Tommaso Chiti, Angelo Nolè, Giorgio Matteucci
  (in press).
 (this citation will be updated as soon as possible).
 If you have made any significant modifications to the code, please mention them in your manuscript.
-This User’s Guide is the only documentation released with 3D-CMCC-FE. The code itself contains extensive internal
+This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
 documentation, and users with specific questions about the algorithms used to estimate particular processes should read
 the comments in the appropriate source code files. The file treemodel.c contains references to all the core science routines,
 and is a good starting point for this kind of inquiry. The files matrix.c and types.h define the data structures that are used to
@@ -56,18 +56,16 @@ please read this entire guide first, then feel free to contact:
 Alessio Collalti (alessio.collalti@cmcc.it)
 
 
-
-
 CODE CHARACTERISTIC
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Code::Blocks or Eclipse IDE Platforms and is compiled using GNU C 4.7.2
+3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Code::Blocks or Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
 
-IMPORTANT: before execute clean all object  (.o) files and rebuild the code
+IMPORTANT: before execute clean all object (.o) files and rebuild the code
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-be sure to set the right arguments passed to the project 
+Be sure to set the right arguments passed to the project 
 
 example:
 
@@ -88,7 +86,7 @@ several command line options, specified in unix style.
 -X_Y_input.txt
 -"species.txt"
 -X_Y_year.txt
--"species.txt"
+-"site.txt"
 
 SETTING MODEL:
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -102,7 +100,7 @@ INPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 INITIALIZATION DATA
 The first required input file is called the "input.txt". It provides general information about the stand site conditions.
-example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
+Example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
 
 x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres
 0,0,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02
@@ -117,34 +115,34 @@ x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres
 150,87,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01
 150,87,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006
 
-the text file must be created following this logic architecture
--for each tree height class define the number of age classes and their values
---for each height->age class define the species
----for each height->age->species class define its state variables:
+The text file must be created following this logic architecture
+- for each tree height class define the number of age classes and their values
+-- for each height->age class define the species
+--- for each height->age->species class define its state variables:
 
-----Phenology (D = deciduous, E = evergreen)
-----Management (T = timber, C = coppice)
-----N = number of trees per area related to that class
-----Stool = number of stool per area (only if Management is setted to C)
-----AvDBH = average diameter at breast height in cm for that class
-----Height = tree height in meters for that class
-----Wf = foliage biomass in tDM per area for that class (only for Evergreen)
-----Wrc = coarse root biomass in tDM per area for that class
-----Wrf = fine root biomass in tDM per area for that class (it can be setted with 0)
-----Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
-----Wres = non structural carbon in tDM per area for that class
+---- Phenology (D = deciduous, E = evergreen)
+---- Management (T = timber, C = coppice)
+---- N = number of trees per area related to that class
+---- Stool = number of stool per area (only if Management is setted to C)
+---- AvDBH = average diameter at breast height in cm for that class
+---- Height = tree height in meters for that class
+---- Wf = foliage biomass in tDM per area for that class (only for Evergreen)
+---- Wrc = coarse root biomass in tDM per area for that class
+---- Wrf = fine root biomass in tDM per area for that class (it can be setted with 0)
+---- Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
+---- Wres = non structural carbon in tDM per area for that class
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
 The second required input file is the meteorological data file named using the cell position (x, y points) and the year of simulation, 
-e.g. "1526_962_2007.txt" contains the monthly meteorological data information for that year.
-Years of simulation depends on the number of the met data file passed as argument into the run configuration tool
+(e.g. "1526_962_2007.txt") containing the monthly meteorological data information for that year.
+Years of simulation depends on the number of the met data file passed as argument into the run configuration tool.
 Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
-Others are optional: soil temperature (Ts) and soil water content (SWC).
+Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
 If the model runs in "spatial version" monthly LAI values are mandatory otherwise they are not considered in processes.
-Columns with ".._sqc" have not to be considered.
+Columns with "_sqc" postfix have not to be considered.
 
-Each variable must be separated by one tab
+Each variable must be separated by one tab character.
 
 example for year 2007 in spatial version 
 Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	RH_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
@@ -164,22 +162,22 @@ Month	n_days	Rg_f	Rg_sqc	Ta_f	Ta_sqc	RH_f	RH_sqc	Ts_f	Ts_sqc	Precip	SWC	LAI
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SPECIES PARAMETERIZATION
-The third required input file is the eco-physiological constants file named with the species names to simulate e.g."Fagussylvatica.txt".
-It contains parameters such as  Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
-IMPORTANT: use the same characters used within input.txt file to rename this file
+The third required input file is the eco-physiological constants file, named with species names to simulate (e.g."Fagussylvatica.txt").
+It contains parameters such as Quantum canopy efficiency, Specific Leaf Area and allocation ratios for example.
+IMPORTANT: use the same characters used within input.txt file to rename this file.
 
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
-'//',at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab.
+'//', at the end of the line. Example parameter files are provided. Parameter definition and its value must be separated by one tab character.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-SITE PARAMETERIZATION
-The fourth required input file is "site.txt". It contains information about the soil and fertility of the test site.
+SITE PARAMETRIZATION
+The fourth required input file is "site.txt". It contains information about soil and fertility of the test site.
 
 Comments are allowed in the parameter file. Comments can appear almost anywhere, must begin with two forward slash characters 
-'//',at the end of the line. Example parameter files are provided.
+'//', at the end of the line. Example parameter files are provided.
 
-The format of the parameter file is, in general, one parameter per line, with the parameter name being enclosed in double quotes, and
-white one tab seperating the parameter name and its value.
+In general, the format of parameters file is one parameter per line, with the parameter name being enclosed in double quotes, with a 
+tab character seperating the parameter name and its value.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 IMPORTANT: If any required parameter is left unset by all files an error will be written and the program terminates.
@@ -187,23 +185,23 @@ IMPORTANT: If any required parameter is left unset by all files an error will be
 
 OUTPUT FILES: OVERVIEW
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-The model create or rewrite for each simulation a file called "output.txt" into the output folder.
-This file contains all simulation monthly and annual results.
-It is also useful for check the model functions used. 
+For each simulation the Model creates or rewrites into the output folder a file named "output.txt".
+This file contains every result for monthly and annual simulations.
+It is also useful to check which model functions have been used. 
 These results can be obtained at stand level or for each type of class level (layer, age or diametric class)
-If you need to extrapolate one variable then is advised to use in Unix platform the function "grep".  
-e.g. into the output folder open a terminal and for the variable GPP write:
-"cat output.txt | grep 'Stand NPP' " if you want to see the grep into terminal or
-"cat output.txt | grep 'Stand NPP' > NPP.txt" if you want to create through the grep a NPP file into the output folder
-IMPORTANT: be sure to use within the grep function the correct declaration of the output
+On Unix like platforms, if you need to extrapolate a variable it is advised to use the "grep" tool.
+E.g. open a terminal into the output folder and for the variable NPP type:
+"cat output.txt | grep 'Stand NPP' " if you want to see grep output into terminal;
+"cat output.txt | grep 'Stand NPP' > NPP.txt" if you want to redirect grep output into an NPP file inside the output folder
+IMPORTANT: be sure to use the correct declaration of the output as grep parameter.
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
-If you have problems with the code, or if you have suggestions on how it could be improved, we’d love to hear from
+If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
 you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-FEM, especially if you
 have compared 3D-CMCC-FEM estimates to measurements. This information helps us to better understand model
-performance, and improve it where we can. For questions on how to parameterize or run the code, please read
+performance and improve it. For questions on how to parameterize or run the code, please read
 everything in this file first.
 Contact:
 Alessio Collalti
