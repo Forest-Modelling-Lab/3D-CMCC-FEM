@@ -1086,8 +1086,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								//CARBON BALANCE
 								Log("**CARBON BALANCE**\n");
-								Log("END of Year Yearly Cumulated GPP for cell (%g, %g) = %g \n", m->cells[cell].x, m->cells[cell].y, m->cells[cell].gpp);
-								Log("END of Year Yearly Cumulated NPP for cell (%g, %g) = %g \n", m->cells[cell].x, m->cells[cell].y, m->cells[cell].npp);
+								//DO NOT CHANGE THESE LINES!!!!!!!!!!
+								Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].gpp);
+								Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM cell resolution^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].npp);
 
 								if ((years + 1) == years_of_simulation)
 								{
@@ -1099,7 +1100,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								//WATER BALANCE
 								Log("**WATER BALANCE**\n");
-								Log("[%d] EOY TOTAL Cumulated Evapotranspiration = %g mm H2o/m^2/year\n",yos[years].year, m->cells[cell].total_yearly_evapotransipration);
+								//DO NOT CHANGE THIS LINE!!!!!!!!!!
+								Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].total_yearly_evapotransipration);
 								Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  m->cells[cell].available_soil_water);
 
 								/*

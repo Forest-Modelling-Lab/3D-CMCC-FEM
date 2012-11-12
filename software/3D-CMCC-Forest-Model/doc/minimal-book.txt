@@ -1,4 +1,4 @@
-= The Book Title
+= 3D-CMCC Forest Model User's Guide
 
 == The first chapter
 Nec vitae mus fringilla eu vel pede sed pellentesque. Nascetur fugiat
