@@ -159,6 +159,10 @@ Month	n_days		Rg_f		Ta_f		VPD_f		Ts_f	Precip		SWC		LAI
 11		30			6.61		5.29226		3.0913		-9999	63.6759		-9999	1.72087
 12		31			5.1			2.09226		2.1539		-9999	144.279		-9999	0.001
 
+
+if you don't have optional data set value as -9999
+-9999 = NO DATA
+
 -Units:
 -Rg_f = Mean monthly global radiation (MJ m^-2 day^-1)
 -Ta_f = Monthly average temperature (°C)
