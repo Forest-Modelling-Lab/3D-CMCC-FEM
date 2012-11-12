@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int DaysInMonth, int z, int Veg_UnVeg)
+void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int DaysInMonth, int z)
 {
 	float Alpha_C;
 	float Epsilon;
@@ -27,7 +27,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 	//Veg period
-	if (Veg_UnVeg == 1 || s->phenology == E)
+	if (s->counter[VEG_UNVEG] == 1 || s->phenology == E)
 	{
 		if (s->value[ALPHA] > 0)
 		{

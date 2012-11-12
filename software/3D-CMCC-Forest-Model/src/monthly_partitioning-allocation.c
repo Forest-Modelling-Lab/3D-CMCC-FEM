@@ -12,7 +12,7 @@
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
 void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,
-											float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
+											float daylength,  int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 
@@ -90,7 +90,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-	if (Veg_UnVeg == 1)
+	if (s->counter[VEG_UNVEG] == 1)
 	{
 		if (settings->version == 'u')
 		{
@@ -744,7 +744,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-		if (Veg_UnVeg == 1)
+		if (s->counter[VEG_UNVEG] == 1)
 		{
 			//defining phenological phase from NDVI values of LAI
 
@@ -1088,7 +1088,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int z, int management,  float daylength,  int DaysInMonth, int years, int Veg_UnVeg, int height, int age)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month,
+											int z, int management,  float daylength,  int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 

@@ -36,7 +36,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							//todo decidere se utlizzare growthend o mindaylenght
 							if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-									|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+									|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);

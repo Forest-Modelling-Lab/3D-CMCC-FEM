@@ -23,8 +23,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static int species;
 
 	//static int tree_soil;
-
-	int Veg_UnVeg;      //if class is in veg or unveg period
 	static float Light_Absorb_for_establishment;
 	static float Light_for_establishment;
 
@@ -46,19 +44,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static float MonthTransp;
 	static float Interception;
 	static float RainIntercepted;
-
-	//static float oldWf;
-
-
-
-
-	//static float Gap_Cover;
 	//static float thermic_sum;
-	//static float veg_index;     //counter of vegetative months
 	static float lessrain;
-
-
-	//	static float Cum_Av_Stem_Mass;
 
 	/*fruit*/
 	/*logistic equation*/
@@ -256,17 +243,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 								}
 
-								//todo decidere se utlizzare growthend o mindaylenght
-								//todo levare veg_unveg ed utilizzare quello nella struct
-								if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6) || (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
-								//to change: the vegetative period should be stopped when LAI values fall under 0
-								{
-									Veg_UnVeg = 1;
-								}
-								else
-								{
-									Veg_UnVeg = 0;
-								}
+
 							}
 							//for spatial version start of growing season is driven by NDVI-LAI
 							if ( settings->version == 's')
@@ -276,18 +253,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								{
 									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 								}
-
-								if ( met[month].ndvi_lai > 0.1)
-								{
-									Veg_UnVeg = 1;
-								}
-								else
-								{
-									Veg_UnVeg = 0;
-								}
 							}
 
-							if (Veg_UnVeg == 1)    //vegetative period for deciduous
+							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)    //vegetative period for deciduous
 							{
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 
@@ -462,9 +430,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								/*reset Evapotranspiration*/
 								m->cells[cell].evapotranspiration = 0;
 
-								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
+								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z);
 
-								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, height, age);
+								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years,  height, age);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -485,8 +453,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//unvegetative period for deciduous
 							else
 							{
-								Veg_UnVeg = 0;
-
 								Log("**UN-VEGETATIVE PERIOD FOR %s SPECIES in layer %d **\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].z);
 
 
@@ -502,9 +468,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 
 								//Productivity
-								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
+								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z);
 
-								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, height, age);
+								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, m->cells[cell].heights[height].z,
+																	m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years,  height, age);
 
 
 
@@ -717,9 +684,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							/*reset Evapotranspiration*/
 							m->cells[cell].evapotranspiration = 0;
 
-							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z, Veg_UnVeg);
+							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], m->cells[cell].heights[height].z);
 
-							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, Veg_UnVeg, height, age);
+							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month,
+															m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, m->cells[cell].daylength, DaysInMonth[month], years, height, age);
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 
@@ -1077,8 +1045,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//CUMULATIVE BALANCE FOR ENTIRE STAND
 							if ( height == 0)
 							{
-
-
 								Log("\n\n\n\n\n\n\n**********END OF YEARLY STAND RUN CARBON-SOIL WATER BALANCE (%d) ************\n", yos[years].year);
 
 								//CUMULATIVE BALANCE FOR ENTIRE CELL

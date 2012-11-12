@@ -806,9 +806,9 @@ extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, float, float);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 //deciduous routine for carbon allocation
-extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int, int);
+extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int);
 //evergreen routine for carbon allocation
-extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int, int);
+extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
@@ -822,7 +822,7 @@ extern void Get_turnover (SPECIES *const);
 extern float Get_Net_Radiation (const MET_DATA *const, int,  int, float);
 extern void Get_Light_Recruitment (SPECIES *const, float, float);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int);
-extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int, int);
+extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int , int);
 extern void Get_biomass_increment ( CELL *const, SPECIES *const, int, int, int, int);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
