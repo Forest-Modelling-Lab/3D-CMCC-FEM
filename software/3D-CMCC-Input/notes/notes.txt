@@ -10,7 +10,10 @@ cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/  
 sort a.txt > b.txt && rm a.txt
 
 # Conversion from CORINE Land Cover to GeoTiff (corine covers zones 32 and 33, but Lower Left is zone 32!):
-gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -a_ullr 31300 5230000 1031300 3930000 CORINE_3211.asc CORINE_3211.tif
+gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' CORINE_3211.asc CORINE_3211.tif
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 CORINE_3211.tif CORINE_3211_Italy_30m.tif
+gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -projwin 925668.4 4222604.47 966852.54 4190034.59 -a_ullr 399125.520 4212108.248 438065.520 4177008.248 CORINE_3211_Italy_30m.tif CORINE_3211_30m.tif
+
 for I in $( ls *.asc ); do gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${I} $( echo ${I} | sed s/.asc/.tif/ ) ; done
 for I in $( ls *.tif); do gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 ${I} $( echo ${I} | sed s/.tif/_30m.tif/ ) ; done
 ./remap -i CORINE_3211.tif -o CORINE_3211_remap.tif -s 30 -m -l 4212108.248 399125.520 -e 4177008.248,438065.520 -w 5x5 -n 0.0
