@@ -8,32 +8,19 @@
 
 
 for I in $( ls *.asc ) ; do
-	O=$( echo ${I} | sed s/.asc/.tif/ )
-	gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${I} ${O} ;
-done
+	OUT1=$( echo ${I} | sed s/.asc/.tif/ )
+	OUT2=$( echo ${I} | sed s/.asc/_latlon.tif/ )
+	OUT3=$( echo ${I} | sed s/.asc/_cut.tif/ )
+	OUT4=$( echo ${I} | sed s/.asc/_shifted.tif/ )
+	OUT5=$( echo ${I} | sed s/.asc/_Madonie_30m.tif/ )
 
-for I in $( ls *.tif) ; do
-	O=$( echo ${I} | sed s/.tif/_latlon.tif/ )
-	gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -tr 0.00045266691956530711 0.00045266691956530711 ${I} ${O} ;
-	rm -v ${I} ;
-done
+	gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${I} ${OUT1} ;
+	gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -tr 0.00045266691956530711 0.00045266691956530711 ${OUT1} ${OUT2} ;
+	gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -projwin 13.855128040667733 38.051144527880616 14.2937623 37.7383517 ${OUT2} ${OUT3} ;
+	gdal_translate -co COMPRESS=LZW -of GTiff -a_ullr 13.855128040667733 38.051144527880616 14.2937623 37.7383517 ${OUT3} ${OUT4} ;
+	gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 ${OUT4} ${OUT5} ;
 
-for I in $( ls *_latlon.tif) ; do
-	O=$( echo ${I} | sed s/_latlon.tif/_cut.tif/ )
-	gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -projwin 13.855128040667733 38.051144527880616 14.2937623 37.7383517 ${I} ${O} ;
-	rm -v ${I} ;
-done
-
-for I in $( ls *_cut.tif) ; do
-	O=$( echo ${I} | sed s/_cut.tif/_shifted.tif/ )
-	gdal_translate -co COMPRESS=LZW -of GTiff -a_ullr 13.855128040667733 38.051144527880616 14.2937623 37.7383517 ${I} ${O} ;
-	rm -v ${I} ;
-done
-
-for I in $( ls *_shifted.tif) ; do
-	O=$( echo ${I} | sed s/_shifted.tif/_Madonie_30m.tif/ )
-	gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 ${I} ${O} ;
-	rm -v ${I} ;
+	rm -v ${OUT1} ${OUT2} ${OUT3} ${OUT4} ;
 done
 
 exit 0
