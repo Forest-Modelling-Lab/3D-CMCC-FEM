@@ -40,7 +40,8 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	turnover.c\
 	types.h\
 	utility.c\
-	vpd.c
+	vpd.c\
+	wue.c
 
 check_SCRIPTS = test_1.sh
 
