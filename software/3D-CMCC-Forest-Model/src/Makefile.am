@@ -35,6 +35,7 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	photosynthesis.c\
 	renovation.c\
 	soil_evaporation.c\
+	soil_water_balance.c\
 	sort.c\
 	structure.c\
 	treemodel.c\
