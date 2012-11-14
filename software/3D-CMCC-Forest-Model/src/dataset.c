@@ -495,7 +495,6 @@ int importSettingsFile(char *fileName)
 		fprintf(stderr, "%f\n", settings->dominated);
 		fprintf(stderr, "%f\n", settings->subdominated);
 		fprintf(stderr, "%f\n", settings->max_layer_cover);
-		fprintf(stderr, "%f\n", settings->adult_age);
 		fprintf(stderr, "%f\n", settings->avdbh_sapling);
 		fprintf(stderr, "%f\n", settings->lai_sapling);
 		fprintf(stderr, "%f\n", settings->height_sapling);

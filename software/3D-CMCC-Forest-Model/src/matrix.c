@@ -180,6 +180,7 @@ static const char *species_values[] = {
 	"MINRAIN",                    //Minimum annual Rain Precipitation for Establishment
 
 	//SEEDS PRODUCTION
+	"ADULT_AGE",
 	"MAXSEED",                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
 	"MASTSEED",                   //ricorrenza anni di pasciona (da TREEMIG)
 	"WEIGHTSEED",                 //peso frutto in g

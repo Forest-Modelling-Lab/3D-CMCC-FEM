@@ -7,9 +7,6 @@ LAYER_LIMIT "2"  //define differences among tree height in meters classes to def
 MIN_LAYER_COVER "0.0001"
 MAX_LAYER_COVER "1"
 
-//AGE LIMIT
-ADULT_AGE "5"     //year limit at which consider trees adult
-
 //INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 AVDBH_SAPLING "0.5"
 LAI_SAPLING "2"

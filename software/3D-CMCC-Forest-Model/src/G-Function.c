@@ -2,6 +2,28 @@
 #include <math.h>
 #include "types.h"
 
+extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
+{
+	/*Set Tree period*/
+	// 0 = adult tree
+	// 1 = young tree
+
+	if ( a->value > s->value[ADULT_AGE])
+	{
+		s->period = 0;
+
+		if (!c->saplings_counter)
+		{
+			c->saplings_counter -= 1;
+		}
+	}
+	else
+	{
+		s->period = 1;
+		//Log("- Class Period = Saplings\n");
+	}
+}
+
 
 
 

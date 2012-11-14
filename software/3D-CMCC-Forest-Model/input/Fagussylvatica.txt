@@ -153,6 +153,7 @@ MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the D
 MINRAIN	100             //Minimum annual Rain Precipitation for Establishment
                                         //S. Sitch 2003
 //SEEDS PRODUCTION
+ADULT_AGE	5	//age at which consider tree as an adult tree
 MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
 MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
 WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)

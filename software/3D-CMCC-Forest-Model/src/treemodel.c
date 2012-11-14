@@ -49,8 +49,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//static int Seeds_Number_LE;
 	/*treemig approach*/
 	//static int Seeds_Number_T;
-	static int Saplings_counter;
-
 
 	/*establishment*/
 	//static int Saplings_Number;
@@ -172,38 +170,17 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
 				/*increment age*/
-				if( month == JANUARY)
+				if( month == JANUARY && years != 0)
 				{
-					if (years != 0)
-					{
-						m->cells[cell].heights[height].ages[age].value += 1;
-					}
+					m->cells[cell].heights[height].ages[age].value += 1;
 				}
-				/*Set Tree period*/
-				if ( m->cells[cell].heights[height].ages[age].value >= settings->adult_age)
+				//loop on each species
+				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
-					if ( m->cells[cell].heights[height].ages[age].period == 1)
-					{
-						m->cells[cell].heights[height].ages[age].period = 0;
-						Saplings_counter -= 1;
-					}
-					else
-					{
-						m->cells[cell].heights[height].ages[age].period = 0;
-						//Log("- Class Period = Adult Trees \n");
-					}
-				}
-				else
-				{
-					m->cells[cell].heights[height].ages[age].period = 1;
-					//Log("- Class Period = Saplings\n");
-				}
+					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
-				/*Loop for adult trees*/
-				if (m->cells[cell].heights[height].ages[age].value >= settings->adult_age)
-				{
-					//loop on each species
-					for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+					/*Loop for adult trees*/
+					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 					{
 						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 
@@ -213,8 +190,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							if (!years)
 							{
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
-								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
 							}
 						}
 
@@ -238,10 +214,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
-
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
-
 								Log("Month = %s\n", szMonth[month]);
+
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
@@ -251,7 +226,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
-
 
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd);
 
@@ -829,7 +803,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 Log("*****************************\n");
                                 Log("*****************************\n");
                             }
-                            if (m->cells[cell].heights[height].ages[age].value == settings->adult_age)
+                            if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
                             {
                                 Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
@@ -842,71 +816,69 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 						}
 					}
-					Log("****************END OF SPECIES CLASS***************\n");
-				}
-				// for young trees
-
-				else
-				{
-					if( month == 11)
+					else
 					{
-						Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
-						Log("SAPLINGS\n");
-						/*
-                           Saplings_counter += 1;
-                           Log("-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
-						 */
-						Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
-						//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
-
-						/*Saplings mortality based on light availability*/
-						Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
-						Log("Radiation for soil =  %g W/m^2\n", Light_for_establishment);
-
-
-						if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
+						if( month == 11)
 						{
-							if ( Light_for_establishment < settings->light_estab_very_tolerant)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-								Log("NO Light for Establishment\n");
-							}
-						}
-						else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
-						{
-							if ( Light_for_establishment < settings->light_estab_tolerant)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-								Log("NO Light for Establishment\n");
-							}
-						}
-						else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
-						{
-							if ( Light_for_establishment < settings->light_estab_intermediate)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-								Log("NO Light for Establishment\n");
-							}
-						}
-						else
-						{
-							if ( Light_for_establishment < settings->light_estab_intolerant)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-								Log("NO Light for Establishment\n");
-							}
-						}
-						/*
-                        if (m->cells[cell].heights[height].ages[age].value == settings->adult_age)
-                        {
-                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
+							Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+							Log("SAPLINGS\n");
+							/*
+	                           Saplings_counter += 1;
+	                           Log("-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
+							 */
+							Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
+							//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
-                        Saplings_counter -= 1;
-                        }
-						 */
+							/*Saplings mortality based on light availability*/
+							Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
+							Log("Radiation for soil =  %g W/m^2\n", Light_for_establishment);
 
-						Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+
+							if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
+							{
+								if ( Light_for_establishment < settings->light_estab_very_tolerant)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+									Log("NO Light for Establishment\n");
+								}
+							}
+							else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
+							{
+								if ( Light_for_establishment < settings->light_estab_tolerant)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+									Log("NO Light for Establishment\n");
+								}
+							}
+							else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
+							{
+								if ( Light_for_establishment < settings->light_estab_intermediate)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+									Log("NO Light for Establishment\n");
+								}
+							}
+							else
+							{
+								if ( Light_for_establishment < settings->light_estab_intolerant)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+									Log("NO Light for Establishment\n");
+								}
+							}
+							/*
+	                        if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
+	                        {
+	                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
+
+	                        Saplings_counter -= 1;
+	                        }
+							 */
+
+							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+						}
 					}
+					Log("****************END OF SPECIES CLASS***************\n");
 				}
 			}
 			Log("****************END OF AGE CLASS***************\n");

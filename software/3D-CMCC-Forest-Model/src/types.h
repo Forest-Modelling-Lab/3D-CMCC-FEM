@@ -212,6 +212,7 @@ enum {
 	MINRAIN,                    //Minimum annual Rain Precipitation for Establishment
 
 	//SEEDS PRODUCTION
+	ADULT_AGE,
 	MAXSEED,                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
 	MASTSEED,                   //ricorrenza anni di pasciona (da TREEMIG)
 	WEIGHTSEED,                 //peso frutto in g
@@ -558,6 +559,7 @@ typedef struct {
 	char *name;
 	ePhenology phenology;
 	eManagement management;
+	int period;            // period = 0 for adult tree ; 1 for very young tree
 	PREC value[VALUES];
 	int counter[COUNTERS];
 } SPECIES;
@@ -566,7 +568,6 @@ typedef struct {
 //all variables related to the age class
 typedef struct {
 	int value;
-	int period;            // period = 0 for adult tree ; 1 for very young tree
 	SPECIES *species;
 	int species_count;
 } AGE;
@@ -644,6 +645,7 @@ typedef struct {
 	int annual_layer_number;
 	int monthly_layer_number;
 	int top_layer;
+	int saplings_counter;
 
 
 } CELL;
@@ -698,7 +700,6 @@ typedef struct
 	layer_limit,
 	min_layer_cover,
 	max_layer_cover,
-	adult_age,
 	avdbh_sapling,
 	lai_sapling,
 	height_sapling,
@@ -851,6 +852,7 @@ extern void Get_average_biomass (SPECIES *);
 extern void Get_total_class_level_biomass (SPECIES *);
 extern void Get_renovation (CELL *, HEIGHT *, SPECIES *);
 extern void Get_WUE (SPECIES *);
+extern void Set_tree_period (SPECIES *, AGE *a, CELL *);
 
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
