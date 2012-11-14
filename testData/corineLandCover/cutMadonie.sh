@@ -3,7 +3,7 @@
 for I in $( ls *.asc ) ; do
 	OUT1=$( echo ${I} | sed s/.asc/.tif/ )
 	OUT2=$( echo ${I} | sed s/.asc/_zone33.tif/ )
-	OUT3=$( echo ${I} | sed s/.asc/_zone33_remapped.tif/ )
+	OUT3=$( echo ${I} | sed s/.asc/_Madonie_30m.tif/ )
 
 	gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${I} ${OUT1} ;
 	gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' ${OUT1} ${OUT2} ;
