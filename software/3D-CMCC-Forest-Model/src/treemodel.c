@@ -615,12 +615,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						if (month == DECEMBER)
 						{
 							Log("*****END OF YEAR******\n");
-							Log("Vegetative months for %s = %d \n",m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
-							Log("**CARBON BALANCE**\n");
-
-							Log("**WATER BALANCE**\n");
-							Log("TOTAL Cumulated Evapotranspiration = %g mm H2o/m^2/year\n",m->cells[cell].total_yearly_evapotransipration);
-							Log("Available Soil Water month %d year %d = %g mm H2o/m^2\n",month, years, m->cells[cell].available_soil_water);
 
 
 							/*FRUIT ALLOCATION*/
@@ -631,9 +625,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							/*
                            if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
                            {
-                           Get_Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
-                           Seeds_Number_LE = Get_Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-                           Log("Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
+						   Get_Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
+						   Seeds_Number_LE = Get_Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+						   Log("Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
 
                             //Seeds_Number_T = Get_Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
                             //Log("Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
@@ -662,9 +656,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Get_litterfall (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
-							//reset
-							m->cells[cell].heights[height].ages[age].species[species].value[DEL_LITTER] = 0;
-
 
 							// Total Biomass at the end
 							m->cells[cell].heights[height].ages[age].species[species].value[TOTAL_W] =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] +
@@ -684,19 +675,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//Log("Average Water use efficiency = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
 
 
-							/*AVERAGE STEM MASS*/
-
-							m->cells[cell].heights[height].ages[age].species[species].value[AV_STEM_MASS] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] *
-									1000 / m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE];
-							/*
-                            m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]
-                                                                                                            + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM];
-							 */
-
-							m->cells[cell].heights[height].ages[age].species[species].value[AV_ROOT_MASS] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] *
-									1000 / m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE];
-
-							Log("Average Stem Mass = %g kgDM stem /tree\n", m->cells[cell].heights[height].ages[age].species[species].value[AV_STEM_MASS]);
+							Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 
@@ -967,7 +946,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
 						//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
-
 						/*Saplings mortality based on light availability*/
 						Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
 						Log("Radiation for soil =  %g W/m^2\n", Light_for_establishment);
@@ -1005,8 +983,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Log("NO Light for Establishment\n");
 							}
 						}
-
-
 						/*
                         if (m->cells[cell].heights[height].ages[age].value == settings->adult_age)
                         {

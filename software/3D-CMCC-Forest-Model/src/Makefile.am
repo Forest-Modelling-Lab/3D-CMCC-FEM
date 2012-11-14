@@ -2,7 +2,7 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 
 3D_CMCC_Forest_Model_SOURCES = \
 	allometry.c\
-	biomass_increment.c\
+	biomass.c\
 	canopy_cover.c\
 	canopy_interception.c\
 	canopy_transpiration.c\

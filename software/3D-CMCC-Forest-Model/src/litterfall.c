@@ -18,6 +18,9 @@ extern void Get_litterfall (CELL *c, SPECIES *const s, const int years)
           c->litter += s->value[DEL_LITTER];
           Log("Total Litter = %g tDM/ha\n", c->litter);
       }
+
+	//reset
+	s->value[DEL_LITTER] = 0;
 }
 
 

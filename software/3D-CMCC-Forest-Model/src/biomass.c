@@ -123,3 +123,12 @@ void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
 
 }
+
+extern void Get_average_biomass (SPECIES *s)
+{
+
+	s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] * 	1000 / s->counter[N_TREE];
+	s->value[AV_ROOT_MASS] = s->value[BIOMASS_ROOTS_TOT_CTEM] * 1000 / s->counter[N_TREE];
+
+	Log("Average Stem Mass = %g kgDM stem /tree\n", s->value[AV_STEM_MASS]);
+}
