@@ -124,8 +124,6 @@ void GetDayLength ( CELL * c,  int MonthLength)
 	//int cell;
 	//Log("MonthLenght = %d \n", MonthLength);
 
-
-
 	float ampl;  //seasonal variation in Day Length from 12 h
 	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
 

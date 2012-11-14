@@ -79,7 +79,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 }
 
 
-extern void Get_annual_average_values (SPECIES *s)
+extern void Get_annual_average_values_modifiers (SPECIES *s)
 {
 
 	//compute to control annual average values for modifiers
@@ -101,6 +101,30 @@ extern void Get_annual_average_values (SPECIES *s)
 	//Log ("average  f_SW = %g \n",s->value[AVERAGE_F_SW] );
 	s->value[AVERAGE_F_SW] = 0;
 
+}
+
+extern void Get_annual_average_values_met_data (CELL *c, float Yearly_Solar_Rad, float Yearly_Vpd, float Yearly_Temp, float Yearly_Rain )
+{
+	//Log("--AVERAGE YEARLY MET DATA--\n");
+	//SOLAR RAD
+	Yearly_Solar_Rad /= 12;
+	//Log ("average Solar Rad = %g MJ m^2 month\n", Yearly_Solar_Rad );
+	Yearly_Solar_Rad = 0;
+	//VPD
+	Yearly_Vpd /= 12;
+	//Log ("average Vpd = %g mbar\n", Yearly_Vpd );
+	Yearly_Vpd = 0;
+	//TEMPERATURE
+	Yearly_Temp /= 12;
+	//Log ("average Temperature = %g C° month\n", Yearly_Temp );
+	Yearly_Temp = 0;
+	//RAIN
+	//Log("yearly Rain = %g mm year\n", Yearly_Rain);
+	Yearly_Rain = 0;
+	//MOIST RATIO
+	c->av_soil_moist_ratio /= 12;
+	//Log("average Moist Ratio = %g year\n",c->av_soil_moist_ratio);
+	//Log ("average Yearly Rain = %g MJ m^2 month\n",  );
 }
 
 

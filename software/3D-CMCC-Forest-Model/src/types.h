@@ -843,7 +843,8 @@ extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);
 extern void Get_layer_cover_mortality (SPECIES *, float, int, int );
 extern void Get_soil_water_balance (CELL *const);
-extern void Get_annual_average_values (SPECIES *);
+extern void Get_annual_average_values_modifiers (SPECIES *);
+extern void Get_annual_average_values_met_data (CELL *, float, float, float, float);
 extern void Get_EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
 extern void Get_EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int);
 

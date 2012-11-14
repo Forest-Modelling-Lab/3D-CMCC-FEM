@@ -84,7 +84,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		//*************FOREST STRUCTURE*********************
-		if (!month)
+		if (month == JANUARY)
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
@@ -117,7 +117,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Yearly_Rain += met[month].rain;
 
 
-		if ( !month  && !years)
+		if ( month == JANUARY  && !years)
 		{
 			m->cells[cell].available_soil_water = site->initialAvailableSoilWater + met[month].rain;
 			Log("Beginning month  %d ASW = %g mm\n", month  + 1 , m->cells[cell].available_soil_water);
@@ -172,7 +172,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
 				/*increment age*/
-				if( !month)
+				if( month == JANUARY)
 				{
 					if (years != 0)
 					{
@@ -207,7 +207,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 					{
 						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 
-						if ( !month )
+						if (month == JANUARY)
 						{
 							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 
@@ -229,7 +229,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 
 							//Peak LAI is also used in spatial version to drive carbon allocation
-							if (month == 0)
+							if (month == JANUARY)
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 							}
@@ -817,7 +817,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
 
-							Get_annual_average_values (&m->cells[cell].heights[height].ages[age].species[species]);
+							Get_annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Get_EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
@@ -832,7 +832,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 							/*
-                           if ( m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] != 0 && m->cells[cell].heights[height].z == top_layer )
+                           if ( m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] != 0 && m->cells[cell].heights[height].z == m->cells[cell].top_layer )
                            {
 
                                 //create new class
@@ -849,9 +849,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP] = settings->wf_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
                                 m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP] = settings->wr_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
                                 m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP] = settings->ws_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-
-
-
 
 
                                 Log("\n\n----A new Height class must be created---------\n\n");
@@ -874,7 +871,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 
-                                Log("....adding new row\n");
+							  	  Log("....adding new row\n");
 
 
                                 //create new height class
@@ -949,15 +946,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
                                 //Saplings_counter -= 1;
                             }
-
 							 */
 
 						}
-						/*END OF DECEMBER*/
-
 					}
 					Log("****************END OF SPECIES CLASS***************\n");
-
 				}
 				// for young trees
 
@@ -1057,42 +1050,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//averaged monthly met data
 	if (month == DECEMBER)
 	{
-
-
-		//Log("--AVERAGE YEARLY MET DATA--\n");
-
-		//SOLAR RAD
-		Yearly_Solar_Rad /= 12;
-		//Log ("[%d]> average Solar Rad = %g MJ m^2 month\n",yos[years].year, Yearly_Solar_Rad );
-		Yearly_Solar_Rad = 0;
-
-
-		//VPD
-		Yearly_Vpd /= 12;
-		//Log ("[%d]> average Vpd = %g mbar\n",yos[years].year, Yearly_Vpd );
-		Yearly_Vpd = 0;
-
-
-		//TEMPERATURE
-		Yearly_Temp /= 12;
-		//Log ("[%d]> average Temperature = %g C° month\n",yos[years].year, Yearly_Temp );
-		Yearly_Temp = 0;
-
-		//RAIN
-		//Log("[%d]> yearly Rain = %g mm year\n",yos[years].year, Yearly_Rain);
-		Yearly_Rain = 0;
-
-		//MOIST RATIO
-		m->cells[cell].av_soil_moist_ratio /= 12;
-		//Log("[%d]> average Moist Ratio = %g year\n",yos[years].year, m->cells[cell].av_soil_moist_ratio);
-
-
-
-		//Total_Rain += met[month].rain;
-
-		//Log ("average Yearly Rain = %g MJ m^2 month\n",  );
-
-
+		Get_annual_average_values_met_data (&m->cells[cell], Yearly_Solar_Rad, Yearly_Vpd, Yearly_Temp, Yearly_Rain );
 	}
 
 	Log("****************END OF CELL***************\n");
