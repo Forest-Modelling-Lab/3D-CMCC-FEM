@@ -1019,7 +1019,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 					}
 				}
-
 			}
 			Log("****************END OF AGE CLASS***************\n");
 		}
