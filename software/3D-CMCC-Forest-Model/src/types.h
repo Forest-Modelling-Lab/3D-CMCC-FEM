@@ -850,6 +850,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *, const YOS *const , in
 extern void Get_average_biomass (SPECIES *);
 extern void Get_total_class_level_biomass (SPECIES *);
 extern void Get_renovation (CELL *, HEIGHT *, SPECIES *);
+extern void Get_WUE (SPECIES *);
 
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);

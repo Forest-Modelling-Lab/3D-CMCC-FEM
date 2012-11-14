@@ -652,13 +652,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							/*WATER USE EFFICIENCY*/
-							m->cells[cell].heights[height].ages[age].species[species].value[WUE] = 100 * ( m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP] /
-									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]) /
-									(m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] /
-											m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
-							//Log("Average Water use efficiency = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
-
+							Get_WUE (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -666,11 +660,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 							/*MORTALITY*/
-
-							/*Mortality based on Self-Thinning Rule*/
 							//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-
-							/*DENSITY MORTALITY*/
 
 							Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 
