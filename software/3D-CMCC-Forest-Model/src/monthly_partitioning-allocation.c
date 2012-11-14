@@ -705,7 +705,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 				Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
 				//monthly rate of foliage reduction
-				foliage_reduction_rate = 1.0 /  s->value[MONTH_FRAC_FOLIAGE_REMOVE];
+
+				//+1 perchè:
+				//esempio: non so come scriverlo
+				foliage_reduction_rate = 1.0 /  (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
 				Log("foliage reduction rate = %g \n", foliage_reduction_rate);
 				s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
 				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -715,8 +718,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("++Lai = %g\n", s->value[LAI]);
 
 				break;
-
-
 			}
 		}
 		else
@@ -1027,9 +1028,23 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
 				Log("Coarse Root Biomass (Wrc) = %g tDM/ha\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
-				Log("Foliage Biomass (Wf) = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("***LEAF FALL**\n");
+				//COMPUTE LITTERFALL using BIOME_BGC approach
+				//compute months of leaf fall taking an integer value
+				s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+				Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
+				//monthly rate of foliage reduction
 
-				s->value[DEL_FOLIAGE_CTEM] = 0;
+				//+1 perchè:
+				//esempio: non so come scriverlo
+				foliage_reduction_rate = 1.0 /  (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
+				Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+				s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
+				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+				//recompute LAI
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+				Log("++Lai = %g\n", s->value[LAI]);
 
 				s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
 				s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE_CTEM];

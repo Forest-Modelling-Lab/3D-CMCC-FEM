@@ -223,6 +223,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] == 1 && settings->version == 'u')
 								{
 									Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+									{
+										Log("ATTENTION LAI > PEAK LAI\n");
+										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
+									}
 								}
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
@@ -242,6 +247,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 										//Rainfall intercepted
 										//heighest height class
 										//interception for the highest of the the dominant class
+										//todo: RIFARE TUTTA QUESTA PARTE
 										if (m->cells[cell].dominant_veg_counter == 1)
 										{
 											RainIntercepted = met[month].rain

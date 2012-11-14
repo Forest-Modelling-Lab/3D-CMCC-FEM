@@ -18,6 +18,8 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
 
+	//todo: CONTROLLARE PRENDE VALORI ERRATI
+	//in light.c fargli calcolare Net_radiatio_for_soil come per la par
 	if (c->monthly_layer_number != 0)
 	{
 		switch (c->monthly_layer_number)
