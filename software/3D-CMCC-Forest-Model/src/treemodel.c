@@ -647,27 +647,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             }
                             }
 							 */
-							//Get_litterfall ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
-
-							Log("****LITTER BIOMASS****\n");
-
-
-							//inserire anche la biomassa dei semi non germogliati
 
 							Get_litterfall (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
-
-							// Total Biomass at the end
-							m->cells[cell].heights[height].ages[age].species[species].value[TOTAL_W] =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] +
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]  +
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]  +
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] ;
-							Log("Total Biomass less Litterfall and Root Turnover = %g tDM/ha\n", m->cells[cell].heights[height].ages[age].species[species].value[TOTAL_W]);
-
+							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*WATER USE EFFICIENCY*/
-
-
 							m->cells[cell].heights[height].ages[age].species[species].value[WUE] = 100 * ( m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP] /
 									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]) /
 									(m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] /
@@ -687,26 +672,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							/*DENSITY MORTALITY*/
 
-							//deselected algorithm for 1Km^2 spatial resolution
-							/*m->cells[cell].heights[height].ages[age].species[species].value[WS_MAX] = m->cells[cell].heights[height].ages[age].species[species].value[WSX1000] *
-                                pow((1000 / (float)m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]),
-                                        m->cells[cell].heights[height].ages[age].species[species].value[THINPOWER]);
-							 */
+							Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 
-							//modifified version for 1Km^2 spatial resolution
-							m->cells[cell].heights[height].ages[age].species[species].value[WS_MAX] = m->cells[cell].heights[height].ages[age].species[species].value[WSX1000];
-
-
-
-							if ( m->cells[cell].heights[height].ages[age].species[species].value[AV_STEM_MASS] > m->cells[cell].heights[height].ages[age].species[species].value[WS_MAX])
-							{
-								Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
-							}
-							else
-							{
-								Log("NO MORTALITY based SELF-THINNING RULE\n");
-								Log("Average Stem Mass < WSMax\n");
-							}
 
 							//todo
 							//WHEN MORTALITY OCCURED IN MULTILAYERED FOREST MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
@@ -733,51 +700,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Get_stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 							}
 
-
-							/*RECRUITMENT*/
-							/*
-                            //compute light availabilty for seeds of dominant layer
-                            if (m->cells[cell].heights[height].z == 0)
-                            {
-                                //Log("Average Yearly Par at Soil Level for recruitment = %g molPAR/m^2 month\n", m->cells[cell].av_yearly_par_soil);
-                                //convert molPAR/m^2 month into W/m^2 hour
-                                //3600 = seconds in a hour
-                                Log("Average Yearly Par at Soil Level for recruitment = %g W/m^2 hour\n", m->cells[cell].av_yearly_par_soil);
-                                m->cells[cell].av_yearly_par_soil = (m->cells[cell].av_yearly_par_soil / ( MOLPAR_MJ * 365 * m->cells[cell].av_yearly_daylength * 3600 )) * W_MJ;
-                                Log("Average Yearly Par at Soil Level for recruitment from previous year = %g W/m^2 hour\n", m->cells[cell].av_yearly_par_soil);
-
-
-                                //ERRORE PÈERCHÈ IN QUESTO CASO PRENDEREBBE IL VALORE "LIGHT_TOL" DELLA SPECIE A z == 0
-                                if (m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] <= 2)
-                                {
-                                //Shade Tollerant
-                                Log("%s is Shade Tollerant\n", m->cells[cell].heights[height].ages[age].species[species].name);
-                                Log("Minimum Par at Soil level for Establishment = %g W/m^2 hour\n", m->cells[cell].heights[height].ages[age].species[species].value[MINPAREST]);
-                                if (m->cells[cell].av_yearly_par_soil < m->cells[cell].heights[height].ages[age].species[species].value[MINPAREST])
-                                {
-                                Log("NO light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
-                                }
-                                else
-                                {
-                                Log("Light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
-                                }
-                                }
-                                else
-                                {
-                                //Shade Intollerant
-                                Log("%s is Shade Intollerant\n", m->cells[cell].heights[height].ages[age].species[species].name);
-                                Log("Minimum Par at Soil level for Establishment = %g W/m^2 hour\n", m->cells[cell].heights[height].ages[age].species[species].value[MINPAREST]);
-                                if (m->cells[cell].av_yearly_par_soil < m->cells[cell].heights[height].ages[age].species[species].value[MINPAREST])
-                                {
-                                Log("NO light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
-                                }
-                                else
-                                {
-                                Log("Light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
-                                }
-                                }
-                            }
-							 */
+                            //Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
 							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);

@@ -8,6 +8,9 @@
 
 extern void Get_litterfall (CELL *c, SPECIES *const s, const int years)
 {
+	Log("****LITTER BIOMASS****\n");
+	//inserire anche la biomassa dei semi non germogliati
+
     if (!years)
       {
           c->litter += s->value[DEL_LITTER] + site->initialLitter;

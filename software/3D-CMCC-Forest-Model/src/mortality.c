@@ -209,79 +209,100 @@ void Get_Mortality (SPECIES *const s, int years)
 	float fN, dfN;
 	float dN, n, x1, x2;
 
-	Log("MORTALITY based SELF-THINNING RULE\n");
-	Log("Average Stem Mass > WSMax\n");
-	Log("WS MAX = %g kgDM/tree\n",  s->value[WS_MAX]);
-	Log("Average Stem Mass = %g kgDM stem /tree\n", s->value[AV_STEM_MASS]);
-
-
-
-
-	Log("Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
-	Log("Tree Stem Mass before Mortality Function = %g\n", s->value[BIOMASS_STEM_CTEM]);
-
-	n = (float)s->counter[N_TREE] / 1000;
-	Log("n = %g\n", n);
-	x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
-	//Log("x1 = %g\n", x1);
-	i = 0;
-	while ( 1 )
-	{
-		i = i + 1;
-		//Log("i = %d\n", i);
-		x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
-		//Log("X2 = %f\n", x2);
-		fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM_CTEM];
-		//Log("fN = %f\n", fN);
-		dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
-		//Log("dfN = %f\n", dfN);
-		dN = -fN / dfN;
-		//Log("dN = %f\n", dN);
-		n = n + dN;
-		//Log("n = %f\n", n);
-		if ((fabs(dN) <= eps) || (i >= 5))
-			break;
-	}
-
-	s->counter[DEL_STEMS] = (float)s->counter[N_TREE] - 1000 * n;
-	Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEL_STEMS]);
-	//control
-	if (s->counter[DEL_STEMS] > s->counter[N_TREE])
-	{
-		Log("ERROR Number of Dead Trees > N Trees\n");
-		Log("Dead Trees = %d\n", s->counter[DEL_STEMS]);
-		Log("Live Trees = %d\n", s->counter[N_TREE]);
-	}
-	else
-	{
-		s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEL_STEMS];
-		Log("Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
-		s->value[BIOMASS_FOLIAGE_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[BIOMASS_FOLIAGE_CTEM] / s->counter[N_TREE]);
-		s->value[BIOMASS_ROOTS_TOT_CTEM] = s->value[BIOMASS_ROOTS_TOT_CTEM] - s->value[MR] * s->counter[DEL_STEMS] * (s->value[BIOMASS_ROOTS_TOT_CTEM] / s->counter[N_TREE]);
-		s->value[BIOMASS_STEM_CTEM] = s->value[BIOMASS_STEM_CTEM] - s->value[MS] * s->counter[DEL_STEMS] * (s->value[BIOMASS_STEM_CTEM] / s->counter[N_TREE]);
-		Log("Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-		Log("Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
-		Log("Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM_CTEM] );
-	}
-
-
-
-	//----------------Number of trees after mortality---------------------
-
-
-
-
-	//--------------------------------------------------------------------
 
 	//deselected algorithm for 1Km^2 spatial resolution
-	//s->value[WS_MAX] = s->value[WSX1000] * pow((1000 / (float)s->counter[N_TREE]), s->value[THINPOWER]);
+	/*m->cells[cell].heights[height].ages[age].species[species].value[WS_MAX] = m->cells[cell].heights[height].ages[age].species[species].value[WSX1000] *
+        pow((1000 / (float)m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]),
+                m->cells[cell].heights[height].ages[age].species[species].value[THINPOWER]);
+	 */
 
 	//modifified version for 1Km^2 spatial resolution
 	s->value[WS_MAX] = s->value[WSX1000];
 
-	Log("wSmax = %g KgDM/tree\n", s->value[WS_MAX]);
-	s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] * 1000 / (float)s->counter[N_TREE];
-	Log("AvStemMass after dead = %g Kg/tree\n", s->value[AV_STEM_MASS]);
+
+
+	if ( s->value[AV_STEM_MASS] > s->value[WS_MAX])
+	{
+
+		Log("MORTALITY based SELF-THINNING RULE\n");
+		Log("Average Stem Mass > WSMax\n");
+		Log("WS MAX = %g kgDM/tree\n",  s->value[WS_MAX]);
+		Log("Average Stem Mass = %g kgDM stem /tree\n", s->value[AV_STEM_MASS]);
+
+
+
+
+		Log("Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
+		Log("Tree Stem Mass before Mortality Function = %g\n", s->value[BIOMASS_STEM_CTEM]);
+
+		n = (float)s->counter[N_TREE] / 1000;
+		Log("n = %g\n", n);
+		x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
+		//Log("x1 = %g\n", x1);
+		i = 0;
+		while ( 1 )
+		{
+			i = i + 1;
+			//Log("i = %d\n", i);
+			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
+			//Log("X2 = %f\n", x2);
+			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM_CTEM];
+			//Log("fN = %f\n", fN);
+			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
+			//Log("dfN = %f\n", dfN);
+			dN = -fN / dfN;
+			//Log("dN = %f\n", dN);
+			n = n + dN;
+			//Log("n = %f\n", n);
+			if ((fabs(dN) <= eps) || (i >= 5))
+				break;
+		}
+
+		s->counter[DEL_STEMS] = (float)s->counter[N_TREE] - 1000 * n;
+		Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEL_STEMS]);
+		//control
+		if (s->counter[DEL_STEMS] > s->counter[N_TREE])
+		{
+			Log("ERROR Number of Dead Trees > N Trees\n");
+			Log("Dead Trees = %d\n", s->counter[DEL_STEMS]);
+			Log("Live Trees = %d\n", s->counter[N_TREE]);
+		}
+		else
+		{
+			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEL_STEMS];
+			Log("Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
+			s->value[BIOMASS_FOLIAGE_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[BIOMASS_FOLIAGE_CTEM] / s->counter[N_TREE]);
+			s->value[BIOMASS_ROOTS_TOT_CTEM] = s->value[BIOMASS_ROOTS_TOT_CTEM] - s->value[MR] * s->counter[DEL_STEMS] * (s->value[BIOMASS_ROOTS_TOT_CTEM] / s->counter[N_TREE]);
+			s->value[BIOMASS_STEM_CTEM] = s->value[BIOMASS_STEM_CTEM] - s->value[MS] * s->counter[DEL_STEMS] * (s->value[BIOMASS_STEM_CTEM] / s->counter[N_TREE]);
+			Log("Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			Log("Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+			Log("Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM_CTEM] );
+		}
+
+
+
+		//----------------Number of trees after mortality---------------------
+
+
+
+
+		//--------------------------------------------------------------------
+
+		//deselected algorithm for 1Km^2 spatial resolution
+		//s->value[WS_MAX] = s->value[WSX1000] * pow((1000 / (float)s->counter[N_TREE]), s->value[THINPOWER]);
+
+		//modifified version for 1Km^2 spatial resolution
+		s->value[WS_MAX] = s->value[WSX1000];
+
+		Log("wSmax = %g KgDM/tree\n", s->value[WS_MAX]);
+		s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] * 1000 / (float)s->counter[N_TREE];
+		Log("AvStemMass after dead = %g Kg/tree\n", s->value[AV_STEM_MASS]);
+	}
+	else
+	{
+		Log("NO MORTALITY based SELF-THINNING RULE\n");
+		Log("Average Stem Mass < WSMax\n");
+	}
 
 	Log("**********************************\n");
 

@@ -132,3 +132,10 @@ extern void Get_average_biomass (SPECIES *s)
 
 	Log("Average Stem Mass = %g kgDM stem /tree\n", s->value[AV_STEM_MASS]);
 }
+
+extern void Get_total_class_level_biomass (SPECIES *s)
+{
+	// Total Biomass less Litterfall and Root turnover
+		s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] +s->value[BIOMASS_STEM_CTEM];
+		Log("Total Biomass less Litterfall and Root Turnover = %g tDM/ha\n", s->value[TOTAL_W]);
+}
