@@ -214,7 +214,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							if (!years)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
-																														  + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
+								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
 							}
 						}
 
@@ -480,7 +480,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									{
 										RainIntercepted = met[month].rain
 												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 										Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
 										Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
 
@@ -517,8 +517,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 										m->cells[cell].evapotranspiration = (lessrain
 												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-												  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+												                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
+												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 
 
 										lessrain -= RainIntercepted;
@@ -547,8 +547,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 									m->cells[cell].evapotranspiration = (lessrain
 											* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-											  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-											  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+											                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
+											                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 
 									lessrain -= RainIntercepted;
 
@@ -589,7 +589,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], height);
 
 							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month,
-									 DaysInMonth[month], years, height, age);
+									DaysInMonth[month], years, height, age);
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 
@@ -662,8 +662,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Get_litterfall (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
-                            //reset
-                            m->cells[cell].heights[height].ages[age].species[species].value[DEL_LITTER] = 0;
+							//reset
+							m->cells[cell].heights[height].ages[age].species[species].value[DEL_LITTER] = 0;
 
 
 							// Total Biomass at the end
@@ -798,7 +798,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 }
                                 }
                             }
-							*/
+							 */
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
 							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
@@ -812,230 +812,23 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//TURNOVER
 							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
 
+							//ANNUAL BIOMASS INCREMENT
 							Get_biomass_increment ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
 
 							Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
 
-							//VPD
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_VPD] /= m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS];
-							//Log ("[%d]layer %d average  f_VPD = %g \n",yos[years].year, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_VPD] );
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_VPD] = 0;
+							Get_annual_average_values (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							//TEMPERATURE
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_T] /= m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS];
-							//Log ("[%d]layer %d average  f_T = %g \n",yos[years].year, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_T] );
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_T] = 0;
+							Get_EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
-							//AGE
-							//Log ("[%d]layer %d average  f_AGE = %g \n",yos[years].year, m->cells[cell].heights[height].z,  m->cells[cell].heights[height].ages[age].species[species].value[F_AGE] );
-
-							//SOIL WATER
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_SW] /= m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS];
-							//Log ("[%d]layer %d average  f_SW = %g \n",yos[years].year, m->cells[cell].heights[height].z,  m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_SW] );
-							m->cells[cell].heights[height].ages[age].species[species].value[AVERAGE_F_SW] = 0;
-
-
-
-							Log("\n\n\n\n\n---------------------------------------------------\n");
-
-
-
-							//CUMULATIVE BALANCE FOR ENTIRE LAYER
-							Log("**CUMULATIVE BALANCE for layer %d ** \n", m->cells[cell].heights[height].z);
-							Log("END of Year Yearly Cumulated GPP for layer %d  = %g gCm^2 year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]);
-							Log("END of Year Yearly Cumulated NPP for layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP]);
-							Log("END of Year Yearly Cumulated DEL STEM layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WS]);
-							//Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WF]);
-							Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WFR]);
-							Log("END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WCR]);
-							Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WRES]);
-							Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g KgC tree year\n", m->cells[cell].heights[height].z, (m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WRES]*2000)/m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE]);
-							Log("END of Year Yearly Cumulated DEL BB layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_BB]);
-							Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %g tDM/ha year\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WR]);
-
-
-
-
-
-
-
-							if (m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WS] +
-									m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WR] +
-									m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WF] +
-									m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WRES] +
-									m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_BB] !=
-											m->cells[cell].heights[height].ages[age].species[species].value[YEARLY_NPP])
-							{
-								Log("ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
-								Log("DEL SUM = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WS] +
-										m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WCR] +
-										m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WFR] +
-										m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_BB] +
-										m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WF] +
-										m->cells[cell].heights[height].ages[age].species[species].value[DEL_Y_WRES]);
-							}
-
-
-
-							//CUMULATIVE BALANCE FOR ENTIRE STAND
 							if ( height == 0)
 							{
-								Log("\n\n\n\n\n\n\n**********END OF YEARLY STAND RUN CARBON-SOIL WATER BALANCE (%d) ************\n", yos[years].year);
-
-								//CUMULATIVE BALANCE FOR ENTIRE CELL
-								Log("**CUMULATIVE BALANCE for cell (%g, %g) ** \n", m->cells[cell].x, m->cells[cell].y);
-
-								//CARBON BALANCE
-								Log("**CARBON BALANCE**\n");
-								//DO NOT CHANGE THESE LINES!!!!!!!!!!
-								Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].gpp);
-								Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM cell resolution^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].npp);
-
-								if ((years + 1) == years_of_simulation)
-								{
-									m->cells[cell].av_gpp /= years_of_simulation;
-									//Log("END OF RUN Average Ecosystem GPP = %g gC/m^2 year\n",m->cells[cell].av_gpp);
-									m->cells[cell].av_npp /= years_of_simulation;
-									//Log("END OF RUN Average Ecosystem NPP = %g tDM/ha year\n",m->cells[cell].av_npp);
-								}
-
-								//WATER BALANCE
-								Log("**WATER BALANCE**\n");
-								//DO NOT CHANGE THIS LINE!!!!!!!!!!
-								Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, m->cells[cell].x, m->cells[cell].y, m->cells[cell].total_yearly_evapotransipration);
-								Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  m->cells[cell].available_soil_water);
-
-								/*
-                                Total_Run_Evapotranspiration +=  (m->cells[cell].total_yearly_evapotransipration + m->cells[cell].total_yearly_soil_evaporation );
-                                Log("-TOTAL EVAPOTRASPIRATION  = %g mm H2o\n", m->cells[cell].total_yearly_evapotransipration);
-                                Log("-TOTAL SOIL EVAPORATION = %g mm H2o\n", m->cells[cell].total_yearly_soil_evaporation);
-                                Log("-TOTAL EVAPORATION = %g mm H2o\n", m->cells[cell].total_yearly_evapotransipration + m->cells[cell].total_yearly_soil_evaporation);
-                                Log("-TOTAL RAIN = %g\n", Yearly_Rain);
-                                Log("-AVAILABLE SOIL WATER = %g mm\n", Yearly_Rain - m->cells[cell].total_yearly_evapotransipration - m->cells[cell].total_yearly_soil_evaporation);
-                                Log("-Available soil water = %g\n", m->cells[cell].available_soil_water);
-								 */
-
-								/*
-                               if ( years == YEARSOFSIMULATION)
-                               {
-                                   Log("**********END OF RUN SOIL WATER BALANCE************\n");
-
-                                   Log("-TOTAL EVAPORATION + EVAPOTRASPIRATION IN RUN = %g mm H2o\n", Total_Run_Evapotranspiration);
-                                   Log("-TOTAL RAIN IN RUN = %g mm H2o\n", Total_Rain);
-                                   Log("-Water Balance = %g mm ", Total_Rain - Total_Run_Evapotranspiration);
-                               }
-								 */
-
+								Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 							}
 
 
-							//Rev 9 May 2012
-
-							/*
-                            if (years == 0)
-                            {
-                                int Manag;
-                                printf("END OF FIRST YEAR RUN \n");
-                                //printf("INSERT VALUE FOR MANAGEMENT (T = timber; C = Coppice): ");
-                                //scanf ("%c",&Manag);
-                                //Log("Management routine choiced = %c \n", Manag);
-
-
-                                //Management
-                                if ( m->cells[cell].heights[height].ages[age].species[species].management == 0)
-                                {
-                                    Log("- Management type = TIMBER\n");
-                                    printf("SELECT TYPE OF MANAGEMENT: \n"
-                                           "-CLEARCUT = 1 \n"
-                                           "-........ = 2 \n"
-                                           "-........ = 3 \n"
-                                           "-........ = 4 \n"
-                                           "-........ = 5 \n");
-
-                                    scanf ("%d",&Manag);
-
-                                    switch (Manag)
-                                    {
-                                        case 1 :
-                                        Log("Case CLEARCUT choiced \n");
-
-                                        //call function
-                                        Clearcut_Timber (&m->cells[cell].heights[height].ages[age].species[species],  years, m->cells[cell].heights[height].z, m->cells[cell].annual_layer_number);
-
-                                        break;
-
-                                        case 2 :
-                                        Log("Case ....... choiced \n");
-
-                                        //call function
-
-                                        break;
-
-                                        case 3 :
-                                        Log("Case .......  choiced \n");
-
-                                        //call function
-
-                                        break;
-
-                                        case 4 :
-                                        Log("Case .......  choiced \n");
-
-                                        //call function
-
-                                        break;
-
-                                    }
-
-                                }
-                                else
-                                {
-                                    Log("- Management type = COPPICE\n");
-                                    printf("SELECT TYPE OF MANAGEMENT: \n"
-                                           "-CLEARCUT = 1 \n"
-                                           "-........ = 2 \n"
-                                           "-........ = 3 \n"
-                                           "-........ = 4 \n"
-                                           "-........ = 5 \n");
-
-                                    scanf ("%d",&Manag);
-
-                                    switch (Manag)
-                                    {
-                                        case 1 :
-                                        Log("Case CLEARCUT choiced \n");
-
-                                        //call function
-                                        Clearcut_Coppice (&m->cells[cell].heights[height].ages[age].species[species],  years, m->cells[cell].heights[height].z, m->cells[cell].annual_layer_number);
-
-                                        break;
-
-                                        case 2 :
-                                        Log("Case ....... choiced \n");
-
-                                        //call function
-
-                                        break;
-
-                                        case 3 :
-                                        Log("Case .......  choiced \n");
-
-                                        //call function
-
-                                        break;
-
-                                        case 4 :
-                                        Log("Case .......  choiced \n");
-
-                                        //call function
-
-                                        break;
-                                    }
-
-                                    }
-
-                                }
-							 */
+							//MANAGEMENT
+							//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
 
 
 							/*

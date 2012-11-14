@@ -77,3 +77,77 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 		}
 	}
 }
+
+
+extern void Get_annual_average_values (SPECIES *s)
+{
+
+	//compute to control annual average values for modifiers
+	//VPD
+	s->value[AVERAGE_F_VPD] /= s->counter[VEG_MONTHS];
+	//Log ("average  f_VPD = %g \n", s->value[AVERAGE_F_VPD] );
+	s->value[AVERAGE_F_VPD] = 0;
+
+	//TEMPERATURE
+	s->value[AVERAGE_F_T] /= s->counter[VEG_MONTHS];
+	//Log ("average  f_T = %g \n",s->value[AVERAGE_F_T] );
+	s->value[AVERAGE_F_T] = 0;
+
+	//AGE
+	//Log ("average  f_AGE = %g \n",s->value[F_AGE] );
+
+	//SOIL WATER
+	s->value[AVERAGE_F_SW] /= s->counter[VEG_MONTHS];
+	//Log ("average  f_SW = %g \n",s->value[AVERAGE_F_SW] );
+	s->value[AVERAGE_F_SW] = 0;
+
+}
+
+
+extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
+{
+	//CUMULATIVE BALANCE FOR ENTIRE LAYER
+	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
+	Log("END of Year Yearly Cumulated GPP for layer %d  = %g gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_G_C]);
+	Log("END of Year Yearly Cumulated NPP for layer %d  = %g tDM/ha year\n", h->z, s->value[YEARLY_NPP]);
+	Log("END of Year Yearly Cumulated DEL STEM layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WS]);
+	//Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WF]);
+	Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WFR]);
+	Log("END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WCR]);
+	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WRES]);
+	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g KgC tree year\n", h->z, (s->value[DEL_Y_WRES]*2000)/s->counter[N_TREE]);
+	Log("END of Year Yearly Cumulated DEL BB layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_BB]);
+	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WR]);
+
+	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP])
+	{
+		Log("ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
+		Log("DEL SUM = %g \n", s->value[DEL_Y_WS] + s->value[DEL_Y_WCR] + s->value[DEL_Y_WFR] + s->value[DEL_Y_BB] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES]);
+	}
+}
+
+extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years)
+{
+
+	//CUMULATIVE BALANCE FOR ENTIRE CELL
+	Log("**CUMULATIVE BALANCE for cell (%g, %g) ** \n", c->x, c->y);
+
+	//DO NOT CHANGE THESE LINES!!!!!!!!!!
+	Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, c->x, c->y, c->gpp);
+	Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM cell resolution^-2 year^-1]\n",yos[years].year, c->x, c->y, c->npp);
+
+	//DO NOT CHANGE THIS LINE!!!!!!!!!!
+	Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, c->x, c->y, c->total_yearly_evapotransipration);
+	Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  c->available_soil_water);
+
+
+	/*
+    Total_Run_Evapotranspiration +=  (c->total_yearly_evapotransipration + c->total_yearly_soil_evaporation );
+    Log("-TOTAL EVAPOTRASPIRATION  = %g mm H2o\n", c->total_yearly_evapotransipration);
+    Log("-TOTAL SOIL EVAPORATION = %g mm H2o\n", c->total_yearly_soil_evaporation);
+    Log("-TOTAL EVAPORATION = %g mm H2o\n", c->total_yearly_evapotransipration + c->total_yearly_soil_evaporation);
+    Log("-Available soil water = %g\n", c->available_soil_water);
+	 */
+
+
+}

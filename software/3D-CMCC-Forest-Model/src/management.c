@@ -8,6 +8,116 @@
 #include "types.h"
 
 
+extern void Choose_management (CELL *c, SPECIES *s, int years, int height)
+{
+	if (years == 0)
+	{
+		int Manag;
+		printf("END OF FIRST YEAR RUN \n");
+		//printf("INSERT VALUE FOR MANAGEMENT (T = timber; C = Coppice): ");
+		//scanf ("%c",&Manag);
+		//Log("Management routine choiced = %c \n", Manag);
+
+
+		//Management
+		if ( s->management == T)
+		{
+			Log("- Management type = TIMBER\n");
+			printf("SELECT TYPE OF MANAGEMENT: \n"
+					"-CLEARCUT = 1 \n"
+					"-........ = 2 \n"
+					"-........ = 3 \n"
+					"-........ = 4 \n"
+					"-........ = 5 \n");
+
+			scanf ("%d",&Manag);
+
+			switch (Manag)
+			{
+			case 1 :
+				Log("Case CLEARCUT choiced \n");
+
+				//call function
+				Clearcut_Timber (&s,  years, &c->heights[height].z, &c->annual_layer_number);
+
+				break;
+
+			case 2 :
+				Log("Case ....... choiced \n");
+
+				//call function
+
+				break;
+
+			case 3 :
+				Log("Case .......  choiced \n");
+
+				//call function
+
+				break;
+
+			case 4 :
+				Log("Case .......  choiced \n");
+
+				//call function
+
+				break;
+
+			}
+
+		}
+		else
+		{
+			Log("- Management type = COPPICE\n");
+			printf("SELECT TYPE OF MANAGEMENT: \n"
+					"-CLEARCUT = 1 \n"
+					"-........ = 2 \n"
+					"-........ = 3 \n"
+					"-........ = 4 \n"
+					"-........ = 5 \n");
+
+			scanf ("%d",&Manag);
+
+			switch (Manag)
+			{
+			case 1 :
+				Log("Case CLEARCUT choiced \n");
+
+				//call function
+				Clearcut_Coppice (&s,  years, &c->heights[height].z, &c->annual_layer_number);
+
+				break;
+
+			case 2 :
+				Log("Case ....... choiced \n");
+
+				//call function
+
+				break;
+
+			case 3 :
+				Log("Case .......  choiced \n");
+
+				//call function
+
+				break;
+
+			case 4 :
+				Log("Case .......  choiced \n");
+
+				//call function
+
+				break;
+			}
+
+		}
+
+	}
+
+
+}
+
+
 
 void Get_Management (SPECIES *const s, AGE * const a, int years)
 {

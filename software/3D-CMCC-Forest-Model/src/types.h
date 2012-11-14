@@ -828,16 +828,14 @@ extern void Get_biomass_increment ( CELL *const, SPECIES *const, int, int, int, 
 void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
-extern void Get_Layer_Density (CELL *cells, const int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
-//extern void Get_top_layer (CELL *const, int, HEIGHT *);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *, int);
 extern void Get_annual_forest_structure (CELL *, HEIGHT *);
 void Print_met_data (const MET_DATA *const, float, int, float);
-extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const, const int, const int, int, int, int);
-extern void Print_end_month_stand_data (CELL *c, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
+extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
+extern void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
 void Get_monthly_vegetative_period (CELL *, const MET_DATA *const, int);
 extern int Get_number_of_layers (CELL *);
@@ -845,11 +843,16 @@ extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);
 extern void Get_layer_cover_mortality (SPECIES *, float, int, int );
 extern void Get_soil_water_balance (CELL *const);
+extern void Get_annual_average_values (SPECIES *);
+extern void Get_EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
+extern void Get_EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int);
 
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
 
 extern void Get_initialization_biomass_data (SPECIES *const);
+
+extern void Choose_management (CELL *, SPECIES *, int , int );
 
 
 
