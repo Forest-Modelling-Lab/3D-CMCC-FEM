@@ -11,8 +11,7 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int z, int management,
-											float daylength,  int DaysInMonth, int years, int height, int age)
+void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int DaysInMonth, int years, int height, int age, int species)
 {
 	//CTEM VERSION
 
@@ -83,7 +82,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	}
 	 */
 
-	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , Phenology %d --\n", z, s->phenology);
+	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , Phenology %d --\n", c->heights[height].z, s->phenology);
 	Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
 
 
@@ -95,7 +94,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		if (settings->version == 'u')
 		{
 			//defining phenological phase
-			if (daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
+			if (c->daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
 			{
 				//Leaf fall
 				phenology_phase = 0;
@@ -152,7 +151,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 
-			if (management == 0)
+			if (s->management == 0)
 			{
 				//Log("Management type = TIMBER\n");
 			}
@@ -420,18 +419,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = %g \n", z, pF_CTEM);
-				Log("afR %d = %g \n", z, Perc_fine * pR_CTEM);
-				Log("acR %d = %g \n", z, Perc_coarse * pR_CTEM);
-				Log("aS %d = %g \n", z, pS_CTEM);
-				Log("aRes %d = 0 \n", z);
+				Log("aF %d = %g \n", c->heights[height].z, pF_CTEM);
+				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
+				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
+				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
+				Log("aRes %d = 0 \n", c->heights[height].z);
 
-				Log("delta_F %d = %g \n", z, s->value[DEL_FOLIAGE_CTEM] );
-				Log("delta_fR %d = %g \n", z, s->value[DEL_ROOTS_FINE_CTEM]);
-				Log("delta_cR %d = %g \n", z, s->value[DEL_ROOTS_COARSE_CTEM]);
-				Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
-				Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
-				Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+				Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
 				//control if new Lai exceeds Peak Lai
 				if (s->value[LAI] > s->value[PEAK_Y_LAI])
@@ -601,18 +600,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = 0 \n", z);
-				Log("afR %d = %g \n", z, Perc_fine * pR_CTEM);
-				Log("acR %d = %g \n", z, Perc_coarse * pR_CTEM);
-				Log("aS %d = %g \n", z, pS_CTEM);
-				Log("aRes %d = %g \n", z, pF_CTEM);
+				Log("aF %d = 0 \n", c->heights[height].z);
+				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
+				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
+				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
+				Log("aRes %d = %g \n", c->heights[height].z, pF_CTEM);
 
-				Log("delta_F %d = %g \n", z, s->value[DEL_FOLIAGE_CTEM] );
-				Log("delta_fR %d = %g \n", z, s->value[DEL_ROOTS_FINE_CTEM]);
-				Log("delta_cR %d = %g \n", z, s->value[DEL_ROOTS_COARSE_CTEM]);
-				Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
-				Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
-				Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+				Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
 
 				break;
@@ -687,18 +686,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = 0 \n", z);
-				Log("afR %d = %g \n", z, Perc_fine * pR_CTEM);
-				Log("acR %d = %g \n", z, Perc_coarse * pR_CTEM);
-				Log("aS %d = %g \n", z, pS_CTEM);
-				Log("aRes %d = %g \n", z, pF_CTEM);
+				Log("aF %d = 0 \n", c->heights[height].z);
+				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
+				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
+				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
+				Log("aRes %d = %g \n", c->heights[height].z, pF_CTEM);
 
-				Log("delta_F %d = %g \n", z, s->value[DEL_FOLIAGE_CTEM] );
-				Log("delta_fR %d = %g \n", z, s->value[DEL_ROOTS_FINE_CTEM]);
-				Log("delta_cR %d = %g \n", z, s->value[DEL_ROOTS_COARSE_CTEM]);
-				Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
-				Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
-				Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+				Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
 				Log("***LEAF FALL**\n");
 				//COMPUTE LITTERFALL using BIOME_BGC approach
@@ -724,25 +723,22 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		{
 			Log("Unvegetative period \n");
 
-			Log("aF %d = 0 \n", z);
-			Log("afR %d = 0 \n", z);
-			Log("acR %d = 0 \n", z);
-			Log("aS %d = 0 \n", z);
-			Log("aRes %d = 0 \n", z);
+			Log("aF %d = 0 \n", c->heights[height].z);
+			Log("afR %d = 0 \n", c->heights[height].z);
+			Log("acR %d = 0 \n", c->heights[height].z);
+			Log("aS %d = 0 \n", c->heights[height].z);
+			Log("aRes %d = 0 \n", c->heights[height].z);
 
-			Log("delta_F %d = 0 \n", z);
-			Log("delta_fR %d = 0 \n", z);
-			Log("delta_cR %d = 0 \n", z);
-			Log("delta_S %d = 0 \n", z);
-			Log("delta_Res %d = 0 \n", z);
+			Log("delta_F %d = 0 \n", c->heights[height].z);
+			Log("delta_fR %d = 0 \n", c->heights[height].z);
+			Log("delta_cR %d = 0 \n", c->heights[height].z);
+			Log("delta_S %d = 0 \n", c->heights[height].z);
+			Log("delta_Res %d = 0 \n", c->heights[height].z);
 		}
 	}
 	if (settings->version == 's')
 	{
 		Log("Spatial version \n");
-
-
-
 
 		if (s->counter[VEG_UNVEG] == 1)
 		{
@@ -785,10 +781,10 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 			//(Arora V. K., Boer G. J., GCB, 2005)
 
-			Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
+			Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
 			Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
 
-			if (management == 0)
+			if (s->management == 0)
 			{
 				//Log("Management type = TIMBER\n");
 			}
@@ -957,18 +953,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = %g \n", z, pF_CTEM);
-				Log("afR %d = %g \n", z, Perc_fine * pR_CTEM);
-				Log("acR %d = %g \n", z, Perc_coarse * pR_CTEM);
-				Log("aS %d = %g \n", z, pS_CTEM);
-				Log("aRes %d = 0 \n", z);
+				Log("aF %d = %g \n", c->heights[height].z, pF_CTEM);
+				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
+				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
+				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
+				Log("aRes %d = 0 \n", c->heights[height].z);
 
-				Log("delta_F %d = %g \n", z, s->value[DEL_FOLIAGE_CTEM] );
-				Log("delta_fR %d = %g \n", z, s->value[DEL_ROOTS_FINE_CTEM]);
-				Log("delta_cR %d = %g \n", z, s->value[DEL_ROOTS_COARSE_CTEM]);
-				Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
-				Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
-				Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+				Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
 
 				break;
@@ -1043,18 +1039,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = 0 \n", z);
-				Log("afR %d = %g \n", z, Perc_fine * pR_CTEM);
-				Log("acR %d = %g \n", z, Perc_coarse * pR_CTEM);
-				Log("aS %d = %g \n", z, pS_CTEM);
-				Log("aRes %d = %g \n", z, pF_CTEM);
+				Log("aF %d = 0 \n", c->heights[height].z);
+				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
+				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
+				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
+				Log("aRes %d = %g \n", c->heights[height].z, pF_CTEM);
 
-				Log("delta_F %d = %g \n", z, s->value[DEL_FOLIAGE_CTEM] );
-				Log("delta_fR %d = %g \n", z, s->value[DEL_ROOTS_FINE_CTEM]);
-				Log("delta_cR %d = %g \n", z, s->value[DEL_ROOTS_COARSE_CTEM]);
-				Log("delta_S %d = %g \n", z, s->value[DEL_STEMS_CTEM]);
-				Log("delta_Res %d = %g \n", z, s->value[DEL_RESERVE_CTEM]);
-				Log("delta_BB %d = %g \n", z, s->value[DEL_BB]);
+				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+				Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
 
 				break;
@@ -1065,17 +1061,17 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		{
 			Log("Un-vegetative period \n");
 
-			Log("aF %d = 0 \n", z);
-			Log("afR %d = 0 \n", z);
-			Log("acR %d = 0 \n", z);
-			Log("aS %d = 0 \n", z);
-			Log("aRes %d = 0 \n", z);
+			Log("aF %d = 0 \n", c->heights[height].z);
+			Log("afR %d = 0 \n", c->heights[height].z);
+			Log("acR %d = 0 \n", c->heights[height].z);
+			Log("aS %d = 0 \n", c->heights[height].z);
+			Log("aRes %d = 0 \n", c->heights[height].z);
 
-			Log("delta_F %d = 0 \n", z);
-			Log("delta_fR %d = 0 \n", z);
-			Log("delta_cR %d = 0 \n", z);
-			Log("delta_S %d = 0 \n", z);
-			Log("delta_Res %d = 0 \n", z);
+			Log("delta_F %d = 0 \n", c->heights[height].z);
+			Log("delta_fR %d = 0 \n", c->heights[height].z);
+			Log("delta_cR %d = 0 \n", c->heights[height].z);
+			Log("delta_S %d = 0 \n", c->heights[height].z);
+			Log("delta_Res %d = 0 \n", c->heights[height].z);
 		}
 	}
 
@@ -1088,8 +1084,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month,
-											int z, int management,  float daylength,  int DaysInMonth, int years, int height, int age)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 
@@ -1180,7 +1175,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
-		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
+		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
 
 		pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 		//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
@@ -1286,7 +1281,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
-		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", z);
+		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
 
 
 

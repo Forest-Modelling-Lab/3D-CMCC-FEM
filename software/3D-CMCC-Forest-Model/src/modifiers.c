@@ -6,7 +6,7 @@
 #include "math.h"
 #include "types.h"
 
-void Get_modifiers (SPECIES *const s,  AGE *const a, const MET_DATA *const met, int year,  int month, int daysinmonth, float available_soil_water, float vpd, float Soil_Moist_Ratio, int z, int management )
+void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DATA *const met, int year,  int month, int daysinmonth, float available_soil_water, float vpd,  int z, int management )
 {
 	float RelAge;
 
@@ -117,8 +117,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, const MET_DATA *const met, 
 
 
 	/*SOIL WATER MODIFIER*/
-
-	//AVAILABLE SOIL WATER???DA FILE ROCCA (MA IN %) O COME IN FILE DI INTESTAZIONE?
+	//todo:swc data
 
 	//float MoistRatio_from_data;
 	/*
@@ -154,10 +153,8 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, const MET_DATA *const met, 
 	}
 	*/
 
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - Soil_Moist_Ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	//Log("Moist Ratio = %g \n", Soil_Moist_Ratio);
-	//Log("SWCONST = %g \n", s->value[SWCONST]);
-	//Log("SWPOWER = %g \n", s->value[SWPOWER]);
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+
 	if ( s->value[F_SW] > 1  )
 	{
 		Log("PROBLEM IN fSW !!!!!!!!!!\n");

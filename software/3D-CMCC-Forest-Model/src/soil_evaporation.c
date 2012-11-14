@@ -16,7 +16,6 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const PsycConst = 65;      //psychrometer costant
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
-	static float MoistRatio;
 	static float PotEvap;            //Potential evapotranspiration
 
 
@@ -52,16 +51,10 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	PotEvap = (e20 / (e20 + PsycConst )) * Net_Radiation / lambda;
 	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
 
+	c->soil_moist_ratio = c->available_soil_water / site->maxAsw;
 
-
-	//Log("Hourly Potential Evapotranspiration from LPJ = %g mm H2O/h\n", PotEvap);
-	//Log("Daily Potential Evapotranspiration from LPJ = %g mm H2O/day\n", PotEvap * 24 );
-	//Log("Monthly Potential Evapotranspiration from LPJ = %g mm H2O/month\n", PotEvap * 24 * DaysInMonth [month]);
-	MoistRatio = c->available_soil_water / site->maxAsw;
-
+	c->soil_evaporation = PotEvap * EvapoCoeff * c->soil_moist_ratio * 24 * DaysInMonth;
 	Log("Monthly Soil Evaporation = %g \n", c->soil_evaporation );
-	//Log("Moist Ratio = %g\n", MoistRatio);
-	c->soil_evaporation = PotEvap * EvapoCoeff * MoistRatio * 24 * DaysInMonth;
 
 }
 

@@ -6,6 +6,20 @@
 #include "math.h"
 #include "types.h"
 
+extern void Get_litterfall (CELL *c, SPECIES *const s, const int years)
+{
+    if (!years)
+      {
+          c->litter += s->value[DEL_LITTER] + site->initialLitter;
+          Log("Total Litter = %g tDM/ha\n", c->litter);
+      }
+      else
+      {
+          c->litter += s->value[DEL_LITTER];
+          Log("Total Litter = %g tDM/ha\n", c->litter);
+      }
+}
+
 
 void Get_litterfall_deciduous (SPECIES *const s)
 {

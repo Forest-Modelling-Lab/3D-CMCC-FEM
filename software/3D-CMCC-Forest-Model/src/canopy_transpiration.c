@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-extern void Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const met, int month, float daylength, int DaysInMonth, float vpd, float Net_Radiation, float soil_moist_ratio)
+extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month,  int DaysInMonth, float vpd)
 {
 	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
@@ -22,6 +22,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const m
 	static float Etransp;
 	static float DailyTransp;
 	static float MonthTransp;
+	static float Net_Radiation;
 
 
 	float alpha_evapo = 0.65;
@@ -65,7 +66,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const m
 	Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 	Log("NET RADIATION = %g \n", Net_Radiation);
 
-	CanopyTranspiration = Etransp / lambda * daylength;         // converted to kg-mm H2o/m2/day
+	CanopyTranspiration = Etransp / lambda * c->daylength;         // converted to kg-mm H2o/m2/day
 	//1Kg m^2 H2o correspond to 1mm H2o
 	Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
 	DailyTransp = CanopyTranspiration;
@@ -77,7 +78,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  const MET_DATA *const m
 	//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
 	//alpha e beta andranno inserite come specie specifiche!!!!
 
-	s->value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (soil_moist_ratio, beta_evapo));
+	s->value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (c->soil_moist_ratio, beta_evapo));
 	Log("ANGELO F_EVAPO = %g \n", s->value[F_EVAPO] );
 
 

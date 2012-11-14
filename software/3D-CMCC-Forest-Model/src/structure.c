@@ -59,6 +59,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 
 	//height differences in meter to consider trees in two different layers
 
+	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
 	Log("--GET NUMBER OF ANNUAL LAYERS--\n");
 
@@ -108,19 +109,19 @@ void Get_annual_numbers_of_layers (CELL *const c)
 			if (height == c->heights_count - 1 )
 			{
 				c->heights[height].z = c->annual_layer_number - 1;
-				Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
+				//Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
 			}
 			else
 			{
 				if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
 				{
 					c->heights[height].z = c->heights[height+1].z - 1;
-					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					c->heights[height].z = c->heights[height+1].z;
-					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 			}
 			break;
@@ -128,19 +129,19 @@ void Get_annual_numbers_of_layers (CELL *const c)
 			if (height == c->heights_count - 1)
 			{
 				c->heights[height].z = c->annual_layer_number - 1;
-				Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+				//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 			}
 			else
 			{
 				if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
 				{
 					c->heights[height].z = c->heights[height+1].z - 1;
-					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					c->heights[height].z = c->heights[height+1].z;
-					Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 			}
 			break;
@@ -397,7 +398,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 	if (c->heights_count == 1)
 	{
-		Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+		Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
 	}
 	if (c->heights_count == 2)
 	{
@@ -521,7 +522,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 }
 
 
-void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, int month)
+void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int month)
 {
 
 	static int height;
@@ -530,6 +531,8 @@ void Get_monthly_vegetative_period (CELL *const c, const MET_DATA *const met, in
 	static int counter;
 
 	counter = 0;
+
+	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
 	Log("--GET VEGETATIVE PERIOD--\n");
 
@@ -693,9 +696,22 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 		}
 	}
 	Log("Monthly layer number = %d\n", c->monthly_layer_number);
-	Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-	Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-	Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+
+	if (c->heights_count == 1)
+	{
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+	}
+	if (c->heights_count == 2)
+	{
+		Log("Vegetated Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+	}
+	if (c->heights_count > 2)
+	{
+		Log("Vegetated Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+	}
 	Log("*************************************************** \n");
 
 }
