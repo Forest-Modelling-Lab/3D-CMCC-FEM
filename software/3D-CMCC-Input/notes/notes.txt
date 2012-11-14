@@ -9,13 +9,37 @@ cat LS/LayerDates_NDVI_YearlyLambda500_year2001    | tr -d '\r' | sed -e 's/$/ |
 cat MODIS/LayerDates_NDVI_YearlyLambda500_year2001 | tr -d '\r' | sed -e 's/^/           | /' >> a.txt
 sort a.txt > b.txt && rm a.txt
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-### Conversion from CORINE Land Cover to GeoTiff ##
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+### Conversion from CORINE Land Cover to GeoTiff ## ---> 2012-11-13 New way: easier and effective!
+# 3 starting files:
+- Sicily.shp:                           shapefile in longlat projection
+- CORINE_3211.asc:                      ascii file representing an image in UTM proj, Zone 32 (res 1000x1000m)
+- NDVI_YearlyLambda500_year2000_b1.tif: Landsat image in UTM proj, Zone 33 (res 30x30m)
+# I have to remap the first two images using the georeferentiation of the third one:
+
+# Rasterization of Parco delle Madonie AOI shapefile (pixel size -tr obtained as described below):
+gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte Sicily.shp Sicily.tif
+# Conversion into UTM 30 meters, zone 33
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 Sicily.tif Madonie.tif
+# Remap using UL and size of Landsat image
+./remap -i Madonie.tif -o Madonie_remapped.tif -s 30 -m -l 4211980.487859229557216 399333.291887304978445 -e 1286x1160 -w 5x5
+
+# Conversion from ASCII corine format into geotiff (ASCII format describes an image with projection UTM, zone 32, datum WGS84):
+gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' CORINE_3211.asc CORINE_3211.tif
+# Changing zone from 32 to 33:
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' CORINE_3211.tif CORINE_3211_zone33.tif
+# Remap using UL and size of Landsat image
+./remap -i CORINE_3211_zone33.tif -o CORINE_3211_zone33_remapped.tif -s 30 -m -l 4211980.487859229557216 399333.291887304978445 -e 1286x1160 -w 5x5
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+
+### Conversion from CORINE Land Cover to GeoTiff ## ---> 2012-11-12 Too complicated and imprecise!
 # Rasterization of Parco delle Madonie AOI shapefile (pixel size -tr obtained as described below):
 gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte Sicily.shp Sicily.tif
 # Conversion from ASCII corine format into geotiff (ASCII format describes an image with projection UTM, zone 32, datum WGS84):
 gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' CORINE_3211.asc CORINE_3211.tif
-# Conversion frompixel size -tr obtained as described below
+# Conversion from pixel size -tr obtained as described below
 gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -tr 0.00045266691956530711 0.00045266691956530711 CORINE_3211.tif CORINE_3211_latlon.tif
 # UL and LR obtained looking at gdalinfo of Sicily.tif
 gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs' -projwin 13.855128040667733 38.051144527880616 14.2937623 37.7383517 CORINE_3211_latlon.tif CORINE_3211_cut.tif
@@ -23,13 +47,9 @@ gdal_translate -co COMPRESS=LZW -of GTiff -a_srs '+proj=longlat +ellps=WGS84 +da
 gdal_translate -co COMPRESS=LZW -of GTiff -a_ullr 13.855128040667733 38.051144527880616 14.2937623 37.7383517 CORINE_3211_cut.tif CORINE_3211_shifted.tif
 # Conversion into UTM 30 meters
 gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 Sicily.tif Madonie.tif
-gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 CORINE_3211_shifted.tif CORINE_3211_Madonie.tif
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-# Not used for the moment:
-./remap -i CORINE_3211.tif -o CORINE_3211_remap.tif -s 30 -m -l 4212108.248 399125.520 -e 4177008.248,438065.520 -w 5x5 -n 0.0
-
-
+gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs' -tr 30 -30 CORINE_3211_shifted.tif CORINE_3211_Madonie_30m.tif
+# Resize and little shift of georeference to get the one of landsat image:
+gdal_translate -co COMPRESS=LZW -srcwin 7 4 1286 1160 -a_ullr 399333.291887304978445 4211980.487859229557216 437913.292 4177180.488 CORINE_3211_Madonie_30m.tif CORINE_3211_Madonie_30m_cut.tif
 
 
 
