@@ -179,13 +179,12 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 
 	if ( c->heights[height].ages[age].species[species].phenology == D)
 	{
-		Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		Log("- Vegetative Months =  %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 	}
 	else
 	{
-		Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		Log("- Vegetative Months = %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 	}
-	Log("- Vegetative Months %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 
 	if (settings->version == 's')
 	{

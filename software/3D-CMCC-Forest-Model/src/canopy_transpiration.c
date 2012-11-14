@@ -7,7 +7,7 @@
 #include "types.h"
 
 
-extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month,  int DaysInMonth, float vpd)
+extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month,  int DaysInMonth, float vpd, int height)
 {
 	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
@@ -22,7 +22,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float Etransp;
 	static float DailyTransp;
 	static float MonthTransp;
-	static float Net_Radiation;
+
 
 
 	float alpha_evapo = 0.65;
@@ -44,7 +44,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//Log("Canopy Conductance  = %g\n", CanCond);
 
-	/*Canopy Traspiration*/
+	/*Canopy Transpiration*/
 
 	// Penman-Monteith equation for computing canopy transpiration
 	// in kg/m2/day, which is converted to mm/day.
@@ -54,17 +54,63 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	duv = (1.0 + e20 + s->value[BLCOND] / CanCond);
 	//Log("duv = %g\n", duv);
 
-	//10 july 2012
+	//10 July 2012
 	//net radiation should be takes into account of the ALBEDO effect
 	//for APAR the ALBEDO is 1/3 as large for PAR because less PAR is reflected than NetRad
 	//see Biome-BGC 4.2 tech report
-	Etransp = (e20 * (Net_Radiation * ( 1 - s->value[MAXALB])) + defTerm) / duv;
-	Log("Etransp con ALBEDO = %g J/m^2/sec\n", Etransp);
-	Log("NET RADIATION with ALBEDO = %g \n", Net_Radiation * (1 - s->value[MAXALB]));
 
-	Etransp = (e20 * Net_Radiation + defTerm) / duv;  // in J/m2/s
-	Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-	Log("NET RADIATION = %g \n", Net_Radiation);
+
+	/*
+	Etransp = (e20 * (c->net_radiation * ( 1 - s->value[MAXALB])) + defTerm) / duv;
+	Log("Etransp con ALBEDO = %g J/m^2/sec\n", Etransp);
+	Log("NET RADIATION with ALBEDO = %g \n", c->net_radiation * (1 - s->value[MAXALB]));
+	 */
+
+	switch (c->monthly_layer_number)
+	{
+	case 1:
+		Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+		Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+		Log("NET RADIATION = %g \n", c->net_radiation);
+		break;
+	case 2:
+		if ( c->heights[height].z == c->top_layer )
+		{
+			Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+			Log("NET RADIATION = %g \n", c->net_radiation);
+		}
+		else
+		{
+			Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+			Log("NET RADIATION = %g \n", c->net_radiation);
+		}
+		break;
+	case 3:
+		if ( c->heights[height].z == c->top_layer )
+		{
+			Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+			Log("NET RADIATION = %g \n", c->net_radiation);
+		}
+		if ( c->heights[height].z == c->top_layer - 1 )
+		{
+			Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+			Log("NET RADIATION = %g \n", c->net_radiation);
+		}
+		else
+		{
+			Etransp = (e20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
+			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+			Log("NET RADIATION = %g \n", c->net_radiation);
+		}
+
+		break;
+	}
+
+
 
 	CanopyTranspiration = Etransp / lambda * c->daylength;         // converted to kg-mm H2o/m2/day
 	//1Kg m^2 H2o correspond to 1mm H2o

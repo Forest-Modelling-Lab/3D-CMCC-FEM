@@ -33,6 +33,7 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	partitioning-allocation.c\
 	peak_lai.c\
 	photosynthesis.c\
+	renovation.c\
 	soil_evaporation.c\
 	sort.c\
 	structure.c\

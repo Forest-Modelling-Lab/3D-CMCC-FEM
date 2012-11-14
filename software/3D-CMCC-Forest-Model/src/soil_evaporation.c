@@ -18,13 +18,6 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
 
-
-	Log("\nthere is a bug in the Net Radiation that model uses \nit should get not the radiation for this layer but for the lowers\n\n");
-
-	//PotEvap = (e20 / (e20 + PsycConst )) * Net_Radiation / lambda;
-	//Log("Net radiation for soil evaporation = %g \n", Net_Radiation);
-
-	//todo: improve see line 34 and 38
 	if (c->monthly_layer_number != 0)
 	{
 		switch (c->monthly_layer_number)

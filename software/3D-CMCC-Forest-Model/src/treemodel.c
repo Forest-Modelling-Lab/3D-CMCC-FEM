@@ -227,7 +227,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
 
-								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd);
+								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd, height);
 
 
 								/*Canopy evaporation of intercepted rainfall*/
@@ -437,7 +437,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
-							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd);
+							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd, height);
 
 							/*Canopy evaporation of intercepted rainfall*/
 							if ( met[month].rain > 0 )
