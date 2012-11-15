@@ -79,9 +79,11 @@ RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Be sure to set the right arguments passed to the project 
 
-Example usage:
-into bin directory:
-./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/input.txt -m ../input/2007.txt,../input/2008.txt -s ../input/site.txt -c ../input/settings.txt
+# Example usage:
+# Go into into bin directory:
+cd bin
+# Run executable with default parameters:
+./3D_CMCC_Forest_Model -i ../input -o ../output/output.txt -d ../input/1526_962_input.txt -m ../input/1526_962_2007.txt,../input/1526_962_2008.txt -s ../input/site.txt -c ../input/settings.txt
 
 
 the model runs monthly starting from the row 0,0 -> 0,n and then starts to process a new row
