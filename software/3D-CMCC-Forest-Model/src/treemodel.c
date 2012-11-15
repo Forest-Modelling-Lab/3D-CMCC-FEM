@@ -241,15 +241,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								{
 									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
-
-									//m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
-									//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 								}
 
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
-
-								/* Soil Water Balance*/
-								Log("\n\n-----------------------------------------------\n");
 
 								Get_soil_water_balance (&m->cells[cell]);
 
@@ -313,15 +307,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									m->cells[cell].available_soil_water -=  m->cells[cell].soil_evaporation;
 									//Log("Available Soil Water at month %d years %d with LPJ soil evaporation = %g mm\n",month, years, m->cells[cell].available_soil_water);
 
-									m->cells[cell].total_yearly_soil_evaporation += m->cells[cell].soil_evaporation;
-									Log("Total Soil Evaporation = %g mm\n", m->cells[cell].total_yearly_soil_evaporation);
-
 								}
 								Log("Available Soil Water at month %d year %d = %g mm\n",month, years, m->cells[cell].available_soil_water);
 
 								Log("*****************************************************************************\n");
 								Log("*****************************************************************************\n");
-
 							}
 						}
 						//evergreen
@@ -329,11 +319,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						{
 							//vegetative period is always equal to 1 for evergreen
 
-							Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
+							Log("*****VEGETATIVE PERIOD FOR %s SPECIES MONTH %d*****\n", m->cells[cell].heights[height].ages[age].species[species].name, szMonth[month] );
 
 							Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 
-							Log("Month = %s\n", szMonth[month]);
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 							Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
@@ -346,20 +335,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							{
 								Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 										m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
-
-								//m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
-								//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 							}
 
 							Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
 
-							/* Soil Water Balance*/
-							Log("\n\n-----------------------------------------------\n");
-
 							Get_soil_water_balance (&m->cells[cell]);
-
-							/*reset Evapotranspiration*/
-							m->cells[cell].evapotranspiration = 0;
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], height);
 
@@ -379,9 +359,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
 							}
 						}
-
-
-
 
 						/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
 
@@ -410,7 +387,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             //FRUIT ESTABLISHMENT
                             if (Yearly_Rain > m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN])
                             {
-                            //decidere se pssare numero di semi da LPJ o dall'Equazione Logistica
+                            //decidere se passare numero di semi da LPJ o dall'Equazione Logistica
                             m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Get_Establishment_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], Light_Absorb_for_establishment);
                             Log("Saplings Number from LPJ = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP]);
                             }
@@ -433,12 +410,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 
-
 							/*MORTALITY*/
 							//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-
 							Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
-
 
 							//todo
 							//WHEN MORTALITY OCCURED IN MULTILAYERED FOREST MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
@@ -619,7 +593,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 					}
 					else
 					{
-						if( month == 11)
+						if( month == DECEMBER)
 						{
 							Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							Log("SAPLINGS\n");
@@ -667,14 +641,15 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Log("NO Light for Establishment\n");
 								}
 							}
-							/*
+/*
 	                        if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 	                        {
 	                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
 	                        Saplings_counter -= 1;
 	                        }
-							 */
+	                        */
+
 
 							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 						}

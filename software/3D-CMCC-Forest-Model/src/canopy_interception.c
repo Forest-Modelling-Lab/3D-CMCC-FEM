@@ -39,10 +39,6 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
 		}
 
-		//Rainfall intercepted
-		//heighest height class
-		//interception for the highest of the the dominant class
-		//todo: RIFARE TUTTA QUESTA PARTE
 		if (c->dominant_veg_counter == 1)
 		{
 			Log("Highest class\n");
