@@ -853,6 +853,7 @@ extern void Get_total_class_level_biomass (SPECIES *);
 extern void Get_renovation (CELL *, HEIGHT *, SPECIES *);
 extern void Get_WUE (SPECIES *);
 extern void Set_tree_period (SPECIES *, AGE *a, CELL *);
+extern void Get_monthly_veg_counter (CELL *, SPECIES * , int);
 
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
@@ -860,6 +861,9 @@ extern void Reset_annual_cumulative_variables (CELL *, const int);
 extern void Get_initialization_biomass_data (SPECIES *const);
 
 extern void Choose_management (CELL *, SPECIES *, int , int );
+
+
+extern void Get_canopy_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
 
 
 

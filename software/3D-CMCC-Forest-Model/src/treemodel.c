@@ -40,9 +40,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 	/*EVAPOTRASPIRATION*/
-	static float RainIntercepted;
 	//static float thermic_sum;
-	static float lessrain;
 
 	/*fruit*/
 	/*logistic equation*/
@@ -150,9 +148,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Print_met_data (met, vpd,  month,  m->cells[cell].daylength);
 
 		//for each month of simulation the model recomputes the number of classes in vegetative period
+		/*
 		m->cells[cell].dominant_veg_counter = 0;
 		m->cells[cell].dominated_veg_counter = 0;
 		m->cells[cell].subdominated_veg_counter = 0;
+		 */
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -178,6 +178,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
 					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
+
+					Get_monthly_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
@@ -234,121 +236,17 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd, height);
 
-
-								/*Canopy evaporation of intercepted rainfall*/
-								if ( met[month].rain > 0 )
-								{
-									Get_frac_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
-
-									//taking into account cell coverage
-									if ( m->cells[cell].heights[height].z == m->cells[cell].top_layer)
-									{
-
-										//Rainfall intercepted
-										//heighest height class
-										//interception for the highest of the the dominant class
-										//todo: RIFARE TUTTA QUESTA PARTE
-										if (m->cells[cell].dominant_veg_counter == 1)
-										{
-											RainIntercepted = met[month].rain
-													* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-													                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-											Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-											Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
-
-
-
-											/*Evapotranspiration*/
-
-											m->cells[cell].evapotranspiration = (met[month].rain
-													* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-													                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-													                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-											//control
-											if (RainIntercepted >= met[month].rain)
-											{
-												RainIntercepted = met[month].rain;
-												Log("Rain is completely intercepted by the highest height class in the dominant layer\n");
-												lessrain = 0;
-											}
-											else
-											{
-												lessrain = met[month].rain - RainIntercepted;
-											}
-										}
-										else
-										{
-											Log("Less Rain = %g mm\n", lessrain);
-											if (lessrain <= 0)
-											{
-												Log("Rainfall is completely intercepted from the upper layer\n");
-											}
-											else
-											{
-												RainIntercepted = lessrain
-														* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-														                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-												Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-											}
-
-											m->cells[cell].evapotranspiration = (lessrain
-													* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-													                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-													                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-											lessrain -= RainIntercepted;
-
-										}
-									}
-									//dominated layers
-									else
-									{
-										Get_frac_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
-
-										Log("Rain Interception rate for dominated layer = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC] );
-
-										if (lessrain > 0)
-										{
-											RainIntercepted = lessrain
-													* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-													                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-											Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-										}
-										else
-										{
-											RainIntercepted = 0;
-											Log("No Rainfall for this layer\n");
-										}
-
-										m->cells[cell].evapotranspiration = (lessrain
-												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-										lessrain -= RainIntercepted;
-									}
-								}
-								else
-								{
-									Log("NO RAIN-NO INTERCEPTION\n");
-									m->cells[cell].evapotranspiration =  m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP];
-								}
 								//compute soil evaporation in the last loop of height
 								if( height == 0)
 								{
 									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
 
-									m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
-									Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
+									//m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
+									//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 								}
 
-
-
-								m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] += m->cells[cell].evapotranspiration;
-								Log("Cumulated Evapotranspiration for this layer = %g mm\n", m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION]);
-
-								m->cells[cell].total_yearly_evapotransipration += m->cells[cell].evapotranspiration;
-								Log("TOTAL Cumulated Evapotranspiration = %g mm\n",m->cells[cell].total_yearly_evapotransipration);
-
+								Get_canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
 
 								/* Soil Water Balance*/
 								Log("\n\n-----------------------------------------------\n");
@@ -356,7 +254,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Get_soil_water_balance (&m->cells[cell]);
 
 								/*reset Evapotranspiration*/
-								m->cells[cell].evapotranspiration = 0;
+								//m->cells[cell].evapotranspiration = 0;
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, DaysInMonth[month], height);
 
@@ -445,118 +343,17 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
 							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd, height);
 
-							/*Canopy evaporation of intercepted rainfall*/
-							if ( met[month].rain > 0 )
-							{
-								Get_frac_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
-								//taking into account cell coverage
-								if ( m->cells[cell].heights[height].z == m->cells[cell].heights[height].top_layer)
-								{
-
-									//Rainfall intercepted
-									//heighest height class
-									//interception for the highest of the the dominant class
-									if (m->cells[cell].dominant_veg_counter == 1)
-									{
-										RainIntercepted = met[month].rain
-												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-										Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-										Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
-
-										m->cells[cell].evapotranspiration = ((met[month].rain
-												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC] )
-												+ m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-												* m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-										//control
-										if (RainIntercepted >= met[month].rain)
-										{
-											RainIntercepted = met[month].rain;
-											Log("Rain is completely intercepted by the highest height class in the dominant layer\n");
-											lessrain = 0;
-										}
-										else
-										{
-											lessrain = met[month].rain - RainIntercepted;
-										}
-									}
-									else
-									{
-										Log("Less Rain = %g mm\n", lessrain);
-										if (lessrain <= 0)
-										{
-											Log("Rainfall is completely intercepted from the upper layer\n");
-										}
-										else
-										{
-											RainIntercepted = lessrain
-													* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-													                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-											Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-										}
-
-										m->cells[cell].evapotranspiration = (lessrain
-												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
-
-										lessrain -= RainIntercepted;
-
-									}
-								}
-								//dominated layers
-								else
-								{
-									Get_frac_canopy_interception ( &m->cells[cell].heights[height].ages[age].species[species], met, month);
-
-									Log("Rain Interception rate for dominated layer = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC] );
-
-									if (lessrain > 0)
-									{
-										RainIntercepted = lessrain
-												* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-												                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-										Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-									}
-									else
-									{
-										RainIntercepted = 0;
-										Log("No Rainfall for this layer\n");
-									}
-
-									m->cells[cell].evapotranspiration = (lessrain
-											* m->cells[cell].heights[height].ages[age].species[species].value[FRAC_RAIN_INTERC]
-											                                                                  + m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP])
-											                                                                  * m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
-									lessrain -= RainIntercepted;
-
-								}
-							}
-							else
-							{
-								Log("NO RAIN-NO INTERCEPTION\n");
-								m->cells[cell].evapotranspiration =  m->cells[cell].heights[height].ages[age].species[species].value[MONTH_TRANSP];
-							}
-
 							//compute soil evaporation in the last loop of height
 							if( height == 0)
 							{
 								Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 										m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
 
-								m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
-								Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
+								//m->cells[cell].evapotranspiration += m->cells[cell].soil_evaporation;
+								//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 							}
 
-
-							m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] += m->cells[cell].evapotranspiration;
-							Log("Cumulated Evapotranspiration for this layer = %g mm\n", m->cells[cell].heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION]);
-
-							m->cells[cell].total_yearly_evapotransipration += m->cells[cell].evapotranspiration;
-							Log("TOTAL Cumulated Evapotranspiration = %g mm\n",m->cells[cell].total_yearly_evapotransipration);
-
+							Get_canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
 
 							/* Soil Water Balance*/
 							Log("\n\n-----------------------------------------------\n");
@@ -670,7 +467,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Get_stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 							}
 
-                            //Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
+							//Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
 							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
@@ -890,6 +687,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("****************END OF AGE CLASS***************\n");
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
+
+		m->cells[cell].dominant_veg_counter = 0;
+		m->cells[cell].dominated_veg_counter = 0;
+		m->cells[cell].subdominated_veg_counter = 0;
+
 		//}
 		//else
 		//{

@@ -706,8 +706,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
 				//monthly rate of foliage reduction
 
-				//+1 perchè:
-				//esempio: non so come scriverlo
+				//currently the model considers a linear reduction in leaf fall
+				//it should be a negative sigmoid function
+				//todo: create a sigmoid function
 				foliage_reduction_rate = 1.0 /  (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
 				Log("foliage reduction rate = %g \n", foliage_reduction_rate);
 				s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
@@ -1035,8 +1036,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
 				//monthly rate of foliage reduction
 
-				//+1 perchè:
-				//esempio: non so come scriverlo
+				//currently the model considers a linear reduction in leaf fall
 				foliage_reduction_rate = 1.0 /  (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
 				Log("foliage reduction rate = %g \n", foliage_reduction_rate);
 				s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
