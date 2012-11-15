@@ -59,7 +59,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			}
 
 			//Evapotranspiration
-			c->evapotranspiration = (((met[month].rain * s->value[FRAC_RAIN_INTERC]) + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
 			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 		}
@@ -78,7 +78,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			}
 
 
-			c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
 			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 			lessrain -= RainIntercepted;
@@ -123,7 +123,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("No Rainfall for this layer\n");
 		}
 
-		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP])* s->value[CANOPY_COVER_DBHDC]);
+		c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
 		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 		lessrain -= RainIntercepted;
 	}
@@ -163,7 +163,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("No Rainfall for this layer\n");
 		}
 
-		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+		c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
 		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 		lessrain -= RainIntercepted;
 
