@@ -63,8 +63,8 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			}
 
 			//Evapotranspiration
-			c->evapotranspiration = ((met[month].rain * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
-			Log("Class evapotranspiration = %g\,", c->evapotranspiration):
+			c->evapotranspiration = (((met[month].rain * s->value[FRAC_RAIN_INTERC]) + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 		}
 		//top layer but not highest tree height class
@@ -83,7 +83,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 
 
 			c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
-			Log("Class evapotranspiration = %g\,", c->evapotranspiration):
+			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 			lessrain -= RainIntercepted;
 
@@ -128,7 +128,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		}
 
 		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP])* s->value[CANOPY_COVER_DBHDC]);
-		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
+		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 		lessrain -= RainIntercepted;
 	}
 	else
@@ -168,7 +168,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		}
 
 		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
-		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
+		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 		lessrain -= RainIntercepted;
 
 	}
@@ -176,12 +176,12 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 	if (height == 0)
 	{
 		c->evapotranspiration += c->soil_evaporation;
-		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
+		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 	}
 
 	//todo mettere nella func Get_canopye evapotrans
 	s->value[MONTHLY_EVAPOTRANSPIRATION] += c->evapotranspiration;
-	Log("Cumulated Evapotranspiration for this layer = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
+	Log("Cumulated Evapotranspiration for this class = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
 
 	c->total_yearly_evapotransipration += c->evapotranspiration;
 	//Log("TOTAL Cumulated Evapotranspiration = %g mm\n",c->total_yearly_evapotransipration);

@@ -164,6 +164,11 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, c->x, c->y, c->total_yearly_evapotransipration);
 	Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  c->available_soil_water);
 
+	c->gpp = 0;
+	c->npp = 0;
+	c->total_yearly_evapotransipration = 0;
+
+
 
 	/*
     Total_Run_Evapotranspiration +=  (c->total_yearly_evapotransipration + c->total_yearly_soil_evaporation );

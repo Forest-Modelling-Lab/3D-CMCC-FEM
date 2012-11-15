@@ -619,16 +619,20 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
 				current_height = c->heights[height].value;
-
 				if (c->heights_count > 1 )
 				{
+					if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					{
+						c->monthly_layer_number += 1;
+						previous_height = current_height;
+					}
 					if ((previous_height - current_height ) > settings->layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 					{
 						c->monthly_layer_number += 1;
+						previous_height = current_height;
 					}
-					previous_height = current_height;
 				}
-				else if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+				if (c->heights_count == 1  && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					c->monthly_layer_number = 1;
 				}
@@ -636,7 +640,7 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 		}
 	}
 	Log("number of vegetative layers = %d\n", c->monthly_layer_number);
-	Log("height count = %d \n", c->heights_count);
+	//Log("height count = %d \n", c->heights_count);
 }
 
 
@@ -667,35 +671,60 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 			{
 				if ( c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
-					//todo: credo sia sbagliata
-					Log("Vegetating layers\n");
-					switch (c->heights[height].z)
+					if (c->monthly_layer_number == 3)
 					{
-					case 2:
-						Log("z = %d\n", c->heights[height].z);
-						c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						Log("Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
-						break;
-					case 1:
-						Log("z = %d\n", c->heights[height].z);
-						c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-						break;
-					case 0:
-						Log("z = %d\n", c->heights[height].z);
-						c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
-						break;
+						switch (c->heights[height].z)
+						{
+						case 2:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
+							break;
+						case 1:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+							break;
+						case 0:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+							break;
+						}
+					}
+					if (c->monthly_layer_number == 2)
+					{
+						switch (c->heights[height].z)
+						{
+						case 1:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+							break;
+						case 0:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+							break;
+						}
+					}
+					else
+					{
+						//Log("z = %d\n", c->heights[height].z);
+						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
 					}
 				}
 				else
 				{
-					Log("Un-Vegetating layers\n");
-					Log("z = %d\n", c->heights[height].z);
+					//Log("Un-Vegetating layers\n");
+					//Log("z = %d\n", c->heights[height].z);
 				}
 			}
+
 		}
 	}
+
 	Log("Monthly layer number = %d\n", c->monthly_layer_number);
 
 	if (c->heights_count == 1)

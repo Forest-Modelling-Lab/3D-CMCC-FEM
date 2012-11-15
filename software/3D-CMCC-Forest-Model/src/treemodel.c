@@ -262,14 +262,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
-								if (m->cells[cell].heights_count == 0)
+								if (height == 0)
 								{
 									Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
 									Log("PAR OVER CANOPY = %g \n",  m->cells[cell].par_over_dominant_canopy);
 									Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
 									Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
-
-
 								}
 								if (settings->version == 'u')
 								{
