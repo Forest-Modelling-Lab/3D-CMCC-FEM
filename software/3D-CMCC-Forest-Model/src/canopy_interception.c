@@ -1,4 +1,4 @@
-/*canopy_interception.c*/
+/*canopy_evapotranspiration.c*/
 
 /* includes */
 #include <stdio.h>
@@ -60,7 +60,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 
 			//Evapotranspiration
 			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
-			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 		}
 		//top layer but not highest tree height class
@@ -70,6 +70,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			if (lessrain <= 0)
 			{
 				Log("Rainfall is completely intercepted from the upper layer\n");
+				RainIntercepted = 0;
 			}
 			else
 			{
