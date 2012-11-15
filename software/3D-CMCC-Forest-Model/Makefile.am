@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-EXTRA_DIST = doc/3D-CMCC-FEM-v.4_User_Guide.txt bin input output
+EXTRA_DIST = doc/*_User_Guide.txt bin input output
 
 dist-hook:
 	cp src/3D_CMCC_Forest_Model $(distdir)/bin
