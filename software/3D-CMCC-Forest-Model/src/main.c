@@ -14,7 +14,7 @@
 #include "types.h"
 
 /* constants */
-#define PROGRAM_VERSION	"v4.0 "
+#define PROGRAM_VERSION	"4.0"
 
 /* */
 enum {	MONTH = 0,
@@ -60,7 +60,7 @@ int log_enabled		=	1,	// default is on
 static FILES *files_founded;
 
 /* strings */
-static const char banner[] =	"\n\n3D-CMCC Forest Model "PROGRAM_VERSION"\n\n"
+static const char banner[] =	"\n\n3D-CMCC Forest Model v."PROGRAM_VERSION"\n\n"
 		"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"(use -h parameter for more information)\n\n\n";
