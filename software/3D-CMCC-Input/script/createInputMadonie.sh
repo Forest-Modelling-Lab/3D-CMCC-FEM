@@ -18,7 +18,7 @@ AOI="Parco delle Madonie (Sicily)"
 BIN_DIR="$( dirname ${0} )/../bin"
 WORK_DIR="$( dirname ${0} )/../output/working"
 MODULES=(remap getLAI applyMask)
-IMG_ALL=(Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
+IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
 IMG_SELECTED=()
 
 
@@ -29,12 +29,13 @@ DEBUG="y"
 
 ### Global functions definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 usage(){
-	echo ""
 	echo "Usage: ${0} [IMG_TO_PROCESS]"
 	echo "       - IMG_TO_PROCESS is an optional array to define which images to process. If omitted, every image will be created."
-	echo "       - Accepted values for the array are (every other value it is ignored):"
+	echo "       - Accepted values for the array are (every other value will be ignored):"
 	echo "             Y_planted, Species, Phenology, Management, NumHa, AvDBH, Height, Wf, Wrc, Ws, SolarRad, Avg_Temp, VPD, Precip, LAI"
 	echo "       - NOTE: Remeber to set up and fill correctly the BIN_DIR, directory where the C modules are stored."
+	echo ""
+	echo "Run example: ${0} Phenology LAI Wrc NumHa"
 	echo ""
 	exit 40
 }
