@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Description:    createInputForSE.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
@@ -208,14 +208,12 @@ for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
 	log "${MSG} ...\n"	
 	${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
 	check "${MSG} failed on ${OUTPUT_05}.\n"
-done
-
 	
-	#cp ${OUT_MSK}/${SCENE_ID}-${PROD_DATE}-LAI_crop.tif ${FINAL_OUTPUT}
-	#if [ ${?} -ne 0 ] ; then
-		#	log "Copy of LAI cropped image into output dir failed.\n"
-		#	error "Copy of LAI cropped image into output dir failed."
-	#fi
+	MSG="Copy of corine remapped image into output dir"
+	log "${MSG} ...\n"
+	cp ${OUTPUT_06} ${OUT_00}
+	check "${MSG} failed.\n"
+done
 	
 	# Clean input/working and packet dir
 	#if [ ${DEBUG} == "n" ] ; then
