@@ -1,5 +1,7 @@
 # Under Linux/MacOS You can build and run this project using autotools instead of Code::Blocks or Eclipse IDE Platforms
 
+BE SURE THAT ALL GOT MY SAME PC ARCHITECTURE!!!!
+
 - be shure to have installed autoconf, automake and libtool packages
 - go into top level project directory
 - type the following to obtain a configure file:

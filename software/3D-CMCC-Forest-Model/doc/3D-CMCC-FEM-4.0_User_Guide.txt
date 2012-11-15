@@ -1,5 +1,5 @@
 Nov 2012
-User’s Guide for 3D-CMCC-FEM, Version 4
+User’s Guide for 3D-CMCC-FEM, Version 4 for 64 bit 
 Source:
 
 Alessio Collalti
@@ -59,7 +59,7 @@ CODE CHARACTERISTIC
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 3D-CMCC-FEM is primarily developed on UNIX-Linux, Ubuntu 1x.x with Code::Blocks or Eclipse IDE Platforms and is compiled using GNU GCC 4.7.2
 
-IMPORTANT: before execute clean all object (.o) files and rebuild the code
+IMPORTANT: BE SURE TO EXECUTE 3D-CMCC FEM ON A LINUX MACHINE WITH ARCHITECTURE X86_64 (64 bit)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Usage
