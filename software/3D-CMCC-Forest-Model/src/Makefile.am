@@ -4,7 +4,7 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	allometry.c\
 	biomass.c\
 	canopy_cover.c\
-	canopy_interception.c\
+	canopy_evapotranspiration.c\
 	canopy_transpiration.c\
 	clearcut.c\
 	common.c\
