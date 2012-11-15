@@ -176,7 +176,6 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 	}
 
-	//todo mettere nella func Get_canopye evapotrans
 	s->value[MONTHLY_EVAPOTRANSPIRATION] += c->evapotranspiration;
 	Log("Cumulated Evapotranspiration for this class = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
 
