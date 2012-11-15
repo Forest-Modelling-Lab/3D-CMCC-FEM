@@ -21,7 +21,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float duv;                      // 'div' in 3pg
 	static float Etransp;
 	static float DailyTransp;
-	static float MonthTransp;
+	//static float MonthTransp;
 
 
 

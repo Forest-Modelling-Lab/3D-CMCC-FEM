@@ -36,10 +36,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 	//compute VPD
 	static float vpd;
-	/*WATER BALANCE*/
 
-
-	/*EVAPOTRASPIRATION*/
 	//static float thermic_sum;
 
 	/*fruit*/

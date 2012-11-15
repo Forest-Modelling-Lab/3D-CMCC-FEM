@@ -18,23 +18,36 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
 
-	//todo: CONTROLLARE PRENDE VALORI ERRATI
-	//in light.c fargli calcolare Net_radiatio_for_soil come per la par
+
+
+	//todo: a better function that also take into account gaps
+	//model uses Net radiation of last height class in last layer * its percentage of light transmitted
 	if (c->monthly_layer_number != 0)
 	{
 		switch (c->monthly_layer_number)
 		{
 		case 3:
-			Net_Radiation = Net_Radiation_for_subdominated;
-			Log("Using Net_Radiation_for_dominated \n");
+			if (settings->version == 's')
+			{
+				Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * met[month].ndvi_lai));
+			}
+			else
+			{
+				Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * s->value[LAI]));
+			}
 			break;
 		case 2:
-			Net_Radiation = Net_Radiation_for_subdominated;
-			Log("Using Net_Radiation_for_dominated \n");
+			if (settings->version == 's')
+			{
+				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
+			}
+			else
+			{
+				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * s->value[LAI]));
+			}
 			break;
 		case 1:
 			Net_Radiation = Net_Radiation_for_dominated;
-			Log("Using Net_Radiation_for_dominated \n");
 			break;
 		}
 	}
