@@ -1,4 +1,4 @@
-# Under Linux/MacOS You can build and run this project using autotools instead of Code::Blocks: or Eclipse IDE Platform
+# Under Linux/MacOS You can build and run this project using autotools instead of Code::Blocks or Eclipse IDE Platforms
 
 - be shure to have installed autoconf, automake and libtool packages
 - go into top level project directory
@@ -14,15 +14,13 @@ make
 make clean
 - to launch unit test, to check if the executable produced is working or not:
 make check
-##### NOT WORKING YET!!! #####
-- to move executable produced from src directory into bin directory:
-make install
-##############################
+- to create a distribution package:
+make dist
 
 # Notes:
 - When you run "autoreconf -i", a lot of files and dirs are produced.
 Do not get worried: the build system needs them, but you do not have to care about them.
-They are set not to be considered by subversion: you can delete them and recreate them with "autoreconf -i".
+They are set not to be considered by subversion: you can delete and recreate them with "autoreconf -i".
 The only autotools files versioned that you do not have to delete are:
 -- configure.ac
 -- Makefile.am
