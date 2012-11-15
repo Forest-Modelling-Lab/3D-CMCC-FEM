@@ -6,46 +6,10 @@
 #include "math.h"
 #include "types.h"
 
-//compute fraction of rain intercepted by canopy
-
-extern void Get_frac_canopy_interception (SPECIES *const s, const MET_DATA *const met, int month)
-{
-
-	Log("\n GET_CANOPY_INTERCEPTION_ROUTINE \n");
-
-	//interception is a rate not a quantity
-
-
-	//see also CLM model for rain interception
-	/*
-	Interception = 1 - exp (-0.5 * m->cells[cell].heights[height].ages[age].species[species].value[LAI])
-	 */
 
 
 
-	if (s->value[LAIMAXINTCPTN] <= 0)
-	{
-		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN];
-		Log("Frac Rain Interception = MAXINTCPTN\n");
-		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
-	}
-	else
-	{
-		if (settings->version == 's')
-		{
-			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
-		}
-		else
-		{
-			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
-		}
-		Log("Frac Rain Interception not use MAXINTCPTN\n");
-		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
-	}
-}
-
-
-extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int height)
+extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int height)
 {
 
 	float RainIntercepted;
@@ -100,6 +64,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 
 			//Evapotranspiration
 			c->evapotranspiration = ((met[month].rain * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+			Log("Class evapotranspiration = %g\,", c->evapotranspiration):
 
 		}
 		//top layer but not highest tree height class
@@ -118,6 +83,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 
 
 			c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+			Log("Class evapotranspiration = %g\,", c->evapotranspiration):
 
 			lessrain -= RainIntercepted;
 
@@ -162,6 +128,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 		}
 
 		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP])* s->value[CANOPY_COVER_DBHDC]);
+		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
 		lessrain -= RainIntercepted;
 	}
 	else
@@ -201,6 +168,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 		}
 
 		c->evapotranspiration += ((RainIntercepted * s->value[FRAC_RAIN_INTERC] + s->value[MONTH_TRANSP]) * s->value[CANOPY_COVER_DBHDC]);
+		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
 		lessrain -= RainIntercepted;
 
 	}
@@ -208,6 +176,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 	if (height == 0)
 	{
 		c->evapotranspiration += c->soil_evaporation;
+		Log("Class evapotranspiration = %g\,", c->evapotranspiration):
 	}
 
 	//todo mettere nella func Get_canopye evapotrans
@@ -217,4 +186,42 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *c, const MET_
 	c->total_yearly_evapotransipration += c->evapotranspiration;
 	//Log("TOTAL Cumulated Evapotranspiration = %g mm\n",c->total_yearly_evapotransipration);
 
+}
+
+//compute fraction of rain intercepted by canopy
+
+extern void Get_frac_canopy_interception (SPECIES *const s, const MET_DATA *const met, int month)
+{
+
+	Log("\n GET_CANOPY_INTERCEPTION_ROUTINE \n");
+
+	//interception is a rate not a quantity
+
+
+	//see also CLM model for rain interception
+	/*
+	Interception = 1 - exp (-0.5 * m->cells[cell].heights[height].ages[age].species[species].value[LAI])
+	 */
+
+
+
+	if (s->value[LAIMAXINTCPTN] <= 0)
+	{
+		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN];
+		Log("Frac Rain Interception = MAXINTCPTN\n");
+		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
+	}
+	else
+	{
+		if (settings->version == 's')
+		{
+			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+		}
+		else
+		{
+			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
+		}
+		Log("Frac Rain Interception not use MAXINTCPTN\n");
+		Log("Frac Rain Interception = %g \n", s->value[FRAC_RAIN_INTERC]);
+	}
 }

@@ -863,7 +863,7 @@ extern void Get_initialization_biomass_data (SPECIES *const);
 extern void Choose_management (CELL *, SPECIES *, int , int );
 
 
-extern void Get_canopy_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
+extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
 
 
 

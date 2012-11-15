@@ -246,7 +246,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 								}
 
-								Get_canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
+								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
 
 								/* Soil Water Balance*/
 								Log("\n\n-----------------------------------------------\n");
@@ -353,7 +353,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//Log("Monthly Evapotranspiration for layer %d at month %s = %g \n",m->cells[cell].heights[height].z, szMonth[month], m->cells[cell].evapotranspiration );
 							}
 
-							Get_canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
+							Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
 
 							/* Soil Water Balance*/
 							Log("\n\n-----------------------------------------------\n");
