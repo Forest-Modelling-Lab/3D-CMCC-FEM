@@ -322,6 +322,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 							Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
+							Log("LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);

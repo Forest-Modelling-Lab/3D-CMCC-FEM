@@ -550,6 +550,7 @@ typedef struct {
 	PREC wrf;
 	PREC ws;
 	PREC wres;
+	PREC lai;
 
 } ROW;
 
