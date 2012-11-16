@@ -1446,10 +1446,31 @@ int main(int argc, char *argv[])
 
 			for ( month = 0; month < MONTHS; month++)
 			{
-				//met_summary(met);
+				//todo make all models run in main for each cell
+				//RUN FOR TREEMODEL
 				if ( !tree_model (m, yos, years, month, years_of_simulation) )
 				{
 					Log("tree model failed.");
+				}
+				else
+				{
+					puts(msg_ok);
+				}
+				/*
+				//RUN FOR CROPMODEL
+				if ( !tree_model (m, yos, years, month, years_of_simulation) )
+				{
+					Log("crop model failed.");
+				}
+				else
+				{
+					puts(msg_ok);
+				}
+				*/
+				//RUN FOR SOILMODEL
+				if ( !soil_model (m, yos, years, month, years_of_simulation) )
+				{
+					Log("soil model failed.");
 				}
 				else
 				{

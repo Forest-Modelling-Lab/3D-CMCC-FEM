@@ -87,8 +87,8 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.650498983" name="canopy_evapotranspiration.c" rcbsApplicability="disable" resourcePath="src/canopy_evapotranspiration.c" toolsToInvoke="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.787497955">
-						<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.787497955" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502"/>
+					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.1790749833" name="soilmodel.c" rcbsApplicability="disable" resourcePath="src/soilmodel.c" toolsToInvoke="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.373066101">
+						<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.373066101" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry excluding="src/garbage.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
