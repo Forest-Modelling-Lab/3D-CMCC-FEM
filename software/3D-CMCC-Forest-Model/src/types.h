@@ -859,7 +859,7 @@ extern void Get_monthly_veg_counter (CELL *, SPECIES * , int);
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
 
-extern void Get_initialization_biomass_data (SPECIES *const);
+extern void Get_initialization_biomass_data (SPECIES *, HEIGHT *);
 
 extern void Choose_management (CELL *, SPECIES *, int , int );
 

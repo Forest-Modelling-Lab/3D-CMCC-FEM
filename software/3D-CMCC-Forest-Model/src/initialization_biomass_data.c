@@ -11,7 +11,7 @@
 #include "math.h"
 #include "types.h"
 
-void Get_initialization_biomass_data (SPECIES *const s)
+void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 {
 
 	float sapwood_perc;
@@ -20,12 +20,17 @@ void Get_initialization_biomass_data (SPECIES *const s)
 	Log("No Biomass Data are available for model initialization \n");
 	Log("Generating input biomass data from DBH data...\n");
 
+	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] *  s->value[AVDBH]) , s->value[CRC]);
+	Log("-Tree Height using Chapman-Richard function = %g m\n", h->value);
+
 	//compute foliage biomass for evergreen
 
 	//compute stem biomass
 	s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER])))*s->value[STEMCONST];
 	s->value[BIOMASS_STEM_CTEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE];
 	Log("-Stem Biomass initialization data from DBH = %g \n", s->value[BIOMASS_STEM_CTEM]);
+
+
 
 	//compute coarse root biomass using root to shoot ratio
 	s->value[BIOMASS_ROOTS_COARSE_CTEM]  = s->value[BIOMASS_STEM_CTEM] * s->value[COARSE_ROOT_STEM];
