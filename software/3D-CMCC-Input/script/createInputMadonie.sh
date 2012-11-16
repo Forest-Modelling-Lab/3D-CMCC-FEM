@@ -377,6 +377,12 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     			gdal_translate -b ${IDX} ${INPUT_02} ${OUTPUT_01}
 				check "${MSG} failed.\n"
 				
+				OUTPUT_02="${WK_15}/NDVI_${DATE}.tif"
+				MSG="Divide every pixel value per 1000"
+				log "${MSG} ...\n"
+				${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
     			IDX=$(( ${IDX} + 1 ));
 			done < "${INPUT_01}"
     		
