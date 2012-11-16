@@ -249,6 +249,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 		a->species[a->species_count-1].counter[i] = INVALID_VALUE;
 	}
 	// set values
+
 	a->species[a->species_count-1].phenology = row->phenology;
 	a->species[a->species_count-1].management = row->management;
 	a->species[a->species_count-1].name = mystrdup(row->species);
@@ -325,6 +326,7 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	}
 
 	/* set values */
+	//m->cells[m->cells_count-1].landuse = row->landuse;
 	m->cells[m->cells_count-1].x = row->x;
 	m->cells[m->cells_count-1].y = row->y;
 	m->cells[m->cells_count-1].heights = NULL;

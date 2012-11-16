@@ -7,6 +7,15 @@
 
 #define NO_DATA -9999
 
+
+ /* enums */
+/*
+typedef enum {
+	F = 0,      //forest
+	C,          //crop
+} eLanduse;
+ */
+
 /* enums */
 typedef enum {
 	D = 0,      //deciduous
@@ -537,6 +546,7 @@ enum {
 typedef struct {
 	int x;
 	int y;
+	//eLanduse landuse;
 	int age;
 	char *species;
 	ePhenology phenology;
@@ -593,6 +603,8 @@ typedef struct {
 typedef struct {
 	PREC x;
 	PREC y;
+
+	//eLanduse landuse;
 
 	HEIGHT *heights;
 	int heights_count;

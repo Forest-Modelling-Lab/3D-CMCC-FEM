@@ -11,6 +11,7 @@
 enum {
 	X_COLUMN = 0,
 	Y_COLUMN,
+	//LANDUSE_COLUMN,
 	AGE_COLUMN,
 	SPECIES_COLUMN,
 	PHENOLOGY_COLUMN,
@@ -37,6 +38,7 @@ static const char dataset_delimiter[] = ",\r\n";
 static const char err_redundancy[] = "redundancy: var \"%s\" already founded at column %d.\n";
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
 static const char err_conversion[] = "error during conversion of \"%s\" value at row %d, column %d.\n";
+static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
 static const char err_bad_phenology_length[] =" bad phenology length at row %d, phenology must be 1 character.\n";
 static const char err_bad_phenology[] = "bad phenology %c at row %d\n";
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
@@ -50,10 +52,12 @@ extern const char err_out_of_memory[];
 extern const char err_unable_open_file[];
 
 /* */
+//new land use
 //version 3D-CMCC Forest Model "pre-spatial"
 static const char *header[COLUMNS] = {
 		"X",
 		"Y",
+		//"LU",  //land use type (F = Forest, C = crop)
 		"AGE",
 		"SPECIES",
 		"PHENOLOGY",
@@ -182,15 +186,51 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 		assigned = 0;
 		for ( token = mystrtok(buffer, dataset_delimiter, &p), y = 0; token; token = mystrtok(NULL, dataset_delimiter, &p), ++y ) {
 			/* put value at specified columns */
-			for ( i = 0; i < COLUMNS; i++ ) {
-				if ( y == columns[i] ) {
+			for ( i = 0; i < COLUMNS; i++ )
+			{
+				if ( y == columns[i] )
+				{
 					/* assigned */
 					++assigned;
 
 					/* check columns */
-					if ( SPECIES_COLUMN == i ) {
+
+					/*
+					if ( LANDUSE_COLUMN == i )
+					{
+						// check landuse length
+						if ( 1 != strlen(token) )
+						{
+							printf(err_bad_landuse_length, *rows_count);
+							free(columns);
+							free(rows);
+							fclose(f);
+							return NULL;
+						}
+
+						// check landuse char
+						//F = forest, C = crop
+						if ( ('F' == token[0]) || ('f' == token[0]) ) {
+							rows[*rows_count-1].landuse = F;
+						}
+							else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+							rows[*rows_count-1].landuse = C;
+						}
+						 else
+						{
+							printf(err_bad_landuse, token[0], *rows_count);
+							free(columns);
+							free(rows);
+							fclose(f);
+							return NULL;
+						}
+					}
+					 */
+					if ( SPECIES_COLUMN == i )
+					{
 						rows[*rows_count-1].species = malloc(strlen(token)+1);
-						if ( !rows[*rows_count-1].species ) {
+						if ( !rows[*rows_count-1].species )
+						{
 							puts(err_out_of_memory);
 							free(columns);
 							free(rows);
@@ -199,9 +239,12 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						}
 						strcpy(rows[*rows_count-1].species, token);
 						/* todo: add check for strcpy */
-					} else if ( PHENOLOGY_COLUMN == i ) {
+					}
+					else if ( PHENOLOGY_COLUMN == i )
+					{
 						/* check phenology length */
-						if ( 1 != strlen(token) ) {
+						if ( 1 != strlen(token) )
+						{
 							printf(err_bad_phenology_length, *rows_count);
 							free(columns);
 							free(rows);
@@ -221,9 +264,12 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							fclose(f);
 							return NULL;
 						}
-					} else if ( MANAGEMENT_COLUMN == i ) {
+					}
+					else if ( MANAGEMENT_COLUMN == i )
+					{
 						/* check management length */
-						if ( 1 != strlen(token) ) {
+						if ( 1 != strlen(token) )
+						{
 							printf(err_bad_management_length, *rows_count);
 							free(columns);
 							free(rows);
@@ -243,10 +289,13 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							fclose(f);
 							return NULL;
 						}
-					} else {
+					}
+					else
+					{
 						/* convert string to prec */
 						value = convert_string_to_prec(token, &error);
-						if ( error ) {
+						if ( error )
+						{
 							printf(err_conversion, token, *rows_count, y+1);
 							free(columns);
 							free(rows);
@@ -255,7 +304,8 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						}
 
 						/* convert nan to invalid value */
-						if ( value != value ) {
+						if ( value != value )
+						{
 							value = INVALID_VALUE;
 						}
 
@@ -496,7 +546,7 @@ int importSettingsFile(char *fileName)
 		ret = 3;
 	}
 
-		/*fprintf(stderr, "%c\n", settings->version);
+	/*fprintf(stderr, "%c\n", settings->version);
 		fprintf(stderr, "%f\n", settings->sizeCell);
 		fprintf(stderr, "%f\n", settings->dominant);
 		fprintf(stderr, "%f\n", settings->dominated);
