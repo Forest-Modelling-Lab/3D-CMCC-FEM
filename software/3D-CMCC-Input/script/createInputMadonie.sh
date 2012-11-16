@@ -190,6 +190,11 @@ log "${MSG} ...\n"
 ${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
 check "${MSG} failed on ${OUTPUT_02}.\n"
 
+MSG="Copy remapped AOI image into output dir"
+log "${MSG} ...\n"
+cp ${OUTPUT_02} ${OUT_00}
+check "${MSG} failed.\n"
+
 for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
 	MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
 	OUTPUT_04="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
@@ -209,21 +214,18 @@ for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
 	${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
 	check "${MSG} failed on ${OUTPUT_05}.\n"
 	
-	MSG="Copy of corine remapped image into output dir"
+	MSG="Copy corine remapped image into output dir"
 	log "${MSG} ...\n"
 	cp ${OUTPUT_06} ${OUT_00}
 	check "${MSG} failed.\n"
 done
 	
-	# Clean input/working and packet dir
-	#if [ ${DEBUG} == "n" ] ; then
-		#	rm -r ${WORK_DIR}/*
-		#	if [ ${?} -ne "0" ] ; then
-			#		echo "Cleaning "${WORK_DIR}" failed\n"
-			#	exit 4
-		#fi
-	#fi
-
+if [ ${DEBUG} == "n" ] ; then
+	MSG="Cleaning working directory ${WK_00}"
+	log "${MSG} ...\n"
+	rm -r ${WK_00}/*
+	check "${MSG} failed.\n"
+fi
 
 log "### .......stop creating Filters images } ###\n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
