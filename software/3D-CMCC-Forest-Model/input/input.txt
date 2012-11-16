@@ -1,3 +1,2 @@
 x,y,Age,Species,Phenology,Management,Lai,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres
-0,0,65,Quercuscerris,D,T,0,622,0,23.77,20.84,0,71.2952,0,297.06,0.5
-0,0,32,Quercuscerris,D,T,0,2156,0,6.36,7.67,0,7.132,0,29.716,0.1
+0,0,65,Quercuscerris,E,T,0,622,0,23.77,20.84,0,71.2952,0,297.06,0.5

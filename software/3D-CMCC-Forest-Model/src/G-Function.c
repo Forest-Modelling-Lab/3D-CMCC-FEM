@@ -69,7 +69,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 						}
-						if (month == 11)
+						if (month == DECEMBER)
 						{
 							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
@@ -93,7 +93,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 						}
-						if (month == 11)
+						if (month == DECEMBER)
 						{
 							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
@@ -199,25 +199,9 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	if (!month)
 	{
 		/*Phenology*/
-		if ( c->heights[height].ages[age].species[species].phenology == D)
-		{
-			Log("- Phenology = DECIDUOUS\n");
-		}
-		else
-		{
-			Log("- Phenology = EVERGREEN\n");
-		}
-
-
+		Log("- Phenology type = %s\n", c->heights[height].ages[age].species[species].phenology ? "E" : "D");
 		/*Management*/
-		if ( c->heights[height].ages[age].species[species].management == T)
-		{
-			Log("- Management type = TIMBER\n");
-		}
-		else
-		{
-			Log("- Management type = COPPICE\n");
-		}
+		Log("- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
 		//Log("+ Lai = %g\n", c->heights[height].ages[age].species[species].value[LAI]);
 		Log("+ AvDBH = %g cm\n",  c->heights[height].ages[age].species[species].value[AVDBH]);
 		if (settings->version == 'u')
