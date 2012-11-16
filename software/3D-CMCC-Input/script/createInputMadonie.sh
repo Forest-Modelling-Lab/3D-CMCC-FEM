@@ -113,6 +113,15 @@ check() {
 		log "... done.\n"
 	fi
 }
+
+clean() {
+	if [ ${DEBUG} == "n" ] ; then
+		MSG="Cleaning working directory ${1}"
+		log "${MSG} ...\n"
+		rm -r ${1}/*
+		check "${MSG} failed.\n"
+	fi
+}
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global functions definitions }
 
 ### Checking input arguments and configurations - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -219,13 +228,8 @@ log "\n"
 #	cp ${OUTPUT_06} ${OUT_00}
 #	check "${MSG} failed.\n"
 #done
-#	
-#if [ ${DEBUG} == "n" ] ; then
-#	MSG="Cleaning working directory ${WK_00}"
-#	log "${MSG} ...\n"
-#	rm -r ${WK_00}/*
-#	check "${MSG} failed.\n"
-#fi
+#
+#clean "${WK_00}"
 
 log "### .......stop creating Filters images } ###\n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
@@ -365,30 +369,44 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	#for INPUT_01 in $( ls ${IN_15}/LayerDates* ) ; do
 		for INPUT_01 in $( ls ${IN_15}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
     		INPUT_02="$( echo ${INPUT_01} | sed s/LayerDates_// | sed s/$/.tif/ )"
-    		#echo ${IDX}
-    		#echo ${INPUT_01}
-    		#echo ${INPUT_02}
+
     		IDX="1"
+    		MONTH_PREV="01"
+    		SAME_MONTH_IMG=()
     		while read LINE; do
     			DATE=${LINE:0:10}
-				OUTPUT_01="${WK_15}/NDVI_Lambda500_${DATE}.tif"
+    			OUTPUT_01="${WK_15}/NDVI_Lambda500_${DATE}.tif"
 				MSG="Extraction of band ${IDX} from ${INPUT_02}"
 				log "${MSG} ...\n"
     			gdal_translate -b ${IDX} ${INPUT_02} ${OUTPUT_01}
 				check "${MSG} failed.\n"
+    			
+    			MONTH=${LINE:5:2}
+    			
+    			if [ "${MONTH}" == "${MONTH_PREV}" ] ; then
+    				SAME_MONTH_IMG+=("${DATE}")
+				else
+					echo "${SAME_MONTH_IMG[@]}"
+					echo "-----------"
+					SAME_MONTH_IMG=()
+					SAME_MONTH_IMG+=("${DATE}")
+    			fi
 				
-				OUTPUT_02="${WK_15}/NDVI_${DATE}.tif"
-				MSG="Divide every pixel value per 1000"
-				log "${MSG} ...\n"
-				${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
+				MONTH_PREV=${MONTH}
     			IDX=$(( ${IDX} + 1 ));
 			done < "${INPUT_01}"
-    		
+			# Work on last month
+			echo ${SAME_MONTH_IMG[@]}
 			
+			#OUTPUT_02="${WK_15}/NDVI_${DATE}.tif"
+			#MSG="Divide every pixel value per 1000"
+			#log "${MSG} ...\n"
+			#${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
+			#check "${MSG} failed.\n"
 		done
     	
+    	#clean "${WK_15}"
+
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
