@@ -599,6 +599,22 @@ typedef struct {
 } HEIGHT;
 
 /* */
+/*
+//all variables related to the site
+typedef struct {
+
+	int soil_count;  //number of soil layers
+
+	float soil_moist_ratio;
+	float av_soil_moist_ratio;
+	float av_yearly_par_soil;
+
+
+} SITE;
+*/
+
+
+/* */
 //all variables related to the cell (stand) are here defined
 typedef struct {
 	PREC x;
@@ -607,6 +623,7 @@ typedef struct {
 	//eLanduse landuse;
 
 	HEIGHT *heights;
+	//SITE *site;
 	int heights_count;
 
 	float daylength;

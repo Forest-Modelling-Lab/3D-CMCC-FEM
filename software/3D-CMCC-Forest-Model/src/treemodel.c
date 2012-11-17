@@ -652,8 +652,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 						}
 					}
-					Log("****************END OF SPECIES CLASS***************\n");
 				}
+				Log("****************END OF SPECIES CLASS***************\n");
 			}
 			Log("****************END OF AGE CLASS***************\n");
 		}
@@ -665,7 +665,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 		//todo: soilmodel could stay here or in main.c
-		//call to:
+		//here is called at the end of all tree height age and species classes loops
 		//soilmodel (yos, years, month, years_of_simulation);
 
 
