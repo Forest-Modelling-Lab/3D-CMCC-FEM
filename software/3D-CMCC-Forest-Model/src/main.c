@@ -1467,6 +1467,7 @@ int main(int argc, char *argv[])
 					puts(msg_ok);
 				}
 				*/
+				//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
 				//RUN FOR SOILMODEL
 				if ( !soil_model (m, yos, years, month, years_of_simulation) )
 				{

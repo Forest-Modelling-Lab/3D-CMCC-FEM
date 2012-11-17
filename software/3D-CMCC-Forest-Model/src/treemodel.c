@@ -663,9 +663,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		m->cells[cell].dominated_veg_counter = 0;
 		m->cells[cell].subdominated_veg_counter = 0;
 
-		//}
-		//else
-		//{
+
+		//todo: soilmodel could stay here or in main.c
+		//call to:
+		//soilmodel (yos, years, month, years_of_simulation);
+
+
 		//    Log("\n\n");
 		//    Log("RUN FOR SOIL LAYER\n");
 		//    Log("* cell = \n");
