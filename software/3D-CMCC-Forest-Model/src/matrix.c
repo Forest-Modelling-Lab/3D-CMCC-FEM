@@ -646,21 +646,16 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				{
 					//*************FOREST INITIALIZATION DATA***********
 
-					//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH)
-					if (m->cells[cell].heights[height].value == 0 &&
-							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]== 0 &&
-							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
+					//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
+					//HEIGHT VALUES ARE MANDATORY
+					if (	m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
 					{
-						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
+						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species]);
 					}
-					if (m->cells[cell].heights[height].ages[age].species[species].phenology == E && m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
-					{
-						Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
-						exit (1);
-					}
+
 					Log(
 							"---- species n.%02d is %s (%c), management type is %c and has\n"
 							"----- n = %d trees\n"
