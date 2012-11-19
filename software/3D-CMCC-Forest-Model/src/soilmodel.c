@@ -18,7 +18,7 @@ extern int DaysInMonth[];
 
 int soil_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
-	Log("SOIL MODEL ROUTINE\n");
+	Log("SOIL MODEL ROUTINE CURRENTLY DOESN'T WORK\n");
 
 	/* ok */
 	return 1;

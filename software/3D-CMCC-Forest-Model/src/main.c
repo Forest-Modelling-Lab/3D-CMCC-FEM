@@ -1448,6 +1448,10 @@ int main(int argc, char *argv[])
 			{
 				//todo make all models run in main for each cell
 				//RUN FOR TREEMODEL
+				//for ( cell = 0; cell < m->cells_count; cell++)
+				//{
+				//if (m->cells[cell].landuse == F)
+				//{
 				if ( !tree_model (m, yos, years, month, years_of_simulation) )
 				{
 					Log("tree model failed.");
@@ -1456,9 +1460,14 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
+				//}
+
 				/*
+				//todo: insert crop moidel routine
 				//RUN FOR CROPMODEL
-				if ( !tree_model (m, yos, years, month, years_of_simulation) )
+				//if (m->cells[cell].landuse == C)
+				{
+				if ( !soil_model (m, yos, years, month, years_of_simulation) )
 				{
 					Log("crop model failed.");
 				}
@@ -1466,9 +1475,12 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
+				}
+				//}
 				*/
 				//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
 				//RUN FOR SOILMODEL
+				/*
 				if ( !soil_model (m, yos, years, month, years_of_simulation) )
 				{
 					Log("soil model failed.");
@@ -1477,6 +1489,7 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
+				*/
 				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 			Log("****************END OF YEAR*******************\n\n\n\n\n\n");

@@ -669,16 +669,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//soilmodel (yos, years, month, years_of_simulation);
 
 
-		//    Log("\n\n");
-		//    Log("RUN FOR SOIL LAYER\n");
-		//    Log("* cell = \n");
-		//    Log("* x = %g\n", m->cells[cell].x);
-		//    Log("* y = %g\n", m->cells[cell].y);
-		//    Log("* z = %d\n", m->cells[cell].heights[height].z);
-		//    Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-
-
-
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
 		//Log("Nitrogen available = %g g m^-2\n", N_avl);
 
@@ -687,13 +677,18 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//    Log("\n\n");
 		//}
 
+		//averaged monthly met data
+		if (month == DECEMBER)
+		{
+			Get_annual_average_values_met_data (&m->cells[cell], Yearly_Solar_Rad, Yearly_Vpd, Yearly_Temp, Yearly_Rain );
+		}
+
+		//todo: move all soil algorithms into soil_model function
+		soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
+
 	}
 
-	//averaged monthly met data
-	if (month == DECEMBER)
-	{
-		Get_annual_average_values_met_data (&m->cells[cell], Yearly_Solar_Rad, Yearly_Vpd, Yearly_Temp, Yearly_Rain );
-	}
+
 
 	Log("****************END OF CELL***************\n");
 	/* ok */
