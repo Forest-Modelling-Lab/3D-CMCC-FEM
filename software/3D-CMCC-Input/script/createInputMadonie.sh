@@ -124,6 +124,21 @@ clean() {
 		check "${MSG} failed.\n"
 	fi
 }
+
+leapYear(){
+	YEAR="${1}"
+	if [ $[${YEAR} % 400] -eq "0" ]; then
+		# This is a leap year: February has 29 days.
+	elif [ $[${YEAR} % 4] -eq 0 ]; then
+    	if [ $[${YEAR} % 100] -ne 0 ]; then
+        	# This is a leap year: February has 29 days.
+        else
+        # This is not a leap year: February has 28 days.
+        fi
+	else
+		# This is not a leap year: February has 28 days.
+	fi
+}
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global functions definitions }
 
 ### Checking input arguments and configurations - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -361,14 +376,34 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	log "### { Start creating ${IMG} images....... ###\n"
     	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
 			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
+			MONTH=${DATE:5:2}
+			YEAR=${DATE:0:4}
 			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
 			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
 	
-			OUTPUT_01="${WK_14}/Precip_0_25_${DATE}.tif"
+			# Original precipitations data are mm/hh
+			OUTPUT_01="${WK_14}/Precip_0_25_mm-hh_${DATE}.tif"
 			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
 			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} NETCDF:"${INPUT_02}":pcp ${OUTPUT_01}
+			gdal_translate ${PAR_01} NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
+			
+			OUTPUT_02="${WK_14}/Precip_0_25_mm-month_${DATE}.tif"
+			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
+				HOURS_IN_MONTH=$( echo "30*24" | bc )
+			fi
+			if [ "${MONTH}" == "02" ] ; then
+				if [ "${MONTH}" == "02" ] ; then
+					HOURS_IN_MONTH=$( echo "28*24" | bc )
+				else
+					HOURS_IN_MONTH=$( echo "28*24" | bc )
+				fi
+			fi
+			MSG="Divide every pixel value for number of hours in month"
+			log "${MSG} ...\n"
+			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
     	done
     	log "### ........stop creating ${IMG} images } ###\n"
     fi
