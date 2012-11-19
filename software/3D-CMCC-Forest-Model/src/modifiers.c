@@ -77,7 +77,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	/*AGE MODIFIER*/
 
 
-     if (management == 0)
+     if (management == T)
      {
         //for TIMBER
         //AGE FOR TIMBER IS THE EFFECTIVE AGE

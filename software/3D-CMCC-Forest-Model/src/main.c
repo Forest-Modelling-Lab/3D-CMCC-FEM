@@ -1463,7 +1463,7 @@ int main(int argc, char *argv[])
 				//}
 
 				/*
-				//todo: insert crop moidel routine
+				//todo: insert crop model routine
 				//RUN FOR CROPMODEL
 				//if (m->cells[cell].landuse == C)
 				{

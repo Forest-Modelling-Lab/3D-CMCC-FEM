@@ -39,5 +39,5 @@ void soil_model(CELL *c, const YOS *const yos, const int years, const int month,
 	}
 
 	/* ok */
-	return 1;
+	//return 1;
 }
