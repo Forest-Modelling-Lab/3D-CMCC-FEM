@@ -15,7 +15,8 @@
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
-MODULES=(remap getLAI applyMask multiplyImgPx)
+SITE="MADONIE"
+MODULES=(remap applyMask calcAverage multiplyImgPx getLAI)
 IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
 IMG_SELECTED=()
 
@@ -85,7 +86,7 @@ PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
-DEBUG="y"
+DEBUG="n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global variables definitions }
 
 ### Global functions definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -179,7 +180,7 @@ log "\n"
 ### Filters execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Filters images are produced indepentently on script input parameters
 #log "### { Start creating Filters images...... ###\n"
-#PAR_01="-co COMPRESS=LZW -of GTiff"
+#PAR_01="-q -co COMPRESS=LZW -of GTiff"
 #MSG="Conversion of AOI shapefile into tiff"
 #INPUT_01="${IN_00}/Sicily.shp"
 #OUTPUT_01="${WK_00}/Sicily.tif"
@@ -365,47 +366,96 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
     	
-    	
-    	#for INPUT_01 in $( ls ${IN_15}/LayerDates* ) ; do
-		for INPUT_01 in $( ls ${IN_15}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
+    	#for INPUT_01 in $( ls ${IN_15}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
+		for INPUT_01 in $( ls ${IN_15}/LayerDates* ) ; do
     		INPUT_02="$( echo ${INPUT_01} | sed s/LayerDates_// | sed s/$/.tif/ )"
 
     		IDX="1"
     		MONTH_PREV="01"
+    		PAR_01="-q -co COMPRESS=LZW -of GTiff"
     		SAME_MONTH_IMG=()
+    		LAI_MONTHS=()
     		while read LINE; do
     			DATE=${LINE:0:10}
     			OUTPUT_01="${WK_15}/NDVI_Lambda500_${DATE}.tif"
 				MSG="Extraction of band ${IDX} from ${INPUT_02}"
 				log "${MSG} ...\n"
-    			gdal_translate -b ${IDX} ${INPUT_02} ${OUTPUT_01}
+    			gdal_translate ${PAR_01} -b ${IDX} ${INPUT_02} ${OUTPUT_01}
 				check "${MSG} failed.\n"
     			
     			MONTH=${LINE:5:2}
+    			YEAR=${LINE:0:4}
     			
     			if [ "${MONTH}" == "${MONTH_PREV}" ] ; then
-    				SAME_MONTH_IMG+=("${DATE}")
+    				SAME_MONTH_IMG+=("${OUTPUT_01}")
 				else
-					echo "${SAME_MONTH_IMG[@]}"
-					echo "-----------"
+					MSG="Getting average for month ${MONTH_PREV}"
+					OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH_PREV}.tif"
+					log "${MSG} ...\n"	
+					${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH_PREV}.tif"
+					MSG="Divide every pixel value per 10000"
+					log "${MSG} ...\n"
+					${BIN_DIR}/multiplyImgPx -i ${OUTPUT_02} -v 0.0001 -o ${OUTPUT_03} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					# For December, January, February and March put LAI to 0.0 if its value is < 1.0
+					if [ "${MONTH_PREV}" == "01" ] || [ "${MONTH_PREV}" == "02" ] || [ "${MONTH_PREV}" == "03" ] ; then
+						THRESHOLD="-t 1.0"
+					else
+						THRESHOLD=""
+					fi
+					
+					OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH_PREV}.tif"
+					MSG="Get LAI from NDVI"
+					log "${MSG} ...\n"
+					${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} ${THRESHOLD} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					LAI_MONTHS+=("${OUTPUT_04}")
+			
 					SAME_MONTH_IMG=()
-					SAME_MONTH_IMG+=("${DATE}")
+					SAME_MONTH_IMG+=("${OUTPUT_01}")
     			fi
-				
 				MONTH_PREV=${MONTH}
     			IDX=$(( ${IDX} + 1 ));
 			done < "${INPUT_01}"
-			# Work on last month
-			echo ${SAME_MONTH_IMG[@]}
+			# Work on last month (December)
+			MSG="Getting average for month ${MONTH}"
+			OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH}.tif"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
 			
-			#OUTPUT_02="${WK_15}/NDVI_${DATE}.tif"
-			#MSG="Divide every pixel value per 1000"
-			#log "${MSG} ...\n"
-			#${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
-			#check "${MSG} failed.\n"
+			OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH}.tif"
+			MSG="Divide every pixel value per 10000"
+			log "${MSG} ...\n"
+			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_02} -v 0.0001 -o ${OUTPUT_03} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH}.tif"
+			MSG="Get LAI from NDVI"
+			log "${MSG} ...\n"
+			${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} -t 1.0 &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			LAI_MONTHS+=("${OUTPUT_04}")
+			
+			OUTPUT_05="${WK_15}/LAI_${YEAR}.tif"
+			MSG="Get multiband LAI image"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#LAI_MONTHS[@]} -i "${LAI_MONTHS[@]}" -o ${OUTPUT_05} -m VALUE=LAI,YEAR=${YEAR},SITE=${SITE}
+			check "${MSG} failed.\n"
+			
+			MSG="Copy LAI multiband image into output dir"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_05} ${OUT_15}
+			check "${MSG} failed.\n"
 		done
-    	
-    	#clean "${WK_15}"
+		
+    	clean "${WK_15}"
 
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
