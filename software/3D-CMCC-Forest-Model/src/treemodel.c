@@ -666,7 +666,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		//todo: soilmodel could stay here or in main.c
 		//here is called at the end of all tree height age and species classes loops
-		//soilmodel (yos, years, month, years_of_simulation);
+		//todo: move all soil algorithms into soil_model function
+		//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
 
 
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
@@ -683,8 +684,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Get_annual_average_values_met_data (&m->cells[cell], Yearly_Solar_Rad, Yearly_Vpd, Yearly_Temp, Yearly_Rain );
 		}
 
-		//todo: move all soil algorithms into soil_model function
-		soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
+
 
 	}
 

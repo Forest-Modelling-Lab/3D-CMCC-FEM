@@ -40,6 +40,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 				Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
 				s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 				Log("MAI-Mean Annual Increment = %g m^3/ha/yr \n", s->value[MAI] );
+				if (dominant_prec_volume > s->value[VOLUME])
+				{
+					Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+					Log("prev_volume - VOLUME = %g\n", dominant_prec_volume - s->value[VOLUME]);
+				}
 			}
 			else if (c->heights[height].z == 1)
 			{
@@ -49,6 +54,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 				Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
 				s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 				Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+				if (dominated_prec_volume > s->value[VOLUME])
+				{
+					Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+					Log("prev_volume - VOLUME = %g\n", dominated_prec_volume - s->value[VOLUME]);
+				}
 			}
 			else
 			{
@@ -58,6 +68,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 				Log("SUBDOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
 				s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 				Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+				if (subdominated_prec_volume > s->value[VOLUME])
+				{
+					Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+					Log("prev_volume - VOLUME = %g\n", subdominated_prec_volume - s->value[VOLUME]);
+				}
 			}
 			break;
 		case 2:
@@ -69,6 +84,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 				Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
 				s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 				Log("MAI-Mean Annual Increment = %g m^3/ha/yr \n", s->value[MAI] );
+				if (dominant_prec_volume > s->value[VOLUME])
+				{
+					Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+					Log("prev_volume - VOLUME = %g\n", dominant_prec_volume - s->value[VOLUME]);
+				}
 			}
 			else
 			{
@@ -78,6 +98,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 				Log("DOMINATED CAI = %g m^3/ha/yr\n", s->value[CAI]);
 				s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 				Log("MAI-Mean Annual Increment = %g m^3/ha/yr\n", s->value[MAI] );
+				if (dominated_prec_volume > s->value[VOLUME])
+				{
+					Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+					Log("prev_volume - VOLUME = %g\n", dominated_prec_volume - s->value[VOLUME]);
+				}
 			}
 
 			break;
@@ -88,6 +113,11 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 			Log("DOMINANT CAI = %g m^3/ha/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 			Log("MAI-Mean Annual Increment = %g m^3/ha/yr \n", s->value[MAI] );
+			if (dominant_prec_volume > s->value[VOLUME])
+			{
+				Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
+				Log("prev_volume - VOLUME = %g\n", dominant_prec_volume - s->value[VOLUME]);
+			}
 			break;
 		}
 	}

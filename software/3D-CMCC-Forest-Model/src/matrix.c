@@ -658,7 +658,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 					}
 					if (m->cells[cell].heights[height].ages[age].species[species].phenology == E && m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
 					{
-						Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
+						Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
 						exit (1);
 					}
 					Log(
