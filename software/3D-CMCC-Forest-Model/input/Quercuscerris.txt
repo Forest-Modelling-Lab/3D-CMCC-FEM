@@ -123,6 +123,8 @@ DBHDCMIN	0.16    //High Density
 SAP_A         0.674         //a value from Kostner for Q. petreae in cm
 SAP_B         1.992         //b value from Kostner for Q. petreae in cm
 SAP_LEAF      2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
+SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	40              //35  //Max Height in m for QUERCUS CERRIS for Chapman-Richards Function (Nocetti M. 2007)
 DMAX	80              //Max Stem Diameter in cm QUERCUS CERRIS
 HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubra

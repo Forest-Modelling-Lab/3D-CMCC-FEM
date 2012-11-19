@@ -65,12 +65,10 @@ void Get_initialization_biomass_data (SPECIES *s)
 		s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
 
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
-
-
 		//see if change with the ratio reported from Barbaroux et al., 2002
 		if (s->phenology == 0)
 		{
-			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.11;
+			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 			//compute foliage biomass for evergreen
 			s->value[BIOMASS_FOLIAGE_CTEM] = 0;
 			Log("--Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -79,7 +77,7 @@ void Get_initialization_biomass_data (SPECIES *s)
 		}
 		else
 		{
-			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * 0.05;
+			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 			//compute foliage biomass for evergreen
 			s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_STEM_CTEM] * (1.0/s->value[STEM_LEAF]);
 			Log("--Foliage Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);

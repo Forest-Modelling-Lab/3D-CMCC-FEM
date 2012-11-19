@@ -190,6 +190,8 @@ enum {
 	SAP_A,                      //a coefficient for sapwood
 	SAP_B,                      //b coefficient for sapwood
 	SAP_LEAF,                   //sapwood_max leaf area ratio in pipe model
+	SAP_WRES,					  //Sapwood-Reserve biomass ratio used if no Wres data are available
+
 	HMAX,                       //Max Height in m
 	DMAX,                       //Max Diameter in cm
 	HPOWER,                     //Slope of Asymptotic Height from Sortie
