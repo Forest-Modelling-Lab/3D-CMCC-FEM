@@ -83,10 +83,11 @@ IMG_UL="4211980.487859229557216 399333.291887304978445"
 # Output geotiff projection:
 PROJ="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+PAR_01="-q -co COMPRESS=LZW -of GTiff"
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
-DEBUG="n"
+DEBUG="y"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global variables definitions }
 
 ### Global functions definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -94,7 +95,7 @@ usage(){
 	echo "Usage: ${0} [IMG_TO_PROCESS]"
 	echo "       - IMG_TO_PROCESS is an optional array to define which images to process. If omitted, every image will be created."
 	echo "       - Accepted values for the array are (every other value will be ignored):"
-	echo "             Y_planted, Species, Phenology, Management, NumHa, AvDBH, Height, Wf, Wrc, Ws, SolarRad, Avg_Temp, VPD, Precip, LAI"
+	echo "             Filters, Y_planted, Species, Phenology, Management, NumHa, AvDBH, Height, Wf, Wrc, Ws, SolarRad, Avg_Temp, VPD, Precip, LAI"
 	echo "       - NOTE: Remeber to set up and fill correctly the BIN_DIR, directory where the C modules are stored."
 	echo ""
 	echo "Run example: ${0} Phenology LAI Wrc NumHa"
@@ -178,61 +179,63 @@ log "\n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Pre-execution settings }
 
 ### Filters execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Filters images are produced indepentently on script input parameters
-#log "### { Start creating Filters images...... ###\n"
-#PAR_01="-q -co COMPRESS=LZW -of GTiff"
-#MSG="Conversion of AOI shapefile into tiff"
-#INPUT_01="${IN_00}/Sicily.shp"
-#OUTPUT_01="${WK_00}/Sicily.tif"
-#log "${MSG} ...\n"
-#gdal_rasterize ${PAR_01} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
-#check "${MSG} failed on ${INPUT_01}.\n"
-#
-#MSG="Conversion of tiff projection from longlat to UTM"
-#OUTPUT_02="${WK_00}/Madonie.tif"
-#log "${MSG} ...\n"
-#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#check "${MSG} failed on ${OUTPUT_01}.\n"
-#
-#MSG="Remap of UTM geotiff image"
-#OUTPUT_03="${WK_00}/Madonie_remap.tif"
-#log "${MSG} ...\n"
-#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
-#check "${MSG} failed on ${OUTPUT_02}.\n"
-#
-#MSG="Copy remapped AOI image into output dir"
-#log "${MSG} ...\n"
-#cp ${OUTPUT_02} ${OUT_00}
-#check "${MSG} failed.\n"
-#
-#for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
-#	MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
-#	OUTPUT_04="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
-#	log "${MSG} ...\n"
-#	gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
-#	check "${MSG} failed on ${INPUT_02}.\n"
-#	
-#	MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
-#	OUTPUT_05="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
-#	log "${MSG} ...\n"
-#	gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
-#	check "${MSG} failed on ${OUTPUT_04}.\n"
-#
-#	MSG="Remap of UTM geotiff image"
-#	OUTPUT_06="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
-#	log "${MSG} ...\n"	
-#	${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
-#	check "${MSG} failed on ${OUTPUT_05}.\n"
-#	
-#	MSG="Copy corine remapped image into output dir"
-#	log "${MSG} ...\n"
-#	cp ${OUTPUT_06} ${OUT_00}
-#	check "${MSG} failed.\n"
-#done
-#
-#clean "${WK_00}"
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Filters" ] ; then
+		log "### { Start creating Filters images...... ###\n"
+		MSG="Conversion of AOI shapefile into tiff"
+		INPUT_01="${IN_00}/Sicily.shp"
+		OUTPUT_01="${WK_00}/Sicily.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+		check "${MSG} failed on ${INPUT_01}.\n"
 
-log "### .......stop creating Filters images } ###\n"
+		MSG="Conversion of tiff projection from longlat to UTM"
+		OUTPUT_02="${WK_00}/Madonie.tif"
+		log "${MSG} ...\n"
+		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		check "${MSG} failed on ${OUTPUT_01}.\n"
+
+		MSG="Remap of UTM geotiff image"
+		OUTPUT_03="${WK_00}/Madonie_remap.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed on ${OUTPUT_02}.\n"
+
+		MSG="Copy remapped AOI image into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_02} ${OUT_00}
+		check "${MSG} failed.\n"
+
+		for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
+			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
+			OUTPUT_04="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
+			check "${MSG} failed on ${INPUT_02}.\n"
+	
+			MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
+			OUTPUT_05="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_04}.\n"
+
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_06="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_05}.\n"
+	
+			MSG="Copy corine remapped image into output dir"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_06} ${OUT_00}
+			check "${MSG} failed.\n"
+		done
+
+		clean "${WK_00}"
+
+		log "### .......stop creating Filters images } ###\n"
+    fi
+done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
 
 ### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
@@ -356,6 +359,17 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
     	log "### { Start creating ${IMG} images....... ###\n"
+    	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
+			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
+			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
+			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
+	
+			OUTPUT_01="${WK_14}/Precip_0_25_${DATE}.tif"
+			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} NETCDF:"${INPUT_02}":pcp ${OUTPUT_01}
+			check "${MSG} failed.\n"
+    	done
     	log "### ........stop creating ${IMG} images } ###\n"
     fi
 done
@@ -372,7 +386,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 
     		IDX="1"
     		MONTH_PREV="01"
-    		PAR_01="-q -co COMPRESS=LZW -of GTiff"
     		SAME_MONTH_IMG=()
     		LAI_MONTHS=()
     		while read LINE; do
