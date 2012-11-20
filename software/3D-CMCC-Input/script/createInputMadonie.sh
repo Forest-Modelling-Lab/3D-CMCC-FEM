@@ -105,7 +105,6 @@ usage(){
 
 log() {
 	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" | tee -a "${LOGFILE}"
-	#echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" >> "${LOGFILE}"
 }
 
 check() {
@@ -126,17 +125,20 @@ clean() {
 }
 
 leapYear(){
-	YEAR="${1}"
-	if [ $[${YEAR} % 400] -eq "0" ]; then
+	if [ $[${1} % 400] -eq "0" ]; then
 		# This is a leap year: February has 29 days.
-	elif [ $[${YEAR} % 4] -eq 0 ]; then
-    	if [ $[${YEAR} % 100] -ne 0 ]; then
+			return 1
+	elif [ $[${1} % 4] -eq "0" ]; then
+    	if [ $[${1} % 100] -ne "0" ]; then
         	# This is a leap year: February has 29 days.
+			return 1
         else
-        # This is not a leap year: February has 28 days.
+        	# This is not a leap year: February has 28 days.
+			return 0
         fi
 	else
 		# This is not a leap year: February has 28 days.
+		return 0
 	fi
 }
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Global functions definitions }
@@ -205,20 +207,20 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed on ${INPUT_01}.\n"
 
 		MSG="Conversion of tiff projection from longlat to UTM"
-		OUTPUT_02="${WK_00}/Madonie.tif"
+		OUTPUT_02="${WK_00}/Madonie_no_remap.tif"
 		log "${MSG} ...\n"
 		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_01}.\n"
 
 		MSG="Remap of UTM geotiff image"
-		OUTPUT_03="${WK_00}/Madonie_remap.tif"
+		OUTPUT_03="${WK_00}/Madonie.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_02}.\n"
 
 		MSG="Copy remapped AOI image into output dir"
 		log "${MSG} ...\n"
-		cp ${OUTPUT_02} ${OUT_00}
+		cp ${OUTPUT_03} ${OUT_00}
 		check "${MSG} failed.\n"
 
 		for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
@@ -388,20 +390,25 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			gdal_translate ${PAR_01} NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
-			OUTPUT_02="${WK_14}/Precip_0_25_mm-month_${DATE}.tif"
+			# Data conversion from mm/hh into mm/month
 			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
-				HOURS_IN_MONTH=$( echo "30*24" | bc )
-			fi
-			if [ "${MONTH}" == "02" ] ; then
-				if [ "${MONTH}" == "02" ] ; then
-					HOURS_IN_MONTH=$( echo "28*24" | bc )
+				HOURS_IN_MONTH=720.0 # 30*24=720 
+			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
+				HOURS_IN_MONTH=744.0 # 31*24=744
+			elif [ "${MONTH}" == "02" ] ; then
+				leapYear "${YEAR}"
+				LEAP="${?}"
+				if [ "${LEAP}" -eq "1" ] ; then
+					HOURS_IN_MONTH=696.0 # 29*24=696
 				else
-					HOURS_IN_MONTH=$( echo "28*24" | bc )
+					HOURS_IN_MONTH=672.0 # 28*24=672
 				fi
 			fi
+			
+			OUTPUT_02="${WK_14}/Precip_0_25_mm-${YEAR}-${MONTH}.tif"
 			MSG="Divide every pixel value for number of hours in month"
 			log "${MSG} ...\n"
-			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v 0.0001 -o ${OUTPUT_02} &>> "${LOGFILE}"
+			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
     	done
