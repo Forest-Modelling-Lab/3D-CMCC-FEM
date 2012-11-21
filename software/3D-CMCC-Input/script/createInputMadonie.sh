@@ -16,7 +16,7 @@ VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
-MODULES=(remap applyMask calcAverage multiplyImgPx getLAI)
+MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg)
 IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
 IMG_SELECTED=()
 
@@ -75,11 +75,13 @@ WK_14="$( dirname ${0} )/../working/14_Precip"
 WK_15="$( dirname ${0} )/../working/15_LAI"
 
 # Output geotiff size:
-IMG_SIZE="1286x1160"
+SIZEX="1286"
+SIZEY="1160"
 # Output geotiff resolution:
 RES="30"
-# Output geotiff Upper Left point coordinates:
+# Output geotiff Upper Left and Lower Right point coordinates:
 IMG_UL="4211980.487859229557216 399333.291887304978445"
+IMG_LR="4177180.488 437913.292"
 # Geotiff projections (proj4 definitions from spatialreference.org):
 PROJ="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
@@ -216,7 +218,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Remap and cut UTM geotiff image"
 		OUTPUT_03="${WK_00}/Madonie.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_02}.\n"
 
 		MSG="Copy remapped AOI image into output dir"
@@ -240,7 +242,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			MSG="Remap of UTM geotiff image"
 			OUTPUT_06="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
 			log "${MSG} ...\n"	
-			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${IMG_UL} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 			check "${MSG} failed on ${OUTPUT_05}.\n"
 	
 			MSG="Copy corine remapped image into output dir"
@@ -269,6 +271,29 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Species" ] ; then
     	log "### { Start creating ${IMG} images...... ###\n"
+    	
+		# band 1: Castaneasativa
+		# band 2: Fagussylvatica
+		# band 3: Ostryacarpinifolia
+		# band 4: Pinusnigra
+		# band 5: Quercuscerris
+		# band 6: quercus_deciduous (Q. cerris, Q. robur, Q. pubescens, Q. petreae)
+		# band 7: quercus_evergreen (Q. ilex, Q. suber)
+    	
+    	MSG="Create an empty monoband image"
+		OUTPUT_01="${WK_02}/empty.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0.0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Give to empty image a proper georeference"
+		OUTPUT_02="${WK_02}/empty_with_georef.tif"
+		log "${MSG} ...\n"
+		#gdal_translate ${PAR_01} -a_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		gdal_translate ${PAR_01} -a_srs "${PROJ}" -a_ullr 399333.291887304978445 4211980.487859229557216 437913.291887304978445 4177180.487859229557216 ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		
+		check "${MSG} failed on ${OUTPUT_01}.\n"
+    	
     	log "### .......stop creating ${IMG} images } ###\n"
     fi
 done
@@ -421,7 +446,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			MSG="Remap and cut UTM geotiff image"
 			OUTPUT_04="${WK_14}/Precip_${YEAR}-${MONTH}.tif"
 			log "${MSG} ...\n"
-			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${IMG_UL} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 			check "${MSG} failed on ${OUTPUT_03}.\n"
 			
 			MSG="Copy remapped and cut precip image into output dir"
