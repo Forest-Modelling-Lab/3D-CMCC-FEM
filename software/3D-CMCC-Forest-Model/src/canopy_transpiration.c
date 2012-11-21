@@ -123,6 +123,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
 	//alpha e beta andranno inserite come specie specifiche!!!!
+	/*
 
 	s->value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (c->soil_moist_ratio, beta_evapo));
 	Log("ANGELO F_EVAPO = %g \n", s->value[F_EVAPO] );
@@ -130,4 +131,5 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	s->value[MONTH_TRANSP] *= s->value[F_EVAPO];
 	Log("ANGELO MonthTransp = %g \n", s->value[MONTH_TRANSP]);
+	*/
 }
