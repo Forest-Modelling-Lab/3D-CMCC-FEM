@@ -42,6 +42,7 @@ void Get_initialization_biomass_data (SPECIES *s)
 
 
 		//compute stem biomass
+		//todo: usare le equazioni di laura, problema: sono a due entrate!
 		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER])))*s->value[STEMCONST];
 		s->value[BIOMASS_STEM_CTEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE];
 		Log("-Stem Biomass initialization data from DBH = %g \n", s->value[BIOMASS_STEM_CTEM]);
