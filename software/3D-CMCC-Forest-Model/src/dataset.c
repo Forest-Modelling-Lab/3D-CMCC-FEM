@@ -526,6 +526,9 @@ int importSettingsFile(char *fileName)
 						settings->version = *pch;
 						break;
 					case 1:
+						settings->presence = *pch;
+						break;
+					case 2:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;

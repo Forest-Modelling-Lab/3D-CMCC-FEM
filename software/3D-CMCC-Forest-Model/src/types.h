@@ -724,7 +724,8 @@ typedef struct
 // Struct representing settings.txt content
 typedef struct
 {
-	char version;
+	char version, // must be 's' or 'u' (spatial or unspatial)
+		 presence; // must be 't' or 'p' (total or percentage)
 	float sizeCell,
 	//dominant,
 	//dominated,
