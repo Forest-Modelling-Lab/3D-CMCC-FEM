@@ -94,6 +94,8 @@ SETTING MODEL:
 The file "settings.txt" permits to set the model run, choosing:
 -between "s" or "u" the version spatial or un-spatial of the model,
 -its cell resolution and other parameters to run the model.
+
+-keep "presence" set to 't'
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -103,18 +105,18 @@ INITIALIZATION DATA
 The first required input file is called the "input.txt". It provides general information about the stand site conditions.
 Example for a cell resolution of 10x10 meters cell X = 0, Y = 0:
 
-x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai
-0,0,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0
-0,0,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0
-0,0,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0
+x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai, Perc
+0,0,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0,1
+0,0,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0,1
+0,0,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0,1
 ..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
 ..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
 ..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
 ..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
 ..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..,..
-150,87,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0
-150,87,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0
-150,87,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0
+150,87,42,Fagussylvatica,D,T,34,0,8.46,9.66,0,0.22,0,0.81,0.02,0,1
+150,87,26,Quercuscerris,D,T,45,0,7.23,6.42,0,0.15,0,0.42,0.01,0,1
+150,87,11,Quercuscerris,D,T,54,0,6.4,2.21,0,0.08,0,0.23,0.006,0,1
 
 The text file must be created following this logic architecture
 - for each tree height class define the number of age classes and their values
@@ -133,6 +135,7 @@ The text file must be created following this logic architecture
 ---- Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
 ---- Wres = non structural carbon in tDM per area for that class
 ---- Lai = leaf area index (m^2m^-2), mandatory only for evergreen
+---- Perc = keep set to 1
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
