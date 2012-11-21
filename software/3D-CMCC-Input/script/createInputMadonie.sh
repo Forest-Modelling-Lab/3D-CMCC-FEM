@@ -80,9 +80,10 @@ IMG_SIZE="1286x1160"
 RES="30"
 # Output geotiff Upper Left point coordinates:
 IMG_UL="4211980.487859229557216 399333.291887304978445"
-# Output geotiff projection:
+# Geotiff projections (proj4 definitions from spatialreference.org):
 PROJ="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
+PROJ_LONGLAT="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 PAR_01="-q -co COMPRESS=LZW -of GTiff"
 
 # DEBUG="n" --> clean the current working directory
@@ -212,7 +213,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_01}.\n"
 
-		MSG="Remap of UTM geotiff image"
+		MSG="Remap and cut UTM geotiff image"
 		OUTPUT_03="${WK_00}/Madonie.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
@@ -387,7 +388,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			OUTPUT_01="${WK_14}/Precip_0_25_mm-hh_${DATE}.tif"
 			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
 			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			# Data conversion from mm/hh into mm/month
@@ -411,7 +412,25 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
+			MSG="Conversion of tiff projection from longlat to UTM"
+			OUTPUT_03="${WK_14}/Precip_${YEAR}-${MONTH}_utm.tif"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_02}.\n"
+			
+			MSG="Remap and cut UTM geotiff image"
+			OUTPUT_04="${WK_14}/Precip_${YEAR}-${MONTH}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${IMG_UL} -e ${IMG_SIZE} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_03}.\n"
+			
+			MSG="Copy remapped and cut precip image into output dir"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_04} ${OUT_14}
+			check "${MSG} failed.\n"
+			
     	done
+    	clean "${WK_14}"
     	log "### ........stop creating ${IMG} images } ###\n"
     fi
 done
