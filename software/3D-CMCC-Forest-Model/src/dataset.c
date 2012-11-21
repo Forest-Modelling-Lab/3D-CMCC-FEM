@@ -369,9 +369,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							rows[*rows_count-1].perc = value;
 							break;
 
-
-
-
 						default:
 							printf(err_too_many_column, *rows_count);
 							free(columns);

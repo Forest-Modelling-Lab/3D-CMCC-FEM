@@ -112,7 +112,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		if ( month == JANUARY  && !years)
 		{
-			m->cells[cell].available_soil_water = site->initialAvailableSoilWater + met[month].rain;
+			m->cells[cell].available_soil_water = (site->maxAsw * site->init_frac_maxasw) + met[month].rain;
 			Log("Beginning month  %d ASW = %g mm\n", month  + 1 , m->cells[cell].available_soil_water);
 		}
 		else

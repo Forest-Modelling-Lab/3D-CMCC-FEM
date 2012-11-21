@@ -711,7 +711,7 @@ typedef struct
 	float lat,
 	lon,
 	Y,
-	initialAvailableSoilWater,
+	init_frac_maxasw,
 	co2Conc,
 	initialLitter,
 	maxAsw,

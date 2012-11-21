@@ -5,7 +5,7 @@ LONG "13.205" //Site Longitude
 
 Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
-INITIALAVAILABLESOILWATER "150" //Initial Available soil water in mm
+INIT_FRAC_MAXASW "0.3" //Initial fraction of maxasw
 
 CO2CONC "387.0" //CO2 concentration
 
