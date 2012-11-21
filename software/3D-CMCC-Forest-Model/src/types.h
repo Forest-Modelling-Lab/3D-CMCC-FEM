@@ -516,6 +516,9 @@ enum {
 	WS_SAP,
 
 
+	PERC,
+
+
 	VALUES
 };
 
@@ -563,6 +566,7 @@ typedef struct {
 	PREC ws;
 	PREC wres;
 	PREC lai;
+	PREC perc;
 
 } ROW;
 
