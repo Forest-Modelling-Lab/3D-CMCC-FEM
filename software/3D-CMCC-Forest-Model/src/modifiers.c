@@ -186,7 +186,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 
 	/*SOIL DROUGHT MODIFIER*/
-	//(see Duursma et al., 2008)
+	//(see Duursma et al., 2008)rev_Angelo
 /*
 	//to put in species.txt
 	//numbers are not real just used for compile!!!!!!!!
