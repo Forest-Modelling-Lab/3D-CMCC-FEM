@@ -17,7 +17,7 @@ SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg mergeImg)
-IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI)
+IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
 IMG_SELECTED=()
 
 BIN_DIR="$( dirname ${0} )/../bin"
@@ -39,6 +39,7 @@ IN_12="$( dirname ${0} )/../input/12_Avg_Temp"
 IN_13="$( dirname ${0} )/../input/13_VPD"
 IN_14="$( dirname ${0} )/../input/14_Precip"
 IN_15="$( dirname ${0} )/../input/15_LAI"
+IN_16="$( dirname ${0} )/../input/16_Soil"
 # Output directories
 OUT_00="$( dirname ${0} )/../output/00_Filters"
 OUT_01="$( dirname ${0} )/../output/01_Y_planted"
@@ -56,6 +57,7 @@ OUT_12="$( dirname ${0} )/../output/12_Avg_Temp"
 OUT_13="$( dirname ${0} )/../output/13_VPD"
 OUT_14="$( dirname ${0} )/../output/14_Precip"
 OUT_15="$( dirname ${0} )/../output/15_LAI"
+OUT_16="$( dirname ${0} )/../output/16_Soil"
 # Working directories
 WK_00="$( dirname ${0} )/../working/00_Filters"
 WK_01="$( dirname ${0} )/../working/01_Y_planted"
@@ -73,6 +75,7 @@ WK_12="$( dirname ${0} )/../working/12_Avg_Temp"
 WK_13="$( dirname ${0} )/../working/13_VPD"
 WK_14="$( dirname ${0} )/../working/14_Precip"
 WK_15="$( dirname ${0} )/../working/15_LAI"
+WK_16="$( dirname ${0} )/../working/16_Soil"
 
 # Output geotiff size:
 SIZEX="1286"
@@ -100,7 +103,7 @@ usage(){
 	echo "Usage: ${0} [IMG_TO_PROCESS]"
 	echo "       - IMG_TO_PROCESS is an optional array to define which images to process. If omitted, every image will be created."
 	echo "       - Accepted values for the array are (every other value will be ignored):"
-	echo "             Filters, Y_planted, Species, Phenology, Management, NumHa, AvDBH, Height, Wf, Wrc, Ws, SolarRad, Avg_Temp, VPD, Precip, LAI"
+	echo "             ${IMG_ALL[@]}"
 	echo "       - NOTE: Remeber to set up and fill correctly the BIN_DIR, directory where the C modules are stored."
 	echo ""
 	echo "Run example: ${0} Phenology LAI Wrc NumHa"
@@ -203,7 +206,7 @@ log "\n"
 ### Filters execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Filters" ] ; then
-		log "### { Start creating Filters images...... ###\n"
+		log "### { Start creating ${IMG} images...... ###\n"
 		MSG="Conversion of AOI shapefile into tiff"
 		INPUT_01="${IN_00}/Sicily.shp"
 		OUTPUT_01="${WK_00}/Sicily.tif"
@@ -255,7 +258,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 
 		clean "${WK_00}"
 
-		log "### .......stop creating Filters images } ###\n"
+		log "### .......stop creating ${IMG} images } ###\n"
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
@@ -563,5 +566,53 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
+
+### Soil execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Soil" ] ; then
+    	log "### { Start creating ${IMG} images......... ###\n"
+    	
+    	INPUT_02=()
+    	for INPUT_01 in $( ls ${IN_16}/*.asc ) ; do
+			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_01}"
+			OUTPUT_01="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+			check "${MSG} failed on ${INPUT_01}.\n"
+	
+			MSG="Changing zone from 32 to 33 of ${OUTPUT_01}"
+			OUTPUT_02="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_zone33.tif/ ) )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_01}.\n"
+
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_Madonie_30m.tif/ ) )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_02}.\n"
+			
+			# Prepare layers for multiband image
+			INPUT_02+=("${OUTPUT_03}")
+		done
+		
+		METADATA="VALUE=SOIL,SITE=MADONIE,BAND1=Babbala,BAND2=Babbala,BAND3=Babbala,BAND4=Babbala,BAND5=Babbala,BAND6=Babbala"
+		MSG="Create multiband soil image"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${WK_16}/Soil.tif -m "${METADATA}"
+		check "${MSG} failed.\n"
+		
+		#MSG="Copy corine remapped image into output dir"
+		#log "${MSG} ...\n"
+		#cp ${OUTPUT_03} ${OUT_16}
+		#check "${MSG} failed.\n"
+
+		clean "${WK_16}"
+		
+    	
+    	log "### ..........stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Soil execution }
 
 exit 0
