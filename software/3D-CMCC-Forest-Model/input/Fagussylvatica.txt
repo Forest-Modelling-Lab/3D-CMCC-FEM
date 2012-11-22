@@ -127,10 +127,10 @@ SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	48              //35  //Max Height in m 
 DMAX	100              //Max Stem Diameter in cm 
-HPOWER	0.0353           //Slope of Asymptotic Height from Sortie for Quercus rubra
-RPOWER	0.152           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
-CHPOWER	0.664           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
-FORMFACT	0.6     //Form Factor for Sessil Oak (MJ Tarp-Johansen, Ann For Sci, 1997)
+HPOWER	0.0353           //Slope of Asymptotic Height 
+RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
+CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
+FORMFACT	0.6     //Form Factor
 //LPJ allometric relationships
 KALLOMA	100
 KALLOMB	40
@@ -156,8 +156,8 @@ MINRAIN	100             //Minimum annual Rain Precipitation for Establishment
                                         //S. Sitch 2003
 //SEEDS PRODUCTION
 ADULT_AGE	5	//age at which consider tree as an adult tree
-MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
-MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
+MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
+MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) 
 WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)
 SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
 GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.)
