@@ -26,9 +26,6 @@ enum {
 	WS_COLUMN,
 	WRES_COLUMN,
 	LAI_COLUMN,
-	//todo perc
-	PERC_COLUMN,
-
 	COLUMNS
 };
 
@@ -73,9 +70,7 @@ static const char *header[COLUMNS] = {
 		"WRF",
 		"WS",
 		"WRES",
-		"LAI",
-		//todo perc
-		"PERC"
+		"LAI"
 };
 
 /* */
@@ -366,11 +361,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						case LAI_COLUMN:
 							rows[*rows_count-1].lai = value;
 							break;
-							//todo perc
-						case PERC_COLUMN:
-							rows[*rows_count-1].perc = value;
-							break;
-
 						default:
 							printf(err_too_many_column, *rows_count);
 							free(columns);

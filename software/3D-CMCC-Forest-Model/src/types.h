@@ -566,8 +566,6 @@ typedef struct {
 	PREC ws;
 	PREC wres;
 	PREC lai;
-	//todo perc
-	PREC perc;
 
 } ROW;
 

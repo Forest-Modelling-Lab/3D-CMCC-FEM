@@ -118,12 +118,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
 
-			//todo perc
-			if (settings->presence == 'p')
-			{
-				s->value[NPP] = (StandGPPtC * 2) * site->Y * s->value[PERC];    // assumes respiratory rate is constant
-				Log("Monthly Stand NPP = %g \n", s->value[NPP]);
-			}
 		}
 
 	}
