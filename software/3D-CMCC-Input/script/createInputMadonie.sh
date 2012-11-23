@@ -390,6 +390,13 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Avg_Temp" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
+    	
+    	# MODIS ID layer 916: Retrieved Temperature profile mean, band 20
+    	# T(a)= m * (Z+2) + T
+		# m è una costante = -0.0064
+		# Z = valore del DEM
+		# T è la temperatura della banda 20 ottenuta dalla formula sopra: T= factor_scale * (valore - add_offset) - 273.15
+
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
 done
@@ -399,6 +406,12 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "VPD" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
+    	
+    	# layers 918 e 919 delle MOD08_M3
+		# una volta che abbiamo la umidità relativa:
+		# VPD = 0.6108 * e^( (17.27 * Tavg)/(237.3 + Tavg) ) * (1 - (RH/100))
+    	
+    	
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
@@ -572,7 +585,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Soil" ] ; then
     	log "### { Start creating ${IMG} images......... ###\n"
     	
-    	INPUT_02=()
     	for INPUT_01 in $( ls ${IN_16}/*.asc ) ; do
 			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_01}"
 			OUTPUT_01="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/.tif/ ) )"
@@ -587,25 +599,21 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			check "${MSG} failed on ${OUTPUT_01}.\n"
 
 			MSG="Remap of UTM geotiff image"
-			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_Madonie_30m.tif/ ) )"
+			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m.tif/ ) )"
 			log "${MSG} ...\n"	
 			${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_02}.\n"
-			
-			# Prepare layers for multiband image
-			INPUT_02+=("${OUTPUT_03}")
+			check "${MSG} failed on ${OUTPUT_02}.\n"	
 		done
 		
-		METADATA="VALUE=SOIL,SITE=MADONIE,BAND1=Babbala,BAND2=Babbala,BAND3=Babbala,BAND4=Babbala,BAND5=Babbala,BAND6=Babbala"
-		MSG="Create multiband soil image"
-		log "${MSG} ...\n"
-		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${WK_16}/Soil.tif -m "${METADATA}"
-		check "${MSG} failed.\n"
+		# Prepare layers for multiband image
+		INPUT_02+=("$( ls ${WK_16}/*argilla*30m.tif*)" "$( ls ${WK_16}/*limo*30m.tif*)" "$( ls ${WK_16}/*sabbia*30m.tif*)" "$( ls ${WK_16}/*campo*30m.tif*)" "$( ls ${WK_16}/*densita*30m.tif*) "$( ls ${WK_16}/*profondita*30m.tif*)"")
 		
-		#MSG="Copy corine remapped image into output dir"
-		#log "${MSG} ...\n"
-		#cp ${OUTPUT_03} ${OUT_16}
-		#check "${MSG} failed.\n"
+		METADATA="VALUE=SOIL,SITE=MADONIE,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=max available soil water (mm),BAND5=density (g/cm3),BAND6=soil thickness (cm)"
+		MSG="Create multiband soil image"
+		OUTPUT_04="${WK_16}/Soil.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_03} -m "${METADATA}"
+		check "${MSG} failed.\n"
 
 		clean "${WK_16}"
 		
