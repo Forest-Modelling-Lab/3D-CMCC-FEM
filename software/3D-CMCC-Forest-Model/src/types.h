@@ -696,7 +696,7 @@ typedef struct {
 	int n_days;
 	PREC solar_rad;
 	PREC tav;
-	PREC rh;
+	PREC vpd;
 	PREC ts_f;
 	PREC rain;
 	PREC swc;

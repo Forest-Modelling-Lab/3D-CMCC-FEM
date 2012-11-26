@@ -6,7 +6,7 @@
 #include "math.h"
 #include "types.h"
 
-
+/*
 float Get_vpd (const MET_DATA *const met, int month)
 {
 	float svp;
@@ -27,6 +27,7 @@ float Get_vpd (const MET_DATA *const met, int month)
 
 	return vpd;
 }
+*/
 
 void Print_met_data (const MET_DATA *const met, float vpd, int month, float daylength)
 {
@@ -34,14 +35,14 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, float dayl
 	Log("**Monthly MET DATA**\n");
 	Log("-average solar_rad = %g MJ/m^2/day\n"
 			"-tav = %g °C\n"
-			"-rh = %g %%\n"
+			//"-rh = %g %%\n"
 			"-vpd = %g mbar\n"
 			"-ts_f = %g °C\n"
 			"-rain = %g mm\n"
 			"-swc = %g %vol\n",
 			met[month].solar_rad,
 			met[month].tav,
-			met[month].rh,
+			//met[month].rh,
 			vpd,
 			met[month].ts_f,
 			met[month].rain,

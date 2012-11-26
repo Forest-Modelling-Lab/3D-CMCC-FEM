@@ -101,7 +101,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		/*Abscission DayLength*/
 		Get_Abscission_DayLength (&m->cells[cell]);
 		//compute vpd from RH
-		vpd = Get_vpd (met, month);
+		//todo remove if used VPD
+		vpd =  met[month].vpd; //Get_vpd (met, month);
 
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].solar_rad;

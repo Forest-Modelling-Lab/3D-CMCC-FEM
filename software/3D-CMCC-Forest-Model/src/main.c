@@ -21,7 +21,7 @@ enum {	MONTH = 0,
 	N_DAYS,
 	RG_F,
 	TA_F,
-	RH_F,
+	VPD_F,
 	TS_F,
 	PRECIP,
 	SWC,
@@ -97,7 +97,7 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 		"n_days",
 		"Rg_f",
 		"Ta_f",
-		"RH_f",
+		"VPD_f",
 		"Ts_f",
 		"Precip",
 		"SWC",
@@ -737,8 +737,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							}
 							break;
 
-						case RH_F: //RH_f - RH
-							yos[*yos_count-1].m[month].rh = convert_string_to_prec(token2, &error_flag);
+						case VPD_F: //RH_f - RH
+							yos[*yos_count-1].m[month].vpd = convert_string_to_prec(token2, &error_flag);
 							if ( error_flag )
 							{
 								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
@@ -746,11 +746,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								fclose(f);
 								return NULL;
 							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rh))
+							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].vpd))
 							{
 								Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								yos[*yos_count-1].m[month].rh = yos[*yos_count-2].m[month].rh;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rh))
+								yos[*yos_count-1].m[month].vpd = yos[*yos_count-2].m[month].vpd;
+								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].vpd))
 								{
 									Log ("********* VPD -NO DATA- in previous year!!!!\n" );
 								}
@@ -935,7 +935,7 @@ void met_summary(MET_DATA *met) {
 				met[i].n_days,
 				met[i].solar_rad,
 				met[i].tav,
-				met[i].rh,
+				met[i].vpd,
 				met[i].ts_f,
 				met[i].rain,
 				met[i].swc,
