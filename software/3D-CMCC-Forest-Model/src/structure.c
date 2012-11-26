@@ -273,6 +273,10 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 
 		height = 0;
 
+
+		//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
+
+
 		//compute class canopy cover
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
