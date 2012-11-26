@@ -80,7 +80,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (m->cells[cell].heights[height].ages[age].species[species].phenology == 0)
+						if (m->cells[cell].heights[height].ages[age].species[species].phenology == D)
 						{
 							if (met[month].ndvi_lai >= 0.5)
 							{

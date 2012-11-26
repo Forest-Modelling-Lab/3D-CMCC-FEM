@@ -1436,7 +1436,7 @@ int main(int argc, char *argv[])
 			matrix_summary (m, years, yos );
 
 			/*compute number of vegetative months*/
-			Log("compute vegetative months.....\n");
+			Log("compute vegetative months for version '%c'\n", settings->version);
 			for (month = 0; month < MONTHS; month ++)
 			{
 				Get_Veg_Months (m, yos, month, years);
