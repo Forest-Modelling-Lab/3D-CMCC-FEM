@@ -270,7 +270,6 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 			Log("Density in layer 0 = %g trees/ha\n", c->density_subdominated);
 		}
 
-
 		height = 0;
 
 
@@ -579,6 +578,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		}
 		Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 		Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
+		c->density_dominant = c->tree_number_dominant / settings->sizeCell;
 		Log("Density in layer 0 = %g trees/ha\n", c->density_dominant);
 
 		if (c->layer_cover_dominant >=  settings->max_layer_cover)
@@ -679,44 +679,38 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 
 	Log("--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--\n");
 
-	if (settings->version == 'u')
+
+	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
-
-		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
-
-		for ( height = c->heights_count - 1; height >= 0; height-- )
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{
-			for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+				current_height = c->heights[height].value;
+				if (c->heights_count > 1 )
 				{
-					current_height = c->heights[height].value;
-					if (c->heights_count > 1 )
+					if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 					{
-						if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-						{
-							c->monthly_layer_number += 1;
-							previous_height = current_height;
-						}
-						if ((previous_height - current_height ) > settings->layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-						{
-							c->monthly_layer_number += 1;
-							previous_height = current_height;
-						}
+						c->monthly_layer_number += 1;
+						previous_height = current_height;
 					}
-					if (c->heights_count == 1  && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					if ((previous_height - current_height ) > settings->layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 					{
-						c->monthly_layer_number = 1;
+						c->monthly_layer_number += 1;
+						previous_height = current_height;
 					}
+				}
+				if (c->heights_count == 1  && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+				{
+					c->monthly_layer_number = 1;
 				}
 			}
 		}
 	}
-	else
-	{
-		c->monthly_layer_number = 1;
-	}
 	Log("number of vegetative layers = %d\n", c->monthly_layer_number);
+
 	//Log("height count = %d \n", c->heights_count);
 }
 

@@ -151,25 +151,25 @@ void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 	Log("-for Class\n");
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
 	                                                                                                                     + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
-	Log("Yearly Class AGB = %g tDM/ha year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
+	Log("Yearly Class AGB = %g tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM];
-	Log("Yearly Class BGB = %g tDM/ha year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
+	Log("Yearly Class BGB = %g tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
 
 
 	Log("-for Stand\n");
 	if (settings->presence == 't')
 	{
 		c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB];
-		Log("Yearly Stand AGB = %g tDM/ha year\n", c->stand_agb);
+		Log("Yearly Stand AGB = %g tDM/area year\n", c->stand_agb);
 		c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB];
-		Log("Yearly Stand BGB = %g tDM/ha year\n", c->stand_bgb);
+		Log("Yearly Stand BGB = %g tDM/area year\n", c->stand_bgb);
 	}
 	else
 	{
 		c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB] * c->heights[height].ages[age].species[species].value[PERC];
-		Log("Yearly Stand AGB = %g tDM/ha year\n", c->stand_agb);
+		Log("Yearly Stand AGB = %g tDM/area year\n", c->stand_agb);
 		c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB] * c->heights[height].ages[age].species[species].value[PERC];
-		Log("Yearly Stand BGB = %g tDM/ha year\n", c->stand_bgb);
+		Log("Yearly Stand BGB = %g tDM/area year\n", c->stand_bgb);
 	}
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
@@ -189,5 +189,5 @@ extern void Get_total_class_level_biomass (SPECIES *s)
 {
 	// Total Biomass less Litterfall and Root turnover
 	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] +s->value[BIOMASS_STEM_CTEM];
-	Log("Total Biomass less Litterfall and Root Turnover = %g tDM/ha\n", s->value[TOTAL_W]);
+	Log("Total Biomass less Litterfall and Root Turnover = %g tDM/area\n", s->value[TOTAL_W]);
 }

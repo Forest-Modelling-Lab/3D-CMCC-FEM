@@ -16,7 +16,7 @@ void Get_initial_month_lai (SPECIES *const s)
 
 	if (s->counter[VEG_MONTHS]  == 1)
 	{
-		Log("++Reserves pools = %g tDM/ha\n", s->value [BIOMASS_RESERVE_CTEM]);
+		Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 		Log("++Reserve biomas for each tree in g = %g \n", s->value[BIOMASS_RESERVE_CTEM] * 1000000 / s->counter[N_TREE]);
 
 		//just a fraction of biomass reserve is used for foliage, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -25,7 +25,7 @@ void Get_initial_month_lai (SPECIES *const s)
 		Log("ratio of reserve for foliage = %g% \n", (1.0 / s->value[STEM_LEAF] * 100));
 
 		s->value[BIOMASS_RESERVE_CTEM] -= s->value[BIOMASS_FOLIAGE_CTEM];
-		Log("++Reserves pools = %g tDM/ha\n", s->value [BIOMASS_RESERVE_CTEM]);
+		Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 		//not sure if allocate the remaining reserves for stem
 		//s->value[BIOMASS_STEM_CTEM] = s->value[BIOMASS_STEM_CTEM] + (s->value[BIOMASS_RESERVE_CTEM]-s->value[BIOMASS_FOLIAGE_CTEM]);

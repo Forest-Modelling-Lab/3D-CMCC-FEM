@@ -63,7 +63,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 
 		}
-		//top layer but not highest tree height class
+		//top layer but not the highest tree height class
 		else
 		{
 			Log("Less Rain = %g mm\n", lessrain);

@@ -91,7 +91,7 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 	}
 
 	Log("Basal Area for this layer = %g m^2/tree\n", s->value[BASAL_AREA]);
-	Log("Stand Basal Area for this layer = %g m^2/ha\n", s->value[STAND_BASAL_AREA]);
+	Log("Stand Basal Area for this layer = %g m^2/area\n", s->value[STAND_BASAL_AREA]);
 
 
 	//Log("**Kostner eq** \n");
@@ -110,10 +110,10 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 
 	//compute sapwood pools and heatwood pool
 	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
-	Log("Stem biomass = %g tDM/ha \n", s->value[BIOMASS_STEM_CTEM]);
-	Log("Sapwood biomass = %g tDM/ha \n", s->value[WS_sap]);
+	Log("Stem biomass = %g tDM/area \n", s->value[BIOMASS_STEM_CTEM]);
+	Log("Sapwood biomass = %g tDM/area \n", s->value[WS_sap]);
 	s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
-	Log("Heartwood biomass = %g tDM/ha \n", s->value[WS_heart]);
+	Log("Heartwood biomass = %g tDM/area \n", s->value[WS_heart]);
 
 	Log("Leaf Area from Kostner-LPJ = %g m^2\n", (s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]);
 	Log("Crown diameter = %g m^2\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
@@ -124,7 +124,7 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 
 
 	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ s->value[SLAmkg]) / 1000;
-	Log("Maximum foliage biomass = %g tDM/ha \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+	Log("Maximum foliage biomass = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 
 
 

@@ -371,7 +371,7 @@ enum {
 	STAND_GPP_g_C,                  //Monthly Stand GPP in grams of C
 	STAND_GPP_t_C,                  //Monthly Stand GPP in tonnes of C
 	STAND_YEARLY_GPP_g_C,           //Yearly Stand GPP in grams of C
-	NPP,                            //Net Primary Production  tDM/ha
+	NPP,                            //Net Primary Production  tDM/area
 
 	POINT_GPP_g_C,
 

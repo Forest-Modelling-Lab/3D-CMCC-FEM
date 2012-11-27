@@ -14,12 +14,12 @@ extern void Get_litterfall (CELL *c, SPECIES *const s, const int years)
     if (!years)
       {
           c->litter += s->value[DEL_LITTER] + site->initialLitter;
-          Log("Total Litter = %g tDM/ha\n", c->litter);
+          Log("Total Litter = %g tDM/area\n", c->litter);
       }
       else
       {
           c->litter += s->value[DEL_LITTER];
-          Log("Total Litter = %g tDM/ha\n", c->litter);
+          Log("Total Litter = %g tDM/area\n", c->litter);
       }
 
 	//reset
@@ -53,7 +53,7 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 		//BISOGNA PRENDERE QUELLE DELL'ANNO PRECEDENTE
 		height->ages[age].species[species].value[DEL_LITTER] = oldWf;
 		//Log("Foliage to litter of previuos year = %g tDM/ha \n", oldWf);
-		Log("Yearly Foliage Biomass to litter from deciduous population = %g tDM/ha\n", height->ages[age].species[species].value[DEL_LITTER]);
+		Log("Yearly Foliage Biomass to litter from deciduous population = %g tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
 	}
 	else
 	{
@@ -74,7 +74,7 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 
 		Log("OldWf = %g\n", oldWf);
 		height->ages[age].species[species].value[DEL_LITTER] = gammaF * oldWf;
-		Log("Yearly Foliage Biomass to litter from evergreen population = %g tDM/ha\n", height->ages[age].species[species].value[DEL_LITTER]);
+		Log("Yearly Foliage Biomass to litter from evergreen population = %g tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
 
 		height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - height->ages[age].species[species].value[DEL_LITTER]);
 		Log("Yearly Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);

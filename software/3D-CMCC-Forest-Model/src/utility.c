@@ -133,15 +133,15 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
 	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
 	Log("END of Year Yearly Cumulated GPP for layer %d  = %g gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_G_C]);
-	Log("END of Year Yearly Cumulated NPP for layer %d  = %g tDM/ha year\n", h->z, s->value[YEARLY_NPP]);
-	Log("END of Year Yearly Cumulated DEL STEM layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WS]);
+	Log("END of Year Yearly Cumulated NPP for layer %d  = %g tDM/area year\n", h->z, s->value[YEARLY_NPP]);
+	Log("END of Year Yearly Cumulated DEL STEM layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_WS]);
 	//Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WF]);
-	Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WFR]);
-	Log("END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WCR]);
-	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WRES]);
+	Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_WFR]);
+	Log("END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_WCR]);
+	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_WRES]);
 	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %g KgC tree year\n", h->z, (s->value[DEL_Y_WRES]*2000)/s->counter[N_TREE]);
-	Log("END of Year Yearly Cumulated DEL BB layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_BB]);
-	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %g tDM/ha year\n", h->z, s->value[DEL_Y_WR]);
+	Log("END of Year Yearly Cumulated DEL BB layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_BB]);
+	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %g tDM/area year\n", h->z, s->value[DEL_Y_WR]);
 
 	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP])
 	{
@@ -158,7 +158,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	//DO NOT CHANGE THESE LINES!!!!!!!!!!
 	Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, c->x, c->y, c->gpp);
-	Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM cell resolution^-2 year^-1]\n",yos[years].year, c->x, c->y, c->npp);
+	Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM/area year^-1]\n",yos[years].year, c->x, c->y, c->npp);
 
 	//DO NOT CHANGE THIS LINE!!!!!!!!!!
 	Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, c->x, c->y, c->total_yearly_evapotransipration);

@@ -673,11 +673,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 							"----- n stumps = %d stumps\n"
 							"----- avdbh = %g cm\n"
 							"----- wf = %g tDM/ha\n"
-							"----- wr coarse = %g tDM/ha\n"
-							"----- wr fine = %g tDM/ha\n"
-							"----- ws = %g tDM/ha\n"
-							"----- wres = %g tDM/ha\n"
-							"----- lai = %g tDM/ha\n",
+							"----- wr coarse = %g tDM/area\n"
+							"----- wr fine = %g tDM/area\n"
+							"----- ws = %g tDM/area\n"
+							"----- wres = %g tDM/area\n"
+							"----- lai = %g tDM/area\n",
 							species + 1,
 							m->cells[cell].heights[height].ages[age].species[species].name,
 							((m->cells[cell].heights[height].ages[age].species[species].phenology == D) ? 'D' : 'E'),
