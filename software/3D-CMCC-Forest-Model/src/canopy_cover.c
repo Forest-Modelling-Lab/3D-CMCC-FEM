@@ -30,8 +30,8 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	/*Density*/
 
 	s->value[DENSITY] = (float)s->counter[N_TREE] / settings->sizeCell;
-	Log("Tree Number = %d trees/ha\n", s->counter[N_TREE]);
-	Log("Density = %g trees/ha\n", s->value[DENSITY]);
+	Log("Tree Number = %d trees/area\n", s->counter[N_TREE]);
+	Log("Density = %g trees/area\n", s->value[DENSITY]);
 
 
 	/*DBH-DC Ratio effective*/

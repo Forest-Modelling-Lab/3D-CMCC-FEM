@@ -246,7 +246,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		{
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
-			Log("Density in layer 0 = %g trees/ha\n", c->density_dominant);
+			Log("Density in layer 0 = %g trees/area\n", c->density_dominant);
 		}
 		if (c->heights_count == 2)
 		{
@@ -254,8 +254,8 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominated_counter);
 			Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_dominated);
-			Log("Density in layer 1 = %g trees/ha\n", c->density_dominant);
-			Log("Density in layer 0 = %g trees/ha\n", c->density_dominated);
+			Log("Density in layer 1 = %g trees/area\n", c->density_dominant);
+			Log("Density in layer 0 = %g trees/area\n", c->density_dominated);
 		}
 		if (c->heights_count > 2)
 		{
@@ -265,9 +265,9 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 			Log("Tree number in layer 2 = %d \n", c->tree_number_dominant);
 			Log("Tree number in layer 1 = %d \n", c->tree_number_dominated);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_subdominated);
-			Log("Density in layer 2 = %g trees/ha\n", c->density_dominant);
-			Log("Density in layer 1 = %g trees/ha\n", c->density_dominated);
-			Log("Density in layer 0 = %g trees/ha\n", c->density_subdominated);
+			Log("Density in layer 2 = %g trees/area\n", c->density_dominant);
+			Log("Density in layer 1 = %g trees/area\n", c->density_dominated);
+			Log("Density in layer 0 = %g trees/area\n", c->density_subdominated);
 		}
 
 		height = 0;
@@ -579,7 +579,7 @@ void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
 		Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 		Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
 		c->density_dominant = c->tree_number_dominant / settings->sizeCell;
-		Log("Density in layer 0 = %g trees/ha\n", c->density_dominant);
+		Log("Density in layer 0 = %g trees/area\n", c->density_dominant);
 
 		if (c->layer_cover_dominant >=  settings->max_layer_cover)
 		{

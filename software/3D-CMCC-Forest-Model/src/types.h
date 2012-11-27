@@ -476,16 +476,16 @@ enum {
 	AV_STEM_MASS,                   //Average Stem Mass           Kg/tree
 	AV_ROOT_MASS,                   //Average Root Mass           Kg/tree
 
-	BASAL_AREA,                     //Basal Area (m^2/ha tree)
+	BASAL_AREA,                     //Basal Area (m^2/area tree)
 	STAND_BASAL_AREA,
 	CROWN_HEIGHT,                   //Crown Height (m)
 	VOLUME,                   //Stem Volume
 	TOTAL_VOLUME,
-	TREE_VOLUME,                    //Single Tree Volume (m^3/ha)
+	TREE_VOLUME,                    //Single Tree Volume (m^3/area)
 	IND_STEM_VOLUME,                //Individual Stem Volume for Crowding Competition Function
 	CAI,                            //Current Annual Increment
 	IND_CAI,                        //Individual Current Annual Increment
-	MAI,                            //Mean Annual Volume Increment (m^3/ha year)
+	MAI,                            //Mean Annual Volume Increment (m^3/area year)
 
 
 	//YEARLY CUMULATIVE VARIABLES
