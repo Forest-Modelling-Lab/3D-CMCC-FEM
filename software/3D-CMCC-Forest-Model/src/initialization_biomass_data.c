@@ -67,7 +67,7 @@ void Get_initialization_biomass_data (SPECIES *s)
 
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002
-		if (s->phenology == 0)
+		if (s->phenology == D)
 		{
 			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 			//compute foliage biomass for evergreen
