@@ -56,7 +56,7 @@ gdal_translate -co COMPRESS=LZW -srcwin 7 4 1286 1160 -a_ullr 399333.29188730497
 
 
 
-# Parco delle Madonie shapefile rasterization:
+# Parco delle Madonie shapefile rasterization (Sicily.shp):
 # Its extent is:
 Lon/Lat Lower Left:  13.855128, 37.738570
 Lon/Lat Upper Right: 14.293904, 38.051145
@@ -74,3 +74,5 @@ Resolution is more or less 1000x1000 meters
 So a resolution of 30x30 meters is in this area a resolution of:
 0.017453292519943295 : 1156.69767983290474081115 = x : 30 --> x = (0.017453292519943295 * 30) / 1156.69767983290474081115
 x = 0.00045266691956530711
+
+
