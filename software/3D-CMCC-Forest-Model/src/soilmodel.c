@@ -28,9 +28,8 @@ void soil_model(CELL *c, const YOS *const yos, const int years, const int month,
 	vwc = soilw / (1000.0 * sitec->soil_depth);
 	*/
 	/* calculate psi */
-	/*
-	*psi = sitec->psi_sat * pow((vwc/sitec->vwc_sat), sitec->soil_b);
-	*psi */0.
+	// *psi = sitec->psi_sat * pow((vwc/sitec->vwc_sat), sitec->soil_b);
+
 
 
 }

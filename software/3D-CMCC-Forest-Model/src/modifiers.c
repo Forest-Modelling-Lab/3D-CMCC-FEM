@@ -187,7 +187,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	/*SOIL DROUGHT MODIFIER*/
 	//(see Duursma et al., 2008)rev_Angelo
-/*
+
 	//to put in species.txt
 	//numbers are not real just used for compile!!!!!!!!
 	float leaf_res = 1; //leaf specific plant hydraulic resistance
@@ -198,16 +198,13 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	float soil_res = 1; //soil hydraulic resistance
 	float psi0 = 2; //dry soil water potential in MPa
 	float soil_coeff = 1; //empirical soil coefficient
-	//soil percentage characteristics have to be with value 0-1
-	float clay_perc; //percentage of clay
-	float silt_perc; //percentage of silt
-	float sand_perc; //percentage of sand
-	//soil average dimension particle
-	float clay_dim; //clay avg dimension of particle
-	float silt_dim; //silt avg dimension of particle
-	float sand_dim; //sand avg dimension of particle
 
-	float dens = 1.49; //g/cm^3
+	//soil average dimension particle
+	//value are averaged from limits in site.txt
+	float clay_dim = 0.001; //clay avg dimension of particle
+	float silt_dim =  0.026;//silt avg dimension of particle
+	float sand_dim =  1.025;//sand avg dimension of particle
+
 
 
 
@@ -226,44 +223,59 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	float soil_water_pot_sat; //soil water potential at saturation
 	float sat_conduct; //saturated conductivity
 	float specific_soil_cond; //specific soil hydraulic conductance
+	float leaf_specific_soil_cond;
 
 
 	//compute soil hydraulic characteristics from soil granulometry
 	//from model Hydrall
-	eq1 = (clay_perc * log(clay_dim)) + (silt_perc * log(silt_perc)) + (sand_perc * log(sand_dim));
+	eq1 = (site->clay_perc * log(clay_dim)) + (site->silt_perc * log(silt_dim)) + (site->sand_perc * log(sand_dim));
+	Log("eq1 = %g\n", eq1);
 
 	//soil mean particle diameter in mm
 	soil_avg_dim = exp(eq1);
+	Log("soil_avg_dim = %g\n", soil_avg_dim);
 
 
-    eq2 = sqrt ((pow ((clay_perc * log(clay_dim)),2)) + (pow ((sand_perc * log(sand_dim)),2)) + (pow ((silt_perc * log(silt_dim)),2)));
+    eq2 = sqrt ((pow ((site->clay_perc * log(clay_dim)),2)) + (pow ((site->sand_perc * log(sand_dim)),2)) + (pow ((site->silt_perc * log(silt_dim)),2)));
+    Log("eq2 = %g\n", eq2);
 
     //geometric standard deviation in particle size distribution (mm)
     sigma_g = exp(eq2);
+    Log("sigma_g = %g\n", sigma_g);
 
     //soil entry water potential (MPa)
     pentry_temp = -0.5 / sqrt(soil_avg_dim)/1000;
+    Log("pentry_temp = %g\n", pentry_temp);
     //correction for bulk density effects with dens = 1.49 g/cm^3
-    pentry = pentry_temp * pow ((dens / 1.3), (0.67 * bsl));
+    pentry = pentry_temp * pow ((site->bulk_dens / 1.3), (0.67 * bsl));
+    Log("pentry = %g\n", pentry);
 
     bsl = -2 * (pentry * 1000) + 0.2 * sigma_g;
+    Log("bsl = %g\n", bsl);
 
     //saturated soil water content
-    sat_soil_water_cont= 1.0 - (dens/2.56);
+    sat_soil_water_cont= 1.0 - (site->bulk_dens/2.56);
+    Log("soil water content at saturation = %g\n", sat_soil_water_cont);
 
-    eq = pentry * pow ((sat_soil_water_cont / Soil_Moist_Ratio), bsl);
+    eq = pentry * pow ((sat_soil_water_cont / c->soil_moist_ratio), bsl);
+    Log("eq = %g\n", eq);
 
-    //compue bulk soil water potential
+    //compute bulk soil water potential
     //for psi see Magani xls
     bulk_pot = Maximum (eq, min_leaf_pot);
+    Log("bulk soil water potential = %g\n", bulk_pot);
 
     //compute leaf-specific soil hydraulic conductance
 	leaf_specific_soil_cond = sat_conduct * pow ((soil_water_pot_sat / bulk_pot), (2 + (3 / soil_coeff)));
+	Log("leaf-specific soil hydraulic conductance = %g\n", leaf_specific_soil_cond);
 
 
 	s->value[F_DROUGHT] = (leaf_res * (bulk_pot - min_leaf_pot)) / (- min_leaf_pot * ((leaf_res + soil_res) * bulk_pot));
+	Log("F_DROUGHT = %g\n", s->value[F_DROUGHT]);
 
-*/
+
+	//todo see Schwalm 2004
+
 
 
 	/*CO2 MODIFIER FROM C-FIX*/
