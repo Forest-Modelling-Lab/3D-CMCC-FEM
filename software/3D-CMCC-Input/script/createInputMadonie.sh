@@ -401,6 +401,18 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Phenology" ] ; then
     	log "### { Start creating ${IMG} images.... ###\n"
     	
+    	# Phenology identification numbers:
+		# 0 = "-9999" (Undefined)
+		# 1 = "D"     (Deciduous)
+		# 2 = "E"     (Evergreen)
+		PHENOLOGY_ID=(Undefined D E)
+		
+		MSG="Create an image monoband image"
+		OUTPUT_08="${WK_03}/Deciduous.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t short -v 1 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+    	
     	INPUT_01="${OUT_02}/Species.tif"
     	OUTPUT_01="${WK_03}/Phenology.tif"
     	gdal_translate ${PAR_01} ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
@@ -477,6 +489,22 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
+    	
+    	for INPUT_01 in $( ls ${IN_11}/*_rad_Nx*.hdf ) ; do
+    		CURR_PROJ=$( gdalinfo HDF4_SDS:UNKNOWN:"${INPUT_01}":6 | grep SRS | cut -d '=' -f '2' )
+    		UL_LONGITUDE=$( gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":1 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
+    		LR_LONGITUDE=$( gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":1 | grep STATISTICS_MAXIMUM | cut -d '=' -f '2' )
+    		UL_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MAXIMUM | cut -d '=' -f '2' )
+    		LR_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
+    		
+    		MSG="Extract solar radiation from hdf"
+    		INPUT_02="HDF4_SDS:UNKNOWN:\"${INPUT_01}\":6" # swgdn subdataset
+			OUTPUT_01="${WK_11}/$( basename $( echo ${INPUT_01} | sed s/.SUB.hdf/.tif/ | sed s/MERRA301.prod.assim.tavgM_2d_rad_Nx./swgdn-/) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+		done
+    		
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
 done
