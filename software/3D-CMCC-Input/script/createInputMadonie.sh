@@ -31,6 +31,18 @@ IMG_SELECTED=()
 # 7 = "quercus_evergreen" (Q. ilex, Q. suber)
 SPECIES_ID=(Undefined Castaneasativa Fagussylvatica Ostryacarpinifolia Pinusnigra Quercuscerris quercus_deciduous quercus_evergreen)
 
+# Phenology identification numbers:
+# 0 = "-9999" (Undefined)
+# 1 = "D"     (Deciduous)
+# 2 = "E"     (Evergreen)
+PHENOLOGY_ID=(Undefined D E)
+
+# Management identification numbers:
+# 0 = "-9999" (Undefined)
+# 1 = "T"     (Timber)
+# 2 = "C"     (Coppice)
+MANAGEMENT_ID=(Undefined T C)
+
 BIN_DIR="$( dirname ${0} )/../bin"
 OUTPUT_DIR="$( dirname ${0} )/../output"
 # Input directories
@@ -388,6 +400,11 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Phenology" ] ; then
     	log "### { Start creating ${IMG} images.... ###\n"
+    	
+    	INPUT_01="${OUT_02}/Species.tif"
+    	OUTPUT_01="${WK_03}/Phenology.tif"
+    	gdal_translate ${PAR_01} ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+    	
     	log "### .....stop creating ${IMG} images } ###\n"
     fi
 done
