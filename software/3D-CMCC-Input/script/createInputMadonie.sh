@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Description:    createInputForSE.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
@@ -16,9 +16,20 @@ VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
-MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg mergeImg)
+MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg mergeImg specFromMaxPerc)
 IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
 IMG_SELECTED=()
+
+# Species identification numbers: 
+# 0 = "-9999" (Undefined)
+# 1 = "Castaneasativa"
+# 2 = "Fagussylvatica"
+# 3 = "Ostryacarpinifolia" 
+# 4 = "Pinusnigra"
+# 5 = "Quercuscerris"
+# 6 = "quercus_deciduous" (Q. cerris, Q. robur, Q. pubescens, Q. petreae)
+# 7 = "quercus_evergreen" (Q. ilex, Q. suber)
+SPECIES_ID=(Undefined Castaneasativa Fagussylvatica Ostryacarpinifolia Pinusnigra Quercuscerris quercus_deciduous quercus_evergreen)
 
 BIN_DIR="$( dirname ${0} )/../bin"
 OUTPUT_DIR="$( dirname ${0} )/../output"
@@ -93,6 +104,7 @@ PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_LONGLAT="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 PROJ_3004="+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=2520000 +y_0=0 +ellps=intl +units=m +no_defs"
 PAR_01="-q -co COMPRESS=LZW -of GTiff"
+PAR_02="-ot Int16"
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
@@ -213,101 +225,18 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		#INPUT_01="${IN_00}/Sicily.shp"
 		#OUTPUT_01="${WK_00}/Sicily.tif"
 		#log "${MSG} ...\n"
-		#gdal_rasterize ${PAR_01} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+		#gdal_rasterize ${PAR_01} ${PAR_02} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
 		#check "${MSG} failed on ${INPUT_01}.\n"
-
 		#MSG="Conversion of tiff projection from longlat to UTM"
 		#OUTPUT_02="${WK_00}/Madonie_no_remap.tif"
 		#log "${MSG} ...\n"
 		#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
 		#check "${MSG} failed on ${OUTPUT_01}.\n"
-
 		#MSG="Remap and cut UTM geotiff image"
 		#OUTPUT_03="${WK_00}/Madonie.tif"
 		#log "${MSG} ...\n"
 		#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		#check "${MSG} failed on ${OUTPUT_02}.\n"
-
-		#MSG="Copy remapped AOI image into output dir"
-		#log "${MSG} ...\n"
-		#cp ${OUTPUT_03} ${OUT_00}
-		#check "${MSG} failed.\n"
-
-		#for INPUT_02 in $( ls ${IN_00}/*.asc ) ; do
-			#MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
-			#OUTPUT_04="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
-			#log "${MSG} ...\n"
-			#gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
-			#check "${MSG} failed on ${INPUT_02}.\n"
-	
-			#MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
-			#OUTPUT_05="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
-			#log "${MSG} ...\n"
-			#gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
-			#check "${MSG} failed on ${OUTPUT_04}.\n"
-
-			#MSG="Remap of UTM geotiff image"
-			#OUTPUT_06="${WK_00}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
-			#log "${MSG} ...\n"	
-			#${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-			#check "${MSG} failed on ${OUTPUT_05}.\n"
-	
-			#MSG="Copy corine remapped image into output dir"
-			#log "${MSG} ...\n"
-			#cp ${OUTPUT_06} ${OUT_00}
-			#check "${MSG} failed.\n"
-		#done
-
-		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-		MSG="Conversion of shapefile georef"
-		INPUT_01="${IN_00}/CFRS_ParcoMadonie.shp"
-		OUTPUT_01="${WK_00}/CFRS_ParcoMadonie_utm.shp"
-		log "${MSG} ...\n"
-		ogr2ogr -a_srs "${PROJ_3004}" -t_srs "${PROJ}" ${OUTPUT_01} ${INPUT_01} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Conversion of Madonie shapefile into GeoTiff (Castaneasativa)"
-		OUTPUT_02="${WK_00}/Madonie_Castaneasativa_1.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="CA"' -burn 1 -tr ${RES} -${RES} -ot Byte ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Conversion of Madonie shapefile into GeoTiff (Fagussylvatica)"
-		OUTPUT_03="${WK_00}/Madonie_Fagussylvatica_2.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="FA"' -burn 2 -tr ${RES} -${RES} -ot Byte ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Conversion of Madonie shapefile into GeoTiff (quercus_deciduous)"
-		OUTPUT_04="${WK_00}/Madonie_quercus_deciduous_6.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="QU" OR COD_CATEG="CE"' -burn 6 -tr ${RES} -${RES} -ot Byte ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Conversion of Madonie shapefile into GeoTiff (quercus_evergreen)"
-		OUTPUT_05="${WK_00}/Madonie_quercus_evergreen_7.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="LE" OR COD_CATEG="SU"' -burn 7 -tr ${RES} -${RES} -ot Byte ${OUTPUT_01} ${OUTPUT_05} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Merge of multiple species"
-		OUTPUT_06="${WK_00}/Madonie_species.tif"
-		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} -n 0 ${OUTPUT_02} ${OUTPUT_03} ${OUTPUT_04} ${OUTPUT_05} -o ${OUTPUT_06} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		#MSG="Conversion of tiff projection from EPSG:3004 to UTM"
-		#OUTPUT_06="${WK_00}/Madonie_species_utm.tif"
-		#log "${MSG} ...\n"
-		#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
-		#check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_07="${WK_00}/Species.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed on ${OUTPUT_02}.\n"
 
 		clean "${WK_00}"
 
@@ -330,27 +259,124 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Species" ] ; then
     	log "### { Start creating ${IMG} images...... ###\n"
     	
-    	MSG="Create an empty monoband image"
-		OUTPUT_01="${WK_02}/empty.tif"
+    	INPUT_03=()
+		for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
+			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
+			OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
+			check "${MSG} failed on ${INPUT_02}.\n"
+	
+			MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
+			OUTPUT_05="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_04}.\n"
+
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_06="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_05}.\n"
+	
+			INPUT_03+=("${OUTPUT_06}")
+		done
+		
+		MSG="Merge different corine images"
 		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0.0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+		OUTPUT_07="${WK_02}/Species_corine_one_band.tif"	
+		${BIN_DIR}/specFromMaxPerc -b ${#INPUT_03[@]} -i ${INPUT_03[@]} -v 7,6,2 -o ${OUTPUT_07} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Create an empty monoband image"
+		OUTPUT_08="${WK_02}/empty.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t short -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Give to empty image a proper georeference"
-		OUTPUT_02="${WK_02}/empty_with_georef.tif"
+		OUTPUT_09="${WK_02}/empty_with_georef.tif"
 		log "${MSG} ...\n"
-		gdal_translate ${PAR_01} -a_srs "${PROJ}" -a_ullr ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		check "${MSG} failed on ${OUTPUT_01}.\n"
+		gdal_translate ${PAR_01} -a_srs "${PROJ}" -a_ullr ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} ${OUTPUT_08} ${OUTPUT_09} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
 		
-		METADATA="VALUE=SPECIES,SITE=MADONIE,BAND1=Castaneasativa,BAND2=Fagussylvatica,BAND3=Ostryacarpinifolia,BAND4=Pinusnigra,BAND5=Quercuscerris,BAND6=quercus_deciduous (Q. cerris Q. robur Q. pubescens Q. petreae),BAND7=quercus_evergreen (Q. ilex Q. suber)"
-		MSG="Create multiband species image with percentages"
-		#INPUT_02=()
-		#for INPUT_01 in $( ls ${OUT_00}/CORINE* ) ; do
-			#	INPUT_02+=("${INPUT_01}")
-		#done
-		INPUT_02=(${OUTPUT_02} $( ls ${OUT_00}/*3115*.tif ) ${OUTPUT_02} ${OUTPUT_02} ${OUTPUT_02} $( ls ${OUT_00}/*3112*.tif ) $( ls ${OUT_00}/*3111*.tif ))
+		METADATA="SITE=${SITE},ID=SPECIE,-9999=${SPECIES_ID[0]},1=${SPECIES_ID[1]},2=${SPECIES_ID[2]},3=${SPECIES_ID[3]},4=${SPECIES_ID[4]},5=${SPECIES_ID[5]},6=${SPECIES_ID[6]},7=${SPECIES_ID[7]}"
+		MSG="Create multiband species image"
+		INPUT_04=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
+		OUTPUT_10="${WK_02}/Species_corine.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${WK_02}/Species.tif -m "${METADATA}"
+		${BIN_DIR}/mergeImg -b ${#INPUT_04[@]} -i ${INPUT_04[@]} -o ${OUTPUT_10} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${OUTPUT_10} into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_10} ${OUT_02}
+		check "${MSG} failed.\n"
+		
+		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+		MSG="Conversion of shapefile georef"
+		INPUT_01="${IN_02}/CFRS_ParcoMadonie.shp"
+		OUTPUT_01="${WK_02}/CFRS_ParcoMadonie_utm.shp"
+		log "${MSG} ...\n"
+		ogr2ogr -a_srs "${PROJ_3004}" -t_srs "${PROJ}" ${OUTPUT_01} ${INPUT_01} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="1"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_02="${WK_02}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="CA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="2"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_03="${WK_02}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="FA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="6"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_04="${WK_02}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="QU" OR COD_CATEG="CE"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="7"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_05="${WK_02}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="LE" OR COD_CATEG="SU"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_05} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Merge of multiple species"
+		OUTPUT_06="${WK_02}/Madonie_species.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${OUTPUT_02} ${OUTPUT_03} ${OUTPUT_04} ${OUTPUT_05} -o ${OUTPUT_06} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_07="${WK_02}/Species_carta_forestale_one_band.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed on ${OUTPUT_02}.\n"
+		
+		MSG="Copy ${OUTPUT_07} into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_07} ${OUT_02}
+		check "${MSG} failed.\n"
+		
+		MSG="Create multiband species image"
+		INPUT_02=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
+		OUTPUT_08="${WK_02}/Species.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_08} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"	
+		
+		MSG="Copy ${OUTPUT_08} into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_08} ${OUT_02}
 		check "${MSG} failed.\n"
     	
     	log "### .......stop creating ${IMG} images } ###\n"
