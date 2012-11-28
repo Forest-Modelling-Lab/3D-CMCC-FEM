@@ -314,8 +314,27 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	Log ("ASW = %g\n", c->available_soil_water);
 
 	swp = psi_sat + pow ((c->available_soil_water / teta_sat), -b_s);
-
 	Log ("SWP = %g\n", swp);
+
+	float SWP_open = -0.6;
+	float SWP_close = -2.3;
+
+	float F_SWP;
+
+	if (swp >= SWP_open)
+	{
+		F_SWP = 1;
+	}
+	else if (swp > SWP_close && swp < SWP_open)
+	{
+		F_SWP = (SWP_close - swp)/(SWP_close - SWP_open);
+	}
+	else
+	{
+		F_SWP = 0;
+	}
+
+	Log("F_SWP = %g\n", F_SWP);
 
 	/*CO2 MODIFIER FROM C-FIX*/
 
