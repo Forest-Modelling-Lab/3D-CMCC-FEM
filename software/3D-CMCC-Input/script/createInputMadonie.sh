@@ -501,7 +501,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     		INPUT_02="HDF4_SDS:UNKNOWN:\"${INPUT_01}\":6" # swgdn subdataset
 			OUTPUT_01="${WK_11}/$( basename $( echo ${INPUT_01} | sed s/.SUB.hdf/.tif/ | sed s/MERRA301.prod.assim.tavgM_2d_rad_Nx./swgdn-/) )"
 			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}"
+			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${LR_LATITUDE} ${LR_LONGITUDE} ${UL_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 		done
     		
