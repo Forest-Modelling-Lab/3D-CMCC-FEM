@@ -19,6 +19,8 @@ SAND_PERC "0.6469"	//PERCENTAGE OF SAND (0,05 - 2 mm)
 
 BULK_DENSITY "1"  //BULK DENSITY (g/cm3)
 
+SOIL_DEPTH "100" //SOIL DEPTH (cm)
+
 
 //SITE NUTRITION
 FR "0.8" //Fertility rating

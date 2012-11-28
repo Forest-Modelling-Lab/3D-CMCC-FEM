@@ -275,8 +275,47 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 
 	//todo see Schwalm 2004
+	float teta_paw; //volumetric water holding capacity minus the same at the permanent wilting point (−1500 J kg−1 )
+	float teta_fc;
+	float teta_sat; //volumetric water content at saturation (m3 m−3 )
+	float teta_pwp;
+	float psi_e;
+	float psi_sat;
+	float b_t; //texture-dependent empirical coefficient
+	float b_s; //soil moisture parameter
+	float swp; //soil water potential
+
+	float logdieci = log10 (9.8);
 
 
+	teta_sat = (50.5 - (0.142 * site->sand_perc) - (0.037 * site->clay_perc))/100;
+	Log ("teta_sat = %g\n", teta_sat);
+
+	psi_e = (-5.99) + (0.0544 * (site->sand_perc * 100)) + (0.0451 * (site->silt_perc * 100));
+	Log ("psi_e = %g\n", psi_e);
+
+	b_t = 11.43 - (0.1034 * (site->sand_perc * 100)) - (0.0687 * (site->silt_perc * 100));
+	Log ("b_t = %g\n", b_t);
+
+	psi_sat = exp (1.54  - (0.0095 * (site->sand_perc * 100)) + (0.0063 * (site->silt_perc * 100)) ) * pow (logdieci, -5);
+	Log ("psi_sat = %g\n", psi_sat);
+
+	b_s = 3.10 + (0.157 + (site->clay_perc + 100)) + (0.003 * (site->sand_perc * 100));
+	Log ("b_s = %g\n", b_s);
+
+	teta_pwp = teta_sat * pow ((psi_e / (-1500)),(1/b_t)) ;
+	Log ("teta_pwp = %g\n", teta_pwp);
+
+	teta_fc = teta_sat * pow ((psi_e / (-15)),(1/b_t)) ;
+	Log ("teta_fc = %g\n", teta_fc);
+
+	teta_paw = teta_fc - teta_pwp;
+	Log ("teta_paw = %g\n", teta_paw);
+	Log ("ASW = %g\n", c->available_soil_water);
+
+	swp = psi_sat + pow ((c->available_soil_water / teta_sat), -b_s);
+
+	Log ("SWP = %g\n", swp);
 
 	/*CO2 MODIFIER FROM C-FIX*/
 
