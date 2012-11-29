@@ -497,14 +497,35 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     		UL_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MAXIMUM | cut -d '=' -f '2' )
     		LR_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
     		
+    		# UL and LR are inverted because the original image is upside down and mirrored: a flip is needed!
     		MSG="Extract solar radiation from hdf"
     		INPUT_02="HDF4_SDS:UNKNOWN:\"${INPUT_01}\":6" # swgdn subdataset
 			OUTPUT_01="${WK_11}/$( basename $( echo ${INPUT_01} | sed s/.SUB.hdf/.tif/ | sed s/MERRA301.prod.assim.tavgM_2d_rad_Nx./swgdn-/) )"
 			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${LR_LATITUDE} ${LR_LONGITUDE} ${UL_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}"
+			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${LR_LATITUDE} ${LR_LONGITUDE} ${UL_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}" &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
+			
+			DATE=$( basename ${OUTPUT_01} | cut -d '-' -f '2' | cut -d '.' -f '1' )
+			
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_02="$( echo ${OUTPUT_01} | sed s/.tif/-remapped/ )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_01} -q -u -o ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Get the subwindow needed"
+    		INPUT_03="$( ls ${WK_11}/*${DATE}-remapped_33S.tif )" # Get only tile at zone 33S
+			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_33S.tif/-final.tif/ )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} -te ${UL_LON} ${LR_LAT} ${LR_LON} ${UL_LAT} ${INPUT_03} ${OUTPUT_03} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			#MSG="Copy ${OUTPUT_03} into output dir"
+			#log "${MSG} ...\n"
+			#cp ${OUTPUT_03} ${OUT_11}
+			#check "${MSG} failed.\n"
 		done
-    		
+		
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
 done
