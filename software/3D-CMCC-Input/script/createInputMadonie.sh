@@ -16,7 +16,7 @@ VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
-MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg mergeImg specFromMaxPerc)
+MODULES=(remap applyMask calcAverage multiplyImgPx getLAI createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
 IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
 IMG_SELECTED=()
 
@@ -35,13 +35,13 @@ SPECIES_ID=(Undefined Castaneasativa Fagussylvatica Ostryacarpinifolia Pinusnigr
 # 0 = "-9999" (Undefined)
 # 1 = "D"     (Deciduous)
 # 2 = "E"     (Evergreen)
-PHENOLOGY_ID=(Undefined D E)
+PHENOLOGY_ID=(Undefined Deciduous Evergreen)
 
 # Management identification numbers:
 # 0 = "-9999" (Undefined)
 # 1 = "T"     (Timber)
 # 2 = "C"     (Coppice)
-MANAGEMENT_ID=(Undefined T C)
+MANAGEMENT_ID=(Undefined Timber Coppice)
 
 BIN_DIR="$( dirname ${0} )/../bin"
 OUTPUT_DIR="$( dirname ${0} )/../output"
@@ -309,23 +309,60 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Merge of multiple species"
-		OUTPUT_10="${WK_00}/Madonie_species.tif"
+		FILTER_01="${OUTPUT_03}"
+		FILTER_02="${OUTPUT_05}"
+		FILTER_06="${OUTPUT_07}"
+		FILTER_07="${OUTPUT_09}"
+		
+		MSG="Merge of deciduous species"
+		FILTER_D="${WK_00}/Deciduous_filter.tif"
 		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} -n 0 -separate ${OUTPUT_03} ${OUTPUT_05} ${OUTPUT_07} ${OUTPUT_09} -o ${OUTPUT_10} &>> "${LOGFILE}"
+		gdal_merge.py ${PAR_01} -n 0 ${FILTER_01} ${FILTER_02} ${FILTER_06} -o ${FILTER_D} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Adding metadata to ${OUTPUT_10}"
-		METADATA="-mo SITE=${SITE} -mo ID=SPECIE -mo -9999=${SPECIES_ID[0]} -mo 1=${SPECIES_ID[1]} -mo 2=${SPECIES_ID[2]} -mo 3=${SPECIES_ID[3]} -mo 4=${SPECIES_ID[4]} -mo 5=${SPECIES_ID[5]} -mo 6=${SPECIES_ID[6]} -mo 7=${SPECIES_ID[7]} -mo BAND1=${SPECIES_ID[1]} -mo BAND2=${SPECIES_ID[2]} -mo BAND3=${SPECIES_ID[6]} -mo BAND4=${SPECIES_ID[7]}"
-		OUTPUT_11="${WK_00}/Madonie_species_filter.tif"
+		FILTER_E="${FILTER_07}"
+		
+		MSG="Get a binary mask of type GDT_Byte"
+		MASK_D="${WK_00}/Deciduous_mask.tif"
 		log "${MSG} ...\n"
-		gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_D} -o ${MASK_D} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Copy ${OUTPUT_11} into output dir"
+		MSG="Get a binary mask of type GDT_Byte"
+		MASK_E="${WK_00}/Evergreen_mask.tif"
 		log "${MSG} ...\n"
-		cp ${OUTPUT_11} ${OUT_00}
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_E} -o ${MASK_E} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
+		
+		MSG="Get a total mask"
+		MASK_TOT="${WK_00}/Total_mask.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${MASK_D} ${MASK_E} -o ${MASK_TOT} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy masks into output dir"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} -t ${OUT_00}
+		check "${MSG} failed.\n"
+		
+		
+#		MSG="Merge of multiple species"
+#		OUTPUT_10="${WK_00}/Madonie_species.tif"
+#		log "${MSG} ...\n"
+#		gdal_merge.py ${PAR_01} -n 0 -separate ${OUTPUT_03} ${OUTPUT_05} ${OUTPUT_07} ${OUTPUT_09} -o ${OUTPUT_10} &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#		
+#		MSG="Adding metadata to ${OUTPUT_10}"
+#		METADATA="-mo SITE=${SITE} -mo ID=SPECIE -mo -9999=${SPECIES_ID[0]} -mo 1=${SPECIES_ID[1]} -mo 2=${SPECIES_ID[2]} -mo 3=${SPECIES_ID[3]} -mo 4=${SPECIES_ID[4]} -mo 5=${SPECIES_ID[5]} -mo 6=${SPECIES_ID[6]} -mo 7=${SPECIES_ID[7]} -mo BAND1=${SPECIES_ID[1]} -mo BAND2=${SPECIES_ID[2]} -mo BAND3=${SPECIES_ID[6]} -mo BAND4=${SPECIES_ID[7]}"
+#		OUTPUT_11="${WK_00}/Madonie_species_filter.tif"
+#		log "${MSG} ...\n"
+#		gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#		
+#		MSG="Copy ${OUTPUT_11} into output dir"
+#		log "${MSG} ...\n"
+#		cp ${OUTPUT_11} ${OUT_00}
+#		check "${MSG} failed.\n"
 
 		clean "${WK_00}"
 
@@ -348,59 +385,59 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Species" ] ; then
     	log "### { Start creating ${IMG} images...... ###\n"
     	
-    	INPUT_03=()
-		for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
-			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
-			OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
-			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
-			check "${MSG} failed on ${INPUT_02}.\n"
-	
-			MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
-			OUTPUT_05="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
-			log "${MSG} ...\n"
-			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_04}.\n"
-
-			MSG="Remap of UTM geotiff image"
-			OUTPUT_06="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
-			log "${MSG} ...\n"	
-			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_05}.\n"
-	
-			INPUT_03+=("${OUTPUT_06}")
-		done
-		
-		MSG="Merge different corine images"
-		log "${MSG} ...\n"
-		OUTPUT_07="${WK_02}/Species_corine_one_band.tif"	
-		${BIN_DIR}/specFromMaxPerc -b ${#INPUT_03[@]} -i ${INPUT_03[@]} -v 7,6,2 -o ${OUTPUT_07} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Create an empty monoband image"
-		OUTPUT_08="${WK_02}/empty.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Give to empty image a proper georeference"
-		OUTPUT_09="${WK_02}/empty_with_georef.tif"
-		log "${MSG} ...\n"
-		gdal_translate ${PAR_01} -a_srs "${PROJ}" -a_ullr ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} ${OUTPUT_08} ${OUTPUT_09} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		METADATA="SITE=${SITE},ID=SPECIE,-9999=${SPECIES_ID[0]},1=${SPECIES_ID[1]},2=${SPECIES_ID[2]},3=${SPECIES_ID[3]},4=${SPECIES_ID[4]},5=${SPECIES_ID[5]},6=${SPECIES_ID[6]},7=${SPECIES_ID[7]}"
-		MSG="Create multiband species image"
-		INPUT_04=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
-		OUTPUT_10="${WK_02}/Species_corine.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/mergeImg -b ${#INPUT_04[@]} -i ${INPUT_04[@]} -o ${OUTPUT_10} -m "${METADATA}" &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Copy ${OUTPUT_10} into output dir"
-		log "${MSG} ...\n"
-		cp ${OUTPUT_10} ${OUT_02}
-		check "${MSG} failed.\n"
+#    	INPUT_03=()
+#		for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
+#			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
+#			OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
+#			log "${MSG} ...\n"
+#			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
+#	check "${MSG} failed on ${INPUT_02}.\n"
+#
+#	MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
+#	OUTPUT_05="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
+#	log "${MSG} ...\n"
+#	gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
+#	check "${MSG} failed on ${OUTPUT_04}.\n"
+#
+#	MSG="Remap of UTM geotiff image"
+#	OUTPUT_06="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_Madonie_30m.tif/ ) )"
+#	log "${MSG} ...\n"	
+#			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+#			check "${MSG} failed on ${OUTPUT_05}.\n"
+#	
+#			INPUT_03+=("${OUTPUT_06}")
+#		done
+#		
+#		MSG="Merge different corine images"
+#		log "${MSG} ...\n"
+#		OUTPUT_07="${WK_02}/Species_corine_one_band.tif"	
+#		${BIN_DIR}/specFromMaxPerc -b ${#INPUT_03[@]} -i ${INPUT_03[@]} -v 7,6,2 -o ${OUTPUT_07} &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#		
+#		MSG="Create an empty monoband image"
+#		OUTPUT_08="${WK_02}/empty.tif"
+#		log "${MSG} ...\n"
+#		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#		
+#		MSG="Give to empty image a proper georeference"
+#		OUTPUT_09="${WK_02}/empty_with_georef.tif"
+#		log "${MSG} ...\n"
+#		gdal_translate ${PAR_01} -a_srs "${PROJ}" -a_ullr ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} ${OUTPUT_08} ${OUTPUT_09} &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#
+#		METADATA="SITE=${SITE},ID=SPECIE,-9999=${SPECIES_ID[0]},1=${SPECIES_ID[1]},2=${SPECIES_ID[2]},3=${SPECIES_ID[3]},4=${SPECIES_ID[4]},5=${SPECIES_ID[5]},6=${SPECIES_ID[6]},7=${SPECIES_ID[7]}"
+#		MSG="Create multiband ${IMG} image"
+#		INPUT_04=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
+#		OUTPUT_10="${WK_02}/Species_corine.tif"
+#		log "${MSG} ...\n"
+#		${BIN_DIR}/mergeImg -b ${#INPUT_04[@]} -i ${INPUT_04[@]} -o ${OUTPUT_10} -m "${METADATA}" &>> "${LOGFILE}"
+#		check "${MSG} failed.\n"
+#		
+#		MSG="Copy ${OUTPUT_10} into output dir"
+#		log "${MSG} ...\n"
+#		cp ${OUTPUT_10} ${OUT_02}
+#		check "${MSG} failed.\n"
 		
 		# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -451,7 +488,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_02}.\n"
 		
-		MSG="Create multiband species image"
+		MSG="Create multiband ${IMG} image"
 		INPUT_02=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
 		OUTPUT_08="${WK_02}/Species.tif"
 		log "${MSG} ...\n"
@@ -473,21 +510,80 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Phenology" ] ; then
     	log "### { Start creating ${IMG} images.... ###\n"
     	
-    	# Phenology identification numbers:
-		# 0 = "-9999" (Undefined)
-		# 1 = "D"     (Deciduous)
-		# 2 = "E"     (Evergreen)
-		PHENOLOGY_ID=(Undefined D E)
-		
-		MSG="Create a monoband image with every pixel det to 1 (D: Deciduous)"
-		OUTPUT_01="${WK_03}/Deciduous.tif"
+		NAME_MASK_D="Deciduous_mask.tif"
+    	NAME_MASK_E="Evergreen_mask.tif"
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filters from ${OUT_00}"
 		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 1 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+		cp ${OUT_00}/${NAME_MASK_D} ${OUT_00}/${NAME_MASK_E} ${OUT_00}/${NAME_MASK_TOT} -t ${WK_03}
 		check "${MSG} failed.\n"
+		
+		MASK_D="${WK_03}/${NAME_MASK_D}"
+    	MASK_E="${WK_03}/${NAME_MASK_E}"
+    	MASK_TOT="${WK_03}/${NAME_MASK_TOT}"
     	
-    	INPUT_01="${OUT_02}/Species.tif"
-    	OUTPUT_01="${WK_03}/Phenology.tif"
-    	gdal_translate ${PAR_01} ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+    	IDX="1"
+		MSG="Create a monoband image with every pixel set to ${IDX} (${PHENOLOGY_ID[${IDX}]})"
+		OUTPUT_01="${WK_03}/Every_px_deciduous.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v ${IDX} -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="2"
+		MSG="Create a monoband image with every pixel set to ${IDX} (${PHENOLOGY_ID[${IDX}]})"
+		OUTPUT_02="${WK_03}/Every_px_evergreen.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v ${IDX} -c -n "${OUTPUT_02}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Set georeference to ${OUTPUT_01}"
+		OUTPUT_03="${WK_03}/Every_px_deciduous_geo.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/copyGeoref -i ${FILTER_D} ${OUTPUT_01} -o ${OUTPUT_03} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Set georeference to ${OUTPUT_02}"
+		OUTPUT_04="${WK_03}/Every_px_evergreen_geo.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/copyGeoref -i ${FILTER_D} ${OUTPUT_02} -o ${OUTPUT_04} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Get deciduous pixels"
+		OUTPUT_05="${WK_03}/Deciduous.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_D} -o ${OUTPUT_05} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Get evergreen pixels"
+		OUTPUT_06="${WK_03}/Evergreen.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_E} -o ${OUTPUT_06} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Merge of different phenologies"
+		OUTPUT_07="${WK_03}/Phenology_b1.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${OUTPUT_05} ${OUTPUT_06} -o ${OUTPUT_07} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Create an empty monoband image"
+		OUTPUT_08="${WK_03}/empty.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"	
+		
+		METADATA="SITE=${SITE},ID=PHENOLOGY,-9999=${PHENOLOGY_ID[0]},1=${PHENOLOGY_ID[1]},2=${PHENOLOGY_ID[2]}"
+		MSG="Create multiband ${IMG} image"
+		INPUT_01=(${OUTPUT_07} ${OUTPUT_08} ${OUTPUT_08} ${OUTPUT_08} ${OUTPUT_08})
+		OUTPUT_09="${WK_03}/Phenology.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_09} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${IMG} into ${OUT_03}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_09} -t ${OUT_03}
+		check "${MSG} failed.\n"
     	
     	log "### .....stop creating ${IMG} images } ###\n"
     fi
@@ -597,6 +693,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			#cp ${OUTPUT_03} ${OUT_11}
 			#check "${MSG} failed.\n"
 		done
+		
+			#allora la formula per convertire W/m2 a MJ/m2/giorno  è : "Valore * 86400 /  1 000 000"
+			#[6:01:27 PM] Caneta: ok: quindi valore* 0.0864
+		
 		
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
