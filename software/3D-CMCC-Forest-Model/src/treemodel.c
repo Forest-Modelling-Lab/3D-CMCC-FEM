@@ -76,6 +76,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//monthly loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
+		//*************SITE CHARACTERISTIC******************
+		if (month == JANUARY && !years)
+		{
+			Get_initialization_site_data (&m->cells[cell], met, month);
+			GetDayLength (&m->cells[cell], MonthLength[month]);
+			Get_Abscission_DayLength (&m->cells[cell]);
+		}
 		//*************FOREST STRUCTURE*********************
 		if (month == JANUARY)
 		{
@@ -96,10 +103,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		/*DayLength*/
-		GetDayLength (&m->cells[cell], MonthLength[month]);
-		/*Abscission DayLength*/
-		Get_Abscission_DayLength (&m->cells[cell]);
+
 		//compute vpd from RH
 		//todo remove if used VPD
 		vpd =  met[month].vpd; //Get_vpd (met, month);
@@ -111,12 +115,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Yearly_Rain += met[month].rain;
 
 
-		if ( month == JANUARY  && !years)
-		{
-			m->cells[cell].available_soil_water = (site->maxAsw * site->init_frac_maxasw) + met[month].rain;
-			Log("Beginning month  %d ASW = %g mm\n", month  + 1 , m->cells[cell].available_soil_water);
-		}
-		else
+		if ( !years)
 		{
 			m->cells[cell].available_soil_water +=  met[month].rain;
 			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
@@ -124,18 +123,18 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 		//control
-		if (m->cells[cell].available_soil_water > site->maxAsw)
+		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
 			Log("ASW > MAXASW !!!\n");
 			//if the asw exceeds maxasw the plus is considered lost for turn off
-			m->cells[cell].available_soil_water = site->maxAsw;
+			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
 			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
 
 
 		//compute moist ratio
-		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / site->maxAsw;
+		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
 		Log("Moist ratio outside modifier = %g\n", m->cells[cell].soil_moist_ratio);
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;

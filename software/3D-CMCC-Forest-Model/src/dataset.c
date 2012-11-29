@@ -465,7 +465,7 @@ int importSiteFile(char *fileName)
 	//	fprintf(stderr, "%f\n", site->initialLitter);
 	//	fprintf(stderr, "%f\n", site->swConst);
 	//	fprintf(stderr, "%f\n", site->swPower);
-	//	fprintf(stderr, "%f\n", site->maxAsw);
+	//	fprintf(stderr, "%f\n", c->max_asw);
 	//	fprintf(stderr, "%f\n", site->minAsw);
 	//	fprintf(stderr, "%f\n", site->fr);
 	//	fprintf(stderr, "%f\n", site->fn0);

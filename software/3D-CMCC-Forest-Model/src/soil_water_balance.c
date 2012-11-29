@@ -22,13 +22,13 @@ extern void Get_soil_water_balance (CELL *const c)
 	if ( c->available_soil_water < 0)
 	{
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		c->available_soil_water = site->minAsw;
+		c->available_soil_water = c->max_asw * site->init_frac_maxasw;
 		Log("ASW = %g\n", c->available_soil_water);
 	}
-	if ( c->available_soil_water > site->maxAsw)
+	if ( c->available_soil_water > c->max_asw)
 	{
 		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-		c->available_soil_water = site->maxAsw;
+		c->available_soil_water = c->max_asw;
 		Log("Available soil water = %g\n", c->available_soil_water);
 	}
 }

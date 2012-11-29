@@ -679,6 +679,11 @@ typedef struct {
 	float total_yearly_soil_evaporation;
 	float soil_moist_ratio;
 	float av_soil_moist_ratio;
+	float max_asw;
+	float psi_sat;//soil saturated matric potential
+	float vwc_sat;//soil saturated Volumetric water content
+	float soil_b; //soil moisture parameter
+	float soilw_sat; //maximum volume soil water content in m3/m3
 	int annual_layer_number;
 	int monthly_layer_number;
 	int top_layer;
@@ -715,8 +720,8 @@ typedef struct
 	co2Conc,
 	initialLitter,
 	init_frac_maxasw,
-	maxAsw,
-	minAsw,
+	//maxAsw,
+	//minAsw,
 	clay_perc,
 	silt_perc,
 	sand_perc,
@@ -905,7 +910,7 @@ extern void Get_monthly_veg_counter (CELL *, SPECIES * , int);
 extern void Reset_annual_cumulative_variables (CELL *, const int);
 
 extern void Get_initialization_biomass_data (SPECIES *);
-
+extern void Get_initialization_site_data (CELL *, const MET_DATA *const, int);
 extern void Choose_management (CELL *, SPECIES *, int , int );
 
 

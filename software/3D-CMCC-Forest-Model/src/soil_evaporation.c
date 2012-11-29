@@ -59,7 +59,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	PotEvap = (e20 / (e20 + PsycConst )) * Net_Radiation / lambda;
 	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
 
-	c->soil_moist_ratio = c->available_soil_water / site->maxAsw;
+	c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 
 	c->soil_evaporation = PotEvap * EvapoCoeff * c->soil_moist_ratio * 24 * DaysInMonth;
 	Log("Monthly Soil Evaporation = %g \n", c->soil_evaporation );

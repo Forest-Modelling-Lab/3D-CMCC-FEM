@@ -9,9 +9,9 @@ CO2CONC "387.0" //CO2 concentration
 
 INITIALLITTER "2" //Initial Litter
 
-INIT_FRAC_MAXASW "0.3" //Initial fraction of maxasw
-MAXASW "300" //Maximum Available soil water in mm
-MINASW "0.0" //It should be the 10% of the maxasw
+INIT_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw
+//MAXASW "300" //Maximum Available soil water in mm
+//MINASW "30" //It should be the 10% of the maxasw
 
 CLAY_PERC "0.118"	//PERCENTAGE OF CLAY (< 0,002 mm)
 SILT_PERC "0.235"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)
