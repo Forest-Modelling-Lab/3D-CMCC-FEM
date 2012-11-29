@@ -116,7 +116,7 @@ PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_LONGLAT="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 PROJ_3004="+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=2520000 +y_0=0 +ellps=intl +units=m +no_defs"
 PAR_01="-q -co COMPRESS=LZW -of GTiff"
-PAR_02="-ot Int16"
+PAR_02="-ot Float32"
 
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
@@ -250,6 +250,83 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		#check "${MSG} failed on ${OUTPUT_02}.\n"
 
+		MSG="Conversion of shapefile georef"
+		INPUT_01="${IN_00}/CFRS_ParcoMadonie.shp"
+		OUTPUT_01="${WK_00}/CFRS_ParcoMadonie_utm.shp"
+		log "${MSG} ...\n"
+		ogr2ogr -a_srs "${PROJ_3004}" -t_srs "${PROJ}" ${OUTPUT_01} ${INPUT_01} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="1"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_02="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="CA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_03="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="2"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_04="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="FA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_05="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_04} -o ${OUTPUT_05} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="6"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_06="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="QU" OR COD_CATEG="CE"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_06} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_07="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="7"
+		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
+		OUTPUT_08="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		log "${MSG} ...\n"
+		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="LE" OR COD_CATEG="SU"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_08} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_09="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Merge of multiple species"
+		OUTPUT_10="${WK_00}/Madonie_species.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 -separate ${OUTPUT_03} ${OUTPUT_05} ${OUTPUT_07} ${OUTPUT_09} -o ${OUTPUT_10} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Adding metadata to ${OUTPUT_10}"
+		METADATA="-mo SITE=${SITE} -mo ID=SPECIE -mo -9999=${SPECIES_ID[0]} -mo 1=${SPECIES_ID[1]} -mo 2=${SPECIES_ID[2]} -mo 3=${SPECIES_ID[3]} -mo 4=${SPECIES_ID[4]} -mo 5=${SPECIES_ID[5]} -mo 6=${SPECIES_ID[6]} -mo 7=${SPECIES_ID[7]} -mo BAND1=${SPECIES_ID[1]} -mo BAND2=${SPECIES_ID[2]} -mo BAND3=${SPECIES_ID[6]} -mo BAND4=${SPECIES_ID[7]}"
+		OUTPUT_11="${WK_00}/Madonie_species_filter.tif"
+		log "${MSG} ...\n"
+		gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${OUTPUT_11} into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_11} ${OUT_00}
+		check "${MSG} failed.\n"
+
 		clean "${WK_00}"
 
 		log "### .......stop creating ${IMG} images } ###\n"
@@ -303,7 +380,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Create an empty monoband image"
 		OUTPUT_08="${WK_02}/empty.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t short -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Give to empty image a proper georeference"
@@ -374,11 +451,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed on ${OUTPUT_02}.\n"
 		
-		MSG="Copy ${OUTPUT_07} into output dir"
-		log "${MSG} ...\n"
-		cp ${OUTPUT_07} ${OUT_02}
-		check "${MSG} failed.\n"
-		
 		MSG="Create multiband species image"
 		INPUT_02=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
 		OUTPUT_08="${WK_02}/Species.tif"
@@ -407,10 +479,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		# 2 = "E"     (Evergreen)
 		PHENOLOGY_ID=(Undefined D E)
 		
-		MSG="Create an image monoband image"
-		OUTPUT_08="${WK_03}/Deciduous.tif"
+		MSG="Create a monoband image with every pixel det to 1 (D: Deciduous)"
+		OUTPUT_01="${WK_03}/Deciduous.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t short -v 1 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 1 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
     	
     	INPUT_01="${OUT_02}/Species.tif"
