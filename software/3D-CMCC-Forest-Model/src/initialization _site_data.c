@@ -63,6 +63,7 @@ void Get_initialization_site_data (CELL *c, const MET_DATA *const met, int month
 	c->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
 	Log ("soil_b = %g\n", c->soil_b);
 	c->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
+	Log ("vwc_sat = %g m^3m^-3\n", c->vwc_sat);
 	c->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
 	Log ("psi_sat = %g\n", c->psi_sat);
 	vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),1.0/c->soil_b);
@@ -78,7 +79,7 @@ void Get_initialization_site_data (CELL *c, const MET_DATA *const met, int month
 
 	c->max_asw = c->soilw_sat;
 
-	c->available_soil_water = (c->soilw_sat * site->init_frac_maxasw);
+	c->available_soil_water = (c->soilw_sat * site->init_frac_maxasw) + met[month].rain;
 	Log("Beginning month  %d ASW = %g mm\n", month  + 1 , c->available_soil_water);
 
 

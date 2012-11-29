@@ -166,7 +166,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Get_annual_forest_structure (CELL *const c, HEIGHT *const h)
+void Get_annual_forest_structure (CELL *const c)
 {
 	int height;
 	int age;

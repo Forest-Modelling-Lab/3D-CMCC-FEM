@@ -6,6 +6,40 @@
 #include "math.h"
 #include "types.h"
 
+void Get_tree_BB (CELL *const c,  int years)
+{
+	int height;
+	int age;
+	int species;
+
+
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			{
+				if (!years && c->heights[height].ages[age].species[species].value[FRACBB0] == 0)
+				{
+					Log("I don't have FRACBB0 = FRACBB1 \n");
+					c->heights[height].ages[age].species[species].value[FRACBB0] = c->heights[height].ages[age].species[species].value[FRACBB1];
+					Log("FRACBB0 = %g\n", c->heights[height].ages[age].species[species].value[FRACBB0]);
+				}
+				else
+				{
+					Log ("cazzzzzo\n");
+					c->heights[height].ages[age].species[species].value[FRACBB] = c->heights[height].ages[age].species[species].value[FRACBB1]
+											  + (c->heights[height].ages[age].species[species].value[FRACBB0]
+											 - c->heights[height].ages[age].species[species].value[FRACBB1])
+										 * exp(-ln2 * (c->heights[height].ages[age].value / c->heights[height].ages[age].species[species].value[TBB]));
+
+				}
+			}
+		}
+	}
+}
+
 void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/

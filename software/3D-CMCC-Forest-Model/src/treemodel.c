@@ -60,15 +60,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	met = (MET_DATA*) yos[years].m;
 
 
-	if (!month && !years)
-	{
-		if (m->cells[cell].heights[height].ages[age].species[species].value[FRACBB0] == 0)
-		{
-			Log("I don't have FRACBB0 = FRACBB1 \n");
-			m->cells[cell].heights[height].ages[age].species[species].value[FRACBB0] = m->cells[cell].heights[height].ages[age].species[species].value[FRACBB1];
-			Log("FRACBB0 = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRACBB0]);
-		}
-	}
+
 
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
@@ -77,18 +69,38 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		//*************SITE CHARACTERISTIC******************
-		if (month == JANUARY && !years)
+		if (month == JANUARY && years == 0)
 		{
+			//first year first month initialization data
 			Get_initialization_site_data (&m->cells[cell], met, month);
-			GetDayLength (&m->cells[cell], MonthLength[month]);
-			Get_Abscission_DayLength (&m->cells[cell]);
 		}
+		else
+		{
+
+			m->cells[cell].available_soil_water +=  met[month].rain;
+			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
+
+			//control
+			if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
+			{
+				Log("ASW > MAXASW !!!\n");
+				//if the asw exceeds maxasw the plus is considered lost for turn off
+				m->cells[cell].available_soil_water = m->cells[cell].max_asw;
+				Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
+			}
+		}
+
+		GetDayLength (&m->cells[cell], MonthLength[month]);
+		Get_Abscission_DayLength (&m->cells[cell]);
+
+
 		//*************FOREST STRUCTURE*********************
 		if (month == JANUARY)
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
-			Get_annual_forest_structure (&m->cells[cell], &m->cells[cell].heights[height]);
+			Get_annual_forest_structure (&m->cells[cell]);
+			Get_tree_BB (&m->cells[cell],  years);
 		}
 
 		//monthly forest structure
@@ -115,21 +127,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Yearly_Rain += met[month].rain;
 
 
-		if ( !years)
-		{
-			m->cells[cell].available_soil_water +=  met[month].rain;
-			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-		}
 
-
-		//control
-		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
-		{
-			Log("ASW > MAXASW !!!\n");
-			//if the asw exceeds maxasw the plus is considered lost for turn off
-			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
-			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-		}
 
 
 
@@ -639,14 +637,14 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Log("NO Light for Establishment\n");
 								}
 							}
-/*
+							/*
 	                        if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 	                        {
 	                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
 	                        Saplings_counter -= 1;
 	                        }
-	                        */
+							 */
 
 
 							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");

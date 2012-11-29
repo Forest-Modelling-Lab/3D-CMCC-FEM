@@ -277,9 +277,11 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 
 	/*SOIL MATRIC POTENTIAL MODIFIER*/
-
+	//todo export in species.txt
 	float SWP_open = -0.6;
 	float SWP_close = -3;
+
+
 	float vwc; //soil volumetric water content
 	float psi;  //soil matric potential
 
@@ -289,11 +291,16 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
 	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	Log("available soil water %g mm\n", c->available_soil_water);
 	vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
-
+	Log("volumetric available soil water  = %g m^3m^-3\n", vwc);
+	Log ("vwc_sat = %g m^3m^-3\n", c->vwc_sat);
+	Log ("vwc/vwc_sat = %g \n", vwc / c->vwc_sat);
 	/* calculate psi */
+	//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
 	psi = c->psi_sat * pow((vwc/c->vwc_sat), c->soil_b);
-	Log ("SWP-PSI BIOME = %g\n", psi);
+	Log ("PSI_SAT BIOME = %g\n", c->psi_sat);
+	Log ("PSI BIOME = %g\n", psi);
 
 
 	if (psi > SWP_open) /*no water stress*/

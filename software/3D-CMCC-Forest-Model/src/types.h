@@ -884,7 +884,7 @@ extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Set_z_value ( CELL *, float, int);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_stool_mortality (SPECIES *, int);
-extern void Get_annual_forest_structure (CELL *, HEIGHT *);
+extern void Get_annual_forest_structure (CELL *);
 void Print_met_data (const MET_DATA *const, float, int, float);
 extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 extern void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
@@ -912,6 +912,8 @@ extern void Reset_annual_cumulative_variables (CELL *, const int);
 extern void Get_initialization_biomass_data (SPECIES *);
 extern void Get_initialization_site_data (CELL *, const MET_DATA *const, int);
 extern void Choose_management (CELL *, SPECIES *, int , int );
+
+extern void Get_tree_BB (CELL *, int);
 
 
 extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
