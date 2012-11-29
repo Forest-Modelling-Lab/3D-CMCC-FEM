@@ -276,20 +276,9 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	*/
 
 
-	//todo see Schwalm 2004 and BIOME-BGC 4.2
-	float teta_paw; //volumetric water holding capacity minus the same at the permanent wilting point (−1500 J kg−1 )
-	float teta_fc;
-	float teta_sat; //volumetric water content at saturation (m3 m−3 )
-	float teta_pwp;
-	float psi_e;
-	float psi_sat;
-	float b_t; //texture-dependent empirical coefficient
-	float b_s; //soil moisture parameter
-	float swp; //soil water potential
-	float mass_available_soil_water;
-	float volume_available_soil_water;
-
-	//all percentace are converted in 100 %
+	/*SOIL MATRIC POTENTIAL MODIFIER*/
+	//see BIOME-BGC 4.2
+	//all percentage are converted in 100 %
 	float sand = site->sand_perc * 100;
 	float clay = site->clay_perc * 100;
 	float silt = site->silt_perc * 100;
@@ -298,78 +287,59 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* first check that the percentages add to 100.0 */
 
-
-
-	teta_sat = (50.5 - (0.142 * sand) - (0.037 * silt))/100;
-	Log ("teta_sat = %g\n", teta_sat);
-
-	psi_e = (-5.99) + (0.0544 * sand) + (0.0451 * silt);
-	Log ("psi_e = %g\n", psi_e);
-
-	b_t = 11.43 - (0.1034 * sand) - (0.0687 * silt);
-	Log ("b_t = %g\n", b_t);
-
-
-	/*from BIOME  src->include->sitec_init.c*/
-	psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
-	Log ("psi_sat = %g\n", psi_sat);
-
-
-	/*from BIOME  src->include->sitec_init.c*/
-	b_s = 3.10 + (0.157 + clay) + (0.003 * sand);
-	Log ("b_s = %g\n", b_s);
-
-	teta_pwp = teta_sat * pow ((psi_e / (-1500)),(1/b_t)) ;
-	Log ("teta_pwp = %g\n", teta_pwp);
-
-	teta_fc = teta_sat * pow ((psi_e / (-15)),(1/b_t)) ;
-	Log ("teta_fc = %g\n", teta_fc);
-
-	teta_paw = teta_fc - teta_pwp;
-	Log ("teta_paw = %g\n", teta_paw);
-	Log ("ASW = %g mm\n", c->available_soil_water);
-
-	mass_available_soil_water = c->available_soil_water;
-	Log("mass_available soil water = %g Kg m^-2\n", mass_available_soil_water);
-	//0.1 convert soil depth cm in-> m
-	volume_available_soil_water = mass_available_soil_water / (1000.0 * (site->soil_depth * 0.1 ));
-	Log("volume_available soil water = %g m3 m^-3\n", volume_available_soil_water);
-
-
-
-	swp = psi_sat * pow ((volume_available_soil_water / teta_sat), -b_s);
-	Log ("SWP = %.8g\n", swp);
-
-
-
-	//   b_s        sitec->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
-	//   teta_sat   sitec->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
-	//   psi_sat    sitec->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
-	/*
-	sitec->vwc_fc = sitec->vwc_sat*pow((-0.015/sitec->psi_sat),1.0/sitec->soil_b);
-	*/
-
-
-
-
-
-
+	float soil_b;  //soil moisture parameter
+	float vwc_sat; //soil saturated Volumetric water content
+	float psi_sat;	//soil saturated matric potential
+	float vwc_fc; //Soil Field Capacity Volumetric Water Content in m3/m3
+	float soilw_fc; //maximum volume soil water content in m3/m3
+	float soilw_sat; //maximum volume soil water content in m3/m3
+	float vwc; //soil volumetric water content
+	float psi, swp;  //soil matric potential
 	float SWP_open = -0.6;
-	float SWP_close = -2.3;
+	float SWP_close = -3;
 
 	float F_SWP;
 
-	if (swp >= SWP_open)
+
+
+	soil_b = -(3.10 + 0.157*clay - 0.003*sand);
+	Log ("soil_b = %g\n", soil_b);
+	vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
+	psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
+	Log ("psi_sat = %g\n", psi_sat);
+	vwc_fc =  vwc_sat * pow((-0.015/psi_sat),1.0/soil_b);
+	Log ("vwc_fc = %g m^3m^-3\n", vwc_fc);
+
+	/* define maximum soilwater content, for outflow calculation
+	converts volumetric water content (m3/m3) --> (kg/m2) */
+	soilw_fc = (site->soil_depth / 100) * vwc_fc * 1000.0;
+	Log ("soilw_fc BIOME = %g kg m^-2\n", soilw_fc);
+	soilw_sat = (site->soil_depth / 100) * vwc_sat * 1000.0;
+	Log ("soilw_sat BIOME = %g kg m^-2\n", soilw_sat);
+
+	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
+
+	/* calculate psi */
+	psi = psi_sat * pow((vwc/vwc_sat), soil_b);
+	Log ("SWP-PSI BIOME = %g\n", psi);
+
+	psi = swp;
+
+
+
+	if (swp > SWP_open) /*no water stress*/
 	{
 		F_SWP = 1;
 	}
-	else if (swp > SWP_close && swp < SWP_open)
-	{
-		F_SWP = (SWP_close - swp)/(SWP_close - SWP_open);
-	}
-	else
+	else if (swp <= SWP_close) /* full water stress */
 	{
 		F_SWP = 0;
+	}
+	else /* partial water stress */
+	{
+		F_SWP = (SWP_close - swp)/(SWP_close - SWP_open);
 	}
 
 	Log("F_SWP = %g\n", F_SWP);
