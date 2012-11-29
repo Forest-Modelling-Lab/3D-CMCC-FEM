@@ -131,7 +131,9 @@ static const char *species_values[] = {
 		"BRANCHTTOVER",	                  //Average yearly branch turnover rate
 
 		"STEMCONST",                  //Constant in the Stem Mass v. diameter relationship
-		"STEMPOWER",                  //Power in the Stem Mass v. diameter raltionship
+		"STEMPOWER_A",                  //Power in the Stem Mass v. diameter relationship dbh < 9cm
+		"STEMPOWER_B",                  //Power in the Stem Mass v. diameter relationship 9 < dbh 15
+		"STEMPOWER_C",                  //Power in the Stem Mass v. diameter relationship dbh > 15
 
 		//MORTALITY
 		"WSX1000",                    //Max stem mass (kg) per tree at 1000 trees/hectare

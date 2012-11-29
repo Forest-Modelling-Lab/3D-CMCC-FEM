@@ -187,6 +187,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	/*SOIL DROUGHT MODIFIER*/
 	//(see Duursma et al., 2008)rev_Angelo
+	/*
 
 	//to put in species.txt
 	//numbers are not real just used for compile!!!!!!!!
@@ -272,9 +273,10 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	s->value[F_DROUGHT] = (leaf_res * (bulk_pot - min_leaf_pot)) / (- min_leaf_pot * ((leaf_res + soil_res) * bulk_pot));
 	Log("F_DROUGHT = %g\n", s->value[F_DROUGHT]);
+	*/
 
 
-	//todo see Schwalm 2004
+	//todo see Schwalm 2004 and BIOME-BGC 4.2
 	float teta_paw; //volumetric water holding capacity minus the same at the permanent wilting point (−1500 J kg−1 )
 	float teta_fc;
 	float teta_sat; //volumetric water content at saturation (m3 m−3 )
@@ -284,23 +286,37 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	float b_t; //texture-dependent empirical coefficient
 	float b_s; //soil moisture parameter
 	float swp; //soil water potential
+	float mass_available_soil_water;
+	float volume_available_soil_water;
 
-	float logdieci = log10 (9.8);
+	//all percentace are converted in 100 %
+	float sand = site->sand_perc * 100;
+	float clay = site->clay_perc * 100;
+	float silt = site->silt_perc * 100;
+
+	/* calculate the soil pressure-volume coefficients from texture data */
+	/* Uses the multivariate regressions from Cosby et al., 1984 */
+	/* first check that the percentages add to 100.0 */
 
 
-	teta_sat = (50.5 - (0.142 * site->sand_perc) - (0.037 * site->clay_perc))/100;
+
+	teta_sat = (50.5 - (0.142 * sand) - (0.037 * silt))/100;
 	Log ("teta_sat = %g\n", teta_sat);
 
-	psi_e = (-5.99) + (0.0544 * (site->sand_perc * 100)) + (0.0451 * (site->silt_perc * 100));
+	psi_e = (-5.99) + (0.0544 * sand) + (0.0451 * silt);
 	Log ("psi_e = %g\n", psi_e);
 
-	b_t = 11.43 - (0.1034 * (site->sand_perc * 100)) - (0.0687 * (site->silt_perc * 100));
+	b_t = 11.43 - (0.1034 * sand) - (0.0687 * silt);
 	Log ("b_t = %g\n", b_t);
 
-	psi_sat = exp (1.54  - (0.0095 * (site->sand_perc * 100)) + (0.0063 * (site->silt_perc * 100)) ) * pow (logdieci, -5);
+
+	/*from BIOME  src->include->sitec_init.c*/
+	psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
 	Log ("psi_sat = %g\n", psi_sat);
 
-	b_s = 3.10 + (0.157 + (site->clay_perc + 100)) + (0.003 * (site->sand_perc * 100));
+
+	/*from BIOME  src->include->sitec_init.c*/
+	b_s = 3.10 + (0.157 + clay) + (0.003 * sand);
 	Log ("b_s = %g\n", b_s);
 
 	teta_pwp = teta_sat * pow ((psi_e / (-1500)),(1/b_t)) ;
@@ -311,10 +327,32 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	teta_paw = teta_fc - teta_pwp;
 	Log ("teta_paw = %g\n", teta_paw);
-	Log ("ASW = %g\n", c->available_soil_water);
+	Log ("ASW = %g mm\n", c->available_soil_water);
 
-	swp = psi_sat + pow ((c->available_soil_water / teta_sat), -b_s);
-	Log ("SWP = %g\n", swp);
+	mass_available_soil_water = c->available_soil_water;
+	Log("mass_available soil water = %g Kg m^-2\n", mass_available_soil_water);
+	//0.1 convert soil depth cm in-> m
+	volume_available_soil_water = mass_available_soil_water / (1000.0 * (site->soil_depth * 0.1 ));
+	Log("volume_available soil water = %g m3 m^-3\n", volume_available_soil_water);
+
+
+
+	swp = psi_sat * pow ((volume_available_soil_water / teta_sat), -b_s);
+	Log ("SWP = %.8g\n", swp);
+
+
+
+	//   b_s        sitec->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
+	//   teta_sat   sitec->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
+	//   psi_sat    sitec->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
+	/*
+	sitec->vwc_fc = sitec->vwc_sat*pow((-0.015/sitec->psi_sat),1.0/sitec->soil_b);
+	*/
+
+
+
+
+
 
 	float SWP_open = -0.6;
 	float SWP_close = -2.3;
@@ -335,6 +373,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	}
 
 	Log("F_SWP = %g\n", F_SWP);
+
 
 	/*CO2 MODIFIER FROM C-FIX*/
 

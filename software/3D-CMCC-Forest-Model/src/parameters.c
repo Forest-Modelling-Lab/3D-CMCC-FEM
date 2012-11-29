@@ -48,7 +48,9 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					"PRX= %g \n"
 					"PRN= %g \n"
 					"STEMCONST= %g \n"
-					"STEMPOWER= %g \n",
+					"STEMPOWER_A= %g \n"
+					"STEMPOWER_B= %g \n"
+					"STEMPOWER_C= %g \n",
 					s->value[ALPHA],
 					s->value[EPSILONgCPAR],
 					//s->value[Y],
@@ -79,7 +81,9 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					s->value[PRX],
 					s->value[PRN],
 					s->value[STEMCONST],
-					s->value[STEMPOWER]
+					s->value[STEMPOWER_A],
+					s->value[STEMPOWER_B],
+					s->value[STEMPOWER_C]
 			);
 
 
