@@ -690,7 +690,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.97971429"
      inkscape:cx="526.18109"
-     inkscape:cy="297.98726"
+     inkscape:cy="372.04724"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -707,7 +707,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -721,13 +721,13 @@
        id="rect4639"
        width="1040.0992"
        height="709.3905"
-       x="8.1656494"
-       y="318.47485"
+       x="5.8690624"
+       y="323.06805"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731" />
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:0.99999994000000003;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028000000007"
+       style="fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:2.2;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028000000007;stroke-dasharray:none"
        d="m 1040.8102,329.80062 -1025.304892,0 0,308.10251 283.857862,0 0,-129.19678 741.49693,0.005 z"
        id="rect22905"
        inkscape:connector-curvature="0"
@@ -739,7 +739,7 @@
        inkscape:export-ydpi="159.99731"
        inkscape:export-xdpi="159.99731"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       style="fill:#ffffff;stroke:#803300;stroke-width:0.99999981999999998;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
+       style="fill:#ffffff;stroke:#803300;stroke-width:2.2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
        id="rect4304"
        width="242.75273"
        height="118.1127"
@@ -758,7 +758,7 @@
        inkscape:export-ydpi="159.99731"
        inkscape:export-xdpi="159.99731"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       style="fill:#ffffff;stroke:#ff0000;stroke-width:0.99999987999999995;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
+       style="fill:#ffffff;stroke:#ff0000;stroke-width:2.2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
        id="rect4607"
        width="85.992104"
        height="498.56454"
@@ -870,7 +870,7 @@
          id="tspan3839"
          x="70.218544"
          y="497.54245"
-         style="font-size:12px;text-align:center;text-anchor:middle">Age</tspan></text>
+         style="font-size:12px;text-align:center;text-anchor:middle">Y_planted</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3890"
@@ -885,7 +885,7 @@
          y="497.54245"
          x="162.21854"
          id="tspan3892"
-         sodipodi:role="line">Fagussylvatica</tspan></text>
+         sodipodi:role="line">Species</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -961,51 +961,6 @@
          x="622.21851"
          y="497.54245"
          style="font-size:12px;text-align:center;text-anchor:middle">Height</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text4106"
-       y="497.54245"
-       x="714.21851"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731"><tspan
-         style="font-size:12px;text-align:center;text-anchor:middle"
-         y="497.54245"
-         x="714.21851"
-         id="tspan4108"
-         sodipodi:role="line">Wrc</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="806.21851"
-       y="497.54245"
-       id="text4142"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731"><tspan
-         sodipodi:role="line"
-         id="tspan4144"
-         x="806.21851"
-         y="497.54245"
-         style="font-size:12px;text-align:center;text-anchor:middle">Ws</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text4178"
-       y="497.54245"
-       x="898.21851"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731"><tspan
-         style="font-size:12px;text-align:center;text-anchor:middle"
-         y="497.54245"
-         x="898.21851"
-         id="tspan4180"
-         sodipodi:role="line">Wres</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -1624,282 +1579,6 @@
       </g>
     </g>
     <g
-       id="g3545"
-       transform="translate(645.36317,-95.655838)"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731">
-      <g
-         id="g3547"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,345.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3549"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3551"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,339.71406)"
-         id="g3553">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3555"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3557"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3559"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,333.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3561"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3563"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,327.71406)"
-         id="g3565">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3567"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3569"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3571"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,321.71406)"
-         style="fill:#ffffff">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3573"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3575"
-           style="fill:#ffffff;stroke:#000000;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-    </g>
-    <g
-       id="g3577"
-       transform="translate(737.36317,-95.655838)"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731">
-      <g
-         id="g3579"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,345.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3581"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3583"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,339.71406)"
-         id="g3585">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3587"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3589"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3591"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,333.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3593"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3595"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,327.71406)"
-         id="g3597">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3599"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3601"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3603"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,321.71406)"
-         style="fill:#ffffff">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3605"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3607"
-           style="fill:#ffffff;stroke:#000000;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-    </g>
-    <g
-       id="g3609"
-       transform="translate(829.36317,-95.655838)"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731">
-      <g
-         id="g3611"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,345.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3613"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3615"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,339.71406)"
-         id="g3617">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3619"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3621"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3623"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,333.71406)"
-         style="fill:#e6e6e6;stroke:#808080">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3625"
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3627"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-      <g
-         style="fill:#e6e6e6;stroke:#808080"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,327.71406)"
-         id="g3629">
-        <rect
-           style="fill:#e6e6e6;fill-opacity:1;stroke:#808080;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-           id="rect3631"
-           width="49"
-           height="49"
-           x="272.82144"
-           y="483.04074" />
-        <path
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-           style="fill:#e6e6e6;stroke:#808080;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           id="path3633"
-           inkscape:connector-curvature="0" />
-      </g>
-      <g
-         id="g3635"
-         transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,0.31917,321.71406)"
-         style="fill:#ffffff">
-        <rect
-           y="483.04074"
-           x="272.82144"
-           height="49"
-           width="49"
-           id="rect3637"
-           style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028" />
-        <path
-           inkscape:connector-curvature="0"
-           id="path3639"
-           style="fill:#ffffff;stroke:#000000;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0" />
-      </g>
-    </g>
-    <g
        id="g3673"
        transform="translate(31.363158,-3.6558344)"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
@@ -2138,38 +1817,11 @@
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731" />
     <path
-       style="fill:#00ff00;fill-opacity:1;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 706.47347,437.18925 8.90197,1.51523 -3.8512,3.4724 -9.12294,-1.59414 z"
-       id="path3799"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731" />
-    <path
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
        id="path3801"
        d="m 614.47347,437.18925 8.90197,1.51523 -3.8512,3.4724 -9.12294,-1.59414 z"
        style="fill:#00ff00;fill-opacity:1;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731" />
-    <path
-       style="fill:#00ff00;fill-opacity:1;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 798.47347,437.18925 8.90197,1.51523 -3.8512,3.4724 -9.12294,-1.59414 z"
-       id="path3804"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731" />
-    <path
-       style="fill:#00ff00;fill-opacity:1;stroke:#008000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 890.47347,437.18925 8.90197,1.51523 -3.8512,3.4724 -9.12294,-1.59414 z"
-       id="path3808"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731" />
@@ -2404,40 +2056,13 @@
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731" />
-    <path
-       inkscape:export-ydpi="159.99731"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       id="path22865"
-       style="fill:#008000;fill-opacity:1;stroke:none"
-       d="m 746.5002,400.43614 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -10e-4,7.56395 -0.0304,12.95945 -0.0304,19.89199 0,0.0169 -39.44635,0.0575 -39.44635,0.0575 0,6.53473 -4e-4,10.50648 -4e-4,17.63574 -0.89556,0.13763 -1.30116,-0.53523 -2.3473,-0.39761 0,-7.14277 -10e-5,-12.98592 -10e-5,-19.53298 0,-0.001 39.4726,-0.0456 39.4726,-0.0456 0,-6.91936 -3.4e-4,-10.05837 -8.5e-4,-17.60786 -1.038,-2.6e-4 -3.11586,0.005 -3.11163,-2.6e-4 z"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccssccssccc" />
-    <path
-       sodipodi:nodetypes="ccccssccssccc"
-       inkscape:connector-curvature="0"
-       d="m 868.90579,400.43614 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -0.001,7.56395 -0.0304,12.95945 -0.0304,19.89199 0,0.0169 -69.85194,0.0575 -69.85194,0.0575 0,6.53473 -4e-4,10.50648 -4e-4,17.63574 -0.89556,0.13763 -1.30116,-0.53523 -2.3473,-0.39761 0,-7.14277 -10e-5,-12.98592 -10e-5,-19.53298 0,-0.001 69.87819,-0.0456 69.87819,-0.0456 0,-6.91936 -3.4e-4,-10.05837 -8.5e-4,-17.60786 -1.038,-2.6e-4 -3.11586,0.005 -3.11163,-2.6e-4 z"
-       style="fill:#008000;fill-opacity:1;stroke:none"
-       id="path22867"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731" />
-    <path
-       inkscape:export-ydpi="159.99731"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       id="path22869"
-       style="fill:#008000;fill-opacity:1;stroke:none"
-       d="m 941.1068,400.43614 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -0.001,7.56395 -0.0304,12.95945 -0.0304,19.89199 0,0.0169 -50.05295,0.0575 -50.05295,0.0575 0,6.53473 -4e-4,10.50648 -4e-4,17.63574 -0.89556,0.13763 -1.30116,-0.53523 -2.3473,-0.39761 0,-7.14277 -10e-5,-12.98592 -10e-5,-19.53298 0,-0.001 50.0792,-0.0456 50.0792,-0.0456 0,-6.91936 -3.4e-4,-10.05837 -8.5e-4,-17.60786 -1.038,-2.6e-4 -3.11586,0.005 -3.11163,-2.6e-4 z"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccssccssccc" />
     <rect
        y="655.90088"
        x="15.505"
        height="362.06454"
        width="539.91437"
        id="rect4306"
-       style="fill:#ffffff;stroke:#0000ff;stroke-width:0.99999987999999995;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
+       style="fill:#ffffff;stroke:#0000ff;stroke-width:2.2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731" />
@@ -2654,7 +2279,7 @@
     </g>
     <g
        id="g23746"
-       transform="translate(467.95996,57.328406)"
+       transform="translate(193.95996,57.328406)"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731">
@@ -2679,7 +2304,7 @@
     </g>
     <g
        id="g23758"
-       transform="translate(679.56836,-87.822354)"
+       transform="translate(405.56836,-87.822354)"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
        inkscape:export-ydpi="159.99731">
@@ -2713,7 +2338,7 @@
          id="tspan23776"
          y="806.77209"
          x="30.781435"
-         sodipodi:role="line">Month  n_days  Rg_f   Ta_f     RH_f     Ts_f   Precip   SWC    LAI</tspan><tspan
+         sodipodi:role="line">Month  n_days  Rg_f   Ta_f     VPD_f     Ts_f   Precip   SWC    LAI</tspan><tspan
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
          y="821.77209"
          x="30.781435"
@@ -3763,28 +3388,8 @@
          id="tspan24176"
          sodipodi:role="line">VPD_2007</tspan></text>
     <g
-       style="fill:#ffffff;stroke:#000000;stroke-opacity:1"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,372.05823)"
-       id="g24223"
-       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
-       inkscape:export-xdpi="159.99731"
-       inkscape:export-ydpi="159.99731">
-      <rect
-         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.63495314;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028"
-         id="rect24225"
-         width="49"
-         height="49"
-         x="272.82144"
-         y="483.04074" />
-      <path
-         d="m 272.32144,482.54074 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m 10,-50 0,50 m -50,-50 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0 m -50,10 50,0"
-         style="fill:#ffffff;stroke:#000000;stroke-width:0.81747656pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         id="path24227"
-         inkscape:connector-curvature="0" />
-    </g>
-    <g
        id="g24229"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,366.05823)"
+       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,374.05823)"
        style="fill:#ffffff;stroke:#000000;stroke-opacity:1"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
@@ -3804,7 +3409,7 @@
     </g>
     <g
        style="fill:#ffffff;stroke:#000000;stroke-opacity:1"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,360.05823)"
+       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,368.05823)"
        id="g24235"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
@@ -3824,7 +3429,7 @@
     </g>
     <g
        id="g24241"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,354.05823)"
+       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,362.05823)"
        style="fill:#ffffff;stroke:#000000;stroke-opacity:1"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
@@ -3844,7 +3449,7 @@
     </g>
     <g
        style="fill:#ffffff;stroke:#000000;stroke-opacity:1"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,348.05823)"
+       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,356.05823)"
        id="g24247"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
@@ -3864,7 +3469,7 @@
     </g>
     <g
        id="g24253"
-       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,342.05823)"
+       transform="matrix(0.91567807,0.15035606,-0.40191253,0.3425565,289.68234,350.05823)"
        style="fill:#ffffff"
        inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
        inkscape:export-xdpi="159.99731"
@@ -3889,13 +3494,13 @@
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="358.21851"
-       y="537.54242"
+       y="545.54242"
        id="text24259"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan24261"
          x="358.21851"
-         y="537.54242"
+         y="545.54242"
          style="font-size:12px;text-align:center;text-anchor:middle">Soil</tspan></text>
     <text
        inkscape:export-ydpi="159.99731"
@@ -3904,37 +3509,27 @@
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="427.1236"
-       y="526.62994"
+       y="548.62994"
        id="text24299"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          x="427.1236"
-         y="526.62994"
-         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
-         id="tspan24909" /><tspan
-         sodipodi:role="line"
-         x="427.1236"
-         y="541.62994"
-         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
-         id="tspan24915">MAXASW &quot;300&quot;</tspan><tspan
-         sodipodi:role="line"
-         x="427.1236"
-         y="556.62994"
+         y="548.62994"
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
          id="tspan24917">CLAY_PERC &quot;0&quot;</tspan><tspan
          sodipodi:role="line"
          x="427.1236"
-         y="571.62994"
+         y="563.62994"
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
          id="tspan24919">SILT_PERC &quot;0&quot;</tspan><tspan
          sodipodi:role="line"
          x="427.1236"
-         y="586.62994"
+         y="578.62994"
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
          id="tspan24921">SAND_PERC &quot;0&quot;</tspan><tspan
          sodipodi:role="line"
          x="427.1236"
-         y="601.62994"
+         y="593.62994"
          style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Courier New;-inkscape-font-specification:Courier New Bold"
          id="tspan24951">BULK_DENSITY &quot;0&quot;</tspan></text>
     <text
@@ -4555,7 +4150,7 @@
          y="967.54248"
          style="font-size:12px;text-align:center;text-anchor:middle">MAI_2007</tspan></text>
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:2.2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:4.00000028000000007"
        id="rect4609"
        width="171"
        height="85"
@@ -4611,5 +4206,172 @@
        d="m 555.56573,760.30904 c 6.9193,0 100.02404,-3.4e-4 107.57353,-8.5e-4 2.6e-4,-1.038 2.6e-4,-3.11163 2.6e-4,-3.11163 l 0.001,10e-4 c 3.82189,1.42856 7.64378,2.85728 11.46567,4.28601 -3.82189,1.42855 -7.64378,2.85728 -11.46567,4.28584 0,-1.01941 0,-2.08512 -2.4e-4,-3.10842 -7.56395,-10e-4 -100.63945,-0.0304 -107.57195,-0.0304 z"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccccc" />
+    <text
+       inkscape:export-ydpi="159.99731"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       sodipodi:linespacing="125%"
+       id="text4524"
+       y="523.54242"
+       x="160.21854"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:12px;text-align:center;text-anchor:middle"
+         y="523.54242"
+         x="160.21854"
+         id="tspan4526"
+         sodipodi:role="line">or</tspan></text>
+    <g
+       inkscape:export-ydpi="159.99731"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       transform="translate(233.67531,4.3441656)"
+       id="g4528">
+      <path
+         inkscape:export-ydpi="159.99731"
+         inkscape:export-xdpi="159.99731"
+         inkscape:export-filename="C:\Documents and Settings\utente\Desktop\SPA Repo\ALCS\Phase2\diagrams\tiles_avnir2_tables_partitioned.png"
+         id="path4530"
+         style="fill:#808080;fill-opacity:1;stroke:none"
+         d="m 517.82297,399.37096 c 0,-6.9193 -3.4e-4,4.19471 -8.5e-4,-3.35478 -1.038,-2.6e-4 -3.11163,-2.6e-4 -3.11163,-2.6e-4 l 10e-4,-10e-4 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -0.001,7.56395 -0.0304,-3.5793 -0.0304,3.3532 z"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccccc" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path4532"
+         d="m 501.31245,399.55673 35.39695,0 0,11.1127 -35.39695,0 z"
+         style="fill:none;stroke:#808080;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4534"
+         y="408.3385"
+         x="518.77905"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:10px;font-style:italic;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Italic"
+           y="408.3385"
+           x="518.77905"
+           id="tspan4536"
+           sodipodi:role="line">Fixed</tspan></text>
+    </g>
+    <g
+       id="g4538"
+       transform="translate(355.20637,4.3441656)"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-ydpi="159.99731">
+      <path
+         sodipodi:nodetypes="ccccccccc"
+         inkscape:connector-curvature="0"
+         d="m 517.82297,399.37096 c 0,-6.9193 -3.4e-4,4.19471 -8.5e-4,-3.35478 -1.038,-2.6e-4 -3.11163,-2.6e-4 -3.11163,-2.6e-4 l 10e-4,-10e-4 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -0.001,7.56395 -0.0304,-3.5793 -0.0304,3.3532 z"
+         style="fill:#808080;fill-opacity:1;stroke:none"
+         id="path4540"
+         inkscape:export-filename="C:\Documents and Settings\utente\Desktop\SPA Repo\ALCS\Phase2\diagrams\tiles_avnir2_tables_partitioned.png"
+         inkscape:export-xdpi="159.99731"
+         inkscape:export-ydpi="159.99731" />
+      <path
+         style="fill:none;stroke:#808080;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028"
+         d="m 501.31245,399.55673 35.39695,0 0,11.1127 -35.39695,0 z"
+         id="path4542"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="518.77905"
+         y="408.3385"
+         id="text4544"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4546"
+           x="518.77905"
+           y="408.3385"
+           style="font-size:10px;font-style:italic;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Italic">Fixed</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="159.99731"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       transform="translate(426.43413,4.3441656)"
+       id="g4548">
+      <path
+         inkscape:export-ydpi="159.99731"
+         inkscape:export-xdpi="159.99731"
+         inkscape:export-filename="C:\Documents and Settings\utente\Desktop\SPA Repo\ALCS\Phase2\diagrams\tiles_avnir2_tables_partitioned.png"
+         id="path4550"
+         style="fill:#808080;fill-opacity:1;stroke:none"
+         d="m 517.82297,399.37096 c 0,-6.9193 -3.4e-4,4.19471 -8.5e-4,-3.35478 -1.038,-2.6e-4 -3.11163,-2.6e-4 -3.11163,-2.6e-4 l 10e-4,-10e-4 c 1.42856,-3.82189 2.85728,-7.64378 4.28601,-11.46567 1.42855,3.82189 2.85728,7.64378 4.28584,11.46567 -1.01941,0 -2.08512,0 -3.10842,2.4e-4 -0.001,7.56395 -0.0304,-3.5793 -0.0304,3.3532 z"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccccc" />
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path4552"
+         d="m 501.31245,399.55673 35.39695,0 0,11.1127 -35.39695,0 z"
+         style="fill:none;stroke:#808080;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4554"
+         y="408.3385"
+         x="518.77905"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:10px;font-style:italic;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Italic"
+           y="408.3385"
+           x="518.77905"
+           id="tspan4556"
+           sodipodi:role="line">Fixed</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="159.99731"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       transform="translate(242.76136,467.82418)"
+       id="g5332">
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path5334"
+         d="m 431.22224,398.49607 174.87033,0 0,13.23402 -174.87033,0 z"
+         style="fill:none;stroke:#808080;stroke-width:0.99999994;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text5336"
+         y="408.3385"
+         x="518.77905"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           style="font-size:10px;font-style:italic;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Italic"
+           y="408.3385"
+           x="518.77905"
+           id="tspan5338"
+           sodipodi:role="line">Every image is a GeoTiff Float32</tspan></text>
+    </g>
+    <g
+       id="g5340"
+       transform="translate(242.76136,527.82418)"
+       inkscape:export-filename="/home/candini/Desktop/UNCEM.png"
+       inkscape:export-xdpi="159.99731"
+       inkscape:export-ydpi="159.99731">
+      <path
+         style="fill:none;stroke:#808080;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dashoffset:4.00000028"
+         d="m 412.84955,398.49607 211.61575,0 0,13.23402 -211.61575,0 z"
+         id="path5342"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="518.77905"
+         y="408.3385"
+         id="text5344"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5346"
+           x="518.77905"
+           y="408.3385"
+           style="font-size:10px;font-style:italic;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Italic">Temporal coverage: 2002-01 to 2009-12</tspan></text>
+    </g>
   </g>
 </svg>
