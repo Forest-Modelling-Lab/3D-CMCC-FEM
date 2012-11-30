@@ -780,8 +780,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			check "${MSG} failed.\n"
 		done
 		
-		METADATA="SITE=${SITE},ID=SOLAR_RADIATION,UNITY_OF_MEASURE=${UNITY}"
 		# Create output years images
+		METADATA="SITE=${SITE},VALUES=SOLAR_RADIATION,UNITY_OF_MEASURE=${UNITY}"
 		for YYYY in "${YEARS_PROC[@]}" ; do
 			MONTHS=()
 			for MM in "${MONTHS_PROC[@]}" ; do
@@ -843,6 +843,16 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
     	log "### { Start creating ${IMG} images....... ###\n"
+    	
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
+    	
+    	UNITY="mm/month"
     	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
 			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
 			MONTH=${DATE:5:2}
@@ -851,7 +861,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
 	
 			# Original precipitations data are mm/hh
-			OUTPUT_01="${WK_14}/Precip_0_25_mm-hh_${DATE}.tif"
+			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
 			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
 			log "${MSG} ...\n"
 			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
@@ -872,31 +882,55 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				fi
 			fi
 			
-			OUTPUT_02="${WK_14}/Precip_0_25_mm-${YEAR}-${MONTH}.tif"
+			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
 			MSG="Divide every pixel value for number of hours in month"
 			log "${MSG} ...\n"
 			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			MSG="Conversion of tiff projection from longlat to UTM"
-			OUTPUT_03="${WK_14}/Precip_${YEAR}-${MONTH}_utm.tif"
+			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
 			log "${MSG} ...\n"
 			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
 			check "${MSG} failed on ${OUTPUT_02}.\n"
 			
 			MSG="Remap and cut UTM geotiff image"
-			OUTPUT_04="${WK_14}/Precip_${YEAR}-${MONTH}.tif"
+			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
 			log "${MSG} ...\n"
 			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 			check "${MSG} failed on ${OUTPUT_03}.\n"
 			
-			MSG="Copy remapped and cut precip image into output dir"
+			MSG="Mask ${IMG}"
+			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
 			log "${MSG} ...\n"
-			cp ${OUTPUT_04} ${OUT_14}
+			${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
     	done
+    	
+    	# Create output years images
+		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
+		for YYYY in "${YEARS_PROC[@]}" ; do
+			MONTHS=()
+			for MM in "${MONTHS_PROC[@]}" ; do
+				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
+				MONTHS+=("${INPUT_03}")				
+			done
+			
+			MSG="Create multiband ${IMG} image"
+			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+		
+			MSG="Copy ${IMG} into ${OUT_14}"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_06} -t ${OUT_14}
+			check "${MSG} failed.\n"
+		done
+    	
     	clean "${WK_14}"
+    	
     	log "### ........stop creating ${IMG} images } ###\n"
     fi
 done
@@ -1007,6 +1041,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Soil" ] ; then
     	log "### { Start creating ${IMG} images......... ###\n"
     	
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_16}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_16}/${NAME_MASK_TOT}"
+    	
     	for INPUT_01 in $( ls ${IN_16}/*.asc ) ; do
 			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_01}"
 			OUTPUT_01="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/.tif/ ) )"
@@ -1024,21 +1066,31 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m.tif/ ) )"
 			log "${MSG} ...\n"	
 			${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_02}.\n"	
+			check "${MSG} failed on ${OUTPUT_02}.\n"
+			
+			MSG="Mask ${IMG}"
+			OUTPUT_04="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m_masked.tif/ ) )"
+			log "${MSG} ...\n"
+			${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_TOT} -o ${OUTPUT_04} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"	
 		done
 		
 		# Prepare layers for multiband image
-		INPUT_02+=("$( ls ${WK_16}/*argilla*30m.tif*)" "$( ls ${WK_16}/*limo*30m.tif*)" "$( ls ${WK_16}/*sabbia*30m.tif*)" "$( ls ${WK_16}/*campo*30m.tif*)" "$( ls ${WK_16}/*densita*30m.tif*) "$( ls ${WK_16}/*profondita*30m.tif*)"")
+		INPUT_02+=("$( ls ${WK_16}/*argilla*30m_masked.tif)" "$( ls ${WK_16}/*limo*30m_masked.tif)" "$( ls ${WK_16}/*sabbia*30m_masked.tif)" "$( ls ${WK_16}/*densita*30m_masked.tif)")
 		
-		METADATA="VALUE=SOIL,SITE=MADONIE,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=max available soil water (mm),BAND5=density (g/cm3),BAND6=soil thickness (cm)"
-		MSG="Create multiband soil image"
-		OUTPUT_04="${WK_16}/Soil.tif"
+		METADATA="SITE=${SITE},VALUE=SOIL,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=density (g/cm3)"
+		MSG="Create multiband ${IMG} image"
+		OUTPUT_05="${WK_16}/${IMG}.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_03} -m "${METADATA}"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_05} -m "${METADATA}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${IMG} into ${OUT_16}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_05} -t ${OUT_16}
 		check "${MSG} failed.\n"
 
 		clean "${WK_16}"
-		
     	
     	log "### ..........stop creating ${IMG} images } ###\n"
     fi
