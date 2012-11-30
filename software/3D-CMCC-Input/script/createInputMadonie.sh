@@ -559,13 +559,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Set georeference to ${OUTPUT_01}"
 		OUTPUT_03="${WK_03}/Every_px_deciduous_geo.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/copyGeoref -i ${FILTER_D} ${OUTPUT_01} -o ${OUTPUT_03} &>> "${LOGFILE}"
+		${BIN_DIR}/copyGeoref -i ${MASK_D} ${OUTPUT_01} -o ${OUTPUT_03} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Set georeference to ${OUTPUT_02}"
 		OUTPUT_04="${WK_03}/Every_px_evergreen_geo.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/copyGeoref -i ${FILTER_D} ${OUTPUT_02} -o ${OUTPUT_04} &>> "${LOGFILE}"
+		${BIN_DIR}/copyGeoref -i ${MASK_D} ${OUTPUT_02} -o ${OUTPUT_04} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Get deciduous pixels"
