@@ -823,15 +823,15 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	#    	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
     	#
     	#    	for INPUT_01 in $( ls ${IN_12}/*.zip ) ; do
-    		#    		MSG="Unzipping DEM files"
-			#			log "${MSG} ...\n"
-			#			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
-			#			check "${MSG} failed.\n"
-			#
-			#			MSG="Removing useless stuff"
-			#			log "${MSG} ...\n"
-			#			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
-			#			check "${MSG} failed.\n"
+    	#    		MSG="Unzipping DEM files"
+		#			log "${MSG} ...\n"
+		#			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
+		#			check "${MSG} failed.\n"
+		#
+		#			MSG="Removing useless stuff"
+		#			log "${MSG} ...\n"
+		#			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
+		#			check "${MSG} failed.\n"
     	#    	done
     	#
 		#		MSG="Merge adjacent dem files"
@@ -845,7 +845,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		#		OUTPUT_02="${WK_12}/Sicily_dem_no_remap.tif"
 		#		log "${MSG} ...\n"
 		#		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		#		check "${MSG} failed on ${OUTPUT_01}.\n"
+		#		check "${MSG} failed.\n"
 		#
 		#		MSG="Remap and cut UTM geotiff image"
 		#		OUTPUT_03="${WK_12}/Madonie_dem.tif"
@@ -862,6 +862,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		for YYYY in ${YEARS_PROC[@]} ; do
 			JULIAN_DAYS=($( ls ${IN_12}/${YYYY} ))
 			for JJ in ${JULIAN_DAYS[@]} ; do
+				HDF="$( find ${IN_12}/${YYYY}/${JJ} -type f )"
 				# Delete zeros in front of julian day: "001" --> "1" or "091" --> "91"
 				if [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" == "0" ] ; then
 					JJ="${JJ:2:1}"
@@ -869,11 +870,38 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 					JJ="${JJ:1:2}"
 				fi
 				MM=$( date -d "`date +${YYYY} `-01-01 +$(( ${JJ} - 1 ))days" +%m )
-				DATE="${YYYY}${MM}"				
+				DATE="${YYYY}${MM}"
+				
+				SUBDATASET="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Mean"
+				
+				MSG="Create multiband ${IMG} image"
+				OUTPUT_05="${WK_12}/${IMG}_global_latlon-${DATE}.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} ${SUBDATASET} ${OUTPUT_05} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				BAND="20"
+				MSG="Extract band ${BAND}"
+				OUTPUT_06="${WK_12}/${IMG}_latlon-${DATE}_b${BAND}.tif"
+				log "${MSG} ...\n"
+				gdal_translate -b ${BAND} -srcwin 192 50 5 4 ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Conversion of tiff projection from longlat to UTM"
+				OUTPUT_07="${WK_12}/${IMG}_utm_30m-${DATE}.tif"
+				log "${MSG} ...\n"
+				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_07} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				#MSG="Remap and cut UTM geotiff image"
+				#OUTPUT_08="${WK_12}/${IMG}_remapped-${DATE}.tif"
+				#log "${MSG} ...\n"
+				#${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_08} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				#check "${MSG} failed.\n"
 			done	
     	done
     	
-    	# MODIS ID layer 916: Retrieved Temperature profile mean, band 20
+    	# MODIS ID layer 917: Retrieved Temperature profile mean, band 20
     	# T(a)= m * (Z+2) + T
 		# m è una costante = -0.0064
 		# Z = valore del DEM
