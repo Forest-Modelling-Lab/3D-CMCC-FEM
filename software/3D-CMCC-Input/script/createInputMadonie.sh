@@ -118,6 +118,11 @@ PROJ_3004="+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=2520000 +y_0=0 +ellps=i
 PAR_01="-q -co COMPRESS=LZW -of GTiff"
 PAR_02="-ot Float32"
 
+# Temporal coverage
+YEARS_PROC=(2002 2003 2004 2005 2006 2007 2008 2009)
+MONTHS_PROC=(01 02 03 04 05 06 07 08 09 10 11 12)
+
+
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
 DEBUG="y"
@@ -508,7 +513,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		
 		MSG="Create multiband ${IMG} image"
 		INPUT_02=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
-		OUTPUT_08="${WK_02}/Species.tif"
+		OUTPUT_08="${WK_02}/${IMG}.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_08} -m "${METADATA}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -517,6 +522,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		log "${MSG} ...\n"
 		cp ${OUTPUT_08} ${OUT_02}
 		check "${MSG} failed.\n"
+		
+		clean "${WK_02}"
     	
     	log "### .......stop creating ${IMG} images } ###\n"
     fi
@@ -589,7 +596,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		METADATA="SITE=${SITE},ID=PHENOLOGY,-9999=${PHENOLOGY_ID[0]},1=${PHENOLOGY_ID[1]},2=${PHENOLOGY_ID[2]}"
 		MSG="Create multiband ${IMG} image"
 		INPUT_01=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
-		OUTPUT_09="${WK_03}/Phenology.tif"
+		OUTPUT_09="${WK_03}/${IMG}.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_09} -m "${METADATA}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -598,6 +605,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		log "${MSG} ...\n"
 		cp ${OUTPUT_09} -t ${OUT_03}
 		check "${MSG} failed.\n"
+		
+		clean "${WK_03}"
     	
     	log "### .....stop creating ${IMG} images } ###\n"
     fi
@@ -616,8 +625,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		cp ${OUT_00}/${NAME_MASK_TOT} ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_04}
 		check "${MSG} failed.\n"
 		
-    	MASK_TOT="${WK_03}/${NAME_MASK_TOT}"
-    	EMPTY_BAND="${WK_03}/${NAME_EMPTY_BAND}"
+    	MASK_TOT="${WK_04}/${NAME_MASK_TOT}"
+    	EMPTY_BAND="${WK_04}/${NAME_EMPTY_BAND}"
     	
     	IDX="1"
 		MSG="Create a monoband image with every pixel set to ${IDX} (${MANAGEMENT_ID[${IDX}]})"
@@ -641,7 +650,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		METADATA="SITE=${SITE},ID=MANAGEMENT,-9999=${MANAGEMENT_ID[0]},1=${MANAGEMENT_ID[1]},2=${MANAGEMENT_ID[2]}"
 		MSG="Create multiband ${IMG} image"
 		INPUT_01=(${OUTPUT_03} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
-		OUTPUT_04="${WK_04}/Management.tif"
+		OUTPUT_04="${WK_04}/${IMG}.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_04} -m "${METADATA}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -650,6 +659,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		log "${MSG} ...\n"
 		cp ${OUTPUT_04} -t ${OUT_04}
 		check "${MSG} failed.\n"
+		
+		clean "${WK_04}"
     	
     	log "### ....stop creating ${IMG} images } ###\n"
     fi
@@ -715,6 +726,15 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
     	
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_11}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_11}/${NAME_MASK_TOT}"
+    	
+    	UNITY="MJ/m2/day"
     	for INPUT_01 in $( ls ${IN_11}/*_rad_Nx*.hdf ) ; do
     		CURR_PROJ=$( gdalinfo HDF4_SDS:UNKNOWN:"${INPUT_01}":6 | grep SRS | cut -d '=' -f '2' )
     		UL_LONGITUDE=$( gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":1 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
@@ -731,6 +751,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			check "${MSG} failed.\n"
 			
 			DATE=$( basename ${OUTPUT_01} | cut -d '-' -f '2' | cut -d '.' -f '1' )
+			MONTH="${DATE:4:2}"
+			YEAR="${DATE:0:4}"
 			
 			MSG="Remap of UTM geotiff image"
 			OUTPUT_02="$( echo ${OUTPUT_01} | sed s/.tif/-remapped/ )"
@@ -740,20 +762,47 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			
 			MSG="Get the subwindow needed"
     		INPUT_03="$( ls ${WK_11}/*${DATE}-remapped_33S.tif )" # Get only tile at zone 33S
-			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_33S.tif/-final.tif/ )"
+			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_33S.tif/-warped.tif/ )"
 			log "${MSG} ...\n"
 			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} -te ${UL_LON} ${LR_LAT} ${LR_LON} ${UL_LAT} ${INPUT_03} ${OUTPUT_03} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
-			#MSG="Copy ${OUTPUT_03} into output dir"
-			#log "${MSG} ...\n"
-			#cp ${OUTPUT_03} ${OUT_11}
-			#check "${MSG} failed.\n"
+			MSG="Mask ${IMG}"
+			OUTPUT_04="$( echo ${OUTPUT_03} | sed s/-warped.tif/-masked.tif/ )"
+			log "${MSG} ...\n"
+			${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_TOT} -o ${OUTPUT_04} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			OUTPUT_05="$( echo ${OUTPUT_04} | sed s/-masked.tif/-final.tif/ )"
+			VALUE_SOLAR_RAD="0.0864"
+			MSG="Conversion from W/m2 to ${UNITY}"
+			log "${MSG} ...\n"
+			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_04} -v "${VALUE_SOLAR_RAD}" -o ${OUTPUT_05} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
 		done
 		
-			#allora la formula per convertire W/m2 a MJ/m2/giorno  è : "Valore * 86400 /  1 000 000"
-			#[6:01:27 PM] Caneta: ok: quindi valore* 0.0864
+		METADATA="SITE=${SITE},ID=SOLAR_RADIATION,UNITY_OF_MEASURE=${UNITY}"
+		# Create output years images
+		for YYYY in "${YEARS_PROC[@]}" ; do
+			MONTHS=()
+			for MM in "${MONTHS_PROC[@]}" ; do
+				INPUT_04=$( ls ${WK_11}/*${YYYY}${MM}-final.tif )
+				MONTHS+=("${INPUT_04}")				
+			done
+			
+			MSG="Create multiband ${IMG} image"
+			OUTPUT_06="${WK_11}/${IMG}_${YYYY}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
 		
+			MSG="Copy ${IMG} into ${OUT_11}"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_06} -t ${OUT_11}
+			check "${MSG} failed.\n"
+		done
+		
+		clean "${WK_11}"
 		
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
