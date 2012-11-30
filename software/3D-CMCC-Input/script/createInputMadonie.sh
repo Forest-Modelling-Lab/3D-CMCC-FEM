@@ -814,34 +814,64 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Avg_Temp" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
-		MSG="Copy filter from ${OUT_00}"
-		log "${MSG} ...\n"
-		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
-		check "${MSG} failed.\n"
+    	#    	NAME_MASK_TOT="Total_mask.tif"
+		#		MSG="Copy filter from ${OUT_00}"
+		#		log "${MSG} ...\n"
+		#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
+		#		check "${MSG} failed.\n"
+		#
+    	#    	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
+    	#
+    	#    	for INPUT_01 in $( ls ${IN_12}/*.zip ) ; do
+    		#    		MSG="Unzipping DEM files"
+			#			log "${MSG} ...\n"
+			#			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
+			#			check "${MSG} failed.\n"
+			#
+			#			MSG="Removing useless stuff"
+			#			log "${MSG} ...\n"
+			#			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
+			#			check "${MSG} failed.\n"
+    	#    	done
+    	#
+		#		MSG="Merge adjacent dem files"
+		#		INPUT_02=($( ls ${WK_12}/*_dem.tif ))
+		#		OUTPUT_01="${WK_12}/Sicily_dem.tif"
+		#		log "${MSG} ...\n"
+    	#    	gdal_merge.py ${PAR_01} ${INPUT_02[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
+    	#    	check "${MSG} failed.\n"
+    	#
+    	#    	MSG="Conversion of tiff projection from longlat to UTM"
+		#		OUTPUT_02="${WK_12}/Sicily_dem_no_remap.tif"
+		#		log "${MSG} ...\n"
+		#		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		#		check "${MSG} failed on ${OUTPUT_01}.\n"
+		#
+		#		MSG="Remap and cut UTM geotiff image"
+		#		OUTPUT_03="${WK_12}/Madonie_dem.tif"
+		#		log "${MSG} ...\n"
+		#		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		#		check "${MSG} failed.\n"
+		#
+		#		MSG="Mask ${IMG}"
+		#		OUTPUT_04="${WK_12}/Madonie_dem_masked.tif"
+		#		log "${MSG} ...\n"
+		#		${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_TOT} -o ${OUTPUT_04} &>> "${LOGFILE}"
+		#		check "${MSG} failed.\n"
 		
-    	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
-    	
-    	for INPUT_01 in $( ls ${IN_12}/*.zip ) ; do
-    		MSG="Unzipping DEM files"
-			log "${MSG} ...\n"
-			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			MSG="Removing useless stuff"
-			log "${MSG} ...\n"
-			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
-			check "${MSG} failed.\n"
+		for YYYY in ${YEARS_PROC[@]} ; do
+			JULIAN_DAYS=($( ls ${IN_12}/${YYYY} ))
+			for JJ in ${JULIAN_DAYS[@]} ; do
+				# Delete zeros in front of julian day: "001" --> "1" or "091" --> "91"
+				if [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" == "0" ] ; then
+					JJ="${JJ:2:1}"
+				elif [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" != "0" ] ; then
+					JJ="${JJ:1:2}"
+				fi
+				MM=$( date -d "`date +${YYYY} `-01-01 +$(( ${JJ} - 1 ))days" +%m )
+				DATE="${YYYY}${MM}"				
+			done	
     	done
-    	
-    	
-    	#gdal_merge.py -of GTiff -o "ASTGTM2_N37E013_dem.tif" "ASTGTM2_N37E014_dem.tif" "ASTGTM2_N38E013_dem.tif" "N38E014_dem.tif"
-		MSG="Merge adjacent dem files"
-		INPUT_01=($( ls ${WK_12}/*_dem.tif ))
-		OUTPUT_01="${WK_12}/Madonie_dem.tif"
-		log "${MSG} ...\n"
-    	gdal_merge.py ${PAR_01} ${INPUT_01[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
-    	check "${MSG} failed.\n"
     	
     	# MODIS ID layer 916: Retrieved Temperature profile mean, band 20
     	# T(a)= m * (Z+2) + T
