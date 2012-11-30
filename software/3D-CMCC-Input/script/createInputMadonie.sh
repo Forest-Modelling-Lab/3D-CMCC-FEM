@@ -510,6 +510,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		cp ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_02}
 		check "${MSG} failed.\n"
 		
+		METADATA="SITE=${SITE},ID=SPECIE,-9999=${SPECIES_ID[0]},1=${SPECIES_ID[1]},2=${SPECIES_ID[2]},3=${SPECIES_ID[3]},4=${SPECIES_ID[4]},5=${SPECIES_ID[5]},6=${SPECIES_ID[6]},7=${SPECIES_ID[7]}"
 		MSG="Create multiband ${IMG} image"
 		INPUT_02=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
 		OUTPUT_08="${WK_02}/${IMG}.tif"
@@ -813,11 +814,42 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Avg_Temp" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
     	
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
+    	
+    	for INPUT_01 in $( ls ${IN_12}/*.zip ) ; do
+    		MSG="Unzipping DEM files"
+			log "${MSG} ...\n"
+			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Removing useless stuff"
+			log "${MSG} ...\n"
+			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
+			check "${MSG} failed.\n"
+    	done
+    	
+    	
+    	#gdal_merge.py -of GTiff -o "ASTGTM2_N37E013_dem.tif" "ASTGTM2_N37E014_dem.tif" "ASTGTM2_N38E013_dem.tif" "N38E014_dem.tif"
+		MSG="Merge adjacent dem files"
+		INPUT_01=($( ls ${WK_12}/*_dem.tif ))
+		OUTPUT_01="${WK_12}/Madonie_dem.tif"
+		log "${MSG} ...\n"
+    	gdal_merge.py ${PAR_01} ${INPUT_01[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
+    	check "${MSG} failed.\n"
+    	
     	# MODIS ID layer 916: Retrieved Temperature profile mean, band 20
     	# T(a)= m * (Z+2) + T
 		# m è una costante = -0.0064
 		# Z = valore del DEM
 		# T è la temperatura della banda 20 ottenuta dalla formula sopra: T= factor_scale * (valore - add_offset) - 273.15
+
+		clean "${WK_12}"
 
     	log "### ......stop creating ${IMG} images } ###\n"
     fi
