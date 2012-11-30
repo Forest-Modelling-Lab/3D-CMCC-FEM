@@ -608,6 +608,49 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Management" ] ; then
     	log "### { Start creating ${IMG} images... ###\n"
+    	
+    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_EMPTY_BAND="empty_geo.tif"
+		MSG="Copy filters and empty band from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_04}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_03}/${NAME_MASK_TOT}"
+    	EMPTY_BAND="${WK_03}/${NAME_EMPTY_BAND}"
+    	
+    	IDX="1"
+		MSG="Create a monoband image with every pixel set to ${IDX} (${MANAGEMENT_ID[${IDX}]})"
+		OUTPUT_01="${WK_04}/Every_px_timber.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v ${IDX} -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Set georeference to ${OUTPUT_01}"
+		OUTPUT_02="${WK_04}/Every_px_timber_geo.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/copyGeoref -i ${MASK_TOT} ${OUTPUT_01} -o ${OUTPUT_02} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Get timber pixels"
+		OUTPUT_03="${WK_04}/Timber.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/applyMask -i ${OUTPUT_02} -m ${MASK_TOT} -o ${OUTPUT_03} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		METADATA="SITE=${SITE},ID=MANAGEMENT,-9999=${MANAGEMENT_ID[0]},1=${MANAGEMENT_ID[1]},2=${MANAGEMENT_ID[2]}"
+		MSG="Create multiband ${IMG} image"
+		INPUT_01=(${OUTPUT_03} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
+		OUTPUT_04="${WK_04}/Management.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_04} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${IMG} into ${OUT_04}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_04} -t ${OUT_04}
+		check "${MSG} failed.\n"
+    	
     	log "### ....stop creating ${IMG} images } ###\n"
     fi
 done
