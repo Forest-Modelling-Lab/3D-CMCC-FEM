@@ -340,11 +340,22 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		gdal_merge.py ${PAR_01} -n 0 ${MASK_D} ${MASK_E} -o ${MASK_TOT} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Copy masks into output dir"
+		MSG="Create an empty monoband image"
+		OUTPUT_10="${WK_00}/empty.tif"
 		log "${MSG} ...\n"
-		cp ${MASK_D} ${MASK_E} ${MASK_TOT} -t ${OUT_00}
+		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_10}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
+		MSG="Set georeference to empty band"
+		OUTPUT_11="${WK_00}/empty_geo.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/copyGeoref -i ${FILTER_E} ${OUTPUT_10} -o ${OUTPUT_11} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy masks and empty band into output dir"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} -t ${OUT_00}
+		check "${MSG} failed.\n"
 		
 #		MSG="Merge of multiple species"
 #		OUTPUT_10="${WK_00}/Madonie_species.tif"
@@ -385,12 +396,12 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Species" ] ; then
     	log "### { Start creating ${IMG} images...... ###\n"
     	
-#    	INPUT_03=()
-#		for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
-#			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
-#			OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
-#			log "${MSG} ...\n"
-#			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
+#   INPUT_03=()
+#	for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
+#		MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
+#		OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
+#		log "${MSG} ...\n"
+#		gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
 #	check "${MSG} failed on ${INPUT_02}.\n"
 #
 #	MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
@@ -486,14 +497,21 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		OUTPUT_07="${WK_02}/Species_carta_forestale_one_band.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed on ${OUTPUT_02}.\n"
+		check "${MSG} failed on ${OUTPUT_02}.\n"	
+		
+    	NAME_EMPTY_BAND="empty_geo.tif"
+    	EMPTY_BAND="${WK_02}/${NAME_EMPTY_BAND}"
+		MSG="Copy empty band from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_02}
+		check "${MSG} failed.\n"
 		
 		MSG="Create multiband ${IMG} image"
-		INPUT_02=(${OUTPUT_07} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09} ${OUTPUT_09})
+		INPUT_02=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
 		OUTPUT_08="${WK_02}/Species.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_08} -m "${METADATA}" &>> "${LOGFILE}"
-		check "${MSG} failed.\n"	
+		check "${MSG} failed.\n"
 		
 		MSG="Copy ${OUTPUT_08} into output dir"
 		log "${MSG} ...\n"
@@ -513,14 +531,16 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		NAME_MASK_D="Deciduous_mask.tif"
     	NAME_MASK_E="Evergreen_mask.tif"
     	NAME_MASK_TOT="Total_mask.tif"
-		MSG="Copy filters from ${OUT_00}"
+    	NAME_EMPTY_BAND="empty_geo.tif"
+		MSG="Copy filters and empty band from ${OUT_00}"
 		log "${MSG} ...\n"
-		cp ${OUT_00}/${NAME_MASK_D} ${OUT_00}/${NAME_MASK_E} ${OUT_00}/${NAME_MASK_TOT} -t ${WK_03}
+		cp ${OUT_00}/${NAME_MASK_D} ${OUT_00}/${NAME_MASK_E} ${OUT_00}/${NAME_MASK_TOT} ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_03}
 		check "${MSG} failed.\n"
 		
 		MASK_D="${WK_03}/${NAME_MASK_D}"
     	MASK_E="${WK_03}/${NAME_MASK_E}"
     	MASK_TOT="${WK_03}/${NAME_MASK_TOT}"
+    	EMPTY_BAND="${WK_03}/${NAME_EMPTY_BAND}"
     	
     	IDX="1"
 		MSG="Create a monoband image with every pixel set to ${IDX} (${PHENOLOGY_ID[${IDX}]})"
@@ -566,15 +586,9 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		gdal_merge.py ${PAR_01} -n 0 ${OUTPUT_05} ${OUTPUT_06} -o ${OUTPUT_07} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Create an empty monoband image"
-		OUTPUT_08="${WK_03}/empty.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v 0 -c -n "${OUTPUT_08}" &>> "${LOGFILE}"
-		check "${MSG} failed.\n"	
-		
 		METADATA="SITE=${SITE},ID=PHENOLOGY,-9999=${PHENOLOGY_ID[0]},1=${PHENOLOGY_ID[1]},2=${PHENOLOGY_ID[2]}"
 		MSG="Create multiband ${IMG} image"
-		INPUT_01=(${OUTPUT_07} ${OUTPUT_08} ${OUTPUT_08} ${OUTPUT_08} ${OUTPUT_08})
+		INPUT_01=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
 		OUTPUT_09="${WK_03}/Phenology.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_09} -m "${METADATA}" &>> "${LOGFILE}"
