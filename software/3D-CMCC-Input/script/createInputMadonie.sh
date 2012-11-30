@@ -122,7 +122,6 @@ PAR_02="-ot Float32"
 YEARS_PROC=(2002 2003 2004 2005 2006 2007 2008 2009)
 MONTHS_PROC=(01 02 03 04 05 06 07 08 09 10 11 12)
 
-
 # DEBUG="n" --> clean the current working directory
 # DEBUG="y" --> do not clean the current working directory
 DEBUG="y"
