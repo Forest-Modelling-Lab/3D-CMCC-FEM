@@ -78,10 +78,6 @@ void Get_initialization_biomass_data (SPECIES *s)
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
 	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
 
-	//todo control Wres
-
-
-
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002
 	if (s->phenology == D)

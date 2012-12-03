@@ -60,9 +60,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	met = (MET_DATA*) yos[years].m;
 
 
-
-
-
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
@@ -73,22 +70,22 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		if (month == JANUARY && years == 0)
 		{
 			//first year first month initialization data
-			Get_initialization_site_data (&m->cells[cell], met, month);
+			m->cells[cell].available_soil_water = (m->cells[cell].soilw_fc * site->min_frac_maxasw) + met[month].rain;
+			Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
 		}
 		else
 		{
 
 			m->cells[cell].available_soil_water +=  met[month].rain;
 			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-
-			//control
-			if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
-			{
-				Log("ASW > MAXASW !!!\n");
-				//if the asw exceeds maxasw the plus is considered lost for turn off
-				m->cells[cell].available_soil_water = m->cells[cell].max_asw;
-				Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-			}
+		}
+		//control
+		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
+		{
+			Log("ASW > MAXASW !!!\n");
+			//if the asw exceeds maxasw the plus is considered lost for turn off
+			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
+			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
 		GetDayLength (&m->cells[cell], MonthLength[month]);

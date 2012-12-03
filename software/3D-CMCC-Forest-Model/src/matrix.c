@@ -565,11 +565,6 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 			}
 		}
 	}
-
-
-
-
-
 	/* return pointer */
 	return m;
 }
@@ -584,6 +579,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	int age;
 	int height;
 	int resol;
+
+
 
 
 	//check parameter
@@ -635,6 +632,10 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				m->cells[cell].y,
 				m->cells[cell].heights_count,
 				((1 == m->cells[cell].heights_count) ? "" : "s"));
+
+		Get_initialization_site_data (&m->cells[cell]);
+
+
 
 		//loop on each height
 		for ( height = 0; height < m->cells[cell].heights_count; height++ )
@@ -692,8 +693,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
 							m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
-							m->cells[cell].heights[height].ages[age].species[species].value[LAI]
-					);
+							m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
 				}
 			}
