@@ -19,10 +19,10 @@ extern void Get_soil_water_balance (CELL *const c)
 	c->available_soil_water -= c->evapotranspiration ;
 
 	Log("ASW at the END of month less Evapotraspiration = %g mm\n", c->available_soil_water);
-	if ( c->available_soil_water < 0)
+	if ( c->available_soil_water < c->max_asw * site->min_frac_maxasw)
 	{
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		c->available_soil_water = c->max_asw * site->init_frac_maxasw;
+		c->available_soil_water = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %g\n", c->available_soil_water);
 	}
 	if ( c->available_soil_water > c->max_asw)

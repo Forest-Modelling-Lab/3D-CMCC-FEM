@@ -720,7 +720,7 @@ typedef struct
 	Y,
 	co2Conc,
 	initialLitter,
-	init_frac_maxasw,
+	min_frac_maxasw,  //wilting point
 	//maxAsw,
 	//minAsw,
 	clay_perc,

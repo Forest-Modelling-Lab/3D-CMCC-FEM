@@ -89,7 +89,7 @@ void Get_initialization_site_data (CELL *c, const MET_DATA *const met, int month
 
 	c->max_asw = c->soilw_fc;
 
-	c->available_soil_water = (c->soilw_sat * site->init_frac_maxasw) + met[month].rain;
+	c->available_soil_water = (c->soilw_sat * site->min_frac_maxasw) + met[month].rain;
 	Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , c->available_soil_water);
 
 
