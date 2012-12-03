@@ -98,7 +98,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		//Log("Monthly  Stand GPP = %g gC/ha covered month\n", s->value[GPP_g_C]);
 
 		//Monthly Stand (area covered by canopy) GPP in tonnes of C
-		StandGPPtC = s->value[POINT_GPP_g_C] / (1000000) * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+		//StandGPPtC = s->value[POINT_GPP_g_C] / (1000000) /* * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC])*/;
 		//Log("Monthly  Stand GPP = %g tC/ha covered month\n", StandGPPtC);
 
 
@@ -106,11 +106,17 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		Log("***************************** NPP *************************** \n");
 
-		//Log("Assimilate Use Efficinecy Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
+		//Log("Assimilate Use Efficiency Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
 
 		//Monthly layer NPP
-		//* 2 to convert gC in DM
-		s->value[NPP] = (StandGPPtC * 2) * site->Y;    // assumes respiratory rate is constant
+		// "*" 2 to convert gC in DM
+		// "/" 1000000 to convert gDM into tonsDM
+
+		//Log("saizsel = %g \n", settings->sizeCell);
+		//Log("canopicover = %g \n", s->value[CANOPY_COVER_DBHDC]);
+
+
+		s->value[NPP] = ((s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]) * 2 * site->Y)/1000000)  ;    // assumes respiratory rate is constant
 		//Log("Respiration rate = %g \n", site->Y);
 		Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
 

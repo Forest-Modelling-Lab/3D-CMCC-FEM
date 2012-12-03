@@ -29,7 +29,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		case 3:
 			if (settings->version == 's')
 			{
-				Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * met[month].ndvi_lai));
+				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
 			}
 			else
 			{
@@ -47,6 +47,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 			}
 			break;
 		case 1:
+			Log("Net radiation from dominant layer = %g\n", Net_Radiation_for_dominated);
 			Net_Radiation = Net_Radiation_for_dominated;
 			break;
 		}

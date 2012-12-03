@@ -185,6 +185,7 @@ void Get_annual_forest_structure (CELL *const c)
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
 
+
 	if (settings->version == 'u')
 	{
 		for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -549,11 +550,29 @@ void Get_annual_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					c->height_class_in_layer_dominant_counter = c->heights_count;
-					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
 
-					//in spatial version DBHDC is an average value
-					DBHDCeffective = (c->heights[height].ages[age].species[species].value[DBHDCMAX] + c->heights[height].ages[age].species[species].value[DBHDCMIN])/ 2;
+					c->height_class_in_layer_dominant_counter += 1;
+					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
+					c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+
+					DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
+							* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
+					Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+
+
+					//control
+					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
+					{
+						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
+					}
+					else if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
+					{
+						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
+					}
+					Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+
+
 					//Crown Diameter using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
@@ -567,7 +586,7 @@ void Get_annual_forest_structure (CELL *const c)
 					//Canopy Cover using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
-
+					Log("-Canopy Cover from DBHDC function = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 					//Canopy Layer Cover
 					c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 

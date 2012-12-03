@@ -35,13 +35,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 {
 
 	Log("\nGET_LIGHT_ROUTINE\n\n");
-
-
-	Log("\nper gli strati dominati fagli prendere quello che ritorna da Get_Layer_Cover\n\n");
-
-
-
-
 	float LightTrasmitted;
 	float LightAbsorb;
 	float Month_Radiation;

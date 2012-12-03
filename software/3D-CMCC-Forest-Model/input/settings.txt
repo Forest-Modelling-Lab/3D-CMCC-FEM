@@ -1,6 +1,6 @@
 VERSION "s"		//Must be 's' or 'u', spatial or unspatial
 PRESENCE "p"	//Must be 'p' or 't', percentage or total
-SIZECELL "10"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
+SIZECELL "30"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 
 LAYER_LIMIT "2"  //define differences among tree height in meters classes to define number of layers
 

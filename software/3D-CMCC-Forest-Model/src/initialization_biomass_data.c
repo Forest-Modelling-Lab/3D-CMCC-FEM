@@ -56,7 +56,8 @@ void Get_initialization_biomass_data (SPECIES *s)
 		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER_C])))*s->value[STEMCONST];
 	}
 
-	s->value[BIOMASS_STEM_CTEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE];
+	//1000 to convert Kg into tons
+	s->value[BIOMASS_STEM_CTEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE] / 1000;
 	Log("-Stem Biomass initialization data from DBH = %g \n", s->value[BIOMASS_STEM_CTEM]);
 
 
@@ -76,6 +77,10 @@ void Get_initialization_biomass_data (SPECIES *s)
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
 	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
+
+	//todo control Wres
+
+
 
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002
