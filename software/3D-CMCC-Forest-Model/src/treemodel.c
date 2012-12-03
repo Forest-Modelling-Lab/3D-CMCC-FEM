@@ -62,6 +62,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 
+
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
 
