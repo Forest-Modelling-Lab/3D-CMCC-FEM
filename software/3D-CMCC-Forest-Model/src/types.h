@@ -171,7 +171,7 @@ enum {
 	BRANCHTTOVER,	                //Average yearly branch turnover rate
 	//RTTOVER,                    //Average monthly root turnover rate
 
-	STEMCONST,                  //Constant in the Stem Mass v. diameter relationship
+	//STEMCONST,                  //Constant in the Stem Mass v. diameter relationship
 	STEMPOWER_A,                  //Power in the Stem Mass v. diameter relationship dbh < 9cm
 	STEMPOWER_B,                  //Power in the Stem Mass v. diameter relationship 9 < dbh 15
 	STEMPOWER_C,                  //Power in the Stem Mass v. diameter relationship dbh > 15
@@ -489,6 +489,8 @@ enum {
 	IND_CAI,                        //Individual Current Annual Increment
 	MAI,                            //Mean Annual Volume Increment (m^3/area year)
 
+	STEMCONST,
+
 
 	//YEARLY CUMULATIVE VARIABLES
 	YEARLY_NPP,                     //Yearly NPP
@@ -799,6 +801,7 @@ typedef struct {
 #define Pi               3.141592654     //Pi greco
 #define ln2              0.693147181
 #define eps                   0.0001
+#define e				  2.71828183     //numero di nepero/eulero
 
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 
@@ -918,6 +921,8 @@ extern void Get_tree_BB (CELL *, int);
 
 
 extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
+
+extern void Get_a_Power_Function (AGE *, SPECIES *);
 
 
 

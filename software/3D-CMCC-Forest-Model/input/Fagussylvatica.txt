@@ -104,7 +104,9 @@ FINERTTOVER	1       //Average yearly fine root turnover rate
 COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
 SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.03	//Average yearly branch turnover rate
-STEMCONST	0.1326   //Constant in the Stem Mass v. diameter relationship
+
+
+//STEMCONST	0.1326   //Constant in the Stem Mass v. diameter relationship
 
 //these values species independent
 STEMPOWER_A	2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm

@@ -28,7 +28,6 @@ void Get_tree_BB (CELL *const c,  int years)
 				}
 				else
 				{
-					Log ("cazzzzzo\n");
 					c->heights[height].ages[age].species[species].value[FRACBB] = c->heights[height].ages[age].species[species].value[FRACBB1]
 											  + (c->heights[height].ages[age].species[species].value[FRACBB0]
 											 - c->heights[height].ages[age].species[species].value[FRACBB1])

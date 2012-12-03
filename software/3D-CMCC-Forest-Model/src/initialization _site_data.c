@@ -14,7 +14,7 @@
 void Get_initialization_site_data (CELL *c)
 {
 
-	Log("****GET SITE-SOIL CHARACTERISTICS for cell  (%g, %g)****\n", c->x, c->y);
+
 	//see BIOME-BGC 4.2
 	//all percentage are converted in 100 %
 	float sand = site->sand_perc * 100;

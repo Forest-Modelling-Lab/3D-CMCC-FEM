@@ -130,7 +130,7 @@ static const char *species_values[] = {
 		"SAPWOODTTOVER",	              //Average yearly sapwood turnover rate
 		"BRANCHTTOVER",	                  //Average yearly branch turnover rate
 
-		"STEMCONST",                  //Constant in the Stem Mass v. diameter relationship
+		//"STEMCONST",                  //Constant in the Stem Mass v. diameter relationship
 		"STEMPOWER_A",                  //Power in the Stem Mass v. diameter relationship dbh < 9cm
 		"STEMPOWER_B",                  //Power in the Stem Mass v. diameter relationship 9 < dbh 15
 		"STEMPOWER_C",                  //Power in the Stem Mass v. diameter relationship dbh > 15
@@ -626,16 +626,14 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	for ( cell = 0; cell< m->cells_count; cell++)
 	{
 		Log("*(%d)\n", cell + 1);
+
+		Log("****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
 		Log("- cell n.%02d is at %g,%g and has %d height classe%s \n",
 				cell+1,
 				m->cells[cell].x,
 				m->cells[cell].y,
 				m->cells[cell].heights_count,
 				((1 == m->cells[cell].heights_count) ? "" : "s"));
-
-		Get_initialization_site_data (&m->cells[cell]);
-
-
 
 		//loop on each height
 		for ( height = 0; height < m->cells[cell].heights_count; height++ )
@@ -659,6 +657,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 				{
 					//*************FOREST INITIALIZATION DATA***********
+
+					Get_a_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
 
 					//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
 					//HEIGHT VALUES ARE MANDATORY
@@ -698,6 +698,9 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				}
 			}
 		}
+
+		Log("\n****GET SITE-SOIL CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
+		Get_initialization_site_data (&m->cells[cell]);
 	}
 
 }

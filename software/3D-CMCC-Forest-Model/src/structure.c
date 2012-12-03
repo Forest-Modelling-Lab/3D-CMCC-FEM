@@ -565,12 +565,14 @@ void Get_annual_forest_structure (CELL *const c)
 					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
+						Log("DBHDC effective to apply = %g\n", DBHDCeffective);
 					}
 					else if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
 					{
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
+						Log("DBHDC effective to apply = %g\n", DBHDCeffective);
 					}
-					Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+
 
 
 					//Crown Diameter using DBH-DC
