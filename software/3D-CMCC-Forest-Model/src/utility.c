@@ -184,6 +184,8 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 void Get_a_Power_Function (AGE *a, SPECIES *s)
 {
+	//todo ask to Laura references
+	//this function computes the STEMCONST values using the values reported from ...... ask to Laura
 
 	float MassDensity;
 
