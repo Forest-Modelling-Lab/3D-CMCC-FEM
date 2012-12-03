@@ -57,32 +57,40 @@ void Get_initialization_site_data (CELL *c, const MET_DATA *const met, int month
 
 
 	float vwc_fc; //Soil Field Capacity Volumetric Water Content in m3/m3
-	float soilw_fc; //maximum volume soil water content in m3/m3
+	//float soilw_fc; //maximum volume soil water content in m3/m3
 
 	/* (DIM) Clapp-Hornberger "b" parameter */
 	c->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
 	Log ("soil_b = %g (DIM)\n", c->soil_b);
+	/* (DIM) volumetric water content at saturation */
 	c->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
-	Log ("vwc_sat = %g m^3m^-3\n", c->vwc_sat);
+	Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
+	/* (MPa) soil matric potential at saturation */
 	c->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
-	Log ("psi_sat = %g MPa\n", c->psi_sat);
+	Log ("psi_sat = %g (MPa)\n", c->psi_sat);
+	/* (DIM) VWC at field capacity ( = -0.015 MPa) */
 	vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),1.0/c->soil_b);
-	Log ("vwc_fc = %g m^3m^-3\n", vwc_fc);
+	Log ("vwc_fc = %g (DIM)\n", vwc_fc);
 
+
+	//todo definire quale determina il MAXASW
 	/* define maximum soilwater content, for outflow calculation
 	converts volumetric water content (m3/m3) --> (kg/m2) */
+	/* (cm)   effective depth of rooting zone */
 	Log("Soil depth = %g cm\n", site->soil_depth);
 	Log("Soil depth = %g m\n", site->soil_depth / 100);
-	soilw_fc = (site->soil_depth / 100) * vwc_fc * 1000.0;
-	Log ("soilw_fc BIOME = %g kg m^-2\n", soilw_fc);
+	/* (kgH2O/m2) soil water at field capacity */
+	c->soilw_fc = (site->soil_depth / 100) * vwc_fc * 1000.0;
+	Log ("soilw_fc BIOME (MAXASW FC BIOME)= %g (kgH2O/m2)\n", c->soilw_fc);
 	//equal to MAXASW
+	/* (kgH2O/m2) soilwater at saturation */
 	c->soilw_sat = (site->soil_depth / 100) * c->vwc_sat * 1000.0;
-	Log ("soilw_sat BIOME (MAXASW BIOME)= %g mm / kg m^-2\n", c->soilw_sat);
+	Log ("soilw_sat BIOME (MAXASW SAT BIOME)= %g (kgH2O/m2)\n", c->soilw_sat);
 
-	c->max_asw = c->soilw_sat;
+	c->max_asw = c->soilw_fc;
 
 	c->available_soil_water = (c->soilw_sat * site->init_frac_maxasw) + met[month].rain;
-	Log("Beginning month  %d ASW = %g mm\n", month  + 1 , c->available_soil_water);
+	Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , c->available_soil_water);
 
 
 }

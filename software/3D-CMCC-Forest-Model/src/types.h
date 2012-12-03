@@ -683,7 +683,8 @@ typedef struct {
 	float psi_sat;//soil saturated matric potential
 	float vwc_sat;//soil saturated Volumetric water content
 	float soil_b; //soil moisture parameter
-	float soilw_sat; //maximum volume soil water content in m3/m3
+	float soilw_sat; //(kgH2O/m2) soilwater at saturation
+	float soilw_fc; //(kgH2O/m2) soilwater at field capacity
 	int annual_layer_number;
 	int monthly_layer_number;
 	int top_layer;
