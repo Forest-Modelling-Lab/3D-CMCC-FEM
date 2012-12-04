@@ -15,8 +15,8 @@ LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.2    //Maximum proportion of rainfall interception evaporated from canopy
 //ALBEDO
 //these Data are still not used
-MAXALB	0.20            //Maximum albedo 
-MINALB	0.10            //Minimum albedo 
+//MAXALB	0.20            //Maximum albedo 
+//MINALB	0.10            //Minimum albedo 
 //SPECIFIC LEAF AREA
 
 SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)

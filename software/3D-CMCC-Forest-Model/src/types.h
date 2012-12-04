@@ -72,8 +72,10 @@ enum {
 
 	//ALBEDO
 	//these Data are still not used
+	/*
 	MAXALB,                     //Maximum albedo for Quercus spp Breuer et al 2003
 	MINALB,                     //Minimum albedo for Quercus spp Breuer et al 2003
+	*/
 
 	//SPECIFIC LEAF AREA 3PG
 	SLA0,                       //Specific Leaf Area at age 0 (m^2/kg)
