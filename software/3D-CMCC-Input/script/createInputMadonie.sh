@@ -285,7 +285,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_03="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		OUTPUT_03="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -298,7 +298,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_05="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		OUTPUT_05="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_04} -o ${OUTPUT_05} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -311,7 +311,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_07="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		OUTPUT_07="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -324,7 +324,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_09="${WK_00}/${SPECIES_ID[${IDX}]}_remapped.tif"
+		OUTPUT_09="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -371,6 +371,36 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		log "${MSG} ...\n"
 		${BIN_DIR}/copyGeoref -i ${FILTER_E} ${OUTPUT_10} -o ${OUTPUT_11} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
+		
+		IDX="1"
+		MSG="Get a binary mask of ${FILTER_01}"
+		MASK_1="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_01} -o ${MASK_1} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="2"
+		MSG="Get a binary mask of ${FILTER_02}"
+		MASK_2="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_02} -o ${MASK_2} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="6"
+		MSG="Get a binary mask of ${FILTER_06}"
+		MASK_6="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_06} -o ${MASK_6} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="7"
+		MSG="Get a binary mask of ${FILTER_07}"
+		MASK_7="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_07} -o ${MASK_7} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		
 		
 		
 #		MSG="Merge of multiple species"
@@ -433,7 +463,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		
 		MSG="Copy masks, empty band and scaled DEM into output dir"
 		log "${MSG} ...\n"
-		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} -t ${OUT_00}
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_00}
 		check "${MSG} failed.\n"
 
 		clean "${WK_00}"
