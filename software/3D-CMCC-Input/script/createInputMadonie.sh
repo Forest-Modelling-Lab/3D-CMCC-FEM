@@ -17,7 +17,7 @@ SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
-IMG_ALL=(Filters Y_planted Species Phenology Management NumHa AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
+IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
 IMG_SELECTED=()
 
 # Species identification numbers: 
@@ -30,6 +30,14 @@ IMG_SELECTED=()
 # 6 = "quercus_deciduous" (Q. cerris, Q. robur, Q. pubescens, Q. petreae)
 # 7 = "quercus_evergreen" (Q. ilex, Q. suber)
 SPECIES_ID=(Undefined Castaneasativa Fagussylvatica Ostryacarpinifolia Pinusnigra Quercuscerris quercus_deciduous quercus_evergreen)
+SPECIES_ID_PRESENT=(1 2 6 7)
+
+# Some parameters values per specie:
+Y_PLANTED_ID=(Undefined 1981 1963 null null null 1991 1986)
+N_ID=(Undefined 5.0 49.0 null null null 12.333 10.667)
+AVDBH_ID=(Undefined 18.33 26.697 null null null 12.387 18.473)
+HEIGHT_ID=(Undefined 12.79 12.427 null null null 7.04 7.0)
+
 
 # Phenology identification numbers:
 # 0 = "-9999" (Undefined)
@@ -51,7 +59,7 @@ IN_01="$( dirname ${0} )/../input/01_Y_planted"
 IN_02="$( dirname ${0} )/../input/02_Species"
 IN_03="$( dirname ${0} )/../input/03_Phenology"
 IN_04="$( dirname ${0} )/../input/04_Management"
-IN_05="$( dirname ${0} )/../input/05_NumHa"
+IN_05="$( dirname ${0} )/../input/05_N_cell"
 IN_06="$( dirname ${0} )/../input/06_AvDBH"
 IN_07="$( dirname ${0} )/../input/07_Height"
 IN_08="$( dirname ${0} )/../input/08_Wf"
@@ -69,7 +77,7 @@ OUT_01="$( dirname ${0} )/../output/01_Y_planted"
 OUT_02="$( dirname ${0} )/../output/02_Species"
 OUT_03="$( dirname ${0} )/../output/03_Phenology"
 OUT_04="$( dirname ${0} )/../output/04_Management"
-OUT_05="$( dirname ${0} )/../output/05_NumHa"
+OUT_05="$( dirname ${0} )/../output/05_N_cell"
 OUT_06="$( dirname ${0} )/../output/06_AvDBH"
 OUT_07="$( dirname ${0} )/../output/07_Height"
 OUT_08="$( dirname ${0} )/../output/08_Wf"
@@ -87,7 +95,7 @@ WK_01="$( dirname ${0} )/../working/01_Y_planted"
 WK_02="$( dirname ${0} )/../working/02_Species"
 WK_03="$( dirname ${0} )/../working/03_Phenology"
 WK_04="$( dirname ${0} )/../working/04_Management"
-WK_05="$( dirname ${0} )/../working/05_NumHa"
+WK_05="$( dirname ${0} )/../working/05_N_cell"
 WK_06="$( dirname ${0} )/../working/06_AvDBH"
 WK_07="$( dirname ${0} )/../working/07_Height"
 WK_08="$( dirname ${0} )/../working/08_Wf"
@@ -138,7 +146,7 @@ usage(){
 	echo "             ${IMG_ALL[@]}"
 	echo "       - NOTE: Remeber to set up and fill correctly the BIN_DIR, directory where the C modules are stored."
 	echo ""
-	echo "Run example: ${0} Phenology LAI Wrc NumHa"
+	echo "Run example: ${0} Phenology LAI Wrc N_cell"
 	echo ""
 	exit 40
 }
@@ -477,6 +485,71 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Y_planted" ] ; then
     	log "### { Start creating ${IMG} images.... ###\n"
+    	
+    	SPECIES_MASK_NAMES=(Undefined null null null null null null null)
+    	SPECIES_MASK=(Undefined null null null null null null null)
+    	for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
+    		SPECIES_MASK_NAMES[${IDX}]="${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+    		SPECIES_MASK[${IDX}]="${WK_01}/${SPECIES_MASK_NAMES[${IDX}]}"
+    		
+    		MSG="Copy ${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
+			log "${MSG} ...\n"
+			cp ${OUT_00}/${SPECIES_MASK_NAMES[${IDX}]} -t ${WK_01}
+			check "${MSG} failed.\n"    	
+    	done
+    	
+    	NAME_EMPTY_BAND="empty_geo.tif"
+    	EMPTY_BAND="${WK_01}/${NAME_EMPTY_BAND}"
+    	
+		MSG="Copy empty band from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_01}
+		check "${MSG} failed.\n"
+		
+		PROCESSED_SPECIES=()
+		for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
+			MSG="Create a monoband image with every pixel set to ${Y_PLANTED_ID[${IDX}]}"
+			OUTPUT_01="${WK_01}/${IMG}_every_px_${IDX}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/createImg -x ${SIZEX} -y ${SIZEY} -b 1 -t float -v ${Y_PLANTED_ID[${IDX}]} -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+		
+			MSG="Set georeference to ${OUTPUT_01}"
+			OUTPUT_02="${WK_01}/${IMG}_every_px_geo_${IDX}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/copyGeoref -i ${EMPTY_BAND} ${OUTPUT_01} -o ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+
+			MSG="Apply mask to ${OUTPUT_02}"
+			OUTPUT_03="${WK_01}/${IMG}_masked_${IDX}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/applyMask -i ${OUTPUT_02} -m ${SPECIES_MASK[${IDX}]} -o ${OUTPUT_03} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			PROCESSED_SPECIES+=("${OUTPUT_03}")
+		done
+		
+		MSG="Merge of different species ${IMG}"
+		OUTPUT_04="${WK_01}/${IMG}_b1.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${PROCESSED_SPECIES[@]} -o ${OUTPUT_04} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		METADATA="SITE=${SITE},ID=Y_PLANTED,${SPECIES_ID[1]}=${Y_PLANTED_ID[1]},${SPECIES_ID[2]}=${Y_PLANTED_ID[2]},${SPECIES_ID[6]}=${Y_PLANTED_ID[6]},${SPECIES_ID[7]}=${Y_PLANTED_ID[7]}"
+		MSG="Create multiband ${IMG} image"
+		INPUT_01=(${OUTPUT_04} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
+		OUTPUT_05="${WK_01}/${IMG}.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_01[@]} -i ${INPUT_01[@]} -o ${OUTPUT_05} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${IMG} into ${OUT_01}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_05} -t ${OUT_01}
+		check "${MSG} failed.\n"
+		
+		clean "${WK_01}"
+    
     	log "### .....stop creating ${IMG} images } ###\n"
     fi
 done
@@ -754,14 +827,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Management execution }
 
-### NumHa execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+### N_cell execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
-	if [ "${IMG}" == "NumHa" ] ; then
+	if [ "${IMG}" == "N_cell" ] ; then
     	log "### { Start creating ${IMG} images........ ###\n"
     	log "### .........stop creating ${IMG} images } ###\n"
     fi
 done
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - NumHa execution }
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - N_cell execution }
 
 ### AvDBH execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
