@@ -7,7 +7,7 @@ ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 //Y              0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-K	0.50		//0.54 Extinction coefficient for absorption of PAR by canopy 
+K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy 
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 //LEAF AREA INDEX
 LAIGCX	8               //LAI for maximum canopy conductance
@@ -82,7 +82,7 @@ MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF              1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
 STEM_LEAF	2.2	//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
 COARSE_ROOT_STEM	0.22	//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
 
@@ -102,7 +102,6 @@ SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate
 BRANCHTTOVER	0.03	//Average yearly branch turnover rate
 
 
-//STEMCONST	0.1326   //Constant in the Stem Mass v. diameter relationship
 
 //these values species independent
 STEMPOWER_A	2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm

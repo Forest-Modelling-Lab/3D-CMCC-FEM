@@ -3,9 +3,8 @@ LIGHT_TOL	3   	//4 = very shade intollerant
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
+ALPHA   0.0297		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-//Y              0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
@@ -13,10 +12,7 @@ K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. ce
 LAIGCX	8               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
-//ALBEDO
-//these Data are still not used
-MAXALB	0.20            //Maximum albedo for Quercus spp Breuer et al 2003
-MINALB	0.10            //Minimum albedo for Quercus spp Breuer et al 2003
+
 //SPECIFIC LEAF AREA 
 
 SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
@@ -86,7 +82,7 @@ MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF              1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
 STEM_LEAF	2.2	//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
 COARSE_ROOT_STEM	0.22	//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
 
@@ -104,12 +100,13 @@ FINERTTOVER	1       //Average yearly fine root turnover rate
 COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
 SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
-STEMCONST	0.095   //Constant in the Stem Mass v. diameter relationship
+
 
 //these values species independent
 STEMPOWER_A	2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
 STEMPOWER_B	2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
 STEMPOWER_C	2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
+
 //MORTALITY
 WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
 THINPOWER	2       //Power in self-thinning rule

@@ -1,179 +1,173 @@
-﻿//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-LIGHT_TOL	0   	//Parameter not currently used
-			//4 = very shade intollerant
+﻿//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL	2   	//4 = very shade intollerant
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA	0.056		//(Wang et al. 2006)//Canopy quantum efficiency (molC/molPAR)	
-EPSILONgCPAR	 	//Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-K			//Extinction coefficient for absorption of PAR by canopy 
-
+ALPHA   0.056		//   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K	0.5		//0.54 Extinction coefficient for absorption of PAR by canopy 
 //LEAF AREA INDEX
-LAIGCX	               	//LAI for maximum canopy conductance
-LAIMAXINTCPTN		//LAI for maximum rainfall interception
-MAXINTCPTN		//Maximum proportion of rainfall interception evaporated from canopy 
+LAIGCX	8               //LAI for maximum canopy conductance
+LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
+MAXINTCPTN	0.2    //Maximum proportion of rainfall interception evaporated from canopy
 
-//ALBEDO
-MAXALB	0	       	//Parameter not currently used//Maximum albedo 
-MINALB	0            	//Parameter not currently used//Minimum albedo 
-
-//SPECIFIC LEAF AREA 3PG
-SLA0	0	      	//Parameter not currently used//Specific Leaf Area at age 0 (m^2/kg)
-SLA1	0	      	//Parameter not currently used//Specific Laef Area for mature leaves (m^2/kg)
-TSLA	0	     	//Parameter not currently used//Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
-
-//SPECIFIC LEAF AREA 3DVTModel
-INITIAL_M_LAI	0     	//Parameter not currently used//FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
-SLA	115.5         	//(Covone 2005)//Specific Leaf Area cm^2/gC
-			//172 (Bartelink 1996, 1997) from Bartelink 1998
+//SPECIFIC LEAF AREA
+SLA0	0               //Specific Leaf Area at age 0 (m^2/kg)
+SLA1	0               //Specific Laef Area for mature leaves (m^2/kg)
+TSLA	0             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
+//SPECIFIC LEAF AREA 
+INITIAL_M_LAI	0     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
+SLA	115.5             //Specific Leaf Area cm^2/gC  					
 SLAmkg	0.1             //Convert SLA in m^2/Kg
-
 //FRACTION BRANCH-BARK
-FRACBB0	            	//Branch and Bark fraction at age 0 
-FRACBB1		       	//Branch and Bark fraction for mature stands 
-TBB			//Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-
+FRACBB0	0.40            //Branch and Bark fraction at age 0
+FRACBB1	0.125            //Branch and Bark fraction for mature stands
+TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
-RHOMIN		     	//Minimum Basic Density for young Trees t/m^3 	 
-RHOMAX	0.49           	//(Federici et al. 2008)//Maximum Basic Density for young Trees t/m^3
-TRHO	               	//Age at which rho = (RHOMIN + RHOMAX )/2
-DRYMAT_FRESHMAT    	//Conversion from Drymatter to Freshmatter
-
+RHOMIN	0.49             //Minimum Basic Density for young Trees t/m^3
+RHOMAX	0.49             //Maximum Basic Density for young Trees 
+TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
+DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter 
 //VPD
-COEFFCOND    		//Define stomatal responsee to VPD in mbar 
-BLCOND			//Canopy Boundary Layer conductance 
-MAXCOND	0.0027          //(Maselli et al. 2009)//Maximum Canopy Conductance in m/sec 
-			//0.001 (Maselli et al. 2009)//Maximum Canopy Conductance in m/sec
-
+COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
+BLCOND	0.01            //Canopy Boundary Layer conductance 
+MAXCOND	0.0027            //Maximum Canopy Conductance in m/sec 
 //AGE for timber
-MAXAGE		       	//Determines rate of "physiological decline" of forest
-RAGE	            	//Relative Age to give fAGE = 0.5
-NAGE	               	//Power of relative Age in function for Age
-
+MAXAGE	80             //Determines rate of "physiological decline" of forest //modified
+RAGE	0.75            //Relative Age to give fAGE = 0.5
+NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
-MAXAGE_S	0     	//Parameter not currently used//Determines rate of "physiological decline" of forest
-RAGE_S	0            	//Parameter not currently used//Relative Age to give fAGE = 0.5
-NAGE_S	0               //Parameter not currently used//Power of relative Age in function for Age
-
+MAXAGE_S	0     //Determines rate of "physiological decline" of forest
+RAGE_S	0            //Relative Age to give fAGE = 0.5
+NAGE_S	0               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN	-1     	//(Calamini-lezioni)//Minimum temperature for growth
-GROWTHTMAX	   	//Maximum temperature for growth
-GROWTHTOPT	    	//Optimum temperature for growth
-GROWTHSTART	       	//average temperature for starting growth in °C 
-GROWTHEND	       	//average temperature for ending growth in °C
-MINDAYLENGTH	      	//minimum day length for deciduous
+GROWTHTMIN	8       //Minimum temperature for growth
+GROWTHTMAX	30      //Maximum temperature for growth
+GROWTHTOPT	16      //Optimum temperature for growth
+GROWTHSTART	14       //average temperature for starting growth in °C
+GROWTHEND	5       //average temperature for ending growth in °C
+MINDAYLENGTH  11      //minimum day length for decidu0us
 
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
-SWCONST		       	//Costant in Soil Water modifier vs Moist Ratio
-SWPOWER		      	//Power in Soil Water modifier vs Moist Ratio
+SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING for timber
-PFS2	0         	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20	0           	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX	0	      	//Parameter not currently used//0.5(Trotter et al. 2004)//Maximum fraction of NPP to Roots
-PRN	0          	//Parameter not currently used//0.17(Trotter et al. 2004)//Minimum fraction of NPP to Roots
-
-//BIOMASS PARTITIONING for coppice 
-PFS2_C	0              	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20_C	0           	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX_C	0	     	//Parameter not currently used//Maximum fraction of NPP to Roots
-PRN_C	0         	//Parameter not currently used//Minimum fraction of NPP to Roots
+PFS2	0.5             //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20	0.5             //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX	0.5	        //Maximum fraction of NPP to Roots
+PRN	0.2             //Minimum fraction of NPP to Roots
+//BIOMASS PARTITIONING for coppice (valore inventati per prova)
+PFS2_C	1               //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20_C	0.4             //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX_C	0.30	        //Maximum fraction of NPP to Roots
+PRN_C	0.10            //Minimum fraction of NPP to Roots
 
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
-OMEGA_CTEM	0.8   	//(Arora et al. 2005)//ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM	0.1          	//(Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
-R0CTEM	0.55           	//0.50 (Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
-F0CTEM	0.35          	//(Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-RES0CTEM		//PARAMETER CONTROLLING ALLOCATION TO RESERVE 
-EPSILON_CTEM	40   	//(Arora et al. 2005) //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
-KAPPA	1.6            	//(Arora et al. 2005)//ALLOCATION PARAMETER DIMENSIONLESS
-MIN_R0CTEM	0	//Parameter not currently used//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
-MAX_S0CTEM	0	//Parameter not currently used//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
-YEARS_FOR_CONVERSION	0	//Parameter not currently used//years from coppicing to consider tree as a timber
+OMEGA_CTEM	0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM	0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM	0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+RES0CTEM	0.22	//PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+EPSILON_CTEM	40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
+KAPPA	1.6             //ALLOCATION PARAMETER DIMENSIONLESS
+MIN_R0CTEM	0.1	//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF		//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
-STEM_LEAF		//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
-COARSE_ROOT_STEM		//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+STEM_LEAF	2.38	//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
+COARSE_ROOT_STEM	0.22	//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
-GAMMAFX	              	//Maximum Litterfall rate (month^-1)
-GAMMAF0	               	//Litterfall rate at t = 0 (month^-1)
-TGAMMAF	               	//Age at which litterfall rate has median value
+//FOLLOWING BIOME-BGC
+LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
+GAMMAFX	11              //Maximum Litterfall rate (month^-1)
+GAMMAF0	9               //Litterfall rate at t = 0 (month^-1)
+TGAMMAF	0               //Age at which litterfall rate has median value
 
 //TURNOVER
-FINERTTOVER	  	//Average yearly fine root turnover rate
-COARSERTTOVER		//Average yearly coarse root turnover rate
-SAPWOODTTOVER		//Average yearly sapwood turnover rate//Heartwood is formed only after approximately 100 years (Hillis 1987)
-BRANCHTTOVER		//Average yearly branch turnover rate
-STEMCONST	0.137 	//(Leonardi et al. 1996) from Zianis e Mencuccini 2004 //Constant in the Stem Mass v. diameter relationship
-STEMPOWER	2.247 	//(Leonardi et al. 1996) from Zianis e Mencuccini 2004 //Power in the Stem Mass v. diameter ralationship
+FINERTTOVER	1       //Average yearly fine root turnover rate
+COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
+SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate 
+BRANCHTTOVER	0.03	//Average yearly branch turnover rate
+
+
+
+//these values species independent
+STEMPOWER_A	2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
+STEMPOWER_B	2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
+STEMPOWER_C	2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
 
 //MORTALITY
-WSX1000	0             	//Parameter not currently used//Max stem mass (kg) per tree at 1000 trees/hectare
-THINPOWER	0      	//Parameter not currently used//Power in self-thinning rule
-MF	0             	//Parameter not currently used//Fraction mean single tree foliage biomass lost per dead tree
-MR	0             	//Parameter not currently used//Fraction mean single tree root biomass lost per dead tree
-MS	0             	//Parameter not currently used//Fraction mean single tree stem biomass lost per dead tree
+WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER	2       //Power in self-thinning rule
+MF	0               //Fraction mean single tree foliage biomass lost per dead tree
+MR	0.2             //Fraction mean single tree root biomass lost per dead tree
+MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDC	0            	//Parameter not currently used//dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
-                     		//DBHDC = 20/100
-				//used for young trees in dominated layer
-DBHDCMAX	    	//Low Density
-DBHDCMIN	    	//High Density
+DBHDC	0.35            //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
+                                        //DBHDC = 20/100
+					//used for young trees in dominated layer
+DBHDCMAX	0.20    //Low Density
+DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A	         	//a value
-SAP_B	         	//b value
-SAP_LEAF		//sapwood_max leaf area ratio in pipe model    
-HMAX	35         	//(Morandini 1955)//Max Height in m for Chapman-Richards Function 	
-DMAX	100          	//(Morandini 1955)//Max Stem Diameter in cm 
-HPOWER	        	//Slope of Asymptotic Height from Sortie 
-RPOWER	         	//Slope of Asymptotic Crown-Radius from Sortie 
-CHPOWER	         	//Slope of Asymptotic Crown-Height from 
-FORMFACT	     	//Form Factor 
-
+SAP_A         0.674         //a value from Kostner for 
+SAP_B         1.992         //b value from Kostner for 
+SAP_LEAF      2600          //leaf area/sapwood max  ratio in pipe model  
+SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+							//0.11 for deciduous 0.05 for evergreen  
+HMAX	35              //35  //Max Height in m see Morandini 1955
+DMAX	100              //Max Stem Diameter in cm see Morandini 1955
+HPOWER	0.0353           //Slope of Asymptotic Height 
+RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
+CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
+FORMFACT	0.6     //Form Factor
 //LPJ allometric relationships
-KALLOMA	0		//Parameter not currently used
-KALLOMB	0		//Parameter not currently used
-KALLOMC	0		//Parameter not currently used
-KRP	0		//Parameter not currently used
-
+KALLOMA	100
+KALLOMB	40
+KALLOMC	0.5
+KRP	1.6
 //CHAPMAN-RICHARDS relationships
-CRA	
-CRB	
-CRC	
-
+CRA	23.27
+CRB	0.041
+CRC	1.03
 //CROWDING COMPETITION FUNCTION
-HDMAX	          	//Height to Base diameter ratio MAX  
-HDMIN	           	//Height to Base diameter ratio MIN  
-
+HDMAX	1.71             //Height to Base diameter ratio MAX  (Portoghesi)
+HDMIN	0.2             //Height to Base diameter ratio MIN  (Portoghesi)
+CANCOVERMAX	0.95    //Maximum Canopy Cover
+CANCOVERMIN	0.0001  //Minimum Canopy Cover
 //DENSITY FUNCTION
-DENMAX		       	//Maximum density (trees/10000 m^2)
-DENMIN		      	//Minimum density (trees/10000 m^2)
-
+DENMAX	0.4             //Maximum density (trees/10000 m^2)
+DENMIN	0.01           //Minimum density (trees/10000 m^2)
 //ESTABLISHMENT
-MINPAREST	0    	//Parameter not currently used//Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
-MINRAIN	0             	//Parameter not currently used//Minimum annual Rain Precipitation for Establishment
-
+MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                                        //broaldleaved summergreen
+MINRAIN	100             //Minimum annual Rain Precipitation for Establishment
+                                        //S. Sitch 2003
 //SEEDS PRODUCTION
-MAXSEED	0           	//Parameter not currently used//numero massimo semi prodotti dalla pianta
-MASTSEED	0      	//Parameter not currently used//ricorrenza anni di pasciona 
-WEIGHTSEED	0      	//Parameter not currently used//peso frutto in g
-SEXAGE	0            	//Parameter not currently used//Age at Sexual Maturity 
-GERMCAPACITY	0    	//Parameter not currently used//Geminability
-MINTEMP	0              	//Parameter not currently used//Minimum temperature for germination in °C
-ESTMAX	0            	//Parameter not currently used//Potential Establishment rate in the absence of competition
-
+ADULT_AGE	5	//age at which consider tree as an adult tree
+MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
+MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) 
+WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)
+SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.)
+MINTEMP	20              //Minimum temperature for germination in °C
+ESTMAX	0.24            //Potential Establishment rate in the absence of competition
 //SEEDS PRODUCTION FROM LPJ
-FRACFRUIT	0    	//Parameter not currently used//Fraction of NPP to Fruit Production
+FRACFRUIT	0.05    //Fraction of NPP to Fruit Production
+
 
 //MANAGMENT
-ROTATION	0     	//Parameter not currently used//Parameter not currently used//Forest Rotation for Managment (Q. cerris)
-MINAGEMANAG	0      	//Parameter not currently used//Minimum age for Managment (Q. cerris)
-MINDBHMANAG	0      	//Parameter not currently used//Minimum DBH for Managment
-AV_SHOOT	0      	//Parameter not currently used//average number of shoot after cut
+ROTATION	100     //Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG	80      //Minimum age for Managment (Q. cerris)
+MINDBHMANAG	27      //Minimum DBH for Managment
+AV_SHOOT	10      //average number of shoot after cut
