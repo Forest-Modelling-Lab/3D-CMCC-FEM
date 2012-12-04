@@ -18,6 +18,7 @@ OUT_13="$( dirname ${0} )/../output/13_VPD"
 OUT_14="$( dirname ${0} )/../output/14_Precip"
 OUT_15="$( dirname ${0} )/../output/15_LAI"
 OUT_16="$( dirname ${0} )/../output/16_Soil"
+OUT_17="$( dirname ${0} )/../output/17_Packet"
 # Working directories
 WK_00="$( dirname ${0} )/../working/00_Filters"
 WK_01="$( dirname ${0} )/../working/01_Y_planted"
@@ -36,9 +37,10 @@ WK_13="$( dirname ${0} )/../working/13_VPD"
 WK_14="$( dirname ${0} )/../working/14_Precip"
 WK_15="$( dirname ${0} )/../working/15_LAI"
 WK_16="$( dirname ${0} )/../working/16_Soil"
+WK_17="$( dirname ${0} )/../working/17_Packet"
 
-OUT_DIRS=(${OUT_00} ${OUT_01} ${OUT_02} ${OUT_03} ${OUT_04} ${OUT_05} ${OUT_06} ${OUT_07} ${OUT_08} ${OUT_09} ${OUT_10} ${OUT_11} ${OUT_12} ${OUT_13} ${OUT_14} ${OUT_15} ${OUT_16})
-WK_DIRS=(${WK_00} ${WK_01} ${WK_02} ${WK_03} ${WK_04} ${WK_05} ${WK_06} ${WK_07} ${WK_08} ${WK_09} ${WK_10} ${WK_11} ${WK_12} ${WK_13} ${WK_14} ${WK_15} ${WK_16})
+OUT_DIRS=(${OUT_00} ${OUT_01} ${OUT_02} ${OUT_03} ${OUT_04} ${OUT_05} ${OUT_06} ${OUT_07} ${OUT_08} ${OUT_09} ${OUT_10} ${OUT_11} ${OUT_12} ${OUT_13} ${OUT_14} ${OUT_15} ${OUT_16} ${OUT_17})
+WK_DIRS=(${WK_00} ${WK_01} ${WK_02} ${WK_03} ${WK_04} ${WK_05} ${WK_06} ${WK_07} ${WK_08} ${WK_09} ${WK_10} ${WK_11} ${WK_12} ${WK_13} ${WK_14} ${WK_15} ${WK_16} ${WK_17})
 
 
 usage(){
