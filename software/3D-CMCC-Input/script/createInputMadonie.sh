@@ -1166,25 +1166,25 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_09} &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				#MSG="Mask ${IMG}"
-				#OUTPUT_11="${WK_13}/${IMG}_${DATE}_masked.tif"
-				#log "${MSG} ...\n"
-				#${BIN_DIR}/applyMask -i ${OUTPUT_10} -m ${MASK_TOT} -o ${OUTPUT_11} &>> "${LOGFILE}"
-				#check "${MSG} failed.\n"
+				MSG="Mask ${IMG}"
+				OUTPUT_10="${WK_13}/${IMG}_${DATE}_masked.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/applyMask -i ${OUTPUT_09} -m ${MASK_TOT} -o ${OUTPUT_10} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 				
-				#MONTHS+=("${WK_13}/${IMG}_${DATE}_masked.tif")
+				MONTHS+=("${WK_13}/${IMG}_${DATE}_masked.tif")
 			done
 			
-			#MSG="Create multiband ${IMG} image"
-			#OUTPUT_12="${WK_13}/${IMG}_${YYYY}.tif"
-			#log "${MSG} ...\n"
-			#${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_12} -m "${METADATA}" &>> "${LOGFILE}"
-			#check "${MSG} failed.\n"
+			MSG="Create multiband ${IMG} image for ${YYYY}"
+			OUTPUT_11="${WK_13}/${IMG}_${YYYY}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_11} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
 		
-			#MSG="Copy ${IMG} into ${OUT_12}"
-			#log "${MSG} ...\n"
-			#cp ${OUTPUT_12} -t ${OUT_12}
-			#check "${MSG} failed.\n"	
+			MSG="Copy ${IMG} into ${OUT_13}"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_11} -t ${OUT_13}
+			check "${MSG} failed.\n"	
     	done
 
 		clean "${WK_13}"
