@@ -17,7 +17,7 @@ SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
-IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil)
+IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil Packet)
 IMG_SELECTED=()
 
 # Species identification numbers: 
@@ -1814,5 +1814,69 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Soil execution }
+
+### Packet execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Packet" ] ; then
+    	log "### { Start creating compressed package .......... ###\n"
+    		
+    	OUT_DIRS=(${OUT_01} ${OUT_02} ${OUT_03} ${OUT_04} ${OUT_05} ${OUT_06} ${OUT_07} ${OUT_08} ${OUT_09} ${OUT_10} ${OUT_11} ${OUT_12} ${OUT_13} ${OUT_14} ${OUT_15} ${OUT_16})
+    	
+    	FIRST_YEAR="${YEARS_PROC[0]}"
+    	LAST_YEAR="${YEARS_PROC[$((${#YEARS_PROC[@]}-1))]}"
+    	
+    	NOW=$( date +"%Y%m%d%H%M%S" )
+    	
+    	PKG_DIR_NAME="${SITE}_${RES}m_${FIRST_YEAR}-${LAST_YEAR}_${NOW}"
+    	PKG_DIR="${WK_17}/${PKG_DIR_NAME}"
+    	PKG_IMG_DIR="${PKG_DIR}/${SITE}/images"
+    	PKG_TXT_DIR="${PKG_DIR}/${SITE}/txt"
+    	
+    	MSG="Craeting package directories"
+		log "${MSG} ...\n"
+    	mkdir -p ${PKG_IMG_DIR} ${PKG_TXT_DIR}
+    	check "${MSG} failed.\n"
+    	
+    	for DIR in "${OUT_DIRS[@]}" ; do
+    		MSG="Copy ${DIR} files into ${PKG_IMG_DIR}"
+			log "${MSG} ...\n"
+			cp ${DIR}/* -t ${PKG_IMG_DIR} 2>/dev/null || :
+			check "${MSG} failed.\n"
+		done
+		
+		CMCC_PROJECT="$( dirname ${0} )/../../3D-CMCC-Forest-Model"
+		SETTINGS="${CMCC_PROJECT}/input/settings.txt"
+		
+		MSG="Copy ${DIR} files into ${PKG_IMG_DIR}"
+		log "${MSG} ...\n"
+		cp ${SETTINGS} -t ${PKG_TXT_DIR} 2>/dev/null || :
+		check "${MSG} failed.\n"
+		
+		for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
+			MSG="Copy specie ${IDX} file into ${PKG_TXT_DIR}"
+			SPECIE_FILE_NAME="${CMCC_PROJECT}/input/${SPECIES_ID[${IDX}]}.txt"
+			log "${MSG} ...\n"
+			cp ${SPECIE_FILE_NAME} -t ${PKG_TXT_DIR} 2>/dev/null || :
+			check "${MSG} failed.\n"
+    	done
+		
+		MSG="Creating ${PKG_DIR_NAME}.zip"
+		log "${MSG} ...\n"
+		cd ${WK_17}
+		zip -r ${PKG_DIR_NAME} ${PKG_DIR_NAME} &>/dev/null
+		cd - &>/dev/null
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${PKG_DIR_NAME}.zip into ${OUT_17}"
+		log "${MSG} ...\n"
+		cp ${PKG_DIR}.zip -t ${OUT_17}
+		check "${MSG} failed.\n"
+
+		clean "${WK_17}"
+		
+    	log "### ............stop creating compressed package } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Packet execution }
 
 exit 0
