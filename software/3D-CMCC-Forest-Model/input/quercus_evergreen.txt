@@ -1,0 +1,182 @@
+//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAB !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL	2   	//Parameter not currently used
+			//4 = very shade intollerant
+		    	//3 = shade intollerant
+		    	//2 = shade tolerant
+		   	//1 = very shade tollerant
+ALPHA			//Canopy quantum efficiency (molC/molPAR)	
+EPSILONgCPAR	 	//Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K	0.72		//(Rambal et al. 1996)//Extinction coefficient for absorption of PAR by canopy 
+
+//LEAF AREA INDEX
+LAIGCX	               	//LAI for maximum canopy conductance
+LAIMAXINTCPTN	5.8	//(R.R.R. Oerlemans & R.P. Vink 2010)//LAI for maximum rainfall interception
+MAXINTCPTN	0.17    //(R.R.R. Oerlemans & R.P. Vink 2010)//Maximum proportion of rainfall interception evaporated from canopy 
+
+//ALBEDO
+MAXALB	0	       	//Parameter not currently used//Maximum albedo 
+MINALB	0            	//Parameter not currently used//Minimum albedo 
+
+//SPECIFIC LEAF AREA 3PG
+SLA0	0	      	//Parameter not currently used//Specific Leaf Area at age 0 (m^2/kg)
+SLA1	0	      	//Parameter not currently used//Specific Laef Area for mature leaves (m^2/kg)
+TSLA	0	     	//Parameter not currently used//Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
+
+//SPECIFIC LEAF AREA 3DVTModel
+INITIAL_M_LAI	0     	//Parameter not currently used//FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
+SLA	66.2         	//?//Specific Leaf Area cm^2/gC
+			//172 (Bartelink 1996, 1997) from Bartelink 1998
+SLAmkg	0.1             //Convert SLA in m^2/Kg
+
+//FRACTION BRANCH-BARK
+FRACBB0	            	//Branch and Bark fraction at age 0 
+FRACBB1		       	//Branch and Bark fraction for mature stands 
+TBB			//Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+
+//MASS DENSITY
+RHOMIN		     	//Minimum Basic Density for young Trees t/m^3 	 
+RHOMAX	0.72           	//(Federici et al. 2008)//Maximum Basic Density for young Trees t/m^3
+TRHO	               	//Age at which rho = (RHOMIN + RHOMAX )/2
+DRYMAT_FRESHMAT    	//Conversion from Drymatter to Freshmatter
+
+//VPD
+COEFFCOND    		//Define stomatal responsee to VPD in mbar 
+BLCOND	0.0022          //(Vitale et al. 2003)//Canopy Boundary Layer conductance 
+MAXCOND	0.0025          //(Valentini et al. 1991)//Maximum Canopy Conductance in m/sec
+			//0.21 (Ko�rner et al. 1979)//Maximum Canopy Conductance in m/sec
+			//0.0014 (Maselli et al. 2009)//Maximum Canopy Conductance in m/sec
+
+//AGE for timber
+MAXAGE		       	//Determines rate of "physiological decline" of forest
+RAGE	            	//Relative Age to give fAGE = 0.5
+NAGE	               	//Power of relative Age in function for Age
+
+//Age for shoots
+MAXAGE_S	0     	//Parameter not currently used//Determines rate of "physiological decline" of forest
+RAGE_S	0            	//Parameter not currently used//Relative Age to give fAGE = 0.5
+NAGE_S	0               //Parameter not currently used//Power of relative Age in function for Age
+
+//TEMPERATURE
+GROWTHTMIN	0     	//(Hoff et al. 2003)//Minimum temperature for growth
+GROWTHTMAX	30   	//(Hoff et al. 2003)//Maximum temperature for growth
+GROWTHTOPT	    	//Optimum temperature for growth
+GROWTHSTART	       	//average temperature for starting growth in °C 
+GROWTHEND	       	//average temperature for ending growth in °C
+MINDAYLENGTH	      	//minimum day length for deciduous
+
+//SOIL WATER
+//modified 13 feb 2012
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWCONST		       	//Costant in Soil Water modifier vs Moist Ratio
+SWPOWER		      	//Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING for timber
+PFS2	0         	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20	0           	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX	0	      	//Parameter not currently used//0.5(Trotter et al. 2004)//Maximum fraction of NPP to Roots
+PRN	0          	//Parameter not currently used//0.17(Trotter et al. 2004)//Minimum fraction of NPP to Roots
+
+//BIOMASS PARTITIONING for coppice 
+PFS2_C	0              	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20_C	0           	//Parameter not currently used//Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX_C	0	     	//Parameter not currently used//Maximum fraction of NPP to Roots
+PRN_C	0         	//Parameter not currently used//Minimum fraction of NPP to Roots
+
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
+OMEGA_CTEM	0.8   	//(Arora et al. 2005)//ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM	0.05          	//(Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.6           	//0.50 (Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM	0.35          	//(Arora et al. 2005)//PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+RES0CTEM		//PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+EPSILON_CTEM	31   	//(Arora et al. 2005) //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
+KAPPA	1.6            	//(Arora et al. 2005)//ALLOCATION PARAMETER DIMENSIONLESS
+MIN_R0CTEM	0	//Parameter not currently used//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM	0	//Parameter not currently used//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION	0	//Parameter not currently used//years from coppicing to consider tree as a timber
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF		//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+STEM_LEAF		//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
+COARSE_ROOT_STEM		//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+
+//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
+//LITTERFALL
+GAMMAFX	              	//Maximum Litterfall rate (month^-1)
+GAMMAF0	               	//Litterfall rate at t = 0 (month^-1)
+TGAMMAF	               	//Age at which litterfall rate has median value
+
+//TURNOVER
+FINERTTOVER	0.9  	//(Hoff et al. 2003)//Average yearly fine root turnover rate
+COARSERTTOVER		//Average yearly coarse root turnover rate
+SAPWOODTTOVER		//Average yearly sapwood turnover rate//Heartwood is formed only after approximately 100 years (Hillis 1987)
+BRANCHTTOVER		//Average yearly branch turnover rate
+STEMCONST	0.2302 	//(Susmel et al. 1976) cited in Canadell et al. 1988//Constant in the Stem Mass v. diameter relationship
+			//0.2187 (Leonardi and Rapp, 1982) cited in Canadell et al. 1988//Constant in the Stem Mass v. diameter relationship
+STEMPOWER	2.28 	//(Susmel et al. 1976) cited in Canadell et al. 1988//Power in the Stem Mass v. diameter ralationship
+			//2.0491 (Leonardi and Rapp, 1982) cited in Canadell et al. 1988//Constant in the Stem Mass v. diameter relationship
+
+//MORTALITY
+WSX1000	0             	//Parameter not currently used//Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER	0      	//Parameter not currently used//Power in self-thinning rule
+MF	0             	//Parameter not currently used//Fraction mean single tree foliage biomass lost per dead tree
+MR	0             	//Parameter not currently used//Fraction mean single tree root biomass lost per dead tree
+MS	0             	//Parameter not currently used//Fraction mean single tree stem biomass lost per dead tree
+//ALLOMETRIC RELATIONSHIPS
+DBHDC	0            	//Parameter not currently used//dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
+                     		//DBHDC = 20/100
+				//used for young trees in dominated layer
+DBHDCMAX	    	//Low Density
+DBHDCMIN	    	//High Density
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A	         	//a value
+SAP_B	         	//b value
+SAP_LEAF		//sapwood_max leaf area ratio in pipe model    
+HMAX	30         	//Max Height in m for Chapman-Richards Function 	
+DMAX	100          	//(Corti e Magini 1955)//Max Stem Diameter in cm 
+HPOWER	        	//Slope of Asymptotic Height from Sortie 
+RPOWER	         	//Slope of Asymptotic Crown-Radius from Sortie 
+CHPOWER	         	//Slope of Asymptotic Crown-Height from 
+FORMFACT	     	//Form Factor 
+
+//LPJ allometric relationships
+KALLOMA	0		//Parameter not currently used
+KALLOMB	0		//Parameter not currently used
+KALLOMC	0		//Parameter not currently used
+KRP	0		//Parameter not currently used
+
+//CHAPMAN-RICHARDS relationships
+CRA	
+CRB	
+CRC	
+
+//CROWDING COMPETITION FUNCTION
+HDMAX	          	//Height to Base diameter ratio MAX  
+HDMIN	           	//Height to Base diameter ratio MIN  
+
+//DENSITY FUNCTION
+DENMAX	0.8	       	//(Corti e Magini 1955)//Maximum density (trees/10000 m^2)
+DENMIN	0.2	      	//(Corti e Magini 1955)//Minimum density (trees/10000 m^2)
+
+//ESTABLISHMENT
+MINPAREST	0    	//Parameter not currently used//Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+MINRAIN	0             	//Parameter not currently used//Minimum annual Rain Precipitation for Establishment
+
+//SEEDS PRODUCTION
+MAXSEED	0           	//Parameter not currently used//numero massimo semi prodotti dalla pianta
+MASTSEED	0      	//Parameter not currently used//ricorrenza anni di pasciona 
+WEIGHTSEED	0      	//Parameter not currently used//peso frutto in g
+SEXAGE	0            	//Parameter not currently used//Age at Sexual Maturity 
+GERMCAPACITY	0    	//Parameter not currently used//Geminability
+MINTEMP	0              	//Parameter not currently used//Minimum temperature for germination in °C
+ESTMAX	0            	//Parameter not currently used//Potential Establishment rate in the absence of competition
+
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT	0    	//Parameter not currently used//Fraction of NPP to Fruit Production
+
+//MANAGMENT
+ROTATION	0     	//Parameter not currently used//Parameter not currently used//Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG	0      	//Parameter not currently used//Minimum age for Managment (Q. cerris)
+MINDBHMANAG	0      	//Parameter not currently used//Minimum DBH for Managment
+AV_SHOOT	0      	//Parameter not currently used//average number of shoot after cut
