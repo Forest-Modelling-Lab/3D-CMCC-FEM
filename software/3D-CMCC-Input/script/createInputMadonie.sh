@@ -372,10 +372,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		${BIN_DIR}/copyGeoref -i ${FILTER_E} ${OUTPUT_10} -o ${OUTPUT_11} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-		MSG="Copy masks and empty band into output dir"
-		log "${MSG} ...\n"
-		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} -t ${OUT_00}
-		check "${MSG} failed.\n"
 		
 #		MSG="Merge of multiple species"
 #		OUTPUT_10="${WK_00}/Madonie_species.tif"
@@ -394,6 +390,51 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 #		log "${MSG} ...\n"
 #		cp ${OUTPUT_11} ${OUT_00}
 #		check "${MSG} failed.\n"
+
+		log "Start creating dem file ...\n"
+		for INPUT_01 in $( ls ${IN_00}/*.zip ) ; do
+    		MSG="Unzipping DEM files"
+			log "${MSG} ...\n"
+			unzip ${INPUT_01} -d ${WK_00} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+		
+			MSG="Removing useless stuff"
+			log "${MSG} ...\n"
+			rm -f ${WK_00}/*.pdf ${WK_00}/*_num.tif
+			check "${MSG} failed.\n"
+    	done
+    	
+		MSG="Merge adjacent dem files"
+		INPUT_02=($( ls ${WK_00}/*_dem.tif ))
+		OUTPUT_01="${WK_00}/Sicily_dem.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} ${PAR_02} ${INPUT_02[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
+    	check "${MSG} failed.\n"
+    	
+    	MSG="Conversion of tiff projection from longlat to UTM"
+		OUTPUT_02="${WK_00}/Sicily_dem_no_remap.tif"
+		log "${MSG} ...\n"
+		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Remap and cut UTM geotiff image"
+		OUTPUT_03="${WK_00}/Madonie_dem.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		M="-0.0064"
+		MSG="Performing DEM rescaling"
+		DEM_SCALED="${WK_00}/Madonie_dem_scaled.tif"
+		log "${MSG} ...\n"
+		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		log "End creating dem file .....\n"
+		
+		MSG="Copy masks, empty band and scaled DEM into output dir"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} -t ${OUT_00}
+		check "${MSG} failed.\n"
 
 		clean "${WK_00}"
 
@@ -853,44 +894,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
 		check "${MSG} failed.\n"
 		
+		NAME_DEM_SCALED="Madonie_dem_scaled.tif"
+		MSG="Copy DEM from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_DEM_SCALED} -t ${WK_12}
+		check "${MSG} failed.\n"
+		
     	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
-    	
-    	for INPUT_01 in $( ls ${IN_12}/*.zip ) ; do
-    		MSG="Unzipping DEM files"
-			log "${MSG} ...\n"
-			unzip ${INPUT_01} -d ${WK_12} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-		
-			MSG="Removing useless stuff"
-			log "${MSG} ...\n"
-			rm -f ${WK_12}/*.pdf ${WK_12}/*_num.tif
-			check "${MSG} failed.\n"
-    	done
-    	
-		MSG="Merge adjacent dem files"
-		INPUT_02=($( ls ${WK_12}/*_dem.tif ))
-		OUTPUT_01="${WK_12}/Sicily_dem.tif"
-		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} ${PAR_02} ${INPUT_02[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
-    	check "${MSG} failed.\n"
-    	
-    	MSG="Conversion of tiff projection from longlat to UTM"
-		OUTPUT_02="${WK_12}/Sicily_dem_no_remap.tif"
-		log "${MSG} ...\n"
-		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_03="${WK_12}/Madonie_dem.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Performing first part of ${AVG_TEMP_FORMULA}"
-		OUTPUT_04="${WK_12}/Madonie_dem_scaled.tif"
-		log "${MSG} ...\n"
-		gdal_calc.py -A ${OUTPUT_03} --outfile=${OUTPUT_04} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
+    	DEM_SCALED="${WK_12}/${NAME_DEM_SCALED}"
 		
 		UNITY="Celsius degrees"
 		METADATA="SITE=${SITE},VALUES=AVG_TEMPERATURE,UNITY_OF_MEASURE=${UNITY}"
@@ -968,7 +979,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				MSG="Performing second part of ${AVG_TEMP_FORMULA}"
 				OUTPUT_10="${WK_12}/${IMG}_${DATE}.tif"
 				log "${MSG} ...\n"
-				gdal_calc.py -A ${OUTPUT_04} -B ${OUTPUT_09} --outfile=${OUTPUT_10} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${OUTPUT_10} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				MSG="Mask ${IMG} for ${DATE}"
@@ -1006,17 +1017,27 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	
     	# VPD pixel value ( VPD )
 		# VPD = e(s) - e(a)
-		# e(s)= (e(T_max) + e(T_min)) / 2
-		# e(T_max) = 0.6108 * e^((17.27 * T_max)/(T_max + 237.3))
-		# e(T_min) = 0.6108 * e^((17.27 * T_min)/(T_min + 237.3))
+		# e(s)= (e(T_max(a)) + e(T_min(a))) / 2
+		# e(T_max(a)) = 0.6108 * e^((17.27 * T_max(a))/(T_max(a) + 237.3))
+		# e(T_min(a)) = 0.6108 * e^((17.27 * T_min(a))/(T_min(a) + 237.3))
 		# e = 2.71828182845904523536028747135266249775724709369995... (Napier's constant)
-		# e(a) = e(T_min)
-		# T_min = MOD08_M3 observed value (layer 919, "Retrieved_Temperature_Profile_Mean_Min", band 20)
-		# T_max = MOD08_M3 observed value (layer 920, "Retrieved_Temperature_Profile_Mean_Max", band 20)
-
+		# e(a) = e(T_min(a))
+		# T_min(a) = m * (Z+2) + T_min(o)
+		# T_max(a) = m * (Z+2) + T_max(o)
+		# m = -0.0064 
+		# Z = DEM pixel value
+		# T_min(o) = scale_factor * (T_min_mod_value - add_offset) - 273.15
+		# T_max(o) = scale_factor * (T_max_mod_value - add_offset) - 273.15
+		# scale_factor = 0.01
+		# T_min_mod_value = MOD08_M3 observed value (layer 919, "Retrieved_Temperature_Profile_Mean_Min", band 20)
+		# T_max_mod_value = MOD08_M3 observed value (layer 920, "Retrieved_Temperature_Profile_Mean_Max", band 20)
+		# add_offset = -15000
+		
 		P1="0.6108"
 		P2="17.27"
 		P3="237.3"
+		SCALE_FACTOR="0.01"
+		ADD_OFFSET="-15000"
 
 		VPD_FORMULA="VPD=((e(T_max)+e(T_min))/2)-(e(T_min))"
 		log "${AVG_TEMP_FORMULA}\n"
@@ -1027,7 +1048,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_13}
 		check "${MSG} failed.\n"
 		
+		NAME_DEM_SCALED="Madonie_dem_scaled.tif"
+		MSG="Copy DEM from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_DEM_SCALED} -t ${WK_13}
+		check "${MSG} failed.\n"
+		
     	MASK_TOT="${WK_13}/${NAME_MASK_TOT}"
+    	DEM_SCALED="${WK_13}/${NAME_DEM_SCALED}"    	
 		
 		UNITY="kPa"
 		METADATA="SITE=${SITE},VALUES=VPD,UNITY_OF_MEASURE=${UNITY}"
@@ -1149,41 +1177,53 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				check "${MSG} failed.\n"
 				
 				MSG="Remap and cut UTM geotiff image for T_min, ${DATE}"
-				T_MIN="${WK_13}/${IMG}_T_min_remapped-${DATE}.tif"
+				OUTPUT_09="${WK_13}/${IMG}_T_min_remapped-${DATE}.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${T_MIN} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				MSG="Remap and cut UTM geotiff image for T_max, ${DATE}"
-				T_MAX="${WK_13}/${IMG}_T_max_remapped-${DATE}.tif"
+				OUTPUT_10="${WK_13}/${IMG}_T_max_remapped-${DATE}.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_08} -o ${T_MAX} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_10} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				MSG="Getting ${IMG} for ${DATE}"
-				OUTPUT_09="${WK_13}/${IMG}_${DATE}.tif"
+				MSG="Getting T_min for ${DATE}"
+				T_MIN="${WK_13}/${IMG}_T_min_${DATE}.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_09} &>> "${LOGFILE}"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MIN} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+				MSG="Getting T_max for ${DATE}"
+				T_MAX="${WK_13}/${IMG}_T_max_${DATE}.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_10} --outfile=${T_MAX} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"				
+								
+				MSG="Getting ${IMG} for ${DATE}"
+				OUTPUT_11="${WK_13}/${IMG}_${DATE}.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				MSG="Mask ${IMG}"
-				OUTPUT_10="${WK_13}/${IMG}_${DATE}_masked.tif"
+				OUTPUT_12="${WK_13}/${IMG}_${DATE}_masked.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/applyMask -i ${OUTPUT_09} -m ${MASK_TOT} -o ${OUTPUT_10} &>> "${LOGFILE}"
+				${BIN_DIR}/applyMask -i ${OUTPUT_11} -m ${MASK_TOT} -o ${OUTPUT_12} &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				MONTHS+=("${WK_13}/${IMG}_${DATE}_masked.tif")
+				MONTHS+=("${OUTPUT_12}")
 			done
 			
 			MSG="Create multiband ${IMG} image for ${YYYY}"
-			OUTPUT_11="${WK_13}/${IMG}_${YYYY}.tif"
+			OUTPUT_13="${WK_13}/${IMG}_${YYYY}.tif"
 			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_11} -m "${METADATA}" &>> "${LOGFILE}"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_13} -m "${METADATA}" &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 		
 			MSG="Copy ${IMG} into ${OUT_13}"
 			log "${MSG} ...\n"
-			cp ${OUTPUT_11} -t ${OUT_13}
+			cp ${OUTPUT_13} -t ${OUT_13}
 			check "${MSG} failed.\n"	
     	done
 
@@ -1297,6 +1337,16 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
     	
+    	NAME_MASK_TOT="Total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_15}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_15}/${NAME_MASK_TOT}"
+    	
+    	UNITY="m^2/m^2 (foliage_area/soil_area)"
+    	METADATA="SITE=${SITE},VALUES=LAI,UNITY_OF_MEASURE=${UNITY}"
     	#for INPUT_01 in $( ls ${IN_15}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
 		for INPUT_01 in $( ls ${IN_15}/LayerDates* ) ; do
     		INPUT_02="$( echo ${INPUT_01} | sed s/LayerDates_// | sed s/$/.tif/ )"
@@ -1344,7 +1394,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 					${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} ${THRESHOLD} &>> "${LOGFILE}"
 					check "${MSG} failed.\n"
 					
-					LAI_MONTHS+=("${OUTPUT_04}")
+					MSG="Mask ${IMG}"
+					OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
+					log "${MSG} ...\n"
+					${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					LAI_MONTHS+=("${OUTPUT_05}")
 			
 					SAME_MONTH_IMG=()
 					SAME_MONTH_IMG+=("${OUTPUT_01}")
@@ -1371,17 +1427,23 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} -t 1.0 &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
-			LAI_MONTHS+=("${OUTPUT_04}")
+			MSG="Mask ${IMG}"
+			OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
 			
-			OUTPUT_05="${WK_15}/LAI_${YEAR}.tif"
+			LAI_MONTHS+=("${OUTPUT_05}")
+			
+			OUTPUT_06="${WK_15}/LAI_${YEAR}.tif"
 			MSG="Get multiband LAI image"
 			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#LAI_MONTHS[@]} -i "${LAI_MONTHS[@]}" -o ${OUTPUT_05} -m VALUE=LAI,YEAR=${YEAR},SITE=${SITE}
+			${BIN_DIR}/mergeImg -b ${#LAI_MONTHS[@]} -i "${LAI_MONTHS[@]}" -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			MSG="Copy LAI multiband image into output dir"
 			log "${MSG} ...\n"
-			cp ${OUTPUT_05} ${OUT_15}
+			cp ${OUTPUT_06} ${OUT_15}
 			check "${MSG} failed.\n"
 		done
 		
