@@ -77,7 +77,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		//Net Radiation
 		Log("Global Solar Radiation = %g MJ/m^2/day\n", met[month].solar_rad);
 		//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
-		c->net_radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / c->daylength;
+
+		//4 Dec 2012 add Albedo
+		c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6)) / c->daylength) * (1 - site->max_alb);
 		Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 		Month_Radiation = met[month].solar_rad * DaysInMonth;
@@ -87,7 +89,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		//DailyPar = met[month].solar_rad * MOLPAR_MJ;
 		//Log("Daily Average Par = %g molPAR/m^2 day\n", DailyPar);
 
-		c->par = Month_Radiation * MOLPAR_MJ;
+		//4 Dec 2012 add Albedo
+		//following BIOME albedo for PAR is 1/3 of albedo
+		//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
+		//PAR is reflected than net_radiation (Jones 1992)
+		c->par = (Month_Radiation * MOLPAR_MJ) * (1 - (site->max_alb/3));
 		Log("Par for layer '%d' = %g molPAR/m^2 month\n", c->heights[height].z, c->par);
 
 

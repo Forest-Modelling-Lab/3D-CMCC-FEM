@@ -31,12 +31,6 @@ static const char *species_values[] = {
 		"LAIMAXINTCPTN",              //LAI for maximum rainfall interception
 		"MAXINTCPTN",                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 
-		//ALBEDO
-		//these Data are still not used
-		/*
-		"MAXALB",                     //Maximum albedo for Quercus spp Breuer et al 2003
-		"MINALB",                     //Minimum albedo for Quercus spp Breuer et al 2003
-		*/
 
 		//SPECIFIC LEAF AREA 3PG
 		"SLA0",                       //Specific Leaf Area at age 0 (m^2/kg)
