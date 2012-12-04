@@ -14,7 +14,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C
-	float const rhoAir = 1.2;       // density of air, kg/m3
+	float rhoAir;       // density of air, kg/m3
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const VPDconv = 0.000622; // convert VPD to saturation deficit = 18/29/1000
 	static float defTerm;
@@ -24,10 +24,12 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//static float MonthTransp;
 
 
+	//following BIOME
+	rhoAir = 1.292 - (0.00428 * met[month].tav);
+
 
 	float alpha_evapo = 0.65;
 	float beta_evapo = 0.95;
-
 	/*Canopy Conductance*/
 
 	//Lai is different among layers so CanCond is different

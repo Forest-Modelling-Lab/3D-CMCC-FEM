@@ -69,13 +69,15 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//*************SITE CHARACTERISTIC******************
 		if (month == JANUARY && years == 0)
 		{
-			//first year first month initialization data
+			/*soil water initialization*/
 			m->cells[cell].available_soil_water = (m->cells[cell].soilw_fc * site->min_frac_maxasw) + met[month].rain;
 			Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
+
+			/*snow initialization*/
+			m->cells[cell].snow = 0;
 		}
 		else
 		{
-
 			m->cells[cell].available_soil_water +=  met[month].rain;
 			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
@@ -126,9 +128,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 
-
-
-
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
 		Log("Moist ratio outside modifier = %g\n", m->cells[cell].soil_moist_ratio);
@@ -139,13 +138,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Log("MONTH SIMULATED = %s\n", szMonth[month]);
 
 		Print_met_data (met, vpd,  month,  m->cells[cell].daylength);
-
-		//for each month of simulation the model recomputes the number of classes in vegetative period
-		/*
-		m->cells[cell].dominant_veg_counter = 0;
-		m->cells[cell].dominated_veg_counter = 0;
-		m->cells[cell].subdominated_veg_counter = 0;
-		 */
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -174,11 +166,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 					Get_monthly_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
+					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
+
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 					{
-						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
-
 						if (month == JANUARY)
 						{
 							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
@@ -237,6 +229,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								}
 
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, height);
+
+								//todo following BIOME create snow function
+								Get_snow_met_data (&m->cells[cell], met, month);
 
 								Get_soil_water_balance (&m->cells[cell]);
 

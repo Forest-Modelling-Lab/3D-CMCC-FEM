@@ -14,6 +14,7 @@
 void Get_initialization_site_data (CELL *c)
 {
 
+	/*soil matric potential*/
 
 	//see BIOME-BGC 4.2
 	//all percentage are converted in 100 %
@@ -62,13 +63,13 @@ void Get_initialization_site_data (CELL *c)
 	/* (DIM) Clapp-Hornberger "b" parameter */
 	c->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
 	Log ("soil_b = %g (DIM)\n", c->soil_b);
-	/* (DIM) volumetric water content at saturation */
+	/* (DIM) Soil volumetric water content at saturation */
 	c->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
 	Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
 	/* (MPa) soil matric potential at saturation */
 	c->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
 	Log ("psi_sat = %g (MPa)\n", c->psi_sat);
-	/* (DIM) VWC at field capacity ( = -0.015 MPa) */
+	/* (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
 	vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),1.0/c->soil_b);
 	Log ("vwc_fc = %g (DIM)\n", vwc_fc);
 
@@ -88,9 +89,6 @@ void Get_initialization_site_data (CELL *c)
 	Log ("soilw_sat BIOME (MAXASW SAT BIOME)= %g (kgH2O/m2)\n", c->soilw_sat);
 
 	c->max_asw = c->soilw_fc;
-
-
-
 
 }
 

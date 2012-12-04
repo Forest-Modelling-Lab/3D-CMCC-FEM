@@ -6,6 +6,58 @@
 #include "math.h"
 #include "types.h"
 
+void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
+{
+
+	//todo inserire la funzione anche nelle altre aprti del treemodel.c
+
+	//FOLLOWING BIOME APPROACH
+	/* temperature and radiation snowmelt,
+	from Joseph Coughlan PhD thesis, 1991 */
+
+	static float snow_abs = 0.6; // absorptivity of snow
+	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coef
+	float inc_rad;  //incident radiation (kJ/m2/d) incident radiation
+	float snow_melt;
+	float snow_sublimation;
+	float incident_rad;  //incident radiation in kJ
+	float melt, t_melt, r_melt, r_sub;
+
+	t_melt = r_melt = r_sub = 0;
+
+	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
+	incident_rad = c->net_radiation_for_soil * met[month].n_days * snow_abs * 0.001;
+	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
+	Log("incident radiation for soil = %g\n", incident_rad);
+
+
+	if (met[month].tav < 0) /* sublimation from snowpack */
+	{
+		r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+		Log("r_sub = %g\n", r_sub);
+		if (r_sub > c->snow)
+		{
+
+		}
+
+
+	}
+	else if (met[month].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
+	{
+
+	}
+	else
+	{
+
+	}
+
+
+
+
+
+
+}
+
 /*
 float Get_vpd (const MET_DATA *const met, int month)
 {
@@ -27,7 +79,7 @@ float Get_vpd (const MET_DATA *const met, int month)
 
 	return vpd;
 }
-*/
+ */
 
 void Print_met_data (const MET_DATA *const met, float vpd, int month, float daylength)
 {

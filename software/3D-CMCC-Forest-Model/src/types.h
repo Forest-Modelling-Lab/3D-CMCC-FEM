@@ -637,6 +637,7 @@ typedef struct {
 	float net_radiation;
 	float net_radiation_for_dominated;
 	float net_radiation_for_subdominated;
+	float net_radiation_for_soil;
 	float par;
 	float par_for_dominated;
 	float par_for_subdominated;
@@ -687,6 +688,7 @@ typedef struct {
 	int monthly_layer_number;
 	int top_layer;
 	int saplings_counter;
+	float snow;  //amount of snow in Kg H2o
 
 
 } CELL;
@@ -783,16 +785,18 @@ typedef struct {
 /* */
 
 //----------------------------CONVERSION FACTOR--------------------------------- This was conversion.h
-//LAI
 
 //LIGHT
-#define QA                      -90      //Intercept of Net vs Solar Radiation (W/m^2)
-#define QB                      0.8      //Slope of Net vs Solar Radiation
+#define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
+#define QB                       0.8      //Slope of Net vs Solar Radiation
 
-#define MOLPAR_MJ               2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
-#define GDM_MOL                  24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
-#define GC_MOL                   12      //Convert molC to grams of C
-#define W_MJ                1000000      //convert Watt to MegaJoule/sec m^2
+#define MOLPAR_MJ                2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
+#define GDM_MOL                   24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
+#define GC_MOL                    12      //Convert molC to grams of C
+#define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
+#define LATENT_HEAT_FUSION       350	  //Latent heat of fusion (kJ/kg)
+#define LATENT_HEAT_SUBLIMATION 2845      //Latent heat of sublimation (kJ/kg)
+
 
 //COSTANT
 #define Pi               3.141592654     //Pi greco
@@ -920,6 +924,8 @@ extern void Get_tree_BB (CELL *, int);
 extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int);
 
 extern void Get_a_Power_Function (AGE *, SPECIES *);
+
+extern void Get_snow_met_data (CELL *c, const MET_DATA *const, int);
 
 
 
