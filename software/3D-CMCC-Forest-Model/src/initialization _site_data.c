@@ -19,7 +19,7 @@ void Get_initialization_site_data (CELL *c)
 
 	//control
 	/*
-	 if (site->sand_perc + site->clay_perc + site->silt_perc != 1)
+	 if (site->sand_perc + site->clay_perc + site->silt_perc != 100)
 	 {
 	 	 Log("ERROR IN SOIL PERCENTAGE!!!!!\n");
 	 	 exit;
@@ -27,10 +27,6 @@ void Get_initialization_site_data (CELL *c)
 	 */
 
 	//see BIOME-BGC 4.2
-	//all percentage are converted in 100 %
-	float sand = site->sand_perc * 100;
-	float clay = site->clay_perc * 100;
-	float silt = site->silt_perc * 100;
 
 	//FROM BIOME
 	/* given a list of site constants and the soil water mass (kg/m2),
@@ -71,13 +67,13 @@ void Get_initialization_site_data (CELL *c)
 	//float soilw_fc; //maximum volume soil water content in m3/m3
 
 	/* (DIM) Clapp-Hornberger "b" parameter */
-	c->soil_b = -(3.10 + 0.157*clay - 0.003*sand);
+	c->soil_b = -(3.10 + 0.157*site->clay_perc - 0.003*site->sand_perc);
 	Log ("soil_b = %g (DIM)\n", c->soil_b);
 	/* (DIM) Soil volumetric water content at saturation */
-	c->vwc_sat = (50.5 - 0.142*sand - 0.037*clay)/100.0;
+	c->vwc_sat = (50.5 - 0.142*site->sand_perc - 0.037*site->clay_perc)/100.0;
 	Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
 	/* (MPa) soil matric potential at saturation */
-	c->psi_sat = -(exp((1.54 - 0.0095*sand + 0.0063*silt)*log(10.0))*9.8e-5);
+	c->psi_sat = -(exp((1.54 - 0.0095*site->sand_perc + 0.0063*site->silt_perc)*log(10.0))*9.8e-5);
 	Log ("psi_sat = %g (MPa)\n", c->psi_sat);
 	/* (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
 	vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),1.0/c->soil_b);
