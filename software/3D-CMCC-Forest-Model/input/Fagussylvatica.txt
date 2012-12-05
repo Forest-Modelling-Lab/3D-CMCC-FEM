@@ -32,8 +32,8 @@ RHOMAX	0.82             //Maximum Basic Density for young Trees
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter 
 //VPD
-COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
-BLCOND	0.01            //Canopy Boundary Layer conductance 
+COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+BLCOND	0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 
 //AGE for timber
 MAXAGE	80             //Determines rate of "physiological decline" of forest //modified
@@ -82,9 +82,9 @@ MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
-STEM_LEAF	2.2	//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
-COARSE_ROOT_STEM	0.22	//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) see Pietsch et al., 2005
+STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) see see Pietsch et al., 2005
+COARSE_ROOT_STEM	0.115	//allocation new coarse root C:new stem (ratio) see Pietsch et al., 2005
 
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
