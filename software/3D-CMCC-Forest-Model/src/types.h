@@ -719,6 +719,7 @@ typedef struct
 	lon,
 	Y,
 	co2Conc,
+	//todo move albedo into species.txt
 	max_alb,
 	initialLitter,
 	min_frac_maxasw,  //wilting point

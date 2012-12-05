@@ -4,9 +4,11 @@ LIGHT_TOL	2   	//Parameter not currently used
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA	0.04			//Canopy quantum efficiency (molC/molPAR)	
+ALPHA	0.02			//Canopy quantum efficiency (molC/molPAR)	(Penuelas et al, 1997 Journal of Experimental Biology )
 EPSILONgCPAR	0	 	//Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-K	0.72		//(Rambal et al. 1996)//Extinction coefficient for absorption of PAR by canopy 
+K	0.72		//(Rambal et al. 1996, Hoff et al., 2002)//Extinction coefficient for absorption of PAR by canopy 
+
+//ALBEDO	0.12  //for Q. ilex (Hoff et al., 2002)
 
 //LEAF AREA INDEX
 LAIGCX	8	               	//LAI for maximum canopy conductance
@@ -44,6 +46,7 @@ MAXCOND	0.021	//(Nolè et al. 2009) Maximum Canopy Conductance in m/sec
 				//0.0025 (Valentini et al. 1991)//Maximum Canopy Conductance in m/sec
 				//0.21 (Ko�rner et al. 1979)//Maximum Canopy Conductance in m/sec
 				//0.0014 (Maselli et al. 2009)//Maximum Canopy Conductance in m/sec
+				
 
 //AGE for timber
 MAXAGE	120		       	//Determines rate of "physiological decline" of forest
@@ -57,7 +60,7 @@ NAGE_S	0               //Parameter not currently used//Power of relative Age in 
 
 //TEMPERATURE
 GROWTHTMIN	0     	//(Hoff et al. 2003)//Minimum temperature for growth
-GROWTHTMAX	30   	//(Hoff et al. 2003)//Maximum temperature for growth
+GROWTHTMAX	40   	//(Hoff et al. 2003)//Maximum temperature for growth
 GROWTHTOPT	20	    	//Optimum temperature for growth
 GROWTHSTART	0	       	//average temperature for starting growth in °C 
 GROWTHEND	0	       	//average temperature for ending growth in °C
@@ -66,6 +69,7 @@ MINDAYLENGTH	0	      	//minimum day length for deciduous
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
+//SWPCLOSE	-3.5 //for Q. ilex, Hoff et al, 2002
 SWCONST	1		       	//Costant in Soil Water modifier vs Moist Ratio
 SWPOWER	5		      	//Power in Soil Water modifier vs Moist Ratio
 

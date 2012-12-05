@@ -3,7 +3,7 @@ LIGHT_TOL	2   	//4 = very shade intollerant
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA   0.056		//   // Canopy quantum efficiency (molC/molPAR)0.75
+ALPHA   0.056		//Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 K	0.5		//0.54 Extinction coefficient for absorption of PAR by canopy 
 //LEAF AREA INDEX
@@ -17,12 +17,13 @@ SLA1	0               //Specific Laef Area for mature leaves (m^2/kg)
 TSLA	0             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
 INITIAL_M_LAI	0     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
-SLA	115.5             //Specific Leaf Area cm^2/gC  					
+SLA	115.5             //Specific Leaf Area cm^2/gC  
+					//from 256 to 175 Wang et al., 2006					
 SLAmkg	0.1             //Convert SLA in m^2/Kg
 //FRACTION BRANCH-BARK
-FRACBB0	0.40            //Branch and Bark fraction at age 0
-FRACBB1	0.125            //Branch and Bark fraction for mature stands
-TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+FRACBB0	0.2            //Branch and Bark fraction at age 0 for C. sativa Ranger et al 1996
+FRACBB1	0.17            //Branch and Bark fraction for mature stands for C. sativa Ranger et al 1996
+TBB	10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
 RHOMIN	0.49             //Minimum Basic Density for young Trees t/m^3
 RHOMAX	0.49             //Maximum Basic Density for young Trees 
@@ -31,7 +32,7 @@ DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter
 //VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
 BLCOND	0.01            //Canopy Boundary Layer conductance 
-MAXCOND	0.0027            //Maximum Canopy Conductance in m/sec 
+MAXCOND	0.02            //Maximum Canopy Conductance in m/sec Ethier & Livingston 2004
 //AGE for timber
 MAXAGE	80             //Determines rate of "physiological decline" of forest //modified
 RAGE	0.75            //Relative Age to give fAGE = 0.5
@@ -51,6 +52,8 @@ MINDAYLENGTH  11      //minimum day length for decidu0us
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
+//SWPOPEN	-0.8 //for C. sativa Nardini Saleo 2000
+//SWPCLOSE	-2 //for C. sativa Nardini Saleo 2000
 SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 
