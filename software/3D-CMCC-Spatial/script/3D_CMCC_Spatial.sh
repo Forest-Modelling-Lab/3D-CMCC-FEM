@@ -145,8 +145,12 @@ done
 # Delete comma in front of first year
 YEARS_STR=${YEARS_STR:1:${#YEARS_STR}}
 
+# Soil input image
+SOIL_IMG="${IMG_PATH}/Soil.tif"
+
 log "Starting execution of getInputCMCC..."
-${BIN}/getInputCMCC -p ${IMG_SPEC} -y ${YEARS_STR} -c ${IMG_CLIM} -o ${WORK_IN}
+#${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
+cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of getInputCMCC failed"
 	echo "Invalid or corrupted data: execution of getInputCMCC failed"
@@ -154,46 +158,40 @@ if [ "$?" -ne "0" ] ; then
 fi
 log "...getInputCMCC exited succesfully."
 
-## :::::::::::::::::: #
-## wrapCMCC execution #
-## :::::::::::::::::: #
-#
-#FIRST_SPEC_FILE=$( find ${WORK_IN} -type f | grep '_spec' | head -n 1 )
-#NUM_PX=$( cat ${FIRST_SPEC_FILE} | wc -l )
-#
-#SPEC_FILES=( $( find ${WORK_IN} -type f | grep '_spec' | sort ) )
-#YEAR_FILES=( $( find ${WORK_IN} -type f | grep '[0-9][0-9][0-9][0-9]_b' | sort ) )
-#
-#for SPEC in ${SPEC_FILES[@]} ; do
-#	SPEC_STR=${SPEC_STR},${SPEC}
-#done
-#
-#for YEAR in ${YEAR_FILES[@]} ; do
-#	YEAR_STR=${YEAR_STR},${YEAR}
-#done
-#
-#SPEC_STR=${SPEC_STR:1:${#SPEC_STR}}
-#YEAR_STR=${YEAR_STR:1:${#YEAR_STR}}
-#
-#SITE="${INPUTDATASETDIR}/${LOCATION}/txt/site.txt"
-#SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
-#
-#if [ ! -f "${SITE}" ] ; then
-#    log "Site file for CMCC not found..."
-#    echo "Site file for CMCC not found..."
-#    exit 2
-#fi
-#
-#log "Starting execution of wrapCMCC..."
-#${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SITE}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
-#if [ "$?" -ne "0" ] ; then
-#	log "Execution of wrapCMCC failed"
-#	echo "Invalid or corrupted data: execution of wrapCMCC failed"
-#	exit 10
-#fi
-#
-#log "...wrapCMCC exited succesfully."
-#
+# :::::::::::::::::: #
+# wrapCMCC execution #
+# :::::::::::::::::: #
+
+FIRST_SPEC_FILE=$( find ${WORK_IN} -type f | grep '_spec' | head -n 1 )
+NUM_PX=$( cat ${FIRST_SPEC_FILE} | wc -l )
+
+SPEC_FILES=( $( find ${WORK_IN} -type f | grep '_spec' | sort ) )
+YEAR_FILES=( $( find ${WORK_IN} -type f | grep '[0-9][0-9][0-9][0-9]_b' | sort ) )
+
+for SPEC in ${SPEC_FILES[@]} ; do
+	SPEC_STR=${SPEC_STR},${SPEC}
+done
+
+for YEAR in ${YEAR_FILES[@]} ; do
+	YEAR_STR=${YEAR_STR},${YEAR}
+done
+
+SPEC_STR=${SPEC_STR:1:${#SPEC_STR}}
+YEAR_STR=${YEAR_STR:1:${#YEAR_STR}}
+
+SOIL="${WORK_IN}/Soil.txt"
+SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
+
+log "Starting execution of wrapCMCC..."
+${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SOIL}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
+if [ "$?" -ne "0" ] ; then
+	log "Execution of wrapCMCC failed"
+	echo "Invalid or corrupted data: execution of wrapCMCC failed"
+	exit 10
+fi
+
+log "...wrapCMCC exited succesfully."
+
 ## :::::::::::::::::::::::::::::::::::: #
 ## getOutputCMCC and mergeImg execution #
 ## :::::::::::::::::::::::::::::::::::: #
