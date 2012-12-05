@@ -16,6 +16,16 @@ void Get_initialization_site_data (CELL *c)
 
 	/*soil matric potential*/
 
+
+	//control
+	/*
+	 if (site->sand_perc + site->clay_perc + site->silt_perc != 1)
+	 {
+	 	 Log("ERROR IN SOIL PERCENTAGE!!!!!\n");
+	 	 exit;
+	 }
+	 */
+
 	//see BIOME-BGC 4.2
 	//all percentage are converted in 100 %
 	float sand = site->sand_perc * 100;
