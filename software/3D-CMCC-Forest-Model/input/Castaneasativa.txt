@@ -7,7 +7,7 @@ ALPHA   0.056		//Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 K	0.5		//0.54 Extinction coefficient for absorption of PAR by canopy 
 //LEAF AREA INDEX
-LAIGCX	8               //LAI for maximum canopy conductance
+LAIGCX	4               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.2    //Maximum proportion of rainfall interception evaporated from canopy
 
