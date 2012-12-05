@@ -1794,9 +1794,9 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		done
 		
 		# Prepare layers for multiband image
-		INPUT_02+=("$( ls ${WK_16}/*argilla*30m_masked.tif)" "$( ls ${WK_16}/*limo*30m_masked.tif)" "$( ls ${WK_16}/*sabbia*30m_masked.tif)" "$( ls ${WK_16}/*densita*30m_masked.tif)")
+		INPUT_02+=("$( ls ${WK_16}/*argilla*30m_masked.tif)" "$( ls ${WK_16}/*limo*30m_masked.tif)" "$( ls ${WK_16}/*sabbia*30m_masked.tif)" "$( ls ${WK_16}/*densita*30m_masked.tif)" "$( ls ${WK_16}/*profondita*30m_masked.tif)")
 		
-		METADATA="SITE=${SITE},VALUE=SOIL,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=density (g/cm3)"
+		METADATA="SITE=${SITE},VALUE=SOIL,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=density (g/cm3),BAND5=soil depth (cm)"
 		MSG="Create multiband ${IMG} image"
 		OUTPUT_05="${WK_16}/${IMG}.tif"
 		log "${MSG} ...\n"
@@ -1870,6 +1870,12 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Copy ${PKG_DIR_NAME}.zip into ${OUT_17}"
 		log "${MSG} ...\n"
 		cp ${PKG_DIR}.zip -t ${OUT_17}
+		check "${MSG} failed.\n"
+		
+		SPATIAL_PROJECT="$( dirname ${0} )/../../3D-CMCC-Spatial"
+		MSG="Copy ${PKG_DIR_NAME}.zip into spatial input directory"
+		log "${MSG} ...\n"
+		cp ${PKG_DIR}.zip -t ${SPATIAL_PROJECT}/input/
 		check "${MSG} failed.\n"
 
 		clean "${WK_17}"
