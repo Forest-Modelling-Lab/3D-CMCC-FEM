@@ -40,7 +40,7 @@ DRYMAT_FRESHMAT	0.58    	//Conversion from Drymatter to Freshmatter
 
 //VPD
 COEFFCOND	0.05    		//Define stomatal responsee to VPD in mbar 
-BLCOND	0.01          //(Vitale et al. 2003)//Canopy Boundary Layer conductance 
+BLCOND	0.01          //(Vitale et al. 2003, Mollicone et al 2002)//Canopy Boundary Layer conductance 
 MAXCOND	0.021	//(Nolè et al. 2009) Maximum Canopy Conductance in m/sec	 	    
 				//0.001(Chiesi et al. 2007) Maximum Canopy Conductance in m/sec	
 				//0.0025 (Valentini et al. 1991)//Maximum Canopy Conductance in m/sec
@@ -99,14 +99,14 @@ MAX_S0CTEM	0	//Parameter not currently used//MAXIMUM RATE TO STEM AT THE FIRST Y
 YEARS_FOR_CONVERSION	0	//Parameter not currently used//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	1			//allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
-STEM_LEAF	2.2		//allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
-COARSE_ROOT_STEM	0.22		//allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+FINE_ROOT_LEAF	1			//allocation new fine root C:new leaf (ratio) see Mollicone et al 2002
+STEM_LEAF	1		//allocation new stem C:new leaf (ratio) see Mollicone et al 2002
+COARSE_ROOT_STEM	0.3		//allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
 //FOLLOWING BIOME-BGC
-LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
+LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall see Mollicone et al 2002
 GAMMAFX	0.03	              	//Maximum Litterfall rate (month^-1)
 GAMMAF0	0.5	               	//Litterfall rate at t = 0 (month^-1)
 TGAMMAF	5	               	//Age at which litterfall rate has median value
