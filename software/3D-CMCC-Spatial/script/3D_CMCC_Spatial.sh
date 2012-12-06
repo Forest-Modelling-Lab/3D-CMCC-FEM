@@ -56,6 +56,7 @@ if [ ! -f "${INPUTDATASET}" ] ; then
 fi
 
 DATASETNAME="$( basename "${INPUTDATASET}" | cut -f '1' -d '.' )"
+SIGN="$( basename "${INPUTDATASET}" | cut -f '4' -d '_' | cut -f '1' -d '.' )"
 
 RESOLUTION="${2}"
 if [ ${RESOLUTION} -ne "10" ] && [ ${RESOLUTION} -ne "100" ] && [ ${RESOLUTION} -ne "30" ] ; then
@@ -149,8 +150,8 @@ YEARS_STR=${YEARS_STR:1:${#YEARS_STR}}
 SOIL_IMG="${IMG_PATH}/Soil.tif"
 
 log "Starting execution of getInputCMCC..."
-#${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
-cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
+${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
+#cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of getInputCMCC failed"
 	echo "Invalid or corrupted data: execution of getInputCMCC failed"
@@ -184,6 +185,7 @@ SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
 
 log "Starting execution of wrapCMCC..."
 ${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SOIL}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
+#cp /home/candini/Desktop/wrapCMCC_temp/* ${WORK_CMCC}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of wrapCMCC failed"
 	echo "Invalid or corrupted data: execution of wrapCMCC failed"
@@ -192,151 +194,136 @@ fi
 
 log "...wrapCMCC exited succesfully."
 
-## :::::::::::::::::::::::::::::::::::: #
-## getOutputCMCC and mergeImg execution #
-## :::::::::::::::::::::::::::::::::::: #
-#
-#TEMPLATE="${INPUTDATASETDIR}/${LOCATION}/images/AvDBH.tif"
-#
-## Production of NPP, GPP, ABG, BGB, MAI and CAI output images
-#for Y in ${YEARS[@]} ; do
-#	MONTHS_NPP=""
-#	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-#		log "Starting execution of getOutputCMCC for NPP on year ${Y}, band ${B}..."
-#		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_NPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_NPP.tif
-#		if [ "$?" -ne "0" ] ; then
-#			log "Execution of getOutputCMCC failed"
-#			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#			exit 10
-#		fi
-#		log "...getOutputCMCC exited succesfully."
-#		MONTHS_NPP="${MONTHS_NPP} ${WORK_OUT}/${Y}_${B}_NPP.tif"
-#	done
-#	unset LD_LIBRARY_PATH
-#	log "Starting execution of mergeImg for NPP, year ${Y}..."
-#	${BIN}/mergeImg -b 12 -i ${MONTHS_NPP} -o ${WORK_OUT}/NPP_${Y}.tif -m VALUE=NPP,YEAR=${Y},SITE=PNMS,SPECIE=FAGUSSYLVATICA
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of mergeImg for NPP, year ${Y} failed"
-#		echo "Invalid or corrupted data: execution of mergeImg for NPP, year ${Y} failed"
-#		exit 10
-#	fi
-#	log "...mergeImg exited succesfully."
-#	rm ${MONTHS_NPP}
-#
-#	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
-#	MONTHS_GPP=""
-#	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-#		log "Starting execution of getOutputCMCC for GPP on year ${Y}, band ${B}..."
-#		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_GPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_GPP.tif
-#		if [ "$?" -ne "0" ] ; then
-#			log "Execution of getOutputCMCC failed"
-#			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#			exit 10
-#		fi
-#		log "...getOutputCMCC exited succesfully."
-#		MONTHS_GPP="${MONTHS_GPP} ${WORK_OUT}/${Y}_${B}_GPP.tif"
-#	done
-#	unset LD_LIBRARY_PATH
-#	log "Starting execution of mergeImg for GPP, year ${Y}..."
-#	${BIN}/mergeImg -b 12 -i ${MONTHS_GPP} -o ${WORK_OUT}/GPP_${Y}.tif -m VALUE=GPP,YEAR=${Y},SITE=PNMS,SPECIE=FAGUSSYLVATICA
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of mergeImg for GPP, year ${Y} failed"
-#		echo "Invalid or corrupted data: execution of mergeImg for GPP, year ${Y} failed"
-#		exit 10
-#	fi
-#	log "...mergeImg exited succesfully."
-#	rm ${MONTHS_GPP}
-#
-#	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
-#	log "Starting execution of getOutputCMCC for AGB on year ${Y}..."
-#	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_AGB_Good_Points.txt -o ${WORK_OUT}/AGB_${Y}.tif
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of getOutputCMCC failed"
-#		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#		exit 10
-#	fi
-#	log "...getOutputCMCC exited succesfully."
-#
-#	log "Starting execution of getOutputCMCC for BGB on year ${Y}..."
-#	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_BGB_Good_Points.txt -o ${WORK_OUT}/BGB_${Y}.tif
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of getOutputCMCC failed"
-#		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#		exit 10
-#	fi
-#	log "...getOutputCMCC exited succesfully."
-#	
-#	log "Starting execution of getOutputCMCC for MAI on year ${Y}..."
-#	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_MAI_Good_Points.txt -o ${WORK_OUT}/MAI_${Y}.tif
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of getOutputCMCC failed"
-#		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#		exit 10
-#	fi
-#	log "...getOutputCMCC exited succesfully."
-#	
-#	log "Starting execution of getOutputCMCC for CAI on year ${Y}..."
-#	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_CAI_Good_Points.txt -o ${WORK_OUT}/CAI_${Y}.tif
-#	if [ "$?" -ne "0" ] ; then
-#		log "Execution of getOutputCMCC failed"
-#		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
-#		exit 10
-#	fi
-#	log "...getOutputCMCC exited succesfully."
-#done
-#
-#OUTDATASETNAME="${PREFIX}${LOCATION}_${RESOLUTION}m_2007-2010_out"
-#
-#OUTPUTDATASETDIR="${OUTPUTDIR}/${OUTDATASETNAME}"
-#mkdir "${OUTPUTDATASETDIR}"
-#if [ ! -d "${OUTPUTDATASETDIR}" ] ; then
-#	log "Invalid output dataset directory."
-#	echo "Cannot create ${OUTPUTDATASETDIR}"
-#	exit 34
-#fi
-#
-#log "Moving ${WORK_OUT} content into ${OUTPUTDATASETDIR}..."
-#mv -f ${WORK_OUT}/* ${OUTPUTDATASETDIR}
-#if [ "$?" -ne "0" ] ; then
-#	log "Moving of ${WORK_OUT} content into ${OUTPUTDATASETDIR} failed"
-#	echo "Cannot move ${WORK_OUT} content into ${OUTPUTDATASETDIR}"
-#	exit 34
-#fi
-#log "...move succesful"
-#
-#log "Removing working dir..."
-#rm -r ${WORKDIR}
-#if [ "$?" -ne "0" ] ; then
-#	log "Cannot remove working directory"
-#	echo "Cannot remove working directory"
-#	exit 34
-#fi
-#log "...done"
-#
-#log "Compressing output dataset into output dir..."
-#cd ${OUTPUTDIR}
-#tar -jcf ${OUTDATASETNAME}.tar.bz2 ${OUTDATASETNAME}
-#if [ "$?" -ne "0" ] ; then
-#	log "Cannot compress output dataset"
-#	echo "Cannot compress output dataset"
-#	exit 34
-#fi
-#cd - > /dev/null
-#log "...done"
-#
-#log "Removing output dataset dir..."
-#rm -r ${OUTPUTDATASETDIR}
-#if [ "$?" -ne "0" ] ; then
-#	log "Cannot remove output dataset directory"
-#	echo "Cannot remove output dataset directory"
-#	exit 34
-#fi
-#log "...done"
-#
-#log "${PROGNAME} successfully ended."
-#
-#echo "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.tar.bz2"
-#echo "Produced ${OUTPUTDIR}/${CMCC}-${RESOLUTION}m.log" 
-#echo "${PROGNAME} successfully ended."
+# :::::::::::::::::::::::::::::::::::: #
+# getOutputCMCC and mergeImg execution #
+# :::::::::::::::::::::::::::::::::::: #
+#cp /home/candini/Desktop/getOutputCMCC_temp/* ${WORK_OUT}
+TEMPLATE="${INPUTDATASETDIR}/${LOCATION}/images/AvDBH.tif"
+
+# Production of NPP, GPP, ABG, BGB, MAI and CAI output images
+for Y in ${YEARS[@]} ; do
+
+	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
+	MONTHS_GPP=""
+	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
+		log "Starting execution of getOutputCMCC for GPP on year ${Y}, band ${B}..."
+		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_GPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_GPP.tif
+		if [ "$?" -ne "0" ] ; then
+			log "Execution of getOutputCMCC failed"
+			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+			exit 10
+		fi
+		log "...getOutputCMCC exited succesfully."
+		MONTHS_GPP="${MONTHS_GPP} ${WORK_OUT}/${Y}_${B}_GPP.tif"
+	done
+	unset LD_LIBRARY_PATH
+	log "Starting execution of mergeImg for GPP, year ${Y}..."
+	${BIN}/mergeImg -b 12 -i ${MONTHS_GPP} -o ${WORK_OUT}/GPP_${Y}.tif -m VALUE=GPP,YEAR=${Y},SITE=${LOCATION}
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of mergeImg for GPP, year ${Y} failed"
+		echo "Invalid or corrupted data: execution of mergeImg for GPP, year ${Y} failed"
+		exit 10
+	fi
+	log "...mergeImg exited succesfully."
+	rm ${MONTHS_GPP}
+	
+	#INPUT_01="${WORK_OUT}/GPP_${Y}.tif"
+	#INPUT_02="-A ${INPUT_01} --A_band=0 -B ${INPUT_01} --B_band=1 -C ${INPUT_01} --C_band=2 -D ${INPUT_01} --D_band=3 -E ${INPUT_01} --E_band=4 -F ${INPUT_01} --F_band=5 -G ${INPUT_01} --G_band=6 -H ${INPUT_01} --H_band=7 -I ${INPUT_01} --I_band=8 -J ${INPUT_01} --J_band=9 -K ${INPUT_01} --K_band=10 -L ${INPUT_01} --L_band=11"
+	#gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
+
+	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
+	log "Starting execution of getOutputCMCC for AGB on year ${Y}..."
+	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_AGB_Good_Points.txt -o ${WORK_OUT}/AGB_${Y}.tif
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of getOutputCMCC failed"
+		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+		exit 10
+	fi
+	log "...getOutputCMCC exited succesfully."
+
+	log "Starting execution of getOutputCMCC for BGB on year ${Y}..."
+	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_BGB_Good_Points.txt -o ${WORK_OUT}/BGB_${Y}.tif
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of getOutputCMCC failed"
+		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+		exit 10
+	fi
+	log "...getOutputCMCC exited succesfully."
+	
+	log "Starting execution of getOutputCMCC for MAI on year ${Y}..."
+	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_MAI_Good_Points.txt -o ${WORK_OUT}/MAI_${Y}.tif
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of getOutputCMCC failed"
+		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+		exit 10
+	fi
+	log "...getOutputCMCC exited succesfully."
+	
+	log "Starting execution of getOutputCMCC for CAI on year ${Y}..."
+	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_CAI_Good_Points.txt -o ${WORK_OUT}/CAI_${Y}.tif
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of getOutputCMCC failed"
+		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+		exit 10
+	fi
+	log "...getOutputCMCC exited succesfully."
+one
+
+FIRST_YEAR="${YEARS[0]}"
+LAST_YEAR="${YEARS[$((${#YEARS[@]}-1))]}"
+
+OUTDATASETNAME="${PREFIX}${LOCATION}_${RESOLUTION}m_${FIRST_YEAR}-${LAST_YEAR}_${SIGN}_output"
+
+OUTPUTDATASETDIR="${OUTPUTDIR}/${OUTDATASETNAME}"
+mkdir "${OUTPUTDATASETDIR}"
+if [ ! -d "${OUTPUTDATASETDIR}" ] ; then
+	log "Invalid output dataset directory."
+	echo "Cannot create ${OUTPUTDATASETDIR}"
+	exit 34
+fi
+
+log "Moving ${WORK_OUT} content into ${OUTPUTDATASETDIR}..."
+mv -f ${WORK_OUT}/* ${OUTPUTDATASETDIR}
+if [ "$?" -ne "0" ] ; then
+	log "Moving of ${WORK_OUT} content into ${OUTPUTDATASETDIR} failed"
+	echo "Cannot move ${WORK_OUT} content into ${OUTPUTDATASETDIR}"
+	exit 34
+fi
+log "...move succesful"
+
+log "Removing working dir..."
+rm -r ${WORKDIR}
+if [ "$?" -ne "0" ] ; then
+	log "Cannot remove working directory"
+	echo "Cannot remove working directory"
+	exit 34
+fi
+log "...done"
+
+log "Compressing output dataset into output dir..."
+cd ${OUTPUTDIR}
+zip -r ${OUTDATASETNAME} ${OUTDATASETNAME} &>/dev/null
+if [ "$?" -ne "0" ] ; then
+	log "Cannot compress output dataset"
+	echo "Cannot compress output dataset"
+	exit 34
+fi
+cd - > /dev/null
+log "...done"
+
+log "Removing output dataset dir..."
+rm -r ${OUTPUTDATASETDIR}
+if [ "$?" -ne "0" ] ; then
+	log "Cannot remove output dataset directory"
+	echo "Cannot remove output dataset directory"
+	exit 34
+fi
+log "...done"
+
+log "${PROGNAME} successfully ended."
+
+echo "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.zip"
+echo "Produced ${OUTPUTDIR}/${CMCC}-${RESOLUTION}m.log" 
+echo "${PROGNAME} successfully ended."
 
 exit 0
