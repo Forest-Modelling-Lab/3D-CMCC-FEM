@@ -200,8 +200,38 @@ log "...wrapCMCC exited succesfully."
 #cp /home/candini/Desktop/getOutputCMCC_temp/* ${WORK_OUT}
 TEMPLATE="${INPUTDATASETDIR}/${LOCATION}/images/AvDBH.tif"
 
-# Production of NPP, GPP, ABG, BGB, MAI and CAI output images
+# Production of GPP, NPP, ABG, BGB, MAI and CAI output images
 for Y in ${YEARS[@]} ; do
+	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
+	MONTHS_NPP=""
+	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
+		log "Starting execution of getOutputCMCC for NPP on year ${Y}, band ${B}..."
+		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_NPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_NPP.tif
+		if [ "$?" -ne "0" ] ; then
+			log "Execution of getOutputCMCC failed"
+			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
+			exit 10
+		fi
+		log "...getOutputCMCC exited succesfully."
+		MONTHS_NPP="${MONTHS_NPP} ${WORK_OUT}/${Y}_${B}_NPP.tif"
+	done
+	unset LD_LIBRARY_PATH
+	log "Starting execution of mergeImg for NPP, year ${Y}..."
+	${BIN}/mergeImg -b 12 -i ${MONTHS_NPP} -o ${WORK_OUT}/NPP_${Y}.tif -m VALUE=NPP,YEAR=${Y},SITE=${LOCATION}
+	if [ "$?" -ne "0" ] ; then
+		log "Execution of mergeImg for NPP, year ${Y} failed"
+		echo "Invalid or corrupted data: execution of mergeImg for NPP, year ${Y} failed"
+		exit 10
+	fi
+	log "...mergeImg exited succesfully."
+	rm ${MONTHS_NPP}
+	
+	INPUT_01="${WORK_OUT}/NPP_${Y}.tif"
+	INPUT_02="-A ${INPUT_01} --A_band=0 -B ${INPUT_01} --B_band=1 -C ${INPUT_01} --C_band=2 -D ${INPUT_01} --D_band=3 -E ${INPUT_01} --E_band=4 -F ${INPUT_01} --F_band=5 -G ${INPUT_01} --G_band=6 -H ${INPUT_01} --H_band=7 -I ${INPUT_01} --I_band=8 -J ${INPUT_01} --J_band=9 -K ${INPUT_01} --K_band=10 -L ${INPUT_01} --L_band=11"
+	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/NPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
+
+	# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_GPP=""
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
@@ -226,9 +256,9 @@ for Y in ${YEARS[@]} ; do
 	log "...mergeImg exited succesfully."
 	rm ${MONTHS_GPP}
 	
-	#INPUT_01="${WORK_OUT}/GPP_${Y}.tif"
-	#INPUT_02="-A ${INPUT_01} --A_band=0 -B ${INPUT_01} --B_band=1 -C ${INPUT_01} --C_band=2 -D ${INPUT_01} --D_band=3 -E ${INPUT_01} --E_band=4 -F ${INPUT_01} --F_band=5 -G ${INPUT_01} --G_band=6 -H ${INPUT_01} --H_band=7 -I ${INPUT_01} --I_band=8 -J ${INPUT_01} --J_band=9 -K ${INPUT_01} --K_band=10 -L ${INPUT_01} --L_band=11"
-	#gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
+	INPUT_01="${WORK_OUT}/GPP_${Y}.tif"
+	INPUT_02="-A ${INPUT_01} --A_band=0 -B ${INPUT_01} --B_band=1 -C ${INPUT_01} --C_band=2 -D ${INPUT_01} --D_band=3 -E ${INPUT_01} --E_band=4 -F ${INPUT_01} --F_band=5 -G ${INPUT_01} --G_band=6 -H ${INPUT_01} --H_band=7 -I ${INPUT_01} --I_band=8 -J ${INPUT_01} --J_band=9 -K ${INPUT_01} --K_band=10 -L ${INPUT_01} --L_band=11"
+	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
 
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	log "Starting execution of getOutputCMCC for AGB on year ${Y}..."
