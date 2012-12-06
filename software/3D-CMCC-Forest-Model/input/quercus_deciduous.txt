@@ -6,7 +6,7 @@ LIGHT_TOL	3   	//4 = very shade intollerant
 ALPHA   0.0297		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
+K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 //LEAF AREA INDEX
 LAIGCX	4               //LAI for maximum canopy conductance
@@ -16,7 +16,7 @@ MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from
 //SPECIFIC LEAF AREA 
 
 SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
-SLA1	7               //Specific Laef Area for mature leaves (m^2/kg)
+SLA1	7               //Specific Leaf Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
 INITIAL_M_LAI	0.5     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
@@ -36,7 +36,7 @@ COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar
 BLCOND	0.01            //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
 //AGE for timber
-MAXAGE	120             //Determines rate of "physiological decline" of forest
+MAXAGE	80             //Determines rate of "physiological decline" of forest
 RAGE	0.75            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
