@@ -1,6 +1,7 @@
 bin_PROGRAMS = 3D_CMCC_Forest_Model
 
 3D_CMCC_Forest_Model_SOURCES = \
+	G-Function.c\
 	allometry.c\
 	biomass.c\
 	canopy_cover.c\
@@ -15,7 +16,6 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	dendrometry.c\
 	establishment.c\
 	garbage.c\
-	G-Function.c\
 	initialization_biomass_data.c\
 	initialization_site_data.c\
 	lai.c\
