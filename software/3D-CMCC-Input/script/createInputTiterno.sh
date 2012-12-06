@@ -1,21 +1,20 @@
 #!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Description:    createInputForSE.sh bash shell script
+# Description:    createInputTiterno.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
 # Author:         Alessandro Candini - candini@meeo.it
 # Version:        0.1
 # Copyright:      MEEO S.R.L. - www.meeo.it 
 # How it works:   It takes...
-# Launch example: ./createInputForSE.sh
-# Changelog:      2012-11-06 - version 0.1
+# Changelog:      2012-12-05 - version 0.1
 #                     - First Release
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  File information summary }
 
 ### Global variables definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
-AOI="Parco delle Madonie (Sicily)"
-SITE="MADONIE"
+AOI="Comunità montana del Titerno ed alto Tammaro (Benevento)"
+SITE="TITERNO"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
 IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil Packet)
 IMG_SELECTED=()

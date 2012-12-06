@@ -1,13 +1,12 @@
 #!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Description:    createInputForSE.sh bash shell script
+# Description:    createInputMadonie.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
 # Author:         Alessandro Candini - candini@meeo.it
 # Version:        0.1
 # Copyright:      MEEO S.R.L. - www.meeo.it 
 # How it works:   It takes...
-# Launch example: ./createInputForSE.sh
-# Changelog:      2012-11-06 - version 0.1
+# Changelog:      2012-12-05 - version 0.1
 #                     - First Release
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  File information summary }
 
@@ -1827,7 +1826,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	
     	NOW=$( date +"%Y%m%d%H%M%S" )
     	
-    	PKG_DIR_NAME="${SITE}_${RES}m_${FIRST_YEAR}-${LAST_YEAR}_${NOW}"
+    	PKG_DIR_NAME="${SITE}_${RES}m_${FIRST_YEAR}-${LAST_YEAR}_${NOW}_input"
     	PKG_DIR="${WK_17}/${PKG_DIR_NAME}"
     	PKG_IMG_DIR="${PKG_DIR}/${SITE}/images"
     	PKG_TXT_DIR="${PKG_DIR}/${SITE}/txt"
