@@ -33,6 +33,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 			Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
 			exit (1);
 		}
+		//unnecessary function for spatial version
 		else
 		{
 			s->value[LAI] = met[0].ndvi_lai;
