@@ -17,7 +17,7 @@ bin_PROGRAMS = 3D_CMCC_Forest_Model
 	garbage.c\
 	G-Function.c\
 	initialization_biomass_data.c\
-	initialization_site.c\
+	initialization_site_data.c\
 	lai.c\
 	layer_cover.c\
 	light.c\
