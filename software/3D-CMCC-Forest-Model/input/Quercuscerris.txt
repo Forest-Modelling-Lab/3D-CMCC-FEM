@@ -147,8 +147,8 @@ HDMIN	0.7             //Height to Base diameter ratio MIN  (Portoghesi)
 CANCOVERMAX	0.95    //Maximum Canopy Cover
 CANCOVERMIN	0.0001  //Minimum Canopy Cover
 //DENSITY FUNCTION
-DENMAX	0.4             //Maximum density (trees/10000 m^2)
-DENMIN	0.01           //Minimum density (trees/10000 m^2)
+DENMAX	0.8             //Maximum density (trees/10000 m^2)
+DENMIN	0.2           //Minimum density (trees/10000 m^2)
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                                         //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
