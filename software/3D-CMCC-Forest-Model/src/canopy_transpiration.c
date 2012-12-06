@@ -28,6 +28,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	rhoAir = 1.292 - (0.00428 * met[month].tav);
 
 
+
+
 	float alpha_evapo = 0.65;
 	float beta_evapo = 0.95;
 	/*Canopy Conductance*/
@@ -47,6 +49,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//Log("Canopy Conductance  = %g\n", CanCond);
 
 	/*Canopy Transpiration*/
+	//todo change all functions with BIOME's
 
 	// Penman-Monteith equation for computing canopy transpiration
 	// in kg/m2/day, which is converted to mm/day.
