@@ -21,17 +21,14 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float duv;                      // 'div' in 3pg
 	static float Etransp;
 	static float DailyTransp;
+	float alpha_evapo = 0.65;
+	float beta_evapo = 0.95;
 	//static float MonthTransp;
 
 
 	//following BIOME
 	rhoAir = 1.292 - (0.00428 * met[month].tav);
 
-
-
-
-	float alpha_evapo = 0.65;
-	float beta_evapo = 0.95;
 	/*Canopy Conductance*/
 
 	//Lai is different among layers so CanCond is different
@@ -137,4 +134,51 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	s->value[MONTH_TRANSP] *= s->value[F_EVAPO];
 	Log("ANGELO MonthTransp = %g \n", s->value[MONTH_TRANSP]);
 	*/
+
+
+	//CANOPY TRASPIRATION FOLLOWING BIOME APPROACH
+	float tav_k; //Average temperature in Kelvin
+	float rr; //resistance to radiative heat transfer through air
+
+
+	//todo move into atmosphere.c
+	/*compute air pressure*/
+	float t1, t2;
+
+	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
+	/* From the discussion on atmospheric statics in:
+	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
+		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
+		(p. 168)
+	*/
+	//todo insert elev in struct site and in site.txt file
+	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
+	t2 = G_STD / (LR_STD * (R / MA));
+	//todo move air_pressure into met file
+	c->air_pressure = P_STD * pow (t1, t2);
+	Log("Air pressure = %g Pa\n", c->air_pressure);
+
+	/* temperature and pressure correction factor for conductances */
+	//c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+
+
+
+	//todo per finire la parte di BIOME devo inserire anche la parte di VPD
+	/* assign tav (Celsius) and tav_k (Kelvins) */
+	tav_k = met[month].tav + 273.15;
+
+    /* calculate density of air (rho) as a function of air temperature */
+	rhoAir = 1.292 - (0.00428 * met[month].tav);
+
+    /* calculate resistance to radiative heat transfer through air, rr */
+    rr = rhoAir * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
+
+
+
+
+
+
+
+
+
 }

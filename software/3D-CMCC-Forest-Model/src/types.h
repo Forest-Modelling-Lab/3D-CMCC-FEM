@@ -4,6 +4,7 @@
 
 /* precision */
 #include "common.h"
+#include "math.h"
 
 #define NO_DATA -9999
 
@@ -689,6 +690,8 @@ typedef struct {
 	int top_layer;
 	int saplings_counter;
 	float snow;  //amount of snow in Kg H2o
+	float gcorr;
+	float air_pressure;
 
 
 } CELL;
@@ -797,6 +800,18 @@ typedef struct {
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
 #define LATENT_HEAT_FUSION       350	  //Latent heat of fusion (kJ/kg)
 #define LATENT_HEAT_SUBLIMATION 2845      //Latent heat of sublimation (kJ/kg)
+#define SBC                  5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
+#define CP                    1010.0      //(J/kg K) specific heat of air
+#define G_STD    			 9.80665      //(m/s2) standard gravitational accel. */
+#define P_STD               101325.0      //(Pa) standard pressure at 0.0 m elevation */
+#define T_STD                 288.15      //(K) standard temp at 0.0 m elevation  */
+#define MA                28.9644e-3      //(kg/mol) molecular weight of air */
+#define MW                18.0148e-3      //(kg/mol) molecular weight of water */
+#define CP                    1010.0      //(J/kg K) specific heat of air */
+#define LR_STD                0.0065      //(-K/m) standard temperature lapse rate */
+#define R                     8.3143      //(m3 Pa/ mol K) gas law constant */
+#define SBC                  5.67e-8      //(W/(m2 K4)) Stefan-Boltzmann constant */
+#define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 
 
 //COSTANT

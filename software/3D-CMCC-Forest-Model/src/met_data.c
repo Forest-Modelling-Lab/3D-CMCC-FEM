@@ -17,10 +17,9 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
 
 	static float snow_abs = 0.6; // absorptivity of snow
 	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coef
-	float inc_rad;  //incident radiation (kJ/m2/d) incident radiation
 	float snow_melt;
 	float snow_sublimation;
-	float incident_rad;  //incident radiation in kJ
+	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation
 	float melt, t_melt, r_melt, r_sub;
 
 	t_melt = r_melt = r_sub = 0;
