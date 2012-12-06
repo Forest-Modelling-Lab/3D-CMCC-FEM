@@ -259,28 +259,28 @@ log "\n"
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Pre-execution settings }
 
 ### Filters execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-#for IMG in "${IMG_SELECTED[@]}" ; do
-#	if [ "${IMG}" == "Filters" ] ; then
-#		log "### { Start creating ${IMG} images...... ###\n"
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Filters" ] ; then
+		log "### { Start creating ${IMG} images...... ###\n"
 		
-#		#MSG="Conversion of AOI shapefile into tiff"
-#		#INPUT_01="${IN_00}/Sicily.shp"
-#		#OUTPUT_01="${WK_00}/Sicily.tif"
-#		#log "${MSG} ...\n"
-#		#gdal_rasterize ${PAR_01} ${PAR_02} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
-#		#check "${MSG} failed on ${INPUT_01}.\n"
-#		#MSG="Conversion of tiff projection from longlat to UTM"
-#		#OUTPUT_02="${WK_00}/Madonie_no_remap.tif"
-#		#log "${MSG} ...\n"
-#		#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#		#check "${MSG} failed on ${OUTPUT_01}.\n"
-#		#MSG="Remap and cut UTM geotiff image"
-#		#OUTPUT_03="${WK_00}/Madonie.tif"
-#		#log "${MSG} ...\n"
-#		#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#		#check "${MSG} failed on ${OUTPUT_02}.\n"
-#
-#			MSG="Conversion of shapefile georef"
+		#MSG="Conversion of AOI shapefile into tiff"
+		#INPUT_01="${IN_00}/Sicily.shp"
+		#OUTPUT_01="${WK_00}/Sicily.tif"
+		#log "${MSG} ...\n"
+		#gdal_rasterize ${PAR_01} ${PAR_02} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+		#check "${MSG} failed on ${INPUT_01}.\n"
+		#MSG="Conversion of tiff projection from longlat to UTM"
+		#OUTPUT_02="${WK_00}/Madonie_no_remap.tif"
+		#log "${MSG} ...\n"
+		#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		#check "${MSG} failed on ${OUTPUT_01}.\n"
+		#MSG="Remap and cut UTM geotiff image"
+		#OUTPUT_03="${WK_00}/Madonie.tif"
+		#log "${MSG} ...\n"
+		#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+		#check "${MSG} failed on ${OUTPUT_02}.\n"
+
+#		MSG="Conversion of shapefile georef"
 #		INPUT_01="${IN_00}/CFRS_ParcoMadonie.shp"
 #		OUTPUT_01="${WK_00}/CFRS_ParcoMadonie_utm.shp"
 #		log "${MSG} ...\n"
@@ -472,15 +472,15 @@ log "\n"
 #		log "${MSG} ...\n"
 #		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_00}
 #		check "${MSG} failed.\n"
-#
-#		clean "${WK_00}"
-#
-#		log "### .......stop creating ${IMG} images } ###\n"
-#    fi
-#done
-#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
-#
-#### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+
+		clean "${WK_00}"
+
+		log "### .......stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
+
+### Y_planted execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 #for IMG in "${IMG_SELECTED[@]}" ; do
 #	if [ "${IMG}" == "Y_planted" ] ; then
 #    	log "### { Start creating ${IMG} images.... ###\n"
