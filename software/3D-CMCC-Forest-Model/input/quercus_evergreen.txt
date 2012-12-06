@@ -49,7 +49,7 @@ MAXCOND	0.021	//(Nolè et al. 2009) Maximum Canopy Conductance in m/sec
 				
 
 //AGE for timber
-MAXAGE	120		       	//Determines rate of "physiological decline" of forest
+MAXAGE	80		       	//Determines rate of "physiological decline" of forest
 RAGE	0.75	            	//Relative Age to give fAGE = 0.5
 NAGE	4	               	//Power of relative Age in function for Age
 
@@ -136,9 +136,9 @@ DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.674         //a value from Kostner for 
-SAP_B         1.992         //b value from Kostner for 
-SAP_LEAF      2600          //leaf area/sapwood max  ratio in pipe model  
+SAP_A	0.674         //a value from Kostner for 
+SAP_B	1.992         //b value from Kostner for 
+SAP_LEAF	2600          //leaf area/sapwood max  ratio in pipe model  
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling   
 HMAX	30         	//Max Height in m for Chapman-Richards Function 	
