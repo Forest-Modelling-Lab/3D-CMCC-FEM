@@ -11,10 +11,16 @@
 #include "math.h"
 #include "types.h"
 
-void Get_initialization_biomass_data (SPECIES *s)
+void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const int years)
 {
 
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+
 	float sapwood_perc;
+
+	Log("LAI from NDVI = %g\n", met[0].ndvi_lai);
 
 
 	Log("No Biomass Data are available for model initialization \n");
@@ -22,8 +28,16 @@ void Get_initialization_biomass_data (SPECIES *s)
 
 	if (s->phenology == E && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
-		Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
-		exit (1);
+		if (settings->version == 'u')
+		{
+			Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
+			exit (1);
+		}
+		else
+		{
+			s->value[LAI] = met[0].ndvi_lai;
+			Log("MODEL RUN FOR EVERGREEN GET LAI VALUES FROM SATELLITE IMAGE = %g\n", s->value[LAI]);
+		}
 	}
 
 	//todo:

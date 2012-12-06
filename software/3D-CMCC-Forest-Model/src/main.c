@@ -964,6 +964,8 @@ int main(int argc, char *argv[])
 	int years,
 	month;
 
+	MET_DATA *met;
+
 	YOS *yos;
 	ROW *rows;
 	MATRIX *m;
@@ -1433,7 +1435,7 @@ int main(int argc, char *argv[])
 		for ( years = 0; years < years_of_simulation; years++)
 		{
 			/* model */
-			matrix_summary (m, years, yos );
+			matrix_summary (m, years, yos);
 
 			/*compute number of vegetative months*/
 			Log("compute vegetative months for version '%c'\n", settings->version);
