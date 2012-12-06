@@ -202,7 +202,6 @@ TEMPLATE="${INPUTDATASETDIR}/${LOCATION}/images/AvDBH.tif"
 
 # Production of NPP, GPP, ABG, BGB, MAI and CAI output images
 for Y in ${YEARS[@]} ; do
-
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_GPP=""
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
@@ -267,7 +266,7 @@ for Y in ${YEARS[@]} ; do
 		exit 10
 	fi
 	log "...getOutputCMCC exited succesfully."
-one
+done
 
 FIRST_YEAR="${YEARS[0]}"
 LAST_YEAR="${YEARS[$((${#YEARS[@]}-1))]}"
