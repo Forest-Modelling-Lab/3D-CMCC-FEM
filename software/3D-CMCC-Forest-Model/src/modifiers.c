@@ -59,7 +59,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	//Log("--RH = %g %%\n", met[month].rh);
 	//Log("--vpd = %g mbar", vpd);
 
-	//The input VPD data is in mbar
+	//The input VPD data is in KPa
 	//if the VPD is in KPa
 	//Convert to mbar
 	//1 Kpa = 10 mbar

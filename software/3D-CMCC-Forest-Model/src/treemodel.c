@@ -118,7 +118,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		//compute vpd from RH
 		//todo remove if used VPD
-		vpd =  met[month].vpd; //Get_vpd (met, month);
+		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
+		//VPD USED MUST BE IN mbar
+		vpd =  met[month].vpd * 10.0; //Get_vpd (met, month);
 
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].solar_rad;
