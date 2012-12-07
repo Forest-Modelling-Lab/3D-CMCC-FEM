@@ -33,7 +33,7 @@ SPECIES_ID_PRESENT=(1 2 6 7)
 
 # Some parameters values per specie:
 Y_PLANTED_ID=(Undefined 1981 1963 null null null 1991 1986)
-N_CELL_ID=(Undefined 5.0 49.0 null null null 12.333 10.667)
+N_CELL_ID=(Undefined 5 49 null null null 12 11)
 AVDBH_ID=(Undefined 18.33 26.697 null null null 12.387 18.473)
 HEIGHT_ID=(Undefined 12.79 12.427 null null null 7.04 7.0)
 
@@ -1831,7 +1831,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	PKG_IMG_DIR="${PKG_DIR}/${SITE}/images"
     	PKG_TXT_DIR="${PKG_DIR}/${SITE}/txt"
     	
-    	MSG="Craeting package directories"
+    	MSG="Creating package directories"
 		log "${MSG} ...\n"
     	mkdir -p ${PKG_IMG_DIR} ${PKG_TXT_DIR}
     	check "${MSG} failed.\n"
