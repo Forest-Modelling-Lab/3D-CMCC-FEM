@@ -36,7 +36,7 @@ COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al.,
 BLCOND	0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 
 //AGE for timber
-MAXAGE	80             //Determines rate of "physiological decline" of forest //modified
+MAXAGE	120             //Determines rate of "physiological decline" of forest //modified
 RAGE	0.75            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
@@ -44,7 +44,7 @@ MAXAGE_S	200     //Determines rate of "physiological decline" of forest
 RAGE_S	0.7            //Relative Age to give fAGE = 0.5
 NAGE_S	3               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN	8       //Minimum temperature for growth
+GROWTHTMIN	4       //Minimum temperature for growth
 GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	16      //Optimum temperature for growth
 GROWTHSTART	14       //average temperature for starting growth in °C
