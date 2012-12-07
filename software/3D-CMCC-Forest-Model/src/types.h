@@ -812,6 +812,8 @@ typedef struct {
 #define R                     8.3143      //(m3 Pa/ mol K) gas law constant */
 #define SBC                  5.67e-8      //(W/(m2 K4)) Stefan-Boltzmann constant */
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
+#define PPFD50      			75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
+#define EPAR        			4.55      //(umol/J) PAR photon energy ratio */
 
 
 //COSTANT

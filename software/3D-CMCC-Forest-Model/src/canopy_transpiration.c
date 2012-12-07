@@ -139,6 +139,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//CANOPY TRASPIRATION FOLLOWING BIOME APPROACH
 	float tav_k; //Average temperature in Kelvin
 	float rr; //resistance to radiative heat transfer through air
+	float gl_bl_corr;  //leaf boundary layer conductance corrected for temperature and pressure
+	float gl_c_corr; //leaf cuticolar conductance corrected for temperature and pressure
+	float ppfd_sun;  //photosynthetic photon flux density (umol/m2/s) PPFD for 1/2 stomatal closure
+	float final_ppfd_sun;
+	float gl_s_sun;   //maximum stomatal condictance
 
 
 	//todo move into atmosphere.c
@@ -159,9 +164,98 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("Air pressure = %g Pa\n", c->air_pressure);
 
 	/* temperature and pressure correction factor for conductances */
-	//c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 
 
+
+
+	/* leaf boundary-layer conductance */
+	gl_bl_corr = s->value[BLCOND]* c->gcorr;
+	Log("gl_bl_corr = %g\n", gl_bl_corr);
+
+	/* leaf cuticular conductance */
+	//todo insert CCOND into species.txt
+    gl_c_corr = /*s->value[CCOND]*/ 0.00006 * c->gcorr;
+    Log("gl_c_corr = %g\n", gl_c_corr);
+
+
+	/* leaf stomatal conductance: first generate multipliers, then apply them
+	to maximum stomatal conductance */
+	/* calculate stomatal conductance radiation multiplier: */
+
+
+	/* photosynthetic photon flux density  */
+	ppfd_sun = s->value[APAR] * EPAR;
+	Log("ppfd_sun = %g\n", ppfd_sun);
+
+	/* photosynthetic photon flux density conductance control */
+	ppfd_sun /= (PPFD50 + ppfd_sun);
+	Log("ppfd_sun = %g\n", ppfd_sun);
+
+
+	/* apply all multipliers to the maximum stomatal conductance */
+	//Currently I will use the 3-PG modifiers
+	final_ppfd_sun = ppfd_sun * s->value[F_SW] * s->value[F_T] * s->value[F_VPD];
+	Log("final_ppfd_sun = %g\n", final_ppfd_sun);
+	gl_s_sun = /*s->value[MAX_STOM_COND]*/ 0.006 * final_ppfd_sun * c->gcorr;
+	Log("gl_s_sun = %g\n", gl_s_sun);
+
+	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
+	float gl_e_wv;
+	gl_e_wv = gl_bl_corr;
+	Log("gl_e_wv = %g\n", gl_e_wv);
+
+
+
+	/* Leaf conductance to transpired water vapor, per unit projected
+	LAI.  This formula is derived from stomatal and cuticular conductances
+	in parallel with each other, and both in series with leaf boundary
+	layer conductance. */
+	float gl_t_wv_sun;
+	gl_t_wv_sun = (gl_bl_corr * (gl_s_sun))/(gl_bl_corr + gl_s_sun + gl_c_corr);
+	Log("gl_t_wv_sun = %g\n", gl_t_wv_sun);
+
+	/* Leaf conductance to sensible heat, per unit all-sided LAI */
+	float gl_sh;
+	gl_sh = gl_bl_corr;
+	Log("gl_sh = %g\n", gl_sh);
+
+
+	float lai;
+	if (settings->version == 'u')
+	{
+		lai = s->value[LAI];
+	}
+	else
+	{
+		lai = met[month].ndvi_lai;
+	}
+
+	/* Canopy conductance to evaporated water vapor */
+	float gc_e_wv;
+	gc_e_wv = gl_e_wv * lai;
+	Log("LAI = %g\n", lai);
+	Log("gc_e_wv = %g\n", gc_e_wv);
+
+	/* Canopy conductane to sensible heat */
+	float gc_sh;
+	gc_sh = gl_sh * lai;
+	Log("gc_sh = %g\n", gc_sh);
+
+	float rv;  //resistance to latent heat transfer
+	rv = 1.0/gc_e_wv;
+	Log("rv = %g\n", rv);
+	float rh;  //resistance to convective heat transfer
+	rh = 1.0/gc_sh;
+	Log("rh = %g\n", rh);
+	//todo make a better function using values from light.c
+	float swabs; //absorbed shortwave radiation in W/m^2
+	swabs = c->net_radiation * (1 -exp (-s->value[K]+lai));
+	Log("swabs = %g\n", swabs);
+
+
+	/*PENMAN-MONTEITH*/
+	/* call penman-monteith function, returns e in kg/m2/s */
 
 	//todo per finire la parte di BIOME devo inserire anche la parte di VPD
 	/* assign tav (Celsius) and tav_k (Kelvins) */
@@ -172,6 +266,58 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
     /* calculate resistance to radiative heat transfer through air, rr */
     rr = rhoAir * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
+
+    /* calculate combined resistance to convective and radiative heat transfer,
+    parallel resistances : rhr = (rh * rr) / (rh + rr) */
+    float rhr;
+    rhr = (rh * rr) / (rh + rr);
+
+    /* calculate latent heat of vaporization as a function of ta */
+    float lhvap;
+    lhvap = 2.5023e6 - 2430.54 * met[month].tav;
+
+    /* calculate temperature offsets for slope estimate */
+    float dt = 0.2; //set the temperature offset for slope calculation
+    t1 = met[month].tav+dt;
+    t2 = met[month].tav-dt;
+
+
+    /* calculate saturation vapor pressures at t1 and t2 */
+    float pvs1, pvs2;
+    pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+    pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+
+    /* calculate slope of pvs vs. T curve, at ta */
+    float esse;
+    esse = (pvs1-pvs2) / (t1-t2);
+
+    /* calculate evaporation, in W/m^2  */
+    float evap;
+    evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
+    	( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
+
+    /* covert evaporation into kg/m^2/s */
+    evap /= lhvap;
+
+    /* convert evaporation into kg/m^2/day */
+    evap *= 84600;
+    Log("Daily transpiration from biome = %g\n", evap);
+
+    /* convert evaporation into kg/m^2/month */
+    evap *= met[month].n_days;
+    Log("Montlhy transpiration from biome = %g\n", evap);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
