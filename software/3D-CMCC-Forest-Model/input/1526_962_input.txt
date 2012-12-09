@@ -1,4 +1,4 @@
 x,y,Age,Species,Phenology,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai
-1526,962,42,Fagussylvatica,D,T,306,0,8.46396,9.66,0,0,0,0,0,0
+1526,962,39,Fagussylvatica,D,T,49,0,12.38,12.42,0,0,0,0,0,0
 
 

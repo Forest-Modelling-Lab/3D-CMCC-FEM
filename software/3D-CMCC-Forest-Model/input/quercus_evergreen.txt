@@ -3,7 +3,7 @@ LIGHT_TOL	4   	//4 = very shade intollerant
 		    	//3 = shade intollerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tollerant
-ALPHA   0.02		//   // Canopy quantum efficiency (molC/molPAR) (0.056, Vats et al., 2011)
+ALPHA   0.038		//Averaged value   // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011)
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.72		//Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, Hoff et al., 2002)
