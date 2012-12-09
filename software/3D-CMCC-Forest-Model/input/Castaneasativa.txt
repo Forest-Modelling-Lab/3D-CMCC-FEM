@@ -47,7 +47,7 @@ GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	16      //Optimum temperature for growth
 GROWTHSTART	14       //average temperature for starting growth in °C
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH  11      //minimum day length for decidu0us
+MINDAYLENGTH  11      //minimum day length for deciduous
 
 //SOIL WATER
 //modified 13 feb 2012
