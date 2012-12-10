@@ -60,15 +60,15 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 	if (s->value[AVDBH] < 9)
 	{
-		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER_A])))*s->value[STEMCONST];
+		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
 	}
 	else if (s->value[AVDBH] > 9 && s->value[AVDBH] < 15)
 	{
-		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER_B])))*s->value[STEMCONST];
+		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
 	}
 	else
 	{
-		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/s->value[STEMPOWER_C])))*s->value[STEMCONST];
+		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
 	}
 
 	//1000 to convert Kg into tons

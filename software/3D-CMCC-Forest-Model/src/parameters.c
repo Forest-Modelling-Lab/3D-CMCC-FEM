@@ -81,9 +81,9 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					s->value[PRX],
 					s->value[PRN],
 					s->value[STEMCONST],
-					s->value[STEMPOWER_A],
-					s->value[STEMPOWER_B],
-					s->value[STEMPOWER_C]
+					STEMPOWER_A,
+					STEMPOWER_B,
+					STEMPOWER_C
 			);
 
 

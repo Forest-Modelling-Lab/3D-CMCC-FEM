@@ -102,11 +102,6 @@ SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 
 
-//these values species independent
-STEMPOWER_A	2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
-STEMPOWER_B	2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
-STEMPOWER_C	2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
-
 //MORTALITY
 WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
 THINPOWER	2       //Power in self-thinning rule

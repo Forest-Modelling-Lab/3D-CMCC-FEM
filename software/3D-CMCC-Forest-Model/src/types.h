@@ -167,10 +167,7 @@ enum {
 	BRANCHTTOVER,	                //Average yearly branch turnover rate
 	//RTTOVER,                    //Average monthly root turnover rate
 
-	//STEMCONST,                  //Constant in the Stem Mass v. diameter relationship
-	STEMPOWER_A,                  //Power in the Stem Mass v. diameter relationship dbh < 9cm
-	STEMPOWER_B,                  //Power in the Stem Mass v. diameter relationship 9 < dbh 15
-	STEMPOWER_C,                  //Power in the Stem Mass v. diameter relationship dbh > 15
+
 
 	//MORTALITY
 	WSX1000,                    //Max stem mass (kg) per tree at 1000 trees/hectare
@@ -820,6 +817,12 @@ typedef struct {
 #define ln2              0.693147181
 #define eps                   0.0001
 #define e				  2.71828183     //numero di nepero/eulero
+
+
+
+#define  STEMPOWER_A	        2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
+#define  STEMPOWER_B	        2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
+#define  STEMPOWER_C	        2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
 
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 

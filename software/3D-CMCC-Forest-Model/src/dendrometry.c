@@ -26,15 +26,15 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 	if (oldavDBH < 9)
 	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / s->value[STEMPOWER_A]));
+		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
 	}
 	else if (oldavDBH > 9 && oldavDBH < 15)
 	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / s->value[STEMPOWER_B]));
+		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
 	}
 	else
 	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / s->value[STEMPOWER_C]));
+		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
 	}
 	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
 
