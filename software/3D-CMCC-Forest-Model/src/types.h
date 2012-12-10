@@ -81,7 +81,6 @@ enum {
 	INITIAL_M_LAI,               //FIRST MONTH OF GROWING SEASON LAI DEFAULT VALUES FOR DECIDUOUS
 
 	SLA,                         //Specific Leaf Area cm^2/g
-	SLAmkg,                      //Convert SLA in m^2/Kg
 
 	//FRACTION BRANCH-BARK
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)
@@ -355,6 +354,7 @@ enum {
 	LAI_CTEM,
 	LAI_LPJ,
 	SLA_LPJ,
+	SLAmkg,
 
 	INITIAL_M_C_LAI,             //FIRST MONTH OF GROWING SEASON LAI COMPUTED BY ONE/THIRD OF PREVIOUS YEARLY BIOMASS ALLOCATED FOR DECIDUOUS  see (Schwalm et al., 2004)
 
@@ -814,6 +814,7 @@ typedef struct {
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 #define PPFD50      			75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
 #define EPAR        			4.55      //(umol/J) PAR photon energy ratio */
+#define SLAMKG				     0.1	  //Convert SLA IN cm ^2/g in m^2/Kg
 
 
 //COSTANT

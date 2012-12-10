@@ -19,7 +19,7 @@ TSLA	0             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 INITIAL_M_LAI	0     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
 SLA	115.5             //Specific Leaf Area cm^2/gC  
 					//from 256 to 175 Wang et al., 2006					
-SLAmkg	0.1             //Convert SLA in m^2/Kg
+
 //FRACTION BRANCH-BARK
 FRACBB0	0.2            //Branch and Bark fraction at age 0 for C. sativa Ranger et al 1996
 FRACBB1	0.17            //Branch and Bark fraction for mature stands for C. sativa Ranger et al 1996

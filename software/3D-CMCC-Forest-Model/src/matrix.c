@@ -40,7 +40,6 @@ static const char *species_values[] = {
 		//SPECIFIC LEAF AREA 3DVTModel
 		"INITIAL_M_LAI",               //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS
 		"SLA",                        //Specific Leaf Area cm^2/g
-		"SLAmkg",                     //Convert SLA in m^2/Kg
 
 		//FRACTION BRANCH-BARK
 		"FRACBB0",                    //Branch and Bark fraction at age 0 (m^2/kg)
@@ -556,7 +555,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 				/* convert SLA in m^2/Kg */
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
 				{
-					m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] *= m->cells[cell].heights[height].ages[age].species[species].value[SLA];
+					m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] = m->cells[cell].heights[height].ages[age].species[species].value[SLA] * SLAmkg;
 				}
 			}
 		}

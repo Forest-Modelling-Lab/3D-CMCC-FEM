@@ -21,7 +21,7 @@ TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
 INITIAL_M_LAI	0.5     //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS 
 SLA	278             //Specific Leaf Area cm^2/gC  					
-SLAmkg	0.1             //Convert SLA in m^2/Kg
+
 //FRACTION BRANCH-BARK
 FRACBB0	0.40            //Branch and Bark fraction at age 0
 FRACBB1	0.125            //Branch and Bark fraction for mature stands
