@@ -9,6 +9,7 @@ EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not avail
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.65		//0.54 Extinction coefficient for absorption of PAR by canopy 
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
+ALBEDO 	0.2
 //LEAF AREA INDEX
 LAIGCX	4               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception

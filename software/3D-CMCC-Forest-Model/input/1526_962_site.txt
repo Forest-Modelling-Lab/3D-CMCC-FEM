@@ -7,8 +7,6 @@ Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
 CO2CONC "387.0" //CO2 concentration
 
-MAXALB "0.2" //albedo
-
 INITIALLITTER "2" //Initial Litter
 
 MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)

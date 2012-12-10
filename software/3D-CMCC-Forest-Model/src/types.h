@@ -65,6 +65,8 @@ enum {
 
 	K,                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 
+	ALBEDO,
+
 
 	//LEAF AREA INDEX
 	LAIGCX,                     //LAI for maximum canopy conductance
@@ -720,8 +722,6 @@ typedef struct
 	lon,
 	Y,
 	co2Conc,
-	//todo move albedo into species.txt
-	max_alb,
 	initialLitter,
 	min_frac_maxasw,  //wilting point
 	//maxAsw,
