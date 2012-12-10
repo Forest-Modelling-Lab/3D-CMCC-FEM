@@ -44,7 +44,7 @@ MAXAGE_S	200     //Determines rate of "physiological decline" of forest
 RAGE_S	0.7            //Relative Age to give fAGE = 0.5
 NAGE_S	3               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN	2       //Minimum temperature for growth
+GROWTHTMIN	4       //Minimum temperature for growth
 GROWTHTMAX	36      //Maximum temperature for growth
 GROWTHTOPT	16      //Optimum temperature for growth
 GROWTHSTART	14       //average temperature for starting growth in °C
