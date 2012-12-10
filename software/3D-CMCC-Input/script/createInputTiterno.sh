@@ -1387,284 +1387,282 @@ done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - VPD execution }
 
 ### Precip execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-#for IMG in "${IMG_SELECTED[@]}" ; do
-#	if [ "${IMG}" == "Precip" ] ; then
-#    	log "### { Start creating ${IMG} images....... ###\n"
-#    	
-#    	NAME_MASK_TOT="${PREF}_total_mask.tif"
-#		MSG="Copy filter from ${OUT_00}"
-#		log "${MSG} ...\n"
-#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
-#		check "${MSG} failed.\n"
-#		
-#    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
-#    	
-#    	UNITY="mm/month"
-#    	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
-#			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
-#			MONTH=${DATE:5:2}
-#			YEAR=${DATE:0:4}
-#			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
-#			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
-#	
-#			# Original precipitations data are mm/hh
-#			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
-#			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
-#			log "${MSG} ...\n"
-#			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			# Data conversion from mm/hh into mm/month
-#			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
-#				HOURS_IN_MONTH=720.0 # 30*24=720 
-#			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
-#				HOURS_IN_MONTH=744.0 # 31*24=744
-#			elif [ "${MONTH}" == "02" ] ; then
-#				leapYear "${YEAR}"
-#				LEAP="${?}"
-#				if [ "${LEAP}" -eq "1" ] ; then
-#					HOURS_IN_MONTH=696.0 # 29*24=696
-#				else
-#					HOURS_IN_MONTH=672.0 # 28*24=672
-#				fi
-#			fi
-#			
-#			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
-#			MSG="Divide every pixel value for number of hours in month"
-#			log "${MSG} ...\n"
-#			gdal_calc.py -A ${OUTPUT_01} --outfile=${OUTPUT_02} --calc="(A*${HOURS_IN_MONTH})" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			MSG="Conversion of tiff projection from longlat to UTM"
-#			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
-#			log "${MSG} ...\n"
-#			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_02}.\n"
-#			
-#			MSG="Remap and cut UTM geotiff image"
-#			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_03}.\n"
-#			
-#			MSG="Mask ${IMG}"
-#			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
-#			log "${MSG} ...\n"
-#			gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#    	done
-#    	
-#    	# Create output years images
-#		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
-#		for YYYY in "${YEARS_PROC[@]}" ; do
-#			MONTHS=()
-#			for MM in "${MONTHS_PROC[@]}" ; do
-#				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
-#				MONTHS+=("${INPUT_03}")				
-#			done
-#			
-#			MSG="Create multiband ${IMG} image"
-#			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#		
-#			MSG="Copy ${IMG} into ${OUT_14}"
-#			log "${MSG} ...\n"
-#			cp ${OUTPUT_06} -t ${OUT_14}
-#			check "${MSG} failed.\n"
-#		done
-#    	
-#    	clean "${WK_14}"
-#    	
-#    	log "### ........stop creating ${IMG} images } ###\n"
-#    fi
-#done
-#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Precip execution }
-#
-#### LAI execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-#for IMG in "${IMG_SELECTED[@]}" ; do
-#	if [ "${IMG}" == "LAI" ] ; then
-#    	log "### { Start creating ${IMG} images.......... ###\n"
-#    	
-#    	NAME_MASK_TOT="Total_mask.tif"
-#		MSG="Copy filter from ${OUT_00}"
-#		log "${MSG} ...\n"
-#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_15}
-#		check "${MSG} failed.\n"
-#		
-#    	MASK_TOT="${WK_15}/${NAME_MASK_TOT}"
-#    	
-#    	UNITY="m^2/m^2 (foliage_area/soil_area)"
-#    	METADATA="SITE=${SITE},VALUES=LAI,UNITY_OF_MEASURE=${UNITY}"
-#    	#for INPUT_01 in $( ls ${IN_15}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
-#		for INPUT_01 in $( ls ${IN_15}/LayerDates* ) ; do
-#    		INPUT_02="$( echo ${INPUT_01} | sed s/LayerDates_// | sed s/$/.tif/ )"
-#
-#    		IDX="1"
-#    		MONTH_PREV="01"
-#    		SAME_MONTH_IMG=()
-#    		LAI_MONTHS=()
-#    		while read LINE; do
-#    			DATE=${LINE:0:10}
-#    			OUTPUT_01="${WK_15}/NDVI_Lambda500_${DATE}.tif"
-#				MSG="Extraction of band ${IDX} from ${INPUT_02}"
-#				log "${MSG} ...\n"
-#    			gdal_translate ${PAR_01} -b ${IDX} ${INPUT_02} ${OUTPUT_01}
-#				check "${MSG} failed.\n"
-#    			
-#    			MONTH=${LINE:5:2}
-#    			YEAR=${LINE:0:4}
-#    			
-#    			if [ "${MONTH}" == "${MONTH_PREV}" ] ; then
-#    				SAME_MONTH_IMG+=("${OUTPUT_01}")
-#				else
-#					MSG="Getting average for month ${MONTH_PREV}"
-#					OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH_PREV}.tif"
-#					log "${MSG} ...\n"	
-#					${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH_PREV}.tif"
-#					MSG="Divide every pixel value per 10000"
-#					log "${MSG} ...\n"
-#					gdal_calc.py -A ${OUTPUT_02} --outfile=${OUTPUT_03} --calc="(A*0.0001)" &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					# For December, January, February and March put LAI to 0.0 if its value is < 1.0
-#					if [ "${MONTH_PREV}" == "01" ] || [ "${MONTH_PREV}" == "02" ] || [ "${MONTH_PREV}" == "03" ] ; then
-#						THRESHOLD="-t 1.0"
-#					else
-#						THRESHOLD=""
-#					fi
-#					
-#					OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH_PREV}.tif"
-#					MSG="Get LAI from NDVI"
-#					log "${MSG} ...\n"
-#					${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} ${THRESHOLD} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					MSG="Mask ${IMG}"
-#					OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
-#					log "${MSG} ...\n"
-#					gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					LAI_MONTHS+=("${OUTPUT_05}")
-#			
-#					SAME_MONTH_IMG=()
-#					SAME_MONTH_IMG+=("${OUTPUT_01}")
-#    			fi
-#				MONTH_PREV=${MONTH}
-#    			IDX=$(( ${IDX} + 1 ));
-#			done < "${INPUT_01}"
-#			# Work on last month (December)
-#			MSG="Getting average for month ${MONTH}"
-#			OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH}.tif"
-#			log "${MSG} ...\n"	
-#			${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH}.tif"
-#			MSG="Divide every pixel value per 10000"
-#			log "${MSG} ...\n"
-#			gdal_calc.py -A ${OUTPUT_02} --outfile=${OUTPUT_03} --calc="(A*0.0001)" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH}.tif"
-#			MSG="Get LAI from NDVI"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} -t 1.0 &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			MSG="Mask ${IMG}"
-#			OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
-#			log "${MSG} ...\n"
-#			gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			LAI_MONTHS+=("${OUTPUT_05}")
-#			
-#			OUTPUT_06="${WK_15}/LAI_${YEAR}.tif"
-#			MSG="Get multiband LAI image"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/mergeImg -b ${#LAI_MONTHS[@]} -i "${LAI_MONTHS[@]}" -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			MSG="Copy LAI multiband image into output dir"
-#			log "${MSG} ...\n"
-#			cp ${OUTPUT_06} ${OUT_15}
-#			check "${MSG} failed.\n"
-#		done
-#		
-#    	clean "${WK_15}"
-#
-#    	log "### ...........stop creating ${IMG} images } ###\n"
-#    fi
-#done
-#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
-#
-#### Soil execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-#for IMG in "${IMG_SELECTED[@]}" ; do
-#	if [ "${IMG}" == "Soil" ] ; then
-#    	log "### { Start creating ${IMG} images......... ###\n"
-#    	
-#    	NAME_MASK_TOT="Total_mask.tif"
-#		MSG="Copy filter from ${OUT_00}"
-#		log "${MSG} ...\n"
-#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_16}
-#		check "${MSG} failed.\n"
-#		
-#    	MASK_TOT="${WK_16}/${NAME_MASK_TOT}"
-#    	
-#    	for INPUT_01 in $( ls ${IN_16}/*.asc ) ; do
-#			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_01}"
-#			OUTPUT_01="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/.tif/ ) )"
-#			log "${MSG} ...\n"
-#			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
-#			check "${MSG} failed on ${INPUT_01}.\n"
-#	
-#			MSG="Changing zone from 32 to 33 of ${OUTPUT_01}"
-#			OUTPUT_02="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_zone33.tif/ ) )"
-#			log "${MSG} ...\n"
-#			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_01}.\n"
-#
-#			MSG="Remap of UTM geotiff image"
-#			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m.tif/ ) )"
-#			log "${MSG} ...\n"	
-#			${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_02}.\n"
-#			
-#			MSG="Mask ${IMG}"
-#			OUTPUT_04="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m_masked.tif/ ) )"
-#			log "${MSG} ...\n"
-#			gdal_calc.py -A ${OUTPUT_03} -B ${MASK_TOT} --outfile=${OUTPUT_04} --calc="(A*B)" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"	
-#		done
-#		
-#		# Prepare layers for multiband image
-#		INPUT_02+=("$( ls ${WK_16}/*argilla*30m_masked.tif)" "$( ls ${WK_16}/*limo*30m_masked.tif)" "$( ls ${WK_16}/*sabbia*30m_masked.tif)" "$( ls ${WK_16}/*densita*30m_masked.tif)" "$( ls ${WK_16}/*profondita*30m_masked.tif)")
-#		
-#		METADATA="SITE=${SITE},VALUE=SOIL,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=density (g/cm3),BAND5=soil depth (cm)"
-#		MSG="Create multiband ${IMG} image"
-#		OUTPUT_05="${WK_16}/${IMG}.tif"
-#		log "${MSG} ...\n"
-#		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_05} -m "${METADATA}"
-#		check "${MSG} failed.\n"
-#		
-#		MSG="Copy ${IMG} into ${OUT_16}"
-#		log "${MSG} ...\n"
-#		cp ${OUTPUT_05} -t ${OUT_16}
-#		check "${MSG} failed.\n"
-#
-#		clean "${WK_16}"
-#    	
-#    	log "### ..........stop creating ${IMG} images } ###\n"
-#    fi
-#done
-#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Soil execution }
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Precip" ] ; then
+    	log "### { Start creating ${IMG} images....... ###\n"
+    	
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
+    	
+    	UNITY="mm/month"
+    	for INPUT_01 in $( ls ${IN_14}/${PREF}/*.nc ) ; do
+			DATE=$( echo $( basename ${INPUT_01} ) | cut -d '.' -f '2' )
+			YEAR=${DATE:0:4}
+			MONTH=${DATE:4:2}
+	
+			# Original precipitations data are mm/hh
+			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
+			MSG="Extraction of precipitations subdataset from ${INPUT_01}"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_01}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			# Data conversion from mm/hh into mm/month
+			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
+				HOURS_IN_MONTH=720.0 # 30*24=720 
+			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
+				HOURS_IN_MONTH=744.0 # 31*24=744
+			elif [ "${MONTH}" == "02" ] ; then
+				leapYear "${YEAR}"
+				LEAP="${?}"
+				if [ "${LEAP}" -eq "1" ] ; then
+					HOURS_IN_MONTH=696.0 # 29*24=696
+				else
+					HOURS_IN_MONTH=672.0 # 28*24=672
+				fi
+			fi
+			
+			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
+			MSG="Divide every pixel value for number of hours in month for ${DATE}"
+			log "${MSG} ...\n"
+			gdal_calc.py -A ${OUTPUT_01} --outfile=${OUTPUT_02} --calc="(A*${HOURS_IN_MONTH})" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Conversion of tiff projection from longlat to UTM for ${DATE}"
+			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_02}.\n"
+			
+			MSG="Remap and cut UTM geotiff image for ${DATE}"
+			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_03}.\n"
+			
+			MSG="Mask ${IMG} for ${DATE}"
+			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
+			log "${MSG} ...\n"
+			gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+    	done
+    	
+    	# Create output years images
+		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
+		for YYYY in "${YEARS_PROC[@]}" ; do
+			MONTHS=()
+			for MM in "${MONTHS_PROC[@]}" ; do
+				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
+				MONTHS+=("${INPUT_03}")				
+			done
+			
+			MSG="Create multiband ${IMG} image for ${DATE}"
+			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+		
+			MSG="Copy ${IMG} into ${OUT_14}"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_06} -t ${OUT_14}
+			check "${MSG} failed.\n"
+		done
+    	
+    	clean "${WK_14}"
+    	
+    	log "### ........stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Precip execution }
+
+### LAI execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "LAI" ] ; then
+    	log "### { Start creating ${IMG} images.......... ###\n"
+    	
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_15}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_15}/${NAME_MASK_TOT}"
+    	
+    	UNITY="m^2/m^2 (foliage_area/soil_area)"
+    	METADATA="SITE=${SITE},VALUES=LAI,UNITY_OF_MEASURE=${UNITY}"
+    	#for INPUT_01 in $( ls ${IN_15}/${PREF}/LayerDates_NDVI_YearlyLambda500_year2000 ) ; do
+		for INPUT_01 in $( ls ${IN_15}/${PREF}/LayerDates* ) ; do
+    		INPUT_02="$( echo ${INPUT_01} | sed s/LayerDates_// | sed s/$/.tif/ )"
+
+    		IDX="1"
+    		MONTH_PREV="01"
+    		SAME_MONTH_IMG=()
+    		LAI_MONTHS=()
+    		while read LINE; do
+    			DATE=${LINE:0:10}
+    			OUTPUT_01="${WK_15}/NDVI_Lambda500_${DATE}.tif"
+				MSG="Extraction of band ${IDX} from ${INPUT_02} and cut to subwindow"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -b ${IDX} -projwin ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} -a_ullr  ${UL_LON} ${UL_LAT} ${LR_LON} ${LR_LAT} ${INPUT_02} ${OUTPUT_01}
+				check "${MSG} failed.\n"
+    			
+    			MONTH=${LINE:5:2}
+    			YEAR=${LINE:0:4}
+    			
+    			if [ "${MONTH}" == "${MONTH_PREV}" ] ; then
+    				SAME_MONTH_IMG+=("${OUTPUT_01}")
+				else
+					MSG="Getting average for month ${MONTH_PREV}"
+					OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH_PREV}.tif"
+					log "${MSG} ...\n"	
+					${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH_PREV}.tif"
+					MSG="Divide every pixel value per 10000"
+					log "${MSG} ...\n"
+					gdal_calc.py -A ${OUTPUT_02} --outfile=${OUTPUT_03} --calc="(A*0.0001)" &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					# For December, January, February and March put LAI to 0.0 if its value is < 1.0
+					if [ "${MONTH_PREV}" == "01" ] || [ "${MONTH_PREV}" == "02" ] || [ "${MONTH_PREV}" == "03" ] ; then
+						THRESHOLD="-t 1.0"
+					else
+						THRESHOLD=""
+					fi
+					
+					OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH_PREV}.tif"
+					MSG="Get LAI from NDVI"
+					log "${MSG} ...\n"
+					${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} ${THRESHOLD} &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					MSG="Mask ${IMG}"
+					OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
+					log "${MSG} ...\n"
+					gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+					
+					LAI_MONTHS+=("${OUTPUT_05}")
+			
+					SAME_MONTH_IMG=()
+					SAME_MONTH_IMG+=("${OUTPUT_01}")
+    			fi
+				MONTH_PREV=${MONTH}
+    			IDX=$(( ${IDX} + 1 ));
+			done < "${INPUT_01}"
+			# Work on last month (December)
+			MSG="Getting average for month ${MONTH}"
+			OUTPUT_02="${WK_15}/NDVI_Lambda500_Averaged_${YEAR}-${MONTH}.tif"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/calcAverage -n ${#SAME_MONTH_IMG[@]} -i "${SAME_MONTH_IMG[@]}" -o ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			OUTPUT_03="${WK_15}/NDVI_${YEAR}-${MONTH}.tif"
+			MSG="Divide every pixel value per 10000"
+			log "${MSG} ...\n"
+			gdal_calc.py -A ${OUTPUT_02} --outfile=${OUTPUT_03} --calc="(A*0.0001)" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			OUTPUT_04="${WK_15}/LAI_${YEAR}-${MONTH}.tif"
+			MSG="Get LAI from NDVI"
+			log "${MSG} ...\n"
+			${BIN_DIR}/getLAI -i ${OUTPUT_03} -o ${OUTPUT_04} -t 1.0 &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Mask ${IMG}"
+			OUTPUT_05="${WK_15}/${IMG}_${YEAR}${MONTH}_masked.tif"
+			log "${MSG} ...\n"
+			gdal_calc.py -A ${OUTPUT_04} -B ${MASK_TOT} --outfile=${OUTPUT_05} --calc="(A*B)" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			LAI_MONTHS+=("${OUTPUT_05}")
+			
+			OUTPUT_06="${WK_15}/LAI_${YEAR}.tif"
+			MSG="Get multiband LAI image for ${YEAR}"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#LAI_MONTHS[@]} -i "${LAI_MONTHS[@]}" -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Copy LAI multiband image into output dir"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_06} ${OUT_15}
+			check "${MSG} failed.\n"
+		done
+		
+    	clean "${WK_15}"
+
+    	log "### ...........stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - LAI execution }
+
+### Soil execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Soil" ] ; then
+    	log "### { Start creating ${IMG} images......... ###\n"
+    	
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_16}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_16}/${NAME_MASK_TOT}"
+    	
+    	for INPUT_01 in $( ls ${IN_16}/*.asc ) ; do
+			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_01}"
+			OUTPUT_01="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+			check "${MSG} failed on ${INPUT_01}.\n"
+	
+			MSG="Changing zone from 32 to 33 of ${OUTPUT_01}"
+			OUTPUT_02="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_zone33.tif/ ) )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_01}.\n"
+
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_03="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m.tif/ ) )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_02}.\n"
+			
+			MSG="Mask ${IMG}"
+			OUTPUT_04="${WK_16}/$( basename $( echo ${INPUT_01} | sed s/.asc/_30m_masked.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_calc.py -A ${OUTPUT_03} -B ${MASK_TOT} --outfile=${OUTPUT_04} --calc="(A*B)" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"	
+		done
+		
+		# Prepare layers for multiband image
+		INPUT_02+=("$( ls ${WK_16}/*argilla*30m_masked.tif)" "$( ls ${WK_16}/*limo*30m_masked.tif)" "$( ls ${WK_16}/*sabbia*30m_masked.tif)" "$( ls ${WK_16}/*densita*30m_masked.tif)" "$( ls ${WK_16}/*profondita*30m_masked.tif)")
+		
+		METADATA="SITE=${SITE},VALUE=SOIL,BAND1=clay (%),BAND2=silt (%),BAND3=sand (%),BAND4=density (g/cm3),BAND5=soil depth (cm)"
+		MSG="Create multiband ${IMG} image"
+		OUTPUT_05="${WK_16}/${IMG}.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_05} -m "${METADATA}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${IMG} into ${OUT_16}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_05} -t ${OUT_16}
+		check "${MSG} failed.\n"
+
+		clean "${WK_16}"
+    	
+    	log "### ..........stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Soil execution }
 
 ### Packet execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
