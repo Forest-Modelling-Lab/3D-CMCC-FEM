@@ -6,7 +6,7 @@ LIGHT_TOL	4   	//4 = very shade intollerant
 ALPHA   0.038		//Averaged value   // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011)
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-K	0.72		//Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, Hoff et al., 2002)
+K	0.65		//Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, Hoff et al., 2002)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 //ALBEDO	0.12 //(Hoff et al., 2002)
 //LEAF AREA INDEX
@@ -36,7 +36,7 @@ COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar see Pietsch et al.,
 BLCOND	0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND	0.021            //Maximum Canopy Conductance in m/sec 
 //AGE for timber
-MAXAGE	140             //Determines rate of "physiological decline" of forest //modified
+MAXAGE	100             //Determines rate of "physiological decline" of forest //modified
 RAGE	0.75            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
@@ -46,7 +46,7 @@ NAGE_S	0               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth 
 GROWTHTMAX	40      //Maximum temperature for growth 
-GROWTHTOPT	18      //Optimum temperature for growth (Fernandex et al., 2008)
+GROWTHTOPT	20      //Optimum temperature for growth (Fernandex et al., 2008)
 GROWTHSTART	0       //average temperature for starting growth in °C
 GROWTHEND	0       //average temperature for ending growth in °C
 MINDAYLENGTH  0      //minimum day length for decidu0us
