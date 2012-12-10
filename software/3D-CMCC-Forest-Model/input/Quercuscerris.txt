@@ -127,11 +127,7 @@ HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubr
 RPOWER	0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
 
-//LPJ allometric relationships
-KALLOMA	100
-KALLOMB	40
-KALLOMC	0.5
-KRP	1.6
+
 //CHAPMAN-RICHARDS relationships
 CRA	34.597
 CRB	0.038

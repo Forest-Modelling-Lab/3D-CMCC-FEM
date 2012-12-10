@@ -149,11 +149,7 @@ static const char *species_values[] = {
 		"RPOWER",                     //Slope of Asymptotic Crown-Radius from Sortie
 		"CHPOWER",                    //Slope of Asymptotic Crown-Height from Sortie
 
-		//LPJ allometric relationships
-		"KALLOMA",
-		"KALLOMB",
-		"KALLOMC",
-		"KRP",
+
 
 		//CHAPMAN-RICHARDS relationships
 		"CRA",

@@ -130,11 +130,6 @@ HPOWER	0.0353           //Slope of Asymptotic Height
 RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
 CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
 
-//LPJ allometric relationships
-KALLOMA	100
-KALLOMB	40
-KALLOMC	0.5
-KRP	1.6
 //CHAPMAN-RICHARDS relationships
 CRA	23.27
 CRB	0.041
