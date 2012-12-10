@@ -78,8 +78,6 @@ enum {
 	TSLA,                       //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 
 	//SPECIFIC LEAF AREA 3DVTModel
-	INITIAL_M_LAI,               //FIRST MONTH OF GROWING SEASON LAI DEFAULT VALUES FOR DECIDUOUS
-
 	SLA,                         //Specific Leaf Area cm^2/g
 
 	//FRACTION BRANCH-BARK

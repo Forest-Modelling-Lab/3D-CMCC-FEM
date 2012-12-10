@@ -37,8 +37,7 @@ static const char *species_values[] = {
 		"SLA1",                       //Specific Laef Area for mature leaves (m^2/kg)
 		"TSLA",                       //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 
-		//SPECIFIC LEAF AREA 3DVTModel
-		"INITIAL_M_LAI",               //FIRST MONTH OF GROWING SEASON LAI VALUES FOR DECIDUOUS
+		//SPECIFIC LEAF AREA
 		"SLA",                        //Specific Leaf Area cm^2/g
 
 		//FRACTION BRANCH-BARK
