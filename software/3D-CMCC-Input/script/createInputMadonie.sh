@@ -15,6 +15,7 @@ VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
+PREF="Madonie"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
 IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil Packet)
 IMG_SELECTED=()
@@ -119,6 +120,7 @@ UL_LON="399333.291887304978445"
 UL_LAT="4211980.487859229557216"
 LR_LON="437913.291887304978445"
 LR_LAT="4177180.487859229557216"
+AOI_ZONE="33S"
 # Geotiff projections (proj4 definitions from spatialreference.org):
 PROJ="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
@@ -327,7 +329,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		
 		IDX="7"
 		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
-		OUTPUT_08="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
+		OUTPUT_08="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}.tif"
 		log "${MSG} ...\n"
 		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="LE" OR COD_CATEG="SU"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_08} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -344,7 +346,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		FILTER_07="${OUTPUT_09}"
 		
 		MSG="Merge of deciduous species"
-		FILTER_D="${WK_00}/Deciduous_filter.tif"
+		FILTER_D="${WK_00}/${PREF}_deciduous_filter.tif"
 		log "${MSG} ...\n"
 		gdal_merge.py ${PAR_01} -n 0 ${FILTER_01} ${FILTER_02} ${FILTER_06} -o ${FILTER_D} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -352,19 +354,19 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		FILTER_E="${FILTER_07}"
 		
 		MSG="Get a binary mask of type GDT_Byte"
-		MASK_D="${WK_00}/Deciduous_mask.tif"
+		MASK_D="${WK_00}/${PREF}_deciduous_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_D} -o ${MASK_D} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Get a binary mask of type GDT_Byte"
-		MASK_E="${WK_00}/Evergreen_mask.tif"
+		MASK_E="${WK_00}/${PREF}_evergreen_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_E} -o ${MASK_E} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Get a total mask"
-		MASK_TOT="${WK_00}/Total_mask.tif"
+		MASK_TOT="${WK_00}/${PREF}_total_mask.tif"
 		log "${MSG} ...\n"
 		gdal_merge.py ${PAR_01} -n 0 ${MASK_D} ${MASK_E} -o ${MASK_TOT} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -383,28 +385,28 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		
 		IDX="1"
 		MSG="Get a binary mask of ${FILTER_01}"
-		MASK_1="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		MASK_1="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_01} -o ${MASK_1} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		IDX="2"
 		MSG="Get a binary mask of ${FILTER_02}"
-		MASK_2="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		MASK_2="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_02} -o ${MASK_2} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		IDX="6"
 		MSG="Get a binary mask of ${FILTER_06}"
-		MASK_6="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		MASK_6="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_06} -o ${MASK_6} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		IDX="7"
 		MSG="Get a binary mask of ${FILTER_07}"
-		MASK_7="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		MASK_7="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_07} -o ${MASK_7} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -454,14 +456,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_03="${WK_00}/Madonie_dem.tif"
+		OUTPUT_03="${WK_00}/${PREF}_dem.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		M="-0.0064"
 		MSG="Performing DEM rescaling"
-		DEM_SCALED="${WK_00}/Madonie_dem_scaled.tif"
+		DEM_SCALED="${WK_00}/${PREF}_dem_scaled.tif"
 		log "${MSG} ...\n"
 		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -470,6 +472,11 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Copy masks, empty band and scaled DEM into output dir"
 		log "${MSG} ...\n"
 		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_00}
+		check "${MSG} failed.\n"
+		
+		MSG="Copy masks into Species output dir (put into packet for testing/tuning purposes)"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_02}
 		check "${MSG} failed.\n"
 
 		clean "${WK_00}"
@@ -487,10 +494,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	SPECIES_MASK_NAMES=(Undefined null null null null null null null)
     	SPECIES_MASK=(Undefined null null null null null null null)
     	for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
-    		SPECIES_MASK_NAMES[${IDX}]="${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+    		SPECIES_MASK_NAMES[${IDX}]="${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
     		SPECIES_MASK[${IDX}]="${WK_01}/${SPECIES_MASK_NAMES[${IDX}]}"
     		
-    		MSG="Copy ${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
+    		MSG="Copy ${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
 			log "${MSG} ...\n"
 			cp ${OUT_00}/${SPECIES_MASK_NAMES[${IDX}]} -t ${WK_01}
 			check "${MSG} failed.\n"    	
@@ -694,9 +701,9 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Phenology" ] ; then
     	log "### { Start creating ${IMG} images.... ###\n"
     	
-		NAME_MASK_D="Deciduous_mask.tif"
-    	NAME_MASK_E="Evergreen_mask.tif"
-    	NAME_MASK_TOT="Total_mask.tif"
+		NAME_MASK_D="${PREF}_deciduous_mask.tif"
+    	NAME_MASK_E="${PREF}_evergreen_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
     	NAME_EMPTY_BAND="empty_geo.tif"
 		MSG="Copy filters and empty band from ${OUT_00}"
 		log "${MSG} ...\n"
@@ -735,13 +742,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		
 		MSG="Get deciduous pixels"
-		OUTPUT_05="${WK_03}/Deciduous.tif"
+		OUTPUT_05="${WK_03}/${PREF}_deciduous.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_D} -o ${OUTPUT_05} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Get evergreen pixels"
-		OUTPUT_06="${WK_03}/Evergreen.tif"
+		OUTPUT_06="${WK_03}/${PREF}_evergreen.tif"
 		log "${MSG} ...\n"
 		${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_E} -o ${OUTPUT_06} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
@@ -777,7 +784,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Management" ] ; then
     	log "### { Start creating ${IMG} images... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
     	NAME_EMPTY_BAND="empty_geo.tif"
 		MSG="Copy filters and empty band from ${OUT_00}"
 		log "${MSG} ...\n"
@@ -834,10 +841,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	SPECIES_MASK_NAMES=(Undefined null null null null null null null)
     	SPECIES_MASK=(Undefined null null null null null null null)
     	for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
-    		SPECIES_MASK_NAMES[${IDX}]="${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+    		SPECIES_MASK_NAMES[${IDX}]="${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
     		SPECIES_MASK[${IDX}]="${WK_06}/${SPECIES_MASK_NAMES[${IDX}]}"
     		
-    		MSG="Copy ${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
+    		MSG="Copy ${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
 			log "${MSG} ...\n"
 			cp ${OUT_00}/${SPECIES_MASK_NAMES[${IDX}]} -t ${WK_05}
 			check "${MSG} failed.\n"    	
@@ -909,10 +916,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	SPECIES_MASK_NAMES=(Undefined null null null null null null null)
     	SPECIES_MASK=(Undefined null null null null null null null)
     	for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
-    		SPECIES_MASK_NAMES[${IDX}]="${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+    		SPECIES_MASK_NAMES[${IDX}]="${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
     		SPECIES_MASK[${IDX}]="${WK_06}/${SPECIES_MASK_NAMES[${IDX}]}"
     		
-    		MSG="Copy ${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
+    		MSG="Copy ${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
 			log "${MSG} ...\n"
 			cp ${OUT_00}/${SPECIES_MASK_NAMES[${IDX}]} -t ${WK_06}
 			check "${MSG} failed.\n"    	
@@ -984,10 +991,10 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	SPECIES_MASK_NAMES=(Undefined null null null null null null null)
     	SPECIES_MASK=(Undefined null null null null null null null)
     	for IDX in "${SPECIES_ID_PRESENT[@]}" ; do
-    		SPECIES_MASK_NAMES[${IDX}]="${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+    		SPECIES_MASK_NAMES[${IDX}]="${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
     		SPECIES_MASK[${IDX}]="${WK_07}/${SPECIES_MASK_NAMES[${IDX}]}"
     		
-    		MSG="Copy ${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
+    		MSG="Copy ${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif from ${OUT_00}"
 			log "${MSG} ...\n"
 			cp ${OUT_00}/${SPECIES_MASK_NAMES[${IDX}]} -t ${WK_07}
 			check "${MSG} failed.\n"    	
@@ -1082,7 +1089,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_11}
@@ -1117,8 +1124,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			check "${MSG} failed.\n"
 			
 			MSG="Get the subwindow needed"
-    		INPUT_03="$( ls ${WK_11}/*${DATE}-remapped_33S.tif )" # Get only tile at zone 33S
-			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_33S.tif/-warped.tif/ )"
+    		INPUT_03="$( ls ${WK_11}/*${DATE}-remapped_${AOI_ZONE}.tif )" # Get only tile at zone 33S
+			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_${AOI_ZONE}.tif/-warped.tif/ )"
 			log "${MSG} ...\n"
 			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} -te ${UL_LON} ${LR_LAT} ${LR_LON} ${UL_LAT} ${INPUT_03} ${OUTPUT_03} &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
@@ -1187,13 +1194,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		AVG_TEMP_FORMULA="T(a)=(${M}*(Z+2))+(${SCALE_FACTOR}*(mod_value-(${ADD_OFFSET}))-273.15)"
 		log "${AVG_TEMP_FORMULA}\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
 		check "${MSG} failed.\n"
 		
-		NAME_DEM_SCALED="Madonie_dem_scaled.tif"
+		NAME_DEM_SCALED="${PREF}_dem_scaled.tif"
 		MSG="Copy DEM from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_DEM_SCALED} -t ${WK_12}
@@ -1341,13 +1348,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		VPD_FORMULA="VPD=((e(T_max)+e(T_min))/2)-(e(T_min))"
 		log "${AVG_TEMP_FORMULA}\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_13}
 		check "${MSG} failed.\n"
 		
-		NAME_DEM_SCALED="Madonie_dem_scaled.tif"
+		NAME_DEM_SCALED="${PREF}_dem_scaled.tif"
 		MSG="Copy DEM from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_DEM_SCALED} -t ${WK_13}
@@ -1539,7 +1546,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
     	log "### { Start creating ${IMG} images....... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
@@ -1636,7 +1643,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "LAI" ] ; then
     	log "### { Start creating ${IMG} images.......... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_15}
@@ -1758,7 +1765,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Soil" ] ; then
     	log "### { Start creating ${IMG} images......... ###\n"
     	
-    	NAME_MASK_TOT="Total_mask.tif"
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_16}
