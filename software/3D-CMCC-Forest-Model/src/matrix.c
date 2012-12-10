@@ -135,7 +135,7 @@ static const char *species_values[] = {
 
 		//ALLOMETRIC RELATIONSHIPS
 
-		"DBHDC",                      //dbh (cm)- crown diameter (e) ratio  from cm to meter cm-->m
+		//"DBHDC",                      //dbh (cm)- crown diameter (e) ratio  from cm to meter cm-->m
 		//DBHDC = 20/100
 		"DBHDCMAX",                   //Low Density
 		"DBHDCMIN",                   //High Density

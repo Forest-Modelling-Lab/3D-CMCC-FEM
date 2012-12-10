@@ -178,7 +178,7 @@ enum {
 
 	//ALLOMETRIC RELATIONSHIPS
 
-	DBHDC,                      //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
+	//DBHDC,                      //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
 	//DBHDC = 20/100
 	DBHDCMAX,                   //Low Density
 	DBHDCMIN,                   //High Density

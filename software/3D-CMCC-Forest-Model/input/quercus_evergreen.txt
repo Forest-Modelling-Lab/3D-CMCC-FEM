@@ -110,9 +110,6 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDC	0.35            //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
-                                        //DBHDC = 20/100
-					//used for young trees in dominated layer
 DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
