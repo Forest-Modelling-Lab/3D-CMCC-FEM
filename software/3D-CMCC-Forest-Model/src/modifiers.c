@@ -291,7 +291,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	float psi;  //soil matric potential
 
 
-	//todo export in types.h
+	//todo export in types.h and matrix.c if used
 	float F_PSI;
 
 	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
