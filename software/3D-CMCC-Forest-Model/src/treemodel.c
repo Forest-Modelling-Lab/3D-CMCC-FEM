@@ -62,13 +62,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//control if all soil data are available
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		if (site->sand_perc == -9999||
-			site->clay_perc == -9999||
-			site->silt_perc == -9999||
-			site->bulk_dens == -9999||
-			site->soil_depth == -9999 )
+		if (site->sand_perc == -999.0||
+			site->clay_perc == -999.0||
+			site->silt_perc == -999.0||
+			site->bulk_dens == -999.0||
+			site->soil_depth == -999.0 )
 		{
-			Log("NO SOIL DATA AVAILABLE, treemodel failed\n");
+			Log("NO SOIL DATA AVAILABLE\n");
 			return 0;
 		}
 
