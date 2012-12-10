@@ -192,7 +192,6 @@ enum {
 	HPOWER,                     //Slope of Asymptotic Height from Sortie
 	RPOWER,                     //Slope of Asymptotic Crown-Radius from Sortie
 	CHPOWER,                    //Slope of Asymptotic Crown-Height from Sortie
-	FORMFACT,                   //Form Factor
 
 	//LPJ allometric relationships
 	KALLOMA,

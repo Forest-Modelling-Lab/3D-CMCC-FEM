@@ -129,7 +129,7 @@ DMAX	100              //Max Stem Diameter in cm see Morandini 1955
 HPOWER	0.0353           //Slope of Asymptotic Height 
 RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
 CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
-FORMFACT	0.6     //Form Factor
+
 //LPJ allometric relationships
 KALLOMA	100
 KALLOMB	40

@@ -127,7 +127,7 @@ DMAX	80              //Max Stem Diameter in cm QUERCUS CERRIS
 HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubra
 RPOWER	0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
-FORMFACT	0.6     //Form Factor for Sessil Oak (MJ Tarp-Johansen, Ann For Sci, 1997)
+
 //LPJ allometric relationships
 KALLOMA	100
 KALLOMB	40
