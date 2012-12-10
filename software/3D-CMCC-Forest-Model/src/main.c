@@ -964,6 +964,8 @@ int main(int argc, char *argv[])
 	int years,
 	month;
 
+	int site_data;  // if site data ok = 1, else = 0
+
 	MET_DATA *met;
 
 	YOS *yos;
@@ -1421,6 +1423,7 @@ int main(int argc, char *argv[])
 			matrix_free(m);
 			return -1;
 		}
+
 
 		/*TREEMODEL*/
 		Log("\nTREEMODEL START\n");

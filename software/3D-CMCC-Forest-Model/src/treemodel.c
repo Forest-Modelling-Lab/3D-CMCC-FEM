@@ -59,6 +59,21 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
+	//control if all soil data are available
+	for ( cell = 0; cell < m->cells_count; cell++)
+	{
+		if (site->sand_perc == -9999||
+			site->clay_perc == -9999||
+			site->silt_perc == -9999||
+			site->bulk_dens == -9999||
+			site->soil_depth == -9999 )
+		{
+			Log("NO SOIL DATA AVAILABLE, treemodel failed\n");
+			return 0;
+		}
+
+	}
+
 
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];
