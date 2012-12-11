@@ -105,7 +105,7 @@ fi
 
 LOCATION="$( ls ${INPUTDATASETDIR} )"
 
-LOGFILE="${OUTPUTDIR}/${CMCC}-${LOCATION}-${SIGN}-${2}m.log"
+LOGFILE="${OUTPUTDIR}/${LOCATION}-${SIGN}-${2}m.log"
 log() {
 	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" | tee -a "${LOGFILE}"
 }
@@ -218,7 +218,7 @@ for Y in ${YEARS[@]} ; do
 	
 	INPUT_01="${WORK_OUT}/NPP_${Y}.tif"
 	INPUT_02="-A ${INPUT_01} --A_band=1 -B ${INPUT_01} --B_band=2 -C ${INPUT_01} --C_band=3 -D ${INPUT_01} --D_band=4 -E ${INPUT_01} --E_band=5 -F ${INPUT_01} --F_band=6 -G ${INPUT_01} --G_band=7 -H ${INPUT_01} --H_band=8 -I ${INPUT_01} --I_band=9 -J ${INPUT_01} --J_band=10 -K ${INPUT_01} --K_band=11 -L ${INPUT_01} --L_band=12"
-	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/NPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
+	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/NPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)" &>/dev/null
 
 	# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -246,7 +246,7 @@ for Y in ${YEARS[@]} ; do
 	
 	INPUT_01="${WORK_OUT}/GPP_${Y}.tif"
 	INPUT_02="-A ${INPUT_01} --A_band=1 -B ${INPUT_01} --B_band=2 -C ${INPUT_01} --C_band=3 -D ${INPUT_01} --D_band=4 -E ${INPUT_01} --E_band=5 -F ${INPUT_01} --F_band=6 -G ${INPUT_01} --G_band=7 -H ${INPUT_01} --H_band=8 -I ${INPUT_01} --I_band=9 -J ${INPUT_01} --J_band=10 -K ${INPUT_01} --K_band=11 -L ${INPUT_01} --L_band=12"
-	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
+	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)" &>/dev/null
 
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	log "Starting execution of getOutputCMCC for AGB on year ${Y}...\n"
