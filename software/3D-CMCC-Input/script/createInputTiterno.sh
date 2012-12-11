@@ -1075,7 +1075,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				MSG="Extract ${IMG} subdataset"
 				OUTPUT_05="${WK_12}/${IMG}_global_latlon-${DATE}.tif"
 				log "${MSG} ...\n"
-				gdal_translate ${PAR_01} ${SUBDATASET} ${OUTPUT_05} &>> "${LOGFILE}"
+				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET} ${OUTPUT_05} &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				BAND="20"
