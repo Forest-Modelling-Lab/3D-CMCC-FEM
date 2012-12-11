@@ -7,7 +7,7 @@ ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 //Y              0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-K	0.65		//0.54 Extinction coefficient for absorption of PAR by canopy 
+K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO 	0.2
 //LEAF AREA INDEX
@@ -36,7 +36,7 @@ COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al.,
 BLCOND	0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 
 //AGE for timber
-MAXAGE	120             //Determines rate of "physiological decline" of forest //modified
+MAXAGE	100             //Determines rate of "physiological decline" of forest //modified
 RAGE	0.75            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
