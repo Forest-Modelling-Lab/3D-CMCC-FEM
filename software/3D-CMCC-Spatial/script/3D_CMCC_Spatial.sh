@@ -109,7 +109,7 @@ LOGFILE="${OUTPUTDIR}/${CMCC}-${LOCATION}-${SIGN}-${2}m.log"
 log() {
 	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" | tee -a "${LOGFILE}"
 }
-log "${PROGNAME} started"
+log "${PROGNAME} started\n"
 
 
 # :::::::::::::::::::::: #
@@ -143,14 +143,14 @@ YEARS_STR=${YEARS_STR:1:${#YEARS_STR}}
 # Soil input image
 SOIL_IMG="${IMG_PATH}/Soil.tif"
 
-log "Starting execution of getInputCMCC..."
+log "Starting execution of getInputCMCC...\n"
 ${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
 #cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
-	log "Execution of getInputCMCC failed"
+	log "Execution of getInputCMCC failed\n"
 	exit 10
 fi
-log "...getInputCMCC exited succesfully."
+log "...getInputCMCC exited succesfully.\n"
 
 # :::::::::::::::::: #
 # wrapCMCC execution #
@@ -176,15 +176,15 @@ YEAR_STR=${YEAR_STR:1:${#YEAR_STR}}
 SOIL="${WORK_IN}/Soil.txt"
 SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
 
-log "Starting execution of wrapCMCC..."
+log "Starting execution of wrapCMCC...\n"
 ${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SOIL}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
 #cp /home/candini/Desktop/wrapCMCC_temp/* ${WORK_CMCC}
 if [ "$?" -ne "0" ] ; then
-	log "Execution of wrapCMCC failed"
+	log "Execution of wrapCMCC failed\n"
 	exit 10
 fi
 
-log "...wrapCMCC exited succesfully."
+log "...wrapCMCC exited succesfully.\n"
 
 # :::::::::::::::::::::::::::::::::::: #
 # getOutputCMCC and mergeImg execution #
@@ -197,23 +197,23 @@ for Y in ${YEARS[@]} ; do
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_NPP=""
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-		log "Starting execution of getOutputCMCC for NPP on year ${Y}, band ${B}..."
+		log "Starting execution of getOutputCMCC for NPP on year ${Y}, band ${B}...\n"
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_NPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_NPP.tif
 		if [ "$?" -ne "0" ] ; then
-			log "Execution of getOutputCMCC failed"
+			log "Execution of getOutputCMCC failed\n"
 			exit 10
 		fi
-		log "...getOutputCMCC exited succesfully."
+		log "...getOutputCMCC exited succesfully.\n"
 		MONTHS_NPP="${MONTHS_NPP} ${WORK_OUT}/${Y}_${B}_NPP.tif"
 	done
 	unset LD_LIBRARY_PATH
-	log "Starting execution of mergeImg for NPP, year ${Y}..."
+	log "Starting execution of mergeImg for NPP, year ${Y}...\n"
 	${BIN}/mergeImg -b 12 -i ${MONTHS_NPP} -o ${WORK_OUT}/NPP_${Y}.tif -m VALUE=NPP,YEAR=${Y},SITE=${LOCATION}
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of mergeImg for NPP, year ${Y} failed"
+		log "Execution of mergeImg for NPP, year ${Y} failed\n"
 		exit 10
 	fi
-	log "...mergeImg exited succesfully."
+	log "...mergeImg exited succesfully.\n"
 	rm ${MONTHS_NPP}
 	
 	INPUT_01="${WORK_OUT}/NPP_${Y}.tif"
@@ -225,23 +225,23 @@ for Y in ${YEARS[@]} ; do
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_GPP=""
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-		log "Starting execution of getOutputCMCC for GPP on year ${Y}, band ${B}..."
+		log "Starting execution of getOutputCMCC for GPP on year ${Y}, band ${B}...\n"
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_GPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_GPP.tif
 		if [ "$?" -ne "0" ] ; then
-			log "Execution of getOutputCMCC failed"
+			log "Execution of getOutputCMCC failed\n"
 			exit 10
 		fi
-		log "...getOutputCMCC exited succesfully."
+		log "...getOutputCMCC exited succesfully.\n"
 		MONTHS_GPP="${MONTHS_GPP} ${WORK_OUT}/${Y}_${B}_GPP.tif"
 	done
 	unset LD_LIBRARY_PATH
-	log "Starting execution of mergeImg for GPP, year ${Y}..."
+	log "Starting execution of mergeImg for GPP, year ${Y}...\n"
 	${BIN}/mergeImg -b 12 -i ${MONTHS_GPP} -o ${WORK_OUT}/GPP_${Y}.tif -m VALUE=GPP,YEAR=${Y},SITE=${LOCATION}
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of mergeImg for GPP, year ${Y} failed"
+		log "Execution of mergeImg for GPP, year ${Y} failed\n"
 		exit 10
 	fi
-	log "...mergeImg exited succesfully."
+	log "...mergeImg exited succesfully.\n"
 	rm ${MONTHS_GPP}
 	
 	INPUT_01="${WORK_OUT}/GPP_${Y}.tif"
@@ -249,37 +249,37 @@ for Y in ${YEARS[@]} ; do
 	gdal_calc.py ${INPUT_02} --outfile=${WORK_OUT}/GPP_sum_${Y}.tif --calc="(A+B+C+D+E+F+G+H+I+J+K+L)"
 
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
-	log "Starting execution of getOutputCMCC for AGB on year ${Y}..."
+	log "Starting execution of getOutputCMCC for AGB on year ${Y}...\n"
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_AGB_Good_Points.txt -o ${WORK_OUT}/AGB_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of getOutputCMCC failed"
+		log "Execution of getOutputCMCC failed\n"
 		exit 10
 	fi
-	log "...getOutputCMCC exited succesfully."
+	log "...getOutputCMCC exited succesfully.\n"
 
-	log "Starting execution of getOutputCMCC for BGB on year ${Y}..."
+	log "Starting execution of getOutputCMCC for BGB on year ${Y}...\n"
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_BGB_Good_Points.txt -o ${WORK_OUT}/BGB_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of getOutputCMCC failed"
+		log "Execution of getOutputCMCC failed\n"
 		exit 10
 	fi
-	log "...getOutputCMCC exited succesfully."
+	log "...getOutputCMCC exited succesfully.\n"
 	
-	log "Starting execution of getOutputCMCC for MAI on year ${Y}..."
+	log "Starting execution of getOutputCMCC for MAI on year ${Y}...\n"
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_MAI_Good_Points.txt -o ${WORK_OUT}/MAI_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of getOutputCMCC failed"
+		log "Execution of getOutputCMCC failed\n"
 		exit 10
 	fi
-	log "...getOutputCMCC exited succesfully."
+	log "...getOutputCMCC exited succesfully.\n"
 	
-	log "Starting execution of getOutputCMCC for CAI on year ${Y}..."
+	log "Starting execution of getOutputCMCC for CAI on year ${Y}...\n"
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_CAI_Good_Points.txt -o ${WORK_OUT}/CAI_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
-		log "Execution of getOutputCMCC failed"
+		log "Execution of getOutputCMCC failed\n"
 		exit 10
 	fi
-	log "...getOutputCMCC exited succesfully."
+	log "...getOutputCMCC exited succesfully.\n"
 done
 
 FIRST_YEAR="${YEARS[0]}"
@@ -290,56 +290,56 @@ OUTDATASETNAME="${PREFIX}${LOCATION}_${RESOLUTION}m_${FIRST_YEAR}-${LAST_YEAR}_$
 OUTPUTDATASETDIR="${OUTPUTDIR}/${OUTDATASETNAME}"
 mkdir "${OUTPUTDATASETDIR}"
 if [ ! -d "${OUTPUTDATASETDIR}" ] ; then
-	log "Invalid output dataset directory."
+	log "Invalid output dataset directory.\n"
 	exit 34
 fi
 
-log "Moving ${WORK_OUT} content into ${OUTPUTDATASETDIR}..."
+log "Moving ${WORK_OUT} content into ${OUTPUTDATASETDIR}...\n"
 mv -f ${WORK_OUT}/* ${OUTPUTDATASETDIR}
 if [ "$?" -ne "0" ] ; then
-	log "Moving of ${WORK_OUT} content into ${OUTPUTDATASETDIR} failed"
+	log "Moving of ${WORK_OUT} content into ${OUTPUTDATASETDIR} failed\n"
 	exit 34
 fi
-log "...move succesful"
+log "...move succesful\n"
 
-log "Moving masks to ${OUTPUTDATASETDIR}"
+log "Moving masks to ${OUTPUTDATASETDIR}\n"
 mv -f ${IMG_PATH}/*_mask.tif ${OUTPUTDATASETDIR}
 if [ "$?" -ne "0" ] ; then
-	log "Moving of masks into ${OUTPUTDATASETDIR} failed"
+	log "Moving of masks into ${OUTPUTDATASETDIR} failed\n"
 	exit 34
 fi
-log "...move succesful"
+log "...move succesful\n"
 
-log "Removing working dir..."
+log "Removing working dir...\n"
 rm -r ${WORKDIR}
 if [ "$?" -ne "0" ] ; then
-	log "Cannot remove working directory"
+	log "Cannot remove working directory\n"
 	exit 34
 fi
-log "...done"
+log "...done\n"
 
-log "Compressing output dataset into output dir..."
+log "Compressing output dataset into output dir...\n"
 cd ${OUTPUTDIR}
 zip -r ${OUTDATASETNAME} ${OUTDATASETNAME} &>/dev/null
 if [ "$?" -ne "0" ] ; then
-	log "Cannot compress output dataset"
+	log "Cannot compress output dataset\n"
 	exit 34
 fi
 cd - > /dev/null
-log "...done"
+log "...done\n"
 
-log "Removing output dataset dir..."
+log "Removing output dataset dir...\n"
 rm -r ${OUTPUTDATASETDIR}
 if [ "$?" -ne "0" ] ; then
-	log "Cannot remove output dataset directory"
+	log "Cannot remove output dataset directory\n"
 	exit 34
 fi
-log "...done"
+log "...done\n"
 
-log "${PROGNAME} successfully ended."
+log "${PROGNAME} successfully ended.\n"
 
-log "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.zip"
-log "Produced ${LOGFILE}" 
-log "${PROGNAME} successfully ended."
+log "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.zip\n"
+log "Produced ${LOGFILE}\n" 
+log "${PROGNAME} successfully ended.\n"
 
 exit 0
