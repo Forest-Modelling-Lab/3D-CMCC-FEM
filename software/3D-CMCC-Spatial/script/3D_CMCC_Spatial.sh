@@ -177,8 +177,8 @@ YEARS_STR=${YEARS_STR:1:${#YEARS_STR}}
 SOIL_IMG="${IMG_PATH}/Soil.tif"
 
 log "Starting execution of getInputCMCC...\n"
-#${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
-cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
+${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
+#cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of getInputCMCC failed\n"
 	exit 10
