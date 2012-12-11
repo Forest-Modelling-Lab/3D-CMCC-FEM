@@ -111,6 +111,39 @@ log() {
 }
 log "${PROGNAME} started\n"
 
+# Soil parameters for wrapCMCC ----------------------------------- #
+LOC1="MADONIE"
+LOC2="TITERNO-TAMMARO"
+
+if [ "${LOCATION}" == "${LOC1}" ] ; then
+	SITENAME="Parco delle Madonie (Sicily) - Italy"
+	LAT="37.53"
+	LONG="14.20"
+	Y_VAL="0.49"
+	INITIALLITTER="2"
+	MIN_FRAC_MAXASW="0.1"
+	FR="0.8"
+	FN0="0.5"
+	FNN="0.5"
+	M0="0.2"
+elif [ "${LOCATION}" == "${LOC2}" ] ; then
+	SITENAME="Comunità montana del Titerno ed alto Tammaro (Benevento, Campania) - Italy"
+	LAT="41.20"
+	LONG="14.36"
+	Y_VAL="0.49"
+	INITIALLITTER="2"
+	MIN_FRAC_MAXASW="0.1"
+	FR="0.8"
+	FN0="0.5"
+	FNN="0.5"
+	M0="0.2"
+else
+	log "${LOCATION} is an unknown location: exiting."
+	exit 40
+fi
+
+SITE_PARAMS="-lat ${LAT} -lon ${LONG} -yval ${Y_VAL} -l ${INITIALLITTER} -asw ${MIN_FRAC_MAXASW} -fr ${FR} -fn0 ${FN0} -fnn ${FNN} -m0 ${M0}"
+# ---------------------------------------------------------------- #
 
 # :::::::::::::::::::::: #
 # getInputCMCC execution #
@@ -144,8 +177,8 @@ YEARS_STR=${YEARS_STR:1:${#YEARS_STR}}
 SOIL_IMG="${IMG_PATH}/Soil.tif"
 
 log "Starting execution of getInputCMCC...\n"
-${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
-#cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
+#${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IMG_CLIM[@]} -s ${SOIL_IMG} -o ${WORK_IN}
+cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of getInputCMCC failed\n"
 	exit 10
@@ -177,7 +210,7 @@ SOIL="${WORK_IN}/Soil.txt"
 SETTINGS="${INPUTDATASETDIR}/${LOCATION}/txt/settings.txt"
 
 log "Starting execution of wrapCMCC...\n"
-${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SOIL}" -c "${SETTINGS}" -o ${WORK_CMCC} 1> /dev/null
+${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e "${BIN}/${CMCC}" -i "${INPUTDATASETDIR}/${LOCATION}/txt" -s "${SOIL}" -c "${SETTINGS}" -o ${WORK_CMCC} -sname "${SITENAME}" ${SITE_PARAMS} 1> /dev/null
 #cp /home/candini/Desktop/wrapCMCC_temp/* ${WORK_CMCC}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of wrapCMCC failed\n"
