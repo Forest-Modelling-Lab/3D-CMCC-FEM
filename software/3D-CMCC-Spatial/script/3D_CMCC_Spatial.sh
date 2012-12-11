@@ -34,11 +34,6 @@ fi
 # Working directory with pid of the process as name
 SUBDIR="dir"$$""
 
-LOGFILE="${OUTPUTDIR}/${CMCC}-${2}m.log"
-log() {
-	echo -e "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" >> "${LOGFILE}"
-}
-log "${PROGNAME} started"
 
 for I in ${MODULES[@]} ; do
 	if [ ! -x "${BIN}/${I}" ] ; then
@@ -50,7 +45,6 @@ done
 INPUTDATASET="${1}"
 # Check if input dataset archive exists
 if [ ! -f "${INPUTDATASET}" ] ; then
-	log "Input dataset not found..."
 	echo "Input dataset not found..."
 	exit 2
 fi
@@ -60,8 +54,7 @@ SIGN="$( basename "${INPUTDATASET}" | cut -f '4' -d '_' | cut -f '1' -d '.' )"
 
 RESOLUTION="${2}"
 if [ ${RESOLUTION} -ne "10" ] && [ ${RESOLUTION} -ne "100" ] && [ ${RESOLUTION} -ne "30" ] ; then
-	log "Input parameters error: resolution (2nd parameter) must be 10 or 100"
-	echo "Input parameters error: resolution (2nd parameter) must be 10 or 100"
+	echo "Input parameters error: resolution (2nd parameter) must be 10, 30 or 100"
 	exit 2
 fi
 
@@ -78,28 +71,24 @@ WORK_OUT="${WORKDIR}/03_getOutputCMCC"
 
 mkdir "${WORKDIR}"
 if [ ! -d "${WORKDIR}" ] ; then
-	log "Invalid working directory."
 	echo "Input parameters error: Invalid working directory"
 	exit 40
 fi
 
 mkdir "${WORK_IN}"
 if [ ! -d "${WORK_IN}" ] ; then
-	log "Invalid getInputCMCC working directory."
 	echo "Input parameters error: Invalid getInputCMCC working directory"
 	exit 40
 fi
 
 mkdir "${WORK_CMCC}"
 if [ ! -d "${WORK_CMCC}" ] ; then
-	log "Invalid wrapCMCC working directory."
 	echo "Input parameters error: Invalid wrapCMCC working directory"
 	exit 40
 fi
 
 mkdir "${WORK_OUT}"
 if [ ! -d "${WORK_OUT}" ] ; then
-	log "Invalid getOutputCMCC working directory."
 	echo "Input parameters error: Invalid getOutputCMCC working directory"
 	exit 40
 fi
@@ -107,16 +96,21 @@ fi
 # Input directory
 INPUTDATASETDIR="${WORKDIR}/${DATASETNAME}"
 
-log "Decompressing input dataset into working dir..."
+
 unzip ${INPUTDATASET} -d ${WORKDIR} &>/dev/null
 if [ "$?" -ne "0" ] ; then
-	log "Cannot decompress input dataset"
 	echo "Invalid or corrupted data: cannot decompress input dataset"
 	exit 10
 fi
-log "...done"
 
 LOCATION="$( ls ${INPUTDATASETDIR} )"
+
+LOGFILE="${OUTPUTDIR}/${CMCC}-${LOCATION}-${SIGN}-${2}m.log"
+log() {
+	echo -en "$(date +"%Y-%m-%d %H:%M:%S") - ${1}" | tee -a "${LOGFILE}"
+}
+log "${PROGNAME} started"
+
 
 # :::::::::::::::::::::: #
 # getInputCMCC execution #
@@ -154,7 +148,6 @@ ${BIN}/getInputCMCC -n ${#IMG_SPEC[@]} -p ${IMG_SPEC[@]} -y ${YEARS_STR} -c ${IM
 #cp /home/candini/Desktop/getInputCMCC_temp/* ${WORK_IN}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of getInputCMCC failed"
-	echo "Invalid or corrupted data: execution of getInputCMCC failed"
 	exit 10
 fi
 log "...getInputCMCC exited succesfully."
@@ -188,7 +181,6 @@ ${BIN}/wrapCMCC -p ${NUM_PX} -y ${YEARS_STR} -yf ${YEAR_STR} -sf ${SPEC_STR} -e 
 #cp /home/candini/Desktop/wrapCMCC_temp/* ${WORK_CMCC}
 if [ "$?" -ne "0" ] ; then
 	log "Execution of wrapCMCC failed"
-	echo "Invalid or corrupted data: execution of wrapCMCC failed"
 	exit 10
 fi
 
@@ -209,7 +201,6 @@ for Y in ${YEARS[@]} ; do
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_NPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_NPP.tif
 		if [ "$?" -ne "0" ] ; then
 			log "Execution of getOutputCMCC failed"
-			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 			exit 10
 		fi
 		log "...getOutputCMCC exited succesfully."
@@ -220,7 +211,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/mergeImg -b 12 -i ${MONTHS_NPP} -o ${WORK_OUT}/NPP_${Y}.tif -m VALUE=NPP,YEAR=${Y},SITE=${LOCATION}
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of mergeImg for NPP, year ${Y} failed"
-		echo "Invalid or corrupted data: execution of mergeImg for NPP, year ${Y} failed"
 		exit 10
 	fi
 	log "...mergeImg exited succesfully."
@@ -239,7 +229,6 @@ for Y in ${YEARS[@]} ; do
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_GPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_GPP.tif
 		if [ "$?" -ne "0" ] ; then
 			log "Execution of getOutputCMCC failed"
-			echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 			exit 10
 		fi
 		log "...getOutputCMCC exited succesfully."
@@ -250,7 +239,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/mergeImg -b 12 -i ${MONTHS_GPP} -o ${WORK_OUT}/GPP_${Y}.tif -m VALUE=GPP,YEAR=${Y},SITE=${LOCATION}
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of mergeImg for GPP, year ${Y} failed"
-		echo "Invalid or corrupted data: execution of mergeImg for GPP, year ${Y} failed"
 		exit 10
 	fi
 	log "...mergeImg exited succesfully."
@@ -265,7 +253,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_AGB_Good_Points.txt -o ${WORK_OUT}/AGB_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of getOutputCMCC failed"
-		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 		exit 10
 	fi
 	log "...getOutputCMCC exited succesfully."
@@ -274,7 +261,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_BGB_Good_Points.txt -o ${WORK_OUT}/BGB_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of getOutputCMCC failed"
-		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 		exit 10
 	fi
 	log "...getOutputCMCC exited succesfully."
@@ -283,7 +269,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_MAI_Good_Points.txt -o ${WORK_OUT}/MAI_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of getOutputCMCC failed"
-		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 		exit 10
 	fi
 	log "...getOutputCMCC exited succesfully."
@@ -292,7 +277,6 @@ for Y in ${YEARS[@]} ; do
 	${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_CAI_Good_Points.txt -o ${WORK_OUT}/CAI_${Y}.tif
 	if [ "$?" -ne "0" ] ; then
 		log "Execution of getOutputCMCC failed"
-		echo "Invalid or corrupted data: execution of getOutputCMCC failed"
 		exit 10
 	fi
 	log "...getOutputCMCC exited succesfully."
@@ -307,7 +291,6 @@ OUTPUTDATASETDIR="${OUTPUTDIR}/${OUTDATASETNAME}"
 mkdir "${OUTPUTDATASETDIR}"
 if [ ! -d "${OUTPUTDATASETDIR}" ] ; then
 	log "Invalid output dataset directory."
-	echo "Cannot create ${OUTPUTDATASETDIR}"
 	exit 34
 fi
 
@@ -315,7 +298,14 @@ log "Moving ${WORK_OUT} content into ${OUTPUTDATASETDIR}..."
 mv -f ${WORK_OUT}/* ${OUTPUTDATASETDIR}
 if [ "$?" -ne "0" ] ; then
 	log "Moving of ${WORK_OUT} content into ${OUTPUTDATASETDIR} failed"
-	echo "Cannot move ${WORK_OUT} content into ${OUTPUTDATASETDIR}"
+	exit 34
+fi
+log "...move succesful"
+
+log "Moving masks to ${OUTPUTDATASETDIR}"
+mv -f ${IMG_PATH}/*_mask.tif ${OUTPUTDATASETDIR}
+if [ "$?" -ne "0" ] ; then
+	log "Moving of masks into ${OUTPUTDATASETDIR} failed"
 	exit 34
 fi
 log "...move succesful"
@@ -324,7 +314,6 @@ log "Removing working dir..."
 rm -r ${WORKDIR}
 if [ "$?" -ne "0" ] ; then
 	log "Cannot remove working directory"
-	echo "Cannot remove working directory"
 	exit 34
 fi
 log "...done"
@@ -334,7 +323,6 @@ cd ${OUTPUTDIR}
 zip -r ${OUTDATASETNAME} ${OUTDATASETNAME} &>/dev/null
 if [ "$?" -ne "0" ] ; then
 	log "Cannot compress output dataset"
-	echo "Cannot compress output dataset"
 	exit 34
 fi
 cd - > /dev/null
@@ -344,15 +332,14 @@ log "Removing output dataset dir..."
 rm -r ${OUTPUTDATASETDIR}
 if [ "$?" -ne "0" ] ; then
 	log "Cannot remove output dataset directory"
-	echo "Cannot remove output dataset directory"
 	exit 34
 fi
 log "...done"
 
 log "${PROGNAME} successfully ended."
 
-echo "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.zip"
-echo "Produced ${OUTPUTDIR}/${CMCC}-${RESOLUTION}m.log" 
-echo "${PROGNAME} successfully ended."
+log "Produced ${OUTPUTDIR}/${OUTDATASETNAME}.zip"
+log "Produced ${LOGFILE}" 
+log "${PROGNAME} successfully ended."
 
 exit 0
