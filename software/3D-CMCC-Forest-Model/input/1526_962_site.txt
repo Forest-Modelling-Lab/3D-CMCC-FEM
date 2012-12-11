@@ -7,13 +7,15 @@ Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
 CO2CONC "387.0" //CO2 concentration
 
+
+
 INITIALLITTER "2" //Initial Litter
 
 MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
 //MAXASW "300" //Maximum Available soil water in mm
 //MINASW "30" //It should be the 10% of the maxasw
 
-CLAY_PERC "-999.0"	//PERCENTAGE OF CLAY (< 0,002 mm)
+CLAY_PERC "11.81"	//PERCENTAGE OF CLAY (< 0,002 mm)
 SILT_PERC "23.5"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)
 SAND_PERC "64.69"	//PERCENTAGE OF SAND (0,05 - 2 mm)
 
