@@ -1,12 +1,12 @@
 #!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Description:    createInputMadonie.sh bash shell script
+# Description:    createInputFutureClimMadonie.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
 # Author:         Alessandro Candini - candini@meeo.it
 # Version:        0.1
 # Copyright:      MEEO S.R.L. - www.meeo.it 
 # How it works:   It takes...
-# Changelog:      2012-12-05 - version 0.1
+# Changelog:      2012-12-11 - version 0.1
 #                     - First Release
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  File information summary }
 
@@ -16,8 +16,9 @@ SCRIPT_NAME="${0:2:-3}"
 AOI="Parco delle Madonie (Sicily)"
 SITE="MADONIE"
 PREF="Madonie"
+SUBDIR="ClimFuture"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
-IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height Wf Wrc Ws SolarRad Avg_Temp VPD Precip LAI Soil Packet)
+IMG_ALL=(Filters Y_planted Species Phenology Management N_cell AvDBH Height SolarRad Avg_Temp VPD Precip LAI Soil Packet)
 IMG_SELECTED=()
 
 # Species identification numbers: 
@@ -61,13 +62,10 @@ IN_04="$( dirname ${0} )/../input/04_Management"
 IN_05="$( dirname ${0} )/../input/05_N_cell"
 IN_06="$( dirname ${0} )/../input/06_AvDBH"
 IN_07="$( dirname ${0} )/../input/07_Height"
-IN_08="$( dirname ${0} )/../input/08_Wf"
-IN_09="$( dirname ${0} )/../input/09_Wrc"
-IN_10="$( dirname ${0} )/../input/10_Ws"
 IN_11="$( dirname ${0} )/../input/11_SolarRad"
 IN_12="$( dirname ${0} )/../input/12_Avg_Temp"
 IN_13="$( dirname ${0} )/../input/13_VPD"
-IN_14="$( dirname ${0} )/../input/14_Precip"
+IN_14="$( dirname ${0} )/../input/14_Precip/${SUBDIR}"
 IN_15="$( dirname ${0} )/../input/15_LAI"
 IN_16="$( dirname ${0} )/../input/16_Soil"
 IN_17="$( dirname ${0} )/../input/17_Packet"
@@ -80,9 +78,6 @@ OUT_04="$( dirname ${0} )/../output/04_Management"
 OUT_05="$( dirname ${0} )/../output/05_N_cell"
 OUT_06="$( dirname ${0} )/../output/06_AvDBH"
 OUT_07="$( dirname ${0} )/../output/07_Height"
-OUT_08="$( dirname ${0} )/../output/08_Wf"
-OUT_09="$( dirname ${0} )/../output/09_Wrc"
-OUT_10="$( dirname ${0} )/../output/10_Ws"
 OUT_11="$( dirname ${0} )/../output/11_SolarRad"
 OUT_12="$( dirname ${0} )/../output/12_Avg_Temp"
 OUT_13="$( dirname ${0} )/../output/13_VPD"
@@ -99,9 +94,6 @@ WK_04="$( dirname ${0} )/../working/04_Management"
 WK_05="$( dirname ${0} )/../working/05_N_cell"
 WK_06="$( dirname ${0} )/../working/06_AvDBH"
 WK_07="$( dirname ${0} )/../working/07_Height"
-WK_08="$( dirname ${0} )/../working/08_Wf"
-WK_09="$( dirname ${0} )/../working/09_Wrc"
-WK_10="$( dirname ${0} )/../working/10_Ws"
 WK_11="$( dirname ${0} )/../working/11_SolarRad"
 WK_12="$( dirname ${0} )/../working/12_Avg_Temp"
 WK_13="$( dirname ${0} )/../working/13_VPD"
@@ -133,7 +125,9 @@ WORLD="-180 90 180 -90"
 SICILY="13 39 15 37"
 
 # Temporal coverage
-YEARS_PROC=(2002 2003 2004 2005 2006 2007 2008 2009)
+YEARS_PROC=(2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020)
+FIRST_YEAR="${YEARS_PROC[0]}"
+LAST_YEAR="${YEARS_PROC[$((${#YEARS_PROC[@]}-1))]}"
 MONTHS_PROC=(01 02 03 04 05 06 07 08 09 10 11 12)
 
 # DEBUG="n" --> clean the current working directory
@@ -1057,33 +1051,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Height execution }
 
-### Wf execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-for IMG in "${IMG_SELECTED[@]}" ; do
-	if [ "${IMG}" == "Wf" ] ; then
-    	log "### { Start creating ${IMG} images........... ###\n"
-    	log "### ............stop creating ${IMG} images } ###\n"
-    fi
-done
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Wf execution }
-
-### Wrc execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-for IMG in "${IMG_SELECTED[@]}" ; do
-	if [ "${IMG}" == "Wrc" ] ; then
-    	log "### { Start creating ${IMG} images.......... ###\n"
-    	log "### ...........stop creating ${IMG} images } ###\n"
-    fi
-done
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Wrc execution }
-
-### Ws execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-for IMG in "${IMG_SELECTED[@]}" ; do
-	if [ "${IMG}" == "Ws" ] ; then
-    	log "### { Start creating ${IMG} images........... ###\n"
-    	log "### ............stop creating ${IMG} images } ###\n"
-    fi
-done
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  Ws execution }
-
 ### SolarRad execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
@@ -1535,7 +1502,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 
 		clean "${WK_13}"
     	
-    	
     	log "### ...........stop creating ${IMG} images } ###\n"
     fi
 done
@@ -1546,90 +1512,95 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
     	log "### { Start creating ${IMG} images....... ###\n"
     	
-    	NAME_MASK_TOT="${PREF}_total_mask.tif"
-		MSG="Copy filter from ${OUT_00}"
-		log "${MSG} ...\n"
-		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
-		check "${MSG} failed.\n"
+    	INPUT_01=$( ls ${IN_14}/*.pre )
+    	OUTPUT_02="${WK_14}/a.txt"
+		cat ${INPUT_01} | grep Grid-ref > ${OUTPUT_02}
 		
-    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
     	
-    	UNITY="mm/month"
-    	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
-			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
-			MONTH=${DATE:5:2}
-			YEAR=${DATE:0:4}
-			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
-			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
-	
-			# Original precipitations data are mm/hh
-			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
-			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
-			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			# Data conversion from mm/hh into mm/month
-			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
-				HOURS_IN_MONTH=720.0 # 30*24=720 
-			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
-				HOURS_IN_MONTH=744.0 # 31*24=744
-			elif [ "${MONTH}" == "02" ] ; then
-				leapYear "${YEAR}"
-				LEAP="${?}"
-				if [ "${LEAP}" -eq "1" ] ; then
-					HOURS_IN_MONTH=696.0 # 29*24=696
-				else
-					HOURS_IN_MONTH=672.0 # 28*24=672
-				fi
-			fi
-			
-			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
-			MSG="Divide every pixel value for number of hours in month"
-			log "${MSG} ...\n"
-			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			MSG="Conversion of tiff projection from longlat to UTM"
-			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
-			log "${MSG} ...\n"
-			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_02}.\n"
-			
-			MSG="Remap and cut UTM geotiff image"
-			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
-			log "${MSG} ...\n"
-			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-			check "${MSG} failed on ${OUTPUT_03}.\n"
-			
-			MSG="Mask ${IMG}"
-			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
-			log "${MSG} ...\n"
-			${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-    	done
-    	
-    	# Create output years images
-		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
-		for YYYY in "${YEARS_PROC[@]}" ; do
-			MONTHS=()
-			for MM in "${MONTHS_PROC[@]}" ; do
-				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
-				MONTHS+=("${INPUT_03}")				
-			done
-			
-			MSG="Create multiband ${IMG} image"
-			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
-			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-		
-			MSG="Copy ${IMG} into ${OUT_14}"
-			log "${MSG} ...\n"
-			cp ${OUTPUT_06} -t ${OUT_14}
-			check "${MSG} failed.\n"
-		done
+#    	NAME_MASK_TOT="${PREF}_total_mask.tif"
+#		MSG="Copy filter from ${OUT_00}"
+#		log "${MSG} ...\n"
+#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
+#		check "${MSG} failed.\n"
+#		
+#    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
+#    	
+#    	UNITY="mm/month"
+#    	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
+#			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
+#			MONTH=${DATE:5:2}
+#			YEAR=${DATE:0:4}
+#			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
+#			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
+#	
+#			# Original precipitations data are mm/hh
+#			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
+#			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
+#			log "${MSG} ...\n"
+#			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
+#			check "${MSG} failed.\n"
+#			
+#			# Data conversion from mm/hh into mm/month
+#			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
+#				HOURS_IN_MONTH=720.0 # 30*24=720 
+#			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
+#				HOURS_IN_MONTH=744.0 # 31*24=744
+#			elif [ "${MONTH}" == "02" ] ; then
+#				leapYear "${YEAR}"
+#				LEAP="${?}"
+#				if [ "${LEAP}" -eq "1" ] ; then
+#					HOURS_IN_MONTH=696.0 # 29*24=696
+#				else
+#					HOURS_IN_MONTH=672.0 # 28*24=672
+#				fi
+#			fi
+#			
+#			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
+#			MSG="Divide every pixel value for number of hours in month"
+#			log "${MSG} ...\n"
+#			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
+#			check "${MSG} failed.\n"
+#			
+#			MSG="Conversion of tiff projection from longlat to UTM"
+#			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
+#			log "${MSG} ...\n"
+#			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
+#			check "${MSG} failed on ${OUTPUT_02}.\n"
+#			
+#			MSG="Remap and cut UTM geotiff image"
+#			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
+#			log "${MSG} ...\n"
+#			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+#			check "${MSG} failed on ${OUTPUT_03}.\n"
+#			
+#			MSG="Mask ${IMG}"
+#			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
+#			log "${MSG} ...\n"
+#			${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
+#			check "${MSG} failed.\n"
+#			
+#    	done
+#    	
+#    	# Create output years images
+#		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
+#		for YYYY in "${YEARS_PROC[@]}" ; do
+#			MONTHS=()
+#			for MM in "${MONTHS_PROC[@]}" ; do
+#				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
+#				MONTHS+=("${INPUT_03}")				
+#			done
+#			
+#			MSG="Create multiband ${IMG} image"
+#			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
+#			log "${MSG} ...\n"
+#			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
+#			check "${MSG} failed.\n"
+#		
+#			MSG="Copy ${IMG} into ${OUT_14}"
+#			log "${MSG} ...\n"
+#			cp ${OUTPUT_06} -t ${OUT_14}
+#			check "${MSG} failed.\n"
+#		done
     	
     	clean "${WK_14}"
     	
