@@ -71,8 +71,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("NO SOIL DATA AVAILABLE\n");
 			return 0;
 		}
-
 	}
+
+
 
 
 	/*somma termica per l'inizio della stagione vegetativa*/

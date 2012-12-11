@@ -1426,7 +1426,7 @@ int main(int argc, char *argv[])
 
 
 		/*TREEMODEL*/
-		Log("\nTREEMODEL START\n");
+		Log("\n3D-CMMC MODEL START\n");
 		Log("***************************************************\n");
 
 		/*Site definition*/
@@ -1439,6 +1439,15 @@ int main(int argc, char *argv[])
 		{
 			/* model */
 			matrix_summary (m, years, yos);
+
+
+			//control version 's' or 'u' and change if asked
+			if (years_of_simulation >= settings->switchtounspatial)
+			{
+				settings->version = 'u';
+				Log("year %d...changing version from spatial to unspatial\n", years_of_simulation);
+				Log("Model version = %c\n", settings->version);
+			}
 
 			/*compute number of vegetative months*/
 			Log("compute vegetative months for version '%c'\n", settings->version);
