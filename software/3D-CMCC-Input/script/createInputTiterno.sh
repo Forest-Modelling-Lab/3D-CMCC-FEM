@@ -13,7 +13,7 @@
 ### Global variables definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
-AOI="Comunità montana del Titerno ed alto Tammaro (Benevento)"
+AOI="Comunità montana del Titerno ed alto Tammaro (Benevento, Campania)"
 SITE="TITERNO-TAMMARO"
 PREF="Titerno-Tammaro"
 MODULES=(remap calcAverage getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
