@@ -4,7 +4,7 @@
 
 extern int log_enabled;
 
-static FILE *file_log = NULL;
+static FILE *file_log ;
 
 int logInit(char * logFileName)
 {

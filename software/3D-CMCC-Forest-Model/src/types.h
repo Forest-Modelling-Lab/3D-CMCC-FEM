@@ -470,6 +470,7 @@ enum {
 	BASAL_AREA,                     //Basal Area (m^2/area tree)
 	STAND_BASAL_AREA,
 	CROWN_HEIGHT,                   //Crown Height (m)
+	PREVIOUS_VOLUME,				//previous year volume for CAI
 	VOLUME,                   //Stem Volume
 	TOTAL_VOLUME,
 	TREE_VOLUME,                    //Single Tree Volume (m^3/area)

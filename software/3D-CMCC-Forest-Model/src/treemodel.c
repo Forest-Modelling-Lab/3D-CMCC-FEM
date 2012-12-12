@@ -177,6 +177,20 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
+				if (month == JANUARY)
+				{
+					//todo make a better function
+					//compute volume
+					float MassDensity;
+					MassDensity = m->cells[cell].heights[height].ages[age].species[species].value[RHOMAX]
+								  + (m->cells[cell].heights[height].ages[age].species[species].value[RHOMIN]
+								 - m->cells[cell].heights[height].ages[age].species[species].value[RHOMAX])
+								 * exp(-ln2 * (m->cells[cell].heights[height].ages[age].value
+								 / m->cells[cell].heights[height].ages[age].species[species].value[TRHO]));
+					m->cells[cell].heights[height].ages[age].species[species].value[PREVIOUS_VOLUME] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
+																									   * (1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB])
+																									   /MassDensity;
+				}
 				//loop on each species
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
@@ -185,6 +199,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 					Get_monthly_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
 					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
+
+
 
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)

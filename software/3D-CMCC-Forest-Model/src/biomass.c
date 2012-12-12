@@ -158,18 +158,18 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 	{
 		if (settings->presence == 't')
 		{
-			dominant_prec_volume = s->value[BIOMASS_STEM_CTEM] * (1 - s->value[FRACBB]) /	MassDensity;
-			Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
-			s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
+			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			Log("CURRENT Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
 			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI] );
 		}
 		else
 		{
-			dominant_prec_volume = s->value[BIOMASS_STEM_CTEM] * (1 - s->value[FRACBB]) /	MassDensity;
-			Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
-			s->value[CAI] = s->value[VOLUME] * s->value[PERC] - dominant_prec_volume;
+			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
+			s->value[CAI] = s->value[VOLUME] * s->value[PERC] - s->value[PREVIOUS_VOLUME];
 			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
 			s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (float)c->heights[height].ages[age].value ;
 			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI] );
@@ -183,7 +183,7 @@ void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 	Log("**AGB & BGB**\n");
 	Log("-for Class\n");
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
-	                                                                                                                     + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
+																	 + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM];
 	Log("Yearly Class AGB = %g tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM];
 	Log("Yearly Class BGB = %g tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
