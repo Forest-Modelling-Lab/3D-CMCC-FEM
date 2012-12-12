@@ -79,8 +79,12 @@ WK_17="$( dirname ${0} )/../working/17_Packet"
 # Output geotiff size:
 SIZEX="1286"
 SIZEY="1160"
-SIZEX_EUROPE="258"
-SIZEY_EUROPE="228"
+SIZEX_SICILY="12"
+SIZEY_SICILY="12"
+START_X="144"
+END_X="168"
+START_Y="18"
+END_Y="42"
 # Output geotiff resolution:
 RES="30"
 # Output geotiff Upper Left and Lower Right point coordinates:
@@ -919,29 +923,24 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	log "### { Start creating ${IMG} images....... ###\n"
     	
     	INPUT_01=$( ls ${IN_14}/*.pre )
-    	PX_COORDS=( $( cat ${INPUT_01} | grep Grid-ref | cut -d '=' -f '2' | tr -d ' ' ) )
+    	#PX_COORDS=( $( cat ${INPUT_01} | grep Grid-ref | cut -d '=' -f '2' | tr -d ' ' ) )
     	MISSING=$( cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
     	MULTI=$(   cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*" | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
     	
-		for P in ${PX_COORDS[@]} ; do
-			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
-			IDX=$( echo "${LINE_NUM}+1" | bc )
-			A=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-			echo ${A[@]}
+    	PX_COORDS=()
+		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+				PX_COORDS+=("${X},${Y}")
+			done
 		done
-		
-		
-
-		
-		#for YYYY in "${YEARS_PROC[@]}" ; do
+    	
+    	#for YYYY in "${YEARS_PROC[@]}" ; do
 			#for MM in "${MONTHS_PROC[@]}" ; do
 			
 				#MSG="Create an empty monoband image for ${YYYY}-${MM}"
 				#OUTPUT_01="${WK_14}/Europe_empty_${YYYY}${MM}.tif"
 				#log "${MSG} ...\n"
-				#${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+				#${BIN_DIR}/createImg -x ${SIZEX_SICILY} -y ${SIZEY_SICILY} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
 				#check "${MSG} failed.\n" 
 		
 				#MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
@@ -949,14 +948,29 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				#log "${MSG} ...\n"
 				#gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
 				#check "${MSG} failed.\n"
-		
+
 			#done
 		#done
 		
 		
-		
-		
-		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+						IDX=$( echo "${LINE_NUM}+${J}" | bc )
+						YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+						echo "${LINE_NUM}"
+						echo "${YEAR_DATA[@]}"
+					#for MM in "${MONTHS_PROC[@]}" ; do
+					#done
+					let "J += 1"
+				done
+				echo ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+			fi
+		done
     	
 #    	NAME_MASK_TOT="${PREF}_total_mask.tif"
 #		MSG="Copy filter from ${OUT_00}"
