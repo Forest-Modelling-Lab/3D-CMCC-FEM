@@ -960,15 +960,17 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
 				J="1"
 				for YYYY in "${YEARS_PROC[@]}" ; do
-						IDX=$( echo "${LINE_NUM}+${J}" | bc )
-						YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-						echo "${LINE_NUM}"
-						echo "${YEAR_DATA[@]}"
-					#for MM in "${MONTHS_PROC[@]}" ; do
-					#done
+					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					echo "${YEAR_DATA[@]}"
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						echo "${YEAR_DATA[${K}]}"
+						let "K += 1"
+					done
 					let "J += 1"
 				done
-				echo ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+				echo "::::::::::::::::::::::::::::::::::::::::::::::::::::"
 			fi
 		done
     	
