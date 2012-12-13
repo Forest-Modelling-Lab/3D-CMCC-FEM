@@ -79,12 +79,23 @@ WK_17="$( dirname ${0} )/../working/17_Packet"
 # Output geotiff size:
 SIZEX="1286"
 SIZEY="1160"
-SIZEX_SICILY="12"
-SIZEY_SICILY="12"
-START_X="144"
-END_X="168"
-START_Y="18"
-END_Y="42"
+
+# Textual files extents (lat,lon and x,y values)
+SIZEX_EUROPE="258"
+SIZEY_EUROPE="228"
+UL_EUR_LONGITUDE="-11"
+UL_EUR_LATITUDE="72"
+LR_EUR_LONGITUDE="32"
+LR_EUR_LATITUDE="34"
+START_X="150"
+END_X="152"
+START_Y="23"
+END_Y="26"
+UL_LONGITUDE="13.8333333333"
+UL_LATITUDE="38.1666666666"
+LR_LONGITUDE="14.3333333333"
+LR_LATITUDE="37.6666666666"
+
 # Output geotiff resolution:
 RES="30"
 # Output geotiff Upper Left and Lower Right point coordinates:
@@ -100,7 +111,8 @@ PROJ_LONGLAT="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 PROJ_3004="+proj=tmerc +lat_0=0 +lon_0=15 +k=0.9996 +x_0=2520000 +y_0=0 +ellps=intl +units=m +no_defs"
 PAR_01="-q -co COMPRESS=LZW -of GTiff"
 PAR_02="-ot Float32"
-PAR_03="-q -co COMPRESS=LZW -of XYZ"
+PAR_03="-q -of XYZ"
+PAR_05="${PAR_01} ${PAR_02} -separate"
 # Lat-lon extents
 WORLD="-180 90 180 -90"
 SICILY="13 39 15 37"
@@ -922,10 +934,17 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Precip" ] ; then
     	log "### { Start creating ${IMG} images....... ###\n"
     	
+    	NAME_MASK_TOT="${PREF}_total_mask.tif"
+		MSG="Copy filter from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
+		check "${MSG} failed.\n"
+		
+		    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
+    	
     	INPUT_01=$( ls ${IN_14}/*.pre )
-    	#PX_COORDS=( $( cat ${INPUT_01} | grep Grid-ref | cut -d '=' -f '2' | tr -d ' ' ) )
-    	MISSING=$( cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
-    	MULTI=$(   cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*" | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
     	
     	PX_COORDS=()
 		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
@@ -934,24 +953,28 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			done
 		done
     	
-    	#for YYYY in "${YEARS_PROC[@]}" ; do
-			#for MM in "${MONTHS_PROC[@]}" ; do
+    	for YYYY in "${YEARS_PROC[@]}" ; do
+			for MM in "${MONTHS_PROC[@]}" ; do
 			
-				#MSG="Create an empty monoband image for ${YYYY}-${MM}"
-				#OUTPUT_01="${WK_14}/Europe_empty_${YYYY}${MM}.tif"
-				#log "${MSG} ...\n"
-				#${BIN_DIR}/createImg -x ${SIZEX_SICILY} -y ${SIZEY_SICILY} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
-				#check "${MSG} failed.\n" 
+				MSG="Create an empty monoband image for ${YYYY}-${MM}"
+				OUTPUT_01="${WK_14}/Europe_empty_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n" 
 		
-				#MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
-				#OUTPUT_02="${WK_14}/${IMG}_${YYYY}${MM}.txt"
-				#log "${MSG} ...\n"
-				#gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-				#check "${MSG} failed.\n"
+				MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_02="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
+				log "${MSG} ...\n"
+				rm ${OUTPUT_01} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
-			#done
-		#done
-		
+			done
+		done
 		
 		for P in ${PX_COORDS[@]} ; do
 			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
@@ -962,102 +985,84 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				for YYYY in "${YEARS_PROC[@]}" ; do
 					IDX=$( echo "${LINE_NUM}+${J}" | bc )
 					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-					echo "${YEAR_DATA[@]}"
 					K="0"
 					for MM in "${MONTHS_PROC[@]}" ; do
-						echo "${YEAR_DATA[${K}]}"
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
 						let "K += 1"
 					done
 					let "J += 1"
 				done
-				echo "::::::::::::::::::::::::::::::::::::::::::::::::::::"
 			fi
 		done
-    	
-#    	NAME_MASK_TOT="${PREF}_total_mask.tif"
-#		MSG="Copy filter from ${OUT_00}"
-#		log "${MSG} ...\n"
-#		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
-#		check "${MSG} failed.\n"
-#		
-#    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
-#    	
-#    	UNITY="mm/month"
-#    	for INPUT_01 in $( ls ${IN_14}/*.xml ) ; do
-#			DATE=$( cat ${INPUT_01} | grep 'RangeBeginningDate' | cut -f2 -d '>' | cut -f1 -d '<' )
-#			MONTH=${DATE:5:2}
-#			YEAR=${DATE:0:4}
-#			DATE_SHORT="${DATE:2:2}${DATE:5:2}${DATE:8:2}"
-#			INPUT_02=$( ls ${IN_14}/*${DATE_SHORT}*.nc)
-#	
-#			# Original precipitations data are mm/hh
-#			OUTPUT_01="${WK_14}/${IMG}_0_25_mm-hh_${DATE}.tif"
-#			MSG="Extraction of precipitations subdataset from ${INPUT_02}"
-#			log "${MSG} ...\n"
-#			gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" NETCDF:"${INPUT_02}":pcp ${OUTPUT_01} &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			# Data conversion from mm/hh into mm/month
-#			if [ "${MONTH}" == "11" ] || [ "${MONTH}" == "04" ] || [ "${MONTH}" == "06" ] || [ "${MONTH}" == "09" ] ; then
-#				HOURS_IN_MONTH=720.0 # 30*24=720 
-#			elif [ "${MONTH}" == "01" ] || [ "${MONTH}" == "03" ] || [ "${MONTH}" == "05" ] || [ "${MONTH}" == "07" ] || [ "${MONTH}" == "08" ] || [ "${MONTH}" == "10" ] || [ "${MONTH}" == "12" ] ; then
-#				HOURS_IN_MONTH=744.0 # 31*24=744
-#			elif [ "${MONTH}" == "02" ] ; then
-#				leapYear "${YEAR}"
-#				LEAP="${?}"
-#				if [ "${LEAP}" -eq "1" ] ; then
-#					HOURS_IN_MONTH=696.0 # 29*24=696
-#				else
-#					HOURS_IN_MONTH=672.0 # 28*24=672
-#				fi
-#			fi
-#			
-#			OUTPUT_02="${WK_14}/${IMG}_0_25_mm-${YEAR}${MONTH}.tif"
-#			MSG="Divide every pixel value for number of hours in month"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_01} -v "${HOURS_IN_MONTH}" -o ${OUTPUT_02} &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#			MSG="Conversion of tiff projection from longlat to UTM"
-#			OUTPUT_03="${WK_14}/${IMG}_${YEAR}${MONTH}_utm.tif"
-#			log "${MSG} ...\n"
-#			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_02} ${OUTPUT_03} &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_02}.\n"
-#			
-#			MSG="Remap and cut UTM geotiff image"
-#			OUTPUT_04="${WK_14}/${IMG}_${YEAR}${MONTH}_remapped.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/remap -i ${OUTPUT_03} -o ${OUTPUT_04} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#			check "${MSG} failed on ${OUTPUT_03}.\n"
-#			
-#			MSG="Mask ${IMG}"
-#			OUTPUT_05="${WK_14}/${IMG}_${YEAR}${MONTH}.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/applyMask -i ${OUTPUT_04} -m ${MASK_TOT} -o ${OUTPUT_05} &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#			
-#    	done
-#    	
-#    	# Create output years images
-#		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
-#		for YYYY in "${YEARS_PROC[@]}" ; do
-#			MONTHS=()
-#			for MM in "${MONTHS_PROC[@]}" ; do
-#				INPUT_03=$( ls ${WK_14}/${IMG}_${YYYY}${MM}.tif )
-#				MONTHS+=("${INPUT_03}")				
-#			done
-#			
-#			MSG="Create multiband ${IMG} image"
-#			OUTPUT_06="${WK_14}/${IMG}_${YYYY}.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#		
-#			MSG="Copy ${IMG} into ${OUT_14}"
-#			log "${MSG} ...\n"
-#			cp ${OUTPUT_06} -t ${OUT_14}
-#			check "${MSG} failed.\n"
-#		done
+
+		#cp ~/Desktop/${IMG}_tmp/* ${WK_14}
+		
+		UNITY="mm/month"
+		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
+		for YYYY in "${YEARS_PROC[@]}" ; do
+			MONTHS=()
+			for MM in "${MONTHS_PROC[@]}" ; do
+				MSG="Reconvert textual files into GeoTiff content for ${YYYY}-${MM}"
+				INPUT_02="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+				OUTPUT_04="${WK_14}/${IMG}_${YYYY}${MM}_latlon.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -a_ullr ${UL_EUR_LONGITUDE} ${UL_EUR_LATITUDE} ${LR_EUR_LONGITUDE} ${LR_EUR_LATITUDE} ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Take a sub window of GeoTiff ${YYYY}-${MM}"
+				OUTPUT_05="${WK_14}/${IMG}_${YYYY}${MM}_latlon_cut.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -projwin ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Conversion of tiff projection from longlat to UTM for ${YYYY}-${MM}"
+				OUTPUT_06="${WK_14}/${IMG}_${YYYY}${MM}_utm.tif"
+				log "${MSG} ...\n"
+				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remap and cut UTM geotiff image for ${YYYY}-${MM}"
+				OUTPUT_07="${WK_14}/${IMG}_${YYYY}${MM}_remap.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Apply mask to ${OUTPUT_07}"
+				OUTPUT_08="${WK_14}/${IMG}_${YYYY}${MM}_mask.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${OUTPUT_07} -B ${MASK_TOT} --outfile=${OUTPUT_08} --calc="(A*B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MONTHS+=("${OUTPUT_08}")
+			done
+			
+			MSG="Create ${IMG} image for ${YYYY}"
+			OUTPUT_09="${WK_14}/${IMG}_${YYYY}.tif"
+			log "${MSG} ...\n"
+			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_09} -m "${METADATA}" &>> "${LOGFILE}"
+			check "${MSG} failed.\n"
+			
+			MSG="Copy ${IMG} into ${OUT_14}"
+			log "${MSG} ...\n"
+			cp ${OUTPUT_09} -t ${OUT_14}
+			check "${MSG} failed.\n"
+			
+		done
     	
     	clean "${WK_14}"
     	
