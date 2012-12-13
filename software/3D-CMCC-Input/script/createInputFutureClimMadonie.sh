@@ -90,7 +90,7 @@ LR_EUR_LATITUDE="34"
 START_X="150"
 END_X="152"
 START_Y="23"
-END_Y="26"
+END_Y="25"
 UL_LONGITUDE="13.8333333333"
 UL_LATITUDE="38.1666666666"
 LR_LONGITUDE="14.3333333333"
@@ -940,7 +940,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_14}
 		check "${MSG} failed.\n"
 		
-		    	MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
+		MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
     	
     	INPUT_01=$( ls ${IN_14}/*.pre )
     	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
@@ -981,9 +981,37 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
 			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
 			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				PREC="${LINE_NUM}"
 				J="1"
 				for YYYY in "${YEARS_PROC[@]}" ; do
 					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			else # If this cell is missing from the dataset take the previous values
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${PREC}+${J}" | bc )
 					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
 					K="0"
 					for MM in "${MONTHS_PROC[@]}" ; do
@@ -1013,7 +1041,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		#cp ~/Desktop/${IMG}_tmp/* ${WK_14}
 		
 		UNITY="mm/month"
-		METADATA="SITE=${SITE},VALUES=PRECIPITATIONS,UNITY_OF_MEASURE=${UNITY}"
 		for YYYY in "${YEARS_PROC[@]}" ; do
 			MONTHS=()
 			for MM in "${MONTHS_PROC[@]}" ; do
@@ -1054,7 +1081,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			MSG="Create ${IMG} image for ${YYYY}"
 			OUTPUT_09="${WK_14}/${IMG}_${YYYY}.tif"
 			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_09} -m "${METADATA}" &>> "${LOGFILE}"
+			#gdal_merge.py ${PAR_05} ${MONTHS[@]} -co SITE=${SITE} -co VALUES=PRECIPITATIONS -co UNITY_OF_MEASURE=${UNITY} -o ${OUTPUT_09}  &>> "${LOGFILE}"
+			gdal_merge.py ${PAR_05} ${MONTHS[@]} -o ${OUTPUT_09}  &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			MSG="Copy ${IMG} into ${OUT_14}"
