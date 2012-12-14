@@ -1448,8 +1448,10 @@ int main(int argc, char *argv[])
 			if (settings->version == 's' && yos[years].year >= (int)(settings->switchtounspatial))
 			{
 				settings->version = 'u';
+				Log("\n\n\n************CHANGING VERSION..........***************\n");
 				Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
-				Log("Model version = %c\n", settings->version);
+				Log("Model version = %c\n\n\n\n", settings->version);
+				Log("************************************************************\n");
 			}
 
 			/*compute number of vegetative months*/
