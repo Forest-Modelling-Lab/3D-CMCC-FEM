@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashEMP
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Description:    createInputFutureClimMadonie.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
@@ -801,17 +801,17 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		UNITY="kPa"
 		METADATA="-mo SITE=${SITE} -mo VALUES=VPD -mo UNITY_OF_MEASURE=${UNITY}"
 		
-#    	INPUT_01=$( ls ${IN_13}/*.tmp )
-#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
-#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
-#    	
-#    	PX_COORDS=()
-#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
-#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
-#				PX_COORDS+=("${X},${Y}")
-#			done
-#		done
-#    	
+    	INPUT_01=$( ls ${IN_13}/*.tmp )
+    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+    	
+    	PX_COORDS=()
+		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+				PX_COORDS+=("${X},${Y}")
+			done
+		done
+    	
 #    	for YYYY in "${YEARS_PROC[@]}" ; do
 #			for MM in "${MONTHS_PROC[@]}" ; do
 #			
@@ -832,7 +832,19 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 #				log "${MSG} ...\n"
 #				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
 #				check "${MSG} failed.\n"
+#
+#				MSG="Conversion of Temp_min GeoTiff to a textual file for ${YYYY}-${MM}"
+#				OUTPUT_04="${WK_13}/Temp_min_${YYYY}${MM}.txt"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
 #				
+#				MSG="Conversion of Temp_max GeoTiff to a textual file for ${YYYY}-${MM}"
+#				OUTPUT_05="${WK_13}/Temp_max_${YYYY}${MM}.txt"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_05} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#
 #				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
 #				log "${MSG} ...\n"
 #				rm ${OUTPUT_01} &>> "${LOGFILE}"
@@ -975,18 +987,46 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 #				done
 #			fi
 #		done
-#
+
 		cp ~/Desktop/${IMG}_tmp/* ${WK_13}
 		
+		TEMPLATE_TXT="${WK_13}/Avg_Temp_201001.txt"
 		
-		
-		
-		
-		
-		
-		
-		
-		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+			NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+			LINE_NUM=$( cat ${TEMPLATE_TXT} | grep -wn "[ \t]*${NEW_X_COORD}[ \t]*${NEW_Y_COORD}" | cut -d ':' -f '1' )
+
+			for YYYY in "${YEARS_PROC[@]}" ; do
+				for MM in "${MONTHS_PROC[@]}" ; do
+					IDX="${LINE_NUM}"
+					INPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+					INPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+					
+					TE=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+				
+					#ORIG_VAL="${YEAR_DATA[${K}]}"
+					#if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+						#ORIG_VAL="0"
+					#fi
+					#SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+					## Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+					## Gdal starts from UL, not from LL as textual files
+					#NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+					#NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+					
+					#MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+					#OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+					#log "${MSG} ...\n"
+					#sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+					#check "${MSG} failed.\n"
+				
+				done
+			done
+		done
+				
 		
 		
 		
