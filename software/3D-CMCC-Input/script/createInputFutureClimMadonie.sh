@@ -63,6 +63,7 @@ IN_15="$( dirname ${0} )/../input/15_LAI"
 IN_17="$( dirname ${0} )/../input/17_Packet"
 # Output directories
 OUT_00="$( dirname ${0} )/../output/00_Filters"
+OUT_11="$( dirname ${0} )/../output/11_SolarRad"
 OUT_12="$( dirname ${0} )/../output/12_Avg_Temp"
 OUT_13="$( dirname ${0} )/../output/13_VPD"
 OUT_14="$( dirname ${0} )/../output/14_Precip"
@@ -70,6 +71,7 @@ OUT_15="$( dirname ${0} )/../output/15_LAI"
 OUT_17="$( dirname ${0} )/../output/17_Packet"
 # Working directories
 WK_00="$( dirname ${0} )/../working/00_Filters"
+WK_11="$( dirname ${0} )/../working/11_SolarRad"
 WK_12="$( dirname ${0} )/../working/12_Avg_Temp"
 WK_13="$( dirname ${0} )/../working/13_VPD"
 WK_14="$( dirname ${0} )/../working/14_Precip"
@@ -477,83 +479,68 @@ done
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "SolarRad" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
-    	
-    	NAME_MASK_TOT="${PREF}_total_mask.tif"
-		MSG="Copy filter from ${OUT_00}"
+		
+		YEARS=(2002 2003 2004 2005 2006 2007 2008 2009)
+		MONTHS_SR=(1 2 3 4 5 6 7 8 9 10 11 12)
+		
+		for Y in ${YEARS[@]} ; do
+			for M in ${MONTHS_SR[@]} ; do
+				INPUT_01="${IN_11}/${IMG}_${Y}.tif"
+				OUTPUT_01="${WK_11}/${IMG}_${Y}_${M}.tif"
+				gdal_translate ${PAR_01} -b ${M} ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
+			done
+		done
+
+		SR_FINAL=()
+		for M in ${MONTHS_SR[@]} ; do
+			INPUT_01="-A ${WK_11}/${IMG}_2002_${M}.tif -B ${WK_11}/${IMG}_2003_${M}.tif -C ${WK_11}/${IMG}_2004_${M}.tif -D ${WK_11}/${IMG}_2005_${M}.tif -E ${WK_11}/${IMG}_2006_${M}.tif -F ${WK_11}/${IMG}_2007_${M}.tif -G ${WK_11}/${IMG}_2008_${M}.tif -H ${WK_11}/${IMG}_2009_${M}.tif"
+			OUTPUT_01="${WK_11}/${IMG}_${M}.tif"
+			gdal_calc.py ${INPUT_01} --outfile=${OUTPUT_01} --calc="(A+B+C+D+E+F+G+H)/${#YEARS[@]}" &>/dev/null
+			SR_FINAL+=("${OUTPUT_01}")
+		done
+		
+		UNITY="MJ/m2/day"
+		METADATA="-mo SITE=${SITE} -mo VALUES=SOLAR_RADIATION -mo UNITY_OF_MEASURE=${UNITY}"
+		
+		MSG="Create merged ${IMG} image for ${YEARS_PROC[0]}"
+		OUTPUT_10="${WK_11}/${IMG}_${YEARS_PROC[0]}_merged.tif"
 		log "${MSG} ...\n"
-		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_11}
+		gdal_merge.py ${PAR_05} ${SR_FINAL[@]} -o ${OUTPUT_10}  &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+			
+		MSG="Add metadata to ${IMG} image and compress it for ${YYYY}"
+		OUTPUT_11="${WK_11}/${IMG}_${YEARS_PROC[0]}.tif"
+		log "${MSG} ...\n"
+		gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
-    	MASK_TOT="${WK_11}/${NAME_MASK_TOT}"
-    	
-    	UNITY="MJ/m2/day"
-    	for INPUT_01 in $( ls ${IN_11}/*_rad_Nx*.hdf ) ; do
-    		CURR_PROJ=$( gdalinfo HDF4_SDS:UNKNOWN:"${INPUT_01}":6 | grep SRS | cut -d '=' -f '2' )
-    		UL_LONGITUDE=$( gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":1 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
-    		LR_LONGITUDE=$( gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":1 | grep STATISTICS_MAXIMUM | cut -d '=' -f '2' )
-    		UL_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MAXIMUM | cut -d '=' -f '2' )
-    		LR_LATITUDE=$(  gdalinfo -stats HDF4_SDS:UNKNOWN:"${INPUT_01}":2 | grep STATISTICS_MINIMUM | cut -d '=' -f '2' )
-    		
-    		# UL and LR are inverted because the original image is upside down and mirrored: a flip is needed!
-    		MSG="Extract solar radiation from hdf"
-    		INPUT_02="HDF4_SDS:UNKNOWN:\"${INPUT_01}\":6" # swgdn subdataset
-			OUTPUT_01="${WK_11}/$( basename $( echo ${INPUT_01} | sed s/.SUB.hdf/.tif/ | sed s/MERRA301.prod.assim.tavgM_2d_rad_Nx./swgdn-/) )"
-			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} -a_srs "${CURR_PROJ}" -a_ullr ${UL_LONGITUDE} ${LR_LATITUDE} ${LR_LONGITUDE} ${UL_LATITUDE} ${INPUT_02} ${OUTPUT_01} &>> "${LOGFILE}" &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			DATE=$( basename ${OUTPUT_01} | cut -d '-' -f '2' | cut -d '.' -f '1' )
-			MONTH="${DATE:4:2}"
-			YEAR="${DATE:0:4}"
-			
-			MSG="Remap of UTM geotiff image"
-			OUTPUT_02="$( echo ${OUTPUT_01} | sed s/.tif/-remapped/ )"
-			log "${MSG} ...\n"	
-			${BIN_DIR}/remap -i ${OUTPUT_01} -q -u -o ${OUTPUT_02} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			MSG="Get the subwindow needed"
-    		INPUT_03="$( ls ${WK_11}/*${DATE}-remapped_${AOI_ZONE}.tif )" # Get only tile at zone 33S
-			OUTPUT_03="$( echo ${INPUT_03} | sed s/-remapped_${AOI_ZONE}.tif/-warped.tif/ )"
-			log "${MSG} ...\n"
-			gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} -te ${UL_LON} ${LR_LAT} ${LR_LON} ${UL_LAT} ${INPUT_03} ${OUTPUT_03} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			MSG="Mask ${IMG}"
-			OUTPUT_04="$( echo ${OUTPUT_03} | sed s/-warped.tif/-masked.tif/ )"
-			log "${MSG} ...\n"
-			${BIN_DIR}/applyMask -i ${OUTPUT_03} -m ${MASK_TOT} -o ${OUTPUT_04} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-			
-			OUTPUT_05="$( echo ${OUTPUT_04} | sed s/-masked.tif/-final.tif/ )"
-			VALUE_SOLAR_RAD="0.0864"
-			MSG="Conversion from W/m2 to ${UNITY}"
-			log "${MSG} ...\n"
-			${BIN_DIR}/multiplyImgPx -i ${OUTPUT_04} -v "${VALUE_SOLAR_RAD}" -o ${OUTPUT_05} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-		done
+		OUTPUT_12="${WK_11}/${IMG}_${YEARS_PROC[1]}.tif"
+		OUTPUT_13="${WK_11}/${IMG}_${YEARS_PROC[2]}.tif"
+		OUTPUT_14="${WK_11}/${IMG}_${YEARS_PROC[3]}.tif"
+		OUTPUT_15="${WK_11}/${IMG}_${YEARS_PROC[4]}.tif"
+		OUTPUT_16="${WK_11}/${IMG}_${YEARS_PROC[5]}.tif"
+		OUTPUT_17="${WK_11}/${IMG}_${YEARS_PROC[6]}.tif"
+		OUTPUT_18="${WK_11}/${IMG}_${YEARS_PROC[7]}.tif"
+		OUTPUT_19="${WK_11}/${IMG}_${YEARS_PROC[8]}.tif"
+		OUTPUT_20="${WK_11}/${IMG}_${YEARS_PROC[9]}.tif"
+		OUTPUT_21="${WK_11}/${IMG}_${YEARS_PROC[10]}.tif"
 		
-		# Create output years images
-		METADATA="SITE=${SITE},VALUES=SOLAR_RADIATION,UNITY_OF_MEASURE=${UNITY}"
-		for YYYY in "${YEARS_PROC[@]}" ; do
-			MONTHS=()
-			for MM in "${MONTHS_PROC[@]}" ; do
-				INPUT_04=$( ls ${WK_11}/*${YYYY}${MM}-final.tif )
-				MONTHS+=("${INPUT_04}")				
-			done
-			
-			MSG="Create multiband ${IMG} image"
-			OUTPUT_06="${WK_11}/${IMG}_${YYYY}.tif"
-			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_06} -m "${METADATA}" &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
+		cp ${OUTPUT_11} ${OUTPUT_12}
+		cp ${OUTPUT_11} ${OUTPUT_13}
+		cp ${OUTPUT_11} ${OUTPUT_14}
+		cp ${OUTPUT_11} ${OUTPUT_15}
+		cp ${OUTPUT_11} ${OUTPUT_16}
+		cp ${OUTPUT_11} ${OUTPUT_17}
+		cp ${OUTPUT_11} ${OUTPUT_18}
+		cp ${OUTPUT_11} ${OUTPUT_19}
+		cp ${OUTPUT_11} ${OUTPUT_20}
+		cp ${OUTPUT_11} ${OUTPUT_21}		
 		
-			MSG="Copy ${IMG} into ${OUT_11}"
-			log "${MSG} ...\n"
-			cp ${OUTPUT_06} -t ${OUT_11}
-			check "${MSG} failed.\n"
-		done
-		
+		MSG="Copy ${IMG} into ${OUT_11}"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_11} ${OUTPUT_12} ${OUTPUT_13} ${OUTPUT_14} ${OUTPUT_15} ${OUTPUT_16} ${OUTPUT_17} ${OUTPUT_18} ${OUTPUT_19} ${OUTPUT_20} ${OUTPUT_21} -t ${OUT_11}
+		check "${MSG} failed.\n"
+				
 		clean "${WK_11}"
 		
     	log "### ......stop creating ${IMG} images } ###\n"
@@ -1132,178 +1119,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			cp ${OUTPUT_14} -t ${OUT_13}
 			check "${MSG} failed.\n"
 		done
-				
-		
-		
-		
-				
-#		for YYYY in ${YEARS_PROC[@]} ; do
-#			MONTHS=()
-#			JULIAN_DAYS=($( ls ${IN_00}/${YYYY} ))
-#			for JJ in ${JULIAN_DAYS[@]} ; do
-#				HDF="$( find ${IN_00}/${YYYY}/${JJ} -type f )"
-#				# Delete zeros in front of julian day: "001" --> "1" or "091" --> "91"
-#				if [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" == "0" ] ; then
-#					JJ="${JJ:2:1}"
-#				elif [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" != "0" ] ; then
-#					JJ="${JJ:1:2}"
-#				fi
-#				MM=$( date -d "`date +${YYYY} `-01-01 +$(( ${JJ} - 1 ))days" +%m )
-#				DATE="${YYYY}${MM}"
-#				
-#				SUBDATASET1="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Min"
-#				SUBDATASET2="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Max"
-#				
-#				MSG="Extract T_min subdataset for ${DATE}"
-#				OUTPUT_01="${WK_13}/${IMG}_T_min_global_latlon-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET1} ${OUTPUT_01} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Extract T_max subdataset for ${DATE}"
-#				OUTPUT_02="${WK_13}/${IMG}_T_max_global_latlon-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET2} ${OUTPUT_02} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				# T_min ------------------------------------------------------------------------
-#				BAND1="20"
-#				MSG="Extract band ${BAND1} for ${DATE}"
-#				OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Cut T_min on Sicily for ${DATE}"
-#				OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"				
-#				
-#				# Check if I have null values (-9999) inside 2x2 image extracted
-#				findNull "${OUTPUT_04}"				
-#				if [ "${?}" == "1" ] ; then
-#					log "Found a null value (-9999) in band ${BAND1}. Trying with previous band.\n"
-#					BAND1="19"
-#					MSG="Extract band ${BAND1} for ${DATE}"
-#					OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
-#					log "${MSG} ...\n"
-#					gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#				
-#					MSG="Cut T_min on Sicily for ${DATE}"
-#					OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
-#					log "${MSG} ...\n"
-#					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					findNull "${OUTPUT_04}"				
-#					if [ "${?}" == "1" ] ; then
-#						log "Found a null value (-9999) in band ${BAND1}. Exiting\n"
-#						return 0
-#					fi
-#				fi
-#				# T_max ------------------------------------------------------------------------
-#				BAND2="20"
-#				MSG="Extract band ${BAND2} for ${DATE}"
-#				OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Cut T_max on Sicily for ${DATE}"
-#				OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"				
-#				
-#				# Check if I have null values (-9999) inside 2x2 image extracted
-#				findNull "${OUTPUT_06}"				
-#				if [ "${?}" == "1" ] ; then
-#					log "Found a null value (-9999) in band ${BAND2}. Trying with previous band.\n"
-#					BAND2="19"
-#					MSG="Extract band ${BAND2} for ${DATE}"
-#					OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
-#					log "${MSG} ...\n"
-#					gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#				
-#					MSG="Cut T_max on Sicily for ${DATE}"
-#					OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
-#					log "${MSG} ...\n"
-#					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#					
-#					findNull "${OUTPUT_06}"				
-#					if [ "${?}" == "1" ] ; then
-#						log "Found a null value (-9999) in band ${BAND2}. Exiting\n"
-#						return 0
-#					fi
-#				fi
-#				# ------------------------------------------------------------------------------
-#				
-#				MSG="Conversion of tiff projection from longlat to UTM (T_min, ${DATE})"
-#				OUTPUT_07="${WK_13}/${IMG}_T_min_utm_30m-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_04} ${OUTPUT_07} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Conversion of tiff projection from longlat to UTM (T_max, ${DATE})"
-#				OUTPUT_08="${WK_13}/${IMG}_T_max_utm_30m-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_08} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remap and cut UTM geotiff image for T_min, ${DATE}"
-#				OUTPUT_09="${WK_13}/${IMG}_T_min_remapped-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remap and cut UTM geotiff image for T_max, ${DATE}"
-#				OUTPUT_10="${WK_13}/${IMG}_T_max_remapped-${DATE}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_10} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Getting T_min for ${DATE}"
-#				T_MIN="${WK_13}/${IMG}_T_min_${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MIN} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Getting T_max for ${DATE}"
-#				T_MAX="${WK_13}/${IMG}_T_max_${DATE}.tif"
-#				log "${MSG} ...\n"
-#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_10} --outfile=${T_MAX} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"				
-#								
-#				MSG="Getting ${IMG} for ${DATE}"
-#				OUTPUT_11="${WK_13}/${IMG}_${DATE}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Mask ${IMG}"
-#				OUTPUT_12="${WK_13}/${IMG}_${DATE}_masked.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/applyMask -i ${OUTPUT_11} -m ${MASK_TOT} -o ${OUTPUT_12} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MONTHS+=("${OUTPUT_12}")
-#			done
-#			
-#			MSG="Create multiband ${IMG} image for ${YYYY}"
-#			OUTPUT_13="${WK_13}/${IMG}_${YYYY}.tif"
-#			log "${MSG} ...\n"
-#			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_13} -m "${METADATA}" &>> "${LOGFILE}"
-#			check "${MSG} failed.\n"
-#		
-#			MSG="Copy ${IMG} into ${OUT_13}"
-#			log "${MSG} ...\n"
-#			cp ${OUTPUT_13} -t ${OUT_13}
-#			check "${MSG} failed.\n"	
-#    	done
 
 		clean "${WK_13}"
     	

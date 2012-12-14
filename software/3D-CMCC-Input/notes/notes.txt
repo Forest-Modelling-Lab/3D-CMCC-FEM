@@ -36,7 +36,6 @@ gdalwarp -co COMPRESS=LZW -of GTiff -t_srs '+proj=utm +zone=33 +ellps=WGS84 +dat
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-
 ### Conversion from CORINE Land Cover to GeoTiff ## ---> 2012-11-12 Too complicated and imprecise!
 # Rasterization of Parco delle Madonie AOI shapefile (pixel size -tr obtained as described below):
 gdal_rasterize -co COMPRESS=LZW -of GTiff -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 -ot Byte Sicily.shp Sicily.tif
