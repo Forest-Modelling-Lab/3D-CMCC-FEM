@@ -1,4 +1,4 @@
-#!/bin/bashEMP
+#!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 # Description:    createInputFutureClimMadonie.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
