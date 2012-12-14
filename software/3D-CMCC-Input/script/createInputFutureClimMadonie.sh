@@ -997,7 +997,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
 			NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
 			NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-			#LINE_NUM=$( cat ${TEMPLATE_TXT} | grep -wn "[ \t]*${NEW_X_COORD}[ \t]*${NEW_Y_COORD}" | cut -d ':' -f '1' )
+			LINE_NUM=$( cat ${TEMPLATE_TXT} | grep -wn "[ \t]*${NEW_X_COORD}[ \t]*${NEW_Y_COORD}" | cut -d ':' -f '1' )
 
 			for YYYY in "${YEARS_PROC[@]}" ; do
 				for MM in "${MONTHS_PROC[@]}" ; do
@@ -1005,8 +1005,12 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 					INPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
 					INPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
 					
-					#AVG_TEMP=$( grep -n '${NEW_X_COORD} ${NEW_Y_COORD}' ${INPUT_02} )
-					#echo ${AVG_TEMP}
+					AVG_TEMP=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_02} | awk -F" " '{ print $3 }' )
+					RANGE=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_03} | awk -F" " '{ print $3 }' )
+					
+					HALF_RANGE=$( echo ${RANGE}*0.5 | bc | sed 's/^\./0./' )
+					
+					echo "${RANGE} --> ${HALF_RANGE}"
 				
 					#ORIG_VAL="${YEAR_DATA[${K}]}"
 					#if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
