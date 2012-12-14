@@ -566,13 +566,26 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Avg_Temp" ] ; then
     	log "### { Start creating ${IMG} images..... ###\n"
     	
+    	# Average Temperature pixel value ( T(a) )
+		# T(a) = m * (Z+2) + T(o)
+		# m = -0.0064 
+		# Z = DEM pixel value
+		# T(o) = pixel value
+    	
     	NAME_MASK_TOT="${PREF}_total_mask.tif"
 		MSG="Copy filter from ${OUT_00}"
 		log "${MSG} ...\n"
 		cp ${OUT_00}/${NAME_MASK_TOT} -t ${WK_12}
 		check "${MSG} failed.\n"
 		
-		MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
+		NAME_DEM_SCALED="${PREF}_dem_scaled.tif"
+		MSG="Copy DEM from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_DEM_SCALED} -t ${WK_12}
+		check "${MSG} failed.\n"
+		
+    	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
+    	DEM_SCALED="${WK_12}/${NAME_DEM_SCALED}"
     	
 #    	INPUT_01=$( ls ${IN_12}/*.tmp )
 #    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
@@ -702,30 +715,36 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				MSG="Apply mask to ${OUTPUT_07}"
-				OUTPUT_08="${WK_12}/${IMG}_${YYYY}${MM}_mask.tif"
+				MSG="Applying scaled dem to pixel value for ${YYYY}-${MM}"
+				OUTPUT_08="${WK_12}/${IMG}_${YYYY}${MM}_dem.tif"
 				log "${MSG} ...\n"
-				gdal_calc.py -A ${OUTPUT_07} -B ${MASK_TOT} --outfile=${OUTPUT_08} --calc="(A*B)" &>> "${LOGFILE}"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_07} --outfile=${OUTPUT_08} --calc="(A+B)" &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				MONTHS+=("${OUTPUT_08}")
+				MSG="Apply mask to ${OUTPUT_08}"
+				OUTPUT_09="${WK_12}/${IMG}_${YYYY}${MM}_mask.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${OUTPUT_08} -B ${MASK_TOT} --outfile=${OUTPUT_09} --calc="(A*B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MONTHS+=("${OUTPUT_09}")
 			done
 			
 			MSG="Create merged ${IMG} image for ${YYYY}"
-			OUTPUT_09="${WK_12}/${IMG}_${YYYY}_merged.tif"
+			OUTPUT_10="${WK_12}/${IMG}_${YYYY}_merged.tif"
 			log "${MSG} ...\n"
-			gdal_merge.py ${PAR_05} ${MONTHS[@]} -o ${OUTPUT_09}  &>> "${LOGFILE}"
+			gdal_merge.py ${PAR_05} ${MONTHS[@]} -o ${OUTPUT_10}  &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			MSG="Add metadata to ${IMG} image and compress it for ${YYYY}"
-			OUTPUT_10="${WK_12}/${IMG}_${YYYY}.tif"
+			OUTPUT_11="${WK_12}/${IMG}_${YYYY}.tif"
 			log "${MSG} ...\n"
-			gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_09} ${OUTPUT_10} &>> "${LOGFILE}" &>> "${LOGFILE}"
+			gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}" &>> "${LOGFILE}"
 			check "${MSG} failed.\n"
 			
 			MSG="Copy ${IMG} into ${OUT_12}"
 			log "${MSG} ...\n"
-			cp ${OUTPUT_10} -t ${OUT_12}
+			cp ${OUTPUT_11} -t ${OUT_12}
 			check "${MSG} failed.\n"
 			
 		done
@@ -753,18 +772,13 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		# T_max(a) = m * (Z+2) + T_max(o)
 		# m = -0.0064 
 		# Z = DEM pixel value
-		# T_min(o) = scale_factor * (T_min_mod_value - add_offset) - 273.15
-		# T_max(o) = scale_factor * (T_max_mod_value - add_offset) - 273.15
-		# scale_factor = 0.01
-		# T_min_mod_value = MOD08_M3 observed value (layer 919, "Retrieved_Temperature_Profile_Mean_Min", band 20)
-		# T_max_mod_value = MOD08_M3 observed value (layer 920, "Retrieved_Temperature_Profile_Mean_Max", band 20)
-		# add_offset = -15000
+		# T_min(o) = pixel value
+		# T_max(o) = pixel value
 		
 		P1="0.6108"
 		P2="17.27"
 		P3="237.3"
-		SCALE_FACTOR="0.01"
-		ADD_OFFSET="-15000"
+
 
 		VPD_FORMULA="VPD=((e(T_max)+e(T_min))/2)-(e(T_min))"
 		log "${AVG_TEMP_FORMULA}\n"
@@ -785,174 +799,364 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	DEM_SCALED="${WK_13}/${NAME_DEM_SCALED}"    	
 		
 		UNITY="kPa"
-		METADATA="SITE=${SITE},VALUES=VPD,UNITY_OF_MEASURE=${UNITY}"
-		for YYYY in ${YEARS_PROC[@]} ; do
-			MONTHS=()
-			JULIAN_DAYS=($( ls ${IN_00}/${YYYY} ))
-			for JJ in ${JULIAN_DAYS[@]} ; do
-				HDF="$( find ${IN_00}/${YYYY}/${JJ} -type f )"
-				# Delete zeros in front of julian day: "001" --> "1" or "091" --> "91"
-				if [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" == "0" ] ; then
-					JJ="${JJ:2:1}"
-				elif [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" != "0" ] ; then
-					JJ="${JJ:1:2}"
-				fi
-				MM=$( date -d "`date +${YYYY} `-01-01 +$(( ${JJ} - 1 ))days" +%m )
-				DATE="${YYYY}${MM}"
-				
-				SUBDATASET1="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Min"
-				SUBDATASET2="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Max"
-				
-				MSG="Extract T_min subdataset for ${DATE}"
-				OUTPUT_01="${WK_13}/${IMG}_T_min_global_latlon-${DATE}.tif"
-				log "${MSG} ...\n"
-				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET1} ${OUTPUT_01} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Extract T_max subdataset for ${DATE}"
-				OUTPUT_02="${WK_13}/${IMG}_T_max_global_latlon-${DATE}.tif"
-				log "${MSG} ...\n"
-				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET2} ${OUTPUT_02} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				# T_min ------------------------------------------------------------------------
-				BAND1="20"
-				MSG="Extract band ${BAND1} for ${DATE}"
-				OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
-				log "${MSG} ...\n"
-				gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Cut T_min on Sicily for ${DATE}"
-				OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
-				log "${MSG} ...\n"
-				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"				
-				
-				# Check if I have null values (-9999) inside 2x2 image extracted
-				findNull "${OUTPUT_04}"				
-				if [ "${?}" == "1" ] ; then
-					log "Found a null value (-9999) in band ${BAND1}. Trying with previous band.\n"
-					BAND1="19"
-					MSG="Extract band ${BAND1} for ${DATE}"
-					OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
-					log "${MSG} ...\n"
-					gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-					check "${MSG} failed.\n"
-				
-					MSG="Cut T_min on Sicily for ${DATE}"
-					OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
-					log "${MSG} ...\n"
-					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
-					check "${MSG} failed.\n"
-					
-					findNull "${OUTPUT_04}"				
-					if [ "${?}" == "1" ] ; then
-						log "Found a null value (-9999) in band ${BAND1}. Exiting\n"
-						return 0
-					fi
-				fi
-				# T_max ------------------------------------------------------------------------
-				BAND2="20"
-				MSG="Extract band ${BAND2} for ${DATE}"
-				OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
-				log "${MSG} ...\n"
-				gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Cut T_max on Sicily for ${DATE}"
-				OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
-				log "${MSG} ...\n"
-				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"				
-				
-				# Check if I have null values (-9999) inside 2x2 image extracted
-				findNull "${OUTPUT_06}"				
-				if [ "${?}" == "1" ] ; then
-					log "Found a null value (-9999) in band ${BAND2}. Trying with previous band.\n"
-					BAND2="19"
-					MSG="Extract band ${BAND2} for ${DATE}"
-					OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
-					log "${MSG} ...\n"
-					gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
-					check "${MSG} failed.\n"
-				
-					MSG="Cut T_max on Sicily for ${DATE}"
-					OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
-					log "${MSG} ...\n"
-					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
-					check "${MSG} failed.\n"
-					
-					findNull "${OUTPUT_06}"				
-					if [ "${?}" == "1" ] ; then
-						log "Found a null value (-9999) in band ${BAND2}. Exiting\n"
-						return 0
-					fi
-				fi
-				# ------------------------------------------------------------------------------
-				
-				MSG="Conversion of tiff projection from longlat to UTM (T_min, ${DATE})"
-				OUTPUT_07="${WK_13}/${IMG}_T_min_utm_30m-${DATE}.tif"
-				log "${MSG} ...\n"
-				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_04} ${OUTPUT_07} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Conversion of tiff projection from longlat to UTM (T_max, ${DATE})"
-				OUTPUT_08="${WK_13}/${IMG}_T_max_utm_30m-${DATE}.tif"
-				log "${MSG} ...\n"
-				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_08} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Remap and cut UTM geotiff image for T_min, ${DATE}"
-				OUTPUT_09="${WK_13}/${IMG}_T_min_remapped-${DATE}.tif"
-				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Remap and cut UTM geotiff image for T_max, ${DATE}"
-				OUTPUT_10="${WK_13}/${IMG}_T_max_remapped-${DATE}.tif"
-				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_10} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Getting T_min for ${DATE}"
-				T_MIN="${WK_13}/${IMG}_T_min_${DATE}.tif"
-				log "${MSG} ...\n"
-				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MIN} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-
-				MSG="Getting T_max for ${DATE}"
-				T_MAX="${WK_13}/${IMG}_T_max_${DATE}.tif"
-				log "${MSG} ...\n"
-				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_10} --outfile=${T_MAX} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
-				check "${MSG} failed.\n"				
-								
-				MSG="Getting ${IMG} for ${DATE}"
-				OUTPUT_11="${WK_13}/${IMG}_${DATE}.tif"
-				log "${MSG} ...\n"
-				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MSG="Mask ${IMG}"
-				OUTPUT_12="${WK_13}/${IMG}_${DATE}_masked.tif"
-				log "${MSG} ...\n"
-				${BIN_DIR}/applyMask -i ${OUTPUT_11} -m ${MASK_TOT} -o ${OUTPUT_12} &>> "${LOGFILE}"
-				check "${MSG} failed.\n"
-				
-				MONTHS+=("${OUTPUT_12}")
-			done
-			
-			MSG="Create multiband ${IMG} image for ${YYYY}"
-			OUTPUT_13="${WK_13}/${IMG}_${YYYY}.tif"
-			log "${MSG} ...\n"
-			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_13} -m "${METADATA}" &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
+		METADATA="-mo SITE=${SITE} -mo VALUES=VPD -mo UNITY_OF_MEASURE=${UNITY}"
 		
-			MSG="Copy ${IMG} into ${OUT_13}"
-			log "${MSG} ...\n"
-			cp ${OUTPUT_13} -t ${OUT_13}
-			check "${MSG} failed.\n"	
-    	done
+#    	INPUT_01=$( ls ${IN_13}/*.tmp )
+#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+#    	
+#    	PX_COORDS=()
+#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+#				PX_COORDS+=("${X},${Y}")
+#			done
+#		done
+#    	
+#    	for YYYY in "${YEARS_PROC[@]}" ; do
+#			for MM in "${MONTHS_PROC[@]}" ; do
+#			
+#				MSG="Create an empty monoband image for ${YYYY}-${MM}"
+#				OUTPUT_01="${WK_13}/Europe_empty_${YYYY}${MM}.tif"
+#				log "${MSG} ...\n"
+#				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+#				check "${MSG} failed.\n" 
+#		
+#				MSG="Conversion of Avg_Temp GeoTiff to a textual file for ${YYYY}-${MM}"
+#				OUTPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#
+#				MSG="Conversion of Temp_Range GeoTiff to a textual file for ${YYYY}-${MM}"
+#				OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
+#				log "${MSG} ...\n"
+#				rm ${OUTPUT_01} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#
+#			done
+#		done
+#		
+#		for P in ${PX_COORDS[@]} ; do
+#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+#				PREC="${LINE_NUM}"
+#				J="1"
+#				for YYYY in "${YEARS_PROC[@]}" ; do
+#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+#					K="0"
+#					for MM in "${MONTHS_PROC[@]}" ; do
+#						ORIG_VAL="${YEAR_DATA[${K}]}"
+#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+#							ORIG_VAL="0"
+#						fi
+#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+#						# Gdal starts from UL, not from LL as textual files
+#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+#						
+#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+#						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+#						log "${MSG} ...\n"
+#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+#						check "${MSG} failed.\n"
+#						
+#						let "K += 1"
+#					done
+#					let "J += 1"
+#				done
+#			else # If this cell is missing from the dataset take the previous values
+#				J="1"
+#				for YYYY in "${YEARS_PROC[@]}" ; do
+#					IDX=$( echo "${PREC}+${J}" | bc )
+#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+#					K="0"
+#					for MM in "${MONTHS_PROC[@]}" ; do
+#						ORIG_VAL="${YEAR_DATA[${K}]}"
+#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+#							ORIG_VAL="0"
+#						fi
+#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+#						# Gdal starts from UL, not from LL as textual files
+#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+#						
+#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+#						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+#						log "${MSG} ...\n"
+#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+#						check "${MSG} failed.\n"
+#						
+#						let "K += 1"
+#					done
+#					let "J += 1"
+#				done
+#			fi
+#		done
+#
+#    	INPUT_01=$( ls ${IN_13}/*.dtr )
+#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+#    	
+#    	PX_COORDS=()
+#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+#				PX_COORDS+=("${X},${Y}")
+#			done
+#		done
+#		
+#		for P in ${PX_COORDS[@]} ; do
+#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+#				PREC="${LINE_NUM}"
+#				J="1"
+#				for YYYY in "${YEARS_PROC[@]}" ; do
+#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+#					K="0"
+#					for MM in "${MONTHS_PROC[@]}" ; do
+#						ORIG_VAL="${YEAR_DATA[${K}]}"
+#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+#							ORIG_VAL="0"
+#						fi
+#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+#						# Gdal starts from UL, not from LL as textual files
+#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+#						
+#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+#						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+#						log "${MSG} ...\n"
+#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+#						check "${MSG} failed.\n"
+#						
+#						let "K += 1"
+#					done
+#					let "J += 1"
+#				done
+#			else # If this cell is missing from the dataset take the previous values
+#				J="1"
+#				for YYYY in "${YEARS_PROC[@]}" ; do
+#					IDX=$( echo "${PREC}+${J}" | bc )
+#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+#					K="0"
+#					for MM in "${MONTHS_PROC[@]}" ; do
+#						ORIG_VAL="${YEAR_DATA[${K}]}"
+#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+#							ORIG_VAL="0"
+#						fi
+#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+#						# Gdal starts from UL, not from LL as textual files
+#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+#						
+#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+#						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+#						log "${MSG} ...\n"
+#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+#						check "${MSG} failed.\n"
+#						
+#						let "K += 1"
+#					done
+#					let "J += 1"
+#				done
+#			fi
+#		done
+#
+		cp ~/Desktop/${IMG}_tmp/* ${WK_13}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+#		for YYYY in ${YEARS_PROC[@]} ; do
+#			MONTHS=()
+#			JULIAN_DAYS=($( ls ${IN_00}/${YYYY} ))
+#			for JJ in ${JULIAN_DAYS[@]} ; do
+#				HDF="$( find ${IN_00}/${YYYY}/${JJ} -type f )"
+#				# Delete zeros in front of julian day: "001" --> "1" or "091" --> "91"
+#				if [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" == "0" ] ; then
+#					JJ="${JJ:2:1}"
+#				elif [ "${JJ:0:1}" == "0" ] && [ "${JJ:1:1}" != "0" ] ; then
+#					JJ="${JJ:1:2}"
+#				fi
+#				MM=$( date -d "`date +${YYYY} `-01-01 +$(( ${JJ} - 1 ))days" +%m )
+#				DATE="${YYYY}${MM}"
+#				
+#				SUBDATASET1="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Min"
+#				SUBDATASET2="HDF4_EOS:EOS_GRID:\"${HDF}\":mod08:Retrieved_Temperature_Profile_Mean_Max"
+#				
+#				MSG="Extract T_min subdataset for ${DATE}"
+#				OUTPUT_01="${WK_13}/${IMG}_T_min_global_latlon-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET1} ${OUTPUT_01} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Extract T_max subdataset for ${DATE}"
+#				OUTPUT_02="${WK_13}/${IMG}_T_max_global_latlon-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate ${PAR_01} ${PAR_02} ${SUBDATASET2} ${OUTPUT_02} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				# T_min ------------------------------------------------------------------------
+#				BAND1="20"
+#				MSG="Extract band ${BAND1} for ${DATE}"
+#				OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Cut T_min on Sicily for ${DATE}"
+#				OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"				
+#				
+#				# Check if I have null values (-9999) inside 2x2 image extracted
+#				findNull "${OUTPUT_04}"				
+#				if [ "${?}" == "1" ] ; then
+#					log "Found a null value (-9999) in band ${BAND1}. Trying with previous band.\n"
+#					BAND1="19"
+#					MSG="Extract band ${BAND1} for ${DATE}"
+#					OUTPUT_03="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}.tif"
+#					log "${MSG} ...\n"
+#					gdal_translate  ${PAR_01} -b ${BAND1} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
+#					check "${MSG} failed.\n"
+#				
+#					MSG="Cut T_min on Sicily for ${DATE}"
+#					OUTPUT_04="${WK_13}/${IMG}_T_min_latlon-${DATE}_b${BAND1}_cut.tif"
+#					log "${MSG} ...\n"
+#					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_03} ${OUTPUT_04} &>> "${LOGFILE}"
+#					check "${MSG} failed.\n"
+#					
+#					findNull "${OUTPUT_04}"				
+#					if [ "${?}" == "1" ] ; then
+#						log "Found a null value (-9999) in band ${BAND1}. Exiting\n"
+#						return 0
+#					fi
+#				fi
+#				# T_max ------------------------------------------------------------------------
+#				BAND2="20"
+#				MSG="Extract band ${BAND2} for ${DATE}"
+#				OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Cut T_max on Sicily for ${DATE}"
+#				OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
+#				log "${MSG} ...\n"
+#				gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"				
+#				
+#				# Check if I have null values (-9999) inside 2x2 image extracted
+#				findNull "${OUTPUT_06}"				
+#				if [ "${?}" == "1" ] ; then
+#					log "Found a null value (-9999) in band ${BAND2}. Trying with previous band.\n"
+#					BAND2="19"
+#					MSG="Extract band ${BAND2} for ${DATE}"
+#					OUTPUT_05="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}.tif"
+#					log "${MSG} ...\n"
+#					gdal_translate  ${PAR_01} -b ${BAND2} -a_srs "${PROJ_LONGLAT}" -a_ullr ${WORLD} ${OUTPUT_02} ${OUTPUT_05} &>> "${LOGFILE}"
+#					check "${MSG} failed.\n"
+#				
+#					MSG="Cut T_max on Sicily for ${DATE}"
+#					OUTPUT_06="${WK_13}/${IMG}_T_max_latlon-${DATE}_b${BAND2}_cut.tif"
+#					log "${MSG} ...\n"
+#					gdal_translate  ${PAR_01} -projwin ${SICILY} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}"
+#					check "${MSG} failed.\n"
+#					
+#					findNull "${OUTPUT_06}"				
+#					if [ "${?}" == "1" ] ; then
+#						log "Found a null value (-9999) in band ${BAND2}. Exiting\n"
+#						return 0
+#					fi
+#				fi
+#				# ------------------------------------------------------------------------------
+#				
+#				MSG="Conversion of tiff projection from longlat to UTM (T_min, ${DATE})"
+#				OUTPUT_07="${WK_13}/${IMG}_T_min_utm_30m-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_04} ${OUTPUT_07} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Conversion of tiff projection from longlat to UTM (T_max, ${DATE})"
+#				OUTPUT_08="${WK_13}/${IMG}_T_max_utm_30m-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_08} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Remap and cut UTM geotiff image for T_min, ${DATE}"
+#				OUTPUT_09="${WK_13}/${IMG}_T_min_remapped-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Remap and cut UTM geotiff image for T_max, ${DATE}"
+#				OUTPUT_10="${WK_13}/${IMG}_T_max_remapped-${DATE}.tif"
+#				log "${MSG} ...\n"
+#				${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_10} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Getting T_min for ${DATE}"
+#				T_MIN="${WK_13}/${IMG}_T_min_${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MIN} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#
+#				MSG="Getting T_max for ${DATE}"
+#				T_MAX="${WK_13}/${IMG}_T_max_${DATE}.tif"
+#				log "${MSG} ...\n"
+#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_10} --outfile=${T_MAX} --calc="(A+(${SCALE_FACTOR}*(B-(${ADD_OFFSET}))-273.15))" &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"				
+#								
+#				MSG="Getting ${IMG} for ${DATE}"
+#				OUTPUT_11="${WK_13}/${IMG}_${DATE}.tif"
+#				log "${MSG} ...\n"
+#				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MSG="Mask ${IMG}"
+#				OUTPUT_12="${WK_13}/${IMG}_${DATE}_masked.tif"
+#				log "${MSG} ...\n"
+#				${BIN_DIR}/applyMask -i ${OUTPUT_11} -m ${MASK_TOT} -o ${OUTPUT_12} &>> "${LOGFILE}"
+#				check "${MSG} failed.\n"
+#				
+#				MONTHS+=("${OUTPUT_12}")
+#			done
+#			
+#			MSG="Create multiband ${IMG} image for ${YYYY}"
+#			OUTPUT_13="${WK_13}/${IMG}_${YYYY}.tif"
+#			log "${MSG} ...\n"
+#			${BIN_DIR}/mergeImg -b ${#MONTHS[@]} -i ${MONTHS[@]} -o ${OUTPUT_13} -m "${METADATA}" &>> "${LOGFILE}"
+#			check "${MSG} failed.\n"
+#		
+#			MSG="Copy ${IMG} into ${OUT_13}"
+#			log "${MSG} ...\n"
+#			cp ${OUTPUT_13} -t ${OUT_13}
+#			check "${MSG} failed.\n"	
+#    	done
 
 		clean "${WK_13}"
     	
