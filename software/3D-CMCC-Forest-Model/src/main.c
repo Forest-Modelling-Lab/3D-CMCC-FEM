@@ -1440,12 +1440,15 @@ int main(int argc, char *argv[])
 			/* model */
 			matrix_summary (m, years, yos);
 
+			Log("-YEARS OF SIMULATION = %d\n", yos[years].year);
+			Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
+
 
 			//control version 's' or 'u' and change if asked
-			if (years_of_simulation >= settings->switchtounspatial)
+			if (settings->version == 's' && yos[years].year >= (int)(settings->switchtounspatial))
 			{
 				settings->version = 'u';
-				Log("year %d...changing version from spatial to unspatial\n", years_of_simulation);
+				Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
 				Log("Model version = %c\n", settings->version);
 			}
 

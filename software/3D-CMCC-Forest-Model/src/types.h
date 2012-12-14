@@ -761,8 +761,8 @@ typedef struct
 	maxrg,
 	maxtav,
 	maxvpd,
-	maxprecip;
-	int switchtounspatial;
+	maxprecip,
+	switchtounspatial;
 } settings_t;
 
 /* */
