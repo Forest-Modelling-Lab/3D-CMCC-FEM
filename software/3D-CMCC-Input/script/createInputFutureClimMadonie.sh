@@ -399,24 +399,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		log "${MSG} ...\n"
 		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_07} -o ${MASK_7} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
-		
-#		MSG="Merge of multiple species"
-#		OUTPUT_10="${WK_00}/Madonie_species.tif"
-#		log "${MSG} ...\n"
-#		gdal_merge.py ${PAR_01} -n 0 -separate ${OUTPUT_03} ${OUTPUT_05} ${OUTPUT_07} ${OUTPUT_09} -o ${OUTPUT_10} &>> "${LOGFILE}"
-#		check "${MSG} failed.\n"
-#		
-#		MSG="Adding metadata to ${OUTPUT_10}"
-#		METADATA="-mo SITE=${SITE} -mo ID=SPECIE -mo -9999=${SPECIES_ID[0]} -mo 1=${SPECIES_ID[1]} -mo 2=${SPECIES_ID[2]} -mo 3=${SPECIES_ID[3]} -mo 4=${SPECIES_ID[4]} -mo 5=${SPECIES_ID[5]} -mo 6=${SPECIES_ID[6]} -mo 7=${SPECIES_ID[7]} -mo BAND1=${SPECIES_ID[1]} -mo BAND2=${SPECIES_ID[2]} -mo BAND3=${SPECIES_ID[6]} -mo BAND4=${SPECIES_ID[7]}"
-#		OUTPUT_11="${WK_00}/Madonie_species_filter.tif"
-#		log "${MSG} ...\n"
-#		gdal_translate ${PAR_01} ${METADATA} ${OUTPUT_10} ${OUTPUT_11} &>> "${LOGFILE}"
-#		check "${MSG} failed.\n"
-#		
-#		MSG="Copy ${OUTPUT_11} into output dir"
-#		log "${MSG} ...\n"
-#		cp ${OUTPUT_11} ${OUT_00}
-#		check "${MSG} failed.\n"
 
 		log "Start creating dem file ...\n"
 		for INPUT_01 in $( ls ${IN_00}/*.zip ) ; do
@@ -574,103 +556,103 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	MASK_TOT="${WK_12}/${NAME_MASK_TOT}"
     	DEM_SCALED="${WK_12}/${NAME_DEM_SCALED}"
     	
-#    	INPUT_01=$( ls ${IN_12}/*.tmp )
-#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
-#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
-#    	
-#    	PX_COORDS=()
-#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
-#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
-#				PX_COORDS+=("${X},${Y}")
-#			done
-#		done
-#    	
-#    	for YYYY in "${YEARS_PROC[@]}" ; do
-#			for MM in "${MONTHS_PROC[@]}" ; do
-#			
-#				MSG="Create an empty monoband image for ${YYYY}-${MM}"
-#				OUTPUT_01="${WK_12}/Europe_empty_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n" 
-#		
-#				MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_02="${WK_12}/${IMG}_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
-#				log "${MSG} ...\n"
-#				rm ${OUTPUT_01} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#			done
-#		done
-#		
-#		for P in ${PX_COORDS[@]} ; do
-#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
-#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
-#				PREC="${LINE_NUM}"
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_12}/${IMG}_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			else # If this cell is missing from the dataset take the previous values
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${PREC}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_12}/${IMG}_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			fi
-#		done
+    	INPUT_01=$( ls ${IN_12}/*.tmp )
+    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+    	
+    	PX_COORDS=()
+		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+				PX_COORDS+=("${X},${Y}")
+			done
+		done
+    	
+    	for YYYY in "${YEARS_PROC[@]}" ; do
+			for MM in "${MONTHS_PROC[@]}" ; do
+			
+				MSG="Create an empty monoband image for ${YYYY}-${MM}"
+				OUTPUT_01="${WK_12}/Europe_empty_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n" 
+		
+				MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_02="${WK_12}/${IMG}_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
+				log "${MSG} ...\n"
+				rm ${OUTPUT_01} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
-		cp ~/Desktop/${IMG}_tmp/* ${WK_12}
+			done
+		done
+		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				PREC="${LINE_NUM}"
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_12}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			else # If this cell is missing from the dataset take the previous values
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${PREC}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_12}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			fi
+		done
+
+		#cp ~/Desktop/${IMG}_tmp/* ${WK_12}
 		
 		UNITY="kPa"
 		METADATA="-mo SITE=${SITE} -mo VALUES=AVERAGE_TEMPERATURE -mo UNITY_OF_MEASURE=${UNITY}"
@@ -766,7 +748,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		P2="17.27"
 		P3="237.3"
 
-
 		VPD_FORMULA="VPD=((e(T_max)+e(T_min))/2)-(e(T_min))"
 		log "${AVG_TEMP_FORMULA}\n"
     	
@@ -796,223 +777,223 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			done
 		done
     	
-#    	for YYYY in "${YEARS_PROC[@]}" ; do
-#			for MM in "${MONTHS_PROC[@]}" ; do
-#			
-#				MSG="Create an empty monoband image for ${YYYY}-${MM}"
-#				OUTPUT_01="${WK_13}/Europe_empty_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n" 
-#		
-#				MSG="Conversion of Avg_Temp GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Conversion of Temp_Range GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Conversion of Temp_min GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_04="${WK_13}/Temp_min_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Conversion of Temp_max GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_05="${WK_13}/Temp_max_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_05} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
-#				log "${MSG} ...\n"
-#				rm ${OUTPUT_01} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#			done
-#		done
-#		
-#		for P in ${PX_COORDS[@]} ; do
-#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
-#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
-#				PREC="${LINE_NUM}"
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			else # If this cell is missing from the dataset take the previous values
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${PREC}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			fi
-#		done
-#
-#    	INPUT_01=$( ls ${IN_13}/*.dtr )
-#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
-#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
-#    	
-#    	PX_COORDS=()
-#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
-#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
-#				PX_COORDS+=("${X},${Y}")
-#			done
-#		done
-#		
-#		for P in ${PX_COORDS[@]} ; do
-#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
-#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
-#				PREC="${LINE_NUM}"
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			else # If this cell is missing from the dataset take the previous values
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${PREC}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			fi
-#		done
-#
-#		TEMPLATE_TXT="${WK_13}/Avg_Temp_201001.txt"
-#		
-#		for P in ${PX_COORDS[@]} ; do
-#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-#			NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#			NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#			LINE_NUM=$( cat ${TEMPLATE_TXT} | grep -wn "[ \t]*${NEW_X_COORD}[ \t]*${NEW_Y_COORD}" | cut -d ':' -f '1' )
-#
-#			for YYYY in "${YEARS_PROC[@]}" ; do
-#				for MM in "${MONTHS_PROC[@]}" ; do
-#					IDX="${LINE_NUM}"
-#					INPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
-#					INPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
-#					
-#					AVG_TEMP=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_02} | awk -F" " '{ print $3 }' )
-#					RANGE=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_03} | awk -F" " '{ print $3 }' )
-#					
-#					HALF_RANGE=$( echo ${RANGE}*0.5 | bc | sed 's/^\./0./' )
-#					
-#					MIN_TEMP=$( echo ${AVG_TEMP}-${HALF_RANGE} | bc | sed 's/^\./0./' )
-#					MAX_TEMP=$( echo ${AVG_TEMP}+${HALF_RANGE} | bc | sed 's/^\./0./' )
-#					
-#					MSG="Change Temp_min textual file in cell ${NEW_X_COORD}, ${NEW_Y_COORD} content for ${YYYY}-${MM}"
-#					OUTPUT_03="${WK_13}/Temp_min_${YYYY}${MM}.txt"
-#					log "${MSG} ...\n"
-#					sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${MIN_TEMP}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#				
-#					MSG="Change Temp_max textual file in cell ${NEW_X_COORD}, ${NEW_Y_COORD} content for ${YYYY}-${MM}"
-#					OUTPUT_04="${WK_13}/Temp_max_${YYYY}${MM}.txt"
-#					log "${MSG} ...\n"
-#					sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${MAX_TEMP}'/' "${OUTPUT_04}" &>> "${LOGFILE}"
-#					check "${MSG} failed.\n"
-#				
-#				done
-#			done
-#		done
-#		
+    	for YYYY in "${YEARS_PROC[@]}" ; do
+			for MM in "${MONTHS_PROC[@]}" ; do
+			
+				MSG="Create an empty monoband image for ${YYYY}-${MM}"
+				OUTPUT_01="${WK_13}/Europe_empty_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n" 
+		
+				MSG="Conversion of Avg_Temp GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
-		cp ~/Desktop/${IMG}_tmp/VPD_[0-9]*.tif ${WK_13}
+				MSG="Conversion of Temp_Range GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_03} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+				MSG="Conversion of Temp_min GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_04="${WK_13}/Temp_min_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Conversion of Temp_max GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_05="${WK_13}/Temp_max_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_05} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
+				log "${MSG} ...\n"
+				rm ${OUTPUT_01} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+			done
+		done
+		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				PREC="${LINE_NUM}"
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			else # If this cell is missing from the dataset take the previous values
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${PREC}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			fi
+		done
+
+    	INPUT_01=$( ls ${IN_13}/*.dtr )
+    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+    	
+    	PX_COORDS=()
+		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+				PX_COORDS+=("${X},${Y}")
+			done
+		done
+		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				PREC="${LINE_NUM}"
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			else # If this cell is missing from the dataset take the previous values
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${PREC}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			fi
+		done
+
+		TEMPLATE_TXT="${WK_13}/Avg_Temp_201001.txt"
+		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+			NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+			LINE_NUM=$( cat ${TEMPLATE_TXT} | grep -wn "[ \t]*${NEW_X_COORD}[ \t]*${NEW_Y_COORD}" | cut -d ':' -f '1' )
+
+			for YYYY in "${YEARS_PROC[@]}" ; do
+				for MM in "${MONTHS_PROC[@]}" ; do
+					IDX="${LINE_NUM}"
+					INPUT_02="${WK_13}/Avg_Temp_${YYYY}${MM}.txt"
+					INPUT_03="${WK_13}/Temp_Range_${YYYY}${MM}.txt"
+					
+					AVG_TEMP=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_02} | awk -F" " '{ print $3 }' )
+					RANGE=$( sed -n -e "${LINE_NUM},${LINE_NUM}p" ${INPUT_03} | awk -F" " '{ print $3 }' )
+					
+					HALF_RANGE=$( echo ${RANGE}*0.5 | bc | sed 's/^\./0./' )
+					
+					MIN_TEMP=$( echo ${AVG_TEMP}-${HALF_RANGE} | bc | sed 's/^\./0./' )
+					MAX_TEMP=$( echo ${AVG_TEMP}+${HALF_RANGE} | bc | sed 's/^\./0./' )
+					
+					MSG="Change Temp_min textual file in cell ${NEW_X_COORD}, ${NEW_Y_COORD} content for ${YYYY}-${MM}"
+					OUTPUT_03="${WK_13}/Temp_min_${YYYY}${MM}.txt"
+					log "${MSG} ...\n"
+					sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${MIN_TEMP}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+				
+					MSG="Change Temp_max textual file in cell ${NEW_X_COORD}, ${NEW_Y_COORD} content for ${YYYY}-${MM}"
+					OUTPUT_04="${WK_13}/Temp_max_${YYYY}${MM}.txt"
+					log "${MSG} ...\n"
+					sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${MAX_TEMP}'/' "${OUTPUT_04}" &>> "${LOGFILE}"
+					check "${MSG} failed.\n"
+				
+				done
+			done
+		done
+		
+
+		#cp ~/Desktop/${IMG}_tmp/VPD_[0-9]*.tif ${WK_13}
 				
 		UNITY="kPa"
 		METADATA="-mo SITE=${SITE} -mo VALUES=VPD -mo UNITY_OF_MEASURE=${UNITY}"
@@ -1021,77 +1002,77 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			MONTHS=()
 			for MM in "${MONTHS_PROC[@]}" ; do
 				
-#				VAR="Temp_min"
-#				MSG="Reconvert ${VAR} textual files into GeoTiff content for ${YYYY}-${MM}"
-#				INPUT_05="${WK_13}/${VAR}_${YYYY}${MM}.txt"
-#				OUTPUT_05="${WK_13}/${VAR}_${YYYY}${MM}_latlon.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -a_ullr ${UL_EUR_LONGITUDE} ${UL_EUR_LATITUDE} ${LR_EUR_LONGITUDE} ${LR_EUR_LATITUDE} ${INPUT_05} ${OUTPUT_05} &>> "${LOGFILE}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Take a sub window of GeoTiff ${VAR} for ${YYYY}-${MM}"
-#				OUTPUT_06="${WK_13}/${VAR}_${YYYY}${MM}_latlon_cut.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -projwin ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Conversion of tiff projection from longlat to UTM for ${VAR} ${YYYY}-${MM}"
-#				OUTPUT_07="${WK_13}/${VAR}_${YYYY}${MM}_utm.tif"
-#				log "${MSG} ...\n"
-#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_07} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
-#				OUTPUT_08="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_08} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				# ------------------------------------------------------------------------------------
-#				
-#				VAR="Temp_max"
-#				MSG="Reconvert ${VAR} textual files into GeoTiff content for ${YYYY}-${MM}"
-#				INPUT_05="${WK_13}/${VAR}_${YYYY}${MM}.txt"
-#				OUTPUT_05="${WK_13}/${VAR}_${YYYY}${MM}_latlon.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -a_ullr ${UL_EUR_LONGITUDE} ${UL_EUR_LATITUDE} ${LR_EUR_LONGITUDE} ${LR_EUR_LATITUDE} ${INPUT_05} ${OUTPUT_05} &>> "${LOGFILE}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Take a sub window of GeoTiff ${VAR} for ${YYYY}-${MM}"
-#				OUTPUT_06="${WK_13}/${VAR}_${YYYY}${MM}_latlon_cut.tif"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -projwin ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Conversion of tiff projection from longlat to UTM for ${VAR} ${YYYY}-${MM}"
-#				OUTPUT_07="${WK_13}/${VAR}_${YYYY}${MM}_utm.tif"
-#				log "${MSG} ...\n"
-#				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_07} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
-#				OUTPUT_09="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Getting T_min for ${YYYY}${MM}"
-#				T_MIN="${WK_13}/${IMG}_T_min_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_08} --outfile=${T_MIN} --calc="(A+B)" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Getting T_max for ${YYYY}${MM}"
-#				T_MAX="${WK_13}/${IMG}_T_max_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MAX} --calc="(A+B)" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#				MSG="Getting ${IMG} for ${YYYY}${MM}"
+				VAR="Temp_min"
+				MSG="Reconvert ${VAR} textual files into GeoTiff content for ${YYYY}-${MM}"
+				INPUT_05="${WK_13}/${VAR}_${YYYY}${MM}.txt"
+				OUTPUT_05="${WK_13}/${VAR}_${YYYY}${MM}_latlon.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -a_ullr ${UL_EUR_LONGITUDE} ${UL_EUR_LATITUDE} ${LR_EUR_LONGITUDE} ${LR_EUR_LATITUDE} ${INPUT_05} ${OUTPUT_05} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Take a sub window of GeoTiff ${VAR} for ${YYYY}-${MM}"
+				OUTPUT_06="${WK_13}/${VAR}_${YYYY}${MM}_latlon_cut.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -projwin ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Conversion of tiff projection from longlat to UTM for ${VAR} ${YYYY}-${MM}"
+				OUTPUT_07="${WK_13}/${VAR}_${YYYY}${MM}_utm.tif"
+				log "${MSG} ...\n"
+				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_07} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
+				OUTPUT_08="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_08} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				# ------------------------------------------------------------------------------------
+				
+				VAR="Temp_max"
+				MSG="Reconvert ${VAR} textual files into GeoTiff content for ${YYYY}-${MM}"
+				INPUT_05="${WK_13}/${VAR}_${YYYY}${MM}.txt"
+				OUTPUT_05="${WK_13}/${VAR}_${YYYY}${MM}_latlon.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -a_ullr ${UL_EUR_LONGITUDE} ${UL_EUR_LATITUDE} ${LR_EUR_LONGITUDE} ${LR_EUR_LATITUDE} ${INPUT_05} ${OUTPUT_05} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Take a sub window of GeoTiff ${VAR} for ${YYYY}-${MM}"
+				OUTPUT_06="${WK_13}/${VAR}_${YYYY}${MM}_latlon_cut.tif"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_01} -a_srs "${PROJ_LONGLAT}" -projwin ${UL_LONGITUDE} ${UL_LATITUDE} ${LR_LONGITUDE} ${LR_LATITUDE} ${OUTPUT_05} ${OUTPUT_06} &>> "${LOGFILE}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Conversion of tiff projection from longlat to UTM for ${VAR} ${YYYY}-${MM}"
+				OUTPUT_07="${WK_13}/${VAR}_${YYYY}${MM}_utm.tif"
+				log "${MSG} ...\n"
+				gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_06} ${OUTPUT_07} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
+				OUTPUT_09="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+				MSG="Getting T_min for ${YYYY}${MM}"
+				T_MIN="${WK_13}/${IMG}_T_min_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_08} --outfile=${T_MIN} --calc="(A+B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Getting T_max for ${YYYY}${MM}"
+				T_MAX="${WK_13}/${IMG}_T_max_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MAX} --calc="(A+B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+
+				MSG="Getting ${IMG} for ${YYYY}${MM}"
 				OUTPUT_11="${WK_13}/${IMG}_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
+				log "${MSG} ...\n"
+				${BIN_DIR}/getVPD -min ${T_MIN} -max ${T_MAX} -o ${OUTPUT_11} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
 				MSG="Apply mask to ${OUTPUT_11}"
 				OUTPUT_12="${WK_13}/${IMG}_${YYYY}${MM}_mask.tif"
@@ -1140,103 +1121,103 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		
 		MASK_TOT="${WK_14}/${NAME_MASK_TOT}"
     	
-#    	INPUT_01=$( ls ${IN_14}/*.pre )
-#    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
-#    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
-#    	
-#    	PX_COORDS=()
-#		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
-#			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
-#				PX_COORDS+=("${X},${Y}")
-#			done
-#		done
-#    	
-#    	for YYYY in "${YEARS_PROC[@]}" ; do
-#			for MM in "${MONTHS_PROC[@]}" ; do
-#			
-#				MSG="Create an empty monoband image for ${YYYY}-${MM}"
-#				OUTPUT_01="${WK_14}/Europe_empty_${YYYY}${MM}.tif"
-#				log "${MSG} ...\n"
-#				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
-#				check "${MSG} failed.\n" 
-#		
-#				MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
-#				OUTPUT_02="${WK_14}/${IMG}_${YYYY}${MM}.txt"
-#				log "${MSG} ...\n"
-#				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#				
-#				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
-#				log "${MSG} ...\n"
-#				rm ${OUTPUT_01} &>> "${LOGFILE}"
-#				check "${MSG} failed.\n"
-#
-#			done
-#		done
-#		
-#		for P in ${PX_COORDS[@]} ; do
-#			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
-#			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
-#			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
-#			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
-#				PREC="${LINE_NUM}"
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${LINE_NUM}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			else # If this cell is missing from the dataset take the previous values
-#				J="1"
-#				for YYYY in "${YEARS_PROC[@]}" ; do
-#					IDX=$( echo "${PREC}+${J}" | bc )
-#					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
-#					K="0"
-#					for MM in "${MONTHS_PROC[@]}" ; do
-#						ORIG_VAL="${YEAR_DATA[${K}]}"
-#						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
-#							ORIG_VAL="0"
-#						fi
-#						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
-#						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
-#						# Gdal starts from UL, not from LL as textual files
-#						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
-#						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
-#						
-#						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
-#						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
-#						log "${MSG} ...\n"
-#						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
-#						check "${MSG} failed.\n"
-#						
-#						let "K += 1"
-#					done
-#					let "J += 1"
-#				done
-#			fi
-#		done
+    	INPUT_01=$( ls ${IN_14}/*.pre )
+    	MISSING=$(  cat ${INPUT_01} | grep -w "Missing=[ \t]*[0-9]*" | awk -F"=" '{ print $5 }' | tr -d ']' ) 
+    	MULTI=$(    cat ${INPUT_01} | grep -w "Multi=[ \t]*[0-9]*"   | awk -F"=" '{ print $4 }' | tr -d '] [Missing' )
+    	
+    	PX_COORDS=()
+		for (( X=${START_X}; X<=${END_X}; X++ )) ; do
+			for (( Y=${START_Y}; Y<=${END_Y}; Y++ )) ; do
+				PX_COORDS+=("${X},${Y}")
+			done
+		done
+    	
+    	for YYYY in "${YEARS_PROC[@]}" ; do
+			for MM in "${MONTHS_PROC[@]}" ; do
+			
+				MSG="Create an empty monoband image for ${YYYY}-${MM}"
+				OUTPUT_01="${WK_14}/Europe_empty_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				${BIN_DIR}/createImg -x ${SIZEX_EUROPE} -y ${SIZEY_EUROPE} -b 1 -t float -v 0 -c -n "${OUTPUT_01}" &>> "${LOGFILE}"
+				check "${MSG} failed.\n" 
+		
+				MSG="Conversion of GeoTiff to a textual file for ${YYYY}-${MM}"
+				OUTPUT_02="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+				log "${MSG} ...\n"
+				gdal_translate ${PAR_03} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
+				
+				MSG="Remove empty GeoTiff for ${YYYY}-${MM}"
+				log "${MSG} ...\n"
+				rm ${OUTPUT_01} &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
-		cp ~/Desktop/${IMG}_tmp/* ${WK_14}
+			done
+		done
+		
+		for P in ${PX_COORDS[@]} ; do
+			X_COORD=$( echo ${P} | cut -d ',' -f '1' )
+			Y_COORD=$( echo ${P} | cut -d ',' -f '2' )
+			LINE_NUM=$( cat ${INPUT_01} | grep -wn "[ \t]*${X_COORD},[ \t]*${Y_COORD}" | cut -d ':' -f '1' )
+			if [ "${LINE_NUM}" != "" ] ; then # If this cell exists in the dataset
+				PREC="${LINE_NUM}"
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${LINE_NUM}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			else # If this cell is missing from the dataset take the previous values
+				J="1"
+				for YYYY in "${YEARS_PROC[@]}" ; do
+					IDX=$( echo "${PREC}+${J}" | bc )
+					YEAR_DATA=( $( sed -n -e "${IDX},${IDX}p" ${INPUT_01} ) )
+					K="0"
+					for MM in "${MONTHS_PROC[@]}" ; do
+						ORIG_VAL="${YEAR_DATA[${K}]}"
+						if [ "${ORIG_VAL}" == "${MISSING}" ] ; then
+							ORIG_VAL="0"
+						fi
+						SCALED_VAL=$( echo ${ORIG_VAL}*${MULTI} | bc | sed 's/^\./0./' )
+						# Gdal indexes starts from 0, not from 1 and in textual files there is the center of the pixel (i.e.: 0,0 --> 0.5,0.5)
+						# Gdal starts from UL, not from LL as textual files
+						NEW_X_COORD=$( echo "(${X_COORD}-1)+0.5" | bc | sed 's/^\./0./' )
+						NEW_Y_COORD=$( echo "((${SIZEY_EUROPE}-1)-(${Y_COORD}-1))+0.5" | bc | sed 's/^\./0./' )
+						
+						MSG="Change textual file in cell ${X_COORD}, ${Y_COORD} (${NEW_X_COORD}, ${NEW_Y_COORD}) content for ${YYYY}-${MM}"
+						OUTPUT_03="${WK_14}/${IMG}_${YYYY}${MM}.txt"
+						log "${MSG} ...\n"
+						sed -i 's/\<'${NEW_X_COORD}' '${NEW_Y_COORD}' 0\>/'${NEW_X_COORD}' '${NEW_Y_COORD}' '${SCALED_VAL}'/' "${OUTPUT_03}" &>> "${LOGFILE}"
+						check "${MSG} failed.\n"
+						
+						let "K += 1"
+					done
+					let "J += 1"
+				done
+			fi
+		done
+
+		#cp ~/Desktop/${IMG}_tmp/* ${WK_14}
 		
 		UNITY="mm/month"
 		METADATA="-mo SITE=${SITE} -mo VALUES=PRECIPITATIONS -mo UNITY_OF_MEASURE=${UNITY}"
