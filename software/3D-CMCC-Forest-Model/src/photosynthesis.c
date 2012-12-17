@@ -120,11 +120,10 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		//Log("Respiration rate = %g \n", site->Y);
 		Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
 
-		if (settings->version == 's')
-		{
-			Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
-			Log("Monthly Stand NPP = %g \n", s->value[NPP] );
-		}
+
+		Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
+		Log("Monthly Stand NPP = %g \n", s->value[NPP] );
+
 
 	}
 	else //Un Veg period
@@ -136,11 +135,10 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		s->value[NPP] = 0;
 		Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
-		if (settings->version == 's')
-		{
-			Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
-			Log("Monthly Stand NPP = %g \n", s->value[NPP]);
-		}
+
+		Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
+		Log("Monthly Stand NPP = %g \n", s->value[NPP]);
+
 	}
 
 
