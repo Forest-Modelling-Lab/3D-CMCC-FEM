@@ -230,16 +230,16 @@ TEMPLATE="${INPUTDATASETDIR}/${LOCATION}/images/AvDBH.tif"
 for Y in ${YEARS[@]} ; do
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_NPP=""
+	log "Starting execution of getOutputCMCC for NPP on year ${Y}...\n"
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-		log "Starting execution of getOutputCMCC for NPP on year ${Y}, band ${B}...\n"
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_NPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_NPP.tif
 		if [ "$?" -ne "0" ] ; then
 			log "Execution of getOutputCMCC failed\n"
 			exit 10
 		fi
-		log "...getOutputCMCC exited succesfully.\n"
 		MONTHS_NPP="${MONTHS_NPP} ${WORK_OUT}/${Y}_${B}_NPP.tif"
 	done
+	log "...getOutputCMCC exited succesfully.\n"
 	unset LD_LIBRARY_PATH
 	log "Starting execution of mergeImg for NPP, year ${Y}...\n"
 	${BIN}/mergeImg -b 12 -i ${MONTHS_NPP} -o ${WORK_OUT}/NPP_${Y}.tif -m VALUE=NPP,YEAR=${Y},SITE=${LOCATION}
@@ -258,16 +258,16 @@ for Y in ${YEARS[@]} ; do
 
 	export LD_LIBRARY_PATH=/home/sistema/lib:${LD_LIBRARY_PATH}
 	MONTHS_GPP=""
+	log "Starting execution of getOutputCMCC for GPP on year ${Y}...\n"
 	for B in b01 b02 b03 b04 b05 b06 b07 b08 b09 b10 b11 b12 ; do
-		log "Starting execution of getOutputCMCC for GPP on year ${Y}, band ${B}...\n"
 		${BIN}/getOutputCMCC -t ${TEMPLATE} -i ${WORK_CMCC}/${Y}_${B}_GPP_Good_Points.txt -o ${WORK_OUT}/${Y}_${B}_GPP.tif
 		if [ "$?" -ne "0" ] ; then
 			log "Execution of getOutputCMCC failed\n"
 			exit 10
 		fi
-		log "...getOutputCMCC exited succesfully.\n"
 		MONTHS_GPP="${MONTHS_GPP} ${WORK_OUT}/${Y}_${B}_GPP.tif"
 	done
+	log "...getOutputCMCC exited succesfully.\n"
 	unset LD_LIBRARY_PATH
 	log "Starting execution of mergeImg for GPP, year ${Y}...\n"
 	${BIN}/mergeImg -b 12 -i ${MONTHS_GPP} -o ${WORK_OUT}/GPP_${Y}.tif -m VALUE=GPP,YEAR=${Y},SITE=${LOCATION}
