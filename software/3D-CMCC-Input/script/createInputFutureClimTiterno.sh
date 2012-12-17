@@ -14,8 +14,8 @@
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
 AOI="Comunità montana del Titerno ed alto Tammaro (Benevento, Campania)"
-SITE="MADONIE"
-PREF="Madonie"
+SITE="TITERNO-TAMMARO"
+PREF="Titerno-Tammaro"
 SUBDIR="ClimFuture"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
 IMG_ALL=(Filters Species SolarRad Avg_Temp VPD Precip LAI Packet)
@@ -255,112 +255,13 @@ log "\n"
 for IMG in "${IMG_SELECTED[@]}" ; do
 	if [ "${IMG}" == "Filters" ] ; then
 		log "### { Start creating ${IMG} images...... ###\n"
-		
-		#MSG="Conversion of AOI shapefile into tiff"
-		#INPUT_01="${IN_00}/Sicily.shp"
-		#OUTPUT_01="${WK_00}/Sicily.tif"
-		#log "${MSG} ...\n"
-		#gdal_rasterize ${PAR_01} ${PAR_02} -burn 255 -tr 0.00045266691956530711 0.00045266691956530711 ${INPUT_01} ${OUTPUT_01} &>> "${LOGFILE}"
-		#check "${MSG} failed on ${INPUT_01}.\n"
-		#MSG="Conversion of tiff projection from longlat to UTM"
-		#OUTPUT_02="${WK_00}/Madonie_no_remap.tif"
-		#log "${MSG} ...\n"
-		#gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		#check "${MSG} failed on ${OUTPUT_01}.\n"
-		#MSG="Remap and cut UTM geotiff image"
-		#OUTPUT_03="${WK_00}/Madonie.tif"
-		#log "${MSG} ...\n"
-		#${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		#check "${MSG} failed on ${OUTPUT_02}.\n"
 
-		MSG="Conversion of shapefile georef"
-		INPUT_01="${IN_00}/CFRS_ParcoMadonie.shp"
-		OUTPUT_01="${WK_00}/CFRS_ParcoMadonie_utm.shp"
+		MSG="Conversion of ${PREF} shapefile into GeoTiff"
+		ZONE_NAME="Rectangle_CM_Tammaro-titerno_Limiti_amministrativi_WGS84_UTM_33N"
+		INPUT_01="${IN_00}/${ZONE_NAME}/${ZONE_NAME}.shp"
+		OUTPUT_02="${WK_00}/${PREF}-envelope.tif"
 		log "${MSG} ...\n"
-		ogr2ogr -a_srs "${PROJ_3004}" -t_srs "${PROJ}" ${OUTPUT_01} ${INPUT_01} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="1"
-		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
-		OUTPUT_02="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="CA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_03="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_02} -o ${OUTPUT_03} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="2"
-		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
-		OUTPUT_04="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="FA"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_04} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_05="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_04} -o ${OUTPUT_05} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="6"
-		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
-		OUTPUT_06="${WK_00}/Madonie_${SPECIES_ID[${IDX}]}_${IDX}.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="QU" OR COD_CATEG="CE"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_06} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_07="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="7"
-		MSG="Conversion of Madonie shapefile into GeoTiff (${SPECIES_ID[${IDX}]})"
-		OUTPUT_08="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}.tif"
-		log "${MSG} ...\n"
-		gdal_rasterize ${PAR_01} ${PAR_02} -sql 'SELECT * FROM CFRS_ParcoMadonie_utm WHERE COD_CATEG="LE" OR COD_CATEG="SU"' -burn ${IDX} -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_08} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Remap and cut UTM geotiff image"
-		OUTPUT_09="${WK_00}/${SPECIES_ID[${IDX}]}_${IDX}_remapped.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/remap -i ${OUTPUT_08} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		FILTER_01="${OUTPUT_03}"
-		FILTER_02="${OUTPUT_05}"
-		FILTER_06="${OUTPUT_07}"
-		FILTER_07="${OUTPUT_09}"
-		
-		MSG="Merge of deciduous species"
-		FILTER_D="${WK_00}/${PREF}_deciduous_filter.tif"
-		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} -n 0 ${FILTER_01} ${FILTER_02} ${FILTER_06} -o ${FILTER_D} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		FILTER_E="${FILTER_07}"
-		
-		MSG="Get a binary mask of type GDT_Byte"
-		MASK_D="${WK_00}/${PREF}_deciduous_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_D} -o ${MASK_D} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Get a binary mask of type GDT_Byte"
-		MASK_E="${WK_00}/${PREF}_evergreen_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_E} -o ${MASK_E} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		MSG="Get a total mask"
-		MASK_TOT="${WK_00}/${PREF}_total_mask.tif"
-		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} -n 0 ${MASK_D} ${MASK_E} -o ${MASK_TOT} &>> "${LOGFILE}"
+		gdal_rasterize ${PAR_01} ${PAR_02} -burn 1 -tr ${RES} -${RES} ${INPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Create an empty monoband image"
@@ -372,61 +273,14 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Set georeference to empty band"
 		OUTPUT_11="${WK_00}/empty_geo.tif"
 		log "${MSG} ...\n"
-		${BIN_DIR}/copyGeoref -i ${FILTER_E} ${OUTPUT_10} -o ${OUTPUT_11} &>> "${LOGFILE}"
+		${BIN_DIR}/copyGeoref -i ${OUTPUT_02} ${OUTPUT_10} -o ${OUTPUT_11} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
-		
-		IDX="1"
-		MSG="Get a binary mask of ${FILTER_01}"
-		MASK_1="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_01} -o ${MASK_1} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="2"
-		MSG="Get a binary mask of ${FILTER_02}"
-		MASK_2="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_02} -o ${MASK_2} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="6"
-		MSG="Get a binary mask of ${FILTER_06}"
-		MASK_6="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_06} -o ${MASK_6} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-		
-		IDX="7"
-		MSG="Get a binary mask of ${FILTER_07}"
-		MASK_7="${WK_00}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
-		log "${MSG} ...\n"
-		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_07} -o ${MASK_7} &>> "${LOGFILE}"
-		check "${MSG} failed.\n"
-
-		log "Start creating dem file ...\n"
-		for INPUT_01 in $( ls ${IN_00}/*.zip ) ; do
-    		MSG="Unzipping DEM files"
-			log "${MSG} ...\n"
-			unzip ${INPUT_01} -d ${WK_00} &>> "${LOGFILE}"
-			check "${MSG} failed.\n"
-		
-			MSG="Removing useless stuff"
-			log "${MSG} ...\n"
-			rm -f ${WK_00}/*.pdf ${WK_00}/*_num.tif
-			check "${MSG} failed.\n"
-    	done
-    	
-		MSG="Merge adjacent dem files"
-		INPUT_02=($( ls ${WK_00}/*_dem.tif ))
-		OUTPUT_01="${WK_00}/Sicily_dem.tif"
-		log "${MSG} ...\n"
-		gdal_merge.py ${PAR_01} ${PAR_02} ${INPUT_02[@]} -o ${OUTPUT_01} &>> "${LOGFILE}"
-    	check "${MSG} failed.\n"
     	
     	MSG="Conversion of tiff projection from longlat to UTM"
-		OUTPUT_02="${WK_00}/Sicily_dem_no_remap.tif"
+    	INPUT_02="${IN_00}/ASTGTM2_N41E014_dem.tif"
+		OUTPUT_02="${WK_00}/${PREF}_dem_no_remap.tif"
 		log "${MSG} ...\n"
-		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${OUTPUT_01} ${OUTPUT_02} &>> "${LOGFILE}"
+		gdalwarp ${PAR_01} -t_srs "${PROJ}" -tr ${RES} -${RES} ${INPUT_02} ${OUTPUT_02} &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		
 		MSG="Remap and cut UTM geotiff image"
@@ -443,14 +297,9 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		check "${MSG} failed.\n"
 		log "End creating dem file .....\n"
 		
-		MSG="Copy masks, empty band and scaled DEM into output dir"
+		MSG="Copy mask, empty band and scaled DEM into output dir"
 		log "${MSG} ...\n"
-		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${OUTPUT_11} ${DEM_SCALED} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_00}
-		check "${MSG} failed.\n"
-		
-		MSG="Copy masks into Species output dir (put into packet for testing/tuning purposes)"
-		log "${MSG} ...\n"
-		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${MASK_1} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_02}
+		cp ${OUTPUT_03} ${OUTPUT_11} ${DEM_SCALED} -t ${OUT_00}
 		check "${MSG} failed.\n"
 
 		clean "${WK_00}"
