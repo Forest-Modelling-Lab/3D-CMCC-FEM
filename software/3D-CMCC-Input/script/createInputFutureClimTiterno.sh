@@ -1,24 +1,24 @@
 #!/bin/bash
 ### File information summary  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
-# Description:    createInputFutureClimMadonie.sh bash shell script
+# Description:    createInputFutureClimTiterno.sh bash shell script
 #                 Processing chain to create input images for Forest Scenarios Evolution project (ForSE).
 # Author:         Alessandro Candini - candini@meeo.it
 # Version:        0.1
 # Copyright:      MEEO S.R.L. - www.meeo.it 
 # How it works:   It takes...
-# Changelog:      2012-12-11 - version 0.1
+# Changelog:      2012-12-17 - version 0.1
 #                     - First Release
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  File information summary }
 
 ### Global variables definitions  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 VERSION="0.1"
 SCRIPT_NAME="${0:2:-3}"
-AOI="Parco delle Madonie (Sicily)"
+AOI="Comunità montana del Titerno ed alto Tammaro (Benevento, Campania)"
 SITE="MADONIE"
 PREF="Madonie"
 SUBDIR="ClimFuture"
 MODULES=(remap applyMask calcAverage multiplyImgPx getLAI getVPD createImg mergeImg specFromMaxPerc copyGeoref reduceToBinaryMask)
-IMG_ALL=(Filters SolarRad Avg_Temp VPD Precip LAI Packet)
+IMG_ALL=(Filters Species SolarRad Avg_Temp VPD Precip LAI Packet)
 IMG_SELECTED=()
 
 # Species identification numbers: 
@@ -31,13 +31,13 @@ IMG_SELECTED=()
 # 6 = "quercus_deciduous" (Q. cerris, Q. robur, Q. pubescens, Q. petreae)
 # 7 = "quercus_evergreen" (Q. ilex, Q. suber)
 SPECIES_ID=(Undefined Castaneasativa Fagussylvatica Ostryacarpinifolia Pinusnigra Quercuscerris quercus_deciduous quercus_evergreen)
-SPECIES_ID_PRESENT=(1 2 6 7)
+SPECIES_ID_PRESENT=(2 6 7)
 
 # Some parameters values per specie:
-Y_PLANTED_ID=(Undefined 1981 1963 null null null 1991 1986)
-N_CELL_ID=(Undefined 5 49 null null null 12 11)
-AVDBH_ID=(Undefined 18.33 26.697 null null null 12.387 18.473)
-HEIGHT_ID=(Undefined 12.79 12.427 null null null 7.04 7.0)
+Y_PLANTED_ID=(Undefined null 1975 null null null 1985 1985)
+N_CELL_ID=(Undefined null 111 null null null 133 50)
+AVDBH_ID=(Undefined null 17.820 null null null 11.279 12.997)
+HEIGHT_ID=(Undefined null 13.0 null null null 6.0 7.0)
 
 # Phenology identification numbers:
 # 0 = "-9999" (Undefined)
@@ -55,6 +55,7 @@ BIN_DIR="$( dirname ${0} )/../bin"
 OUTPUT_DIR="$( dirname ${0} )/../output"
 # Input directories
 IN_00="$( dirname ${0} )/../input/00_Filters"
+IN_02="$( dirname ${0} )/../input/02_Species"
 IN_11="$( dirname ${0} )/../input/11_SolarRad/${SUBDIR}"
 IN_12="$( dirname ${0} )/../input/12_Avg_Temp/${SUBDIR}"
 IN_13="$( dirname ${0} )/../input/13_VPD/${SUBDIR}"
@@ -63,6 +64,7 @@ IN_15="$( dirname ${0} )/../input/15_LAI"
 IN_17="$( dirname ${0} )/../input/17_Packet"
 # Output directories
 OUT_00="$( dirname ${0} )/../output/00_Filters"
+OUT_02="$( dirname ${0} )/../output/02_Species"
 OUT_11="$( dirname ${0} )/../output/11_SolarRad"
 OUT_12="$( dirname ${0} )/../output/12_Avg_Temp"
 OUT_13="$( dirname ${0} )/../output/13_VPD"
@@ -71,6 +73,7 @@ OUT_15="$( dirname ${0} )/../output/15_LAI"
 OUT_17="$( dirname ${0} )/../output/17_Packet"
 # Working directories
 WK_00="$( dirname ${0} )/../working/00_Filters"
+WK_02="$( dirname ${0} )/../working/02_Species"
 WK_11="$( dirname ${0} )/../working/11_SolarRad"
 WK_12="$( dirname ${0} )/../working/12_Avg_Temp"
 WK_13="$( dirname ${0} )/../working/13_VPD"
@@ -79,8 +82,8 @@ WK_15="$( dirname ${0} )/../working/15_LAI"
 WK_17="$( dirname ${0} )/../working/17_Packet"
 
 # Output geotiff size:
-SIZEX="1286"
-SIZEY="1160"
+SIZEX="1349"
+SIZEY="907"
 
 # Textual files extents (lat,lon and x,y values)
 SIZEX_EUROPE="258"
@@ -89,23 +92,23 @@ UL_EUR_LONGITUDE="-11"
 UL_EUR_LATITUDE="72"
 LR_EUR_LONGITUDE="32"
 LR_EUR_LATITUDE="34"
-START_X="150"
-END_X="152"
-START_Y="23"
-END_Y="25"
-UL_LONGITUDE="13.8333333333"
-UL_LATITUDE="38.1666666666"
-LR_LONGITUDE="14.3333333333"
-LR_LATITUDE="37.6666666666"
+START_X="153"
+END_X="155"
+START_Y="43"
+END_Y="45"
+UL_LONGITUDE="14.5"
+UL_LATITUDE="41.6666666666"
+LR_LONGITUDE="15"
+LR_LATITUDE="41.1666666666"
 
 # Output geotiff resolution:
 RES="30"
 # Output geotiff Upper Left and Lower Right point coordinates:
-UL_LON="399333.291887304978445"
-UL_LAT="4211980.487859229557216"
-LR_LON="437913.291887304978445"
-LR_LAT="4177180.487859229557216"
-AOI_ZONE="33S"
+UL_LON="451158.503598976763897"
+UL_LAT="4589065.056699615903199"
+LR_LON="491628.503598976763897"
+LR_LAT="4561855.056699615903199"
+AOI_ZONE="33T"
 # Geotiff projections (proj4 definitions from spatialreference.org):
 PROJ="+proj=utm +zone=33 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
 PROJ_32="+proj=utm +zone=32 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
@@ -117,7 +120,7 @@ PAR_03="-q -of XYZ"
 PAR_05="${PAR_01} ${PAR_02} -separate"
 # Lat-lon extents
 WORLD="-180 90 180 -90"
-SICILY="13 39 15 37"
+GLOBAL_SUBWIN_LONLAT="13 42 15 40"
 
 # Temporal coverage
 YEARS_PROC=(2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020)
@@ -456,6 +459,153 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     fi
 done
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Filters execution }
+
+### Species execution - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
+for IMG in "${IMG_SELECTED[@]}" ; do
+	if [ "${IMG}" == "Species" ] ; then
+    	log "### { Start creating ${IMG} images...... ###\n"
+    	
+    	NAME_EMPTY_BAND="empty_geo.tif"
+   		EMPTY_BAND="${WK_02}/${NAME_EMPTY_BAND}"
+   	
+		MSG="Copy empty band from ${OUT_00}"
+		log "${MSG} ...\n"
+		cp ${OUT_00}/${NAME_EMPTY_BAND} -t ${WK_02}
+		check "${MSG} failed.\n"
+    	
+		INPUT_03=()
+		for INPUT_02 in $( ls ${IN_02}/*.asc ) ; do
+			MSG="Conversion from ASCII corine format into geotiff of ${INPUT_02}"
+			OUTPUT_04="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/.tif/ ) )"
+			log "${MSG} ...\n"
+			gdal_translate ${PAR_01} -a_srs "${PROJ_32}" ${INPUT_02} ${OUTPUT_04} &>> "${LOGFILE}"
+			check "${MSG} failed on ${INPUT_02}.\n"
+	
+			MSG="Changing zone from 32 to 33 of ${OUTPUT_04}"
+			OUTPUT_05="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_zone33.tif/ ) )"
+			log "${MSG} ...\n"
+			gdalwarp ${PAR_01} -t_srs "${PROJ}" ${OUTPUT_04} ${OUTPUT_05} &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_04}.\n"
+
+			MSG="Remap of UTM geotiff image"
+			OUTPUT_06="${WK_02}/$( basename $( echo ${INPUT_02} | sed s/.asc/_${PREF}_30m.tif/ ) )"
+			log "${MSG} ...\n"	
+			${BIN_DIR}/remap -i ${OUTPUT_05} -o ${OUTPUT_06} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+			check "${MSG} failed on ${OUTPUT_05}.\n"
+	
+			INPUT_03+=("${OUTPUT_06}")
+		done
+	
+		# CORINE_3115 --> Fagussylvatica    (2)
+		# CORINE_3112 --> quercus_deciduous (6)
+		# CORINE_3111 --> quercus_evergreen (7)	
+		
+		MSG="Merge different corine images"
+		log "${MSG} ...\n"
+		OUTPUT_07="${WK_02}/${PREF}_species_one_band.tif"	
+		${BIN_DIR}/specFromMaxPerc -b ${#INPUT_03[@]} -i ${INPUT_03[@]} -v 7,6,2 -o ${OUTPUT_07} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"		
+
+		METADATA="SITE=${SITE},ID=SPECIE,-9999=${SPECIES_ID[0]},1=${SPECIES_ID[1]},2=${SPECIES_ID[2]},3=${SPECIES_ID[3]},4=${SPECIES_ID[4]},5=${SPECIES_ID[5]},6=${SPECIES_ID[6]},7=${SPECIES_ID[7]}"
+		MSG="Create multiband ${IMG} image"
+		INPUT_02=(${OUTPUT_07} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND} ${EMPTY_BAND})
+		OUTPUT_08="${WK_02}/${IMG}.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/mergeImg -b ${#INPUT_02[@]} -i ${INPUT_02[@]} -o ${OUTPUT_08} -m "${METADATA}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Copy ${OUTPUT_08} into output dir"
+		log "${MSG} ...\n"
+		cp ${OUTPUT_08} ${OUT_02}
+		check "${MSG} failed.\n"
+		
+		### Mask creation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+
+		IDX="2"
+		FILTER_02="${WK_02}/CORINE_3115_${PREF}_filter.tif"
+		MSG="Create specie filter for ${SPECIES_ID[${IDX}]} (${IDX})"
+		log "${MSG} ...\n"
+		gdal_calc.py -A ${OUTPUT_07} --outfile=${FILTER_02} --calc="(A==${IDX})*${IDX}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+
+		IDX="6"
+		FILTER_06="${WK_02}/CORINE_3112_${PREF}_filter.tif"
+		MSG="Create specie filter for ${SPECIES_ID[${IDX}]} (${IDX})"
+		log "${MSG} ...\n"
+		gdal_calc.py -A ${OUTPUT_07} --outfile=${FILTER_06} --calc="(A==${IDX})*${IDX}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="7"
+		FILTER_07="${WK_02}/CORINE_3111_${PREF}_filter.tif"
+		MSG="Create specie filter for ${SPECIES_ID[${IDX}]} (${IDX})"
+		log "${MSG} ...\n"
+		gdal_calc.py -A ${OUTPUT_07} --outfile=${FILTER_07} --calc="(A==${IDX})*${IDX}" &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Merge of deciduous species"
+		FILTER_D="${WK_02}/${PREF}_deciduous_filter.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${FILTER_02} ${FILTER_06} -o ${FILTER_D} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		FILTER_E="${FILTER_07}"
+		
+		MSG="Get a binary mask of type GDT_Byte"
+		MASK_D="${WK_02}/${PREF}_deciduous_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_D} -o ${MASK_D} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Get a binary mask of type GDT_Byte"
+		MASK_E="${WK_02}/${PREF}_evergreen_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_E} -o ${MASK_E} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		MSG="Get a total mask"
+		MASK_TOT="${WK_02}/${PREF}_total_mask.tif"
+		log "${MSG} ...\n"
+		gdal_merge.py ${PAR_01} -n 0 ${MASK_D} ${MASK_E} -o ${MASK_TOT} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+				
+		IDX="2"
+		MSG="Get a binary mask of ${FILTER_02}"
+		MASK_2="${WK_02}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_02} -o ${MASK_2} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="6"
+		MSG="Get a binary mask of ${FILTER_06}"
+		MASK_6="${WK_02}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_06} -o ${MASK_6} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		IDX="7"
+		MSG="Get a binary mask of ${FILTER_07}"
+		MASK_7="${WK_02}/${PREF}_${SPECIES_ID[${IDX}]}_${IDX}_mask.tif"
+		log "${MSG} ...\n"
+		${BIN_DIR}/reduceToBinaryMask -i ${FILTER_07} -o ${MASK_7} &>> "${LOGFILE}"
+		check "${MSG} failed.\n"
+		
+		# Be careful! Copy into Filters output folder
+		MSG="Copy masks, empty band and scaled DEM into output dir"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_00}
+		check "${MSG} failed.\n"
+		
+		MSG="Copy masks into ${IMG} output dir (put into packet for testing/tuning purposes)"
+		log "${MSG} ...\n"
+		cp ${MASK_D} ${MASK_E} ${MASK_TOT} ${MASK_2} ${MASK_6} ${MASK_7} -t ${OUT_02}
+		check "${MSG} failed.\n"
+		
+		clean "${WK_02}"
+    	
+    	log "### .......stop creating ${IMG} images } ###\n"
+    fi
+done
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Species execution }
 
 ### SolarRad execution  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - {
 for IMG in "${IMG_SELECTED[@]}" ; do
