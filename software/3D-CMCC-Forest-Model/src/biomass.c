@@ -140,17 +140,26 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 
 			break;
 		case 1:
+			/*
 			dominant_prec_volume = s->value[BIOMASS_STEM_CTEM] * (1 - s->value[FRACBB]) /	MassDensity;
 			Log("DominantVolume = %g m^3/cell resolution\n", dominant_prec_volume);
 			s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 			Log("DOMINANT CAI = %g m^3/area/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
 			Log("MAI-Mean Annual Increment = %g m^3/area/yr \n", s->value[MAI] );
+
 			if (dominant_prec_volume > s->value[VOLUME])
 			{
 				Log("ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
 				Log("prev_volume - VOLUME = %g\n", dominant_prec_volume - s->value[VOLUME]);
 			}
+			*/
+			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			Log("CURRENT Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
+			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
+			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
+			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI]);
 			break;
 		}
 	}
@@ -163,7 +172,7 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
 			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
-			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI] );
+			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI]);
 		}
 		else
 		{
