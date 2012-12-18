@@ -466,6 +466,8 @@ enum {
 
 	AV_STEM_MASS,                   //Average Stem Mass           Kg/tree
 	AV_ROOT_MASS,                   //Average Root Mass           Kg/tree
+	AV_FINE_ROOT_MASS,
+	AV_COARSE_ROOT_MASS,
 
 	BASAL_AREA,                     //Basal Area (m^2/area tree)
 	STAND_BASAL_AREA,

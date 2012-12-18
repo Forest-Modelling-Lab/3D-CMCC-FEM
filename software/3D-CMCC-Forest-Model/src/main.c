@@ -41,17 +41,17 @@ const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", 
 
 /* global variables */
 char *program_path		=	NULL,	// mandatory
-	 *input_dir			=	NULL,	// mandatory
-	 *input_path		=	NULL,	// mandatory
-	 *dataset_filename	=	NULL,	// mandatory
-	 *input_met_path	=	NULL,	// mandatory
-	 *site_path			=	NULL,	// mandatory
-	 *output_path		=	NULL,	// mandatory
-	 *out_filename		=	NULL,	// mandatory
-	 *output_file		= 	NULL,	// mandatory
-	 *settings_path		=	NULL;	// mandatory
-	 //*resolution		= 	NULL,	// mandatory
-	 //*vers_arg			= 	NULL;	// mandatory
+		*input_dir			=	NULL,	// mandatory
+		*input_path		=	NULL,	// mandatory
+		*dataset_filename	=	NULL,	// mandatory
+		*input_met_path	=	NULL,	// mandatory
+		*site_path			=	NULL,	// mandatory
+		*output_path		=	NULL,	// mandatory
+		*out_filename		=	NULL,	// mandatory
+		*output_file		= 	NULL,	// mandatory
+		*settings_path		=	NULL;	// mandatory
+//*resolution		= 	NULL,	// mandatory
+//*vers_arg			= 	NULL;	// mandatory
 
 int log_enabled		=	1,	// default is on
 		years_of_simulation	=	0;	// default is none
@@ -112,7 +112,7 @@ static const char msg_dataset_not_specified[] =
 		" searching..."
 #endif
 		"\n";
-*/
+ */
 static const char msg_dataset_path[]	=	"dataset path = %s\n";
 static const char msg_site_path[]		=	"site path = %s\n";
 static const char msg_settings_path[]	=	"settings path = %s\n";
@@ -834,52 +834,55 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							}
 							break;
 						case Ndvi_Lai: //Get LAI in spatial version
-							yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
-
-
-							if ( error_flag )
+							if (settings->version == 's')
 							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							//if is not the first year the model get the previous year value
-							if (*yos_count > 1)
-							{
+								yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
 
-								//control in lai data if is an invalid value
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ndvi_lai))
+
+								if ( error_flag )
 								{
-									Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									//Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ndvi_lai))
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								//if is not the first year the model get the previous year value
+								if (*yos_count > 1)
+								{
+
+									//control in lai data if is an invalid value
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ndvi_lai))
 									{
-										Log ("* LAI -NO DATA- in previous year!!!!\n" );
-										yos[*yos_count-1].m[month].ndvi_lai = NO_DATA;
+										Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+										//Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ndvi_lai))
+										{
+											Log ("* LAI -NO DATA- in previous year!!!!\n" );
+											yos[*yos_count-1].m[month].ndvi_lai = NO_DATA;
+										}
+									}
+									//control lai data in spatial version if value is higher than MAXLAI
+									if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+									{
+										Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+										Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
 									}
 								}
-								//control lai data in spatial version if value is higher than MAXLAI
-								if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+								//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
+								else
 								{
-									Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
-								}
-							}
-							//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
-							else
-							{
-								if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
-								{
-									//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
-									//
-									//
-									//
-									Log("**********First Year without a valid LAI value set to default value LAI\n");
-									yos[*yos_count-1].m[month].ndvi_lai = settings->defaultlai;
-									Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
+									if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+									{
+										//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+										//
+										//
+										//
+										Log("**********First Year without a valid LAI value set to default value LAI\n");
+										yos[*yos_count-1].m[month].ndvi_lai = settings->defaultlai;
+										Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
+									}
 								}
 							}
 							break;
@@ -1062,7 +1065,7 @@ int main(int argc, char *argv[])
 			bzero(settings_path, BUFFER_SIZE-1);
 			strcpy(settings_path, argv[i+1]);
 			break;
-		/*case 'r': // Resolution (must be 10 or 100)
+			/*case 'r': // Resolution (must be 10 or 100)
 			resolution = malloc(sizeof(*resolution)*BUFFER_SIZE);
 			if( !resolution )
 			{
@@ -1215,7 +1218,7 @@ int main(int argc, char *argv[])
 		free(tmp);
 	}
 
-/*	if( resolution == NULL )
+	/*	if( resolution == NULL )
 	{
 		fprintf(stderr, "Error: resolution option is missing!\n");
 		usage();
@@ -1496,7 +1499,7 @@ int main(int argc, char *argv[])
 				}
 				}
 				//}
-				*/
+				 */
 				//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
 				//RUN FOR SOILMODEL
 				/*
@@ -1508,7 +1511,7 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
-				*/
+				 */
 				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);

@@ -47,9 +47,9 @@ NAGE_S	3               //Power of relative Age in function for Age
 GROWTHTMIN	4       //Minimum temperature for growth
 GROWTHTMAX	36      //Maximum temperature for growth
 GROWTHTOPT	16      //Optimum temperature for growth
-GROWTHSTART	14       //average temperature for starting growth in °C
+GROWTHSTART	8       //average temperature for starting growth in °C
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH  11      //minimum day length for decidu0us
+MINDAYLENGTH  10      //minimum day length for decidu0us
 
 //SOIL WATER
 //modified 13 feb 2012
@@ -83,7 +83,7 @@ YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF	1.4	//allocation new fine root C:new leaf (ratio) see Mollicone et al 2002
-STEM_LEAF	1	//allocation new stem C:new leaf (ratio) see Mollicone et al 2002
+STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
 COARSE_ROOT_STEM	0.36	//allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
 //FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) see Pietsch et al., 2005
 //STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) see see Pietsch et al., 2005
@@ -119,7 +119,7 @@ DBHDCMIN	0.18    //High Density
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A         0.674         //a value from Kostner for 
 SAP_B         1.992         //b value from Kostner for 
-SAP_LEAF      2600          //leaf area/sapwood max  ratio in pipe model  
+SAP_LEAF      1500          //leaf area/sapwood max  ratio in pipe model  
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	48              //35  //Max Height in m 

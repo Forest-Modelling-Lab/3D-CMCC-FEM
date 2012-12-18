@@ -94,7 +94,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
 		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[WS] );
+		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (Av_root_mass * deadtree);

@@ -9,7 +9,7 @@
 
 void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_number, int z)
 {
-	int oldNtree;
+	//int oldNtree;
 	int deadtree;
 	int oldNstump;
 	int deadstump;
@@ -25,40 +25,53 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 
 	//Layer coverage mortality for timber
 	//mortality occurs directly for timber
-	if (s->management == 0)
+	if (s->management == T)
 	{
 
 		Log("Layer coverage mortality for timber \n");
 
 		//compute average biomass
 		s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
+		s->value[AV_FINE_ROOT_MASS] = s->value[BIOMASS_ROOTS_FINE_CTEM] / (float)s->counter[N_TREE];
+		s->value[AV_COARSE_ROOT_MASS] = s->value[BIOMASS_ROOTS_COARSE_CTEM] / (float)s->counter[N_TREE];
 		//Log(" Av stem mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
+
+		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
+		Log("Canopy Cover in while = %g \n", s->value[CANOPY_COVER_DBHDC]);
 
 
 		// levato
 		//s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM])/ (float)s->counter[N_TREE];
 		//Log(" Av root mass = %g tDM/tree\n", s->value[AV_ROOT_MASS] );
 
-		oldNtree = s->counter[N_TREE];
+		//oldNtree = s->counter[N_TREE];
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
-			layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / settings->sizeCell;
+			//todo in this case the model takes into account not NTREE of layer but just for class
+			//insert a variable linked to cell for ntree
+			layer_cover = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
+			s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
 		}
-		oldNtree -= s->counter[N_TREE];
+		//oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[WS] );
-		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[AV_ROOT_MASS] * deadtree);
-		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (s->value[AV_ROOT_MASS] * deadtree);
+
+		s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
+
+		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[AV_FINE_ROOT_MASS] * deadtree);
+		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (s->value[AV_COARSE_ROOT_MASS] * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (s->value[AV_STEM_MASS] * deadtree);
 		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
-		Log("Canopy Cover in while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Canopy Cover in after while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+
+		//reset dead tree
+		deadtree = 0;
 	}
 	//Layer coverage mortality for coppice
 	//mortality occurs only for stools
@@ -81,7 +94,8 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 		{
 			s->counter[N_STUMP] -= 1;
 			deadstump += 1;
-			layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_STUMP] / settings->sizeCell;
+			//layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_STUMP] / settings->sizeCell;
+			s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
 		}
 		oldNstump -= s->counter[N_STUMP];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);

@@ -20,7 +20,10 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 	float sapwood_perc;
 
-	Log("LAI from NDVI = %g\n", met[0].ndvi_lai);
+	if(settings->version == 's')
+	{
+		Log("LAI from NDVI = %g\n", met[0].ndvi_lai);
+	}
 
 
 	Log("No Biomass Data are available for model initialization \n");
@@ -32,12 +35,6 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		{
 			Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
 			exit (1);
-		}
-		//unnecessary function for spatial version
-		else
-		{
-			s->value[LAI] = met[0].ndvi_lai;
-			Log("MODEL RUN FOR EVERGREEN GET LAI VALUES FROM SATELLITE IMAGE = %g\n", s->value[LAI]);
 		}
 	}
 
@@ -91,7 +88,8 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
-	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
+	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc)*1000;
+	Log("WS_SAP = %g\n", s->value[WS_sap]);
 
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002
@@ -101,7 +99,8 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		//compute foliage biomass for evergreen
 		s->value[BIOMASS_FOLIAGE_CTEM] = 0;
 		Log("--Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
-		Log("--Reserve Biomass initialization data  = %g \n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g KgDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]/ s->counter[N_TREE]);
 
 	}
 	else
@@ -110,7 +109,8 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		//compute foliage biomass for evergreen
 		s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_STEM_CTEM] * (1.0/s->value[STEM_LEAF]);
 		Log("--Foliage Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
-		Log("--Reserve Biomass initialization data  = %g \n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g KgDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]/ s->counter[N_TREE]);
 	}
 
 
