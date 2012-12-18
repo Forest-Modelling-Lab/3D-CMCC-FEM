@@ -120,7 +120,7 @@ DBHDCMIN	0.18    //High Density
 SAP_A         0.674         //a value from Kostner for 
 SAP_B         1.992         //b value from Kostner for 
 SAP_LEAF      1500          //leaf area/sapwood max  ratio in pipe model  
-SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+SAP_WRES	0.07           //Sapwood-Reserve biomass ratio used if no Wres data are available  0.07 from calibration
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	48              //35  //Max Height in m 
 DMAX	100              //Max Stem Diameter in cm 

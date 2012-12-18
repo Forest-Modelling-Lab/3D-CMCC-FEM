@@ -88,8 +88,8 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
-	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc)*1000;
-	Log("WS_SAP = %g\n", s->value[WS_sap]);
+	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc);
+	Log("WS_SAP = %g KgDM tree\n", s->value[WS_sap]);
 
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002
@@ -99,8 +99,10 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		//compute foliage biomass for evergreen
 		s->value[BIOMASS_FOLIAGE_CTEM] = 0;
 		Log("--Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		Log("--Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]);
+		//converted to stand and tDM
+		s->value[BIOMASS_RESERVE_CTEM] = (s->value[BIOMASS_RESERVE_CTEM] * (float)s->counter[N_TREE]) / 1000;
 		Log("--Reserve Biomass initialization data  = %g KgDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
-		Log("--Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]/ s->counter[N_TREE]);
 
 	}
 	else
@@ -111,6 +113,9 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		Log("--Foliage Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 		Log("--Reserve Biomass initialization data  = %g KgDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
 		Log("--Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]/ s->counter[N_TREE]);
+		//converted to stand and tDM
+		s->value[BIOMASS_RESERVE_CTEM] = (s->value[BIOMASS_RESERVE_CTEM] * (float)s->counter[N_TREE]) / 1000;
+		Log("--Reserve Biomass initialization data  = %g KgDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
 	}
 
 
