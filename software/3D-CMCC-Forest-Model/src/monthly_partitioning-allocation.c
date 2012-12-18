@@ -221,7 +221,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 				//recompute LAI
 				//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
-				Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 				Log("++Lai = %g\n", s->value[LAI]);
 

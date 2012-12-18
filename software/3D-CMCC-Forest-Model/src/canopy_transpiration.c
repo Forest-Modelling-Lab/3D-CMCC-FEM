@@ -29,18 +29,41 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//following BIOME
 	rhoAir = 1.292 - (0.00428 * met[month].tav);
 
+	//todo move into atmosphere.c
+	/*compute air pressure*/
+	float t1, t2;
+
+	//todo insert elev in struct site and in site.txt file
+	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
+	t2 = G_STD / (LR_STD * (R / MA));
+	//todo move air_pressure into met file
+	c->air_pressure = P_STD * pow (t1, t2);
+	//Log("Air pressure = %g Pa\n", c->air_pressure);
+
+	/* temperature and pressure correction factor for conductances */
+	c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	Log("gcorr = %g\n", c->gcorr);
+
 	/*Canopy Conductance*/
 
 	//Lai is different among layers so CanCond is different
 	//Log("Lai for Can Cond = %g\n", s->value[LAI]);
 
+	//todo get maximum stomatal condictance from biome data instead canopy max conductance
+
 	if (settings->version == 's')
 	{
 		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].ndvi_lai / s->value[LAIGCX]);
+		//Log("MAXCOND da biome = %g\n", 0.006 * met[month].ndvi_lai);
+		//Log("Cancond biome = %g\n", (0.006 * met[month].ndvi_lai * c->gcorr));
+		//Log("CanCond 3PG = %g\n", CanCond);
 	}
 	else
 	{
 		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI]  / s->value[LAIGCX]);
+		//Log("MAXCOND da biome = %g\n", 0.006 * s->value[LAI]);
+		//Log("Cancond biome = %g\n", (0.006 * s->value[LAI] * c->gcorr));
+		//Log("CanCond 3PG = %g\n", CanCond);
 	}
 
 	//Log("Canopy Conductance  = %g\n", CanCond);
@@ -146,9 +169,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	float gl_s_sun;   //maximum stomatal condictance
 
 
-	//todo move into atmosphere.c
-	/*compute air pressure*/
-	float t1, t2;
+
 
 	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
 	/* From the discussion on atmospheric statics in:
@@ -156,15 +177,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
 		(p. 168)
 	*/
-	//todo insert elev in struct site and in site.txt file
-	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
-	t2 = G_STD / (LR_STD * (R / MA));
-	//todo move air_pressure into met file
-	c->air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %g Pa\n", c->air_pressure);
 
-	/* temperature and pressure correction factor for conductances */
-	c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+
+
 
 
 
