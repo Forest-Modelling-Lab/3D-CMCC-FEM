@@ -155,7 +155,7 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 			}
 			*/
 			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-			Log("CURRENT Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+			Log("CURRENT Volume = %g m^3/cell resolution\n", s->value[VOLUME]);
 			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
 			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
 			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;

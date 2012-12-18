@@ -17,7 +17,7 @@ void Get_initial_month_lai (SPECIES *const s)
 	if (s->counter[VEG_MONTHS]  == 1)
 	{
 		Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-		Log("++Reserve biomas for each tree in g = %g \n", s->value[BIOMASS_RESERVE_CTEM] * 1000000 / s->counter[N_TREE]);
+		Log("++Reserve biomass for each tree in g = %g \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
 
 		//just a fraction of biomass reserve is used for foliage, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 		s->value[BIOMASS_FOLIAGE_CTEM] = s->value[BIOMASS_RESERVE_CTEM] * (1.0 / s->value[STEM_LEAF]);
@@ -34,7 +34,9 @@ void Get_initial_month_lai (SPECIES *const s)
 		//Log ("++Biomass stem from reserves for initial LAI = %g \n", s->value[BIOMASS_STEM_CTEM]);
 		//Log ("++Biomass stem increment from reserves for initial LAI = %g \n", s->value[BIOMASS_RESERVE_CTEM]-s->value[BIOMASS_FOLIAGE_CTEM]);
 
-		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+		//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
+		Log("++SLAmkg = %g\n", s->value[SLAmkg]);
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		// * 1000 to convert reserve biomass from tDM into KgDM
 
 		Log("++Lai from reserves = %g\n", s->value[LAI]);

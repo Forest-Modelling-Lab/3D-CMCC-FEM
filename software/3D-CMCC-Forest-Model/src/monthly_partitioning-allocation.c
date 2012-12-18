@@ -220,7 +220,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("BiomassFoliage CTEM = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM] );
 
 				//recompute LAI
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+				//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
+				Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 				Log("++Lai = %g\n", s->value[LAI]);
 
 				s->value[DEL_STEMS_CTEM] = 0;
@@ -303,7 +305,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 					s->value[DEL_FOLIAGE_CTEM] = 0;
 
-					Log("LAI setted to Peak Lai= %g \n", s->value[LAI]);
+					Log("LAI setted to Peak Lai = %g \n", s->value[PEAK_Y_LAI]);
 					s->value[LAI] = s->value[PEAK_Y_LAI];
 
 					// Total Biomass Increment
@@ -1042,7 +1044,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				//recompute LAI
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+				Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 				Log("++Lai = %g\n", s->value[LAI]);
 
 				s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
@@ -1263,7 +1266,8 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
-		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+		Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		Log("++Lai = %g\n", s->value[LAI]);
 
 
@@ -1372,7 +1376,8 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
-		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+		Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		Log("++Lai = %g\n", s->value[LAI]);
 
 	}

@@ -34,6 +34,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 		s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
 		s->value[AV_FINE_ROOT_MASS] = s->value[BIOMASS_ROOTS_FINE_CTEM] / (float)s->counter[N_TREE];
 		s->value[AV_COARSE_ROOT_MASS] = s->value[BIOMASS_ROOTS_COARSE_CTEM] / (float)s->counter[N_TREE];
+		s->value[AV_RESERVE_BIOMASS] = s->value[BIOMASS_RESERVE_CTEM] / (float)s->counter[N_TREE];
 		//Log(" Av stem mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
 		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
@@ -64,6 +65,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[AV_FINE_ROOT_MASS] * deadtree);
 		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (s->value[AV_COARSE_ROOT_MASS] * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (s->value[AV_STEM_MASS] * deadtree);
+		s->value[BIOMASS_RESERVE_CTEM] -= (s->value[AV_RESERVE_BIOMASS] * deadtree);
 		Log("Tot Root Biomass after reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass after reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);

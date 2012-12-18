@@ -546,7 +546,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 				/* convert SLA in m^2/Kg */
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
 				{
-					m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] = m->cells[cell].heights[height].ages[age].species[species].value[SLA] * SLAmkg;
+					m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] = m->cells[cell].heights[height].ages[age].species[species].value[SLA] * SLAMKG;
 				}
 			}
 		}

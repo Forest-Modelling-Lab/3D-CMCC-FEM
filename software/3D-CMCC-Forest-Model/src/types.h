@@ -468,6 +468,7 @@ enum {
 	AV_ROOT_MASS,                   //Average Root Mass           Kg/tree
 	AV_FINE_ROOT_MASS,
 	AV_COARSE_ROOT_MASS,
+	AV_RESERVE_BIOMASS,
 
 	BASAL_AREA,                     //Basal Area (m^2/area tree)
 	STAND_BASAL_AREA,
@@ -808,7 +809,7 @@ typedef struct {
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 #define PPFD50      			75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
 #define EPAR        			4.55      //(umol/J) PAR photon energy ratio */
-#define SLAMKG				     0.1	  //Convert SLA IN cm ^2/g in m^2/Kg
+#define SLAMKG				     0.1	  //Convert SLA IN cm ^2/gC in m^2/KgC
 
 
 //COSTANT

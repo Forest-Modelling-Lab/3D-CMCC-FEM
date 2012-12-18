@@ -82,11 +82,15 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	s->value[BIOMASS_ROOTS_FINE_CTEM] = 0;
 	Log("---Fine Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 
+	s->value[BIOMASS_ROOTS_TOT_CTEM]= s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
+	Log("---Total Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+
 
 	//compute reserve "biomass"
 
 	s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+	//Log("SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
 	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc);
 	//Log("WS_SAP = %g KgDM tree\n", s->value[WS_sap]);
@@ -102,7 +106,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		Log("-----Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]);
 		//converted to stand and tDM
 		s->value[BIOMASS_RESERVE_CTEM] = (s->value[BIOMASS_RESERVE_CTEM] * (float)s->counter[N_TREE]) / 1000;
-		//Log("-----Reserve Biomass initialization data  = %g tDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("-----Reserve Biomass initialization data  = %g tDM/cell\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 	}
 	else
