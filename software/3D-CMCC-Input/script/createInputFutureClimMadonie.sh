@@ -436,7 +436,8 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Performing DEM rescaling"
 		DEM_SCALED="${WK_00}/${PREF}_dem_scaled.tif"
 		log "${MSG} ...\n"
-		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
+		#gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
+		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A-498)" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		log "End creating dem file .....\n"
 		
@@ -531,7 +532,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
     	log "### { Start creating ${IMG} images..... ###\n"
     	
     	# Average Temperature pixel value ( T(a) )
-		# T(a) = m * (Z+2) + T(o)
+		# T(a) = m * (Z-498) + T(o)
 		# m = -0.0064 
 		# Z = DEM pixel value
 		# T(o) = pixel value
@@ -679,16 +680,16 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				${BIN_DIR}/remap -i ${OUTPUT_06} -o ${OUTPUT_07} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
-				#MSG="Applying scaled dem to pixel value for ${YYYY}-${MM}"
-				#OUTPUT_08="${WK_12}/${IMG}_${YYYY}${MM}_dem.tif"
-				#log "${MSG} ...\n"
-				#gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_07} --outfile=${OUTPUT_08} --calc="(A+B)" &>> "${LOGFILE}"
-				#check "${MSG} failed.\n"
+				MSG="Applying scaled dem to pixel value for ${YYYY}-${MM}"
+				OUTPUT_08="${WK_12}/${IMG}_${YYYY}${MM}_dem.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_07} --outfile=${OUTPUT_08} --calc="(A+B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 				
 				MSG="Apply mask to ${OUTPUT_07}"
 				OUTPUT_09="${WK_12}/${IMG}_${YYYY}${MM}_mask.tif"
 				log "${MSG} ...\n"
-				gdal_calc.py -A ${OUTPUT_07} -B ${MASK_TOT} --outfile=${OUTPUT_09} --calc="(A*B)" &>> "${LOGFILE}"
+				gdal_calc.py -A ${OUTPUT_08} -B ${MASK_TOT} --outfile=${OUTPUT_09} --calc="(A*B)" &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				MONTHS+=("${OUTPUT_09}")
@@ -987,7 +988,6 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 			done
 		done
 		
-
 		#cp ~/Desktop/${IMG}_tmp/VPD_[0-9]*.tif ${WK_13}
 				
 		UNITY="kPa"
@@ -1018,9 +1018,9 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				check "${MSG} failed.\n"
 				
 				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
-				T_MIN="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
+				OUTPUT_08="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${T_MIN} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_08} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 				
 				# ------------------------------------------------------------------------------------
@@ -1046,22 +1046,22 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 				check "${MSG} failed.\n"
 				
 				MSG="Remap and cut UTM geotiff ${VAR} image for ${YYYY}-${MM}"
-				T_MAX="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
+				OUTPUT_09="${WK_13}/${VAR}_${YYYY}${MM}_remap.tif"
 				log "${MSG} ...\n"
-				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${T_MAX} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
+				${BIN_DIR}/remap -i ${OUTPUT_07} -o ${OUTPUT_09} -s ${RES} -m -l ${UL_LAT} ${UL_LON} -e ${SIZEX}x${SIZEY} -w 5x5 &>> "${LOGFILE}"
 				check "${MSG} failed.\n"
 
-				#MSG="Getting T_min for ${YYYY}${MM}"
-				#T_MIN="${WK_13}/${IMG}_T_min_${YYYY}${MM}.tif"
-				#log "${MSG} ...\n"
-				#gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_08} --outfile=${T_MIN} --calc="(A+B)" &>> "${LOGFILE}"
-				#check "${MSG} failed.\n"
+				MSG="Getting T_min for ${YYYY}${MM}"
+				T_MIN="${WK_13}/${IMG}_T_min_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_08} --outfile=${T_MIN} --calc="(A+B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 				
-				#MSG="Getting T_max for ${YYYY}${MM}"
-				#T_MAX="${WK_13}/${IMG}_T_max_${YYYY}${MM}.tif"
-				#log "${MSG} ...\n"
-				#gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MAX} --calc="(A+B)" &>> "${LOGFILE}"
-				#check "${MSG} failed.\n"
+				MSG="Getting T_max for ${YYYY}${MM}"
+				T_MAX="${WK_13}/${IMG}_T_max_${YYYY}${MM}.tif"
+				log "${MSG} ...\n"
+				gdal_calc.py -A ${DEM_SCALED} -B ${OUTPUT_09} --outfile=${T_MAX} --calc="(A+B)" &>> "${LOGFILE}"
+				check "${MSG} failed.\n"
 
 				MSG="Getting ${IMG} for ${YYYY}${MM}"
 				OUTPUT_11="${WK_13}/${IMG}_${YYYY}${MM}.tif"
