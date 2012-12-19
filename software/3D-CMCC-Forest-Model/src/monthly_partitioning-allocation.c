@@ -213,18 +213,28 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("LAI < PEAK_Y_LAI * 0.5 \n");
 				Log("LAI = %g \n", s->value[LAI]);
 				Log("**Maximum Growth**\n");
-				Log("allocating only into foliage pools\n");
+				Log("allocating only into foliage and stem pools\n");
 
-				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP];
+				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 / s->value[STEM_LEAF]);
+				s->value[DEL_STEMS_CTEM] = (s->value[NPP]-s->value[DEL_FOLIAGE_CTEM]);
+
+				//old version
+				//s->value[DEL_FOLIAGE_CTEM] = s->value[NPP];
+
 				s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
-				Log("BiomassFoliage CTEM = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM] );
+				Log("Biomass Foliage CTEM = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM] );
+
+				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
+				Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
 
 				//recompute LAI
 				//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 				Log("++Lai = %g\n", s->value[LAI]);
 
-				s->value[DEL_STEMS_CTEM] = 0;
+				//s->value[DEL_STEMS_CTEM] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT_CTEM] = 0;
