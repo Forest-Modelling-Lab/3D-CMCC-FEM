@@ -1265,13 +1265,13 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0]) * exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
 		//Log("Litterfall rate = %g\n", gammaF);
 
-		oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
+		//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
 
-		Log("OldWf = %g\n", oldWf);
-		s->value[DEL_LITTER] = gammaF * oldWf;
+		//Log("OldWf = %g\n", oldWf);
+		s->value[DEL_LITTER] = gammaF * s->value[BIOMASS_FOLIAGE_CTEM];
 		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
-		s->value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - s->value[DEL_LITTER]);
+		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
 		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
@@ -1375,13 +1375,13 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 				* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
 		//Log("Litterfall rate = %g\n", gammaF);
 
-		oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
+		//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
 
-		Log("OldWf = %g\n", oldWf);
-		s->value[DEL_LITTER] = gammaF * oldWf;
+		//Log("OldWf = %g\n", oldWf);
+		s->value[DEL_LITTER] = gammaF * s->value[BIOMASS_FOLIAGE_CTEM];
 		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
-		s->value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - s->value[DEL_LITTER]);
+		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
 		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI

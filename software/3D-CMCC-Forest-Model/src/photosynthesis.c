@@ -21,6 +21,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
 	Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month);
 
+	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
+
 
 	//Log("X = %g \n", c->x);
 	//Log("Y = %g \n", c->y);
@@ -59,7 +61,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		/*GPP*/
 
 		Optimum_GPP = s->value[ALPHA] * s->value[APAR];
-		//Log("Optimum GPP (alpha max * apar) = %g molC/m^2 month\n", Optimum_GPP);
+		Log("Optimum GPP (alpha max * apar) = %g molC/m^2 month\n", Optimum_GPP);
 
 		Optimum_GPP_gC = Optimum_GPP * GC_MOL;
 		//Log("Monthly Optimum GPP in grams of C for this layer = %g gC/m^2 month\n", Optimum_GPP_gC );

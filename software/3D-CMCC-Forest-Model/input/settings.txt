@@ -1,4 +1,4 @@
-VERSION "s"		//Must be 's' or 'u', spatial or unspatial
+VERSION "u"		//Must be 's' or 'u', spatial or unspatial
 PRESENCE "t"	//Must be 'p' or 't', percentage or total
 SIZECELL "30"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 

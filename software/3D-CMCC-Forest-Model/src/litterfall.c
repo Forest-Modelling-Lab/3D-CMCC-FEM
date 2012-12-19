@@ -44,7 +44,7 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 
 	Log("*LITTERFALL*\n");
 
-	if ( height->ages[age].species[species].phenology == 0) /*for deciduous*/
+	if ( height->ages[age].species[species].phenology == D) /*for deciduous*/
 	{
 		Log("DECIDUOUS POPULATION\n");
 
@@ -77,7 +77,7 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 		Log("Yearly Foliage Biomass to litter from evergreen population = %g tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
 
 		height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - height->ages[age].species[species].value[DEL_LITTER]);
-		Log("Yearly Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/ha = %g\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
+		Log("Yearly Foliage Biomass at the end of month less Litterfall (Wf + oldWf) in tDM/ha = %g\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
 
 	}
 
