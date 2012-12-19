@@ -1438,10 +1438,11 @@ int main(int argc, char *argv[])
 		Log("Longitude = %g \n", site->lon);
 		Log("Years of Simulations = %d \n", years_of_simulation );
 		Log("***************************************************\n");
-		for ( years = 0; years < years_of_simulation; years++)
+		for (years = 0; years < years_of_simulation; years++)
 		{
 			/* model */
 			matrix_summary (m, years, yos);
+
 
 			Log("-YEARS OF SIMULATION = %d\n", yos[years].year);
 			Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
@@ -1463,10 +1464,7 @@ int main(int argc, char *argv[])
 			{
 				Get_Veg_Months (m, yos, month, years);
 			}
-
-
-
-			for ( month = 0; month < MONTHS; month++)
+			for (month = 0; month < MONTHS; month++)
 			{
 				//todo make all models run in main for each cell
 				//RUN FOR TREEMODEL
