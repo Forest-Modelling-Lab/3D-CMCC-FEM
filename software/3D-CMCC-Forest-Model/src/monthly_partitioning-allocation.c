@@ -1268,14 +1268,17 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
 
 		//Log("OldWf = %g\n", oldWf);
-		s->value[DEL_LITTER] = gammaF * s->value[BIOMASS_FOLIAGE_CTEM];
-		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
+		if(s->value[NPP]>0)
+		{
+			s->value[DEL_LITTER] = gammaF * s->value[BIOMASS_FOLIAGE_CTEM];
+			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
-		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
-		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
+			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-		//recompute LAI
-		Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+			//recompute LAI
+			Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+		}
 		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		Log("++Lai = %g\n", s->value[LAI]);
 

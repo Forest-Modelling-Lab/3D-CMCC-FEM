@@ -251,6 +251,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									}
 								}
 
+								if(m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
+										&& m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
+								{
+									Log("ERROR VEG_UNVEG = 1 BUT LAI = 0!!!!!\n");
+								}
+
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], height);
 
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, DaysInMonth[month], vpd, height);

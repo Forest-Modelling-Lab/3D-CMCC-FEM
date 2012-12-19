@@ -204,10 +204,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		Log("- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
 		//Log("+ Lai = %g\n", c->heights[height].ages[age].species[species].value[LAI]);
 		Log("+ AvDBH = %g cm\n",  c->heights[height].ages[age].species[species].value[AVDBH]);
-		if (settings->version == 'u')
-		{
-			Log("+ Wf = %g tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
-		}
+		Log("+ Wf = %g tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
 		Log("+ Ws = %g tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]);
 		Log("+ Wrc = %g tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]);
 		Log("+ Wrf = %g tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]);

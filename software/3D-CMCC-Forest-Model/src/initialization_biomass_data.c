@@ -113,7 +113,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 		//compute foliage biomass for evergreen
-		s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_STEM_CTEM] * (1.0/s->value[STEM_LEAF]);
+		s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_RESERVE_CTEM] * (1.0/s->value[STEM_LEAF]);
 		Log("----Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 		Log("-----Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]);
 		//converted to stand and tDM

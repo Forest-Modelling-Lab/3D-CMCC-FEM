@@ -116,9 +116,9 @@ DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.674         //a value from Kostner for 
-SAP_B         1.992         //b value from Kostner for 
-SAP_LEAF      2600          //leaf area/sapwood max  ratio in pipe model  
+SAP_A         0.034         //a value from Kostner for Q. petreae in cm
+SAP_B         2.384         //b value from Kostner for Q. petreae in cm
+SAP_LEAF      9400          //sapwood_max leaf area ratio in pipe model  for Q petreae   
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  
 HMAX	35              //35  //Max Height in m see Morandini 1955
