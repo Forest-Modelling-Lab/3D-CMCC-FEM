@@ -18,10 +18,12 @@ typedef enum {
  */
 
 /* enums */
+/*
 typedef enum {
 	D = 0,      //deciduous
 	E,          //evergreen
 } ePhenology;
+*/
 
 /* */
 typedef enum {
@@ -55,6 +57,8 @@ enum {
 	/* serve questo ordine per l'importazione, vedere species_values dentro matrix.c */
 
 	LIGHT_TOL = 0,
+
+	PHENOLOGY,                  //PHENOLOGY 0=deciduous, 1=evergreen
 
 
 	ALPHA,                      // Canopy quantum efficiency (molC/molPAR)
@@ -551,7 +555,7 @@ typedef struct {
 	//eLanduse landuse;
 	int age;
 	char *species;
-	ePhenology phenology;
+	//ePhenology phenology;
 	eManagement management;
 	int n;
 	int stump;
@@ -570,7 +574,7 @@ typedef struct {
 //all variables related to the species class
 typedef struct {
 	char *name;
-	ePhenology phenology;
+	//ePhenology phenology;
 	eManagement management;
 	int period;            // period = 0 for adult tree ; 1 for very young tree
 	PREC value[VALUES];

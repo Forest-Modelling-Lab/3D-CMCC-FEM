@@ -634,7 +634,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				if (c->heights[height].ages[age].species[species].phenology == D)
+				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 				{
 					if (settings->version == 's')
 					{

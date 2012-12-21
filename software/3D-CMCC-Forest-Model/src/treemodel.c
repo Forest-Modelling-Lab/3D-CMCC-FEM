@@ -219,7 +219,7 @@ int tree_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
 
 						//deciduous
-						if ( m->cells[cell].heights[height].ages[age].species[species].phenology == D )
+						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0 )
 						{
 							//for unspatial version growth start, growthend/mindaylength and month drives start and end of growing season
 							//PEAK LAI
@@ -731,4 +731,5 @@ int tree_model_D (MATRIX *const m, const YOS *const yos, const int years, const 
 {
 	Log("Daily version\n");
 	Log("test function\n");
+	return 1;
 }

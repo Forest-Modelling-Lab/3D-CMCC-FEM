@@ -16,6 +16,8 @@ static const char *species_values[] = {
 
 		"LIGHT_TOL",                  //light Tolerance
 
+		"PHENOLOGY",				//PHENOLOGY 0 = deciduous,  1 = evergreen
+
 		"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
 		"EPSILONgCPAR",               // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)
 		//"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
@@ -239,7 +241,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	}
 	// set values
 
-	a->species[a->species_count-1].phenology = row->phenology;
+	//a->species[a->species_count-1].phenology = row->phenology;
 	a->species[a->species_count-1].management = row->management;
 	a->species[a->species_count-1].name = mystrdup(row->species);
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
@@ -668,7 +670,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 					}
 
 					Log(
-							"---- species n.%02d is %s (%c), management type is %c and has\n"
+							"---- species n.%02d is %s (%d), management type is %c and has\n"
 							"----- n = %d trees\n"
 							"----- n stumps = %d stumps\n"
 							"----- avdbh = %g cm\n"
@@ -680,7 +682,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 							"----- lai = %g tDM/area\n",
 							species + 1,
 							m->cells[cell].heights[height].ages[age].species[species].name,
-							((m->cells[cell].heights[height].ages[age].species[species].phenology == D) ? 'D' : 'E'),
+							m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY],
 							((m->cells[cell].heights[height].ages[age].species[species].management == T) ? 'T' : 'C'),
 							m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
 							m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],

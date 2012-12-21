@@ -54,7 +54,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (m->cells[cell].heights[height].ages[age].species[species].phenology == D)
+						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							//todo decidere se utlizzare growthend o mindaylenght
 							if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
@@ -80,7 +80,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (m->cells[cell].heights[height].ages[age].species[species].phenology == D)
+						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							if (met[month].ndvi_lai >= 0.5)
 							{
@@ -177,7 +177,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	Log("- Height = %g m\n", c->heights[height].value);
 	Log("- Number of trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 
-	if ( c->heights[height].ages[age].species[species].phenology == D)
+	if ( c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 	{
 		Log("- Vegetative Months =  %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 	}
@@ -199,7 +199,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	if (!month)
 	{
 		/*Phenology*/
-		Log("- Phenology type = %s\n", c->heights[height].ages[age].species[species].phenology ? "E" : "D");
+		Log("- Phenology type = %d\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 		/*Management*/
 		Log("- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
 		//Log("+ Lai = %g\n", c->heights[height].ages[age].species[species].value[LAI]);
@@ -222,7 +222,7 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("> height = %g\n", c->heights[height].value);
 	Log("> age = %d\n", c->heights[height].ages[age].value);
 	Log("> species = %s\n", c->heights[height].ages[age].species[species].name);
-	Log("> phenology = %d\n", c->heights[height].ages[age].species[species].phenology);
+	Log("> phenology = %d\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 	Log("> management = %d\n", c->heights[height].ages[age].species[species].management);
 	//Log("[%d] PEAK Y LAI IN THIS YEAR LAYER %d = %g\n",yos[years].year, m->cells[cell].heights[height].z,  m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI]);
 	Log("[%d] layer %d n tree = %d\n", yos[years].year,  c->heights[height].z, c->heights[height].ages[age].species[species].counter[N_TREE]);

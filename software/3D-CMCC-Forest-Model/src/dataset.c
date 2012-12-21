@@ -14,7 +14,7 @@ enum {
 	//LANDUSE_COLUMN,
 	AGE_COLUMN,
 	SPECIES_COLUMN,
-	PHENOLOGY_COLUMN,
+	//PHENOLOGY_COLUMN,
 	MANAGEMENT_COLUMN,
 	N_COLUMN,
 	STOOL_COLUMN,
@@ -38,8 +38,8 @@ static const char err_redundancy[] = "redundancy: var \"%s\" already founded at 
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
 static const char err_conversion[] = "error during conversion of \"%s\" value at row %d, column %d.\n";
 //static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
-static const char err_bad_phenology_length[] =" bad phenology length at row %d, phenology must be 1 character.\n";
-static const char err_bad_phenology[] = "bad phenology %c at row %d\n";
+//static const char err_bad_phenology_length[] =" bad phenology length at row %d, phenology must be 1 character.\n";
+//static const char err_bad_phenology[] = "bad phenology %c at row %d\n";
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
 static const char err_bad_management[] = "bad management %c at row %d\n";
 static const char err_too_many_column[] = "too many columns at row %d\n";
@@ -59,7 +59,7 @@ static const char *header[COLUMNS] = {
 		//"LU",  //land use type (F = Forest, C = crop)
 		"AGE",
 		"SPECIES",
-		"PHENOLOGY",
+		//"PHENOLOGY",
 		"MANAGEMENT",
 		"N",
 		"STOOL",
@@ -239,9 +239,10 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						strcpy(rows[*rows_count-1].species, token);
 						/* todo: add check for strcpy */
 					}
+					/*
 					else if ( PHENOLOGY_COLUMN == i )
 					{
-						/* check phenology length */
+						// check phenology length
 						if ( 1 != strlen(token) )
 						{
 							printf(err_bad_phenology_length, *rows_count);
@@ -251,7 +252,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							return NULL;
 						}
 
-						/* check phenology char */
+						// check phenology char
 						if ( ('D' == token[0]) || ('d' == token[0]) ) {
 							rows[*rows_count-1].phenology = D;
 						} else if ( ('E' == token[0]) || ('e' == token[0]) ) {
@@ -264,6 +265,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							return NULL;
 						}
 					}
+					 */
 					else if ( MANAGEMENT_COLUMN == i )
 					{
 						/* check management length */

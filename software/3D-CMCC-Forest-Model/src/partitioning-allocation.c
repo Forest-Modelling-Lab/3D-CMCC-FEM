@@ -289,7 +289,7 @@ void Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int ma
 	// Total Foliage Biomass
 	if (!years)
 	{
-		if ( s->phenology == 0)
+		if ( s->value[PHENOLOGY] == 0)
 		{
 			s->value[WF] = s->value[DEL_WF];
 		}
@@ -300,7 +300,7 @@ void Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int ma
 	}
 	else
 	{
-		if ( s->phenology == 0)
+		if ( s->value[PHENOLOGY] == 0)
 		{
 			s->value[WF] = s->value[DEL_WF];
 		}

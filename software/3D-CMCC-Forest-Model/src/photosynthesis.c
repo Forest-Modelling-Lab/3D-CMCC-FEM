@@ -29,7 +29,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 || s->phenology == E)
+	if (s->counter[VEG_UNVEG] == 1 || s->value[PHENOLOGY] == 0)
 	{
 		if (s->value[ALPHA] > 0)
 		{

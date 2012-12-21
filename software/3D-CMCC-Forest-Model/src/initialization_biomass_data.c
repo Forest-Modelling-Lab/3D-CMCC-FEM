@@ -29,7 +29,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("No Biomass Data are available for model initialization \n");
 	Log("Generating input biomass data from DBH data...\n");
 
-	if (s->phenology == E && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
+	if (s->value[PHENOLOGY] == 1 && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
 		if (settings->version == 'u')
 		{
@@ -97,7 +97,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002
-	if (s->phenology == D)
+	if (s->value[PHENOLOGY] == 0)
 	{
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 		//compute foliage biomass for evergreen
