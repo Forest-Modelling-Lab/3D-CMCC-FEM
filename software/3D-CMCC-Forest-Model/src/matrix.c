@@ -588,6 +588,15 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		Log ("Model version = un-spatial \n");
 	}
 
+	if (settings->time == 'm')
+	{
+		Log ("Temporal scale = monthly \n");
+	}
+	else
+	{
+		Log ("Temporal scale = daily \n");
+	}
+
 	if (settings->presence == 't')
 	{
 		Log ("Vegetation Presence = total \n");
@@ -596,6 +605,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	{
 		Log ("Vegetation Presence = percentage \n");
 	}
+
+
 
 
 	Log("Years of simulation = %d (%d)\n", years + 1, yos[years].year);

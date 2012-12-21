@@ -740,7 +740,8 @@ typedef struct
 typedef struct
 {
 	char version, // must be 's' or 'u' (spatial or unspatial)
-		 presence; // must be 't' or 'p' (total or percentage)
+		time,  // must be 'm' or 'd' (monthly or daily)
+		presence; // must be 't' or 'p' (total or percentage)
 	float sizeCell,
 	//dominant,
 	//dominated,
