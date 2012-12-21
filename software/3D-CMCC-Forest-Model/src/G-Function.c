@@ -199,7 +199,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	if (!month)
 	{
 		/*Phenology*/
-		Log("- Phenology type = %d\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
+		Log("- Phenology type = %g\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 		/*Management*/
 		Log("- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
 		//Log("+ Lai = %g\n", c->heights[height].ages[age].species[species].value[LAI]);
