@@ -1458,21 +1458,66 @@ int main(int argc, char *argv[])
 				Log("************************************************************\n");
 			}
 
-			/*compute number of vegetative months*/
-			Log("compute vegetative months for version '%c'\n", settings->version);
-			for (month = 0; month < MONTHS; month ++)
+			if (settings->time == 'm')
 			{
-				Get_Veg_Months (m, yos, month, years);
+				/*compute number of vegetative months*/
+				Log("compute vegetative months for version '%c'\n", settings->version);
+				for (month = 0; month < MONTHS; month ++)
+				{
+					Get_Veg_Months (m, yos, month, years);
+				}
+				for (month = 0; month < MONTHS; month++)
+				{
+					//todo make all models run in main for each cell
+					//RUN FOR TREEMODEL
+					//for ( cell = 0; cell < m->cells_count; cell++)
+					//{
+					//if (m->cells[cell].landuse == F)
+					//{
+					if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
+					{
+						Log("tree model failed.");
+					}
+					else
+					{
+						puts(msg_ok);
+					}
+					//}
+
+					/*
+					//todo: insert crop model routine
+					//RUN FOR CROPMODEL
+					//if (m->cells[cell].landuse == C)
+					{
+					if ( !soil_model (m, yos, years, month, years_of_simulation) )
+					{
+						Log("crop model failed.");
+					}
+					else
+					{
+						puts(msg_ok);
+					}
+					}
+					//}
+						 */
+						//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
+						//RUN FOR SOILMODEL
+						/*
+					if ( !soil_model (m, yos, years, month, years_of_simulation) )
+					{
+						Log("soil model failed.");
+					}
+					else
+					{
+						puts(msg_ok);
+					}
+					 */
+					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
+				}
 			}
-			for (month = 0; month < MONTHS; month++)
+			else //run for daily version
 			{
-				//todo make all models run in main for each cell
-				//RUN FOR TREEMODEL
-				//for ( cell = 0; cell < m->cells_count; cell++)
-				//{
-				//if (m->cells[cell].landuse == F)
-				//{
-				if ( !tree_model (m, yos, years, month, years_of_simulation) )
+				if ( !tree_model_D (m, yos, years, month, years_of_simulation) )
 				{
 					Log("tree model failed.");
 				}
@@ -1480,38 +1525,8 @@ int main(int argc, char *argv[])
 				{
 					puts(msg_ok);
 				}
-				//}
-
-				/*
-				//todo: insert crop model routine
-				//RUN FOR CROPMODEL
-				//if (m->cells[cell].landuse == C)
-				{
-				if ( !soil_model (m, yos, years, month, years_of_simulation) )
-				{
-					Log("crop model failed.");
-				}
-				else
-				{
-					puts(msg_ok);
-				}
-				}
-				//}
-				 */
-				//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
-				//RUN FOR SOILMODEL
-				/*
-				if ( !soil_model (m, yos, years, month, years_of_simulation) )
-				{
-					Log("soil model failed.");
-				}
-				else
-				{
-					puts(msg_ok);
-				}
-				 */
-				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
+
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);
 
 			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");

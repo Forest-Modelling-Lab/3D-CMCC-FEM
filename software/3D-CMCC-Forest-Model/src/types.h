@@ -835,7 +835,8 @@ site_t *site;
 settings_t *settings;
 
 // External functions
-extern int tree_model(MATRIX *const, const YOS *const, const int, const int, const int);
+extern int tree_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
+extern int tree_model_D (MATRIX *const, const YOS *const, const int, const int, const int);
 //if putted into main.c
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void soil_model (CELL *, const YOS *const, const int, const int, const int);

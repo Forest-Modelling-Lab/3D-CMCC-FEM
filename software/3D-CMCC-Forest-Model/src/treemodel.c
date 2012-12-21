@@ -13,7 +13,7 @@ extern int DaysInMonth[];
 
 
 /* */
-int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
+int tree_model_M(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
 	MET_DATA *met;
 
@@ -724,4 +724,11 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	Log("****************END OF CELL***************\n");
 	/* ok */
 	return 1;
+}
+
+
+int tree_model_D (MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
+{
+	Log("Daily version\n");
+	Log("test function\n");
 }
