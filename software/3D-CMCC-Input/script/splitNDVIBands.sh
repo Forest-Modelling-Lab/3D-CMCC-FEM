@@ -18,9 +18,12 @@ for DIRECTORY in ${DIRS[@]} ; do
     	IDX="1"
     	while read LINE; do
 			DATE=$( echo ${LINE:0:10} | tr -d '-' )
-    		OUTPUT_01="${DIRECTORY}/${SENSOR}_${PRODUCT}_${DATE}.${TIME}.${TEMPORALRESOLUTION}.tif"
-			echo -ne "Producing ${OUTPUT_01} (band ${IDX})..."
+    		OUTPUT_01="${DIRECTORY}/${SENSOR}_${PRODUCT}_${DATE}.${TIME}.${TEMPORALRESOLUTION}_not_scaled.tif"
+    		OUTPUT_02="${DIRECTORY}/${SENSOR}_${PRODUCT}_${DATE}.${TIME}.${TEMPORALRESOLUTION}.tif"
+			echo "Producing ${OUTPUT_01} (band ${IDX})..."
 			gdal_translate ${PAR_01} -b ${IDX} ${INPUT_02} ${OUTPUT_01}
+			gdal_calc.py -A ${OUTPUT_01} --outfile=${OUTPUT_02} --calc="(A*0.0001)"
+			rm -f ${OUTPUT_01}
 			echo "done"
 			IDX=$(( ${IDX} + 1 ));
 		done < "${INPUT_01}"
