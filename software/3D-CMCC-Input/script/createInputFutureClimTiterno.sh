@@ -293,7 +293,7 @@ for IMG in "${IMG_SELECTED[@]}" ; do
 		MSG="Performing DEM rescaling"
 		DEM_SCALED="${WK_00}/${PREF}_dem_scaled.tif"
 		log "${MSG} ...\n"
-		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A+2)" &>> "${LOGFILE}"
+		gdal_calc.py -A ${OUTPUT_03} --outfile=${DEM_SCALED} --calc="(${M})*(A-498)" &>> "${LOGFILE}"
 		check "${MSG} failed.\n"
 		log "End creating dem file .....\n"
 		
