@@ -1,0 +1,185 @@
+-forse->3D-CMCC-Spatial->script
+
+-mettere preventivamente il dataset di input che MI DA ALESSANDRO
+
+-lanciare processamento nella dir forSE->3D-CMCC-Spatial->script:
+
+./3D_CMCC_Spatial.sh /home/alessio/Scrivania/forSE/software/3D-CMCC-Spatial/input/MADONIE_30m_2002-2020_20121224000001_input.zip 30 /home/alessio/Scrivania/forSE/software/3D-CMCC-Spatial/output/
+
+
+
+
+
+
+I dataset di input/output per il progetto sono dei pacchetti compressi (.zip).
+La loro nomenclatura e struttura e' descritta di seguito.
+
+# NOMENCLATURA :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+I filename dei dataset, seguono il seguente pattern:
+
+${SITO}_${RISOLUZIONE}_${PRIMO_ANNO_DI_PROCESSAMENTO}-${ULTIMO_ANNO_DI_PROCESSAMENTO}_${FIRMA}_${TIPO_DATO}.zip
+
+Un esempio e':
+MADONIE_30m_2002-2020_20121217173519_input.zip
+
+Le variabili indicano quanto segue
+- ${SITO} : il luogo a cui si riferiscono i dati. Es.: MADONIE, TITERNO-TAMMARO.
+- ${RISOLUZIONE} : la risoluzione di ogni cella presente nel dataset. Es.: 30m
+- ${PRIMO_ANNO_DI_PROCESSAMENTO} : anno da cui cominciano i dati presenti nel pacchetto. Es.: 2002
+- ${ULTIMO_ANNO_DI_PROCESSAMENTO} : ultimo anno di dati presenti nel pacchetto. Es.: 2020
+- ${FIRMA} : e' una data nella forma YYYYMMDDHHMMSS (anno a 4 cifre, mese, giorno, ora, minuti e secondi a 2 cifre) per identificare univocamente il dataset.
+Nel caso il dataset venga suddiviso in piu' parti, dove ogni parte racchiude informazioni su una sola specie arborea, la firma rimarra' invariata per la parte YYYYMMDD, mentre la parte HHMMSS avra' tutti zeri a parte l'ultima cifra dei secondi, che identifichera' l'unica specie racchiusa nel dataset.
+In questo modo l'integrita' e la progressione delle firme resta invariata e si aggiunge un significato semantico all'ultima cifra.
+Ricordo che gli identificativi scelti per le specie sono i seguenti:
+
+1: Castaneasativa
+2: Fagussylvatica
+3: Ostryacarpinifolia
+4: Pinusnigra
+5: Quercuscerris
+6: quercus_deciduous (Q. cerris, Q. robur, Q. pubescens, Q. petreae)
+7: quercus_evergreen (Q. ilex, Q. suber)
+
+Se la parte di firma HHMMSS e' tutta settata a zero, significa che al suo interno sono racchiuse TUTTE le specie proprie del dataset.
+Esempi:
+TITERNO-TAMMARO_30m_2002-2009_20121211093008_input.zip: firma standard, tutte le specie.
+MADONIE_30m_2002-2020_20121217000001_output.zip: solo la specie Castaneasativa.
+TITERNO-TAMMARO_30m_2002-2009_20121214000006_output.zip solo la "specie" quercus_deciduous
+MADONIE_30m_2002-2020_20121217000000_input.zip: tutte le specie analizzate per il sito.
+
+- ${TIPO_DATO} : descrive se il dato e' di input o di output. Es.: input, output.
+
+# STRUTTURA :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Una volta decompressi, i dataset racchiudono la seguente struttura ed i seguenti dati:
+
+- Dataset di input
+TITERNO-TAMMARO_30m_2002-2020_20121218000002_input/
+└── TITERNO-TAMMARO
+├── images
+│ ├── Y_planted.tif
+│ ├── Species.tif
+│ ├── Phenology.tif
+│ ├── Management.tif
+│ ├── N_cell.tif
+│ ├── AvDBH.tif
+│ ├── Height.tif
+│ ├── SolarRad_2002.tif
+│ ├── ...
+│ ├── SolarRad_2020.tif
+│ ├── Avg_Temp_2002.tif
+│ ├── ...
+│ ├── Avg_Temp_2020.tif
+│ ├── VPD_2002.tif
+│ ├── ...
+│ ├── VPD_2020.tif
+│ ├── Precip_2002.tif
+│ ├── ...
+│ ├── Precip_2020.tif
+│ ├── LAI_2002.tif
+│ ├── ...
+│ ├── LAI_2020.tif
+│ ├── Soil.tif
+│ ├── Titerno-Tammaro_Fagussylvatica_2_mask.tif
+│ ├── Titerno-Tammaro_quercus_deciduous_6_mask.tif
+│ ├── Titerno-Tammaro_quercus_evergreen_7_mask.tif
+│ ├── Titerno-Tammaro_deciduous_mask.tif
+│ ├── Titerno-Tammaro_evergreen_mask.tif
+│ └── Titerno-Tammaro_total_mask.tif
+└── txt
+├── Fagussylvatica.txt
+├── quercus_deciduous.txt
+├── quercus_evergreen.txt
+└── settings.txt
+
+Una volta decompresso il dataset di input e' costituito da
+- una directory con lo stesso nome del file .zip
+- una sottodirectory col nome del sito
+- all'interno della sottodirectory col nome del sito due ulteriori sottodirectory chiamate images e txt
+- all'interno della directory images troviamo:
+-- i 7 files relativi alla specie, GeoTiff Float32 a 5 bande con solo la prima piena: Y_planted, Species, Phenology, Management, N_cell, AvDBH, Height
+-- i file meteoclimatici, uno per anno, GeoTiff Float32 a 12 bande (ognuna rappresenta un mese): SolarRad, Avg_Temp, VPD, Precip, LAI
+-- un file per il suolo, GeoTiff Float32 a 5 bande: Soil
+-- diversi file di maschera per ogni specie del dataset, per gruppi di specie decidue e sempreverdi e una maschera totale, GeoTiff Byte monobanda: *_mask
+- all'interno della directory txt troviamo:
+-- il file di settaggio per 3D-CMCC-Forest-Model: settings.txt
+-- i file di parametrizzazione delle specie presenti nel dataset: gli altri txt
+
+- Dataset di output:
+TITERNO-TAMMARO_30m_2002-2020_20121218000002_output/
+├── GPP_2002.tif
+├── ...
+├── GPP_2020.tif
+├── GPP_sum_2002.tif
+├── ...
+├── GPP_sum_2020.tif
+├── NPP_2002.tif
+├── ...
+├── NPP_2020.tif
+├── NPP_sum_2002.tif
+├── ...
+├── NPP_sum_2020.tif
+├── AGB_2002.tif
+├── ...
+├── AGB_2020.tif
+├── BGB_2002.tif
+├── ...
+├── BGB_2020.tif
+├── MAI_2002.tif
+├── ...
+├── MAI_2020.tif
+├── CAI_2002.tif
+├── ...
+├── CAI_2020.tif
+├── Titerno-Tammaro_Fagussylvatica_2_mask.tif
+├── Titerno-Tammaro_quercus_deciduous_6_mask.tif
+├── Titerno-Tammaro_quercus_evergreen_7_mask.tif
+├── Titerno-Tammaro_deciduous_mask.tif
+├── Titerno-Tammaro_evergreen_mask.tif
+└── Titerno-Tammaro_total_mask.tif
+
+Una volta decompresso il dataset di output e' costituito da
+- una directory con lo stesso nome del file .zip
+- all'interno di questa directory ci sono le immagini prodotte dal processamento del dataset in input con la stessa firma:
+-- un file per anno, GeoTiff Float32 a 12 bande (ognuna rappresenta un mese): GPP, NPP
+-- un file per anno, GeoTiff Float32 monobanda che somma i valori di tutti i mesi di GPP ed NPP: GPP_sum, NPP_sum
+-- un file per anno, GeoTiff Float32 monobanda: AGB, BGB, MAI, CAI
+-- gli stessi file di maschera presenti nel dataset di input: *_mask
+
+# DISTRIBUZIONE PIXEL PER SPECIE :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Per le immagini dei siti del progetto, abbiamo la seguente distribuzione di pixel:
+
+- MADONIE : immagini 1286x1160
+1491760 pixels totali
+1353704 pixel vuoti
+138056 pixel di specie
+
+I pixel di specie per le MADONIE sono cosi suddivisi:
+
+(1) Castaneasativa: 1904
+(2) Fagussylvatica: 29520
+(6) quercus_deciduous: 46527
+(7) quercus_evergreen: 60105
+
+Piante decidue (1+2+6): 77951
+Piante sempreverdi (7): 60105
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+- TITERNO-TAMMARO : immagini 1349x907
+1223543 pixels totali
+489494 pixel vuoti
+734049 pixel di specie
+
+I pixel di specie per il TITERNO-TAMMARO sono cosi suddivisi:
+
+(2) Fagussylvatica: 151433
+(6) quercus_deciduous: 542598
+(7) quercus_evergreen: 40018
+
+Piante decidue (2+6): 694031
+Piante sempreverdi (7): 40018
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
