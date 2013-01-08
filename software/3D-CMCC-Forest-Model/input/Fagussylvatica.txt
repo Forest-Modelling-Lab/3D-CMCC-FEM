@@ -1,8 +1,8 @@
 //NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-LIGHT_TOL	3   	//4 = very shade intollerant
-		    	//3 = shade intollerant
+LIGHT_TOL	3   	//4 = very shade intolerant
+		    	//3 = shade intolerant
 		    	//2 = shade tolerant
-		   	//1 = very shade tollerant
+		   	//1 = very shade tolerant
 PHENOLOGY	0 //PHENOLOGY 0=deciduous, 1=evergreen
 ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
