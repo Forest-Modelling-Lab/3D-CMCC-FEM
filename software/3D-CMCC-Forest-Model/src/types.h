@@ -12,8 +12,8 @@
  /* enums */
 
 typedef enum {
-	Forest = 0,      //forest
-	Crop          //crop
+	F = 0,      //forest
+	Z          //crop
 } eLanduse;
 
 

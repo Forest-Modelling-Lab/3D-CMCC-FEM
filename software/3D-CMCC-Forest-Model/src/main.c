@@ -1474,7 +1474,7 @@ int main(int argc, char *argv[])
 					//RUN FOR TREEMODEL
 					for ( cell = 0; cell < m->cells_count; cell++)
 					{
-						if (m->cells[cell].landuse == 'Forest')
+						if (m->cells[cell].landuse == F)
 						{
 							if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
 							{
