@@ -1445,36 +1445,35 @@ int main(int argc, char *argv[])
 			/* model */
 			matrix_summary (m, years, yos);
 
-
 			Log("-YEARS OF SIMULATION = %d\n", yos[years].year);
-			Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
-
-
-			//control version 's' or 'u' and change if asked
-			if (settings->version == 's' && yos[years].year >= (int)(settings->switchtounspatial))
-			{
-				settings->version = 'u';
-				Log("\n\n\n************CHANGING VERSION..........***************\n");
-				Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
-				Log("Model version = %c\n\n\n\n", settings->version);
-				Log("************************************************************\n");
-			}
 
 			if (settings->time == 'm')
 			{
-				/*compute number of vegetative months*/
-				Log("compute vegetative months for version '%c'\n", settings->version);
-				for (month = 0; month < MONTHS; month ++)
+				//run for all cells to check land use
+				for ( cell = 0; cell < m->cells_count; cell++)
 				{
-					Get_Veg_Months (m, yos, month, years);
-				}
-				for (month = 0; month < MONTHS; month++)
-				{
-					//todo make all models run in main for each cell
-					//RUN FOR TREEMODEL
-					for ( cell = 0; cell < m->cells_count; cell++)
+					//run for forests
+					if (m->cells[cell].landuse == F)
 					{
-						if (m->cells[cell].landuse == F)
+						Log("RUN FOR FORESTS\n");
+						//control version 's' or 'u' and change if asked
+						if (settings->version == 's' && yos[years].year >= (int)(settings->switchtounspatial))
+						{
+							settings->version = 'u';
+							Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
+							Log("\n\n\n************CHANGING VERSION..........***************\n");
+							Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
+							Log("Model version = %c\n\n\n\n", settings->version);
+							Log("************************************************************\n");
+						}
+						/*compute number of vegetative months*/
+						Log("compute vegetative months for version '%c'\n", settings->version);
+						for (month = 0; month < MONTHS; month++)
+						{
+							Get_Veg_Months (m, yos, month, years);
+						}
+						//run tree_model_M
+						for (month = 0; month < MONTHS; month++)
 						{
 							if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
 							{
@@ -1485,52 +1484,54 @@ int main(int argc, char *argv[])
 								puts(msg_ok);
 							}
 						}
+					}
+					//run for crops
+					if  (m->cells[cell].landuse == Z)
+					{
+						Log("RUN FOR CROPS\n");
+						/*
+						if ( !crop_model_M (m, yos, years, month, years_of_simulation) )
+						{
+							Log("crop model failed.");
+						}
 						else
 						{
-							Log("crop model\n");
+							puts(msg_ok);
 						}
-					}
-
-					/*
-					//todo: insert crop model routine
-					//RUN FOR CROPMODEL
-					//if (m->cells[cell].landuse == C)
-					{
-					if ( !soil_model (m, yos, years, month, years_of_simulation) )
-					{
-						Log("crop model failed.");
-					}
-					else
-					{
-						puts(msg_ok);
-					}
-					}
-					//}
 						 */
-						//todo: soilmodel could stay here or inside treemodel.c or outside tree height loop
-						//RUN FOR SOILMODEL
-						/*
-					if ( !soil_model (m, yos, years, month, years_of_simulation) )
-					{
-						Log("soil model failed.");
 					}
-					else
-					{
-						puts(msg_ok);
-					}
-					 */
-					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 				}
+				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 			else //run for daily version
 			{
-				if ( !tree_model_D (m, yos, years, month, years_of_simulation) )
+				//run for all cells to check land use
+				for ( cell = 0; cell < m->cells_count; cell++)
 				{
-					Log("tree model failed.");
-				}
-				else
-				{
-					puts(msg_ok);
+					if(m->cells[cell].landuse == F)
+					{
+						if ( !tree_model_D (m, yos, years, month, years_of_simulation) )
+						{
+							Log("tree model failed.");
+						}
+						else
+						{
+							puts(msg_ok);
+						}
+					}
+					if(m->cells[cell].landuse == Z)
+					{
+						/*
+						if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
+						{
+							Log("crop model failed.");
+						}
+						else
+						{
+							puts(msg_ok);
+						}
+						 */
+					}
 				}
 			}
 
