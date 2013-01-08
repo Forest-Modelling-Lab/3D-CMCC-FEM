@@ -10,12 +10,12 @@
 
 
  /* enums */
-/*
+
 typedef enum {
 	F = 0,      //forest
-	C,          //crop
+	Z,          //crop
 } eLanduse;
- */
+
 
 /* enums */
 /*
@@ -552,7 +552,7 @@ enum {
 typedef struct {
 	int x;
 	int y;
-	//eLanduse landuse;
+	eLanduse landuse;
 	int age;
 	char *species;
 	//ePhenology phenology;
@@ -626,7 +626,7 @@ typedef struct {
 	PREC x;
 	PREC y;
 
-	//eLanduse landuse;
+	eLanduse landuse;
 
 	HEIGHT *heights;
 	//SITE *site;

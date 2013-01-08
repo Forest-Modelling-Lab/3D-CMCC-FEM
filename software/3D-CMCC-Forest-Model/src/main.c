@@ -967,6 +967,8 @@ int main(int argc, char *argv[])
 	int years,
 	month;
 
+	int cell;
+
 	int site_data;  // if site data ok = 1, else = 0
 
 	MET_DATA *met;
@@ -1470,19 +1472,24 @@ int main(int argc, char *argv[])
 				{
 					//todo make all models run in main for each cell
 					//RUN FOR TREEMODEL
-					//for ( cell = 0; cell < m->cells_count; cell++)
-					//{
-					//if (m->cells[cell].landuse == F)
-					//{
-					if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
+					for ( cell = 0; cell < m->cells_count; cell++)
 					{
-						Log("tree model failed.");
+						if (m->cells[cell].landuse == F)
+						{
+							if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
+							{
+								Log("tree model failed.");
+							}
+							else
+							{
+								puts(msg_ok);
+							}
+						}
+						else
+						{
+							Log("crop model\n");
+						}
 					}
-					else
-					{
-						puts(msg_ok);
-					}
-					//}
 
 					/*
 					//todo: insert crop model routine

@@ -11,7 +11,7 @@
 enum {
 	X_COLUMN = 0,
 	Y_COLUMN,
-	//LANDUSE_COLUMN,
+	LANDUSE_COLUMN,
 	AGE_COLUMN,
 	SPECIES_COLUMN,
 	//PHENOLOGY_COLUMN,
@@ -37,7 +37,7 @@ static const char dataset_delimiter[] = ",\r\n";
 static const char err_redundancy[] = "redundancy: var \"%s\" already founded at column %d.\n";
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
 static const char err_conversion[] = "error during conversion of \"%s\" value at row %d, column %d.\n";
-//static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
+static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
 //static const char err_bad_phenology_length[] =" bad phenology length at row %d, phenology must be 1 character.\n";
 //static const char err_bad_phenology[] = "bad phenology %c at row %d\n";
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
@@ -56,7 +56,7 @@ extern const char err_unable_open_file[];
 static const char *header[COLUMNS] = {
 		"X",
 		"Y",
-		//"LU",  //land use type (F = Forest, C = crop)
+		"LANDUSE",  //land use type (F = Forest, C = crop)
 		"AGE",
 		"SPECIES",
 		//"PHENOLOGY",
@@ -194,7 +194,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 
 					/* check columns */
 
-					/*
+
 					if ( LANDUSE_COLUMN == i )
 					{
 						// check landuse length
@@ -212,20 +212,20 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						if ( ('F' == token[0]) || ('f' == token[0]) ) {
 							rows[*rows_count-1].landuse = F;
 						}
-							else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-							rows[*rows_count-1].landuse = C;
+							else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
+							rows[*rows_count-1].landuse = Z;
 						}
 						 else
 						{
-							printf(err_bad_landuse, token[0], *rows_count);
+							printf(err_bad_landuse_length, token[0], *rows_count);
 							free(columns);
 							free(rows);
 							fclose(f);
 							return NULL;
 						}
 					}
-					 */
-					if ( SPECIES_COLUMN == i )
+
+					else if ( SPECIES_COLUMN == i )
 					{
 						rows[*rows_count-1].species = malloc(strlen(token)+1);
 						if ( !rows[*rows_count-1].species )
