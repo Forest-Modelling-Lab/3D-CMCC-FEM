@@ -1533,6 +1533,7 @@ int main(int argc, char *argv[])
 						 */
 					}
 				}
+				Log("****************END OF DAY*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);
