@@ -13,7 +13,7 @@
 
 typedef enum {
 	F = 0,      //forest
-	Z,          //crop
+	C,          //crop
 } eLanduse;
 
 

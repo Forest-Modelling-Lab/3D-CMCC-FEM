@@ -212,8 +212,8 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						if ( ('F' == token[0]) || ('f' == token[0]) ) {
 							rows[*rows_count-1].landuse = F;
 						}
-							else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
-							rows[*rows_count-1].landuse = Z;
+							else if ( ('C' == token[0]) || ('c' == token[0]) ) {
+							rows[*rows_count-1].landuse = C;
 						}
 						 else
 						{
