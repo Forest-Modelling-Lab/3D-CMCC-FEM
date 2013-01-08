@@ -198,6 +198,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 					if ( LANDUSE_COLUMN == i )
 					{
 						// check landuse length
+						/*
 						if ( 1 != strlen(token) )
 						{
 							printf(err_bad_landuse_length, *rows_count);
@@ -206,15 +207,17 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							fclose(f);
 							return NULL;
 						}
+						*/
 
 						// check landuse char
 						//F = forest, C = crop
-						if ( ('F' == token[0]) || ('f' == token[0]) ) {
-							rows[*rows_count-1].landuse = F;
+						if ( ('Forest' == token[0]) || ('forest' == token[0]) ) {
+							rows[*rows_count-1].landuse = 'Forest';
 						}
-							else if ( ('C' == token[0]) || ('c' == token[0]) ) {
-							rows[*rows_count-1].landuse = C;
+							else if ( ('Crop' == token[0]) || ('crop' == token[0]) ) {
+							rows[*rows_count-1].landuse = 'Crop';
 						}
+						/*
 						 else
 						{
 							printf(err_bad_landuse_length, token[0], *rows_count);
@@ -223,6 +226,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							fclose(f);
 							return NULL;
 						}
+						*/
 					}
 
 					else if ( SPECIES_COLUMN == i )

@@ -12,9 +12,10 @@
  /* enums */
 
 typedef enum {
-	F = 0,      //forest
-	C,          //crop
+	Forest = 0,      //forest
+	Crop          //crop
 } eLanduse;
+
 
 
 /* enums */
@@ -28,7 +29,7 @@ typedef enum {
 /* */
 typedef enum {
 	T = 0,      //Timber
-	C,          //Coppice
+	C          //Coppice
 } eManagement;
 
 /* */
