@@ -132,7 +132,7 @@ int tree_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
-		//compute vpd from RH
+		//compute vpd
 		//todo remove if used VPD
 		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
 		//VPD USED MUST BE IN mbar

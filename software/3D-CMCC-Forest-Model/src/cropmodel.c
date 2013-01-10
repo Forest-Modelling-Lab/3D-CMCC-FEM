@@ -27,6 +27,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	static float vpd;
 
 
+	//dichiara e inizializza qui tutte le variabili che ti servono
+	int a = 1;
+	int b = 2;
+	int c = 3;
+	int somma;
+
 	// check parameters
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
@@ -53,7 +59,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		GetDayLength (&m->cells[cell], MonthLength[month]);
 
-		//compute vpd from RH
+		//compute vpd
 		//todo remove if used VPD
 		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
 		//VPD USED MUST BE IN mbar
@@ -64,6 +70,36 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		Log("PROVA TEMPERATURA = %g\n", met[month].tav);
 		Log("PROVA SETTINGS = %c\n", settings->version);
+
+
+
+		somma = a + b + c;
+		Log("somma = %d\n", somma);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
