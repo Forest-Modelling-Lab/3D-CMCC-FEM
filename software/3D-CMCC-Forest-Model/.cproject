@@ -87,9 +87,28 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.1790749833" name="soilmodel.c" rcbsApplicability="disable" resourcePath="src/soilmodel.c" toolsToInvoke="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.373066101">
-						<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.373066101" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502"/>
-					</fileInfo>
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.697445559" name="/" resourcePath="src/src_forest">
+						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.453042501" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.509975925" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502">
+								<option id="gnu.c.compiler.option.include.paths.1062002981" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="src"/>
+								</option>
+								<option id="gnu.c.compiler.option.include.files.21779039" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+									<listOptionValue builtIn="false" value="src"/>
+								</option>
+								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2029529225" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1906774479" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1869267783">
+								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.878950388" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+							</tool>
+							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1972328036" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker.144579203"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.2087363905" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker.1943147040"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.archiver.1436655779" name="Cross GCC Archiver" superClass="cdt.managedbuild.tool.gnu.cross.archiver.649883483"/>
+							<tool id="cdt.managedbuild.tool.gnu.cross.assembler.925538717" name="Cross GCC Assembler" superClass="cdt.managedbuild.tool.gnu.cross.assembler.1155004233">
+								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1394010279" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
 					<sourceEntries>
 						<entry excluding="src/garbage.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
