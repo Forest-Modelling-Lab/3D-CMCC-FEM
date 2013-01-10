@@ -87,13 +87,14 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.697445559" name="/" resourcePath="src/src_forest">
+					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.697445559" name="/" resourcePath="src/forest">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.453042501" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug" unusedChildren="">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.509975925" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502">
-								<option id="gnu.c.compiler.option.include.paths.1062002981" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.1062002981" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="src"/>
 								</option>
-								<option id="gnu.c.compiler.option.include.files.21779039" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
+								<option id="gnu.c.compiler.option.include.files.21779039" name="Include files (-include)" superClass="gnu.c.compiler.option.include.files" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="src"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.2029529225" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -110,7 +111,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/garbage.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="canopy_evapotranspiration.c|src/garbage.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -163,7 +164,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/garbage.c|src/canopy_evapotranspiration.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/canopy_evapotranspiration.c|canopy_evapotranspiration.c|src/garbage.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
