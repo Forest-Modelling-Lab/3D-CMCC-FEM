@@ -955,6 +955,10 @@ extern void Get_a_Power_Function (AGE *, SPECIES *);
 extern void Get_snow_met_data (CELL *c, const MET_DATA *const, int);
 
 
+//sergio's functions
+extern int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
+
+
 
 
 

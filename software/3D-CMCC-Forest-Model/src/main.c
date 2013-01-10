@@ -1489,16 +1489,18 @@ int main(int argc, char *argv[])
 					if  (m->cells[cell].landuse == Z)
 					{
 						Log("RUN FOR CROPS\n");
-						/*
-						if ( !crop_model_M (m, yos, years, month, years_of_simulation) )
+						//run tree_model_M
+						for (month = 0; month < MONTHS; month++)
 						{
-							Log("crop model failed.");
+							if (!crop_model_M (m, yos, years, month, years_of_simulation) )
+							{
+								Log("crop model failed.");
+							}
+							else
+							{
+								puts(msg_ok);
+							}
 						}
-						else
-						{
-							puts(msg_ok);
-						}
-						 */
 					}
 				}
 				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
