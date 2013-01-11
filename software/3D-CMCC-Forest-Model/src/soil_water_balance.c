@@ -8,7 +8,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include "types.h"
 
 extern void Get_soil_water_balance (CELL *const c)

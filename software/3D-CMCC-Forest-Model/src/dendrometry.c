@@ -1,7 +1,7 @@
 /* dendrometry.c */
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include "types.h"
 
 void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)

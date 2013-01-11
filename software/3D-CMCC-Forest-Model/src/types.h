@@ -4,7 +4,7 @@
 
 /* precision */
 #include "common.h"
-#include "math.h"
+#include <math.h>
 
 #define NO_DATA -9999
 

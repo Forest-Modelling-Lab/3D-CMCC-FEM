@@ -3,7 +3,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include "types.h"
 
 //TO COMPUTE YEARLY PEAK LAI FROM PROVIOUS YEARLY LAI

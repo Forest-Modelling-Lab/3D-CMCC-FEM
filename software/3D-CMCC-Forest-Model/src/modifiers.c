@@ -3,7 +3,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include "types.h"
 
 void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DATA *const met, int year,  int month, int daysinmonth, float available_soil_water, float vpd,  int z, int management )

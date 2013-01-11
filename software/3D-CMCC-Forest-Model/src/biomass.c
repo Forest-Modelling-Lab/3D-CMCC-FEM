@@ -3,7 +3,7 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include "types.h"
 
 void Get_tree_BB (CELL *const c,  int years)
