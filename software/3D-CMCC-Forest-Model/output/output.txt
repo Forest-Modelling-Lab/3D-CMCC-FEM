@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Jan 11 2013 at 10:16:43
+compiled using GNU C 4.7.2 on Jan 18 2013 at 12:21:12
 (use -h parameter for more information)
 
 
@@ -39,7 +39,7 @@ compiled using GNU C 4.7.2 on Jan 11 2013 at 10:16:43
 Site Name = Madonie - Italy
 Latitude = 37.53 
 Longitude = 14.2 
-Years of Simulations = 1 
+Years of Simulations = 2 
 ***************************************************
 RUN DATASET
 Cell resolution = 30 x 30 = 900 m^2
@@ -53,7 +53,7 @@ matrix has 1 cell
 
 FOREST DATASET
 *(1)
-****GET FOREST CHARACTERISTICS for cell  (0, 1083693056)****
+****GET FOREST CHARACTERISTICS for cell  (0, 0)****
 - cell n.01 is at 1526,962 and has 1 height classe 
 **(1)
 -- height n.01 is 12.42 m and has 1 age classes 
@@ -69,8 +69,18 @@ Generating input biomass data from DBH data...
 ----Foliage Biomass initialization data  = 0 
 -----Reserve Biomass initialization data  = 0.947842 KgDM/tree
 -----Reserve Biomass initialization data  = 0.0464443 tDM/cell
----- species n.01 is Fagussylvatica (0), management type is 
-****GET SITE-SOIL CHARACTERISTICS for cell  (0, 1083693056)****
+---- species n.01 is Fagussylvatica (84), management type is 1 and has
+----- n = 0 trees
+----- n stumps = 0 stumps
+----- avdbh = 0 cm
+----- wf = 26.97 tDM/ha
+----- wr coarse = 0 tDM/area
+----- wr fine = 5.832 tDM/area
+----- ws = 0 tDM/area
+----- wres = 16.2 tDM/area
+----- lai = 0.0464443 tDM/area
+
+****GET SITE-SOIL CHARACTERISTICS for cell  (0, 0)****
 soil_b = -4.7601 (DIM)
 vwc_sat = 0.408771 (DIM)
 psi_sat = -0.0011607 (MPa)
@@ -138,9 +148,9 @@ MONTH SIMULATED = JANUARY
 -average solar_rad = 8.98 MJ/m^2/day
 -tav = 2.53 °C
 -vpd = 2 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = -9999 °C
 -rain = 42.94 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 10.1547 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -388,9 +398,9 @@ MONTH SIMULATED = MARCH
 -average solar_rad = 15.61 MJ/m^2/day
 -tav = 3.92 °C
 -vpd = 2.6 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = -9999 °C
 -rain = 23.48 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 12.4723 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -502,7 +512,7 @@ MONTH SIMULATED = APRIL
 -vpd = 3.6 mbar
 -ts_f = -9999 °C
 -rain = 51.22 mm
--swc = 0 %vol
+-swc = -9999 %vol
 -Day length = 13.6275 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -615,9 +625,9 @@ MONTH SIMULATED = MAY
 -average solar_rad = 26.13 MJ/m^2/day
 -tav = 18.44 °C
 -vpd = 2.3 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = 0 °C
 -rain = 54.65 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 14.3729 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -812,7 +822,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= 4.88354e-194 
+- Monthly LAI from Model= 2.09816 
 - ASW layer 0 month 6  = 97.9755 mm
 
  GET_MODIFIERS
@@ -983,9 +993,9 @@ MONTH SIMULATED = JULY
 -average solar_rad = 27.76 MJ/m^2/day
 -tav = 22.24 °C
 -vpd = 12.5 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = -9999 °C
 -rain = 40.96 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 13.8899 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -1001,7 +1011,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= 4.14382e+156 
+- Monthly LAI from Model= 2.41264 
 - ASW layer 0 month 7  = 56.1227 mm
 
  GET_MODIFIERS
@@ -1190,7 +1200,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= -2.74815e-105 
+- Monthly LAI from Model= 3.37312 
 - ASW layer 0 month 8  = 49.6227 mm
 
  GET_MODIFIERS
@@ -1245,7 +1255,7 @@ Etransp for dominant layer = 618522 J/m^2/sec
 NET RADIATION = 1.24515e+06 
 Daily Canopy Transpiration = 3.21517 mm-Kg H2o/m^2/day
 Daily Transpiration = 3.21517 mm/m^2/day
-Monthly Canopy Transpiration = 99.6702 mm-Kg H2o/m^2/month
+Monthly Canopy Transpiration = 99.6703 mm-Kg H2o/m^2/month
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 173997
@@ -1383,9 +1393,9 @@ MONTH SIMULATED = SEPTEMBER
 -average solar_rad = 18.53 MJ/m^2/day
 -tav = 17.11 °C
 -vpd = 4.9 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = -9999 °C
 -rain = 46.37 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 11.5084 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -1401,7 +1411,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
+- Monthly LAI from Model= 3.77346 
 - ASW layer 0 month 9  = 61.5327 mm
 
  GET_MODIFIERS
@@ -1474,7 +1484,7 @@ Cumulated Evapotranspiration for this class = 438.989 mm
 net_radiation for soil = 9148.4
 incident radiation for soil = 164.671
 *********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = -21.5467 mm
+ASW at the END of month less Evapotraspiration = -21.5468 mm
 ATTENTION Available Soil Water is low than MinASW!!! 
 ASW = 15.1627
 
@@ -1588,7 +1598,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
+- Monthly LAI from Model= 3.77346 
 - ASW layer 0 month 10  = 58.4727 mm
 
  GET_MODIFIERS
@@ -1757,9 +1767,9 @@ MONTH SIMULATED = NOVEMBER
 -average solar_rad = 9.25 MJ/m^2/day
 -tav = 8.11 °C
 -vpd = 3.6 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = -9999 °C
 -rain = 61.3 mm
--swc = 1.59783e-314 %vol
+-swc = -9999 %vol
 -Day length = 9.62076 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -1775,7 +1785,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
+- Monthly LAI from Model= 3.77346 
 - ASW layer 0 month 11  = 76.4627 mm
 
  GET_MODIFIERS
@@ -1900,7 +1910,7 @@ delta_fR 0 = 0.00860299
 delta_cR 0 = 0.00840635 
 delta_S 0 = 0.019615 
 delta_Res 0 = 0.0103851 
-delta_BB 0 = 0.00478705 
+delta_BB 0 = 0.00478706 
 ***LEAF FALL**
 Months of leaf fall for deciduous = 1.2 
 foliage reduction rate = 0.454545 
@@ -1949,7 +1959,7 @@ MONTH SIMULATED = DECEMBER
 -vpd = 2.8 mbar
 -ts_f = -nan °C
 -rain = 71.48 mm
--swc = -nan %vol
+-swc = 2.12199e-314 %vol
 -Day length = 9.54527 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -1965,7 +1975,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  6 months
-- Monthly LAI from Model= -6.10553e+123 
+- Monthly LAI from Model= 1.02913 
 - ASW layer 0 month 12  = 99.9475 mm
 
  GET_MODIFIERS
@@ -2075,7 +2085,7 @@ Yearly Stand MAI = 0.406234 m^3/area/yr
 > height = 22.689
 > age = 39
 > species = Fagussylvatica
-> phenology = 0
+> phenology = 21168512
 > management = 0
 [2007] layer 0 n tree = 47
 [2007] layer 0 > avdbh = 27.3936
@@ -2125,6 +2135,2233 @@ DEL SUM = 1.39607
 
 
 ****************END OF YEAR (2007)*******************
+
+
+
+
+
+*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
+RUN DATASET
+Cell resolution = 30 x 30 = 900 m^2
+Model version = un-spatial 
+Temporal scale = monthly 
+Vegetation Presence = total 
+Years of simulation = 2 (2008)
+matrix has 1 cell
+*********************
+
+
+FOREST DATASET
+*(1)
+****GET FOREST CHARACTERISTICS for cell  (0, 0)****
+- cell n.01 is at 1526,962 and has 1 height classe 
+**(1)
+-- height n.01 is 22.689 m and has 1 age classes 
+--- age n.01 is 39 and has 1 species
+-Mass Density = 0.819832
+-Stem const = 0.0846852
+---- species n.01 is Fagussylvatica (84), management type is / and has
+----- n = 0 trees
+----- n stumps = 0 stumps
+----- avdbh = 0 cm
+----- wf = 27.3936 tDM/ha
+----- wr coarse = 0.0459053 tDM/area
+----- wr fine = 5.83673 tDM/area
+----- ws = 0 tDM/area
+----- wres = 16.1586 tDM/area
+----- lai = 0.118538 tDM/area
+
+****GET SITE-SOIL CHARACTERISTICS for cell  (0, 0)****
+soil_b = -4.7601 (DIM)
+vwc_sat = 0.408771 (DIM)
+psi_sat = -0.0011607 (MPa)
+vwc_fc = 0.238783 (DIM)
+Soil depth = 63.5 cm
+Soil depth = 0.635 m
+soilw_fc BIOME (MAXASW FC BIOME)= 151.627 (kgH2O/m2)
+soilw_sat BIOME (MAXASW SAT BIOME)= 259.569 (kgH2O/m2)
+-YEARS OF SIMULATION = 2008
+RUN FOR FORESTS
+compute vegetative months for version 'u'
+----- TOTAL VEGETATIVE MONTHS for species Fagussylvatica = 8 
+
+Beginning month  1 ASW = 138.604 mm
+daylength = 10.1547 
+Abscission day length = 11.9758 
+****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET NUMBER OF ANNUAL LAYERS--
+ANNUAL LAYERS NUMBER = 1
+height 22.689, z 0
+NUMBER OF DIFFERENT LAYERS = 1
+Number of adult height classes in layer 0 = 1
+Tree number in layer 0 = 47 
+Density in layer 0 = 0.0522222 trees/area
+** CANOPY COVER from DBH-DC Function FOR LAYER 0  species Fagussylvatica **
+DBHDC effective to apply = 0.182165
+-Crown Diameter from DBHDC function  = 4.99015 m
+-Crown Area from DBHDC function = 19.5577 m^2
+Layer cover in layer 0 = 102.135 % 
+MORTALITY BASED ON HIGH CANOPY COVER layer 0 !!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CONTROL ROOT BIOMASS!!!
+Layer coverage mortality for timber 
+Tot Root Biomass before reduction = 5.83673 tDM/tree
+Stem Biomass before reduction = 16.1586 tDM/tree
+Canopy Cover in while = 1.02135 
+Tot Root Biomass after reduction = 5.71254 tDM/tree
+Stem Biomass after reduction = 15.8148 tDM/tree
+Number of Trees = 46 trees 
+Tree Removed for Crowding Competition = 1 trees
+Canopy Cover in after while = 0.999616 
+*************************************************** 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 0
+
+species in veg period = 0
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 0
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 1
+Determines Effective Layer Cover 
+Monthly layer number = 0
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 0.91411
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = JANUARY
+***************
+**Monthly MET DATA**
+-average solar_rad = 6.1 MJ/m^2/day
+-tav = 4.8 °C
+-vpd = 3 mbar
+-ts_f = -9999 °C
+-rain = 43.8182 mm
+-swc = -9999 %vol
+-Day length = 10.1547 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 1 = 138.604 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 0 
+- ASW layer 0 month 1  = 138.604 mm
+- Phenology type = 0
+- Management type = T
++ AvDBH = 27.3936 cm
++ Wf = 0.0459053 tDM/area
++ Ws = 15.8148 tDM/area
++ Wrc = 5.71254 tDM/area
++ Wrf = 0 tDM/area
++ Wr Tot = 6.08518 tDM/area
++ Wres = 0.116016 tDM/area
+
+ GET_MODIFIERS
+
+--Temperature Average 4.8 °C
+F_T = 0 
+fT - Temperature Modifier = 0
+fVPD - VPD modifier = 0.83527
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 0.999995
+PhysMod = 0.592558
+PHYSMOD uses F_VPD * F_AGE
+available soil water 138.604 mm
+volumetric available soil water  = 0.218274 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.533976 
+PSI BIOME = -0.0230008 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+old basal area = 0.0571284 
+ Basal Area Increment= 0.00180847 m^2/tree 
+ Basal Area Increment= 18.0847 cm^2/tree 
+Basal Area for this layer = 0.0589368 m^2/tree
+Stand Basal Area for this layer = 2.71109 m^2/area
+sapwood from Kostner = 492.556 cm^2
+heartwood from Wang et al 2010 = 96.8123 cm^2
+Sapwood/Basal Area = 0.835735 
+Sapwood/Basal Area = 83.5735 %
+Stem biomass = 15.8148 tDM/area 
+Sapwood biomass = 13.217 tDM/area 
+Heartwood biomass = 2.59781 tDM/area 
+Leaf Area from Kostner-LPJ = 73.8834 m^2
+Crown diameter = 4.99015 m^2
+Crown Area for Kostner = 19.5577 m^2
+year 1 PEAK LAI from Kostner = 3.77771 m^2 m^-2
+Maximum foliage biomass = 0.0849659 tDM/area 
+Maximum foliage biomass = 1847.08 gDM/tree 
+Maximum foliage biomass = 0.00184708 Kg/area 
+SLA in mod= 20 KgC/m^2 
+**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
+++Lai layer 0 = 0
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 0 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 0
+Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 29.3585 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 0 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 0
+CLASS LEVEL Yearly NPP = 0
+CELL LEVEL
+CELL LEVEL Yearly GPP = 0
+CELL LEVEL Yearly NPP = 0
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+******************************
+-----------------------------------------------------------------
+********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation for soil evaporation = 480477 W/m^2/hour
+Monthly Soil Evaporation = 5.74032 
+Total Soil Evaporation = 59.8889 mm
+Available Soil Water at month 0 year 1 = 132.864 mm
+*****************************************************************************
+*****************************************************************************
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  2 ASW = 153.311 mm
+ASW > MAXASW !!!
+ASW month 2 = 151.627 mm
+daylength = 11.1531 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 0
+
+species in veg period = 0
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 0
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 2
+Determines Effective Layer Cover 
+Monthly layer number = 0
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = FEBRUARY
+***************
+**Monthly MET DATA**
+-average solar_rad = 9.1 MJ/m^2/day
+-tav = 4.5231 °C
+-vpd = 3 mbar
+-ts_f = -9999 °C
+-rain = 20.4472 mm
+-swc = -9999 %vol
+-Day length = 11.1531 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 2 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 0 
+- ASW layer 0 month 2  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 4.5231 °C
+F_T = 0 
+fT - Temperature Modifier = 0
+fVPD - VPD modifier = 0.83527
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.592558
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
+++Lai layer 0 = 0
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 1 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 0
+Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 29.3585 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 0 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 0
+CLASS LEVEL Yearly NPP = 0
+CELL LEVEL
+CELL LEVEL Yearly GPP = 0
+CELL LEVEL Yearly NPP = 0
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+******************************
+-----------------------------------------------------------------
+********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation for soil evaporation = 652642 W/m^2/hour
+Monthly Soil Evaporation = 7.70436 
+Total Soil Evaporation = 67.5933 mm
+Available Soil Water at month 1 year 1 = 143.923 mm
+*****************************************************************************
+*****************************************************************************
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  3 ASW = 354.939 mm
+ASW > MAXASW !!!
+ASW month 3 = 151.627 mm
+daylength = 12.4723 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 3
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = MARCH
+***************
+**Monthly MET DATA**
+-average solar_rad = 13.15 MJ/m^2/day
+-tav = 6.36916 °C
+-vpd = 3 mbar
+-ts_f = -9999 °C
+-rain = 211.016 mm
+-swc = -9999 %vol
+-Day length = 12.4723 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 3 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 0 
+- ASW layer 0 month 3  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 6.36916 °C
+fT - Temperature Modifier = 0.171548
+fVPD - VPD modifier = 0.83527
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.592558
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = MARCH
+VEG_MONTHS = 1 
+
+--GET_INITIAL_MONTH_LAI--
+++Reserves pools = 0.116016 tDM/area
+++Reserve biomass for each tree in g = 2522.08 
+Biomass foliage = 0.0305305
+ratio of reserve for foliage = 26.3158% 
+++Reserves pools less foliage = 0.0854854 tDM/area
+Biomass stem = 15.8697
+++Reserves pools less foliage + stem = 0 tDM/area
+++Biomass foliage from reserves for initial LAI = 0.0305305 
+++Lai from reserves = 1.35743
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 1.35743 
+Light Transmitted = 0.442879
+Vertical Percentage of Light Transmitted through this layer = 44.2879 %
+Vertical Fraction of Light Absorbed by this layer = 0.557121 
+Vertical Percentage of Light Absorbed by this layer = 55.7121 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 13.15 MJ/m^2/day
+Hourly Net Radiation = 674704 W/m^2/hour
+Par for layer '0' = 875.089 molPAR/m^2 month
+Apar for layer '0' = 487.53 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 298957  W/m^2/hour
+Average Par for lower layer = 387.746 molPAR/m^2 month
+Par for soil = 0.767077 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 0.976331
+Etransp for dominant layer = 261043 J/m^2/sec
+NET RADIATION = 674704 
+Daily Canopy Transpiration = 1.32349 mm-Kg H2o/m^2/day
+Daily Transpiration = 1.32349 mm/m^2/day
+Monthly Canopy Transpiration = 41.0283 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 298957
+Net radiation for soil evaporation = 298957 W/m^2/hour
+Monthly Soil Evaporation = 3.90727 
+Total Soil Evaporation = 71.5006 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.0542973 
+Highest class
+Rainfall Intercepted = 11.4532 mm/month
+Percentage of Rain Intercepted from dominant canopy = 5.42764%
+-Class evapotranspiration = 52.4658 mm/month
+Class evapotranspiration = 56.373 mm/month
+Cumulated Evapotranspiration for this class = 56.373 mm
+net_radiation for soil = 591.426
+incident radiation for soil = 11.0005
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 95.2542 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 2 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.00434072 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 26.8142 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 25.3948 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.0223896 
+Monthly Stand GPP = 25.3948 
+Monthly Stand NPP = 0.0223896 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 25.3948
+CLASS LEVEL Yearly NPP = 0.0223896
+CELL LEVEL
+CELL LEVEL Yearly GPP = 25.3948
+CELL LEVEL Yearly NPP = 0.0223896
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+FASE FENOLOGICA = 1 
+LAI < PEAK_Y_LAI * 0.5 
+LAI = 1.35743 
+**Maximum Growth**
+allocating only into foliage and stem pools
+Biomass Foliage CTEM = 0.0364225 tDM/area
+Biomass Stem CTEM = 15.8862 tDM/area
+++Lai = 1.6194
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 875.089 
+PAR FOR SOIL = 0.767077 
+Average Light Absorbed for establishment = 0.00087657 
+PHENOLOGY LAI = 1.6194 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  4 ASW = 218.024 mm
+ASW > MAXASW !!!
+ASW month 4 = 151.627 mm
+daylength = 13.6275 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 4
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = APRIL
+***************
+**Monthly MET DATA**
+-average solar_rad = 17.23 MJ/m^2/day
+-tav = 9.45381 °C
+-vpd = 5 mbar
+-ts_f = -9999 °C
+-rain = 122.77 mm
+-swc = -9999 %vol
+-Day length = 13.6275 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 4 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 1.6194 
+- ASW layer 0 month 4  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 9.45381 °C
+fT - Temperature Modifier = 0.503438
+fVPD - VPD modifier = 0.740818
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.525552
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = APRIL
+VEG_MONTHS = 2 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 1.6194 
+Light Transmitted = 0.378462
+Vertical Percentage of Light Transmitted through this layer = 37.8462 %
+Vertical Fraction of Light Absorbed by this layer = 0.621538 
+Vertical Percentage of Light Absorbed by this layer = 62.1538 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 17.23 MJ/m^2/day
+Hourly Net Radiation = 809113 W/m^2/hour
+Par for layer '0' = 1109.61 molPAR/m^2 month
+Apar for layer '0' = 689.666 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 306412  W/m^2/hour
+Average Par for lower layer = 420.211 molPAR/m^2 month
+Par for soil = 0.893264 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 0.995265
+Etransp for dominant layer = 320749 J/m^2/sec
+NET RADIATION = 809113 
+Daily Canopy Transpiration = 1.77684 mm-Kg H2o/m^2/day
+Daily Transpiration = 1.77684 mm/m^2/day
+Monthly Canopy Transpiration = 53.3051 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 306412
+Net radiation for soil evaporation = 306412 W/m^2/hour
+Monthly Soil Evaporation = 3.87552 
+Total Soil Evaporation = 75.3761 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.064776 
+Highest class
+Rainfall Intercepted = 7.94949 mm/month
+Percentage of Rain Intercepted from dominant canopy = 6.47511%
+-Class evapotranspiration = 61.2341 mm/month
+Class evapotranspiration = 65.1097 mm/month
+Cumulated Evapotranspiration for this class = 121.483 mm
+net_radiation for soil = 651.355
+incident radiation for soil = 11.7244
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 86.5175 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 3 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0112981 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 37.9316 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 93.5032 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.0824381 
+Monthly Stand GPP = 93.5032 
+Monthly Stand NPP = 0.0824381 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 118.898
+CLASS LEVEL Yearly NPP = 0.104828
+CELL LEVEL
+CELL LEVEL Yearly GPP = 118.898
+CELL LEVEL Yearly NPP = 0.104828
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+FASE FENOLOGICA = 1 
+LAI < PEAK_Y_LAI * 0.5 
+LAI = 1.6194 
+**Maximum Growth**
+allocating only into foliage and stem pools
+Biomass Foliage CTEM = 0.0581167 tDM/area
+Biomass Stem CTEM = 15.947 tDM/area
+++Lai = 2.58396
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 1109.61 
+PAR FOR SOIL = 0.893264 
+Average Light Absorbed for establishment = 0.000805024 
+PHENOLOGY LAI = 2.58396 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  5 ASW = 152.457 mm
+ASW > MAXASW !!!
+ASW month 5 = 151.627 mm
+daylength = 14.3729 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 5
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = MAY
+***************
+**Monthly MET DATA**
+-average solar_rad = 20.79 MJ/m^2/day
+-tav = 14.2615 °C
+-vpd = 6 mbar
+-ts_f = 0 °C
+-rain = 65.9398 mm
+-swc = -9999 %vol
+-Day length = 14.3729 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 5 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 2.58396 
+- ASW layer 0 month 5  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 14.2615 °C
+fT - Temperature Modifier = 0.860355
+fVPD - VPD modifier = 0.697676
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.494946
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = MAY
+VEG_MONTHS = 3 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 2.58396 
+Light Transmitted = 0.212168
+Vertical Percentage of Light Transmitted through this layer = 21.2168 %
+Vertical Fraction of Light Absorbed by this layer = 0.787832 
+Vertical Percentage of Light Absorbed by this layer = 78.7832 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 20.79 MJ/m^2/day
+Hourly Net Radiation = 925670 W/m^2/hour
+Par for layer '0' = 1383.51 molPAR/m^2 month
+Apar for layer '0' = 1089.97 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 196678  W/m^2/hour
+Average Par for lower layer = 293.955 molPAR/m^2 month
+Par for soil = 0.858221 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.02508
+Etransp for dominant layer = 427511 J/m^2/sec
+NET RADIATION = 925670 
+Daily Canopy Transpiration = 2.4978 mm-Kg H2o/m^2/day
+Daily Transpiration = 2.4978 mm/m^2/day
+Monthly Canopy Transpiration = 77.4317 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 196678
+Net radiation for soil evaporation = 196678 W/m^2/hour
+Monthly Soil Evaporation = 2.57052 
+Total Soil Evaporation = 77.9466 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.103358 
+Highest class
+Rainfall Intercepted = 6.81281 mm/month
+Percentage of Rain Intercepted from dominant canopy = 10.3319%
+-Class evapotranspiration = 84.2148 mm/month
+Class evapotranspiration = 86.7853 mm/month
+Cumulated Evapotranspiration for this class = 208.268 mm
+net_radiation for soil = 574.215
+incident radiation for soil = 10.6804
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 64.8419 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 4 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0181836 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 59.9483 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 237.835 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.20969 
+Monthly Stand GPP = 237.835 
+Monthly Stand NPP = 0.20969 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 356.733
+CLASS LEVEL Yearly NPP = 0.314518
+CELL LEVEL
+CELL LEVEL Yearly GPP = 356.733
+CELL LEVEL Yearly NPP = 0.314518
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+FASE FENOLOGICA = 2 
+**Normal Growth**
+Day length > 10 
+LAI MAX * 0.5 < LAI < LAI MAX 
+allocating into the three pools Ws+Wr+Wf
+BiomassRoots increment CTEM = 0.0702551 tDM/area
+BiomassRoots increment into fine roots = 0.0355336 tDM/area
+BiomassRoots increment into coarse roots = 0.0347214 tDM/area
+BiomassStem increment CTEM = 0.094727 tDM/area
+BiomassFoliage increment CTEM = 0.0447078 tDM/area
+Stem Biomass (Ws) = 16.0231 tDM/area
+Foliage Biomass (Wf) = 0.102825 tDM/area
+Total Root Biomass (Wr TOT) = 6.15544 tDM/area
+Fine Root Biomass (Wrf) = 0.0355336 tDM/area
+Coarse Root Biomass (Wrc) = 5.74727 tDM/area
+++Lai = 2.28587
+aF 0 = 0.213209 
+afR 0 = 0.169458 
+acR 0 = 0.165585 
+aS 0 = 0.451748 
+aRes 0 = 0 
+delta_F 0 = 0.0447078 
+delta_fR 0 = 0.0355336 
+delta_cR 0 = 0.0347214 
+delta_S 0 = 0.076144 
+delta_Res 0 = 0 
+delta_BB 0 = 0.018583 
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 1383.51 
+PAR FOR SOIL = 0.858221 
+Average Light Absorbed for establishment = 0.000620324 
+PHENOLOGY LAI = 2.28587 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  6 ASW = 164.734 mm
+ASW > MAXASW !!!
+ASW month 6 = 151.627 mm
+daylength = 14.467 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 6
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = JUNE
+***************
+**Monthly MET DATA**
+-average solar_rad = 22.67 MJ/m^2/day
+-tav = 18.3615 °C
+-vpd = 7 mbar
+-ts_f = -9999 °C
+-rain = 99.8921 mm
+-swc = -9999 %vol
+-Day length = 14.467 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 6 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 2.28587 
+- ASW layer 0 month 6  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 18.3615 °C
+fT - Temperature Modifier = 0.993968
+fVPD - VPD modifier = 0.657047
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.466123
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = JUNE
+VEG_MONTHS = 4 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 2.28587 
+Light Transmitted = 0.253721
+Vertical Percentage of Light Transmitted through this layer = 25.3721 %
+Vertical Fraction of Light Absorbed by this layer = 0.746279 
+Vertical Percentage of Light Absorbed by this layer = 74.6279 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 22.67 MJ/m^2/day
+Hourly Net Radiation = 1.00281e+06 W/m^2/hour
+Par for layer '0' = 1459.95 molPAR/m^2 month
+Apar for layer '0' = 1089.53 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 254722  W/m^2/hour
+Average Par for lower layer = 370.838 molPAR/m^2 month
+Par for soil = 0.97302 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.05081
+Etransp for dominant layer = 434567 J/m^2/sec
+NET RADIATION = 1.00281e+06 
+Daily Canopy Transpiration = 2.55565 mm-Kg H2o/m^2/day
+Daily Transpiration = 2.55565 mm/m^2/day
+Monthly Canopy Transpiration = 76.6694 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 254722
+Net radiation for soil evaporation = 254722 W/m^2/hour
+Monthly Soil Evaporation = 3.22175 
+Total Soil Evaporation = 81.1684 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.0914347 
+Highest class
+Rainfall Intercepted = 9.13009 mm/month
+Percentage of Rain Intercepted from dominant canopy = 9.13996%
+-Class evapotranspiration = 85.7701 mm/month
+Class evapotranspiration = 88.9918 mm/month
+Cumulated Evapotranspiration for this class = 297.26 mm
+net_radiation for soil = 668.351
+incident radiation for soil = 12.0303
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 62.6354 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 5 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0197841 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 59.9241 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 258.665 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.228055 
+Monthly Stand GPP = 258.665 
+Monthly Stand NPP = 0.228055 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 615.398
+CLASS LEVEL Yearly NPP = 0.542572
+CELL LEVEL
+CELL LEVEL Yearly GPP = 615.398
+CELL LEVEL Yearly NPP = 0.542572
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+FASE FENOLOGICA = 2 
+**Normal Growth**
+Day length > 10 
+LAI MAX * 0.5 < LAI < LAI MAX 
+allocating into the three pools Ws+Wr+Wf
+BiomassRoots increment CTEM = 0.07788 tDM/area
+BiomassRoots increment into fine roots = 0.0393902 tDM/area
+BiomassRoots increment into coarse roots = 0.0384898 tDM/area
+BiomassStem increment CTEM = 0.100615 tDM/area
+BiomassFoliage increment CTEM = 0.04956 tDM/area
+Stem Biomass (Ws) = 16.104 tDM/area
+Foliage Biomass (Wf) = 0.152384 tDM/area
+Total Root Biomass (Wr TOT) = 6.23332 tDM/area
+Fine Root Biomass (Wrf) = 0.0749238 tDM/area
+Coarse Root Biomass (Wrc) = 5.78576 tDM/area
+++Lai = 3.38762
+aF 0 = 0.217316 
+afR 0 = 0.172723 
+acR 0 = 0.168775 
+aS 0 = 0.441186 
+aRes 0 = 0 
+delta_F 0 = 0.04956 
+delta_fR 0 = 0.0393902 
+delta_cR 0 = 0.0384898 
+delta_S 0 = 0.0808766 
+delta_Res 0 = 0 
+delta_BB 0 = 0.019738 
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 1459.95 
+PAR FOR SOIL = 0.97302 
+Average Light Absorbed for establishment = 0.000666476 
+PHENOLOGY LAI = 3.38762 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  7 ASW = 75.9887 mm
+daylength = 13.8899 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 7
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 0.501155
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = JULY
+***************
+**Monthly MET DATA**
+-average solar_rad = 22.56 MJ/m^2/day
+-tav = 21.5385 °C
+-vpd = 13 mbar
+-ts_f = -9999 °C
+-rain = 13.3533 mm
+-swc = -9999 %vol
+-Day length = 13.8899 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 7 = 75.9887 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 3.38762 
+- ASW layer 0 month 7  = 75.9887 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 21.5385 °C
+fT - Temperature Modifier = 0.972969
+fVPD - VPD modifier = 0.458406
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 0.970035
+PhysMod = 0.325203
+PHYSMOD uses F_VPD * F_AGE
+available soil water 75.9887 mm
+volumetric available soil water  = 0.119667 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.292749 
+PSI BIOME = -0.402028 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = JULY
+VEG_MONTHS = 5 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 3.38762 
+Light Transmitted = 0.130998
+Vertical Percentage of Light Transmitted through this layer = 13.0998 %
+Vertical Fraction of Light Absorbed by this layer = 0.869002 
+Vertical Percentage of Light Absorbed by this layer = 86.9002 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 22.56 MJ/m^2/day
+Hourly Net Radiation = 1.03942e+06 W/m^2/hour
+Par for layer '0' = 1501.29 molPAR/m^2 month
+Apar for layer '0' = 1304.63 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 136509  W/m^2/hour
+Average Par for lower layer = 197.167 molPAR/m^2 month
+Par for soil = 0.795939 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.07093
+Etransp for dominant layer = 455984 J/m^2/sec
+NET RADIATION = 1.03942e+06 
+Daily Canopy Transpiration = 2.57462 mm-Kg H2o/m^2/day
+Daily Transpiration = 2.57462 mm/m^2/day
+Monthly Canopy Transpiration = 79.8133 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 136509
+Net radiation for soil evaporation = 136509 W/m^2/hour
+Monthly Soil Evaporation = 0.894122 
+Total Soil Evaporation = 82.0625 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.135505 
+Highest class
+Rainfall Intercepted = 1.80874 mm/month
+Percentage of Rain Intercepted from dominant canopy = 13.5453%
+-Class evapotranspiration = 81.5913 mm/month
+Class evapotranspiration = 82.4855 mm/month
+Cumulated Evapotranspiration for this class = 379.745 mm
+net_radiation for soil = 551.067
+incident radiation for soil = 10.2499
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = -6.4968 mm
+ATTENTION Available Soil Water is low than MinASW!!! 
+ASW = 15.1627
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 6 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0135113 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 71.7545 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 211.527 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.186495 
+Monthly Stand GPP = 211.527 
+Monthly Stand NPP = 0.186495 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 826.924
+CLASS LEVEL Yearly NPP = 0.729067
+CELL LEVEL
+CELL LEVEL Yearly GPP = 826.924
+CELL LEVEL Yearly NPP = 0.729067
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+FASE FENOLOGICA = 2 
+**Normal Growth**
+Day length > 10 
+LAI MAX * 0.5 < LAI < LAI MAX 
+allocating into the three pools Ws+Wr+Wf
+BiomassRoots increment CTEM = 0.0620121 tDM/area
+BiomassRoots increment into fine roots = 0.0313645 tDM/area
+BiomassRoots increment into coarse roots = 0.0306476 tDM/area
+BiomassStem increment CTEM = 0.0866686 tDM/area
+BiomassFoliage increment CTEM = 0.0378141 tDM/area
+Stem Biomass (Ws) = 16.1737 tDM/area
+Foliage Biomass (Wf) = 0.190199 tDM/area
+Total Root Biomass (Wr TOT) = 6.29533 tDM/area
+Fine Root Biomass (Wrf) = 0.106288 tDM/area
+Coarse Root Biomass (Wrc) = 5.8164 tDM/area
+++Lai = 4.22826
+aF 0 = 0.202762 
+afR 0 = 0.168179 
+acR 0 = 0.164335 
+aS 0 = 0.464724 
+aRes 0 = 0 
+delta_F 0 = 0.0378141 
+delta_fR 0 = 0.0313645 
+delta_cR 0 = 0.0306476 
+delta_S 0 = 0.0696665 
+delta_Res 0 = 0 
+delta_BB 0 = 0.0170022 
+FASE FENOLOGICA = 2.1 
+ TOO MUCH BIOMASS INTO FOLIAGE
+LAI = 4.22826 
+Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve
+Foliar Biomass exceeding = 0.105233 tDM 
+Biomass Foliage = 0.190199 tDM/area 
+Max Biomass Foliage = 0.0849659 tDM/area 
+Biomass Foliage = 0.0849659 tDM/area 
+BiomassRoots increment CTEM = 0.0349913 tDM/area
+BiomassRoots into fine roots = 0.0176979 tDM/area
+BiomassRoots into coarse roots = 0.0172934 tDM/area
+BiomassStem increment CTEM = 0.0489042 tDM/area
+BiomassReserve increment CTEM = 0.0213372 tDM/area
+Stem Biomass (Ws) = 16.213 tDM/area
+Reserve Biomass (Wres) = 0.0213372 tDM/area
+Total Root Biomass (Wr TOT) = 6.33032 tDM/area
+Fine Root Biomass (Wrf) = 0.123986 tDM/area
+Coarse Root Biomass (Wrc) = 5.8337 tDM/area
+LAI setted to Peak Lai= 4.22826 
+Increment Monthly Total Biomass  (delTotalW) = 0.0743017 tDM/area
+Previous Total W = 22.1171 tDM/area
+Total Biomass = 22.6283 tDM/area
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 1501.29 
+PAR FOR SOIL = 0.795939 
+Average Light Absorbed for establishment = 0.000530169 
+PHENOLOGY LAI = 3.77771 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  8 ASW = 143.553 mm
+daylength = 12.7874 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 8
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 0.946748
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = AUGUST
+***************
+**Monthly MET DATA**
+-average solar_rad = 19.2 MJ/m^2/day
+-tav = 22.6 °C
+-vpd = 15 mbar
+-ts_f = -9999 °C
+-rain = 128.39 mm
+-swc = -9999 %vol
+-Day length = 12.7874 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 8 = 143.553 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 3.77771 
+- ASW layer 0 month 8  = 143.553 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 22.6 °C
+fT - Temperature Modifier = 0.938128
+fVPD - VPD modifier = 0.40657
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.288429
+PHYSMOD uses F_VPD * F_AGE
+available soil water 143.553 mm
+volumetric available soil water  = 0.226067 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.553042 
+PSI BIOME = -0.0194634 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = AUGUST
+VEG_MONTHS = 6 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 3.77771 
+Light Transmitted = 0.103661
+Vertical Percentage of Light Transmitted through this layer = 10.3661 %
+Vertical Fraction of Light Absorbed by this layer = 0.896339 
+Vertical Percentage of Light Absorbed by this layer = 89.6339 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 19.2 MJ/m^2/day
+Hourly Net Radiation = 960870 W/m^2/hour
+Par for layer '0' = 1277.7 molPAR/m^2 month
+Apar for layer '0' = 1145.25 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 99935.8  W/m^2/hour
+Average Par for lower layer = 132.887 molPAR/m^2 month
+Par for soil = 0.638601 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.07769
+Etransp for dominant layer = 419854 J/m^2/sec
+NET RADIATION = 960870 
+Daily Canopy Transpiration = 2.18246 mm-Kg H2o/m^2/day
+Daily Transpiration = 2.18246 mm/m^2/day
+Monthly Canopy Transpiration = 67.6564 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 99935.8
+Net radiation for soil evaporation = 99935.8 W/m^2/hour
+Monthly Soil Evaporation = 1.23658 
+Total Soil Evaporation = 83.2991 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.151109 
+Highest class
+Rainfall Intercepted = 19.3934 mm/month
+Percentage of Rain Intercepted from dominant canopy = 15.1051%
+-Class evapotranspiration = 87.0238 mm/month
+Class evapotranspiration = 88.2604 mm/month
+Cumulated Evapotranspiration for this class = 468.006 mm
+net_radiation for soil = 480.249
+incident radiation for soil = 8.93264
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 55.2924 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 7 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0115544 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 62.9887 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 158.791 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.14 
+Monthly Stand GPP = 158.791 
+Monthly Stand NPP = 0.14 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 985.716
+CLASS LEVEL Yearly NPP = 0.869067
+CELL LEVEL
+CELL LEVEL Yearly GPP = 985.716
+CELL LEVEL Yearly NPP = 0.869067
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+LAI == PEAK LAI 
+FASE FENOLOGICA = 3 
+allocating into the three pools Ws+Wr+Wreserve
+BiomassRoots increment CTEM = 0.0446999 tDM/area
+BiomassRoots into fine roots = 0.0226084 tDM/area
+BiomassRoots into coarse roots = 0.0220916 tDM/area
+BiomassStem increment CTEM = 0.0668548 tDM/area
+BiomassReserve increment CTEM = 0.0284454 tDM/area
+Stem Biomass (Ws) = 16.2667 tDM/area
+Reserve Biomass (Wres) = 0.0497826 tDM/area
+Total Root Biomass (Wr TOT) = 6.37502 tDM/area
+Fine Root Biomass (Wrf) = 0.146595 tDM/area
+Coarse Root Biomass (Wrc) = 5.85579 tDM/area
+Foliage Biomass (Wf) = 0.0849659 
+aF 0 = 0 
+afR 0 = 0.161488 
+acR 0 = 0.157797 
+aS 0 = 0.477534 
+aRes 0 = 0.203181 
+delta_F 0 = 0 
+delta_fR 0 = 0.0226084 
+delta_cR 0 = 0.0220916 
+delta_S 0 = 0.0537396 
+delta_Res 0 = 0.0284454 
+delta_BB 0 = 0.0131152 
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 1277.7 
+PAR FOR SOIL = 0.638601 
+Average Light Absorbed for establishment = 0.000499807 
+PHENOLOGY LAI = 3.77771 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  9 ASW = 142.367 mm
+daylength = 11.5084 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 9
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 0.938931
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = SEPTEMBER
+***************
+**Monthly MET DATA**
+-average solar_rad = 14.89 MJ/m^2/day
+-tav = 15.5846 °C
+-vpd = 7 mbar
+-ts_f = -9999 °C
+-rain = 87.0751 mm
+-swc = -9999 %vol
+-Day length = 11.5084 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 9 = 142.367 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 3.77771 
+- ASW layer 0 month 9  = 142.367 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 15.5846 °C
+fT - Temperature Modifier = 0.921718
+fVPD - VPD modifier = 0.657047
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 0.999999
+PhysMod = 0.466123
+PHYSMOD uses F_VPD * F_AGE
+available soil water 142.367 mm
+volumetric available soil water  = 0.224201 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.548476 
+PSI BIOME = -0.0202469 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = SEPTEMBER
+VEG_MONTHS = 7 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 3.77771 
+Light Transmitted = 0.103661
+Vertical Percentage of Light Transmitted through this layer = 10.3661 %
+Vertical Fraction of Light Absorbed by this layer = 0.896339 
+Vertical Percentage of Light Absorbed by this layer = 89.6339 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 14.89 MJ/m^2/day
+Hourly Net Radiation = 827983 W/m^2/hour
+Par for layer '0' = 958.916 molPAR/m^2 month
+Apar for layer '0' = 859.514 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 86114.8  W/m^2/hour
+Average Par for lower layer = 99.7325 molPAR/m^2 month
+Par for soil = 0.479273 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.03336
+Etransp for dominant layer = 420152 J/m^2/sec
+NET RADIATION = 827983 
+Daily Canopy Transpiration = 1.96556 mm-Kg H2o/m^2/day
+Daily Transpiration = 1.96556 mm/m^2/day
+Monthly Canopy Transpiration = 58.9669 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 86114.8
+Net radiation for soil evaporation = 86114.8 W/m^2/hour
+Monthly Soil Evaporation = 1.02267 
+Total Soil Evaporation = 84.3217 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.151109 
+Highest class
+Rainfall Intercepted = 13.1527 mm/month
+Percentage of Rain Intercepted from dominant canopy = 15.1051%
+-Class evapotranspiration = 72.097 mm/month
+Class evapotranspiration = 73.1196 mm/month
+Cumulated Evapotranspiration for this class = 541.125 mm
+net_radiation for soil = 413.831
+incident radiation for soil = 7.44896
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 69.2478 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 8 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0183461 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 47.2733 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 189.224 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.166832 
+Monthly Stand GPP = 189.224 
+Monthly Stand NPP = 0.166832 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 1174.94
+CLASS LEVEL Yearly NPP = 1.0359
+CELL LEVEL
+CELL LEVEL Yearly GPP = 1174.94
+CELL LEVEL Yearly NPP = 1.0359
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+LAI == PEAK LAI 
+FASE FENOLOGICA = 3 
+allocating into the three pools Ws+Wr+Wreserve
+BiomassRoots increment CTEM = 0.0532669 tDM/area
+BiomassRoots into fine roots = 0.0269414 tDM/area
+BiomassRoots into coarse roots = 0.0263255 tDM/area
+BiomassStem increment CTEM = 0.0796678 tDM/area
+BiomassReserve increment CTEM = 0.0338971 tDM/area
+Stem Biomass (Ws) = 16.3308 tDM/area
+Reserve Biomass (Wres) = 0.0836797 tDM/area
+Total Root Biomass (Wr TOT) = 6.42829 tDM/area
+Fine Root Biomass (Wrf) = 0.173536 tDM/area
+Coarse Root Biomass (Wrc) = 5.88211 tDM/area
+Foliage Biomass (Wf) = 0.0849659 
+aF 0 = 0 
+afR 0 = 0.161488 
+acR 0 = 0.157797 
+aS 0 = 0.477534 
+aRes 0 = 0.203181 
+delta_F 0 = 0 
+delta_fR 0 = 0.0269414 
+delta_cR 0 = 0.0263255 
+delta_S 0 = 0.064039 
+delta_Res 0 = 0.0338971 
+delta_BB 0 = 0.0156288 
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 958.916 
+PAR FOR SOIL = 0.479273 
+Average Light Absorbed for establishment = 0.000499807 
+PHENOLOGY LAI = 3.77771 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  10 ASW = 136.432 mm
+daylength = 10.3251 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 10
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 0.899787
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = OCTOBER
+***************
+**Monthly MET DATA**
+-average solar_rad = 10.5 MJ/m^2/day
+-tav = 13.2231 °C
+-vpd = 5 mbar
+-ts_f = -9999 °C
+-rain = 67.1843 mm
+-swc = -9999 %vol
+-Day length = 10.3251 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 10 = 136.432 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 3.77771 
+- ASW layer 0 month 10  = 136.432 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 13.2231 °C
+fT - Temperature Modifier = 0.800678
+fVPD - VPD modifier = 0.740818
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 0.99999
+PhysMod = 0.525552
+PHYSMOD uses F_VPD * F_AGE
+available soil water 136.432 mm
+volumetric available soil water  = 0.214854 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.52561 
+PSI BIOME = -0.0247965 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = OCTOBER
+VEG_MONTHS = 8 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 3.77771 
+Light Transmitted = 0.103661
+Vertical Percentage of Light Transmitted through this layer = 10.3661 %
+Vertical Fraction of Light Absorbed by this layer = 0.896339 
+Vertical Percentage of Light Absorbed by this layer = 89.6339 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 10.5 MJ/m^2/day
+Hourly Net Radiation = 650767 W/m^2/hour
+Par for layer '0' = 698.74 molPAR/m^2 month
+Apar for layer '0' = 626.308 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 67683.4  W/m^2/hour
+Average Par for lower layer = 72.6728 molPAR/m^2 month
+Par for soil = 0.349235 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 1.01861
+Etransp for dominant layer = 340304 J/m^2/sec
+NET RADIATION = 650767 
+Daily Canopy Transpiration = 1.42833 mm-Kg H2o/m^2/day
+Daily Transpiration = 1.42833 mm/m^2/day
+Monthly Canopy Transpiration = 44.2781 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 67683.4
+Net radiation for soil evaporation = 67683.4 W/m^2/hour
+Monthly Soil Evaporation = 0.795952 
+Total Soil Evaporation = 85.1177 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.151109 
+Highest class
+Rainfall Intercepted = 10.1482 mm/month
+Percentage of Rain Intercepted from dominant canopy = 15.105%
+-Class evapotranspiration = 54.4094 mm/month
+Class evapotranspiration = 55.2053 mm/month
+Cumulated Evapotranspiration for this class = 596.331 mm
+net_radiation for soil = 325.258
+incident radiation for soil = 6.04979
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 81.2268 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 9 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.0179688 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 34.4469 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 135.048 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.119066 
+Monthly Stand GPP = 135.048 
+Monthly Stand NPP = 0.119066 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 1309.99
+CLASS LEVEL Yearly NPP = 1.15497
+CELL LEVEL
+CELL LEVEL Yearly GPP = 1309.99
+CELL LEVEL Yearly NPP = 1.15497
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+LAI == PEAK LAI 
+FASE FENOLOGICA = 3 
+allocating into the three pools Ws+Wr+Wreserve
+BiomassRoots increment CTEM = 0.0380165 tDM/area
+BiomassRoots into fine roots = 0.019228 tDM/area
+BiomassRoots into coarse roots = 0.0187885 tDM/area
+BiomassStem increment CTEM = 0.0568579 tDM/area
+BiomassReserve increment CTEM = 0.0241919 tDM/area
+Stem Biomass (Ws) = 16.3765 tDM/area
+Reserve Biomass (Wres) = 0.107872 tDM/area
+Total Root Biomass (Wr TOT) = 6.4663 tDM/area
+Fine Root Biomass (Wrf) = 0.192764 tDM/area
+Coarse Root Biomass (Wrc) = 5.9009 tDM/area
+Foliage Biomass (Wf) = 0.0849659 
+aF 0 = 0 
+afR 0 = 0.16149 
+acR 0 = 0.157798 
+aS 0 = 0.477532 
+aRes 0 = 0.20318 
+delta_F 0 = 0 
+delta_fR 0 = 0.019228 
+delta_cR 0 = 0.0187885 
+delta_S 0 = 0.0457039 
+delta_Res 0 = 0.0241919 
+delta_BB 0 = 0.0111541 
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 698.74 
+PAR FOR SOIL = 0.349235 
+Average Light Absorbed for establishment = 0.000499807 
+PHENOLOGY LAI = 3.77771 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  11 ASW = 252.721 mm
+ASW > MAXASW !!!
+ASW month 11 = 151.627 mm
+daylength = 9.62076 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 1
+
+species in veg period = 1
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 1
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 11
+Determines Effective Layer Cover 
+Monthly layer number = 1
+Vegetated Layer cover in layer 0 = 99.9616 % 
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = NOVEMBER
+***************
+**Monthly MET DATA**
+-average solar_rad = 6.61 MJ/m^2/day
+-tav = 7.43845 °C
+-vpd = 2 mbar
+-ts_f = -9999 °C
+-rain = 171.494 mm
+-swc = -9999 %vol
+-Day length = 9.62076 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 11 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 3.77771 
+- ASW layer 0 month 11  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 7.43845 °C
+fT - Temperature Modifier = 0.295286
+fVPD - VPD modifier = 0.88692
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.6292
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
+--PHYSIOLOGICAL PROCESSES LAYER 0 --
+Month = NOVEMBER
+VEG_MONTHS = 9 
+
+GET_LIGHT_ROUTINE
+
+MODEL_LAI = 3.77771 
+Light Transmitted = 0.103661
+Vertical Percentage of Light Transmitted through this layer = 10.3661 %
+Vertical Fraction of Light Absorbed by this layer = 0.896339 
+Vertical Percentage of Light Absorbed by this layer = 89.6339 %
+dominant contatore 1 
+Top_layer = 0
+**LIGHT DOMINANT**
+Height Classes in Dominant Layer = 1
+Global Solar Radiation = 6.61 MJ/m^2/day
+Hourly Net Radiation = 439644 W/m^2/hour
+Par for layer '0' = 425.684 molPAR/m^2 month
+Apar for layer '0' = 381.557 molPAR/m^2 month
+Only one height class in dominant light
+Canopy Cover = 0.999616 
+Gap Cover = 0.000384245 
+Hourly Net Radiation for lower layer = 45725.4  W/m^2/hour
+Average Par for lower layer = 44.2735 molPAR/m^2 month
+Par for soil = 0.21276 molPAR/m^2 month
+
+ GET_CANOPY_TRANSPIRATION_ROUTINE 
+gcorr = 0.982877
+Etransp for dominant layer = 239336 J/m^2/sec
+NET RADIATION = 439644 
+Daily Canopy Transpiration = 0.936012 mm-Kg H2o/m^2/day
+Daily Transpiration = 0.936012 mm/m^2/day
+Monthly Canopy Transpiration = 28.0804 mm-Kg H2o/m^2/month
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation from dominant layer = 45725.4
+Net radiation for soil evaporation = 45725.4 W/m^2/hour
+Monthly Soil Evaporation = 0.578339 
+Total Soil Evaporation = 85.696 mm
+Frac Rain Interception not use MAXINTCPTN
+Frac Rain Interception = 0.151109 
+Highest class
+Rainfall Intercepted = 25.9043 mm/month
+Percentage of Rain Intercepted from dominant canopy = 15.1051%
+-Class evapotranspiration = 53.9738 mm/month
+Class evapotranspiration = 54.5522 mm/month
+Cumulated Evapotranspiration for this class = 650.883 mm
+net_radiation for soil = 219.737
+incident radiation for soil = 3.95527
+*********GET MONTHLY SOIL WATER BALACE************
+ASW at the END of month less Evapotraspiration = 97.075 mm
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 10 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 1
+Alpha C (Effective Quantum Canopy Efficiency)= 0.00793369 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 20.9856 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 36.3259 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0.0320271 
+Monthly Stand GPP = 36.3259 
+Monthly Stand NPP = 0.0320271 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 1346.31
+CLASS LEVEL Yearly NPP = 1.18699
+CELL LEVEL
+CELL LEVEL Yearly GPP = 1346.31
+CELL LEVEL Yearly NPP = 1.18699
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+Unspatial version 
+DayLength < Abscission DayLength 
+FASE FENOLOGICA = 0 
+allocating into the three pools Ws+Wr+Wreserve 
+with leaf fall
+BiomassRoots increment CTEM = 0.0102258 tDM/area
+BiomassRoots into fine roots = 0.005172 tDM/area
+BiomassRoots into coarse roots = 0.00505378 tDM/area
+BiomassStem increment CTEM = 0.015294 tDM/area
+BiomassReserve increment CTEM = 0.00650731 tDM/area
+Stem Biomass (Ws) = 16.3888 tDM/area
+Reserve Biomass (Wres) = 0.114379 tDM/area
+Total Root Biomass (Wr TOT) = 6.47653 tDM/area
+Fine Root Biomass (Wrf) = 0.197936 tDM/area
+Coarse Root Biomass (Wrc) = 5.90596 tDM/area
+Foliage Biomass (Wf) = 0.0849659 
+aF 0 = 0 
+afR 0 = 0.161488 
+acR 0 = 0.157797 
+aS 0 = 0.477534 
+aRes 0 = 0.203181 
+delta_F 0 = 0 
+delta_fR 0 = 0.005172 
+delta_cR 0 = 0.00505378 
+delta_S 0 = 0.0122937 
+delta_Res 0 = 0.00650731 
+delta_BB 0 = 0.0030003 
+***LEAF FALL**
+Months of leaf fall for deciduous = 1.6 
+foliage reduction rate = 0.384615 
+Biomass foliage = 0.0522867 
+++Lai = 1.16237
+******************************
+--------------------------------------------------------------------------
+
+
+PAR OVER CANOPY = 425.684 
+PAR FOR SOIL = 0.21276 
+Average Light Absorbed for establishment = 0.000499807 
+PHENOLOGY LAI = 1.16237 
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+Beginning month  12 ASW = 324.678 mm
+ASW > MAXASW !!!
+ASW month 12 = 151.627 mm
+daylength = 9.54527 
+Abscission day length = 11.9758 
+
+
+
+****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
+--GET VEGETATIVE PERIOD--
+counter = 0
+
+species in veg period = 0
+--GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
+number of vegetative layers = 0
+
+GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 12
+Determines Effective Layer Cover 
+Monthly layer number = 0
+*************************************************** 
+-Dominant Light Index Function-
+Monthly Dominant layer is z = 0
+***************************************************
+Moist ratio outside modifier = 1
+YEAR SIMULATED = 2 (2008)
+MONTH SIMULATED = DECEMBER
+***************
+**Monthly MET DATA**
+-average solar_rad = 5.1 MJ/m^2/day
+-tav = 3.39226 °C
+-vpd = 1 mbar
+-ts_f = -nan °C
+-rain = 227.603 mm
+-swc = 2.12199e-314 %vol
+-Day length = 9.54527 hours 
+***************
+*****************CELL x = 1526, y = 962 STRUCTURE*********************
+ASW month 12 = 151.627 mm
+******************************************************
+
+cell = 
+- x = 1526
+- y = 962
+- z = 0
+- Class Age = 40 years 
+- Species = Fagussylvatica
+- Height = 22.689 m
+- Number of trees = 46 trees 
+- Vegetative Months =  8 months
+- Monthly LAI from Model= 1.16237 
+- ASW layer 0 month 12  = 151.627 mm
+
+ GET_MODIFIERS
+
+--Temperature Average 3.39226 °C
+F_T = 0 
+fT - Temperature Modifier = 0
+fVPD - VPD modifier = 0.941765
+--Age = 40 years
+fAge - Age modifier for timber= 0.709421
+fNutr - Soil Nutrient modifier = 0.776393
+fSW - Soil Water modifier layer 0 = 1
+PhysMod = 0.668108
+PHYSMOD uses F_VPD * F_AGE
+available soil water 151.627 mm
+volumetric available soil water  = 0.238783 (DIM)
+vwc_sat = 0.408771 (DIM)
+vwc/vwc_sat = 0.584149 
+PSI BIOME = -0.015 (MPa)
+PSI_SAT BIOME = -0.0011607 (MPa)
+F_PSI = 1
+-------------------
+**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
+++Lai layer 0 = 0
+
+GET_PHOTOSYNTHESIS_ROUTINE
+
+************** at Month 11 CARBON FLUX-PRODUCTIVITY ******************
+VegUnveg = 0
+Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
+**************************** GPP ************************************ 
+Optimum GPP (alpha max * apar) = 20.9856 molC/m^2 month
+Monthly GPP in grams of C for layer 0 = 0 
+***************************** NPP *************************** 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
+CLASS LEVEL
+CLASS LEVEL Yearly GPP = 1346.31
+CLASS LEVEL Yearly NPP = 1.18699
+CELL LEVEL
+CELL LEVEL Yearly GPP = 1346.31
+CELL LEVEL Yearly NPP = 1.18699
+GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
+
+Carbon allocation routine for deciduous
+Version = u 
+(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
+PEAK_LAI = 3.77771 
+******************************
+-----------------------------------------------------------------
+********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
+
+ GET_SOIL_EVAPORATION_ROUTINE
+Net radiation for soil evaporation = 427347 W/m^2/hour
+Monthly Soil Evaporation = 5.58529 
+Total Soil Evaporation = 91.2813 mm
+Available Soil Water at month 11 year 1 = 146.042 mm
+*****************************************************************************
+*****************************************************************************
+*****END OF YEAR******
+****LITTER BIOMASS****
+Total Litter = -9997 tDM/area
+Total Biomass less Litterfall and Root Turnover = 22.5449 tDM/area
+Average Stem Mass = 356.277 kgDM stem /tree
+*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
+NO MORTALITY based SELF-THINNING RULE
+Average Stem Mass < WSMax
+**********************************
+DOMINANT LAYER
+Canopy Cover < 100 ->  Low Crowding Competition!!
+H/D Ratio Effective = 1.70942
+Height Increment = 0.000169993 m
+Height from CC Func = 12.4204 m
+DBH Increment from CC Func  = 0.0099445 cm
+DBH from CC Func = 26.996 cm
+**AGB & BGB**
+-for Class
+Yearly Class AGB = 16.441 tDM/area year
+Yearly Class BGB = 6.47653 tDM/area year
+-for Stand
+Yearly Stand AGB = 16.441 tDM/area year
+Yearly Stand BGB = 6.47653 tDM/area year
+
+GET_DENDROMETRY_ROUTINE
+
+**Average DBH 3PG**
+**Tree Height from CC function**
+-New Average DBH from 3PG CLASSIC = 27.7854 cm
+-DBH increment from 3PG CLASSIC = 0.391854 cm
+-Tree Height using Chapman-Richard function = 22.8796 m
+-Tree Height using Sortie function > 10 cm = 30.5062 m
+****TURNOVER****
+****fine root turnover****
+Fine Root Biomass  = 0.197936 tDM/area
+Average yearly fine Root turnover rate  = 1
+Fine Root Biomass lost = 0.197936 tDM/area
+***CAI & MAI***
+Volume for this class = 16.0683 m^3/area
+PREVIOUS Volume = 15.2354 m^3/cell resolution
+CURRENT Volume = 16.0683 m^3/cell resolution
+Yearly Stand CAI = 0.832857 m^3/area/yr
+Yearly Stand MAI = 0.401706 m^3/area/yr 
+> x = 1526
+> y = 962
+> z = 0
+> height = 22.8796
+> age = 40
+> species = Fagussylvatica
+> phenology = 21168512
+> management = 0
+[2008] layer 0 n tree = 46
+[2008] layer 0 > avdbh = 27.7854
+[2008] layer 0 > wf = 0.0522867
+[2008] layer 0 > wr coarse = 5.90596
+[2008] layer 0 > wr fine = 0
+[2008] layer 0 > wr Tot = 5.90596
+[2008] layer 0 > ws = 16.3888
+[2008] layer 0 > wres = 0.114379
+[2008] layer 0 > wres tree = 2486.5 gC/trees
+[2008] layer 0 > Dead Trees = 0
+> New Saplings = 0
+*****************************
+**CUMULATIVE BALANCE for layer 0 ** 
+END of Year Yearly Cumulated GPP for layer 0  = 1346.31 gCm^2 year
+END of Year Yearly Cumulated NPP for layer 0  = 1.18699 tDM/area year
+END of Year Yearly Cumulated NPP/ha_area_covered for layer 0  = 13.1837 tDM/ha_area_covered year
+END of Year Yearly Cumulated DEL STEM layer 0  = 0.441774 tDM/area year
+END of Year Yearly Cumulated DEL FINE ROOT layer 0  = 0.197936 tDM/area year
+END of Year Yearly Cumulated DEL COARSE ROOT layer 0  = 0.193412 tDM/area year
+END of Year Yearly Cumulated DEL RESERVE layer 0  = 0.114379 tDM/area year
+END of Year Yearly Cumulated DEL RESERVE layer 0  = 4.973 KgC tree year
+END of Year Yearly Cumulated DEL BB layer 0  = 0.107815 tDM/area year
+END of Year Yearly Cumulated DEL TOT ROOT layer 0  = 0.391348 tDM/area year
+ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP 
+DEL SUM = 1.1874 
+**CUMULATIVE BALANCE for cell (1526, 962) ** 
+[2008] [1526, 962] EOY TOTAL Cumulated GPP = 1346.31 [gCm^-2 year^-1]
+[2008] [1526, 962] EOY TOTAL Cumulated NPP = 1.18699 [tDM/area year^-1]
+[2008] [1526, 962] EOY TOTAL Cumulated Evapotranspiration = 650.883 [mm m^-2 year^-1]
+[2008] EOY Available Soil Water = 146.042 mm H2o/m^2
+****************END OF SPECIES CLASS***************
+****************END OF AGE CLASS***************
+****************END OF HEIGHT CLASS***************
+****************END OF CELL***************
+****************END OF MONTH*******************
+
+
+
+
+
+
+
+
+
+
+
+
+****************END OF YEAR (2008)*******************
 
 
 
