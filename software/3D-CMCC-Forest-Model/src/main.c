@@ -965,7 +965,8 @@ int main(int argc, char *argv[])
 	total_files_count;
 
 	int years,
-	month;
+	month,
+	day;
 
 	int cell;
 
@@ -1434,6 +1435,15 @@ int main(int argc, char *argv[])
 		Log("\n3D-CMMC MODEL START\n");
 		Log("***************************************************\n");
 
+
+		//added in version 571
+		MET_DATA *met;
+		// check parameters
+		assert(m && yos);
+		met = (MET_DATA*) yos[years].m;
+
+
+
 		/*Site definition*/
 		Log("Site Name = %s\n", site->sitename);
 		Log("Latitude = %g \n", site->lat);
@@ -1475,7 +1485,7 @@ int main(int argc, char *argv[])
 						//run tree_model_M
 						for (month = 0; month < MONTHS; month++)
 						{
-							if ( !tree_model_M (m, yos, years, month, years_of_simulation) )
+							if ( !tree_model (m, yos, years, month, years_of_simulation) )
 							{
 								Log("tree model failed.");
 							}
@@ -1489,7 +1499,7 @@ int main(int argc, char *argv[])
 					if  (m->cells[cell].landuse == Z)
 					{
 						Log("RUN FOR CROPS\n");
-						//run tree_model_M
+						//run tree_model
 						for (month = 0; month < MONTHS; month++)
 						{
 							if (!crop_model_M (m, yos, years, month, years_of_simulation) )
@@ -1510,32 +1520,40 @@ int main(int argc, char *argv[])
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
-					if(m->cells[cell].landuse == F)
+					//run tree_model
+					for (month = 0; month < MONTHS; month++)
 					{
-						if ( !tree_model_D (m, yos, years, month, years_of_simulation) )
+						for (day = 0; day < met[month].n_days; day++ )
 						{
-							Log("tree model failed.");
+							if(m->cells[cell].landuse == F)
+							{
+								if ( !tree_model (m, yos, years, month, years_of_simulation) )
+								{
+									Log("tree model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+								}
+							}
+							if(m->cells[cell].landuse == Z)
+							{
+										/*
+								if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
+								{
+									Log("crop model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+								}
+										 */
+							}
 						}
-						else
-						{
-							puts(msg_ok);
-						}
+						Log("****************END OF DAY*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 					}
-					if(m->cells[cell].landuse == Z)
-					{
-						/*
-						if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
-						{
-							Log("crop model failed.");
-						}
-						else
-						{
-							puts(msg_ok);
-						}
-						 */
-					}
+					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 				}
-				Log("****************END OF DAY*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
 
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);

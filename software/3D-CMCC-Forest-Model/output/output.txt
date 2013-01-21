@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Jan 21 2013 at 17:05:08
+compiled using GNU C 4.7.2 on Jan 21 2013 at 17:47:42
 (use -h parameter for more information)
 
 
@@ -2001,7 +2001,7 @@ Yearly Stand MAI = 0.406234 m^3/area/yr
 > height = 22.689
 > age = 39
 > species = Fagussylvatica
-> phenology = 14438784
+> phenology = 20140416
 > management = 0
 [2007] layer 0 n tree = 47
 [2007] layer 0 > avdbh = 27.3936
@@ -4144,7 +4144,7 @@ Yearly Stand MAI = 0.401706 m^3/area/yr
 > height = 22.8796
 > age = 40
 > species = Fagussylvatica
-> phenology = 14438784
+> phenology = 20140416
 > management = 0
 [2008] layer 0 n tree = 46
 [2008] layer 0 > avdbh = 27.7854
