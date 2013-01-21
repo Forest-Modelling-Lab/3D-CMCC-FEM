@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Jan 18 2013 at 12:21:12
+compiled using GNU C 4.7.2 on Jan 21 2013 at 17:05:08
 (use -h parameter for more information)
 
 
@@ -190,13 +190,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.91804
 PhysMod = 0.647316
 PHYSMOD uses F_VPD * F_AGE
-available soil water 58.1027 mm
-volumetric available soil water  = 0.0915003 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.223843 
-PSI BIOME = -1.4423 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.64904
 -------------------
 Basal Area for this layer = 0.0571284 m^2/tree
 Stand Basal Area for this layer = 2.68503 m^2/area
@@ -319,13 +312,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.972762
 PhysMod = 0.66304
 PHYSMOD uses F_VPD * F_AGE
-available soil water 77.4601 mm
-volumetric available soil water  = 0.121984 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.298418 
-PSI BIOME = -0.366952 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -431,13 +417,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.993084
 PhysMod = 0.624427
 PHYSMOD uses F_VPD * F_AGE
-available soil water 95.4772 mm
-volumetric available soil water  = 0.150358 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.36783 
-PSI BIOME = -0.135608 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -543,13 +522,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.999995
 PhysMod = 0.588063
 PHYSMOD uses F_VPD * F_AGE
-available soil water 138.458 mm
-volumetric available soil water  = 0.218044 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.533414 
-PSI BIOME = -0.0231165 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -657,13 +629,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.635769
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -836,13 +801,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.994484
 PhysMod = 0.503123
 PHYSMOD uses F_VPD * F_AGE
-available soil water 97.9755 mm
-volumetric available soil water  = 0.154292 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.377454 
-PSI BIOME = -0.11992 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1025,13 +983,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.909805
 PhysMod = 0.344755
 PHYSMOD uses F_VPD * F_AGE
-available soil water 56.1227 mm
-volumetric available soil water  = 0.0883822 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.216215 
-PSI BIOME = -1.70111 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.541203
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1214,13 +1165,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.878899
 PhysMod = 0.482429
 PHYSMOD uses F_VPD * F_AGE
-available soil water 49.6227 mm
-volumetric available soil water  = 0.078146 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.191173 
-PSI BIOME = -3.05632 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1425,13 +1369,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.931043
 PhysMod = 0.543938
 PHYSMOD uses F_VPD * F_AGE
-available soil water 61.5327 mm
-volumetric available soil water  = 0.0969019 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.237057 
-PSI BIOME = -1.0977 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.792625
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1612,13 +1549,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.919519
 PhysMod = 0.609619
 PHYSMOD uses F_VPD * F_AGE
-available soil water 58.4727 mm
-volumetric available soil water  = 0.092083 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.225268 
-PSI BIOME = -1.39937 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.666928
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1799,13 +1729,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.970935
 PhysMod = 0.588063
 PHYSMOD uses F_VPD * F_AGE
-available soil water 76.4627 mm
-volumetric available soil water  = 0.120414 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.294575 
-PSI BIOME = -0.3903 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -1990,13 +1913,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.995422
 PhysMod = 0.616979
 PHYSMOD uses F_VPD * F_AGE
-available soil water 99.9475 mm
-volumetric available soil water  = 0.157398 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.385051 
-PSI BIOME = -0.109067 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -2085,7 +2001,7 @@ Yearly Stand MAI = 0.406234 m^3/area/yr
 > height = 22.689
 > age = 39
 > species = Fagussylvatica
-> phenology = 21168512
+> phenology = 14438784
 > management = 0
 [2007] layer 0 n tree = 47
 [2007] layer 0 > avdbh = 27.3936
@@ -2281,13 +2197,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.999995
 PhysMod = 0.592558
 PHYSMOD uses F_VPD * F_AGE
-available soil water 138.604 mm
-volumetric available soil water  = 0.218274 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.533976 
-PSI BIOME = -0.0230008 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 old basal area = 0.0571284 
  Basal Area Increment= 0.00180847 m^2/tree 
@@ -2415,13 +2324,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.592558
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -2529,13 +2431,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.592558
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -2710,13 +2605,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.525552
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -2880,13 +2768,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.494946
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -3069,13 +2950,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.466123
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -3256,13 +3130,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.970035
 PhysMod = 0.325203
 PHYSMOD uses F_VPD * F_AGE
-available soil water 75.9887 mm
-volumetric available soil water  = 0.119667 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.292749 
-PSI BIOME = -0.402028 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -3467,13 +3334,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.288429
 PHYSMOD uses F_VPD * F_AGE
-available soil water 143.553 mm
-volumetric available soil water  = 0.226067 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.553042 
-PSI BIOME = -0.0194634 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -3652,13 +3512,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.999999
 PhysMod = 0.466123
 PHYSMOD uses F_VPD * F_AGE
-available soil water 142.367 mm
-volumetric available soil water  = 0.224201 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.548476 
-PSI BIOME = -0.0202469 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -3837,13 +3690,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 0.99999
 PhysMod = 0.525552
 PHYSMOD uses F_VPD * F_AGE
-available soil water 136.432 mm
-volumetric available soil water  = 0.214854 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.52561 
-PSI BIOME = -0.0247965 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -4024,13 +3870,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.6292
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 *****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
 --PHYSIOLOGICAL PROCESSES LAYER 0 --
@@ -4217,13 +4056,6 @@ fNutr - Soil Nutrient modifier = 0.776393
 fSW - Soil Water modifier layer 0 = 1
 PhysMod = 0.668108
 PHYSMOD uses F_VPD * F_AGE
-available soil water 151.627 mm
-volumetric available soil water  = 0.238783 (DIM)
-vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.584149 
-PSI BIOME = -0.015 (MPa)
-PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 1
 -------------------
 **UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
 ++Lai layer 0 = 0
@@ -4312,7 +4144,7 @@ Yearly Stand MAI = 0.401706 m^3/area/yr
 > height = 22.8796
 > age = 40
 > species = Fagussylvatica
-> phenology = 21168512
+> phenology = 14438784
 > management = 0
 [2008] layer 0 n tree = 46
 [2008] layer 0 > avdbh = 27.7854

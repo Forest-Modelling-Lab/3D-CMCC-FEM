@@ -55,6 +55,8 @@ MINDAYLENGTH  0      //minimum day length for decidu0us
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN	-0.6 //For Q ilex Mollicone et al., 2002
+SWPCLOSE	-3.2 //For Q ilex Mollicone et al., 2002
 SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 

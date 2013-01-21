@@ -55,6 +55,8 @@ MINDAYLENGTH  10      //minimum day length for fagus through satellite images
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN	-0.6 //for Fagus sylvatica Mollicone et al., 2002
+SWPCLOSE	-2.3 //For Fagus sylvatica Mollicone et al., 2002
 SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 

@@ -53,8 +53,8 @@ MINDAYLENGTH  11      //minimum day length for deciduous
 //SOIL WATER
 //modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
-//SWPOPEN	-0.8 //for C. sativa Nardini Saleo 2000
-//SWPCLOSE	-2 //for C. sativa Nardini Saleo 2000
+SWPOPEN	-0.8 //for C. sativa Nardini Saleo 2000
+SWPCLOSE	-2 //for C. sativa Nardini Saleo 2000
 SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 

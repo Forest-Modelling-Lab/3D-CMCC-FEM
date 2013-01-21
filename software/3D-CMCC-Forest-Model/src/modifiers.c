@@ -35,8 +35,8 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	if (s->value[F_T] > 1)
 	{
-	    Log("ATTENTION fT EXCEEDS 1 \n");
-	    s->value[F_T] = 1;
+		Log("ATTENTION fT EXCEEDS 1 \n");
+		s->value[F_T] = 1;
 	}
 
 
@@ -77,27 +77,27 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	/*AGE MODIFIER*/
 
 
-     if (management == T)
-     {
-        //for TIMBER
-        //AGE FOR TIMBER IS THE EFFECTIVE AGE
-        RelAge = (float)a->value / s->value[MAXAGE];
-        s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
-        //Log("--Rel Age = %g years\n", RelAge);
-        Log("--Age = %d years\n", a->value);
-        Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
-     }
-     else
-     {
-        //for SHOOTS
-        //AGE FOR COPPICE IS THE AGE FROM THE COPPICING
-        RelAge = (float)a->value / s->value[MAXAGE_S];
-        s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
-        //Log("--Rel Age = %g years\n", RelAge);
-        //Log("--Age = %d years\n", a->value);
-        Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
+	if (management == T)
+	{
+		//for TIMBER
+		//AGE FOR TIMBER IS THE EFFECTIVE AGE
+		RelAge = (float)a->value / s->value[MAXAGE];
+		s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
+		//Log("--Rel Age = %g years\n", RelAge);
+		Log("--Age = %d years\n", a->value);
+		Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
+	}
+	else
+	{
+		//for SHOOTS
+		//AGE FOR COPPICE IS THE AGE FROM THE COPPICING
+		RelAge = (float)a->value / s->value[MAXAGE_S];
+		s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
+		//Log("--Rel Age = %g years\n", RelAge);
+		//Log("--Age = %d years\n", a->value);
+		Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
 
-     }
+	}
 
 
 
@@ -151,22 +151,105 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 		//Log("-Available Soil Water = %g mm\n", available_soil_water);
 		Log("-Moist Ratio = %g \n", MoistRatio);
 	}
-	*/
+	 */
 
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-
-	if ( s->value[F_SW] > 1  )
+	if (settings->time == 'm')
 	{
-		Log("PROBLEM IN fSW !!!!!!!!!!\n");
-		s->value[F_SW] = 1;
-		Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+
+		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+
+		if ( s->value[F_SW] > 1  )
+		{
+			Log("PROBLEM IN fSW !!!!!!!!!!\n");
+			s->value[F_SW] = 1;
+			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
+		else
+		{
+			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
 	}
 	else
 	{
-        Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+
+		/*SOIL MATRIC POTENTIAL MODIFIER*/
+
+		//**********************************
+		//USABLE ONLY FOR DAILY SIMULATION
+		//**********************************
+
+
+
+		float vwc; //soil volumetric water content
+		float psi;  //soil matric potential
+
+
+		//todo export in types.h and matrix.c if used
+		float F_PSI;
+
+		/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+		//100 mm H20 m^-2 = 100 kg H20 m^-2
+		Log("available soil water %g mm\n", c->available_soil_water);
+
+		/* (DIM) volumetric water content */
+		vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
+		Log("volumetric available soil water  = %g (DIM)\n", vwc);
+		Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
+		Log ("vwc/vwc_sat = %g \n", vwc / c->vwc_sat);
+
+		/* calculate psi */
+		//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
+		/* (MPa) water potential of soil and leaves */
+		psi = c->psi_sat * pow((vwc/c->vwc_sat), c->soil_b);
+		Log ("PSI BIOME = %g (MPa)\n", psi);
+		Log ("PSI_SAT BIOME = %g (MPa)\n", c->psi_sat);
+
+
+		if (psi > s->value[SWPOPEN]) /*no water stress*/
+		{
+			F_PSI = 1;
+		}
+		else if (psi <= s->value[SWPCLOSE]) /* full water stress */
+		{
+			F_PSI = 0;
+		}
+		else /* partial water stress */
+		{
+			F_PSI = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
+		}
+
+		Log("F_PSI = %g\n", F_PSI);
+
+		s->value[F_SW] = F_PSI;
+
+		if ( s->value[F_SW] > 1  )
+		{
+			Log("PROBLEM IN fSW !!!!!!!!!!\n");
+			s->value[F_SW] = 1;
+			Log("fSW-F_PSI - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
+		else
+		{
+			Log("fSW-F_PSI - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
+
+		//put for comparison with biome module
+		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+
+		if ( s->value[F_SW] > 1  )
+		{
+			Log("PROBLEM IN fSW !!!!!!!!!!\n");
+			s->value[F_SW] = 1;
+			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
+		else
+		{
+			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+		}
+
 	}
 
-        //average yearly f_sw modifiers
+	//average yearly f_sw modifiers
 	s->value[AVERAGE_F_SW] += s->value[F_SW];
 
 	/*PHYSIOLOGICAL MODIFIER*/
@@ -174,11 +257,11 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	Log("PhysMod = %g\n", s->value[PHYS_MOD]);
 	if (s->value[F_VPD] < s->value[F_SW])
 	{
-	        Log("PHYSMOD uses F_VPD * F_AGE\n");
+		Log("PHYSMOD uses F_VPD * F_AGE\n");
 	}
 	else
 	{
-                Log("PHYSMOD uses F_SW * F_AGE\n");
+		Log("PHYSMOD uses F_SW * F_AGE\n");
 	}
 
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
@@ -273,59 +356,10 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	s->value[F_DROUGHT] = (leaf_res * (bulk_pot - min_leaf_pot)) / (- min_leaf_pot * ((leaf_res + soil_res) * bulk_pot));
 	Log("F_DROUGHT = %g\n", s->value[F_DROUGHT]);
-	*/
+	 */
 
 
-	/*SOIL MATRIC POTENTIAL MODIFIER*/
 
-	//**********************************
-	//USABLE ONLY FOR DAILY SIMULATION
-	//**********************************
-
-	//todo export in species.txt
-	float SWP_open = -0.6;
-	float SWP_close = -3;
-
-
-	float vwc; //soil volumetric water content
-	float psi;  //soil matric potential
-
-
-	//todo export in types.h and matrix.c if used
-	float F_PSI;
-
-	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
-	//100 mm H20 m^-2 = 100 kg H20 m^-2
-	Log("available soil water %g mm\n", c->available_soil_water);
-
-	/* (DIM) volumetric water content */
-	vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
-	Log("volumetric available soil water  = %g (DIM)\n", vwc);
-	Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
-	Log ("vwc/vwc_sat = %g \n", vwc / c->vwc_sat);
-
-	/* calculate psi */
-	//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
-	/* (MPa) water potential of soil and leaves */
-	psi = c->psi_sat * pow((vwc/c->vwc_sat), c->soil_b);
-	Log ("PSI BIOME = %g (MPa)\n", psi);
-	Log ("PSI_SAT BIOME = %g (MPa)\n", c->psi_sat);
-
-
-	if (psi > SWP_open) /*no water stress*/
-	{
-		F_PSI = 1;
-	}
-	else if (psi <= SWP_close) /* full water stress */
-	{
-		F_PSI = 0;
-	}
-	else /* partial water stress */
-	{
-		F_PSI = (SWP_close - psi)/(SWP_close - SWP_open);
-	}
-
-	Log("F_PSI = %g\n", F_PSI);
 
 
 	/*CO2 MODIFIER FROM C-FIX*/

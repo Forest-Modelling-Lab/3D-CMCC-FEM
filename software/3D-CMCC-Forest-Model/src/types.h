@@ -121,6 +121,8 @@ enum {
 	MINDAYLENGTH,               //minimum day length for phenology
 
 	//SOIL WATER
+	SWPOPEN,
+	SWPCLOSE,
 	SWCONST,                    //Costant in Soil Water modifier vs Moist Ratio
 	SWPOWER,                    //Power in Soil Water modifier vs Moist Ratio
 
