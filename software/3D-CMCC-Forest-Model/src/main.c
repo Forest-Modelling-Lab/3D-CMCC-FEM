@@ -970,9 +970,9 @@ int main(int argc, char *argv[])
 
 	int cell;
 
-	int site_data;  // if site data ok = 1, else = 0
+	//int site_data;  // if site data ok = 1, else = 0
 
-	MET_DATA *met;
+	//MET_DATA *met;
 
 	YOS *yos;
 	ROW *rows;
@@ -1485,6 +1485,7 @@ int main(int argc, char *argv[])
 						//run tree_model_M
 						for (month = 0; month < MONTHS; month++)
 						{
+							//todo add all forest structure definition functions
 							if ( !tree_model (m, yos, years, month, years_of_simulation) )
 							{
 								Log("tree model failed.");
