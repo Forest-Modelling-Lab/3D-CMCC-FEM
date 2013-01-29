@@ -1,10 +1,17 @@
 /* dataset.c */
 
 #include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include "types.h"
+
+#ifndef NULL
+#define NULL   ((void *) 0)
+#endif
+
+
 
 /* constants */
 /* please see header.h */
@@ -211,12 +218,15 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 
 						// check landuse char
 						//F = forest, Z = crop
-						if ( ('F' == token[0]) || ('f' == token[0]) ) {
+						if ( ('F' == token[0]) || ('f' == token[0]) )
+						{
 							rows[*rows_count-1].landuse = F ;
 						}
-							else if ( ('Z' == token[0]) || ('z' == token[0]) ) {
+						else if ( ('Z' == token[0]) || ('z' == token[0]) )
+						{
 							rows[*rows_count-1].landuse = Z;
 						}
+						//todo add land use types how many land use you want to simulate
 						 else
 						{
 							printf(err_bad_landuse_length, token[0], *rows_count);
@@ -527,6 +537,7 @@ int importSettingsFile(char *fileName)
 					case 1:
 						settings->time = *pch;
 						break;
+						//todo maybe delete it
 					case 2:
 						settings->presence = *pch;
 						break;

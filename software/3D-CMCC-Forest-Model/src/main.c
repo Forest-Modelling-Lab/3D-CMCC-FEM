@@ -2,6 +2,7 @@
 
 /* includes */
 #include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -12,6 +13,10 @@
 #include <string.h>
 #include "compiler.h"
 #include "types.h"
+
+#ifndef NULL
+#define NULL   ((void *) 0)
+#endif
 
 /* constants */
 #define PROGRAM_VERSION	"4.0"
@@ -1485,7 +1490,6 @@ int main(int argc, char *argv[])
 						//run tree_model_M
 						for (month = 0; month < MONTHS; month++)
 						{
-							//todo add all forest structure definition functions
 							if ( !tree_model (m, yos, years, month, years_of_simulation) )
 							{
 								Log("tree model failed.");
