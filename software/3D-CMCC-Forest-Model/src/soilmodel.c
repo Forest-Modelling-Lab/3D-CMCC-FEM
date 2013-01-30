@@ -16,10 +16,16 @@
 //extern int DaysInMonth[];
 
 
-void soil_model(CELL *c, const YOS *const yos, const int years, const int month, const int years_of_simulation)
+void soil_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
-
+	int cell;
 	int soil_layer;
+
+	// check parameters
+	assert(m && yos);
+
+	for ( cell = 0; cell < m->cells_count; cell++)
+	{
 
 	Log("--SOIL MODEL ROUTINE--\n");
 
@@ -29,6 +35,13 @@ void soil_model(CELL *c, const YOS *const yos, const int years, const int month,
 	{
 		Log("The model is running with one soil layer\n");
 		//todo move here all algorithms about soil
+
+		//if the soil_model is upgraded and each cell has a own soil parameters
+		/*
+		 m->cells[cell].soil_values[AVAILABLE_SOIL_WATER]
+		 */
+
+
 	}
 	else
 	{
@@ -41,6 +54,7 @@ void soil_model(CELL *c, const YOS *const yos, const int years, const int month,
 		}
 	}
 	Log("***************************************************\n\n");
+	}
 
 	//from BIOME
 	/* convert kg/m2 --> m3/m2 --> m3/m3 */

@@ -22,7 +22,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	static int age;
 	static int species;
 
-	//static int tree_soil;
 	static float Light_Absorb_for_establishment;
 	static float Light_for_establishment;
 
@@ -72,9 +71,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			return 0;
 		}
 	}
-
-
-
 
 	/*somma termica per l'inizio della stagione vegetativa*/
 	//thermic_sum = met[month].tav * DaysInMonth [month];

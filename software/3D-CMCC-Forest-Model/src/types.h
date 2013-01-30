@@ -550,6 +550,14 @@ enum {
 	COUNTERS
 };
 
+/*enum for soil values*/
+enum{
+
+	AVAILABLE_SOIL_WATER,
+
+	SOIL_VALUES
+};
+
 /* structures */
 // A row inside input.txt file
 typedef struct {
@@ -608,19 +616,18 @@ typedef struct {
 } HEIGHT;
 
 /* */
-/*
+
 //all variables related to the site
 typedef struct {
 
-	int soil_count;  //number of soil layers
+	PREC soil_value[SOIL_VALUES];
 
-	float soil_moist_ratio;
-	float av_soil_moist_ratio;
+	//variables related only to the highest layer
 	float av_yearly_par_soil;
 
 
-} SITE;
-*/
+} SOIL;
+
 
 
 /* */
@@ -632,8 +639,11 @@ typedef struct {
 	eLanduse landuse;
 
 	HEIGHT *heights;
-	//SITE *site;
-	int heights_count;
+	SOIL *soil;
+	int heights_count; //number of heights
+	int soils_count;  //number of soil layers
+
+	int soil_value;
 
 	float daylength;
 	float abscission_daylength;
@@ -846,7 +856,7 @@ settings_t *settings;
 extern int tree_model (MATRIX *const, const YOS *const, const int, const int, const int);
 //if putted into main.c
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
-extern void soil_model (CELL *, const YOS *const, const int, const int, const int);
+extern void soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void Get_Veg_Months (MATRIX *const, const YOS *const, const int, const int);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );

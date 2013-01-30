@@ -1498,6 +1498,9 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
+								//look if put it here or move before tree_model  at the beginning of each month simulation
+								//currently soil_model uses equals values for all cells
+								//a struct is anyway defined in types.h for soil data
 								soil_model (m, yos, years, month, years_of_simulation);
 							}
 						}
@@ -1516,7 +1519,10 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
-								//run for soil??
+								//look if put it here or move before tree_model  at the beginning of each month simulation
+								//currently soil_model uses equals values for all cells
+								//a struct is anyway defined in types.h for soil data
+								soil_model (m, yos, years, month, years_of_simulation);
 							}
 						}
 					}
@@ -1546,7 +1552,8 @@ int main(int argc, char *argv[])
 								else
 								{
 									puts(msg_ok);
-									//run for soil??
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									soil_model (m, yos, years, month, years_of_simulation);
 								}
 								*/
 								Log ("prova  T = %g\n", met[month].tav);
@@ -1561,7 +1568,8 @@ int main(int argc, char *argv[])
 								else
 								{
 									puts(msg_ok);
-									//run for soil??
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									soil_model (m, yos, years, month, years_of_simulation);
 								}
 										 */
 							}
