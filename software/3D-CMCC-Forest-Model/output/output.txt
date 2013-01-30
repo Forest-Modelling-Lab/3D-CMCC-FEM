@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Jan 30 2013 at 10:17:50
+compiled using GNU C 4.7.2 on Jan 30 2013 at 13:19:25
 (use -h parameter for more information)
 
 
@@ -205,14 +205,12 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 0 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = -549.945 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = -0 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = -0 
-Monthly Stand GPP = -0 
-Monthly Stand NPP = -0 
+Phenology = 0
+Unvegetative period !! 
+Monthly GPP in grams of C for layer 0 = 0 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP = 0
 CLASS LEVEL Yearly NPP = 0
@@ -233,13 +231,18 @@ PEAK_LAI = 3.77346
 Net radiation for soil evaporation = 707368 W/m^2/hour
 Monthly Soil Evaporation = 3.54266 
 Total Soil Evaporation = 3.54266 mm
-Available Soil Water at month 0 year 0 = 54.5601 mm
+Available Soil Water at month 1 year of simulation 0 = 54.5601 mm
 *****************************************************************************
 *****************************************************************************
 ****************END OF SPECIES CLASS***************
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  2 ASW = 77.4601 mm
 daylength = 11.1531 
 Abscission day length = 11.9758 
@@ -310,14 +313,12 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 1 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = -549.945 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = -0 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = -0 
-Monthly Stand GPP = -0 
-Monthly Stand NPP = -0 
+Phenology = 0
+Unvegetative period !! 
+Monthly GPP in grams of C for layer 0 = 0 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP = 0
 CLASS LEVEL Yearly NPP = 0
@@ -338,13 +339,18 @@ PEAK_LAI = 3.77346
 Net radiation for soil evaporation = 905845 W/m^2/hour
 Monthly Soil Evaporation = 5.46281 
 Total Soil Evaporation = 9.00547 mm
-Available Soil Water at month 1 year 0 = 71.9972 mm
+Available Soil Water at month 2 year of simulation 0 = 71.9972 mm
 *****************************************************************************
 *****************************************************************************
 ****************END OF SPECIES CLASS***************
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  3 ASW = 95.4772 mm
 daylength = 12.4723 
 Abscission day length = 11.9758 
@@ -415,14 +421,12 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 2 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = -549.945 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = -0 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = -0 
-Monthly Stand GPP = -0 
-Monthly Stand NPP = -0 
+Phenology = 0
+Unvegetative period !! 
+Monthly GPP in grams of C for layer 0 = 0 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP = 0
 CLASS LEVEL Yearly NPP = 0
@@ -443,13 +447,18 @@ PEAK_LAI = 3.77346
 Net radiation for soil evaporation = 1.00117e+06 W/m^2/hour
 Monthly Soil Evaporation = 8.23941 
 Total Soil Evaporation = 17.2449 mm
-Available Soil Water at month 2 year 0 = 87.2378 mm
+Available Soil Water at month 3 year of simulation 0 = 87.2378 mm
 *****************************************************************************
 *****************************************************************************
 ****************END OF SPECIES CLASS***************
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  4 ASW = 138.458 mm
 daylength = 13.6275 
 Abscission day length = 11.9758 
@@ -520,14 +529,12 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 3 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = -549.945 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = -0 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = -0 
-Monthly Stand GPP = -0 
-Monthly Stand NPP = -0 
+Phenology = 0
+Unvegetative period !! 
+Monthly GPP in grams of C for layer 0 = 0 
+Monthly NPP for layer 0 = 0 
+Monthly Stand GPP = 0 
+Monthly Stand NPP = 0 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP = 0
 CLASS LEVEL Yearly NPP = 0
@@ -548,13 +555,18 @@ PEAK_LAI = 3.77346
 Net radiation for soil evaporation = 1.20453e+06 W/m^2/hour
 Monthly Soil Evaporation = 13.9118 
 Total Soil Evaporation = 31.1567 mm
-Available Soil Water at month 3 year 0 = 124.546 mm
+Available Soil Water at month 4 year of simulation 0 = 124.546 mm
 *****************************************************************************
 *****************************************************************************
 ****************END OF SPECIES CLASS***************
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  5 ASW = 179.196 mm
 ASW > MAXASW !!!
 ASW month 5 = 151.627 mm
@@ -688,6 +700,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 4 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0270082 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 25.869 molC/m^2 month
@@ -729,6 +742,11 @@ PHENOLOGY LAI = 2.09816
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  6 ASW = 97.9755 mm
 daylength = 14.467 
 Abscission day length = 11.9758 
@@ -851,6 +869,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 5 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0204872 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 70.8104 molC/m^2 month
@@ -911,6 +930,11 @@ PHENOLOGY LAI = 2.41264
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  7 ASW = 56.1227 mm
 daylength = 13.8899 
 Abscission day length = 11.9758 
@@ -1033,6 +1057,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 6 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0140097 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 77.7127 molC/m^2 month
@@ -1093,6 +1118,11 @@ PHENOLOGY LAI = 3.37312
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  8 ASW = 49.6227 mm
 daylength = 12.7874 
 Abscission day length = 11.9758 
@@ -1215,6 +1245,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 7 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.020448 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 79.0292 molC/m^2 month
@@ -1297,6 +1328,11 @@ PHENOLOGY LAI = 3.77346
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  9 ASW = 61.5327 mm
 daylength = 11.5084 
 Abscission day length = 11.9758 
@@ -1419,6 +1455,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 8 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0225583 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 58.8123 molC/m^2 month
@@ -1477,6 +1514,11 @@ PHENOLOGY LAI = 3.77346
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  10 ASW = 58.4727 mm
 daylength = 10.3251 
 Abscission day length = 11.9758 
@@ -1599,6 +1641,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 9 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0191737 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 47.0964 molC/m^2 month
@@ -1657,6 +1700,11 @@ PHENOLOGY LAI = 3.77346
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  11 ASW = 76.4627 mm
 daylength = 9.62076 
 Abscission day length = 11.9758 
@@ -1777,6 +1825,7 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 10 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 1
+Phenology = 0
 Alpha C (Effective Quantum Canopy Efficiency)= 0.00924905 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 29.3585 molC/m^2 month
@@ -1841,6 +1890,11 @@ PHENOLOGY LAI = 1.02913
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 Beginning month  12 ASW = 99.9475 mm
 daylength = 9.54527 
 Abscission day length = 11.9758 
@@ -1911,11 +1965,9 @@ GET_PHOTOSYNTHESIS_ROUTINE
 
 ************** at Month 11 CARBON FLUX-PRODUCTIVITY ******************
 VegUnveg = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 29.3585 molC/m^2 month
+Phenology = 0
+Unvegetative period !! 
 Monthly GPP in grams of C for layer 0 = 0 
-***************************** NPP *************************** 
 Monthly NPP for layer 0 = 0 
 Monthly Stand GPP = 0 
 Monthly Stand NPP = 0 
@@ -1939,7 +1991,7 @@ PEAK_LAI = 3.77346
 Net radiation for soil evaporation = 599160 W/m^2/hour
 Monthly Soil Evaporation = 5.16182 
 Total Soil Evaporation = 54.1486 mm
-Available Soil Water at month 11 year 0 = 94.7857 mm
+Available Soil Water at month 12 year of simulation 0 = 94.7857 mm
 *****************************************************************************
 *****************************************************************************
 *****END OF YEAR******
@@ -2027,6 +2079,11 @@ DEL SUM = 1.39607
 ****************END OF AGE CLASS***************
 ****************END OF HEIGHT CLASS***************
 ****************END OF CELL***************
+--SOIL MODEL ROUTINE--
+*********GET MONTHLY SOIL WATER BALACE************
+The model is running with one soil layer
+***************************************************
+
 ****************END OF MONTH*******************
 
 

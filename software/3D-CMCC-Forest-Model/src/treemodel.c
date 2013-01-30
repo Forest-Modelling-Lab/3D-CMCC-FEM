@@ -336,7 +336,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									//Log("Available Soil Water at month %d years %d with LPJ soil evaporation = %g mm\n",month, years, m->cells[cell].available_soil_water);
 
 								}
-								Log("Available Soil Water at month %d year %d = %g mm\n",month, years, m->cells[cell].available_soil_water);
+								Log("Available Soil Water at month %d year of simulation %d = %g mm\n",month+1, years, m->cells[cell].available_soil_water);
 
 								Log("*****************************************************************************\n");
 								Log("*****************************************************************************\n");

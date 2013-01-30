@@ -22,6 +22,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month);
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
+	Log("Phenology = %g\n", s->value[PHENOLOGY]);
 
 
 	//Log("X = %g \n", c->x);
@@ -29,7 +30,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 || s->value[PHENOLOGY] == 0)
+	if (s->counter[VEG_UNVEG] == 1 || s->value[PHENOLOGY] == 1)
 	{
 		if (s->value[ALPHA] > 0)
 		{

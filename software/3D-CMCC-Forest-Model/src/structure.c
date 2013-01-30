@@ -82,7 +82,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 					}
 					else
 					{
-						if ((previous_height -current_height ) > settings->layer_limit)
+						if ((previous_height -current_height ) > settings->tree_layer_limit)
 						{
 							c->annual_layer_number += 1;
 							previous_height = current_height;
@@ -115,7 +115,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 				}
 				else
 				{
-					if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
+					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
 						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
@@ -135,7 +135,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 				}
 				else
 				{
-					if ((c->heights[height+1].value - c->heights[height].value) > settings->layer_limit)
+					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
 						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
@@ -717,7 +717,7 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 						c->monthly_layer_number += 1;
 						previous_height = current_height;
 					}
-					if ((previous_height - current_height ) > settings->layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					if ((previous_height - current_height ) > settings->tree_layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 					{
 						c->monthly_layer_number += 1;
 						previous_height = current_height;

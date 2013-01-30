@@ -1,9 +1,11 @@
 VERSION "u"		//Must be 's' or 'u', spatial or unspatial
 TIME "m"		//Must be 'm' or 'd', monthly or daily
-PRESENCE "t"	//Must be 'p' or 't', percentage or total
+PRESENCE "t"	//Must be 'p' or 't', percentage or total coverage
 SIZECELL "30"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 
-LAYER_LIMIT "2"  //define differences among tree height in meters classes to define number of layers in unspatial version
+TREE_LAYER_LIMIT "2"  //define differences among tree heights in meters classes to define number of layers in unspatial version
+
+SOIL_LAYER "1"	//define soil layer/s to consider
 
 //LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
 MIN_LAYER_COVER "0.0001"
@@ -17,7 +19,7 @@ WS_SAPLING "0.00001"
 WR_SAPLING "0.000005"
 WF_SAPLING "0.0000001"
 
-//MINIMUM PAR AT FOREST FLOOR FOR ESATBLISHMENT (W/m^2)
+//MINIMUM PAR AT FOREST FLOOR FOR ESTABLISHMENT (W/m^2)
 LIGHT_ESTAB_VERY_TOLERANT "0.3"
 LIGHT_ESTAB_TOLERANT "1.0"
 LIGHT_ESTAB_INTERMEDIATE "2.0"
