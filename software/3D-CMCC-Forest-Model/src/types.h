@@ -616,19 +616,11 @@ typedef struct {
 } HEIGHT;
 
 /* */
-
 //all variables related to the site
 typedef struct {
-
 	PREC soil_value[SOIL_VALUES];
 
-	//variables related only to the highest layer
-	float av_yearly_par_soil;
-
-
 } SOIL;
-
-
 
 /* */
 //all variables related to the cell (stand) are here defined
@@ -639,7 +631,7 @@ typedef struct {
 	eLanduse landuse;
 
 	HEIGHT *heights;
-	SOIL *soil;
+	SOIL *soils;
 	int heights_count; //number of heights
 	int soils_count;  //number of soil layers
 

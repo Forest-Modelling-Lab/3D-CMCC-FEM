@@ -27,40 +27,41 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
-	Log("--SOIL MODEL ROUTINE--\n");
+		Log("--SOIL MODEL ROUTINE--\n");
 
-	Log("*********GET MONTHLY SOIL WATER BALACE************\n");
+		Log("*********GET MONTHLY SOIL WATER BALACE************\n");
 
-	if (settings->soil_layer == 1)
-	{
-		Log("The model is running with one soil layer\n");
-		//todo move here all algorithms about soil
-
-		//if the soil_model is upgraded and each cell has a own soil parameters
-		/*
-		 m->cells[cell].soil_values[AVAILABLE_SOIL_WATER]
-		 */
-
-
-	}
-	else
-	{
-		Log("The model is running with more than one soil layer\n");
-
-		for (soil_layer = 0; soil_layer < settings->soil_layer; soil_layer++)
+		if (settings->soil_layer == 1)
 		{
-			Log("Soil layer considered = %d\n", soil_layer);
+			Log("The model is running with one soil layer\n");
 			//todo move here all algorithms about soil
+
+			//if the soil_model is upgraded and each cell has a own soil parameters
+			/*
+			 //example for variables related to the soil layers
+			 m->cells[cell].soils[soil].value[AVAILABLE_SOIL_WATER];
+			 //example for variables not related to the soil layers
+			 m_>cells[cell].av_yearly_par_soil;
+			 */
 		}
-	}
-	Log("***************************************************\n\n");
+		else
+		{
+			Log("The model is running with more than one soil layer\n");
+
+			for (soil_layer = 0; soil_layer < settings->soil_layer /*soil_layer < m->cells[cell].soils_count*/; soil_layer++)
+			{
+				Log("Soil layer considered = %d\n", soil_layer);
+				//todo move here all algorithms about soil
+			}
+		}
+		Log("***************************************************\n\n");
 	}
 
 	//from BIOME
 	/* convert kg/m2 --> m3/m2 --> m3/m3 */
 	/*
 	vwc = soilw / (1000.0 * sitec->soil_depth);
-	*/
+	 */
 	/* calculate psi */
 	// *psi = sitec->psi_sat * pow((vwc/sitec->vwc_sat), sitec->soil_b);
 
