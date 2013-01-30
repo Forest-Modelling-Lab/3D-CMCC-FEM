@@ -655,13 +655,15 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
-				if ( month == MONTHS )
+
+				if ( month == MONTHS  )
 				{
 					printf("bad format data for met file.\n\n");
 					free(yos);
 					fclose(f);
 					return NULL;
 				}
+
 
 				for ( i = 0; i < MET_COLUMNS; i++ )
 				{
@@ -1520,7 +1522,7 @@ int main(int argc, char *argv[])
 				}
 				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 			}
-			else //run for daily version
+			else if (settings->time == 'd')//run for daily version
 			{
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
@@ -1528,10 +1530,14 @@ int main(int argc, char *argv[])
 					//run tree_model
 					for (month = 0; month < MONTHS; month++)
 					{
+						Log("Month simulated = %d\n", month);
+						Log("number of days in month = %d\n", met[month].n_days);
 						for (day = 0; day < met[month].n_days; day++ )
 						{
+							Log("Day simulated = %d\n", month);
 							if(m->cells[cell].landuse == F)
 							{
+								/*
 								if ( !tree_model (m, yos, years, month, years_of_simulation) )
 								{
 									Log("tree model failed.");
@@ -1540,6 +1546,8 @@ int main(int argc, char *argv[])
 								{
 									puts(msg_ok);
 								}
+								*/
+								Log ("prova  T = %g\n", met[month].tav);
 							}
 							if(m->cells[cell].landuse == Z)
 							{
@@ -1559,6 +1567,10 @@ int main(int argc, char *argv[])
 					}
 					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 				}
+			}
+			else
+			{
+				Log("NOT TIME STEP CHOICED!!!\n");
 			}
 
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);
