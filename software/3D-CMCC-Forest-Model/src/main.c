@@ -689,7 +689,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 						case RG_F: //Rg_f - solar_rad -daily average solar radiation
 							yos[*yos_count-1].m[month].solar_rad = convert_string_to_prec(token2, &error_flag);
-							//for feudozzo data are in KJ
 							//convert KJ to MJ
 							//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
 							if ( error_flag )
@@ -1009,7 +1008,7 @@ int main(int argc, char *argv[])
 	//		return 1;
 	//	}
 
-	// Parsing argumets
+	// Parsing arguments
 	for(i=1; i<argc; i++)
 	{
 		if ( argv[i][0] != '-' ) continue;
@@ -1499,6 +1498,7 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
+								//run for soil??
 							}
 						}
 					}
@@ -1516,6 +1516,7 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
+								//run for soil??
 							}
 						}
 					}
@@ -1545,6 +1546,7 @@ int main(int argc, char *argv[])
 								else
 								{
 									puts(msg_ok);
+									//run for soil??
 								}
 								*/
 								Log ("prova  T = %g\n", met[month].tav);
@@ -1559,6 +1561,7 @@ int main(int argc, char *argv[])
 								else
 								{
 									puts(msg_ok);
+									//run for soil??
 								}
 										 */
 							}
@@ -1570,7 +1573,7 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				Log("NOT TIME STEP CHOICED!!!\n");
+				Log("NO TIME STEP CHOICED!!!\n");
 			}
 
 			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);
