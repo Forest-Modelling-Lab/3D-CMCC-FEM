@@ -31,7 +31,7 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 
 		Log("*********GET MONTHLY SOIL WATER BALACE************\n");
 
-		if (settings->soil_layer == 1)
+		if (settings->soil_layer == 1 /*m->cells[cell].soils_count == 1*/)
 		{
 			Log("The model is running with one soil layer\n");
 			//todo move here all algorithms about soil
