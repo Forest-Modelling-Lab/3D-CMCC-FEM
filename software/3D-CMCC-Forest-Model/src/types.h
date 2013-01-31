@@ -4,9 +4,14 @@
 
 /* precision */
 #include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
+#include <assert.h>
+
 
 #define NO_DATA -9999
+
 
 
  /* enums */
@@ -49,6 +54,85 @@ enum {
 
 	MONTHS
 };
+
+/* */
+typedef struct {
+	int n_days;
+	PREC solar_rad;
+	PREC tav;
+	PREC vpd;
+	PREC ts_f;
+	PREC rain;
+	PREC swc;
+	PREC ndvi_lai;
+} MET_DATA;
+
+// Struct representing site.txt content
+typedef struct
+{
+	char sitename[1024];
+	float lat,
+	lon,
+	Y,
+	co2Conc,
+	initialLitter,
+	min_frac_maxasw,  //wilting point
+	//maxAsw,
+	//minAsw,
+	clay_perc,
+	silt_perc,
+	sand_perc,
+	bulk_dens,
+	soil_depth,
+	fr,
+	fn0,
+	fnn,
+	m0,
+	sN,
+	cutTree;
+} site_t;
+
+
+// Struct representing settings.txt content
+typedef struct
+{
+	char version, // must be 's' or 'u' (spatial or unspatial)
+		time,  // must be 'm' or 'd' (monthly or daily)
+		presence; // must be 't' or 'p' (total or percentage)
+	float sizeCell,
+	//dominant,
+	//dominated,
+	//subdominated,
+	tree_layer_limit,
+	soil_layer,
+	min_layer_cover,
+	max_layer_cover,
+	avdbh_sapling,
+	lai_sapling,
+	height_sapling,
+	ws_sapling,
+	wr_sapling,
+	wf_sapling,
+	light_estab_very_tolerant,
+	light_estab_tolerant,
+	light_estab_intermediate,
+	light_estab_intolerant,
+	maxlai,
+	defaultlai,
+	maxdays,
+	maxrg,
+	maxtav,
+	maxvpd,
+	maxprecip,
+	switchtounspatial;
+} settings_t;
+
+/* */
+typedef struct {
+	MET_DATA m[MONTHS];
+	int year;
+} YOS; // YEARS OF SIMULATION
+
 
 /* */
 enum {
@@ -633,7 +717,7 @@ typedef struct {
 	HEIGHT *heights;
 	SOIL *soils;
 	int heights_count; //number of heights
-	int soils_count;  //number of soil layers
+	int soils_count[settings->soil_layer];  //number of soil layers
 
 	int soil_value;
 
@@ -707,83 +791,7 @@ typedef struct {
 	int cells_count;
 } MATRIX;
 
-/* */
-typedef struct {
-	int n_days;
-	PREC solar_rad;
-	PREC tav;
-	PREC vpd;
-	PREC ts_f;
-	PREC rain;
-	PREC swc;
-	PREC ndvi_lai;
-} MET_DATA;
 
-// Struct representing site.txt content
-typedef struct
-{
-	char sitename[1024];
-	float lat,
-	lon,
-	Y,
-	co2Conc,
-	initialLitter,
-	min_frac_maxasw,  //wilting point
-	//maxAsw,
-	//minAsw,
-	clay_perc,
-	silt_perc,
-	sand_perc,
-	bulk_dens,
-	soil_depth,
-	fr,
-	fn0,
-	fnn,
-	m0,
-	sN,
-	cutTree;
-} site_t;
-
-
-// Struct representing settings.txt content
-typedef struct
-{
-	char version, // must be 's' or 'u' (spatial or unspatial)
-		time,  // must be 'm' or 'd' (monthly or daily)
-		presence; // must be 't' or 'p' (total or percentage)
-	float sizeCell,
-	//dominant,
-	//dominated,
-	//subdominated,
-	tree_layer_limit,
-	soil_layer,
-	min_layer_cover,
-	max_layer_cover,
-	avdbh_sapling,
-	lai_sapling,
-	height_sapling,
-	ws_sapling,
-	wr_sapling,
-	wf_sapling,
-	light_estab_very_tolerant,
-	light_estab_tolerant,
-	light_estab_intermediate,
-	light_estab_intolerant,
-	maxlai,
-	defaultlai,
-	maxdays,
-	maxrg,
-	maxtav,
-	maxvpd,
-	maxprecip,
-	switchtounspatial;
-} settings_t;
-
-/* */
-typedef struct {
-	MET_DATA m[MONTHS];
-	int year;
-} YOS; // YEARS OF SIMULATION
 
 /* constants */
 #define MET_FILENAME_LEN                18

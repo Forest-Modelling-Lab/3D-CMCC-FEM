@@ -16,6 +16,10 @@
 //extern int DaysInMonth[];
 
 
+//this function should be used only for function not directly related to the forest layers, it just run at the end
+//of all physiological function for all forest layers
+
+
 void soil_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
 	int cell;
@@ -50,23 +54,10 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 
 			for (soil_layer = 0; soil_layer < settings->soil_layer /*soil_layer < m->cells[cell].soils_count*/; soil_layer++)
 			{
-				Log("Soil layer considered = %d\n", soil_layer);
+				Log("Soil layers considered = %d\n", soil_layer);
 				//todo move here all algorithms about soil
 			}
 		}
 		Log("***************************************************\n\n");
 	}
-
-	//from BIOME
-	/* convert kg/m2 --> m3/m2 --> m3/m3 */
-	/*
-	vwc = soilw / (1000.0 * sitec->soil_depth);
-	 */
-	/* calculate psi */
-	// *psi = sitec->psi_sat * pow((vwc/sitec->vwc_sat), sitec->soil_b);
-
-
-
-
-
 }

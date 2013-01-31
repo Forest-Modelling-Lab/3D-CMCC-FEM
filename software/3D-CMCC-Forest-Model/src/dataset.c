@@ -205,7 +205,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 					if ( LANDUSE_COLUMN == i )
 					{
 						// check landuse length
-
 						if ( 1 != strlen(token) )
 						{
 							printf(err_bad_landuse_length, *rows_count);
@@ -214,8 +213,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							fclose(f);
 							return NULL;
 						}
-
-
 						// check landuse char
 						//F = forest, Z = crop
 						if ( ('F' == token[0]) || ('f' == token[0]) )
