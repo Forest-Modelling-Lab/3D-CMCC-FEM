@@ -509,7 +509,7 @@ enum {
 	BIOMASS_FOLIAGE_NASA_CASA,
 
 
-	//CTEM ALLOCATION FUNCTION
+	//CTEM CARBON
 	//biomass monthly increment
 	DEL_ROOTS_TOT_CTEM,
 	DEL_STEMS_CTEM,
@@ -522,6 +522,18 @@ enum {
 	BIOMASS_STEM_CTEM,
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
+	//NITROGEN
+	NITROGEN_DEL_ROOTS_TOT_CTEM,
+	NITROGEN_DEL_STEMS_CTEM,
+	NITROGEN_DEL_FOLIAGE_CTEM,
+	NITROGEN_DEL_RESERVE_CTEM,
+	//biomass pools
+	NITROGEN_BIOMASS_ROOTS_TOT_CTEM,
+	NITROGEN_BIOMASS_ROOTS_COARSE_CTEM,
+	NITROGEN_BIOMASS_ROOTS_FINE_CTEM,
+	NITROGEN_BIOMASS_STEM_CTEM,
+	NITROGEN_BIOMASS_FOLIAGE_CTEM,
+	NITROGEN_BIOMASS_RESERVE_CTEM,
 
 
 	CLASS_AGB,
@@ -637,7 +649,7 @@ enum {
 /*enum for soil values*/
 enum{
 
-	AVAILABLE_SOIL_WATER,
+	//AVAILABLE_SOIL_WATER,
 
 	SOIL_VALUES
 };
@@ -703,6 +715,7 @@ typedef struct {
 //all variables related to the site
 typedef struct {
 	PREC soil_value[SOIL_VALUES];
+	float available_soil_water_layer;
 
 } SOIL;
 
@@ -717,9 +730,11 @@ typedef struct {
 	HEIGHT *heights;
 	SOIL *soils;
 	int heights_count; //number of heights
-	int soils_count[settings->soil_layer];  //number of soil layers
+	int soils_count;  //number of soil layers
+
 
 	int soil_value;
+
 
 	float daylength;
 	float abscission_daylength;

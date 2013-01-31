@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Jan 31 2013 at 08:58:10
+compiled using GNU C 4.7.2 on Jan 31 2013 at 11:17:20
 (use -h parameter for more information)
 
 
@@ -241,6 +241,7 @@ Available Soil Water at month 1 year of simulation 0 = 54.5601 mm
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 54.5601
 ***************************************************
 
 Beginning month  2 ASW = 77.4601 mm
@@ -349,6 +350,7 @@ Available Soil Water at month 2 year of simulation 0 = 71.9972 mm
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 71.9972
 ***************************************************
 
 Beginning month  3 ASW = 95.4772 mm
@@ -380,9 +382,9 @@ MONTH SIMULATED = MARCH
 -average solar_rad = 15.61 MJ/m^2/day
 -tav = 3.92 °C
 -vpd = 2.6 mbar
--ts_f = 1.59783e-314 °C
+-ts_f = 0 °C
 -rain = 23.48 mm
--swc = 1.59783e-314 %vol
+-swc = 0 %vol
 -Day length = 12.4723 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -457,6 +459,7 @@ Available Soil Water at month 3 year of simulation 0 = 87.2378 mm
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 87.2378
 ***************************************************
 
 Beginning month  4 ASW = 138.458 mm
@@ -490,7 +493,7 @@ MONTH SIMULATED = APRIL
 -vpd = 3.6 mbar
 -ts_f = -9999 °C
 -rain = 51.22 mm
--swc = 0 %vol
+-swc = -9999 %vol
 -Day length = 13.6275 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
@@ -565,6 +568,7 @@ Available Soil Water at month 4 year of simulation 0 = 124.546 mm
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 124.546
 ***************************************************
 
 Beginning month  5 ASW = 179.196 mm
@@ -745,6 +749,7 @@ PHENOLOGY LAI = 2.09816
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 89.3255
 ***************************************************
 
 Beginning month  6 ASW = 97.9755 mm
@@ -933,6 +938,7 @@ PHENOLOGY LAI = 2.41264
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 15.1627
 ***************************************************
 
 Beginning month  7 ASW = 56.1227 mm
@@ -1121,6 +1127,7 @@ PHENOLOGY LAI = 3.37312
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 15.1627
 ***************************************************
 
 Beginning month  8 ASW = 49.6227 mm
@@ -1331,6 +1338,7 @@ PHENOLOGY LAI = 3.77346
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 15.1627
 ***************************************************
 
 Beginning month  9 ASW = 61.5327 mm
@@ -1517,6 +1525,7 @@ PHENOLOGY LAI = 3.77346
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 15.1627
 ***************************************************
 
 Beginning month  10 ASW = 58.4727 mm
@@ -1703,6 +1712,7 @@ PHENOLOGY LAI = 3.77346
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 15.1627
 ***************************************************
 
 Beginning month  11 ASW = 76.4627 mm
@@ -1893,6 +1903,7 @@ PHENOLOGY LAI = 1.02913
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 28.4675
 ***************************************************
 
 Beginning month  12 ASW = 99.9475 mm
@@ -2082,6 +2093,7 @@ DEL SUM = 1.39607
 --SOIL MODEL ROUTINE--
 *********GET MONTHLY SOIL WATER BALACE************
 The model is running with one soil layer
+prova sull'array = 94.7857
 ***************************************************
 
 ****************END OF MONTH*******************
