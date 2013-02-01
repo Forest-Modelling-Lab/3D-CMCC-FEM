@@ -45,6 +45,7 @@ static const char err_redundancy[] = "redundancy: var \"%s\" already founded at 
 static const char err_unable_find_column[] = "unable to find column for \"%s\" var.\n";
 static const char err_conversion[] = "error during conversion of \"%s\" value at row %d, column %d.\n";
 static const char err_bad_landuse_length[] =" bad landuse length at row %d, landuse must be 1 character.\n";
+static const char err_bad_landuse[] ="bad landuse %c at row %d\n";
 //static const char err_bad_phenology_length[] =" bad phenology length at row %d, phenology must be 1 character.\n";
 //static const char err_bad_phenology[] = "bad phenology %c at row %d\n";
 static const char err_bad_management_length[] =" bad management length at row %d, management must be 1 character.\n";
@@ -226,7 +227,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						//todo add land use types how many land use you want to simulate
 						 else
 						{
-							printf(err_bad_landuse_length, token[0], *rows_count);
+							printf(err_bad_landuse, token[0], *rows_count);
 							free(columns);
 							free(rows);
 							fclose(f);

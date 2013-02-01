@@ -14,7 +14,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 
 	float RainIntercepted;
 	float lessrain;
-	//quantitatively computes the amount of rain intercepted by each strata
+	//quantitatively computes the amount of rain intercepted by each layer
 
 	if ( c->heights[height].z == c->top_layer)
 	{

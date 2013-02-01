@@ -510,12 +510,12 @@ enum {
 
 
 	//CTEM CARBON
-	//biomass monthly increment
+	//carbon biomass monthly increment
 	DEL_ROOTS_TOT_CTEM,
 	DEL_STEMS_CTEM,
 	DEL_FOLIAGE_CTEM,
 	DEL_RESERVE_CTEM,
-	//biomass pools
+	//carbon biomass pools
 	BIOMASS_ROOTS_TOT_CTEM,
 	BIOMASS_ROOTS_COARSE_CTEM,
 	BIOMASS_ROOTS_FINE_CTEM,
@@ -523,17 +523,18 @@ enum {
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
 	//NITROGEN
+	//nitrogen biomass monthly increment
 	NITROGEN_DEL_ROOTS_TOT_CTEM,
 	NITROGEN_DEL_STEMS_CTEM,
 	NITROGEN_DEL_FOLIAGE_CTEM,
-	NITROGEN_DEL_RESERVE_CTEM,
-	//biomass pools
+	NITROGEN_DEL_RESERVE_CTEM, //?????
+	//nitrogen biomass pools
 	NITROGEN_BIOMASS_ROOTS_TOT_CTEM,
 	NITROGEN_BIOMASS_ROOTS_COARSE_CTEM,
 	NITROGEN_BIOMASS_ROOTS_FINE_CTEM,
 	NITROGEN_BIOMASS_STEM_CTEM,
 	NITROGEN_BIOMASS_FOLIAGE_CTEM,
-	NITROGEN_BIOMASS_RESERVE_CTEM,
+	NITROGEN_BIOMASS_RESERVE_CTEM, //?????
 
 
 	CLASS_AGB,
@@ -716,6 +717,8 @@ typedef struct {
 typedef struct {
 	PREC soil_value[SOIL_VALUES];
 	float available_soil_water_layer;
+
+	int soil_layer[];
 
 } SOIL;
 

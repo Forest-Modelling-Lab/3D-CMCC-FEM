@@ -9,7 +9,7 @@
 
 extern  const char *szMonth[MONTHS];
 extern int MonthLength[];
-extern int DaysInMonth[];
+//extern int DaysInMonth[];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
@@ -25,13 +25,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	//compute VPD
 	static float vpd;
-
-
-	//dichiara e inizializza qui tutte le variabili che ti servono
-	int a = 1;
-	int b = 2;
-	int c = 3;
-	int somma;
 
 	// check parameters
 	assert(m && yos);
@@ -70,38 +63,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		Log("PROVA TEMPERATURA = %g\n", met[month].tav);
 		Log("PROVA SETTINGS = %c\n", settings->version);
-
-
-
-		somma = a + b + c;
-		Log("somma = %d\n", somma);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	}
 
