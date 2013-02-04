@@ -76,27 +76,34 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	/*AGE MODIFIER*/
 
-
-	if (management == T)
+	if (a->value != 0)
 	{
-		//for TIMBER
-		//AGE FOR TIMBER IS THE EFFECTIVE AGE
-		RelAge = (float)a->value / s->value[MAXAGE];
-		s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
-		//Log("--Rel Age = %g years\n", RelAge);
-		Log("--Age = %d years\n", a->value);
-		Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
+		if (management == T)
+		{
+			//for TIMBER
+			//AGE FOR TIMBER IS THE EFFECTIVE AGE
+			RelAge = (float)a->value / s->value[MAXAGE];
+			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
+			//Log("--Rel Age = %g years\n", RelAge);
+			Log("--Age = %d years\n", a->value);
+			Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
+		}
+		else
+		{
+			//for SHOOTS
+			//AGE FOR COPPICE IS THE AGE FROM THE COPPICING
+			RelAge = (float)a->value / s->value[MAXAGE_S];
+			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
+			//Log("--Rel Age = %g years\n", RelAge);
+			//Log("--Age = %d years\n", a->value);
+			Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
+
+		}
 	}
 	else
 	{
-		//for SHOOTS
-		//AGE FOR COPPICE IS THE AGE FROM THE COPPICING
-		RelAge = (float)a->value / s->value[MAXAGE_S];
-		s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
-		//Log("--Rel Age = %g years\n", RelAge);
-		//Log("--Age = %d years\n", a->value);
-		Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
-
+		s->value[F_AGE] = 1;
+		Log("no data for age F_AGE = 1\n");
 	}
 
 
