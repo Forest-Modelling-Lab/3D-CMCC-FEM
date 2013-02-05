@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 // per determinare l'incremento di Height e DBH in funzione della densità di popolazione

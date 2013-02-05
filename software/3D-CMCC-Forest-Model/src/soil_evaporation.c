@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int DaysInMonth, float Net_Radiation, int top_layer, int z,

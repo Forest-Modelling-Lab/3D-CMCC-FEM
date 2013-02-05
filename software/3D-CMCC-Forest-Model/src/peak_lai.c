@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 //TO COMPUTE YEARLY PEAK LAI FROM PROVIOUS YEARLY LAI
 /*

@@ -6,6 +6,7 @@
 #include <math.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 extern void Choose_management (CELL *c, SPECIES *s, int years, int height)

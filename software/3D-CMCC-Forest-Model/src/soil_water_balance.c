@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 extern void Get_soil_water_balance (CELL *const c)
 {

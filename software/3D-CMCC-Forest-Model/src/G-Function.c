@@ -1,6 +1,7 @@
 //
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 {

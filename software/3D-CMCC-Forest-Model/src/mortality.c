@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_number, int z)

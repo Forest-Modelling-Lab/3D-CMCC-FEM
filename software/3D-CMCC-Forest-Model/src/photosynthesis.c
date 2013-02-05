@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int DaysInMonth, int height)

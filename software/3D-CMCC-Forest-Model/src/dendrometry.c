@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 {

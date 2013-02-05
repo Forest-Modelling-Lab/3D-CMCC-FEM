@@ -11,6 +11,7 @@
 #include <math.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 
 extern void Get_renovation (CELL *c, HEIGHT *h, SPECIES *s)

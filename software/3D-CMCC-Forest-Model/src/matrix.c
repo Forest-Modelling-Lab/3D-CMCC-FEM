@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "types.h"
+#include "constants.h"
 
 /* constants */
 #define EQUAL_CELL                     1

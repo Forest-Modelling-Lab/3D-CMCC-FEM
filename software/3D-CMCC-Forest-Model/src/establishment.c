@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 /**/
 int Get_Establishment_LPJ (SPECIES *const s, float Light_Absorb_for_establishment, float  canopy_cover_dominant)

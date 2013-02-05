@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "types.h"
+#include "constants.h"
 
 void Get_initialization_site_data (CELL *c)
 {
