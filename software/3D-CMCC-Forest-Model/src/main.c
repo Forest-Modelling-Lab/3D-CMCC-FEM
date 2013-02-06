@@ -13,6 +13,7 @@
 #include <string.h>
 #include "compiler.h"
 #include "types.h"
+#include "constants.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
@@ -488,6 +489,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			error,
 			columns[MET_COLUMNS];
 
+	int day_counter = 0;
+
 	char year[5],
 	*filename,
 	*token = NULL,
@@ -655,14 +658,25 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
+				Log("month = %d\n", month);
+				Log("MONTH = %d\n", MONTHS);
 
-				if ( month == MONTHS  )
+				if (settings->time == 'm')
 				{
-					printf("bad format data for met file.\n\n");
-					free(yos);
-					fclose(f);
-					return NULL;
+					if ( month == MONTHS  )
+					{
+						printf("bad monthly format data for met file.\n\n");
+						free(yos);
+						fclose(f);
+						return NULL;
+					}
 				}
+				else
+				{
+					month = MONTHS -1;
+				}
+				Log("day_counter = %d\n", day_counter);
+				Log("ok passed function\n");
 
 
 				for ( i = 0; i < MET_COLUMNS; i++ )
@@ -897,17 +911,21 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				}
 
 			}
-
+			++day_counter;
 			++month;
 		}
 
 		// check for month
-		if ( month != MONTHS )
+		if (settings->time == 'm')
 		{
-			printf("missing values in met data file, %d months imported instead of %d !\n", month+1, MONTHS);
-			free(yos);
-			return NULL;
+			if ( month != MONTHS )
+			{
+				printf("missing values in met data file, %d months imported instead of %d !\n", month+1, MONTHS);
+				free(yos);
+				return NULL;
+			}
 		}
+
 
 		fclose(f);
 	}
@@ -931,6 +949,7 @@ void met_summary(MET_DATA *met) {
 	/* */
 	for ( i=0; i<MONTHS; i++ )
 	{
+		Log("MET_SUMMARY FUNCTION\n");
 		Log(	"MET DATA - month %02d:\n"
 				"n_days = %d\n"
 				"solar_rad = %g\n"
@@ -1537,41 +1556,43 @@ int main(int argc, char *argv[])
 					//run tree_model
 					for (month = 0; month < MONTHS; month++)
 					{
-						Log("Month simulated = %d\n", month);
-						Log("number of days in month = %d\n", met[month].n_days);
-						for (day = 0; day < met[month].n_days; day++ )
+						//il modello si blocca qui su met[month].n_days!!!!!!
+						//Log("number of days in month = %d\n", met[month].tav);
+						//Log("number of days in month = %d\n", met[month].n_days);
+
+						for (day = 0; day <= DaysInMonth[month]; day++ )
 						{
-							Log("Day simulated = %d\n", month);
+							Log("Month-Day simulated = %d-%d\n", month+1, day);
 							if(m->cells[cell].landuse == F)
 							{
-								/*
-								if ( !tree_model (m, yos, years, month, years_of_simulation) )
-								{
-									Log("tree model failed.");
-								}
-								else
-								{
-									puts(msg_ok);
+
+								//if ( !tree_model (m, yos, years, month, years_of_simulation) )
+								//{
+								//	Log("tree model failed.");
+								//}
+								//else
+								//{
+								//	puts(msg_ok);
 									//look if put it here or move before tree_model  at the beginning of each month simulation
-									soil_model (m, yos, years, month, years_of_simulation);
-								}
-								*/
-								Log ("prova  T = %g\n", met[month].tav);
+								//	soil_model (m, yos, years, month, years_of_simulation);
+								//}
+								//
+								//Log ("prova  T = %g\n", met[month].tav);
 							}
 							if(m->cells[cell].landuse == Z)
 							{
-										/*
-								if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
-								{
-									Log("crop model failed.");
-								}
-								else
-								{
-									puts(msg_ok);
+
+								//if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
+								//{
+								//	Log("crop model failed.");
+								//}
+								//else
+								//{
+								//	puts(msg_ok);
 									//look if put it here or move before tree_model  at the beginning of each month simulation
-									soil_model (m, yos, years, month, years_of_simulation);
-								}
-										 */
+								//	soil_model (m, yos, years, month, years_of_simulation);
+								//}
+
 							}
 						}
 						Log("****************END OF DAY*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
