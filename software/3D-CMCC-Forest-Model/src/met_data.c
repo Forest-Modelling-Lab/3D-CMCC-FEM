@@ -7,6 +7,8 @@
 #include "types.h"
 #include "constants.h"
 
+extern int DaysInMonth[];
+
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
 {
 
@@ -26,7 +28,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
 	t_melt = r_melt = r_sub = 0;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	incident_rad = c->net_radiation_for_soil * met[month].n_days * snow_abs * 0.001;
+	incident_rad = c->net_radiation_for_soil * DaysInMonth[month] * snow_abs * 0.001;
 	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
 	Log("incident radiation for soil = %g\n", incident_rad);
 

@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Feb  6 2013 at 12:53:41
+compiled using GNU C 4.7.2 on Feb  6 2013 at 13:10:42
 (use -h parameter for more information)
 
 
@@ -41,6 +41,15 @@ month = 0
 MONTH = 12
 day_counter = 0
 ok passed function
+ERROR IN N_DAYS DATA!!
+
+
+
+
+
+
+
+
 month = 0
 MONTH = 12
 day_counter = 0
@@ -477,7 +486,7 @@ RUN DATASET
 Cell resolution = 30 x 30 = 900 m^2
 Model version = un-spatial 
 Temporal scale = monthly 
-Vegetation Presence = percentage 
+Vegetation Presence = total 
 Years of simulation = 1 (2007)
 matrix has 1 cell
 *********************
@@ -2458,8 +2467,8 @@ DBH from CC Func = 26.9861 cm
 Yearly Class AGB = 16.2045 tDM/area year
 Yearly Class BGB = 6.08518 tDM/area year
 -for Stand
-Yearly Stand AGB = -162029 tDM/area year
-Yearly Stand BGB = -60845.7 tDM/area year
+Yearly Stand AGB = 16.2045 tDM/area year
+Yearly Stand BGB = 6.08518 tDM/area year
 
 GET_DENDROMETRY_ROUTINE
 
