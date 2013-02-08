@@ -485,11 +485,12 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	int i = 0,
 			column = 0,
 			month = 0,
+			day = 0,
 			error_flag = 0,
 			error,
 			columns[MET_COLUMNS];
 
-	int day_counter = 0;
+
 
 	char year[5],
 	*filename,
@@ -658,14 +659,16 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
-				Log("month = %d\n", month);
-				Log("MONTH = %d\n", MONTHS);
+				//Log("day = %d\n", day);
+				//Log("month = %d\n", month);
+				//Log("MONTH = %d\n", MONTHS);
+				//Log("MET_COLUMNS = %d\n", MET_COLUMNS);
 
 				if (settings->time == 'm')
 				{
 					if ( month == MONTHS  )
 					{
-						printf("bad monthly format data for met file.\n\n");
+						printf("bad monthly format data for monthly met file, too many rows for a year.\n\n");
 						free(yos);
 						fclose(f);
 						return NULL;
@@ -673,192 +676,29 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				}
 				else
 				{
-					month = MONTHS -1;
+					if (day > 365)
+					{
+						printf("bad monthly format data for daily met file, too many rows for a year.\n\n");
+						free(yos);
+						fclose(f);
+						return NULL;
+					}
 				}
-				Log("day_counter = %d\n", day_counter);
-				Log("ok passed function\n");
+
 
 
 				for ( i = 0; i < MET_COLUMNS; i++ )
 				{
 					if ( column == columns[i] )
 					{
-						switch ( i )
+						//set value for monthly version
+						if (settings->time == 'm')
 						{
-						case N_DAYS:
-							yos[*yos_count-1].m[month].n_days = convert_string_to_int(token2, &error_flag);
-							if ( error_flag )
+							switch ( i )
 							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							//CONTROL
-							if (yos[*yos_count-1].m[month].n_days > (int)settings->maxdays)
-							{
-								Log("ERROR IN N_DAYS DATA!!\n");
-							}
-							break;
-
-						case RG_F: //Rg_f - solar_rad -daily average solar radiation
-							yos[*yos_count-1].m[month].solar_rad = convert_string_to_prec(token2, &error_flag);
-							//convert KJ to MJ
-							//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].solar_rad))
-							{
-								Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								Log("Getting previous years values !!\n");
-								yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-2].m[month].solar_rad;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].solar_rad))
-								{
-									Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
-								}
-							}
-							//CONTROL
-							if (yos[*yos_count-1].m[month].solar_rad > settings->maxrg )
-							{
-								Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
-							}
-							//convert daily average solar radiation to monthly solar radiation
-							//m[month].solar_rad *= m[month].n_days;
-							break;
-
-						case TA_F: //Ta_f -  temperature average
-							yos[*yos_count-1].m[month].tav = convert_string_to_prec(token2, &error_flag);
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tav))
-							{
-								Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								Log("Getting previous years values !!\n");
-								yos[*yos_count-1].m[month].tav = yos[*yos_count-2].m[month].tav;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tav))
-								{
-									Log ("********* TAV -NO DATA- in previous year!!!!\n" );
-								}
-							}
-							//CONTROL
-							if (yos[*yos_count-1].m[month].tav > settings->maxtav)
-							{
-								Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-							}
-							break;
-
-						case VPD_F: //RH_f - RH
-							yos[*yos_count-1].m[month].vpd = convert_string_to_prec(token2, &error_flag);
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].vpd))
-							{
-								Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								yos[*yos_count-1].m[month].vpd = yos[*yos_count-2].m[month].vpd;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].vpd))
-								{
-									Log ("********* VPD -NO DATA- in previous year!!!!\n" );
-								}
-							}
-							break;
-
-						case TS_F: // ts_f   Soil temperature
-							yos[*yos_count-1].m[month].ts_f = convert_string_to_prec(token2, &error_flag);
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ts_f))
-							{
-								//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								yos[*yos_count-1].m[month].ts_f = yos[*yos_count-2].m[month].ts_f;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
-								{
-									//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
-								}
-							}
-							break;
-
-						case PRECIP:  //Precip - rain
-							yos[*yos_count-1].m[month].rain = convert_string_to_prec(token2, &error_flag);
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rain))
-							{
-								Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								Log("Getting previous years values !!\n");
-								yos[*yos_count-1].m[month].rain = yos[*yos_count-2].m[month].rain;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rain))
-								{
-									Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
-
-								}
-								//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
-							}
-							/*
-								   else
-								   {
-								//convert daily average to monthly rain precipitation
-								yos[*yos_count-1].m[month].rain *= yos[*yos_count-1].m[month].n_days;
-								}
-							 */
-							//CONTROL
-							if (yos[*yos_count-1].m[month].rain > settings->maxprecip)
-							{
-								Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
-							}
-							break;
-
-						case SWC: //Soil Water Content (%)
-							yos[*yos_count-1].m[month].swc = convert_string_to_prec(token2, &error_flag);
-							if ( error_flag )
-							{
-								printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
-								free(yos);
-								fclose(f);
-								return NULL;
-							}
-							if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].swc))
-							{
-								//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								//Log("Getting previous years values !!\n");
-								yos[*yos_count-1].m[month].swc = yos[*yos_count-2].m[month].swc;
-								if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].swc))
-								{
-									//Log ("* SWC -NO DATA- in previous year!!!!\n" );
-									yos[*yos_count-1].m[month].swc = NO_DATA;
-								}
-							}
-							break;
-						case Ndvi_Lai: //Get LAI in spatial version
-							if (settings->version == 's')
-							{
-								yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
-
-
+							//unused in monthly version just used in daily version
+							case N_DAYS:
+								yos[*yos_count-1].m[month].n_days = convert_string_to_int(token2, &error_flag);
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
@@ -866,53 +706,476 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
-								//if is not the first year the model get the previous year value
-								if (*yos_count > 1)
+								//CONTROL
+								if (yos[*yos_count-1].m[month].n_days > (int)settings->maxdays)
 								{
+									Log("ERROR IN N_DAYS DATA!!\n");
+								}
+								break;
 
-									//control in lai data if is an invalid value
-									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ndvi_lai))
+							case RG_F: //Rg_f - solar_rad -daily average solar radiation
+								yos[*yos_count-1].m[month].solar_rad = convert_string_to_prec(token2, &error_flag);
+								//convert KJ to MJ
+								//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].solar_rad))
+								{
+									Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-2].m[month].solar_rad;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].solar_rad))
 									{
-										Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-										//Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ndvi_lai))
+										Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].solar_rad > settings->maxrg )
+								{
+									Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								//convert daily average solar radiation to monthly solar radiation
+								//m[month].solar_rad *= m[month].n_days;
+								break;
+
+							case TA_F: //Ta_f -  temperature average
+								yos[*yos_count-1].m[month].tav = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tav))
+								{
+									Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].tav = yos[*yos_count-2].m[month].tav;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tav))
+									{
+										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].tav > settings->maxtav)
+								{
+									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								break;
+
+							case VPD_F: //RH_f - RH
+								yos[*yos_count-1].m[month].vpd = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].vpd))
+								{
+									Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									yos[*yos_count-1].m[month].vpd = yos[*yos_count-2].m[month].vpd;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].vpd))
+									{
+										Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								break;
+
+							case TS_F: // ts_f   Soil temperature
+								yos[*yos_count-1].m[month].ts_f = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ts_f))
+								{
+									//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									yos[*yos_count-1].m[month].ts_f = yos[*yos_count-2].m[month].ts_f;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
+									{
+										//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								break;
+
+							case PRECIP:  //Precip - rain
+								yos[*yos_count-1].m[month].rain = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].rain))
+								{
+									Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].rain = yos[*yos_count-2].m[month].rain;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].rain))
+									{
+										Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+
+									}
+									//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
+								}
+								/*
+								   else
+								   {
+								//convert daily average to monthly rain precipitation
+								yos[*yos_count-1].m[month].rain *= yos[*yos_count-1].m[month].n_days;
+								}
+								 */
+								//CONTROL
+								if (yos[*yos_count-1].m[month].rain > settings->maxprecip)
+								{
+									Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								break;
+
+							case SWC: //Soil Water Content (%)
+								yos[*yos_count-1].m[month].swc = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].swc))
+								{
+									//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									//Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].swc = yos[*yos_count-2].m[month].swc;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].swc))
+									{
+										//Log ("* SWC -NO DATA- in previous year!!!!\n" );
+										yos[*yos_count-1].m[month].swc = NO_DATA;
+									}
+								}
+								break;
+							case Ndvi_Lai: //Get LAI in spatial version
+								if (settings->version == 's')
+								{
+									yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
+
+
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									//if is not the first year the model get the previous year value
+									if (*yos_count > 1)
+									{
+
+										//control in lai data if is an invalid value
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].ndvi_lai))
 										{
-											Log ("* LAI -NO DATA- in previous year!!!!\n" );
-											yos[*yos_count-1].m[month].ndvi_lai = NO_DATA;
+											Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+											//Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
+											if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ndvi_lai))
+											{
+												Log ("* LAI -NO DATA- in previous year!!!!\n" );
+												yos[*yos_count-1].m[month].ndvi_lai = NO_DATA;
+											}
+										}
+										//control lai data in spatial version if value is higher than MAXLAI
+										if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+										{
+											Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+											Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
 										}
 									}
-									//control lai data in spatial version if value is higher than MAXLAI
-									if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+									//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
+									else
 									{
-										Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
-										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].ndvi_lai = yos[*yos_count-2].m[month].ndvi_lai;
+										if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
+										{
+											//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+											//
+											//
+											//
+											Log("**********First Year without a valid LAI value set to default value LAI\n");
+											yos[*yos_count-1].m[month].ndvi_lai = settings->defaultlai;
+											Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
+										}
 									}
 								}
-								//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
-								else
-								{
-									if(yos[*yos_count-1].m[month].ndvi_lai > settings->maxlai)
-									{
-										//RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
-										//
-										//
-										//
-										Log("**********First Year without a valid LAI value set to default value LAI\n");
-										yos[*yos_count-1].m[month].ndvi_lai = settings->defaultlai;
-										Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
-									}
-								}
+								break;
 							}
-							break;
+						}
+						//set values for daily version
+						else
+						{
+							switch ( i )
+							{
+							//unused in monthly version just used in daily version
+							case N_DAYS:
+								yos[*yos_count-1].m[month].d[day].n_days = convert_string_to_int(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].d[day].n_days > (int)settings->maxdays)
+								{
+									Log("ERROR IN N_DAYS DATA!!\n");
+								}
+								Log("month %s day = %d\n",szMonth[month], yos[*yos_count-1].m[month].d[day].n_days);
+								break;
+
+							case RG_F: //Rg_f - solar_rad -daily average solar radiation
+								yos[*yos_count-1].m[month].d[day].solar_rad = convert_string_to_prec(token2, &error_flag);
+								//convert KJ to MJ
+								//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
+								{
+									Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].solar_rad))
+									{
+										Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].d[day].solar_rad > settings->maxrg )
+								{
+									Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								//convert daily average solar radiation to monthly solar radiation
+								//m[month].solar_rad *= m[month].n_days;
+								Log("%d-%s-solar rad = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].solar_rad);
+								break;
+
+							case TA_F: //Ta_f -  temperature average
+								yos[*yos_count-1].m[month].d[day].tav = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tav))
+								{
+									Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].d[day].tav = yos[*yos_count-2].m[month].d[day].tav;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tav))
+									{
+										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								if (yos[*yos_count-1].m[month].d[day].tav > settings->maxtav)
+								{
+									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								Log("%d-%s-tav = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tav);
+								break;
+
+							case VPD_F: //RH_f - RH
+								yos[*yos_count-1].m[month].d[day].vpd = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
+								{
+									Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									yos[*yos_count-1].m[month].d[day].vpd = yos[*yos_count-2].m[month].d[day].vpd;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].vpd))
+									{
+										Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								Log("%d-%s-vpd = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].vpd);
+								break;
+
+							case TS_F: // ts_f   Soil temperature
+								yos[*yos_count-1].m[month].d[day].ts_f = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
+								{
+									//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									yos[*yos_count-1].m[month].d[day].ts_f = yos[*yos_count-2].m[month].d[day].ts_f;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
+									{
+										//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								Log("%d-%s-ts_f = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ts_f);
+								break;
+
+							case PRECIP:  //Precip - rain
+								yos[*yos_count-1].m[month].d[day].rain = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
+								{
+									Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count-2].m[month].d[day].rain;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].rain))
+									{
+										Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+
+									}
+									//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
+								}
+								/*
+								   else
+								   {
+								//convert daily average to monthly rain precipitation
+								yos[*yos_count-1].m[month].rain *= yos[*yos_count-1].m[month].n_days;
+								}
+								 */
+								//CONTROL
+								if (yos[*yos_count-1].m[month].d[day].rain > settings->maxprecip)
+								{
+									Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								Log("%d-%s-precip = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].rain);
+								break;
+
+							case SWC: //Soil Water Content (%)
+								yos[*yos_count-1].m[month].d[day].swc = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
+								{
+									//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									//Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count-2].m[month].d[day].swc;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].swc))
+									{
+										//Log ("* SWC -NO DATA- in previous year!!!!\n" );
+										yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
+									}
+								}
+								Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].swc);
+								break;
+							case Ndvi_Lai: //Get LAI in spatial version
+								if (settings->version == 's')
+								{
+									yos[*yos_count-1].m[month].d[day].ndvi_lai = convert_string_to_prec(token2, &error_flag);
+
+
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									//if is not the first year the model get the previous year value
+									if (*yos_count > 1)
+									{
+
+										//control in lai data if is an invalid value
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
+										{
+											Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+											//Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
+											if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].ndvi_lai))
+											{
+												Log ("* LAI -NO DATA- in previous year!!!!\n" );
+												yos[*yos_count-1].m[month].d[day].ndvi_lai = NO_DATA;
+											}
+										}
+										//control lai data in spatial version if value is higher than MAXLAI
+										if(yos[*yos_count-1].m[month].d[day].ndvi_lai > settings->maxlai)
+										{
+											Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, szMonth[month] );
+											Log("Getting previous years values !!\n");
+											yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
+										}
+									}
+									//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
+									else
+									{
+										if(yos[*yos_count-1].m[month].d[day].ndvi_lai > settings->maxlai)
+										{
+											//todo RISOLVERE QUESTO PROBLEMA PER NON AVERE UN DEFUALT LAI!!!!!!!!!!!!!
+											//
+											//
+											//
+											Log("**********First Year without a valid LAI value set to default value LAI\n");
+											yos[*yos_count-1].m[month].d[day].ndvi_lai = settings->defaultlai;
+											Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
+										}
+									}
+								}
+								Log("%d-%s-ndvi_lai = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ndvi_lai);
+								Log("mese = %d\n", yos[*yos_count -1].m);
+								break;
+							}
 						}
 					}
+
 				}
 
 			}
-			++day_counter;
-			++month;
+			if (settings->time == 'd')
+			{
+				++day;
+				if (day == DaysInMonth[month])
+				{
+					++month;
+					day = 0;
+				}
+			}
+			else
+			{
+				++month;
+			}
 		}
 
 		// check for month
@@ -1461,11 +1724,7 @@ int main(int argc, char *argv[])
 		Log("***************************************************\n");
 
 
-		//added in version 571
-		MET_DATA *met;
-		// check parameters
-		assert(m && yos);
-		met = (MET_DATA*) yos[years].m;
+
 
 
 
@@ -1481,6 +1740,7 @@ int main(int argc, char *argv[])
 			matrix_summary (m, years, yos);
 
 			Log("-YEARS OF SIMULATION = %d\n", yos[years].year);
+
 
 			if (settings->time == 'm')
 			{
@@ -1550,19 +1810,26 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
+				//added in version 571
+				MET_DATA *met;
+				// check parameters
+				//assert( m && yos);
+				met = (MET_DATA*) yos[years].m;
+
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
 					//run tree_model
 					for (month = 0; month < MONTHS; month++)
 					{
-						//il modello si blocca qui su met[month].n_days!!!!!!
-						//Log("number of days in month = %d\n", met[month].tav);
-						//Log("number of days in month = %d\n", met[month].n_days);
-
 						for (day = 0; day <= DaysInMonth[month]; day++ )
 						{
-							Log("Month-Day simulated = %d-%d\n", month+1, day);
+							Log("Month = %s\n", szMonth[month]);
+							Log("day = %d\n", met[month+1].d[day+1].n_days);
+							Log("rg = %g\n", met[month].d[day].solar_rad);
+							Log("tav = %g\n", met[month].d[day].tav);
+							Log("vpd = %g\n", met[month].d[day].vpd);
+							Log("rain = %g\n", met[month].d[day].rain);
 							if(m->cells[cell].landuse == F)
 							{
 
@@ -1573,7 +1840,7 @@ int main(int argc, char *argv[])
 								//else
 								//{
 								//	puts(msg_ok);
-									//look if put it here or move before tree_model  at the beginning of each month simulation
+								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//	soil_model (m, yos, years, month, years_of_simulation);
 								//}
 								//
@@ -1589,15 +1856,16 @@ int main(int argc, char *argv[])
 								//else
 								//{
 								//	puts(msg_ok);
-									//look if put it here or move before tree_model  at the beginning of each month simulation
+								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//	soil_model (m, yos, years, month, years_of_simulation);
 								//}
 
 							}
+							Log("****************END OF DAY*******************\n");
 						}
-						Log("****************END OF DAY*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
+						Log("****************END OF MONTH*******************\n\n");
 					}
-					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
 				}
 			}
 			else

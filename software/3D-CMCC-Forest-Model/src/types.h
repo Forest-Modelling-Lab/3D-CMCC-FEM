@@ -57,7 +57,8 @@ enum {
 };
 
 /* */
-typedef struct {
+//used in daily simulation
+typedef struct{
 	int n_days;
 	PREC solar_rad;
 	PREC tav;
@@ -66,7 +67,29 @@ typedef struct {
 	PREC rain;
 	PREC swc;
 	PREC ndvi_lai;
+}MET_DAILY_DATA;
+
+/* */
+typedef struct {
+
+	int n_days;
+	int month;
+	PREC solar_rad;
+	PREC tav;
+	PREC vpd;
+	PREC ts_f;
+	PREC rain;
+	PREC swc;
+	PREC ndvi_lai;
+	MET_DAILY_DATA d[];
+
 } MET_DATA;
+
+/* */
+typedef struct {
+	MET_DATA m[MONTHS];
+	int year;
+} YOS; // YEARS OF SIMULATION
 
 // Struct representing site.txt content
 typedef struct
@@ -128,11 +151,7 @@ typedef struct
 	switchtounspatial;
 } settings_t;
 
-/* */
-typedef struct {
-	MET_DATA m[MONTHS];
-	int year;
-} YOS; // YEARS OF SIMULATION
+
 
 
 /* */

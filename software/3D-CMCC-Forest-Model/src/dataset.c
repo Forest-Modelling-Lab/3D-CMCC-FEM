@@ -535,7 +535,7 @@ int importSettingsFile(char *fileName)
 					case 1:
 						settings->time = *pch;
 						break;
-						//todo maybe delete it
+						//todo maybe delete it and changed with plot/regional scale spatial resolution
 					case 2:
 						settings->presence = *pch;
 						break;
