@@ -33,6 +33,3291 @@ compiled using GNU C 4.7.2 on Feb  7 2013 at 16:17:22
 (use -h parameter for more information)
 
 
+month JANUARY day = 1
+1-JANUARY-solar rad = 5.1
+1-JANUARY-tav = 11.8
+1-JANUARY-vpd = 15.8
+1-JANUARY-ts_f = 7.8
+1-JANUARY-precip = 0
+1-JANUARY-swc= 0.11
+1-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 2
+2-JANUARY-solar rad = 6.1
+2-JANUARY-tav = 10.3
+2-JANUARY-vpd = 14.96
+2-JANUARY-ts_f = 6.3
+2-JANUARY-precip = 0.2
+2-JANUARY-swc= 0.27
+2-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 3
+3-JANUARY-solar rad = 6.1
+3-JANUARY-tav = 7.3
+3-JANUARY-vpd = 12.78
+3-JANUARY-ts_f = 3.3
+3-JANUARY-precip = 0
+3-JANUARY-swc= 0.39
+3-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 4
+4-JANUARY-solar rad = 6.1
+4-JANUARY-tav = 4.5
+4-JANUARY-vpd = 9.64
+4-JANUARY-ts_f = 0.5
+4-JANUARY-precip = 0
+4-JANUARY-swc= 0.2
+4-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 5
+5-JANUARY-solar rad = 6.1
+5-JANUARY-tav = 9.8
+5-JANUARY-vpd = 14.63
+5-JANUARY-ts_f = 5.8
+5-JANUARY-precip = 0.2
+5-JANUARY-swc= 0.18
+5-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 6
+6-JANUARY-solar rad = 6.1
+6-JANUARY-tav = 8.1
+6-JANUARY-vpd = 13.4
+6-JANUARY-ts_f = 4.1
+6-JANUARY-precip = 0
+6-JANUARY-swc= 0.14
+6-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 7
+7-JANUARY-solar rad = 6.1
+7-JANUARY-tav = 10.6
+7-JANUARY-vpd = 15.12
+7-JANUARY-ts_f = 6.6
+7-JANUARY-precip = 0
+7-JANUARY-swc= 0.12
+7-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 8
+8-JANUARY-solar rad = 6.1
+8-JANUARY-tav = 11.6
+8-JANUARY-vpd = 15.69
+8-JANUARY-ts_f = 7.6
+8-JANUARY-precip = 3.4
+8-JANUARY-swc= 0.1
+8-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 9
+9-JANUARY-solar rad = 6.1
+9-JANUARY-tav = 9.1
+9-JANUARY-vpd = 14.14
+9-JANUARY-ts_f = 5.1
+9-JANUARY-precip = 0
+9-JANUARY-swc= 0.11
+9-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 10
+10-JANUARY-solar rad = 6.1
+10-JANUARY-tav = 8.4
+10-JANUARY-vpd = 13.62
+10-JANUARY-ts_f = 4.4
+10-JANUARY-precip = 0
+10-JANUARY-swc= 0.1
+10-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 11
+11-JANUARY-solar rad = 6.1
+11-JANUARY-tav = 10.9
+11-JANUARY-vpd = 15.28
+11-JANUARY-ts_f = 6.9
+11-JANUARY-precip = 0
+11-JANUARY-swc= 0.08
+11-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 12
+12-JANUARY-solar rad = 6.1
+12-JANUARY-tav = 12
+12-JANUARY-vpd = 15.92
+12-JANUARY-ts_f = 8
+12-JANUARY-precip = 0
+12-JANUARY-swc= 0.18
+12-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 13
+13-JANUARY-solar rad = 6.1
+13-JANUARY-tav = 11.1
+13-JANUARY-vpd = 15.42
+13-JANUARY-ts_f = 7.1
+13-JANUARY-precip = 0
+13-JANUARY-swc= 0.15
+13-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 14
+14-JANUARY-solar rad = 6.1
+14-JANUARY-tav = 9.2
+14-JANUARY-vpd = 14.2
+14-JANUARY-ts_f = 5.2
+14-JANUARY-precip = 0
+14-JANUARY-swc= 0.09
+14-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 15
+15-JANUARY-solar rad = 6.1
+15-JANUARY-tav = 10.8
+15-JANUARY-vpd = 15.24
+15-JANUARY-ts_f = 6.8
+15-JANUARY-precip = 0
+15-JANUARY-swc= 0.15
+15-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 16
+16-JANUARY-solar rad = 6.1
+16-JANUARY-tav = 8
+16-JANUARY-vpd = 13.31
+16-JANUARY-ts_f = 4
+16-JANUARY-precip = 0
+16-JANUARY-swc= 0.11
+16-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 17
+17-JANUARY-solar rad = 6.1
+17-JANUARY-tav = 11.4
+17-JANUARY-vpd = 15.57
+17-JANUARY-ts_f = 7.4
+17-JANUARY-precip = 5.4
+17-JANUARY-swc= 0.08
+17-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 18
+18-JANUARY-solar rad = 6.1
+18-JANUARY-tav = 9.8
+18-JANUARY-vpd = 14.61
+18-JANUARY-ts_f = 5.8
+18-JANUARY-precip = 0
+18-JANUARY-swc= 0.09
+18-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 19
+19-JANUARY-solar rad = 6.1
+19-JANUARY-tav = 13.4
+19-JANUARY-vpd = 16.62
+19-JANUARY-ts_f = 9.4
+19-JANUARY-precip = 0
+19-JANUARY-swc= 0.13
+19-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 20
+20-JANUARY-solar rad = 6.1
+20-JANUARY-tav = 10.8
+20-JANUARY-vpd = 15.23
+20-JANUARY-ts_f = 6.8
+20-JANUARY-precip = 0
+20-JANUARY-swc= 0.08
+20-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 21
+21-JANUARY-solar rad = 6.1
+21-JANUARY-tav = 12.3
+21-JANUARY-vpd = 16.06
+21-JANUARY-ts_f = 8.3
+21-JANUARY-precip = 0
+21-JANUARY-swc= 0.09
+21-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 22
+22-JANUARY-solar rad = 6.1
+22-JANUARY-tav = 13.1
+22-JANUARY-vpd = 16.47
+22-JANUARY-ts_f = 9.1
+22-JANUARY-precip = 0
+22-JANUARY-swc= 0.13
+22-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 23
+23-JANUARY-solar rad = 6.1
+23-JANUARY-tav = 13
+23-JANUARY-vpd = 16.42
+23-JANUARY-ts_f = 9
+23-JANUARY-precip = 13.2
+23-JANUARY-swc= 0.09
+23-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 24
+24-JANUARY-solar rad = 6.1
+24-JANUARY-tav = 6.4
+24-JANUARY-vpd = 11.9
+24-JANUARY-ts_f = 2.4
+24-JANUARY-precip = 7
+24-JANUARY-swc= 0.2
+24-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 25
+25-JANUARY-solar rad = 6.1
+25-JANUARY-tav = 5.6
+25-JANUARY-vpd = 11.04
+25-JANUARY-ts_f = 1.6
+25-JANUARY-precip = 7.4
+25-JANUARY-swc= 0.16
+25-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 26
+26-JANUARY-solar rad = 6.1
+26-JANUARY-tav = 3.9
+26-JANUARY-vpd = 8.71
+26-JANUARY-ts_f = 1
+26-JANUARY-precip = 2.4
+26-JANUARY-swc= 0.08
+26-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 27
+27-JANUARY-solar rad = 6.1
+27-JANUARY-tav = 5.3
+27-JANUARY-vpd = 10.69
+27-JANUARY-ts_f = 1.3
+27-JANUARY-precip = 0
+27-JANUARY-swc= 0.18
+27-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 28
+28-JANUARY-solar rad = 6.1
+28-JANUARY-tav = 6.7
+28-JANUARY-vpd = 12.2
+28-JANUARY-ts_f = 2.7
+28-JANUARY-precip = 0
+28-JANUARY-swc= 0.23
+28-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 29
+29-JANUARY-solar rad = 6.1
+29-JANUARY-tav = 6.4
+29-JANUARY-vpd = 11.88
+29-JANUARY-ts_f = 2.4
+29-JANUARY-precip = 0
+29-JANUARY-swc= 0.09
+29-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 30
+30-JANUARY-solar rad = 6.1
+30-JANUARY-tav = 7.4
+30-JANUARY-vpd = 12.82
+30-JANUARY-ts_f = 3.4
+30-JANUARY-precip = 0
+30-JANUARY-swc= 0.18
+30-JANUARY-ndvi_lai = 0
+mese = 145624864
+month JANUARY day = 31
+31-JANUARY-solar rad = 6.1
+31-JANUARY-tav = 7.4
+31-JANUARY-vpd = 12.82
+31-JANUARY-ts_f = 3.4
+31-JANUARY-precip = 0
+31-JANUARY-swc= 0.18
+31-JANUARY-ndvi_lai = 0
+mese = 145624864
+month FEBRUARY day = 1
+1-FEBRUARY-solar rad = 8.1
+1-FEBRUARY-tav = 7
+1-FEBRUARY-vpd = 12.47
+1-FEBRUARY-ts_f = 3
+1-FEBRUARY-precip = 0
+1-FEBRUARY-swc= 0.16
+1-FEBRUARY-ndvi_lai = 6.36599e-314
+mese = 145624864
+month FEBRUARY day = 2
+2-FEBRUARY-solar rad = 9.1
+2-FEBRUARY-tav = 10.6
+2-FEBRUARY-vpd = 15.12
+2-FEBRUARY-ts_f = 6.6
+2-FEBRUARY-precip = 0
+2-FEBRUARY-swc= 0.12
+2-FEBRUARY-ndvi_lai = 8.48798e-314
+mese = 145624864
+month FEBRUARY day = 3
+3-FEBRUARY-solar rad = 9.1
+3-FEBRUARY-tav = 9.9
+3-FEBRUARY-vpd = 14.72
+3-FEBRUARY-ts_f = 5.9
+3-FEBRUARY-precip = 0
+3-FEBRUARY-swc= 0.3
+3-FEBRUARY-ndvi_lai = 1.061e-313
+mese = 145624864
+month FEBRUARY day = 4
+4-FEBRUARY-solar rad = 9.1
+4-FEBRUARY-tav = 9.2
+4-FEBRUARY-vpd = 14.24
+4-FEBRUARY-ts_f = 5.2
+4-FEBRUARY-precip = 0
+4-FEBRUARY-swc= 0.28
+4-FEBRUARY-ndvi_lai = 1.2732e-313
+mese = 145624864
+month FEBRUARY day = 5
+5-FEBRUARY-solar rad = 9.1
+5-FEBRUARY-tav = 8.7
+5-FEBRUARY-vpd = 13.91
+5-FEBRUARY-ts_f = 4.7
+5-FEBRUARY-precip = 0
+5-FEBRUARY-swc= 0.41
+5-FEBRUARY-ndvi_lai = 1.4854e-313
+mese = 145624864
+month FEBRUARY day = 6
+6-FEBRUARY-solar rad = 9.1
+6-FEBRUARY-tav = 8
+6-FEBRUARY-vpd = 13.35
+6-FEBRUARY-ts_f = 4
+6-FEBRUARY-precip = 0
+6-FEBRUARY-swc= 0.32
+6-FEBRUARY-ndvi_lai = 1.6976e-313
+mese = 145624864
+month FEBRUARY day = 7
+7-FEBRUARY-solar rad = 9.1
+7-FEBRUARY-tav = 8.3
+7-FEBRUARY-vpd = 13.55
+7-FEBRUARY-ts_f = 4.3
+7-FEBRUARY-precip = 0.6
+7-FEBRUARY-swc= 0.13
+7-FEBRUARY-ndvi_lai = 1.9098e-313
+mese = 145624864
+month FEBRUARY day = 8
+8-FEBRUARY-solar rad = 9.1
+8-FEBRUARY-tav = 10
+8-FEBRUARY-vpd = 14.75
+8-FEBRUARY-ts_f = 6
+8-FEBRUARY-precip = 0.2
+8-FEBRUARY-swc= 0.14
+8-FEBRUARY-ndvi_lai = 2.122e-313
+mese = 145624864
+month FEBRUARY day = 9
+9-FEBRUARY-solar rad = 9.1
+9-FEBRUARY-tav = 11
+9-FEBRUARY-vpd = 15.36
+9-FEBRUARY-ts_f = 7
+9-FEBRUARY-precip = 0
+9-FEBRUARY-swc= 0.13
+9-FEBRUARY-ndvi_lai = 2.3342e-313
+mese = 145624864
+month FEBRUARY day = 10
+10-FEBRUARY-solar rad = 9.1
+10-FEBRUARY-tav = 9.7
+10-FEBRUARY-vpd = 14.54
+10-FEBRUARY-ts_f = 5.7
+10-FEBRUARY-precip = 21.4
+10-FEBRUARY-swc= 0.08
+10-FEBRUARY-ndvi_lai = 2.54639e-313
+mese = 145624864
+month FEBRUARY day = 11
+11-FEBRUARY-solar rad = 9.1
+11-FEBRUARY-tav = 10.7
+11-FEBRUARY-vpd = 15.17
+11-FEBRUARY-ts_f = 6.7
+11-FEBRUARY-precip = 0.2
+11-FEBRUARY-swc= 0.11
+11-FEBRUARY-ndvi_lai = 2.75859e-313
+mese = 145624864
+month FEBRUARY day = 12
+12-FEBRUARY-solar rad = 9.1
+12-FEBRUARY-tav = 11.2
+12-FEBRUARY-vpd = 15.48
+12-FEBRUARY-ts_f = 7.2
+12-FEBRUARY-precip = 0
+12-FEBRUARY-swc= 0.15
+12-FEBRUARY-ndvi_lai = 2.97079e-313
+mese = 145624864
+month FEBRUARY day = 13
+13-FEBRUARY-solar rad = 9.1
+13-FEBRUARY-tav = 10.5
+13-FEBRUARY-vpd = 15.04
+13-FEBRUARY-ts_f = 6.5
+13-FEBRUARY-precip = 15.2
+13-FEBRUARY-swc= 0.07
+13-FEBRUARY-ndvi_lai = 3.18299e-313
+mese = 145624864
+month FEBRUARY day = 14
+14-FEBRUARY-solar rad = 9.1
+14-FEBRUARY-tav = 11.4
+14-FEBRUARY-vpd = 15.6
+14-FEBRUARY-ts_f = 7.4
+14-FEBRUARY-precip = 0
+14-FEBRUARY-swc= 0.22
+14-FEBRUARY-ndvi_lai = 3.39519e-313
+mese = 145624864
+month FEBRUARY day = 15
+15-FEBRUARY-solar rad = 9.1
+15-FEBRUARY-tav = 9.8
+15-FEBRUARY-vpd = 14.62
+15-FEBRUARY-ts_f = 5.8
+15-FEBRUARY-precip = 0
+15-FEBRUARY-swc= 0.16
+15-FEBRUARY-ndvi_lai = 3.60739e-313
+mese = 145624864
+month FEBRUARY day = 16
+16-FEBRUARY-solar rad = 9.1
+16-FEBRUARY-tav = 10.8
+16-FEBRUARY-vpd = 15.24
+16-FEBRUARY-ts_f = 6.8
+16-FEBRUARY-precip = 0.6
+16-FEBRUARY-swc= 0.13
+16-FEBRUARY-ndvi_lai = 3.81959e-313
+mese = 145624864
+month FEBRUARY day = 17
+17-FEBRUARY-solar rad = 9.1
+17-FEBRUARY-tav = 11.6
+17-FEBRUARY-vpd = 15.73
+17-FEBRUARY-ts_f = 7.6
+17-FEBRUARY-precip = 0
+17-FEBRUARY-swc= 0.27
+17-FEBRUARY-ndvi_lai = 4.03179e-313
+mese = 145624864
+month FEBRUARY day = 18
+18-FEBRUARY-solar rad = 9.1
+18-FEBRUARY-tav = 8.9
+18-FEBRUARY-vpd = 14.01
+18-FEBRUARY-ts_f = 4.9
+18-FEBRUARY-precip = 0
+18-FEBRUARY-swc= 0.21
+18-FEBRUARY-ndvi_lai = 4.24399e-313
+mese = 145624864
+month FEBRUARY day = 19
+19-FEBRUARY-solar rad = 9.1
+19-FEBRUARY-tav = 6
+19-FEBRUARY-vpd = 11.46
+19-FEBRUARY-ts_f = 2
+19-FEBRUARY-precip = 15.4
+19-FEBRUARY-swc= 0.05
+19-FEBRUARY-ndvi_lai = 4.45619e-313
+mese = 145624864
+month FEBRUARY day = 20
+20-FEBRUARY-solar rad = 9.1
+20-FEBRUARY-tav = 8
+20-FEBRUARY-vpd = 13.31
+20-FEBRUARY-ts_f = 4
+20-FEBRUARY-precip = 1.4
+20-FEBRUARY-swc= 0.11
+20-FEBRUARY-ndvi_lai = 4.66839e-313
+mese = 145624864
+month FEBRUARY day = 21
+21-FEBRUARY-solar rad = 9.1
+21-FEBRUARY-tav = 11.6
+21-FEBRUARY-vpd = 15.71
+21-FEBRUARY-ts_f = 7.6
+21-FEBRUARY-precip = 0.6
+21-FEBRUARY-swc= 0.2
+21-FEBRUARY-ndvi_lai = 4.88059e-313
+mese = 145624864
+month FEBRUARY day = 22
+22-FEBRUARY-solar rad = 9.1
+22-FEBRUARY-tav = 10.4
+22-FEBRUARY-vpd = 14.99
+22-FEBRUARY-ts_f = 6.4
+22-FEBRUARY-precip = 8.2
+22-FEBRUARY-swc= 0.09
+22-FEBRUARY-ndvi_lai = 5.09279e-313
+mese = 145624864
+month FEBRUARY day = 23
+23-FEBRUARY-solar rad = 9.1
+23-FEBRUARY-tav = 10.2
+23-FEBRUARY-vpd = 14.87
+23-FEBRUARY-ts_f = 6.2
+23-FEBRUARY-precip = 0.2
+23-FEBRUARY-swc= 0.13
+23-FEBRUARY-ndvi_lai = 5.30499e-313
+mese = 145624864
+month FEBRUARY day = 24
+24-FEBRUARY-solar rad = 9.1
+24-FEBRUARY-tav = 11.4
+24-FEBRUARY-vpd = 15.59
+24-FEBRUARY-ts_f = 7.4
+24-FEBRUARY-precip = 0
+24-FEBRUARY-swc= 0.16
+24-FEBRUARY-ndvi_lai = 5.51719e-313
+mese = 145624864
+month FEBRUARY day = 25
+25-FEBRUARY-solar rad = 9.1
+25-FEBRUARY-tav = 11.3
+25-FEBRUARY-vpd = 15.53
+25-FEBRUARY-ts_f = 7.3
+25-FEBRUARY-precip = 0
+25-FEBRUARY-swc= 0.13
+25-FEBRUARY-ndvi_lai = 5.72939e-313
+mese = 145624864
+month FEBRUARY day = 26
+26-FEBRUARY-solar rad = 9.1
+26-FEBRUARY-tav = 11.7
+26-FEBRUARY-vpd = 15.74
+26-FEBRUARY-ts_f = 7.7
+26-FEBRUARY-precip = 0.8
+26-FEBRUARY-swc= 0.11
+26-FEBRUARY-ndvi_lai = 5.94159e-313
+mese = 145624864
+month FEBRUARY day = 27
+27-FEBRUARY-solar rad = 9.1
+27-FEBRUARY-tav = 12.4
+27-FEBRUARY-vpd = 16.14
+27-FEBRUARY-ts_f = 8.4
+27-FEBRUARY-precip = 1.8
+27-FEBRUARY-swc= 0.21
+27-FEBRUARY-ndvi_lai = 6.15379e-313
+mese = 145624864
+month FEBRUARY day = 28
+28-FEBRUARY-solar rad = 9.1
+28-FEBRUARY-tav = 12.4
+28-FEBRUARY-vpd = 16.16
+28-FEBRUARY-ts_f = 8.4
+28-FEBRUARY-precip = 0
+28-FEBRUARY-swc= 0.27
+28-FEBRUARY-ndvi_lai = 6.36599e-313
+mese = 145624864
+month MARCH day = 1
+1-MARCH-solar rad = 13.15
+1-MARCH-tav = 13.9
+1-MARCH-vpd = 16.86
+1-MARCH-ts_f = 9.9
+1-MARCH-precip = 0
+1-MARCH-swc= 0.18
+1-MARCH-ndvi_lai = 6.36599e-314
+mese = 145624864
+month MARCH day = 2
+2-MARCH-solar rad = 13.15
+2-MARCH-tav = 14.7
+2-MARCH-vpd = 17.21
+2-MARCH-ts_f = 10.7
+2-MARCH-precip = 0
+2-MARCH-swc= 0.14
+2-MARCH-ndvi_lai = 8.48798e-314
+mese = 145624864
+month MARCH day = 3
+3-MARCH-solar rad = 13.15
+3-MARCH-tav = 13.1
+3-MARCH-vpd = 16.47
+3-MARCH-ts_f = 9.1
+3-MARCH-precip = 0
+3-MARCH-swc= 0.11
+3-MARCH-ndvi_lai = 1.061e-313
+mese = 145624864
+month MARCH day = 4
+4-MARCH-solar rad = 13.15
+4-MARCH-tav = 15.1
+4-MARCH-vpd = 17.4
+4-MARCH-ts_f = 11.1
+4-MARCH-precip = 0
+4-MARCH-swc= 0.19
+4-MARCH-ndvi_lai = 1.2732e-313
+mese = 145624864
+month MARCH day = 5
+5-MARCH-solar rad = 13.15
+5-MARCH-tav = 14.2
+5-MARCH-vpd = 16.99
+5-MARCH-ts_f = 10.2
+5-MARCH-precip = 0
+5-MARCH-swc= 0.12
+5-MARCH-ndvi_lai = 1.4854e-313
+mese = 145624864
+month MARCH day = 6
+6-MARCH-solar rad = 13.15
+6-MARCH-tav = 12.8
+6-MARCH-vpd = 16.32
+6-MARCH-ts_f = 8.8
+6-MARCH-precip = 0
+6-MARCH-swc= 0.11
+6-MARCH-ndvi_lai = 1.6976e-313
+mese = 145624864
+month MARCH day = 7
+7-MARCH-solar rad = 13.15
+7-MARCH-tav = 10.4
+7-MARCH-vpd = 14.99
+7-MARCH-ts_f = 6.4
+7-MARCH-precip = 9.2
+7-MARCH-swc= 0.08
+7-MARCH-ndvi_lai = 1.9098e-313
+mese = 145624864
+month MARCH day = 8
+8-MARCH-solar rad = 13.15
+8-MARCH-tav = 13.1
+8-MARCH-vpd = 16.5
+8-MARCH-ts_f = 9.1
+8-MARCH-precip = 0
+8-MARCH-swc= 0.22
+8-MARCH-ndvi_lai = 2.122e-313
+mese = 145624864
+month MARCH day = 9
+9-MARCH-solar rad = 13.15
+9-MARCH-tav = 13.3
+9-MARCH-vpd = 16.59
+9-MARCH-ts_f = 9.3
+9-MARCH-precip = 0
+9-MARCH-swc= 0.22
+9-MARCH-ndvi_lai = 2.3342e-313
+mese = 145624864
+month MARCH day = 10
+10-MARCH-solar rad = 13.15
+10-MARCH-tav = 11.4
+10-MARCH-vpd = 15.61
+10-MARCH-ts_f = 7.4
+10-MARCH-precip = 0
+10-MARCH-swc= 0.25
+10-MARCH-ndvi_lai = 2.54639e-313
+mese = 145624864
+month MARCH day = 11
+11-MARCH-solar rad = 13.15
+11-MARCH-tav = 11.2
+11-MARCH-vpd = 15.49
+11-MARCH-ts_f = 7.2
+11-MARCH-precip = 0
+11-MARCH-swc= 0.23
+11-MARCH-ndvi_lai = 2.75859e-313
+mese = 145624864
+month MARCH day = 12
+12-MARCH-solar rad = 13.15
+12-MARCH-tav = 12.9
+12-MARCH-vpd = 16.4
+12-MARCH-ts_f = 8.9
+12-MARCH-precip = 0
+12-MARCH-swc= 0.25
+12-MARCH-ndvi_lai = 2.97079e-313
+mese = 145624864
+month MARCH day = 13
+13-MARCH-solar rad = 13.15
+13-MARCH-tav = 13.4
+13-MARCH-vpd = 16.66
+13-MARCH-ts_f = 9.4
+13-MARCH-precip = 0
+13-MARCH-swc= 0.29
+13-MARCH-ndvi_lai = 3.18299e-313
+mese = 145624864
+month MARCH day = 14
+14-MARCH-solar rad = 13.15
+14-MARCH-tav = 15.1
+14-MARCH-vpd = 17.42
+14-MARCH-ts_f = 11.1
+14-MARCH-precip = 0
+14-MARCH-swc= 0.28
+14-MARCH-ndvi_lai = 3.39519e-313
+mese = 145624864
+month MARCH day = 15
+15-MARCH-solar rad = 13.15
+15-MARCH-tav = 15.1
+15-MARCH-vpd = 17.41
+15-MARCH-ts_f = 11.1
+15-MARCH-precip = 0
+15-MARCH-swc= 0.23
+15-MARCH-ndvi_lai = 3.60739e-313
+mese = 145624864
+month MARCH day = 16
+16-MARCH-solar rad = 13.15
+16-MARCH-tav = 15.6
+16-MARCH-vpd = 17.62
+16-MARCH-ts_f = 11.6
+16-MARCH-precip = 0
+16-MARCH-swc= 0.23
+16-MARCH-ndvi_lai = 3.81959e-313
+mese = 145624864
+month MARCH day = 17
+17-MARCH-solar rad = 13.15
+17-MARCH-tav = 13.9
+17-MARCH-vpd = 16.85
+17-MARCH-ts_f = 9.9
+17-MARCH-precip = 0
+17-MARCH-swc= 0.13
+17-MARCH-ndvi_lai = 4.03179e-313
+mese = 145624864
+month MARCH day = 18
+18-MARCH-solar rad = 13.15
+18-MARCH-tav = 12.4
+18-MARCH-vpd = 16.12
+18-MARCH-ts_f = 8.4
+18-MARCH-precip = 0
+18-MARCH-swc= 0.14
+18-MARCH-ndvi_lai = 4.24399e-313
+mese = 145624864
+month MARCH day = 19
+19-MARCH-solar rad = 13.15
+19-MARCH-tav = 10.5
+19-MARCH-vpd = 15.05
+19-MARCH-ts_f = 6.5
+19-MARCH-precip = 19
+19-MARCH-swc= 0.08
+19-MARCH-ndvi_lai = 4.45619e-313
+mese = 145624864
+month MARCH day = 20
+20-MARCH-solar rad = 13.15
+20-MARCH-tav = 5.6
+20-MARCH-vpd = 11.04
+20-MARCH-ts_f = 1.6
+20-MARCH-precip = 4.2
+20-MARCH-swc= 0.15
+20-MARCH-ndvi_lai = 4.66839e-313
+mese = 145624864
+month MARCH day = 21
+21-MARCH-solar rad = 13.15
+21-MARCH-tav = 6.8
+21-MARCH-vpd = 12.29
+21-MARCH-ts_f = 2.8
+21-MARCH-precip = 0
+21-MARCH-swc= 0.22
+21-MARCH-ndvi_lai = 4.88059e-313
+mese = 145624864
+month MARCH day = 22
+22-MARCH-solar rad = 13.15
+22-MARCH-tav = 7.1
+22-MARCH-vpd = 12.57
+22-MARCH-ts_f = 3.1
+22-MARCH-precip = 0
+22-MARCH-swc= 0.21
+22-MARCH-ndvi_lai = 5.09279e-313
+mese = 145624864
+month MARCH day = 23
+23-MARCH-solar rad = 13.15
+23-MARCH-tav = 8.6
+23-MARCH-vpd = 13.81
+23-MARCH-ts_f = 4.6
+23-MARCH-precip = 0
+23-MARCH-swc= 0.29
+23-MARCH-ndvi_lai = 5.30499e-313
+mese = 145624864
+month MARCH day = 24
+24-MARCH-solar rad = 13.15
+24-MARCH-tav = 7.2
+24-MARCH-vpd = 12.64
+24-MARCH-ts_f = 3.2
+24-MARCH-precip = 1.2
+24-MARCH-swc= 0.14
+24-MARCH-ndvi_lai = 5.51719e-313
+mese = 145624864
+month MARCH day = 25
+25-MARCH-solar rad = 13.15
+25-MARCH-tav = 8.1
+25-MARCH-vpd = 13.4
+25-MARCH-ts_f = 4.1
+25-MARCH-precip = 15.2
+25-MARCH-swc= 0.14
+25-MARCH-ndvi_lai = 5.72939e-313
+mese = 145624864
+month MARCH day = 26
+26-MARCH-solar rad = 13.15
+26-MARCH-tav = 10.1
+26-MARCH-vpd = 14.83
+26-MARCH-ts_f = 6.1
+26-MARCH-precip = 17.8
+26-MARCH-swc= 0.22
+26-MARCH-ndvi_lai = 5.94159e-313
+mese = 145624864
+month MARCH day = 27
+27-MARCH-solar rad = 13.15
+27-MARCH-tav = 9.7
+27-MARCH-vpd = 14.56
+27-MARCH-ts_f = 5.7
+27-MARCH-precip = 0
+27-MARCH-swc= 0.19
+27-MARCH-ndvi_lai = 1.9036e+185
+mese = 145624864
+month MARCH day = 28
+28-MARCH-solar rad = 13.15
+28-MARCH-tav = 10.3
+28-MARCH-vpd = 14.94
+28-MARCH-ts_f = 6.3
+28-MARCH-precip = 0
+28-MARCH-swc= 0.18
+28-MARCH-ndvi_lai = 1.9036e+185
+mese = 145624864
+month MARCH day = 29
+29-MARCH-solar rad = 13.15
+29-MARCH-tav = 10.9
+29-MARCH-vpd = 15.31
+29-MARCH-ts_f = 6.9
+29-MARCH-precip = 0.2
+29-MARCH-swc= 0.18
+29-MARCH-ndvi_lai = 0
+mese = 145624864
+month MARCH day = 30
+30-MARCH-solar rad = 13.15
+30-MARCH-tav = 12.8
+30-MARCH-vpd = 16.33
+30-MARCH-ts_f = 8.8
+30-MARCH-precip = 0
+30-MARCH-swc= 0.17
+30-MARCH-ndvi_lai = 0
+mese = 145624864
+month MARCH day = 31
+31-MARCH-solar rad = 13.15
+31-MARCH-tav = 12.8
+31-MARCH-vpd = 16.35
+31-MARCH-ts_f = 8.8
+31-MARCH-precip = 0
+31-MARCH-swc= 0.23
+31-MARCH-ndvi_lai = 0
+mese = 145624864
+month APRIL day = 1
+1-APRIL-solar rad = 17.23
+1-APRIL-tav = 15
+1-APRIL-vpd = 17.36
+1-APRIL-ts_f = 11
+1-APRIL-precip = 0
+1-APRIL-swc= 0.2
+1-APRIL-ndvi_lai = 6.36599e-314
+mese = 145624864
+month APRIL day = 2
+2-APRIL-solar rad = 17.23
+2-APRIL-tav = 15.9
+2-APRIL-vpd = 17.75
+2-APRIL-ts_f = 11.9
+2-APRIL-precip = 0
+2-APRIL-swc= 0.27
+2-APRIL-ndvi_lai = 8.48798e-314
+mese = 145624864
+month APRIL day = 3
+3-APRIL-solar rad = 17.23
+3-APRIL-tav = 13.2
+3-APRIL-vpd = 16.53
+3-APRIL-ts_f = 9.2
+3-APRIL-precip = 2.8
+3-APRIL-swc= 0.18
+3-APRIL-ndvi_lai = 1.061e-313
+mese = 145624864
+month APRIL day = 4
+4-APRIL-solar rad = 17.23
+4-APRIL-tav = 12.3
+4-APRIL-vpd = 16.07
+4-APRIL-ts_f = 8.3
+4-APRIL-precip = 1
+4-APRIL-swc= 0.14
+4-APRIL-ndvi_lai = 1.2732e-313
+mese = 145624864
+month APRIL day = 5
+5-APRIL-solar rad = 17.23
+5-APRIL-tav = 15.2
+5-APRIL-vpd = 17.47
+5-APRIL-ts_f = 11.2
+5-APRIL-precip = 0
+5-APRIL-swc= 0.29
+5-APRIL-ndvi_lai = 1.4854e-313
+mese = 145624864
+month APRIL day = 6
+6-APRIL-solar rad = 17.23
+6-APRIL-tav = 15.2
+6-APRIL-vpd = 17.45
+6-APRIL-ts_f = 11.2
+6-APRIL-precip = 0
+6-APRIL-swc= 0.24
+6-APRIL-ndvi_lai = 1.6976e-313
+mese = 145624864
+month APRIL day = 7
+7-APRIL-solar rad = 17.23
+7-APRIL-tav = 14.7
+7-APRIL-vpd = 17.24
+7-APRIL-ts_f = 10.7
+7-APRIL-precip = 0
+7-APRIL-swc= 0.23
+7-APRIL-ndvi_lai = 1.9098e-313
+mese = 145624864
+month APRIL day = 8
+8-APRIL-solar rad = 17.23
+8-APRIL-tav = 14.8
+8-APRIL-vpd = 17.28
+8-APRIL-ts_f = 10.8
+8-APRIL-precip = 0
+8-APRIL-swc= 0.23
+8-APRIL-ndvi_lai = 2.122e-313
+mese = 145624864
+month APRIL day = 9
+9-APRIL-solar rad = 17.23
+9-APRIL-tav = 16
+9-APRIL-vpd = 17.79
+9-APRIL-ts_f = 12
+9-APRIL-precip = 0
+9-APRIL-swc= 0.26
+9-APRIL-ndvi_lai = 2.3342e-313
+mese = 145624864
+month APRIL day = 10
+10-APRIL-solar rad = 17.23
+10-APRIL-tav = 15.3
+10-APRIL-vpd = 17.5
+10-APRIL-ts_f = 11.3
+10-APRIL-precip = 0
+10-APRIL-swc= 0.26
+10-APRIL-ndvi_lai = 2.54639e-313
+mese = 145624864
+month APRIL day = 11
+11-APRIL-solar rad = 17.23
+11-APRIL-tav = 17.1
+11-APRIL-vpd = 18.2
+11-APRIL-ts_f = 13.1
+11-APRIL-precip = 0
+11-APRIL-swc= 0.22
+11-APRIL-ndvi_lai = 2.75859e-313
+mese = 145624864
+month APRIL day = 12
+12-APRIL-solar rad = 17.23
+12-APRIL-tav = 19.1
+12-APRIL-vpd = 18.93
+12-APRIL-ts_f = 15.1
+12-APRIL-precip = 0
+12-APRIL-swc= 0.29
+12-APRIL-ndvi_lai = 2.97079e-313
+mese = 145624864
+month APRIL day = 13
+13-APRIL-solar rad = 17.23
+13-APRIL-tav = 19.4
+13-APRIL-vpd = 19.02
+13-APRIL-ts_f = 15.4
+13-APRIL-precip = 0
+13-APRIL-swc= 0.25
+13-APRIL-ndvi_lai = 3.18299e-313
+mese = 145624864
+month APRIL day = 14
+14-APRIL-solar rad = 17.23
+14-APRIL-tav = 16.6
+14-APRIL-vpd = 18.01
+14-APRIL-ts_f = 12.6
+14-APRIL-precip = 0
+14-APRIL-swc= 0.2
+14-APRIL-ndvi_lai = 3.39519e-313
+mese = 145624864
+month APRIL day = 15
+15-APRIL-solar rad = 17.23
+15-APRIL-tav = 18.2
+15-APRIL-vpd = 18.63
+15-APRIL-ts_f = 14.2
+15-APRIL-precip = 0
+15-APRIL-swc= 0.31
+15-APRIL-ndvi_lai = 3.60739e-313
+mese = 145624864
+month APRIL day = 16
+16-APRIL-solar rad = 17.23
+16-APRIL-tav = 21.2
+16-APRIL-vpd = 19.63
+16-APRIL-ts_f = 17.2
+16-APRIL-precip = 0
+16-APRIL-swc= 0.41
+16-APRIL-ndvi_lai = 3.81959e-313
+mese = 145624864
+month APRIL day = 17
+17-APRIL-solar rad = 17.23
+17-APRIL-tav = 18.8
+17-APRIL-vpd = 18.85
+17-APRIL-ts_f = 14.8
+17-APRIL-precip = 0
+17-APRIL-swc= 0.38
+17-APRIL-ndvi_lai = 4.03179e-313
+mese = 145624864
+month APRIL day = 18
+18-APRIL-solar rad = 17.23
+18-APRIL-tav = 17.9
+18-APRIL-vpd = 18.5
+18-APRIL-ts_f = 13.9
+18-APRIL-precip = 0
+18-APRIL-swc= 0.25
+18-APRIL-ndvi_lai = 4.24399e-313
+mese = 145624864
+month APRIL day = 19
+19-APRIL-solar rad = 17.23
+19-APRIL-tav = 17.6
+19-APRIL-vpd = 18.39
+19-APRIL-ts_f = 13.6
+19-APRIL-precip = 0
+19-APRIL-swc= 0.22
+19-APRIL-ndvi_lai = 4.45619e-313
+mese = 145624864
+month APRIL day = 20
+20-APRIL-solar rad = 17.23
+20-APRIL-tav = 20.4
+20-APRIL-vpd = 19.35
+20-APRIL-ts_f = 16.4
+20-APRIL-precip = 0
+20-APRIL-swc= 0.26
+20-APRIL-ndvi_lai = 4.66839e-313
+mese = 145624864
+month APRIL day = 21
+21-APRIL-solar rad = 17.23
+21-APRIL-tav = 22.3
+21-APRIL-vpd = 19.94
+21-APRIL-ts_f = 18.3
+21-APRIL-precip = 0
+21-APRIL-swc= 0.34
+21-APRIL-ndvi_lai = 4.88059e-313
+mese = 145624864
+month APRIL day = 22
+22-APRIL-solar rad = 17.23
+22-APRIL-tav = 22.2
+22-APRIL-vpd = 19.92
+22-APRIL-ts_f = 18.2
+22-APRIL-precip = 0
+22-APRIL-swc= 0.36
+22-APRIL-ndvi_lai = 5.09279e-313
+mese = 145624864
+month APRIL day = 23
+23-APRIL-solar rad = 17.23
+23-APRIL-tav = 21.2
+23-APRIL-vpd = 19.61
+23-APRIL-ts_f = 17.2
+23-APRIL-precip = 0
+23-APRIL-swc= 0.32
+23-APRIL-ndvi_lai = 5.30499e-313
+mese = 145624864
+month APRIL day = 24
+24-APRIL-solar rad = 17.23
+24-APRIL-tav = 21.2
+24-APRIL-vpd = 19.62
+24-APRIL-ts_f = 17.2
+24-APRIL-precip = 0
+24-APRIL-swc= 0.36
+24-APRIL-ndvi_lai = 5.51719e-313
+mese = 145624864
+month APRIL day = 25
+25-APRIL-solar rad = 17.23
+25-APRIL-tav = 22.1
+25-APRIL-vpd = 19.89
+25-APRIL-ts_f = 18.1
+25-APRIL-precip = 0
+25-APRIL-swc= 0.35
+25-APRIL-ndvi_lai = 5.72939e-313
+mese = 145624864
+month APRIL day = 26
+26-APRIL-solar rad = 17.23
+26-APRIL-tav = 19.3
+26-APRIL-vpd = 19.01
+26-APRIL-ts_f = 15.3
+26-APRIL-precip = 0
+26-APRIL-swc= 0.34
+26-APRIL-ndvi_lai = 6.02647e-313
+mese = 145624864
+month APRIL day = 27
+27-APRIL-solar rad = 17.23
+27-APRIL-tav = 19.2
+27-APRIL-vpd = 18.98
+27-APRIL-ts_f = 15.2
+27-APRIL-precip = 0
+27-APRIL-swc= 0.34
+27-APRIL-ndvi_lai = 6.23867e-313
+mese = 145624864
+month APRIL day = 28
+28-APRIL-solar rad = 17.23
+28-APRIL-tav = 18.3
+28-APRIL-vpd = 18.64
+28-APRIL-ts_f = 14.3
+28-APRIL-precip = 0
+28-APRIL-swc= 0.22
+28-APRIL-ndvi_lai = 6.36599e-313
+mese = 145624864
+month APRIL day = 29
+29-APRIL-solar rad = 17.23
+29-APRIL-tav = 18.6
+29-APRIL-vpd = 18.74
+29-APRIL-ts_f = 14.6
+29-APRIL-precip = 0
+29-APRIL-swc= 0.2
+29-APRIL-ndvi_lai = 6.57819e-313
+mese = 145624864
+month APRIL day = 30
+30-APRIL-solar rad = 17.23
+30-APRIL-tav = 16.4
+30-APRIL-vpd = 17.93
+30-APRIL-ts_f = 12.4
+30-APRIL-precip = 0.2
+30-APRIL-swc= 0.18
+30-APRIL-ndvi_lai = 0
+mese = 145624864
+month MAY day = 1
+1-MAY-solar rad = 20.79
+1-MAY-tav = 17.4
+1-MAY-vpd = 18.31
+1-MAY-ts_f = 13.4
+1-MAY-precip = 2.2
+1-MAY-swc= 0.21
+1-MAY-ndvi_lai = 6.36599e-314
+mese = 145624864
+month MAY day = 2
+2-MAY-solar rad = 20.79
+2-MAY-tav = 16.8
+2-MAY-vpd = 18.08
+2-MAY-ts_f = 12.8
+2-MAY-precip = 3.6
+2-MAY-swc= 0.2
+2-MAY-ndvi_lai = 8.48798e-314
+mese = 145624864
+month MAY day = 3
+3-MAY-solar rad = 20.79
+3-MAY-tav = 17.4
+3-MAY-vpd = 18.3
+3-MAY-ts_f = 13.4
+3-MAY-precip = 0
+3-MAY-swc= 0.18
+3-MAY-ndvi_lai = 1.061e-313
+mese = 145624864
+month MAY day = 4
+4-MAY-solar rad = 20.79
+4-MAY-tav = 16.4
+4-MAY-vpd = 17.92
+4-MAY-ts_f = 12.4
+4-MAY-precip = 12.6
+4-MAY-swc= 0.16
+4-MAY-ndvi_lai = 1.2732e-313
+mese = 145624864
+month MAY day = 5
+5-MAY-solar rad = 20.79
+5-MAY-tav = 16.8
+5-MAY-vpd = 18.08
+5-MAY-ts_f = 12.8
+5-MAY-precip = 7
+5-MAY-swc= 0.2
+5-MAY-ndvi_lai = 1.4854e-313
+mese = 145624864
+month MAY day = 6
+6-MAY-solar rad = 20.79
+6-MAY-tav = 14.7
+6-MAY-vpd = 17.21
+6-MAY-ts_f = 10.7
+6-MAY-precip = 6.6
+6-MAY-swc= 0.13
+6-MAY-ndvi_lai = 1.6976e-313
+mese = 145624864
+month MAY day = 7
+7-MAY-solar rad = 20.79
+7-MAY-tav = 19.3
+7-MAY-vpd = 19
+7-MAY-ts_f = 15.3
+7-MAY-precip = 0
+7-MAY-swc= 0.28
+7-MAY-ndvi_lai = 1.9098e-313
+mese = 145624864
+month MAY day = 8
+8-MAY-solar rad = 20.79
+8-MAY-tav = 20.8
+8-MAY-vpd = 19.49
+8-MAY-ts_f = 16.8
+8-MAY-precip = 0
+8-MAY-swc= 0.34
+8-MAY-ndvi_lai = 2.122e-313
+mese = 145624864
+month MAY day = 9
+9-MAY-solar rad = 20.79
+9-MAY-tav = 19.2
+9-MAY-vpd = 18.93
+9-MAY-ts_f = 15.2
+9-MAY-precip = 0
+9-MAY-swc= 0.16
+9-MAY-ndvi_lai = 2.3342e-313
+mese = 145624864
+month MAY day = 10
+10-MAY-solar rad = 20.79
+10-MAY-tav = 20.8
+10-MAY-vpd = 19.45
+10-MAY-ts_f = 16.8
+10-MAY-precip = 0
+10-MAY-swc= 0.18
+10-MAY-ndvi_lai = 2.54639e-313
+mese = 145624864
+month MAY day = 11
+11-MAY-solar rad = 20.79
+11-MAY-tav = 20.7
+11-MAY-vpd = 19.42
+11-MAY-ts_f = 16.7
+11-MAY-precip = 0
+11-MAY-swc= 0.19
+11-MAY-ndvi_lai = 2.75859e-313
+mese = 145624864
+month MAY day = 12
+12-MAY-solar rad = 20.79
+12-MAY-tav = 22.3
+12-MAY-vpd = 19.9
+12-MAY-ts_f = 18.3
+12-MAY-precip = 0
+12-MAY-swc= 0.22
+12-MAY-ndvi_lai = 2.97079e-313
+mese = 145624864
+month MAY day = 13
+13-MAY-solar rad = 20.79
+13-MAY-tav = 23.3
+13-MAY-vpd = 20.21
+13-MAY-ts_f = 19.3
+13-MAY-precip = 0
+13-MAY-swc= 0.29
+13-MAY-ndvi_lai = 3.18299e-313
+mese = 145624864
+month MAY day = 14
+14-MAY-solar rad = 20.79
+14-MAY-tav = 24.3
+14-MAY-vpd = 20.51
+14-MAY-ts_f = 20.3
+14-MAY-precip = 0
+14-MAY-swc= 0.39
+14-MAY-ndvi_lai = 3.39519e-313
+mese = 145624864
+month MAY day = 15
+15-MAY-solar rad = 20.79
+15-MAY-tav = 20.4
+15-MAY-vpd = 19.35
+15-MAY-ts_f = 16.4
+15-MAY-precip = 0
+15-MAY-swc= 0.28
+15-MAY-ndvi_lai = 3.60739e-313
+mese = 145624864
+month MAY day = 16
+16-MAY-solar rad = 20.79
+16-MAY-tav = 17
+16-MAY-vpd = 18.17
+16-MAY-ts_f = 13
+16-MAY-precip = 14.4
+16-MAY-swc= 0.24
+16-MAY-ndvi_lai = 3.81959e-313
+mese = 145624864
+month MAY day = 17
+17-MAY-solar rad = 20.79
+17-MAY-tav = 18.7
+17-MAY-vpd = 18.8
+17-MAY-ts_f = 14.7
+17-MAY-precip = 0
+17-MAY-swc= 0.29
+17-MAY-ndvi_lai = 4.03179e-313
+mese = 145624864
+month MAY day = 18
+18-MAY-solar rad = 20.79
+18-MAY-tav = 19.2
+18-MAY-vpd = 19
+18-MAY-ts_f = 15.2
+18-MAY-precip = 0
+18-MAY-swc= 0.42
+18-MAY-ndvi_lai = 4.24399e-313
+mese = 145624864
+month MAY day = 19
+19-MAY-solar rad = 20.79
+19-MAY-tav = 20.8
+19-MAY-vpd = 19.53
+19-MAY-ts_f = 16.8
+19-MAY-precip = 0
+19-MAY-swc= 0.46
+19-MAY-ndvi_lai = 4.45619e-313
+mese = 145624864
+month MAY day = 20
+20-MAY-solar rad = 20.79
+20-MAY-tav = 21.9
+20-MAY-vpd = 19.82
+20-MAY-ts_f = 17.9
+20-MAY-precip = 0
+20-MAY-swc= 0.34
+20-MAY-ndvi_lai = 4.66839e-313
+mese = 145624864
+month MAY day = 21
+21-MAY-solar rad = 20.79
+21-MAY-tav = 23.3
+21-MAY-vpd = 20.22
+21-MAY-ts_f = 19.3
+21-MAY-precip = 0
+21-MAY-swc= 0.34
+21-MAY-ndvi_lai = 4.88059e-313
+mese = 145624864
+month MAY day = 22
+22-MAY-solar rad = 20.79
+22-MAY-tav = 25.8
+22-MAY-vpd = 20.88
+22-MAY-ts_f = 21.8
+22-MAY-precip = 0
+22-MAY-swc= 0.36
+22-MAY-ndvi_lai = 5.09279e-313
+mese = 145624864
+month MAY day = 23
+23-MAY-solar rad = 20.79
+23-MAY-tav = 27.5
+23-MAY-vpd = 21.3
+23-MAY-ts_f = 23.5
+23-MAY-precip = 0
+23-MAY-swc= 0.39
+23-MAY-ndvi_lai = 5.30499e-313
+mese = 145624864
+month MAY day = 24
+24-MAY-solar rad = 20.79
+24-MAY-tav = 28.4
+24-MAY-vpd = 21.51
+24-MAY-ts_f = 24.4
+24-MAY-precip = 0
+24-MAY-swc= 0.41
+24-MAY-ndvi_lai = 5.51719e-313
+mese = 145624864
+month MAY day = 25
+25-MAY-solar rad = 20.79
+25-MAY-tav = 27
+25-MAY-vpd = 21.16
+25-MAY-ts_f = 23
+25-MAY-precip = 0
+25-MAY-swc= 0.32
+25-MAY-ndvi_lai = 5.72939e-313
+mese = 145624864
+month MAY day = 26
+26-MAY-solar rad = 20.79
+26-MAY-tav = 24.4
+26-MAY-vpd = 20.51
+26-MAY-ts_f = 20.4
+26-MAY-precip = 0
+26-MAY-swc= 0.33
+26-MAY-ndvi_lai = 5.94159e-313
+mese = 145624864
+month MAY day = 27
+27-MAY-solar rad = 20.79
+27-MAY-tav = 22.4
+27-MAY-vpd = 19.93
+27-MAY-ts_f = 18.4
+27-MAY-precip = 0.2
+27-MAY-swc= 0.21
+27-MAY-ndvi_lai = 6.15379e-313
+mese = 145624864
+month MAY day = 28
+28-MAY-solar rad = 20.79
+28-MAY-tav = 16.4
+28-MAY-vpd = 17.93
+28-MAY-ts_f = 12.4
+28-MAY-precip = 16.6
+28-MAY-swc= 0.2
+28-MAY-ndvi_lai = 6.36599e-313
+mese = 145624864
+month MAY day = 29
+29-MAY-solar rad = 20.79
+29-MAY-tav = 13.9
+29-MAY-vpd = 16.86
+29-MAY-ts_f = 9.9
+29-MAY-precip = 14.2
+29-MAY-swc= 0.15
+29-MAY-ndvi_lai = 0
+mese = 145624864
+month MAY day = 30
+30-MAY-solar rad = 20.79
+30-MAY-tav = 17
+30-MAY-vpd = 18.16
+30-MAY-ts_f = 13
+30-MAY-precip = 0.4
+30-MAY-swc= 0.21
+30-MAY-ndvi_lai = 0
+mese = 145624864
+month MAY day = 31
+31-MAY-solar rad = 20.79
+31-MAY-tav = 19.6
+31-MAY-vpd = 19.09
+31-MAY-ts_f = 15.6
+31-MAY-precip = 0
+31-MAY-swc= 0.28
+31-MAY-ndvi_lai = 0
+mese = 145624864
+month JUNE day = 1
+1-JUNE-solar rad = 22.67
+1-JUNE-tav = 19
+1-JUNE-vpd = 18.87
+1-JUNE-ts_f = 15
+1-JUNE-precip = 1.8
+1-JUNE-swc= 0.18
+1-JUNE-ndvi_lai = 6.36599e-314
+mese = 145624864
+month JUNE day = 2
+2-JUNE-solar rad = 22.67
+2-JUNE-tav = 18.4
+2-JUNE-vpd = 18.68
+2-JUNE-ts_f = 14.4
+2-JUNE-precip = 0
+2-JUNE-swc= 0.25
+2-JUNE-ndvi_lai = 8.48798e-314
+mese = 145624864
+month JUNE day = 3
+3-JUNE-solar rad = 22.67
+3-JUNE-tav = 17
+3-JUNE-vpd = 18.14
+3-JUNE-ts_f = 13
+3-JUNE-precip = 2.8
+3-JUNE-swc= 0.11
+3-JUNE-ndvi_lai = 1.061e-313
+mese = 145624864
+month JUNE day = 4
+4-JUNE-solar rad = 22.67
+4-JUNE-tav = 22.9
+4-JUNE-vpd = 20.11
+4-JUNE-ts_f = 18.9
+4-JUNE-precip = 0
+4-JUNE-swc= 0.33
+4-JUNE-ndvi_lai = 1.2732e-313
+mese = 145624864
+month JUNE day = 5
+5-JUNE-solar rad = 22.67
+5-JUNE-tav = 21.9
+5-JUNE-vpd = 19.79
+5-JUNE-ts_f = 17.9
+5-JUNE-precip = 17
+5-JUNE-swc= 0.24
+5-JUNE-ndvi_lai = 1.4854e-313
+mese = 145624864
+month JUNE day = 6
+6-JUNE-solar rad = 22.67
+6-JUNE-tav = 20.6
+6-JUNE-vpd = 19.38
+6-JUNE-ts_f = 16.6
+6-JUNE-precip = 8
+6-JUNE-swc= 0.18
+6-JUNE-ndvi_lai = 1.6976e-313
+mese = 145624864
+month JUNE day = 7
+7-JUNE-solar rad = 22.67
+7-JUNE-tav = 21.6
+7-JUNE-vpd = 19.71
+7-JUNE-ts_f = 17.6
+7-JUNE-precip = 0
+7-JUNE-swc= 0.25
+7-JUNE-ndvi_lai = 1.9098e-313
+mese = 145624864
+month JUNE day = 8
+8-JUNE-solar rad = 22.67
+8-JUNE-tav = 21.9
+8-JUNE-vpd = 19.8
+8-JUNE-ts_f = 17.9
+8-JUNE-precip = 0.2
+8-JUNE-swc= 0.27
+8-JUNE-ndvi_lai = 2.122e-313
+mese = 145624864
+month JUNE day = 9
+9-JUNE-solar rad = 22.67
+9-JUNE-tav = 24.6
+9-JUNE-vpd = 20.56
+9-JUNE-ts_f = 20.6
+9-JUNE-precip = 0
+9-JUNE-swc= 0.29
+9-JUNE-ndvi_lai = 2.3342e-313
+mese = 145624864
+month JUNE day = 10
+10-JUNE-solar rad = 22.67
+10-JUNE-tav = 23.6
+10-JUNE-vpd = 20.26
+10-JUNE-ts_f = 19.6
+10-JUNE-precip = 0.2
+10-JUNE-swc= 0.18
+10-JUNE-ndvi_lai = 2.54639e-313
+mese = 145624864
+month JUNE day = 11
+11-JUNE-solar rad = 22.67
+11-JUNE-tav = 24.3
+11-JUNE-vpd = 20.46
+11-JUNE-ts_f = 20.3
+11-JUNE-precip = 0
+11-JUNE-swc= 0.25
+11-JUNE-ndvi_lai = 2.75859e-313
+mese = 145624864
+month JUNE day = 12
+12-JUNE-solar rad = 22.67
+12-JUNE-tav = 23.2
+12-JUNE-vpd = 20.15
+12-JUNE-ts_f = 19.2
+12-JUNE-precip = 0
+12-JUNE-swc= 0.19
+12-JUNE-ndvi_lai = 2.97079e-313
+mese = 145624864
+month JUNE day = 13
+13-JUNE-solar rad = 22.67
+13-JUNE-tav = 23.1
+13-JUNE-vpd = 20.13
+13-JUNE-ts_f = 19.1
+13-JUNE-precip = 0
+13-JUNE-swc= 0.2
+13-JUNE-ndvi_lai = 3.18299e-313
+mese = 145624864
+month JUNE day = 14
+14-JUNE-solar rad = 22.67
+14-JUNE-tav = 25.4
+14-JUNE-vpd = 20.76
+14-JUNE-ts_f = 21.4
+14-JUNE-precip = 0
+14-JUNE-swc= 0.29
+14-JUNE-ndvi_lai = 3.39519e-313
+mese = 145624864
+month JUNE day = 15
+15-JUNE-solar rad = 22.67
+15-JUNE-tav = 24.4
+15-JUNE-vpd = 20.51
+15-JUNE-ts_f = 20.4
+15-JUNE-precip = 0
+15-JUNE-swc= 0.3
+15-JUNE-ndvi_lai = 3.60739e-313
+mese = 145624864
+month JUNE day = 16
+16-JUNE-solar rad = 22.67
+16-JUNE-tav = 24.4
+16-JUNE-vpd = 20.5
+16-JUNE-ts_f = 20.4
+16-JUNE-precip = 0
+16-JUNE-swc= 0.28
+16-JUNE-ndvi_lai = 3.81959e-313
+mese = 145624864
+month JUNE day = 17
+17-JUNE-solar rad = 22.67
+17-JUNE-tav = 24.8
+17-JUNE-vpd = 20.63
+17-JUNE-ts_f = 20.8
+17-JUNE-precip = 0
+17-JUNE-swc= 0.36
+17-JUNE-ndvi_lai = 4.03179e-313
+mese = 145624864
+month JUNE day = 18
+18-JUNE-solar rad = 22.67
+18-JUNE-tav = 27.1
+18-JUNE-vpd = 21.2
+18-JUNE-ts_f = 23.1
+18-JUNE-precip = 0
+18-JUNE-swc= 0.36
+18-JUNE-ndvi_lai = 4.24399e-313
+mese = 145624864
+month JUNE day = 19
+19-JUNE-solar rad = 22.67
+19-JUNE-tav = 28.6
+19-JUNE-vpd = 21.55
+19-JUNE-ts_f = 24.6
+19-JUNE-precip = 0
+19-JUNE-swc= 0.38
+19-JUNE-ndvi_lai = 4.45619e-313
+mese = 145624864
+month JUNE day = 20
+20-JUNE-solar rad = 22.67
+20-JUNE-tav = 29.3
+20-JUNE-vpd = 21.7
+20-JUNE-ts_f = 25.3
+20-JUNE-precip = 0
+20-JUNE-swc= 0.35
+20-JUNE-ndvi_lai = 4.66839e-313
+mese = 145624864
+month JUNE day = 21
+21-JUNE-solar rad = 22.67
+21-JUNE-tav = 26.1
+21-JUNE-vpd = 20.91
+21-JUNE-ts_f = 22.1
+21-JUNE-precip = 0
+21-JUNE-swc= 0.2
+21-JUNE-ndvi_lai = 4.88059e-313
+mese = 145624864
+month JUNE day = 22
+22-JUNE-solar rad = 22.67
+22-JUNE-tav = 27.4
+22-JUNE-vpd = 21.24
+22-JUNE-ts_f = 23.4
+22-JUNE-precip = 0
+22-JUNE-swc= 0.27
+22-JUNE-ndvi_lai = 5.09279e-313
+mese = 145624864
+month JUNE day = 23
+23-JUNE-solar rad = 22.67
+23-JUNE-tav = 27.2
+23-JUNE-vpd = 21.2
+23-JUNE-ts_f = 23.2
+23-JUNE-precip = 0
+23-JUNE-swc= 0.27
+23-JUNE-ndvi_lai = 5.30499e-313
+mese = 145624864
+month JUNE day = 24
+24-JUNE-solar rad = 22.67
+24-JUNE-tav = 27.1
+24-JUNE-vpd = 21.2
+24-JUNE-ts_f = 23.1
+24-JUNE-precip = 0
+24-JUNE-swc= 0.37
+24-JUNE-ndvi_lai = 5.51719e-313
+mese = 145624864
+month JUNE day = 25
+25-JUNE-solar rad = 22.67
+25-JUNE-tav = 30.7
+25-JUNE-vpd = 22
+25-JUNE-ts_f = 26.7
+25-JUNE-precip = 0
+25-JUNE-swc= 0.36
+25-JUNE-ndvi_lai = 5.72939e-313
+mese = 145624864
+month JUNE day = 26
+26-JUNE-solar rad = 22.67
+26-JUNE-tav = 25.8
+26-JUNE-vpd = 20.85
+26-JUNE-ts_f = 21.8
+26-JUNE-precip = 0
+26-JUNE-swc= 0.26
+26-JUNE-ndvi_lai = 5.94159e-313
+mese = 145624864
+month JUNE day = 27
+27-JUNE-solar rad = 22.67
+27-JUNE-tav = 24.1
+27-JUNE-vpd = 20.46
+27-JUNE-ts_f = 20.1
+27-JUNE-precip = 0
+27-JUNE-swc= 0.41
+27-JUNE-ndvi_lai = 6.15379e-313
+mese = 145624864
+month JUNE day = 28
+28-JUNE-solar rad = 22.67
+28-JUNE-tav = 24.1
+28-JUNE-vpd = 20.45
+28-JUNE-ts_f = 20.1
+28-JUNE-precip = 0
+28-JUNE-swc= 0.37
+28-JUNE-ndvi_lai = 6.36599e-313
+mese = 145624864
+month JUNE day = 29
+29-JUNE-solar rad = 22.67
+29-JUNE-tav = 25
+29-JUNE-vpd = 20.68
+29-JUNE-ts_f = 21
+29-JUNE-precip = 0
+29-JUNE-swc= 0.37
+29-JUNE-ndvi_lai = 6.57819e-313
+mese = 145624864
+month JUNE day = 30
+30-JUNE-solar rad = 22.67
+30-JUNE-tav = 26.4
+30-JUNE-vpd = 21.04
+30-JUNE-ts_f = 22.4
+30-JUNE-precip = 0
+30-JUNE-swc= 0.39
+30-JUNE-ndvi_lai = 0
+mese = 145624864
+month JULY day = 1
+1-JULY-solar rad = 22.56
+1-JULY-tav = 26.8
+1-JULY-vpd = 21.11
+1-JULY-ts_f = 22.8
+1-JULY-precip = 0
+1-JULY-swc= 0.29
+1-JULY-ndvi_lai = 6.36599e-314
+mese = 145624864
+month JULY day = 2
+2-JULY-solar rad = 22.56
+2-JULY-tav = 24.4
+2-JULY-vpd = 20.51
+2-JULY-ts_f = 20.4
+2-JULY-precip = 0
+2-JULY-swc= 0.32
+2-JULY-ndvi_lai = 8.48798e-314
+mese = 145624864
+month JULY day = 3
+3-JULY-solar rad = 22.56
+3-JULY-tav = 25.2
+3-JULY-vpd = 20.72
+3-JULY-ts_f = 21.2
+3-JULY-precip = 0
+3-JULY-swc= 0.32
+3-JULY-ndvi_lai = 1.061e-313
+mese = 145624864
+month JULY day = 4
+4-JULY-solar rad = 22.56
+4-JULY-tav = 24
+4-JULY-vpd = 20.38
+4-JULY-ts_f = 20
+4-JULY-precip = 0
+4-JULY-swc= 0.22
+4-JULY-ndvi_lai = 1.2732e-313
+mese = 145624864
+month JULY day = 5
+5-JULY-solar rad = 22.56
+5-JULY-tav = 25.4
+5-JULY-vpd = 20.81
+5-JULY-ts_f = 21.4
+5-JULY-precip = 0
+5-JULY-swc= 0.46
+5-JULY-ndvi_lai = 1.4854e-313
+mese = 145624864
+month JULY day = 6
+6-JULY-solar rad = 22.56
+6-JULY-tav = 25
+6-JULY-vpd = 20.7
+6-JULY-ts_f = 21
+6-JULY-precip = 0
+6-JULY-swc= 0.44
+6-JULY-ndvi_lai = 1.6976e-313
+mese = 145624864
+month JULY day = 7
+7-JULY-solar rad = 22.56
+7-JULY-tav = 25.4
+7-JULY-vpd = 20.79
+7-JULY-ts_f = 21.4
+7-JULY-precip = 0
+7-JULY-swc= 0.39
+7-JULY-ndvi_lai = 1.9098e-313
+mese = 145624864
+month JULY day = 8
+8-JULY-solar rad = 22.56
+8-JULY-tav = 26.4
+8-JULY-vpd = 21.03
+8-JULY-ts_f = 22.4
+8-JULY-precip = 0
+8-JULY-swc= 0.36
+8-JULY-ndvi_lai = 2.122e-313
+mese = 145624864
+month JULY day = 9
+9-JULY-solar rad = 22.56
+9-JULY-tav = 26.8
+9-JULY-vpd = 21.12
+9-JULY-ts_f = 22.8
+9-JULY-precip = 0.2
+9-JULY-swc= 0.35
+9-JULY-ndvi_lai = 2.3342e-313
+mese = 145624864
+month JULY day = 10
+10-JULY-solar rad = 22.56
+10-JULY-tav = 25.3
+10-JULY-vpd = 20.76
+10-JULY-ts_f = 21.3
+10-JULY-precip = 0.2
+10-JULY-swc= 0.38
+10-JULY-ndvi_lai = 2.54639e-313
+mese = 145624864
+month JULY day = 11
+11-JULY-solar rad = 22.56
+11-JULY-tav = 22
+11-JULY-vpd = 19.85
+11-JULY-ts_f = 18
+11-JULY-precip = 0
+11-JULY-swc= 0.34
+11-JULY-ndvi_lai = 2.75859e-313
+mese = 145624864
+month JULY day = 12
+12-JULY-solar rad = 22.56
+12-JULY-tav = 25.2
+12-JULY-vpd = 20.77
+12-JULY-ts_f = 21.2
+12-JULY-precip = 0
+12-JULY-swc= 0.48
+12-JULY-ndvi_lai = 2.97079e-313
+mese = 145624864
+month JULY day = 13
+13-JULY-solar rad = 22.56
+13-JULY-tav = 26.8
+13-JULY-vpd = 21.17
+13-JULY-ts_f = 22.8
+13-JULY-precip = 0
+13-JULY-swc= 0.51
+13-JULY-ndvi_lai = 3.18299e-313
+mese = 145624864
+month JULY day = 14
+14-JULY-solar rad = 22.56
+14-JULY-tav = 29.5
+14-JULY-vpd = 21.78
+14-JULY-ts_f = 25.5
+14-JULY-precip = 0
+14-JULY-swc= 0.48
+14-JULY-ndvi_lai = 3.39519e-313
+mese = 145624864
+month JULY day = 15
+15-JULY-solar rad = 22.56
+15-JULY-tav = 30.8
+15-JULY-vpd = 22.06
+15-JULY-ts_f = 26.8
+15-JULY-precip = 0
+15-JULY-swc= 0.48
+15-JULY-ndvi_lai = 3.60739e-313
+mese = 145624864
+month JULY day = 16
+16-JULY-solar rad = 22.56
+16-JULY-tav = 31
+16-JULY-vpd = 22.09
+16-JULY-ts_f = 27
+16-JULY-precip = 0
+16-JULY-swc= 0.44
+16-JULY-ndvi_lai = 3.81959e-313
+mese = 145624864
+month JULY day = 17
+17-JULY-solar rad = 22.56
+17-JULY-tav = 31
+17-JULY-vpd = 22.09
+17-JULY-ts_f = 27
+17-JULY-precip = 0
+17-JULY-swc= 0.46
+17-JULY-ndvi_lai = 4.03179e-313
+mese = 145624864
+month JULY day = 18
+18-JULY-solar rad = 22.56
+18-JULY-tav = 32.4
+18-JULY-vpd = 22.38
+18-JULY-ts_f = 28.4
+18-JULY-precip = 0
+18-JULY-swc= 0.46
+18-JULY-ndvi_lai = 4.24399e-313
+mese = 145624864
+month JULY day = 19
+19-JULY-solar rad = 22.56
+19-JULY-tav = 32.6
+19-JULY-vpd = 22.42
+19-JULY-ts_f = 28.6
+19-JULY-precip = 0
+19-JULY-swc= 0.47
+19-JULY-ndvi_lai = 4.45619e-313
+mese = 145624864
+month JULY day = 20
+20-JULY-solar rad = 22.56
+20-JULY-tav = 31.6
+20-JULY-vpd = 22.21
+20-JULY-ts_f = 27.6
+20-JULY-precip = 0
+20-JULY-swc= 0.43
+20-JULY-ndvi_lai = 4.66839e-313
+mese = 145624864
+month JULY day = 21
+21-JULY-solar rad = 22.56
+21-JULY-tav = 30.8
+21-JULY-vpd = 22.04
+21-JULY-ts_f = 26.8
+21-JULY-precip = 0
+21-JULY-swc= 0.41
+21-JULY-ndvi_lai = 4.88059e-313
+mese = 145624864
+month JULY day = 22
+22-JULY-solar rad = 22.56
+22-JULY-tav = 29.7
+22-JULY-vpd = 21.77
+22-JULY-ts_f = 25.7
+22-JULY-precip = 0
+22-JULY-swc= 0.3
+22-JULY-ndvi_lai = 5.09279e-313
+mese = 145624864
+month JULY day = 23
+23-JULY-solar rad = 22.56
+23-JULY-tav = 31.4
+23-JULY-vpd = 22.18
+23-JULY-ts_f = 27.4
+23-JULY-precip = 0
+23-JULY-swc= 0.46
+23-JULY-ndvi_lai = 5.30499e-313
+mese = 145624864
+month JULY day = 24
+24-JULY-solar rad = 22.56
+24-JULY-tav = 30.4
+24-JULY-vpd = 21.94
+24-JULY-ts_f = 26.4
+24-JULY-precip = 0
+24-JULY-swc= 0.39
+24-JULY-ndvi_lai = 5.51719e-313
+mese = 145624864
+month JULY day = 25
+25-JULY-solar rad = 22.56
+25-JULY-tav = 28.8
+25-JULY-vpd = 21.6
+25-JULY-ts_f = 24.8
+25-JULY-precip = 0
+25-JULY-swc= 0.41
+25-JULY-ndvi_lai = 5.72939e-313
+mese = 145624864
+month JULY day = 26
+26-JULY-solar rad = 22.56
+26-JULY-tav = 29.6
+26-JULY-vpd = 21.78
+26-JULY-ts_f = 25.6
+26-JULY-precip = 0
+26-JULY-swc= 0.41
+26-JULY-ndvi_lai = 5.94159e-313
+mese = 145624864
+month JULY day = 27
+27-JULY-solar rad = 22.56
+27-JULY-tav = 30.8
+27-JULY-vpd = 22.05
+27-JULY-ts_f = 26.8
+27-JULY-precip = 0
+27-JULY-swc= 0.45
+27-JULY-ndvi_lai = 6.15379e-313
+mese = 145624864
+month JULY day = 28
+28-JULY-solar rad = 22.56
+28-JULY-tav = 31.3
+28-JULY-vpd = 22.15
+28-JULY-ts_f = 27.3
+28-JULY-precip = 0
+28-JULY-swc= 0.43
+28-JULY-ndvi_lai = 6.36599e-313
+mese = 145624864
+month JULY day = 29
+29-JULY-solar rad = 22.56
+29-JULY-tav = 30.2
+29-JULY-vpd = 21.89
+29-JULY-ts_f = 26.2
+29-JULY-precip = 0
+29-JULY-swc= 0.35
+29-JULY-ndvi_lai = 0
+mese = 145624864
+month JULY day = 30
+30-JULY-solar rad = 22.56
+30-JULY-tav = 28.1
+30-JULY-vpd = 21.42
+30-JULY-ts_f = 24.1
+30-JULY-precip = 0
+30-JULY-swc= 0.32
+30-JULY-ndvi_lai = 0
+mese = 145624864
+month JULY day = 31
+31-JULY-solar rad = 22.56
+31-JULY-tav = 25.4
+31-JULY-vpd = 20.77
+31-JULY-ts_f = 21.4
+31-JULY-precip = 0
+31-JULY-swc= 0.34
+31-JULY-ndvi_lai = 0
+mese = 145624864
+month AUGUST day = 1
+1-AUGUST-solar rad = 19.2
+1-AUGUST-tav = 27.3
+1-AUGUST-vpd = 21.29
+1-AUGUST-ts_f = 23.3
+1-AUGUST-precip = 0
+1-AUGUST-swc= 0.51
+1-AUGUST-ndvi_lai = 6.36599e-314
+mese = 145624864
+month AUGUST day = 2
+2-AUGUST-solar rad = 19.2
+2-AUGUST-tav = 27.6
+2-AUGUST-vpd = 21.34
+2-AUGUST-ts_f = 23.6
+2-AUGUST-precip = 0
+2-AUGUST-swc= 0.45
+2-AUGUST-ndvi_lai = 8.48798e-314
+mese = 145624864
+month AUGUST day = 3
+3-AUGUST-solar rad = 19.2
+3-AUGUST-tav = 26.3
+3-AUGUST-vpd = 20.99
+3-AUGUST-ts_f = 22.3
+3-AUGUST-precip = 0
+3-AUGUST-swc= 0.29
+3-AUGUST-ndvi_lai = 1.061e-313
+mese = 145624864
+month AUGUST day = 4
+4-AUGUST-solar rad = 19.2
+4-AUGUST-tav = 26.4
+4-AUGUST-vpd = 21.03
+4-AUGUST-ts_f = 22.4
+4-AUGUST-precip = 0
+4-AUGUST-swc= 0.37
+4-AUGUST-ndvi_lai = 1.2732e-313
+mese = 145624864
+month AUGUST day = 5
+5-AUGUST-solar rad = 19.2
+5-AUGUST-tav = 25.9
+5-AUGUST-vpd = 20.93
+5-AUGUST-ts_f = 21.9
+5-AUGUST-precip = 0
+5-AUGUST-swc= 0.45
+5-AUGUST-ndvi_lai = 1.4854e-313
+mese = 145624864
+month AUGUST day = 6
+6-AUGUST-solar rad = 19.2
+6-AUGUST-tav = 26.1
+6-AUGUST-vpd = 20.96
+6-AUGUST-ts_f = 22.1
+6-AUGUST-precip = 0
+6-AUGUST-swc= 0.37
+6-AUGUST-ndvi_lai = 1.6976e-313
+mese = 145624864
+month AUGUST day = 7
+7-AUGUST-solar rad = 19.2
+7-AUGUST-tav = 26.9
+7-AUGUST-vpd = 21.15
+7-AUGUST-ts_f = 22.9
+7-AUGUST-precip = 0
+7-AUGUST-swc= 0.36
+7-AUGUST-ndvi_lai = 1.9098e-313
+mese = 145624864
+month AUGUST day = 8
+8-AUGUST-solar rad = 19.2
+8-AUGUST-tav = 25.9
+8-AUGUST-vpd = 20.88
+8-AUGUST-ts_f = 21.9
+8-AUGUST-precip = 0
+8-AUGUST-swc= 0.27
+8-AUGUST-ndvi_lai = 2.122e-313
+mese = 145624864
+month AUGUST day = 9
+9-AUGUST-solar rad = 19.2
+9-AUGUST-tav = 24.4
+9-AUGUST-vpd = 20.52
+9-AUGUST-ts_f = 20.4
+9-AUGUST-precip = 0
+9-AUGUST-swc= 0.34
+9-AUGUST-ndvi_lai = 2.3342e-313
+mese = 145624864
+month AUGUST day = 10
+10-AUGUST-solar rad = 19.2
+10-AUGUST-tav = 18.2
+10-AUGUST-vpd = 18.59
+10-AUGUST-ts_f = 14.2
+10-AUGUST-precip = 9.6
+10-AUGUST-swc= 0.15
+10-AUGUST-ndvi_lai = 2.54639e-313
+mese = 145624864
+month AUGUST day = 11
+11-AUGUST-solar rad = 19.2
+11-AUGUST-tav = 21.2
+11-AUGUST-vpd = 19.57
+11-AUGUST-ts_f = 17.2
+11-AUGUST-precip = 0.4
+11-AUGUST-swc= 0.17
+11-AUGUST-ndvi_lai = 2.75859e-313
+mese = 145624864
+month AUGUST day = 12
+12-AUGUST-solar rad = 19.2
+12-AUGUST-tav = 24.3
+12-AUGUST-vpd = 20.47
+12-AUGUST-ts_f = 20.3
+12-AUGUST-precip = 0
+12-AUGUST-swc= 0.25
+12-AUGUST-ndvi_lai = 2.97079e-313
+mese = 145624864
+month AUGUST day = 13
+13-AUGUST-solar rad = 19.2
+13-AUGUST-tav = 24.6
+13-AUGUST-vpd = 20.55
+13-AUGUST-ts_f = 20.6
+13-AUGUST-precip = 0
+13-AUGUST-swc= 0.26
+13-AUGUST-ndvi_lai = 3.18299e-313
+mese = 145624864
+month AUGUST day = 14
+14-AUGUST-solar rad = 19.2
+14-AUGUST-tav = 26.2
+14-AUGUST-vpd = 20.96
+14-AUGUST-ts_f = 22.2
+14-AUGUST-precip = 0
+14-AUGUST-swc= 0.29
+14-AUGUST-ndvi_lai = 3.39519e-313
+mese = 145624864
+month AUGUST day = 15
+15-AUGUST-solar rad = 19.2
+15-AUGUST-tav = 28.7
+15-AUGUST-vpd = 21.58
+15-AUGUST-ts_f = 24.7
+15-AUGUST-precip = 0
+15-AUGUST-swc= 0.4
+15-AUGUST-ndvi_lai = 3.60739e-313
+mese = 145624864
+month AUGUST day = 16
+16-AUGUST-solar rad = 19.2
+16-AUGUST-tav = 28.8
+16-AUGUST-vpd = 21.59
+16-AUGUST-ts_f = 24.8
+16-AUGUST-precip = 0
+16-AUGUST-swc= 0.37
+16-AUGUST-ndvi_lai = 3.81959e-313
+mese = 145624864
+month AUGUST day = 17
+17-AUGUST-solar rad = 19.2
+17-AUGUST-tav = 27.4
+17-AUGUST-vpd = 21.24
+17-AUGUST-ts_f = 23.4
+17-AUGUST-precip = 0
+17-AUGUST-swc= 0.27
+17-AUGUST-ndvi_lai = 4.03179e-313
+mese = 145624864
+month AUGUST day = 18
+18-AUGUST-solar rad = 19.2
+18-AUGUST-tav = 26
+18-AUGUST-vpd = 20.94
+18-AUGUST-ts_f = 22
+18-AUGUST-precip = 0
+18-AUGUST-swc= 0.39
+18-AUGUST-ndvi_lai = 4.24399e-313
+mese = 145624864
+month AUGUST day = 19
+19-AUGUST-solar rad = 19.2
+19-AUGUST-tav = 24.8
+19-AUGUST-vpd = 20.61
+19-AUGUST-ts_f = 20.8
+19-AUGUST-precip = 0
+19-AUGUST-swc= 0.3
+19-AUGUST-ndvi_lai = 4.45619e-313
+mese = 145624864
+month AUGUST day = 20
+20-AUGUST-solar rad = 19.2
+20-AUGUST-tav = 24.3
+20-AUGUST-vpd = 20.47
+20-AUGUST-ts_f = 20.3
+20-AUGUST-precip = 0
+20-AUGUST-swc= 0.28
+20-AUGUST-ndvi_lai = 4.66839e-313
+mese = 145624864
+month AUGUST day = 21
+21-AUGUST-solar rad = 19.2
+21-AUGUST-tav = 23.3
+21-AUGUST-vpd = 20.19
+21-AUGUST-ts_f = 19.3
+21-AUGUST-precip = 0
+21-AUGUST-swc= 0.24
+21-AUGUST-ndvi_lai = 4.88059e-313
+mese = 145624864
+month AUGUST day = 22
+22-AUGUST-solar rad = 19.2
+22-AUGUST-tav = 26.2
+22-AUGUST-vpd = 20.95
+22-AUGUST-ts_f = 22.2
+22-AUGUST-precip = 0
+22-AUGUST-swc= 0.27
+22-AUGUST-ndvi_lai = 5.09279e-313
+mese = 145624864
+month AUGUST day = 23
+23-AUGUST-solar rad = 19.2
+23-AUGUST-tav = 22.8
+23-AUGUST-vpd = 20.02
+23-AUGUST-ts_f = 18.8
+23-AUGUST-precip = 1
+23-AUGUST-swc= 0.13
+23-AUGUST-ndvi_lai = 5.30499e-313
+mese = 145624864
+month AUGUST day = 24
+24-AUGUST-solar rad = 19.2
+24-AUGUST-tav = 25.3
+24-AUGUST-vpd = 20.73
+24-AUGUST-ts_f = 21.3
+24-AUGUST-precip = 0
+24-AUGUST-swc= 0.27
+24-AUGUST-ndvi_lai = 5.51719e-313
+mese = 145624864
+month AUGUST day = 25
+25-AUGUST-solar rad = 19.2
+25-AUGUST-tav = 32.2
+25-AUGUST-vpd = 22.33
+25-AUGUST-ts_f = 28.2
+25-AUGUST-precip = 0
+25-AUGUST-swc= 0.44
+25-AUGUST-ndvi_lai = 5.72939e-313
+mese = 145624864
+month AUGUST day = 26
+26-AUGUST-solar rad = 19.2
+26-AUGUST-tav = 32.4
+26-AUGUST-vpd = 22.38
+26-AUGUST-ts_f = 28.4
+26-AUGUST-precip = 0
+26-AUGUST-swc= 0.46
+26-AUGUST-ndvi_lai = 5.94159e-313
+mese = 145624864
+month AUGUST day = 27
+27-AUGUST-solar rad = 19.2
+27-AUGUST-tav = 30.4
+27-AUGUST-vpd = 21.96
+27-AUGUST-ts_f = 26.4
+27-AUGUST-precip = 0
+27-AUGUST-swc= 0.42
+27-AUGUST-ndvi_lai = 6.15379e-313
+mese = 145624864
+month AUGUST day = 28
+28-AUGUST-solar rad = 19.2
+28-AUGUST-tav = 31.4
+28-AUGUST-vpd = 22.16
+28-AUGUST-ts_f = 27.4
+28-AUGUST-precip = 0
+28-AUGUST-swc= 0.41
+28-AUGUST-ndvi_lai = 6.36599e-313
+mese = 145624864
+month AUGUST day = 29
+29-AUGUST-solar rad = 19.2
+29-AUGUST-tav = 29.2
+29-AUGUST-vpd = 21.69
+29-AUGUST-ts_f = 25.2
+29-AUGUST-precip = 0
+29-AUGUST-swc= 0.39
+29-AUGUST-ndvi_lai = 6.57819e-313
+mese = 145624864
+month AUGUST day = 30
+30-AUGUST-solar rad = 19.2
+30-AUGUST-tav = 29.2
+30-AUGUST-vpd = 21.64
+30-AUGUST-ts_f = 25.2
+30-AUGUST-precip = 0.2
+30-AUGUST-swc= 0.24
+30-AUGUST-ndvi_lai = 0
+mese = 145624864
+month AUGUST day = 31
+31-AUGUST-solar rad = 19.2
+31-AUGUST-tav = 25
+31-AUGUST-vpd = 20.64
+31-AUGUST-ts_f = 21
+31-AUGUST-precip = 0
+31-AUGUST-swc= 0.22
+31-AUGUST-ndvi_lai = 0
+mese = 145624864
+month SEPTEMBER day = 1
+1-SEPTEMBER-solar rad = 14.89
+1-SEPTEMBER-tav = 27.3
+1-SEPTEMBER-vpd = 21.29
+1-SEPTEMBER-ts_f = 23.3
+1-SEPTEMBER-precip = 0
+1-SEPTEMBER-swc= 0.51
+1-SEPTEMBER-ndvi_lai = 6.36599e-314
+mese = 145624864
+month SEPTEMBER day = 2
+2-SEPTEMBER-solar rad = 14.89
+2-SEPTEMBER-tav = 27.6
+2-SEPTEMBER-vpd = 21.34
+2-SEPTEMBER-ts_f = 23.6
+2-SEPTEMBER-precip = 0
+2-SEPTEMBER-swc= 0.45
+2-SEPTEMBER-ndvi_lai = 8.48798e-314
+mese = 145624864
+month SEPTEMBER day = 3
+3-SEPTEMBER-solar rad = 14.89
+3-SEPTEMBER-tav = 26.3
+3-SEPTEMBER-vpd = 20.99
+3-SEPTEMBER-ts_f = 22.3
+3-SEPTEMBER-precip = 0
+3-SEPTEMBER-swc= 0.29
+3-SEPTEMBER-ndvi_lai = 1.061e-313
+mese = 145624864
+month SEPTEMBER day = 4
+4-SEPTEMBER-solar rad = 14.89
+4-SEPTEMBER-tav = 26.4
+4-SEPTEMBER-vpd = 21.03
+4-SEPTEMBER-ts_f = 22.4
+4-SEPTEMBER-precip = 0
+4-SEPTEMBER-swc= 0.37
+4-SEPTEMBER-ndvi_lai = 1.2732e-313
+mese = 145624864
+month SEPTEMBER day = 5
+5-SEPTEMBER-solar rad = 14.89
+5-SEPTEMBER-tav = 25.9
+5-SEPTEMBER-vpd = 20.93
+5-SEPTEMBER-ts_f = 21.9
+5-SEPTEMBER-precip = 0
+5-SEPTEMBER-swc= 0.45
+5-SEPTEMBER-ndvi_lai = 1.4854e-313
+mese = 145624864
+month SEPTEMBER day = 6
+6-SEPTEMBER-solar rad = 14.89
+6-SEPTEMBER-tav = 26.1
+6-SEPTEMBER-vpd = 20.96
+6-SEPTEMBER-ts_f = 22.1
+6-SEPTEMBER-precip = 2
+6-SEPTEMBER-swc= 0.37
+6-SEPTEMBER-ndvi_lai = 1.6976e-313
+mese = 145624864
+month SEPTEMBER day = 7
+7-SEPTEMBER-solar rad = 14.89
+7-SEPTEMBER-tav = 26.9
+7-SEPTEMBER-vpd = 21.15
+7-SEPTEMBER-ts_f = 22.9
+7-SEPTEMBER-precip = 0
+7-SEPTEMBER-swc= 0.36
+7-SEPTEMBER-ndvi_lai = 1.9098e-313
+mese = 145624864
+month SEPTEMBER day = 8
+8-SEPTEMBER-solar rad = 14.89
+8-SEPTEMBER-tav = 25.9
+8-SEPTEMBER-vpd = 20.88
+8-SEPTEMBER-ts_f = 21.9
+8-SEPTEMBER-precip = 0
+8-SEPTEMBER-swc= 0.27
+8-SEPTEMBER-ndvi_lai = 2.122e-313
+mese = 145624864
+month SEPTEMBER day = 9
+9-SEPTEMBER-solar rad = 14.89
+9-SEPTEMBER-tav = 24.4
+9-SEPTEMBER-vpd = 20.52
+9-SEPTEMBER-ts_f = 20.4
+9-SEPTEMBER-precip = 0
+9-SEPTEMBER-swc= 0.34
+9-SEPTEMBER-ndvi_lai = 2.3342e-313
+mese = 145624864
+month SEPTEMBER day = 10
+10-SEPTEMBER-solar rad = 14.89
+10-SEPTEMBER-tav = 18.2
+10-SEPTEMBER-vpd = 18.59
+10-SEPTEMBER-ts_f = 14.2
+10-SEPTEMBER-precip = 9.8
+10-SEPTEMBER-swc= 0.15
+10-SEPTEMBER-ndvi_lai = 2.54639e-313
+mese = 145624864
+month SEPTEMBER day = 11
+11-SEPTEMBER-solar rad = 14.89
+11-SEPTEMBER-tav = 21.2
+11-SEPTEMBER-vpd = 19.57
+11-SEPTEMBER-ts_f = 17.2
+11-SEPTEMBER-precip = 0
+11-SEPTEMBER-swc= 0.17
+11-SEPTEMBER-ndvi_lai = 2.75859e-313
+mese = 145624864
+month SEPTEMBER day = 12
+12-SEPTEMBER-solar rad = 14.89
+12-SEPTEMBER-tav = 24.3
+12-SEPTEMBER-vpd = 20.47
+12-SEPTEMBER-ts_f = 20.3
+12-SEPTEMBER-precip = 0
+12-SEPTEMBER-swc= 0.25
+12-SEPTEMBER-ndvi_lai = 2.97079e-313
+mese = 145624864
+month SEPTEMBER day = 13
+13-SEPTEMBER-solar rad = 14.89
+13-SEPTEMBER-tav = 24.6
+13-SEPTEMBER-vpd = 20.55
+13-SEPTEMBER-ts_f = 20.6
+13-SEPTEMBER-precip = 0
+13-SEPTEMBER-swc= 0.26
+13-SEPTEMBER-ndvi_lai = 3.18299e-313
+mese = 145624864
+month SEPTEMBER day = 14
+14-SEPTEMBER-solar rad = 14.89
+14-SEPTEMBER-tav = 26.2
+14-SEPTEMBER-vpd = 20.96
+14-SEPTEMBER-ts_f = 22.2
+14-SEPTEMBER-precip = 0
+14-SEPTEMBER-swc= 0.29
+14-SEPTEMBER-ndvi_lai = 3.39519e-313
+mese = 145624864
+month SEPTEMBER day = 15
+15-SEPTEMBER-solar rad = 14.89
+15-SEPTEMBER-tav = 28.7
+15-SEPTEMBER-vpd = 21.58
+15-SEPTEMBER-ts_f = 24.7
+15-SEPTEMBER-precip = 0
+15-SEPTEMBER-swc= 0.4
+15-SEPTEMBER-ndvi_lai = 3.60739e-313
+mese = 145624864
+month SEPTEMBER day = 16
+16-SEPTEMBER-solar rad = 14.89
+16-SEPTEMBER-tav = 28.8
+16-SEPTEMBER-vpd = 21.59
+16-SEPTEMBER-ts_f = 24.8
+16-SEPTEMBER-precip = 0
+16-SEPTEMBER-swc= 0.37
+16-SEPTEMBER-ndvi_lai = 3.81959e-313
+mese = 145624864
+month SEPTEMBER day = 17
+17-SEPTEMBER-solar rad = 14.89
+17-SEPTEMBER-tav = 27.4
+17-SEPTEMBER-vpd = 21.24
+17-SEPTEMBER-ts_f = 23.4
+17-SEPTEMBER-precip = 0
+17-SEPTEMBER-swc= 0.27
+17-SEPTEMBER-ndvi_lai = 4.03179e-313
+mese = 145624864
+month SEPTEMBER day = 18
+18-SEPTEMBER-solar rad = 14.89
+18-SEPTEMBER-tav = 26
+18-SEPTEMBER-vpd = 20.94
+18-SEPTEMBER-ts_f = 22
+18-SEPTEMBER-precip = 0.8
+18-SEPTEMBER-swc= 0.39
+18-SEPTEMBER-ndvi_lai = 4.24399e-313
+mese = 145624864
+month SEPTEMBER day = 19
+19-SEPTEMBER-solar rad = 14.89
+19-SEPTEMBER-tav = 24.8
+19-SEPTEMBER-vpd = 20.61
+19-SEPTEMBER-ts_f = 20.8
+19-SEPTEMBER-precip = 0
+19-SEPTEMBER-swc= 0.3
+19-SEPTEMBER-ndvi_lai = 4.45619e-313
+mese = 145624864
+month SEPTEMBER day = 20
+20-SEPTEMBER-solar rad = 14.89
+20-SEPTEMBER-tav = 24.3
+20-SEPTEMBER-vpd = 20.47
+20-SEPTEMBER-ts_f = 20.3
+20-SEPTEMBER-precip = 0
+20-SEPTEMBER-swc= 0.28
+20-SEPTEMBER-ndvi_lai = 4.66839e-313
+mese = 145624864
+month SEPTEMBER day = 21
+21-SEPTEMBER-solar rad = 14.89
+21-SEPTEMBER-tav = 23.3
+21-SEPTEMBER-vpd = 20.19
+21-SEPTEMBER-ts_f = 19.3
+21-SEPTEMBER-precip = 0
+21-SEPTEMBER-swc= 0.24
+21-SEPTEMBER-ndvi_lai = 4.88059e-313
+mese = 145624864
+month SEPTEMBER day = 22
+22-SEPTEMBER-solar rad = 14.89
+22-SEPTEMBER-tav = 26.2
+22-SEPTEMBER-vpd = 20.95
+22-SEPTEMBER-ts_f = 22.2
+22-SEPTEMBER-precip = 0
+22-SEPTEMBER-swc= 0.27
+22-SEPTEMBER-ndvi_lai = 5.09279e-313
+mese = 145624864
+month SEPTEMBER day = 23
+23-SEPTEMBER-solar rad = 14.89
+23-SEPTEMBER-tav = 22.8
+23-SEPTEMBER-vpd = 20.02
+23-SEPTEMBER-ts_f = 18.8
+23-SEPTEMBER-precip = 0
+23-SEPTEMBER-swc= 0.13
+23-SEPTEMBER-ndvi_lai = 5.30499e-313
+mese = 145624864
+month SEPTEMBER day = 24
+24-SEPTEMBER-solar rad = 14.89
+24-SEPTEMBER-tav = 25.3
+24-SEPTEMBER-vpd = 20.73
+24-SEPTEMBER-ts_f = 21.3
+24-SEPTEMBER-precip = 0
+24-SEPTEMBER-swc= 0.27
+24-SEPTEMBER-ndvi_lai = 5.51719e-313
+mese = 145624864
+month SEPTEMBER day = 25
+25-SEPTEMBER-solar rad = 14.89
+25-SEPTEMBER-tav = 32.2
+25-SEPTEMBER-vpd = 22.33
+25-SEPTEMBER-ts_f = 28.2
+25-SEPTEMBER-precip = 0
+25-SEPTEMBER-swc= 0.44
+25-SEPTEMBER-ndvi_lai = 5.72939e-313
+mese = 145624864
+month SEPTEMBER day = 26
+26-SEPTEMBER-solar rad = 14.89
+26-SEPTEMBER-tav = 32.4
+26-SEPTEMBER-vpd = 22.38
+26-SEPTEMBER-ts_f = 28.4
+26-SEPTEMBER-precip = 0.6
+26-SEPTEMBER-swc= 0.46
+26-SEPTEMBER-ndvi_lai = 5.94159e-313
+mese = 145624864
+month SEPTEMBER day = 27
+27-SEPTEMBER-solar rad = 14.89
+27-SEPTEMBER-tav = 30.4
+27-SEPTEMBER-vpd = 21.96
+27-SEPTEMBER-ts_f = 26.4
+27-SEPTEMBER-precip = 31.8
+27-SEPTEMBER-swc= 0.42
+27-SEPTEMBER-ndvi_lai = 6.15379e-313
+mese = 145624864
+month SEPTEMBER day = 28
+28-SEPTEMBER-solar rad = 14.89
+28-SEPTEMBER-tav = 29.8
+28-SEPTEMBER-vpd = 21.83
+28-SEPTEMBER-ts_f = 25.8
+28-SEPTEMBER-precip = 7
+28-SEPTEMBER-swc= 0.43
+28-SEPTEMBER-ndvi_lai = 6.36599e-313
+mese = 145624864
+month SEPTEMBER day = 29
+29-SEPTEMBER-solar rad = 14.89
+29-SEPTEMBER-tav = 29.2
+29-SEPTEMBER-vpd = 21.69
+29-SEPTEMBER-ts_f = 25.2
+29-SEPTEMBER-precip = 0
+29-SEPTEMBER-swc= 0.39
+29-SEPTEMBER-ndvi_lai = 6.57819e-313
+mese = 145624864
+month SEPTEMBER day = 30
+30-SEPTEMBER-solar rad = 14.89
+30-SEPTEMBER-tav = 29.2
+30-SEPTEMBER-vpd = 21.64
+30-SEPTEMBER-ts_f = 25.2
+30-SEPTEMBER-precip = 0
+30-SEPTEMBER-swc= 0.24
+30-SEPTEMBER-ndvi_lai = 0
+mese = 145624864
+month OCTOBER day = 1
+1-OCTOBER-solar rad = 10.5
+1-OCTOBER-tav = 25
+1-OCTOBER-vpd = 20.64
+1-OCTOBER-ts_f = 21
+1-OCTOBER-precip = 0
+1-OCTOBER-swc= 0.22
+1-OCTOBER-ndvi_lai = 6.36599e-314
+mese = 145624864
+month OCTOBER day = 2
+2-OCTOBER-solar rad = 10.5
+2-OCTOBER-tav = 22.8
+2-OCTOBER-vpd = 20.08
+2-OCTOBER-ts_f = 18.8
+2-OCTOBER-precip = 0
+2-OCTOBER-swc= 0.32
+2-OCTOBER-ndvi_lai = 8.48798e-314
+mese = 145624864
+month OCTOBER day = 3
+3-OCTOBER-solar rad = 10.5
+3-OCTOBER-tav = 22.8
+3-OCTOBER-vpd = 20.06
+3-OCTOBER-ts_f = 18.8
+3-OCTOBER-precip = 0
+3-OCTOBER-swc= 0.27
+3-OCTOBER-ndvi_lai = 1.061e-313
+mese = 145624864
+month OCTOBER day = 4
+4-OCTOBER-solar rad = 10.5
+4-OCTOBER-tav = 23
+4-OCTOBER-vpd = 20.13
+4-OCTOBER-ts_f = 19
+4-OCTOBER-precip = 0
+4-OCTOBER-swc= 0.3
+4-OCTOBER-ndvi_lai = 1.2732e-313
+mese = 145624864
+month OCTOBER day = 5
+5-OCTOBER-solar rad = 10.5
+5-OCTOBER-tav = 23.6
+5-OCTOBER-vpd = 20.29
+5-OCTOBER-ts_f = 19.6
+5-OCTOBER-precip = 0
+5-OCTOBER-swc= 0.31
+5-OCTOBER-ndvi_lai = 1.4854e-313
+mese = 145624864
+month OCTOBER day = 6
+6-OCTOBER-solar rad = 10.5
+6-OCTOBER-tav = 22.8
+6-OCTOBER-vpd = 20.07
+6-OCTOBER-ts_f = 18.8
+6-OCTOBER-precip = 0.4
+6-OCTOBER-swc= 0.29
+6-OCTOBER-ndvi_lai = 1.6976e-313
+mese = 145624864
+month OCTOBER day = 7
+7-OCTOBER-solar rad = 10.5
+7-OCTOBER-tav = 20.8
+7-OCTOBER-vpd = 19.46
+7-OCTOBER-ts_f = 16.8
+7-OCTOBER-precip = 0.4
+7-OCTOBER-swc= 0.21
+7-OCTOBER-ndvi_lai = 1.9098e-313
+mese = 145624864
+month OCTOBER day = 8
+8-OCTOBER-solar rad = 10.5
+8-OCTOBER-tav = 19.3
+8-OCTOBER-vpd = 18.98
+8-OCTOBER-ts_f = 15.3
+8-OCTOBER-precip = 0
+8-OCTOBER-swc= 0.24
+8-OCTOBER-ndvi_lai = 2.122e-313
+mese = 145624864
+month OCTOBER day = 9
+9-OCTOBER-solar rad = 10.5
+9-OCTOBER-tav = 20.8
+9-OCTOBER-vpd = 19.48
+9-OCTOBER-ts_f = 16.8
+9-OCTOBER-precip = 0
+9-OCTOBER-swc= 0.3
+9-OCTOBER-ndvi_lai = 2.3342e-313
+mese = 145624864
+month OCTOBER day = 10
+10-OCTOBER-solar rad = 10.5
+10-OCTOBER-tav = 18.1
+10-OCTOBER-vpd = 18.57
+10-OCTOBER-ts_f = 14.1
+10-OCTOBER-precip = 0.8
+10-OCTOBER-swc= 0.23
+10-OCTOBER-ndvi_lai = 2.54639e-313
+mese = 145624864
+month OCTOBER day = 11
+11-OCTOBER-solar rad = 10.5
+11-OCTOBER-tav = 17.1
+11-OCTOBER-vpd = 18.19
+11-OCTOBER-ts_f = 13.1
+11-OCTOBER-precip = 0
+11-OCTOBER-swc= 0.17
+11-OCTOBER-ndvi_lai = 2.75859e-313
+mese = 145624864
+month OCTOBER day = 12
+12-OCTOBER-solar rad = 10.5
+12-OCTOBER-tav = 16.7
+12-OCTOBER-vpd = 18.05
+12-OCTOBER-ts_f = 12.7
+12-OCTOBER-precip = 0
+12-OCTOBER-swc= 0.21
+12-OCTOBER-ndvi_lai = 2.97079e-313
+mese = 145624864
+month OCTOBER day = 13
+13-OCTOBER-solar rad = 10.5
+13-OCTOBER-tav = 17.2
+13-OCTOBER-vpd = 18.24
+13-OCTOBER-ts_f = 13.2
+13-OCTOBER-precip = 0
+13-OCTOBER-swc= 0.2
+13-OCTOBER-ndvi_lai = 3.18299e-313
+mese = 145624864
+month OCTOBER day = 14
+14-OCTOBER-solar rad = 10.5
+14-OCTOBER-tav = 19.3
+14-OCTOBER-vpd = 19
+14-OCTOBER-ts_f = 15.3
+14-OCTOBER-precip = 0
+14-OCTOBER-swc= 0.3
+14-OCTOBER-ndvi_lai = 3.39519e-313
+mese = 145624864
+month OCTOBER day = 15
+15-OCTOBER-solar rad = 10.5
+15-OCTOBER-tav = 17.3
+15-OCTOBER-vpd = 18.32
+15-OCTOBER-ts_f = 13.3
+15-OCTOBER-precip = 0
+15-OCTOBER-swc= 0.39
+15-OCTOBER-ndvi_lai = 3.60739e-313
+mese = 145624864
+month OCTOBER day = 16
+16-OCTOBER-solar rad = 10.5
+16-OCTOBER-tav = 16.2
+16-OCTOBER-vpd = 17.88
+16-OCTOBER-ts_f = 12.2
+16-OCTOBER-precip = 0
+16-OCTOBER-swc= 0.32
+16-OCTOBER-ndvi_lai = 3.81959e-313
+mese = 145624864
+month OCTOBER day = 17
+17-OCTOBER-solar rad = 10.5
+17-OCTOBER-tav = 16.6
+17-OCTOBER-vpd = 18.04
+17-OCTOBER-ts_f = 12.6
+17-OCTOBER-precip = 0
+17-OCTOBER-swc= 0.32
+17-OCTOBER-ndvi_lai = 4.03179e-313
+mese = 145624864
+month OCTOBER day = 18
+18-OCTOBER-solar rad = 10.5
+18-OCTOBER-tav = 17.3
+18-OCTOBER-vpd = 18.29
+18-OCTOBER-ts_f = 13.3
+18-OCTOBER-precip = 4.2
+18-OCTOBER-swc= 0.25
+18-OCTOBER-ndvi_lai = 4.24399e-313
+mese = 145624864
+month OCTOBER day = 19
+19-OCTOBER-solar rad = 10.5
+19-OCTOBER-tav = 17.6
+19-OCTOBER-vpd = 18.36
+19-OCTOBER-ts_f = 13.6
+19-OCTOBER-precip = 0
+19-OCTOBER-swc= 0.1
+19-OCTOBER-ndvi_lai = 4.45619e-313
+mese = 145624864
+month OCTOBER day = 20
+20-OCTOBER-solar rad = 10.5
+20-OCTOBER-tav = 13.8
+20-OCTOBER-vpd = 16.88
+20-OCTOBER-ts_f = 9.8
+20-OCTOBER-precip = 0
+20-OCTOBER-swc= 0.42
+20-OCTOBER-ndvi_lai = 4.66839e-313
+mese = 145624864
+month OCTOBER day = 21
+21-OCTOBER-solar rad = 10.5
+21-OCTOBER-tav = 9.1
+21-OCTOBER-vpd = 14.18
+21-OCTOBER-ts_f = 5.1
+21-OCTOBER-precip = 0
+21-OCTOBER-swc= 0.32
+21-OCTOBER-ndvi_lai = 4.88059e-313
+mese = 145624864
+month OCTOBER day = 22
+22-OCTOBER-solar rad = 10.5
+22-OCTOBER-tav = 8.3
+22-OCTOBER-vpd = 13.58
+22-OCTOBER-ts_f = 4.3
+22-OCTOBER-precip = 0.4
+22-OCTOBER-swc= 0.28
+22-OCTOBER-ndvi_lai = 5.09279e-313
+mese = 145624864
+month OCTOBER day = 23
+23-OCTOBER-solar rad = 10.5
+23-OCTOBER-tav = 6.9
+23-OCTOBER-vpd = 12.37
+23-OCTOBER-ts_f = 2.9
+23-OCTOBER-precip = 0.4
+23-OCTOBER-swc= 0.15
+23-OCTOBER-ndvi_lai = 5.30499e-313
+mese = 145624864
+month OCTOBER day = 24
+24-OCTOBER-solar rad = 10.5
+24-OCTOBER-tav = 11.8
+24-OCTOBER-vpd = 15.83
+24-OCTOBER-ts_f = 7.8
+24-OCTOBER-precip = 0.2
+24-OCTOBER-swc= 0.26
+24-OCTOBER-ndvi_lai = 5.51719e-313
+mese = 145624864
+month OCTOBER day = 25
+25-OCTOBER-solar rad = 10.5
+25-OCTOBER-tav = 12.4
+25-OCTOBER-vpd = 16.14
+25-OCTOBER-ts_f = 8.4
+25-OCTOBER-precip = 2.8
+25-OCTOBER-swc= 0.22
+25-OCTOBER-ndvi_lai = 5.72939e-313
+mese = 145624864
+month OCTOBER day = 26
+26-OCTOBER-solar rad = 10.5
+26-OCTOBER-tav = 11.7
+26-OCTOBER-vpd = 15.75
+26-OCTOBER-ts_f = 7.7
+26-OCTOBER-precip = 10.4
+26-OCTOBER-swc= 0.14
+26-OCTOBER-ndvi_lai = 5.94159e-313
+mese = 145624864
+month OCTOBER day = 27
+27-OCTOBER-solar rad = 10.5
+27-OCTOBER-tav = 16
+27-OCTOBER-vpd = 17.75
+27-OCTOBER-ts_f = 12
+27-OCTOBER-precip = 0
+27-OCTOBER-swc= 0.11
+27-OCTOBER-ndvi_lai = 6.15379e-313
+mese = 145624864
+month OCTOBER day = 28
+28-OCTOBER-solar rad = 10.5
+28-OCTOBER-tav = 18.1
+28-OCTOBER-vpd = 18.56
+28-OCTOBER-ts_f = 14.1
+28-OCTOBER-precip = 0
+28-OCTOBER-swc= 0.2
+28-OCTOBER-ndvi_lai = 6.36599e-313
+mese = 145624864
+month OCTOBER day = 29
+29-OCTOBER-solar rad = 10.5
+29-OCTOBER-tav = 16.6
+29-OCTOBER-vpd = 18.01
+29-OCTOBER-ts_f = 12.6
+29-OCTOBER-precip = 0
+29-OCTOBER-swc= 0.19
+29-OCTOBER-ndvi_lai = 0
+mese = 145624864
+month OCTOBER day = 30
+30-OCTOBER-solar rad = 10.5
+30-OCTOBER-tav = 15.2
+30-OCTOBER-vpd = 17.45
+30-OCTOBER-ts_f = 11.2
+30-OCTOBER-precip = 17.8
+30-OCTOBER-swc= 0.22
+30-OCTOBER-ndvi_lai = 0
+mese = 145624864
+month OCTOBER day = 31
+31-OCTOBER-solar rad = 10.5
+31-OCTOBER-tav = 14.4
+31-OCTOBER-vpd = 17.07
+31-OCTOBER-ts_f = 10.4
+31-OCTOBER-precip = 0
+31-OCTOBER-swc= 0.11
+31-OCTOBER-ndvi_lai = 0
+mese = 145624864
+month NOVEMBER day = 1
+1-NOVEMBER-solar rad = 6.61
+1-NOVEMBER-tav = 13.8
+1-NOVEMBER-vpd = 16.81
+1-NOVEMBER-ts_f = 9.8
+1-NOVEMBER-precip = 2.8
+1-NOVEMBER-swc= 0.16
+1-NOVEMBER-ndvi_lai = 6.36599e-314
+mese = 145624864
+month NOVEMBER day = 2
+2-NOVEMBER-solar rad = 6.61
+2-NOVEMBER-tav = 11.4
+2-NOVEMBER-vpd = 15.59
+2-NOVEMBER-ts_f = 7.4
+2-NOVEMBER-precip = 0
+2-NOVEMBER-swc= 0.18
+2-NOVEMBER-ndvi_lai = 8.48798e-314
+mese = 145624864
+month NOVEMBER day = 3
+3-NOVEMBER-solar rad = 6.61
+3-NOVEMBER-tav = 13
+3-NOVEMBER-vpd = 16.45
+3-NOVEMBER-ts_f = 9
+3-NOVEMBER-precip = 0
+3-NOVEMBER-swc= 0.25
+3-NOVEMBER-ndvi_lai = 1.061e-313
+mese = 145624864
+month NOVEMBER day = 4
+4-NOVEMBER-solar rad = 6.61
+4-NOVEMBER-tav = 14.6
+4-NOVEMBER-vpd = 17.2
+4-NOVEMBER-ts_f = 10.6
+4-NOVEMBER-precip = 0
+4-NOVEMBER-swc= 0.27
+4-NOVEMBER-ndvi_lai = 1.2732e-313
+mese = 145624864
+month NOVEMBER day = 5
+5-NOVEMBER-solar rad = 6.61
+5-NOVEMBER-tav = 14.1
+5-NOVEMBER-vpd = 16.97
+5-NOVEMBER-ts_f = 10.1
+5-NOVEMBER-precip = 0
+5-NOVEMBER-swc= 0.24
+5-NOVEMBER-ndvi_lai = 1.4854e-313
+mese = 145624864
+month NOVEMBER day = 6
+6-NOVEMBER-solar rad = 6.61
+6-NOVEMBER-tav = 13.6
+6-NOVEMBER-vpd = 16.74
+6-NOVEMBER-ts_f = 9.6
+6-NOVEMBER-precip = 0
+6-NOVEMBER-swc= 0.26
+6-NOVEMBER-ndvi_lai = 1.6976e-313
+mese = 145624864
+month NOVEMBER day = 7
+7-NOVEMBER-solar rad = 6.61
+7-NOVEMBER-tav = 7.4
+7-NOVEMBER-vpd = 12.82
+7-NOVEMBER-ts_f = 3.4
+7-NOVEMBER-precip = 0
+7-NOVEMBER-swc= 0.16
+7-NOVEMBER-ndvi_lai = 1.9098e-313
+mese = 145624864
+month NOVEMBER day = 8
+8-NOVEMBER-solar rad = 6.61
+8-NOVEMBER-tav = 12.2
+8-NOVEMBER-vpd = 16.07
+8-NOVEMBER-ts_f = 8.2
+8-NOVEMBER-precip = 0
+8-NOVEMBER-swc= 0.38
+8-NOVEMBER-ndvi_lai = 2.122e-313
+mese = 145624864
+month NOVEMBER day = 9
+9-NOVEMBER-solar rad = 6.61
+9-NOVEMBER-tav = 11.1
+9-NOVEMBER-vpd = 15.42
+9-NOVEMBER-ts_f = 7.1
+9-NOVEMBER-precip = 0.6
+9-NOVEMBER-swc= 0.16
+9-NOVEMBER-ndvi_lai = 2.3342e-313
+mese = 145624864
+month NOVEMBER day = 10
+10-NOVEMBER-solar rad = 6.61
+10-NOVEMBER-tav = 13.1
+10-NOVEMBER-vpd = 16.49
+10-NOVEMBER-ts_f = 9.1
+10-NOVEMBER-precip = 0
+10-NOVEMBER-swc= 0.18
+10-NOVEMBER-ndvi_lai = 2.54639e-313
+mese = 145624864
+month NOVEMBER day = 11
+11-NOVEMBER-solar rad = 6.61
+11-NOVEMBER-tav = 8.8
+11-NOVEMBER-vpd = 13.98
+11-NOVEMBER-ts_f = 4.8
+11-NOVEMBER-precip = 0
+11-NOVEMBER-swc= 0.42
+11-NOVEMBER-ndvi_lai = 2.75859e-313
+mese = 145624864
+month NOVEMBER day = 12
+12-NOVEMBER-solar rad = 6.61
+12-NOVEMBER-tav = 11.2
+12-NOVEMBER-vpd = 15.47
+12-NOVEMBER-ts_f = 7.2
+12-NOVEMBER-precip = 0
+12-NOVEMBER-swc= 0.13
+12-NOVEMBER-ndvi_lai = 2.97079e-313
+mese = 145624864
+month NOVEMBER day = 13
+13-NOVEMBER-solar rad = 6.61
+13-NOVEMBER-tav = 11.8
+13-NOVEMBER-vpd = 15.83
+13-NOVEMBER-ts_f = 7.8
+13-NOVEMBER-precip = 0.4
+13-NOVEMBER-swc= 0.23
+13-NOVEMBER-ndvi_lai = 3.18299e-313
+mese = 145624864
+month NOVEMBER day = 14
+14-NOVEMBER-solar rad = 6.61
+14-NOVEMBER-tav = 9.2
+14-NOVEMBER-vpd = 14.27
+14-NOVEMBER-ts_f = 5.2
+14-NOVEMBER-precip = 11.6
+14-NOVEMBER-swc= 0.44
+14-NOVEMBER-ndvi_lai = 3.39519e-313
+mese = 145624864
+month NOVEMBER day = 15
+15-NOVEMBER-solar rad = 6.61
+15-NOVEMBER-tav = 6.7
+15-NOVEMBER-vpd = 12.18
+15-NOVEMBER-ts_f = 2.7
+15-NOVEMBER-precip = 0
+15-NOVEMBER-swc= 0.11
+15-NOVEMBER-ndvi_lai = 3.60739e-313
+mese = 145624864
+month NOVEMBER day = 16
+16-NOVEMBER-solar rad = 6.61
+16-NOVEMBER-tav = 6.8
+16-NOVEMBER-vpd = 12.3
+16-NOVEMBER-ts_f = 2.8
+16-NOVEMBER-precip = 3.2
+16-NOVEMBER-swc= 0.27
+16-NOVEMBER-ndvi_lai = 3.81959e-313
+mese = 145624864
+month NOVEMBER day = 17
+17-NOVEMBER-solar rad = 6.61
+17-NOVEMBER-tav = 4.7
+17-NOVEMBER-vpd = 9.91
+17-NOVEMBER-ts_f = 0.7
+17-NOVEMBER-precip = 0
+17-NOVEMBER-swc= 0.15
+17-NOVEMBER-ndvi_lai = 4.03179e-313
+mese = 145624864
+month NOVEMBER day = 18
+18-NOVEMBER-solar rad = 6.61
+18-NOVEMBER-tav = 5.2
+18-NOVEMBER-vpd = 10.57
+18-NOVEMBER-ts_f = 1.2
+18-NOVEMBER-precip = 0
+18-NOVEMBER-swc= 0.22
+18-NOVEMBER-ndvi_lai = 4.24399e-313
+mese = 145624864
+month NOVEMBER day = 19
+19-NOVEMBER-solar rad = 6.61
+19-NOVEMBER-tav = 5.6
+19-NOVEMBER-vpd = 11.05
+19-NOVEMBER-ts_f = 1.6
+19-NOVEMBER-precip = 0
+19-NOVEMBER-swc= 0.22
+19-NOVEMBER-ndvi_lai = 4.45619e-313
+mese = 145624864
+month NOVEMBER day = 20
+20-NOVEMBER-solar rad = 6.61
+20-NOVEMBER-tav = 5.9
+20-NOVEMBER-vpd = 11.38
+20-NOVEMBER-ts_f = 1.9
+20-NOVEMBER-precip = 0
+20-NOVEMBER-swc= 0.22
+20-NOVEMBER-ndvi_lai = 4.66839e-313
+mese = 145624864
+month NOVEMBER day = 21
+21-NOVEMBER-solar rad = 6.61
+21-NOVEMBER-tav = 7
+21-NOVEMBER-vpd = 12.48
+21-NOVEMBER-ts_f = 3
+21-NOVEMBER-precip = 0
+21-NOVEMBER-swc= 0.22
+21-NOVEMBER-ndvi_lai = 4.88059e-313
+mese = 145624864
+month NOVEMBER day = 22
+22-NOVEMBER-solar rad = 6.61
+22-NOVEMBER-tav = 7.1
+22-NOVEMBER-vpd = 12.55
+22-NOVEMBER-ts_f = 3.1
+22-NOVEMBER-precip = 0
+22-NOVEMBER-swc= 0.15
+22-NOVEMBER-ndvi_lai = 5.09279e-313
+mese = 145624864
+month NOVEMBER day = 23
+23-NOVEMBER-solar rad = 6.61
+23-NOVEMBER-tav = 12
+23-NOVEMBER-vpd = 15.93
+23-NOVEMBER-ts_f = 8
+23-NOVEMBER-precip = 0
+23-NOVEMBER-swc= 0.22
+23-NOVEMBER-ndvi_lai = 5.30499e-313
+mese = 145624864
+month NOVEMBER day = 24
+24-NOVEMBER-solar rad = 6.61
+24-NOVEMBER-tav = 17
+24-NOVEMBER-vpd = 18.18
+24-NOVEMBER-ts_f = 13
+24-NOVEMBER-precip = 2
+24-NOVEMBER-swc= 0.28
+24-NOVEMBER-ndvi_lai = 5.51719e-313
+mese = 145624864
+month NOVEMBER day = 25
+25-NOVEMBER-solar rad = 6.61
+25-NOVEMBER-tav = 14.6
+25-NOVEMBER-vpd = 17.17
+25-NOVEMBER-ts_f = 10.6
+25-NOVEMBER-precip = 0.4
+25-NOVEMBER-swc= 0.13
+25-NOVEMBER-ndvi_lai = 5.72939e-313
+mese = 145624864
+month NOVEMBER day = 26
+26-NOVEMBER-solar rad = 6.61
+26-NOVEMBER-tav = 10.8
+26-NOVEMBER-vpd = 15.23
+26-NOVEMBER-ts_f = 6.8
+26-NOVEMBER-precip = 0
+26-NOVEMBER-swc= 0.09
+26-NOVEMBER-ndvi_lai = 5.94159e-313
+mese = 145624864
+month NOVEMBER day = 27
+27-NOVEMBER-solar rad = 6.61
+27-NOVEMBER-tav = 13.8
+27-NOVEMBER-vpd = 16.81
+27-NOVEMBER-ts_f = 9.8
+27-NOVEMBER-precip = 0
+27-NOVEMBER-swc= 0.13
+27-NOVEMBER-ndvi_lai = 6.15379e-313
+mese = 145624864
+month NOVEMBER day = 28
+28-NOVEMBER-solar rad = 6.61
+28-NOVEMBER-tav = 10
+28-NOVEMBER-vpd = 14.75
+28-NOVEMBER-ts_f = 6
+28-NOVEMBER-precip = 0
+28-NOVEMBER-swc= 0.18
+28-NOVEMBER-ndvi_lai = 6.36599e-313
+mese = 145624864
+month NOVEMBER day = 29
+29-NOVEMBER-solar rad = 6.61
+29-NOVEMBER-tav = 9.6
+29-NOVEMBER-vpd = 14.52
+29-NOVEMBER-ts_f = 5.6
+29-NOVEMBER-precip = 6.4
+29-NOVEMBER-swc= 0.31
+29-NOVEMBER-ndvi_lai = 6.57819e-313
+mese = 145624864
+month NOVEMBER day = 30
+30-NOVEMBER-solar rad = 6.61
+30-NOVEMBER-tav = 6.7
+30-NOVEMBER-vpd = 12.19
+30-NOVEMBER-ts_f = 2.7
+30-NOVEMBER-precip = 0.8
+30-NOVEMBER-swc= 0.18
+30-NOVEMBER-ndvi_lai = 0
+mese = 145624864
+month DECEMBER day = 1
+1-DECEMBER-solar rad = 5.1
+1-DECEMBER-tav = 8.7
+1-DECEMBER-vpd = 13.87
+1-DECEMBER-ts_f = 4.7
+1-DECEMBER-precip = 0
+1-DECEMBER-swc= 0.2
+1-DECEMBER-ndvi_lai = 6.36599e-314
+mese = 145624864
+month DECEMBER day = 2
+2-DECEMBER-solar rad = 5.1
+2-DECEMBER-tav = 8.3
+2-DECEMBER-vpd = 13.56
+2-DECEMBER-ts_f = 4.3
+2-DECEMBER-precip = 0
+2-DECEMBER-swc= 0.17
+2-DECEMBER-ndvi_lai = 8.48798e-314
+mese = 145624864
+month DECEMBER day = 3
+3-DECEMBER-solar rad = 5.1
+3-DECEMBER-tav = 10.6
+3-DECEMBER-vpd = 15.11
+3-DECEMBER-ts_f = 6.6
+3-DECEMBER-precip = 1.2
+3-DECEMBER-swc= 0.1
+3-DECEMBER-ndvi_lai = 1.061e-313
+mese = 145624864
+month DECEMBER day = 4
+4-DECEMBER-solar rad = 5.1
+4-DECEMBER-tav = 10.8
+4-DECEMBER-vpd = 15.23
+4-DECEMBER-ts_f = 6.8
+4-DECEMBER-precip = 0
+4-DECEMBER-swc= 0.11
+4-DECEMBER-ndvi_lai = 1.2732e-313
+mese = 145624864
+month DECEMBER day = 5
+5-DECEMBER-solar rad = 5.1
+5-DECEMBER-tav = 10.2
+5-DECEMBER-vpd = 14.91
+5-DECEMBER-ts_f = 6.2
+5-DECEMBER-precip = 0
+5-DECEMBER-swc= 0.33
+5-DECEMBER-ndvi_lai = 1.4854e-313
+mese = 145624864
+month DECEMBER day = 6
+6-DECEMBER-solar rad = 5.1
+6-DECEMBER-tav = 8.2
+6-DECEMBER-vpd = 13.51
+6-DECEMBER-ts_f = 4.2
+6-DECEMBER-precip = 0
+6-DECEMBER-swc= 0.33
+6-DECEMBER-ndvi_lai = 1.6976e-313
+mese = 145624864
+month DECEMBER day = 7
+7-DECEMBER-solar rad = 5.1
+7-DECEMBER-tav = 7.6
+7-DECEMBER-vpd = 13
+7-DECEMBER-ts_f = 3.6
+7-DECEMBER-precip = 0.2
+7-DECEMBER-swc= 0.18
+7-DECEMBER-ndvi_lai = 1.9098e-313
+mese = 145624864
+month DECEMBER day = 8
+8-DECEMBER-solar rad = 5.1
+8-DECEMBER-tav = 7.8
+8-DECEMBER-vpd = 13.15
+8-DECEMBER-ts_f = 3.8
+8-DECEMBER-precip = 2.8
+8-DECEMBER-swc= 0.09
+8-DECEMBER-ndvi_lai = 2.122e-313
+mese = 145624864
+month DECEMBER day = 9
+9-DECEMBER-solar rad = 5.1
+9-DECEMBER-tav = 8.2
+9-DECEMBER-vpd = 13.48
+9-DECEMBER-ts_f = 4.2
+9-DECEMBER-precip = 5
+9-DECEMBER-swc= 0.16
+9-DECEMBER-ndvi_lai = 2.3342e-313
+mese = 145624864
+month DECEMBER day = 10
+10-DECEMBER-solar rad = 5.1
+10-DECEMBER-tav = 6.2
+10-DECEMBER-vpd = 11.67
+10-DECEMBER-ts_f = 2.2
+10-DECEMBER-precip = 1.4
+10-DECEMBER-swc= 0.06
+10-DECEMBER-ndvi_lai = 2.54639e-313
+mese = 145624864
+month DECEMBER day = 11
+11-DECEMBER-solar rad = 5.1
+11-DECEMBER-tav = 8.4
+11-DECEMBER-vpd = 13.62
+11-DECEMBER-ts_f = 4.4
+11-DECEMBER-precip = 0
+11-DECEMBER-swc= 0.11
+11-DECEMBER-ndvi_lai = 2.75859e-313
+mese = 145624864
+month DECEMBER day = 12
+12-DECEMBER-solar rad = 5.1
+12-DECEMBER-tav = 7.4
+12-DECEMBER-vpd = 12.82
+12-DECEMBER-ts_f = 3.4
+12-DECEMBER-precip = 0
+12-DECEMBER-swc= 0.13
+12-DECEMBER-ndvi_lai = 2.97079e-313
+mese = 145624864
+month DECEMBER day = 13
+13-DECEMBER-solar rad = 5.1
+13-DECEMBER-tav = 7.1
+13-DECEMBER-vpd = 12.57
+13-DECEMBER-ts_f = 3.1
+13-DECEMBER-precip = 0
+13-DECEMBER-swc= 0.25
+13-DECEMBER-ndvi_lai = 3.18299e-313
+mese = 145624864
+month DECEMBER day = 14
+14-DECEMBER-solar rad = 5.1
+14-DECEMBER-tav = 7.1
+14-DECEMBER-vpd = 12.57
+14-DECEMBER-ts_f = 3.1
+14-DECEMBER-precip = 0
+14-DECEMBER-swc= 0.22
+14-DECEMBER-ndvi_lai = 3.39519e-313
+mese = 145624864
+month DECEMBER day = 15
+15-DECEMBER-solar rad = 5.1
+15-DECEMBER-tav = 4.2
+15-DECEMBER-vpd = 9.22
+15-DECEMBER-ts_f = 0.2
+15-DECEMBER-precip = 0
+15-DECEMBER-swc= 0.35
+15-DECEMBER-ndvi_lai = 3.60739e-313
+mese = 145624864
+month DECEMBER day = 16
+16-DECEMBER-solar rad = 5.1
+16-DECEMBER-tav = -0.3
+16-DECEMBER-vpd = 3.1
+16-DECEMBER-ts_f = 0.5
+16-DECEMBER-precip = 0
+16-DECEMBER-swc= 0.22
+16-DECEMBER-ndvi_lai = 3.81959e-313
+mese = 145624864
+month DECEMBER day = 17
+17-DECEMBER-solar rad = 5.1
+17-DECEMBER-tav = 1.6
+17-DECEMBER-vpd = 3.01
+17-DECEMBER-ts_f = 0.8
+17-DECEMBER-precip = 0
+17-DECEMBER-swc= 0.22
+17-DECEMBER-ndvi_lai = 4.03179e-313
+mese = 145624864
+month DECEMBER day = 18
+18-DECEMBER-solar rad = 5.1
+18-DECEMBER-tav = 4.4
+18-DECEMBER-vpd = 9.51
+18-DECEMBER-ts_f = 0.4
+18-DECEMBER-precip = 0
+18-DECEMBER-swc= 0.27
+18-DECEMBER-ndvi_lai = 4.24399e-313
+mese = 145624864
+month DECEMBER day = 19
+19-DECEMBER-solar rad = 5.1
+19-DECEMBER-tav = 4.8
+19-DECEMBER-vpd = 10.05
+19-DECEMBER-ts_f = 0.8
+19-DECEMBER-precip = 0
+19-DECEMBER-swc= 0.19
+19-DECEMBER-ndvi_lai = 4.45619e-313
+mese = 145624864
+month DECEMBER day = 20
+20-DECEMBER-solar rad = 5.1
+20-DECEMBER-tav = 4.9
+20-DECEMBER-vpd = 10.19
+20-DECEMBER-ts_f = 0.9
+20-DECEMBER-precip = 0
+20-DECEMBER-swc= 0.19
+20-DECEMBER-ndvi_lai = 4.66839e-313
+mese = 145624864
+month DECEMBER day = 21
+21-DECEMBER-solar rad = 5.1
+21-DECEMBER-tav = 5.6
+21-DECEMBER-vpd = 11.06
+21-DECEMBER-ts_f = 1.6
+21-DECEMBER-precip = 0
+21-DECEMBER-swc= 0.32
+21-DECEMBER-ndvi_lai = 4.88059e-313
+mese = 145624864
+month DECEMBER day = 22
+22-DECEMBER-solar rad = 5.1
+22-DECEMBER-tav = 4.4
+22-DECEMBER-vpd = 9.5
+22-DECEMBER-ts_f = 0.4
+22-DECEMBER-precip = 0.2
+22-DECEMBER-swc= 0.23
+22-DECEMBER-ndvi_lai = 5.09279e-313
+mese = 145624864
+month DECEMBER day = 23
+23-DECEMBER-solar rad = 5.1
+23-DECEMBER-tav = 4.8
+23-DECEMBER-vpd = 10.05
+23-DECEMBER-ts_f = 0.8
+23-DECEMBER-precip = 0.2
+23-DECEMBER-swc= 0.17
+23-DECEMBER-ndvi_lai = 5.30499e-313
+mese = 145624864
+month DECEMBER day = 24
+24-DECEMBER-solar rad = 5.1
+24-DECEMBER-tav = 7.2
+24-DECEMBER-vpd = 12.63
+24-DECEMBER-ts_f = 3.2
+24-DECEMBER-precip = 0
+24-DECEMBER-swc= 0.08
+24-DECEMBER-ndvi_lai = 5.51719e-313
+mese = 145624864
+month DECEMBER day = 25
+25-DECEMBER-solar rad = 5.1
+25-DECEMBER-tav = 8.6
+25-DECEMBER-vpd = 13.78
+25-DECEMBER-ts_f = 4.6
+25-DECEMBER-precip = 0.2
+25-DECEMBER-swc= 0.15
+25-DECEMBER-ndvi_lai = 5.72939e-313
+mese = 145624864
+month DECEMBER day = 26
+26-DECEMBER-solar rad = 5.1
+26-DECEMBER-tav = 8.9
+26-DECEMBER-vpd = 14.01
+26-DECEMBER-ts_f = 4.9
+26-DECEMBER-precip = 8
+26-DECEMBER-swc= 0.17
+26-DECEMBER-ndvi_lai = 5.94159e-313
+mese = 145624864
+month DECEMBER day = 27
+27-DECEMBER-solar rad = 5.1
+27-DECEMBER-tav = 5.8
+27-DECEMBER-vpd = 11.27
+27-DECEMBER-ts_f = 1.8
+27-DECEMBER-precip = 0
+27-DECEMBER-swc= 0.19
+27-DECEMBER-ndvi_lai = 6.15379e-313
+mese = 145624864
+month DECEMBER day = 28
+28-DECEMBER-solar rad = 5.1
+28-DECEMBER-tav = 5.6
+28-DECEMBER-vpd = 11.06
+28-DECEMBER-ts_f = 1.6
+28-DECEMBER-precip = 0
+28-DECEMBER-swc= 0.28
+28-DECEMBER-ndvi_lai = 6.36599e-313
+mese = 145624864
+month DECEMBER day = 29
+29-DECEMBER-solar rad = 5.1
+29-DECEMBER-tav = 5.4
+29-DECEMBER-vpd = 10.81
+29-DECEMBER-ts_f = 1.4
+29-DECEMBER-precip = 0
+29-DECEMBER-swc= 0.22
+29-DECEMBER-ndvi_lai = 0
+mese = 145624864
+month DECEMBER day = 30
+30-DECEMBER-solar rad = 5.1
+30-DECEMBER-tav = 4.9
+30-DECEMBER-vpd = 10.18
+30-DECEMBER-ts_f = 0.9
+30-DECEMBER-precip = 1.8
+30-DECEMBER-swc= 0.18
+30-DECEMBER-ndvi_lai = 0
+mese = 145624864
+month DECEMBER day = 31
+31-DECEMBER-solar rad = 5.1
+31-DECEMBER-tav = 4.6
+31-DECEMBER-vpd = 9.78
+31-DECEMBER-ts_f = 0.6
+31-DECEMBER-precip = 0
+31-DECEMBER-swc= 0.18
+31-DECEMBER-ndvi_lai = 0
+mese = 145624864
 
 3D-CMMC MODEL START
 ***************************************************
@@ -44,9 +3329,9 @@ Years of Simulations = 1
 RUN DATASET
 Cell resolution = 30 x 30 = 900 m^2
 Model version = un-spatial 
-Temporal scale = monthly 
+Temporal scale = daily 
 Vegetation Presence = total 
-Years of simulation = 1 (2007)
+Years of simulation = 1 (1)
 matrix has 1 cell
 *********************
 
@@ -79,2037 +3364,2671 @@ Soil depth = 63.5 cm
 Soil depth = 0.635 m
 soilw_fc BIOME (MAXASW FC BIOME)= 151.627 (kgH2O/m2)
 soilw_sat BIOME (MAXASW SAT BIOME)= 259.569 (kgH2O/m2)
--YEARS OF SIMULATION = 2007
-RUN FOR FORESTS
-compute vegetative months for version 'u'
------ TOTAL VEGETATIVE MONTHS for species Fagussylvatica = 6 
-
-Beginning month  1 ASW = 58.1027 (mm-kgH2O/m2)
-daylength = 10.1547 
-Abscission day length = 11.9758 
-****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET NUMBER OF ANNUAL LAYERS--
-ANNUAL LAYERS NUMBER = 1
-height 12.42, z 0
-NUMBER OF DIFFERENT LAYERS = 1
-Number of adult height classes in layer 0 = 1
-Tree number in layer 0 = 49 
-Density in layer 0 = 0.0544444 trees/area
-** CANOPY COVER from DBH-DC Function FOR LAYER 0  species Fagussylvatica **
-DBHDC effective to apply = 0.182279
--Crown Diameter from DBHDC function  = 4.91607 m
--Crown Area from DBHDC function = 18.9813 m^2
-Layer cover in layer 0 = 103.343 % 
-MORTALITY BASED ON HIGH CANOPY COVER layer 0 !!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CONTROL ROOT BIOMASS!!!
-Layer coverage mortality for timber 
-Tot Root Biomass before reduction = 5.832 tDM/tree
-Stem Biomass before reduction = 16.2 tDM/tree
-Canopy Cover in while = 1.03343 
-Tot Root Biomass after reduction = 5.59396 tDM/tree
-Stem Biomass after reduction = 15.5388 tDM/tree
-Number of Trees = 47 trees 
-Tree Removed for Crowding Competition = 2 trees
-Canopy Cover in after while = 0.991246 
-*************************************************** 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 0
-
-species in veg period = 0
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 0
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 1
-Determines Effective Layer Cover 
-Monthly layer number = 0
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.383195
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = JANUARY
-***************
-**Monthly MET DATA**
--average solar_rad = 8.98 MJ/m^2/day
--tav = 2.53 °C
--vpd = 2 mbar
--ts_f = -9999 °C
--rain = 42.94 mm
--swc = -9999 %vol
--Day length = 10.1547 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 1 = 58.1027 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 0 
-- ASW layer 0 month 1  = 58.1027 mm
-- Phenology type = 0
-- Management type = T
-+ AvDBH = 26.97 cm
-+ Wf = 0 tDM/area
-+ Ws = 15.5388 tDM/area
-+ Wrc = 5.59396 tDM/area
-+ Wrf = 0 tDM/area
-+ Wr Tot = 5.832 tDM/area
-+ Wres = 0.0445486 tDM/area
-
- GET_MODIFIERS
-
---Temperature Average 2.53 °C
-F_T = 0 
-fT - Temperature Modifier = 0
-fVPD - VPD modifier = 0.88692
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.91804
-PhysMod = 0.647316
-PHYSMOD uses F_VPD * F_AGE
--------------------
-Basal Area for this layer = 0.0571284 m^2/tree
-Stand Basal Area for this layer = 2.68503 m^2/area
-sapwood from Kostner = 477.502 cm^2
-heartwood from Wang et al 2010 = 93.7821 cm^2
-Sapwood/Basal Area = 0.83584 
-Sapwood/Basal Area = 83.584 %
-Stem biomass = 15.5388 tDM/area 
-Sapwood biomass = 12.9879 tDM/area 
-Heartwood biomass = 2.55085 tDM/area 
-Leaf Area from Kostner-LPJ = 71.6252 m^2
-Crown diameter = 4.91607 m^2
-Crown Area for Kostner = 18.9813 m^2
-year 0 PEAK LAI from Kostner = 3.77346 m^2 m^-2
-Maximum foliage biomass = 0.0841596 tDM/area 
-Maximum foliage biomass = 1790.63 gDM/tree 
-Maximum foliage biomass = 0.00179063 Kg/area 
-SLA in mod= 20 KgC/m^2 
-**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
-++Lai layer 0 = 0
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 0 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 0
-Phenology = 0
-Unvegetative period !! 
-Monthly GPP in grams of C for layer 0 = 0 
-Monthly NPP for layer 0 = 0 
-Monthly Stand GPP = 0 
-Monthly Stand NPP = 0 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 0
-CLASS LEVEL Yearly NPP = 0
-CELL LEVEL
-CELL LEVEL Yearly GPP = 0
-CELL LEVEL Yearly NPP = 0
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-******************************
------------------------------------------------------------------
-********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation for soil evaporation = 707368 W/m^2/hour
-Monthly Soil Evaporation = 3.54266 
-Total Soil Evaporation = 3.54266 mm
-Available Soil Water at month 1 year of simulation 0 = 54.5601 mm
-*****************************************************************************
-*****************************************************************************
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 54.5601
-***************************************************
-
-Beginning month  2 ASW = 77.4601 mm
-daylength = 11.1531 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 0
-
-species in veg period = 0
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 0
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 2
-Determines Effective Layer Cover 
-Monthly layer number = 0
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.510859
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = FEBRUARY
-***************
-**Monthly MET DATA**
--average solar_rad = 12.63 MJ/m^2/day
--tav = -0.17 °C
--vpd = 1.6 mbar
--ts_f = -9999 °C
--rain = 22.9 mm
--swc = -9999 %vol
--Day length = 11.1531 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 2 = 77.4601 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 0 
-- ASW layer 0 month 2  = 77.4601 mm
-
- GET_MODIFIERS
-
---Temperature Average -0.17 °C
-F_T = 0 
-fT - Temperature Modifier = 0
-fVPD - VPD modifier = 0.908464
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.972762
-PhysMod = 0.66304
-PHYSMOD uses F_VPD * F_AGE
--------------------
-**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
-++Lai layer 0 = 0
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 1 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 0
-Phenology = 0
-Unvegetative period !! 
-Monthly GPP in grams of C for layer 0 = 0 
-Monthly NPP for layer 0 = 0 
-Monthly Stand GPP = 0 
-Monthly Stand NPP = 0 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 0
-CLASS LEVEL Yearly NPP = 0
-CELL LEVEL
-CELL LEVEL Yearly GPP = 0
-CELL LEVEL Yearly NPP = 0
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-******************************
------------------------------------------------------------------
-********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation for soil evaporation = 905845 W/m^2/hour
-Monthly Soil Evaporation = 5.46281 
-Total Soil Evaporation = 9.00547 mm
-Available Soil Water at month 2 year of simulation 0 = 71.9972 mm
-*****************************************************************************
-*****************************************************************************
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 71.9972
-***************************************************
-
-Beginning month  3 ASW = 95.4772 mm
-daylength = 12.4723 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 0
-
-species in veg period = 0
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 0
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 3
-Determines Effective Layer Cover 
-Monthly layer number = 0
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.629684
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = MARCH
-***************
-**Monthly MET DATA**
--average solar_rad = 15.61 MJ/m^2/day
--tav = 3.92 °C
--vpd = 2.6 mbar
--ts_f = -9999 °C
--rain = 23.48 mm
--swc = -9999 %vol
--Day length = 12.4723 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 3 = 95.4772 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 0 
-- ASW layer 0 month 3  = 95.4772 mm
-
- GET_MODIFIERS
-
---Temperature Average 3.92 °C
-F_T = 0 
-fT - Temperature Modifier = 0
-fVPD - VPD modifier = 0.855559
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.993084
-PhysMod = 0.624427
-PHYSMOD uses F_VPD * F_AGE
--------------------
-**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
-++Lai layer 0 = 0
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 2 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 0
-Phenology = 0
-Unvegetative period !! 
-Monthly GPP in grams of C for layer 0 = 0 
-Monthly NPP for layer 0 = 0 
-Monthly Stand GPP = 0 
-Monthly Stand NPP = 0 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 0
-CLASS LEVEL Yearly NPP = 0
-CELL LEVEL
-CELL LEVEL Yearly GPP = 0
-CELL LEVEL Yearly NPP = 0
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-******************************
------------------------------------------------------------------
-********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation for soil evaporation = 1.00117e+06 W/m^2/hour
-Monthly Soil Evaporation = 8.23941 
-Total Soil Evaporation = 17.2449 mm
-Available Soil Water at month 3 year of simulation 0 = 87.2378 mm
-*****************************************************************************
-*****************************************************************************
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 87.2378
-***************************************************
-
-Beginning month  4 ASW = 138.458 mm
-daylength = 13.6275 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 0
-
-species in veg period = 0
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 0
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 4
-Determines Effective Layer Cover 
-Monthly layer number = 0
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.913147
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = APRIL
-***************
-**Monthly MET DATA**
--average solar_rad = 20.52 MJ/m^2/day
--tav = 3.59 °C
--vpd = 3.6 mbar
--ts_f = 0 °C
--rain = 51.22 mm
--swc = -9999 %vol
--Day length = 13.6275 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 4 = 138.458 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 0 
-- ASW layer 0 month 4  = 138.458 mm
-
- GET_MODIFIERS
-
---Temperature Average 3.59 °C
-F_T = 0 
-fT - Temperature Modifier = 0
-fVPD - VPD modifier = 0.805735
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.999995
-PhysMod = 0.588063
-PHYSMOD uses F_VPD * F_AGE
--------------------
-**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
-++Lai layer 0 = 0
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 3 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 0
-Phenology = 0
-Unvegetative period !! 
-Monthly GPP in grams of C for layer 0 = 0 
-Monthly NPP for layer 0 = 0 
-Monthly Stand GPP = 0 
-Monthly Stand NPP = 0 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 0
-CLASS LEVEL Yearly NPP = 0
-CELL LEVEL
-CELL LEVEL Yearly GPP = 0
-CELL LEVEL Yearly NPP = 0
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-******************************
------------------------------------------------------------------
-********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation for soil evaporation = 1.20453e+06 W/m^2/hour
-Monthly Soil Evaporation = 13.9118 
-Total Soil Evaporation = 31.1567 mm
-Available Soil Water at month 4 year of simulation 0 = 124.546 mm
-*****************************************************************************
-*****************************************************************************
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 124.546
-***************************************************
-
-Beginning month  5 ASW = 179.196 mm
-ASW > MAXASW !!!
-ASW month 5 = 151.627 mm
-daylength = 14.3729 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 5
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 1
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = MAY
-***************
-**Monthly MET DATA**
--average solar_rad = 26.13 MJ/m^2/day
--tav = 18.44 °C
--vpd = 2.3 mbar
--ts_f = -9999 °C
--rain = 54.65 mm
--swc = -9999 %vol
--Day length = 14.3729 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 5 = 151.627 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 0 
-- ASW layer 0 month 5  = 151.627 mm
-
- GET_MODIFIERS
-
---Temperature Average 18.44 °C
-fT - Temperature Modifier = 0.994839
-fVPD - VPD modifier = 0.871099
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 1
-PhysMod = 0.635769
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = MAY
-VEG_MONTHS = 1 
-
---GET_INITIAL_MONTH_LAI--
-++Reserves pools = 0.0445486 tDM/area
-++Reserve biomass for each tree in g = 947.842 
-Biomass foliage = 0.0117233
-ratio of reserve for foliage = 26.3158% 
-++Reserves pools less foliage = 0.0328253 tDM/area
-Biomass stem = 15.5599
-++Reserves pools less foliage + stem = 0 tDM/area
-++Biomass foliage from reserves for initial LAI = 0.0117233 
-++Lai from reserves = 0.525638
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 0.525638 
-Light Transmitted = 0.72951
-Vertical Percentage of Light Transmitted through this layer = 72.951 %
-Vertical Fraction of Light Absorbed by this layer = 0.27049 
-Vertical Percentage of Light Absorbed by this layer = 27.049 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 26.13 MJ/m^2/day
-Hourly Net Radiation = 1.16345e+06 W/m^2/hour
-Par for layer '0' = 1738.86 molPAR/m^2 month
-Apar for layer '0' = 470.346 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 851503  W/m^2/hour
-Average Par for lower layer = 1272.64 molPAR/m^2 month
-Par for soil = 16.6365 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.05131
-Etransp for dominant layer = 278684 J/m^2/sec
-NET RADIATION = 1.16345e+06 
-Daily Canopy Transpiration = 1.62825 mm-Kg H2o/m^2/day
-Daily Transpiration = 1.62825 mm/m^2/day
-Monthly Canopy Transpiration = 50.4757 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 851503
-Net radiation for soil evaporation = 851503 W/m^2/hour
-Monthly Soil Evaporation = 11.1289 
-Total Soil Evaporation = 42.2855 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.0210255 
-Highest class
-Rainfall Intercepted = 1.13898 mm/month
-Percentage of Rain Intercepted from dominant canopy = 2.08414%
--Class evapotranspiration = 51.1728 mm/month
-Class evapotranspiration = 62.3017 mm/month
-Cumulated Evapotranspiration for this class = 62.3017 mm
-net_radiation for soil = 11131.2
-incident radiation for soil = 207.041
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = 89.3255 mm
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 4 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.0270082 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 25.869 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 152.439 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.133274 
-Monthly Stand GPP = 152.439 
-Monthly Stand NPP = 0.133274 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 152.439
-CLASS LEVEL Yearly NPP = 0.133274
-CELL LEVEL
-CELL LEVEL Yearly GPP = 152.439
-CELL LEVEL Yearly NPP = 0.133274
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-FASE FENOLOGICA = 1 
-LAI < PEAK_Y_LAI * 0.5 
-LAI = 0.525638 
-**Maximum Growth**
-allocating only into foliage and stem pools
-Biomass Foliage CTEM = 0.0467954 tDM/area
-Biomass Stem CTEM = 15.6581 tDM/area
-++Lai = 2.09816
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 1738.86 
-PAR FOR SOIL = 16.6365 
-Average Light Absorbed for establishment = 0.00956743 
-PHENOLOGY LAI = 2.09816 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 89.3255
-***************************************************
-
-Beginning month  6 ASW = 97.9755 mm
-daylength = 14.467 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 6
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.64616
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = JUNE
-***************
-**Monthly MET DATA**
--average solar_rad = 27.92 MJ/m^2/day
--tav = 16.48 °C
--vpd = 6.2 mbar
--ts_f = -9999 °C
--rain = 8.65 mm
--swc = -9999 %vol
--Day length = 14.467 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 6 = 97.9755 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 4.88354e-194 
-- ASW layer 0 month 6  = 97.9755 mm
-
- GET_MODIFIERS
-
---Temperature Average 16.48 °C
-fT - Temperature Modifier = 0.953597
-fVPD - VPD modifier = 0.689354
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.994484
-PhysMod = 0.503123
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = JUNE
-VEG_MONTHS = 2 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 2.09816 
-Light Transmitted = 0.283967
-Vertical Percentage of Light Transmitted through this layer = 28.3967 %
-Vertical Fraction of Light Absorbed by this layer = 0.716033 
-Vertical Percentage of Light Absorbed by this layer = 71.6033 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 27.92 MJ/m^2/day
-Hourly Net Radiation = 1.23507e+06 W/m^2/hour
-Par for layer '0' = 1798.05 molPAR/m^2 month
-Apar for layer '0' = 1287.46 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 358460  W/m^2/hour
-Average Par for lower layer = 521.857 molPAR/m^2 month
-Par for soil = 16.3204 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.03897
-Etransp for dominant layer = 533362 J/m^2/sec
-NET RADIATION = 1.23507e+06 
-Daily Canopy Transpiration = 3.13665 mm-Kg H2o/m^2/day
-Daily Transpiration = 3.13665 mm/m^2/day
-Monthly Canopy Transpiration = 94.0996 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 358460
-Net radiation for soil evaporation = 358460 W/m^2/hour
-Monthly Soil Evaporation = 2.92958 
-Total Soil Evaporation = 45.2151 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.0839265 
-Highest class
-Rainfall Intercepted = 0.719609 mm/month
-Percentage of Rain Intercepted from dominant canopy = 8.31918%
--Class evapotranspiration = 93.9954 mm/month
-Class evapotranspiration = 96.925 mm/month
-Cumulated Evapotranspiration for this class = 159.227 mm
-net_radiation for soil = 11210.3
-incident radiation for soil = 201.786
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = 1.05048 mm
-ATTENTION Available Soil Water is low than MinASW!!! 
-ASW = 15.1627
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 5 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.0204872 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 70.8104 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 316.518 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.276725 
-Monthly Stand GPP = 316.518 
-Monthly Stand NPP = 0.276725 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 468.957
-CLASS LEVEL Yearly NPP = 0.409999
-CELL LEVEL
-CELL LEVEL Yearly GPP = 468.957
-CELL LEVEL Yearly NPP = 0.409999
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-FASE FENOLOGICA = 2 
-**Normal Growth**
-Day length > 10 
-LAI MAX * 0.5 < LAI < LAI MAX 
-allocating into the three pools Ws+Wr+Wf
-BiomassRoots increment CTEM = 0.0963462 tDM/area
-BiomassRoots increment into fine roots = 0.04873 tDM/area
-BiomassRoots increment into coarse roots = 0.0476162 tDM/area
-BiomassStem increment CTEM = 0.119556 tDM/area
-BiomassFoliage increment CTEM = 0.0608232 tDM/area
-Stem Biomass (Ws) = 15.7542 tDM/area
-Foliage Biomass (Wf) = 0.107619 tDM/area
-Total Root Biomass (Wr TOT) = 5.69031 tDM/area
-Fine Root Biomass (Wrf) = 0.04873 tDM/area
-Coarse Root Biomass (Wrc) = 5.64158 tDM/area
-++Lai = 2.41264
-aF 0 = 0.219796 
-afR 0 = 0.176095 
-acR 0 = 0.17207 
-aS 0 = 0.432039 
-aRes 0 = 0 
-delta_F 0 = 0.0608232 
-delta_fR 0 = 0.04873 
-delta_cR 0 = 0.0476162 
-delta_S 0 = 0.0961022 
-delta_Res 0 = 0 
-delta_BB 0 = 0.0234538 
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 1798.05 
-PAR FOR SOIL = 16.3204 
-Average Light Absorbed for establishment = 0.00907671 
-PHENOLOGY LAI = 2.41264 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 15.1627
-***************************************************
-
-Beginning month  7 ASW = 56.1227 mm
-daylength = 13.8899 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 7
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.370136
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = JULY
-***************
-**Monthly MET DATA**
--average solar_rad = 27.76 MJ/m^2/day
--tav = 22.24 °C
--vpd = 12.5 mbar
--ts_f = -9999 °C
--rain = 40.96 mm
--swc = -9999 %vol
--Day length = 13.8899 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 7 = 56.1227 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= 4.14382e+156 
-- ASW layer 0 month 7  = 56.1227 mm
-
- GET_MODIFIERS
-
---Temperature Average 22.24 °C
-fT - Temperature Modifier = 0.95164
-fVPD - VPD modifier = 0.472367
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.909805
-PhysMod = 0.344755
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = JULY
-VEG_MONTHS = 3 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 2.41264 
-Light Transmitted = 0.235137
-Vertical Percentage of Light Transmitted through this layer = 23.5137 %
-Vertical Fraction of Light Absorbed by this layer = 0.764863 
-Vertical Percentage of Light Absorbed by this layer = 76.4863 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 27.76 MJ/m^2/day
-Hourly Net Radiation = 1.27902e+06 W/m^2/hour
-Par for layer '0' = 1847.34 molPAR/m^2 month
-Apar for layer '0' = 1412.96 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 309308  W/m^2/hour
-Average Par for lower layer = 446.746 molPAR/m^2 month
-Par for soil = 16.6684 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.0754
-Etransp for dominant layer = 502108 J/m^2/sec
-NET RADIATION = 1.27902e+06 
-Daily Canopy Transpiration = 2.83505 mm-Kg H2o/m^2/day
-Daily Transpiration = 2.83505 mm/m^2/day
-Monthly Canopy Transpiration = 87.8865 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 309308
-Net radiation for soil evaporation = 309308 W/m^2/hour
-Monthly Soil Evaporation = 1.4963 
-Total Soil Evaporation = 46.7114 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.0965058 
-Highest class
-Rainfall Intercepted = 3.91827 mm/month
-Percentage of Rain Intercepted from dominant canopy = 9.56609%
--Class evapotranspiration = 91.0354 mm/month
-Class evapotranspiration = 92.5317 mm/month
-Cumulated Evapotranspiration for this class = 251.758 mm
-net_radiation for soil = 11540.5
-incident radiation for soil = 214.653
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = -36.409 mm
-ATTENTION Available Soil Water is low than MinASW!!! 
-ASW = 15.1627
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 6 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.0140097 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 77.7127 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 237.541 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.207677 
-Monthly Stand GPP = 237.541 
-Monthly Stand NPP = 0.207677 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 706.498
-CLASS LEVEL Yearly NPP = 0.617676
-CELL LEVEL
-CELL LEVEL Yearly GPP = 706.498
-CELL LEVEL Yearly NPP = 0.617676
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-FASE FENOLOGICA = 2 
-**Normal Growth**
-Day length > 10 
-LAI MAX * 0.5 < LAI < LAI MAX 
-allocating into the three pools Ws+Wr+Wf
-BiomassRoots increment CTEM = 0.0761573 tDM/area
-BiomassRoots increment into fine roots = 0.0385189 tDM/area
-BiomassRoots increment into coarse roots = 0.0376385 tDM/area
-BiomassStem increment CTEM = 0.0886767 tDM/area
-BiomassFoliage increment CTEM = 0.0428431 tDM/area
-Stem Biomass (Ws) = 15.8255 tDM/area
-Foliage Biomass (Wf) = 0.150462 tDM/area
-Total Root Biomass (Wr TOT) = 5.76646 tDM/area
-Fine Root Biomass (Wrf) = 0.0872489 tDM/area
-Coarse Root Biomass (Wrc) = 5.67921 tDM/area
-++Lai = 3.37312
-aF 0 = 0.206297 
-afR 0 = 0.185475 
-acR 0 = 0.181235 
-aS 0 = 0.426993 
-aRes 0 = 0 
-delta_F 0 = 0.0428431 
-delta_fR 0 = 0.0385189 
-delta_cR 0 = 0.0376385 
-delta_S 0 = 0.0712806 
-delta_Res 0 = 0 
-delta_BB 0 = 0.0173961 
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 1847.34 
-PAR FOR SOIL = 16.6684 
-Average Light Absorbed for establishment = 0.00902293 
-PHENOLOGY LAI = 3.37312 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 15.1627
-***************************************************
-
-Beginning month  8 ASW = 49.6227 mm
-daylength = 12.7874 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 8
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.327268
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = AUGUST
-***************
-**Monthly MET DATA**
--average solar_rad = 24.88 MJ/m^2/day
--tav = 20.53 °C
--vpd = 6.9 mbar
--ts_f = -9999 °C
--rain = 34.46 mm
--swc = -9999 %vol
--Day length = 12.7874 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 8 = 49.6227 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= -2.74815e-105 
-- ASW layer 0 month 8  = 49.6227 mm
-
- GET_MODIFIERS
-
---Temperature Average 20.53 °C
-fT - Temperature Modifier = 0.992595
-fVPD - VPD modifier = 0.661001
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.878899
-PhysMod = 0.482429
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = AUGUST
-VEG_MONTHS = 4 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 3.37312 
-Light Transmitted = 0.132143
-Vertical Percentage of Light Transmitted through this layer = 13.2143 %
-Vertical Fraction of Light Absorbed by this layer = 0.867857 
-Vertical Percentage of Light Absorbed by this layer = 86.7857 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 24.88 MJ/m^2/day
-Hourly Net Radiation = 1.24515e+06 W/m^2/hour
-Par for layer '0' = 1655.68 molPAR/m^2 month
-Apar for layer '0' = 1436.89 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 173997  W/m^2/hour
-Average Par for lower layer = 231.365 molPAR/m^2 month
-Par for soil = 14.7513 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.06453
-Etransp for dominant layer = 618522 J/m^2/sec
-NET RADIATION = 1.24515e+06 
-Daily Canopy Transpiration = 3.21517 mm-Kg H2o/m^2/day
-Daily Transpiration = 3.21517 mm/m^2/day
-Monthly Canopy Transpiration = 99.6702 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 173997
-Net radiation for soil evaporation = 173997 W/m^2/hour
-Monthly Soil Evaporation = 0.744237 
-Total Soil Evaporation = 47.4557 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.134925 
-Highest class
-Rainfall Intercepted = 4.60881 mm/month
-Percentage of Rain Intercepted from dominant canopy = 13.3744%
--Class evapotranspiration = 103.407 mm/month
-Class evapotranspiration = 104.151 mm/month
-Cumulated Evapotranspiration for this class = 355.909 mm
-net_radiation for soil = 11093.7
-incident radiation for soil = 206.342
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = -54.528 mm
-ATTENTION Available Soil Water is low than MinASW!!! 
-ASW = 15.1627
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 7 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.020448 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 79.0292 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 352.579 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.308252 
-Monthly Stand GPP = 352.579 
-Monthly Stand NPP = 0.308252 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 1059.08
-CLASS LEVEL Yearly NPP = 0.925929
-CELL LEVEL
-CELL LEVEL Yearly GPP = 1059.08
-CELL LEVEL Yearly NPP = 0.925929
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-FASE FENOLOGICA = 2 
-**Normal Growth**
-Day length > 10 
-LAI MAX * 0.5 < LAI < LAI MAX 
-allocating into the three pools Ws+Wr+Wf
-BiomassRoots increment CTEM = 0.110889 tDM/area
-BiomassRoots increment into fine roots = 0.0560856 tDM/area
-BiomassRoots increment into coarse roots = 0.0548036 tDM/area
-BiomassStem increment CTEM = 0.137366 tDM/area
-BiomassFoliage increment CTEM = 0.0599975 tDM/area
-Stem Biomass (Ws) = 15.9359 tDM/area
-Foliage Biomass (Wf) = 0.210459 tDM/area
-Total Root Biomass (Wr TOT) = 5.87735 tDM/area
-Fine Root Biomass (Wrf) = 0.143334 tDM/area
-Coarse Root Biomass (Wrc) = 5.73402 tDM/area
-++Lai = 4.71817
-aF 0 = 0.194638 
-afR 0 = 0.181947 
-acR 0 = 0.177788 
-aS 0 = 0.445627 
-aRes 0 = 0 
-delta_F 0 = 0.0599975 
-delta_fR 0 = 0.0560856 
-delta_cR 0 = 0.0548036 
-delta_S 0 = 0.110418 
-delta_Res 0 = 0 
-delta_BB 0 = 0.0269476 
-FASE FENOLOGICA = 2.1 
- TOO MUCH BIOMASS INTO FOLIAGE
-LAI = 4.71817 
-Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve
-Foliar Biomass exceeding = 0.126299 tDM 
-Biomass Foliage = 0.210459 tDM/area 
-Max Biomass Foliage = 0.0841596 tDM/area 
-Biomass Foliage = 0.0841596 tDM/area 
-BiomassRoots increment CTEM = 0.0454344 tDM/area
-BiomassRoots into fine roots = 0.0229798 tDM/area
-BiomassRoots into coarse roots = 0.0224546 tDM/area
-BiomassStem increment CTEM = 0.0562825 tDM/area
-BiomassReserve increment CTEM = 0.0245826 tDM/area
-Stem Biomass (Ws) = 15.9811 tDM/area
-Reserve Biomass (Wres) = 0.0245826 tDM/area
-Total Root Biomass (Wr TOT) = 5.92279 tDM/area
-Fine Root Biomass (Wrf) = 0.166314 tDM/area
-Coarse Root Biomass (Wrc) = 5.75647 tDM/area
-LAI setted to Peak Lai= 4.71817 
-Increment Monthly Total Biomass  (delTotalW) = 0.0906757 tDM/area
-Previous Total W = 21.7424 tDM/area
-Total Biomass = 21.9881 tDM/area
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 1655.68 
-PAR FOR SOIL = 14.7513 
-Average Light Absorbed for establishment = 0.0089095 
-PHENOLOGY LAI = 3.77346 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 15.1627
-***************************************************
-
-Beginning month  9 ASW = 61.5327 mm
-daylength = 11.5084 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 9
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.405816
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = SEPTEMBER
-***************
-**Monthly MET DATA**
--average solar_rad = 18.53 MJ/m^2/day
--tav = 17.11 °C
--vpd = 4.9 mbar
--ts_f = -9999 °C
--rain = 46.37 mm
--swc = -9999 %vol
--Day length = 11.5084 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 9 = 61.5327 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
-- ASW layer 0 month 9  = 61.5327 mm
-
- GET_MODIFIERS
-
---Temperature Average 17.11 °C
-fT - Temperature Modifier = 0.971208
-fVPD - VPD modifier = 0.745276
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.931043
-PhysMod = 0.543938
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = SEPTEMBER
-VEG_MONTHS = 5 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 3.77346 
-Light Transmitted = 0.103926
-Vertical Percentage of Light Transmitted through this layer = 10.3926 %
-Vertical Fraction of Light Absorbed by this layer = 0.896074 
-Vertical Percentage of Light Absorbed by this layer = 89.6074 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 18.53 MJ/m^2/day
-Hourly Net Radiation = 1.03041e+06 W/m^2/hour
-Par for layer '0' = 1193.33 molPAR/m^2 month
-Apar for layer '0' = 1069.31 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 115169  W/m^2/hour
-Average Par for lower layer = 133.379 molPAR/m^2 month
-Par for soil = 10.5949 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.04293
-Etransp for dominant layer = 543069 J/m^2/sec
-NET RADIATION = 1.03041e+06 
-Daily Canopy Transpiration = 2.54059 mm-Kg H2o/m^2/day
-Daily Transpiration = 2.54059 mm/m^2/day
-Monthly Canopy Transpiration = 76.2178 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 115169
-Net radiation for soil evaporation = 115169 W/m^2/hour
-Monthly Soil Evaporation = 0.591139 
-Total Soil Evaporation = 48.0468 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.150938 
-Highest class
-Rainfall Intercepted = 6.93775 mm/month
-Percentage of Rain Intercepted from dominant canopy = 14.9617%
--Class evapotranspiration = 82.4883 mm/month
-Class evapotranspiration = 83.0795 mm/month
-Cumulated Evapotranspiration for this class = 438.989 mm
-net_radiation for soil = 9148.4
-incident radiation for soil = 164.671
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = -21.5467 mm
-ATTENTION Available Soil Water is low than MinASW!!! 
-ASW = 15.1627
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 8 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.0225583 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 58.8123 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 289.462 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.253071 
-Monthly Stand GPP = 289.462 
-Monthly Stand NPP = 0.253071 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 1348.54
-CLASS LEVEL Yearly NPP = 1.179
-CELL LEVEL
-CELL LEVEL Yearly GPP = 1348.54
-CELL LEVEL Yearly NPP = 1.179
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-LAI == PEAK LAI 
-FASE FENOLOGICA = 3 
-allocating into the three pools Ws+Wr+Wreserve
-BiomassRoots increment CTEM = 0.0861569 tDM/area
-BiomassRoots into fine roots = 0.0435765 tDM/area
-BiomassRoots into coarse roots = 0.0425804 tDM/area
-BiomassStem increment CTEM = 0.117085 tDM/area
-BiomassReserve increment CTEM = 0.0498292 tDM/area
-Stem Biomass (Ws) = 16.0752 tDM/area
-Reserve Biomass (Wres) = 0.0744118 tDM/area
-Total Root Biomass (Wr TOT) = 6.00894 tDM/area
-Fine Root Biomass (Wrf) = 0.209891 tDM/area
-Coarse Root Biomass (Wrc) = 5.79905 tDM/area
-Foliage Biomass (Wf) = 0.0841596 
-aF 0 = 0 
-afR 0 = 0.172191 
-acR 0 = 0.168255 
-aS 0 = 0.462656 
-aRes 0 = 0.196898 
-delta_F 0 = 0 
-delta_fR 0 = 0.0435765 
-delta_cR 0 = 0.0425804 
-delta_S 0 = 0.0941157 
-delta_Res 0 = 0.0498292 
-delta_BB 0 = 0.022969 
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 1193.33 
-PAR FOR SOIL = 10.5949 
-Average Light Absorbed for establishment = 0.00887842 
-PHENOLOGY LAI = 3.77346 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 15.1627
-***************************************************
-
-Beginning month  10 ASW = 58.4727 mm
-daylength = 10.3251 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 10
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.385635
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = OCTOBER
-***************
-**Monthly MET DATA**
--average solar_rad = 14.36 MJ/m^2/day
--tav = 12.26 °C
--vpd = 3 mbar
--ts_f = -9999 °C
--rain = 43.31 mm
--swc = -9999 %vol
--Day length = 10.3251 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 10 = 58.4727 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
-- ASW layer 0 month 10  = 58.4727 mm
-
- GET_MODIFIERS
-
---Temperature Average 12.26 °C
-fT - Temperature Modifier = 0.736553
-fVPD - VPD modifier = 0.83527
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.919519
-PhysMod = 0.609619
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = OCTOBER
-VEG_MONTHS = 6 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 3.77346 
-Light Transmitted = 0.103926
-Vertical Percentage of Light Transmitted through this layer = 10.3926 %
-Vertical Fraction of Light Absorbed by this layer = 0.896074 
-Vertical Percentage of Light Absorbed by this layer = 89.6074 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 14.36 MJ/m^2/day
-Hourly Net Radiation = 890028 W/m^2/hour
-Par for layer '0' = 955.61 molPAR/m^2 month
-Apar for layer '0' = 856.298 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 99478.7  W/m^2/hour
-Average Par for lower layer = 106.809 molPAR/m^2 month
-Par for soil = 8.48431 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 1.01262
-Etransp for dominant layer = 481178 J/m^2/sec
-NET RADIATION = 890028 
-Daily Canopy Transpiration = 2.01961 mm-Kg H2o/m^2/day
-Daily Transpiration = 2.01961 mm/m^2/day
-Monthly Canopy Transpiration = 62.6078 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 99478.7
-Net radiation for soil evaporation = 99478.7 W/m^2/hour
-Monthly Soil Evaporation = 0.501385 
-Total Soil Evaporation = 48.5482 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.150938 
-Highest class
-Rainfall Intercepted = 6.47992 mm/month
-Percentage of Rain Intercepted from dominant canopy = 14.9617%
--Class evapotranspiration = 68.5396 mm/month
-Class evapotranspiration = 69.041 mm/month
-Cumulated Evapotranspiration for this class = 508.03 mm
-net_radiation for soil = 7902.04
-incident radiation for soil = 146.978
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = -10.5683 mm
-ATTENTION Available Soil Water is low than MinASW!!! 
-ASW = 15.1627
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 9 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.0191737 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 47.0964 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 197.021 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.172251 
-Monthly Stand GPP = 197.021 
-Monthly Stand NPP = 0.172251 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 1545.56
-CLASS LEVEL Yearly NPP = 1.35125
-CELL LEVEL
-CELL LEVEL Yearly GPP = 1545.56
-CELL LEVEL Yearly NPP = 1.35125
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-LAI == PEAK LAI 
-FASE FENOLOGICA = 3 
-allocating into the three pools Ws+Wr+Wreserve
-BiomassRoots increment CTEM = 0.0592285 tDM/area
-BiomassRoots into fine roots = 0.0299566 tDM/area
-BiomassRoots into coarse roots = 0.0292719 tDM/area
-BiomassStem increment CTEM = 0.0792819 tDM/area
-BiomassReserve increment CTEM = 0.033741 tDM/area
-Stem Biomass (Ws) = 16.139 tDM/area
-Reserve Biomass (Wres) = 0.108153 tDM/area
-Total Root Biomass (Wr TOT) = 6.06817 tDM/area
-Fine Root Biomass (Wrf) = 0.239847 tDM/area
-Coarse Root Biomass (Wrc) = 5.82832 tDM/area
-Foliage Biomass (Wf) = 0.0841596 
-aF 0 = 0 
-afR 0 = 0.173912 
-acR 0 = 0.169937 
-aS 0 = 0.460269 
-aRes 0 = 0.195882 
-delta_F 0 = 0 
-delta_fR 0 = 0.0299566 
-delta_cR 0 = 0.0292719 
-delta_S 0 = 0.0637288 
-delta_Res 0 = 0.033741 
-delta_BB 0 = 0.0155531 
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 955.61 
-PAR FOR SOIL = 8.48431 
-Average Light Absorbed for establishment = 0.00887842 
-PHENOLOGY LAI = 3.77346 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 15.1627
-***************************************************
-
-Beginning month  11 ASW = 76.4627 mm
-daylength = 9.62076 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 1
-
-species in veg period = 1
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 1
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 11
-Determines Effective Layer Cover 
-Monthly layer number = 1
-Vegetated Layer cover in layer 0 = 99.1246 % 
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.504281
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = NOVEMBER
-***************
-**Monthly MET DATA**
--average solar_rad = 9.25 MJ/m^2/day
--tav = 8.11 °C
--vpd = 3.6 mbar
--ts_f = -9999 °C
--rain = 61.3 mm
--swc = -9999 %vol
--Day length = 9.62076 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 11 = 76.4627 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= -7.80681e+235 
-- ASW layer 0 month 11  = 76.4627 mm
-
- GET_MODIFIERS
-
---Temperature Average 8.11 °C
-fT - Temperature Modifier = 0.368323
-fVPD - VPD modifier = 0.805735
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.970935
-PhysMod = 0.588063
-PHYSMOD uses F_VPD * F_AGE
--------------------
-*****VEGETATIVE PERIOD FOR Fagussylvatica SPECIES*****
---PHYSIOLOGICAL PROCESSES LAYER 0 --
-Month = NOVEMBER
-VEG_MONTHS = 7 
-
-GET_LIGHT_ROUTINE
-
-MODEL_LAI = 3.77346 
-Light Transmitted = 0.103926
-Vertical Percentage of Light Transmitted through this layer = 10.3926 %
-Vertical Fraction of Light Absorbed by this layer = 0.896074 
-Vertical Percentage of Light Absorbed by this layer = 89.6074 %
-dominant contatore 1 
-Top_layer = 0
-**LIGHT DOMINANT**
-Height Classes in Dominant Layer = 1
-Global Solar Radiation = 9.25 MJ/m^2/day
-Hourly Net Radiation = 615264 W/m^2/hour
-Par for layer '0' = 595.7 molPAR/m^2 month
-Apar for layer '0' = 533.791 molPAR/m^2 month
-Only one height class in dominant light
-Canopy Cover = 0.991246 
-Gap Cover = 0.00875423 
-Hourly Net Radiation for lower layer = 68768.3  W/m^2/hour
-Average Par for lower layer = 66.5816 molPAR/m^2 month
-Par for soil = 5.28887 molPAR/m^2 month
-
- GET_CANOPY_TRANSPIRATION_ROUTINE 
-gcorr = 0.986997
-Etransp for dominant layer = 330055 J/m^2/sec
-NET RADIATION = 615264 
-Daily Canopy Transpiration = 1.2908 mm-Kg H2o/m^2/day
-Daily Transpiration = 1.2908 mm/m^2/day
-Monthly Canopy Transpiration = 38.7241 mm-Kg H2o/m^2/month
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation from dominant layer = 68768.3
-Net radiation for soil evaporation = 68768.3 W/m^2/hour
-Monthly Soil Evaporation = 0.438617 
-Total Soil Evaporation = 48.9868 mm
-Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.150938 
-Highest class
-Rainfall Intercepted = 9.17153 mm/month
-Percentage of Rain Intercepted from dominant canopy = 14.9617%
--Class evapotranspiration = 47.5566 mm/month
-Class evapotranspiration = 47.9952 mm/month
-Cumulated Evapotranspiration for this class = 556.025 mm
-net_radiation for soil = 5462.57
-incident radiation for soil = 98.3263
-*********GET MONTHLY SOIL WATER BALACE************
-ASW at the END of month less Evapotraspiration = 28.4675 mm
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 10 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 1
-Phenology = 0
-Alpha C (Effective Quantum Canopy Efficiency)= 0.00924905 molC/molPAR
-**************************** GPP ************************************ 
-Optimum GPP (alpha max * apar) = 29.3585 molC/m^2 month
-Monthly GPP in grams of C for layer 0 = 59.2448 
-***************************** NPP *************************** 
-Monthly NPP for layer 0 = 0.0517964 
-Monthly Stand GPP = 59.2448 
-Monthly Stand NPP = 0.0517964 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 1604.81
-CLASS LEVEL Yearly NPP = 1.40305
-CELL LEVEL
-CELL LEVEL Yearly GPP = 1604.81
-CELL LEVEL Yearly NPP = 1.40305
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-Unspatial version 
-DayLength < Abscission DayLength 
-FASE FENOLOGICA = 0 
-allocating into the three pools Ws+Wr+Wreserve 
-with leaf fall
-BiomassRoots increment CTEM = 0.0170093 tDM/area
-BiomassRoots into fine roots = 0.00860299 tDM/area
-BiomassRoots into coarse roots = 0.00840635 tDM/area
-BiomassStem increment CTEM = 0.024402 tDM/area
-BiomassReserve increment CTEM = 0.0103851 tDM/area
-Stem Biomass (Ws) = 16.1586 tDM/area
-Reserve Biomass (Wres) = 0.118538 tDM/area
-Total Root Biomass (Wr TOT) = 6.08518 tDM/area
-Fine Root Biomass (Wrf) = 0.24845 tDM/area
-Coarse Root Biomass (Wrc) = 5.83673 tDM/area
-Foliage Biomass (Wf) = 0.0841596 
-aF 0 = 0 
-afR 0 = 0.166092 
-acR 0 = 0.162296 
-aS 0 = 0.471114 
-aRes 0 = 0.200498 
-delta_F 0 = 0 
-delta_fR 0 = 0.00860299 
-delta_cR 0 = 0.00840635 
-delta_S 0 = 0.019615 
-delta_Res 0 = 0.0103851 
-delta_BB 0 = 0.00478705 
-***LEAF FALL**
-Months of leaf fall for deciduous = 1.2 
-foliage reduction rate = 0.454545 
-Biomass foliage = 0.0459053 
-++Lai = 1.02913
-******************************
---------------------------------------------------------------------------
-
-
-PAR OVER CANOPY = 595.7 
-PAR FOR SOIL = 5.28887 
-Average Light Absorbed for establishment = 0.00887842 
-PHENOLOGY LAI = 1.02913 
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 28.4675
-***************************************************
-
-Beginning month  12 ASW = 99.9475 mm
-daylength = 9.54527 
-Abscission day length = 11.9758 
-
-
-
-****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (1526, 962)****
---GET VEGETATIVE PERIOD--
-counter = 0
-
-species in veg period = 0
---GET NUMBER OF MONTHLY LAYERS (Layer in Veg)--
-number of vegetative layers = 0
-
-GET_MONTHLY_FOREST_STRUCTURE_ROUTINE, MONTH = 12
-Determines Effective Layer Cover 
-Monthly layer number = 0
-*************************************************** 
--Dominant Light Index Function-
-Monthly Dominant layer is z = 0
-***************************************************
-Moist ratio outside modifier = 0.659166
-YEAR SIMULATED = 1 (2007)
-MONTH SIMULATED = DECEMBER
-***************
-**Monthly MET DATA**
--average solar_rad = 7.15 MJ/m^2/day
--tav = 3.32 °C
--vpd = 2.8 mbar
--ts_f = -nan °C
--rain = 71.48 mm
--swc = -nan %vol
--Day length = 9.54527 hours 
-***************
-*****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW month 12 = 99.9475 mm
-******************************************************
-
-cell = 
-- x = 1526
-- y = 962
-- z = 0
-- Class Age = 39 years 
-- Species = Fagussylvatica
-- Height = 12.42 m
-- Number of trees = 47 trees 
-- Vegetative Months =  6 months
-- Monthly LAI from Model= -6.10553e+123 
-- ASW layer 0 month 12  = 99.9475 mm
-
- GET_MODIFIERS
-
---Temperature Average 3.32 °C
-F_T = 0 
-fT - Temperature Modifier = 0
-fVPD - VPD modifier = 0.845354
---Age = 39 years
-fAge - Age modifier for timber= 0.729847
-fNutr - Soil Nutrient modifier = 0.776393
-fSW - Soil Water modifier layer 0 = 0.995422
-PhysMod = 0.616979
-PHYSMOD uses F_VPD * F_AGE
--------------------
-**UN-VEGETATIVE PERIOD FOR Fagussylvatica SPECIES in layer 0 **
-++Lai layer 0 = 0
-
-GET_PHOTOSYNTHESIS_ROUTINE
-
-************** at Month 11 CARBON FLUX-PRODUCTIVITY ******************
-VegUnveg = 0
-Phenology = 0
-Unvegetative period !! 
-Monthly GPP in grams of C for layer 0 = 0 
-Monthly NPP for layer 0 = 0 
-Monthly Stand GPP = 0 
-Monthly Stand NPP = 0 
-CLASS LEVEL
-CLASS LEVEL Yearly GPP = 1604.81
-CLASS LEVEL Yearly NPP = 1.40305
-CELL LEVEL
-CELL LEVEL Yearly GPP = 1604.81
-CELL LEVEL Yearly NPP = 1.40305
-GET_ALLOCATION_ROUTINE*********************************************************************************************************************************
-
-Carbon allocation routine for deciduous
-Version = u 
-(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER 0 , --
-PEAK_LAI = 3.77346 
-******************************
------------------------------------------------------------------
-********MONTHLY SOIL WATER BALACE in UNVEGETATIVE PERIOD*********
-
- GET_SOIL_EVAPORATION_ROUTINE
-Net radiation for soil evaporation = 599160 W/m^2/hour
-Monthly Soil Evaporation = 5.16182 
-Total Soil Evaporation = 54.1486 mm
-Available Soil Water at month 12 year of simulation 0 = 94.7857 mm
-*****************************************************************************
-*****************************************************************************
-*****END OF YEAR******
-****LITTER BIOMASS****
-Total Litter = -9997 tDM/area
-Total Biomass less Litterfall and Root Turnover = 22.2897 tDM/area
-Average Stem Mass = 343.8 kgDM stem /tree
-*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
-NO MORTALITY based SELF-THINNING RULE
-Average Stem Mass < WSMax
-**********************************
-DOMINANT LAYER
-Canopy Cover < 100 ->  Low Crowding Competition!!
-H/D Ratio Effective = 1.69678
-Height Increment = 0.000273061 m
-Height from CC Func = 12.4203 m
-DBH Increment from CC Func  = 0.0160929 cm
-DBH from CC Func = 26.9861 cm
-**AGB & BGB**
--for Class
-Yearly Class AGB = 16.2045 tDM/area year
-Yearly Class BGB = 6.08518 tDM/area year
--for Stand
-Yearly Stand AGB = 16.2045 tDM/area year
-Yearly Stand BGB = 6.08518 tDM/area year
-
-GET_DENDROMETRY_ROUTINE
-
-**Average DBH 3PG**
-**Tree Height from CC function**
--New Average DBH from 3PG CLASSIC = 27.3936 cm
--DBH increment from 3PG CLASSIC = 0.423559 cm
--Tree Height using Chapman-Richard function = 22.689 m
--Tree Height using Sortie function > 10 cm = 30.2625 m
-****TURNOVER****
-****fine root turnover****
-Fine Root Biomass  = 0.24845 tDM/area
-Average yearly fine Root turnover rate  = 1
-Fine Root Biomass lost = 0.24845 tDM/area
-***CAI & MAI***
-Volume for this class = 15.8431 m^3/area
-PREVIOUS Volume = 15.2354 m^3/cell resolution
-CURRENT Volume = 15.8431 m^3/cell resolution
-Yearly Stand CAI = 0.607704 m^3/area/yr
-Yearly Stand MAI = 0.406234 m^3/area/yr 
-> x = 1526
-> y = 962
-> z = 0
-> height = 22.689
-> age = 39
-> species = Fagussylvatica
-> phenology = 0
-> management = 0
-[2007] layer 0 n tree = 47
-[2007] layer 0 > avdbh = 27.3936
-[2007] layer 0 > wf = 0.0459053
-[2007] layer 0 > wr coarse = 5.83673
-[2007] layer 0 > wr fine = 0
-[2007] layer 0 > wr Tot = 5.83673
-[2007] layer 0 > ws = 16.1586
-[2007] layer 0 > wres = 0.118538
-[2007] layer 0 > wres tree = 2522.08 gC/trees
-[2007] layer 0 > Dead Trees = 0
-> New Saplings = 0
-*****************************
-**CUMULATIVE BALANCE for layer 0 ** 
-END of Year Yearly Cumulated GPP for layer 0  = 1604.81 gCm^2 year
-END of Year Yearly Cumulated NPP for layer 0  = 1.40305 tDM/area year
-END of Year Yearly Cumulated NPP/ha_area_covered for layer 0  = 15.4529 tDM/ha_area_covered year
-END of Year Yearly Cumulated DEL STEM layer 0  = 0.500502 tDM/area year
-END of Year Yearly Cumulated DEL FINE ROOT layer 0  = 0.24845 tDM/area year
-END of Year Yearly Cumulated DEL COARSE ROOT layer 0  = 0.242771 tDM/area year
-END of Year Yearly Cumulated DEL RESERVE layer 0  = 0.118538 tDM/area year
-END of Year Yearly Cumulated DEL RESERVE layer 0  = 5.04417 KgC tree year
-END of Year Yearly Cumulated DEL BB layer 0  = 0.122148 tDM/area year
-END of Year Yearly Cumulated DEL TOT ROOT layer 0  = 0.491222 tDM/area year
-ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP 
-DEL SUM = 1.39607 
-**CUMULATIVE BALANCE for cell (1526, 962) ** 
-[2007] [1526, 962] EOY TOTAL Cumulated GPP = 1604.81 [gCm^-2 year^-1]
-[2007] [1526, 962] EOY TOTAL Cumulated NPP = 1.40305 [tDM/area year^-1]
-[2007] [1526, 962] EOY TOTAL Cumulated Evapotranspiration = 556.025 [mm m^-2 year^-1]
-[2007] EOY Available Soil Water = 94.7857 mm H2o/m^2
-****************END OF SPECIES CLASS***************
-****************END OF AGE CLASS***************
-****************END OF HEIGHT CLASS***************
-****************END OF CELL***************
---SOIL MODEL ROUTINE--
-*********GET MONTHLY SOIL WATER BALACE************
-The model is running with one soil layer
-prova sull'array = 94.7857
-***************************************************
-
+-YEARS OF SIMULATION = 1
+Month = JANUARY
+day = 2
+rg = 5.1
+tav = 11.8
+vpd = 15.8
+rain = 0
+****************END OF DAY*******************
+Month = JANUARY
+day = 3
+rg = 4.66726e-62
+tav = 5.31542e-315
+vpd = -1.97202e+111
+rain = 5.30758e-315
+****************END OF DAY*******************
+Month = JANUARY
+day = 4
+rg = 2.122e-314
+tav = 13.15
+vpd = 13.9
+rain = 9.9
+****************END OF DAY*******************
+Month = JANUARY
+day = 1070260551
+rg = 4.24399e-314
+tav = 1.99916e+37
+vpd = 5.32093e-315
+rain = 5.32097e-315
+****************END OF DAY*******************
+Month = JANUARY
+day = 1889785610
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 20.79
+rain = 18.31
+****************END OF DAY*******************
+Month = JANUARY
+day = 0
+rg = 9.01676e-314
+tav = 4.24399e-314
+vpd = 1.08115e-160
+rain = 4.27698e+86
+****************END OF DAY*******************
+Month = JANUARY
+day = 0
+rg = 0.18
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 26.8
+****************END OF DAY*******************
+Month = JANUARY
+day = 1077365964
+rg = 2.26204e-111
+tav = 9.01701e-314
+vpd = 4.24399e-314
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = JANUARY
+day = 0
+rg = 0
+tav = 0.51
+vpd = 6.36599e-314
+rain = 14.89
+****************END OF DAY*******************
+Month = JANUARY
+day = 1076940636
+rg = 5.3229e-315
+tav = -5.1647e-284
+vpd = 9.01746e-314
+rain = 4.94066e-324
+****************END OF DAY*******************
+Month = JANUARY
+day = -1546188227
+rg = 21
+tav = 0
+vpd = 0.22
+rain = 2.122e-314
+****************END OF DAY*******************
+Month = JANUARY
+day = 1374389535
+rg = -2.35344e-185
+tav = 1.9036e+185
+vpd = 1.99916e+37
+rain = 4.24399e-314
+****************END OF DAY*******************
+Month = JANUARY
+day = -343597384
+rg = 13.87
+tav = 4.7
+vpd = 0
+rain = 6.36599e-314
+****************END OF DAY*******************
+Month = JANUARY
+day = -1889785610
+rg = 13.56
+tav = 4.3
+vpd = 0
+rain = 8.48798e-314
+****************END OF DAY*******************
+Month = JANUARY
+day = -2061584302
+rg = 15.11
+tav = 6.6
+vpd = 1.2
+rain = 1.061e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1202590843
+rg = 15.23
+tav = 6.8
+vpd = 0
+rain = 1.2732e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 0
+rg = 14.91
+tav = 6.2
+vpd = 0
+rain = 1.4854e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -858993459
+rg = 13.51
+tav = 4.2
+vpd = 0
+rain = 1.6976e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1889785610
+rg = 13
+tav = 3.6
+vpd = 0.2
+rain = 1.9098e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 1030792151
+rg = 13.15
+tav = 3.8
+vpd = 2.8
+rain = 2.122e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1546188227
+rg = 13.48
+tav = 4.2
+vpd = 5
+rain = 2.3342e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 171798692
+rg = 11.67
+tav = 2.2
+vpd = 1.4
+rain = 2.54639e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 171798692
+rg = 13.62
+tav = 4.4
+vpd = 0
+rain = 2.75859e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 171798692
+rg = 12.82
+tav = 3.4
+vpd = 0
+rain = 2.97079e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -687194767
+rg = 12.57
+tav = 3.1
+vpd = 0
+rain = 3.18299e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -858993459
+rg = 12.57
+tav = 3.1
+vpd = 0
+rain = 3.39519e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -515396076
+rg = 9.22
+tav = 0.2
+vpd = 0
+rain = 3.60739e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1202590843
+rg = 3.1
+tav = 0.5
+vpd = 0
+rain = 3.81959e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1717986918
+rg = 3.01
+tav = 0.8
+vpd = 0
+rain = 4.03179e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = -1374389535
+rg = 9.51
+tav = 0.4
+vpd = 0
+rain = 4.24399e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 1374389535
+rg = 10.05
+tav = 0.8
+vpd = 0
+rain = 4.45619e-313
+****************END OF DAY*******************
+Month = JANUARY
+day = 0
+rg = 10.19
+tav = 0.9
+vpd = 0
+rain = 4.66839e-313
+****************END OF DAY*******************
 ****************END OF MONTH*******************
 
+Month = FEBRUARY
+day = 2
+rg = 8.1
+tav = 7
+vpd = 12.47
+rain = 0
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 3
+rg = -9.25596e+61
+tav = -9.25597e+61
+vpd = -1.78355e+259
+rain = 5.31658e-315
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 4
+rg = 2.122e-314
+tav = 17.23
+vpd = 15
+rain = 11
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1070008893
+rg = 4.24399e-314
+tav = 3.94265e+234
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 687194767
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 22.67
+rain = 18.87
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 0
+rg = 9.01664e-314
+tav = 4.24399e-314
+vpd = 2.26204e-111
+rain = -1.78355e+259
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 0
+rg = 0.29
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 27.3
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1077215232
+rg = -5.1647e-284
+tav = 9.01746e-314
+vpd = 4.24399e-314
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = FEBRUARY
+day = -1717986918
+rg = 0
+tav = 0.51
+vpd = 6.36599e-314
+rain = 10.5
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076608368
+rg = 5.32215e-315
+tav = -4.31009e+12
+vpd = 9.0168e-314
+rain = -1.97202e+111
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076567736
+rg = 9.8
+tav = 2.8
+vpd = 0.16
+rain = 2.122e-314
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076770897
+rg = -9.25597e+61
+tav = 5.31108e-315
+vpd = -2.35344e-185
+rain = 4.24399e-314
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076786626
+rg = 4.66726e-62
+tav = 5.31056e-315
+vpd = 9.07095e+135
+rain = 6.36599e-314
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076744683
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -2.35344e-185
+rain = 8.48798e-314
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076561182
+rg = 4.66726e-62
+tav = 5.3138e-315
+vpd = -4.31009e+12
+rain = 1.061e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076494336
+rg = -9.25597e+61
+tav = 5.31302e-315
+vpd = 4.27698e+86
+rain = 1.2732e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076513996
+rg = -9.25597e+61
+tav = 5.31043e-315
+vpd = 4.27698e+86
+rain = 1.4854e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076557250
+rg = -9.25597e+61
+tav = -2.35344e-185
+vpd = 3.94265e+234
+rain = 1.6976e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076320010
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 3.94265e+234
+rain = 1.9098e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076575600
+rg = -9.25597e+61
+tav = 5.31043e-315
+vpd = 1.99916e+37
+rain = 2.122e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076470743
+rg = -2.35344e-185
+tav = 1.9036e+185
+vpd = -8.67922e+209
+rain = 2.3342e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076437975
+rg = -2.35344e-185
+tav = 5.31069e-315
+vpd = -4.31009e+12
+rain = 2.54639e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076437975
+rg = 4.66726e-62
+tav = 5.30862e-315
+vpd = 2.39343e-259
+rain = 2.75859e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1075998883
+rg = -9.25597e+61
+tav = 5.30784e-315
+vpd = 0
+rain = 2.97079e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1074318540
+rg = -9.25597e+61
+tav = 5.30784e-315
+vpd = -4.31009e+12
+rain = 3.18299e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1074271354
+rg = -2.35344e-185
+tav = 5.28738e-315
+vpd = 1.9036e+185
+rain = 3.39519e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076036894
+rg = 5.30784e-315
+tav = 5.29463e-315
+vpd = -4.31009e+12
+rain = 3.60739e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076107673
+rg = -2.35344e-185
+tav = 5.29774e-315
+vpd = -4.31009e+12
+rain = 3.81959e-313
+****************END OF DAY*******************
+Month = FEBRUARY
+day = 1076126023
+rg = -2.35344e-185
+tav = 5.29256e-315
+vpd = 5.11014e-210
+rain = 4.03179e-313
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = MARCH
+day = 2
+rg = 13.15
+tav = 13.9
+vpd = 16.86
+rain = 0
+****************END OF DAY*******************
+Month = MARCH
+day = 3
+rg = 1.99916e+37
+tav = 5.32093e-315
+vpd = -1.78355e+259
+rain = 5.31729e-315
+****************END OF DAY*******************
+Month = MARCH
+day = 4
+rg = 2.122e-314
+tav = 20.79
+vpd = 17.4
+rain = 13.4
+****************END OF DAY*******************
+Month = MARCH
+day = 1070763868
+rg = 4.24399e-314
+tav = 1.08115e-160
+vpd = 5.32269e-315
+rain = 5.32146e-315
+****************END OF DAY*******************
+Month = MARCH
+day = -2061584302
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 22.56
+rain = 21.11
+****************END OF DAY*******************
+Month = MARCH
+day = 0
+rg = 9.01701e-314
+tav = 4.24399e-314
+vpd = 4.66726e-62
+rain = 3.94265e+234
+****************END OF DAY*******************
+Month = MARCH
+day = 0
+rg = 0.51
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 27.3
+****************END OF DAY*******************
+Month = MARCH
+day = 1076074905
+rg = -5.1647e-284
+tav = 9.01746e-314
+vpd = 4.24399e-314
+rain = 5.31697e-315
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 0
+tav = 0.22
+vpd = 6.36599e-314
+rain = 6.61
+****************END OF DAY*******************
+Month = MARCH
+day = 858993459
+rg = 1.9036e+185
+tav = 1.99916e+37
+vpd = 9.01655e-314
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = 1717986918
+rg = 4.7
+tav = 0
+vpd = 0.2
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = 858993459
+rg = 4.3
+tav = 0
+vpd = 0.17
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 6.6
+tav = 1.2
+vpd = 0.1
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 6.8
+tav = 0
+vpd = 0.11
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 6.2
+tav = 0
+vpd = 0.33
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = 1717986918
+rg = 4.2
+tav = 0
+vpd = 0.33
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 3.6
+tav = 0.2
+vpd = 0.18
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 3.8
+tav = 2.8
+vpd = 0.09
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 4.2
+tav = 5
+vpd = 0.16
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = 858993459
+rg = 2.2
+tav = 1.4
+vpd = 0.06
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 4.4
+tav = 0
+vpd = 0.11
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 3.4
+tav = 0
+vpd = 0.13
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 3.1
+tav = 0
+vpd = 0.25
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = 0
+rg = 3.1
+tav = 0
+vpd = 0.22
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.2
+tav = 0
+vpd = 0.35
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.5
+tav = 0
+vpd = 0.22
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.8
+tav = 0
+vpd = 0.22
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -858993459
+rg = 0.4
+tav = 0
+vpd = 0.27
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.8
+tav = 0
+vpd = 0.19
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.9
+tav = 0
+vpd = 0.19
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 1.6
+tav = 0
+vpd = 0.32
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MARCH
+day = -1717986918
+rg = 0.4
+tav = 0.2
+vpd = 0.23
+rain = 1.9036e+185
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = APRIL
+day = 2
+rg = 17.23
+tav = 15
+vpd = 17.36
+rain = 0
+****************END OF DAY*******************
+Month = APRIL
+day = 3
+rg = 3.94265e+234
+tav = 1.9036e+185
+vpd = 2.26204e-111
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = APRIL
+day = 4
+rg = 2.122e-314
+tav = 22.67
+vpd = 19
+rain = 15
+****************END OF DAY*******************
+Month = APRIL
+day = 1071665643
+rg = 4.24399e-314
+tav = 2.26204e-111
+vpd = -9.25597e+61
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = APRIL
+day = -2061584302
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 19.2
+rain = 21.29
+****************END OF DAY*******************
+Month = APRIL
+day = 0
+rg = 9.01746e-314
+tav = 4.24399e-314
+vpd = 5.11014e-210
+rain = 3.94265e+234
+****************END OF DAY*******************
+Month = APRIL
+day = 1717986918
+rg = 0.51
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 25
+****************END OF DAY*******************
+Month = APRIL
+day = 1074973900
+rg = -4.31009e+12
+tav = 9.0168e-314
+vpd = 4.24399e-314
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = APRIL
+day = 1074869043
+rg = 2.8
+tav = 0.16
+vpd = 6.36599e-314
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1075471974
+rg = 5.31108e-315
+tav = -2.35344e-185
+vpd = 9.01672e-314
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1075524403
+rg = 5.31056e-315
+tav = 9.07095e+135
+vpd = 1.11386e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1075367116
+rg = 4.66726e-62
+tav = -2.35344e-185
+vpd = 1.32602e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074842828
+rg = 5.3138e-315
+tav = -4.31009e+12
+vpd = 1.53823e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074580684
+rg = 5.31302e-315
+tav = 4.27698e+86
+vpd = 1.75051e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074685542
+rg = 5.31043e-315
+tav = 4.27698e+86
+vpd = 1.96271e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074842828
+rg = -2.35344e-185
+tav = 3.94265e+234
+vpd = 2.17486e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1073846681
+rg = 1.9036e+185
+tav = 3.94265e+234
+vpd = 2.38701e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074895257
+rg = 5.31043e-315
+tav = 1.99916e+37
+vpd = 2.59925e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074475827
+rg = 1.9036e+185
+tav = -8.67922e+209
+vpd = 2.81138e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074318540
+rg = 5.31069e-315
+tav = -4.31009e+12
+vpd = 3.02362e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074318540
+rg = 5.30862e-315
+tav = 2.39343e-259
+vpd = 3.23584e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1070176665
+rg = 5.30784e-315
+tav = 0
+vpd = 3.44809e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1071644672
+rg = 5.30784e-315
+tav = -4.31009e+12
+vpd = 3.66027e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1072273817
+rg = 5.28738e-315
+tav = 1.9036e+185
+vpd = 3.87251e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1071225241
+rg = 5.29463e-315
+tav = -4.31009e+12
+vpd = 4.08467e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1072273817
+rg = 5.29774e-315
+tav = -4.31009e+12
+vpd = 4.29687e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1072483532
+rg = 5.29256e-315
+tav = 5.11014e-210
+vpd = 4.50909e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1073322393
+rg = 5.29774e-315
+tav = -5.1647e-284
+vpd = 4.72126e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1071225241
+rg = 5.29877e-315
+tav = -5.1647e-284
+vpd = 4.93346e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1072273817
+rg = 5.30292e-315
+tav = 1.99916e+37
+vpd = 5.1457e-313
+rain = 5.1
+****************END OF DAY*******************
+Month = APRIL
+day = 1074370969
+rg = -2.35344e-185
+tav = -1.97202e+111
+vpd = 5.35788e-313
+rain = 5.1
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = MAY
+day = 2
+rg = 20.79
+tav = 17.4
+vpd = 18.31
+rain = 2.2
+****************END OF DAY*******************
+Month = MAY
+day = 3
+rg = 1.08115e-160
+tav = 5.32269e-315
+vpd = 4.27698e+86
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = 4
+rg = 2.122e-314
+tav = 22.56
+vpd = 26.8
+rain = 22.8
+****************END OF DAY*******************
+Month = MAY
+day = 1071665643
+rg = 4.24399e-314
+tav = 4.66726e-62
+vpd = -9.25597e+61
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = -1030792151
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 14.89
+rain = 21.29
+****************END OF DAY*******************
+Month = MAY
+day = 1074161254
+rg = 9.01746e-314
+tav = 4.24399e-314
+vpd = 4.94066e-324
+rain = 2.39344e-259
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0.22
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 13.8
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 1.99916e+37
+tav = 9.01655e-314
+vpd = 4.24399e-314
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 858993459
+rg = 0
+tav = 0.2
+vpd = 6.36599e-314
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.17
+vpd = 8.48798e-314
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 1.2
+tav = 0.1
+vpd = 1.061e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.11
+vpd = 1.2732e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = -1717986918
+rg = 0
+tav = 0.33
+vpd = 1.4854e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 1717986918
+rg = 0
+tav = 0.33
+vpd = 1.6976e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0.2
+tav = 0.18
+vpd = 1.9098e-313
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = MAY
+day = 1717986918
+rg = 2.8
+tav = 0.09
+vpd = 2.122e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 5
+tav = 0.16
+vpd = 2.3342e-313
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 1.4
+tav = 0.06
+vpd = 2.54639e-313
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.11
+vpd = 2.75859e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.13
+vpd = 2.97079e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.25
+vpd = 3.18299e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.22
+vpd = 3.39519e-313
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.35
+vpd = 3.60739e-313
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.22
+vpd = 3.81959e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.22
+vpd = 4.03179e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.27
+vpd = 4.24399e-313
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.19
+vpd = 4.45619e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = -1717986918
+rg = 0
+tav = 0.19
+vpd = 4.66839e-313
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = MAY
+day = -1717986918
+rg = 0
+tav = 0.32
+vpd = 4.88059e-313
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0.2
+tav = 0.23
+vpd = 5.09279e-313
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = MAY
+day = -1717986918
+rg = 0.2
+tav = 0.17
+vpd = 5.30499e-313
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = MAY
+day = 0
+rg = 0
+tav = 0.08
+vpd = 5.51719e-313
+rain = 4.66726e-62
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = JUNE
+day = 2
+rg = 22.67
+tav = 19
+vpd = 18.87
+rain = 1.8
+****************END OF DAY*******************
+Month = JUNE
+day = 3
+rg = 2.26204e-111
+tav = -9.25597e+61
+vpd = -1.78355e+259
+rain = 5.32273e-315
+****************END OF DAY*******************
+Month = JUNE
+day = 4
+rg = 2.122e-314
+tav = 19.2
+vpd = 27.3
+rain = 23.3
+****************END OF DAY*******************
+Month = JUNE
+day = 1070344437
+rg = 4.24399e-314
+tav = 5.11014e-210
+vpd = -9.25597e+61
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = JUNE
+day = 1202590843
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 10.5
+rain = 20.64
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 9.0168e-314
+tav = 4.24399e-314
+vpd = -1.97202e+111
+rain = 2.26204e-111
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 0.16
+tav = 6.36599e-314
+vpd = 2.122e-314
+rain = 8.7
+****************END OF DAY*******************
+Month = JUNE
+day = 1072902963
+rg = -2.35344e-185
+tav = 9.01672e-314
+vpd = 4.24399e-314
+rain = 8.3
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 9.07095e+135
+tav = 1.11386e-313
+vpd = 6.36599e-314
+rain = 10.6
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -2.35344e-185
+tav = 1.32602e-313
+vpd = 8.48798e-314
+rain = 10.8
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -4.31009e+12
+tav = 1.53823e-313
+vpd = 1.061e-313
+rain = 10.2
+****************END OF DAY*******************
+Month = JUNE
+day = 1070176665
+rg = 4.27698e+86
+tav = 1.75051e-313
+vpd = 1.2732e-313
+rain = 8.2
+****************END OF DAY*******************
+Month = JUNE
+day = 1074161254
+rg = 4.27698e+86
+tav = 1.96271e-313
+vpd = 1.4854e-313
+rain = 7.6
+****************END OF DAY*******************
+Month = JUNE
+day = 1075052544
+rg = 3.94265e+234
+tav = 2.17486e-313
+vpd = 1.6976e-313
+rain = 7.8
+****************END OF DAY*******************
+Month = JUNE
+day = 1073112678
+rg = 3.94265e+234
+tav = 2.38701e-313
+vpd = 1.9098e-313
+rain = 8.2
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 1.99916e+37
+tav = 2.59925e-313
+vpd = 2.122e-313
+rain = 6.2
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -8.67922e+209
+tav = 2.81138e-313
+vpd = 2.3342e-313
+rain = 8.4
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -4.31009e+12
+tav = 3.02362e-313
+vpd = 2.54639e-313
+rain = 7.4
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 2.39343e-259
+tav = 3.23584e-313
+vpd = 2.75859e-313
+rain = 7.1
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 0
+tav = 3.44809e-313
+vpd = 2.97079e-313
+rain = 7.1
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -4.31009e+12
+tav = 3.66027e-313
+vpd = 3.18299e-313
+rain = 4.2
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 1.9036e+185
+tav = 3.87251e-313
+vpd = 3.39519e-313
+rain = -0.3
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -4.31009e+12
+tav = 4.08467e-313
+vpd = 3.60739e-313
+rain = 1.6
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -4.31009e+12
+tav = 4.29687e-313
+vpd = 3.81959e-313
+rain = 4.4
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = 5.11014e-210
+tav = 4.50909e-313
+vpd = 4.03179e-313
+rain = 4.8
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -5.1647e-284
+tav = 4.72126e-313
+vpd = 4.24399e-313
+rain = 4.9
+****************END OF DAY*******************
+Month = JUNE
+day = 1070176665
+rg = -5.1647e-284
+tav = 4.93346e-313
+vpd = 4.45619e-313
+rain = 5.6
+****************END OF DAY*******************
+Month = JUNE
+day = 1070176665
+rg = 1.99916e+37
+tav = 5.1457e-313
+vpd = 4.66839e-313
+rain = 4.4
+****************END OF DAY*******************
+Month = JUNE
+day = 0
+rg = -1.97202e+111
+tav = 5.35788e-313
+vpd = 4.88059e-313
+rain = 4.8
+****************END OF DAY*******************
+Month = JUNE
+day = 1070176665
+rg = 9.07095e+135
+tav = 5.57005e-313
+vpd = 5.09279e-313
+rain = 7.2
+****************END OF DAY*******************
+Month = JUNE
+day = 1075838976
+rg = 1.99916e+37
+tav = 5.78219e-313
+vpd = 5.30499e-313
+rain = 8.6
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = JULY
+day = 2
+rg = 22.56
+tav = 26.8
+vpd = 21.11
+rain = 0
+****************END OF DAY*******************
+Month = JULY
+day = 3
+rg = 4.66726e-62
+tav = -9.25597e+61
+vpd = 3.94265e+234
+rain = 5.3229e-315
+****************END OF DAY*******************
+Month = JULY
+day = 4
+rg = 2.122e-314
+tav = 14.89
+vpd = 27.3
+rain = 23.3
+****************END OF DAY*******************
+Month = JULY
+day = 1069841121
+rg = 4.24399e-314
+tav = 4.94066e-324
+vpd = 5.31697e-315
+rain = 5.32203e-315
+****************END OF DAY*******************
+Month = JULY
+day = -1717986918
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 6.61
+rain = 16.81
+****************END OF DAY*******************
+Month = JULY
+day = 1546188227
+rg = 9.01655e-314
+tav = 4.24399e-314
+vpd = 1.9036e+185
+rain = -4.95296e-136
+****************END OF DAY*******************
+Month = JULY
+day = -1717986918
+rg = 0.2
+tav = 6.36599e-314
+vpd = 1.9036e+185
+rain = 4.27698e+86
+****************END OF DAY*******************
+Month = JULY
+day = -1030792151
+rg = 0.17
+tav = 8.48798e-314
+vpd = 1.9036e+185
+rain = -8.67922e+209
+****************END OF DAY*******************
+Month = JULY
+day = 1374389535
+rg = 0.1
+tav = 1.061e-313
+vpd = 1.9036e+185
+rain = -1.10707e-234
+****************END OF DAY*******************
+Month = JULY
+day = 1374389535
+rg = 0.11
+tav = 1.2732e-313
+vpd = 1.9036e+185
+rain = -5.1647e-284
+****************END OF DAY*******************
+Month = JULY
+day = 1889785610
+rg = 0.33
+tav = 1.4854e-313
+vpd = 1.9036e+185
+rain = -2.10649e-37
+****************END OF DAY*******************
+Month = JULY
+day = 1889785610
+rg = 0.33
+tav = 1.6976e-313
+vpd = 1.9036e+185
+rain = 5.31483e-315
+****************END OF DAY*******************
+Month = JULY
+day = 1202590843
+rg = 0.18
+tav = 1.9098e-313
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = JULY
+day = -343597384
+rg = 0.09
+tav = 2.122e-313
+vpd = 1.9036e+185
+rain = -1.10707e-234
+****************END OF DAY*******************
+Month = JULY
+day = -1030792151
+rg = 0.16
+tav = 2.3342e-313
+vpd = 1.9036e+185
+rain = 9.45875e-13
+****************END OF DAY*******************
+Month = JULY
+day = 171798692
+rg = 0.06
+tav = 2.54639e-313
+vpd = 1.9036e+185
+rain = -4.95296e-136
+****************END OF DAY*******************
+Month = JULY
+day = 0
+rg = 0.11
+tav = 2.75859e-313
+vpd = 1.9036e+185
+rain = 2.39344e-259
+****************END OF DAY*******************
+Month = JULY
+day = -1030792151
+rg = 0.13
+tav = 2.97079e-313
+vpd = 1.9036e+185
+rain = 2.39344e-259
+****************END OF DAY*******************
+Month = JULY
+day = 1717986918
+rg = 0.25
+tav = 3.18299e-313
+vpd = 1.9036e+185
+rain = 2.39344e-259
+****************END OF DAY*******************
+Month = JULY
+day = -1030792151
+rg = 0.22
+tav = 3.39519e-313
+vpd = 1.9036e+185
+rain = -1.97202e+111
+****************END OF DAY*******************
+Month = JULY
+day = -1030792151
+rg = 0.35
+tav = 3.60739e-313
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = JULY
+day = 343597384
+rg = 0.22
+tav = 3.81959e-313
+vpd = 1.9036e+185
+rain = -4.16149e+160
+****************END OF DAY*******************
+Month = JULY
+day = -2061584302
+rg = 0.22
+tav = 4.03179e-313
+vpd = 1.9036e+185
+rain = -2.10649e-37
+****************END OF DAY*******************
+Month = JULY
+day = -2061584302
+rg = 0.27
+tav = 4.24399e-313
+vpd = 1.9036e+185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = JULY
+day = 1202590843
+rg = 0.19
+tav = 4.45619e-313
+vpd = 1.9036e+185
+rain = -1.02951e-86
+****************END OF DAY*******************
+Month = JULY
+day = -687194767
+rg = 0.19
+tav = 4.66839e-313
+vpd = 1.9036e+185
+rain = 4.27698e+86
+****************END OF DAY*******************
+Month = JULY
+day = 1546188227
+rg = 0.32
+tav = 4.88059e-313
+vpd = 1.9036e+185
+rain = 5.31069e-315
+****************END OF DAY*******************
+Month = JULY
+day = 1202590843
+rg = 0.23
+tav = 5.09279e-313
+vpd = 1.9036e+185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = JULY
+day = 858993459
+rg = 0.17
+tav = 5.30499e-313
+vpd = 1.9036e+185
+rain = 9.07095e+135
+****************END OF DAY*******************
+Month = JULY
+day = 1546188227
+rg = 0.08
+tav = 5.51719e-313
+vpd = 1.9036e+185
+rain = 2.26204e-111
+****************END OF DAY*******************
+Month = JULY
+day = -2061584302
+rg = 0.15
+tav = 5.72939e-313
+vpd = 1.9036e+185
+rain = -2.10649e-37
+****************END OF DAY*******************
+Month = JULY
+day = 515396076
+rg = 0.17
+tav = 5.94159e-313
+vpd = 1.9036e+185
+rain = 3.94265e+234
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = AUGUST
+day = 2
+rg = 19.2
+tav = 27.3
+vpd = 21.29
+rain = 0
+****************END OF DAY*******************
+Month = AUGUST
+day = 3
+rg = 5.11014e-210
+tav = -9.25597e+61
+vpd = 3.94265e+234
+rain = 5.3229e-315
+****************END OF DAY*******************
+Month = AUGUST
+day = 4
+rg = 2.122e-314
+tav = 10.5
+vpd = 25
+rain = 21
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070176665
+rg = 4.24399e-314
+tav = -1.97202e+111
+vpd = -2.35344e-185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069925007
+rg = 6.36599e-314
+tav = 2.122e-314
+vpd = 5.1
+rain = 13.87
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069128089
+rg = 9.01672e-314
+tav = 4.24399e-314
+vpd = 5.1
+rain = 13.56
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069295861
+rg = 1.11386e-313
+tav = 6.36599e-314
+vpd = 5.1
+rain = 15.11
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070931640
+rg = 1.32602e-313
+tav = 8.48798e-314
+vpd = 5.1
+rain = 15.23
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070931640
+rg = 1.53823e-313
+tav = 1.061e-313
+vpd = 5.1
+rain = 14.91
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070008893
+rg = 1.75051e-313
+tav = 1.2732e-313
+vpd = 5.1
+rain = 13.51
+****************END OF DAY*******************
+Month = AUGUST
+day = 1068960317
+rg = 1.96271e-313
+tav = 1.4854e-313
+vpd = 5.1
+rain = 13
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069841121
+rg = 2.17486e-313
+tav = 1.6976e-313
+vpd = 5.1
+rain = 13.15
+****************END OF DAY*******************
+Month = AUGUST
+day = 1068415057
+rg = 2.38701e-313
+tav = 1.9098e-313
+vpd = 5.1
+rain = 13.48
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069295861
+rg = 2.59925e-313
+tav = 2.122e-313
+vpd = 5.1
+rain = 11.67
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069589463
+rg = 2.81138e-313
+tav = 2.3342e-313
+vpd = 5.1
+rain = 13.62
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070596096
+rg = 3.02362e-313
+tav = 2.54639e-313
+vpd = 5.1
+rain = 12.82
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070344437
+rg = 3.23584e-313
+tav = 2.75859e-313
+vpd = 5.1
+rain = 12.57
+****************END OF DAY*******************
+Month = AUGUST
+day = 1071015526
+rg = 3.44809e-313
+tav = 2.97079e-313
+vpd = 5.1
+rain = 12.57
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070344437
+rg = 3.66027e-313
+tav = 3.18299e-313
+vpd = 5.1
+rain = 9.22
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070344437
+rg = 3.87251e-313
+tav = 3.39519e-313
+vpd = 5.1
+rain = 3.1
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070679982
+rg = 4.08467e-313
+tav = 3.60739e-313
+vpd = 5.1
+rain = 3.01
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070092779
+rg = 4.29687e-313
+tav = 3.81959e-313
+vpd = 5.1
+rain = 9.51
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070092779
+rg = 4.50909e-313
+tav = 4.03179e-313
+vpd = 5.1
+rain = 10.05
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070889697
+rg = 4.72126e-313
+tav = 4.24399e-313
+vpd = 5.1
+rain = 10.19
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070428323
+rg = 4.93346e-313
+tav = 4.45619e-313
+vpd = 5.1
+rain = 11.06
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069925007
+rg = 5.1457e-313
+tav = 4.66839e-313
+vpd = 5.1
+rain = 9.5
+****************END OF DAY*******************
+Month = AUGUST
+day = 1068792545
+rg = 5.35788e-313
+tav = 4.88059e-313
+vpd = 5.1
+rain = 10.05
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069757235
+rg = 5.57005e-313
+tav = 5.09279e-313
+vpd = 5.1
+rain = 12.63
+****************END OF DAY*******************
+Month = AUGUST
+day = 1069925007
+rg = 5.78219e-313
+tav = 5.30499e-313
+vpd = 5.1
+rain = 13.78
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070092779
+rg = 5.99444e-313
+tav = 5.51719e-313
+vpd = 5.1
+rain = 14.01
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070721925
+rg = 6.20665e-313
+tav = 5.72939e-313
+vpd = 5.1
+rain = 11.27
+****************END OF DAY*******************
+Month = AUGUST
+day = 1070344437
+rg = 6.41886e-313
+tav = 5.94159e-313
+vpd = 5.1
+rain = 11.06
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = SEPTEMBER
+day = 2
+rg = 14.89
+tav = 27.3
+vpd = 21.29
+rain = 0
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 3
+rg = 4.94066e-324
+tav = 5.31697e-315
+vpd = 2.39344e-259
+rain = 5.32215e-315
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 4
+rg = 2.122e-314
+tav = 6.61
+vpd = 13.8
+rain = 9.8
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 5
+rg = 4.24399e-314
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 6
+rg = 6.36599e-314
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 7
+rg = 8.48798e-314
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 8
+rg = 1.061e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 9
+rg = 1.2732e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 10
+rg = 1.4854e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 11
+rg = 1.6976e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 12
+rg = 1.9098e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 13
+rg = 2.122e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 14
+rg = 2.3342e-313
+tav = 1.9036e+185
+vpd = -9.25597e+61
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 15
+rg = 2.54639e-313
+tav = 1.9036e+185
+vpd = -9.25597e+61
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 16
+rg = 2.75859e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 17
+rg = 2.97079e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 18
+rg = 3.18299e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 19
+rg = 3.39519e-313
+tav = 1.9036e+185
+vpd = -9.25597e+61
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 20
+rg = 3.60739e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = 5.30784e-315
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 21
+rg = 3.81959e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 22
+rg = 4.03179e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 23
+rg = 4.24399e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 24
+rg = 4.45619e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 25
+rg = 4.66839e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 26
+rg = 4.88059e-313
+tav = 1.9036e+185
+vpd = -2.35344e-185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 27
+rg = 5.09279e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 28
+rg = 5.30499e-313
+tav = 1.9036e+185
+vpd = -9.25597e+61
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 29
+rg = 5.51719e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 30
+rg = 5.72939e-313
+tav = 1.9036e+185
+vpd = -9.25597e+61
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 31
+rg = 5.94159e-313
+tav = 1.9036e+185
+vpd = 4.66726e-62
+rain = -9.25597e+61
+****************END OF DAY*******************
+Month = SEPTEMBER
+day = 0
+rg = 6.15379e-313
+tav = 1.9036e+185
+vpd = 1.9036e+185
+rain = -2.35344e-185
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = OCTOBER
+day = 2
+rg = 10.5
+tav = 25
+vpd = 20.64
+rain = 0
+****************END OF DAY*******************
+Month = OCTOBER
+day = 3
+rg = -1.97202e+111
+tav = -2.35344e-185
+vpd = 2.26204e-111
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = OCTOBER
+day = 4
+rg = 2.122e-314
+tav = 5.1
+vpd = 8.7
+rain = 4.7
+****************END OF DAY*******************
+Month = OCTOBER
+day = 5
+rg = 4.24399e-314
+tav = 5.1
+vpd = 8.3
+rain = 4.3
+****************END OF DAY*******************
+Month = OCTOBER
+day = 6
+rg = 6.36599e-314
+tav = 5.1
+vpd = 10.6
+rain = 6.6
+****************END OF DAY*******************
+Month = OCTOBER
+day = 7
+rg = 8.48798e-314
+tav = 5.1
+vpd = 10.8
+rain = 6.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 8
+rg = 1.061e-313
+tav = 5.1
+vpd = 10.2
+rain = 6.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 9
+rg = 1.2732e-313
+tav = 5.1
+vpd = 8.2
+rain = 4.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 10
+rg = 1.4854e-313
+tav = 5.1
+vpd = 7.6
+rain = 3.6
+****************END OF DAY*******************
+Month = OCTOBER
+day = 11
+rg = 1.6976e-313
+tav = 5.1
+vpd = 7.8
+rain = 3.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 12
+rg = 1.9098e-313
+tav = 5.1
+vpd = 8.2
+rain = 4.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 13
+rg = 2.122e-313
+tav = 5.1
+vpd = 6.2
+rain = 2.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 14
+rg = 2.3342e-313
+tav = 5.1
+vpd = 8.4
+rain = 4.4
+****************END OF DAY*******************
+Month = OCTOBER
+day = 15
+rg = 2.54639e-313
+tav = 5.1
+vpd = 7.4
+rain = 3.4
+****************END OF DAY*******************
+Month = OCTOBER
+day = 16
+rg = 2.75859e-313
+tav = 5.1
+vpd = 7.1
+rain = 3.1
+****************END OF DAY*******************
+Month = OCTOBER
+day = 17
+rg = 2.97079e-313
+tav = 5.1
+vpd = 7.1
+rain = 3.1
+****************END OF DAY*******************
+Month = OCTOBER
+day = 18
+rg = 3.18299e-313
+tav = 5.1
+vpd = 4.2
+rain = 0.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 19
+rg = 3.39519e-313
+tav = 5.1
+vpd = -0.3
+rain = 0.5
+****************END OF DAY*******************
+Month = OCTOBER
+day = 20
+rg = 3.60739e-313
+tav = 5.1
+vpd = 1.6
+rain = 0.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 21
+rg = 3.81959e-313
+tav = 5.1
+vpd = 4.4
+rain = 0.4
+****************END OF DAY*******************
+Month = OCTOBER
+day = 22
+rg = 4.03179e-313
+tav = 5.1
+vpd = 4.8
+rain = 0.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 23
+rg = 4.24399e-313
+tav = 5.1
+vpd = 4.9
+rain = 0.9
+****************END OF DAY*******************
+Month = OCTOBER
+day = 24
+rg = 4.45619e-313
+tav = 5.1
+vpd = 5.6
+rain = 1.6
+****************END OF DAY*******************
+Month = OCTOBER
+day = 25
+rg = 4.66839e-313
+tav = 5.1
+vpd = 4.4
+rain = 0.4
+****************END OF DAY*******************
+Month = OCTOBER
+day = 26
+rg = 4.88059e-313
+tav = 5.1
+vpd = 4.8
+rain = 0.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 27
+rg = 5.09279e-313
+tav = 5.1
+vpd = 7.2
+rain = 3.2
+****************END OF DAY*******************
+Month = OCTOBER
+day = 28
+rg = 5.30499e-313
+tav = 5.1
+vpd = 8.6
+rain = 4.6
+****************END OF DAY*******************
+Month = OCTOBER
+day = 29
+rg = 5.51719e-313
+tav = 5.1
+vpd = 8.9
+rain = 4.9
+****************END OF DAY*******************
+Month = OCTOBER
+day = 30
+rg = 5.72939e-313
+tav = 5.1
+vpd = 5.8
+rain = 1.8
+****************END OF DAY*******************
+Month = OCTOBER
+day = 0
+rg = 5.94159e-313
+tav = 5.1
+vpd = 5.6
+rain = 1.6
+****************END OF DAY*******************
+Month = OCTOBER
+day = 0
+rg = 6.15379e-313
+tav = 5.1
+vpd = 5.4
+rain = 1.4
+****************END OF DAY*******************
+Month = OCTOBER
+day = 0
+rg = 6.36599e-313
+tav = 5.1
+vpd = 4.9
+rain = 0.9
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = NOVEMBER
+day = 2
+rg = 6.61
+tav = 13.8
+vpd = 16.81
+rain = 2.8
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 3
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = -4.95296e-136
+rain = 5.31108e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 4
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = 4.27698e+86
+rain = 5.31056e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 5
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -8.67922e+209
+rain = 4.66726e-62
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 6
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = -1.10707e-234
+rain = 5.3138e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 7
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = -5.1647e-284
+rain = 5.31302e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 8
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = -2.10649e-37
+rain = 5.31043e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 9
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 5.31483e-315
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 10
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -9.25597e+61
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 11
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = -1.10707e-234
+rain = 5.31043e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 12
+rg = 1.9036e+185
+tav = -9.25597e+61
+vpd = 9.45875e-13
+rain = 1.9036e+185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 13
+rg = 1.9036e+185
+tav = -9.25597e+61
+vpd = -4.95296e-136
+rain = 5.31069e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 14
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = 2.39344e-259
+rain = 5.30862e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 15
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 2.39344e-259
+rain = 5.30784e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 16
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 2.39344e-259
+rain = 5.30784e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 17
+rg = 1.9036e+185
+tav = -9.25597e+61
+vpd = -1.97202e+111
+rain = 5.28738e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 18
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -9.25597e+61
+rain = 5.29463e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 19
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = -4.16149e+160
+rain = 5.29774e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 20
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = -2.10649e-37
+rain = 5.29256e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 21
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -2.35344e-185
+rain = 5.29774e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 22
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = -1.02951e-86
+rain = 5.29877e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 23
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 4.27698e+86
+rain = 5.30292e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 24
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = 5.31069e-315
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 25
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = -2.35344e-185
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 26
+rg = 1.9036e+185
+tav = -9.25597e+61
+vpd = 9.07095e+135
+rain = 5.3081e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 27
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = 2.26204e-111
+rain = -2.35344e-185
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 28
+rg = 1.9036e+185
+tav = -9.25597e+61
+vpd = -2.10649e-37
+rain = 5.31134e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 29
+rg = 1.9036e+185
+tav = 4.66726e-62
+vpd = 3.94265e+234
+rain = 5.30395e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 30
+rg = 1.9036e+185
+tav = 1.9036e+185
+vpd = 4.27698e+86
+rain = 5.30292e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 31
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = 4.27698e+86
+rain = 5.30188e-315
+****************END OF DAY*******************
+Month = NOVEMBER
+day = 0
+rg = 1.9036e+185
+tav = -2.35344e-185
+vpd = -1.78355e+259
+rain = -9.25597e+61
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.7
+vpd = 13.87
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.3
+vpd = 13.56
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 10.6
+vpd = 15.11
+rain = 1.2
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 10.8
+vpd = 15.23
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 10.2
+vpd = 14.91
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.2
+vpd = 13.51
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.6
+vpd = 13
+rain = 0.2
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.8
+vpd = 13.15
+rain = 2.8
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.2
+vpd = 13.48
+rain = 5
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 6.2
+vpd = 11.67
+rain = 1.4
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.4
+vpd = 13.62
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.4
+vpd = 12.82
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.1
+vpd = 12.57
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.1
+vpd = 12.57
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.2
+vpd = 9.22
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = -0.3
+vpd = 3.1
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 1.6
+vpd = 3.01
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.4
+vpd = 9.51
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.8
+vpd = 10.05
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.9
+vpd = 10.19
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 5.6
+vpd = 11.06
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.4
+vpd = 9.5
+rain = 0.2
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 4.8
+vpd = 10.05
+rain = 0.2
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 7.2
+vpd = 12.63
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.6
+vpd = 13.78
+rain = 0.2
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 8.9
+vpd = 14.01
+rain = 8
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 5.8
+vpd = 11.27
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 5.6
+vpd = 11.06
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 1717986918
+rg = 5.1
+tav = 5.4
+vpd = 10.81
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 0
+rg = 5.1
+tav = 4.9
+vpd = 10.18
+rain = 1.8
+****************END OF DAY*******************
+Month = DECEMBER
+day = 0
+rg = 5.1
+tav = 4.6
+vpd = 9.78
+rain = 0
+****************END OF DAY*******************
+Month = DECEMBER
+day = 0
+rg = 0
+tav = 0
+vpd = 0
+rain = 0
+****************END OF DAY*******************
+****************END OF MONTH*******************
 
-****************END OF YEAR (2007)*******************
+****************END OF YEAR (1)*******************
 
 
 

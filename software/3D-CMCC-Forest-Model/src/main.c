@@ -1,5 +1,15 @@
 /* main.c */
 
+
+
+//LIST OF THINGS TODO
+//TODO DAILY RUN
+//TODO SOIL LAYER ask simona
+//TODO RUN MODEL FOR ROCCA
+//TODO SIMULAZIONI DA bareground
+//TODO RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
+//TODO INSERIRE UN MAX NUMBER OF LAYER IN FUNZIONE DEL TREE HEIGHT (chiedere Arianna)
+
 /* includes */
 #include <stdio.h>
 #include <stddef.h>
