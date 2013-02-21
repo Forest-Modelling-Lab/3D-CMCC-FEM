@@ -9,6 +9,10 @@
 //TODO SIMULAZIONI DA bareground
 //TODO RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
 //TODO INSERIRE UN MAX NUMBER OF LAYER IN FUNZIONE DEL TREE HEIGHT (chiedere Arianna)
+//TODO NETCDF
+//TODO VERSION FEM AND BGC
+
+
 
 /* includes */
 #include <stdio.h>
@@ -21,6 +25,9 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
+#include <netcdf.h>
+
+
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
