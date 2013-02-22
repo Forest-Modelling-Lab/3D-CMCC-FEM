@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
-#include <netcdf.h>
+//#include <netcdf.h>
 
 
 #include "compiler.h"
@@ -1227,6 +1227,7 @@ void met_summary(MET_DATA *met) {
 	assert(met);
 
 	/* */
+	//todo flaggare solo per monthly run
 	for ( i=0; i<MONTHS; i++ )
 	{
 		Log("MET_SUMMARY FUNCTION\n");
