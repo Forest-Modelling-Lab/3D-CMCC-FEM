@@ -14,12 +14,13 @@
 
 void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const int years)
 {
+	float sapwood_perc;
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
 
-	float sapwood_perc;
+	
 
 	if(settings->version == 's')
 	{

@@ -1840,10 +1840,10 @@ int main(int argc, char *argv[])
 					//run tree_model
 					for (month = 0; month < MONTHS; month++)
 					{
-						for (day = 0; day <= DaysInMonth[month]; day++ )
+						for (day = 0; day < DaysInMonth[month]; day++ )
 						{
 							Log("Month = %s\n", szMonth[month]);
-							Log("day = %d\n", met[month+1].d[day+1].n_days);
+							Log("day = %d\n", met[month].d[day].n_days);
 							Log("rg = %g\n", met[month].d[day].solar_rad);
 							Log("tav = %g\n", met[month].d[day].tav);
 							Log("vpd = %g\n", met[month].d[day].vpd);

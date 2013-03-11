@@ -17,7 +17,7 @@ extern int MonthLength[];
 /* */
 int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
-	MET_DATA *met;
+	
 
 	static int cell;
 	//static int height;
@@ -26,6 +26,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	//compute VPD
 	static float vpd;
+
+	MET_DATA *met;
 
 	// check parameters
 	assert(m && yos);

@@ -11,13 +11,15 @@
 extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int DaysInMonth, float Net_Radiation, int top_layer, int z,
 		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter, float daylength)
 {
-	Log ("\n GET_SOIL_EVAPORATION_ROUTINE\n");
+	
 
 	float const e20 = 2.2;          // rate of change of saturated VP with T at 20C
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const PsycConst = 65;      //psychrometer costant
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
+
+	Log ("\n GET_SOIL_EVAPORATION_ROUTINE\n");
 
 
 

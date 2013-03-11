@@ -793,7 +793,7 @@ typedef struct {
 	float canopy_cover_dominant;
 	float canopy_cover_dominated;
 	float canopy_cover_subdominated;
-	float layer_cover_dominant;
+	double layer_cover_dominant;
 	float layer_cover_dominated;
 	float layer_cover_subdominated;
 	float evapotranspiration;

@@ -10,7 +10,7 @@
 
 extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month,  int DaysInMonth, float vpd, int height)
 {
-	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
+	
 
 	static float CanCond;
 	static float CanopyTranspiration;
@@ -24,7 +24,35 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float DailyTransp;
 	float alpha_evapo = 0.65;
 	float beta_evapo = 0.95;
+	float t1, t2;
 	//static float MonthTransp;
+
+	//CANOPY TRASPIRATION FOLLOWING BIOME APPROACH
+	float tav_k; //Average temperature in Kelvin
+	float rr; //resistance to radiative heat transfer through air
+	float gl_bl_corr;  //leaf boundary layer conductance corrected for temperature and pressure
+	float gl_c_corr; //leaf cuticolar conductance corrected for temperature and pressure
+	float ppfd_sun;  //photosynthetic photon flux density (umol/m2/s) PPFD for 1/2 stomatal closure
+	float final_ppfd_sun;
+	float gl_s_sun;   //maximum stomatal condictance
+
+	float gl_e_wv;
+	float gl_t_wv_sun;
+	float gc_e_wv;
+	float gl_sh;
+	float lai;
+	float gc_sh;
+	float rv;  //resistance to latent heat transfer
+	float rh;  //resistance to convective heat transfer
+	float swabs; //absorbed shortwave radiation in W/m^2
+	float rhr;
+	float lhvap;
+	float dt = 0.2; //set the temperature offset for slope calculation
+    float pvs1, pvs2;
+	float esse;
+	float evap;
+
+	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
 
 	//following BIOME
@@ -32,7 +60,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//todo move into atmosphere.c
 	/*compute air pressure*/
-	float t1, t2;
+	
 
 	//todo insert elev in struct site and in site.txt file
 	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
@@ -160,14 +188,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	*/
 
 
-	//CANOPY TRASPIRATION FOLLOWING BIOME APPROACH
-	float tav_k; //Average temperature in Kelvin
-	float rr; //resistance to radiative heat transfer through air
-	float gl_bl_corr;  //leaf boundary layer conductance corrected for temperature and pressure
-	float gl_c_corr; //leaf cuticolar conductance corrected for temperature and pressure
-	float ppfd_sun;  //photosynthetic photon flux density (umol/m2/s) PPFD for 1/2 stomatal closure
-	float final_ppfd_sun;
-	float gl_s_sun;   //maximum stomatal condictance
+
 
 
 
@@ -217,7 +238,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//Log("gl_s_sun = %g\n", gl_s_sun);
 
 	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
-	float gl_e_wv;
+	
 	gl_e_wv = gl_bl_corr;
 	//Log("gl_e_wv = %g\n", gl_e_wv);
 
@@ -227,17 +248,17 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	LAI.  This formula is derived from stomatal and cuticular conductances
 	in parallel with each other, and both in series with leaf boundary
 	layer conductance. */
-	float gl_t_wv_sun;
+	
 	gl_t_wv_sun = (gl_bl_corr * (gl_s_sun))/(gl_bl_corr + gl_s_sun + gl_c_corr);
 	//Log("gl_t_wv_sun = %g\n", gl_t_wv_sun);
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
-	float gl_sh;
+	
 	gl_sh = gl_bl_corr;
 	//Log("gl_sh = %g\n", gl_sh);
 
 
-	float lai;
+	
 	if (settings->version == 'u')
 	{
 		lai = s->value[LAI];
@@ -248,24 +269,24 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	}
 
 	/* Canopy conductance to evaporated water vapor */
-	float gc_e_wv;
+	
 	gc_e_wv = gl_e_wv * lai;
 	//Log("LAI = %g\n", lai);
 	//Log("gc_e_wv = %g\n", gc_e_wv);
 
 	/* Canopy conductane to sensible heat */
-	float gc_sh;
+	
 	gc_sh = gl_sh * lai;
 	//Log("gc_sh = %g\n", gc_sh);
 
-	float rv;  //resistance to latent heat transfer
+	
 	rv = 1.0/gc_e_wv;
 	//Log("rv = %g\n", rv);
-	float rh;  //resistance to convective heat transfer
+	
 	rh = 1.0/gc_sh;
 	//Log("rh = %g\n", rh);
 	//todo make a better function using values from light.c
-	float swabs; //absorbed shortwave radiation in W/m^2
+	
 	swabs = c->net_radiation * (1 -exp (-s->value[K]+lai));
 	//Log("swabs = %g\n", swabs);
 
@@ -285,30 +306,29 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
     /* calculate combined resistance to convective and radiative heat transfer,
     parallel resistances : rhr = (rh * rr) / (rh + rr) */
-    float rhr;
+    
     rhr = (rh * rr) / (rh + rr);
 
     /* calculate latent heat of vaporization as a function of ta */
-    float lhvap;
+    
     lhvap = 2.5023e6 - 2430.54 * met[month].tav;
 
     /* calculate temperature offsets for slope estimate */
-    float dt = 0.2; //set the temperature offset for slope calculation
+    
     t1 = met[month].tav+dt;
     t2 = met[month].tav-dt;
 
 
-    /* calculate saturation vapor pressures at t1 and t2 */
-    float pvs1, pvs2;
+	/* calculate saturation vapor pressures at t1 and t2 */
     pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
     pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
     /* calculate slope of pvs vs. T curve, at ta */
-    float esse;
+
     esse = (pvs1-pvs2) / (t1-t2);
 
     /* calculate evaporation, in W/m^2  */
-    float evap;
+    
     evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
     	( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
 

@@ -37,12 +37,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 	//todo control par for soil and net rad for soil
 
-	Log("\nGET_LIGHT_ROUTINE\n\n");
+	
 	float LightTrasmitted;
 	float LightAbsorb;
 	float Month_Radiation;
 	//float DailyPar;
 	float Gap_Cover = 0;
+
+	Log("\nGET_LIGHT_ROUTINE\n\n");
 
 
 	if (settings->version == 's')

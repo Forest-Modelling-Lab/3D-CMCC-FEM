@@ -44,6 +44,10 @@ void Get_tree_BB (CELL *const c,  int years)
 void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
+	float MassDensity;
+	float dominant_prec_volume;
+	float dominated_prec_volume;
+	float subdominated_prec_volume;
 
 	//in m^3/area/yr
 	//Cai = Volume t1 - Volume t0
@@ -51,10 +55,7 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 
 	Log("***CAI & MAI***\n");
 
-	float MassDensity;
-	float dominant_prec_volume;
-	float dominated_prec_volume;
-	float subdominated_prec_volume;
+
 
 	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TRHO]));
 	/*STAND VOLUME-(STEM VOLUME)*/
