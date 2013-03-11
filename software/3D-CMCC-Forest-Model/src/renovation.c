@@ -14,6 +14,7 @@
 #include "constants.h"
 
 
+
 extern void Get_renovation (CELL *c, HEIGHT *h, SPECIES *s)
 {
 
