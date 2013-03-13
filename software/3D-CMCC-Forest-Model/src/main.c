@@ -957,7 +957,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								{
 									Log("ERROR IN N_DAYS DATA!!\n");
 								}
-								Log("month %s day = %d\n",szMonth[month], yos[*yos_count-1].m[month].d[day].n_days);
+								//Log("month %s day = %d\n",szMonth[month], yos[*yos_count-1].m[month].d[day].n_days);
 								break;
 
 							case RG_F: //Rg_f - solar_rad -daily average solar radiation
@@ -988,7 +988,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								//convert daily average solar radiation to monthly solar radiation
 								//m[month].solar_rad *= m[month].n_days;
-								Log("%d-%s-solar rad = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].solar_rad);
+								//Log("%d-%s-solar rad = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].solar_rad);
 								break;
 
 							case TA_F: //Ta_f -  temperature average
@@ -1015,7 +1015,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								{
 									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 								}
-								Log("%d-%s-tav = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tav);
+								//Log("%d-%s-tav = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tav);
 								break;
 
 							case VPD_F: //RH_f - RH
@@ -1036,7 +1036,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* VPD -NO DATA- in previous year!!!!\n" );
 									}
 								}
-								Log("%d-%s-vpd = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].vpd);
+								//Log("%d-%s-vpd = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].vpd);
 								break;
 
 							case TS_F: // ts_f   Soil temperature
@@ -1057,7 +1057,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
 									}
 								}
-								Log("%d-%s-ts_f = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ts_f);
+								//Log("%d-%s-ts_f = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ts_f);
 								break;
 
 							case PRECIP:  //Precip - rain
@@ -1093,7 +1093,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								{
 									Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, szMonth[month] );
 								}
-								Log("%d-%s-precip = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].rain);
+								//Log("%d-%s-precip = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].rain);
 								break;
 
 							case SWC: //Soil Water Content (%)
@@ -1116,7 +1116,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
 									}
 								}
-								Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].swc);
+								//Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].swc);
 								break;
 							case Ndvi_Lai: //Get LAI in spatial version
 								if (settings->version == 's')
@@ -1170,7 +1170,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										}
 									}
 								}
-								Log("%d-%s-ndvi_lai = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ndvi_lai);
+								//Log("%d-%s-ndvi_lai = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ndvi_lai);
 								Log("mese = %d\n", yos[*yos_count -1].m);
 								break;
 							}

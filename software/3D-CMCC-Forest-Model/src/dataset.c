@@ -540,6 +540,9 @@ int importSettingsFile(char *fileName)
 						settings->presence = *pch;
 						break;
 					case 3:
+						settings->daymet = *pch;
+						break;
+					case 4:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;

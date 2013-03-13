@@ -104,7 +104,6 @@
 							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.281717471" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 						</tool>
 					</fileInfo>
-					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.282980522" name="output.txt" rcbsApplicability="disable" resourcePath="output/output.txt" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="src/garbage.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
