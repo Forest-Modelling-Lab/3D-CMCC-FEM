@@ -30,7 +30,14 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		{
 			if (settings->spatial == 's')
 			{
-				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				if(settings->time == 'm')
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
+				else
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
 			}
 			else
 			{
@@ -43,25 +50,52 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		if (c->dominant_veg_counter == 1)
 		{
 			Log("Highest class\n");
-			RainIntercepted = met[month].rain * s->value[FRAC_RAIN_INTERC]* s->value[CANOPY_COVER_DBHDC];
-			Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-			Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
-
-			//control
-			if (RainIntercepted >= met[month].rain)
+			if(settings->time == 'm')
 			{
-				RainIntercepted = met[month].rain;
-				Log("Rain is completely intercepted by the highest height class in the dominant layer\n");
-				lessrain = 0;
+				RainIntercepted = met[month].rain * s->value[FRAC_RAIN_INTERC]* s->value[CANOPY_COVER_DBHDC];
+				//control
+				if (RainIntercepted >= met[month].rain)
+				{
+					RainIntercepted = met[month].rain;
+					Log("Rain is completely intercepted by the highest height class in the dominant layer\n");
+					lessrain = 0;
+				}
+				else
+				{
+					lessrain = met[month].rain - RainIntercepted;
+				}
 			}
 			else
 			{
-				lessrain = met[month].rain - RainIntercepted;
+				RainIntercepted = met[month].d[day].rain * s->value[FRAC_RAIN_INTERC]* s->value[CANOPY_COVER_DBHDC];
+				//control
+				if (RainIntercepted >= met[month].d[day].rain)
+				{
+					RainIntercepted = met[month].d[day].rain;
+					Log("Rain is completely intercepted by the highest height class in the dominant layer\n");
+					lessrain = 0;
+				}
+				else
+				{
+					lessrain = met[month].d[day].rain - RainIntercepted;
+				}
 			}
+			Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
+			Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
+
+
 
 			//Evapotranspiration
-			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
-			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			if(settings->time == 'm')
+			{
+				c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+				Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			}
+			else
+			{
+				c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+				Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			}
 
 		}
 		//top layer but not the highest tree height class
@@ -79,9 +113,17 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 				Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
 			}
 
-
-			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
-			Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			//Evapotranspiration
+			if(settings->time == 'm')
+			{
+				c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+				Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			}
+			else
+			{
+				c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+				Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+			}
 
 			lessrain -= RainIntercepted;
 
@@ -102,7 +144,14 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		{
 			if (settings->spatial == 's')
 			{
-				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				if(settings->time == 'm')
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
+				else
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
 			}
 			else
 			{
@@ -125,8 +174,17 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("No Rainfall for this layer\n");
 		}
 
-		c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
-		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		//Evapotranspiration
+		if(settings->time == 'm')
+		{
+			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		}
+		else
+		{
+			c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		}
 		lessrain -= RainIntercepted;
 	}
 	else
@@ -142,7 +200,14 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		{
 			if (settings->spatial == 's')
 			{
-				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				if(settings->time == 'm')
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
+				else
+				{
+					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
+				}
 			}
 			else
 			{
@@ -165,8 +230,17 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			Log("No Rainfall for this layer\n");
 		}
 
-		c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
-		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		//Evapotranspiration
+		if(settings->time == 'm')
+		{
+			c->evapotranspiration = (RainIntercepted  + (s->value[MONTH_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		}
+		else
+		{
+			c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+			Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
+		}
 		lessrain -= RainIntercepted;
 
 	}
@@ -177,8 +251,16 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		Log("Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 	}
 
-	s->value[MONTHLY_EVAPOTRANSPIRATION] += c->evapotranspiration;
-	Log("Cumulated Evapotranspiration for this class = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
+	if(settings->time =='m')
+	{
+		s->value[MONTHLY_EVAPOTRANSPIRATION] += c->evapotranspiration;
+		Log("Cumulated Evapotranspiration for this class = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
+	}
+	else
+	{
+		s->value[MONTHLY_EVAPOTRANSPIRATION] += c->evapotranspiration;
+		Log("Cumulated Evapotranspiration for this class = %g mm\n", s->value[MONTHLY_EVAPOTRANSPIRATION]);
+	}
 
 	c->total_yearly_evapotransipration += c->evapotranspiration;
 	//Log("TOTAL Cumulated Evapotranspiration = %g mm\n",c->total_yearly_evapotransipration);

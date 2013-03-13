@@ -25,11 +25,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
 	if (settings->time == 'm')
 	{
-		Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month);
+		Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month+1);
 	}
 	else
 	{
-		Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day, month);
+		Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
 	}
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);

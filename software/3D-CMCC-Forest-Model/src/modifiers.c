@@ -67,7 +67,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
-	Log("fVPD - VPD modifier = %g\n", s->value[F_VPD]);
+	Log("fVPD = %g\n", s->value[F_VPD]);
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
@@ -385,7 +385,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 
 	/*TEMPERATURE MODIFIER*/
 
-	Log("--Temperature Average %g °C\n", met[month].d[day].tav);
+	//Log("--Temperature Average %g °C\n", met[month].d[day].tav);
 	//Log("--Optimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTOPT]);
 	//Log("--Maximum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMAX]);
 	//Log("--Minimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMIN]);
@@ -400,7 +400,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		s->value[F_T] = ((met[month].d[day].tav - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].d[day].tav) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
 				((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
 	}
-	Log("fT - Temperature Modifier = %g\n", s->value[F_T]);
+	Log("fT = %g\n", s->value[F_T]);
 
 	if (s->value[F_T] > 1)
 	{
@@ -435,7 +435,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
-	Log("fVPD - VPD modifier = %g\n", s->value[F_VPD]);
+	Log("fVPD = %g\n", s->value[F_VPD]);
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
@@ -454,8 +454,8 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 			RelAge = (float)a->value / s->value[MAXAGE];
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE]), (float)s->value[NAGE] )));
 			//Log("--Rel Age = %g years\n", RelAge);
-			Log("--Age = %d years\n", a->value);
-			Log("fAge - Age modifier for timber= %g\n", s->value[F_AGE]);
+			//Log("--Age = %d years\n", a->value);
+			Log("fAge = %g\n", s->value[F_AGE]);
 		}
 		else
 		{
@@ -465,7 +465,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (float)s->value[RAGE_S]), (float)s->value[NAGE_S] )));
 			//Log("--Rel Age = %g years\n", RelAge);
 			//Log("--Age = %d years\n", a->value);
-			Log("fAge - Age modifier for coppice = %g\n", s->value[F_AGE]);
+			Log("fAge = %g\n", s->value[F_AGE]);
 
 		}
 	}
@@ -482,7 +482,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	/*SOIL NUTRIENT MODIFIER*/
 
 	s->value[F_NUTR] = 1.0 - ( 1.0- site->fn0)  * pow ((1.0 - site->fr), site->fnn);
-	Log("fNutr - Soil Nutrient modifier = %g\n", s->value[F_NUTR]);
+	Log("fNutr = %g\n", s->value[F_NUTR]);
 
 
 
@@ -538,11 +538,11 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		{
 			Log("PROBLEM IN fSW !!!!!!!!!!\n");
 			s->value[F_SW] = 1;
-			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW = %g\n", s->value[F_SW]);
 		}
 		else
 		{
-			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW = %g\n", s->value[F_SW]);
 		}
 	}
 	else
@@ -602,11 +602,11 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		{
 			Log("PROBLEM IN fSW !!!!!!!!!!\n");
 			s->value[F_SW] = 1;
-			Log("fSW-F_PSI - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW-F_PSI = %g\n", s->value[F_SW]);
 		}
 		else
 		{
-			Log("fSW-F_PSI - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW-F_PSI = %g\n", s->value[F_SW]);
 		}
 
 		//put for comparison with biome module
@@ -616,11 +616,11 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		{
 			Log("PROBLEM IN fSW !!!!!!!!!!\n");
 			s->value[F_SW] = 1;
-			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW = %g\n", s->value[F_SW]);
 		}
 		else
 		{
-			Log("fSW - Soil Water modifier layer %d = %g\n", z,  s->value[F_SW]);
+			Log("fSW = %g\n", s->value[F_SW]);
 		}
 
 	}

@@ -19,7 +19,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	from Joseph Coughlan PhD thesis, 1991 */
 
 	static float snow_abs = 0.6; // absorptivity of snow
-	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coef
+	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
 	float snow_melt;
 	float snow_sublimation;
 	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation

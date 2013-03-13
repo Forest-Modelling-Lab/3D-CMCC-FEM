@@ -129,7 +129,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / c->daylength) * (1 - s->value[ALBEDO]);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
-			Daily_Radiation = met[month].solar_rad;
+			Daily_Radiation = met[month].d[day].solar_rad;
 
 			//Par
 			//DailyPar = met[month].solar_rad * MOLPAR_MJ;

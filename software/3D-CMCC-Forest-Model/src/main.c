@@ -368,7 +368,7 @@ int get_output_filename(char *arg, char *param, void *p)
 		if( output_path )
 			strcat(output_file, out_filename);
 		else
-			printf("With -outname flag set -outpath not set: using default output file (prog_path/output.txt)");
+			printf("With -outname flag set -outpath not set: using default output file (prog_path/output_%s_%s_%s_%s_%d.txt)", settings->version, settings->spatial, settings->time, settings->daymet);
 	}
 
 
@@ -1935,7 +1935,7 @@ int main(int argc, char *argv[])
 								//}
 
 							}
-							Log("****************END OF DAY*******************\n");
+							Log("****************END OF DAY*******************\n\n\n\n");
 						}
 						Log("****************END OF MONTH*******************\n\n");
 					}

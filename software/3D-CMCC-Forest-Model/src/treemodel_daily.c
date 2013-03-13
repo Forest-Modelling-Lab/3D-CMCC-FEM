@@ -152,9 +152,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
-		Log("YEAR SIMULATED = %d (%d)\n", years+1, yos[years].year );
-		Log("MONTH SIMULATED = %s\n", szMonth[month]);
-
+		Log("-YEAR SIMULATED = %d (%d)\n", years+1, yos[years].year );
+		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
+		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days)
+;
 		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
 
 		// sort by heights
@@ -314,7 +315,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								else
 								{
-									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
+									if (settings->time == 'm')
+									{
+										Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
+									}
+									else
+									{
+										Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
+									}
 								}
 
 								//Productivity
@@ -341,7 +349,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									//Log("Available Soil Water at month %d years %d with LPJ soil evaporation = %g mm\n",month, years, m->cells[cell].available_soil_water);
 
 								}
-								Log("Available Soil Water at month %d year of simulation %d = %g mm\n",month+1, years, m->cells[cell].available_soil_water);
+								Log("Available Soil Water at day %d month %d year of simulation %d = %g mm\n",day, month+1, years, m->cells[cell].available_soil_water);
 
 								Log("*****************************************************************************\n");
 								Log("*****************************************************************************\n");
@@ -352,7 +360,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						{
 							//vegetative period is always equal to 1 for evergreen
 
-							Log("*****VEGETATIVE PERIOD FOR %s SPECIES MONTH %d*****\n", m->cells[cell].heights[height].ages[age].species[species].name, szMonth[month] );
+							Log("*****VEGETATIVE PERIOD FOR %s SPECIES DAY %d MONTH %d*****\n", m->cells[cell].heights[height].ages[age].species[species].name, day, szMonth[month] );
 
 							Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 
@@ -398,7 +406,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						/*END OF YEAR*/
 
-						if (month == DECEMBER)
+						if (day == 31 && month == DECEMBER)
 						{
 							Log("*****END OF YEAR******\n");
 
@@ -627,7 +635,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 					}
 					else
 					{
-						if( month == DECEMBER)
+						if(day == 31 && month == DECEMBER)
 						{
 							Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							Log("SAPLINGS\n");

@@ -692,7 +692,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 	counter = 0;
 
-	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
+	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
 	Log("--GET VEGETATIVE PERIOD--\n");
 
