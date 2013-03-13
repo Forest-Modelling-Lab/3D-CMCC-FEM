@@ -533,16 +533,19 @@ int importSettingsFile(char *fileName)
 						settings->version = *pch;
 						break;
 					case 1:
+						settings->spatial = *pch;
+						break;
+					case 2:
 						settings->time = *pch;
 						break;
 						//todo maybe delete it and changed with plot/regional scale spatial resolution
-					case 2:
+					case 3:
 						settings->presence = *pch;
 						break;
-					case 3:
+					case 4:
 						strncpy (settings->daymet, (const char*)pch, 3);
 						break;
-					case 4:
+					case 5:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;
@@ -563,7 +566,7 @@ int importSettingsFile(char *fileName)
 		ret = 3;
 	}
 
-	/*fprintf(stderr, "%c\n", settings->version);
+	/*fprintf(stderr, "%c\n", settings->spatial);
 		fprintf(stderr, "%f\n", settings->sizeCell);
 		fprintf(stderr, "%f\n", settings->max_layer_cover);
 		fprintf(stderr, "%f\n", settings->avdbh_sapling);

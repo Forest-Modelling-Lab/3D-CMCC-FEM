@@ -80,7 +80,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//todo get maximum stomatal condictance from biome data instead canopy max conductance
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].ndvi_lai / s->value[LAIGCX]);
 		//Log("MAXCOND da biome = %g\n", 0.006 * met[month].ndvi_lai);
@@ -259,7 +259,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	
-	if (settings->version == 'u')
+	if (settings->spatial == 'u')
 	{
 		lai = s->value[LAI];
 	}

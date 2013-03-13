@@ -49,7 +49,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 			{
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
-					if (settings->version == 'u')
+					if (settings->spatial == 'u')
 					{
 						if (!month)
 						{
@@ -187,7 +187,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		Log("- Vegetative Months = %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 	}
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		Log("- Monthly LAI from NDVI = %g \n",c->heights[height].z, met[month].ndvi_lai);
 	}

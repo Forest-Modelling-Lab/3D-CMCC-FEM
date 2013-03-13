@@ -64,7 +64,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 
 	Log("--GET NUMBER OF ANNUAL LAYERS--\n");
 
-	if (settings->version == 'u')
+	if (settings->spatial == 'u')
 	{
 		//the model sorts starting from highest tree class
 		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -187,7 +187,7 @@ void Get_annual_forest_structure (CELL *const c)
 	c->layer_cover_subdominated = 0;
 
 
-	if (settings->version == 'u')
+	if (settings->spatial == 'u')
 	{
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{

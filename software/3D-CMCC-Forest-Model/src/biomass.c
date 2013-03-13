@@ -63,7 +63,7 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 	Log("Volume for this class = %g m^3/area\n", s->value[VOLUME]);
 
 
-	if (settings->version == 'u')
+	if (settings->spatial == 'u')
 	{
 		switch (c->annual_layer_number)
 		{

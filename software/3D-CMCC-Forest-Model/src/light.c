@@ -47,7 +47,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	Log("\nGET_LIGHT_ROUTINE\n\n");
 
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		LightTrasmitted = (exp(- s->value[K] * met[month].ndvi_lai));
 		Log("NDVI-LAI = %g \n", met[month].ndvi_lai );

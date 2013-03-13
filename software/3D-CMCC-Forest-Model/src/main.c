@@ -882,7 +882,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								break;
 							case Ndvi_Lai: //Get LAI in spatial version
-								if (settings->version == 's')
+								if (settings->spatial == 's')
 								{
 									yos[*yos_count-1].m[month].ndvi_lai = convert_string_to_prec(token2, &error_flag);
 
@@ -1781,7 +1781,7 @@ int main(int argc, char *argv[])
 					{
 						Log("RUN FOR FORESTS\n");
 						//control version 's' or 'u' and change if asked
-						if (settings->version == 's' && yos[years].year >= (int)(settings->switchtounspatial))
+						if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
 						{
 							settings->version = 'u';
 							Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
@@ -1791,7 +1791,7 @@ int main(int argc, char *argv[])
 							Log("************************************************************\n");
 						}
 						/*compute number of vegetative months*/
-						Log("compute vegetative months for version '%c'\n", settings->version);
+						Log("compute vegetative months for version '%c'\n", settings->spatial);
 						for (month = 0; month < MONTHS; month++)
 						{
 							Get_Veg_Months (m, yos, month, years);

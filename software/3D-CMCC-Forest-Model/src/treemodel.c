@@ -240,7 +240,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 								Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
 
-								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] == 1 && settings->version == 'u')
+								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] == 1 && settings->spatial == 'u')
 								{
 									Get_initial_month_lai (&m->cells[cell].heights[height].ages[age].species[species]);
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
@@ -290,7 +290,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
 									Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
 								}
-								if (settings->version == 'u')
+								if (settings->spatial == 'u')
 								{
 									Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
@@ -300,7 +300,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Log("**UN-VEGETATIVE PERIOD FOR %s SPECIES in layer %d **\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].z);
 
 
-								if (settings->version == 'u')
+								if (settings->spatial == 'u')
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);

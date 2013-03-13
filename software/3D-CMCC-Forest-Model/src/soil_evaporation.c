@@ -30,7 +30,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		switch (c->monthly_layer_number)
 		{
 		case 3:
-			if (settings->version == 's')
+			if (settings->spatial == 's')
 			{
 				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
 			}
@@ -40,7 +40,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 			}
 			break;
 		case 2:
-			if (settings->version == 's')
+			if (settings->spatial == 's')
 			{
 				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
 			}

@@ -102,7 +102,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, float dayl
 			met[month].rain,
 			met[month].swc);
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		Log("-lai from NDVI = %g \n", met[month].ndvi_lai);
 	}

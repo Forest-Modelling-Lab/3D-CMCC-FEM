@@ -91,7 +91,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		if (settings->version == 'u')
+		if (settings->spatial == 'u')
 		{
 			//defining phenological phase
 			if (c->daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
@@ -749,7 +749,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			Log("delta_Res %d = 0 \n", c->heights[height].z);
 		}
 	}
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		Log("Spatial version \n");
 
@@ -1286,7 +1286,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 	}
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		Log("Spatial version \n");
 

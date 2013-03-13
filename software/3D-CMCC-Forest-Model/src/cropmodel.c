@@ -65,7 +65,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 		Log("PROVA TEMPERATURA = %g\n", met[month].tav);
-		Log("PROVA SETTINGS = %c\n", settings->version);
+		Log("PROVA SETTINGS = %c\n", settings->spatial);
 
 	}
 

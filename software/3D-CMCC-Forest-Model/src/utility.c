@@ -62,7 +62,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 
 
 				//reset only in unspatial version
-				if (settings->version == 'u')
+				if (settings->spatial == 'u')
 				{
 					//reset foliage biomass for deciduous
 					if ( c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)

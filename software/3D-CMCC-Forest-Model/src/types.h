@@ -120,7 +120,8 @@ typedef struct
 // Struct representing settings.txt content
 typedef struct
 {
-	char version, // must be 's' or 'u' (spatial or unspatial)
+	char version,
+		spatial, // must be 's' or 'u' (spatial or unspatial)
 		time,  // must be 'm' or 'd' (monthly or daily)
 		presence; // must be 't' or 'p' (total or percentage)
 

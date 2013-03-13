@@ -28,7 +28,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		}
 		else
 		{
-			if (settings->version == 's')
+			if (settings->spatial == 's')
 			{
 				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 			}
@@ -100,7 +100,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		}
 		else
 		{
-			if (settings->version == 's')
+			if (settings->spatial == 's')
 			{
 				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 			}
@@ -140,7 +140,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 		}
 		else
 		{
-			if (settings->version == 's')
+			if (settings->spatial == 's')
 			{
 				s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 			}
@@ -210,7 +210,7 @@ extern void Get_frac_canopy_interception (SPECIES *const s, const MET_DATA *cons
 	}
 	else
 	{
-		if (settings->version == 's')
+		if (settings->spatial == 's')
 		{
 			s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 		}

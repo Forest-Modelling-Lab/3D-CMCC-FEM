@@ -583,8 +583,16 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	resol = sqrt (settings->sizeCell);
 
 	Log ("Cell resolution = %d x %d = %g m^2\n", resol, resol, settings->sizeCell);
+	if (settings->version == 'f')
+	{
+		Log ("Model version = FEM \n");
+	}
+	else
+	{
+		Log("Model version = BGC \n");
+	}
 
-	if (settings->version == 's')
+	if (settings->spatial == 's')
 	{
 		Log ("Model version = spatial \n");
 	}

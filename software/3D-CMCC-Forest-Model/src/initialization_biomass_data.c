@@ -22,7 +22,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 	
 
-	if(settings->version == 's')
+	if(settings->spatial == 's')
 	{
 		Log("LAI from NDVI = %g\n", met[0].ndvi_lai);
 	}
@@ -33,7 +33,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 	if (s->value[PHENOLOGY] == 1 && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
-		if (settings->version == 'u')
+		if (settings->spatial == 'u')
 		{
 			Log("MODEL RUN FOR EVERGREEN COULD NOT RUN WITHOUT INITIAL LAI VALUES!!!!!!!!!!!!!!!!!!!!\n");
 			exit (1);
