@@ -38,7 +38,10 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	static int species;
 
 
+
 	met = (MET_DATA*) yos[years].m;
+
+	Log("compute vegetative months for version '%c'\n", settings->spatial);
 
 
 	for ( cell = 0; cell < m->cells_count; cell++)
@@ -144,6 +147,8 @@ return acos(cosH0) / Pi;
 
 void GetDayLength ( CELL * c,  int MonthLength)
 {
+	//todo make a better function for daily daylength
+
 	//int cell;
 	//Log("MonthLenght = %d \n", MonthLength);
 

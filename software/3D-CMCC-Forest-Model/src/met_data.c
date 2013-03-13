@@ -9,7 +9,7 @@
 
 extern int DaysInMonth[];
 
-void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
+void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
 	//todo inserire la funzione anche nelle altre aprti del treemodel.c
@@ -32,32 +32,50 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month)
 	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
 	Log("incident radiation for soil = %g\n", incident_rad);
 
-
-	if (met[month].tav < 0) /* sublimation from snowpack */
+	if (settings->time == 'm')
 	{
-		r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-		Log("r_sub = %g\n", r_sub);
-		if (r_sub > c->snow)
+		if (met[month].tav < 0) /* sublimation from snowpack */
+		{
+			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+			Log("r_sub = %g\n", r_sub);
+			if (r_sub > c->snow)
+			{
+
+			}
+
+
+		}
+		else if (met[month].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
 		{
 
 		}
+		else
+		{
 
-
-	}
-	else if (met[month].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
-	{
-
+		}
 	}
 	else
 	{
+		if (met[month].d[day].tav < 0) /* sublimation from snowpack */
+		{
+			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+			Log("r_sub = %g\n", r_sub);
+			if (r_sub > c->snow)
+			{
 
+			}
+
+
+		}
+		else if (met[month].d[day].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
+		{
+
+		}
+		else
+		{
+
+		}
 	}
-
-
-
-
-
-
 }
 
 /*
@@ -83,28 +101,55 @@ float Get_vpd (const MET_DATA *const met, int month)
 }
  */
 
-void Print_met_data (const MET_DATA *const met, float vpd, int month, float daylength)
+void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, float daylength)
 {
-	Log("***************\n");
-	Log("**Monthly MET DATA**\n");
-	Log("-average solar_rad = %g MJ/m^2/day\n"
-			"-tav = %g °C\n"
-			//"-rh = %g %%\n"
-			"-vpd = %g mbar\n"
-			"-ts_f = %g °C\n"
-			"-rain = %g mm\n"
-			"-swc = %g %vol\n",
-			met[month].solar_rad,
-			met[month].tav,
-			//met[month].rh,
-			vpd,
-			met[month].ts_f,
-			met[month].rain,
-			met[month].swc);
-
-	if (settings->spatial == 's')
+	if (settings->time == 'm')
 	{
-		Log("-lai from NDVI = %g \n", met[month].ndvi_lai);
+		Log("***************\n");
+		Log("**Monthly MET DATA**\n");
+		Log("-average solar_rad = %g MJ/m^2/day\n"
+				"-tav = %g °C\n"
+				//"-rh = %g %%\n"
+				"-vpd = %g mbar\n"
+				"-ts_f = %g °C\n"
+				"-rain = %g mm\n"
+				"-swc = %g %vol\n",
+				met[month].solar_rad,
+				met[month].tav,
+				//met[month].rh,
+				vpd,
+				met[month].ts_f,
+				met[month].rain,
+				met[month].swc);
+
+		if (settings->spatial == 's')
+		{
+			Log("-lai from NDVI = %g \n", met[month].ndvi_lai);
+		}
+	}
+	else
+	{
+		Log("***************\n");
+		Log("**Daily MET DATA**\n");
+		Log("-average solar_rad = %g MJ/m^2/day\n"
+				"-tav = %g °C\n"
+				//"-rh = %g %%\n"
+				"-vpd = %g mbar\n"
+				"-ts_f = %g °C\n"
+				"-rain = %g mm\n"
+				"-swc = %g %vol\n",
+				met[month].d[day].solar_rad,
+				met[month].d[day].tav,
+				//met[month].rh,
+				vpd,
+				met[month].d[day].ts_f,
+				met[month].d[day].rain,
+				met[month].d[day].swc);
+
+		if (settings->spatial == 's')
+		{
+			Log("-lai from NDVI = %g \n", met[month].d[day].ndvi_lai);
+		}
 	}
 
 

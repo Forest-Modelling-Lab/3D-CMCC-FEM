@@ -12,7 +12,7 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int DaysInMonth, int years, int height, int age, int species)
+void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
 {
 	//CTEM VERSION
 
@@ -38,6 +38,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	float oldW;
+	float Daily_solar_radiation;
 	float Monthly_solar_radiation;
 	float Light_trasm;
 	float Par_over;
@@ -59,9 +60,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//Log ("EPSILON_CTEM  = %g \n", epsilon);
 	//Log ("KAPPA_CTEM  = %g \n", kappa);
 
-	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-	Par_over = c->par - s->value[APAR];
-	Light_trasm = Par_over / Monthly_solar_radiation;
+	if (settings->time == 'm')
+	{
+		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over / Monthly_solar_radiation;
+	}
+	else
+	{
+		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over /Daily_solar_radiation;
+	}
 
 
 
@@ -757,20 +767,41 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		{
 			//defining phenological phase from NDVI values of LAI
 
-			//Beginning of growing season
-			if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
+			if (settings->time == 'm')
 			{
-				phenology_phase = 1;
+				//Beginning of growing season
+				if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
+				{
+					phenology_phase = 1;
+				}
+				//arealf of beginning of growing season
+				if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
+				{
+					phenology_phase = 2;
+				}
+				//Full growing season or "||" end of growing season
+				if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
+				{
+					phenology_phase = 3;
+				}
 			}
-			//arealf of beginning of growing season
-			if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
+			else
 			{
-				phenology_phase = 2;
-			}
-			//Full growing season or "||" end of growing season
-			if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
-			{
-				phenology_phase = 3;
+				//Beginning of growing season
+				if (met[month].d[day].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
+				{
+					phenology_phase = 1;
+				}
+				//arealf of beginning of growing season
+				if (met[month].d[day].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].d[day].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
+				{
+					phenology_phase = 2;
+				}
+				//Full growing season or "||" end of growing season
+				if((fabs (met[month].d[day].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
+				{
+					phenology_phase = 3;
+				}
 			}
 
 			oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
@@ -851,13 +882,27 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			switch (phenology_phase)
 			{
 
-			Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
+			if (settings->time == 'm')
+			{
+				Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
+			}
+			else
+			{
+				Log("NDVI-LAI = %g \n", met[month].d[day].ndvi_lai);
+			}
 			/************************************************************/
 			case 1:
 
 				Log("FASE FENOLOGICA = 1 \n");
 				Log("NDVI-LAI < PEAK_Y_LAI * 0.5 \n");
-				Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
+				if (settings->time == 'm')
+				{
+					Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
+				}
+				else
+				{
+					Log("NDVI-LAI = %g \n", met[month].d[day].ndvi_lai);
+				}
 				Log("**Maximum Growth**\n");
 				Log("allocating only into foliage pools\n");
 
@@ -1111,7 +1156,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int DaysInMonth, int years, int height, int age)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 
@@ -1140,6 +1185,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 	//float max_DM_foliage;
 	//float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
+	float Daily_solar_radiation;
 	float Monthly_solar_radiation;
 	float Light_trasm;
 	float Par_over;
@@ -1151,9 +1197,18 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 	float gammaF;
 	float oldWf;
 
-	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-	Par_over = c->par - s->value[APAR];
-	Light_trasm = Par_over / Monthly_solar_radiation;
+	if (settings->time == 'm')
+	{
+		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over / Monthly_solar_radiation;
+	}
+	else
+	{
+		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over /Daily_solar_radiation;
+	}
 
 	s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
 	//Log("fracBB = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]);

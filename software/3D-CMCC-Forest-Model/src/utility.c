@@ -34,6 +34,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->stand_bgb = 0;
 				c->evapotranspiration = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_MONTHS] = 0;
+				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
 				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C]  = 0;
 				c->heights[height].ages[age].species[species].value[NPP]  = 0;

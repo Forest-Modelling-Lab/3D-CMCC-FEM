@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int DaysInMonth, int height)
+void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height)
 {
 	float Alpha_C;
 	float Epsilon;
@@ -16,11 +16,21 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	float Optimum_GPP_gC;
 	float GPPmolC;
 	float DailyGPPgC;
+	float MonthlyGPPgC;
+	float DailyNPP;
+	float MonthlyNPP;
 	//float DailyGPPmolC;
 	float StandGPPtC;
 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
-	Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month);
+	if (settings->time == 'm')
+	{
+		Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month);
+	}
+	else
+	{
+		Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day, month);
+	}
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	Log("Phenology = %g\n", s->value[PHENOLOGY]);
@@ -63,7 +73,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		/*GPP*/
 
 		Optimum_GPP = s->value[ALPHA] * s->value[APAR];
-		Log("Optimum GPP (alpha max * apar) = %g molC/m^2 month\n", Optimum_GPP);
+		Log("Optimum GPP (alpha max * apar) = %g molC/m^2 day/month\n", Optimum_GPP);
 
 		Optimum_GPP_gC = Optimum_GPP * GC_MOL;
 		//Log("Monthly Optimum GPP in grams of C for this layer = %g gC/m^2 month\n", Optimum_GPP_gC );
@@ -90,10 +100,28 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		//Yearly_GPP +=  GPPgC;
 		//Log("Yearly Cumulated GPP  = %g gC/m^2\n",  Yearly_GPP);
-
-
-		DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
-		//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+		if (settings->time == 'm')
+		{
+			//Monthy layer GPP in grams of C/m^2
+			//Convert molC into grams
+			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
+			Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
+			DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
+			//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+		}
+		else
+		{
+			//Daily layer GPP in grams of C/m^2
+			//Convert molC into grams
+			if (day == 0)
+			{
+				MonthlyGPPgC = 0;
+			}
+			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
+			Log("Daily GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
+			MonthlyGPPgC += s->value[POINT_GPP_g_C];
+			Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , MonthlyGPPgC);
+		}
 
 
 		//Monthly Stand (area covered by canopy) GPP in grams of C
@@ -122,11 +150,30 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		s->value[NPP] = ((s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]) * 2 * site->Y)/1000000)  ;    // assumes respiratory rate is constant
 		//Log("Respiration rate = %g \n", site->Y);
-		Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
 
+		if (settings->time == 'm')
+		{
+			//Monthy layer GPP in grams of C/m^2
+			//Convert molC into grams
+			Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
+			DailyNPP = s->value[POINT_GPP_g_C] / DaysInMonth;
+			//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+		}
+		else
+		{
+			//Daily layer GPP in grams of C/m^2
+			//Convert molC into grams
+			if (day == 0)
+			{
+				MonthlyNPP = 0;
+			}
+			Log("Daily NPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[NPP] );
+			MonthlyNPP += s->value[NPP];
+			Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, MonthlyNPP);
+		}
 
-		Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
-		Log("Monthly Stand NPP = %g \n", s->value[NPP] );
+		Log("Daily/Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
+		Log("Daily/Monthly Stand NPP = %g \n", s->value[NPP] );
 
 
 	}
@@ -135,13 +182,13 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Unvegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
-		Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[GPP_g_C]);
+		Log("Daily/Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[GPP_g_C]);
 
 		s->value[NPP] = 0;
-		Log("Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
+		Log("Daily/Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
 
-		Log("Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
-		Log("Monthly Stand NPP = %g \n", s->value[NPP]);
+		Log("Daily/Monthly Stand GPP = %g \n", s->value[POINT_GPP_g_C] );
+		Log("Daily/Monthly Stand NPP = %g \n", s->value[NPP]);
 
 	}
 

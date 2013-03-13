@@ -1172,7 +1172,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										}
 									}
 									//Log("%d-%s-ndvi_lai = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ndvi_lai);
-									Log("mese = %d\n", yos[*yos_count -1].m);
+									//Log("mese = %d\n", yos[*yos_count -1].m);
 									break;
 								}
 							}
@@ -1773,6 +1773,19 @@ int main(int argc, char *argv[])
 
 			if (settings->time == 'm')
 			{
+				//check if soil data are available
+				for ( cell = 0; cell < m->cells_count; cell++)
+				{
+					if ((site->sand_perc == -999.0) ||
+						(site->clay_perc == -999.0) ||
+						(site->silt_perc == -999.0) ||
+						(site->bulk_dens == -999.0) ||
+						(site->soil_depth == -999.0) )
+					{
+						Log("NO SOIL DATA AVAILABLE\n");
+						return 0;
+					}
+				}
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
@@ -1780,6 +1793,7 @@ int main(int argc, char *argv[])
 					if (m->cells[cell].landuse == F)
 					{
 						Log("RUN FOR FORESTS\n");
+
 						//control version 's' or 'u' and change if asked
 						if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
 						{
@@ -1791,7 +1805,6 @@ int main(int argc, char *argv[])
 							Log("************************************************************\n");
 						}
 						/*compute number of vegetative months*/
-						Log("compute vegetative months for version '%c'\n", settings->spatial);
 						for (month = 0; month < MONTHS; month++)
 						{
 							Get_Veg_Months (m, yos, month, years);
@@ -1845,35 +1858,67 @@ int main(int argc, char *argv[])
 				//assert( m && yos);
 				met = (MET_DATA*) yos[years].m;
 
+				//check if soil data are available
+				for ( cell = 0; cell < m->cells_count; cell++)
+				{
+					if ((site->sand_perc == -999.0) ||
+						(site->clay_perc == -999.0) ||
+						(site->silt_perc == -999.0) ||
+						(site->bulk_dens == -999.0) ||
+						(site->soil_depth == -999.0) )
+					{
+						Log("NO SOIL DATA AVAILABLE\n");
+						return 0;
+					}
+				}
+
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
+					if (settings->version == 'f')
+					{
+						Log("RUN FOR FORESTSin FEM version\n");
+					}
+					else
+					{
+						Log("RUN FOR FORESTSin BGC version\n");
+					}
 					//run tree_model
+					for (month = 0; month < MONTHS; month++)
+					{
+						//todo check it
+						Get_Veg_Months (m, yos, month, years);
+					}
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < DaysInMonth[month]; day++ )
 						{
-							Log("Month = %s\n", szMonth[month]);
-							Log("day = %d\n", met[month].d[day].n_days);
-							Log("rg = %g\n", met[month].d[day].solar_rad);
-							Log("tav = %g\n", met[month].d[day].tav);
-							Log("vpd = %g\n", met[month].d[day].vpd);
-							Log("rain = %g\n", met[month].d[day].rain);
+							//Log("Month = %s\n", szMonth[month]);
+							//Log("day = %d\n", met[month].d[day].n_days);
+							//Log("rg = %g\n", met[month].d[day].solar_rad);
+							//Log("tav = %g\n", met[month].d[day].tav);
+							//Log("vpd = %g\n", met[month].d[day].vpd);
+							//Log("rain = %g\n", met[month].d[day].rain);
 							if(m->cells[cell].landuse == F)
 							{
+								if (settings->version == 'f')
+								{
+									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
+									{
+										Log("tree model daily failed.");
+									}
+									else
+									{
+										puts(msg_ok);
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									//	soil_model (m, yos, years, month, years_of_simulation);
+									}
 
-								//if ( !tree_model (m, yos, years, month, years_of_simulation) )
-								//{
-								//	Log("tree model failed.");
-								//}
-								//else
-								//{
-								//	puts(msg_ok);
-								//look if put it here or move before tree_model  at the beginning of each month simulation
-								//	soil_model (m, yos, years, month, years_of_simulation);
-								//}
-								//
-								//Log ("prova  T = %g\n", met[month].tav);
+								}
+								else
+								{
+
+								}
 							}
 							if(m->cells[cell].landuse == Z)
 							{

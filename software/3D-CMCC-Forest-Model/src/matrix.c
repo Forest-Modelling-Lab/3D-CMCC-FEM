@@ -577,7 +577,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	//check parameter
 	assert (m);
 
-	Log ("RUN DATASET\n");
+	Log ("RUN DATASET (COMPSET)\n");
 
 	//cell MUST be squares
 	resol = sqrt (settings->sizeCell);

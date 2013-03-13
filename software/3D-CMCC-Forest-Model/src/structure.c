@@ -682,6 +682,76 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	Log("species in veg period = %d\n", counter);
 }
 
+void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day, float thermic_sum)
+{
+
+	static int height;
+	static int age;
+	static int species;
+	static int counter;
+
+	counter = 0;
+
+	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
+
+	Log("--GET VEGETATIVE PERIOD--\n");
+
+	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			{
+				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+				{
+					if (settings->version == 's')
+					{
+						//Log("Spatial version \n");
+
+						//veg period
+						if (met[month].d[day].ndvi_lai > 0.1)
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							counter += 1;
+						}
+						//unveg period
+						else
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+						}
+					}
+					else
+					{
+						//todo use termic sum
+						if((thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+								|| //todo use GROWTHEND or abscission daylength
+								(met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							counter += 1;
+							Log("counter = %d\n\n", counter);
+						}
+						else
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							Log("counter = %d\n\n", counter);
+						}
+					}
+				}
+				else
+				{
+					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					counter += 1;
+					Log("counter = %d\n\n", counter);
+				}
+			}
+		}
+	}
+	Log("species in veg period = %d\n", counter);
+}
 
 
 
@@ -736,6 +806,56 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 	//Log("height count = %d \n", c->heights_count);
 }
 
+extern void Get_daily_numbers_of_layers (CELL *const c)
+{
+	//determines number of layer in function of:
+	//-differences between tree height classes
+	//-vegetative or un-vegetative period
+	static int height;
+	static int age;
+	static int species;
+	static float current_height;
+	static float previous_height;
+
+	//height differences in meter to consider trees in two different layers
+	c->daily_layer_number = 0;
+
+	Log("--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
+
+
+	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			{
+				current_height = c->heights[height].value;
+				if (c->heights_count > 1 )
+				{
+					if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					{
+						c->daily_layer_number += 1;
+						previous_height = current_height;
+					}
+					if ((previous_height - current_height ) > settings->tree_layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					{
+						c->daily_layer_number += 1;
+						previous_height = current_height;
+					}
+				}
+				if (c->heights_count == 1  && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+				{
+					c->daily_layer_number = 1;
+				}
+			}
+		}
+	}
+	Log("number of vegetative layers = %d\n", c->daily_layer_number);
+
+	//Log("height count = %d \n", c->heights_count);
+}
 
 
 void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
@@ -838,6 +958,105 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 
 }
 
+void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
+{
+
+	//compute if is in veg period
+	static int height;
+	static int age;
+	static int species;
+
+
+	c->layer_cover_dominant = 0;
+	c->layer_cover_dominated = 0;
+	c->layer_cover_subdominated = 0;
+
+
+	Log("\nGET_DAILY_FOREST_STRUCTURE_ROUTINE, DAY = %d MONTH = %d\n", day+1, month+1);
+
+	Log("Determines Effective Layer Cover \n");
+
+	for (height = c->heights_count - 1; height >= 0; height -- )
+	{
+		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+		{
+			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+			{
+				if ( c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+				{
+					if (c->daily_layer_number == 3)
+					{
+						switch (c->heights[height].z)
+						{
+						case 2:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
+							break;
+						case 1:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+							break;
+						case 0:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+							break;
+						}
+					}
+					if (c->daily_layer_number == 2)
+					{
+						switch (c->heights[height].z)
+						{
+						case 1:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+							break;
+						case 0:
+							//Log("z = %d\n", c->heights[height].z);
+							c->layer_cover_dominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+							break;
+						}
+					}
+					else
+					{
+						//Log("z = %d\n", c->heights[height].z);
+						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+					}
+				}
+				else
+				{
+					//Log("Un-Vegetating layers\n");
+					//Log("z = %d\n", c->heights[height].z);
+				}
+			}
+		}
+	}
+
+	Log("Daily layer number = %d\n", c->daily_layer_number);
+
+	if (c->daily_layer_number == 1)
+	{
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+	}
+	if (c->daily_layer_number == 2)
+	{
+		Log("Vegetated Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+	}
+	if (c->daily_layer_number > 2)
+	{
+		Log("Vegetated Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+	}
+	Log("*************************************************** \n");
+
+}
 
 /*
 void Get_top_layer (CELL *const c, int heights_count, HEIGHT *heights)
@@ -933,6 +1152,41 @@ int Get_number_of_layers (CELL *c)
 extern void Get_monthly_veg_counter (CELL *c, SPECIES *s, int height)
 {
 	switch (c->monthly_layer_number)
+	{
+	case 3:
+		if (c->heights[height].z == 2)
+		{
+			c->dominant_veg_counter += 1;
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->dominated_veg_counter += 1;
+		}
+		else
+		{
+			c->subdominated_veg_counter += 1;
+		}
+		break;
+	case 2:
+		if (c->heights[height].z == 1)
+		{
+			c->dominant_veg_counter += 1;
+		}
+		else
+		{
+			c->dominated_veg_counter += 1;
+		}
+		break;
+	case 1:
+		c->dominant_veg_counter += 1;
+		break;
+	}
+
+}
+
+extern void Get_daily_veg_counter (CELL *c, SPECIES *s, int height)
+{
+	switch (c->daily_layer_number)
 	{
 	case 3:
 		if (c->heights[height].z == 2)
