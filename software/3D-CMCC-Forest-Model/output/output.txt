@@ -54,7 +54,7 @@ matrix has 1 cell
 
 FOREST DATASET
 *(1)
-****GET FOREST CHARACTERISTICS for cell  (37813296, 0)****
+****GET FOREST CHARACTERISTICS for cell  (14249008, 0)****
 - cell n.01 is at 1526,962 and has 1 height classe 
 **(1)
 -- height n.01 is 12.42 m and has 1 age classes 
@@ -81,7 +81,7 @@ Generating input biomass data from DBH data...
 ----- wres = 16.2 tDM/area
 ----- lai = 0.0464443 tDM/area
 
-****GET SITE-SOIL CHARACTERISTICS for cell  (37813296, 0)****
+****GET SITE-SOIL CHARACTERISTICS for cell  (14249008, 0)****
 soil_b = -4.7601 (DIM)
 vwc_sat = 0.408771 (DIM)
 psi_sat = -0.0011607 (MPa)
@@ -6883,7 +6883,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0210255 
 Highest class
 Rainfall Intercepted = 0.191741 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 2.08414%
 -Class evapotranspiration = 0.994467 mm/month
 Class evapotranspiration = 1.16351 mm/month
 Cumulated Evapotranspiration for this class = 1.16351 mm
@@ -6902,7 +6902,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0157204 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.419957 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.44041 
 Daily GPP in grams of C for layer 0 = 1.44041 
-Monthly GPP in grams of C for layer 0 = 1.43653 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00125932 
 Monthly NPP for layer 0 = 0.00125932 
@@ -7051,7 +7051,6 @@ Frac Rain Interception = 0.0216199
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.817461 mm/month
 Class evapotranspiration = 0.98344 mm/month
 Cumulated Evapotranspiration for this class = 2.14695 mm
@@ -7070,7 +7069,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0211432 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.43001 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.98366 
 Daily GPP in grams of C for layer 0 = 1.98366 
-Monthly GPP in grams of C for layer 0 = 1.97978 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00173427 
 Monthly NPP for layer 0 = 0.00173427 
@@ -7219,7 +7218,6 @@ Frac Rain Interception = 0.0224384
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.837294 mm/month
 Class evapotranspiration = 0.99995 mm/month
 Cumulated Evapotranspiration for this class = 3.1469 mm
@@ -7238,7 +7236,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0214762 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.443708 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.07909 
 Daily GPP in grams of C for layer 0 = 2.07909 
-Monthly GPP in grams of C for layer 0 = 2.07521 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00181771 
 Monthly NPP for layer 0 = 0.00181771 
@@ -7387,7 +7385,6 @@ Frac Rain Interception = 0.0232963
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.857531 mm/month
 Class evapotranspiration = 1.01681 mm/month
 Cumulated Evapotranspiration for this class = 4.16371 mm
@@ -7406,7 +7403,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.017927 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.457886 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.79095 
 Daily GPP in grams of C for layer 0 = 1.79095 
-Monthly GPP in grams of C for layer 0 = 1.78707 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00156579 
 Monthly NPP for layer 0 = 0.00156579 
@@ -7555,7 +7552,6 @@ Frac Rain Interception = 0.0240353
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.874529 mm/month
 Class evapotranspiration = 1.03073 mm/month
 Cumulated Evapotranspiration for this class = 5.19444 mm
@@ -7574,7 +7570,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.017504 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.469954 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.79478 
 Daily GPP in grams of C for layer 0 = 1.79478 
-Monthly GPP in grams of C for layer 0 = 1.7909 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00156914 
 Monthly NPP for layer 0 = 0.00156914 
@@ -7723,7 +7719,6 @@ Frac Rain Interception = 0.0247759
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.891175 mm/month
 Class evapotranspiration = 1.04434 mm/month
 Cumulated Evapotranspiration for this class = 6.23878 mm
@@ -7742,7 +7737,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0208005 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.481914 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.18707 
 Daily GPP in grams of C for layer 0 = 2.18707 
-Monthly GPP in grams of C for layer 0 = 2.18319 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00191211 
 Monthly NPP for layer 0 = 0.00191211 
@@ -7891,7 +7886,6 @@ Frac Rain Interception = 0.0256783
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.910952 mm/month
 Class evapotranspiration = 1.06074 mm/month
 Cumulated Evapotranspiration for this class = 7.29952 mm
@@ -7910,7 +7904,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0216391 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.49631 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.3432 
 Daily GPP in grams of C for layer 0 = 2.3432 
-Monthly GPP in grams of C for layer 0 = 2.33933 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00204861 
 Monthly NPP for layer 0 = 0.00204861 
@@ -8059,7 +8053,6 @@ Frac Rain Interception = 0.0266452
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.931546 mm/month
 Class evapotranspiration = 1.07787 mm/month
 Cumulated Evapotranspiration for this class = 8.37739 mm
@@ -8078,7 +8071,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0240293 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.511518 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.68177 
 Daily GPP in grams of C for layer 0 = 2.68177 
-Monthly GPP in grams of C for layer 0 = 2.67789 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00234461 
 Monthly NPP for layer 0 = 0.00234461 
@@ -8227,7 +8220,6 @@ Frac Rain Interception = 0.0277518
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.954395 mm/month
 Class evapotranspiration = 1.097 mm/month
 Cumulated Evapotranspiration for this class = 9.47439 mm
@@ -8246,7 +8238,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0240293 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.528656 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.77162 
 Daily GPP in grams of C for layer 0 = 2.77162 
-Monthly GPP in grams of C for layer 0 = 2.76774 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00242317 
 Monthly NPP for layer 0 = 0.00242317 
@@ -8395,7 +8387,6 @@ Frac Rain Interception = 0.0288954
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 0.977239 mm/month
 Class evapotranspiration = 1.11611 mm/month
 Cumulated Evapotranspiration for this class = 10.5905 mm
@@ -8414,7 +8405,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0245931 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.546071 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.9301 
 Daily GPP in grams of C for layer 0 = 2.9301 
-Monthly GPP in grams of C for layer 0 = 2.92622 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00256172 
 Monthly NPP for layer 0 = 0.00256172 
@@ -8563,7 +8554,6 @@ Frac Rain Interception = 0.0301045
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.00058 mm/month
 Class evapotranspiration = 1.13565 mm/month
 Cumulated Evapotranspiration for this class = 11.7261 mm
@@ -8582,7 +8572,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0224167 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.564161 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.75927 
 Daily GPP in grams of C for layer 0 = 2.75927 
-Monthly GPP in grams of C for layer 0 = 2.75539 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00241237 
 Monthly NPP for layer 0 = 0.00241237 
@@ -8731,7 +8721,6 @@ Frac Rain Interception = 0.0312431
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.02183 mm/month
 Class evapotranspiration = 1.15331 mm/month
 Cumulated Evapotranspiration for this class = 12.8794 mm
@@ -8750,7 +8739,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0199018 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.580898 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.52238 
 Daily GPP in grams of C for layer 0 = 2.52238 
-Monthly GPP in grams of C for layer 0 = 2.5185 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00220526 
 Monthly NPP for layer 0 = 0.00220526 
@@ -8898,7 +8887,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0322839 
 Highest class
 Rainfall Intercepted = 0.608024 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.20012%
 -Class evapotranspiration = 1.6487 mm/month
 Class evapotranspiration = 1.79891 mm/month
 Cumulated Evapotranspiration for this class = 14.6784 mm
@@ -8917,7 +8906,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0159513 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.59595 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.07408 
 Daily GPP in grams of C for layer 0 = 2.07408 
-Monthly GPP in grams of C for layer 0 = 2.0702 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00181332 
 Monthly NPP for layer 0 = 0.00181332 
@@ -9065,7 +9054,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0331397 
 Highest class
 Rainfall Intercepted = 0.137968 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.28496%
 -Class evapotranspiration = 1.19374 mm/month
 Class evapotranspiration = 1.34481 mm/month
 Cumulated Evapotranspiration for this class = 16.0232 mm
@@ -9084,7 +9073,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00205234 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.608152 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 0.27232 
 Daily GPP in grams of C for layer 0 = 0.27232 
-Monthly GPP in grams of C for layer 0 = 0.268442 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.000238084 
 Monthly NPP for layer 0 = 0.000238084 
@@ -9233,7 +9222,6 @@ Frac Rain Interception = 0.0332521
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.05773 mm/month
 Class evapotranspiration = 1.20701 mm/month
 Cumulated Evapotranspiration for this class = 17.2302 mm
@@ -9252,7 +9240,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00593264 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.609743 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 0.789247 
 Daily GPP in grams of C for layer 0 = 0.789247 
-Monthly GPP in grams of C for layer 0 = 0.785369 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.000690022 
 Monthly NPP for layer 0 = 0.000690022 
@@ -9401,7 +9389,6 @@ Frac Rain Interception = 0.0335777
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.06336 mm/month
 Class evapotranspiration = 1.21055 mm/month
 Cumulated Evapotranspiration for this class = 18.4407 mm
@@ -9420,7 +9407,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00685542 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.614337 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 0.918881 
 Daily GPP in grams of C for layer 0 = 0.918881 
-Monthly GPP in grams of C for layer 0 = 0.915003 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.000803358 
 Monthly NPP for layer 0 = 0.000803358 
@@ -9569,7 +9556,6 @@ Frac Rain Interception = 0.0339569
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.06986 mm/month
 Class evapotranspiration = 1.21485 mm/month
 Cumulated Evapotranspiration for this class = 19.6556 mm
@@ -9588,7 +9574,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0111805 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.619658 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.51158 
 Daily GPP in grams of C for layer 0 = 1.51158 
-Monthly GPP in grams of C for layer 0 = 1.5077 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00132154 
 Monthly NPP for layer 0 = 0.00132154 
@@ -9736,7 +9722,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0345806 
 Highest class
 Rainfall Intercepted = 0.0411335 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.42779%
 -Class evapotranspiration = 1.12154 mm/month
 Class evapotranspiration = 1.26518 mm/month
 Cumulated Evapotranspiration for this class = 20.9208 mm
@@ -9755,7 +9741,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00715877 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.628346 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 0.981421 
 Daily GPP in grams of C for layer 0 = 0.981421 
-Monthly GPP in grams of C for layer 0 = 0.977543 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.000858036 
 Monthly NPP for layer 0 = 0.000858036 
@@ -9903,7 +9889,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0349856 
 Highest class
 Rainfall Intercepted = 0.527125 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.46793%
 -Class evapotranspiration = 1.61428 mm/month
 Class evapotranspiration = 1.77263 mm/month
 Cumulated Evapotranspiration for this class = 22.6934 mm
@@ -9922,7 +9908,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00979269 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.633943 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 1.35447 
 Daily GPP in grams of C for layer 0 = 1.35447 
-Monthly GPP in grams of C for layer 0 = 1.3506 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00118419 
 Monthly NPP for layer 0 = 0.00118419 
@@ -10072,7 +10058,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0355445 
 Highest class
 Rainfall Intercepted = 0.627153 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.52333%
 -Class evapotranspiration = 1.72351 mm/month
 Class evapotranspiration = 1.89144 mm/month
 Cumulated Evapotranspiration for this class = 24.5848 mm
@@ -10091,7 +10077,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.015014 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.641612 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.10177 
 Daily GPP in grams of C for layer 0 = 2.10177 
-Monthly GPP in grams of C for layer 0 = 2.0979 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00183754 
 Monthly NPP for layer 0 = 0.00183754 
@@ -10240,7 +10226,6 @@ Frac Rain Interception = 0.0364117
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.11037 mm/month
 Class evapotranspiration = 1.27409 mm/month
 Cumulated Evapotranspiration for this class = 25.8589 mm
@@ -10259,7 +10244,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0140406 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.653386 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.00158 
 Daily GPP in grams of C for layer 0 = 2.00158 
-Monthly GPP in grams of C for layer 0 = 1.9977 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00174994 
 Monthly NPP for layer 0 = 0.00174994 
@@ -10408,7 +10393,6 @@ Frac Rain Interception = 0.0372377
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.12342 mm/month
 Class evapotranspiration = 1.28378 mm/month
 Cumulated Evapotranspiration for this class = 27.1427 mm
@@ -10427,7 +10411,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0154872 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.664457 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.24521 
 Daily GPP in grams of C for layer 0 = 2.24521 
-Monthly GPP in grams of C for layer 0 = 2.24133 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00196294 
 Monthly NPP for layer 0 = 0.00196294 
@@ -10575,7 +10559,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0381641 
 Highest class
 Rainfall Intercepted = 0.007566 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 3.783%
 -Class evapotranspiration = 1.14529 mm/month
 Class evapotranspiration = 1.30232 mm/month
 Cumulated Evapotranspiration for this class = 28.445 mm
@@ -10594,7 +10578,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0168523 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.676714 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.48819 
 Daily GPP in grams of C for layer 0 = 2.48819 
-Monthly GPP in grams of C for layer 0 = 2.48431 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00217537 
 Monthly NPP for layer 0 = 0.00217537 
@@ -10743,7 +10727,6 @@ Frac Rain Interception = 0.0391908
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.15319 mm/month
 Class evapotranspiration = 1.30649 mm/month
 Cumulated Evapotranspiration for this class = 29.7515 mm
@@ -10762,7 +10745,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0206255 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.690099 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 3.10553 
 Daily GPP in grams of C for layer 0 = 3.10553 
-Monthly GPP in grams of C for layer 0 = 3.10165 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0027151 
 Monthly NPP for layer 0 = 0.0027151 
@@ -10911,7 +10894,6 @@ Frac Rain Interception = 0.0404722
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.17194 mm/month
 Class evapotranspiration = 1.32103 mm/month
 Cumulated Evapotranspiration for this class = 31.0726 mm
@@ -10930,7 +10912,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0206255 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.706519 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 3.17942 
 Daily GPP in grams of C for layer 0 = 3.17942 
-Monthly GPP in grams of C for layer 0 = 3.17554 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0027797 
 Monthly NPP for layer 0 = 0.0027797 
@@ -11094,7 +11076,6 @@ Frac Rain Interception = 0.0417842
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.51414 mm/month
 Class evapotranspiration = 1.68789 mm/month
 Cumulated Evapotranspiration for this class = 32.7604 mm
@@ -11262,7 +11243,6 @@ Frac Rain Interception = 0.0437045
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.54845 mm/month
 Class evapotranspiration = 1.71536 mm/month
 Cumulated Evapotranspiration for this class = 34.4758 mm
@@ -11281,7 +11261,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0234502 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.978194 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.00484 
 Daily GPP in grams of C for layer 0 = 5.00484 
-Monthly GPP in grams of C for layer 0 = 5.00096 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00437562 
 Monthly NPP for layer 0 = 0.00437562 
@@ -11429,7 +11409,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0457697 
 Highest class
 Rainfall Intercepted = 0.127033 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 4.5369%
 -Class evapotranspiration = 1.71072 mm/month
 Class evapotranspiration = 1.87386 mm/month
 Cumulated Evapotranspiration for this class = 36.3497 mm
@@ -11448,7 +11428,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0200699 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.01041 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 4.42445 
 Daily GPP in grams of C for layer 0 = 4.42445 
-Monthly GPP in grams of C for layer 0 = 4.42057 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00386821 
 Monthly NPP for layer 0 = 0.00386821 
@@ -11596,7 +11576,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0475954 
 Highest class
 Rainfall Intercepted = 0.0471787 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 4.71787%
 -Class evapotranspiration = 1.66066 mm/month
 Class evapotranspiration = 1.81851 mm/month
 Cumulated Evapotranspiration for this class = 38.1682 mm
@@ -11615,7 +11595,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0185668 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.03807 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 4.20514 
 Daily GPP in grams of C for layer 0 = 4.20514 
-Monthly GPP in grams of C for layer 0 = 4.20126 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00367646 
 Monthly NPP for layer 0 = 0.00367646 
@@ -11764,7 +11744,6 @@ Frac Rain Interception = 0.0493305
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.64071 mm/month
 Class evapotranspiration = 1.7926 mm/month
 Cumulated Evapotranspiration for this class = 39.9608 mm
@@ -11783,7 +11762,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.022741 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.06366 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.27754 
 Daily GPP in grams of C for layer 0 = 5.27754 
-Monthly GPP in grams of C for layer 0 = 5.27366 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00461404 
 Monthly NPP for layer 0 = 0.00461404 
@@ -11932,7 +11911,6 @@ Frac Rain Interception = 0.0515082
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.67346 mm/month
 Class evapotranspiration = 1.81868 mm/month
 Cumulated Evapotranspiration for this class = 41.7794 mm
@@ -11951,7 +11929,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.022741 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.09485 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.43231 
 Daily GPP in grams of C for layer 0 = 5.43231 
-Monthly GPP in grams of C for layer 0 = 5.42843 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00474935 
 Monthly NPP for layer 0 = 0.00474935 
@@ -12100,7 +12078,6 @@ Frac Rain Interception = 0.0537497
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.70563 mm/month
 Class evapotranspiration = 1.84428 mm/month
 Cumulated Evapotranspiration for this class = 43.6237 mm
@@ -12119,7 +12096,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0221617 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.12592 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.44412 
 Daily GPP in grams of C for layer 0 = 5.44412 
-Monthly GPP in grams of C for layer 0 = 5.44024 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00475968 
 Monthly NPP for layer 0 = 0.00475968 
@@ -12268,7 +12245,6 @@ Frac Rain Interception = 0.0559962
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.73639 mm/month
 Class evapotranspiration = 1.86873 mm/month
 Cumulated Evapotranspiration for this class = 45.4925 mm
@@ -12287,7 +12263,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0222824 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.15601 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.62009 
 Daily GPP in grams of C for layer 0 = 5.62009 
-Monthly GPP in grams of C for layer 0 = 5.61621 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00491352 
 Monthly NPP for layer 0 = 0.00491352 
@@ -12436,7 +12412,6 @@ Frac Rain Interception = 0.0583152
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.76671 mm/month
 Class evapotranspiration = 1.89284 mm/month
 Cumulated Evapotranspiration for this class = 47.3853 mm
@@ -12455,7 +12430,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0235417 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.18604 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.09193 
 Daily GPP in grams of C for layer 0 = 6.09193 
-Monthly GPP in grams of C for layer 0 = 6.08806 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00532605 
 Monthly NPP for layer 0 = 0.00532605 
@@ -12604,7 +12579,6 @@ Frac Rain Interception = 0.0608289
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.79804 mm/month
 Class evapotranspiration = 1.91787 mm/month
 Cumulated Evapotranspiration for this class = 49.3032 mm
@@ -12623,7 +12597,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0228496 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.21743 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.06934 
 Daily GPP in grams of C for layer 0 = 6.06934 
-Monthly GPP in grams of C for layer 0 = 6.06546 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0053063 
 Monthly NPP for layer 0 = 0.0053063 
@@ -12772,7 +12746,6 @@ Frac Rain Interception = 0.0633333
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.82777 mm/month
 Class evapotranspiration = 1.94158 mm/month
 Cumulated Evapotranspiration for this class = 51.2447 mm
@@ -12791,7 +12764,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.024382 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.24755 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.63659 
 Daily GPP in grams of C for layer 0 = 6.63659 
-Monthly GPP in grams of C for layer 0 = 6.63271 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00580223 
 Monthly NPP for layer 0 = 0.00580223 
@@ -12940,7 +12913,6 @@ Frac Rain Interception = 0.0660718
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.85871 mm/month
 Class evapotranspiration = 1.9664 mm/month
 Cumulated Evapotranspiration for this class = 53.2111 mm
@@ -12959,7 +12931,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0250985 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.27921 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.00498 
 Daily GPP in grams of C for layer 0 = 7.00498 
-Monthly GPP in grams of C for layer 0 = 7.0011 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00612431 
 Monthly NPP for layer 0 = 0.00612431 
@@ -13108,7 +13080,6 @@ Frac Rain Interception = 0.0689623
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.88972 mm/month
 Class evapotranspiration = 1.99135 mm/month
 Cumulated Evapotranspiration for this class = 55.2025 mm
@@ -13127,7 +13098,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0251113 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.31125 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.18408 
 Daily GPP in grams of C for layer 0 = 7.18408 
-Monthly GPP in grams of C for layer 0 = 7.1802 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00628089 
 Monthly NPP for layer 0 = 0.00628089 
@@ -13276,7 +13247,6 @@ Frac Rain Interception = 0.0719266
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.9199 mm/month
 Class evapotranspiration = 2.01567 mm/month
 Cumulated Evapotranspiration for this class = 57.2182 mm
@@ -13295,7 +13265,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0240381 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.34269 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.04198 
 Daily GPP in grams of C for layer 0 = 7.04198 
-Monthly GPP in grams of C for layer 0 = 7.0381 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00615665 
 Monthly NPP for layer 0 = 0.00615665 
@@ -13444,7 +13414,6 @@ Frac Rain Interception = 0.0748324
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.948 mm/month
 Class evapotranspiration = 2.03828 mm/month
 Cumulated Evapotranspiration for this class = 59.2564 mm
@@ -13463,7 +13432,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0249095 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.37219 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.45758 
 Daily GPP in grams of C for layer 0 = 7.45758 
-Monthly GPP in grams of C for layer 0 = 7.4537 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00652 
 Monthly NPP for layer 0 = 0.00652 
@@ -13612,7 +13581,6 @@ Frac Rain Interception = 0.0779096
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.97628 mm/month
 Class evapotranspiration = 2.06114 mm/month
 Cumulated Evapotranspiration for this class = 61.3176 mm
@@ -13631,7 +13599,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246335 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.40206 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.53547 
 Daily GPP in grams of C for layer 0 = 7.53547 
-Monthly GPP in grams of C for layer 0 = 7.53159 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0065881 
 Monthly NPP for layer 0 = 0.0065881 
@@ -13799,7 +13767,6 @@ Frac Rain Interception = 0.0402732
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.48602 mm/month
 Class evapotranspiration = 1.63094 mm/month
 Cumulated Evapotranspiration for this class = 62.9485 mm
@@ -13818,7 +13785,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0250604 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.922414 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.0435 
 Daily GPP in grams of C for layer 0 = 5.0435 
-Monthly GPP in grams of C for layer 0 = 5.03962 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00440942 
 Monthly NPP for layer 0 = 0.00440942 
@@ -13967,7 +13934,6 @@ Frac Rain Interception = 0.0826276
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.01693 mm/month
 Class evapotranspiration = 2.09371 mm/month
 Cumulated Evapotranspiration for this class = 65.0422 mm
@@ -13986,7 +13952,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0247975 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.44525 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.81933 
 Daily GPP in grams of C for layer 0 = 7.81933 
-Monthly GPP in grams of C for layer 0 = 7.81545 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00683627 
 Monthly NPP for layer 0 = 0.00683627 
@@ -14154,7 +14120,6 @@ Frac Rain Interception = 0.042668
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.53012 mm/month
 Class evapotranspiration = 1.66555 mm/month
 Cumulated Evapotranspiration for this class = 66.7078 mm
@@ -14173,7 +14138,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246614 molC/molPAR
 Optimum GPP (alpha max * apar) = 0.961645 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.17429 
 Daily GPP in grams of C for layer 0 = 5.17429 
-Monthly GPP in grams of C for layer 0 = 5.17041 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00452377 
 Monthly NPP for layer 0 = 0.00452377 
@@ -14322,7 +14287,6 @@ Frac Rain Interception = 0.0874711
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.0556 mm/month
 Class evapotranspiration = 2.12482 mm/month
 Cumulated Evapotranspiration for this class = 68.8326 mm
@@ -14341,7 +14305,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.024966 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.48653 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.09731 
 Daily GPP in grams of C for layer 0 = 8.09731 
-Monthly GPP in grams of C for layer 0 = 8.09343 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0070793 
 Monthly NPP for layer 0 = 0.0070793 
@@ -14509,7 +14473,6 @@ Frac Rain Interception = 0.0451242
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.57285 mm/month
 Class evapotranspiration = 1.69909 mm/month
 Cumulated Evapotranspiration for this class = 70.5317 mm
@@ -14528,7 +14491,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0238434 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.00045 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.20452 
 Daily GPP in grams of C for layer 0 = 5.20452 
-Monthly GPP in grams of C for layer 0 = 5.20065 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0045502 
 Monthly NPP for layer 0 = 0.0045502 
@@ -14677,7 +14640,6 @@ Frac Rain Interception = 0.092396
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.09207 mm/month
 Class evapotranspiration = 2.15431 mm/month
 Cumulated Evapotranspiration for this class = 72.686 mm
@@ -14696,7 +14658,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0239318 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.52554 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.96558 
 Daily GPP in grams of C for layer 0 = 7.96558 
-Monthly GPP in grams of C for layer 0 = 7.9617 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00696414 
 Monthly NPP for layer 0 = 0.00696414 
@@ -14864,7 +14826,6 @@ Frac Rain Interception = 0.0475515
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.61278 mm/month
 Class evapotranspiration = 1.7303 mm/month
 Cumulated Evapotranspiration for this class = 74.4163 mm
@@ -14883,7 +14844,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246335 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.03741 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.57565 
 Daily GPP in grams of C for layer 0 = 5.57565 
-Monthly GPP in grams of C for layer 0 = 5.57177 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00487467 
 Monthly NPP for layer 0 = 0.00487467 
@@ -15032,7 +14993,6 @@ Frac Rain Interception = 0.0974038
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.12653 mm/month
 Class evapotranspiration = 2.18233 mm/month
 Cumulated Evapotranspiration for this class = 76.5986 mm
@@ -15051,7 +15011,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246335 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.56235 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.39699 
 Daily GPP in grams of C for layer 0 = 8.39699 
-Monthly GPP in grams of C for layer 0 = 8.39311 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00734131 
 Monthly NPP for layer 0 = 0.00734131 
@@ -15219,7 +15179,6 @@ Frac Rain Interception = 0.0501161
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.65271 mm/month
 Class evapotranspiration = 1.76168 mm/month
 Cumulated Evapotranspiration for this class = 78.3603 mm
@@ -15238,7 +15197,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0240169 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.07503 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.63321 
 Daily GPP in grams of C for layer 0 = 5.63321 
-Monthly GPP in grams of C for layer 0 = 5.62933 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.004925 
 Monthly NPP for layer 0 = 0.004925 
@@ -15387,7 +15346,6 @@ Frac Rain Interception = 0.102557
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.15949 mm/month
 Class evapotranspiration = 2.20933 mm/month
 Cumulated Evapotranspiration for this class = 80.5696 mm
@@ -15406,7 +15364,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0251098 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.59746 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.75167 
 Daily GPP in grams of C for layer 0 = 8.75167 
-Monthly GPP in grams of C for layer 0 = 8.7478 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0076514 
 Monthly NPP for layer 0 = 0.0076514 
@@ -15574,7 +15532,6 @@ Frac Rain Interception = 0.0527397
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.69132 mm/month
 Class evapotranspiration = 1.79207 mm/month
 Cumulated Evapotranspiration for this class = 82.3617 mm
@@ -15593,7 +15550,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0251056 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.11205 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.09133 
 Daily GPP in grams of C for layer 0 = 6.09133 
-Monthly GPP in grams of C for layer 0 = 6.08745 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00532552 
 Monthly NPP for layer 0 = 0.00532552 
@@ -15742,7 +15699,6 @@ Frac Rain Interception = 0.107993
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.19183 mm/month
 Class evapotranspiration = 2.23607 mm/month
 Cumulated Evapotranspiration for this class = 84.5978 mm
@@ -15761,7 +15717,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0249415 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.63166 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.87914 
 Daily GPP in grams of C for layer 0 = 8.87914 
-Monthly GPP in grams of C for layer 0 = 8.87526 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00776284 
 Monthly NPP for layer 0 = 0.00776284 
@@ -15929,7 +15885,6 @@ Frac Rain Interception = 0.0554663
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 1.72926 mm/month
 Class evapotranspiration = 1.82206 mm/month
 Cumulated Evapotranspiration for this class = 86.4199 mm
@@ -15948,7 +15903,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.025021 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.14901 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.27258 
 Daily GPP in grams of C for layer 0 = 6.27258 
-Monthly GPP in grams of C for layer 0 = 6.2687 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00548399 
 Monthly NPP for layer 0 = 0.00548399 
@@ -16096,7 +16051,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.113521 
 Highest class
 Rainfall Intercepted = 0.0225054 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 11.2527%
 -Class evapotranspiration = 2.2449 mm/month
 Class evapotranspiration = 2.28413 mm/month
 Cumulated Evapotranspiration for this class = 88.704 mm
@@ -16115,7 +16070,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0238826 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.6637 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.66915 
 Daily GPP in grams of C for layer 0 = 8.66915 
-Monthly GPP in grams of C for layer 0 = 8.66527 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00757925 
 Monthly NPP for layer 0 = 0.00757925 
@@ -16297,7 +16252,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0581837 
 Highest class
 Rainfall Intercepted = 0.126884 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 5.76744%
 -Class evapotranspiration = 2.32626 mm/month
 Class evapotranspiration = 2.42641 mm/month
 Cumulated Evapotranspiration for this class = 91.1304 mm
@@ -16464,7 +16419,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.119783 
 Highest class
 Rainfall Intercepted = 0.427445 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 11.8735%
 -Class evapotranspiration = 3.2023 mm/month
 Class evapotranspiration = 3.24382 mm/month
 Cumulated Evapotranspiration for this class = 94.3742 mm
@@ -16483,7 +16438,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0261451 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.04754 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.68 
 Daily GPP in grams of C for layer 0 = 11.68 
-Monthly GPP in grams of C for layer 0 = 11.6761 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0102116 
 Monthly NPP for layer 0 = 0.0102116 
@@ -16651,7 +16606,6 @@ Frac Rain Interception = 0.0617961
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.25247 mm/month
 Class evapotranspiration = 2.34532 mm/month
 Cumulated Evapotranspiration for this class = 96.7195 mm
@@ -16670,7 +16624,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0265496 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.48317 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.59146 
 Daily GPP in grams of C for layer 0 = 8.59146 
-Monthly GPP in grams of C for layer 0 = 8.58758 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00751133 
 Monthly NPP for layer 0 = 0.00751133 
@@ -16818,7 +16772,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.127137 
 Highest class
 Rainfall Intercepted = 1.58791 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 12.6024%
 -Class evapotranspiration = 4.403 mm/month
 Class evapotranspiration = 4.44323 mm/month
 Cumulated Evapotranspiration for this class = 101.163 mm
@@ -16837,7 +16791,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0258201 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.09006 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.7743 
 Daily GPP in grams of C for layer 0 = 11.7743 
-Monthly GPP in grams of C for layer 0 = 11.7704 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.010294 
 Monthly NPP for layer 0 = 0.010294 
@@ -17004,7 +16958,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0654774 
 Highest class
 Rainfall Intercepted = 0.454329 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 6.49041%
 -Class evapotranspiration = 2.75715 mm/month
 Class evapotranspiration = 2.85765 mm/month
 Cumulated Evapotranspiration for this class = 104.02 mm
@@ -17023,7 +16977,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0261451 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.53535 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.75826 
 Daily GPP in grams of C for layer 0 = 8.75826 
-Monthly GPP in grams of C for layer 0 = 8.75438 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00765716 
 Monthly NPP for layer 0 = 0.00765716 
@@ -17171,7 +17125,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.134569 
 Highest class
 Rainfall Intercepted = 0.880378 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 13.3391%
 -Class evapotranspiration = 3.73268 mm/month
 Class evapotranspiration = 3.77118 mm/month
 Cumulated Evapotranspiration for this class = 107.792 mm
@@ -17190,7 +17144,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0239595 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.12851 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.1269 
 Daily GPP in grams of C for layer 0 = 11.1269 
-Monthly GPP in grams of C for layer 0 = 11.123 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00972798 
 Monthly NPP for layer 0 = 0.00972798 
@@ -17358,7 +17312,6 @@ Frac Rain Interception = 0.0690775
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.34875 mm/month
 Class evapotranspiration = 2.44406 mm/month
 Cumulated Evapotranspiration for this class = 110.236 mm
@@ -17377,7 +17330,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0271468 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.58368 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.38003 
 Daily GPP in grams of C for layer 0 = 9.38003 
-Monthly GPP in grams of C for layer 0 = 9.37616 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00820077 
 Monthly NPP for layer 0 = 0.00820077 
@@ -17526,7 +17479,6 @@ Frac Rain Interception = 0.142026
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.88658 mm/month
 Class evapotranspiration = 2.91923 mm/month
 Cumulated Evapotranspiration for this class = 113.155 mm
@@ -17545,7 +17497,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0268382 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.16302 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.6658 
 Daily GPP in grams of C for layer 0 = 12.6658 
-Monthly GPP in grams of C for layer 0 = 12.6619 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0110734 
 Monthly NPP for layer 0 = 0.0110734 
@@ -17713,7 +17665,6 @@ Frac Rain Interception = 0.0730395
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.39589 mm/month
 Class evapotranspiration = 2.48114 mm/month
 Cumulated Evapotranspiration for this class = 115.636 mm
@@ -17732,7 +17683,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0271422 molC/molPAR
 Optimum GPP (alpha max * apar) = 1.63393 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.67602 
 Daily GPP in grams of C for layer 0 = 9.67602 
-Monthly GPP in grams of C for layer 0 = 9.67214 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00845954 
 Monthly NPP for layer 0 = 0.00845954 
@@ -17881,7 +17832,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94815 mm/month
 Cumulated Evapotranspiration for this class = 118.584 mm
@@ -17900,7 +17850,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0268382 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.8599 
 Daily GPP in grams of C for layer 0 = 12.8599 
-Monthly GPP in grams of C for layer 0 = 12.856 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0112432 
 Monthly NPP for layer 0 = 0.0112432 
@@ -18066,7 +18016,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.9473 mm/month
 Cumulated Evapotranspiration for this class = 121.531 mm
@@ -18085,7 +18034,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0268814 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.8806 
 Daily GPP in grams of C for layer 0 = 12.8806 
-Monthly GPP in grams of C for layer 0 = 12.8768 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0112613 
 Monthly NPP for layer 0 = 0.0112613 
@@ -18251,7 +18200,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94644 mm/month
 Cumulated Evapotranspiration for this class = 124.478 mm
@@ -18270,7 +18218,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0257777 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.3517 
 Daily GPP in grams of C for layer 0 = 12.3517 
-Monthly GPP in grams of C for layer 0 = 12.3479 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0107989 
 Monthly NPP for layer 0 = 0.0107989 
@@ -18436,7 +18384,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94558 mm/month
 Cumulated Evapotranspiration for this class = 127.423 mm
@@ -18455,7 +18402,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246136 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.794 
 Daily GPP in grams of C for layer 0 = 11.794 
-Monthly GPP in grams of C for layer 0 = 11.7901 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0103112 
 Monthly NPP for layer 0 = 0.0103112 
@@ -18621,7 +18568,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94472 mm/month
 Cumulated Evapotranspiration for this class = 130.368 mm
@@ -18640,7 +18586,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0230466 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.0431 
 Daily GPP in grams of C for layer 0 = 11.0431 
-Monthly GPP in grams of C for layer 0 = 11.0392 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00965476 
 Monthly NPP for layer 0 = 0.00965476 
@@ -18806,7 +18752,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94386 mm/month
 Cumulated Evapotranspiration for this class = 133.312 mm
@@ -18825,7 +18770,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0269913 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.9333 
 Daily GPP in grams of C for layer 0 = 12.9333 
-Monthly GPP in grams of C for layer 0 = 12.9294 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0113073 
 Monthly NPP for layer 0 = 0.0113073 
@@ -18990,7 +18935,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 2.14211 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 5.06264 mm/month
 Class evapotranspiration = 5.08931 mm/month
 Cumulated Evapotranspiration for this class = 138.401 mm
@@ -19009,7 +18954,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0262911 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.5978 
 Daily GPP in grams of C for layer 0 = 12.5978 
-Monthly GPP in grams of C for layer 0 = 12.5939 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.011014 
 Monthly NPP for layer 0 = 0.011014 
@@ -19175,7 +19120,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94572 mm/month
 Cumulated Evapotranspiration for this class = 141.347 mm
@@ -19194,7 +19138,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0270736 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.9727 
 Daily GPP in grams of C for layer 0 = 12.9727 
-Monthly GPP in grams of C for layer 0 = 12.9688 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0113417 
 Monthly NPP for layer 0 = 0.0113417 
@@ -19360,7 +19304,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94486 mm/month
 Cumulated Evapotranspiration for this class = 144.292 mm
@@ -19379,7 +19322,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0271422 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 13.0056 
 Daily GPP in grams of C for layer 0 = 13.0056 
-Monthly GPP in grams of C for layer 0 = 13.0017 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0113705 
 Monthly NPP for layer 0 = 0.0113705 
@@ -19545,7 +19488,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.944 mm/month
 Cumulated Evapotranspiration for this class = 147.236 mm
@@ -19564,7 +19506,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0268382 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.8599 
 Daily GPP in grams of C for layer 0 = 12.8599 
-Monthly GPP in grams of C for layer 0 = 12.856 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0112432 
 Monthly NPP for layer 0 = 0.0112432 
@@ -19730,7 +19672,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94315 mm/month
 Cumulated Evapotranspiration for this class = 150.179 mm
@@ -19749,7 +19690,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0261381 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.5245 
 Daily GPP in grams of C for layer 0 = 12.5245 
-Monthly GPP in grams of C for layer 0 = 12.5206 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0109499 
 Monthly NPP for layer 0 = 0.0109499 
@@ -19915,7 +19856,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94229 mm/month
 Cumulated Evapotranspiration for this class = 153.121 mm
@@ -19934,7 +19874,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0246136 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.794 
 Daily GPP in grams of C for layer 0 = 11.794 
-Monthly GPP in grams of C for layer 0 = 11.7901 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0103112 
 Monthly NPP for layer 0 = 0.0103112 
@@ -20100,7 +20040,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94143 mm/month
 Cumulated Evapotranspiration for this class = 156.063 mm
@@ -20119,7 +20058,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0198375 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.5054 
 Daily GPP in grams of C for layer 0 = 9.5054 
-Monthly GPP in grams of C for layer 0 = 9.50153 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00831037 
 Monthly NPP for layer 0 = 0.00831037 
@@ -20285,7 +20224,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94058 mm/month
 Cumulated Evapotranspiration for this class = 159.003 mm
@@ -20304,7 +20242,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0146471 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.01838 
 Daily GPP in grams of C for layer 0 = 7.01838 
-Monthly GPP in grams of C for layer 0 = 7.01451 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00613602 
 Monthly NPP for layer 0 = 0.00613602 
@@ -20470,7 +20408,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.93972 mm/month
 Cumulated Evapotranspiration for this class = 161.943 mm
@@ -20489,7 +20426,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0109676 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 5.2553 
 Daily GPP in grams of C for layer 0 = 5.2553 
-Monthly GPP in grams of C for layer 0 = 5.25142 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0045946 
 Monthly NPP for layer 0 = 0.0045946 
@@ -20655,7 +20592,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.93886 mm/month
 Cumulated Evapotranspiration for this class = 164.882 mm
@@ -20674,7 +20610,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0163787 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.84808 
 Daily GPP in grams of C for layer 0 = 7.84808 
-Monthly GPP in grams of C for layer 0 = 7.8442 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00686141 
 Monthly NPP for layer 0 = 0.00686141 
@@ -20840,7 +20776,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.93801 mm/month
 Cumulated Evapotranspiration for this class = 167.82 mm
@@ -20859,7 +20794,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0228662 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.9566 
 Daily GPP in grams of C for layer 0 = 10.9566 
-Monthly GPP in grams of C for layer 0 = 10.9528 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00957917 
 Monthly NPP for layer 0 = 0.00957917 
@@ -21024,7 +20959,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.0297516 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 2.95028 mm/month
 Class evapotranspiration = 2.96696 mm/month
 Cumulated Evapotranspiration for this class = 170.787 mm
@@ -21043,7 +20978,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0256784 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.3042 
 Daily GPP in grams of C for layer 0 = 12.3042 
-Monthly GPP in grams of C for layer 0 = 12.3003 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0107573 
 Monthly NPP for layer 0 = 0.0107573 
@@ -21208,7 +21143,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 2.46938 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 5.38991 mm/month
 Class evapotranspiration = 5.41056 mm/month
 Cumulated Evapotranspiration for this class = 176.198 mm
@@ -21227,7 +21162,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0258201 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.3721 
 Daily GPP in grams of C for layer 0 = 12.3721 
-Monthly GPP in grams of C for layer 0 = 12.3682 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0108166 
 Monthly NPP for layer 0 = 0.0108166 
@@ -21392,7 +21327,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 2.11236 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 5.03289 mm/month
 Class evapotranspiration = 5.0561 mm/month
 Cumulated Evapotranspiration for this class = 181.254 mm
@@ -21411,7 +21346,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0228239 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.9364 
 Daily GPP in grams of C for layer 0 = 10.9364 
-Monthly GPP in grams of C for layer 0 = 10.9325 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00956146 
 Monthly NPP for layer 0 = 0.00956146 
@@ -21576,7 +21511,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.0595031 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 2.98003 mm/month
 Class evapotranspiration = 3.00189 mm/month
 Cumulated Evapotranspiration for this class = 184.256 mm
@@ -21595,7 +21530,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0262911 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 12.5978 
 Daily GPP in grams of C for layer 0 = 12.5978 
-Monthly GPP in grams of C for layer 0 = 12.5939 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.011014 
 Monthly NPP for layer 0 = 0.011014 
@@ -21761,7 +21696,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.92053 mm/month
 Class evapotranspiration = 2.94151 mm/month
 Cumulated Evapotranspiration for this class = 187.197 mm
@@ -21780,7 +21714,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0271422 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 13.0056 
 Daily GPP in grams of C for layer 0 = 13.0056 
-Monthly GPP in grams of C for layer 0 = 13.0017 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0113705 
 Monthly NPP for layer 0 = 0.0113705 
@@ -21960,7 +21894,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.267764 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 3.28723 mm/month
 Class evapotranspiration = 3.3096 mm/month
 Cumulated Evapotranspiration for this class = 190.507 mm
@@ -22145,7 +22079,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.0408 mm/month
 Cumulated Evapotranspiration for this class = 193.547 mm
@@ -22164,7 +22097,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0213639 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.1625 
 Daily GPP in grams of C for layer 0 = 11.1625 
-Monthly GPP in grams of C for layer 0 = 11.1587 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00975917 
 Monthly NPP for layer 0 = 0.00975917 
@@ -22329,7 +22262,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.416522 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 3.43599 mm/month
 Class evapotranspiration = 3.45724 mm/month
 Cumulated Evapotranspiration for this class = 197.005 mm
@@ -22348,7 +22281,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0208058 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.8709 
 Daily GPP in grams of C for layer 0 = 10.8709 
-Monthly GPP in grams of C for layer 0 = 10.867 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00950421 
 Monthly NPP for layer 0 = 0.00950421 
@@ -22514,7 +22447,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03963 mm/month
 Cumulated Evapotranspiration for this class = 200.044 mm
@@ -22533,7 +22465,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0198834 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.389 
 Daily GPP in grams of C for layer 0 = 10.389 
-Monthly GPP in grams of C for layer 0 = 10.3851 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00908285 
 Monthly NPP for layer 0 = 0.00908285 
@@ -22698,7 +22630,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 2.52888 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 5.54835 mm/month
 Class evapotranspiration = 5.57292 mm/month
 Cumulated Evapotranspiration for this class = 205.617 mm
@@ -22717,7 +22649,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0206847 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.8076 
 Daily GPP in grams of C for layer 0 = 10.8076 
-Monthly GPP in grams of C for layer 0 = 10.8038 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0094489 
 Monthly NPP for layer 0 = 0.0094489 
@@ -22882,7 +22814,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 1.19006 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 4.20953 mm/month
 Class evapotranspiration = 4.23486 mm/month
 Cumulated Evapotranspiration for this class = 209.852 mm
@@ -22901,7 +22833,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0213045 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 11.1315 
 Daily GPP in grams of C for layer 0 = 11.1315 
-Monthly GPP in grams of C for layer 0 = 11.1276 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00973203 
 Monthly NPP for layer 0 = 0.00973203 
@@ -23067,7 +22999,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.04346 mm/month
 Cumulated Evapotranspiration for this class = 212.896 mm
@@ -23086,7 +23017,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0208688 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.9038 
 Daily GPP in grams of C for layer 0 = 10.9038 
-Monthly GPP in grams of C for layer 0 = 10.8999 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00953298 
 Monthly NPP for layer 0 = 0.00953298 
@@ -23251,7 +23182,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.0297516 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 3.04922 mm/month
 Class evapotranspiration = 3.07232 mm/month
 Cumulated Evapotranspiration for this class = 215.968 mm
@@ -23270,7 +23201,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0206847 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.8076 
 Daily GPP in grams of C for layer 0 = 10.8076 
-Monthly GPP in grams of C for layer 0 = 10.8038 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0094489 
 Monthly NPP for layer 0 = 0.0094489 
@@ -23436,7 +23367,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.0416 mm/month
 Cumulated Evapotranspiration for this class = 219.009 mm
@@ -23455,7 +23385,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.017799 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.29989 
 Daily GPP in grams of C for layer 0 = 9.29989 
-Monthly GPP in grams of C for layer 0 = 9.29601 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.0081307 
 Monthly NPP for layer 0 = 0.0081307 
@@ -23620,7 +23550,7 @@ Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
 Rainfall Intercepted = 0.0297516 mm/month
-Percentage of Rain Intercepted from dominant canopy = inf%
+Percentage of Rain Intercepted from dominant canopy = 14.8758%
 -Class evapotranspiration = 3.04922 mm/month
 Class evapotranspiration = 3.07045 mm/month
 Cumulated Evapotranspiration for this class = 222.08 mm
@@ -23639,7 +23569,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0191412 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.0011 
 Daily GPP in grams of C for layer 0 = 10.0011 
-Monthly GPP in grams of C for layer 0 = 9.99726 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00874379 
 Monthly NPP for layer 0 = 0.00874379 
@@ -23805,7 +23735,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03973 mm/month
 Cumulated Evapotranspiration for this class = 225.12 mm
@@ -23824,7 +23753,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0182382 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.52936 
 Daily GPP in grams of C for layer 0 = 9.52936 
-Monthly GPP in grams of C for layer 0 = 9.52548 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00833132 
 Monthly NPP for layer 0 = 0.00833132 
@@ -23990,7 +23919,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03877 mm/month
 Cumulated Evapotranspiration for this class = 228.158 mm
@@ -24009,7 +23937,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0195843 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.2327 
 Daily GPP in grams of C for layer 0 = 10.2327 
-Monthly GPP in grams of C for layer 0 = 10.2288 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00894621 
 Monthly NPP for layer 0 = 0.00894621 
@@ -24175,7 +24103,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03781 mm/month
 Cumulated Evapotranspiration for this class = 231.196 mm
@@ -24194,7 +24121,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0196871 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 10.2864 
 Daily GPP in grams of C for layer 0 = 10.2864 
-Monthly GPP in grams of C for layer 0 = 10.2825 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00899318 
 Monthly NPP for layer 0 = 0.00899318 
@@ -24360,7 +24287,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03686 mm/month
 Cumulated Evapotranspiration for this class = 234.233 mm
@@ -24379,7 +24305,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0164631 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.60186 
 Daily GPP in grams of C for layer 0 = 8.60186 
-Monthly GPP in grams of C for layer 0 = 8.59798 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00752042 
 Monthly NPP for layer 0 = 0.00752042 
@@ -24545,7 +24471,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.0359 mm/month
 Cumulated Evapotranspiration for this class = 237.269 mm
@@ -24564,7 +24489,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0180954 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.45475 
 Daily GPP in grams of C for layer 0 = 9.45475 
-Monthly GPP in grams of C for layer 0 = 9.45087 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00826608 
 Monthly NPP for layer 0 = 0.00826608 
@@ -24730,7 +24655,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03494 mm/month
 Cumulated Evapotranspiration for this class = 240.304 mm
@@ -24749,7 +24673,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0180954 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.45475 
 Daily GPP in grams of C for layer 0 = 9.45475 
-Monthly GPP in grams of C for layer 0 = 9.45087 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00826608 
 Monthly NPP for layer 0 = 0.00826608 
@@ -24915,7 +24839,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03398 mm/month
 Cumulated Evapotranspiration for this class = 243.338 mm
@@ -24934,7 +24857,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.017488 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 9.13738 
 Daily GPP in grams of C for layer 0 = 9.13738 
-Monthly GPP in grams of C for layer 0 = 9.1335 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00798862 
 Monthly NPP for layer 0 = 0.00798862 
@@ -25100,7 +25023,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03303 mm/month
 Cumulated Evapotranspiration for this class = 246.371 mm
@@ -25119,7 +25041,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0126995 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.6354 
 Daily GPP in grams of C for layer 0 = 6.6354 
-Monthly GPP in grams of C for layer 0 = 6.63152 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00580119 
 Monthly NPP for layer 0 = 0.00580119 
@@ -25285,7 +25207,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03207 mm/month
 Cumulated Evapotranspiration for this class = 249.403 mm
@@ -25304,7 +25225,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00793406 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 4.1455 
 Daily GPP in grams of C for layer 0 = 4.1455 
-Monthly GPP in grams of C for layer 0 = 4.14162 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00362432 
 Monthly NPP for layer 0 = 0.00362432 
@@ -25470,7 +25391,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03111 mm/month
 Cumulated Evapotranspiration for this class = 252.434 mm
@@ -25489,7 +25409,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.00490454 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 2.56259 
 Daily GPP in grams of C for layer 0 = 2.56259 
-Monthly GPP in grams of C for layer 0 = 2.55872 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00224042 
 Monthly NPP for layer 0 = 0.00224042 
@@ -25655,7 +25575,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.03016 mm/month
 Cumulated Evapotranspiration for this class = 255.464 mm
@@ -25674,7 +25593,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0150796 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.87899 
 Daily GPP in grams of C for layer 0 = 7.87899 
-Monthly GPP in grams of C for layer 0 = 7.87511 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00688843 
 Monthly NPP for layer 0 = 0.00688843 
@@ -25840,7 +25759,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.0292 mm/month
 Cumulated Evapotranspiration for this class = 258.493 mm
@@ -25859,7 +25777,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0118777 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.20602 
 Daily GPP in grams of C for layer 0 = 6.20602 
-Monthly GPP in grams of C for layer 0 = 6.20214 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00542579 
 Monthly NPP for layer 0 = 0.00542579 
@@ -26025,7 +25943,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.02825 mm/month
 Cumulated Evapotranspiration for this class = 261.522 mm
@@ -26044,7 +25961,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0124316 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.49546 
 Daily GPP in grams of C for layer 0 = 6.49546 
-Monthly GPP in grams of C for layer 0 = 6.49158 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00567884 
 Monthly NPP for layer 0 = 0.00567884 
@@ -26210,7 +26127,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01947 mm/month
 Class evapotranspiration = 3.02729 mm/month
 Cumulated Evapotranspiration for this class = 264.549 mm
@@ -26229,7 +26145,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0126995 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.6354 
 Daily GPP in grams of C for layer 0 = 6.6354 
-Monthly GPP in grams of C for layer 0 = 6.63152 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00580119 
 Monthly NPP for layer 0 = 0.00580119 
@@ -26396,7 +26312,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 3.01427 mm/month
 Class evapotranspiration = 3.02113 mm/month
 Cumulated Evapotranspiration for this class = 267.57 mm
@@ -26415,7 +26330,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 0 
 Daily GPP in grams of C for layer 0 = 0 
-Monthly GPP in grams of C for layer 0 = -0.00387823 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0 
 Monthly NPP for layer 0 = 4.59163e-41 
@@ -26581,7 +26496,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.98557 mm/month
 Class evapotranspiration = 2.99149 mm/month
 Cumulated Evapotranspiration for this class = 270.562 mm
@@ -26600,7 +26514,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0150134 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 7.84439 
 Daily GPP in grams of C for layer 0 = 7.84439 
-Monthly GPP in grams of C for layer 0 = 7.84051 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00685819 
 Monthly NPP for layer 0 = 0.00685819 
@@ -26766,7 +26680,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.95508 mm/month
 Class evapotranspiration = 2.96005 mm/month
 Cumulated Evapotranspiration for this class = 273.522 mm
@@ -26787,7 +26700,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0170222 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.894 
 Daily GPP in grams of C for layer 0 = 8.894 
-Monthly GPP in grams of C for layer 0 = 8.89012 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00777584 
 Monthly NPP for layer 0 = 0.00777584 
@@ -26953,7 +26866,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.94875 mm/month
 Class evapotranspiration = 2.95354 mm/month
 Cumulated Evapotranspiration for this class = 276.475 mm
@@ -26974,7 +26886,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0168853 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.82249 
 Daily GPP in grams of C for layer 0 = 8.82249 
-Monthly GPP in grams of C for layer 0 = 8.81861 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00771332 
 Monthly NPP for layer 0 = 0.00771332 
@@ -27140,7 +27052,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.94875 mm/month
 Class evapotranspiration = 2.95354 mm/month
 Cumulated Evapotranspiration for this class = 279.429 mm
@@ -27161,7 +27072,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.0156528 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 8.17852 
 Daily GPP in grams of C for layer 0 = 8.17852 
-Monthly GPP in grams of C for layer 0 = 8.17464 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00715031 
 Monthly NPP for layer 0 = 0.00715031 
@@ -27327,7 +27238,6 @@ Frac Rain Interception = 0.150072
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
-Percentage of Rain Intercepted from dominant canopy = -nan%
 -Class evapotranspiration = 2.94875 mm/month
 Class evapotranspiration = 2.95354 mm/month
 Cumulated Evapotranspiration for this class = 282.382 mm
@@ -27348,7 +27258,7 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0.013151 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C for layer 0 = 6.87131 
 Daily GPP in grams of C for layer 0 = 6.87131 
-Monthly GPP in grams of C for layer 0 = 6.86743 
+Monthly GPP in grams of C for layer 0 = -1.47331e+07 
 ***************************** NPP *************************** 
 Daily NPP in grams of C for layer 0 = 0.00600744 
 Monthly NPP for layer 0 = 0.00600744 

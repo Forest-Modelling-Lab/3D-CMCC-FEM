@@ -64,6 +64,8 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 				{
 					lessrain = met[month].rain - RainIntercepted;
 				}
+				Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
+				Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
 			}
 			else
 			{
@@ -79,9 +81,13 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 				{
 					lessrain = met[month].d[day].rain - RainIntercepted;
 				}
+				Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
+				if(RainIntercepted > 0)
+				{
+					Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].d[day].rain );
+				}
 			}
-			Log("Rainfall Intercepted = %g mm/month\n", RainIntercepted);
-			Log("Percentage of Rain Intercepted from dominant canopy = %g%%\n", (RainIntercepted * 100) / met[month].rain );
+
 
 
 
