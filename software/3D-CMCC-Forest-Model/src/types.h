@@ -851,7 +851,7 @@ typedef struct {
 
 //-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
 
-#define LOGFILE		"output.txt"
+//#define LOGFILE		"output.txt"
 #define BUFFER_SIZE	4096
 
 

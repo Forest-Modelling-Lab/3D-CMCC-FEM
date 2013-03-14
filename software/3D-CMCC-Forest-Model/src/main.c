@@ -1707,6 +1707,18 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
+	/*
+	 tmp = out_filename
+[09:12:55] Alessandro-Candini-Caneta: tmp = tmp + settings->a + settings->b + ".txt"
+[09:13:04] Alessandro-Candini-Caneta: outfilename = tmp
+[09:13:11] Alessandro-Candini-Caneta: strcpy
+[09:13:54] Alessandro-Candini-Caneta: char temporaneo[BUFFER_SIZE];
+[09:16:28] Alessandro-Candini-Caneta: strcpy
+[09:16:30] Alessandro-Candini-Caneta: stradd
+	 sprintf
+	 strcat
+	 */
+
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
