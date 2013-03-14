@@ -1671,22 +1671,27 @@ int main(int argc, char *argv[])
 	//todo output.txt
 	//define output file name in function of model settings
 
-	if (settings->version == 'f')
+	/*if (settings->version == 'f')
 	{
 		strcat (out_filename, "_f");
 	}
 	else
 	{
 		strcat (out_filename, "_b");
-	}
-	if (settings->spatial == 's')
-	{
-		strcat (out_filename, "_s_");
-	}
-	else
-	{
-		strcat (out_filename, "_u_");
-	}
+	}*/
+
+	char strTmp[3], strTmp2[4];
+	strTmp[0] = '_';
+	strTmp[1] = settings->version;
+	strTmp[2] = '\0';
+
+	strTmp2[0] = '_';
+	strTmp2[1] = settings->spatial;
+	strTmp2[2] = '_';
+	strTmp2[3] = '\0';
+
+	strcat (out_filename, strTmp);
+	strcat (out_filename, strTmp2);
 
 	char strSizeCell[10] = "";
 	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
