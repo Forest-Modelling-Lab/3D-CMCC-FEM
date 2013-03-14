@@ -1673,7 +1673,7 @@ int main(int argc, char *argv[])
 	}
 
 	//define output file name in function of model settings
-	char strTmp[3], strTmp2[4], strTmp3[4];
+	char strTmp[3], strTmp2[4], strTmp3[3];
 	strTmp[0] = '_';
 	strTmp[1] = settings->version;
 	strTmp[2] = '\0';
@@ -1683,10 +1683,9 @@ int main(int argc, char *argv[])
 	strTmp2[2] = '_';
 	strTmp2[3] = '\0';
 
-	strTmp3[0] = '_';
-	strTmp3[1] = settings->time;
-	strTmp3[2] = '_';
-	strTmp3[3] = '\0';
+	strTmp3[0] = settings->time;
+	strTmp3[1] = '_';
+	strTmp3[2] = '\0';
 
 
 	strcat (out_filename, strTmp);
