@@ -146,6 +146,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].rain;
 
 
+		if (day == 0 && month == JANUARY)
+		{
+			m->cells[cell].yearday = 0;
+		}
+
+		m->cells[cell].yearday ++;
+
+
 
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
@@ -155,7 +163,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		Log("-YEAR SIMULATED = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
-		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days)
+		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
+		Log("----YEARDAY = %d\n", m->cells[cell].yearday);
 ;
 		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
 

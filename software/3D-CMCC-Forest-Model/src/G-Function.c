@@ -161,9 +161,9 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 
 
 	//BIOME-BGC version
-	//Running-Coughlan 1998, Ecological Modelling
+	//Running-Coughlan 1988, Ecological Modelling
 
-	void GetDayLength ( CELL * c,  int MonthLength)
+	void GetDayLength ( CELL * c,  int MonthLength )
 	{
 		//todo make a better function for daily daylength
 
