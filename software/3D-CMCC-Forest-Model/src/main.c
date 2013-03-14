@@ -1842,6 +1842,7 @@ int main(int argc, char *argv[])
 
 
 
+
 		/*Site definition*/
 		Log("Site Name = %s\n", site->sitename);
 		Log("Latitude = %g \n", site->lat);
