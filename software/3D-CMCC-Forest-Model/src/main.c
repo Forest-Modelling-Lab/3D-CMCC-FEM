@@ -1749,6 +1749,8 @@ int main(int argc, char *argv[])
 
 	strcat (out_filename, ".txt");
 
+
+
 	if ( !logInit(out_filename) )
 	{
 		log_enabled = 0;
@@ -1943,7 +1945,7 @@ int main(int argc, char *argv[])
 				MET_DATA *met;
 				// check parameters
 				//assert( m && yos);
-				met = (MET_DATA*) yos[years].m;
+				//met = (MET_DATA*) yos[years].m;
 
 				//check if soil data are available
 				for ( cell = 0; cell < m->cells_count; cell++)
@@ -2034,7 +2036,7 @@ int main(int argc, char *argv[])
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
 
-			Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n", yos[years].year);
+			Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
 
 			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 		}

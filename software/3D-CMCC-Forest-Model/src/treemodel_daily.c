@@ -161,7 +161,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
-		Log("-YEAR SIMULATED = %d (%d)\n", years+1, yos[years].year );
+		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 		Log("----YEARDAY = %d\n", m->cells[cell].yearday);
