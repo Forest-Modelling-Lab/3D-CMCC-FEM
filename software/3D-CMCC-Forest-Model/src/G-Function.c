@@ -108,6 +108,85 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	}
 }
 
+extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, const int month, const int years)
+{
+	MET_DATA *met;
+	static int cell;
+	static int height;
+	static int age;
+	static int species;
+
+
+
+	met = (MET_DATA*) yos[years].m;
+
+	Log("compute vegetative days for version '%c'\n", settings->spatial);
+
+
+	for ( cell = 0; cell < m->cells_count; cell++)
+	{
+		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+		{
+			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+			{
+				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+				{
+					if (settings->spatial == 'u')
+					{
+						if (!day && !month)
+						{
+							//todo check it
+							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+						}
+						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						{
+							//todo decidere se utlizzare growthend o mindaylenght
+							if ((met[month].d[day].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+									|| (met[month].d[day].tav >= m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
+							{
+								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+								//Log("----- Vegetative month = %d for species %s\n", month + 1, m->cells[cell].heights[height].ages[age].species[species].name );
+							}
+						}
+						else
+						{
+							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+						}
+						if (month == DECEMBER)
+						{
+							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						}
+					}
+					else
+					{
+						if (!month)
+						{
+							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+						}
+						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						{
+							if (met[month].ndvi_lai >= 0.5)
+							{
+								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+								//Log("----- Vegetative month = %d \n", month + 1);
+							}
+						}
+						else
+						{
+							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+						}
+						if (month == DECEMBER)
+						{
+							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						}
+					}
+				}
+			}
+		}
+	}
+}
 
 
 //----------------------------------------------------------------------------//

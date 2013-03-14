@@ -1913,6 +1913,7 @@ int main(int argc, char *argv[])
 							Log("Model spatial = %c\n\n\n\n", settings->spatial);
 							Log("************************************************************\n");
 						}
+
 						/*compute number of vegetative months*/
 						for (month = 0; month < MONTHS; month++)
 						{
@@ -1995,8 +1996,11 @@ int main(int argc, char *argv[])
 					//run tree_model
 					for (month = 0; month < MONTHS; month++)
 					{
-						//todo check it
-						Get_Veg_Months (m, yos, month, years);
+						for (day = 0; day < 365; day++)
+						{
+							//todo check it
+							Get_Veg_Days (m, yos, day, month, years);
+						}
 					}
 					for (month = 0; month < MONTHS; month++)
 					{
