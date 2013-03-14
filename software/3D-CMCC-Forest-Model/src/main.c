@@ -1671,9 +1671,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	//todo output.txt
 	//define output file name in function of model settings
-
 	char strTmp[3], strTmp2[4];
 	strTmp[0] = '_';
 	strTmp[1] = settings->version;
@@ -1715,31 +1713,32 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+	//check if daylight savings time
 	if (data->tm_isdst == 0)
 	{
 		sprintf(strData, "%d", data->tm_hour+1);
 		strcat (out_filename, strData);
 		strcat (out_filename, ":");
+		sprintf(strData, "%d", data->tm_min);
+		strcat (out_filename, strData);
 	}
-	else
+	else if (data->tm_isdst > 0)
 	{
 		sprintf(strData, "%d", data->tm_hour);
 		strcat (out_filename, strData);
 		strcat (out_filename, ":");
+		sprintf(strData, "%d", data->tm_min);
+		strcat (out_filename, strData);
 	}
-
-	sprintf(strData, "%d", data->tm_min);
-	strcat (out_filename, strData);
+	else
+	{
+		strcat (out_filename, "no_data_available");
+	}
 
 	//sprintf(strData, "%d", data->tm_sec);
 	//strcat (out_filename, strData);
 
-
-
 	strcat (out_filename, ".txt");
-
-
-
 
 	if ( !logInit(out_filename) )
 	{
