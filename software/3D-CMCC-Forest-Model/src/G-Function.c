@@ -173,11 +173,16 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 		float ampl;  //seasonal variation in Day Length from 12 h
 		ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
 
-
-		c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
-
-
-		Log("daylength = %g \n", c->daylength);
+		if (settings->time == 'm')
+		{
+			c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
+			Log("month daylength = %g \n", c->daylength);
+		}
+		else
+		{
+			c->daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
+			Log("daily daylength = %g \n", c->daylength);
+		}
 	}
 
 

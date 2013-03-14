@@ -764,7 +764,7 @@ typedef struct {
 
 	int soil_value;
 
-	float yearday;
+	int yearday;
 	float daylength;
 	float daylength_3PG;
 	int cum_dayOfyear;
