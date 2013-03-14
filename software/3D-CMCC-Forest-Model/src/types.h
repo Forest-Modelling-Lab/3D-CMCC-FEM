@@ -766,6 +766,8 @@ typedef struct {
 
 
 	float daylength;
+	float daylength_3PG;
+	int cum_dayOfyear;
 	float abscission_daylength;
 
 	float net_radiation;
@@ -874,6 +876,7 @@ extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
 extern void GetDayLength (CELL *, int);
+extern void GetDayLength_3PG (CELL *, const MET_DATA *const, int , int );
 extern void Get_Abscission_DayLength (CELL *);
 extern int Get_Establishment_LPJ (SPECIES *const, float, float);
 extern int logInit(char*);

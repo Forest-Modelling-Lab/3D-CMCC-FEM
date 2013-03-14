@@ -107,11 +107,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 
 		GetDayLength (&m->cells[cell], MonthLength[month]);
+		//GetDayLength_3PG (&m->cells[cell], met, month, day);
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 
 		//*************FOREST STRUCTURE*********************
-		if (month == JANUARY && day == 0)
+		if (day == 0 && month == JANUARY)
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
@@ -257,7 +258,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									}
 								}
 
-								if(m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
+								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
 										&& m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
 								{
 									Log("ERROR VEG_UNVEG = 1 BUT LAI = 0!!!!!\n");
