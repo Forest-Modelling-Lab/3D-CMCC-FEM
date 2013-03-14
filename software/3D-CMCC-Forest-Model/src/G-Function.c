@@ -120,7 +120,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 
 	met = (MET_DATA*) yos[years].m;
 
-	Log("compute vegetative days for version '%c'\n", settings->spatial);
+	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
 
 	for ( cell = 0; cell < m->cells_count; cell++)
@@ -147,11 +147,13 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 								//Log("----- Vegetative month = %d for species %s\n", month + 1, m->cells[cell].heights[height].ages[age].species[species].name );
+								m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							}
 						}
 						else
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 						}
 						if (month == DECEMBER)
 						{
@@ -163,25 +165,29 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 						if (!month)
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
 						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
-							if (met[month].ndvi_lai >= 0.5)
+							if (met[month].d[day].ndvi_lai >= 0.5)
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 								//Log("----- Vegetative month = %d \n", month + 1);
+								m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] +=1;
 							}
 						}
 						else
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 						}
 						if (month == DECEMBER)
 						{
 							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
+					Log("Annual days of veg = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 				}
 			}
 		}

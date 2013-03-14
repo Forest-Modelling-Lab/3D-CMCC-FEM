@@ -1993,7 +1993,7 @@ int main(int argc, char *argv[])
 					{
 						Log("RUN FOR FORESTSin BGC version\n");
 					}
-					//run tree_model
+					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < 365; day++)
