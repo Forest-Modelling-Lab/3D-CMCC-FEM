@@ -19,7 +19,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	Log("GET_ALLOCATION_ROUTINE*********************************************************************************************************************************\n\n");
 
 	Log("Carbon allocation routine for deciduous\n");
-	Log("Version = %c \n", settings->version);
+	Log("Spatial = %c \n", settings->spatial);
 
 
 	int phenology_phase;
@@ -80,8 +80,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	//I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_NUTR]);
 	//reductor = s->value[F_SW];
-	/*
 
+	//todo use it if a better function of fSW is developed
+	/*
 	if (reductor == s->value[F_SW])
 	{
 		Log("reductor in CTEM is F_SW \n");
@@ -94,10 +95,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , --\n", c->heights[height].z);
 	Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
-
-
-
-
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
@@ -1099,7 +1096,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				//recompute LAI
-				Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+				//Log("SLA in mod = %g KgC/m^2 \n", s->value[SLAmkg]);
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 				Log("++Lai = %g\n", s->value[LAI]);
 
@@ -1164,6 +1161,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 	Log("Carbon allocation routine for evergreen\n");
 	Log("Version = %c \n", settings->version);
+	Log("Spatial = %c \n", settings->spatial);
 
 
 
@@ -1232,7 +1230,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 
 
-	if (settings->version == 'u')
+	if (settings->spatial == 'u')
 	{
 		Log("Unspatial version \n");
 

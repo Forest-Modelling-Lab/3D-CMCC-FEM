@@ -594,11 +594,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 
 	if (settings->spatial == 's')
 	{
-		Log ("Model version = spatial \n");
+		Log ("Model spatial = spatial \n");
 	}
 	else
 	{
-		Log ("Model version = un-spatial \n");
+		Log ("Model spatial = un-spatial \n");
 	}
 
 	if (settings->time == 'm')

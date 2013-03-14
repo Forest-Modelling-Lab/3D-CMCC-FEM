@@ -1120,7 +1120,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									//Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].swc);
 									break;
 								case Ndvi_Lai: //Get LAI in spatial version
-									if (settings->version == 's')
+									if (settings->spatial == 's')
 									{
 										yos[*yos_count-1].m[month].d[day].ndvi_lai = convert_string_to_prec(token2, &error_flag);
 
@@ -1802,6 +1802,7 @@ int main(int argc, char *argv[])
 							Log("\n\n\n************CHANGING VERSION..........***************\n");
 							Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
 							Log("Model version = %c\n\n\n\n", settings->version);
+							Log("Model spatial = %c\n\n\n\n", settings->spatial);
 							Log("************************************************************\n");
 						}
 						/*compute number of vegetative months*/

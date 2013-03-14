@@ -1108,7 +1108,7 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 			{
 				if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
 				{
-					if (settings->version == 'u')
+					if (settings->spatial == 'u')
 					{
 						c->top_layer = c->heights[height].z;
 					}

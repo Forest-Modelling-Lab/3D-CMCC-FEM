@@ -12,7 +12,7 @@ extern int DaysInMonth[];
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
-	//todo inserire la funzione anche nelle altre aprti del treemodel.c
+	//todo inserire la funzione anche nelle altre parti del treemodel.c
 
 	//FOLLOWING BIOME APPROACH
 	/* temperature and radiation snowmelt,
@@ -28,7 +28,14 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	t_melt = r_melt = r_sub = 0;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	incident_rad = c->net_radiation_for_soil * DaysInMonth[month] * snow_abs * 0.001;
+	if (settings->time == 'm')
+	{
+		incident_rad = c->net_radiation_for_soil * DaysInMonth[month] * snow_abs * 0.001;
+	}
+	else
+	{
+		incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
+	}
 	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
 	Log("incident radiation for soil = %g\n", incident_rad);
 
