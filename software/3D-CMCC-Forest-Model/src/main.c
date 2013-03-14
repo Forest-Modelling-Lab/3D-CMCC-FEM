@@ -1659,7 +1659,42 @@ int main(int argc, char *argv[])
 	//		return 1;
 	//	}
 	//
-	if ( !logInit(output_file) )
+
+	// Import settings.txt file (before logInit(), because I choose output filename from settings)
+	error = importSettingsFile(settings_path);
+	if ( error )
+	{
+		Log("Settings File not imported!!\n\n");
+		return -1;
+	}
+
+	//todo output.txt
+	//define output file name in function of model settings
+
+	if (settings->version == 'f')
+	{
+		strcat (out_filename, "_f");
+	}
+	else
+	{
+		strcat (out_filename, "_b");
+	}
+	if (settings->spatial == 's')
+	{
+		strcat (out_filename, "_s_");
+	}
+	else
+	{
+		strcat (out_filename, "_u_");
+	}
+
+	char strSizeCell[10] = "";
+	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
+
+	strcat (out_filename, strSizeCell);
+	strcat (out_filename, ".txt");
+
+	if ( !logInit(out_filename) )
 	{
 		log_enabled = 0;
 		puts("Unable to log to file: check logfile path!");
@@ -1697,14 +1732,6 @@ int main(int argc, char *argv[])
 	if ( error )
 	{
 		Log("Site File not imported!!\n\n");
-		return -1;
-	}
-
-	// Import settings.txt file
-	error = importSettingsFile(settings_path);
-	if ( error )
-	{
-		Log("Settings File not imported!!\n\n");
 		return -1;
 	}
 
@@ -1751,32 +1778,6 @@ int main(int argc, char *argv[])
 		}
 
 
-		//todo output.txt
-		//define output file name in function of model settings
-
-		if (settings->version == 'f')
-		{
-			Log("prova\n");
-			strcat (out_filename, "_f");
-		}
-		else
-		{
-			strcat (out_filename, "_b");
-		}
-		if (settings->spatial == 's')
-		{
-			strcat (out_filename, "_s_");
-		}
-		else
-		{
-			strcat (out_filename, "_u_");
-		}
-
-		char strSizeCell[10] = "";
-		sprintf(strSizeCell, "%d", (int)settings->sizeCell);
-
-		strcat (out_filename, strSizeCell);
-		strcat (out_filename, ".txt");
 
 		Log("out_filename = %s\n", out_filename);
 
