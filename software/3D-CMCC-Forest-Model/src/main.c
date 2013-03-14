@@ -24,6 +24,7 @@
 #include <stdarg.h>
 #include <math.h>
 #include <string.h>
+#include <time.h>
 //#include <netcdf.h>
 
 
@@ -1280,6 +1281,8 @@ int main(int argc, char *argv[])
 	files_not_processed_count,
 	total_files_count;
 
+	struct tm* data;
+
 	int years,
 	month,
 	day;
@@ -1688,7 +1691,55 @@ int main(int argc, char *argv[])
 	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
 
 	strcat (out_filename, strSizeCell);
+	strcat (out_filename, "_");
+
+	//add data to output.txt
+	time_t rawtime;
+	time (&rawtime);
+	data = gmtime(&rawtime);
+
+	char strData[30] = "";
+	sprintf(strData, "%d", data->tm_year+1900);
+	strcat (out_filename, strData);
+	strcat (out_filename, "_");
+
+	//sprintf(strData, "%d", data->tm_mon+1);
+	//strcat (out_filename, strData);
+	//strcat (out_filename, "_");
+
+	sprintf(strData, "%s", szMonth[data->tm_mon]);
+	strcat (out_filename, strData);
+	strcat (out_filename, "_");
+
+	sprintf(strData, "%d", data->tm_mday);
+	strcat (out_filename, strData);
+	strcat (out_filename, "_");
+
+	if (data->tm_isdst == 0)
+	{
+		sprintf(strData, "%d", data->tm_hour+1);
+		strcat (out_filename, strData);
+		strcat (out_filename, ":");
+	}
+	else
+	{
+		sprintf(strData, "%d", data->tm_hour);
+		strcat (out_filename, strData);
+		strcat (out_filename, ":");
+	}
+
+	sprintf(strData, "%d", data->tm_min);
+	strcat (out_filename, strData);
+
+	//sprintf(strData, "%d", data->tm_sec);
+	//strcat (out_filename, strData);
+
+
+
 	strcat (out_filename, ".txt");
+
+
+
 
 	if ( !logInit(out_filename) )
 	{
