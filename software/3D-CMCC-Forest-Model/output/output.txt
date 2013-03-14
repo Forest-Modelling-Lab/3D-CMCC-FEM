@@ -29,7 +29,7 @@ was released by CMCC-UNITUS.
 3D-CMCC Forest Model v.4.0
 
 by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it
-compiled using GNU C 4.7.2 on Mar 14 2013 at 08:28:25
+compiled using GNU C 4.7.2 on Mar 14 2013 at 11:27:27
 (use -h parameter for more information)
 
 
@@ -54,7 +54,7 @@ matrix has 1 cell
 
 FOREST DATASET
 *(1)
-****GET FOREST CHARACTERISTICS for cell  (0, 1083693056)****
+****GET FOREST CHARACTERISTICS for cell  (38345776, 0)****
 - cell n.01 is at 1526,962 and has 1 height classe 
 **(1)
 -- height n.01 is 12.42 m and has 1 age classes 
@@ -70,8 +70,18 @@ Generating input biomass data from DBH data...
 ----Foliage Biomass initialization data  = 0 
 -----Reserve Biomass initialization data  = 0.947842 KgDM/tree
 -----Reserve Biomass initialization data  = 0.0464443 tDM/cell
----- species n.01 is Fagussylvatica (0), management type is 
-****GET SITE-SOIL CHARACTERISTICS for cell  (0, 1083693056)****
+---- species n.01 is Fagussylvatica (84), management type is 1 and has
+----- n = 0 trees
+----- n stumps = 0 stumps
+----- avdbh = 0 cm
+----- wf = 26.97 tDM/ha
+----- wr coarse = 0 tDM/area
+----- wr fine = 5.832 tDM/area
+----- ws = 0 tDM/area
+----- wres = 16.2 tDM/area
+----- lai = 0.0464443 tDM/area
+
+****GET SITE-SOIL CHARACTERISTICS for cell  (38345776, 0)****
 soil_b = -4.7601 (DIM)
 vwc_sat = 0.408771 (DIM)
 psi_sat = -0.0011607 (MPa)
@@ -643,7 +653,7 @@ PEAK_LAI = 3.77346
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 480477 W/m^2/hour
-Daily Soil Evaporation = 0.0206867 
+Daily Soil Evaporation = 0.0206868 
 Total Soil Evaporation = 0.0990451 mm
 Available Soil Water at day 4 month 1 year of simulation 0 = 15.4637 mm
 *****************************************************************************
@@ -1793,7 +1803,7 @@ fNutr = 0.776393
 available soil water 23.9973 mm
 volumetric available soil water  = 0.037791 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.0924503 
+vwc/vwc_sat = 0.0924504 
 PSI BIOME = -97.0733 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
@@ -1992,7 +2002,7 @@ available soil water 23.9332 mm
 volumetric available soil water  = 0.0376901 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0922035 
-PSI BIOME = -98.3167 (MPa)
+PSI BIOME = -98.3166 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -2030,7 +2040,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 480477 W/m^2/hour
 Daily Soil Evaporation = 0.0319742 
-Total Soil Evaporation = 0.461497 mm
+Total Soil Evaporation = 0.461498 mm
 Available Soil Water at day 18 month 1 year of simulation 0 = 23.9012 mm
 *****************************************************************************
 *****************************************************************************
@@ -3084,8 +3094,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.205505 
 PSI BIOME = -2.16647 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0785467
-fSW-F_PSI = 0.0785467
+F_PSI = 0.0785469
+fSW-F_PSI = 0.0785469
 fSW = 0.89732
 PhysMod = 0.647316
 PHYSMOD uses F_VPD * F_AGE
@@ -3183,8 +3193,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.205231 
 PSI BIOME = -2.1803 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0704111
-fSW-F_PSI = 0.0704111
+F_PSI = 0.0704112
+fSW-F_PSI = 0.0704112
 fSW = 0.896986
 PhysMod = 0.647316
 PHYSMOD uses F_VPD * F_AGE
@@ -3294,11 +3304,11 @@ fNutr = 0.776393
 available soil water 53.2004 mm
 volumetric available soil water  = 0.0837802 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.204956 
+vwc/vwc_sat = 0.204957 
 PSI BIOME = -2.19422 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0622229
-fSW-F_PSI = 0.0622229
+F_PSI = 0.0622236
+fSW-F_PSI = 0.0622236
 fSW = 0.896651
 PhysMod = 0.654418
 PHYSMOD uses F_SW * F_AGE
@@ -3432,7 +3442,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 652642 W/m^2/hour
 Daily Soil Evaporation = 0.0963861 
-Total Soil Evaporation = 1.34462 mm
+Total Soil Evaporation = 1.34463 mm
 Available Soil Water at day 1 month 2 year of simulation 0 = 53.0181 mm
 *****************************************************************************
 *****************************************************************************
@@ -3594,8 +3604,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.203883 
 PSI BIOME = -2.24974 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.029566
-fSW-F_PSI = 0.029566
+F_PSI = 0.0295667
+fSW-F_PSI = 0.0295667
 fSW = 0.895335
 PhysMod = 0.653457
 PHYSMOD uses F_SW * F_AGE
@@ -3693,8 +3703,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.203513 
 PSI BIOME = -2.26927 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0180751
-fSW-F_PSI = 0.0180751
+F_PSI = 0.018075
+fSW-F_PSI = 0.018075
 fSW = 0.894878
 PhysMod = 0.653124
 PHYSMOD uses F_SW * F_AGE
@@ -3792,8 +3802,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.203144 
 PSI BIOME = -2.28898 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.00648347
-fSW-F_PSI = 0.00648347
+F_PSI = 0.00648389
+fSW-F_PSI = 0.00648389
 fSW = 0.894421
 PhysMod = 0.65279
 PHYSMOD uses F_SW * F_AGE
@@ -3990,8 +4000,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.205485 
 PSI BIOME = -2.16747 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0779607
-fSW-F_PSI = 0.0779607
+F_PSI = 0.0779608
+fSW-F_PSI = 0.0779608
 fSW = 0.897296
 PhysMod = 0.654889
 PHYSMOD uses F_SW * F_AGE
@@ -4086,11 +4096,11 @@ fNutr = 0.776393
 available soil water 53.2409 mm
 volumetric available soil water  = 0.0838439 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.205112 
+vwc/vwc_sat = 0.205113 
 PSI BIOME = -2.18629 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.0668892
-fSW-F_PSI = 0.0668892
+F_PSI = 0.0668898
+fSW-F_PSI = 0.0668898
 fSW = 0.896842
 PhysMod = 0.654557
 PHYSMOD uses F_SW * F_AGE
@@ -4719,7 +4729,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 652642 W/m^2/hour
 Daily Soil Evaporation = 0.161895 
-Total Soil Evaporation = 2.91081 mm
+Total Soil Evaporation = 2.91082 mm
 Available Soil Water at day 14 month 2 year of simulation 0 = 89.0519 mm
 *****************************************************************************
 *****************************************************************************
@@ -4818,7 +4828,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 652642 W/m^2/hour
 Daily Soil Evaporation = 0.16269 
-Total Soil Evaporation = 3.0735 mm
+Total Soil Evaporation = 3.07351 mm
 Available Soil Water at day 15 month 2 year of simulation 0 = 89.4892 mm
 *****************************************************************************
 *****************************************************************************
@@ -5510,7 +5520,7 @@ PEAK_LAI = 3.77346
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 652642 W/m^2/hour
-Daily Soil Evaporation = 0.207206 
+Daily Soil Evaporation = 0.207207 
 Total Soil Evaporation = 4.38682 mm
 Available Soil Water at day 22 month 2 year of simulation 0 = 113.976 mm
 *****************************************************************************
@@ -5609,7 +5619,7 @@ PEAK_LAI = 3.77346
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 652642 W/m^2/hour
-Daily Soil Evaporation = 0.20683 
+Daily Soil Evaporation = 0.206831 
 Total Soil Evaporation = 4.59365 mm
 Available Soil Water at day 23 month 2 year of simulation 0 = 113.769 mm
 *****************************************************************************
@@ -6280,7 +6290,7 @@ available soil water 114.993 mm
 volumetric available soil water  = 0.181092 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.443016 
-PSI BIOME = -0.0559499 (MPa)
+PSI BIOME = -0.0559498 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -6764,7 +6774,7 @@ Monthly GPP in grams of C for layer 0 = 1.44041
 Monthly  Stand GPP (per area covered)= 1285.02 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00125932 
-Monthly NPP (per area covered) for layer 0 = 493801 
+Monthly NPP (per area covered) for layer 0 = 0.00125932 
 Daily/Monthly Stand GPP (absolute) = 1.44041 
 Daily/Monthly Stand NPP (per area covered) = 0.00125932 
 CLASS LEVEL
@@ -6930,7 +6940,7 @@ Monthly GPP in grams of C for layer 0 = 1.98366
 Monthly  Stand GPP (per area covered)= 1769.67 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00173427 
-Monthly NPP (per area covered) for layer 0 = 489471 
+Monthly NPP (per area covered) for layer 0 = 0.00173427 
 Daily/Monthly Stand GPP (absolute) = 1.98366 
 Daily/Monthly Stand NPP (per area covered) = 0.00173427 
 CLASS LEVEL
@@ -6960,7 +6970,7 @@ Biomass Stem CTEM = 15.5621 tDM/area
 
 PAR OVER CANOPY = 28.2287 
 PAR FOR SOIL = 0.269874 
-Average Light Absorbed for establishment = 0.0095603 
+Average Light Absorbed for establishment = 0.00956029 
 PHENOLOGY LAI = 0.56096 
 ****************END OF SPECIES CLASS***************
 ****************END OF AGE CLASS***************
@@ -7096,7 +7106,7 @@ Monthly GPP in grams of C for layer 0 = 2.07909
 Monthly  Stand GPP (per area covered)= 1854.8 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00181771 
-Monthly NPP (per area covered) for layer 0 = 483570 
+Monthly NPP (per area covered) for layer 0 = 0.00181771 
 Daily/Monthly Stand GPP (absolute) = 2.07909 
 Daily/Monthly Stand NPP (per area covered) = 0.00181771 
 CLASS LEVEL
@@ -7242,7 +7252,7 @@ Frac Rain Interception = 0.0232963
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
--Class evapotranspiration = 0.857532 mm/month
+-Class evapotranspiration = 0.857531 mm/month
 Class evapotranspiration = 1.01681 mm/month
 Cumulated Evapotranspiration for this class = 4.16371 mm
 net_radiation for soil = 6437.03
@@ -7262,7 +7272,7 @@ Monthly GPP in grams of C for layer 0 = 1.79095
 Monthly  Stand GPP (per area covered)= 1597.74 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00156579 
-Monthly NPP (per area covered) for layer 0 = 477462 
+Monthly NPP (per area covered) for layer 0 = 0.00156579 
 Daily/Monthly Stand GPP (absolute) = 1.79095 
 Daily/Monthly Stand NPP (per area covered) = 0.00156579 
 CLASS LEVEL
@@ -7408,7 +7418,7 @@ Frac Rain Interception = 0.0240353
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
--Class evapotranspiration = 0.87453 mm/month
+-Class evapotranspiration = 0.874529 mm/month
 Class evapotranspiration = 1.03073 mm/month
 Cumulated Evapotranspiration for this class = 5.19444 mm
 net_radiation for soil = 6431.26
@@ -7428,7 +7438,7 @@ Monthly GPP in grams of C for layer 0 = 1.79478
 Monthly  Stand GPP (per area covered)= 1601.16 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00156914 
-Monthly NPP (per area covered) for layer 0 = 472264 
+Monthly NPP (per area covered) for layer 0 = 0.00156914 
 Daily/Monthly Stand GPP (absolute) = 1.79478 
 Daily/Monthly Stand NPP (per area covered) = 0.00156914 
 CLASS LEVEL
@@ -7562,7 +7572,7 @@ Daily Transpiration = 0.899046 mm/m^2/day
 Monthly Canopy Transpiration = 0.899046 mm-Kg H2o/m^2/day
 Monthly Canopy Transpiration = -9993.87 mm-Kg H2o/m^2/month
 Daily transpiration from biome = -213.819
-Montlhy transpiration from biome = -6628.4
+Montlhy transpiration from biome = -6628.38
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 467112
@@ -7594,7 +7604,7 @@ Monthly GPP in grams of C for layer 0 = 2.18707
 Monthly  Stand GPP (per area covered)= 1951.13 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00191211 
-Monthly NPP (per area covered) for layer 0 = 467112 
+Monthly NPP (per area covered) for layer 0 = 0.00191211 
 Daily/Monthly Stand GPP (absolute) = 2.18707 
 Daily/Monthly Stand NPP (per area covered) = 0.00191211 
 CLASS LEVEL
@@ -7760,7 +7770,7 @@ Monthly GPP in grams of C for layer 0 = 2.3432
 Monthly  Stand GPP (per area covered)= 2090.42 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00204861 
-Monthly NPP (per area covered) for layer 0 = 460911 
+Monthly NPP (per area covered) for layer 0 = 0.00204861 
 Daily/Monthly Stand GPP (absolute) = 2.3432 
 Daily/Monthly Stand NPP (per area covered) = 0.00204861 
 CLASS LEVEL
@@ -7926,7 +7936,7 @@ Monthly GPP in grams of C for layer 0 = 2.68177
 Monthly  Stand GPP (per area covered)= 2392.46 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00234461 
-Monthly NPP (per area covered) for layer 0 = 454360 
+Monthly NPP (per area covered) for layer 0 = 0.00234461 
 Daily/Monthly Stand GPP (absolute) = 2.68177 
 Daily/Monthly Stand NPP (per area covered) = 0.00234461 
 CLASS LEVEL
@@ -8043,7 +8053,7 @@ Height Classes in Dominant Layer = 1
 Global Solar Radiation = 13.15 MJ/m^2/day
 Hourly Net Radiation = 674704 W/m^2/hour
 Par for layer '0' = 28.2287 molPAR/m^2 day
-Apar for layer '0' = 9.61192 molPAR/m^2 day/month
+Apar for layer '0' = 9.61193 molPAR/m^2 day/month
 Only one height class in dominant light
 Canopy Cover = 0.991246 
 Gap Cover = 0.00875423 
@@ -8092,7 +8102,7 @@ Monthly GPP in grams of C for layer 0 = 2.77162
 Monthly  Stand GPP (per area covered)= 2472.62 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00242317 
-Monthly NPP (per area covered) for layer 0 = 446977 
+Monthly NPP (per area covered) for layer 0 = 0.00242317 
 Daily/Monthly Stand GPP (absolute) = 2.77162 
 Daily/Monthly Stand NPP (per area covered) = 0.00242317 
 CLASS LEVEL
@@ -8258,7 +8268,7 @@ Monthly GPP in grams of C for layer 0 = 2.9301
 Monthly  Stand GPP (per area covered)= 2614 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00256172 
-Monthly NPP (per area covered) for layer 0 = 439475 
+Monthly NPP (per area covered) for layer 0 = 0.00256172 
 Daily/Monthly Stand GPP (absolute) = 2.9301 
 Daily/Monthly Stand NPP (per area covered) = 0.00256172 
 CLASS LEVEL
@@ -8424,7 +8434,7 @@ Monthly GPP in grams of C for layer 0 = 2.75927
 Monthly  Stand GPP (per area covered)= 2461.6 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00241237 
-Monthly NPP (per area covered) for layer 0 = 431683 
+Monthly NPP (per area covered) for layer 0 = 0.00241237 
 Daily/Monthly Stand GPP (absolute) = 2.75927 
 Daily/Monthly Stand NPP (per area covered) = 0.00241237 
 CLASS LEVEL
@@ -8590,7 +8600,7 @@ Monthly GPP in grams of C for layer 0 = 2.52238
 Monthly  Stand GPP (per area covered)= 2250.27 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00220526 
-Monthly NPP (per area covered) for layer 0 = 424473 
+Monthly NPP (per area covered) for layer 0 = 0.00220526 
 Daily/Monthly Stand GPP (absolute) = 2.52238 
 Daily/Monthly Stand NPP (per area covered) = 0.00220526 
 CLASS LEVEL
@@ -8680,7 +8690,7 @@ available soil water 129.239 mm
 volumetric available soil water  = 0.203526 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.497898 
-PSI BIOME = -0.0320895 (MPa)
+PSI BIOME = -0.0320894 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -8756,7 +8766,7 @@ Monthly GPP in grams of C for layer 0 = 2.07408
 Monthly  Stand GPP (per area covered)= 1850.33 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00181332 
-Monthly NPP (per area covered) for layer 0 = 417989 
+Monthly NPP (per area covered) for layer 0 = 0.00181332 
 Daily/Monthly Stand GPP (absolute) = 2.07408 
 Daily/Monthly Stand NPP (per area covered) = 0.00181332 
 CLASS LEVEL
@@ -8896,7 +8906,7 @@ Montlhy transpiration from biome = -73770.3
 Net radiation from dominant layer = 412733
 Net radiation for soil evaporation = 412733 W/m^2/hour
 Daily Soil Evaporation = 0.151072 
-Total Soil Evaporation = 9.15591 mm
+Total Soil Evaporation = 9.15592 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0331397 
 Highest class
@@ -8922,7 +8932,7 @@ Monthly GPP in grams of C for layer 0 = 0.27232
 Monthly  Stand GPP (per area covered)= 242.943 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.000238084 
-Monthly NPP (per area covered) for layer 0 = 412733 
+Monthly NPP (per area covered) for layer 0 = 0.000238084 
 Daily/Monthly Stand GPP (absolute) = 0.27232 
 Daily/Monthly Stand NPP (per area covered) = 0.000238084 
 CLASS LEVEL
@@ -9062,7 +9072,7 @@ Montlhy transpiration from biome = -77901.2
 Net radiation from dominant layer = 412048
 Net radiation for soil evaporation = 412048 W/m^2/hour
 Daily Soil Evaporation = 0.14928 
-Total Soil Evaporation = 9.30519 mm
+Total Soil Evaporation = 9.3052 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0332521 
 Highest class
@@ -9088,7 +9098,7 @@ Monthly GPP in grams of C for layer 0 = 0.789247
 Monthly  Stand GPP (per area covered)= 704.104 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.000690022 
-Monthly NPP (per area covered) for layer 0 = 412048 
+Monthly NPP (per area covered) for layer 0 = 0.000690022 
 Daily/Monthly Stand GPP (absolute) = 0.789247 
 Daily/Monthly Stand NPP (per area covered) = 0.000690022 
 CLASS LEVEL
@@ -9254,7 +9264,7 @@ Monthly GPP in grams of C for layer 0 = 0.918881
 Monthly  Stand GPP (per area covered)= 819.753 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.000803358 
-Monthly NPP (per area covered) for layer 0 = 410069 
+Monthly NPP (per area covered) for layer 0 = 0.000803358 
 Daily/Monthly Stand GPP (absolute) = 0.918881 
 Daily/Monthly Stand NPP (per area covered) = 0.000803358 
 CLASS LEVEL
@@ -9394,7 +9404,7 @@ Montlhy transpiration from biome = -89954.1
 Net radiation from dominant layer = 407777
 Net radiation for soil evaporation = 407777 W/m^2/hour
 Daily Soil Evaporation = 0.144992 
-Total Soil Evaporation = 9.59737 mm
+Total Soil Evaporation = 9.59738 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0339569 
 Highest class
@@ -9420,7 +9430,7 @@ Monthly GPP in grams of C for layer 0 = 1.51158
 Monthly  Stand GPP (per area covered)= 1348.51 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00132154 
-Monthly NPP (per area covered) for layer 0 = 407777 
+Monthly NPP (per area covered) for layer 0 = 0.00132154 
 Daily/Monthly Stand GPP (absolute) = 1.51158 
 Daily/Monthly Stand NPP (per area covered) = 0.00132154 
 CLASS LEVEL
@@ -9586,7 +9596,7 @@ Monthly GPP in grams of C for layer 0 = 0.981421
 Monthly  Stand GPP (per area covered)= 875.547 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.000858036 
-Monthly NPP (per area covered) for layer 0 = 404034 
+Monthly NPP (per area covered) for layer 0 = 0.000858036 
 Daily/Monthly Stand GPP (absolute) = 0.981421 
 Daily/Monthly Stand NPP (per area covered) = 0.000858036 
 CLASS LEVEL
@@ -9752,7 +9762,7 @@ Monthly GPP in grams of C for layer 0 = 1.35447
 Monthly  Stand GPP (per area covered)= 1208.36 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00118419 
-Monthly NPP (per area covered) for layer 0 = 401623 
+Monthly NPP (per area covered) for layer 0 = 0.00118419 
 Daily/Monthly Stand GPP (absolute) = 1.35447 
 Daily/Monthly Stand NPP (per area covered) = 0.00118419 
 CLASS LEVEL
@@ -9920,7 +9930,7 @@ Monthly GPP in grams of C for layer 0 = 2.10177
 Monthly  Stand GPP (per area covered)= 1875.04 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00183754 
-Monthly NPP (per area covered) for layer 0 = 398320 
+Monthly NPP (per area covered) for layer 0 = 0.00183754 
 Daily/Monthly Stand GPP (absolute) = 2.10177 
 Daily/Monthly Stand NPP (per area covered) = 0.00183754 
 CLASS LEVEL
@@ -10086,7 +10096,7 @@ Monthly GPP in grams of C for layer 0 = 2.00158
 Monthly  Stand GPP (per area covered)= 1785.65 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00174994 
-Monthly NPP (per area covered) for layer 0 = 393248 
+Monthly NPP (per area covered) for layer 0 = 0.00174994 
 Daily/Monthly Stand GPP (absolute) = 2.00158 
 Daily/Monthly Stand NPP (per area covered) = 0.00174994 
 CLASS LEVEL
@@ -10252,7 +10262,7 @@ Monthly GPP in grams of C for layer 0 = 2.24521
 Monthly  Stand GPP (per area covered)= 2003 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00196294 
-Monthly NPP (per area covered) for layer 0 = 388479 
+Monthly NPP (per area covered) for layer 0 = 0.00196294 
 Daily/Monthly Stand GPP (absolute) = 2.24521 
 Daily/Monthly Stand NPP (per area covered) = 0.00196294 
 CLASS LEVEL
@@ -10418,7 +10428,7 @@ Monthly GPP in grams of C for layer 0 = 2.48819
 Monthly  Stand GPP (per area covered)= 2219.76 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00217537 
-Monthly NPP (per area covered) for layer 0 = 383199 
+Monthly NPP (per area covered) for layer 0 = 0.00217537 
 Daily/Monthly Stand GPP (absolute) = 2.48819 
 Daily/Monthly Stand NPP (per area covered) = 0.00217537 
 CLASS LEVEL
@@ -10584,7 +10594,7 @@ Monthly GPP in grams of C for layer 0 = 3.10553
 Monthly  Stand GPP (per area covered)= 2770.51 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0027151 
-Monthly NPP (per area covered) for layer 0 = 377433 
+Monthly NPP (per area covered) for layer 0 = 0.0027151 
 Daily/Monthly Stand GPP (absolute) = 3.10553 
 Daily/Monthly Stand NPP (per area covered) = 0.0027151 
 CLASS LEVEL
@@ -10750,7 +10760,7 @@ Monthly GPP in grams of C for layer 0 = 3.17942
 Monthly  Stand GPP (per area covered)= 2836.43 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0027797 
-Monthly NPP (per area covered) for layer 0 = 370360 
+Monthly NPP (per area covered) for layer 0 = 0.0027797 
 Daily/Monthly Stand GPP (absolute) = 3.17942 
 Daily/Monthly Stand NPP (per area covered) = 0.0027797 
 CLASS LEVEL
@@ -10842,7 +10852,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  0 months
-- Monthly LAI from Model= -4.83289e+230 
+- Monthly LAI from Model= 1.0446 
 - ASW layer 0 month 4  = 143.448 mm
 
  GET_DAILY_MODIFIERS
@@ -11097,7 +11107,7 @@ Monthly GPP in grams of C for layer 0 = 5.00484
 Monthly  Stand GPP (per area covered)= 4464.92 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00437562 
-Monthly NPP (per area covered) for layer 0 = 423455 
+Monthly NPP (per area covered) for layer 0 = 0.00437562 
 Daily/Monthly Stand GPP (absolute) = 5.00484 
 Daily/Monthly Stand NPP (per area covered) = 0.00437562 
 CLASS LEVEL
@@ -11247,7 +11257,7 @@ Percentage of Rain Intercepted from dominant canopy = 4.5369%
 Class evapotranspiration = 1.87386 mm/month
 Cumulated Evapotranspiration for this class = 36.3497 mm
 net_radiation for soil = 7539.56
-incident radiation for soil = 4.52373
+incident radiation for soil = 4.52374
 *********GET DAILY/MONTHLY SOIL WATER BALACE************
 ASW at the END of day/month less Evapotraspiration = 140.971 mm
 
@@ -11262,10 +11272,10 @@ Daily GPP in grams of C for layer 0 = 4.42445
 Monthly GPP in grams of C for layer 0 = 4.42445 
 Monthly  Stand GPP (per area covered)= 3947.15 gC/ha covered month
 ***************************** NPP *************************** 
-Daily NPP in grams of C (per area covered) for layer 0 = 0.0038682 
-Monthly NPP (per area covered) for layer 0 = 410754 
+Daily NPP in grams of C (per area covered) for layer 0 = 0.00386821 
+Monthly NPP (per area covered) for layer 0 = 0.00386821 
 Daily/Monthly Stand GPP (absolute) = 4.42445 
-Daily/Monthly Stand NPP (per area covered) = 0.0038682 
+Daily/Monthly Stand NPP (per area covered) = 0.00386821 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP (absolute) = 64.3912
 CLASS LEVEL Yearly NPP (per area covered) = 0.0562959
@@ -11395,7 +11405,7 @@ NET RADIATION = 809113
 Daily Canopy Transpiration = 1.62774 mm-Kg H2o/m^2/day
 Daily Transpiration = 1.62774 mm/m^2/day
 Monthly Canopy Transpiration = 1.62774 mm-Kg H2o/m^2/day
-Monthly Canopy Transpiration = 6.31504 mm-Kg H2o/m^2/month
+Monthly Canopy Transpiration = 6.31503 mm-Kg H2o/m^2/month
 Daily transpiration from biome = -11598.9
 Montlhy transpiration from biome = -347967
 
@@ -11429,7 +11439,7 @@ Monthly GPP in grams of C for layer 0 = 4.20514
 Monthly  Stand GPP (per area covered)= 3751.49 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00367646 
-Monthly NPP (per area covered) for layer 0 = 399850 
+Monthly NPP (per area covered) for layer 0 = 0.00367646 
 Daily/Monthly Stand GPP (absolute) = 4.20514 
 Daily/Monthly Stand NPP (per area covered) = 0.00367646 
 CLASS LEVEL
@@ -11595,7 +11605,7 @@ Monthly GPP in grams of C for layer 0 = 5.27754
 Monthly  Stand GPP (per area covered)= 4708.2 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00461404 
-Monthly NPP (per area covered) for layer 0 = 389759 
+Monthly NPP (per area covered) for layer 0 = 0.00461404 
 Daily/Monthly Stand GPP (absolute) = 5.27754 
 Daily/Monthly Stand NPP (per area covered) = 0.00461404 
 CLASS LEVEL
@@ -11761,7 +11771,7 @@ Monthly GPP in grams of C for layer 0 = 5.43231
 Monthly  Stand GPP (per area covered)= 4846.28 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00474935 
-Monthly NPP (per area covered) for layer 0 = 377461 
+Monthly NPP (per area covered) for layer 0 = 0.00474935 
 Daily/Monthly Stand GPP (absolute) = 5.43231 
 Daily/Monthly Stand NPP (per area covered) = 0.00474935 
 CLASS LEVEL
@@ -11927,7 +11937,7 @@ Monthly GPP in grams of C for layer 0 = 5.44412
 Monthly  Stand GPP (per area covered)= 4856.81 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00475968 
-Monthly NPP (per area covered) for layer 0 = 365215 
+Monthly NPP (per area covered) for layer 0 = 0.00475968 
 Daily/Monthly Stand GPP (absolute) = 5.44412 
 Daily/Monthly Stand NPP (per area covered) = 0.00475968 
 CLASS LEVEL
@@ -12093,7 +12103,7 @@ Monthly GPP in grams of C for layer 0 = 5.62009
 Monthly  Stand GPP (per area covered)= 5013.8 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00491352 
-Monthly NPP (per area covered) for layer 0 = 353348 
+Monthly NPP (per area covered) for layer 0 = 0.00491352 
 Daily/Monthly Stand GPP (absolute) = 5.62009 
 Daily/Monthly Stand NPP (per area covered) = 0.00491352 
 CLASS LEVEL
@@ -12259,7 +12269,7 @@ Monthly GPP in grams of C for layer 0 = 6.09193
 Monthly  Stand GPP (per area covered)= 5434.74 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00532605 
-Monthly NPP (per area covered) for layer 0 = 341510 
+Monthly NPP (per area covered) for layer 0 = 0.00532605 
 Daily/Monthly Stand GPP (absolute) = 6.09193 
 Daily/Monthly Stand NPP (per area covered) = 0.00532605 
 CLASS LEVEL
@@ -12425,7 +12435,7 @@ Monthly GPP in grams of C for layer 0 = 6.06934
 Monthly  Stand GPP (per area covered)= 5414.59 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0053063 
-Monthly NPP (per area covered) for layer 0 = 329135 
+Monthly NPP (per area covered) for layer 0 = 0.0053063 
 Daily/Monthly Stand GPP (absolute) = 6.06934 
 Daily/Monthly Stand NPP (per area covered) = 0.0053063 
 CLASS LEVEL
@@ -12591,7 +12601,7 @@ Monthly GPP in grams of C for layer 0 = 6.63659
 Monthly  Stand GPP (per area covered)= 5920.64 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00580223 
-Monthly NPP (per area covered) for layer 0 = 317261 
+Monthly NPP (per area covered) for layer 0 = 0.00580223 
 Daily/Monthly Stand GPP (absolute) = 6.63659 
 Daily/Monthly Stand NPP (per area covered) = 0.00580223 
 CLASS LEVEL
@@ -12713,7 +12723,7 @@ Only one height class in dominant light
 Canopy Cover = 0.991246 
 Gap Cover = 0.00875423 
 Hourly Net Radiation for lower layer = 304778  W/m^2/hour
-Average Par for lower layer = 13.9324 molPAR/m^2 day/month
+Average Par for lower layer = 13.9323 molPAR/m^2 day/month
 Par for soil = 0.339274 molPAR/m^2 day/month
 
  GET_CANOPY_TRANSPIRATION_ROUTINE 
@@ -12757,7 +12767,7 @@ Monthly GPP in grams of C for layer 0 = 7.00498
 Monthly  Stand GPP (per area covered)= 6249.29 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00612431 
-Monthly NPP (per area covered) for layer 0 = 304778 
+Monthly NPP (per area covered) for layer 0 = 0.00612431 
 Daily/Monthly Stand GPP (absolute) = 7.00498 
 Daily/Monthly Stand NPP (per area covered) = 0.00612431 
 CLASS LEVEL
@@ -12923,7 +12933,7 @@ Monthly GPP in grams of C for layer 0 = 7.18408
 Monthly  Stand GPP (per area covered)= 6409.07 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00628089 
-Monthly NPP (per area covered) for layer 0 = 292147 
+Monthly NPP (per area covered) for layer 0 = 0.00628089 
 Daily/Monthly Stand GPP (absolute) = 7.18408 
 Daily/Monthly Stand NPP (per area covered) = 0.00628089 
 CLASS LEVEL
@@ -13089,7 +13099,7 @@ Monthly GPP in grams of C for layer 0 = 7.04198
 Monthly  Stand GPP (per area covered)= 6282.3 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00615665 
-Monthly NPP (per area covered) for layer 0 = 279749 
+Monthly NPP (per area covered) for layer 0 = 0.00615665 
 Daily/Monthly Stand GPP (absolute) = 7.04198 
 Daily/Monthly Stand NPP (per area covered) = 0.00615665 
 CLASS LEVEL
@@ -13228,7 +13238,7 @@ Montlhy transpiration from biome = -1.33348e+06
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 268120
 Net radiation for soil evaporation = 268120 W/m^2/hour
-Daily Soil Evaporation = 0.0902834 
+Daily Soil Evaporation = 0.0902835 
 Total Soil Evaporation = 12.8357 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.0748324 
@@ -13255,7 +13265,7 @@ Monthly GPP in grams of C for layer 0 = 7.45758
 Monthly  Stand GPP (per area covered)= 6653.06 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00652 
-Monthly NPP (per area covered) for layer 0 = 268120 
+Monthly NPP (per area covered) for layer 0 = 0.00652 
 Daily/Monthly Stand GPP (absolute) = 7.45758 
 Daily/Monthly Stand NPP (per area covered) = 0.00652 
 CLASS LEVEL
@@ -13421,7 +13431,7 @@ Monthly GPP in grams of C for layer 0 = 7.53547
 Monthly  Stand GPP (per area covered)= 6722.55 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0065881 
-Monthly NPP (per area covered) for layer 0 = 256345 
+Monthly NPP (per area covered) for layer 0 = 0.0065881 
 Daily/Monthly Stand GPP (absolute) = 7.53547 
 Daily/Monthly Stand NPP (per area covered) = 0.0065881 
 CLASS LEVEL
@@ -13582,7 +13592,7 @@ Net radiation for soil evaporation = 445446 W/m^2/hour
 Daily Soil Evaporation = 0.144917 
 Total Soil Evaporation = 13.0655 mm
 Frac Rain Interception not use MAXINTCPTN
-Frac Rain Interception = 0.0402733 
+Frac Rain Interception = 0.0402732 
 Highest class
 Rain is completely intercepted by the highest height class in the dominant layer
 Rainfall Intercepted = 0 mm/month
@@ -13600,14 +13610,14 @@ GET_PHOTOSYNTHESIS_ROUTINE
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0250604 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 0.922414 molC/m^2 day/month
-Monthly GPP in grams of C (if CC = 100%) for layer 0 = 5.04349 
-Daily GPP in grams of C for layer 0 = 5.04349 
-Monthly GPP in grams of C for layer 0 = 5.04349 
+Monthly GPP in grams of C (if CC = 100%) for layer 0 = 5.0435 
+Daily GPP in grams of C for layer 0 = 5.0435 
+Monthly GPP in grams of C for layer 0 = 5.0435 
 Monthly  Stand GPP (per area covered)= 4499.41 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00440942 
-Monthly NPP (per area covered) for layer 0 = 445446 
-Daily/Monthly Stand GPP (absolute) = 5.04349 
+Monthly NPP (per area covered) for layer 0 = 0.00440942 
+Daily/Monthly Stand GPP (absolute) = 5.0435 
 Daily/Monthly Stand NPP (per area covered) = 0.00440942 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP (absolute) = 150.436
@@ -13772,7 +13782,7 @@ Monthly GPP in grams of C for layer 0 = 7.81933
 Monthly  Stand GPP (per area covered)= 6975.79 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00683627 
-Monthly NPP (per area covered) for layer 0 = 239314 
+Monthly NPP (per area covered) for layer 0 = 0.00683627 
 Daily/Monthly Stand GPP (absolute) = 7.81933 
 Daily/Monthly Stand NPP (per area covered) = 0.00683627 
 CLASS LEVEL
@@ -13957,7 +13967,7 @@ Monthly GPP in grams of C for layer 0 = 5.17429
 Monthly  Stand GPP (per area covered)= 4616.09 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00452377 
-Monthly NPP (per area covered) for layer 0 = 429979 
+Monthly NPP (per area covered) for layer 0 = 0.00452377 
 Daily/Monthly Stand GPP (absolute) = 5.17429 
 Daily/Monthly Stand NPP (per area covered) = 0.00452377 
 CLASS LEVEL
@@ -14123,7 +14133,7 @@ Monthly GPP in grams of C for layer 0 = 8.09731
 Monthly  Stand GPP (per area covered)= 7223.78 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0070793 
-Monthly NPP (per area covered) for layer 0 = 223040 
+Monthly NPP (per area covered) for layer 0 = 0.0070793 
 Daily/Monthly Stand GPP (absolute) = 8.09731 
 Daily/Monthly Stand NPP (per area covered) = 0.0070793 
 CLASS LEVEL
@@ -14308,7 +14318,7 @@ Monthly GPP in grams of C for layer 0 = 5.20452
 Monthly  Stand GPP (per area covered)= 4643.07 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0045502 
-Monthly NPP (per area covered) for layer 0 = 414682 
+Monthly NPP (per area covered) for layer 0 = 0.0045502 
 Daily/Monthly Stand GPP (absolute) = 5.20452 
 Daily/Monthly Stand NPP (per area covered) = 0.0045502 
 CLASS LEVEL
@@ -14430,7 +14440,7 @@ Only one height class in dominant light
 Canopy Cover = 0.991246 
 Gap Cover = 0.00875423 
 Hourly Net Radiation for lower layer = 207662  W/m^2/hour
-Average Par for lower layer = 9.49285 molPAR/m^2 day/month
+Average Par for lower layer = 9.49286 molPAR/m^2 day/month
 Par for soil = 0.334341 molPAR/m^2 day/month
 
  GET_CANOPY_TRANSPIRATION_ROUTINE 
@@ -14474,7 +14484,7 @@ Monthly GPP in grams of C for layer 0 = 7.96558
 Monthly  Stand GPP (per area covered)= 7106.26 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00696414 
-Monthly NPP (per area covered) for layer 0 = 207662 
+Monthly NPP (per area covered) for layer 0 = 0.00696414 
 Daily/Monthly Stand GPP (absolute) = 7.96558 
 Daily/Monthly Stand NPP (per area covered) = 0.00696414 
 CLASS LEVEL
@@ -14659,7 +14669,7 @@ Monthly GPP in grams of C for layer 0 = 5.57565
 Monthly  Stand GPP (per area covered)= 4974.15 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00487467 
-Monthly NPP (per area covered) for layer 0 = 400108 
+Monthly NPP (per area covered) for layer 0 = 0.00487467 
 Daily/Monthly Stand GPP (absolute) = 5.57565 
 Daily/Monthly Stand NPP (per area covered) = 0.00487467 
 CLASS LEVEL
@@ -14749,7 +14759,7 @@ available soil water 103.904 mm
 volumetric available soil water  = 0.163629 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.400295 
-PSI BIOME = -0.0906633 (MPa)
+PSI BIOME = -0.0906632 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -14825,7 +14835,7 @@ Monthly GPP in grams of C for layer 0 = 8.39699
 Monthly  Stand GPP (per area covered)= 7491.13 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00734131 
-Monthly NPP (per area covered) for layer 0 = 193147 
+Monthly NPP (per area covered) for layer 0 = 0.00734131 
 Daily/Monthly Stand GPP (absolute) = 8.39699 
 Daily/Monthly Stand NPP (per area covered) = 0.00734131 
 CLASS LEVEL
@@ -14953,7 +14963,7 @@ MODEL_LAI = 1.2529
 Light Transmitted = 0.471545
 Vertical Percentage of Light Transmitted through this layer = 47.1545 %
 Vertical Fraction of Light Absorbed by this layer = 0.528455 
-Vertical Percentage of Light Absorbed by this layer = 52.8455 %
+Vertical Percentage of Light Absorbed by this layer = 52.8456 %
 dominant contatore 1 
 Top_layer = 0
 **LIGHT DOMINANT**
@@ -15010,7 +15020,7 @@ Monthly GPP in grams of C for layer 0 = 5.63321
 Monthly  Stand GPP (per area covered)= 5025.51 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.004925 
-Monthly NPP (per area covered) for layer 0 = 385276 
+Monthly NPP (per area covered) for layer 0 = 0.004925 
 Daily/Monthly Stand GPP (absolute) = 5.63321 
 Daily/Monthly Stand NPP (per area covered) = 0.004925 
 CLASS LEVEL
@@ -15176,7 +15186,7 @@ Monthly GPP in grams of C for layer 0 = 8.75167
 Monthly  Stand GPP (per area covered)= 7807.55 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0076514 
-Monthly NPP (per area covered) for layer 0 = 179307 
+Monthly NPP (per area covered) for layer 0 = 0.0076514 
 Daily/Monthly Stand GPP (absolute) = 8.75167 
 Daily/Monthly Stand NPP (per area covered) = 0.0076514 
 CLASS LEVEL
@@ -15361,7 +15371,7 @@ Monthly GPP in grams of C for layer 0 = 6.09133
 Monthly  Stand GPP (per area covered)= 5434.2 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00532552 
-Monthly NPP (per area covered) for layer 0 = 370682 
+Monthly NPP (per area covered) for layer 0 = 0.00532552 
 Daily/Monthly Stand GPP (absolute) = 6.09133 
 Daily/Monthly Stand NPP (per area covered) = 0.00532552 
 CLASS LEVEL
@@ -15527,7 +15537,7 @@ Monthly GPP in grams of C for layer 0 = 8.87914
 Monthly  Stand GPP (per area covered)= 7921.27 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00776284 
-Monthly NPP (per area covered) for layer 0 = 165821 
+Monthly NPP (per area covered) for layer 0 = 0.00776284 
 Daily/Monthly Stand GPP (absolute) = 8.87914 
 Daily/Monthly Stand NPP (per area covered) = 0.00776284 
 CLASS LEVEL
@@ -15712,7 +15722,7 @@ Monthly GPP in grams of C for layer 0 = 6.27258
 Monthly  Stand GPP (per area covered)= 5595.9 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00548399 
-Monthly NPP (per area covered) for layer 0 = 356111 
+Monthly NPP (per area covered) for layer 0 = 0.00548399 
 Daily/Monthly Stand GPP (absolute) = 6.27258 
 Daily/Monthly Stand NPP (per area covered) = 0.00548399 
 CLASS LEVEL
@@ -15878,7 +15888,7 @@ Monthly GPP in grams of C for layer 0 = 8.66915
 Monthly  Stand GPP (per area covered)= 7733.93 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00757925 
-Monthly NPP (per area covered) for layer 0 = 153189 
+Monthly NPP (per area covered) for layer 0 = 0.00757925 
 Daily/Monthly Stand GPP (absolute) = 8.66915 
 Daily/Monthly Stand NPP (per area covered) = 0.00757925 
 CLASS LEVEL
@@ -15989,7 +15999,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  0 months
-- Monthly LAI from Model= 9.53868e-296 
+- Monthly LAI from Model= 1.45459 
 - ASW layer 0 month 5  = 92.0166 mm
 
  GET_DAILY_MODIFIERS
@@ -16244,7 +16254,7 @@ Monthly GPP in grams of C for layer 0 = 11.68
 Monthly  Stand GPP (per area covered)= 10420 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0102116 
-Monthly NPP (per area covered) for layer 0 = 160270 
+Monthly NPP (per area covered) for layer 0 = 0.0102116 
 Daily/Monthly Stand GPP (absolute) = 11.68 
 Daily/Monthly Stand NPP (per area covered) = 0.0102116 
 CLASS LEVEL
@@ -16429,7 +16439,7 @@ Monthly GPP in grams of C for layer 0 = 8.59146
 Monthly  Stand GPP (per area covered)= 7664.62 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00751133 
-Monthly NPP (per area covered) for layer 0 = 371242 
+Monthly NPP (per area covered) for layer 0 = 0.00751133 
 Daily/Monthly Stand GPP (absolute) = 8.59146 
 Daily/Monthly Stand NPP (per area covered) = 0.00751133 
 CLASS LEVEL
@@ -16595,7 +16605,7 @@ Monthly GPP in grams of C for layer 0 = 11.7743
 Monthly  Stand GPP (per area covered)= 10504.1 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.010294 
-Monthly NPP (per area covered) for layer 0 = 144377 
+Monthly NPP (per area covered) for layer 0 = 0.010294 
 Daily/Monthly Stand GPP (absolute) = 11.7743 
 Daily/Monthly Stand NPP (per area covered) = 0.010294 
 CLASS LEVEL
@@ -16780,7 +16790,7 @@ Monthly GPP in grams of C for layer 0 = 8.75826
 Monthly  Stand GPP (per area covered)= 7813.43 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00765716 
-Monthly NPP (per area covered) for layer 0 = 351733 
+Monthly NPP (per area covered) for layer 0 = 0.00765716 
 Daily/Monthly Stand GPP (absolute) = 8.75826 
 Daily/Monthly Stand NPP (per area covered) = 0.00765716 
 CLASS LEVEL
@@ -16946,7 +16956,7 @@ Monthly GPP in grams of C for layer 0 = 11.1269
 Monthly  Stand GPP (per area covered)= 9926.51 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00972798 
-Monthly NPP (per area covered) for layer 0 = 130003 
+Monthly NPP (per area covered) for layer 0 = 0.00972798 
 Daily/Monthly Stand GPP (absolute) = 11.1269 
 Daily/Monthly Stand NPP (per area covered) = 0.00972798 
 CLASS LEVEL
@@ -17131,7 +17141,7 @@ Monthly GPP in grams of C for layer 0 = 9.38003
 Monthly  Stand GPP (per area covered)= 8368.13 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00820077 
-Monthly NPP (per area covered) for layer 0 = 333668 
+Monthly NPP (per area covered) for layer 0 = 0.00820077 
 Daily/Monthly Stand GPP (absolute) = 9.38003 
 Daily/Monthly Stand NPP (per area covered) = 0.00820077 
 CLASS LEVEL
@@ -17297,7 +17307,7 @@ Monthly GPP in grams of C for layer 0 = 12.6658
 Monthly  Stand GPP (per area covered)= 11299.4 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0110734 
-Monthly NPP (per area covered) for layer 0 = 117103 
+Monthly NPP (per area covered) for layer 0 = 0.0110734 
 Daily/Monthly Stand GPP (absolute) = 12.6658 
 Daily/Monthly Stand NPP (per area covered) = 0.0110734 
 CLASS LEVEL
@@ -17482,7 +17492,7 @@ Monthly GPP in grams of C for layer 0 = 9.67602
 Monthly  Stand GPP (per area covered)= 8632.18 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00845954 
-Monthly NPP (per area covered) for layer 0 = 314884 
+Monthly NPP (per area covered) for layer 0 = 0.00845954 
 Daily/Monthly Stand GPP (absolute) = 9.67602 
 Daily/Monthly Stand NPP (per area covered) = 0.00845954 
 CLASS LEVEL
@@ -17648,7 +17658,7 @@ Monthly GPP in grams of C for layer 0 = 12.8599
 Monthly  Stand GPP (per area covered)= 11472.6 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0112432 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0112432 
 Daily/Monthly Stand GPP (absolute) = 12.8599 
 Daily/Monthly Stand NPP (per area covered) = 0.0112432 
 CLASS LEVEL
@@ -17831,7 +17841,7 @@ Monthly GPP in grams of C for layer 0 = 12.8806
 Monthly  Stand GPP (per area covered)= 11491.1 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0112613 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0112613 
 Daily/Monthly Stand GPP (absolute) = 12.8806 
 Daily/Monthly Stand NPP (per area covered) = 0.0112613 
 CLASS LEVEL
@@ -18014,7 +18024,7 @@ Monthly GPP in grams of C for layer 0 = 12.3517
 Monthly  Stand GPP (per area covered)= 11019.3 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0107989 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0107989 
 Daily/Monthly Stand GPP (absolute) = 12.3517 
 Daily/Monthly Stand NPP (per area covered) = 0.0107989 
 CLASS LEVEL
@@ -18171,7 +18181,7 @@ Montlhy transpiration from biome = -1.5661e+07
 Net radiation from dominant layer = 104710
 Net radiation for soil evaporation = 104710 W/m^2/hour
 Daily Soil Evaporation = 0.0250513 
-Total Soil Evaporation = 14.8768 mm
+Total Soil Evaporation = 14.8769 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
@@ -18197,7 +18207,7 @@ Monthly GPP in grams of C for layer 0 = 11.794
 Monthly  Stand GPP (per area covered)= 10521.7 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0103112 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0103112 
 Daily/Monthly Stand GPP (absolute) = 11.794 
 Daily/Monthly Stand NPP (per area covered) = 0.0103112 
 CLASS LEVEL
@@ -18380,7 +18390,7 @@ Monthly GPP in grams of C for layer 0 = 11.0431
 Monthly  Stand GPP (per area covered)= 9851.8 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00965476 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.00965476 
 Daily/Monthly Stand GPP (absolute) = 11.0431 
 Daily/Monthly Stand NPP (per area covered) = 0.00965476 
 CLASS LEVEL
@@ -18487,7 +18497,7 @@ available soil water 80.1524 mm
 volumetric available soil water  = 0.126224 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.30879 
-PSI BIOME = -0.311872 (MPa)
+PSI BIOME = -0.311871 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -18563,7 +18573,7 @@ Monthly GPP in grams of C for layer 0 = 12.9333
 Monthly  Stand GPP (per area covered)= 11538 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0113073 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0113073 
 Daily/Monthly Stand GPP (absolute) = 12.9333 
 Daily/Monthly Stand NPP (per area covered) = 0.0113073 
 CLASS LEVEL
@@ -18713,14 +18723,14 @@ Daily Canopy Transpiration = 2.94632 mm-Kg H2o/m^2/day
 Daily Transpiration = 2.94632 mm/m^2/day
 Monthly Canopy Transpiration = 2.94632 mm-Kg H2o/m^2/day
 Monthly Canopy Transpiration = 43.654 mm-Kg H2o/m^2/month
-Daily transpiration from biome = -451030
+Daily transpiration from biome = -451031
 Montlhy transpiration from biome = -1.39819e+07
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 104710
 Net radiation for soil evaporation = 104710 W/m^2/hour
 Daily Soil Evaporation = 0.0266718 
-Total Soil Evaporation = 14.951 mm
+Total Soil Evaporation = 14.9511 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
 Highest class
@@ -18746,7 +18756,7 @@ Monthly GPP in grams of C for layer 0 = 12.5978
 Monthly  Stand GPP (per area covered)= 11238.7 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.011014 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.011014 
 Daily/Monthly Stand GPP (absolute) = 12.5978 
 Daily/Monthly Stand NPP (per area covered) = 0.011014 
 CLASS LEVEL
@@ -18929,7 +18939,7 @@ Monthly GPP in grams of C for layer 0 = 12.9727
 Monthly  Stand GPP (per area covered)= 11573.2 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0113417 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0113417 
 Daily/Monthly Stand GPP (absolute) = 12.9727 
 Daily/Monthly Stand NPP (per area covered) = 0.0113417 
 CLASS LEVEL
@@ -19112,7 +19122,7 @@ Monthly GPP in grams of C for layer 0 = 13.0056
 Monthly  Stand GPP (per area covered)= 11602.5 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0113705 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0113705 
 Daily/Monthly Stand GPP (absolute) = 13.0056 
 Daily/Monthly Stand NPP (per area covered) = 0.0113705 
 CLASS LEVEL
@@ -19295,7 +19305,7 @@ Monthly GPP in grams of C for layer 0 = 12.8599
 Monthly  Stand GPP (per area covered)= 11472.6 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0112432 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0112432 
 Daily/Monthly Stand GPP (absolute) = 12.8599 
 Daily/Monthly Stand NPP (per area covered) = 0.0112432 
 CLASS LEVEL
@@ -19478,7 +19488,7 @@ Monthly GPP in grams of C for layer 0 = 12.5245
 Monthly  Stand GPP (per area covered)= 11173.3 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0109499 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0109499 
 Daily/Monthly Stand GPP (absolute) = 12.5245 
 Daily/Monthly Stand NPP (per area covered) = 0.0109499 
 CLASS LEVEL
@@ -19661,7 +19671,7 @@ Monthly GPP in grams of C for layer 0 = 11.794
 Monthly  Stand GPP (per area covered)= 10521.7 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0103112 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0103112 
 Daily/Monthly Stand GPP (absolute) = 11.794 
 Daily/Monthly Stand NPP (per area covered) = 0.0103112 
 CLASS LEVEL
@@ -19844,7 +19854,7 @@ Monthly GPP in grams of C for layer 0 = 9.5054
 Monthly  Stand GPP (per area covered)= 8479.97 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00831037 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.00831037 
 Daily/Monthly Stand GPP (absolute) = 9.5054 
 Daily/Monthly Stand NPP (per area covered) = 0.00831037 
 CLASS LEVEL
@@ -20027,7 +20037,7 @@ Monthly GPP in grams of C for layer 0 = 7.01838
 Monthly  Stand GPP (per area covered)= 6261.25 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00613602 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.00613602 
 Daily/Monthly Stand GPP (absolute) = 7.01838 
 Daily/Monthly Stand NPP (per area covered) = 0.00613602 
 CLASS LEVEL
@@ -20210,7 +20220,7 @@ Monthly GPP in grams of C for layer 0 = 5.2553
 Monthly  Stand GPP (per area covered)= 4688.36 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0045946 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0045946 
 Daily/Monthly Stand GPP (absolute) = 5.2553 
 Daily/Monthly Stand NPP (per area covered) = 0.0045946 
 CLASS LEVEL
@@ -20393,7 +20403,7 @@ Monthly GPP in grams of C for layer 0 = 7.84808
 Monthly  Stand GPP (per area covered)= 7001.44 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00686141 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.00686141 
 Daily/Monthly Stand GPP (absolute) = 7.84808 
 Daily/Monthly Stand NPP (per area covered) = 0.00686141 
 CLASS LEVEL
@@ -20570,14 +20580,14 @@ GET_PHOTOSYNTHESIS_ROUTINE
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0228662 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 2.19617 molC/m^2 day/month
-Monthly GPP in grams of C (if CC = 100%) for layer 0 = 10.9567 
-Daily GPP in grams of C for layer 0 = 10.9567 
+Monthly GPP in grams of C (if CC = 100%) for layer 0 = 10.9566 
+Daily GPP in grams of C for layer 0 = 10.9566 
 Monthly GPP in grams of C for layer 0 = 10.9566 
 Monthly  Stand GPP (per area covered)= 9774.66 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00957917 
-Monthly NPP (per area covered) for layer 0 = 104711 
-Daily/Monthly Stand GPP (absolute) = 10.9567 
+Monthly NPP (per area covered) for layer 0 = 0.00957917 
+Daily/Monthly Stand GPP (absolute) = 10.9566 
 Daily/Monthly Stand NPP (per area covered) = 0.00957917 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP (absolute) = 525.098
@@ -20759,7 +20769,7 @@ Monthly GPP in grams of C for layer 0 = 12.3042
 Monthly  Stand GPP (per area covered)= 10976.8 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0107573 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0107573 
 Daily/Monthly Stand GPP (absolute) = 12.3042 
 Daily/Monthly Stand NPP (per area covered) = 0.0107573 
 CLASS LEVEL
@@ -20863,7 +20873,7 @@ fVPD = 0.871099
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 70.9336 mm
-volumetric available soil water  = 0.111707 (DIM)
+volumetric available soil water  = 0.111706 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.273274 
 PSI BIOME = -0.557913 (MPa)
@@ -20942,7 +20952,7 @@ Monthly GPP in grams of C for layer 0 = 12.3721
 Monthly  Stand GPP (per area covered)= 11037.4 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0108166 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0108166 
 Daily/Monthly Stand GPP (absolute) = 12.3721 
 Daily/Monthly Stand NPP (per area covered) = 0.0108166 
 CLASS LEVEL
@@ -21125,7 +21135,7 @@ Monthly GPP in grams of C for layer 0 = 10.9364
 Monthly  Stand GPP (per area covered)= 9756.6 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00956146 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.00956146 
 Daily/Monthly Stand GPP (absolute) = 10.9364 
 Daily/Monthly Stand NPP (per area covered) = 0.00956146 
 CLASS LEVEL
@@ -21236,7 +21246,7 @@ PSI BIOME = -0.426073 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
-fSW = 0.968224
+fSW = 0.968223
 PhysMod = 0.635769
 PHYSMOD uses F_VPD * F_AGE
 -------------------
@@ -21275,7 +21285,7 @@ Daily Canopy Transpiration = 2.94632 mm-Kg H2o/m^2/day
 Daily Transpiration = 2.94632 mm/m^2/day
 Monthly Canopy Transpiration = 2.94632 mm-Kg H2o/m^2/day
 Monthly Canopy Transpiration = 84.9025 mm-Kg H2o/m^2/month
-Daily transpiration from biome = -451030
+Daily transpiration from biome = -451031
 Montlhy transpiration from biome = -1.39819e+07
 
  GET_SOIL_EVAPORATION_ROUTINE
@@ -21308,7 +21318,7 @@ Monthly GPP in grams of C for layer 0 = 12.5978
 Monthly  Stand GPP (per area covered)= 11238.7 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.011014 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.011014 
 Daily/Monthly Stand GPP (absolute) = 12.5978 
 Daily/Monthly Stand NPP (per area covered) = 0.011014 
 CLASS LEVEL
@@ -21491,7 +21501,7 @@ Monthly GPP in grams of C for layer 0 = 13.0056
 Monthly  Stand GPP (per area covered)= 11602.5 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0113705 
-Monthly NPP (per area covered) for layer 0 = 104711 
+Monthly NPP (per area covered) for layer 0 = 0.0113705 
 Daily/Monthly Stand GPP (absolute) = 13.0056 
 Daily/Monthly Stand NPP (per area covered) = 0.0113705 
 CLASS LEVEL
@@ -21600,7 +21610,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  0 months
-- Monthly LAI from Model= 1.67577e-194 
+- Monthly LAI from Model= 3.75179 
 - ASW layer 0 month 6  = 70.9236 mm
 
  GET_DAILY_MODIFIERS
@@ -21769,7 +21779,7 @@ Vegetated Layer cover in layer 0 = 99.1246 %
 -Dominant Light Index Function-
 Monthly Dominant layer is z = 0
 ***************************************************
-Moist ratio outside modifier = 0.445923
+Moist ratio outside modifier = 0.445922
 -YEAR SIMULATED = 1 (2007)
 --MONTH SIMULATED = JUNE
 ---DAY SIMULATED = 2
@@ -21872,7 +21882,7 @@ Monthly GPP in grams of C for layer 0 = 11.1625
 Monthly  Stand GPP (per area covered)= 9958.33 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00975917 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00975917 
 Daily/Monthly Stand GPP (absolute) = 11.1625 
 Daily/Monthly Stand NPP (per area covered) = 0.00975917 
 CLASS LEVEL
@@ -21976,7 +21986,7 @@ fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 67.3732 mm
-volumetric available soil water  = 0.1061 (DIM)
+volumetric available soil water  = 0.106099 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.259558 
 PSI BIOME = -0.712897 (MPa)
@@ -22055,7 +22065,7 @@ Monthly GPP in grams of C for layer 0 = 10.8709
 Monthly  Stand GPP (per area covered)= 9698.17 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00950421 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00950421 
 Daily/Monthly Stand GPP (absolute) = 10.8709 
 Daily/Monthly Stand NPP (per area covered) = 0.00950421 
 CLASS LEVEL
@@ -22135,7 +22145,7 @@ Vegetated Layer cover in layer 0 = 99.1246 %
 -Dominant Light Index Function-
 Monthly Dominant layer is z = 0
 ***************************************************
-Moist ratio outside modifier = 0.421534
+Moist ratio outside modifier = 0.421533
 -YEAR SIMULATED = 1 (2007)
 --MONTH SIMULATED = JUNE
 ---DAY SIMULATED = 4
@@ -22164,8 +22174,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.246238 
 PSI BIOME = -0.916068 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.814078
-fSW-F_PSI = 0.814078
+F_PSI = 0.814077
+fSW-F_PSI = 0.814077
 fSW = 0.939168
 PhysMod = 0.503123
 PHYSMOD uses F_VPD * F_AGE
@@ -22238,7 +22248,7 @@ Monthly GPP in grams of C for layer 0 = 10.389
 Monthly  Stand GPP (per area covered)= 9268.22 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00908285 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00908285 
 Daily/Monthly Stand GPP (absolute) = 10.389 
 Daily/Monthly Stand NPP (per area covered) = 0.00908285 
 CLASS LEVEL
@@ -22345,7 +22355,7 @@ available soil water 77.8763 mm
 volumetric available soil water  = 0.12264 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.300021 
-PSI BIOME = -0.357708 (MPa)
+PSI BIOME = -0.357709 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -22421,7 +22431,7 @@ Monthly GPP in grams of C for layer 0 = 10.8076
 Monthly  Stand GPP (per area covered)= 9641.73 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0094489 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.0094489 
 Daily/Monthly Stand GPP (absolute) = 10.8076 
 Daily/Monthly Stand NPP (per area covered) = 0.0094489 
 CLASS LEVEL
@@ -22528,7 +22538,7 @@ available soil water 80.3034 mm
 volumetric available soil water  = 0.126462 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.309372 
-PSI BIOME = -0.309089 (MPa)
+PSI BIOME = -0.30909 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -22604,12 +22614,12 @@ Monthly GPP in grams of C for layer 0 = 11.1315
 Monthly  Stand GPP (per area covered)= 9930.64 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00973203 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00973203 
 Daily/Monthly Stand GPP (absolute) = 11.1315 
 Daily/Monthly Stand NPP (per area covered) = 0.00973203 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP (absolute) = 651.891
-CLASS LEVEL Yearly NPP (per area covered) = 0.569935
+CLASS LEVEL Yearly NPP (per area covered) = 0.569934
 CELL LEVEL
 CELL LEVEL Yearly GPP (absolute) = 651.891
 CELL LEVEL Yearly NPP (per area covered) = 0.569934
@@ -22784,10 +22794,10 @@ Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C (if CC = 100%) for layer 0 = 10.9038 
 Daily GPP in grams of C for layer 0 = 10.9038 
 Monthly GPP in grams of C for layer 0 = 10.9038 
-Monthly  Stand GPP (per area covered)= 9727.54 gC/ha covered month
+Monthly  Stand GPP (per area covered)= 9727.53 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00953298 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00953298 
 Daily/Monthly Stand GPP (absolute) = 10.9038 
 Daily/Monthly Stand NPP (per area covered) = 0.00953298 
 CLASS LEVEL
@@ -22970,7 +22980,7 @@ Monthly GPP in grams of C for layer 0 = 10.8076
 Monthly  Stand GPP (per area covered)= 9641.73 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0094489 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.0094489 
 Daily/Monthly Stand GPP (absolute) = 10.8076 
 Daily/Monthly Stand NPP (per area covered) = 0.0094489 
 CLASS LEVEL
@@ -23077,7 +23087,7 @@ available soil water 70.1527 mm
 volumetric available soil water  = 0.110477 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.270266 
-PSI BIOME = -0.588099 (MPa)
+PSI BIOME = -0.5881 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -23139,7 +23149,7 @@ Cumulated Evapotranspiration for this class = 219.009 mm
 net_radiation for soil = 8904.91
 incident radiation for soil = 5.34295
 *********GET DAILY/MONTHLY SOIL WATER BALACE************
-ASW at the END of day/month less Evapotraspiration = 67.1112 mm
+ASW at the END of day/month less Evapotraspiration = 67.1111 mm
 
 GET_PHOTOSYNTHESIS_ROUTINE
 
@@ -23153,7 +23163,7 @@ Monthly GPP in grams of C for layer 0 = 9.29989
 Monthly  Stand GPP (per area covered)= 8296.63 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.0081307 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.0081307 
 Daily/Monthly Stand GPP (absolute) = 9.29989 
 Daily/Monthly Stand NPP (per area covered) = 0.0081307 
 CLASS LEVEL
@@ -23336,7 +23346,7 @@ Monthly GPP in grams of C for layer 0 = 10.0011
 Monthly  Stand GPP (per area covered)= 8922.23 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00874379 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00874379 
 Daily/Monthly Stand GPP (absolute) = 10.0011 
 Daily/Monthly Stand NPP (per area covered) = 0.00874379 
 CLASS LEVEL
@@ -23443,7 +23453,7 @@ available soil water 64.2407 mm
 volumetric available soil water  = 0.101166 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.24749 
-PSI BIOME = -0.894232 (MPa)
+PSI BIOME = -0.894233 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0.826922
 fSW-F_PSI = 0.826922
@@ -23516,10 +23526,10 @@ Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C (if CC = 100%) for layer 0 = 9.52936 
 Daily GPP in grams of C for layer 0 = 9.52936 
 Monthly GPP in grams of C for layer 0 = 9.52936 
-Monthly  Stand GPP (per area covered)= 8501.34 gC/ha covered month
+Monthly  Stand GPP (per area covered)= 8501.35 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00833132 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00833132 
 Daily/Monthly Stand GPP (absolute) = 9.52936 
 Daily/Monthly Stand NPP (per area covered) = 0.00833132 
 CLASS LEVEL
@@ -23702,7 +23712,7 @@ Monthly GPP in grams of C for layer 0 = 10.2327
 Monthly  Stand GPP (per area covered)= 9128.78 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00894621 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00894621 
 Daily/Monthly Stand GPP (absolute) = 10.2327 
 Daily/Monthly Stand NPP (per area covered) = 0.00894621 
 CLASS LEVEL
@@ -23885,7 +23895,7 @@ Monthly GPP in grams of C for layer 0 = 10.2864
 Monthly  Stand GPP (per area covered)= 9176.71 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00899318 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00899318 
 Daily/Monthly Stand GPP (absolute) = 10.2864 
 Daily/Monthly Stand NPP (per area covered) = 0.00899318 
 CLASS LEVEL
@@ -23994,8 +24004,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.212369 
 PSI BIOME = -1.85284 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.263036
-fSW-F_PSI = 0.263036
+F_PSI = 0.263035
+fSW-F_PSI = 0.263035
 fSW = 0.905447
 PhysMod = 0.503123
 PHYSMOD uses F_VPD * F_AGE
@@ -24068,7 +24078,7 @@ Monthly GPP in grams of C for layer 0 = 8.60186
 Monthly  Stand GPP (per area covered)= 7673.9 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00752042 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00752042 
 Daily/Monthly Stand GPP (absolute) = 8.60186 
 Daily/Monthly Stand NPP (per area covered) = 0.00752042 
 CLASS LEVEL
@@ -24251,7 +24261,7 @@ Monthly GPP in grams of C for layer 0 = 9.45475
 Monthly  Stand GPP (per area covered)= 8434.78 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00826608 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00826608 
 Daily/Monthly Stand GPP (absolute) = 9.45475 
 Daily/Monthly Stand NPP (per area covered) = 0.00826608 
 CLASS LEVEL
@@ -24358,7 +24368,7 @@ available soil water 49.0516 mm
 volumetric available soil water  = 0.0772466 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.188973 
-PSI BIOME = -3.22945 (MPa)
+PSI BIOME = -3.22946 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -24434,7 +24444,7 @@ Monthly GPP in grams of C for layer 0 = 9.45475
 Monthly  Stand GPP (per area covered)= 8434.78 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00826608 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00826608 
 Daily/Monthly Stand GPP (absolute) = 9.45475 
 Daily/Monthly Stand NPP (per area covered) = 0.00826608 
 CLASS LEVEL
@@ -24541,7 +24551,7 @@ available soil water 46.0167 mm
 volumetric available soil water  = 0.0724672 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.177281 
-PSI BIOME = -4.37688 (MPa)
+PSI BIOME = -4.37689 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -24617,7 +24627,7 @@ Monthly GPP in grams of C for layer 0 = 9.13738
 Monthly  Stand GPP (per area covered)= 8151.65 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00798862 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00798862 
 Daily/Monthly Stand GPP (absolute) = 9.13738 
 Daily/Monthly Stand NPP (per area covered) = 0.00798862 
 CLASS LEVEL
@@ -24800,7 +24810,7 @@ Monthly GPP in grams of C for layer 0 = 6.6354
 Monthly  Stand GPP (per area covered)= 5919.58 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00580119 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00580119 
 Daily/Monthly Stand GPP (absolute) = 6.6354 
 Daily/Monthly Stand NPP (per area covered) = 0.00580119 
 CLASS LEVEL
@@ -24904,10 +24914,10 @@ fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 39.9497 mm
-volumetric available soil water  = 0.0629129 (DIM)
+volumetric available soil water  = 0.0629128 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.153908 
-PSI BIOME = -8.57917 (MPa)
+vwc/vwc_sat = 0.153907 
+PSI BIOME = -8.57918 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -24983,7 +24993,7 @@ Monthly GPP in grams of C for layer 0 = 4.1455
 Monthly  Stand GPP (per area covered)= 3698.29 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00362432 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00362432 
 Daily/Monthly Stand GPP (absolute) = 4.1455 
 Daily/Monthly Stand NPP (per area covered) = 0.00362432 
 CLASS LEVEL
@@ -25166,7 +25176,7 @@ Monthly GPP in grams of C for layer 0 = 2.56259
 Monthly  Stand GPP (per area covered)= 2286.14 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00224042 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00224042 
 Daily/Monthly Stand GPP (absolute) = 2.56259 
 Daily/Monthly Stand NPP (per area covered) = 0.00224042 
 CLASS LEVEL
@@ -25246,7 +25256,7 @@ Vegetated Layer cover in layer 0 = 99.1246 %
 -Dominant Light Index Function-
 Monthly Dominant layer is z = 0
 ***************************************************
-Moist ratio outside modifier = 0.223486
+Moist ratio outside modifier = 0.223485
 -YEAR SIMULATED = 1 (2007)
 --MONTH SIMULATED = JUNE
 ---DAY SIMULATED = 21
@@ -25273,7 +25283,7 @@ available soil water 33.8865 mm
 volumetric available soil water  = 0.0533645 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.130549 
-PSI BIOME = -18.7814 (MPa)
+PSI BIOME = -18.7815 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -25349,7 +25359,7 @@ Monthly GPP in grams of C for layer 0 = 7.87899
 Monthly  Stand GPP (per area covered)= 7029.01 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00688843 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00688843 
 Daily/Monthly Stand GPP (absolute) = 7.87899 
 Daily/Monthly Stand NPP (per area covered) = 0.00688843 
 CLASS LEVEL
@@ -25456,7 +25466,7 @@ available soil water 30.8563 mm
 volumetric available soil water  = 0.0485926 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.118875 
-PSI BIOME = -29.3346 (MPa)
+PSI BIOME = -29.3347 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -25532,7 +25542,7 @@ Monthly GPP in grams of C for layer 0 = 6.20602
 Monthly  Stand GPP (per area covered)= 5536.52 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00542579 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00542579 
 Daily/Monthly Stand GPP (absolute) = 6.20602 
 Daily/Monthly Stand NPP (per area covered) = 0.00542579 
 CLASS LEVEL
@@ -25572,7 +25582,7 @@ delta_fR 0 = 0.00106614
 delta_cR 0 = 0.00104177 
 delta_S 0 = 0.00187012 
 delta_Res 0 = 0.000991354 
-delta_BB 0 = 0.000456406 
+delta_BB 0 = 0.000456405 
 ******************************
 --------------------------------------------------------------------------
 
@@ -25639,7 +25649,7 @@ available soil water 27.8271 mm
 volumetric available soil water  = 0.0438222 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.107205 
-PSI BIOME = -47.9727 (MPa)
+PSI BIOME = -47.9728 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -25709,14 +25719,14 @@ GET_PHOTOSYNTHESIS_ROUTINE
 Alpha C (Effective Quantum Canopy Efficiency)= 0.0124316 molC/molPAR
 **************************** GPP ************************************ 
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
-Monthly GPP in grams of C (if CC = 100%) for layer 0 = 6.49545 
-Daily GPP in grams of C for layer 0 = 6.49545 
-Monthly GPP in grams of C for layer 0 = 6.49545 
+Monthly GPP in grams of C (if CC = 100%) for layer 0 = 6.49546 
+Daily GPP in grams of C for layer 0 = 6.49546 
+Monthly GPP in grams of C for layer 0 = 6.49546 
 Monthly  Stand GPP (per area covered)= 5794.73 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00567884 
-Monthly NPP (per area covered) for layer 0 = 113437 
-Daily/Monthly Stand GPP (absolute) = 6.49545 
+Monthly NPP (per area covered) for layer 0 = 0.00567884 
+Daily/Monthly Stand GPP (absolute) = 6.49546 
 Daily/Monthly Stand NPP (per area covered) = 0.00567884 
 CLASS LEVEL
 CLASS LEVEL Yearly GPP (absolute) = 793.525
@@ -25819,10 +25829,10 @@ fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 24.7989 mm
-volumetric available soil water  = 0.0390534 (DIM)
+volumetric available soil water  = 0.0390533 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.0955386 
-PSI BIOME = -83.018 (MPa)
+vwc/vwc_sat = 0.0955385 
+PSI BIOME = -83.0182 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -25871,7 +25881,7 @@ Montlhy transpiration from biome = -1.73546e+07
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 113437
 Net radiation for soil evaporation = 113437 W/m^2/hour
-Daily Soil Evaporation = 0.00782192 
+Daily Soil Evaporation = 0.00782191 
 Total Soil Evaporation = 15.6898 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
@@ -25898,7 +25908,7 @@ Monthly GPP in grams of C for layer 0 = 6.6354
 Monthly  Stand GPP (per area covered)= 5919.58 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00580119 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00580119 
 Daily/Monthly Stand GPP (absolute) = 6.6354 
 Daily/Monthly Stand NPP (per area covered) = 0.00580119 
 CLASS LEVEL
@@ -26003,7 +26013,7 @@ fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 21.7716 mm
-volumetric available soil water  = 0.034286 (DIM)
+volumetric available soil water  = 0.0342859 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0838758 
 PSI BIOME = -154.283 (MPa)
@@ -26055,7 +26065,7 @@ Montlhy transpiration from biome = -1.81541e+07
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation from dominant layer = 113437
 Net radiation for soil evaporation = 113437 W/m^2/hour
-Daily Soil Evaporation = 0.00686707 
+Daily Soil Evaporation = 0.00686706 
 Total Soil Evaporation = 15.6966 mm
 Frac Rain Interception not use MAXINTCPTN
 Frac Rain Interception = 0.150072 
@@ -26068,7 +26078,7 @@ Cumulated Evapotranspiration for this class = 267.57 mm
 net_radiation for soil = 8904.91
 incident radiation for soil = 5.34295
 *********GET DAILY/MONTHLY SOIL WATER BALACE************
-ASW at the END of day/month less Evapotraspiration = 18.7505 mm
+ASW at the END of day/month less Evapotraspiration = 18.7504 mm
 
 GET_PHOTOSYNTHESIS_ROUTINE
 
@@ -26078,11 +26088,11 @@ Alpha C (Effective Quantum Canopy Efficiency)= 0 molC/molPAR
 Optimum GPP (alpha max * apar) = 2.39477 molC/m^2 day/month
 Monthly GPP in grams of C (if CC = 100%) for layer 0 = 0 
 Daily GPP in grams of C for layer 0 = 0 
-Monthly GPP in grams of C for layer 0 = 5.6192e-34 
+Monthly GPP in grams of C for layer 0 = -4.23944e-36 
 Monthly  Stand GPP (per area covered)= 0 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 4.59163e-41 
 Daily/Monthly Stand GPP (absolute) = 0 
 Daily/Monthly Stand NPP (per area covered) = 0 
 CLASS LEVEL
@@ -26140,7 +26150,7 @@ PHENOLOGY LAI = 3.75179
 
 
 Thermic sum = 2718.4
-Day 26 month 6 ASW = 18.7505 mm
+Day 26 month 6 ASW = 18.7504 mm
 daylength = 14.467 
 Abscission day length = 11.9758 
 
@@ -26162,7 +26172,7 @@ Vegetated Layer cover in layer 0 = 99.1246 %
 -Dominant Light Index Function-
 Monthly Dominant layer is z = 0
 ***************************************************
-Moist ratio outside modifier = 0.123662
+Moist ratio outside modifier = 0.123661
 -YEAR SIMULATED = 1 (2007)
 --MONTH SIMULATED = JUNE
 ---DAY SIMULATED = 26
@@ -26177,7 +26187,7 @@ Moist ratio outside modifier = 0.123662
 -Day length = 14.467 hours 
 ***************
 *****************CELL x = 1526, y = 962 STRUCTURE*********************
-ASW day 26 month 6 = 18.7505 mm
+ASW day 26 month 6 = 18.7504 mm
 
  GET_DAILY_MODIFIERS
 
@@ -26185,7 +26195,7 @@ fT = 0.730706
 fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
-available soil water 18.7505 mm
+available soil water 18.7504 mm
 volumetric available soil water  = 0.0295283 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0722368 
@@ -26265,7 +26275,7 @@ Monthly GPP in grams of C for layer 0 = 7.84439
 Monthly  Stand GPP (per area covered)= 6998.15 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00685819 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00685819 
 Daily/Monthly Stand GPP (absolute) = 7.84439 
 Daily/Monthly Stand NPP (per area covered) = 0.00685819 
 CLASS LEVEL
@@ -26369,10 +26379,10 @@ fVPD = 0.689354
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 15.759 mm
-volumetric available soil water  = 0.0248173 (DIM)
+volumetric available soil water  = 0.0248172 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.060712 
-PSI BIOME = -718.549 (MPa)
+vwc/vwc_sat = 0.0607119 
+PSI BIOME = -718.552 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -26450,7 +26460,7 @@ Monthly GPP in grams of C for layer 0 = 8.894
 Monthly  Stand GPP (per area covered)= 7934.53 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00777584 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00777584 
 Daily/Monthly Stand GPP (absolute) = 8.894 
 Daily/Monthly Stand NPP (per area covered) = 0.00777584 
 CLASS LEVEL
@@ -26635,7 +26645,7 @@ Monthly GPP in grams of C for layer 0 = 8.82249
 Monthly  Stand GPP (per area covered)= 7870.73 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00771332 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00771332 
 Daily/Monthly Stand GPP (absolute) = 8.82249 
 Daily/Monthly Stand NPP (per area covered) = 0.00771332 
 CLASS LEVEL
@@ -26820,7 +26830,7 @@ Monthly GPP in grams of C for layer 0 = 8.17852
 Monthly  Stand GPP (per area covered)= 7296.23 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00715031 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00715031 
 Daily/Monthly Stand GPP (absolute) = 8.17852 
 Daily/Monthly Stand NPP (per area covered) = 0.00715031 
 CLASS LEVEL
@@ -27005,7 +27015,7 @@ Monthly GPP in grams of C for layer 0 = 6.87131
 Monthly  Stand GPP (per area covered)= 6130.04 gC/ha covered month
 ***************************** NPP *************************** 
 Daily NPP in grams of C (per area covered) for layer 0 = 0.00600744 
-Monthly NPP (per area covered) for layer 0 = 113437 
+Monthly NPP (per area covered) for layer 0 = 0.00600744 
 Daily/Monthly Stand GPP (absolute) = 6.87131 
 Daily/Monthly Stand NPP (per area covered) = 0.00600744 
 CLASS LEVEL
@@ -27113,7 +27123,7 @@ cell =
 - Height = 12.42 m
 - Number of trees = 47 trees 
 - Vegetative Months =  0 months
-- Monthly LAI from Model= 1.67577e-194 
+- Monthly LAI from Model= 3.75179 
 - ASW layer 0 month 7  = 15.1627 mm
 
  GET_DAILY_MODIFIERS
@@ -28017,7 +28027,7 @@ available soil water 15.0761 mm
 volumetric available soil water  = 0.0237418 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0580811 
-PSI BIOME = -887.238 (MPa)
+PSI BIOME = -887.237 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -28413,7 +28423,7 @@ available soil water 14.8594 mm
 volumetric available soil water  = 0.0234006 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0572463 
-PSI BIOME = -950.534 (MPa)
+PSI BIOME = -950.533 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -28910,7 +28920,7 @@ fVPD = 0.472367
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 14.5929 mm
-volumetric available soil water  = 0.0229809 (DIM)
+volumetric available soil water  = 0.022981 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0562197 
 PSI BIOME = -1036.04 (MPa)
@@ -32339,7 +32349,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 1.20109e+06 W/m^2/hour
 Daily Soil Evaporation = 0.0754279 
-Total Soil Evaporation = 18.7744 mm
+Total Soil Evaporation = 18.7745 mm
 Available Soil Water at day 21 month 8 year of simulation 0 = 22.5101 mm
 *****************************************************************************
 *****************************************************************************
@@ -32599,7 +32609,7 @@ available soil water 23.3534 mm
 volumetric available soil water  = 0.0367769 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0899696 
-PSI BIOME = -110.492 (MPa)
+PSI BIOME = -110.491 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -33135,7 +33145,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 1.20109e+06 W/m^2/hour
 Daily Soil Evaporation = 0.0773663 
-Total Soil Evaporation = 19.3959 mm
+Total Soil Evaporation = 19.396 mm
 Available Soil Water at day 29 month 8 year of simulation 0 = 23.0886 mm
 *****************************************************************************
 *****************************************************************************
@@ -33805,7 +33815,7 @@ available soil water 24.6823 mm
 volumetric available soil water  = 0.0388698 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0950895 
-PSI BIOME = -84.9011 (MPa)
+PSI BIOME = -84.901 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -33904,7 +33914,7 @@ available soil water 24.6113 mm
 volumetric available soil water  = 0.0387579 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.0948158 
-PSI BIOME = -86.0738 (MPa)
+PSI BIOME = -86.0737 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -34696,7 +34706,7 @@ available soil water 33.7101 mm
 volumetric available soil water  = 0.0530868 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.12987 
-PSI BIOME = -19.2537 (MPa)
+PSI BIOME = -19.2538 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 0
 fSW-F_PSI = 0
@@ -35426,7 +35436,7 @@ PEAK_LAI = 3.77346
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 1.03498e+06 W/m^2/hour
-Daily Soil Evaporation = 0.0973488 
+Daily Soil Evaporation = 0.0973487 
 Total Soil Evaporation = 21.3542 mm
 Available Soil Water at day 21 month 9 year of simulation 0 = 33.7304 mm
 *****************************************************************************
@@ -35889,8 +35899,8 @@ vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.253274 
 PSI BIOME = -0.801111 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
-F_PSI = 0.881699
-fSW-F_PSI = 0.881699
+F_PSI = 0.8817
+fSW-F_PSI = 0.8817
 fSW = 0.944907
 PhysMod = 0.543938
 PHYSMOD uses F_VPD * F_AGE
@@ -35986,7 +35996,7 @@ available soil water 72.5528 mm
 volumetric available soil water  = 0.114256 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.279512 
-PSI BIOME = -0.501079 (MPa)
+PSI BIOME = -0.50108 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -37387,7 +37397,7 @@ available soil water 71.7453 mm
 volumetric available soil water  = 0.112985 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.276401 
-PSI BIOME = -0.528502 (MPa)
+PSI BIOME = -0.528501 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -37585,7 +37595,7 @@ available soil water 71.4211 mm
 volumetric available soil water  = 0.112474 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.275152 
-PSI BIOME = -0.540018 (MPa)
+PSI BIOME = -0.540019 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -37881,7 +37891,7 @@ fNutr = 0.776393
 available soil water 70.9376 mm
 volumetric available soil water  = 0.111713 (DIM)
 vwc_sat = 0.408771 (DIM)
-vwc/vwc_sat = 0.273289 
+vwc/vwc_sat = 0.27329 
 PSI BIOME = -0.557766 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
@@ -38118,7 +38128,7 @@ PEAK_LAI = 3.77346
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 813459 W/m^2/hour
 Daily Soil Evaporation = 0.169203 
-Total Soil Evaporation = 25.6462 mm
+Total Soil Evaporation = 25.6463 mm
 Available Soil Water at day 18 month 10 year of simulation 0 = 74.6383 mm
 *****************************************************************************
 *****************************************************************************
@@ -39382,7 +39392,7 @@ available soil water 107.152 mm
 volumetric available soil water  = 0.168743 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.412807 
-PSI BIOME = -0.0783074 (MPa)
+PSI BIOME = -0.0783073 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -39481,7 +39491,7 @@ available soil water 106.988 mm
 volumetric available soil water  = 0.168486 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.412176 
-PSI BIOME = -0.0788795 (MPa)
+PSI BIOME = -0.0788794 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -40171,10 +40181,10 @@ fVPD = 0.805735
 fAge = 0.729847
 fNutr = 0.776393
 available soil water 106.449 mm
-volumetric available soil water  = 0.167636 (DIM)
+volumetric available soil water  = 0.167637 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.410099 
-PSI BIOME = -0.0807994 (MPa)
+PSI BIOME = -0.0807993 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -40273,7 +40283,7 @@ available soil water 106.287 mm
 volumetric available soil water  = 0.16738 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.409473 
-PSI BIOME = -0.0813897 (MPa)
+PSI BIOME = -0.0813896 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -40867,7 +40877,7 @@ available soil water 120.479 mm
 volumetric available soil water  = 0.18973 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.464148 
-PSI BIOME = -0.0448199 (MPa)
+PSI BIOME = -0.0448198 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1
@@ -41202,8 +41212,8 @@ PEAK_LAI = 3.77346
 
  GET_SOIL_EVAPORATION_ROUTINE
 Net radiation for soil evaporation = 549555 W/m^2/hour
-Daily Soil Evaporation = 0.183254 
-Total Soil Evaporation = 31.1407 mm
+Daily Soil Evaporation = 0.183255 
+Total Soil Evaporation = 31.1408 mm
 Available Soil Water at day 18 month 11 year of simulation 0 = 119.744 mm
 *****************************************************************************
 *****************************************************************************
@@ -41462,7 +41472,7 @@ available soil water 119.378 mm
 volumetric available soil water  = 0.187997 (DIM)
 vwc_sat = 0.408771 (DIM)
 vwc/vwc_sat = 0.459909 
-PSI BIOME = -0.0468208 (MPa)
+PSI BIOME = -0.0468207 (MPa)
 PSI_SAT BIOME = -0.0011607 (MPa)
 F_PSI = 1
 fSW-F_PSI = 1

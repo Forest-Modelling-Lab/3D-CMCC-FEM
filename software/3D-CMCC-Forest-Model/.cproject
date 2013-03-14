@@ -104,6 +104,9 @@
 							<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.281717471" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 						</tool>
 					</fileInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.1079459103.938893671" name="soilmodel.c" rcbsApplicability="disable" resourcePath="src/soilmodel.c" toolsToInvoke="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.1526621969">
+						<tool id="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502.1526621969" name="Cross GCC Compiler" superClass="cdt.managedbuild.tool.gnu.cross.c.compiler.1391453502"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry excluding="src/garbage.c|canopy_evapotranspiration.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>

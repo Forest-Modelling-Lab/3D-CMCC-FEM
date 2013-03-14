@@ -368,10 +368,9 @@ int get_output_filename(char *arg, char *param, void *p)
 		if( output_path )
 			strcat(output_file, out_filename);
 		else
-			printf("With -outname flag set -outpath not set: using default output file (prog_path/output_%s_%s_%s_%s_%d.txt)", settings->version, settings->spatial, settings->time, settings->daymet);
+			printf("With -outname flag set -outpath not set: using default output file (prog_path/output.txt)");
 	}
-
-
+	Log("output file name = %s\n", out_filename);
 	return 1;
 }
 
@@ -1442,7 +1441,9 @@ int main(int argc, char *argv[])
 		}
 		bzero(output_file, BUFFER_SIZE-1);
 		strcpy(output_file, out_filename);
+
 	}
+
 
 	if( dataset_filename == NULL )
 	{
@@ -1707,21 +1708,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	/*
 
-	 levare da riga di comando .txt
-	 tmp = out_filename
-
-[09:12:55] Alessandro-Candini-Caneta: tmp = tmp + settings->a + settings->b + ".txt"
-[09:13:04] Alessandro-Candini-Caneta: outfilename = tmp
-[09:13:11] Alessandro-Candini-Caneta: strcpy
-[09:13:54] Alessandro-Candini-Caneta: char temporaneo[BUFFER_SIZE];
-[09:16:28] Alessandro-Candini-Caneta: strcpy
-[09:16:30] Alessandro-Candini-Caneta: stradd
-	 sprintf
-	 strcat
-
-	 */
 
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
@@ -1762,6 +1749,46 @@ int main(int argc, char *argv[])
 			matrix_free(m);
 			return -1;
 		}
+
+
+		//todo output.txt
+		//define output file name in function of model settings
+		//char tmp_out_filename[BUFFER_SIZE];
+		//*tmp_out_filename = strcat (out_filename, "ciao.txt");
+		//out_filename = tmp_out_filename;
+		//Log("tmp_out_filename = %s", tmp_out_filename);
+		//Log("out_filename = %s", out_filename);
+		//char *versione = settings->version;
+		/*
+
+		Log("out_filename = %s\n", out_filename);
+		Log("versione = %c\n", settings->version);
+		//strcpy (out_filename, "ciao.txt");
+		if (settings->version == 'f')
+		{
+			Log("prova\n");
+			strcat (out_filename, "_f");
+		}
+		else
+		{
+			strcat (out_filename, "_b");
+		}
+		if (settings->spatial == 's')
+		{
+			strcat (out_filename, "_s_");
+		}
+		else
+		{
+			strcat (out_filename, "_u_");
+		}
+
+		strncat (out_filename, (char)settings->sizeCell, ".txt");
+
+		Log("out_filename = %s\n", out_filename);
+
+		 */
+
+
 
 
 		/*TREEMODEL*/
