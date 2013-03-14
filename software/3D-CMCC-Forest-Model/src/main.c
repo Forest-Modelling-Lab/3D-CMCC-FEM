@@ -1744,6 +1744,26 @@ int main(int argc, char *argv[])
 		strcat (out_filename, "no_data_available");
 	}
 
+
+
+	/******************************************************
+	 *
+	 *	per Alessandro: sono riuscito a compilare ed eseguire, ho fatto un commit
+	 *	di prova e da allora è sorto il problema ad Alessio;
+	 *	apparentemente nel settare il mio eclipse, e lasciando la configurazione
+	 *	su default (non Debug) il suo binario si è tipo "scollegato"
+	 *	dal progetto, e quindi per quanto potesse fare un clean o modificare il codice,
+	 *	il build ricreava sempre i vecchi file oggetto. il problema si è risolto quando
+	 *	in run configuration anche lui è passato in C/C++ application: da Debug/3D_CMCC_Forest_Model
+	 *	a Default/3D_CMCC_Forest_Model
+	 *
+	 *	suppongo pertanto che la colpa sia mia, e che possa presentarsi lo stesso problema per te
+	 *
+	 *
+	 ******************************************************/
+
+
+
 	//sprintf(strData, "%d", data->tm_sec);
 	//strcat (out_filename, strData);
 
