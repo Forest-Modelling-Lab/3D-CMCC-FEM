@@ -1753,17 +1753,7 @@ int main(int argc, char *argv[])
 
 		//todo output.txt
 		//define output file name in function of model settings
-		//char tmp_out_filename[BUFFER_SIZE];
-		//*tmp_out_filename = strcat (out_filename, "ciao.txt");
-		//out_filename = tmp_out_filename;
-		//Log("tmp_out_filename = %s", tmp_out_filename);
-		//Log("out_filename = %s", out_filename);
-		//char *versione = settings->version;
-		/*
 
-		Log("out_filename = %s\n", out_filename);
-		Log("versione = %c\n", settings->version);
-		//strcpy (out_filename, "ciao.txt");
 		if (settings->version == 'f')
 		{
 			Log("prova\n");
@@ -1782,21 +1772,17 @@ int main(int argc, char *argv[])
 			strcat (out_filename, "_u_");
 		}
 
-		strncat (out_filename, (char)settings->sizeCell, ".txt");
+		char strSizeCell[10] = "";
+		sprintf(strSizeCell, "%d", (int)settings->sizeCell);
+
+		strcat (out_filename, strSizeCell);
+		strcat (out_filename, ".txt");
 
 		Log("out_filename = %s\n", out_filename);
-
-		 */
-
-
-
 
 		/*TREEMODEL*/
 		Log("\n3D-CMMC MODEL START\n");
 		Log("***************************************************\n");
-
-
-
 
 
 
