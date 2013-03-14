@@ -1671,15 +1671,6 @@ int main(int argc, char *argv[])
 	//todo output.txt
 	//define output file name in function of model settings
 
-	/*if (settings->version == 'f')
-	{
-		strcat (out_filename, "_f");
-	}
-	else
-	{
-		strcat (out_filename, "_b");
-	}*/
-
 	char strTmp[3], strTmp2[4];
 	strTmp[0] = '_';
 	strTmp[1] = settings->version;
