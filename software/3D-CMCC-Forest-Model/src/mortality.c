@@ -71,7 +71,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 		Log("Stem Biomass after reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
-		Log("Canopy Cover in after while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Canopy Cover after while = %g \n", s->value[CANOPY_COVER_DBHDC]);
 
 		//reset dead tree
 		deadtree = 0;

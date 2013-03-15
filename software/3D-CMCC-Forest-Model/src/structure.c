@@ -106,7 +106,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 			{
 			case 1:
 				c->heights[height].z = c->annual_layer_number - 1;
-				Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
+				//Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
 				break;
 			case 2:
 				if (height == c->heights_count - 1 )

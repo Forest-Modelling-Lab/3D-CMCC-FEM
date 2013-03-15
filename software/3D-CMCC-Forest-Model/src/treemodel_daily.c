@@ -61,23 +61,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
-	/*somma termica per l'inizio della stagione vegetativa*/
-	/*
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
-		if(day == 0 && month == 0)
-		{
-			m->cells[cell].thermic_sum = 0;
-			Log("Thermic sum = %g\n", m->cells[cell].thermic_sum);
-		}
-		else
-		{
-			m->cells[cell].thermic_sum += met[month].d[day].tav;
-			Log("Thermic sum = %g\n", m->cells[cell].thermic_sum);
-		}
-	}
-	*/
-
 	//daily loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
@@ -105,6 +88,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
 		}
 
+		//currently not used
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 
@@ -117,7 +101,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Get_tree_BB (&m->cells[cell],  years);
 		}
 
-		//daily/monthly forest structure
+		//daily forest structure
 		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
 		Get_daily_numbers_of_layers (&m->cells[cell]);
 		Get_daily_layer_cover (&m->cells[cell],  met, month, day);

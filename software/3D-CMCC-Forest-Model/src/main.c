@@ -2000,7 +2000,6 @@ int main(int argc, char *argv[])
 							Get_Veg_Days (m, yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}
 					}
-					/*
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < DaysInMonth[month]; day++ )
@@ -2051,8 +2050,6 @@ int main(int argc, char *argv[])
 						}
 						Log("****************END OF MONTH*******************\n");
 					}
-					*/
-
 				}
 			}
 			else

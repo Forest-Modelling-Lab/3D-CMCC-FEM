@@ -82,10 +82,11 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 
 
 
-
+/*to compute dayleght for stopping growth*/
+//from Schwalm and Ek, 2004
+//but it considers a value independently from species
 void Get_Abscission_DayLength ( CELL * c)
 {
-	//from Schwalm and Ek, 2004
 	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
 	Log("Abscission day length = %g \n", c->abscission_daylength);
 
@@ -278,10 +279,9 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 						}
 						if (day == 30 && month == DECEMBER)
 						{
-							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+							Log("----- TOTAL VEGETATIVE DAYS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
-					//Log("Annual days of veg = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 				}
 			}
 		}
