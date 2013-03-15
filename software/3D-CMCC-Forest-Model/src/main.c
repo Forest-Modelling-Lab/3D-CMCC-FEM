@@ -1954,7 +1954,7 @@ int main(int argc, char *argv[])
 								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//currently soil_model uses equals values for all cells
 								//a struct is anyway defined in types.h for soil data
-								soil_model (m, yos, years, month, years_of_simulation);
+								//soil_model (m, yos, years, month, years_of_simulation);
 							}
 						}
 					}
