@@ -3,7 +3,8 @@
 #include "types.h"
 #include "constants.h"
 
-extern int EndDaysInMonth [];
+
+extern int MonthLength[];
 
 extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 {
@@ -111,7 +112,9 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	}
 }
 
-extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, const int month, const int years, int EndDaysInMonth)
+
+//compute annual number of vegetative days
+extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, const int month, const int years, int MonthLength)
 {
 	MET_DATA *met;
 	static int cell;
@@ -126,8 +129,22 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
 
+
+
+
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
+		/*reset thermic sum*/
+		if(day == 0 && month == 0)
+		{
+			m->cells[cell].thermic_sum = 0;
+		}
+
+		/*compute thermic sum*/
+		m->cells[cell].thermic_sum += met[month].d[day].tav;
+		Log("Thermic sum = %g\n", m->cells[cell].thermic_sum);
+
+
 		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
 		{
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
@@ -138,30 +155,26 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 					{
 						if (!day && !month)
 						{
-							//todo check it
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
+							Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 						}
 						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							//todo decidere se utlizzare growthend o mindaylenght
-							if ((met[month].d[day].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+							if ((m->cells[cell].thermic_sum >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 									|| (met[month].d[day].tav >= m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
-								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-								//Log("----- Vegetative month = %d for species %s\n", month + 1, m->cells[cell].heights[height].ages[age].species[species].name );
 								m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
+								Log("add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 							}
 						}
 						else
 						{
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 						}
-						if (day == 0 /* EndDaysInMonth[month]*/)
+						if (day == MonthLength)
 						{
-							Log("Month %d \n", month);
-							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+							Log("-TOTAL VEGETATIVE DAYS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
 					else
@@ -175,9 +188,6 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 						{
 							if (met[month].d[day].ndvi_lai >= 0.5)
 							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
-								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-								//Log("----- Vegetative month = %d \n", month + 1);
 								m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] +=1;
 							}
 						}

@@ -10,7 +10,6 @@
 extern  const char *szMonth[MONTHS];
 extern int MonthLength[];
 extern int DaysInMonth[];
-extern int EndDaysInMonth [];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
@@ -23,8 +22,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	static int height;
 	static int age;
 	static int species;
-
-	static float thermic_sum;
 
 	static float Light_Absorb_for_establishment;
 	static float Light_for_establishment;
@@ -65,20 +62,21 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	met = (MET_DATA*) yos[years].m;
 
 	/*somma termica per l'inizio della stagione vegetativa*/
-
+	/*
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		if(day == 0 && month == 0)
 		{
-			thermic_sum = 0;
-			Log("Thermic sum = %g\n", thermic_sum);
+			m->cells[cell].thermic_sum = 0;
+			Log("Thermic sum = %g\n", m->cells[cell].thermic_sum);
 		}
 		else
 		{
-			thermic_sum += met[month].d[day].tav;
-			Log("Thermic sum = %g\n", thermic_sum);
+			m->cells[cell].thermic_sum += met[month].d[day].tav;
+			Log("Thermic sum = %g\n", m->cells[cell].thermic_sum);
 		}
 	}
+	*/
 
 	//daily loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
@@ -122,7 +120,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 
 		//daily/monthly forest structure
-		Get_daily_vegetative_period (&m->cells[cell], met, month, day, thermic_sum);
+		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
 		Get_daily_numbers_of_layers (&m->cells[cell]);
 		Get_daily_layer_cover (&m->cells[cell],  met, month, day);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);

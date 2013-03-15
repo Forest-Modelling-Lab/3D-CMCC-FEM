@@ -682,7 +682,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	Log("species in veg period = %d\n", counter);
 }
 
-void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day, float thermic_sum)
+void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
 	static int height;
@@ -725,7 +725,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 					else
 					{
 						//todo use termic sum
-						if((thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+						if((c->thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 								|| //todo use GROWTHEND or abscission daylength
 								(met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 						{
