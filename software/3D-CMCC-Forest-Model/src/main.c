@@ -1963,11 +1963,7 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
-				//added in version 571
 				MET_DATA *met;
-				// check parameters
-				//assert( m && yos);
-				//met = (MET_DATA*) yos[years].m;
 
 				//check if soil data are available
 				for ( cell = 0; cell < m->cells_count; cell++)
@@ -1997,11 +1993,13 @@ int main(int argc, char *argv[])
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
-						for (day = 0; day < 365; day++)
+						Log("month %d\n", month);						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-							Get_Veg_Days (m, yos, day, month, years, MonthLength[month]);
+							GetDayLength (&m->cells[cell], MonthLength[month]);
+							//Get_Veg_Days (m, yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}
 					}
+					/*
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < DaysInMonth[month]; day++ )
@@ -2052,6 +2050,7 @@ int main(int argc, char *argv[])
 						}
 						Log("****************END OF MONTH*******************\n");
 					}
+					*/
 
 				}
 			}
