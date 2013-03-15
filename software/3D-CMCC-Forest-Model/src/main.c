@@ -2057,7 +2057,7 @@ int main(int argc, char *argv[])
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
 
-			Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
+			Log("****************END OF YEARs (%d)*******************\n", yos[years].year);
 
 			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 		}

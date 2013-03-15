@@ -98,7 +98,6 @@ void Get_annual_numbers_of_layers (CELL *const c)
 		}
 		Log("ANNUAL LAYERS NUMBER = %d\n", c->annual_layer_number);
 
-
 		//ASSIGN ANNUAL Z VALUE
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
