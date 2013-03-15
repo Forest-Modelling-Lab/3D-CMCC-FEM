@@ -268,6 +268,13 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 //	float blackBodyExtinctionCoeff2;									// Extinction coefficient of assumed black body leaves
 	float directLightExtinctionCoeff;									// extinction coefficient of direct light
 
+
+
+	float prova;
+
+
+
+
 	float hourPar;														// mean par at a specific hour
 	float diffuseLightAboveCanopy;										// diffuse light above the canopy
 	float directLightAboveCanopy;										// direct light above the canopy
