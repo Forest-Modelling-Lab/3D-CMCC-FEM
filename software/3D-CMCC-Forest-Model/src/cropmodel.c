@@ -13,7 +13,7 @@ extern  const char *szMonth[MONTHS];
 //extern int DaysInMonth[];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
-
+//ciao!
 //define
 #define SNOW_COEFF 15 		// snow cm;
 #define DAY 24
