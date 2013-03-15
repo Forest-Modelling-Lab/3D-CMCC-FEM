@@ -93,7 +93,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
-		GetDayLength (&m->cells[cell], MonthLength[month]);
+		GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 

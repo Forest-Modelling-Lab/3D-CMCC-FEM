@@ -105,8 +105,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
 		}
 
-		//GetDayLength (&m->cells[cell], MonthLength[month]);
-		//GetDayLength_3PG (&m->cells[cell], met, month, day);
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 
@@ -144,14 +142,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Temp += met[month].d[day].tav;
 		Yearly_Rain += met[month].d[day].rain;
 
-
-		//compute yearday for GeDdayLength function
-		if (day == 0 && month == JANUARY)
-		{
-			m->cells[cell].yearday = 0;
-			Log("entro\n");
-		}
-		m->cells[cell].yearday +=1;
 
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;

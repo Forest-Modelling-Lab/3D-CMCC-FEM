@@ -12,12 +12,16 @@
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void GetDayLength ( CELL * c,  int MonthLength )
+void GetDayLength ( CELL * c,  int day, int month, int MonthLength )
 {
-	//todo make a better function for daily daylength
+	//todo forse spostare daylength come variabile MET
 
-	//int cell;
-	//Log("MonthLenght = %d \n", MonthLength);
+	//compute yearday for GeDdayLength function
+	if (day == 0 && month == JANUARY)
+	{
+		c->yearday = 0;
+	}
+	c->yearday +=1;
 
 	float ampl;  //seasonal variation in Day Length from 12 h
 	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
@@ -25,12 +29,12 @@ void GetDayLength ( CELL * c,  int MonthLength )
 	if (settings->time == 'm')
 	{
 		c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
-		Log("month daylength = %g \n", c->daylength);
+		//Log("month daylength = %g \n", c->daylength);
 	}
 	else
 	{
 		c->daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
-		Log("daily daylength = %g \n", c->daylength);
+		//Log("daily daylength = %g \n", c->daylength);
 	}
 }
 
@@ -235,7 +239,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 								//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 							}
 							//todo decidere se utlizzare growthend o mindaylenght
-							if ((m->cells[cell].thermic_sum >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART])
+							if ((m->cells[cell].thermic_sum >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 									|| (m->cells[cell].daylength >= m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
@@ -245,11 +249,6 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 						else
 						{
 							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
-						}
-						if (met[month].d[day].n_days == DaysInMonth)
-						{
-							Log("-MONTH = %d TOTAL VEGETATIVE DAYS for species %s = %d \n\n", month+1, m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-							Log("Getdaylength = %g\n", m->cells[cell].daylength);
 						}
 						if (day == 30 && month == DECEMBER)
 						{

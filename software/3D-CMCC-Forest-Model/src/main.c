@@ -1993,10 +1993,11 @@ int main(int argc, char *argv[])
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
-						Log("month %d\n", month);						for (day = 0; day < DaysInMonth[month]; day++)
+						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-							GetDayLength (&m->cells[cell], MonthLength[month]);
-							//Get_Veg_Days (m, yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+							GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
+							//GetDayLength_3PG (&m->cells[cell], met, month, day);
+							Get_Veg_Days (m, yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}
 					}
 					/*
