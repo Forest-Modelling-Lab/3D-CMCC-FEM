@@ -10,6 +10,7 @@
 extern  const char *szMonth[MONTHS];
 extern int MonthLength[];
 extern int DaysInMonth[];
+extern int EndDaysInMonth [];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
 
 
@@ -145,6 +146,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Temp += met[month].d[day].tav;
 		Yearly_Rain += met[month].d[day].rain;
 
+
+		//compute yearday for GeDdayLength function
 		if (day == 0 && month == JANUARY)
 		{
 			m->cells[cell].yearday = 0;
@@ -162,7 +165,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 		Log("----cumulated day = %d\n", m->cells[cell].yearday);
-;
+
 		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
 
 		// sort by heights

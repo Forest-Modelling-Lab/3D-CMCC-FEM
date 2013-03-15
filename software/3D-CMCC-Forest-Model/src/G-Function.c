@@ -3,6 +3,8 @@
 #include "types.h"
 #include "constants.h"
 
+//extern int
+
 extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 {
 	/*Set Tree period*/
@@ -75,6 +77,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						}
 						if (month == DECEMBER)
 						{
+							Log("Month = %d\n", month);
 							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
@@ -108,7 +111,7 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	}
 }
 
-extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, const int month, const int years)
+extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, const int month, const int years, int EndDaysInMonth)
 {
 	MET_DATA *met;
 	static int cell;
@@ -155,8 +158,9 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 						}
-						if (month == DECEMBER)
+						if (day == 0/*EndDaysInMonth[month]*/)
 						{
+							Log("Month %d \n", month);
 							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
@@ -187,7 +191,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
-					Log("Annual days of veg = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+					//Log("Annual days of veg = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 				}
 			}
 		}

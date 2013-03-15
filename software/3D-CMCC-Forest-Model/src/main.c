@@ -59,6 +59,8 @@ int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 }
 
 //Days in Months
 int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+//todo control
+int EndDaysInMonth [] = {31, 59, 90, 120, 151, 181,  211, 242, 273, 303, 334, 365};
 const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY",
 		"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 
@@ -1999,7 +2001,7 @@ int main(int argc, char *argv[])
 						for (day = 0; day < 365; day++)
 						{
 							//todo check it
-							Get_Veg_Days (m, yos, day, month, years);
+							Get_Veg_Days (m, yos, day, month, years, EndDaysInMonth);
 						}
 					}
 					for (month = 0; month < MONTHS; month++)
