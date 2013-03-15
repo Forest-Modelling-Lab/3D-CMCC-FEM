@@ -3,7 +3,7 @@
 #include "types.h"
 #include "constants.h"
 
-//extern int
+extern int EndDaysInMonth [];
 
 extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 {
@@ -158,7 +158,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, const int day, 
 							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 							m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 						}
-						if (day == 0/*EndDaysInMonth[month]*/)
+						if (day == 0 /* EndDaysInMonth[month]*/)
 						{
 							Log("Month %d \n", month);
 							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);

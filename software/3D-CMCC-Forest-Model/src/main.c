@@ -2001,7 +2001,7 @@ int main(int argc, char *argv[])
 						for (day = 0; day < 365; day++)
 						{
 							//todo check it
-							Get_Veg_Days (m, yos, day, month, years, EndDaysInMonth);
+							Get_Veg_Days (m, yos, day, month, years, EndDaysInMonth[month]);
 						}
 					}
 					for (month = 0; month < MONTHS; month++)
