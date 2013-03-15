@@ -240,6 +240,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 								//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 							}
 							//todo decidere se utlizzare growthend o mindaylenght
+							//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
 							if ((m->cells[cell].thermic_sum >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 									|| (m->cells[cell].daylength >= m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 							{
@@ -286,6 +287,8 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 			}
 		}
 	}
+	//reset
+	m->cells[cell].thermic_sum = 0;
 }
 
 
@@ -305,11 +308,25 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 
 	if ( c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 	{
-		Log("- Vegetative Months =  %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		if(settings->time == 'm')
+		{
+			Log("- Vegetative Months =  %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		}
+		else
+		{
+			Log("- Vegetative Days =  %d months\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+		}
 	}
 	else
 	{
-		Log("- Vegetative Months = %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		if(settings->time == 'm')
+		{
+			Log("- Vegetative Months =  %d months\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+		}
+		else
+		{
+			Log("- Vegetative Days =  %d months\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+		}
 	}
 
 	if (settings->spatial == 's')

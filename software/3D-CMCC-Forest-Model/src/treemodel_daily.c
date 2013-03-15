@@ -39,8 +39,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//compute VPD
 	static float vpd;
 
-	//static float thermic_sum;
-
 	/*fruit*/
 	/*logistic equation*/
 	//static int Seeds_Number_LE;
@@ -136,7 +134,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
-		Log("----cumulated day = %d\n", m->cells[cell].yearday);
 
 		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
 
@@ -674,7 +671,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	                        }
 							 */
 
-
 							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 						}
 					}
@@ -688,6 +684,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		m->cells[cell].dominant_veg_counter = 0;
 		m->cells[cell].dominated_veg_counter = 0;
 		m->cells[cell].subdominated_veg_counter = 0;
+
+
 
 
 		//todo: soilmodel could stay here or in main.c

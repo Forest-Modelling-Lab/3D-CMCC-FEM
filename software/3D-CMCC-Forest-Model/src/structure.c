@@ -689,6 +689,14 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	static int species;
 	static int counter;
 
+	float thermic_sum;
+
+	if(day == 0 && month == 0)
+	{
+	 thermic_sum = 0;
+	}
+	thermic_sum += met[month].d[day].tav;
+
 	counter = 0;
 
 	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
@@ -723,11 +731,12 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 					}
 					else
 					{
-						//todo use termic sum
-						if((c->thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-								|| //todo use GROWTHEND or abscission daylength
-								(met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						//todo decidere se utlizzare growthend o mindaylenght
+						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
+						if ((thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+								|| (c->daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
+							Log("thermic sum = %g\n", c->thermic_sum);
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
 							Log("counter = %d\n\n", counter);
