@@ -830,7 +830,6 @@ typedef struct {
 	int saplings_counter;
 	float snow;  //amount of snow in Kg H2O
 	//float snow_subl; //sublimated snow
-	float snow_subl; //sublimated snow
 	float gcorr;
 	float air_pressure;
 
@@ -953,7 +952,7 @@ extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const in
 extern void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
 void Get_monthly_vegetative_period (CELL *, const MET_DATA *const, int);
-void Get_daily_vegetative_period (CELL *, SPECIES*, const MET_DATA *const, int, int);
+void Get_daily_vegetative_period (CELL *, const MET_DATA *const, int, int);
 extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);

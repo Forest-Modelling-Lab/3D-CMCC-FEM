@@ -104,7 +104,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 
 		//daily forest structure
-		Get_daily_vegetative_period (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], met, month, day);
+		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
 		Get_daily_numbers_of_layers (&m->cells[cell]);
 		Get_daily_layer_cover (&m->cells[cell],  met, month, day);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
