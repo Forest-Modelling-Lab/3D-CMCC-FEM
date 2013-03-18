@@ -81,6 +81,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("--Coarse Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
 	//compute fine root biomass setting by default to 0
+	//todo questa è valida solo per le decidue
 	s->value[BIOMASS_ROOTS_FINE_CTEM] = 0;
 	Log("---Fine Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 

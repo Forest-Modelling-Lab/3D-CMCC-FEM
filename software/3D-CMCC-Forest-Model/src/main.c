@@ -10,6 +10,7 @@
 //TODO INSERIRE UN MAX NUMBER OF LAYER IN FUNZIONE DEL TREE HEIGHT (chiedere Arianna)
 //TODO NETCDF
 //TODO VERSION FEM AND BGC
+//TODO RIMETTERE PER L'ACQUA COMPETIZIONE SIMMETRICA
 
 
 
@@ -26,6 +27,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
+
 //#include <netcdf.h>
 
 

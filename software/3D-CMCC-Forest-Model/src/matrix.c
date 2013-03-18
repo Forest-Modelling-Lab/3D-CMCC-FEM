@@ -640,12 +640,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 			Log("*(%d)\n", cell + 1);
 
 			Log("****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-			Log("- cell n.%02d is at %g,%g and has %d height classe%s \n",
+			Log("- cell n.%02d is at %g,%g and has %d height classes \n",
 					cell+1,
 					m->cells[cell].x,
 					m->cells[cell].y,
-					m->cells[cell].heights_count,
-					((1 == m->cells[cell].heights_count) ? "" : "s"));
+					m->cells[cell].heights_count);
 
 			//loop on each height
 			for ( height = 0; height < m->cells[cell].heights_count; height++ )
