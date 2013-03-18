@@ -683,7 +683,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	Log("species in veg period = %d\n", counter);
 }
 
-void Get_daily_vegetative_period (CELL *c, SPECIES *s, const MET_DATA *const met, int month, int day)
+void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
 	static int height;
@@ -718,32 +718,33 @@ void Get_daily_vegetative_period (CELL *c, SPECIES *s, const MET_DATA *const met
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				if (s->value[PHENOLOGY] == 0)
+				if (c->heights[height].ages[age].species[species].counter[PHENOLOGY] == 0)
 				{
-					if (settings->version == 's')
+					if (settings->time == 's')
 					{
 						//Log("Spatial version \n");
 
 						//veg period
 						if (met[month].d[day].ndvi_lai > 0.1)
 						{
-							s->counter[VEG_UNVEG] = 1;
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
 						}
 						//unveg period
 						else
 						{
-							s->counter[VEG_UNVEG] = 0;
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
 						}
 					}
 					else
 					{
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
-						if ((thermic_sum >= s->value[GROWTHSTART] && month <= 6) || (c->daylength >= s->value[MINDAYLENGTH] && month >= 6))
+						if ((thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+								|| (c->daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
 							Log("thermic sum = %g\n", c->thermic_sum);
-							s->counter[VEG_UNVEG] = 1;
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
 							Log("ENTRO \n\n");
 							//Log("growth start = %g\n", s->value[GROWTHSTART]);
@@ -751,15 +752,15 @@ void Get_daily_vegetative_period (CELL *c, SPECIES *s, const MET_DATA *const met
 						}
 						else
 						{
-							s->counter[VEG_UNVEG] = 0;
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
 							Log("NON ENTRO\n\n");
 						}
 					}
 				}
 				else
 				{
-					s->counter[VEG_UNVEG] = 1;
-					Log("Veg period = %d \n", s->counter[VEG_UNVEG]);
+					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
 					counter += 1;
 					Log("counter = %d\n\n", counter);
 				}
