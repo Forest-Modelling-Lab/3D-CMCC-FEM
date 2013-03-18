@@ -90,6 +90,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
 		}
 
+
+		GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
 		//currently not used
 		Get_Abscission_DayLength (&m->cells[cell]);
 
@@ -156,6 +158,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			//loop on each ages
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
+				Log("period!!!!!!!!!!!!!!!!!!!!!!!%d\n", m->cells[cell].heights[height].ages[age].species[species].period);
 				/*increment age*/
 				if( day == 0 && month == JANUARY && years != 0)
 				{
@@ -186,12 +189,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						{
 							Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 						}
-
-
-
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 					{
+
 						if (day == 0 && month == JANUARY)
 						{
 							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
