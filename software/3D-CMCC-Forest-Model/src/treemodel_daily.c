@@ -158,12 +158,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			//loop on each ages
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
-				Log("period!!!!!!!!!!!!!!!!!!!!!!!%d\n", m->cells[cell].heights[height].ages[age].species[species].period);
+				Log("AGE %d\n", m->cells[cell].heights[height].ages[age].value);
 				/*increment age*/
 				if( day == 0 && month == JANUARY && years != 0)
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
+				Log("AGE %d\n", m->cells[cell].heights[height].ages[age].value);
 				if (day == 0 && month == JANUARY)
 				{
 					//todo make a better function
