@@ -56,7 +56,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	//following BIOME
-	rhoAir = 1.292 - (0.00428 * met[month].tav);
+	rhoAir = 1.292 - (0.00428 * met[month].tavg);
 
 	//todo move into atmosphere.c
 	/*compute air pressure*/
@@ -70,7 +70,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//Log("Air pressure = %g Pa\n", c->air_pressure);
 
 	/* temperature and pressure correction factor for conductances */
-	c->gcorr = pow((met[month].tav + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 	Log("gcorr = %g\n", c->gcorr);
 
 	/*Canopy Conductance*/
@@ -392,28 +392,28 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	/* call penman-monteith function, returns e in kg/m2/s */
 
 	//todo per finire la parte di BIOME devo inserire anche la parte di VPD
-	/* assign tav (Celsius) and tav_k (Kelvins) */
+	/* assign tavg (Celsius) and tav_k (Kelvins) */
 	if (settings->time == 'm')
 	{
-		tav_k = met[month].tav + 273.15;
+		tav_k = met[month].tavg + 273.15;
 	    /* calculate density of air (rho) as a function of air temperature */
-		rhoAir = 1.292 - (0.00428 * met[month].tav);
+		rhoAir = 1.292 - (0.00428 * met[month].tavg);
 	    /* calculate latent heat of vaporization as a function of ta */
-	    lhvap = 2.5023e6 - 2430.54 * met[month].tav;
+	    lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
 	    /* calculate temperature offsets for slope estimate */
-	    t1 = met[month].tav+dt;
-	    t2 = met[month].tav-dt;
+	    t1 = met[month].tavg+dt;
+	    t2 = met[month].tavg-dt;
 	}
 	else
 	{
-		tav_k = met[month].d[day].tav + 273.15;
+		tav_k = met[month].d[day].tavg + 273.15;
 	    /* calculate density of air (rho) as a function of air temperature */
-		rhoAir = 1.292 - (0.00428 * met[month].d[day].tav);
+		rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
 	    /* calculate latent heat of vaporization as a function of ta */
-	    lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tav;
+	    lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	    /* calculate temperature offsets for slope estimate */
-	    t1 = met[month].d[day].tav+dt;
-	    t2 = met[month].d[day].tav-dt;
+	    t1 = met[month].d[day].tavg+dt;
+	    t2 = met[month].d[day].tavg-dt;
 	}
 
 

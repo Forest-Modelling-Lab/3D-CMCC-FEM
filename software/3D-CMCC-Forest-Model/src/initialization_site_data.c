@@ -97,5 +97,12 @@ void Get_initialization_site_data (CELL *c)
 
 	c->max_asw = c->soilw_fc;
 
+	//compute initialization soil water content
+	c->available_soil_water = (c->soilw_fc * site->min_frac_maxasw);
+	Log("Initialization ASW = %g (mm-kgH2O/m2)\n", c->available_soil_water);
+
+	/*snow initialization*/
+	c->snow = 0;
+
 }
 

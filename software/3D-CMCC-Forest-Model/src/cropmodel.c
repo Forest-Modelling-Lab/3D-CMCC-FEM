@@ -850,13 +850,13 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		for(i = 0; i < 12; i++)
 		{
-			if (met[i].tav > max)
+			if (met[i].tavg > max)
 			{
-				max = met[i].tav;
+				max = met[i].tavg;
 			}
-			if (met[i].tav < min)
+			if (met[i].tavg < min)
 			{
-				min = met[i].tav;
+				min = met[i].tavg;
 			}
 		}
 		annualTemperatureAmplitude = max - min;
@@ -865,29 +865,29 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Log("\nthe mean value between annual max and min temperature: %g", meanAnnualTemperature);
 
 		//------ todo insert Tmax and T min -----------------------------------------------------------------------
-		maxAirTemperature = met[month].tav + 2;
-		minAirTemperature = met[month].tav -2;
+		maxAirTemperature = met[month].tavg + 2;
+		minAirTemperature = met[month].tavg -2;
 		Log ("\nmax Tair: %g\nMin Tair: %g", maxAirTemperature, minAirTemperature);
 		//---------------------------------------------------------------------------------------------------------
 
 		//########## CANOPY TEMPERATURE ############
 
 		// effect of snow on cover on canopy temperature
-		if (met[month].tav >=0) 			//not totally clear on Zhang 2002 appendix; anyway I'm quite sure it've to be used Tair instead of Tmax/min
+		if (met[month].tavg >=0) 			//not totally clear on Zhang 2002 appendix; anyway I'm quite sure it've to be used Tair instead of Tmax/min
 		{
 			snow_eff = 1;
 		}
-		else if (met[month].tav <0 )
+		else if (met[month].tavg <0 )
 		{
-			snow_eff = 2 + met[month].tav * (0.4 + 0.0018 * pow((Minimum(SNOW_COEFF,snow) -15), 2));
+			snow_eff = 2 + met[month].tavg * (0.4 + 0.0018 * pow((Minimum(SNOW_COEFF,snow) -15), 2));
 		}
 		Log("\nsnow effect coefficient equal to %g", snow_eff);
 
-		canopyMaxTemperature = snow_eff * maxAirTemperature; //met[month].tav;  todo  T_max in input
+		canopyMaxTemperature = snow_eff * maxAirTemperature; //met[month].tavg;  todo  T_max in input
 		Log("\nCanopy monthly max temperature is %g\n", canopyMaxTemperature);
 
 
-		canopyMinTemperature = snow_eff * minAirTemperature;	//met[month].tav;	todo  T_min in input
+		canopyMinTemperature = snow_eff * minAirTemperature;	//met[month].tavg;	todo  T_min in input
 		Log("\nCanopy monthly min temperature is %g\n", canopyMinTemperature);
 
 		//Canopy daily mean temperature
@@ -1009,14 +1009,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				if (met[month].rain > 0.0)
 				{
 					//met[month].met[day - i].ta_min
-					soilSurfaceTemperature += (met[month].tav - 2 ) + ((float)wetDays / (float)met[month].n_days) *
-							((float)met[month].tav - (float)met[month].tav -2);
+					soilSurfaceTemperature += (met[month].tavg - 2 ) + ((float)wetDays / (float)met[month].n_days) *
+							((float)met[month].tavg - (float)met[month].tavg -2);
 					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 				}
 				else
 				{
 					//met[month].met[day - i].ta_max
-					soilSurfaceTemperature += met[month].tav +2 + (dryDays / met[month].n_days) * (met[month].tav +2 - met[month].tav);
+					soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
 					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 				}
 			}
@@ -1049,13 +1049,13 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 						if (met[month].rain > 0.0)
 						{
 							//met[month].met[day - i].ta_min
-							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
+							soilSurfaceTemperature += (met[month - i].tavg -2 ) + (wetDays / met[month].n_days) * (met[month].tavg - met[month - i].tavg -2);
 							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
 						}
 						else
 						{
 							//met[month].met[day - i].ta_max
-							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
+							soilSurfaceTemperature += met[month - i].tavg +2 + (dryDays / met[month].n_days) * (met[month - i].tavg +2 - met[month].tavg);
 							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
 						}
 					}
@@ -2787,7 +2787,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					//DRoot shouldn't be single layer since
 					//it is assumed to be function of layer specific parameters
 				}
-		/*
+
 				Log("******** CROP NITROGEN MODULE ********\n\n");
 
 				//movable nitrogen in shoot and root
@@ -2919,7 +2919,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				//solute movement
 				Js = - SW[l] * Ds * Gs + Jw * Sc;			//TODO here many variables missing yet (Gs, Jw, Sc)
 
-				//**********************************************************************************************************************
 				Log(" denitrification\n\n");
 
 

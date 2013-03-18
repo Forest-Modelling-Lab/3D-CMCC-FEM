@@ -61,7 +61,7 @@ enum {
 typedef struct{
 	int n_days;
 	PREC solar_rad;
-	PREC tav;
+	PREC tavg;
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
@@ -75,7 +75,7 @@ typedef struct {
 	int n_days;
 	int month;
 	PREC solar_rad;
-	PREC tav;
+	PREC tavg;
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
@@ -149,7 +149,7 @@ typedef struct
 	defaultlai,
 	maxdays,
 	maxrg,
-	maxtav,
+	maxtavg,
 	maxvpd,
 	maxprecip,
 	switchtounspatial;

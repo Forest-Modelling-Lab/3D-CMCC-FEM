@@ -64,26 +64,20 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	met = (MET_DATA*) yos[years].m;
 
 	/*somma termica per l'inizio della stagione vegetativa*/
-	//thermic_sum = met[month].tav * DaysInMonth [month];
+	//thermic_sum = met[month].tavg * DaysInMonth [month];
 
 	//monthly loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		//*************SITE CHARACTERISTIC******************
-		if (month == JANUARY && years == 0)
-		{
-			/*soil water initialization*/
-			m->cells[cell].available_soil_water = (m->cells[cell].soilw_fc * site->min_frac_maxasw) + met[month].rain;
-			Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
 
-			/*snow initialization*/
-			m->cells[cell].snow = 0;
-		}
-		else
-		{
-			m->cells[cell].available_soil_water +=  met[month].rain;
-			Log("Beginning month  %d ASW = %g mm\n", month + 1, m->cells[cell].available_soil_water);
-		}
+		/*soil water initialization*/
+		m->cells[cell].available_soil_water += met[month].rain;
+		Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
+
+		/*snow initialization*/
+		m->cells[cell].snow = 0;
+
 		//control
 		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
@@ -128,7 +122,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].solar_rad;
 		Yearly_Vpd += vpd;
-		Yearly_Temp += met[month].tav;
+		Yearly_Temp += met[month].tavg;
 		Yearly_Rain += met[month].rain;
 
 
@@ -258,6 +252,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
 								//todo following BIOME create snow function
+								//todo check its position into treemodel
 								Get_snow_met_data (&m->cells[cell], met, month, day);
 
 								Get_soil_water_balance (&m->cells[cell]);

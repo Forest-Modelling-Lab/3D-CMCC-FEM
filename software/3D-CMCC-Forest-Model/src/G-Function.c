@@ -3,6 +3,9 @@
 #include "types.h"
 #include "constants.h"
 
+
+
+
 //----------------------------------------------------------------------------//
 //                                                                            //
 //                             GetDayLength                                   //
@@ -150,8 +153,8 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							//todo decidere se utlizzare growthend o mindaylenght
-							if ((met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-									|| (met[month].tav >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+							if ((met[month].tavg >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+									|| (met[month].tavg >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 							{
 								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
@@ -221,7 +224,7 @@ extern void Get_Veg_Days (MATRIX *const m, const YOS *const yos, int day, int mo
 			m->cells[cell].thermic_sum = 0;
 		}
 		/*compute thermic sum*/
-		m->cells[cell].thermic_sum += met[month].d[day].tav;
+		m->cells[cell].thermic_sum += met[month].d[day].tavg;
 
 		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
 		{

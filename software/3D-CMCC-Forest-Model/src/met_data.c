@@ -41,7 +41,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 
 	if (settings->time == 'm')
 	{
-		if (met[month].tav < 0) /* sublimation from snowpack */
+		if (met[month].tavg < 0) /* sublimation from snowpack */
 		{
 			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
 			Log("r_sub = %g\n", r_sub);
@@ -52,7 +52,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 
 
 		}
-		else if (met[month].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
+		else if (met[month].tavg > 0 && !c->snow) /* temperature and radiation melt from snowpack */
 		{
 
 		}
@@ -63,18 +63,18 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	}
 	else
 	{
-		if (met[month].d[day].tav < 0) /* sublimation from snowpack */
+		if (met[month].d[day].tavg < 0) /* sublimation from snowpack */
 		{
 			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
 			Log("r_sub = %g\n", r_sub);
 			if (r_sub > c->snow)
 			{
-
+				//
 			}
 
 
 		}
-		else if (met[month].d[day].tav > 0 && !c->snow) /* temperature and radiation melt from snowpack */
+		else if (met[month].d[day].tavg > 0 && !c->snow) /* temperature and radiation melt from snowpack */
 		{
 
 		}
@@ -97,7 +97,7 @@ float Get_vpd (const MET_DATA *const met, int month)
 
 	//compute vpd
 	//see triplex model Peng et al., 2002
-	svp = 6.1076 * exp ((17.269 * met[month].tav) / (met[month].tav + 237.3));
+	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tav + 237.3));
 	//Log("svp = %g\n", svp);
 	vp = met[month].rh * (svp /100);
 	//Log("vp = %g\n", vp);
@@ -122,7 +122,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n",
 				met[month].solar_rad,
-				met[month].tav,
+				met[month].tavg,
 				//met[month].rh,
 				vpd,
 				met[month].ts_f,
@@ -139,14 +139,14 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 		Log("***************\n");
 		Log("**Daily MET DATA**\n");
 		Log("-average solar_rad = %g MJ/m^2/day\n"
-				"-tav = %g °C\n"
+				"-tavg = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n",
 				met[month].d[day].solar_rad,
-				met[month].d[day].tav,
+				met[month].d[day].tavg,
 				//met[month].rh,
 				vpd,
 				met[month].d[day].ts_f,

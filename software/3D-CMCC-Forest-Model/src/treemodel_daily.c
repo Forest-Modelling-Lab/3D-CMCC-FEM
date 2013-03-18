@@ -63,20 +63,24 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		//*************SITE CHARACTERISTIC******************
-		if (day == 0 && month == JANUARY && years == 0)
+		if (met[month].d[day].tavg > 0)
 		{
-			/*soil water initialization*/
-			m->cells[cell].available_soil_water = (m->cells[cell].soilw_fc * site->min_frac_maxasw) + met[month].d[day].rain;
+			m->cells[cell].available_soil_water += met[month].d[day].rain;
 			Log("Day %d month %d ASW = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
-
-			/*snow initialization*/
-			m->cells[cell].snow = 0;
+			if (m->cells[cell].snow =! 0)
+			{
+				/*snow sublimation*/
+				Get_snow_met_data (&m->cells[cell], met, month, day);
+			}
 		}
 		else
 		{
-			m->cells[cell].available_soil_water +=  met[month].d[day].rain;
-			Log("Day %d month %d ASW = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
+			m->cells[cell].snow += met[month].d[day].rain;
+			Log("Day %d month %d ASW as snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
 		}
+
+
+
 		//control
 		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
@@ -121,7 +125,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].d[day].solar_rad;
 		Yearly_Vpd += vpd;
-		Yearly_Temp += met[month].d[day].tav;
+		Yearly_Temp += met[month].d[day].tavg;
 		Yearly_Rain += met[month].d[day].rain;
 
 
@@ -254,9 +258,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-
-								//todo following BIOME create snow function
-								Get_snow_met_data (&m->cells[cell], met, month, day);
 
 								Get_soil_water_balance (&m->cells[cell]);
 

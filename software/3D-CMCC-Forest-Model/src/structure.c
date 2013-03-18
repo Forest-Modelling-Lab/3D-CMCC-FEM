@@ -654,8 +654,8 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 					}
 					else
 					{
-						if((met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-								|| (met[month].tav >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						if((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
@@ -695,7 +695,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	{
 	 thermic_sum = 0;
 	}
-	thermic_sum += met[month].d[day].tav;
+	thermic_sum += met[month].d[day].tavg;
 
 	counter = 0;
 

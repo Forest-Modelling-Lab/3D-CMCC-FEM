@@ -583,7 +583,7 @@ int importSettingsFile(char *fileName)
 		fprintf(stderr, "%f\n", settings->defaultlai);
 		fprintf(stderr, "%f\n", settings->maxdays);
 		fprintf(stderr, "%f\n", settings->maxrg);
-		fprintf(stderr, "%f\n", settings->maxtav);
+		fprintf(stderr, "%f\n", settings->maxtavg);
 		fprintf(stderr, "%f\n", settings->maxvpd);
 		fprintf(stderr, "%f\n", settings->maxprecip);*/
 

@@ -201,6 +201,7 @@ int sort_by_years(const void *a, const void *b)
 	}
 }
 
+
 static void clean_up(void)
 {
 	if (program_path)
@@ -764,7 +765,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								break;
 
 							case TA_F: //Ta_f -  temperature average
-								yos[*yos_count-1].m[month].tav = convert_string_to_prec(token2, &error_flag);
+								yos[*yos_count-1].m[month].tavg = convert_string_to_prec(token2, &error_flag);
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
@@ -772,18 +773,18 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
-								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tav))
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tavg))
 								{
 									Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									Log("Getting previous years values !!\n");
-									yos[*yos_count-1].m[month].tav = yos[*yos_count-2].m[month].tav;
-									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tav))
+									yos[*yos_count-1].m[month].tavg = yos[*yos_count-2].m[month].tavg;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tavg))
 									{
 										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
 									}
 								}
 								//CONTROL
-								if (yos[*yos_count-1].m[month].tav > settings->maxtav)
+								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
 								{
 									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 								}
@@ -997,7 +998,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									break;
 
 								case TA_F: //Ta_f -  temperature average
-									yos[*yos_count-1].m[month].d[day].tav = convert_string_to_prec(token2, &error_flag);
+									yos[*yos_count-1].m[month].d[day].tavg = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
 										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
@@ -1005,22 +1006,22 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
-									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tav))
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
 									{
 										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].tav = yos[*yos_count-2].m[month].d[day].tav;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tav))
+										yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count-2].m[month].d[day].tavg;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tavg))
 										{
-											Log ("********* TAV -NO DATA- in previous year!!!!\n" );
+											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 										}
 									}
 									//CONTROL
-									if (yos[*yos_count-1].m[month].d[day].tav > settings->maxtav)
+									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
 									{
 										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									}
-									//Log("%d-%s-tav = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tav);
+									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
 
 								case VPD_F: //RH_f - RH
@@ -1258,7 +1259,7 @@ void met_summary(MET_DATA *met) {
 				i+1,
 				met[i].n_days,
 				met[i].solar_rad,
-				met[i].tav,
+				met[i].tavg,
 				met[i].vpd,
 				met[i].ts_f,
 				met[i].rain,
