@@ -99,7 +99,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 			}
 			else
 			{
-				c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC]));
+				c->evapotranspiration = (RainIntercepted  + (s->value[DAILY_TRANSP]* s->value[CANOPY_COVER_DBHDC])) + c->snow_subl;
 				Log("-Class evapotranspiration = %g mm/month\n", c->evapotranspiration);
 			}
 

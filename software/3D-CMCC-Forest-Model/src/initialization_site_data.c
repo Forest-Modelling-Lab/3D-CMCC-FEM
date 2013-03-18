@@ -103,6 +103,7 @@ void Get_initialization_site_data (CELL *c)
 
 	/*snow initialization*/
 	c->snow = 0;
+	c->snow_subl = 0;
 
 }
 

@@ -654,7 +654,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		/*
 		GetDayLength (&m->cells[cell], MonthLength[month]);
 		vpd =  met[month].vpd * 10.0; //Get_vpd (met, month);
-		Log("PROVA TEMPERATURA = %g\n", met[month].tav);
+		Log("PROVA TEMPERATURA = %g\n", met[month].tavg);
 		Log("PROVA SETTINGS = %c\n", settings->version);
 		 */
 
@@ -1030,14 +1030,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					if (met[month].rain > 0.0)
 					{
 						//met[month].met[day - i].ta_min
-						soilSurfaceTemperature += (met[month].tav -2 ) + ((float)wetDays / (float)met[month].n_days) *
-								((float)met[month].tav - (float)met[month].tav -2);
+						soilSurfaceTemperature += (met[month].tavg -2 ) + ((float)wetDays / (float)met[month].n_days) *
+								((float)met[month].tavg - (float)met[month].tavg -2);
 						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 					}
 					else
 					{
 						//met[month].met[day - i].ta_max
-						soilSurfaceTemperature += met[month].tav +2 + (dryDays / met[month].n_days) * (met[month].tav +2 - met[month].tav);
+						soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
 						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 					}
 				}

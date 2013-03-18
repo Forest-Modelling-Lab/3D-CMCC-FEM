@@ -20,8 +20,6 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 
 	static float snow_abs = 0.6; // absorptivity of snow
 	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
-	float snow_melt;
-	float snow_sublimation;
 	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation
 	float melt, t_melt, r_melt, r_sub;
 
@@ -56,6 +54,8 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 					melt = c->snow;
 					//add snow to soil water
 					c->available_soil_water += c->snow;
+					/*reset snow*/
+					c->snow = 0;
 				}
 			}
 			/* sublimation from snowpack */
@@ -67,6 +67,9 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 				if (r_sub > c->snow)
 				{
 					r_sub = c->snow;
+					c->snow_subl = r_sub;
+					/*reset*/
+					c->snow = 0;
 				}
 			}
 		}
@@ -89,7 +92,7 @@ float Get_vpd (const MET_DATA *const met, int month)
 
 	//compute vpd
 	//see triplex model Peng et al., 2002
-	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tav + 237.3));
+	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tavg + 237.3));
 	//Log("svp = %g\n", svp);
 	vp = met[month].rh * (svp /100);
 	//Log("vp = %g\n", vp);
@@ -107,7 +110,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 		Log("***************\n");
 		Log("**Monthly MET DATA**\n");
 		Log("-average solar_rad = %g MJ/m^2/day\n"
-				"-tav = %g °C\n"
+				"-tavg = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"

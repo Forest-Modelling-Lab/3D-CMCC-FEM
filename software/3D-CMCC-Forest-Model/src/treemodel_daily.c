@@ -67,7 +67,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		{
 			m->cells[cell].available_soil_water += met[month].d[day].rain;
 			Log("Day %d month %d ASW = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
-			if (m->cells[cell].snow =! 0)
+			if (m->cells[cell].snow != 0)
 			{
 				/*snow sublimation*/
 				Get_snow_met_data (&m->cells[cell], met, month, day);

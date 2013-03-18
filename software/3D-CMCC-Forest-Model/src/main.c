@@ -775,12 +775,12 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tavg))
 								{
-									Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tavg = yos[*yos_count-2].m[month].tavg;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tavg))
 									{
-										Log ("********* TAV -NO DATA- in previous year!!!!\n" );
+										Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 									}
 								}
 								//CONTROL
@@ -1966,8 +1966,6 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
-				MET_DATA *met;
-
 				//check if soil data are available
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
@@ -2010,7 +2008,7 @@ int main(int argc, char *argv[])
 							//Log("Month = %s\n", szMonth[month]);
 							//Log("day = %d\n", met[month].d[day].n_days);
 							//Log("rg = %g\n", met[month].d[day].solar_rad);
-							//Log("tav = %g\n", met[month].d[day].tav);
+							//Log("tavg = %g\n", met[month].d[day].tavg;
 							//Log("vpd = %g\n", met[month].d[day].vpd);
 							//Log("rain = %g\n", met[month].d[day].rain);
 							if(m->cells[cell].landuse == F)
