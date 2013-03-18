@@ -27,61 +27,53 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 
 	t_melt = r_melt = r_sub = 0;
 
+	t_melt = t_coeff * met[month].tavg;
+
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	if (settings->time == 'm')
+	if (settings->time == 's')
 	{
-		incident_rad = c->net_radiation_for_soil * DaysInMonth[month] * snow_abs * 0.001;
+		incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
 	}
 	else
 	{
-		incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
+		/*no snow calculations in monthly time step*/
 	}
 	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
 	Log("incident radiation for soil = %g\n", incident_rad);
 
-	if (settings->time == 'm')
+	if (settings->time == 's')
 	{
-		if (met[month].tavg < 0) /* sublimation from snowpack */
+		if (c->snow != 0)
 		{
-			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-			Log("r_sub = %g\n", r_sub);
-			if (r_sub > c->snow)
+			/* temperature and radiation melt from snowpack */
+			if (met[month].d[day].tavg > 0)
 			{
+				r_melt = incident_rad / LATENT_HEAT_FUSION;
+				melt = t_melt + r_melt;
 
+				if (melt > c->snow)
+				{
+					melt = c->snow;
+					//add snow to soil water
+					c->available_soil_water += c->snow;
+				}
 			}
-
-
-		}
-		else if (met[month].tavg > 0 && !c->snow) /* temperature and radiation melt from snowpack */
-		{
-
-		}
-		else
-		{
-
+			/* sublimation from snowpack */
+			else
+			{
+				r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+				Log("r_sub = %g\n", r_sub);
+				/*snow sublimation*/
+				if (r_sub > c->snow)
+				{
+					r_sub = c->snow;
+				}
+			}
 		}
 	}
 	else
 	{
-		if (met[month].d[day].tavg < 0) /* sublimation from snowpack */
-		{
-			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-			Log("r_sub = %g\n", r_sub);
-			if (r_sub > c->snow)
-			{
-				//
-			}
-
-
-		}
-		else if (met[month].d[day].tavg > 0 && !c->snow) /* temperature and radiation melt from snowpack */
-		{
-
-		}
-		else
-		{
-
-		}
+		/*no snow calculations in monthly time step*/
 	}
 }
 
