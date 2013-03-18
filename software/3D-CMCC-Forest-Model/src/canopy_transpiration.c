@@ -51,6 +51,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
     float pvs1, pvs2;
 	float esse;
 	float evap;
+	float evap_dayl ; //calculate the time required to evaporate all the canopy water
 
 	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
 
@@ -271,24 +272,12 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("ANGELO MonthTransp = %g \n", s->value[MONTH_TRANSP]);
 	*/
 
-
-
-
-
-
-
 	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
 	/* From the discussion on atmospheric statics in:
 	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
 		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
 		(p. 168)
 	*/
-
-
-
-
-
-
 
 	/* leaf boundary-layer conductance */
 	gl_bl_corr = s->value[BLCOND]* c->gcorr;
@@ -430,11 +419,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
     pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
     /* calculate slope of pvs vs. T curve, at ta */
-
     esse = (pvs1-pvs2) / (t1-t2);
 
     /* calculate evaporation, in W/m^2  */
-    
     evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
     	( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
 
@@ -457,4 +444,12 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		Log("Daily transpiration from biome = %g\n", evap);
 		Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
     }
+
+
+	/* calculate the time required to evaporate all the canopy water */
+	evap_dayl = met[month].d[day].rain/e;
+	Log("evap_dayl = %g\n", evap_dayl);
+
+
+
 }

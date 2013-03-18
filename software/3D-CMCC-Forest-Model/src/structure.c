@@ -681,7 +681,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	Log("species in veg period = %d\n", counter);
 }
 
-void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
+void Get_daily_vegetative_period (CELL *c, SPECIES *s, const MET_DATA *const met, int month, int day)
 {
 
 	static int height;
@@ -702,16 +702,21 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
 	Log("--GET VEGETATIVE PERIOD--\n");
+	Log("THERMIC SUM = %g\n", thermic_sum);
+	Log("daylength = %g", c->daylength);
+	Log("month = %d\n", month);
+
+
 
 	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
 
-	for ( height = c->heights_count - 1; height >= 0; height-- )
+	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
-		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		for (age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+				if (s->value[PHENOLOGY] == 0)
 				{
 					if (settings->version == 's')
 					{
@@ -720,38 +725,39 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						//veg period
 						if (met[month].d[day].ndvi_lai > 0.1)
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							s->counter[VEG_UNVEG] = 1;
 							counter += 1;
 						}
 						//unveg period
 						else
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							s->counter[VEG_UNVEG] = 0;
 						}
 					}
 					else
 					{
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
-						if ((thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (c->daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
+						if ((thermic_sum >= s->value[GROWTHSTART] && month <= 6) || (c->daylength >= s->value[MINDAYLENGTH] && month >= 6))
 						{
 							Log("thermic sum = %g\n", c->thermic_sum);
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							s->counter[VEG_UNVEG] = 1;
 							counter += 1;
-							Log("counter = %d\n\n", counter);
+							Log("ENTRO \n\n");
+							//Log("growth start = %g\n", s->value[GROWTHSTART]);
+							//Log("MINDAYLENGTH = %g\n", s->value[MINDAYLENGTH]);
 						}
 						else
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-							Log("counter = %d\n\n", counter);
+							s->counter[VEG_UNVEG] = 0;
+							Log("NON ENTRO\n\n");
 						}
 					}
 				}
 				else
 				{
-					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					s->counter[VEG_UNVEG] = 1;
+					Log("Veg period = %d \n", s->counter[VEG_UNVEG]);
 					counter += 1;
 					Log("counter = %d\n\n", counter);
 				}

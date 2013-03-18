@@ -1979,7 +1979,6 @@ int main(int argc, char *argv[])
 						return 0;
 					}
 				}
-
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
