@@ -8,6 +8,8 @@
 #include "types.h"
 #include "constants.h"
 
+
+
 /* todo : implement a better comparison for equality */
 int sort_by_heights_asc(const void * a, const void * b)
 {
