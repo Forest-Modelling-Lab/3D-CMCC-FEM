@@ -226,6 +226,14 @@ IMPORTANT: be sure to use the correct declaration of the output as grep paramete
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+-ECLIPSE-
+
+FOR RUN IT INTO ECLIPSE PLATFORM YOU NEED TO INSTALL CDT 8.0.2 OR MORE from:
+http://www.eclipse.org/downloads/download.php?file=/tools/cdt/releases/indigo/dist/cdt-master-8.0.2.zip&mirror_id=189
+
+FOR SUBVERSION YOU NEED TO INSTALL SUBCLIPSE v. 1.8.16 FROM: http://subclipse.tigris.org/archive/subclipse_1.8.16
+
+
 
 If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
 you. Also, please send us copies of any manuscripts or reports that include the use of 3D-CMCC-FEM, especially if you
