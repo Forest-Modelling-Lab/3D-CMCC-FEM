@@ -27,3 +27,4 @@ AC_CHECK_FUNCS([atexit bzero getcwd strcspn strrchr strspn strtod scanf pow])
 AC_CONFIG_FILES([Makefile
                  src/Makefile])
 AC_OUTPUT
+
