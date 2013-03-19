@@ -274,7 +274,7 @@
 <folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.950621359." name="/" resourcePath="">
 <toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.569717135" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
 <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.targetPlatform.gnu.cross.2142624003" isAbstract="false" osList="all" superClass="cdt.managedbuild.targetPlatform.gnu.cross"/>
-<builder buildPath="${workspace_loc:/3D_CMCC_Forest_Model/Debug}" id="cdt.managedbuild.builder.gnu.cross.1751368630" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="cdt.managedbuild.builder.gnu.cross"/>
+<builder autoBuildTarget="" buildPath="${workspace_loc:/3D_CMCC_Forest_Model/Debug}" cleanBuildTarget="" enableAutoBuild="false" enableCleanBuild="true" enabledIncrementalBuild="true" id="cdt.managedbuild.builder.gnu.cross.1751368630" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" parallelizationNumber="1" superClass="cdt.managedbuild.builder.gnu.cross"/>
 <tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.1309459426" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
 <option id="gnu.cpp.compiler.option.optimization.level.1786975303" name="Optimization Level" superClass="gnu.cpp.compiler.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.option.debugging.level.53391110" name="Debug Level" superClass="gnu.cpp.compiler.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
