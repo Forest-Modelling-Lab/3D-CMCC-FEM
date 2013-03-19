@@ -233,6 +233,8 @@ http://www.eclipse.org/downloads/download.php?file=/tools/cdt/releases/indigo/di
 
 FOR SUBVERSION YOU NEED TO INSTALL SUBCLIPSE v. 1.8.16 FROM: http://subclipse.tigris.org/archive/subclipse_1.8.16
 
+FOR COLOR THEMES HERE http://eclipse-color-theme.github.com/update
+
 
 
 If you encounter issues with the code, or if you have suggestions on how it could be improved, we’d love to hear from
