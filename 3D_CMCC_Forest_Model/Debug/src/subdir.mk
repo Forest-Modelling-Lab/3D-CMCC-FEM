@@ -1,0 +1,153 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../src/G-Function.c \
+../src/allometry.c \
+../src/biomass.c \
+../src/canopy_cover.c \
+../src/canopy_evapotranspiration.c \
+../src/canopy_transpiration.c \
+../src/clearcut.c \
+../src/common.c \
+../src/cropmodel.c \
+../src/crowding-competition.c \
+../src/dataset.c \
+../src/dendrometry.c \
+../src/establishment.c \
+../src/garbage.c \
+../src/initialization_biomass_data.c \
+../src/initialization_site_data.c \
+../src/lai.c \
+../src/layer_cover.c \
+../src/light.c \
+../src/litterfall.c \
+../src/log.c \
+../src/main.c \
+../src/management.c \
+../src/matrix.c \
+../src/met_data.c \
+../src/modifiers.c \
+../src/monthly_partitioning-allocation.c \
+../src/mortality.c \
+../src/parameters.c \
+../src/partitioning-allocation.c \
+../src/peak_lai.c \
+../src/photosynthesis.c \
+../src/renovation.c \
+../src/soil_evaporation.c \
+../src/soil_water_balance.c \
+../src/soilmodel.c \
+../src/sort.c \
+../src/structure.c \
+../src/treemodel.c \
+../src/treemodel_daily.c \
+../src/turnover.c \
+../src/utility.c \
+../src/vpd.c \
+../src/wue.c 
+
+OBJS += \
+./src/G-Function.o \
+./src/allometry.o \
+./src/biomass.o \
+./src/canopy_cover.o \
+./src/canopy_evapotranspiration.o \
+./src/canopy_transpiration.o \
+./src/clearcut.o \
+./src/common.o \
+./src/cropmodel.o \
+./src/crowding-competition.o \
+./src/dataset.o \
+./src/dendrometry.o \
+./src/establishment.o \
+./src/garbage.o \
+./src/initialization_biomass_data.o \
+./src/initialization_site_data.o \
+./src/lai.o \
+./src/layer_cover.o \
+./src/light.o \
+./src/litterfall.o \
+./src/log.o \
+./src/main.o \
+./src/management.o \
+./src/matrix.o \
+./src/met_data.o \
+./src/modifiers.o \
+./src/monthly_partitioning-allocation.o \
+./src/mortality.o \
+./src/parameters.o \
+./src/partitioning-allocation.o \
+./src/peak_lai.o \
+./src/photosynthesis.o \
+./src/renovation.o \
+./src/soil_evaporation.o \
+./src/soil_water_balance.o \
+./src/soilmodel.o \
+./src/sort.o \
+./src/structure.o \
+./src/treemodel.o \
+./src/treemodel_daily.o \
+./src/turnover.o \
+./src/utility.o \
+./src/vpd.o \
+./src/wue.o 
+
+C_DEPS += \
+./src/G-Function.d \
+./src/allometry.d \
+./src/biomass.d \
+./src/canopy_cover.d \
+./src/canopy_evapotranspiration.d \
+./src/canopy_transpiration.d \
+./src/clearcut.d \
+./src/common.d \
+./src/cropmodel.d \
+./src/crowding-competition.d \
+./src/dataset.d \
+./src/dendrometry.d \
+./src/establishment.d \
+./src/garbage.d \
+./src/initialization_biomass_data.d \
+./src/initialization_site_data.d \
+./src/lai.d \
+./src/layer_cover.d \
+./src/light.d \
+./src/litterfall.d \
+./src/log.d \
+./src/main.d \
+./src/management.d \
+./src/matrix.d \
+./src/met_data.d \
+./src/modifiers.d \
+./src/monthly_partitioning-allocation.d \
+./src/mortality.d \
+./src/parameters.d \
+./src/partitioning-allocation.d \
+./src/peak_lai.d \
+./src/photosynthesis.d \
+./src/renovation.d \
+./src/soil_evaporation.d \
+./src/soil_water_balance.d \
+./src/soilmodel.d \
+./src/sort.d \
+./src/structure.d \
+./src/treemodel.d \
+./src/treemodel_daily.d \
+./src/turnover.d \
+./src/utility.d \
+./src/vpd.d \
+./src/wue.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+src/%.o: ../src/%.c
+	@echo 'Building file: $<'
+	@echo 'Invoking: Cross GCC Compiler'
+	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+
