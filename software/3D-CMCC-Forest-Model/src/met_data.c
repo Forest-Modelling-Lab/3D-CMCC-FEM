@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-extern int DaysInMonth[];
+//extern int DaysInMonth[];
 
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
