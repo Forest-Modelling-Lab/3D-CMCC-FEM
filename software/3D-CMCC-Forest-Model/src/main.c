@@ -40,7 +40,7 @@
 #endif
 
 /* constants */
-#define PROGRAM_VERSION	"4.0"
+#define PROGRAM_VERSION	"5.0"
 
 /* */
 enum {	MONTH = 0,
