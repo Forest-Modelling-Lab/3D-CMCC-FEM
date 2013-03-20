@@ -196,6 +196,9 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 //	float Wup_s;
 	float potentialTranspiration;
 
+
+
+
 	float moistureEffectWaterUptake1[1];						// effect of moisture on water uptake
 //	float moistureEffectNitrogenUptake2[1];						// effect of moisture on nitrogen uptake
 
