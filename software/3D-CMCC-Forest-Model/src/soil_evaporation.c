@@ -19,7 +19,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
 
-	Log ("\n GET_SOIL_EVAPORATION_ROUTINE\n");
+	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
 
 
 

@@ -67,7 +67,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		/*Productivity*/
 
 
-		Log("**************************** GPP ************************************ \n");
+		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
 		/*GPP*/
 
@@ -131,7 +131,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		/*NPP*/
 
-		Log("***************************** NPP *************************** \n");
+		Log("***************************** NPP-'%c' *************************** \n", settings->time);
 
 		//Log("Assimilate Use Efficiency Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
 
@@ -189,9 +189,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 
+	Log("***************************** ANNUAL GPP-NPP *************************** \n");
 
-
-
+	Log("*********************** CLASS LEVEL ANNUAL GPP-NPP ********************** \n");
 	//class level
 	s->value[YEARLY_POINT_GPP_G_C] += s->value[POINT_GPP_g_C];
 	s->value[YEARLY_NPP] += s->value[NPP];
@@ -199,7 +199,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("CLASS LEVEL Yearly GPP (absolute) = %g\n", s->value[YEARLY_POINT_GPP_G_C]);
 	Log("CLASS LEVEL Yearly NPP (per area covered) = %g\n", s->value[YEARLY_NPP]);
 
-
+	Log("*********************** STAND LEVEL ANNUAL GPP-NPP ********************** \n");
 	//cell level
 	c->gpp += s->value[POINT_GPP_g_C];
 	c->npp += s->value[NPP];

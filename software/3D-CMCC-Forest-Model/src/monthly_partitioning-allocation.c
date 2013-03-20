@@ -42,7 +42,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 	//CTEM VERSION
 
-	Log("GET_ALLOCATION_ROUTINE**********************************\n\n");
+	Log("\nGET_ALLOCATION_ROUTINE\n\n");
 
 	Log("Carbon allocation routine for deciduous\n");
 
@@ -89,7 +89,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	 */
 
 	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , --\n", c->heights[height].z);
-	Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
+	//Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
@@ -119,7 +119,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 					phenology_phase = 3;
 				}
 			}
-			Log("Unspatial version \n");
+
 			oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
 
 			//Log ("PEAK_Y_LAI  = %g \n", s->value[PEAK_Y_LAI]);
@@ -204,16 +204,14 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 			}
 
+			Log("PHENOLOGICAL PHASE = %d\n", phenology_phase);
 
 			switch (phenology_phase)
 			{
-
 			Log("LAI = %g \n", s->value[LAI]);
 			/************************************************************/
 			case 1:
-
-				Log("FASE FENOLOGICA = 1 \n");
-				Log("LAI < PEAK_Y_LAI * 0.5 \n");
+				Log("(LAI < PEAK_Y_LAI * 0.5) \n");
 				Log("LAI = %g \n", s->value[LAI]);
 				Log("**Maximum Growth**\n");
 				Log("allocating only into foliage and stem pools\n");
@@ -247,7 +245,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				//control if new Lai exceeds Peak Lai
 				if (s->value[LAI] > s->value[PEAK_Y_LAI])
 				{
-					Log("FASE FENOLOGICA = 1.1 \n TOO MUCH BIOMASS INTO FOLIAGE\n");
+					Log("PHENOLOGICAL PHASE = 1.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
 					Log("LAI = %g \n", s->value[LAI]);
 
 
@@ -343,11 +341,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				break;
 				/************************************************************/
 			case 2:
-
-				Log("FASE FENOLOGICA = 2 \n");
 				Log("**Normal Growth**\n");
 				Log("Day length > %g \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
-				Log("LAI MAX * 0.5 < LAI < LAI MAX \n");
+				Log("(LAI MAX * 0.5 < LAI < LAI MAX)\n");
 				Log("allocating into the three pools Ws+Wr+Wf\n");
 
 
@@ -448,7 +444,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				//control if new Lai exceeds Peak Lai
 				if (s->value[LAI] > s->value[PEAK_Y_LAI])
 				{
-					Log("FASE FENOLOGICA = 2.1 \n TOO MUCH BIOMASS INTO FOLIAGE\n");
+					Log("PHENOLOGICAL PHASE = 2.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
 					Log("LAI = %g \n", s->value[LAI]);
 
 
@@ -544,9 +540,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				break;
 				/************************************************************************/
 			case 3:
-
-				Log("LAI == PEAK LAI \n");
-				Log("FASE FENOLOGICA = 3 \n");
+				Log("(LAI == PEAK LAI)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -630,9 +624,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				break;
 				/**********************************************************************/
 			case 0:
-
-				Log("DayLength < Abscission DayLength \n");
-				Log("FASE FENOLOGICA = 0 \n");
+				Log("(DayLength < Abscission DayLength)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve \nwith leaf fall\n");
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -874,7 +866,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 			switch (phenology_phase)
 			{
-
+			Log("PHENOLOGICAL PHASE = %d\n", phenology_phase);
 			if (settings->time == 'm')
 			{
 				Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
@@ -885,9 +877,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			}
 			/************************************************************/
 			case 1:
-
-				Log("FASE FENOLOGICA = 1 \n");
-				Log("NDVI-LAI < PEAK_Y_LAI * 0.5 \n");
+				Log("(NDVI-LAI < PEAK_Y_LAI * 0.5)\n");
 				if (settings->time == 'm')
 				{
 					Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
@@ -917,11 +907,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				break;
 				/************************************************************/
 			case 2:
-
-				Log("FASE FENOLOGICA = 2 \n");
 				Log("**Normal Growth**\n");
-				Log("Day length > %g \n", /*c->abscission_daylength*/ s->value[MINDAYLENGTH] );
-				Log("LAI MAX * 0.5 < NDVI-LAI < LAI MAX \n");
+				Log("(Day length > %g)\n", /*c->abscission_daylength*/ s->value[MINDAYLENGTH] );
+				Log("(LAI MAX * 0.5 < NDVI-LAI < LAI MAX)\n");
 				Log("allocating into the three pools Ws+Wr+Wf\n");
 
 
@@ -1021,9 +1009,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				break;
 				/************************************************************************/
 			case 3:
-
-				Log("NDVI-LAI == PEAK LAI or Month > 6\n");
-				Log("FASE FENOLOGICA = 3 \n");
+				Log("(NDVI-LAI == PEAK LAI or Month > 6)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
