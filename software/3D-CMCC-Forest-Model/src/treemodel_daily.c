@@ -154,6 +154,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
+			Log("HEIGHT %g\n", m->cells[cell].heights[height].value);
 			//Log("*RUN FOR TREE LAYERS\n");
 			//loop on each ages
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
@@ -182,6 +183,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				//loop on each species
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
+					Log("SPECIES = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
 					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
