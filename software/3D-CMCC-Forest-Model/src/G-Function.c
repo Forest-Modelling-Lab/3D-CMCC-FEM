@@ -121,8 +121,8 @@ extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 
 
 
-
-extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int month, const int years)
+//compute annual number of vegetative months
+extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month, const int years)
 {
 	MET_DATA *met;
 	static int cell;
@@ -137,69 +137,67 @@ extern void Get_Veg_Months (MATRIX *const m, const YOS *const yos, const int mon
 	Log("compute vegetative months for version '%c'\n", settings->spatial);
 
 
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
-		for ( height = m->cells[cell].heights_count - 1; height >= 0; height-- )
+
+		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+			for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
-				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+				for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 				{
 					if (settings->spatial == 'u')
 					{
 						if (!month)
 						{
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							//todo decidere se utlizzare growthend o mindaylenght
-							if ((met[month].tavg >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-									|| (met[month].tavg >= m->cells[cell].heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+							if ((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+									|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+								c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 								//Log("----- Vegetative month = %d for species %s\n", month + 1, m->cells[cell].heights[height].ages[age].species[species].name );
 							}
 						}
 						else
 						{
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 						}
 						if (month == DECEMBER)
 						{
 							Log("Month = %d\n", month);
-							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+							Log("----- TOTAL VEGETATIVE MONTHS for species %s = %d \n\n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
 					else
 					{
 						if (!month)
 						{
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
+							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							if (met[month].ndvi_lai >= 0.5)
 							{
-								m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
+								c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 								//Log("----- Vegetative month = %d \n", month + 1);
 							}
 						}
 						else
 						{
-							m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
+							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 12;
 						}
 						if (month == DECEMBER)
 						{
-							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+							Log("----- TOTAL VEGETATIVE MONTHS = %d \n\n", c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}
 				}
 			}
 		}
-	}
 }
 
 
