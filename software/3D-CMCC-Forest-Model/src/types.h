@@ -474,7 +474,8 @@ enum {
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
 	GPP_t_DM,                       //Gross Primary Production  tDM/ha month
 	GPP_g_C,                        //Gross Primary Production  gC/m^2 month
-	DAILY_GPP_g_C,                  //Daily Gross Primary Production gC/m^2 day
+	DAILY_GPP_g_C,                  //Class Daily Gross Primary Production gC/m^2 day
+	MONTHLY_GPP_g_C,				//Class Monthly Gross Primary Production gC/m^2 month
 	STAND_GPP_g_C,                  //Monthly Stand GPP in grams of C
 	STAND_GPP_t_C,                  //Monthly Stand GPP in tonnes of C
 	STAND_YEARLY_GPP_g_C,           //Yearly Stand GPP in grams of C

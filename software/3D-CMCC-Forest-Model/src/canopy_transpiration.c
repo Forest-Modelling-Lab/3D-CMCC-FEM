@@ -53,7 +53,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	float evap;
 	float evap_dayl ; //calculate the time required to evaporate all the canopy water
 
-	Log("\n GET_CANOPY_TRANSPIRATION_ROUTINE \n");
+	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE \n\n");
 
 
 	//following BIOME
@@ -147,7 +147,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		case 1:
 			Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
 			Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-			Log("NET RADIATION = %g \n", c->net_radiation);
+			Log("Net radiation = %g W/m^2/hour\n", c->net_radiation);
 			break;
 		case 2:
 			if ( c->heights[height].z == c->top_layer )
@@ -220,13 +220,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			{
 				Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-				Log("NET RADIATION = %g \n", c->net_radiation);
+				Log("Net radiation = %g \n", c->net_radiation);
 			}
 			else
 			{
 				Etransp = (e20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-				Log("NET RADIATION = %g \n", c->net_radiation);
+				Log("Net radiation = %g \n", c->net_radiation);
 			}
 
 			break;
@@ -240,7 +240,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//1Kg m^2 H2o correspond to 1mm H2o
 	Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
 	DailyTransp = CanopyTranspiration;
-	Log("Daily Transpiration = %g mm/m^2/day\n", DailyTransp);
+
 	//initial transpiration from Penman-Monteith (mm/day converted to mm/month)
 	if (settings->time == 'm')
 	{
@@ -252,9 +252,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		if (day == 0)
 		{
 			s->value[MONTH_TRANSP] = 0;
+			Log("Monthly Canopy Transpiration at day 0 = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
 		}
 		s->value[DAILY_TRANSP] = CanopyTranspiration;
-		Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", s->value[DAILY_TRANSP]);
 		s->value[MONTH_TRANSP] += s->value[DAILY_TRANSP];
 		Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
 

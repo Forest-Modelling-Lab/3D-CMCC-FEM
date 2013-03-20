@@ -156,7 +156,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 	}
 
 
-	Log("-Day length = %g hours \n", daylength);
+	Log("-day length = %g hours \n", daylength);
 	Log("***************\n");
 
 }

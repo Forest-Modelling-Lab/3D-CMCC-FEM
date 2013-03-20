@@ -381,7 +381,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 
 
 
-	Log("\n GET_DAILY_MODIFIERS\n\n");
+	Log("\nGET_DAILY_MODIFIERS\n\n");
 
 	/*TEMPERATURE MODIFIER*/
 

@@ -83,7 +83,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 
 
-	Log("dominant contatore %d \n", c->dominant_veg_counter);
+	Log("dominant counter %d \n", c->dominant_veg_counter);
 	Log("Top_layer = %d\n", c->top_layer);
 
 

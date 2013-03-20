@@ -146,7 +146,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
-		Log("Moist ratio outside modifier = %g\n", m->cells[cell].soil_moist_ratio);
+		Log("Moist ratio = %g\n", m->cells[cell].soil_moist_ratio);
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
@@ -289,13 +289,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							}
 							else
 							{
-								Log("**UN-VEGETATIVE PERIOD FOR %s SPECIES in layer %d **\n", m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].z);
-
 
 								if (settings->spatial == 'u')
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									//Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 									//Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 								else

@@ -70,9 +70,9 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
 void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 {
 	static float oldBasalArea;
-
-
 	static float sapwood_perc;
+
+	Log ("\nPEAK LAI FUNCTION\n\n");
 
 	//compute Basal Area
 	if (years == 0)
