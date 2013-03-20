@@ -1246,7 +1246,6 @@ void met_summary(MET_DATA *met) {
 	assert(met);
 
 	/* */
-	//todo flaggare solo per monthly run
 	for ( i=0; i<MONTHS; i++ )
 	{
 		Log("MET_SUMMARY FUNCTION\n");
@@ -1857,18 +1856,9 @@ int main(int argc, char *argv[])
 
 		for (years = 0; years < years_of_simulation; years++)
 		{
-			/* model */
-
-
-
-
 			matrix_summary (m, years, yos);
 
 			Log("\n-YEARS OF SIMULATION = %d\n", yos[years].year);
-
-
-
-
 
 			if (settings->time == 'm')
 			{
@@ -1908,7 +1898,7 @@ int main(int argc, char *argv[])
 						/*compute number of vegetative months*/
 						for (month = 0; month < MONTHS; month++)
 						{
-							Get_Veg_Months (m, yos, month, years);
+							Get_Veg_Months (&m->cells[cell], yos, month, years);
 						}
 						//run tree_model_M
 						for (month = 0; month < MONTHS; month++)

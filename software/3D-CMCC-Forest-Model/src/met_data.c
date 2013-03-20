@@ -22,7 +22,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
 	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation
 	float melt, t_melt, r_melt, r_sub;
-	float snow_subl;
+
 
 	t_melt = r_melt = r_sub = 0;
 
@@ -68,8 +68,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 				if (r_sub > c->snow)
 				{
 					r_sub = c->snow;
-					//c->snow_subl = r_sub;
-					snow_subl = r_sub;
+					c->snow_subl = r_sub;
 					/*reset*/
 					c->snow = 0;
 				}

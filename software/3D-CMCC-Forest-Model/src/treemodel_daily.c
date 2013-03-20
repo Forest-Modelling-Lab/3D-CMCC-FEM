@@ -157,24 +157,18 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//loop on each heights starting from highest to lower
 
-		Log("*****************CELL x = %g, y = %g STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
-
-		Log("ASW day %d month %d = %g mm\n",day+1,  month+1, m->cells[cell].available_soil_water);
+		Log("******CELL x = %g, y = %g STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
-			Log("HEIGHT %g\n", m->cells[cell].heights[height].value);
-			//Log("*RUN FOR TREE LAYERS\n");
 			//loop on each ages
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
-				Log("AGE %d\n", m->cells[cell].heights[height].ages[age].value);
-				/*increment age*/
+				/*increment age after first year*/
 				if( day == 0 && month == JANUARY && years != 0)
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
-				Log("AGE %d\n", m->cells[cell].heights[height].ages[age].value);
 				if (day == 0 && month == JANUARY)
 				{
 					//todo make a better function
@@ -192,7 +186,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				//loop on each species
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
-					Log("SPECIES = %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
 					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
@@ -238,7 +231,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
-								Log("Day %d Month = %s\n", day, szMonth[month]);
 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);

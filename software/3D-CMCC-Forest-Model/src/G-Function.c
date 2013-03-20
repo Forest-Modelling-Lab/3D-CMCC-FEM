@@ -100,7 +100,6 @@ extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 	/*Set Tree period*/
 	// 0 = adult tree
 	// 1 = young tree
-	Log("age = %d\n", a->value);
 
 	if ( a->value > s->value[ADULT_AGE])
 	{
