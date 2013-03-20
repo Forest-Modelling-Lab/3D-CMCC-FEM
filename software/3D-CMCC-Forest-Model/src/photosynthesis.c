@@ -177,13 +177,13 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Unvegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
-		Log("Daily/Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[GPP_g_C]);
+		Log("Daily/Monthly GPP in grams of C for layer %d = %g gC/m^2 yr\n", c->heights[height].z , s->value[GPP_g_C]);
 
 		s->value[NPP] = 0;
-		Log("Daily/Monthly NPP for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
+		Log("Daily/Monthly NPP for layer %d = %g  tDM/sizecell yr\n", c->heights[height].z, s->value[NPP]);
 
-		Log("Daily/Monthly Stand GPP (absolute) = %g \n", s->value[POINT_GPP_g_C] );
-		Log("Daily/Monthly Stand NPP (per area covered) = %g \n", s->value[NPP]);
+		Log("Daily/Monthly Stand GPP (absolute) = %g gC/m^2 yr\n", s->value[POINT_GPP_g_C] );
+		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
 
 	}
 
@@ -195,16 +195,16 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	//class level
 	s->value[YEARLY_POINT_GPP_G_C] += s->value[POINT_GPP_g_C];
 	s->value[YEARLY_NPP] += s->value[NPP];
-	Log("CLASS LEVEL\n");
-	Log("CLASS LEVEL Yearly GPP (absolute) = %g\n", s->value[YEARLY_POINT_GPP_G_C]);
-	Log("CLASS LEVEL Yearly NPP (per area covered) = %g\n", s->value[YEARLY_NPP]);
+	Log("-CLASS LEVEL\n");
+	Log("-CLASS LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_G_C]);
+	Log("-CLASS LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", s->value[YEARLY_NPP]);
 
 	Log("*********************** STAND LEVEL ANNUAL GPP-NPP ********************** \n");
 	//cell level
 	c->gpp += s->value[POINT_GPP_g_C];
 	c->npp += s->value[NPP];
-	Log("CELL LEVEL\n");
-	Log("CELL LEVEL Yearly GPP (absolute) = %g\n", c->gpp);
-	Log("CELL LEVEL Yearly NPP (per area covered) = %g\n", c->npp);
+	Log("-CELL LEVEL\n");
+	Log("-CELL LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", c->gpp);
+	Log("-CELL LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", c->npp);
 
 }

@@ -226,7 +226,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 			F_PSI = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 		}
 
-		Log("F_PSI = %g\n", F_PSI);
+		//Log("F_PSI = %g\n", F_PSI);
 
 		s->value[F_SW] = F_PSI;
 
@@ -594,7 +594,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 			F_PSI = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 		}
 
-		Log("F_PSI = %g\n", F_PSI);
+		//Log("F_PSI = %g\n", F_PSI);
 
 		s->value[F_SW] = F_PSI;
 
@@ -606,7 +606,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		}
 		else
 		{
-			Log("fSW-F_PSI = %g\n", s->value[F_SW]);
+			Log("day = %d month %d fSW-F_PSI = %g\n", day, month, s->value[F_SW]);
 		}
 
 		//put for comparison with biome module
