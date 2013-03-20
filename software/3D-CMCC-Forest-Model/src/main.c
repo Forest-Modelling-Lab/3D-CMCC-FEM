@@ -2000,6 +2000,7 @@ int main(int argc, char *argv[])
 							{
 								if (settings->version == 'f')
 								{
+									/*
 									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
 										Log("tree model daily failed.");
@@ -2010,7 +2011,7 @@ int main(int argc, char *argv[])
 									//look if put it here or move before tree_model  at the beginning of each month simulation
 									//	soil_model (m, yos, years, month, years_of_simulation);
 									}
-
+									*/
 								}
 								else
 								{
