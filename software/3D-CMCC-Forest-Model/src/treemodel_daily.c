@@ -62,41 +62,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//daily loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		//*************SITE CHARACTERISTIC******************
-		if (met[month].d[day].tavg > 0)
-		{
-			m->cells[cell].available_soil_water += met[month].d[day].rain;
-			Log("Day %d month %d ASW = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
-			if (m->cells[cell].snow != 0)
-			{
-				/*control snow*/
-				Get_snow_met_data (&m->cells[cell], met, month, day);
-			}
-		}
-		else
-		{
-			m->cells[cell].snow += met[month].d[day].rain;
-			Log("Day %d month %d ASW as snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].snow);
-		}
-
-
-
-		//control
-		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
-		{
-			Log("ASW > MAXASW !!!\n");
-			//if the asw exceeds maxasw the plus is considered lost for turn off
-			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
-			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
-		}
-
-
-		GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
-		//currently not used
-		Get_Abscission_DayLength (&m->cells[cell]);
-
-
-		//*************FOREST STRUCTURE*********************
+		//*************FOREST CHARACTERISTIC*********************
 		if (day == 0 && month == JANUARY)
 		{
 			//annual forest structure
@@ -113,13 +79,34 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
 		Log("***************************************************\n");
+
+		//*************SITE CHARACTERISTIC******************
+
+
+		GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
+		//currently not used
+		Get_Abscission_DayLength (&m->cells[cell]);
+
+
+
+
+
+
 	}
 
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
+
+
+
+
+		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
+		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
+		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
+
 		//compute vpd
-		//todo remove if used VPD
+		//TODO remove if used VPD
 		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
 		//VPD USED MUST BE IN mbar
 		vpd =  met[month].d[day].vpd * 10.0; //Get_vpd (met, month);
@@ -130,6 +117,32 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Temp += met[month].d[day].tavg;
 		Yearly_Rain += met[month].d[day].rain;
 
+		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
+
+
+		if (met[month].d[day].tavg > 0)
+		{
+			m->cells[cell].available_soil_water += met[month].d[day].rain;
+			Log("Day %d month %d ASW = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
+			if (m->cells[cell].snow != 0)
+			{
+				/*control snow*/
+				Get_snow_met_data (&m->cells[cell], met, month, day);
+			}
+		}
+		else
+		{
+			m->cells[cell].snow += met[month].d[day].rain;
+			Log("Day %d month %d ASW as snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].snow);
+		}
+		//control
+		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
+		{
+			Log("ASW > MAXASW !!!\n");
+			//if the asw exceeds maxasw the plus is considered lost for turn off
+			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
+			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
+		}
 
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
@@ -137,11 +150,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
-		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
-		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
-		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 
-		Print_met_data (met, vpd,  month, day, m->cells[cell].daylength);
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);

@@ -89,7 +89,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 				}
 				break;
 			case 1:
-				Log("Net radiation from dominant layer = %g\n", Net_Radiation_for_dominated);
+				Log("Net radiation from dominant layer = %g W/m^2/hour\n", Net_Radiation_for_dominated);
 				Net_Radiation = Net_Radiation_for_dominated;
 				break;
 			}

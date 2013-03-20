@@ -1852,24 +1852,22 @@ int main(int argc, char *argv[])
 		Log("out_filename = %s\n", out_filename);
 
 		/*TREEMODEL*/
-		Log("\n3D-CMMC MODEL START\n");
+		Log("\n3D-CMCC MODEL START\n");
 		Log("***************************************************\n");
 
-
-
-
-		/*Site definition*/
-		Log("Site Name = %s\n", site->sitename);
-		Log("Latitude = %g \n", site->lat);
-		Log("Longitude = %g \n", site->lon);
-		Log("Years of Simulations = %d \n", years_of_simulation );
-		Log("***************************************************\n");
 		for (years = 0; years < years_of_simulation; years++)
 		{
 			/* model */
+
+
+
+
 			matrix_summary (m, years, yos);
 
-			Log("-YEARS OF SIMULATION = %d\n", yos[years].year);
+			Log("\n-YEARS OF SIMULATION = %d\n", yos[years].year);
+
+
+
 
 
 			if (settings->time == 'm')
@@ -1971,14 +1969,6 @@ int main(int argc, char *argv[])
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
-					if (settings->version == 'f')
-					{
-						Log("RUN FOR FORESTS in FEM version\n");
-					}
-					else
-					{
-						Log("RUN FOR FORESTS in BGC version\n");
-					}
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{

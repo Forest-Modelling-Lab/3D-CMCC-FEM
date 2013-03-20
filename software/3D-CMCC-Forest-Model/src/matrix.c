@@ -619,24 +619,21 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		Log ("Vegetation Presence = percentage \n");
 	}
 
+	/*Site definition*/
+	Log("***************************************************\n");
+	Log("Site Name = %s\n", site->sitename);
+	Log("Latitude = %g \n", site->lat);
+	Log("Longitude = %g \n", site->lon);
+	Log("***************************************************\n");
 
-
-
-	Log("Years of simulation = %d (%d)\n", years + 1, yos[years].year);
-
-
-
-
-	//show matrix
-	Log("matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
 
 	//loop on each cell
 	for ( cell = 0; cell< m->cells_count; cell++)
 	{
 		if (m->cells[cell].landuse == F)
 		{
-			Log ("*********************\n\n\n");
 			Log ("FOREST DATASET\n");
+			Log("matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
 			Log("****GET FOREST CHARACTERISTICS for cell  (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
 			Log("- cell n.%02d is at %g, %g and has %d height classes \n",
 					cell+1,
@@ -656,7 +653,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				//loop on each age
 				for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
 				{
-					Log("--- age n.%02d is %d and has %d species %s\n",
+					Log("--- age n.%02d is %d yrs and has %d species '%s'\n\n",
 							age + 1,
 							m->cells[cell].heights[height].ages[age].value,
 							m->cells[cell].heights[height].ages[age].species_count,

@@ -711,8 +711,8 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 			{
 				if (c->heights[height].ages[age].species[species].counter[PHENOLOGY] == 0)
 				{
-					Log("--GET DAILY VEGETATIVE PERIOD for height = %g, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
-					if (settings->time == 's')
+					Log("-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
+					if (settings->spatial == 's')
 					{
 						//Log("Spatial version \n");
 
@@ -721,11 +721,13 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
+							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 						}
 						//unveg period
 						else
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
 						}
 					}
 					else
@@ -735,17 +737,14 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						if ((c->thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 								|| (c->daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
-							Log("thermic sum = %g\n", c->thermic_sum);
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
-							Log("ENTRO \n\n");
-							//Log("growth start = %g\n", s->value[GROWTHSTART]);
-							//Log("MINDAYLENGTH = %g\n", s->value[MINDAYLENGTH]);
+							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 						}
 						else
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-							Log("NON ENTRO\n\n");
+							Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
 						}
 					}
 				}
@@ -754,12 +753,12 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
 					counter += 1;
-					Log("counter = %d\n\n", counter);
+					Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 				}
 			}
 		}
 	}
-	Log("species in veg period = %d\n", counter);
+	Log("classes in veg period = %d\n", counter);
 }
 
 
@@ -829,7 +828,7 @@ extern void Get_daily_numbers_of_layers (CELL *const c)
 	//height differences in meter to consider trees in two different layers
 	c->daily_layer_number = 0;
 
-	Log("--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
+	Log("\n--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
 
 
 	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -981,7 +980,7 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 	c->layer_cover_subdominated = 0;
 
 
-	Log("\nGET_DAILY_FOREST_STRUCTURE_ROUTINE, DAY = %d MONTH = %d\n", day+1, month+1);
+	Log("\nGET_DAILY_FOREST_STRUCTURE_ROUTINE\n");
 
 	Log("Determines Effective Layer Cover \n");
 
@@ -1105,31 +1104,35 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 	int species;
 
 	assert(heights);
-	Log("-Dominant Light Index Function-\n");
 
-	//highest z value in veg period determines top_layer value
-	for ( height = count- 1; height >= 0; height-- )
+	if (c->daily_layer_number != 0)
 	{
-		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
-		for ( age = 0; age < heights[height].ages_count; age++ )
+		Log("-Dominant Light Index Function-\n");
+
+		//highest z value in veg period determines top_layer value
+		for ( height = count- 1; height >= 0; height-- )
 		{
-			for ( species = 0; species < heights[height].ages[age].species_count; species++ )
+			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
+			for ( age = 0; age < heights[height].ages_count; age++ )
 			{
-				if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
+				for ( species = 0; species < heights[height].ages[age].species_count; species++ )
 				{
-					if (settings->spatial == 'u')
+					if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
 					{
-						c->top_layer = c->heights[height].z;
-					}
-					else
-					{
-						c->top_layer = 0;
+						if (settings->spatial == 'u')
+						{
+							c->top_layer = c->heights[height].z;
+						}
+						else
+						{
+							c->top_layer = 0;
+						}
 					}
 				}
 			}
 		}
+		Log("Monthly Dominant layer is z = %d\n", c->top_layer);
 	}
-	Log("Monthly Dominant layer is z = %d\n", c->top_layer);
 	//Log("-Species in veg period = %d\n", c->Veg_Counter);
 }
 

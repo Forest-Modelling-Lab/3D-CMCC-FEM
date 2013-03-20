@@ -14,18 +14,7 @@
 //Deciduous carbon allocation routine
 void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
 {
-	//CTEM VERSION
-
-	Log("GET_ALLOCATION_ROUTINE*********************************************************************************************************************************\n\n");
-
-	Log("Carbon allocation routine for deciduous\n");
-	Log("Spatial = %c \n", settings->spatial);
-
-
 	int phenology_phase;
-
-
-
 	//allocation parameter. their sum must be = 1
 	float  s0Ctem = s->value[S0CTEM];
 	float  r0Ctem = s->value[R0CTEM];
@@ -50,6 +39,12 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	float Biomass_exceeding;
 
 	float foliage_reduction_rate;    //Monthly foliage reduction rate during foliage senescence
+
+	//CTEM VERSION
+
+	Log("GET_ALLOCATION_ROUTINE**********************************\n\n");
+
+	Log("Carbon allocation routine for deciduous\n");
 
 
 

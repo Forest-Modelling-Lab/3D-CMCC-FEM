@@ -91,7 +91,7 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 void Get_Abscission_DayLength ( CELL * c)
 {
 	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
-	Log("Abscission day length = %g \n", c->abscission_daylength);
+	Log("Abscission day length = %g hrs\n", c->abscission_daylength);
 
 }
 
@@ -287,8 +287,6 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 			}
 		}
 	}
-	//reset
-	c->thermic_sum = 0;
 }
 
 
