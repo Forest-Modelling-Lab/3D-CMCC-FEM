@@ -626,8 +626,6 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 
 	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
-	Log("--GET VEGETATIVE PERIOD--\n");
-
 	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -636,6 +634,8 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
+				Log("--GET VEGETATIVE PERIOD for height = %g, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
+
 				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 				{
 					if (settings->version == 's')
@@ -701,12 +701,6 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
 
-	Log("--GET VEGETATIVE PERIOD--\n");
-	Log("daylength = %g\n", c->daylength);
-	Log("month = %d\n", month);
-
-
-
 	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
 
 	for (height = c->heights_count - 1; height >= 0; height-- )
@@ -717,6 +711,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 			{
 				if (c->heights[height].ages[age].species[species].counter[PHENOLOGY] == 0)
 				{
+					Log("--GET DAILY VEGETATIVE PERIOD for height = %g, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
 					if (settings->time == 's')
 					{
 						//Log("Spatial version \n");

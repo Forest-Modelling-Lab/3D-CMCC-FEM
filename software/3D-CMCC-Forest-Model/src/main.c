@@ -1970,11 +1970,11 @@ int main(int argc, char *argv[])
 				{
 					if (settings->version == 'f')
 					{
-						Log("RUN FOR FORESTSin FEM version\n");
+						Log("RUN FOR FORESTS in FEM version\n");
 					}
 					else
 					{
-						Log("RUN FOR FORESTSin BGC version\n");
+						Log("RUN FOR FORESTS in BGC version\n");
 					}
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
@@ -1983,24 +1983,17 @@ int main(int argc, char *argv[])
 						{
 							GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
-							Get_Veg_Days (m, yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+							Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}
 					}
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < DaysInMonth[month]; day++ )
 						{
-							//Log("Month = %s\n", szMonth[month]);
-							//Log("day = %d\n", met[month].d[day].n_days);
-							//Log("rg = %g\n", met[month].d[day].solar_rad);
-							//Log("tavg = %g\n", met[month].d[day].tavg;
-							//Log("vpd = %g\n", met[month].d[day].vpd);
-							//Log("rain = %g\n", met[month].d[day].rain);
 							if(m->cells[cell].landuse == F)
 							{
 								if (settings->version == 'f')
 								{
-									/*
 									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
 										Log("tree model daily failed.");
@@ -2011,7 +2004,6 @@ int main(int argc, char *argv[])
 									//look if put it here or move before tree_model  at the beginning of each month simulation
 									//	soil_model (m, yos, years, month, years_of_simulation);
 									}
-									*/
 								}
 								else
 								{

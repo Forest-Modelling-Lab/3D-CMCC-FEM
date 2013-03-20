@@ -637,10 +637,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		{
 			Log ("*********************\n\n\n");
 			Log ("FOREST DATASET\n");
-			Log("*(%d)\n", cell + 1);
-
-			Log("****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-			Log("- cell n.%02d is at %g,%g and has %d height classes \n",
+			Log("****GET FOREST CHARACTERISTICS for cell  (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
+			Log("- cell n.%02d is at %g, %g and has %d height classes \n",
 					cell+1,
 					m->cells[cell].x,
 					m->cells[cell].y,
@@ -682,7 +680,9 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 						}
 
 						Log(
-								"---- species n.%02d is %s (%d), management type is %c and has\n"
+								"----- height = %g\n"
+								"----- age = %d\n"
+								"----- species n.%02d is %s\n"
 								"----- n = %d trees\n"
 								"----- n stumps = %d stumps\n"
 								"----- avdbh = %g cm\n"
@@ -692,10 +692,12 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								"----- ws = %g tDM/area\n"
 								"----- wres = %g tDM/area\n"
 								"----- lai = %g tDM/area\n",
+
+
+								m->cells[cell].heights[height].value,
+								m->cells[cell].heights[height].ages[age].value,
 								species + 1,
 								m->cells[cell].heights[height].ages[age].species[species].name,
-								m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY],
-								((m->cells[cell].heights[height].ages[age].species[species].management == T) ? 'T' : 'C'),
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
 								m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
@@ -710,8 +712,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				}
 			}
 
-			Log("\n****GET SITE-SOIL CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
 			Get_initialization_site_data (&m->cells[cell]);
+
 		}
 		else
 		{

@@ -872,7 +872,7 @@ extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const i
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void Get_Veg_Months (MATRIX *const, const YOS *const,  const int, const int);
-extern void Get_Veg_Days (MATRIX *const, const YOS *const, const int, const int, const int, int, int);
+extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
 extern float Get_canopy_cover (SPECIES *const, int, int, int);
