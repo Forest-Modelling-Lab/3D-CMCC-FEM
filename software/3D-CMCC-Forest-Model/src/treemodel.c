@@ -251,7 +251,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
-								//todo following BIOME create snow function
 								//todo check its position into treemodel
 								Get_snow_met_data (&m->cells[cell], met, month, day);
 
