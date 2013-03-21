@@ -11,6 +11,9 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 {
 	float RelAge;
 
+	float vwc; //soil volumetric water content
+	float psi;  //soil matric potential
+
 
 
 	Log("\n GET_MODIFIERS\n\n");
@@ -186,15 +189,6 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 		//USABLE ONLY FOR DAILY SIMULATION
 		//**********************************
 
-
-
-		float vwc; //soil volumetric water content
-		float psi;  //soil matric potential
-
-
-		//todo export in types.h and matrix.c if used
-		float F_PSI;
-
 		/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
 		//100 mm H20 m^-2 = 100 kg H20 m^-2
 		Log("available soil water %g mm\n", c->available_soil_water);
@@ -215,20 +209,20 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 		if (psi > s->value[SWPOPEN]) /*no water stress*/
 		{
-			F_PSI = 1;
+			s->value[F_PSI] = 1;
 		}
 		else if (psi <= s->value[SWPCLOSE]) /* full water stress */
 		{
-			F_PSI = 0;
+			s->value[F_PSI] = 0;
 		}
 		else /* partial water stress */
 		{
-			F_PSI = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
+			s->value[F_PSI] = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 		}
 
-		//Log("F_PSI = %g\n", F_PSI);
+		//Log("F_PSI = %g\n", s->value[F_PSI]);
 
-		s->value[F_SW] = F_PSI;
+		s->value[F_SW] = s->value[F_PSI];
 
 		if ( s->value[F_SW] > 1  )
 		{
