@@ -15,9 +15,11 @@
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void GetDayLength ( CELL * c,  int day, int month, int MonthLength )
+void GetDayLength ( CELL * c,  int day, int month, int MonthLength ,  MET_DATA *met)
 {
-	//todo forse spostare daylength come variabile MET
+	//todo  spostare daylength come variabile MET
+
+
 
 	//compute yearday for GeDdayLength function
 	if (day == 0 && month == JANUARY)
@@ -31,13 +33,11 @@ void GetDayLength ( CELL * c,  int day, int month, int MonthLength )
 
 	if (settings->time == 'm')
 	{
-		c->daylength = ampl * (sin ((MonthLength - 79) * 0.01721)) + 12;
-		//Log("month daylength = %g \n", c->daylength);
+		met[month].daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
 	}
 	else
 	{
-		c->daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
-		//Log("daily daylength = %g \n", c->daylength);
+		met[month].d[day].daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
 	}
 }
 
@@ -57,6 +57,7 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 	}
 
 	c->cum_dayOfyear += met[month].d[day].n_days;
+
 	Log("dayOfYear = %d \n", met[month].d[day].n_days);
 	Log("cumulative dayOfYear = %d \n", c->cum_dayOfyear);
 
@@ -124,7 +125,7 @@ extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month, const int years)
 {
 	MET_DATA *met;
-	static int cell;
+
 	static int height;
 	static int age;
 	static int species;
@@ -242,7 +243,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
 						if ((c->thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (c->daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
+								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);

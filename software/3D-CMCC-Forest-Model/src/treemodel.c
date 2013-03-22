@@ -87,7 +87,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
-		GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
+		GetDayLength (&m->cells[cell], day, month, MonthLength[month], met);
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 
@@ -136,7 +136,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		Log("YEAR SIMULATED = %d (%d)\n", years + 1, yos[years].year );
 		Log("MONTH SIMULATED = %s\n", szMonth[month]);
 
-		Print_met_data (met, vpd,  month,  day, m->cells[cell].daylength);
+		Print_met_data (met, vpd,  month,  day);
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -246,7 +246,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								if( height == 0)
 								{
 									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
+											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
 								}
 
 								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -306,7 +306,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								if( height == 0)
 								{
 									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation,  m->cells[cell].heights[height].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
+											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
 
 									if (m->cells[cell].available_soil_water <= m->cells[cell].soil_evaporation )
 									{
@@ -344,7 +344,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							if( height == 0)
 							{
 								Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-										m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter, m->cells[cell].daylength);
+										m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
 							}
 
 							Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);

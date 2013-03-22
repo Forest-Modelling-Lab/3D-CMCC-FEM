@@ -6,20 +6,6 @@
 #include "constants.h"
 
 
-float Get_Net_Radiation (const MET_DATA *const met, int years,  int month, float daylength)
-{
-	float Net_Radiation;
-	//The function pow is used to convert MJ in W?
-	Net_Radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / daylength;
-
-	Log("Solar Radiation = %g MJ/m^2/day\n", met[month].solar_rad);
-	Log("year = %d\n", years);
-	Log("month = %d\n", month);
-	Log("Day Lenght = %g hours\n", daylength);
-	Log("Hourly Net Radiation = %g W/m^2/hour\n", Net_Radiation);
-
-	return Net_Radiation;
-}
 
 
 /**/
@@ -101,7 +87,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Global Solar Radiation = %g MJ/m^2/day\n", met[month].solar_rad);
 			//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
 			//4 Dec 2012 add Albedo
-			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6)) / c->daylength) * (1 - s->value[ALBEDO]);
+			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6)) / met[month].daylength) * (1 - s->value[ALBEDO]);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 
@@ -126,7 +112,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Global Solar Radiation = %g MJ/m^2/day\n", met[month].d[day].solar_rad);
 			//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
 			//4 Dec 2012 add Albedo
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / c->daylength) * (1 - s->value[ALBEDO]);
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength) * (1 - s->value[ALBEDO]);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 			Daily_Radiation = met[month].d[day].solar_rad;

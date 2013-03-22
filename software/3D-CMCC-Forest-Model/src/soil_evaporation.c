@@ -9,7 +9,7 @@
 
 
 extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int day, int DaysInMonth, float Net_Radiation, int top_layer, int z,
-		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter, float daylength)
+		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter)
 {
 	
 
@@ -59,7 +59,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		}
 		else
 		{
-			Net_Radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / daylength;
+			Net_Radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / met[month].daylength;
 		}
 	}
 	else
@@ -96,7 +96,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		}
 		else
 		{
-			Net_Radiation = QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / daylength;
+			Net_Radiation = QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength;
 		}
 	}
 

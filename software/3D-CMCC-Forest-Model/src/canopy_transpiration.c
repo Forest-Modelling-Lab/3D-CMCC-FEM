@@ -185,6 +185,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 			break;
 		}
+
+		CanopyTranspiration = Etransp / lambda * met[month].daylength;         // converted to kg-mm H2o/m2/day
+
 	}
 	else
 	{
@@ -232,11 +235,10 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			break;
 		}
 
+		CanopyTranspiration = Etransp / lambda * met[month].d[day].daylength;   // converted to kg-mm H2o/m2/day
+
 	}
 
-
-
-	CanopyTranspiration = Etransp / lambda * c->daylength;         // converted to kg-mm H2o/m2/day
 	//1Kg m^2 H2o correspond to 1mm H2o
 	Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
 	DailyTransp = CanopyTranspiration;

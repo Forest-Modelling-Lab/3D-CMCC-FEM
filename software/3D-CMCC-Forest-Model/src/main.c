@@ -1964,7 +1964,7 @@ int main(int argc, char *argv[])
 					{
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-							GetDayLength (&m->cells[cell], day, month, MonthLength[month]);
+							GetDayLength (&m->cells[cell], day, month, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 							Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}

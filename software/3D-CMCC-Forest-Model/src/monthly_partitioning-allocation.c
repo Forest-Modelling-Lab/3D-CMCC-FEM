@@ -96,27 +96,56 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 		if (settings->spatial == 'u')
 		{
 			//defining phenological phase
-			if (c->daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
+			if(settings->time == 'd')
 			{
-				//Leaf fall
-				phenology_phase = 0;
+				if (met[month].d[day].daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
+				{
+					//Leaf fall
+					phenology_phase = 0;
+				}
+				else
+				{
+					//Beginning of growing season
+					if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
+					{
+						phenology_phase = 1;
+					}
+					//arealf of beginning of growing season
+					if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
+					{
+						phenology_phase = 2;
+					}
+					//Full growing season
+					if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
+					{
+						phenology_phase = 3;
+					}
+				}
 			}
 			else
 			{
-				//Beginning of growing season
-				if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
+				if (met[month].daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
 				{
-					phenology_phase = 1;
+					//Leaf fall
+					phenology_phase = 0;
 				}
-				//arealf of beginning of growing season
-				if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
+				else
 				{
-					phenology_phase = 2;
-				}
-				//Full growing season
-				if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
-				{
-					phenology_phase = 3;
+					//Beginning of growing season
+					if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
+					{
+						phenology_phase = 1;
+					}
+					//arealf of beginning of growing season
+					if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
+					{
+						phenology_phase = 2;
+					}
+					//Full growing season
+					if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
+					{
+						phenology_phase = 3;
+					}
 				}
 			}
 
@@ -1490,7 +1519,7 @@ void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const s, int z, float Stan
 
 
 //CURRENTLY NOT USED
-void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int management, float Stand_NPP, float daylength)
+void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int month, int management, float Stand_NPP, const MET_DATA *const met)
 {
 	/*3PG VERSION*/
 	float pfsPower;
@@ -1545,7 +1574,7 @@ void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int 
 	}
 	else
 	{
-		if (daylength > s->value[MINDAYLENGTH])
+		if (met[month].daylength > s->value[MINDAYLENGTH])
 		{
 
 			/*timber routine*/

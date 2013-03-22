@@ -104,7 +104,7 @@ float Get_vpd (const MET_DATA *const met, int month)
 }
  */
 
-void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, float daylength)
+void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 {
 	if (settings->time == 'm')
 	{
@@ -116,14 +116,16 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
 				"-rain = %g mm\n"
-				"-swc = %g %vol\n",
+				"-swc = %g %vol\n"
+				"-daylength = %g hrs\n",
 				met[month].solar_rad,
 				met[month].tavg,
 				//met[month].rh,
 				vpd,
 				met[month].ts_f,
 				met[month].rain,
-				met[month].swc);
+				met[month].swc,
+				met[month].daylength);
 
 		if (settings->spatial == 's')
 		{
@@ -140,14 +142,16 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
 				"-rain = %g mm\n"
-				"-swc = %g %vol\n",
+				"-swc = %g %vol\n"
+				"-daylength = %g hrs\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				//met[month].rh,
 				vpd,
 				met[month].d[day].ts_f,
 				met[month].d[day].rain,
-				met[month].d[day].swc);
+				met[month].d[day].swc,
+				met[month].d[day].daylength);
 
 		if (settings->spatial == 's')
 		{
@@ -155,8 +159,6 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day, f
 		}
 	}
 
-
-	Log("-day length = %g hours \n", daylength);
 	Log("***************\n");
 
 }
