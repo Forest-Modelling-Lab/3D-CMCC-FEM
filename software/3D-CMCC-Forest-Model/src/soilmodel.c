@@ -32,7 +32,7 @@ void soil_model_daily(MATRIX *const m, const YOS *const yos, const int years, co
 
 		Log("--SOIL MODEL ROUTINE--\n");
 
-		//fixme
+		//FIXME bug IN SOILMODEL
 /*
 		for (soil = 0; soil <= settings->soil_layer; soil++)
 		{
