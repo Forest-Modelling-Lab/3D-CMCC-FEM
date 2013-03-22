@@ -17,23 +17,38 @@
 //this function should be used only for function not directly related to the forest layers, it just run at the end
 //of all physiological function for all forest layers
 
-
-void soil_model(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
+//todo add day to arguments
+void soil_model_daily(MATRIX *const m, const YOS *const yos, const int years, const int month, const int years_of_simulation)
 {
 	int cell;
-	int soil_layer;
+	int soil;
 
 	// check parameters
-	assert(m && yos);
+	//assert(m && yos);
+
 
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
 		Log("--SOIL MODEL ROUTINE--\n");
 
-		Log("*********GET MONTHLY SOIL WATER BALACE************\n");
+		//fixme
+/*
+		for (soil = 0; soil <= settings->soil_layer; soil++)
+		{
+			m->cells[cell].soils[soil].variabile = 5;
+			Log("soil layer = %d\n", soil);
+			Log("soil layer = %d , variabile = %g\n", soil, m->cells[cell].soils[soil].variabile);
+		}
+		*/
+	}
 
-		if (settings->soil_layer == 1 /*m->cells[cell].soils_count == 1*/)
+
+
+
+		/*
+
+		if (settings->soil_layer == 1 || m->cells[cell].soils_count == 1)
 		{
 			Log("The model is running with one soil layer\n");
 
@@ -47,19 +62,18 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 			//todo move here all algorithms about soil
 
 			//if the soil_model is upgraded and each cell has a own soil parameters
-			/*
 			 //example for variables related to the soil layers
-			 m->cells[cell].soils[soil].value[AVAILABLE_SOIL_WATER];
+			 //m->cells[cell].soils[soil].value[AVAILABLE_SOIL_WATER];
 			 //example for variables not related to the soil layers
-			 m_>cells[cell].av_yearly_par_soil;
-			 */
+			 //m_>cells[cell].av_yearly_par_soil;
+
 		}
 		else
 		{
 
 			Log("The model is running with more than one soil layer\n");
 
-			for (soil_layer = 0; soil_layer < settings->soil_layer /*soil_layer < m->cells[cell].soils_count*/; soil_layer++)
+			for (soil_layer = 0; soil_layer < settings->soil_layer soil_layer < m->cells[cell].soils_count; soil_layer++)
 			{
 				Log("Soil layers considered = %d\n", soil_layer);
 
@@ -69,6 +83,7 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 				//todo move here all algorithms about soil
 			}
 		}
+
 		Log("***************************************************\n\n");
-	}
+	}*/
 }

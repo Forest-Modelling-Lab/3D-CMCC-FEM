@@ -1298,7 +1298,7 @@ int main(int argc, char *argv[])
 
 	//int site_data;  // if site data ok = 1, else = 0
 
-	//MET_DATA *met;
+	MET_DATA *met;
 
 	YOS *yos;
 	ROW *rows;
@@ -1850,7 +1850,6 @@ int main(int argc, char *argv[])
 
 		Log("out_filename = %s\n", out_filename);
 
-		/*TREEMODEL*/
 		Log("\n3D-CMCC MODEL START\n");
 		Log("***************************************************\n");
 
@@ -1913,7 +1912,7 @@ int main(int argc, char *argv[])
 								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//currently soil_model uses equals values for all cells
 								//a struct is anyway defined in types.h for soil data
-								soil_model (m, yos, years, month, years_of_simulation);
+								//soil_model (m, yos, years, month, years_of_simulation);
 							}
 						}
 					}
@@ -1964,7 +1963,7 @@ int main(int argc, char *argv[])
 					{
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-							GetDayLength (&m->cells[cell], day, month, MonthLength[month], yos);
+							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 							Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
 						}
@@ -1977,6 +1976,7 @@ int main(int argc, char *argv[])
 							{
 								if (settings->version == 'f')
 								{
+									//run for FEM version
 									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
 										Log("tree model daily failed.");
@@ -1984,12 +1984,15 @@ int main(int argc, char *argv[])
 									else
 									{
 										puts(msg_ok);
-									//look if put it here or move before tree_model  at the beginning of each month simulation
-									//	soil_model (m, yos, years, month, years_of_simulation);
+										//run for SOIL function
+										soil_model_daily (m, yos, years, month, years_of_simulation);
 									}
+
+
 								}
 								else
 								{
+									//run for BGC version
 
 								}
 							}

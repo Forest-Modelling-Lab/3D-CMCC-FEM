@@ -15,8 +15,11 @@
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void GetDayLength ( CELL * c,  int day, int month, int MonthLength ,  MET_DATA *met)
+void GetDayLength ( CELL * c,  int day, int month, int years, int MonthLength ,  YOS  *yos)
 {
+	MET_DATA *met;
+
+	met = (MET_DATA*) yos[years].m;
 
 	//compute yearday for GeDdayLength function
 	if (day == 0 && month == JANUARY)

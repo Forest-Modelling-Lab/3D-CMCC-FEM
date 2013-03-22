@@ -678,13 +678,7 @@ enum {
 	COUNTERS
 };
 
-/*enum for soil values*/
-enum{
 
-	//AVAILABLE_SOIL_WATER,
-
-	SOIL_VALUES
-};
 
 /* structures */
 // A row inside input.txt file
@@ -744,12 +738,10 @@ typedef struct {
 } HEIGHT;
 
 /* */
-//all variables related to the site
+//all variables related to the soil site
 typedef struct {
-	PREC soil_value[SOIL_VALUES];
-	float available_soil_water_layer;
 
-	int soil_layer[];
+	float variabile;
 
 } SOIL;
 
@@ -764,10 +756,6 @@ typedef struct {
 	HEIGHT *heights;
 	SOIL *soils;
 	int heights_count; //number of heights
-	int soils_count;  //number of soil layers
-
-
-	int soil_value;
 
 	int yearday;
 	float daylength_3PG;
@@ -873,7 +861,7 @@ extern int tree_model (MATRIX *const, const YOS *const, const int, const int, co
 extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
-extern void soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
+extern void soil_model_daily (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
 extern int sort_by_heights_asc(const void * , const void * );
@@ -883,7 +871,7 @@ extern void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
-extern void GetDayLength (CELL *, int, int, int, MET_DATA *);
+extern void GetDayLength (CELL *, int, int, int, int, YOS *);
 extern void GetDayLength_3PG (CELL *, const MET_DATA *const, int , int );
 extern void Get_Abscission_DayLength (CELL *);
 extern int Get_Establishment_LPJ (SPECIES *const, float, float);
