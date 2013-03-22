@@ -17,9 +17,6 @@
 
 void GetDayLength ( CELL * c,  int day, int month, int MonthLength ,  MET_DATA *met)
 {
-	//todo  spostare daylength come variabile MET
-
-
 
 	//compute yearday for GeDdayLength function
 	if (day == 0 && month == JANUARY)

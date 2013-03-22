@@ -82,15 +82,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//*************SITE CHARACTERISTIC******************
 
-
-		GetDayLength (&m->cells[cell], day, month, MonthLength[month], met);
-		//currently not used
 		Get_Abscission_DayLength (&m->cells[cell]);
-
-
-
-
-
 
 	}
 
