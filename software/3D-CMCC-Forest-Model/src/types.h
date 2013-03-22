@@ -67,6 +67,7 @@ typedef struct{
 	PREC rain;
 	PREC swc;
 	PREC ndvi_lai;
+	PREC daylength;
 }MET_DAILY_DATA;
 
 /* */
@@ -81,6 +82,7 @@ typedef struct {
 	PREC rain;
 	PREC swc;
 	PREC ndvi_lai;
+	PREC daylength;
 	MET_DAILY_DATA d[31];
 
 } MET_DATA;
