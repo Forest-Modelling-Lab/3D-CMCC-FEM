@@ -57,6 +57,7 @@ enum {
 };
 
 /* */
+//TODO add t_max and t_min instead tavg?
 //used in daily simulation
 typedef struct{
 	int n_days;
