@@ -35,12 +35,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	/**************************************************************************************************************************************
 	 * 													STATIC AND CONST PARAMETERS
 	 **************************************************************************************************************************************/
-//	static float vpd;
+	//	static float vpd;
 	static int cell;
 
 	int   const   soilLayer = 1;						// when done a cropType.h point to the value in site
 	int   const   phyllocron = 95;						// time interval between leaf tip appearance todo it shoul be somehow variable (see Ritchie et al., 91)
-//	const int     MAX_DIM = 100;
+	//	const int     MAX_DIM = 100;
 	const int     MAXINT = 32767;
 	const float   scatterLightParameter = 0.02;			//scatter of light parameter; set as default 0.02 (Zhang et al. 2002)
 	const float   rootWaterUptakeCoefficient = 0.003;	// root water uptake coefficient (0.003 cm water/cm root)
@@ -92,7 +92,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float LAI;																// in m->cells[cell].heights[height].species[species].value[LAI]
 	float LAI_Max;
 	float Net_Radiation;
-//	float maxPhotoperiodismDaylength;										// max daylength for photoperiodism; is useful only for those lpaces in which daylength exceeds 20h
+	//	float maxPhotoperiodismDaylength;										// max daylength for photoperiodism; is useful only for those lpaces in which daylength exceeds 20h
 
 	/*********************************************************************************************************
 	 * 											TEMPERATURE
@@ -110,12 +110,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float meanAnnualTemperature;											// mean of annual temperatures (°C)
 	float soilSurfaceTemperature;											// soil surface temperature in day k
 	float soilSurfaceTempPrevious;																// soil surface temperature at day k - 1;
-//	float soilSurfaceTemperature2;											// soil surface temperature in day k (computed with Parton)
+	//	float soilSurfaceTemperature2;											// soil surface temperature in day k (computed with Parton)
 
 	//float Tmax;															// daily air max temperature (°C)
 	//float Tmin;															// daily air minimum temperature (°C)
 
-//	float surfaceTemperatureAdjustment;										// adjustment factor for the effects of surface temperature
+	//	float surfaceTemperatureAdjustment;										// adjustment factor for the effects of surface temperature
 	float soilLayerThickness[1];									// thickness of soil layer
 	//	float Zmax;															// soil depth from the surface
 
@@ -131,8 +131,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	float snowCoverLagFactor; 												// lagging factor simulating residues and and snow cover effects on soil surface
 	float soilLayerTemperature[1];									//soil layer temperature at its center
-//	float soilMaxTemperature;
-//	float soilMinimumTemperature;
+	//	float soilMaxTemperature;
+	//	float soilMinimumTemperature;
 	int   hourDay;															// hour of the day
 	int   wetDays;															// number of rainy days in the current month;
 	int   dryDays;															// number of dry days in the current month
@@ -167,12 +167,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	int  hydroGroup;
 
 
-//	float landuse;
+	//	float landuse;
 	float CN;
 	float SWcon;															// drainage coefficient (Ritchie, 88)
 	float profileWaterContent;												//soil water content from input: it is a whole profile value
 	float drain[1];													// daily water draining flux (cm)
-//	float Diff;																// daily diffusiob flux of water between soil layers (cm)
+	//	float Diff;																// daily diffusiob flux of water between soil layers (cm)
 
 
 	/********************************************************************************************************************************
@@ -182,10 +182,10 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	//float SWcon;														// drainage coefficient (Ritchie, 88)
 	float fieldCapacityLayerMoisture[1];						// soil moisture at field capacity of the specific layer;
 	float actualTranspiration;											// actual crop transpiration (cm water)
-//	float potentialTranspiration;										// potential crop transpiration (cm water)
-//	float layerMoistureAboveWilting[1];							// soil moisture above the layer's wilting point (cm^3 water / cm^3 soil)
+	//	float potentialTranspiration;										// potential crop transpiration (cm water)
+	//	float layerMoistureAboveWilting[1];							// soil moisture above the layer's wilting point (cm^3 water / cm^3 soil)
 	float layerWilting[1];										// soil moisture at wilting point of layer l_n
-//	float soilWaterDiffusionCoeff;										// diffusion coefficient of soil water
+	//	float soilWaterDiffusionCoeff;										// diffusion coefficient of soil water
 	float potentialEvaporation;											// potential evaporation
 	float equilibriumEvapotranspiration;								// equilibrium evapotranspiration (cm)
 	float potentialEvapotranspiration;									// potential evapotranspiration (cm)
@@ -193,14 +193,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float depthTopSoilAffectingEvaporation;								// depth of top soil affecting evaporation (20cm) (cm)
 
 	float waterUptakeSoilLayer;											// water uptake from specific soil layer
-//	float Wup_s;
+	//	float Wup_s;
 	float potentialTranspiration;
 
 
 
 
 	float moistureEffectWaterUptake1[1];						// effect of moisture on water uptake
-//	float moistureEffectNitrogenUptake2[1];						// effect of moisture on nitrogen uptake
+	//	float moistureEffectNitrogenUptake2[1];						// effect of moisture on nitrogen uptake
 
 	float infiltration;													// quantity of water infiltrated in a soil layer
 	float Hold[soilLayer];												// quantity of water holded in the specific layer???
@@ -240,11 +240,11 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	float fCO2;															// effects of CO2 concentration on photosynthesis
 	float co2EffectPhotosynthesis;										// crop parameter for CO2 effects on photosynthesis (0.4 for C4; 0.8 for C3)
-//	float CO2;															// atmospheric CO2;
+	//	float CO2;															// atmospheric CO2;
 	float lightSaturationPhotoRate;										// Photosynthesis rate at light saturation (kg CO2/ha/h)
 	float ligthTempSaturationPhotoRate;									// Photosynthesis rate at light saturation when T is optimal;
-//	float accumulatedNH3Loss; 											// accumulated NH3 loss at time t (kg N/ha) ex AM;
-//	float dailyAssimilationRate;										// daily crop assimilation rate (P0 - Rg, g/m^2)
+	//	float accumulatedNH3Loss; 											// accumulated NH3 loss at time t (kg N/ha) ex AM;
+	//	float dailyAssimilationRate;										// daily crop assimilation rate (P0 - Rg, g/m^2)
 
 	float blackBodyExtinctionCoeff;										// Extinction coefficient of assumed black body leaves
 
@@ -252,7 +252,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float gaussianParameter1[3];
 	float gaussianParameter2[3];
 
-//	float SL;															//??????
+	//	float SL;															//??????
 	//float x;															//
 	float layerSoilTempEffectPhotoRate;									// effecsoilLayerTemperature of temperature on photosynthesis rate at light saturation
 	float canopyShape;													// canopy shape, influencing light diffusion coefficient
@@ -268,7 +268,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float diffuseLightExtinctionCoeff; 									// extinction coefficient of diffuse light
 	float extinctionCoeff;												// extinction coefficient; is this the one used for diffuse light!?
 	float diffuseLightFraction;											// fraction of diffuse light
-//	float blackBodyExtinctionCoeff2;									// Extinction coefficient of assumed black body leaves
+	//	float blackBodyExtinctionCoeff2;									// Extinction coefficient of assumed black body leaves
 	float directLightExtinctionCoeff;									// extinction coefficient of direct light
 
 
@@ -320,9 +320,9 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float stemBiomassFract;												// stem biomass fraction
 	float grainBiomassFract;											// grain biomass fraction
 
-//	float dailyIncreaseLAI;												// daily increase of LAI
-//	float dailyLeafSenescence;											// daily leaf senescence
-//	float specificLeafArea;												// specific leaf area
+	//	float dailyIncreaseLAI;												// daily increase of LAI
+	//	float dailyLeafSenescence;											// daily leaf senescence
+	//	float specificLeafArea;												// specific leaf area
 
 	float waterStressFactor;											// water stress factor (from 0 to 1: formula to be found)
 	float nitrogenStressFactor;											// nitrogen stress factor (nitrogenStressFactor to be evaluated with a formula; to be found)
@@ -342,23 +342,23 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	 *************************************************************************************************************************/
 	/*										Claudio O. Stockle and Gaylon S. Campbell
 	 *************************************************************************************************************************/
-/*
+	/*
 	float solar_d;
 	float half_rad;
 	float time_eq;
 	float s_middle;
 	float dawn;
-*/
+	 */
 	//Parton 1989:
-//	float Tsoil;
-//	float dawn2;
-
+	//	float Tsoil;
+	//	float dawn2;
+/*
 	//wiki: dawn
 	float s_noon;					// approximate solar noon
 	float mean_anomaly;				// solar mean anomaly
 	float Center;					// equation of center
 	float ec_lon;					// ecliptic longitude
-//	float sol_transit;				// solar transit
+	//	float sol_transit;				// solar transit
 	float sin_decl;					// declination of the sun
 	float hour_angle;				// hour angle
 	float j_cycle;					// actual julian cycle
@@ -367,6 +367,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	int dawn3;
 	int sunset;
 
+*/
 	/*******************************************************************************************
 	 * 							RITCHIE 1988
 	 *******************************************************************************************/
@@ -378,19 +379,19 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float leafAreaGrowthRate;
 	float tillNumber;
 	float assimilateAreaToWeight,
-		potentialLeafGrowth,
-		potentialRootGrowth,
-		dailyAssimilate,
-		totalCumulativeLeafArea,
-		tillerRate1,
-		tillersPerSquareMeter;
+	potentialLeafGrowth,
+	potentialRootGrowth,
+	dailyAssimilate,
+	totalCumulativeLeafArea,
+	tillerRate1,
+	tillersPerSquareMeter;
 	int plants,
-		leafNumber,
-		phylloCounter;
+	leafNumber,
+	phylloCounter;
 	float tillerRate2,
-		cumulativeLeafAreaPhyllocron[5],
-		leafAreaLossRate,
-		senescenceLeafArea;
+	cumulativeLeafAreaPhyllocron[5],
+	leafAreaLossRate,
+	senescenceLeafArea;
 
 	//-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -514,7 +515,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			soilBulkDensity = 1.49;				//(g/cm3)
 			//profileWaterContent = 0.5;
-			fractionFactor = 0.03;  // todo if heavyclay, 0.03; if sandy 0.07
+			fractionFactor = 0.03;  // if heavyclay, 0.03; if sandy 0.07
 
 			Q10 = 2.0;	//assumed by penning de vries, pag. 53
 
@@ -527,7 +528,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			//Zmax = 63.5;
 
-			abovegroundFraction = 80.0;			//aboveground biomass fraction (todo understand if it is the same)
+			abovegroundFraction = 80.0;			//aboveground biomass fraction (understand if it is the same)
 			soilLayerThickness[0] = 50.0;
 			//SW[0] = ;
 			fieldCapacityLayerMoisture[0] = 30.0;			// it shoul be set at MAXASW (i suppose), but on site is putted as a comment
@@ -621,10 +622,10 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			leafNumber= 0;
 			cumPhyllocrons = 0;
 			senescenceLeafArea = 0;
-			// time interval between leaf tip appearance todo it shoul be somehow variable (see Ritchie et al., 91)
+			// time interval between leaf tip appearance todo it should be somehow variable (see Ritchie et al., 91)
 		}
 
-/*
+		/*
 		//parameter reinitializated every year
 		else if (month == JANUARY && years != 0)	// variable which have to be resetted at each yos
 		{
@@ -637,7 +638,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		CN = 70.0;
 
-*/
+		 */
 		//to be set to 0 everyday/month
 		canopyDaytimeMeanTemperature2 = 0;
 		soilSurfaceTemperature = 0.0;
@@ -654,16 +655,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		Log("\n\nMONTH SIMULATED = %s\n", szMonth[month]);
 
-		/*
-		GetDayLength (&m->cells[cell], MonthLength[month]);
-		vpd =  met[month].vpd * 10.0; //Get_vpd (met, month);
-		Log("PROVA TEMPERATURA = %g\n", met[month].tavg);
-		Log("PROVA SETTINGS = %c\n", settings->version);
-		 */
 
-		/**********************************************************************************************************************************
-		 *											THERMOHYDRAULIC SUBMODEL
-		 **********************************************************************************************************************************/
+		/**************************************************************************************************/
 		//												SOLAR QUANTITIES
 		//*************************************************************************************************
 
@@ -673,90 +666,39 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		actualDate = met[month].n_days;
 		Log("\nstarting from year %d\njulianDate: %d", yos[years].year, julianDate);
 
-		//todo  should be set here maxAltitudeJulianDate: julian date when sun is higher?
+		//should be set here maxAltitudeJulianDate: julian date when sun is higher?
 
-
+//------------------------------------------------------------------------------------------------------------------
 		//solar declination
 		solarDeclination = -asin(sin(23.4 * 180.0 / Pi) * cos(360.0 * (actualDate +10) / 365.0));
 		Log("\nsolar declination = %g", solarDeclination);
 
-		//todo try the 3D-CMCC-Forest-Model version and compare them
+		//todo sergio there are some potential dicrepancies with literature versions; watch out! c computes angle operation ALWAYS as radiants!
 
 		Cfactor = cos(site->lat) * sin(solarDeclination);
 		Sfactor = sin(site->lat) * sin(solarDeclination);
 		Log("\nC value is %g\nS value is %g", Cfactor, Sfactor);
 
-		//day length  TODO MAKE A COMPARISON OF THE TWO METHODS
+//------------------------------------------------------------------------------------------------------------------
+
 		daylength = 12 + (24.0 / Pi) * asin(Sfactor / Cfactor);
 		Log("\nDay length is equal to %g hours\n", daylength);
 
 		// daily solar radiation using DNDC method
 		Log("\n ****** COMPUTING DAILY SOLAR RADIATION ****** \n");
 
-		//todo (substitute  to be understood if it is a net radiation formulation; comparison with net radiation
+		// (substitute  to be understood if it is a net radiation formulation; comparison with net radiation
 		solarConstant = 1370.0 * (1.0 + 0.033 * cos(2.0 * Pi * julianDate/365.0));
 		Log("For a solar constant equal to %g\n", solarConstant);
 
-		//extraterrestrial insulation
+		// extraterrestrial insulation
 		extraTerrestrialInsolation = 3600 * solarConstant * (daylength * Sfactor + (24 * Cfactor * sqrt(1 - (pow(Sfactor,2) / pow(Cfactor,2)))) / Pi);
-		Log("And the extra terrestrial insulation = %g\n", extraTerrestrialInsolation); // todo add unit
+		Log("And the extra terrestrial insulation = %g\n", extraTerrestrialInsolation);
 
 
-		//Collalti's net radiation function
-		//Net_Radiation = QA + QB * (met[month].solar_rad * pow (10.0,  6)) / daylength;
-
-
-		//##########################################################################################################################
-		//taken from wikipedia at the voice "sunrise_equation"
-
-
-		//5.07 ore vs 5.02
-
-		Log("\n\n***** CALCULATING SUNRISE HOUR FROM SUNRISE EQUATION (WIKIPEDIA) *****");
-
-		//	printf("\n%g",dawn2);
-		j_cycle = (julianDate - 2451545 - 0.0009) - (site->lon /360.0);
-		s_noon = 2451545 + 0.0009 + (site->lon / 360.0) + j_cycle;
-		Log("\nsolar noon: %g",s_noon);
-		mean_anomaly = (357.5291 + 0.98560028 * (s_noon - 2451545)) * 3.1415 / 180.0;
-		Center = (1.9148 * sin (mean_anomaly)) + (0.0200 * sin(2 * mean_anomaly)) + (0.0003 * sin(3 * mean_anomaly));
-		ec_lon = (mean_anomaly * 180.0 /3.1415) + 102.9372 + Cfactor + 180.0;
-		//float s_transit =  s_noon + (0.0053 * sin(mean_anomaly)) - ( 0.0069 * sin(2*ec_lon * 3.1415 / 180.0));
-		sin_decl = asin(sin(ec_lon * 3.1415 /180.0) * sin (23.45 * 3.1415 /180.0));
-		hour_angle = acos((sin(-0.83 *3.1415 / 180.0) - sin(site->lat * 3.1415 /180.0) * sin(sin_decl))
-				/(cos(site->lat * 3.1415 / 180.0) * cos(sin_decl)))*180.0/3.1415;
-		hour_angle /= 15.0;
-		Log("\nhour angle: %g", hour_angle);
-		hour_int = (hour_angle - (int)hour_angle) * 60.0 / 100.0;
-		Log("\nsexagesimal of the hour: %g", hour_int);
-		if (hour_int > 0.50)
-		{
-			hour_int = (int)hour_angle + 1;
-		}
-		else
-		{
-			hour_int = (int)hour_angle;
-		}
-		dawn3 = 12 - hour_int;
-		sunset = 12 + hour_int;
-		Log("\nactual dawn hour, estimated by wiki function and given using 12 as half day:\n*** %d ***", dawn3);
-		Log("\nactual sunset hour, estimated by wiki function and given using 12 as half day:\n*** %d ***", sunset);
-		//sunshine is the real daylength: here assumed as 2*hour angle (that is half day duration calculated trough wikipedia)
-		sunshine = 2 * hour_angle;
-
-		//	sunshine = (int)daylength;
-		Log("\nsunshine: %g h\n", sunshine);
-
-
-
-		//##############################################################################################################################
-		/*
-		 * *******************************************************************************************************************
+		 /* *******************************************************************************************************************
 		 * 								A SOLAR EQ. ALTERNATIVE: STOCKLE AND CAMPBELL
 		 * ********************************************************************************************************************/
-
-
-
 
 
 		Log("\n------------------------------------------------------------------------");
@@ -819,7 +761,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			albedo = 0.6;
 			Log("albedo: %g\n", albedo);
 		}
-		else 		// nn ricordo il discorso di alessio; si può mettere = classico o per forza == Logico?
+		else
 		{
 			if (stage == 6 || stage == 7)
 			{
@@ -894,7 +836,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Log("\nCanopy monthly min temperature is %g\n", canopyMinTemperature);
 
 		//Canopy daily mean temperature
-		meanCanopyTemperature = 0.5 * canopyMaxTemperature + 0.5 * canopyMinTemperature;
+		meanCanopyTemperature = 0.6 * canopyMaxTemperature + 0.4 * canopyMinTemperature;
 		Log("\nCanopy monthly mean temperature is %g\n", meanCanopyTemperature);
 		//canopy day time mean temperature
 		//try also 0.6 + 0.4
@@ -904,28 +846,28 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 		if(meanCanopyTemperature <= 0.0)
-				{
-					meanCanopyTemperature = 1.0;	//todo: elimina!!!!!
-				}
+		{
+			meanCanopyTemperature = 1.0;	//todo sergio: elimina!!!!!
+		}
 
-				//setting layerSoilTempEffectPhotoRate: temperature reduction factor
-				if (meanCanopyTemperature > 0.0 && meanCanopyTemperature <= 10.0)
-				{
-					layerSoilTempEffectPhotoRate = 0.0001;
-				}
-				else if(meanCanopyTemperature >= 10.0 && meanCanopyTemperature <= 35.0)
-				{
-					layerSoilTempEffectPhotoRate = 1.0;
-				}
-				else if ( meanCanopyTemperature > 35 && meanCanopyTemperature <= 50.0)
-				{
-					layerSoilTempEffectPhotoRate = 0.01;
-				}
-				else
-				{
-					layerSoilTempEffectPhotoRate = 0.0;
-				}
-/*
+		//setting layerSoilTempEffectPhotoRate: temperature reduction factor
+		if (meanCanopyTemperature > 0.0 && meanCanopyTemperature <= 10.0)
+		{
+			layerSoilTempEffectPhotoRate = 0.0001;
+		}
+		else if(meanCanopyTemperature >= 10.0 && meanCanopyTemperature <= 35.0)
+		{
+			layerSoilTempEffectPhotoRate = 1.0;
+		}
+		else if ( meanCanopyTemperature > 35 && meanCanopyTemperature <= 50.0)
+		{
+			layerSoilTempEffectPhotoRate = 0.01;
+		}
+		else
+		{
+			layerSoilTempEffectPhotoRate = 0.0;
+		}
+		/*
 		//estimation of canopy hourly diurnal temperature; not in use for now
 
 		// canopy hourly temperature during daytime
@@ -944,233 +886,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Tc_n = canopyMinTemperature + (Tset - canopyMinTemperature) * exp(2 * Pi * (hourDay[i] - 11.82 + 0.5 * daylength)/ (24 - daylength));
 		Log("\nCanopy hourly estimated temperature in night time: %g °C",Tc_n);
 
-*/
-		/***********************************************************************************
-		 * 									SOIL TEMPERATURE ESTIMATION
-		 **********************************************************************************/
-
-		Log("\n******* DAILY MEAN SOIL TEMPERATURE ********\n\n");
-
-		//TODO sergio: attenzione qui c'è un soilSurfaceTemperature +1	its originis in Daymet first computation of Tt: anyway changed by Thornton 1988
-		// SO I'VE SETTED
-
-
-		if (month == JANUARY)		//todo add && day ==1)
-		{
-			Log("\n\nis January the 1st; influence of previous day not evaluated!");
-			soilSurfaceTempPrevious = 0;
-		}
-		else
-		{
-			soilSurfaceTempPrevious = soilSurfaceTemperature;
-		}
-
-		if(met[month].ts_f != -9999)
-		{
-			soilSurfaceTemperature = met[month].ts_f;
-			Log("\nsoil temperature measured: %g", soilSurfaceTemperature);
-		}
-		else
-		{
-
-			/**************************************************************************************************************
-			 * 								SOIL SURFACE TEMPERATURE ESTIMETED
-			 *************************************************************************************************************/
-
-			//soilSurfaceTemperature = (1 - albedo) * (meanCanopyTemperature + (canopyMaxTemperature - canopyMinTemperature) * pow((0.03 * dailySolarRadiation), 0.5) + albedo *
-			//		((1- albedoPrev) * ((meanCanopyTemperature + (canopyMaxTemperature - canopyMinTemperature) * pow((0.03 * dailySolarRadiation), 0.5) )));
-
-
-			/*****************************************************************************************
-			 * 					EPIC SOIL TEMPERATURE PREDICTION
-			 *****************************************************************************************/
-			/*
-			 * this is a module usable just in case of a daily version; to be removed in case of monthly version
-			 *
-			 *
-			 * 	for (t = 0; t < met[month].n_days; t++)
-			 * 	{
-			 * 		if(met[month].met[day].rain > 0)
-			 * 		{
-			 * 			wetDays ++;
-			 * 		}
-			 */
-			//todo sergio: nested if to avoid the problem  of -i in case of thevery first days of the year
-			// for now working with months as if they were days: substitute it with day == i && month == JANAURY
-
-			Log("\n*****************************************************************************************\n"
-					"*\n 					EPIC SOIL TEMPERATURE PREDICTION"
-					"\n*****************************************************************************************");
-
-			//todo: delete when daily model is ready
-			wetDays = 10;
-			dryDays = met[month].n_days - wetDays;
-
-			if (settings->time == 'm')
-			{
-				Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
-				if (met[month].rain > 0.0)
-				{
-					//met[month].met[day - i].ta_min
-					soilSurfaceTemperature += (met[month].tavg - 2 ) + ((float)wetDays / (float)met[month].n_days) *
-							((float)met[month].tavg - (float)met[month].tavg -2);
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-				else
-				{
-					//met[month].met[day - i].ta_max
-					soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-			}
-
-			else
-			{
-/*
-				if (month == JANUARY)
-				{
-					Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
-					if (met[month].rain > 0.0)
-					{
-						//met[month].met[day - i].ta_min
-						soilSurfaceTemperature += (met[month].tavg -2 ) + ((float)wetDays / (float)met[month].n_days) *
-								((float)met[month].tavg - (float)met[month].tavg -2);
-						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-					}
-					else
-					{
-						//met[month].met[day - i].ta_max
-						soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
-						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-					}
-				}
-				else if (month == FEBRUARY)
-				{
-					for (i = 2; i <= 0; i--)
-					{
-						//to be substituted with month met[month].met[day].rain
-						if (met[month].rain > 0.0)
-						{
-							//met[month].met[day - i].ta_min
-							soilSurfaceTemperature += (met[month - i].tavg -2 ) + (wetDays / met[month].n_days) * (met[month].tavg - met[month - i].tavg -2);
-							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-						else
-						{
-							//met[month].met[day - i].ta_max
-							soilSurfaceTemperature += met[month - i].tavg +2 + (dryDays / met[month].n_days) * (met[month - i].tavg +2 - met[month].tavg);
-							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-					}
-					soilSurfaceTemperature /= 2;
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-				else if (month == MARCH)
-				{
-					for (i = 3; i <= 0; i--)
-					{
-						//to be substituted with month met[month].met[day].rain
-						if (met[month].rain > 0.0)
-						{
-							//met[month].met[day - i].ta_min
-							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
-							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-						else
-						{
-							//met[month].met[day - i].ta_max
-							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
-							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-					}
-					soilSurfaceTemperature /= 3;
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-				else if (month == APRIL)
-				{
-					for (i = 4; i <= 0; i--)
-					{
-						//to be substituted with month met[month].met[day].rain
-						if (met[month].rain > 0.0)
-						{
-							//met[month].met[day - i].ta_min
-							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
-							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-						else
-						{
-							//met[month].met[day - i].ta_max
-							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
-							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-					}
-					soilSurfaceTemperature /= 4;
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-				else
-				{
-					for (i = 5; i <= 0; i--)
-					{
-						//to be substituted with month met[month].met[day].rain
-						if (met[month].rain > 0.0)
-						{
-							//met[month].met[day - i].ta_min
-							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
-							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-						else
-						{
-							//met[month].met[day - i].ta_max
-							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
-							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
-						}
-						//develope a system for the first 4 days of the very frst year of simulation
-					}
-					//estimate of bare soil surface temperature in the ith day
-					soilSurfaceTemperature /= 5;
-					Log("current day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-*/
-			}
-
-			if (month == JANUARY)		//todo add && day == 1)
-			{
-				snowCoverLagFactor = 0.0;
-				Log("\nthe very first cycle of the year! previous cycle effect imposed to 0!");
-			}
-			else
-			{
-				//snowCoverLagFactor = lagging factor simulating residues and and snow cover effects on soil surface
-				snowCoverLagFactor = Maximum((abovegroundFraction / (abovegroundFraction + exp(5.3396 - 2.3951 * abovegroundFraction))),(snow * 10.0/
-						(snow * 10.0 + exp(2.303 - 0.2197 * snow * 10.0))));
-				Log("not the very first day(month) of the year: \nlagging factor snowCoverLagFactor: %g", snowCoverLagFactor);
-			}
-			//estimate of soil surface temperature considering biomass lag effect
-			soilSurfaceTemperature = snowCoverLagFactor * soilSurfaceTempPrevious + (1 - snowCoverLagFactor) * soilSurfaceTemperature;
-			Log("\n\nHence, soil surface temperature: %g\n", soilSurfaceTemperature);
-
-
-
-
-			/*******************************************************************************************************
-			 * 							PARTON SOIL TEMPERATURE ROUTINE (1984)
-			 ******************************************************************************************************/
-
-
-			Log("\n***** Parton (1984) estimation of soil temperature *****");
-			//epi_biomass = 0.0;
-			//soil surface temperature (By Parton, 1989)
-			//soil max temperature (daily)
-			epigeousBiomass = exp(-0.0048 * abovegroundFraction) - 0.13;				//g/m^2
-			Log("\nParton epigeousBiomass: %g", epigeousBiomass);
-			deltaSoilAirTemperature = 24.07 * (1.0 - exp(-0.000038 * dailySolarRadiation));		//solar radiation in Kj/dm^2)
-			Log("\nParton SoilAirTemperature: %g", deltaSoilAirTemperature);
-			partonSoilSurfaceMinTemperature = minAirTemperature + 0.006 * epigeousBiomass - 1.82;
-			Log("\nParton SoilSurfaceMinTemperature: %g", partonSoilSurfaceMinTemperature);
-			partonSoilSurfaceMaxTemperature = maxAirTemperature + (deltaSoilAirTemperature + 0.35 * maxAirTemperature) * epigeousBiomass;
-			Log("\nParton SoilSurfaceMaxTemperature: %g", partonSoilSurfaceMaxTemperature);
-			partonSoilSurfaceMeanTemperature = 0.41 * partonSoilSurfaceMaxTemperature + 0.59 * partonSoilSurfaceMinTemperature;
-			Log("\nParton SoilSurfaceMeanTemperature: %g", partonSoilSurfaceMeanTemperature);
+		 */
 
 			/***************************************************************************************************************************
 			 *
@@ -2060,7 +1776,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			 * 												WATER REDISTRIBUITION
 			 *********************************************************************************************************************************************************/
 
-
+//checked
 
 			//todo a surface flooding module
 			for (l = soilLayer; l > 1; l--)
@@ -2218,6 +1934,233 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			//layer specific soil temperature, as estimated at the center of the layer
 
 		}
+
+
+
+		/***********************************************************************************
+		 * 									SOIL TEMPERATURE ESTIMATION
+		 **********************************************************************************/
+
+		Log("\n******* DAILY MEAN SOIL TEMPERATURE ********\n\n");
+
+		//TODO sergio: attenzione qui c'è un soilSurfaceTemperature +1	its originis in Daymet first computation of Tt: anyway changed by Thornton 1988
+		// SO I'VE SETTED
+
+
+		if (month == JANUARY)		//todo add && day ==1)
+		{
+			Log("\n\nis January the 1st; influence of previous day not evaluated!");
+			soilSurfaceTempPrevious = 0;
+		}
+		else
+		{
+			soilSurfaceTempPrevious = soilSurfaceTemperature;
+		}
+
+		if(met[month].ts_f != -9999)
+		{
+			soilSurfaceTemperature = met[month].ts_f;
+			Log("\nsoil temperature measured: %g", soilSurfaceTemperature);
+		}
+		else
+		{
+
+			/**************************************************************************************************************
+			 * 								SOIL SURFACE TEMPERATURE ESTIMETED
+			 *************************************************************************************************************/
+
+
+
+			Log("*****************************************************************************************"
+					"*\n 					EPIC SOIL SURFACE TEMPERATURE PREDICTION"
+					"*\n****************************************************************************************");
+/*
+			//bare soil surface temperature to equal average daily air temperature
+			bareSurfaceTemperature = 0.5 * (maxTemperature + minTemperature) + (UmaxTemperature - minTemperature) * (solarRadiation * (1.0 - albedo) - 14.0) /20.0;
+
+			//correction factor
+			snoFactor = snow / ( snow +exp(2.30 - 0.220 * snow));
+			correctionFactor1 = aboveBiomass / (aboveBiomass + exp(5.34 -2.40 * aboveBiomass));
+
+			//covered surface temeperature
+			coveredSoilSurfaceTemperature = (1.0 - soilTempCorrectionFactor) * bareSoilSurfaceTemperature * soilTempCorrectionFactor * meanSoilTemperature[1];
+
+
+*/
+
+			Log("\n*****************************************************************************************\n"
+					"*\n 					EPIC SOIL TEMPERATURE PREDICTION"
+					"\n*****************************************************************************************");
+
+			//todo: delete when daily model is ready
+			wetDays = 10;
+			dryDays = met[month].n_days - wetDays;
+
+			if (settings->time == 'm')
+			{
+				Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
+				if (met[month].rain > 0.0)
+				{
+					//met[month].met[day - i].ta_min
+					soilSurfaceTemperature = (met[month].tavg - 2 ) + ((float)wetDays / (float)met[month].n_days) *
+							((float)met[month].tavg - (float)met[month].tavg -2);
+					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+				else
+				{
+					//met[month].met[day - i].ta_max
+					soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
+					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+			}
+
+			else
+			{
+				/*
+				if (month == JANUARY)
+				{
+					Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
+					if (met[month].rain > 0.0)
+					{
+						//met[month].met[day - i].ta_min
+						soilSurfaceTemperature += (met[month].tavg -2 ) + ((float)wetDays / (float)met[month].n_days) *
+								((float)met[month].tavg - (float)met[month].tavg -2);
+						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+					}
+					else
+					{
+						//met[month].met[day - i].ta_max
+						soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
+						Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+					}
+				}
+				else if (month == FEBRUARY)
+				{
+					for (i = 2; i <= 0; i--)
+					{
+						//to be substituted with month met[month].met[day].rain
+						if (met[month].rain > 0.0)
+						{
+							//met[month].met[day - i].ta_min
+							soilSurfaceTemperature += (met[month - i].tavg -2 ) + (wetDays / met[month].n_days) * (met[month].tavg - met[month - i].tavg -2);
+							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+						else
+						{
+							//met[month].met[day - i].ta_max
+							soilSurfaceTemperature += met[month - i].tavg +2 + (dryDays / met[month].n_days) * (met[month - i].tavg +2 - met[month].tavg);
+							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+					}
+					soilSurfaceTemperature /= 2;
+					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+				else if (month == MARCH)
+				{
+					for (i = 3; i <= 0; i--)
+					{
+						//to be substituted with month met[month].met[day].rain
+						if (met[month].rain > 0.0)
+						{
+							//met[month].met[day - i].ta_min
+							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
+							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+						else
+						{
+							//met[month].met[day - i].ta_max
+							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
+							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+					}
+					soilSurfaceTemperature /= 3;
+					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+				else if (month == APRIL)
+				{
+					for (i = 4; i <= 0; i--)
+					{
+						//to be substituted with month met[month].met[day].rain
+						if (met[month].rain > 0.0)
+						{
+							//met[month].met[day - i].ta_min
+							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
+							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+						else
+						{
+							//met[month].met[day - i].ta_max
+							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
+							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+					}
+					soilSurfaceTemperature /= 4;
+					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+				else
+				{
+					for (i = 5; i <= 0; i--)
+					{
+						//to be substituted with month met[month].met[day].rain
+						if (met[month].rain > 0.0)
+						{
+							//met[month].met[day - i].ta_min
+							soilSurfaceTemperature += (met[month - i].tav -2 ) + (wetDays / met[month].n_days) * (met[month].tav - met[month - i].tav -2);
+							Log("\npartial day (rainy) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+						else
+						{
+							//met[month].met[day - i].ta_max
+							soilSurfaceTemperature += met[month - i].tav +2 + (dryDays / met[month].n_days) * (met[month - i].tav +2 - met[month].tav);
+							Log("\npartial day (dry) soilSurfaceTemperature: %g °C ", soilSurfaceTemperature);
+						}
+						//develope a system for the first 4 days of the very frst year of simulation
+					}
+					//estimate of bare soil surface temperature in the ith day
+					soilSurfaceTemperature /= 5;
+					Log("current day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+				}
+				 */
+			}
+
+			if (month == JANUARY)		//todo add && day == 1)
+			{
+				snowCoverLagFactor = 0.0;
+				Log("\nthe very first cycle of the year! previous cycle effect imposed to 0!");
+			}
+			else
+			{
+				//snowCoverLagFactor = lagging factor simulating residues and and snow cover effects on soil surface
+				snowCoverLagFactor = Maximum((abovegroundFraction / (abovegroundFraction + exp(5.3396 - 2.3951 * abovegroundFraction))),(snow * 10.0/
+						(snow * 10.0 + exp(2.303 - 0.2197 * snow * 10.0))));
+				Log("not the very first day(month) of the year: \nlagging factor snowCoverLagFactor: %g", snowCoverLagFactor);
+			}
+			//estimate of soil surface temperature considering biomass lag effect
+			soilSurfaceTemperature = snowCoverLagFactor * soilSurfaceTempPrevious + (1 - snowCoverLagFactor) * soilSurfaceTemperature;
+			Log("\n\nHence, soil surface temperature: %g\n", soilSurfaceTemperature);
+
+
+
+
+			/*******************************************************************************************************
+			 * 							PARTON SOIL TEMPERATURE ROUTINE (1984)
+			 ******************************************************************************************************/
+
+
+			Log("\n***** Parton (1984) estimation of soil temperature *****");
+			//epi_biomass = 0.0;
+			//soil surface temperature (By Parton, 1989)
+			//soil max temperature (daily)
+			epigeousBiomass = exp(-0.0048 * abovegroundFraction) - 0.13;				//g/m^2
+			Log("\nParton epigeousBiomass: %g", epigeousBiomass);
+			deltaSoilAirTemperature = 24.07 * (1.0 - exp(-0.000038 * dailySolarRadiation));		//solar radiation in Kj/dm^2)
+			Log("\nParton SoilAirTemperature: %g", deltaSoilAirTemperature);
+			partonSoilSurfaceMinTemperature = minAirTemperature + 0.006 * epigeousBiomass - 1.82;
+			Log("\nParton SoilSurfaceMinTemperature: %g", partonSoilSurfaceMinTemperature);
+			partonSoilSurfaceMaxTemperature = maxAirTemperature + (deltaSoilAirTemperature + 0.35 * maxAirTemperature) * epigeousBiomass;
+			Log("\nParton SoilSurfaceMaxTemperature: %g", partonSoilSurfaceMaxTemperature);
+			partonSoilSurfaceMeanTemperature = 0.41 * partonSoilSurfaceMaxTemperature + 0.59 * partonSoilSurfaceMinTemperature;
+			Log("\nParton SoilSurfaceMeanTemperature: %g", partonSoilSurfaceMeanTemperature);
 
 		//--------------------------------------------------------------------------------------------------------------------------------------
 
