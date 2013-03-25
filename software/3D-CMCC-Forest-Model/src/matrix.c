@@ -635,7 +635,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		{
 			Log ("FOREST DATASET\n");
 			Log("matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
-			Log("****GET FOREST CHARACTERISTICS for cell  (%g, %g)****\n", m->cells[cell].x, m->cells[cell].y);
+			Log("****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
 			Log("- cell n.%02d is at %g, %g and has %d height classes \n",
 					cell+1,
 					m->cells[cell].x,

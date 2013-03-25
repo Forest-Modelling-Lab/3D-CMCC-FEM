@@ -142,7 +142,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		//loop on each heights starting from highest to lower
 
-		Log("*****************CELL x = %g, y = %g STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
+		Log("*****************CELL x = %d, y = %d STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
 
 		Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
 

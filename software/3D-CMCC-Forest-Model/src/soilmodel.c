@@ -15,7 +15,7 @@
 
 
 //this function should be used only for function not directly related to the forest layers, it just run at the end
-//of all physiological function for all forest layers
+//of all physiological function for all forest/crop layers
 
 //todo add day to arguments
 void soil_model_daily(MATRIX *const m)
@@ -24,26 +24,30 @@ void soil_model_daily(MATRIX *const m)
 	int soil;
 
 	// check parameters
-	//assert(m && yos);
+	assert(m);
 
 
-	for ( cell = 0; cell < m->cells_count; cell++)
+	for (cell = 0; cell < m->cells_count; cell++)
 	{
 
 		Log("--SOIL MODEL ROUTINE--\n");
 		Log("--SOIL LAYERS = %g \n", settings->soil_layer);
+		Log("--cells count= %d \n", m->cells_count);
+		Log("x = %d\n",m->cells[cell].x);
 
 		//FIXME bug IN SOILMODEL
 		//[soil] represent the soil layer number
 		//0 index if for the upper layer
 /*
-		for (soil = 0; soil < (int)settings->soil_layer; soil++)
+		for (soil = 0; soil < settings->soil_layer; soil++)
 		{
 			m->cells[cell].soils[soil].variabile = 5;
 			Log("soil layer = %d\n", soil);
 			Log("soil layer = %d , variabile = %g\n", soil, m->cells[cell].soils[soil].variabile);
 		}
 */
+
+
 
 
 	}

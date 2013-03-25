@@ -750,8 +750,8 @@ typedef struct {
 /* */
 //all variables related to the cell (stand) are here defined
 typedef struct {
-	PREC x;
-	PREC y;
+	int x;
+	int y;
 
 	eLanduse landuse;
 

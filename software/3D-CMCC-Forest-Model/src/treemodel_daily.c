@@ -149,7 +149,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//loop on each heights starting from highest to lower
 
-		Log("******CELL x = %g, y = %g STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
+		Log("******CELL x = %d, y = %d STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
