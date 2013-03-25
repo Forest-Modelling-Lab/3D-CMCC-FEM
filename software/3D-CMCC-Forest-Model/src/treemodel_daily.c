@@ -93,6 +93,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 
+
+		//check for temperature
+		if ( IS_INVALID_VALUE (met[month].d[day].tavg))
+		{
+			met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+		}
+
 		//compute vpd
 		//TODO remove if used VPD
 		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
