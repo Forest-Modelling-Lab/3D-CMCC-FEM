@@ -782,6 +782,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
+								//fixme
+								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tavg))
 								{
 									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -792,6 +794,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 									}
 								}
+								*/
 								//CONTROL
 								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
 								{
@@ -808,6 +811,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
+								//fixme
+								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmax))
 								{
 									Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -818,6 +823,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* T_MAX -NO DATA- in previous year!!!!\n" );
 									}
 								}
+								*/
 								//CONTROL
 								/*
 								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
@@ -837,6 +843,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
+								//fixme
+								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmin))
 								{
 									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -847,6 +855,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
 									}
 								}
+								*/
 								//CONTROL
 								/*
 								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
@@ -1072,6 +1081,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									//fixme
+									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
 									{
 										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -1082,6 +1093,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 										}
 									}
+									*/
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
 									{
@@ -1099,6 +1111,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									//fixme
+									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 									{
 										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -1109,6 +1123,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 										}
 									}
+									*/
 									//CONTROL
 									/*
 									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
@@ -1128,6 +1143,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									//fixme
+									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 									{
 										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
@@ -1138,6 +1155,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
 										}
 									}
+									*/
 									//CONTROL
 									/*
 									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
