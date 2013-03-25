@@ -864,7 +864,7 @@ extern int tree_model (MATRIX *const, const YOS *const, const int, const int, co
 extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
-extern void soil_model_daily (MATRIX *const);
+extern void soil_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
 extern int sort_by_heights_asc(const void * , const void * );
