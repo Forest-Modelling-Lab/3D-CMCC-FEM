@@ -45,6 +45,7 @@ void soil_model_daily(MATRIX *const m)
 			Log("cazzo %d!!!!!\n", soil);
 			m->cells[cell].soils[soil].variabile = 5;
 
+			//prova
 			if (soil == 0)
 			{
 				m->cells[cell].soils[soil].variabile = 5;

@@ -294,10 +294,12 @@ int fill_cell_from_heights(CELL *const c, const ROW *const row)
 	//check parameter
 	assert(c && row);
 
+	//alloc memory for heights
 	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(HEIGHT)) )
 	{
 		return 0;
 	}
+	//alloc memory for soils
 	if (!alloc_struct((void **)&c->soils, &c->soils_count, sizeof(SOIL)) )
 	{
 		return 0;
@@ -330,6 +332,7 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	m->cells[m->cells_count-1].y = row->y;
 	m->cells[m->cells_count-1].heights = NULL;
 	m->cells[m->cells_count-1].heights_count = 0;
+	//fixme without -1 the model gets 1 more!!
 	m->cells[m->cells_count-1].soils_count = (int)settings->soil_layer -1;
 
 	/* add species */
@@ -720,6 +723,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 			/*Soil definition*/
 			Log("***************************************************\n");
 			Log("SOIL DATASET\n");
+			Log("Number of soil layers = %g\n", settings->soil_layer);
 			Log("Number of soil layers = %d\n", m->cells[cell].soils_count);
 			Log("***************************************************\n");
 
