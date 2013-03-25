@@ -14,7 +14,7 @@
 
 void Get_initialization_site_data (CELL *c)
 {
-	Log("\n****GET SITE-SOIL CHARACTERISTICS for cell  (%g, %g)****\n", c->x, c->y);
+	Log("\n****GET SITE-SOIL CHARACTERISTICS for cell  (%d, %d)****\n", c->x, c->y);
 	/*soil matric potential*/
 
 

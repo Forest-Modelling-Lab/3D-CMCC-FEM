@@ -30,22 +30,28 @@ void soil_model_daily(MATRIX *const m)
 	for (cell = 0; cell < m->cells_count; cell++)
 	{
 
-		Log("--SOIL MODEL ROUTINE--\n");
-		Log("--SOIL LAYERS = %g \n", settings->soil_layer);
-		Log("--cells count= %d \n", m->cells_count);
+
+		Log("--cells count = %d \n", m->cells_count);
+		Log("--soils count = %d \n", m->cells[cell].soils_count);
 		Log("x = %d\n",m->cells[cell].x);
+
 
 		//FIXME bug IN SOILMODEL
 		//[soil] represent the soil layer number
 		//0 index if for the upper layer
-/*
-		for (soil = 0; soil < settings->soil_layer; soil++)
+
+		for (soil = 0; soil < m->cells[cell].soils_count; soil++)
 		{
+			Log("cazzo %d!!!!!\n", soil);
+			/*
 			m->cells[cell].soils[soil].variabile = 5;
 			Log("soil layer = %d\n", soil);
 			Log("soil layer = %d , variabile = %g\n", soil, m->cells[cell].soils[soil].variabile);
+			*/
+
 		}
-*/
+
+
 
 
 

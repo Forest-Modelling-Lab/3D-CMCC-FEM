@@ -308,6 +308,7 @@ int fill_cell_from_heights(CELL *const c, const ROW *const row)
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 }
 
+
 /* */
 static int fill_cell(MATRIX *const m, const ROW *const row)
 {
@@ -325,9 +326,27 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	m->cells[m->cells_count-1].y = row->y;
 	m->cells[m->cells_count-1].heights = NULL;
 	m->cells[m->cells_count-1].heights_count = 0;
+	m->cells[m->cells_count-1].soils_count = settings->soil_layer;
 
 	/* add species */
 	return fill_cell_from_heights(&m->cells[m->cells_count-1], row);
+}
+
+int fill_cell_for_soils(MATRIX *const m)
+{
+	/* check parameter */
+	assert(m);
+
+	if ( !alloc_struct((void **)&m->cells, &m->cells_count, sizeof(CELL)) )
+	{
+		return 0;
+	}
+
+	/* set values */
+	m->cells[m->cells_count-1].soils_count = settings->soil_layer;
+
+	return m->cells[m->cells_count-1].soils_count;
+
 }
 
 /* */
@@ -377,6 +396,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 		/* loop on each cell */
 		for ( cell = 0; cell < m->cells_count; cell++ )
 		{
+
 			/* check cell */
 			if ( ARE_FLOATS_EQUAL(rows[row].x, m->cells[cell].x) && ARE_FLOATS_EQUAL(rows[row].y, m->cells[cell].y) )
 			{
@@ -577,7 +597,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	//check parameter
 	assert (m);
 
-	Log ("RUN DATASET (COMPSET)\n");
+	Log ("RUN COMPSET\n");
 
 	//cell MUST be squares
 	resol = sqrt (settings->sizeCell);
@@ -710,16 +730,26 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				}
 			}
 
+			/*Soil definition*/
+			Log("***************************************************\n");
+			Log("SOIL DATASET\n");
+			Log("Number of soil layers = %d\n", m->cells[cell].soils_count);
+			Log("***************************************************\n");
+
 			Get_initialization_site_data (&m->cells[cell]);
 
 		}
-		else
+		else if (m->cells[cell].landuse == Z)
 		{
 			Log ("*********************\n\n\n");
 			Log ("CROP DATASET\n");
 			Log("*(%d)\n", cell + 1);
 
 		}
+
+
+
+
 	}
 
 }

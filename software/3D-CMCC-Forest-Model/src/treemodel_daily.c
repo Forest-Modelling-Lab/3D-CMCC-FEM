@@ -698,6 +698,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//    Log("\n\n");
 		//}
 
+
 		//averaged monthly met data
 		if (month == DECEMBER)
 		{

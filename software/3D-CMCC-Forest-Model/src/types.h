@@ -745,6 +745,7 @@ typedef struct {
 
 	float variabile;
 
+
 } SOIL;
 
 /* */
@@ -758,6 +759,7 @@ typedef struct {
 	HEIGHT *heights;
 	SOIL *soils;
 	int heights_count; //number of heights
+	int soils_count;
 
 	int yearday;
 	float daylength_3PG;
