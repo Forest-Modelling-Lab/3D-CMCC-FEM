@@ -782,19 +782,16 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
-								//fixme
-								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tavg))
 								{
-									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
+									//Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tavg = yos[*yos_count-2].m[month].tavg;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tavg))
 									{
-										Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
+										//Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
 									}
 								}
-								*/
 								//CONTROL
 								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
 								{
@@ -811,26 +808,17 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
-								//fixme
-								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmax))
 								{
-									Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
+									//Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tmax = yos[*yos_count-2].m[month].tmax;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmax))
 									{
-										Log ("********* T_MAX -NO DATA- in previous year!!!!\n" );
+										//Log ("********* T_MAX -NO DATA- in previous year!!!!\n" );
 									}
 								}
-								*/
-								//CONTROL
-								/*
-								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
-								{
-									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								}
-								*/
+
 								break;
 
 
@@ -843,26 +831,16 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									fclose(f);
 									return NULL;
 								}
-								//fixme
-								/*
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmin))
 								{
-									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									Log("Getting previous years values !!\n");
+									//Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tmin = yos[*yos_count-2].m[month].tmin;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmin))
 									{
-										Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
+										//Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
 									}
 								}
-								*/
-								//CONTROL
-								/*
-								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
-								{
-									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-								}
-								*/
 								break;
 
 							case VPD_F: //RH_f - RH
@@ -1054,12 +1032,22 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
 									{
+										//the model gets the value of the day before
 										Log ("* SOLAR RAD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].solar_rad))
+										yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count].m[month].d[day-1].solar_rad;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
 										{
-											Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+											Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
+
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
+											{
+												Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+											}
+
 										}
 									}
 									//CONTROL
@@ -1067,9 +1055,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									}
-									//convert daily average solar radiation to monthly solar radiation
-									//m[month].solar_rad *= m[month].n_days;
-									//Log("%d-%s-solar rad = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].solar_rad);
 									break;
 
 								case TA_F: //Ta_f -  temperature average
@@ -1081,19 +1066,22 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
-									//fixme
-									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
 									{
-										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count-2].m[month].d[day].tavg;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tavg))
+										//the model gets the value of the day before
+										//Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+										yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count].m[month].d[day-1].tavg;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
 										{
-											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count-2].m[month].d[day].tavg;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
+											{
+												//Log ("********* TAVG -NO DATA- in previous year!!!!\n" );
+											}
 										}
 									}
-									*/
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
 									{
@@ -1111,27 +1099,23 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
-									//fixme
-									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 									{
-										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-2].m[month].d[day].tmax;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tmax))
+										//the model gets the value of the day before
+										//Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count].m[month].d[day-1].tmax;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 										{
-											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-2].m[month].d[day].tmax;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
+											{
+												Log ("********* TMAX -NO DATA- in previous year!!!!\n" );
+											}
 										}
 									}
-									*/
-									//CONTROL
-									/*
-									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
-									{
-										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									}
 									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
-									 */
 									break;
 
 								case TMIN: //TMIN -  minimum temperature
@@ -1143,27 +1127,23 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
-									//fixme
-									/*
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 									{
+										//the model gets the value of the day before
 										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-2].m[month].d[day].tmin;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tmin))
+										yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count].m[month].d[day-1].tmin;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 										{
-											Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-2].m[month].d[day].tmin;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
+											{
+												//Log ("********* TMIN -NO DATA- in previous year!!!!\n" );
+											}
 										}
 									}
-									*/
-									//CONTROL
-									/*
-									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
-									{
-										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
-									}
-									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
-									 */
 									break;
 
 								case VPD_F: //RH_f - RH
@@ -1177,11 +1157,21 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
 									{
+										//the model gets the value of the day before
 										Log ("* VPD -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-										yos[*yos_count-1].m[month].d[day].vpd = yos[*yos_count-2].m[month].d[day].vpd;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].vpd))
+										yos[*yos_count-1].m[month].d[day].vpd = yos[*yos_count].m[month].d[day-1].vpd;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
 										{
 											Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].vpd = yos[*yos_count-2].m[month].d[day].vpd;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
+											{
+												Log ("********* VPD -NO DATA- in previous year!!!!\n" );
+											}
+
 										}
 									}
 									//Log("%d-%s-vpd = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].vpd);
@@ -1198,11 +1188,20 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
 									{
+										//the model gets the value of the day before
 										//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
-										yos[*yos_count-1].m[month].d[day].ts_f = yos[*yos_count-2].m[month].d[day].ts_f;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].ts_f))
+										yos[*yos_count-1].m[month].d[day].ts_f = yos[*yos_count].m[month].d[day-1].ts_f;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
 										{
 											//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].ts_f = yos[*yos_count-2].m[month].d[day].ts_f;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
+											{
+												//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
+											}
 										}
 									}
 									//Log("%d-%s-ts_f = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ts_f);
@@ -1219,12 +1218,21 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
 									{
+										//the model gets the value of the day before
 										Log ("* PRECIPITATION -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 										Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count-2].m[month].d[day].rain;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].rain))
+										yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count].m[month].d[day-1].rain;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].rain))
 										{
 											Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count-2].m[month].d[day].rain;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
+											{
+												Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
+											}
 
 										}
 										//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
@@ -1255,13 +1263,22 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
 									{
+										//the model gets the value of the day before
 										//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 										//Log("Getting previous years values !!\n");
-										yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count-2].m[month].d[day].swc;
-										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].swc))
+										yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count].m[month].d[day-1].swc;
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
 										{
 											//Log ("* SWC -NO DATA- in previous year!!!!\n" );
 											yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
+
+											//the model gets the value of the year before
+											yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count-2].m[month].d[day].swc;
+
+											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
+											{
+												//Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
+											}
 										}
 									}
 									//Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].swc);
@@ -1286,10 +1303,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											//control in lai data if is an invalid value
 											if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
 											{
+												//the model gets the value of the day before
 												Log ("********* LAI -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
 												//Log("Getting previous years values !!\n");
-												yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
-												if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].ndvi_lai))
+												yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count].m[month].d[day-1].ndvi_lai;
+												if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
 												{
 													Log ("* LAI -NO DATA- in previous year!!!!\n" );
 													yos[*yos_count-1].m[month].d[day].ndvi_lai = NO_DATA;
@@ -1890,7 +1908,7 @@ int main(int argc, char *argv[])
 	{
 		strcat (out_filename, "no_data_available");
 	}
-	*/
+	 */
 
 
 
@@ -2004,10 +2022,10 @@ int main(int argc, char *argv[])
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
 					if ((site->sand_perc == -999.0) ||
-						(site->clay_perc == -999.0) ||
-						(site->silt_perc == -999.0) ||
-						(site->bulk_dens == -999.0) ||
-						(site->soil_depth == -999.0) )
+							(site->clay_perc == -999.0) ||
+							(site->silt_perc == -999.0) ||
+							(site->bulk_dens == -999.0) ||
+							(site->soil_depth == -999.0) )
 					{
 						Log("NO SOIL DATA AVAILABLE\n");
 						return 0;
@@ -2085,10 +2103,10 @@ int main(int argc, char *argv[])
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
 					if ((site->sand_perc == -999.0) ||
-						(site->clay_perc == -999.0) ||
-						(site->silt_perc == -999.0) ||
-						(site->bulk_dens == -999.0) ||
-						(site->soil_depth == -999.0) )
+							(site->clay_perc == -999.0) ||
+							(site->silt_perc == -999.0) ||
+							(site->bulk_dens == -999.0) ||
+							(site->soil_depth == -999.0) )
 					{
 						Log("NO SOIL DATA AVAILABLE\n");
 						return 0;
