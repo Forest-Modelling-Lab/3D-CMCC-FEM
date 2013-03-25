@@ -136,6 +136,12 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 
 	Log("compute vegetative months for version '%c'\n", settings->spatial);
 
+	//check for temperature
+	if ( met[month].tavg == NO_DATA)
+	{
+		met[month].tavg = (met[month].tmax + met[month].tmin)/2;
+	}
+
 
 
 		for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -213,6 +219,14 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 
 
 	met = (MET_DATA*) yos[years].m;
+	Log("recompute tavg = %g\n", met[month].d[day].tavg);
+
+	//check for temperature
+	if ( met[month].d[day].tavg == NO_DATA)
+	{
+		met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+		Log("recompute tavg = %g\n", met[month].d[day].tavg);
+	}
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 

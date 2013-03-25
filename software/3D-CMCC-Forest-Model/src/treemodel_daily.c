@@ -62,6 +62,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//daily loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
+
+		//check for temperature
+		if ( met[month].d[day].tavg == NO_DATA)
+		{
+			met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+		}
+
+
 		//*************FOREST CHARACTERISTIC*********************
 		if (day == 0 && month == JANUARY)
 		{
@@ -94,11 +102,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 
 
-		//check for temperature
-		if ( IS_INVALID_VALUE (met[month].d[day].tavg))
-		{
-			met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
-		}
+
 
 		//compute vpd
 		//TODO remove if used VPD

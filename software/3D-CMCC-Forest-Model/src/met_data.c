@@ -112,6 +112,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 		Log("**Monthly MET DATA**\n");
 		Log("-average solar_rad = %g MJ/m^2/day\n"
 				"-tavg = %g °C\n"
+				"-tmax = %g °C\n"
+				"-tmin = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
@@ -120,6 +122,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-daylength = %g hrs\n",
 				met[month].solar_rad,
 				met[month].tavg,
+				met[month].tmax,
+				met[month].tmin,
 				//met[month].rh,
 				vpd,
 				met[month].ts_f,
@@ -138,6 +142,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 		Log("**Daily MET DATA**\n");
 		Log("-average solar_rad = %g MJ/m^2/day\n"
 				"-tavg = %g °C\n"
+				"-tmax = %g °C\n"
+				"-tmin = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
@@ -146,6 +152,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-daylength = %g hrs\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
+				met[month].d[day].tmax,
+				met[month].d[day].tmin,
 				//met[month].rh,
 				vpd,
 				met[month].d[day].ts_f,
