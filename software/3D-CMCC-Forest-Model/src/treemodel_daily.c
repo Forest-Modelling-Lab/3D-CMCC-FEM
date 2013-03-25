@@ -89,8 +89,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
-
-
+		if (met[month].d[day].tavg == -9999)
+		{
+			Log("---temperatura = %g\n", met[month].d[day].tavg);
+		}
 
 
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );

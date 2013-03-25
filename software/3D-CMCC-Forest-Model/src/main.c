@@ -47,6 +47,8 @@ enum {	MONTH = 0,
 	N_DAYS,
 	RG_F,
 	TA_F,
+	TMAX,
+	TMIN,
 	VPD_F,
 	TS_F,
 	PRECIP,
@@ -127,8 +129,8 @@ static const char *met_columns[MET_COLUMNS] = {	"Month",
 		"n_days",
 		"Rg_f",
 		"Ta_f",
-		//"Tamax",
-		//"Tmin",
+		"Tmax",
+		"Tmin",
 		"VPD_f",
 		"Ts_f",
 		"Precip",
@@ -654,6 +656,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// check if each columns was assigned
 		for ( i = 0; i < MET_COLUMNS; i++ )
 		{
+
 			if ( -1 == columns[i] )
 			{
 				printf("met column %s not found.\n\n", met_columns[i]);
@@ -661,6 +664,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				fclose(f);
 				return NULL;
 			}
+
 		}
 
 		// reset
@@ -793,6 +797,63 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								{
 									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 								}
+								break;
+
+							case TMAX: //Tmax -  maximum temperature
+								yos[*yos_count-1].m[month].tmax = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmax))
+								{
+									Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].tmax = yos[*yos_count-2].m[month].tmax;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmax))
+									{
+										Log ("********* T_MAX -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								/*
+								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
+								{
+									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								*/
+								break;
+
+
+							case TMIN: //Tmin -  minimum temperature
+								yos[*yos_count-1].m[month].tmin = convert_string_to_prec(token2, &error_flag);
+								if ( error_flag )
+								{
+									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+									free(yos);
+									fclose(f);
+									return NULL;
+								}
+								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmin))
+								{
+									Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									Log("Getting previous years values !!\n");
+									yos[*yos_count-1].m[month].tmin = yos[*yos_count-2].m[month].tmin;
+									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmin))
+									{
+										Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
+									}
+								}
+								//CONTROL
+								/*
+								if (yos[*yos_count-1].m[month].tavg > settings->maxtavg)
+								{
+									Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+								}
+								*/
 								break;
 
 							case VPD_F: //RH_f - RH
@@ -1027,6 +1088,64 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
 									}
 									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
+									break;
+
+								case TMAX: //TMAX -  maximum temperature
+									yos[*yos_count-1].m[month].d[day].tmax = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
+									{
+										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+										Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-2].m[month].d[day].tmax;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tmax))
+										{
+											Log ("********* T_AVG -NO DATA- in previous year!!!!\n" );
+										}
+									}
+									//CONTROL
+									/*
+									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
+									{
+										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									}
+									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
+									 */
+									break;
+
+								case TMIN: //TMIN -  minimum temperature
+									yos[*yos_count-1].m[month].d[day].tmin = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, szMonth[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
+									{
+										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, szMonth[month] );
+										Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-2].m[month].d[day].tmin;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].d[day].tmin))
+										{
+											Log ("********* T_MIN -NO DATA- in previous year!!!!\n" );
+										}
+									}
+									//CONTROL
+									/*
+									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
+									{
+										Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, szMonth[month] );
+									}
+									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].tavg);
+									 */
 									break;
 
 								case VPD_F: //RH_f - RH

@@ -63,6 +63,8 @@ typedef struct{
 	int n_days;
 	PREC solar_rad;
 	PREC tavg;
+	PREC tmax;
+	PREC tmin;
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
@@ -78,6 +80,8 @@ typedef struct {
 	int month;
 	PREC solar_rad;
 	PREC tavg;
+	PREC tmax;
+	PREC tmin;
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
