@@ -99,6 +99,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	 *********************************************************************************************************/
 
 	float snow_eff;															// snow effect on canopy temperature
+	float snowFactor; 														// snow factor of influence of soil surface temperature
 	float canopyMaxTemperature;												// max (daily) canopy temperature
 	float canopyMinTemperature;												// min (daily) canopy temperature
 	float canopyDaytimeMeanTemperature;										// canopy daytime (mean) temperature
@@ -119,7 +120,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float soilLayerThickness[1];									// thickness of soil layer
 	//	float Zmax;															// soil depth from the surface
 
-	float mid1;
+	float maxDampingDepth;
 	float mid2;
 	float dampingDepth[1];											// damping depth in soil temperature estimation (cm water)
 	float soilBulkDensity;													// average soil bulk density: each array cell stores its' array profile BD; BD[l+1] = sum BD[i];
@@ -131,14 +132,16 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	float snowCoverLagFactor; 												// lagging factor simulating residues and and snow cover effects on soil surface
 	float soilLayerTemperature[1];									//soil layer temperature at its center
-	//	float soilMaxTemperature;
-	//	float soilMinimumTemperature;
+
 	int   hourDay;															// hour of the day
 	int   wetDays;															// number of rainy days in the current month;
 	int   dryDays;															// number of dry days in the current month
 
-
+	//----------------------------------APEX-EPIC REQUESTED ----------------------------------------------------------------------------------------------------------------
+	float aboveBiomass;
+	float soilTemperatureCorrectionFactor;									// soil tempearture lagging factor, simulating snow and residue cover influences
 	float lag; 																// coeff. ranging from 0.0 to 1.0: allows weighting of (d-1)’s soil temp. with the current day’s
+
 	// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 
 	//---------------------------------- PARTON -------------------------------
@@ -217,7 +220,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	 *********************************************************************************************************************************/
 	int   stageLimit[9];   //todo
 	float dailyThermalTime;
-	//float dailyThermalTime2;											// daily thermal time using penning the vries, 1989)
 	float maxDevelopmentTemperature;									// max temperature in which possible development
 	float basalTemperature;												// basal temperature for wheat; corn (8), rice (10)
 
@@ -270,14 +272,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float diffuseLightFraction;											// fraction of diffuse light
 	//	float blackBodyExtinctionCoeff2;									// Extinction coefficient of assumed black body leaves
 	float directLightExtinctionCoeff;									// extinction coefficient of direct light
-
-
-
-	float prova;
-
-
-
-
 	float hourPar;														// mean par at a specific hour
 	float diffuseLightAboveCanopy;										// diffuse light above the canopy
 	float directLightAboveCanopy;										// direct light above the canopy
@@ -319,10 +313,11 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float aboveBiomassFract;											// aboveground biomass fraction (todo understand if it is the same as potentialEvaporationi_biomass)
 	float stemBiomassFract;												// stem biomass fraction
 	float grainBiomassFract;											// grain biomass fraction
-
-	//	float dailyIncreaseLAI;												// daily increase of LAI
-	//	float dailyLeafSenescence;											// daily leaf senescence
-	//	float specificLeafArea;												// specific leaf area
+	float litterfalled;													// litter quantity, initialized as site.initiallitter and updated at the end of each day
+	float previousDaySoilTemp;											// layer 2 soil temperature of the previous day; if soil is not layered, assumed as the whole soil temperature
+	//	float dailyIncreaseLAI;											// daily increase of LAI
+	//	float dailyLeafSenescence;										// daily leaf senescence
+	//	float specificLeafArea;											// specific leaf area
 
 	float waterStressFactor;											// water stress factor (from 0 to 1: formula to be found)
 	float nitrogenStressFactor;											// nitrogen stress factor (nitrogenStressFactor to be evaluated with a formula; to be found)
@@ -335,39 +330,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	int   cumPhyllocrons;
 
 
-
-
-	/**************************************************************************************************************************
-	 *												alternatives
-	 *************************************************************************************************************************/
-	/*										Claudio O. Stockle and Gaylon S. Campbell
-	 *************************************************************************************************************************/
-	/*
-	float solar_d;
-	float half_rad;
-	float time_eq;
-	float s_middle;
-	float dawn;
-	 */
-	//Parton 1989:
-	//	float Tsoil;
-	//	float dawn2;
-/*
-	//wiki: dawn
-	float s_noon;					// approximate solar noon
-	float mean_anomaly;				// solar mean anomaly
-	float Center;					// equation of center
-	float ec_lon;					// ecliptic longitude
-	//	float sol_transit;				// solar transit
-	float sin_decl;					// declination of the sun
-	float hour_angle;				// hour angle
-	float j_cycle;					// actual julian cycle
-
-	float hour_int;					// decimal of the hour transformed in its sexagesimal value
-	int dawn3;
-	int sunset;
-
-*/
 	/*******************************************************************************************
 	 * 							RITCHIE 1988
 	 *******************************************************************************************/
@@ -516,20 +478,18 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			soilBulkDensity = 1.49;				//(g/cm3)
 			//profileWaterContent = 0.5;
 			fractionFactor = 0.03;  // if heavyclay, 0.03; if sandy 0.07
-
+			litterfalled = site->initialLitter;
 			Q10 = 2.0;	//assumed by penning de vries, pag. 53
 
 			for (l = 0; l < soilLayer; l++)
 			{
 				layerFieldSaturation[l] = 1.0 - soilBulkDensity / 2.65 - fractionFactor;
+				layerFieldSaturation[l] = 30.0;		//fixme sergio find out a way to compute water content at saturation (macropore occupied by water)
 			}
-
-			CN = 70;
-
-			//Zmax = 63.5;
 
 			abovegroundFraction = 80.0;			//aboveground biomass fraction (understand if it is the same)
 			soilLayerThickness[0] = 50.0;
+			layerMoisture [0] = 15.0;
 			//SW[0] = ;
 			fieldCapacityLayerMoisture[0] = 30.0;			// it shoul be set at MAXASW (i suppose), but on site is putted as a comment
 			//soil moisture of layer l at wilting point; assumed as 10% fraction of max swc ( filed capacity) (Collalti)
@@ -590,6 +550,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				cumulativeLeafAreaPhyllocron[3] = 0;
 				cumulativeLeafAreaPhyllocron[4] = 0;
 
+				layerRootLengthDensity[0] = 1.0;	//fixme sergio cm of very first root length; invented by me to avoid 0/0 problem
 				//growth respiration efficiency; taken fron Penning de Vries
 				growthRespEfficiency = (0.451 + 0.532 + 0.774 + 0.690 + 0.375) / 5.0;		//from listing 1, pag 205; is the mean coefficient  of specific chemical compound CO2 production not totally secure though
 			}
@@ -668,7 +629,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		//should be set here maxAltitudeJulianDate: julian date when sun is higher?
 
-//------------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------
 		//solar declination
 		solarDeclination = -asin(sin(23.4 * 180.0 / Pi) * cos(360.0 * (actualDate +10) / 365.0));
 		Log("\nsolar declination = %g", solarDeclination);
@@ -679,7 +640,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Sfactor = sin(site->lat) * sin(solarDeclination);
 		Log("\nC value is %g\nS value is %g", Cfactor, Sfactor);
 
-//------------------------------------------------------------------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------------
 
 		daylength = 12 + (24.0 / Pi) * asin(Sfactor / Cfactor);
 		Log("\nDay length is equal to %g hours\n", daylength);
@@ -696,7 +657,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Log("And the extra terrestrial insulation = %g\n", extraTerrestrialInsolation);
 
 
-		 /* *******************************************************************************************************************
+		/* *******************************************************************************************************************
 		 * 								A SOLAR EQ. ALTERNATIVE: STOCKLE AND CAMPBELL
 		 * ********************************************************************************************************************/
 
@@ -737,13 +698,15 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		{
 			//converted in J/(m^2 d)
 			Log("\n\nSolar radiation measured in the field; converted in J/(M^2*d)");
-			dailySolarRadiation = met[month].solar_rad * 1000000;
+			dailySolarRadiation = met[month].solar_rad;
 		}
 		else
 		{
 			Log("\n******* DERIVING SOLAR RADIATION FROM SUNSHINE DURATION ********\n\n");
 			//daily solar radiation formulation
-			dailySolarRadiation = extraTerrestrialInsolation * (empiric_param_a + empiric_param_b * sunshine / daylength);		// compare with alessio's; i suppose sunshine's not
+
+			//			dailySolarRadiation = extraTerrestrialInsolation * (empiric_param_a + empiric_param_b * sunshine / daylength) / 1000000.0;		// compare with alessio's; i suppose sunshine's not
+
 			//convert in MJ/m-2 d-1 : 1,000,000: perfect!! it is allineated to the values measured in field
 			//ATTENTION! there's an error on Zhang et al 2002: the amount is (m^2d and not m^2s)
 		}
@@ -888,556 +851,553 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		 */
 
-			/***************************************************************************************************************************
-			 *
-			 * 		ATTENTION!!! THIS ROUTINE IS RELATED TO PLANT DEVELOPMENT; TO AVOID CRASHES IS PLACED HERE FOR NOW
-			 * 							REMEMBER TO PLACE IN EACH STAGE, WITH ITS DIFFERENCES ONCE DEBUGGED
-			 **************************************************************************************************************************/
+		/***************************************************************************************************************************
+		 *
+		 * 		ATTENTION!!! THIS ROUTINE IS RELATED TO PLANT DEVELOPMENT; TO AVOID CRASHES IS PLACED HERE FOR NOW
+		 * 							REMEMBER TO PLACE IN EACH STAGE, WITH ITS DIFFERENCES ONCE DEBUGGED
+		 **************************************************************************************************************************/
 
-			/*********************************************************************************************************************************
-			 * 											SOIL WATER MODULE
-			 *******************************************************************************************************************************/
+		/*********************************************************************************************************************************
+		 * 											SOIL WATER MODULE
+		 *******************************************************************************************************************************/
 
-			//daily maximum snow melt
-			dailyMaximumSnowMelt = 0.07 * meanCanopyTemperature;
+		//daily maximum snow melt
+		dailyMaximumSnowMelt = 0.07 * meanCanopyTemperature;
 
-			//daily maximum crop interception (cm of water)
-			dailyMaximumPlantInterception = 0.02 * LAI;
-			Log("\nDaily maximum snow melt: %g \nDaily maximum plant interception: %g", dailyMaximumSnowMelt);
+		//daily maximum crop interception (cm of water)
+		dailyMaximumPlantInterception = 0.02 * LAI;
+		Log("\nDaily maximum snow melt: %g \nDaily maximum plant interception: %g", dailyMaximumSnowMelt, dailyMaximumPlantInterception);
 
 
-			Log("\n******* CALCULATING WATER SURFACE RUNOFF: CURVE NUMBER ESTIMATION METHOD ********\n\n");
-			//CN usually varies from 30 to 100; SCS curve number model
+		Log("\n******* CALCULATING WATER SURFACE RUNOFF: CURVE NUMBER ESTIMATION METHOD ********\n\n");
+		//CN usually varies from 30 to 100; SCS curve number model
 
-			// look at SCS method
-			Log ("\nCURVE NUMBER VALUE\n");
+		// look at SCS method
+		Log ("\nCURVE NUMBER VALUE\n");
 
-			/***********************************************************************************************************************
+		/***********************************************************************************************************************
 											CURVE NUMBER SETTING TODO stagione riposo: set it using development module
-			 ***********************************************************************************************************************/
-			//TODO ATTENTION!!!! THIS IS COMPLETELY NONSENSE!!! IT IS USELESS TO USE THIS APPROACH ON A MONTHLY BASED MODEL; ITS USE IS
-			// JUST FUNCTION OF A DEBUGGING APPROACH
 
 			//todo develope an automated CN setting, based on silt/sand/clay % approach
 
 
 			/***************************************************************************
-			 * 											RUNOFF CURVE NUMBER
-			 **************************************************************************/
+		 * 											RUNOFF CURVE NUMBER
+		 **************************************************************************/
 
-			if(strncmp (Luse,"fallow", 4) == 0)
+		if(strncmp (Luse,"fallow", 4) == 0)
+		{
+			if (strncmp(pract,  "straightRow", 4) == 0)
 			{
-				if (strncmp(pract,  "straightRow", 4) == 0)
+				switch (hydroGroup)
+				{
+				case 1:
+					CN = 77;
+					break;
+				case 2:
+					CN = 86;
+					break;
+				case 3:
+					CN = 91;
+					break;
+				case 4:
+					CN = 94;
+					break;
+				}
+			}
+		}
+		else if (strncmp(Luse,  "RowCrops", 4) == 0)
+		{
+			if (strncmp(pract,  "straightRow", 4) == 0)
+			{
+				if (hydroCondition == 0)	// 0 stands for poor; 1 for good
 				{
 					switch (hydroGroup)
 					{
 					case 1:
-						CN = 77;
+						CN = 72;
 						break;
 					case 2:
-						CN = 86;
+						CN = 81;
 						break;
 					case 3:
-						CN = 91;
+						CN = 88;
 						break;
 					case 4:
-						CN = 94;
+						CN = 91;
+						break;
+					}
+				}
+				if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 67;
+						break;
+					case 2:
+						CN = 78;
+						break;
+					case 3:
+						CN = 85;
+						break;
+					case 4:
+						CN = 89;
 						break;
 					}
 				}
 			}
-			else if (strncmp(Luse,  "RowCrops", 4) == 0)
+			else if (strncmp(pract,  "contoured", 4) == 0)
 			{
-				if (strncmp(pract,  "straightRow", 4) == 0)
+				if (hydroCondition == 0)	// 0 stands for poor; 1 for good
 				{
-					if (hydroCondition == 0)	// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 72;
-							break;
-						case 2:
-							CN = 81;
-							break;
-						case 3:
-							CN = 88;
-							break;
-						case 4:
-							CN = 91;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 67;
-							break;
-						case 2:
-							CN = 78;
-							break;
-						case 3:
-							CN = 85;
-							break;
-						case 4:
-							CN = 89;
-							break;
-						}
+					case 1:
+						CN = 70;
+						break;
+					case 2:
+						CN = 79;
+						break;
+					case 3:
+						CN = 84;
+						break;
+					case 4:
+						CN = 88;
+						break;
 					}
 				}
-				else if (strncmp(pract,  "contoured", 4) == 0)
+				if (hydroCondition == 1)
 				{
-					if (hydroCondition == 0)	// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 70;
-							break;
-						case 2:
-							CN = 79;
-							break;
-						case 3:
-							CN = 84;
-							break;
-						case 4:
-							CN = 88;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 65;
-							break;
-						case 2:
-							CN = 75;
-							break;
-						case 3:
-							CN = 82;
-							break;
-						case 4:
-							CN = 86;
-							break;
-						}
-					}
-				}
-				else if (strncmp(pract,  "terraced", 4) == 0)
-				{
-					if (hydroCondition == 0)	// 0 stands for poor; 1 for good
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 66;
-							break;
-						case 2:
-							CN = 74;
-							break;
-						case 3:
-							CN = 80;
-							break;
-						case 4:
-							CN = 82;
-							break;
-						}
-					}
-					else if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 62;
-							break;
-						case 2:
-							CN = 71;
-							break;
-						case 3:
-							CN = 78;
-							break;
-						case 4:
-							CN = 81;
-							break;
-						}
+					case 1:
+						CN = 65;
+						break;
+					case 2:
+						CN = 75;
+						break;
+					case 3:
+						CN = 82;
+						break;
+					case 4:
+						CN = 86;
+						break;
 					}
 				}
 			}
-
-			else if (strncmp(Luse,  "smallgrain", 4) == 0)
+			else if (strncmp(pract,  "terraced", 4) == 0)
 			{
-				if (strncmp(pract,  "straightRow", 4) == 0)
+				if (hydroCondition == 0)	// 0 stands for poor; 1 for good
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 65;
-							break;
-						case 2:
-							CN = 76;
-							break;
-						case 3:
-							CN = 84;
-							break;
-						case 4:
-							CN = 88;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 63;
-							break;
-						case 2:
-							CN = 75;
-							break;
-						case 3:
-							CN = 83;
-							break;
-						case 4:
-							CN = 87;
-							break;
-						}
+					case 1:
+						CN = 66;
+						break;
+					case 2:
+						CN = 74;
+						break;
+					case 3:
+						CN = 80;
+						break;
+					case 4:
+						CN = 82;
+						break;
 					}
 				}
-				else if (strncmp(pract,  "contoured", 4) == 0)
+				else if (hydroCondition == 1)
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 63;
-							break;
-						case 2:
-							CN = 74;
-							break;
-						case 3:
-							CN = 82;
-							break;
-						case 4:
-							CN = 85;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 61;
-							break;
-						case 2:
-							CN = 73;
-							break;
-						case 3:
-							CN = 81;
-							break;
-						case 4:
-							CN = 84;
-							break;
-						}
-					}
-				}
-				else if (strncmp(pract,  "terraced", 4) == 0)
-				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 61;
-							break;
-						case 2:
-							CN = 72;
-							break;
-						case 3:
-							CN = 79;
-							break;
-						case 4:
-							CN = 82;
-							break;
-						}
-					}
-					else if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 59;
-							break;
-						case 2:
-							CN = 70;
-							break;
-						case 3:
-							CN = 78;
-							break;
-						case 4:
-							CN = 81;
-							break;
-						}
+					case 1:
+						CN = 62;
+						break;
+					case 2:
+						CN = 71;
+						break;
+					case 3:
+						CN = 78;
+						break;
+					case 4:
+						CN = 81;
+						break;
 					}
 				}
 			}
-			else if (strncmp(Luse,  "legumes", 4) == 0)
+		}
+
+		else if (strncmp(Luse,  "smallgrain", 4) == 0)
+		{
+			if (strncmp(pract,  "straightRow", 4) == 0)
 			{
-				if (strncmp(pract,  "straightRow", 4) == 0)
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 66;
-							break;
-						case 2:
-							CN = 77;
-							break;
-						case 3:
-							CN = 85;
-							break;
-						case 4:
-							CN = 89;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 58;
-							break;
-						case 2:
-							CN = 72;
-							break;
-						case 3:
-							CN = 81;
-							break;
-						case 4:
-							CN = 85;
-							break;
-						}
+					case 1:
+						CN = 65;
+						break;
+					case 2:
+						CN = 76;
+						break;
+					case 3:
+						CN = 84;
+						break;
+					case 4:
+						CN = 88;
+						break;
 					}
 				}
-				else if (strncmp(pract,  "contoured", 4) == 0)
+				if (hydroCondition == 1)
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 64;
-							break;
-						case 2:
-							CN = 75;
-							break;
-						case 3:
-							CN = 83;
-							break;
-						case 4:
-							CN = 85;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 55;
-							break;
-						case 2:
-							CN = 69;
-							break;
-						case 3:
-							CN = 78;
-							break;
-						case 4:
-							CN = 83;
-							break;
-						}
-					}
-				}
-				else if (strncmp(pract,  "terraced", 4) == 0)
-				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 63;
-							break;
-						case 2:
-							CN = 73;
-							break;
-						case 3:
-							CN = 80;
-							break;
-						case 4:
-							CN = 83;
-							break;
-						}
-					}
-					else if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 51;
-							break;
-						case 2:
-							CN = 67;
-							break;
-						case 3:
-							CN = 76;
-							break;
-						case 4:
-							CN = 80;
-							break;
-						}
+					case 1:
+						CN = 63;
+						break;
+					case 2:
+						CN = 75;
+						break;
+					case 3:
+						CN = 83;
+						break;
+					case 4:
+						CN = 87;
+						break;
 					}
 				}
 			}
-			else if (strncmp(Luse,  "pasture", 4) == 0)
+			else if (strncmp(pract,  "contoured", 4) == 0)
 			{
-
-				if (strncmp(pract,  "straightRow", 4) == 0)
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 68;
-							break;
-						case 2:
-							CN = 79;
-							break;
-						case 3:
-							CN = 86;
-							break;
-						case 4:
-							CN = 89;
-							break;
-						}
-					}
-					if (hydroCondition == 1)// 0 stands for poor; 1 for good
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 49;
-							break;
-						case 2:
-							CN = 69;
-							break;
-						case 3:
-							CN = 79;
-							break;
-						case 4:
-							CN = 84;
-							break;
-						}
-					}
-					if (hydroCondition == 2)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 39;
-							break;
-						case 2:
-							CN = 61;
-							break;
-						case 3:
-							CN = 74;
-							break;
-						case 4:
-							CN = 80;
-							break;
-						}
+					case 1:
+						CN = 63;
+						break;
+					case 2:
+						CN = 74;
+						break;
+					case 3:
+						CN = 82;
+						break;
+					case 4:
+						CN = 85;
+						break;
 					}
 				}
-				else if (strncmp(pract,  "contoured", 4) == 0)
+				if (hydroCondition == 1)
 				{
-					if (hydroCondition == 0)// 0 stands for poor; 1 for good
+					switch (hydroGroup)
 					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 47;
-							break;
-						case 2:
-							CN = 67;
-							break;
-						case 3:
-							CN = 81;
-							break;
-						case 4:
-							CN = 88;
-							break;
-						}
-					}
-					if (hydroCondition == 1)
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 25;
-							break;
-						case 2:
-							CN = 59;
-							break;
-						case 3:
-							CN = 75;
-							break;
-						case 4:
-							CN = 83;
-							break;
-						}
-					}
-					if (hydroCondition == 2)// 0 stands for poor; 1 for good
-					{
-						switch (hydroGroup)
-						{
-						case 1:
-							CN = 6;
-							break;
-						case 2:
-							CN = 35;
-							break;
-						case 3:
-							CN = 70;
-							break;
-						case 4:
-							CN = 79;
-							break;
-						}
+					case 1:
+						CN = 61;
+						break;
+					case 2:
+						CN = 73;
+						break;
+					case 3:
+						CN = 81;
+						break;
+					case 4:
+						CN = 84;
+						break;
 					}
 				}
 			}
-
-			else
+			else if (strncmp(pract,  "terraced", 4) == 0)
 			{
-				CN = 50;
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 61;
+						break;
+					case 2:
+						CN = 72;
+						break;
+					case 3:
+						CN = 79;
+						break;
+					case 4:
+						CN = 82;
+						break;
+					}
+				}
+				else if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 59;
+						break;
+					case 2:
+						CN = 70;
+						break;
+					case 3:
+						CN = 78;
+						break;
+					case 4:
+						CN = 81;
+						break;
+					}
+				}
 			}
+		}
+		else if (strncmp(Luse,  "legumes", 4) == 0)
+		{
+			if (strncmp(pract,  "straightRow", 4) == 0)
+			{
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 66;
+						break;
+					case 2:
+						CN = 77;
+						break;
+					case 3:
+						CN = 85;
+						break;
+					case 4:
+						CN = 89;
+						break;
+					}
+				}
+				if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 58;
+						break;
+					case 2:
+						CN = 72;
+						break;
+					case 3:
+						CN = 81;
+						break;
+					case 4:
+						CN = 85;
+						break;
+					}
+				}
+			}
+			else if (strncmp(pract,  "contoured", 4) == 0)
+			{
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 64;
+						break;
+					case 2:
+						CN = 75;
+						break;
+					case 3:
+						CN = 83;
+						break;
+					case 4:
+						CN = 85;
+						break;
+					}
+				}
+				if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 55;
+						break;
+					case 2:
+						CN = 69;
+						break;
+					case 3:
+						CN = 78;
+						break;
+					case 4:
+						CN = 83;
+						break;
+					}
+				}
+			}
+			else if (strncmp(pract,  "terraced", 4) == 0)
+			{
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 63;
+						break;
+					case 2:
+						CN = 73;
+						break;
+					case 3:
+						CN = 80;
+						break;
+					case 4:
+						CN = 83;
+						break;
+					}
+				}
+				else if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 51;
+						break;
+					case 2:
+						CN = 67;
+						break;
+					case 3:
+						CN = 76;
+						break;
+					case 4:
+						CN = 80;
+						break;
+					}
+				}
+			}
+		}
+		else if (strncmp(Luse,  "pasture", 4) == 0)
+		{
 
-			Log("\nCurveNumber %g", CN);
+			if (strncmp(pract,  "straightRow", 4) == 0)
+			{
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 68;
+						break;
+					case 2:
+						CN = 79;
+						break;
+					case 3:
+						CN = 86;
+						break;
+					case 4:
+						CN = 89;
+						break;
+					}
+				}
+				if (hydroCondition == 1)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 49;
+						break;
+					case 2:
+						CN = 69;
+						break;
+					case 3:
+						CN = 79;
+						break;
+					case 4:
+						CN = 84;
+						break;
+					}
+				}
+				if (hydroCondition == 2)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 39;
+						break;
+					case 2:
+						CN = 61;
+						break;
+					case 3:
+						CN = 74;
+						break;
+					case 4:
+						CN = 80;
+						break;
+					}
+				}
+			}
+			else if (strncmp(pract,  "contoured", 4) == 0)
+			{
+				if (hydroCondition == 0)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 47;
+						break;
+					case 2:
+						CN = 67;
+						break;
+					case 3:
+						CN = 81;
+						break;
+					case 4:
+						CN = 88;
+						break;
+					}
+				}
+				if (hydroCondition == 1)
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 25;
+						break;
+					case 2:
+						CN = 59;
+						break;
+					case 3:
+						CN = 75;
+						break;
+					case 4:
+						CN = 83;
+						break;
+					}
+				}
+				if (hydroCondition == 2)// 0 stands for poor; 1 for good
+				{
+					switch (hydroGroup)
+					{
+					case 1:
+						CN = 6;
+						break;
+					case 2:
+						CN = 35;
+						break;
+					case 3:
+						CN = 70;
+						break;
+					case 4:
+						CN = 79;
+						break;
+					}
+				}
+			}
+		}
 
-			//--------------------------------------------------------------------------------------------------------------------
+		else
+		{
+			CN = 50;
+		}
+
+		Log("\nCurveNumber %g", CN);
+
+		//--------------------------------------------------------------------------------------------------------------------
 
 
-			//SCS CN correction method:
-			/*
+		//SCS CN correction method:
+		/*
 			if (stage >= 3 && stage < 8)
 			{
 				if(met[month-4].rain + met[month-3].rain + met[month-2].rain + met[month-1].rain + met[month].rain < 13)
@@ -1464,139 +1424,138 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				}
 			}
 			Log("\nCurveNumber corrected by SCS methodn on previous rainy days number: %g", CN);
-			 *************************************************************************************************************************************/
+		 *************************************************************************************************************************************/
 
-			//retention factor
-			maxInfiltration = 254.0 * (100 - CN) / CN;
-			if(met[month].rain >= 0.2 * maxInfiltration)
-			{
-				//Runoff
-				Runoff = 0.1 * pow((met[month].rain - 0.2),2) / (met[month].rain + 0.8 * maxInfiltration);
-			}else
-			{
-				//Runoff
-				Runoff = 0;
-			}
-			Log("\nfor a retention factor: %g", maxInfiltration);
-			Log("\nand for a monthly rainfall of %g mm", met[month].rain);
-			Log("\nestimated runoff: %g\n", Runoff);
+		//retention factor
+		maxInfiltration = 254.0 * (100 - CN) / CN;
+		if(met[month].rain >= 0.2 * maxInfiltration)
+		{
+			//Runoff
+			Runoff = 0.1 * pow((met[month].rain - 0.2 * maxInfiltration),2) / (met[month].rain + 0.8 * maxInfiltration);
+		}else
+		{
+			//Runoff
+			Runoff = 0;
+		}
+		Log("\nfor a retention factor: %g", maxInfiltration);
+		Log("\nand for a monthly rainfall of %g mm", met[month].rain);
+		Log("\nestimated runoff: %g\n", Runoff);
 
 
-			if (met[month].swc != 9999)
-			{
-				//soil water content from input: it is a whole profile value
-				profileWaterContent = met[month].swc;
-			}
-			else
-			{
-				profileWaterContent = 0;
-				for (l = 0; l < soilLayer; l++)
-				{
-					profileWaterContent += layerMoisture[l];
-				}
-			}
-
-			//********************************************************************************************************************************
-			//------------------------ SOIL WATER BALANCE PARTIALLY TAKEN FROM CERES WHEAT 2.0 -----------------------------
-			//********************************************************************************************************************************
-
-			Log("\n**************************************\n"
-					"soil water balance (CERES WHEAT 2.0)\n"
-					"****************************************\n");
-			//ratio of actual to potentially-extractable soil water (SWR) for layer 1 (the upper layer)
-			//DUL : upper limit of soil water content
-			//SWR = (SW[0] - LL[0])/(fieldCapacityLayerMoisture[0] - LL[0]);			to be used in case of ceres CN correction usage
+		if (met[month].swc != 0)
+		{
+			//soil water content from input: it is a whole profile value
+			profileWaterContent = met[month].swc;
+		}
+		else
+		{
+			profileWaterContent = 0;
 			for (l = 0; l < soilLayer; l++)
 			{
-				//assumed as infiltrated water, the net amount of (precipitation + melt) - (runoff and interception)
-				infiltration = (met[month].rain + dailyMaximumSnowMelt - Runoff - dailyMaximumPlantInterception) / 10.0;	//whatch out if the variablesare set in mm; here in cm
-				Log("\ninfiltration %g", infiltration);
-				//todo flux computation has to be confirmed
-				if (l == 0)
-				{
-					//supposed by me: at the very first layer all the water infiltrated moves from the surface to this layer
-					flux = infiltration;
-					Log("\nflux: %g", flux);
-				}
+				profileWaterContent += layerMoisture[l];
+			}
+		}
 
-				if (flux > 0)
+		//********************************************************************************************************************************
+		//------------------------ SOIL WATER BALANCE PARTIALLY TAKEN FROM CERES WHEAT 2.0 -----------------------------
+		//********************************************************************************************************************************
+
+		Log("\n**************************************\n"
+				"soil water balance (CERES WHEAT 2.0)\n"
+				"****************************************\n");
+
+		//assumed as infiltrated water, the net amount of (precipitation + melt) - (runoff and interception)
+		infiltration = (met[month].rain + dailyMaximumSnowMelt - Runoff - dailyMaximumPlantInterception) / 10.0;	//watch out if the variables are set in mm; here in cm
+		Log("\ninfiltration %g", infiltration);
+
+		for (l = 0; l < soilLayer; l++)
+		{
+			//todo flux computation has to be confirmed
+			if (l == 0)
+			{
+				//supposed by me: at the very first layer all the water infiltrated moves from the surface to this layer
+				flux = infiltration;
+				Log("\nflux: %g", flux);
+			}
+
+			if (flux > 0)
+			{
+				Hold[l] = (layerFieldSaturation[l] - layerMoisture[l]) * soilLayerThickness[l];
+				Log("\nhold[%d]: %g", l, Hold[l]);
+				if (flux <= Hold[l])
 				{
-					Hold[l] = (layerFieldSaturation[l] - layerMoisture[l]) * soilLayerThickness[l];
-					Log("\nhold[%d]: %g", l, Hold[l]);
-					if (flux <= Hold[l])
+					layerMoisture[l] += flux / soilLayerThickness[l];	//water = previous water + (new water / soil thickness)
+					Log("\nflux < hold; SW: %g", layerMoisture[l]);
+					//at this point is evaluated if infiltration is greater than layer field capacity; if yes there's infiltration
+					if ( layerMoisture[l] < fieldCapacityLayerMoisture[l])
 					{
-						layerMoisture[l] += flux / soilLayerThickness[l];	//water = previous water + (new water / soil thickness)
-						Log("\nflux < hold; SW: %g", layerMoisture[l]);
-						//at this point is evaluated if infiltration is greater than layer field capacity; if yes there's infiltration
-						if ( layerMoisture[l] < fieldCapacityLayerMoisture[l])
-						{
-							drain[l] = 0.0;
-							Log("\nlayerMoisture < fieldCapacity: drain = %g", drain[l]);
-						}
-						else
-						{
-							drain[l] = (layerMoisture[l] - fieldCapacityLayerMoisture[l]) * SWcon * soilLayerThickness[l];
-							flux = drain[l];
-							Log("\nlayerMoisture > fieldCapacity: drain = %g", drain[l]);
-							layerMoisture[l] = layerMoisture[l] - drain[l] / soilLayerThickness[l];
-							Log("\nnew SW[l]: %g", layerMoisture[l]);
-						}
+						drain[l] = 0.0;
+						Log("\nlayerMoisture < fieldCapacity: drain = %g", drain[l]);
 					}
 					else
 					{
-						drain[l] = SWcon * (layerFieldSaturation[l] - fieldCapacityLayerMoisture[l]) * soilLayerThickness[l];
-						flux = flux - Hold[l] + drain[l];
-						Log("\nflux > hold: drain[%d] = %g\n\tflux = %g",l,drain[l],flux);
+						drain[l] = (layerMoisture[l] - fieldCapacityLayerMoisture[l]) * SWcon * soilLayerThickness[l];
+						flux = drain[l];
+						Log("\nlayerMoisture > fieldCapacity: drain = %g", drain[l]);
+						layerMoisture[l] = layerMoisture[l] - drain[l] / soilLayerThickness[l];
+						Log("\nnew SW[l]: %g", layerMoisture[l]);
 					}
-					Log("\n\n****UPWARD MOVEMENT****");
-					normVolumetricWater[l] = Maximum(layerMoisture[l] - layerWilting[l],0);		// LL[i] constant (wilting point)
-					Log("\nnormalizedVolumetricWaterContent %g", normVolumetricWater[l]);
 				}
+				else
+				{
+					drain[l] = SWcon * (layerFieldSaturation[l] - fieldCapacityLayerMoisture[l]) * soilLayerThickness[l];
+					flux = flux - Hold[l] + drain[l];
+					Log("\nflux > hold: drain[%d] = %g\n\tflux = %g",l,drain[l],flux);
+				}
+				Log("\n\n****UPWARD MOVEMENT****");
+				normVolumetricWater[l] = Maximum(layerMoisture[l] - layerWilting[l],0);		// LL[i] constant (wilting point)
+				Log("\nnormalizedVolumetricWaterContent %g", normVolumetricWater[l]);
 			}
+		}
 
 
-			/*******************************************************************************************************************************
-			 * 											EVAPOTRANSPIRATION MODULE
-			 ******************************************************************************************************************************/
+		/*******************************************************************************************************************************
+		 * 											EVAPOTRANSPIRATION MODULE
+		 ******************************************************************************************************************************/
 
-			//equilibrium evapotranspiration (solar rad is supposed Mj m-2 day-1; EEq cm day-1)
-			equilibriumEvapotranspiration = 0.0001 * dailySolarRadiation * (4.88 - 4.37 * albedo) * (canopyDaytimeMeanTemperature + 29);	//equilibriumEvapotranspiration
-			Log("\nEquilibrium evapotranspiration: %g", equilibriumEvapotranspiration);
-			Log("\ncanopy temperature %g", canopyDaytimeMeanTemperature);
+		//equilibrium evapotranspiration (solar rad is supposed Mj m-2 day-1; EEq cm day-1)
+		equilibriumEvapotranspiration = 0.0001 * dailySolarRadiation * (4.88 - 4.37 * albedo) * (canopyDaytimeMeanTemperature + 29);	//equilibriumEvapotranspiration
+		Log("\nEquilibrium evapotranspiration: %g", equilibriumEvapotranspiration);
+		Log("\ncanopy temperature %g", canopyDaytimeMeanTemperature);
 
-			//Potential evapotranspiration
-			if (canopyMaxTemperature < 5)
-			{
-				potentialEvapotranspiration = 0.01 * equilibriumEvapotranspiration * exp (0.18 * (canopyMaxTemperature + 20));
-			}
-			else if (canopyMaxTemperature >= 5 && canopyMaxTemperature < 24)
-			{
-				potentialEvapotranspiration = 1.1 * equilibriumEvapotranspiration;
-			}
-			else
-			{
-				//version of Ritchie, 88, from whom taken the other ones
-				potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
-				//version read in zhang 2002
-				//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
-			}
-
-
-			// potential evaporation
-			if (LAI < 1)
-			{
-				potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
-			}
-			else
-			{
-				potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
-			}
+		//Potential evapotranspiration
+		if (canopyMaxTemperature < 5)
+		{
+			potentialEvapotranspiration = 0.01 * equilibriumEvapotranspiration * exp (0.18 * (canopyMaxTemperature + 20));
+		}
+		else if (canopyMaxTemperature >= 5 && canopyMaxTemperature < 24)
+		{
+			potentialEvapotranspiration = 1.1 * equilibriumEvapotranspiration;
+		}
+		else
+		{
+			//version of Ritchie, 88, from whom taken the other ones
+			potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
+			//version read in zhang 2002
+			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
+		}
 
 
-			/*******************************************************************************
-			 * 					RITCHIE ACTUAL RATE OF SOIL EVAPORATION
-			 ******************************************************************************/
-			/*
+		// potential evaporation
+		if (LAI < 1)
+		{
+			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
+		}
+		else
+		{
+			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
+		}
+
+
+		/*******************************************************************************
+		 * 					RITCHIE ACTUAL RATE OF SOIL EVAPORATION
+		 ******************************************************************************/
+		/*
 			Log("\n*****SOIL EVAPORATION MODULE*****");
 
 			if (esStage2 == 0)
@@ -1727,296 +1686,334 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 			//############################################################################################################################################
-			 */
-			// potential transpiration
-			potentialTranspiration = potentialEvapotranspiration - potentialEvaporation;
-			Log("\nfor a potential evapotranspiration of: %g \npotential transpiration: %g", potentialEvapotranspiration, potentialTranspiration);
+		 */
+		// potential transpiration
+		potentialTranspiration = potentialEvapotranspiration - potentialEvaporation;
+		Log("\nfor a potential evapotranspiration of: %g \npotential transpiration: %g", potentialEvapotranspiration, potentialTranspiration);
 
 
-			//effect of soil moisture on evaporation
-			for (l = 0; l < soilLayer; l++)
+		//effect of soil moisture on evaporation
+		for (l = 0; l < soilLayer; l++)
+		{
+			moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / site->soil_depth;
+		}
+		//moistureSoilEvaporationEffect /= site->soil_depth;
+		Log("\nSoil moisture effect on evaporation is: %g\n", moistureSoilEvaporationEffect);
+
+		//actual soil evaporation
+		actualSoilEvaporation = potentialEvaporation * moistureSoilEvaporationEffect;
+
+		deltaMoisture = layerMoisture[0] - actualSoilEvaporation;
+		if (deltaMoisture < driestSoilWaterContent * layerWilting[0])
+		{
+			actualSoilEvaporation = deltaMoisture - layerMoisture[0];
+			layerMoisture[0] = driestSoilWaterContent * layerWilting[0];
+		}
+
+
+
+
+		//________________________________________________________________________________________________________________________
+		//MOVE IN CROP DEVELOPMENT
+		//Crop uptake capacity
+		for (l = 0; l < soilLayer; l++ )
+		{
+			moistureEffectWaterUptake1[l] = sin((layerMoisture[l] - layerWilting[l])/(fieldCapacityLayerMoisture[l] - layerWilting[l]) * 1.25 * Pi /2);
+
+			//find out where computed  layerRootLengthDensity[l]
+			//A Generalized Function of Wheat's Root Length Density Distributions
+
+			//crop uptake capacity
+			waterUptakeSoilLayer += rootWaterUptakeCoefficient * layerRootLengthDensity[l] / (0.2 + 0.2 * layerRootLengthDensity[l]) * moistureEffectWaterUptake1[l] * soilLayerThickness[l];
+
+			Log("\nWater uptake cumulated till layer %d is: %g",l, waterUptakeSoilLayer);
+		}
+		Log("\nwater total uptake is %g", waterUptakeSoilLayer);
+
+		//Actual transpiration
+		actualTranspiration = Minimum(potentialTranspiration, waterUptakeSoilLayer);
+		Log("\nActual transpiration: %g", actualTranspiration);
+
+		/*********************************************************************************************************************************************************
+		 * 												WATER REDISTRIBUITION
+		 *********************************************************************************************************************************************************/
+
+		//checked
+
+		//todo a surface flooding module
+		for (l = soilLayer; l > 1; l--)
+		{
+
+			//to be seen if new moisture is > fieldCapacity: if it's greater than field capacity what should be done!?
+			// supposed: if the lower layer is full, then put it on the upper one; if it is the layer 0, it's a pool
+			Diffusion = 0.88 * exp(35.4 * 0.5 *(normVolumetricWater[l-1] + normVolumetricWater[l])) *
+					(normVolumetricWater[l] - normVolumetricWater[l-1]) / (soilLayerThickness[l] + soilLayerThickness[l-1]) * 0.5;
+			Log("\ndiffusion flux = %g",Diffusion);
+			//to be reviewed
+			layerMoisture[l] -= Diffusion / soilLayerThickness[l];
+			Log("\nnew SW[%d] %g",l,layerMoisture[l]);
+			if(l-1 >= 0)
 			{
-				moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / site->soil_depth;
+				layerMoisture[l - 1] += Diffusion / soilLayerThickness[l-1];
+				Log("\nnew SW[%d] %g",l-1,layerMoisture[l-1]);
 			}
-			//moistureSoilEvaporationEffect /= site->soil_depth;
-			Log("\nSoil moisture effect on evaporation is: %g\n", moistureSoilEvaporationEffect);
+			//todo SW[l] correction
+			//SW[l] += Diffusion
+			Log("\nlayerMoisture: \n\t layer %d, %g \n\t layer %d, %g",l,layerMoisture[l],l-1,layerMoisture[l-1]);
+		}
+		Log("\nEnd of soil water balance module\n\n");
 
-			//actual soil evaporation
-			actualSoilEvaporation = potentialEvaporation * moistureSoilEvaporationEffect;
+		/*******************************************************************************************************************************
+		 * 											EVAPOTRANSPIRATION MODULE
+		 ******************************************************************************************************************************/
 
-			deltaMoisture = layerMoisture[0] - actualSoilEvaporation;
-			if (deltaMoisture < driestSoilWaterContent * layerWilting[0])
+		//equilibrium evapotranspiration (solar rad is supposed Mj m-2 day-1; EEq cm day-1)
+		equilibriumEvapotranspiration = 0.0001 * dailySolarRadiation * (4.88 - 4.37 * albedo) * (canopyDaytimeMeanTemperature + 29);	//equilibriumEvapotranspiration
+		Log("\nEquilibrium evapotranspiration: %g", equilibriumEvapotranspiration);
+		Log("\ncanopy temperature %g", canopyDaytimeMeanTemperature);
+		//Potential evapotranspiration
+		if (canopyMaxTemperature < 5)
+		{
+			potentialEvapotranspiration = 0.01 * equilibriumEvapotranspiration * exp (0.18 * (canopyMaxTemperature + 20));
+		}
+		else if (canopyMaxTemperature >= 5 && canopyMaxTemperature < 24)
+		{
+			potentialEvapotranspiration = 1.1 * equilibriumEvapotranspiration;
+		}
+		else
+		{
+			//version of Ritchie, 88, from whom taken the other ones
+			potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
+			//version read in zhang 2002
+			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
+		}
+
+
+		// potential evaporation
+		if (LAI < 1)
+		{
+			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
+		}
+		else
+		{
+			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
+		}
+
+		// potential transpiration
+		actualTranspiration = potentialEvapotranspiration - potentialEvaporation;
+		Log("\nfor a potential evapotranspiration of: %g \npotential transpiration: %g", potentialEvaporation, actualTranspiration);
+
+
+
+		//effect of soil moisture on evaporation
+		for (l = 0; l < soilLayer; l++)
+		{
+			moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/site->soil_depth;
+		}
+		//moistureSoilEvaporationEffect /= site->soil_depth;
+		Log("\nSoil moisture effect on evaporation is: %g\n", moistureSoilEvaporationEffect);
+
+		//actual soil evaporation
+		actualSoilEvaporation = potentialEvaporation * moistureSoilEvaporationEffect;
+
+		//________________________________________________________________________________________________________________________
+		//MOVE IN CROP DEVELOPMENT
+		//Crop uptake capacity
+		for (l = 0; l < soilLayer; l++ )
+		{
+			moistureEffectWaterUptake1[l] = sin((layerMoisture[l] - layerWilting[l])/(fieldCapacityLayerMoisture[l] - layerWilting[l]) * 1.25 * Pi /2);
+
+			//find out where computed  layerRootLengthDensity[l]
+			//A Generalized Function of Wheat's Root Length Density Distributions
+
+			//crop uptake capacity
+			waterUptakeSoilLayer += rootWaterUptakeCoefficient * layerRootLengthDensity[l] / (0.2 + 0.2 * layerRootLengthDensity[l]) * moistureEffectWaterUptake1[l] * soilLayerThickness[l];
+
+			Log("\nWater uptake cumulated till layer %d is: %g", waterUptakeSoilLayer);
+		}
+		Log("\nwater total uptake is %g", waterUptakeSoilLayer);
+
+		//Actual transpiration
+		actualTranspiration = Minimum(actualTranspiration, waterUptakeSoilLayer);
+		Log("\nActual transpiration: %g", actualTranspiration);
+
+
+		//Crop water stress factor
+		waterStressFactor = actualTranspiration / potentialTranspiration;
+
+		//_____________________________________________________________________________________________________________________________
+
+		Log("*****************************************************************************************"
+				"*\n 					EPIC SOIL SURFACE TEMPERATURE PREDICTION"
+				"*\n****************************************************************************************");
+		if (month == JANUARY) //&&yos == 1;
+		{
+			previousDaySoilTemp = 3.0;
+			lag = 0.0;
+			Log("\nIt's january the first! no lag factor imposed!");
+		}
+		else
+		{
+		if (soilLayer >= 2)
+		{
+			previousDaySoilTemp = soilLayerTemperature[1];
+		}
+		else
+		{
+			previousDaySoilTemp = soilLayerTemperature[0];
+			lag = 0.5;
+			Log("\nlag factor imposed as %g as default", lag);
+		}
+		}
+		//bare soil surface temperature to equal average daily air temperature
+		soilSurfaceTemperature = 0.5 * (maxAirTemperature + minAirTemperature) + (maxAirTemperature - minAirTemperature) * (dailySolarRadiation * (1.0 - albedo) - 14.0) /20.0;
+
+		//correction factor
+		snowFactor = snow / ( snow + exp(2.30 - 0.220 * snow));		//snow should be in mm check!
+		aboveBiomass = epigeousBiomass + litterfalled;
+
+		soilTemperatureCorrectionFactor = aboveBiomass / (aboveBiomass + exp(5.34 -2.40 * aboveBiomass));
+
+		soilTemperatureCorrectionFactor = Maximum(soilTemperatureCorrectionFactor, snowFactor);
+		//covered surface temeperature
+		soilSurfaceTemperature = (1.0 - soilTemperatureCorrectionFactor) * soilSurfaceTemperature + soilTemperatureCorrectionFactor * previousDaySoilTemp * lag;
+
+
+		/***************************************************************************************
+		 * 						DNDC SOIL SURFACE TEMPERATURE
+		 **************************************************************************************/
+/*
+		for (k = 5; k < 1; k--)
+		{
+			soilSurfaceTemperature += (1 - albedo) * (meanCanopyTemperature + ( maxCanopyTemperature - minCanopyTemperature) * (0.03 * dailySolarRadiation)) 		}
+*/
+
+		/*****************************************************************************************************
+		 * 			SOIL TEMPERATURE AT DIFFERENT LAYER DEPTH: IMPORTANT! THIS MUST OCCURR AFTER SWC MODULE
+		 **********************************************************************************************************/
+
+		//computing soil temperature using T
+		for (l = 0; l < soilLayer; l++)
+		{
+			Log("\n\n**** starting evaluation of soil temperature in different layers ****");
+			Log("\nfor a %d number of soil layer used:", soilLayer);
+			Log("\n****** LAYER %d ********\n", l);
+
+			//assumed soil water content and bulk density as a soil constant
+
+			//todo: SW and BD have to be layer specific not the value for the whole profile
+			mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * site->soil_depth;
+			maxDampingDepth = 1.00 + 2.5 * soilBulkDensity / (soilBulkDensity + exp (6.53 - 5.63 * soilBulkDensity));
+			Log("\n***Coefficients to evaluate depth weighting factors ***\ncoeff1: %g \ncoeff2: %g", maxDampingDepth, mid2);
+
+			//damping depth: factor which simulates soil buffer effect on temperature oscillations:
+			//the more the layer is deepened , the more temperature is constant during the year (function of annual mean temperature)
+			dampingDepth[l] = maxDampingDepth * exp (log(0.5 / maxDampingDepth) * pow(((1.0 - mid2)/(1.0 + mid2)), 2.0));
+			Log("\ndamping depth: %g", dampingDepth[l]);
+
+			Log("\n\nCHECKED!!!");
+
+
+
+
+
+
+			if ( soilLayer == 0)
 			{
-				actualSoilEvaporation = deltaMoisture - layerMoisture[0];
-				layerMoisture[0] = driestSoilWaterContent * layerWilting[0];
-			}
-
-			//________________________________________________________________________________________________________________________
-			//MOVE IN CROP DEVELOPMENT
-			//Crop uptake capacity
-			for (l = 0; l < soilLayer; l++ )
-			{
-				moistureEffectWaterUptake1[l] = sin((layerMoisture[l] - layerWilting[l])/(fieldCapacityLayerMoisture[l] - layerWilting[l]) * 1.25 * Pi /2);
-
-				//find out where computed  layerRootLengthDensity[l]
-				//A Generalized Function of Wheat's Root Length Density Distributions
-
-				//crop uptake capacity
-				waterUptakeSoilLayer += rootWaterUptakeCoefficient * layerRootLengthDensity[l] / (0.2 + 0.2 * layerRootLengthDensity[l]) * moistureEffectWaterUptake1[l] * soilLayerThickness[l];
-
-				Log("\nWater uptake cumulated till layer %d is: %g",l, waterUptakeSoilLayer);
-			}
-			Log("\nwater total uptake is %g", waterUptakeSoilLayer);
-
-			//Actual transpiration
-			actualTranspiration = Minimum(potentialTranspiration, waterUptakeSoilLayer);
-			Log("\nActual transpiration: %g", actualTranspiration);
-
-			/*********************************************************************************************************************************************************
-			 * 												WATER REDISTRIBUITION
-			 *********************************************************************************************************************************************************/
-
-//checked
-
-			//todo a surface flooding module
-			for (l = soilLayer; l > 1; l--)
-			{
-
-				//to be seen if new moisture is > fieldCapacity: if it's greater than field capacity what should be done!?
-				// supposed: if the lower layer is full, then put it on the upper one; if it is the layer 0, it's a pool
-				Diffusion = 0.88 * exp(35.4 * 0.5 *(normVolumetricWater[l-1] + normVolumetricWater[l])) *
-						(normVolumetricWater[l] - normVolumetricWater[l-1]) / (soilLayerThickness[l] + soilLayerThickness[l-1]) * 0.5;
-				Log("\ndiffusion flux = %g",Diffusion);
-				//to be reviewed
-				layerMoisture[l] -= Diffusion / soilLayerThickness[l];
-				Log("\nnew SW[%d] %g",l,layerMoisture[l]);
-				if(l-1 >= 0)
-				{
-					layerMoisture[l - 1] += Diffusion / soilLayerThickness[l-1];
-					Log("\nnew SW[%d] %g",l-1,layerMoisture[l-1]);
-				}
-				//todo SW[l] correction
-				//SW[l] += Diffusion
-				Log("\nlayerMoisture: \n\t layer %d, %g \n\t layer %d, %g",l,layerMoisture[l],l-1,layerMoisture[l-1]);
-			}
-			Log("\nEnd of soil waer balance module\n\n");
-
-			/*******************************************************************************************************************************
-			 * 											EVAPOTRANSPIRATION MODULE
-			 ******************************************************************************************************************************/
-
-			//equilibrium evapotranspiration (solar rad is supposed Mj m-2 day-1; EEq cm day-1)
-			equilibriumEvapotranspiration = 0.0001 * dailySolarRadiation * (4.88 - 4.37 * albedo) * (canopyDaytimeMeanTemperature + 29);	//equilibriumEvapotranspiration
-			Log("\nEquilibrium evapotranspiration: %g", equilibriumEvapotranspiration);
-			Log("\ncanopy temperature %g", canopyDaytimeMeanTemperature);
-			//Potential evapotranspiration
-			if (canopyMaxTemperature < 5)
-			{
-				potentialEvapotranspiration = 0.01 * equilibriumEvapotranspiration * exp (0.18 * (canopyMaxTemperature + 20));
-			}
-			else if (canopyMaxTemperature >= 5 && canopyMaxTemperature < 24)
-			{
-				potentialEvapotranspiration = 1.1 * equilibriumEvapotranspiration;
+//				soilLayerTemperature[l] = met[month].tavg + exp(-1.0 / dampingDepth);
+				//soilLayerTemperature[l] == lagCoeff * previousDayLayerTemperature[l] + (1.0 - lagCoeff) * (FZ * (AVT - DST0) + DST0);
 			}
 			else
 			{
-				//version of Ritchie, 88, from whom taken the other ones
-				potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
-				//version read in zhang 2002
-				//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
-			}
-
-
-			// potential evaporation
-			if (LAI < 1)
-			{
-				potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
-			}
-			else
-			{
-				potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
-			}
-
-			// potential transpiration
-			actualTranspiration = potentialEvapotranspiration - potentialEvaporation;
-			Log("\nfor a potential evapotranspiration of: %g \npotential transpiration: %g", potentialEvaporation, actualTranspiration);
-
-
-
-			//effect of soil moisture on evaporation
-			for (l = 0; l < soilLayer; l++)
-			{
-				moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/site->soil_depth;
-			}
-			//moistureSoilEvaporationEffect /= site->soil_depth;
-			Log("\nSoil moisture effect on evaporation is: %g\n", moistureSoilEvaporationEffect);
-
-			//actual soil evaporation
-			actualSoilEvaporation = potentialEvaporation * moistureSoilEvaporationEffect;
-
-			//________________________________________________________________________________________________________________________
-			//MOVE IN CROP DEVELOPMENT
-			//Crop uptake capacity
-			for (l = 0; l < soilLayer; l++ )
-			{
-				moistureEffectWaterUptake1[l] = sin((layerMoisture[l] - layerWilting[l])/(fieldCapacityLayerMoisture[l] - layerWilting[l]) * 1.25 * Pi /2);
-
-				//find out where computed  layerRootLengthDensity[l]
-				//A Generalized Function of Wheat's Root Length Density Distributions
-
-				//crop uptake capacity
-				waterUptakeSoilLayer += rootWaterUptakeCoefficient * layerRootLengthDensity[l] / (0.2 + 0.2 * layerRootLengthDensity[l]) * moistureEffectWaterUptake1[l] * soilLayerThickness[l];
-
-				Log("\nWater uptake cumulated till layer %d is: %g", waterUptakeSoilLayer);
-			}
-			Log("\nwater total uptake is %g", waterUptakeSoilLayer);
-
-			//Actual transpiration
-			actualTranspiration = Minimum(actualTranspiration, waterUptakeSoilLayer);
-			Log("\nActual transpiration: %g", actualTranspiration);
-
-
-			//Crop water stress factor
-			waterStressFactor = actualTranspiration / potentialTranspiration;
-			//_____________________________________________________________________________________________________________________________
-
-			/*****************************************************************************************************
-			 * 			SOIL TEMPERATURE AT DIFFERENT LAYER DEPTH: IMPORTANT! THIS MUST OCCURR AFTER SWC MODULE
-			 **********************************************************************************************************/
-
-			//computing soil temperature using T
-			for (l = 0; l < soilLayer; l++)
-			{
-				Log("\n\n**** starting evaluation of soil temperature in different layers ****");
-				Log("\nfor a %d number of soil layer used:", soilLayer);
-				Log("\n****** LAYER %d ********\n", l);
-
-				//assumed soil water content and bulk density as a soil constant
-
-				//todo: whatch out if SW and BD have to be layer specific or the value for the whole profile
-				mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * site->soil_depth;
-				mid1 = 1.00 + 2.5 * soilBulkDensity / (soilBulkDensity + exp (6.53 - 5.63 * soilBulkDensity));
-				Log("\n***Coefficients to evaluate depth weigthning factors ***\ncoeff1: %g \ncoeff2: %g", mid1, mid2);
-
-				//damping depth: factor which simulates soil buffer effect on temperature oscillations:
-				//the more the layer is deepened , the more temperature is constant during the year (function of annual mean temperature)
-				dampingDepth[l] = mid1 * exp (log(0.5 / mid1) * pow(((1.0 - mid2)/(1.0 + mid2)), 2.0));
-				Log("\ndamping depth: %g", dampingDepth[l]);
-
-
 				temperatureFactor1[l] = (soilLayerThickness[l-1] + soilLayerThickness[l])/2.0 /dampingDepth[l];
 				Log("\ntemperatureFactor1 factor: %g", temperatureFactor1[l]);
 				//depth weightning factor; attention! it is computed in Mg/m^3!!!!!
 				temperatureFactor2[l] = temperatureFactor1[l] / (temperatureFactor1[l] + exp(-0.867 - 2.08 * temperatureFactor1[l]));
 				Log("\ndepth weigthning factor temperatureFactor2: %g (Mg/m^3)", temperatureFactor2[l]);
 
-				if (month == JANUARY)		// todo: add && day == 1
-				{
-					lag = 0.0;
-					Log("\nIt's january the first! no lag factor imposed!");
-				}
-				else
-				{
-					lag = 0.5;
-					Log("\nlag factor imposed as %g as default", lag);
-				}
+
 				//soil temperature at the center of layer's depth
 				soilLayerTemperature[l] = soilLayerTemperature[l] * lag + (1.0 - lag) * ((meanAnnualTemperature - soilSurfaceTemperature) * temperatureFactor2[l] + soilSurfaceTemperature);
 				Log("\nFinally!!!! soilLayerTemperature at the center of the layer: %g", soilLayerTemperature[l]);
-
-				//soil temperature at the center of layer's depth (parton)
-				soilLayerTemperature[l] = soilLayerTemperature[l] * lag + (1.0 - lag) * ((meanAnnualTemperature - partonSoilSurfaceMeanTemperature) * temperatureFactor2[l] + soilSurfaceTemperature);
-				Log("\n\nFinally!!!! soilLayerTemperature at the center of the layer: %g", soilLayerTemperature[l]);
 			}
-			Log("\nend of the soil temperature module (DNDC||EPIC)");
-			//layer specific soil temperature, as estimated at the center of the layer
-			Log("\nend of the soil temperature module (Parton)");
-			//layer specific soil temperature, as estimated at the center of the layer
 
-		}
 
 
 
-		/***********************************************************************************
-		 * 									SOIL TEMPERATURE ESTIMATION
-		 **********************************************************************************/
-
-		Log("\n******* DAILY MEAN SOIL TEMPERATURE ********\n\n");
-
-		//TODO sergio: attenzione qui c'è un soilSurfaceTemperature +1	its originis in Daymet first computation of Tt: anyway changed by Thornton 1988
-		// SO I'VE SETTED
+		}
+		Log("\nend of the soil temperature module (DNDC||EPIC)");
+		//layer specific soil temperature, as estimated at the center of the layer
 
 
-		if (month == JANUARY)		//todo add && day ==1)
+	}
+
+
+
+	/***********************************************************************************
+	 * 									SOIL TEMPERATURE ESTIMATION
+	 **********************************************************************************/
+
+	Log("\n******* DAILY MEAN SOIL TEMPERATURE ********\n\n");
+
+	//TODO sergio: attenzione qui c'è un soilSurfaceTemperature +1	its originis in Daymet first computation of Tt: anyway changed by Thornton 1988
+	// SO I'VE SETTED
+
+
+	if (month == JANUARY)		//todo add && day ==1)
+	{
+		Log("\n\nis January the 1st; influence of previous day not evaluated!");
+		soilSurfaceTempPrevious = 0;
+	}
+	else
+	{
+		soilSurfaceTempPrevious = soilSurfaceTemperature;
+	}
+
+	if(met[month].ts_f != -9999)
+	{
+		soilSurfaceTemperature = met[month].ts_f;
+		Log("\nsoil temperature measured: %g", soilSurfaceTemperature);
+	}
+	else
+	{
+
+		/**************************************************************************************************************
+		 * 								SOIL SURFACE TEMPERATURE ESTIMETED
+		 *************************************************************************************************************/
+
+
+
+
+
+		Log("\n*****************************************************************************************\n"
+				"*\n 					EPIC SOIL TEMPERATURE PREDICTION"
+				"\n*****************************************************************************************");
+
+		//todo: delete when daily model is ready
+		wetDays = 10;
+		dryDays = met[month].n_days - wetDays;
+
+		if (settings->time == 'm')
 		{
-			Log("\n\nis January the 1st; influence of previous day not evaluated!");
-			soilSurfaceTempPrevious = 0;
-		}
-		else
-		{
-			soilSurfaceTempPrevious = soilSurfaceTemperature;
-		}
-
-		if(met[month].ts_f != -9999)
-		{
-			soilSurfaceTemperature = met[month].ts_f;
-			Log("\nsoil temperature measured: %g", soilSurfaceTemperature);
-		}
-		else
-		{
-
-			/**************************************************************************************************************
-			 * 								SOIL SURFACE TEMPERATURE ESTIMETED
-			 *************************************************************************************************************/
-
-
-
-			Log("*****************************************************************************************"
-					"*\n 					EPIC SOIL SURFACE TEMPERATURE PREDICTION"
-					"*\n****************************************************************************************");
-/*
-			//bare soil surface temperature to equal average daily air temperature
-			bareSurfaceTemperature = 0.5 * (maxTemperature + minTemperature) + (UmaxTemperature - minTemperature) * (solarRadiation * (1.0 - albedo) - 14.0) /20.0;
-
-			//correction factor
-			snoFactor = snow / ( snow +exp(2.30 - 0.220 * snow));
-			correctionFactor1 = aboveBiomass / (aboveBiomass + exp(5.34 -2.40 * aboveBiomass));
-
-			//covered surface temeperature
-			coveredSoilSurfaceTemperature = (1.0 - soilTempCorrectionFactor) * bareSoilSurfaceTemperature * soilTempCorrectionFactor * meanSoilTemperature[1];
-
-
-*/
-
-			Log("\n*****************************************************************************************\n"
-					"*\n 					EPIC SOIL TEMPERATURE PREDICTION"
-					"\n*****************************************************************************************");
-
-			//todo: delete when daily model is ready
-			wetDays = 10;
-			dryDays = met[month].n_days - wetDays;
-
-			if (settings->time == 'm')
+			Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
+			if (met[month].rain > 0.0)
 			{
-				Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
-				if (met[month].rain > 0.0)
-				{
-					//met[month].met[day - i].ta_min
-					soilSurfaceTemperature = (met[month].tavg - 2 ) + ((float)wetDays / (float)met[month].n_days) *
-							((float)met[month].tavg - (float)met[month].tavg -2);
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
-				else
-				{
-					//met[month].met[day - i].ta_max
-					soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
-					Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
-				}
+				//met[month].met[day - i].ta_min
+				soilSurfaceTemperature = (met[month].tavg - 2 ) + ((float)wetDays / (float)met[month].n_days) *
+						((float)met[month].tavg - (float)met[month].tavg -2);
+				Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 			}
-
 			else
 			{
-				/*
+				//met[month].met[day - i].ta_max
+				soilSurfaceTemperature += met[month].tavg +2 + (dryDays / met[month].n_days) * (met[month].tavg +2 - met[month].tavg);
+				Log("\ncurrent day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
+			}
+		}
+
+		else
+		{
+			/*
 				if (month == JANUARY)
 				{
 					Log("\nIs the first day(month) of the cycle: soilSurfaceTemperature not meaned");
@@ -2120,47 +2117,24 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					soilSurfaceTemperature /= 5;
 					Log("current day soilSurfaceTemperature: %g °C \nprevious day soilSurfaceTemperature: %g °C", soilSurfaceTemperature, soilSurfaceTempPrevious);
 				}
-				 */
-			}
+			 */
+		}
 
-			if (month == JANUARY)		//todo add && day == 1)
-			{
-				snowCoverLagFactor = 0.0;
-				Log("\nthe very first cycle of the year! previous cycle effect imposed to 0!");
-			}
-			else
-			{
-				//snowCoverLagFactor = lagging factor simulating residues and and snow cover effects on soil surface
-				snowCoverLagFactor = Maximum((abovegroundFraction / (abovegroundFraction + exp(5.3396 - 2.3951 * abovegroundFraction))),(snow * 10.0/
-						(snow * 10.0 + exp(2.303 - 0.2197 * snow * 10.0))));
-				Log("not the very first day(month) of the year: \nlagging factor snowCoverLagFactor: %g", snowCoverLagFactor);
-			}
-			//estimate of soil surface temperature considering biomass lag effect
-			soilSurfaceTemperature = snowCoverLagFactor * soilSurfaceTempPrevious + (1 - snowCoverLagFactor) * soilSurfaceTemperature;
-			Log("\n\nHence, soil surface temperature: %g\n", soilSurfaceTemperature);
-
-
-
-
-			/*******************************************************************************************************
-			 * 							PARTON SOIL TEMPERATURE ROUTINE (1984)
-			 ******************************************************************************************************/
-
-
-			Log("\n***** Parton (1984) estimation of soil temperature *****");
-			//epi_biomass = 0.0;
-			//soil surface temperature (By Parton, 1989)
-			//soil max temperature (daily)
-			epigeousBiomass = exp(-0.0048 * abovegroundFraction) - 0.13;				//g/m^2
-			Log("\nParton epigeousBiomass: %g", epigeousBiomass);
-			deltaSoilAirTemperature = 24.07 * (1.0 - exp(-0.000038 * dailySolarRadiation));		//solar radiation in Kj/dm^2)
-			Log("\nParton SoilAirTemperature: %g", deltaSoilAirTemperature);
-			partonSoilSurfaceMinTemperature = minAirTemperature + 0.006 * epigeousBiomass - 1.82;
-			Log("\nParton SoilSurfaceMinTemperature: %g", partonSoilSurfaceMinTemperature);
-			partonSoilSurfaceMaxTemperature = maxAirTemperature + (deltaSoilAirTemperature + 0.35 * maxAirTemperature) * epigeousBiomass;
-			Log("\nParton SoilSurfaceMaxTemperature: %g", partonSoilSurfaceMaxTemperature);
-			partonSoilSurfaceMeanTemperature = 0.41 * partonSoilSurfaceMaxTemperature + 0.59 * partonSoilSurfaceMinTemperature;
-			Log("\nParton SoilSurfaceMeanTemperature: %g", partonSoilSurfaceMeanTemperature);
+		if (month == JANUARY)		//todo add && day == 1)
+		{
+			snowCoverLagFactor = 0.0;
+			Log("\nthe very first cycle of the year! previous cycle effect imposed to 0!");
+		}
+		else
+		{
+			//snowCoverLagFactor = lagging factor simulating residues and and snow cover effects on soil surface
+			snowCoverLagFactor = Maximum((abovegroundFraction / (abovegroundFraction + exp(5.3396 - 2.3951 * abovegroundFraction))),(snow * 10.0/
+					(snow * 10.0 + exp(2.303 - 0.2197 * snow * 10.0))));
+			Log("not the very first day(month) of the year: \nlagging factor snowCoverLagFactor: %g", snowCoverLagFactor);
+		}
+		//estimate of soil surface temperature considering biomass lag effect
+		soilSurfaceTemperature = snowCoverLagFactor * soilSurfaceTempPrevious + (1 - snowCoverLagFactor) * soilSurfaceTemperature;
+		Log("\n\nHence, soil surface temperature: %g\n", soilSurfaceTemperature);
 
 		//--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -2168,7 +2142,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 		/*****************************************************************************************************************/
 
-		//##################################################CHECKED: SEEMS OK!!!!
+		// CHECKED: SEEMS OK!!!!
 
 
 
