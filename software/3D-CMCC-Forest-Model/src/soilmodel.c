@@ -43,11 +43,20 @@ void soil_model_daily(MATRIX *const m)
 		for (soil = 0; soil < m->cells[cell].soils_count; soil++)
 		{
 			Log("cazzo %d!!!!!\n", soil);
-			/*
 			m->cells[cell].soils[soil].variabile = 5;
+
+			if (soil == 0)
+			{
+				m->cells[cell].soils[soil].variabile = 5;
+			}
+			else
+			{
+				m->cells[cell].soils[soil].variabile = m->cells[cell].soils[soil-1].variabile + 1;
+			}
+
 			Log("soil layer = %d\n", soil);
 			Log("soil layer = %d , variabile = %g\n", soil, m->cells[cell].soils[soil].variabile);
-			*/
+
 
 		}
 

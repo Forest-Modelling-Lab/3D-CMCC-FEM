@@ -298,6 +298,10 @@ int fill_cell_from_heights(CELL *const c, const ROW *const row)
 	{
 		return 0;
 	}
+	if (!alloc_struct((void **)&c->soils, &c->soils_count, sizeof(SOIL)) )
+	{
+		return 0;
+	}
 
 	// set values
 	c->heights[c->heights_count-1].value = row->height;
@@ -326,27 +330,10 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	m->cells[m->cells_count-1].y = row->y;
 	m->cells[m->cells_count-1].heights = NULL;
 	m->cells[m->cells_count-1].heights_count = 0;
-	m->cells[m->cells_count-1].soils_count = settings->soil_layer;
+	m->cells[m->cells_count-1].soils_count = (int)settings->soil_layer -1;
 
 	/* add species */
 	return fill_cell_from_heights(&m->cells[m->cells_count-1], row);
-}
-
-int fill_cell_for_soils(MATRIX *const m)
-{
-	/* check parameter */
-	assert(m);
-
-	if ( !alloc_struct((void **)&m->cells, &m->cells_count, sizeof(CELL)) )
-	{
-		return 0;
-	}
-
-	/* set values */
-	m->cells[m->cells_count-1].soils_count = settings->soil_layer;
-
-	return m->cells[m->cells_count-1].soils_count;
-
 }
 
 /* */

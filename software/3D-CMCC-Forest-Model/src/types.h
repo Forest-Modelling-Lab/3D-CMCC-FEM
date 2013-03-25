@@ -135,7 +135,6 @@ typedef struct
 	//dominated,
 	//subdominated,
 	tree_layer_limit,
-	//TODO change soil_layer in int
 	soil_layer,
 	min_layer_cover,
 	max_layer_cover,
