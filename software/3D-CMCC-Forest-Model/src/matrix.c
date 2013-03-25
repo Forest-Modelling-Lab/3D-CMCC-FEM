@@ -289,7 +289,7 @@ static int fill_cell_from_ages(HEIGHT *const h, const ROW *const row)
 }
 
 /* */
-int fill_cell_from_heights(CELL *const c, const ROW *const row)
+int fill_cell_from_heights_and_soils(CELL *const c, const ROW *const row)
 {
 	//check parameter
 	assert(c && row);
@@ -336,7 +336,7 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	m->cells[m->cells_count-1].soils_count = (int)settings->soil_layer -1;
 
 	/* add species */
-	return fill_cell_from_heights(&m->cells[m->cells_count-1], row);
+	return fill_cell_from_heights_and_soils(&m->cells[m->cells_count-1], row);
 }
 
 /* */
@@ -446,7 +446,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 		}
 		else if ( IS_FLAG_SET(equal_flag, EQUAL_CELL) )
 		{
-			result = fill_cell_from_heights(&m->cells[cell], &rows[row]);
+			result = fill_cell_from_heights_and_soils(&m->cells[cell], &rows[row]);
 		}
 		else
 		{
