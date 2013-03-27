@@ -18,13 +18,13 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 	{
 		if ( met[month].d[day].tavg == NO_DATA)
 		{
-			if (met[month].d[day].tmax == NO_DATA || met[month].d[day].tmin == NO_DATA)
+			if (met[month].d[day].tmax == NO_DATA && met[month].d[day].tmin == NO_DATA)
 			{
 				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 			}
 			{
 				met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
-				Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
+				//Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 			}
 		}
 	}
@@ -32,7 +32,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 	{
 		if ( met[month].tavg == NO_DATA)
 		{
-			if (met[month].tmax == NO_DATA || met[month].tmin == NO_DATA)
+			if (met[month].tmax == NO_DATA && met[month].tmin == NO_DATA)
 			{
 				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 			}
@@ -43,6 +43,36 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 	}
 }
 
+//following BIOME-BGC 4.2 src
+//compute daylight average air temperature
+extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	if (settings->time == 'd')
+	{
+		if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin)
+		{
+			met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
+		}
+		else
+		{
+			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
+		}
+	}
+	else
+	{
+		if (met[month].tmax != NO_DATA && met[month].tmin)
+		{
+			met[month].tday = 0.45 * (met[month].tmax - met[month].tavg) + met[month].tavg;
+		}
+		else
+		{
+			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
+		}
+	}
+}
 
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
