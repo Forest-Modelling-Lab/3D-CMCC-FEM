@@ -56,34 +56,19 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE \n\n");
 
 
-	//following BIOME
-	rhoAir = 1.292 - (0.00428 * met[month].tavg);
-
-	//todo move into atmosphere.c
-	/*compute air pressure*/
-	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
-	/* From the discussion on atmospheric statics in:
-	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
-		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
-		(p. 168)*/
-
-	//todo insert elev in struct site and in site.txt file
-	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
-	t2 = G_STD / (LR_STD * (R / MA));
-	//todo move air_pressure into met file
-	c->air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %g Pa\n", c->air_pressure);
 
 	/* temperature and pressure correction factor for conductances */
 	if (settings->time == 'm')
 	{
 		if(met[month].tday == NO_DATA)
 		{
+			rhoAir = 1.292 - (0.00428 * met[month].tavg);
 			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 			Log("gcorr = %g\n", c->gcorr);
 		}
 		else
 		{
+			rhoAir = 1.292 - (0.00428 * met[month].tday);
 			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 			Log("gcorr = %g\n", c->gcorr);
 		}
@@ -92,11 +77,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	{
 		if(met[month].d[day].tday == NO_DATA)
 		{
+			rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
 			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 			Log("gcorr = %g\n", c->gcorr);
 		}
 		else
 		{
+			rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
 			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
 			Log("gcorr = %g\n", c->gcorr);
 		}

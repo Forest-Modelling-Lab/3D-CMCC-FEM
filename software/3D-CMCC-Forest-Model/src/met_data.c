@@ -204,6 +204,23 @@ float Get_vpd (const MET_DATA *const met, int month)
 }
  */
 
+extern void Get_air_pressure (CELL *c)
+{
+	float t1, t2;
+
+	/*compute air pressure*/
+	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
+	/* From the discussion on atmospheric statics in:
+	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
+		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
+		(p. 168)*/
+
+	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
+	c->air_pressure = P_STD * pow (t1, t2);
+	//Log("Air pressure = %g Pa\n", c->air_pressure);
+
+}
+
 void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 {
 	if (settings->time == 'm')

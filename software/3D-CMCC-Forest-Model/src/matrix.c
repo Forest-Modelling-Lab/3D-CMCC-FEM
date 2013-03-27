@@ -633,8 +633,9 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	Log("***************************************************\n");
 	Log("SITE DATASET\n");
 	Log("Site Name = %s\n", site->sitename);
-	Log("Latitude = %g \n", site->lat);
-	Log("Longitude = %g \n", site->lon);
+	Log("Latitude = %g° \n", site->lat);
+	Log("Longitude = %g° \n", site->lon);
+	Log("Elevation = %g m\n", site->elev);
 	Log("***************************************************\n");
 
 

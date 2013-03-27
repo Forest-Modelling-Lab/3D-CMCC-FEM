@@ -1973,6 +1973,9 @@ int main(int argc, char *argv[])
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
+					//Get air pressure
+					Get_air_pressure (&m->cells[cell]);
+
 					//run for forests
 					if (m->cells[cell].landuse == F)
 					{
@@ -1997,6 +2000,7 @@ int main(int argc, char *argv[])
 							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_daylight_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_nightime_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
 							//Get vegetative months
 							Get_Veg_Months (&m->cells[cell], yos, month, years);
 						}
@@ -2043,6 +2047,9 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
+				//Get air pressure
+				Get_air_pressure (&m->cells[cell]);
+
 				//check if soil data are available
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{

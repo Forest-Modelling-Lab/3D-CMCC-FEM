@@ -993,6 +993,8 @@ extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const,
 
 extern void Get_a_Power_Function (AGE *, SPECIES *);
 
+extern void Get_air_pressure (CELL *c);
+
 extern void Get_snow_met_data (CELL *c, const MET_DATA *const, int, int);
 
 
