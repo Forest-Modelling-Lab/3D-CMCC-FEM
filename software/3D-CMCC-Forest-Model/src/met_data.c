@@ -65,8 +65,7 @@ void met_summary(MET_DATA *met)
 }
 
 
-
-
+//following Running et al., 1987
 Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
 	MET_DATA *met;
@@ -81,7 +80,7 @@ Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, 
 				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 			}
 			{
-				met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+				met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 				Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 			}
 		}
@@ -95,7 +94,7 @@ Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, 
 				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 			}
 			{
-				met[month].tavg = (met[month].tmax + met[month].tmin)/2;
+				met[month].tavg = (0.606 * met[month].tmax) + (0.394 * met[month].tmin);
 			}
 		}
 	}
