@@ -874,6 +874,7 @@ extern int is_valid_met(const char *const);
 extern void Get_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
+extern int sort_by_years(const void *, const void *);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
 extern float Get_canopy_cover (SPECIES *const, int, int, int);

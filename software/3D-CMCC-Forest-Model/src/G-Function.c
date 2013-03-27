@@ -3,7 +3,21 @@
 #include "types.h"
 #include "constants.h"
 
-
+extern int sort_by_years(const void *a, const void *b)
+{
+	if ( ((YOS *)a)->year < ((YOS *)b)->year )
+	{
+		return -1;
+	}
+	else if ( ((YOS *)a)->year > ((YOS *)b)->year )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 
 //----------------------------------------------------------------------------//

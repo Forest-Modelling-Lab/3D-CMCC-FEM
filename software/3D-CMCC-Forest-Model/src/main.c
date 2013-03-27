@@ -192,21 +192,7 @@ static const char err_unable_convert_value_arg[] = "unable to convert value \"%s
 //static const char err_met_not_specified[] = "met not specified.";
 //static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
 
-int sort_by_years(const void *a, const void *b)
-{
-	if ( ((YOS *)a)->year < ((YOS *)b)->year )
-	{
-		return -1;
-	}
-	else if ( ((YOS *)a)->year > ((YOS *)b)->year )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
+
 
 
 static void clean_up(void)
@@ -483,7 +469,6 @@ void usage(void)
 
 /*import met data file*/
 //------------------------------------------------------------------------------
-
 //
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {
