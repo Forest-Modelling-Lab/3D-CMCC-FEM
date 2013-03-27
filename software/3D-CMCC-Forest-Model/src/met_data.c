@@ -7,66 +7,9 @@
 #include "types.h"
 #include "constants.h"
 
-//extern int DaysInMonth[];
-
-extern int is_valid_met(const char *const input_file)
-{
-	// met file should be MET_FILENAME_LEN chars len
-	if ( MET_FILENAME_LEN != strlen(input_file) )
-		return 0;
-
-	// 01234567890123456789
-	// ATNeu2002_L4_m.txt
-	// 10th and 12th chars must be an underscore
-	if ( '_' != input_file[9] || '_' != input_file[12] )
-		return 0;
-
-	// from 5th to 8th chars a digit must be present ( year )
-	if ( 0 == isdigit(input_file[5]) ) return 0;
-	if ( 0 == isdigit(input_file[6]) ) return 0;
-	if ( 0 == isdigit(input_file[7]) ) return 0;
-	if ( 0 == isdigit(input_file[8]) ) return 0;
-
-	/* ok */
-	return 1;
-}
-
-void met_summary(MET_DATA *met)
-{
-	int i;
-
-	/* check parameter */
-	assert(met);
-
-	/* */
-	for ( i=0; i<MONTHS; i++ )
-	{
-		Log("MET_SUMMARY FUNCTION\n");
-		Log(	"MET DATA - month %02d:\n"
-				"n_days = %d\n"
-				"solar_rad = %g\n"
-				"tav = %g\n"
-				"rh = %g\n"
-				"ts_f = %g\n"
-				"rain = %g\n"
-				"swc = %g\n",
-				"lai = %g\n",
-				i+1,
-				met[i].n_days,
-				met[i].solar_rad,
-				met[i].tavg,
-				met[i].vpd,
-				met[i].ts_f,
-				met[i].rain,
-				met[i].swc,
-				met[i].ndvi_lai
-		);
-	}
-}
-
 
 //following Running et al., 1987
-Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
