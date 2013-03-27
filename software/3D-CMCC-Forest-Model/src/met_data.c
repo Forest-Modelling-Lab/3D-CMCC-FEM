@@ -112,8 +112,6 @@ extern void Get_nightime_avg_teperature (CELL * c,  int day, int month, int year
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
-	//todo inserire la funzione anche nelle altre parti del treemodel.c
-
 	//FOLLOWING BIOME APPROACH
 	/* temperature and radiation snowmelt,
 	from Joseph Coughlan PhD thesis, 1991 */
@@ -125,11 +123,17 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 
 
 	t_melt = r_melt = r_sub = 0;
-
-	t_melt = t_coeff * met[month].tavg;
+	if(settings->time == 'm')
+	{
+		t_melt = t_coeff * met[month].tavg;
+	}
+	else
+	{
+		t_melt = t_coeff * met[month].d[day].tavg;
+	}
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	if (settings->time == 's')
+	if (settings->time == 'd')
 	{
 		incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
 	}
@@ -140,7 +144,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
 	Log("incident radiation for soil = %g\n", incident_rad);
 
-	if (settings->time == 's')
+	if (settings->time == 'd')
 	{
 		if (c->snow != 0)
 		{
