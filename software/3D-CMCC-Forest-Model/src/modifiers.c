@@ -21,19 +21,36 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	/*TEMPERATURE MODIFIER*/
 
 	Log("--Temperature Average %g °C\n", met[month].tavg);
+	Log("--Daylight Average Temperature  %g °C\n", met[month].tday);
 	//Log("--Optimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTOPT]);
 	//Log("--Maximum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMAX]);
 	//Log("--Minimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMIN]);
 
-	if ((met[month].tavg <= s->value[GROWTHTMIN]) || (met[month].tavg >= s->value[GROWTHTMAX]))
+	if (met[month].tday == NO_DATA)
 	{
-		s->value[F_T] = 0;
-		Log("F_T = 0 \n");
+		if ((met[month].tavg <= s->value[GROWTHTMIN]) || (met[month].tavg >= s->value[GROWTHTMAX]))
+		{
+			s->value[F_T] = 0;
+			Log("F_T = 0 \n");
+		}
+		else
+		{
+			s->value[F_T] = ((met[month].tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		}
 	}
 	else
 	{
-		s->value[F_T] = ((met[month].tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
-				((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		if ((met[month].tday <= s->value[GROWTHTMIN]) || (met[month].tday >= s->value[GROWTHTMAX]))
+		{
+			s->value[F_T] = 0;
+			Log("F_T = 0 \n");
+		}
+		else
+		{
+			s->value[F_T] = ((met[month].tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		}
 	}
 	Log("fT - Temperature Modifier = %g\n", s->value[F_T]);
 
@@ -382,19 +399,36 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	/*TEMPERATURE MODIFIER*/
 
 	//Log("--Temperature Average %g °C\n", met[month].d[day].tavg);
+	//Log("--Daylight Average Temperature  %g °C\n", met[month].d[day].tday);
 	//Log("--Optimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTOPT]);
 	//Log("--Maximum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMAX]);
 	//Log("--Minimum temperature for species %s = %g °C\n", s->name, s->value[GROWTHTMIN]);
 
-	if ((met[month].d[day].tavg <= s->value[GROWTHTMIN]) || (met[month].d[day].tavg >= s->value[GROWTHTMAX]))
+	if (met[month].d[day].tday == NO_DATA)
 	{
-		s->value[F_T] = 0;
-		Log("F_T = 0 \n");
+		if ((met[month].d[day].tavg <= s->value[GROWTHTMIN]) || (met[month].d[day].tavg >= s->value[GROWTHTMAX]))
+		{
+			s->value[F_T] = 0;
+			Log("F_T = 0 \n");
+		}
+		else
+		{
+			s->value[F_T] = ((met[month].d[day].tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].d[day].tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		}
 	}
 	else
 	{
-		s->value[F_T] = ((met[month].d[day].tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].d[day].tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
-				((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		if ((met[month].d[day].tday <= s->value[GROWTHTMIN]) || (met[month].d[day].tday >= s->value[GROWTHTMAX]))
+		{
+			s->value[F_T] = 0;
+			Log("F_T = 0 \n");
+		}
+		else
+		{
+			s->value[F_T] = ((met[month].d[day].tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) * pow(((s->value[GROWTHTMAX] - met[month].d[day].tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+		}
 	}
 	Log("fT = %g\n", s->value[F_T]);
 

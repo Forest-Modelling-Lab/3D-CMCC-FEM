@@ -61,7 +61,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//todo move into atmosphere.c
 	/*compute air pressure*/
-	
+	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
+	/* From the discussion on atmospheric statics in:
+	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
+		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
+		(p. 168)*/
 
 	//todo insert elev in struct site and in site.txt file
 	t1 = 1.0 - (LR_STD * 500/*site->elev*/)/T_STD;
@@ -71,15 +75,39 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	//Log("Air pressure = %g Pa\n", c->air_pressure);
 
 	/* temperature and pressure correction factor for conductances */
-	c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
-	Log("gcorr = %g\n", c->gcorr);
+	if (settings->time == 'm')
+	{
+		if(met[month].tday == NO_DATA)
+		{
+			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		else
+		{
+			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+	}
+	else
+	{
+		if(met[month].d[day].tday == NO_DATA)
+		{
+			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		else
+		{
+			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+	}
 
 	/*Canopy Conductance*/
 
 	//Lai is different among layers so CanCond is different
 	//Log("Lai for Can Cond = %g\n", s->value[LAI]);
 
-	//todo get maximum stomatal condictance from biome data instead canopy max conductance
+	//todo get maximum stomatal conductance from biome data instead canopy max conductance
 
 	if (settings->time == 'm')
 	{
@@ -274,12 +302,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("ANGELO MonthTransp = %g \n", s->value[MONTH_TRANSP]);
 	*/
 
-	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
-	/* From the discussion on atmospheric statics in:
-	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
-		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
-		(p. 168)
-	*/
+
 
 	/* leaf boundary-layer conductance */
 	gl_bl_corr = s->value[BLCOND]* c->gcorr;
@@ -386,25 +409,53 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	/* assign tavg (Celsius) and tav_k (Kelvins) */
 	if (settings->time == 'm')
 	{
-		tav_k = met[month].tavg + 273.15;
-	    /* calculate density of air (rho) as a function of air temperature */
-		rhoAir = 1.292 - (0.00428 * met[month].tavg);
-	    /* calculate latent heat of vaporization as a function of ta */
-	    lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
-	    /* calculate temperature offsets for slope estimate */
-	    t1 = met[month].tavg+dt;
-	    t2 = met[month].tavg-dt;
+		if (met[month].tday == NO_DATA)
+		{
+			tav_k = met[month].tavg + 273.15;
+			/* calculate density of air (rho) as a function of air temperature */
+			rhoAir = 1.292 - (0.00428 * met[month].tavg);
+			/* calculate latent heat of vaporization as a function of ta */
+			lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
+			/* calculate temperature offsets for slope estimate */
+			t1 = met[month].tavg+dt;
+			t2 = met[month].tavg-dt;
+		}
+		else
+		{
+			tav_k = met[month].tday + 273.15;
+			/* calculate density of air (rho) as a function of air temperature */
+			rhoAir = 1.292 - (0.00428 * met[month].tday);
+			/* calculate latent heat of vaporization as a function of ta */
+			lhvap = 2.5023e6 - 2430.54 * met[month].tday;
+			/* calculate temperature offsets for slope estimate */
+			t1 = met[month].tday+dt;
+			t2 = met[month].tday-dt;
+		}
 	}
 	else
 	{
-		tav_k = met[month].d[day].tavg + 273.15;
-	    /* calculate density of air (rho) as a function of air temperature */
-		rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
-	    /* calculate latent heat of vaporization as a function of ta */
-	    lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
-	    /* calculate temperature offsets for slope estimate */
-	    t1 = met[month].d[day].tavg+dt;
-	    t2 = met[month].d[day].tavg-dt;
+		if (met[month].tday == NO_DATA)
+		{
+			tav_k = met[month].d[day].tavg + 273.15;
+			/* calculate density of air (rho) as a function of air temperature */
+			rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
+			/* calculate latent heat of vaporization as a function of ta */
+			lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
+			/* calculate temperature offsets for slope estimate */
+			t1 = met[month].d[day].tavg+dt;
+			t2 = met[month].d[day].tavg-dt;
+		}
+		else
+		{
+			tav_k = met[month].d[day].tday + 273.15;
+			/* calculate density of air (rho) as a function of air temperature */
+			rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
+			/* calculate latent heat of vaporization as a function of ta */
+			lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
+			/* calculate temperature offsets for slope estimate */
+			t1 = met[month].d[day].tday+dt;
+			t2 = met[month].d[day].tday-dt;
+		}
 	}
 
 

@@ -69,12 +69,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//monthly loop on each cell
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		//check for temperature
-		if ( met[month].tavg == -9999)
-		{
-			met[month].tavg = (met[month].tmax + met[month].tmin)/2;
-		}
-
 
 		//*************SITE CHARACTERISTIC******************
 

@@ -58,6 +58,7 @@ extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int year
 		}
 		else
 		{
+			met[month].d[day].tday = NO_DATA;
 			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
 		}
 	}
@@ -69,6 +70,7 @@ extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int year
 		}
 		else
 		{
+			met[month].tday = NO_DATA;
 			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
 		}
 	}

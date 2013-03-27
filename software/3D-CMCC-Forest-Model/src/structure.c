@@ -656,6 +656,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 					}
 					else
 					{
+						//todo decidere su usare tavg o tday
 						if((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 						{
@@ -691,6 +692,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	static int species;
 	static int counter;
 
+	//TODO decidere se usare tday o tavg
 	if(day == 0 && month == 0)
 	{
 		c->thermic_sum = 0;

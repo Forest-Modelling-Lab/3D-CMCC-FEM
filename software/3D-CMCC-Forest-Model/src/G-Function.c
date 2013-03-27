@@ -164,7 +164,7 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 						}
 						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
-							//todo decidere se utlizzare growthend o mindaylenght
+							//todo decidere se utlizzare tday o tavg growthend o mindaylenght
 							if ((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 									|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
 							{
@@ -228,6 +228,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
 	/*yearly reset thermic sum*/
+	//todo decidere se calcolare la somma termica con tavg o tday
 	if(day == 0 && month == 0)
 	{
 		c->thermic_sum = 0;
