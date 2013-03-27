@@ -8,6 +8,40 @@
 #include "constants.h"
 
 //extern int DaysInMonth[];
+Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	if (settings->time == 'd')
+	{
+		if ( met[month].d[day].tavg == NO_DATA)
+		{
+			if (met[month].d[day].tmax == NO_DATA || met[month].d[day].tmin == NO_DATA)
+			{
+				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+			}
+			{
+				met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+				Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
+			}
+		}
+	}
+	else
+	{
+		if ( met[month].tavg == NO_DATA)
+		{
+			if (met[month].tmax == NO_DATA || met[month].tmin == NO_DATA)
+			{
+				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+			}
+			{
+				met[month].tavg = (met[month].tmax + met[month].tmin)/2;
+			}
+		}
+	}
+}
+
 
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {

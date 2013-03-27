@@ -2061,6 +2061,8 @@ int main(int argc, char *argv[])
 						/*compute number of vegetative months*/
 						for (month = 0; month < MONTHS; month++)
 						{
+							//Check for temperature
+							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_Veg_Months (&m->cells[cell], yos, month, years);
 						}
 						//run tree_model_M
@@ -2127,15 +2129,9 @@ int main(int argc, char *argv[])
 					{
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-
-							//check for temperature
-/*
-							if ( met[month].d[day].tavg == -9999)
-							{
-								met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
-							}
-*/
-
+							//Check for temperature
+							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							//Get day length
 							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 							Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
