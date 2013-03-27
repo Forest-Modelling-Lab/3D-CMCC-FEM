@@ -76,6 +76,39 @@ extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int year
 	}
 }
 
+//following BIOME-BGC 4.2 src
+//compute nightime average air temperature
+extern void Get_nightime_avg_teperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	if (settings->time == 'd')
+	{
+		if (met[month].d[day].tday != NO_DATA )
+		{
+			met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
+		}
+		else
+		{
+			met[month].d[day].tnight = NO_DATA;
+			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
+		}
+	}
+	else
+	{
+		if (met[month].tday != NO_DATA )
+		{
+			met[month].tnight = (met[month].tday + met[month].tmin)/2 ;
+		}
+		else
+		{
+			met[month].tnight = NO_DATA;
+			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
+		}
+	}
+}
+
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
 

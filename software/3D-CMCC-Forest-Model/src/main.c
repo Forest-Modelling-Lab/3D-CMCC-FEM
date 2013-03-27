@@ -1996,6 +1996,7 @@ int main(int argc, char *argv[])
 							//Check for temperature
 							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_daylight_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_nightime_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_Veg_Months (&m->cells[cell], yos, month, years);
 						}
 						//run tree_model_M
@@ -2065,6 +2066,7 @@ int main(int argc, char *argv[])
 							//Check for temperature
 							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_daylight_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_nightime_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//Get day length
 							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
