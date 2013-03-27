@@ -1403,37 +1403,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	return yos;
 }
 
-void met_summary(MET_DATA *met) {
-	int i;
 
-	/* check parameter */
-	assert(met);
-
-	/* */
-	for ( i=0; i<MONTHS; i++ )
-	{
-		Log("MET_SUMMARY FUNCTION\n");
-		Log(	"MET DATA - month %02d:\n"
-				"n_days = %d\n"
-				"solar_rad = %g\n"
-				"tav = %g\n"
-				"rh = %g\n"
-				"ts_f = %g\n"
-				"rain = %g\n"
-				"swc = %g\n",
-				"lai = %g\n",
-				i+1,
-				met[i].n_days,
-				met[i].solar_rad,
-				met[i].tavg,
-				met[i].vpd,
-				met[i].ts_f,
-				met[i].rain,
-				met[i].swc,
-				met[i].ndvi_lai
-		);
-	}
-}
 
 
 //----------------------------------------------------------------------------//
