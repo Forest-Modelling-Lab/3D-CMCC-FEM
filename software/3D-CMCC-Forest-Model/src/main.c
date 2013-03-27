@@ -484,29 +484,6 @@ void usage(void)
 /*import met data file*/
 //------------------------------------------------------------------------------
 
-
-int is_valid_met(const char *const input_file)
-{
-	// met file should be MET_FILENAME_LEN chars len
-	if ( MET_FILENAME_LEN != strlen(input_file) )
-		return 0;
-
-	// 01234567890123456789
-	// ATNeu2002_L4_m.txt
-	// 10th and 12th chars must be an underscore
-	if ( '_' != input_file[9] || '_' != input_file[12] )
-		return 0;
-
-	// from 5th to 8th chars a digit must be present ( year )
-	if ( 0 == isdigit(input_file[5]) ) return 0;
-	if ( 0 == isdigit(input_file[6]) ) return 0;
-	if ( 0 == isdigit(input_file[7]) ) return 0;
-	if ( 0 == isdigit(input_file[8]) ) return 0;
-
-	/* ok */
-	return 1;
-}
-
 //
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {

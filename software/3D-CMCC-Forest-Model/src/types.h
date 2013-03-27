@@ -870,6 +870,7 @@ extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const i
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern void soil_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 extern void met_summary(MET_DATA *);
+extern int is_valid_met(const char *const);
 extern void Get_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
