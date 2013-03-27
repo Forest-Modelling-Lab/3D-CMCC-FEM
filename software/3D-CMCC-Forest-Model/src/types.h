@@ -66,6 +66,7 @@ typedef struct{
 	PREC tmax;	/* (deg C) daily maximum air temperature */
 	PREC tmin;	/* (deg C) daily minimum air temperature */
 	PREC tday;	/* (deg C) daylight average air temperature */
+	PREC tnight;	/* (deg C) nightime average air temperature */
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
@@ -84,6 +85,7 @@ typedef struct {
 	PREC tmax;	/* (deg C) daily maximum air temperature */
 	PREC tmin;	/* (deg C) daily minimum air temperature */
 	PREC tday;	/* (deg C) daylight average air temperature */
+	PREC tnight;	/* (deg C) nightime average air temperature */
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
