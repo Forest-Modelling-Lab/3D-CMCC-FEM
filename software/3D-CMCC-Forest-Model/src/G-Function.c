@@ -139,7 +139,13 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 	//check for temperature
 	if ( met[month].tavg == NO_DATA)
 	{
-		met[month].tavg = (met[month].tmax + met[month].tmin)/2;
+		if (met[month].tmax == NO_DATA || met[month].tmin == NO_DATA)
+		{
+			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+		}
+		{
+			met[month].tavg = (met[month].tmax + met[month].tmin)/2;
+		}
 	}
 
 
@@ -211,7 +217,6 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int MonthLength, int DaysInMonth)
 {
 	MET_DATA *met;
-	static int cell;
 	static int height;
 	static int age;
 	static int species;
@@ -224,8 +229,14 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 	//check for temperature
 	if ( met[month].d[day].tavg == NO_DATA)
 	{
-		met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
-		Log("recompute tavg = %g\n", met[month].d[day].tavg);
+		if (met[month].d[day].tmax == NO_DATA || met[month].d[day].tmin == NO_DATA)
+		{
+			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+		}
+		{
+			met[month].d[day].tavg = (met[month].d[day].tmax + met[month].d[day].tmin)/2;
+			Log("recompute tavg = %g\n", met[month].d[day].tavg);
+		}
 	}
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
