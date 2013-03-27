@@ -62,9 +62,10 @@ enum {
 typedef struct{
 	int n_days;
 	PREC solar_rad;
-	PREC tavg;
-	PREC tmax;
-	PREC tmin;
+	PREC tavg;	/* (deg C) daily average air temperature */
+	PREC tmax;	/* (deg C) daily maximum air temperature */
+	PREC tmin;	/* (deg C) daily minimum air temperature */
+	PREC tday;	/* (deg C) daylight average air temperature */
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
@@ -79,9 +80,10 @@ typedef struct {
 	int n_days;
 	int month;
 	PREC solar_rad;
-	PREC tavg;
-	PREC tmax;
-	PREC tmin;
+	PREC tavg;	/* (deg C) daily average air temperature */
+	PREC tmax;	/* (deg C) daily maximum air temperature */
+	PREC tmin;	/* (deg C) daily minimum air temperature */
+	PREC tday;	/* (deg C) daylight average air temperature */
 	PREC vpd;
 	PREC ts_f;
 	PREC rain;
