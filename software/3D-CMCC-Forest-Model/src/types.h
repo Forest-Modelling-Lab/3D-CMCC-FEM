@@ -108,6 +108,7 @@ typedef struct
 	char sitename[1024];
 	float lat,
 	lon,
+	elev,
 	Y,
 	co2Conc,
 	initialLitter,
