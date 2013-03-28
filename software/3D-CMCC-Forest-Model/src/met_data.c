@@ -235,6 +235,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-tavg = %g °C\n"
 				"-tmax = %g °C\n"
 				"-tmin = %g °C\n"
+				"-tday = %g °C\n"
+				"-tnight = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
@@ -245,6 +247,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].tavg,
 				met[month].tmax,
 				met[month].tmin,
+				met[month].tday,
+				met[month].tnight,
 				//met[month].rh,
 				vpd,
 				met[month].ts_f,
@@ -265,6 +269,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-tavg = %g °C\n"
 				"-tmax = %g °C\n"
 				"-tmin = %g °C\n"
+				"-tday = %g °C\n"
+				"-tnight = %g °C\n"
 				//"-rh = %g %%\n"
 				"-vpd = %g mbar\n"
 				"-ts_f = %g °C\n"
@@ -275,6 +281,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
 				met[month].d[day].tmin,
+				met[month].d[day].tday,
+				met[month].d[day].tnight,
 				//met[month].rh,
 				vpd,
 				met[month].d[day].ts_f,
