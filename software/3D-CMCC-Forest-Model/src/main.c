@@ -1955,6 +1955,7 @@ int main(int argc, char *argv[])
 
 			Log("\n-YEARS OF SIMULATION = %d\n", yos[years].year);
 
+
 			if (settings->time == 'm')
 			{
 				//check if soil data are available
