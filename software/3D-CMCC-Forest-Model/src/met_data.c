@@ -127,7 +127,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		met[month].d[day].thermic_sum = 0;
 		previous_thermic_sum = 0;
 
-		if (met[month].d[day-1].tday != NO_DATA)
+		if (met[month].d[day].tday != NO_DATA)
 		{
 			if (met[month].d[day].tday > 5)
 			{
@@ -147,14 +147,15 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 	}
 	else
 	{
-		if (met[month].d[day-1].tday != NO_DATA)
+		if (previous_tday != NO_DATA)
 		{
 			//fixme look if use a general base temp or a species specific base temp
-			if (met[month].d[day-1].tday > 5)
+			if (previous_tday > 5)
 			{
 				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tday - 5);
 				previous_tday = met[month].d[day].tday;
 				previous_thermic_sum = met[month].d[day].thermic_sum;
+				Log("thermic sum = %g\n ", met[month].d[day].thermic_sum);
 			}
 			else
 			{
@@ -167,7 +168,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		else
 		{
 			//fixme look if use a general base temp or a species specific base temp
-			if (met[month].d[day-1].tavg > 5)
+			if (previous_tavg > 5)
 			{
 				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tavg - 5);
 				previous_tavg = met[month].d[day].tavg;
