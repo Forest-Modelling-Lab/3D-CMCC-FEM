@@ -155,7 +155,6 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tday - 5);
 				previous_tday = met[month].d[day].tday;
 				previous_thermic_sum = met[month].d[day].thermic_sum;
-				Log("thermic sum = %g\n ", met[month].d[day].thermic_sum);
 			}
 			else
 			{
