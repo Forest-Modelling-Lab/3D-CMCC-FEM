@@ -58,6 +58,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	/* temperature and pressure correction factor for conductances */
+	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
 	if (settings->time == 'm')
 	{
 		if(met[month].tday == NO_DATA)
