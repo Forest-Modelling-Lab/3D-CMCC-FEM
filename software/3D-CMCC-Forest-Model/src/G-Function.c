@@ -227,15 +227,6 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
-	/*yearly reset thermic sum*/
-	//todo decidere se calcolare la somma termica con tavg o tday
-	if(day == 0 && month == 0)
-	{
-		c->thermic_sum = 0;
-	}
-	/*compute thermic sum*/
-	c->thermic_sum += met[month].d[day].tavg;
-
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
 		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
@@ -253,8 +244,9 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 						}
 						//todo decidere se utlizzare growthend o mindaylenght
+						//fixme change GROWTHSTART with a variable for thermic_sum
 						//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
-						if ((c->thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;

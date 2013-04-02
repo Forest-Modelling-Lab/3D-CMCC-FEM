@@ -110,15 +110,40 @@ extern void Get_nightime_avg_teperature (CELL * c,  int day, int month, int year
 }
 
 
-extern void Get_thermic_sum (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
+
+	static float previous_tday;
+	static float previous_tavg;
+	static float previous_thermic_sum;
+
+	//to compute thermic sum model takes into account tday or tavg of the day before (except for the first day of the first month)
 
 	//reset annualy thermic sum
 	if(day == 0 && month == 0)
 	{
 		met[month].d[day].thermic_sum = 0;
+		previous_thermic_sum = 0;
+
+		if (met[month].d[day-1].tday != NO_DATA)
+		{
+			if (met[month].d[day].tday > 5)
+			{
+				previous_thermic_sum = met[month].d[day].tday - 5;
+			}
+			previous_tday = met[month].d[day].tday;
+		}
+		else
+		{
+			if (met[month].d[day].tavg > 5)
+			{
+				previous_thermic_sum = met[month].d[day].tavg - 5;
+			}
+			previous_tavg = met[month].d[day].tavg;
+		}
+		met[month].d[day].thermic_sum += previous_thermic_sum;
 	}
 	else
 	{
@@ -127,11 +152,15 @@ extern void Get_thermic_sum (CELL * c,  int day, int month, int years, int Month
 			//fixme look if use a general base temp or a species specific base temp
 			if (met[month].d[day-1].tday > 5)
 			{
-				met[month].d[day].thermic_sum += (met[month].d[day-1].tday - 5);
+				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tday - 5);
+				previous_tday = met[month].d[day].tday;
+				previous_thermic_sum = met[month].d[day].thermic_sum;
 			}
 			else
 			{
-				met[month].d[day].thermic_sum += 0;
+				met[month].d[day].thermic_sum = previous_thermic_sum + 0;
+				previous_tday = met[month].d[day].tday;
+				previous_thermic_sum = met[month].d[day].thermic_sum;
 			}
 		}
 		//if no tmax and/or tmin are availables
@@ -140,11 +169,15 @@ extern void Get_thermic_sum (CELL * c,  int day, int month, int years, int Month
 			//fixme look if use a general base temp or a species specific base temp
 			if (met[month].d[day-1].tavg > 5)
 			{
-				met[month].d[day].thermic_sum += (met[month].d[day-1].tavg - 5);
+				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tavg - 5);
+				previous_tavg = met[month].d[day].tavg;
+				previous_thermic_sum = met[month].d[day].thermic_sum;
 			}
 			else
 			{
-				met[month].d[day].thermic_sum += 0;
+				met[month].d[day].thermic_sum = previous_thermic_sum + 0;
+				previous_tavg = met[month].d[day].tavg;
+				previous_thermic_sum = met[month].d[day].thermic_sum;
 			}
 		}
 	}
@@ -317,6 +350,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-ts_f = %g °C\n"
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n"
+				"-thermic_sum = %g °C\n"
 				"-daylength = %g hrs\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
@@ -329,6 +363,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].d[day].ts_f,
 				met[month].d[day].rain,
 				met[month].d[day].swc,
+				met[month].d[day].thermic_sum,
 				met[month].d[day].daylength);
 
 		if (settings->spatial == 's')
