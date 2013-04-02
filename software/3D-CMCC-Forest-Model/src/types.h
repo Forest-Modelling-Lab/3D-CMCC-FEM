@@ -73,6 +73,7 @@ typedef struct{
 	PREC swc;
 	PREC ndvi_lai;
 	PREC daylength;
+	PREC thermic_sum; //daily thermic sum
 }MET_DAILY_DATA;
 
 /* */
@@ -92,6 +93,7 @@ typedef struct {
 	PREC swc;
 	PREC ndvi_lai;
 	PREC daylength;
+	PREC thermic_sum; //monthly thermic sum NOT USED IN MONTHLY SIMUALATION
 	MET_DAILY_DATA d[31];
 
 } MET_DATA;
@@ -879,6 +881,7 @@ extern int is_valid_met(const char *const);
 extern void Get_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_daylight_avg_teperature (CELL *, int, int, int, int, YOS *);
 extern void Get_nightime_avg_teperature (CELL *, int, int, int, int, YOS *);
+extern void Get_thermic_sum (CELL *, int, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
 extern int sort_by_years(const void *, const void *);

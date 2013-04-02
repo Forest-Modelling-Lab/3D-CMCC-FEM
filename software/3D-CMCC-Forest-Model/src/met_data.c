@@ -109,6 +109,47 @@ extern void Get_nightime_avg_teperature (CELL * c,  int day, int month, int year
 	}
 }
 
+
+extern void Get_thermic_sum (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	//reset annualy thermic sum
+	if(day == 0 && month == 0)
+	{
+		met[month].d[day].thermic_sum = 0;
+	}
+	else
+	{
+		if (met[month].d[day-1].tday != NO_DATA)
+		{
+			//fixme look if use a general base temp or a species specific base temp
+			if (met[month].d[day-1].tday > 5)
+			{
+				met[month].d[day].thermic_sum += (met[month].d[day-1].tday - 5);
+			}
+			else
+			{
+				met[month].d[day].thermic_sum += 0;
+			}
+		}
+		//if no tmax and/or tmin are availables
+		else
+		{
+			//fixme look if use a general base temp or a species specific base temp
+			if (met[month].d[day-1].tavg > 5)
+			{
+				met[month].d[day].thermic_sum += (met[month].d[day-1].tavg - 5);
+			}
+			else
+			{
+				met[month].d[day].thermic_sum += 0;
+			}
+		}
+	}
+}
+
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
 

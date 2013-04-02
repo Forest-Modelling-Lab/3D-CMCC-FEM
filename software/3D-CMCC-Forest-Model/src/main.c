@@ -2002,6 +2002,8 @@ int main(int argc, char *argv[])
 							Get_daylight_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_nightime_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
+							//todo add Get_thermic_sum
+
 							//Get vegetative months
 							Get_Veg_Months (&m->cells[cell], yos, month, years);
 						}
@@ -2076,6 +2078,9 @@ int main(int argc, char *argv[])
 							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_daylight_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_nightime_avg_teperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
+							//todo add Get_thermic_sum
+							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
 							//Get day length
 							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
