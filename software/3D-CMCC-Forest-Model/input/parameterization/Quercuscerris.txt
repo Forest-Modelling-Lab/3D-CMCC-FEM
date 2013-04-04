@@ -4,12 +4,12 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	0 //PHENOLOGY 0=deciduous, 1=evergreen
-ALPHA   0.0297		//   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+ALPHA	0.0297		//   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
-ALBEDO 	0.2    
+ALBEDO	0.2    
 //LEAF AREA INDEX
 LAIGCX	8               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
@@ -50,7 +50,7 @@ GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	20      //Optimum temperature for growth
 GROWTHSTART	2       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
 GROWTHEND	2       //average temperature for ending growth in °C
-MINDAYLENGTH  11      //minimum day length for deciduous
+MINDAYLENGTH	11      //minimum day length for deciduous
 
 //SOIL WATER
 //modified 13 feb 2012
@@ -116,9 +116,9 @@ DBHDCMAX	0.24    //Low Density
 DBHDCMIN	0.16    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.674         //a value from Kostner for Q. petreae in cm
-SAP_B         1.992         //b value from Kostner for Q. petreae in cm
-SAP_LEAF      2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
+SAP_A	0.674         //a value from Kostner for Q. petreae in cm
+SAP_B	1.992         //b value from Kostner for Q. petreae in cm
+SAP_LEAF	2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	40              //35  //Max Height in m for QUERCUS CERRIS for Chapman-Richards Function (Nocetti M. 2007)

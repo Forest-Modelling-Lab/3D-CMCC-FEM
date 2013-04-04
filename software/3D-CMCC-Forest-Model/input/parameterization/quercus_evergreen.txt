@@ -4,12 +4,12 @@ LIGHT_TOL	4   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	1 //PHENOLOGY 0=deciduous, 1=evergreen
-ALPHA   0.038		//Averaged value   // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011)
-EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+ALPHA	0.038		//Averaged value   // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011)
+EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.65		//Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, Hoff et al., 2002)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO 	0.23    //0.12 (Hoff et al., 2002)
+ALBEDO	0.23    //0.12 (Hoff et al., 2002)
 
 //LEAF AREA INDEX
 LAIGCX	3.3               //LAI for maximum canopy conductance
@@ -117,9 +117,9 @@ DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.674         //a value from Kostner for Q. petreae in cm
-SAP_B         1.992         //b value from Kostner for Q. petreae in cm
-SAP_LEAF      2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
+SAP_A	0.674         //a value from Kostner for Q. petreae in cm
+SAP_B	1.992         //b value from Kostner for Q. petreae in cm
+SAP_LEAF	2600          //sapwood_max leaf area ratio in pipe model  for Q petreae    
 SAP_WRES	0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	30              //35  //Max Height in m 

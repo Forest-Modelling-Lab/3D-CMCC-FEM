@@ -4,10 +4,10 @@ LIGHT_TOL	2   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	0 //PHENOLOGY 0=deciduous, 1=evergreen
-ALPHA   0.056		//Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+ALPHA	0.056		//Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy 
-ALBEDO 	0.2
+ALBEDO	0.2
 //LEAF AREA INDEX
 LAIGCX	4               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
@@ -48,7 +48,7 @@ GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	16      //Optimum temperature for growth
 GROWTHSTART	6       //average temperature for starting growth in °C
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH  11      //minimum day length for deciduous
+MINDAYLENGTH	11      //minimum day length for deciduous
 
 //SOIL WATER
 //modified 13 feb 2012
@@ -117,9 +117,9 @@ DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.034         //a value from Kostner for Q. petreae in cm
-SAP_B         2.384         //b value from Kostner for Q. petreae in cm
-SAP_LEAF      9400          //sapwood_max leaf area ratio in pipe model  for Q petreae   
+SAP_A	0.034         //a value from Kostner for Q. petreae in cm
+SAP_B	2.384         //b value from Kostner for Q. petreae in cm
+SAP_LEAF	9400          //sapwood_max leaf area ratio in pipe model  for Q petreae   
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  
 HMAX	35              //35  //Max Height in m see Morandini 1955

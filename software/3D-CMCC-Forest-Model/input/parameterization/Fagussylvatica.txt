@@ -4,13 +4,13 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	0 //PHENOLOGY 0=deciduous, 1=evergreen
-ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-//Y              0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
+ALPHA	0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+//Y	0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO 	0.2
+ALBEDO	0.2
 //LEAF AREA INDEX
 LAIGCX	4               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
@@ -50,7 +50,7 @@ GROWTHTMAX	30      //Maximum temperature for growth
 GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001
 GROWTHSTART	1500       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C  for fagus through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH  10      //minimum day length for fagus through satellite images
+MINDAYLENGTH	10      //minimum day length for fagus through satellite images
 
 //SOIL WATER
 //modified 13 feb 2012
@@ -120,9 +120,9 @@ DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A         0.674         //a value from Kostner for 
-SAP_B         1.992         //b value from Kostner for 
-SAP_LEAF      1500          //leaf area/sapwood max  ratio in pipe model  
+SAP_A	0.674         //a value from Kostner for 
+SAP_B	1.992         //b value from Kostner for 
+SAP_LEAF	1500          //leaf area/sapwood max  ratio in pipe model  
 SAP_WRES	0.07           //Sapwood-Reserve biomass ratio used if no Wres data are available  0.07 from calibration
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	48              //35  //Max Height in m 
