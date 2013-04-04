@@ -2086,8 +2086,15 @@ int main(int argc, char *argv[])
 							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 
-							//Get vegetative days
-							Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+							if(m->cells[cell].landuse == F)
+							{
+								//Get vegetative days
+								Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+							}
+							else if (m->cells[cell].landuse == Z)
+							{
+								//sergio
+							}
 						}
 					}
 					for (month = 0; month < MONTHS; month++)
@@ -2109,18 +2116,14 @@ int main(int argc, char *argv[])
 										//run for SOIL function
 										soil_model_daily (m, yos, years, month, day, years_of_simulation);
 									}
-
-
 								}
 								else
 								{
 									//run for BGC version
-
 								}
 							}
 							if(m->cells[cell].landuse == Z)
 							{
-
 								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
 								{
 									Log("crop model failed.");
@@ -2131,7 +2134,6 @@ int main(int argc, char *argv[])
 								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//	soil_model (m, yos, years, month, years_of_simulation);
 								}
-
 							}
 							Log("****************END OF DAY*******************\n");
 						}
