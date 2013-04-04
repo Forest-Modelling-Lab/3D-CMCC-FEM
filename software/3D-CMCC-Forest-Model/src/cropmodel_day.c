@@ -347,13 +347,13 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	cumulativeLeafAreaPhyllocron[5],
 	leafAreaLossRate,
 	senescenceLeafArea;
-
-	float photoperiodFactor;
+/*
+//	float photoperiodFactor;
 	float photoperiodCoefficient;
-	float vernalizationFactor;
+//	float vernalizationFactor;
 	float vernalizationCoefficient;
 	float vernalizationDays;
-
+*/
 
 	//-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -514,8 +514,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 				totalCumulativeLeafArea 	= LAI;
 				plants 						= 300.0;
 				tillNumber 					= 1.0;
+/*
 				photoperiodCoefficient 		= 0.0055;
 				vernalizationCoefficient 	= 0.027;
+*/
 				//### PHOTOSINTHESYS ###
 
 				optimumPhotoRate 			= 4.0;		// taken from spitters, g CO2 /m2/h
@@ -619,6 +621,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 			}
 
 		}
+
 
 
 
@@ -2087,7 +2090,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					//vernalizationDays
 					//this scheme is defined by me, interpreting Ritchie graph RVE = f(Tc)
-
+/*
 
 					vernalizationFactor = 1 - vernalizationCoefficient * (50.0 - vernalizationDays);
 
@@ -2101,7 +2104,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					{
 						photoperiodFactor = 1 - photoperiodCoefficient * pow(20.0 - daylength, 2);
 					}
-
+*/
 					if (meanCanopyTemperature - basalTemperature > 0 )	//&& stage != 3
 					{
 						dailyThermalTime += ((meanCanopyTemperature - basalTemperature) * met[month].n_days)* Minimum(vernalizationFactor,photoperiodFactor);
