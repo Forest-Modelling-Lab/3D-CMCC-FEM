@@ -62,7 +62,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 
 	//height differences in meter to consider trees in two different layers
 
-	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
+	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
 
 	Log("--GET NUMBER OF ANNUAL LAYERS--\n");
 
@@ -696,7 +696,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 	counter = 0;
 
-	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
+	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
 
 	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
 

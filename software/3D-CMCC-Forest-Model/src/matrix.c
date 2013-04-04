@@ -725,7 +725,6 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 			Log("***************************************************\n");
 			Log("SOIL DATASET\n");
 			Log("Number of soil layers = %g\n", settings->soil_layer);
-			Log("Number of soil layers = %d\n", m->cells[cell].soils_count);
 			Log("***************************************************\n");
 
 			Get_initialization_site_data (&m->cells[cell]);
