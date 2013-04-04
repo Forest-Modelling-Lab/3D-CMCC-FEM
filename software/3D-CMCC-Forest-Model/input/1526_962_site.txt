@@ -2,7 +2,7 @@ SITENAME "Madonie - Italy" //Site Name
 
 LAT "37.53" //Site Latitude 
 LONG "14.20" //Site Longitude 
-ELEV "500" //Elevation in meters
+ELEV "500.0" //Elevation in meters
 
 Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
