@@ -1003,7 +1003,7 @@ extern void Get_snow_met_data (CELL *c, const MET_DATA *const, int, int);
 
 //sergio's functions
 extern int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
-
+extern int crop_model_D (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 
 
 

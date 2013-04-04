@@ -37,7 +37,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	int   const   soilLayer = 1;						// when done a cropType.h point to the value in site
 	int   const   phyllocron = 95;						// time interval between leaf tip appearancE it shoul be somehow variable (see Ritchie et al., 91)
 	const int     MAXINT = 32767;
-	const float   scatterLightParameter = 0.02;			//scatter of light parameter; set as default 0.02 (Zhang et al. 2002)
+	const float   scatterLightParameter = 0.2;			//scatter of light parameter; set as default 0.02 (Zhang et al. 2002)
 	const float   rootWaterUptakeCoefficient = 0.003;	// root water uptake coefficient (0.003 cm water/cm root)
 
 	float max = -MAXINT;
@@ -138,7 +138,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float soilTemperatureCorrectionFactor;		// soil tempearture lagging factor, simulating snow and residue cover influences
 	float displacementHeight;
 	float lag; 									// coeff. ranging from 0.0 to 1.0: allows weighting of (d-1)’s soil temp. with the current day’s
-												// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
+	// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 	float prevDaySoilLayerTemperature[1];
 	float depthTempFactor;						// epic factor to consider soil layer distance from surface in computing soil layer temperature
 	float canopyHeight;							// rop height: used to compute displacement height
@@ -232,10 +232,10 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	 * 												PHOTOSYNTHESIS MODULE
 	 *******************************************************************************************************************************/
 
-	float fCO2;									// effects of CO2 concentration on photosynthesis
-	float co2EffectPhotosynthesis;				// crop parameter for CO2 effects on photosynthesis (0.4 for C4; 0.8 for C3)
-	float lightSaturationPhotoRate;				// Photosynthesis rate at light saturation (kg CO2/ha/h)
-	float optimumPhotoRate;						// Photosynthesis rate at light saturation when T is optimal;
+	float  fCO2;									// effects of CO2 concentration on photosynthesis
+	float  co2EffectPhotosynthesis;				// crop parameter for CO2 effects on photosynthesis (0.4 for C4; 0.8 for C3)
+	double lightSaturationPhotoRate;				// Photosynthesis rate at light saturation (kg CO2/ha/h)
+	double optimumPhotoRate;						// Photosynthesis rate at light saturation when T is optimal;
 
 	float blackBodyExtinctionCoeff;				// Extinction coefficient of assumed black body leaves
 
@@ -261,8 +261,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float directComponentDirectLight;			// Direct component of the direct light after canopy scattering
 	float directLight;							// Direct light
 	float diffuseLight;							// Diffuse light
-	float shadeLeavesLightAbsor;				// light adsorbed by shaded leaves in a layer
-	float leafSurface90degLight;				// light which is perpendicoular to leeaf surface
 
 	float atmosphericTrasmissionCoeff;			// atmospheric transmission coefficient
 	float canopyHorizontalReflectivity;			// Reflectivity of horizontally distribuited canopy
@@ -271,23 +269,16 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	float midVariable4;							// mid variable
 	float midVariable3;							// mid variable
 
-	float shadLeavesPhotoRate;					// photosynthesis rate of shaded leaves
-	float sunlitLeavesPhotoRate;				// photosynthesis rate of sunlit leaves
-	float gaussIntegrPhoto;						// gaussian integration f(time) of photosynthesis for a canopy layer
-	float gaussIntegPhotoSum; 					// photosynthesi value for a canopy point, as proposed for a gaussian integration
-	float dailyGrossPhoto;						// daily gross photosinthesis (g/m^2)
-	float initialLightUseEfficiency;			// initial light use efficiency   -> taken as PLEI (penning de vries)
-	float layerGrossPhotoRate,
+	double shadeLeavesLightAbsor;				// light adsorbed by shaded leaves in a layer
+	double leafSurface90degLight;				// light which is perpendicoular to leeaf surface
+	double shadLeavesPhotoRate;					// photosynthesis rate of shaded leaves
+	double sunlitLeavesPhotoRate;				// photosynthesis rate of sunlit leaves
+	double gaussIntegrPhoto;						// gaussian integration f(time) of photosynthesis for a canopy layer
+	double gaussIntegPhotoSum; 					// photosynthesi value for a canopy point, as proposed for a gaussian integration
+	float  dailyGrossPhoto;						// daily gross photosinthesis (g/m^2)
+	double initialLightUseEfficiency;			// initial light use efficiency   -> taken as PLEI (penning de vries)
+	double layerGrossPhotoRate,
 	sunlitLeafAreaFraction;
-
-	//float blackBodyExtinctionCoeff2;			// Extinction coefficient of assumed black body leaves
-	//float extinctionCoeff;					// extinction coefficient; is this the one used for diffuse light!?
-	//float horizontalSemiax;					// leaves horizontal semiaxis distribuition
-	//float verticalSemiax;						// leaves vertical semiaxis distribuition
-	//float canopyShape;						// canopy shape, influencing light diffusion coefficient
-	//float accumulatedNH3Loss; 				// accumulated NH3 loss at time t (kg N/ha) ex AM;
-	//float dailyAssimilationRate;				// daily crop assimilation rate (P0 - Rg, g/m^2)
-	//float CO2;								// atmospheric CO2;
 
 
 	/******************************************************************************************************************************
@@ -353,8 +344,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	//-----------------------------------------------------------------------------------------------------------------------------------
 
-	float solarElevationSum,
-	solarElevationSumDNDC;
+	float solarElevationSumDNDC;
+	float reflectionCoefficient,
+	diffuseComponentDirectLight,
+	absorbedDiffuseLight ,
+	absorptionDirectLight,
+	absorptionDirectDirectLight,
+	absorptionDiffuseDirect,
+	sunlitLeavesLightAbsor;
 	/*****************************************************************************************************************************
 	 * 										############################################
 	 * 									       CROP MODULE OF 3D-CMCC-LANDSCAPE MODEL
@@ -394,17 +391,17 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		{
 			Log("***** VERY FIRST VARIABLES INITIALIZATION *****\n"); 	//PAY ATTENTION, IS THIS ALLRIGHT TO CALL IT INITIALIZATION!?
 			//shandong K coefficient
-				//extinctionCoeff = 0.6;
+			//extinctionCoeff = 0.6;
 
 			//gaussian canpopy integration
 			gaussianParameter1[0] 		= 0.5 - sqrt(0.15);
 			gaussianParameter1[1] 		= 0.5;
 			gaussianParameter1[2] 		= 0.5 + sqrt(0.15);
 
-			//gaussian time integration
-			gaussianParameter2[0] 		= 1.0 /3.6;
-			gaussianParameter2[1]		= 1.6 / 2.3;
-			gaussianParameter2[2] 		= 1.0 / 3.6;
+			//gaussian time integration: evaluate if they're equivalent
+			gaussianParameter2[0] 		= 0.5 - sqrt(0.15);
+			gaussianParameter2[1]		= 0.5;
+			gaussianParameter2[2] 		= 0.5 + sqrt(0.15);
 
 			drainageClass				= 3;
 			hydroCondition 				= 1;
@@ -447,7 +444,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			/*********************************************************
 			 * 					SOIL PARAMETERS
 			 ********************************************************/
-			waterStressFactor 	= .5;
+			waterStressFactor 				= .5;
 
 			// critical daylenght for max photoperiodism
 			stage 							= 0;
@@ -475,11 +472,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			 * 				GENERAL SITE PARAMETERS
 			 ***************************************************/
 
-			//profileWaterContent = 0.5;
-			//depthTopSoilAffectingEvaporation = 20.0;
-			//airTemperature = 15.0; //??
-			//maxAltitudeJulianDate = 144;				//21/6
-
 			julianDate = (4713 * 365) + (4713 + yos[years].year) / 4 + (yos[years].year * 365) - 14;
 			litterfalled = site->initialLitter;
 
@@ -490,23 +482,10 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			}
 
 
-			/****************************************************
-			 * 				GENERAL SITE PARAMETERS
-			 ***************************************************/
-
 			//profileWaterContent = 0.5;
-			//depthTopSoilAffectingEvaporation = 20.0;
+			//depthTopSoilAffectingEvaporation 			= 20.0;
 			//airTemperature = 15.0; //??
 			//maxAltitudeJulianDate = 144;				//21/6
-
-			julianDate = (4713 * 365) + (4713 + yos[years].year) / 4 + (yos[years].year * 365) - 14;
-			litterfalled = site->initialLitter;
-
-			for (l = 0; l < soilLayer; l++)
-			{
-				layerFieldSaturation[l] = 1.0 - soilBulkDensity / 2.65 - fractionFactor;
-				layerFieldSaturation[l] = 30.0;		//fixme sergio find out a way to compute water content at saturation (macropore occupied by water)
-			}
 
 
 			/***********************************************************
@@ -517,17 +496,17 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			if (species == 0)			//and day is 1st
 			{
-				LAI 						= 4;
+				LAI 						= 4.0;
 				totalCumulativeLeafArea 	= LAI;
-				plants 						= 300;
-				tillNumber 					= 1;
+				plants 						= 300.0;
+				tillNumber 					= 1.0;
 
 				//### PHOTOSINTHESYS ###
 
-				optimumPhotoRate 			= 40.0;		// taken from penning the vries: PLMX
-				initialLightUseEfficiency	= 0.5;		// (kg CO2 /ha/h) ( J/(m^2 sec))
+				optimumPhotoRate 			= 4.0;		// taken from spitters, g CO2 /m2/h
+				initialLightUseEfficiency	= 0.0000125;		// (g CO2 /J) ( J/(m^2 sec))  for spitters
 				co2EffectPhotosynthesis		= 0.8;
-				nitrogenStressFactor 		= 0.4;
+				nitrogenStressFactor 		= 0.6;
 				vernalizationFactor 		= 0.5;
 				photoperiodFactor 			= 0.4;
 
@@ -554,12 +533,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				compartBiomass[3] 			= 10.0;	// root biomass
 
 
-				//to be further evaluated (values taken from penning de vries, pag. 52): IMPROVABLE; function of temperature and photosynthesis!! pag 53
-
-				compartMaintenanceResp[0] 	= 0.016;	//wheat, sage: _______________
-				compartMaintenanceResp[1] 	= 0.010;	// general annual plants; in young stems tissue, rate 1.5 2 times higher
-				compartMaintenanceResp[2]	= 0.010;  	// assumed equal to stem maintenance respiration
-				compartMaintenanceResp[3] 	= 0.015; 	// general for annual plants
 
 				cumulativeLeafAreaPhyllocron[0] = 0;
 				cumulativeLeafAreaPhyllocron[1] = 0;
@@ -576,7 +549,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			}
 
-			cumPhyllocrons 						= 1; //number of cumulative phyllocrones since emergence
+			cumPhyllocrons 						= 1.0; //number of cumulative phyllocrones since emergence
 
 
 
@@ -589,7 +562,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			//riordina perbene
 
 
-			stageLimit[0] 			= 400;
+			stageLimit[0] 			= 400.0;
 			stageLimit[1] 			= 3 * phyllocron;
 			stageLimit[2] 			= 2 * phyllocron;
 			stageLimit[3] 			= THERMAL_STAGE1;
@@ -618,6 +591,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		waterUptakeSoilLayer 			= 0.0;
 		gaussIntegPhotoSum 				= 0.0;
 		maintenanceRespiration 			= 0.0;
+		dailyGrossPhoto					= 0.0;
+
 
 		//**************************************************************************************************************************************
 
@@ -640,7 +615,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		 * 											CROPMODEL_M
 		 * 									---------------------------
 		 ****************************************************************************************************/
-
+		float aaa = 10000000;
+		Log("\n\n\naaa=%g", aaa);
 
 
 		Log("\n\nMONTH SIMULATED = %s\n", szMonth[month]);
@@ -652,26 +628,26 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 		//julian date
-		julianDate += met[month].n_days;
-		actualDate = met[month].n_days;
-		Log("\nstarting from year %d\njulianDate: %d", yos[years].year, julianDate);
+		actualDate += met[month].n_days;
+		Log("\nstarting from year %d\njulianDate: %d", yos[years].year, actualDate);
 
 		//should be set here maxAltitudeJulianDate: julian date when sun is higher?
 
 		//------------------------------------------------------------------------------------------------------------------
 		//solar declination
-		solarDeclination = -asin(sin(23.45 * 180.0 / Pi) * cos(2 * Pi * (actualDate +10) / 365.0));
+		solarDeclination = -asin(sin(23.45 * Pi / 180.0) * cos(2.0 * Pi * (actualDate +10) / 365.0));
 		Log("\nsolar declination = %g", solarDeclination);
 
 		// there are some potential dicrepancies with literature versions; watch out! c computes angle operation ALWAYS as radiants!
 
-		Cfactor = cos(site->lat) * sin(solarDeclination);
+		Cfactor = cos(site->lat) * cos(solarDeclination);
 		Sfactor = sin(site->lat) * sin(solarDeclination);
 		Log("\nC value is %g\nS value is %g", Cfactor, Sfactor);
 
 		//------------------------------------------------------------------------------------------------------------------
 
-		daylength = 12 + (24.0 / Pi) * asin(Sfactor / Cfactor);
+
+		daylength = 12 + (24.0 / Pi) * asin(tan(site->lat) - tan(solarDeclination) * Pi / 180.0);
 		Log("\nDay length is equal to %g hours\n", daylength);
 
 		// daily solar radiation using DNDC method
@@ -681,7 +657,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		solarConstant = 1370.0 * (1.0 + 0.033 * cos(2.0 * Pi * julianDate/365.0));
 		Log("For a solar constant equal to %g\n", solarConstant);
 
-		// extraterrestrial insulation
+		// extraterrestrial insulation /J/(m^2 s)
 		extraTerrestrialInsolation = 3600 * solarConstant * (daylength * Sfactor + (24 * Cfactor * sqrt(1 - (pow(Sfactor,2) / pow(Cfactor,2)))) / Pi);
 		Log("And the extra terrestrial insulation = %g\n", extraTerrestrialInsolation);
 
@@ -719,18 +695,20 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		else
 		{
 			Log("ERROR; NO PROPER LAND_TYPE INPUT");
-			//return (0);}	//buttata là seminventato
 		}
 		Log("--------------------------------------------------------------------------\n\n");
 
 		if (met[month].solar_rad != -9999)
 		{
-			//converted in J/(m^2 d)
+			// in MJ/(m^2 d)
 			Log("\n\nSolar radiation measured in the field; converted in J/(m^2 d)");
 			dailySolarRadiation = met[month].solar_rad;
+			dailySolarRadiation = 27.92;
+			Log("\n\n\nsolar radiation taken from input file: %g", met[month].solar_rad);
+			Log("\n\nsolar radiation from variable value %g", dailySolarRadiation);
 
-			//converted in J/(m^2 sec)
-			dailySolarRadiation *= 1000000 / (daylength * 3600);
+			//converted in J/(m^2 s)
+			dailySolarRadiation *= (1000000 / (3600 * daylength));
 			Log("\n\nSolar radiation measured in the field; converted in J/(m^2 sec)");
 
 		}
@@ -742,10 +720,9 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			//			dailySolarRadiation = extraTerrestrialInsolation * (empiric_param_a + empiric_param_b * sunshine / daylength) / 1000000.0;		// compare with alessio's; i suppose sunshine's not
 
 			//convert in MJ/m-2 d-1 : 1,000,000: perfect!! it is allineated to the values measured in field
-			//ATTENTION! there's an error on Zhang et al 2002: the amount is (m^2d and not m^2s)
 		}
 
-		Log("daily solar radiation = %g J/(m^2*d)\n\n", dailySolarRadiation);
+		Log("\ndaily solar radiation = %g J/(m^2*s)\n\n", dailySolarRadiation);
 
 		//Zhang proposes also Bristow and campbell (1984) approach (the same of the first version of Daymet)
 
@@ -845,7 +822,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 		//setting layerSoilTempEffectPhotoRate: temperature reduction factor
-		if (meanCanopyTemperature <= 10.0)
+		if (meanCanopyTemperature <= 5.0)		//or 10 °C???
 		{
 			layerSoilTempEffectPhotoRate = 0.0001;
 		}
@@ -906,12 +883,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		Log ("\nCURVE NUMBER VALUE\n");
 
 		/***********************************************************************************************************************
-		*									CURVE NUMBER SETTING  stagione riposo: set it using development module
-		************************************************************************************************************************/
+		 *									CURVE NUMBER SETTING  stagione riposo: set it using development module
+		 ************************************************************************************************************************/
 
 		/***************************************************************************
-		* 						RUNOFF CURVE NUMBER
-		**************************************************************************/
+		 * 						RUNOFF CURVE NUMBER
+		 **************************************************************************/
 
 		if(strncmp (Luse,"fallow", 4) == 0)
 		{
@@ -1882,19 +1859,19 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		}
 		else
 		{
-		if (soilLayer >= 2)
-		{
-			previousDaySoilTemp = soilLayerTemperature[1];
+			if (soilLayer >= 2)
+			{
+				previousDaySoilTemp = soilLayerTemperature[1];
 
-			lag = 0.5;
-			Log("\ndefault lag factor");
-		}
-		else
-		{
-			previousDaySoilTemp = soilLayerTemperature[0];
-			lag = 0.5;
-			Log("\nlag factor imposed as %g as default", lag);
-		}
+				lag = 0.5;
+				Log("\ndefault lag factor");
+			}
+			else
+			{
+				previousDaySoilTemp = soilLayerTemperature[0];
+				lag = 0.5;
+				Log("\nlag factor imposed as %g as default", lag);
+			}
 		}
 		//bare soil surface temperature to equal average daily air temperature
 		soilSurfaceTemperature = 0.5 * (maxAirTemperature + minAirTemperature) + (maxAirTemperature - minAirTemperature) * (dailySolarRadiation * (1.0 - albedo) - 14.0) /20.0;
@@ -1929,7 +1906,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			//assumed soil water content and bulk density as a soil constant
 
-			//todo: SW and BD have to be layer specific not the value for the whole profile
+			// SW and BD have to be layer specific not the value for the whole profile
 			mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * site->soil_depth;
 			maxDampingDepth = 1.00 + 2.5 * soilBulkDensity / (soilBulkDensity + exp (6.53 - 5.63 * soilBulkDensity));
 			Log("\n***Coefficients to evaluate depth weighting factors ***\ncoeff1: %g \ncoeff2: %g", maxDampingDepth, mid2);
@@ -2061,117 +2038,130 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					 * 				PHOTOSYNTHESIS
 					 ******************************************/
 
+
+
 					Log("\n\n******** PHOTOSYNTHESIS MODULE *********\n ");
 
-					// Effects of CO2 concentration on photosynthesis
-					fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340);
-					Log("\neffects of CO2 concentration on photosynthesis: %g", fCO2);
 
 					// Light which is perpendicular to leaf optimumPhotoRate
-					lightSaturationPhotoRate = optimumPhotoRate * layerSoilTempEffectPhotoRate;			// todo fTP layerSoilTempEffectPhotoRate
+					lightSaturationPhotoRate = optimumPhotoRate * layerSoilTempEffectPhotoRate;
 					Log("\nPhotosynthesis rate at light saturation: %g kg CO2/ha/h", lightSaturationPhotoRate);
 
 
 					Log("\n\n******** PHOTOSINTETICALLY ACTIVE RADIATION AT CERTAIN TIME ********* \n ");
 					//get photosynthetically active radiation at certain time
 
+					//integral of solar elevation during the day
+					solarElevationSumDNDC = 3600.0 * (daylength * (Sfactor + 0.4 * (pow(Sfactor, 2) + 0.5 * pow(Cfactor, 2))) +
+							24.0 / Pi * Cfactor * (1 + 0.6 * Sfactor) * sqrt(1 - pow(Sfactor/ Cfactor,2)));
+					Log("solarElevationSUM %g",solarElevationSumDNDC);
 
-					// Three canopy layers for Gaussian integration
-					for (l = 0; l < 3; l++)
+					//the external cycle has to be that computing for 3 different hours
+
+					// Atmospheric transmission coefficient
+					atmosphericTrasmissionCoeff = (dailySolarRadiation * 3600.0 * daylength) /
+							(solarConstant * solarElevationSumDNDC);
+					Log("\nAtmospheric transmission coefficient: %g", atmosphericTrasmissionCoeff);
+
+					//setting the three different hours by using a gaussian integration over a period from noon to sunset
+					for (i = 0; i < 3; i++)
 					{
-						//Canopy layer for gaussian integration
-						canopyHeightLAI[l] = LAI * gaussianParameter1[l];
-						Log("\nLAI above layer %d: %g",l, canopyHeightLAI[l]);
-						//diffuseLightExtinctionCoeff ???????????????????
+						// setting the 3 different hours to evaluate mean daily photosynthesis
 
-						Log("\nmissingn coefficient of diffuse light extinction");
-						// canopy extinction coefficient: taken from wimovac (Campbell and Norman (1989))
+						// three points for Gaussian integration;
+						gaussianIntegrationHour[i] = 12 + 0.5 * daylength * gaussianParameter1[i];
+						Log("\nAssuming the gaussian integration, setted the hour %g,", gaussianIntegrationHour[i]);
 
-						for (i = 0; i < 3; i++)
+						// canopy hourly temperature during daytime
+
+						//sine of the elevation angle of the sun
+						solarElevation = Sfactor + Cfactor * cos(2 * Pi * (gaussianIntegrationHour[i] - 12.0) / 24.0);
+						Log("\nsine of the elevation angle of the sun: %g", solarElevation);
+
+						//mean par for the certain time;
+						hourPar = 0.55 * dailySolarRadiation * solarElevation * (1 + 0.4 * solarElevation) / solarElevationSumDNDC;
+						hourPar = dailySolarRadiation / 2.0;
+						Log("\n\n\nhourPar = %g",hourPar);
+						/*
+						//reflection coefficient taken from eq.1 Spitters, 96
+						reflectionCoefficient = (1 - sqrt(1 - scatterLightParameter)) / (1 + sqrt(1 - scatterLightParameter)) *
+								(2 / (1 + 1.6 * solarElevation));
+						 */
+						// Reflectivity of horizontally distribuited canopy
+						canopyHorizontalReflectivity = (1 - sqrt(1 - scatterLightParameter)) / (1 + sqrt(1-scatterLightParameter));
+						Log("\nreflectivity of horizontally distribuited canopy %g", canopyHorizontalReflectivity);
+
+						// Reflectivity of sphaerical distribuited canopy = reflectionCoefficient
+						canopySpharicalReflectivity = 2 * canopyHorizontalReflectivity / (1 + 2.0 * solarElevation);
+						Log("\nreflectivity of sphaerical distribuition canopy %g", canopySpharicalReflectivity);
+
+						//taken from Spitters 96, eq 7
+						diffuseLightExtinctionCoeff = 0.8 * sqrt(1 - scatterLightParameter);
+						Log("\ndiffuseLightExtinctionCoefficient: %g", diffuseLightExtinctionCoeff);
+
+						// Extinction coefficient of assumed black body leaves
+						blackBodyExtinctionCoeff = (0.5 * diffuseLightExtinctionCoeff) / (0.8 * solarElevation * sqrt(1.0 - scatterLightParameter));
+						Log("\nextinction coefficient of leaves, assuming them as black bodies: %g", blackBodyExtinctionCoeff);
+
+						//extinction coefficient of direct light
+						directLightExtinctionCoeff = blackBodyExtinctionCoeff * sqrt((1 - scatterLightParameter));
+						Log("\nextinction coefficient of direct light %g",directLightExtinctionCoeff);
+
+						// midVariable3 && midVariable4: mid coefficients
+						midVariable4 = 0.847 - 1.61 * solarElevation * pow(solarElevation, 2);
+						midVariable3 = (11.47 - midVariable4) / 1.66;
+						Log("\nbeing the two mid coefficients midVariable3 and midVariable4, respectively: %g and %g",midVariable3,midVariable4);
+
+						//Fraction of diffuse light above the canopy
+						if (atmosphericTrasmissionCoeff <= 0.22)
 						{
-							// three points for Gaussian integration;
-							gaussianIntegrationHour[i] = 12 + 0.5 * daylength * gaussianParameter1[i];
-							Log("\nAssuming the gaussian integration, setted the hour %g,", gaussianIntegrationHour[i]);
-							// canopy hourly temperature during daytime
+							diffuseLightFraction = 0.99;
+						}
+						else if (atmosphericTrasmissionCoeff > 0.22 && atmosphericTrasmissionCoeff <= 0.35)
+						{
+							diffuseLightFraction = 1 - 6.4 * pow((atmosphericTrasmissionCoeff - 0.22), 2.0);
+						}
+						else if (atmosphericTrasmissionCoeff <= midVariable3 && atmosphericTrasmissionCoeff > 0.35)
+						{
+							diffuseLightFraction = 1.47 - 1.66 * atmosphericTrasmissionCoeff;
+						}
+						else
+						{
+							diffuseLightFraction = midVariable4;
+						}
 
+						diffuseLightAboveCanopy = hourPar * diffuseLightFraction;
 
-							//sine of the elevation angle of the sun
-							solarElevation = Sfactor + Cfactor * cos(2 * Pi * (gaussianIntegrationHour[i] + 12) / 24.0);
-							Log("\nsine of the elevation angle of the sun: %g", solarElevation);
+						directLightAboveCanopy = hourPar - diffuseLightAboveCanopy;
 
-							//-------------------------------------------------------------------------------------------------------------------------------
+						//Light which is perpendicular to leaf surface
+						leafSurface90degLight = (1 - scatterLightParameter) * directLightAboveCanopy / solarElevation;
+						Log("\nLight perpendicular to leaf surface: %g (J/m^2/s)", leafSurface90degLight);
 
-							//fixme sergio : missing factor in Zhang 2002; tried to find out a way to compute it but there's a bug; now trying to use a mid standard value diffuseLightExtinctionCoeff = 0.5;
-							diffuseLightExtinctionCoeff = 0.5;
-							Log("\ndiffuseLightExtinctionCoefficient: %g", diffuseLightExtinctionCoeff);
-							//---------------------------------------------------------------------------------------------------------------------------------
-
-							// Extinction coefficient of assumed black body leaves
-							blackBodyExtinctionCoeff = (0.5 * diffuseLightExtinctionCoeff) / (0.8 * solarElevation * pow(1.0 - scatterLightParameter, 0.5));
-							Log("\nextinction coefficient of leaves, assuming them as black bodies: %g", blackBodyExtinctionCoeff);
+						for (l = 0; l < 3; l++)
+						{
+							//Canopy layer for gaussian integration
+							canopyHeightLAI[l] = LAI * gaussianParameter1[l];
+							Log("\nLAI above layer %d: %g",l, canopyHeightLAI[l]);
 
 							//Fraction of sunlit area
 							sunlitLeafAreaFraction = exp(-blackBodyExtinctionCoeff * canopyHeightLAI[l]);
-
-							solarElevationSum = 3600.0 * (daylength * (Sfactor + 0.4 * (pow(Sfactor,2) + 0.5 * pow(Cfactor, 2))) + (24 / Pi) *
-									Cfactor * (1 + 1.5 * 0.4 * Sfactor) * sqrt(1 - pow(Sfactor, 2) / pow(Cfactor, 2)));
-
-							solarElevationSumDNDC = (3600.0 * (daylength * (Sfactor + 0.4 * pow(Sfactor, 2) +	0.2 * pow (Cfactor, 2)) + 12.0 * Cfactor *
-									(2 + 1.2 * Sfactor * canopyHeightLAI[l] * Pi * sqrt(1 - (pow(Sfactor, 2.0) / pow(Cfactor , 2.0))))));
-
-							// mean par for the certain time;
-
-							hourPar = 0.55 * dailySolarRadiation * solarElevation * (1 + 0.4 * solarElevation) / solarElevationSumDNDC;
-
-		//					hourParDNDC = 0.55 * dailySolarRadiation * solarElevation * (1 + 0.4 * solarElevation) /solarElevationSum;
-							Log("\nPhotosynthetic active radiation for the &d-th estimated hour: %g J/m^2/s", gaussianIntegrationHour[i], hourPar);
-
+							/*
+							//-----------------------------------------------------------------------------------------------
 							// Atmospheric transmission coefficient (as read in Zhang)
-							//atmosphericTrasmissionCoeff = hourPar * (0.5 * solarConstant * solarElevation);
+							atmosphericTrasmissionCoeff = hourPar * (0.5 * solarConstant * solarElevation);
+							//-----------------------------------------------------------------------------------------------
 
-							atmosphericTrasmissionCoeff = dailySolarRadiation / (solarConstant * solarElevation);
-							Log("\nAtmospheric transmission coefficient: %g", atmosphericTrasmissionCoeff);
-
-							// Atmospheric transmission coefficient
-		//					atmosphericTrasmissionCoeffDNDC = hourParDNDC * (0.5 * solarConstant);
-		//					Log("\nAtmospheric transmission coefficient: %g", atmosphericTrasmissionCoeffDNDC);
-
-
-							// midVariable3 && midVariable4: mid coefficients
-							midVariable4 = 0.847 - 1.61 * solarElevation * pow(solarElevation, 2);
-							midVariable3 = (11.47 - midVariable4) / 1.66;
-							Log("\nbeing the two mid coefficients midVariable3 and midVariable4, respectively: %g and %g",midVariable3,midVariable4);
-							// Fraction of diffuse light above the canopy
-							if (atmosphericTrasmissionCoeff <= 0.22)
-							{
-								diffuseLightFraction = 0.99;
-							}
-							else if (atmosphericTrasmissionCoeff > 0.22 && atmosphericTrasmissionCoeff <= 0.35)
-							{
-								diffuseLightFraction = 1 - 6.4 * pow((atmosphericTrasmissionCoeff - 0.22), 2.0);
-							}
-							else if (atmosphericTrasmissionCoeff <= midVariable3 && atmosphericTrasmissionCoeff > 0.35)
-							{
-								diffuseLightFraction = 1.47 - 1.66 * atmosphericTrasmissionCoeff;
-							}
-							else
-							{
-								diffuseLightFraction = midVariable4;
-							}
-//checked!?
-							Log("\nfraction of diffuse light above canopy: %g",diffuseLightFraction);
-							//todo import here Am f(diffuseLightFraction)
-							//diffuse light above the canopy
-							diffuseLightAboveCanopy = hourPar * diffuseLightFraction;
+							//diffuse light above the canopy (modified: spitters)
+							diffuseLightAboveCanopy = hourPar * diffuseLightFraction * (1 - reflectionCoefficient) * exp(-diffuseLightExtinctionCoeff * canopyHeightLAI[l]);
 							Log("\ndiffuse light above canopy %g", diffuseLightAboveCanopy);
 
-							//direct light above the canopy
-							directLightAboveCanopy = hourPar - diffuseLightAboveCanopy;
+							//direct light above the canopy (modified (spitters)
+							directLightAboveCanopy = (1 - reflectionCoefficient) * hourPar * (1 -diffuseLightFraction) * exp (-sqrt(1 - scatterLightParameter) *
+									blackBodyExtinctionCoeff * canopyHeightLAI[l]);
 							Log("\ndirect light above the canopy %g",directLightAboveCanopy);
 
-							//extinction coefficient of direct light
-							directLightExtinctionCoeff = blackBodyExtinctionCoeff * sqrt((1 - scatterLightParameter));
-							Log("\nextinction coefficient of direct light %g",directLightExtinctionCoeff);
+						//--------------------------------------------------------------------------------------------------------------------------------------
 
 							// Reflectivity of horizontally distribuited canopy
 							canopyHorizontalReflectivity = (1 - sqrt(1 - scatterLightParameter)) / (1 + sqrt(1-scatterLightParameter));
@@ -2181,59 +2171,107 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 							canopySpharicalReflectivity = 2 * canopyHorizontalReflectivity / (1 + 2.0 * solarElevation);
 							Log("\nreflectivity of sphaerical distribuition canopy %g", canopySpharicalReflectivity);
 
-							// Direct component of the direct light after canopy scatterLightParametering
-							directComponentDirectLight = (1 - scatterLightParameter) * directLightAboveCanopy * blackBodyExtinctionCoeff *
-									exp(- blackBodyExtinctionCoeff * canopyHeightLAI[l]); // l_c < 3; l++;
-							Log("\ndirect light in canopy if the leaves are non scattered back: %g", directComponentDirectLight);
-
-							// Direct light
-							directLight = (1 - canopySpharicalReflectivity) * directLightAboveCanopy * directLightExtinctionCoeff *
-									exp(- directLightExtinctionCoeff * canopyHeightLAI[l]); // l_c < 3; l++;
-							Log("\ndirect light accepted by sunlit leaves: %g", directLight);
-
-							// Diffuse light
-							diffuseLight = (1 - canopyHorizontalReflectivity) * diffuseLightAboveCanopy * diffuseLightExtinctionCoeff *
-									exp(- diffuseLightExtinctionCoeff * canopyHeightLAI[l]); 	//diffuseLightExtinctionCoeff mancante
-							Log("\ndiffuse light accepted by sunlit leaves: %g", diffuseLight);
-
-							//Light absorbed by shaded leaves in a layer
-							shadeLeavesLightAbsor = diffuseLight + (directLight - directComponentDirectLight);
-							Log("\nLight assorbed by shaded leaves in a canopy layer:%g (J/m^2/s)", shadeLeavesLightAbsor);
-
-							// Light which is perpendicular to leaf surface
-							leafSurface90degLight = (1 - scatterLightParameter) * directLightAboveCanopy / solarElevation;
-							Log("\nLight perpendicular to leaf surface: %g (J/m^2/s)", leafSurface90degLight);
-							//Photosynthesis rate of shaded leaves
-
-							//layerSoilTempEffectPhotoRate and Asm0 are parameters!!
 
 
 							shadLeavesPhotoRate = lightSaturationPhotoRate * (1 - exp(-shadeLeavesLightAbsor * initialLightUseEfficiency / lightSaturationPhotoRate));
 							Log("\nPhotosynthesis rate of shaded leaves: %g (kg CO2/ha/h)",shadLeavesPhotoRate);
+							 */
+							//-------------------------------------------------------------------------------------------------------------------------------------
+							// Direct light
+							directLight = (1 - canopySpharicalReflectivity) * directLightAboveCanopy *  sqrt(1 - scatterLightParameter) * blackBodyExtinctionCoeff *
+									exp(-1 * sqrt(1 - scatterLightParameter) * blackBodyExtinctionCoeff * canopyHeightLAI[l]);
+							Log("\ndirect light accepted by sunlit leaves: %g", directLight);
+
+							// Diffuse light : todo sergio; spitters canopy shpaerical!!!
+							diffuseLight = (1 - canopySpharicalReflectivity) * diffuseLightAboveCanopy * diffuseLightExtinctionCoeff *
+									exp(- diffuseLightExtinctionCoeff * canopyHeightLAI[l]);
+							Log("\ndiffuse light accepted by sunlit leaves: %g", diffuseLight);
+
+							// Direct component of the direct light after canopy scatterLightParametering
+							directComponentDirectLight = (1 - scatterLightParameter) * blackBodyExtinctionCoeff * directLightAboveCanopy *
+									exp(-1 * sqrt(1 - scatterLightParameter) * blackBodyExtinctionCoeff * canopyHeightLAI[l]);
+
+							//diffuseComponent of DirectLight
+							diffuseComponentDirectLight = directLightAboveCanopy - directComponentDirectLight;
+
+							//absorption of diffuse light taken from Spitters
+							absorbedDiffuseLight = (1 - canopySpharicalReflectivity) * diffuseLightAboveCanopy * diffuseLightExtinctionCoeff *
+									exp( - diffuseLightExtinctionCoeff * canopyHeightLAI[l]);
+
+							//absorption of direct light taken from spitters
+							absorptionDirectLight = (1 - canopySpharicalReflectivity) * directLightAboveCanopy * sqrt(1 - scatterLightParameter) *
+									blackBodyExtinctionCoeff * exp (- 1 * (1 - scatterLightParameter) * blackBodyExtinctionCoeff * canopyHeightLAI[l]);
+
+							//absorption of direct component of direct light
+							absorptionDirectDirectLight = (1 - scatterLightParameter) * directLightAboveCanopy * blackBodyExtinctionCoeff *
+									exp(-sqrt(1 - scatterLightParameter) * blackBodyExtinctionCoeff * canopyHeightLAI[l]);
+
+							//absorption of diffuse component of directLight
+							absorptionDiffuseDirect = absorptionDirectLight - absorptionDirectDirectLight;
+
+							//Light absorbed by shaded leaves in a layer
+							shadeLeavesLightAbsor = absorbedDiffuseLight + absorptionDirectLight - absorptionDirectDirectLight;
+
+							//light absorbed by sunlit leaves
+							sunlitLeavesLightAbsor = shadeLeavesLightAbsor + (1 - scatterLightParameter) * blackBodyExtinctionCoeff * directLightAboveCanopy;
+
+							//Photosynthesis rate of shaded leaves
+							shadLeavesPhotoRate = lightSaturationPhotoRate * (1 - exp(-1 * shadeLeavesLightAbsor * initialLightUseEfficiency * 3600.0 / lightSaturationPhotoRate));
+							Log("\nPhotosynthesis rate of shaded leaves: %g (g CO2/m^2/h)",shadLeavesPhotoRate);
+
 							//Photosynthesis rate of sunlit leaves
-							sunlitLeavesPhotoRate = lightSaturationPhotoRate * (1 - (lightSaturationPhotoRate - shadLeavesPhotoRate)) *
-									(1- exp(-leafSurface90degLight * initialLightUseEfficiency / lightSaturationPhotoRate))/(leafSurface90degLight *
-											initialLightUseEfficiency); //-k * LAI, trasmitted;
-							Log("\nPhotosynthesis rate of sunlit leaves: %g (kg CO2/ha/h)", sunlitLeavesPhotoRate);
+							sunlitLeavesPhotoRate = lightSaturationPhotoRate * (1 - ((lightSaturationPhotoRate - shadLeavesPhotoRate) *
+									(1 - exp(-1 * leafSurface90degLight * initialLightUseEfficiency * 3600.0 / lightSaturationPhotoRate))) /
+										(leafSurface90degLight * initialLightUseEfficiency *3600.0));
+							Log("\nPhotosynthesis rate of sunlit leaves: %g (g CO2/m^2/h)", sunlitLeavesPhotoRate);
 
 							//Gross photosynthesis rate at layer Li and time tj
 							layerGrossPhotoRate = sunlitLeafAreaFraction * sunlitLeavesPhotoRate + (1 - sunlitLeafAreaFraction) * shadLeavesPhotoRate;
-							Log("\n\nGross photosynthesis rate at crop layer %d: %g ( Kg CO2/ha/h)",l, layerGrossPhotoRate);
+							Log("\n\nGross photosynthesis rate at crop layer %d: %g ( gCO2/m^2/h)",l, layerGrossPhotoRate);
 
-							//mean value: sum(P(Li,t[j]) * LAI * DL * gaussianParameter2j * gaussianParameter2i), l_c)
-							gaussIntegrPhoto += layerGrossPhotoRate * LAI * daylength * gaussianParameter2[l] * gaussianParameter2[i];
-							Log("\n partial denominator in the photosynthesis module: %g",gaussIntegrPhoto);
+							switch (l)
+							{
+							case 0:
+								gaussIntegrPhoto = layerGrossPhotoRate * LAI;
+								Log("\n partial denominator in the photosynthesis module: %g",gaussIntegrPhoto);
+								break;
+							case 1:
+								gaussIntegrPhoto += 1.6 * layerGrossPhotoRate * LAI;
+								Log("\n partial denominator in the photosynthesis module: %g",gaussIntegrPhoto);
+								break;
+							case 2:
+								gaussIntegrPhoto += layerGrossPhotoRate * LAI;
+								Log("\n partial denominator in the photosynthesis module: %g",gaussIntegrPhoto);
+								break;
+							}
 						}
-
-						gaussIntegPhotoSum += gaussIntegrPhoto;
-						gaussIntegrPhoto = 0;
+						//hourlyCanopyAssimilation: assumed * LAI as seen in table 1 gaudriaan
+						gaussIntegrPhoto /= 3.6;
+						switch (i)
+						{
+						case 0:
+							gaussIntegPhotoSum = daylength * gaussIntegrPhoto;
+							break;
+						case 1:
+							gaussIntegPhotoSum += 1.6 * daylength * gaussIntegrPhoto;
+							break;
+						case 2:
+							gaussIntegPhotoSum += daylength * gaussIntegrPhoto;
+							break;
+						}
 						Log("\nformatting gaussIntegrPhoto value: %g\nPartial denominator: %g", gaussIntegrPhoto, gaussIntegPhotoSum);
-
 					}
 
-					// daily gross photosynthesis (g/m^2)
-					dailyGrossPhoto = 0.1 * 30 / 44 * Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum; //dailyGrossPhoto = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
+					//dailyCanopyAssimilation
+					gaussIntegPhotoSum /= 3.6;
+
+					// Effects of CO2 concentration on photosynthesis
+					fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340.0);
+
+					//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
+					dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
 					Log("\ndaily gross photosynthesis: %g g/m^2", dailyGrossPhoto);
+
 
 
 
@@ -2246,6 +2284,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					// maintenance respiration: k stands for the number of comparts
 					for (i = 0; i < 4; i++)
 					{
+
+						//to be further evaluated (values taken from penning de vries, pag. 52): IMPROVABLE; function of temperature and photosynthesis!! pag 53
+
+						compartMaintenanceResp[0] 	= 0.016;	// wheat, sage: _______________
+						compartMaintenanceResp[1] 	= 0.010;	// general annual plants; in young stems tissue, rate 1.5 2 times higher
+						compartMaintenanceResp[2]	= 0.010;  	// assumed equal to stem maintenance respiration
+						compartMaintenanceResp[3] 	= 0.015; 	// general for annual plants
+
 						maintenanceRespiration += compartMaintenanceResp[i] * pow(Q10, (meanCanopyTemperature - 25)/10.0) * compartBiomass[i];
 						Log("\nMaintenanace respiration cumulated for %d compartments: %g g CO2/m^2\n", i, maintenanceRespiration);
 
@@ -2254,7 +2300,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					growthRespiration = (dailyGrossPhoto - maintenanceRespiration) * (1 - 1 / growthRespEfficiency);
 					Log ("Maintenance total respiration: %g\nGrowth respiration: %g\n", maintenanceRespiration, growthRespiration);
 
-					dailyAssimilate = dailyGrossPhoto - growthRespiration - maintenanceRespiration;  //assumed as the difference between GPP and Resp
+					//fixme sergio
+					dailyAssimilate = -dailyGrossPhoto - growthRespiration - maintenanceRespiration;  //assumed as the difference between GPP and Resp
 					/*******************************************
 					 * 			   	LEAF GROWTH
 					 ******************************************/
@@ -2262,6 +2309,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					leafAreaGrowthRate = 7.5 * sqrt(cumPhyllocrons) * dailyThermalTime / phyllocron;
 					plantLeafAreaGrowthRate = leafAreaGrowthRate * tillNumber;
+
+					Log("\ndailyAssimilate %g; \nleafAreaGrowthRate %g; \nplantLeafAreaGrowthRate %g\n", dailyAssimilate, leafAreaGrowthRate, plantLeafAreaGrowthRate);
 
 
 					//uncertainties: should vary much more
@@ -2281,12 +2330,24 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					totalCumulativeLeafArea += plantLeafAreaGrowthRate;
 
+					Log("\nassimilateAreaToWeight; %g \npotentialLEafGrowth: %g, \npotenitialRootGrowth; %g;"
+							" \ntotalCumulativeLeafArea; %g;", assimilateAreaToWeight, potentialLeafGrowth, potentialRootGrowth, totalCumulativeLeafArea);
+
 					/*****************************************
 					 * 				TILLERING
 					 ***************************************/
 
 					//tillers
-					tillerRate1 = -2.5 + cumPhyllocrons;
+
+					//tillerRate1 depends on thermal time after emergence; after three phyllocrons tillers produced in direct proportion to the leaf number
+					if (cumPhyllocrons == 3)
+					{
+						tillerRate1 = -2.5 + cumPhyllocrons;
+					}
+					else
+					{
+						tillerRate1 = 0.0;
+					}
 					tillersPerSquareMeter = plants * tillNumber;
 
 					tillerRate2 = 2.56 * exp(-10.0) * pow(2500 - tillersPerSquareMeter, 3.0);
@@ -2295,7 +2356,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					//tillering factor corrected with SWDF2 from water balance routine
 
-
+					Log("\n\n### TILLERS ###"
+							"\ntillerRate1; %g \ntillerRate2; %g;\ntillNumber; %g", tillerRate1, tillerRate2, tillNumber);
 
 					/******************************************
 					 * 				LEAF SENESCENCE
@@ -2313,6 +2375,9 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 						cumPhyllocrons ++;
 					}
 
+					Log("\nLEAF SENESCENCE"
+							"\nleafNumber %g;\nphylloCounter; %g; \ncumPhyllocrons; %d, \n", leafNumber, phylloCounter, cumPhyllocrons);
+
 					//only 4 leaves per stem
 					if (leafNumber > 4)
 					{
@@ -2325,7 +2390,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					}
 
 					//green leaf LAI calculation, m2
-					LAI = (totalCumulativeLeafArea - senescenceLeafArea) * plants * 0.0001;
+					LAI += (totalCumulativeLeafArea - senescenceLeafArea) * plants * 0.0001;
+					totalCumulativeLeafArea = LAI;
 
 					if (developmentRate >= 1.0)
 					{

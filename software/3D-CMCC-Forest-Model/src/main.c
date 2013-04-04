@@ -2121,16 +2121,16 @@ int main(int argc, char *argv[])
 							if(m->cells[cell].landuse == Z)
 							{
 
-								//if ( !crop_model_D (m, yos, years, month, years_of_simulation) )
-								//{
-								//	Log("crop model failed.");
-								//}
-								//else
-								//{
-								//	puts(msg_ok);
+								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
+								{
+									Log("crop model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
 								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//	soil_model (m, yos, years, month, years_of_simulation);
-								//}
+								}
 
 							}
 							Log("****************END OF DAY*******************\n");
