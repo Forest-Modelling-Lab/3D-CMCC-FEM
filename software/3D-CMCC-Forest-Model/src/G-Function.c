@@ -300,8 +300,8 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 {
 	Log("******************************************************\n\n");
 	Log("cell = \n");
-	Log("- x = %g\n", c->x);
-	Log("- y = %g\n", c->y);
+	Log("- x = %d\n", c->x);
+	Log("- y = %d\n", c->y);
 	Log("- z = %d\n", c->heights[height].z);
 	Log("- Class Age = %d years \n", c->heights[height].ages[age].value);
 	Log("- Species = %s\n", c->heights[height].ages[age].species[species].name);

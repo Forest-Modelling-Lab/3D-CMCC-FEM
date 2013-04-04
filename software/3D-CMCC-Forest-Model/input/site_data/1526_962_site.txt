@@ -1,4 +1,4 @@
-SITENAME "Madonie - Italy" //Site Name
+SITENAME "Undefined - Italy" //Site Name
 
 LAT "37.53" //Site Latitude 
 LONG "14.20" //Site Longitude 
