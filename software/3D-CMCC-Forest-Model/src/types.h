@@ -640,9 +640,13 @@ enum {
 	YEARLY_POINT_GPP_G_C,
 	YEARLY_RAIN,                    //Yearly Rain
 
-	//PHENOLOGY
+	//MONTHLY PHENOLOGY
 	FRAC_MONTH_FOLIAGE_REMOVE,
 	MONTH_FRAC_FOLIAGE_REMOVE,
+
+	//DAILY PHENOLOGY
+	FRAC_DAY_FOLIAGE_REMOVE,	//number of leaf fall days/tot number of veg days
+	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
 
 
 
