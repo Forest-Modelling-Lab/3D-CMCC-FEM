@@ -622,6 +622,11 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	static int species;
 	static int counter;
 
+	static int leaf_fall_counter;
+
+	if (month == 0)
+		leaf_fall_counter = 0;
+
 	counter = 0;
 
 	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
@@ -656,6 +661,22 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 					}
 					else
 					{
+
+						//compute months of leaf fall taking an integer value
+						c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] =  (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+						                                                                                                                                       * c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("Months of leaf fall for deciduous = %g \n", c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
+
+						//currently the model considers a linear reduction in leaf fall
+						//it should be a negative sigmoid function
+						//todo: create a sigmoid function
+						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
+						Log("foliage reduction rate = %g \n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] );
+
+
+
+
 						//todo decidere su usare tavg o tday
 						if((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
 								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
@@ -666,7 +687,28 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 						}
 						else
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							if (met[month].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
+							{
+
+								leaf_fall_counter += 1;
+
+								//check
+								if(leaf_fall_counter <= (int)c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE])
+								{
+									/*days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+								}
+								else
+								{
+									/*outside days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+								}
+
+							}
+							else
+							{
+								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							}
 							Log("counter = %d\n\n", counter);
 						}
 					}
@@ -692,6 +734,10 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	static int species;
 	static int counter;
 
+	static int leaf_fall_counter;
+
+	if (day == 0 && month == 0)
+		leaf_fall_counter = 0;
 
 
 	counter = 0;
@@ -729,8 +775,24 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 					}
 					else
 					{
+
+						/*compute days of leaf fall*/
+						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+						                                                                                                                                      * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
+
+						//currently the model considers a linear reduction in leaf fall
+						//it should be a negative sigmoid function
+						//todo: create a sigmoid function
+						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] + 1);
+						Log("foliage reduction rate = %g,  = %g%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+
+						//fixme see Get_Veg_Days func
+
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
+						//currently model can simulate only forests in boreal hemisphere
 						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
 						{
@@ -740,8 +802,29 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						}
 						else
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-							Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
+							{
+
+								leaf_fall_counter += 1;
+
+								//check
+								if(leaf_fall_counter <= (int)c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE])
+								{
+									/*days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+								}
+								else
+								{
+									/*outside days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+								}
+
+							}
+							else
+							{
+								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+								Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+							}
 						}
 					}
 				}

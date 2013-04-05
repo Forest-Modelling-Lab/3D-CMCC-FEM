@@ -649,6 +649,9 @@ enum {
 	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
 
 
+	FOLIAGE_REDUCTION_RATE,
+
+
 
 
 

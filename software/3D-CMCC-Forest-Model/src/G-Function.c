@@ -237,6 +237,8 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 				{
 					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 					{
+						//fixme see litterfal function down!!!!
+
 						//reset 'day_veg_for_litterfall_rate'
 						if (met[month].d[day].n_days == 1 && month == JANUARY)
 						{
