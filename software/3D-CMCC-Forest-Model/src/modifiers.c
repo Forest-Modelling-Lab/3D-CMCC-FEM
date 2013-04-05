@@ -200,6 +200,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	else
 	{
 
+		//todo F_PSISHOULD BE USED NOT IN GPP COMPUTATION BUT IN THE EVAPOTRANSPIRATION PROCESSES!!
 		/*SOIL MATRIC POTENTIAL MODIFIER*/
 
 		//**********************************
@@ -421,6 +422,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	{
 		if ((met[month].d[day].tday <= s->value[GROWTHTMIN]) || (met[month].d[day].tday >= s->value[GROWTHTMAX]))
 		{
+			Log("tday > GROWTHTMAX\n");
 			s->value[F_T] = 0;
 			Log("F_T = 0 \n");
 		}
@@ -505,146 +507,67 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		Log("no data for age F_AGE = 1\n");
 	}
 
-
-
-
-
 	/*SOIL NUTRIENT MODIFIER*/
-
 	s->value[F_NUTR] = 1.0 - ( 1.0- site->fn0)  * pow ((1.0 - site->fr), site->fnn);
 	Log("fNutr = %g\n", s->value[F_NUTR]);
-
-
-
 
 	/*SOIL NUTRIENT MODIFIER*/
 	//rev 16 May 2012
 	//Log("Soil Nitrogen Content = %g g m^-2 \n", site->sN);
 
-
 	/*SOIL WATER MODIFIER*/
-	//todo:swc data
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 
-	//float MoistRatio_from_data;
-	/*
-
-	if ( ! year  && ! month )
+	if ( s->value[F_SW] > 1  )
 	{
-		if ( met[month].swc == -9999)
-		{
-			Log("No Data for SWC!!\n");
-			Log("swc from data = %g\n", met[month].swc);
-			Log("Function use default data\n");
-
-			//in realtà solo per il primo mese dovrebbe prendere INITIALAVAILABLESOILWATER poi dovrebbe ricalcolarselo
-			MoistRatio = site->initialAvailableSoilWater / c->max_asw;
-			Log("-year %d\n", year);
-			Log("-Initial Available Soil Water = %f mm\n", site->initialAvailableSoilWater);
-			Log("-Moist Ratio = %g \n", MoistRatio);
-		}
-		else
-		{
-			MoistRatio = met[month].swc / 100;
-			Log("OK Data for SWC!!\n");
-			Log("swc from data = %g %%\n", met[month].swc);
-			Log("Function use default data\n");
-			Log("-Moist Ratio = %g \n", MoistRatio);
-		}
+		Log("PROBLEM IN fSW !!!!!!!!!!\n");
+		s->value[F_SW] = 1;
+		Log("fSW = %g\n", s->value[F_SW]);
 	}
 	else
 	{
-		MoistRatio = available_soil_water / c->max_asw;
-		//Log("-Available Soil Water = %g mm\n", available_soil_water);
-		Log("-Moist Ratio = %g \n", MoistRatio);
+		Log("fSW = %g\n", s->value[F_SW]);
 	}
-	 */
 
-	if (settings->time == 'm')
+
+	/*SOIL MATRIC POTENTIAL*/
+
+	//**********************************
+	//USABLE ONLY FOR DAILY SIMULATION
+	//**********************************
+
+	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	Log("available soil water %g mm\n", c->available_soil_water);
+
+	/* (DIM) volumetric water content */
+	vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
+	Log("volumetric available soil water  = %g (DIM)\n", vwc);
+	Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
+	Log ("vwc/vwc_sat = %g \n", vwc / c->vwc_sat);
+
+	/* calculate psi */
+	//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
+	/* (MPa) water potential of soil and leaves */
+	psi = c->psi_sat * pow((vwc/c->vwc_sat), c->soil_b);
+	Log ("PSI BIOME = %g (MPa)\n", psi);
+	Log ("PSI_SAT BIOME = %g (MPa)\n", c->psi_sat);
+
+
+	if (psi > s->value[SWPOPEN]) /*no water stress*/
 	{
-
-		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-
-		if ( s->value[F_SW] > 1  )
-		{
-			Log("PROBLEM IN fSW !!!!!!!!!!\n");
-			s->value[F_SW] = 1;
-			Log("fSW = %g\n", s->value[F_SW]);
-		}
-		else
-		{
-			Log("fSW = %g\n", s->value[F_SW]);
-		}
+		s->value[F_PSI] = 1;
 	}
-	else
+	else if (psi <= s->value[SWPCLOSE]) /* full water stress */
 	{
-
-		/*SOIL MATRIC POTENTIAL MODIFIER*/
-
-		//**********************************
-		//USABLE ONLY FOR DAILY SIMULATION
-		//**********************************
-
-		/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
-		//100 mm H20 m^-2 = 100 kg H20 m^-2
-		Log("available soil water %g mm\n", c->available_soil_water);
-
-		/* (DIM) volumetric water content */
-		vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
-		Log("volumetric available soil water  = %g (DIM)\n", vwc);
-		Log ("vwc_sat = %g (DIM)\n", c->vwc_sat);
-		Log ("vwc/vwc_sat = %g \n", vwc / c->vwc_sat);
-
-		/* calculate psi */
-		//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
-		/* (MPa) water potential of soil and leaves */
-		psi = c->psi_sat * pow((vwc/c->vwc_sat), c->soil_b);
-		Log ("PSI BIOME = %g (MPa)\n", psi);
-		Log ("PSI_SAT BIOME = %g (MPa)\n", c->psi_sat);
-
-
-		if (psi > s->value[SWPOPEN]) /*no water stress*/
-		{
-			s->value[F_PSI] = 1;
-		}
-		else if (psi <= s->value[SWPCLOSE]) /* full water stress */
-		{
-			s->value[F_PSI] = 0;
-		}
-		else /* partial water stress */
-		{
-			s->value[F_PSI] = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
-		}
-
-		//Log("F_PSI = %g\n", s->value[F_PSI]);
-
-		s->value[F_SW] = s->value[F_PSI];
-
-		if ( s->value[F_SW] > 1  )
-		{
-			Log("PROBLEM IN fSW !!!!!!!!!!\n");
-			s->value[F_SW] = 1;
-			Log("fSW-F_PSI = %g\n", s->value[F_SW]);
-		}
-		else
-		{
-			Log("day = %d month %d fSW-F_PSI = %g\n", day, month, s->value[F_SW]);
-		}
-
-		//put for comparison with biome module
-		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-
-		if ( s->value[F_SW] > 1  )
-		{
-			Log("PROBLEM IN fSW !!!!!!!!!!\n");
-			s->value[F_SW] = 1;
-			Log("fSW = %g\n", s->value[F_SW]);
-		}
-		else
-		{
-			Log("fSW = %g\n", s->value[F_SW]);
-		}
-
+		s->value[F_PSI] = 0;
 	}
+	else /* partial water stress */
+	{
+		s->value[F_PSI] = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
+	}
+	Log("F_PSI = %g\n", s->value[F_PSI]);
+
 
 	//average yearly f_sw modifiers
 	s->value[AVERAGE_F_SW] += s->value[F_SW];

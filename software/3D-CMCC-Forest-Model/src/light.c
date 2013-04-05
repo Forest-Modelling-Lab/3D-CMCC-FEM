@@ -43,7 +43,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		else
 		{
 			LightTrasmitted = (exp(- s->value[K] * s->value[LAI]));
-			Log("MODEL_LAI = %g \n", s->value[LAI] );
+			Log("day %d month %d MODEL_LAI = %g \n", day, month, s->value[LAI] );
 		}
 	}
 	else
@@ -56,7 +56,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		else
 		{
 			LightTrasmitted = (exp(- s->value[K] * s->value[LAI]));
-			Log("MODEL_LAI = %g \n", s->value[LAI] );
+			Log("day %d month %d MODEL_LAI = %g \n", day+1, month+1, s->value[LAI] );
 		}
 	}
 

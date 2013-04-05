@@ -285,19 +285,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								if (settings->spatial == 'u')
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
+									Log("day %d month %d MODEL_LAI = %g \n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 									//Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 									//Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 								else
 								{
-									if (settings->time == 'm')
-									{
-										Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
-									}
-									else
-									{
-										Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
-									}
+									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 								}
 
 								//Productivity

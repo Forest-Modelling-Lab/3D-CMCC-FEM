@@ -87,7 +87,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		//Daily/Monthly layer GPP in grams of C/m^2
 		//Convert molC into grams
 		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		Log("Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
+		//Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 
 
 
@@ -113,14 +113,14 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 				s->value[MONTHLY_GPP_g_C] = 0;
 			}
 			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-			Log("Daily GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
+			Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 			s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
 			Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
 		}
 
 
 		//Monthly Stand (area covered by canopy) GPP in grams of C
-		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C]  * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
 		//Log("CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
 		//Log("Monthly  Stand GPP (per area covered)= %g gC/ha covered month\n", s->value[GPP_g_C]);
 
@@ -177,7 +177,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Unvegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
-		Log("Daily/Monthly GPP in grams of C for layer %d = %g gC/m^2 yr\n", c->heights[height].z , s->value[GPP_g_C]);
+		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 
 		s->value[NPP] = 0;
 		Log("Daily/Monthly NPP for layer %d = %g  tDM/sizecell yr\n", c->heights[height].z, s->value[NPP]);
