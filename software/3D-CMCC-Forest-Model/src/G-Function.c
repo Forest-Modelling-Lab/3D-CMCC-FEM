@@ -165,8 +165,8 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 						{
 							//todo decidere se utlizzare tday o tavg growthend o mindaylenght
-							if ((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-									|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+							if (((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+									|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6)) && c->north == 0)
 							{
 								c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] += 1;
 								//Log("MONTHs = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
@@ -237,7 +237,6 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 				{
 					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
 					{
-						//fixme see litterfal function down!!!!
 
 						//reset 'day_veg_for_litterfall_rate'
 						if (met[month].d[day].n_days == 1 && month == JANUARY)

@@ -636,6 +636,8 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	Log("Latitude = %g° \n", site->lat);
 	Log("Longitude = %g° \n", site->lon);
 	Log("Elevation = %g m\n", site->elev);
+	if (site->lat > 0) Log("North hemisphere\n");
+	else Log("South hemisphere\n");
 	Log("***************************************************\n");
 
 
