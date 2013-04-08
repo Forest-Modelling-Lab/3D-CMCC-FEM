@@ -261,6 +261,11 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 					}
 					if (day == 30 && month == DECEMBER)
 					{
+						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+												                                                                                  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						//add leaf fall days
+						c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += (int)(c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]
+																											 * c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]);
 						Log("-TOTAL VEGETATIVE DAYS = %d \n\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 					}
 				}

@@ -726,6 +726,8 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 	Log("species in veg period = %d\n", counter);
 }
 
+
+//define VEG_UNVEG for deciduous species
 void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
@@ -778,7 +780,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 						/*compute days of leaf fall*/
 						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-						                                                                                                                                      * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						                                                                                  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 
@@ -802,6 +804,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						}
 						else
 						{
+							//check for case 0 of allocation
 							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
 							{
 
