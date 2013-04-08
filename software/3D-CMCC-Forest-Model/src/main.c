@@ -2065,6 +2065,16 @@ int main(int argc, char *argv[])
 						Log("NO SOIL DATA AVAILABLE\n");
 						return 0;
 					}
+
+					//check emisphere
+					if (site->lat > 0)
+					{
+						m->cells[cell].north = 0;
+					}
+					else
+					{
+						m->cells[cell].north = 1;
+					}
 				}
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)

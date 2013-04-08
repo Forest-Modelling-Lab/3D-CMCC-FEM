@@ -754,6 +754,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
+				/*PHENOLOGY = 0 FOR DECIDUOUS*/
 				if (c->heights[height].ages[age].species[species].counter[PHENOLOGY] == 0)
 				{
 					Log("-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
@@ -831,6 +832,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						}
 					}
 				}
+				/*PHENOLOGY = 1 FOR EVERGREEN*/
 				else
 				{
 					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;

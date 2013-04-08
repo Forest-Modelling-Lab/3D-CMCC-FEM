@@ -20,9 +20,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 	float  r0Ctem = s->value[R0CTEM];
 	//float  f0Ctem = s->value[F0CTEM];
 	float const omegaCtem = s->value[OMEGA_CTEM];
-	float pS_CTEM;
-	float pR_CTEM;
-	float pF_CTEM;
+	float pS_CTEM = 0;
+	float pR_CTEM = 0;
+	float pF_CTEM = 0;
 	//float max_DM_foliage;
 	//float reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
@@ -296,13 +296,13 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 
 
 					pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-					//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
+					Log("Roots CTEM ratio = %g %%\n",  pR_CTEM * 100);
 					pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-					//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+					Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 
 					//reserve ratio
 					pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-					//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+					Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
 
 					// Biomass allocation
@@ -848,7 +848,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 				{
 					phenology_phase = 1;
 				}
-				//arealf of beginning of growing season
+				//areal of beginning of growing season
 				if (met[month].d[day].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].d[day].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
 				{
 					phenology_phase = 2;
@@ -1179,6 +1179,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  CELL *const c, con
 			Log("delta_Res %d = 0 \n", c->heights[height].z);
 		}
 	}
+
+	Log("allocation ratios: day %d month %d pF %g pRf %g pRc %g pS %g\n", day+1, month+1, pF_CTEM, Perc_fine * pR_CTEM, Perc_coarse * pR_CTEM, pS_CTEM);
 
 	Log("******************************\n");
 

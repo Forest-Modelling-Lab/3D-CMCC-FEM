@@ -1,6 +1,6 @@
 SITENAME "Undefined - Italy" //Site Name
 
-LAT "37.53" //Site Latitude 
+LAT "37.53" //Site Latitude negative for south hemisphere
 LONG "14.20" //Site Longitude 
 ELEV "500.0" //Elevation in meters
 

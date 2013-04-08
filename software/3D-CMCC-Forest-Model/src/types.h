@@ -844,6 +844,7 @@ typedef struct {
 	float snow_subl; //sublimated snow
 	float gcorr;
 	float air_pressure;
+	int north; //northern emisphere north = 0, south emisphere south = 1
 
 
 } CELL;
