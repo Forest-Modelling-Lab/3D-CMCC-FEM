@@ -678,8 +678,8 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 
 
 						//todo decidere su usare tavg o tday
-						if((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6))
+						if(((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6)) && c->north == 0)
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
@@ -687,7 +687,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 						}
 						else
 						{
-							if (met[month].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
+							if (met[month].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0)
 							{
 
 								leaf_fall_counter += 1;
@@ -741,6 +741,8 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	if (day == 0 && month == 0)
 		leaf_fall_counter = 0;
 
+	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
+
 
 	counter = 0;
 
@@ -791,13 +793,12 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] + 1);
 						Log("foliage reduction rate = %g,  = %g%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
 
-						//fixme see Get_Veg_Days func
 
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
 						//currently model can simulate only forests in boreal hemisphere
 						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
+								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							counter += 1;
@@ -806,7 +807,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						else
 						{
 							//check for case 0 of allocation
-							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
+							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 							{
 
 								leaf_fall_counter += 1;

@@ -248,8 +248,8 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 						//todo decidere se utlizzare growthend o mindaylenght
 						//fixme change GROWTHSTART with a variable for thermic_sum
 						//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
-						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
+						if (((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)) && c->north == 0)
 						{
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
