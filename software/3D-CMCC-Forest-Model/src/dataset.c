@@ -64,7 +64,7 @@ extern const char err_unable_open_file[];
 static const char *header[COLUMNS] = {
 		"X",
 		"Y",
-		"LANDUSE",  //land use type (F = Forest, C = crop)
+		"LANDUSE",//land use type (F=Forest, C=crop)
 		"AGE",
 		"SPECIES",
 		//"PHENOLOGY",
@@ -98,26 +98,22 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 
 	/* reset */
 	*rows_count = 0;
-
 	/* check parameter */
 	if ( !filename || '\0' == filename[0] ) {
 		return NULL;
 	}
-
 	/* open file */
 	f = fopen(filename, "r");
 	if ( !f ) {
 		puts(err_unable_open_file);
 		return NULL;
 	}
-
 	/* get header */
 	if ( !fgets(buffer, BUFFER_SIZE, f) ) {
 		puts(err_empty_file);
 		fclose(f);
 		return 0;
 	}
-
 	/* alloc memory for columns */
 	columns = malloc(COLUMNS * sizeof *columns);
 	if ( !columns ) {
@@ -125,12 +121,10 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 		fclose(f);
 		return NULL;
 	}
-
 	/* reset columns */
 	for ( i = 0; i < COLUMNS; i++ ) {
 		columns[i] = -1;
 	}
-
 	/* get columns */
 	for ( y = 0, token = mystrtok(buffer, header_delimiter, &p); token; token = mystrtok(NULL, header_delimiter, &p), ++y ) {
 		for ( i = 0; i < COLUMNS; i++ ) {
@@ -149,7 +143,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 			}
 		}
 	}
-
 	/* check for missing values */
 	for ( i = 0; i < COLUMNS; i++ ) {
 		if ( -1 == columns[i] ) {
@@ -159,7 +152,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 			return 0;
 		}
 	}
-
 	/* get data */
 	rows = NULL; /* mandatory, because I use realloc instead of malloc */
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
@@ -170,12 +162,10 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 				break;
 			}
 		}
-
 		/* skip empty lines */
 		if ( '\0' == buffer[0] ) {
 			continue;
 		}
-
 		/* alloc memory */
 		rows_no_leak = realloc(rows, (++*rows_count)*sizeof*rows_no_leak);
 		if ( !rows_no_leak ) {
@@ -199,10 +189,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 				{
 					/* assigned */
 					++assigned;
-
 					/* check columns */
-
-
 					if ( LANDUSE_COLUMN == i )
 					{
 						// check landuse length
@@ -234,7 +221,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 							return NULL;
 						}
 					}
-
 					else if ( SPECIES_COLUMN == i )
 					{
 						rows[*rows_count-1].species = malloc(strlen(token)+1);
