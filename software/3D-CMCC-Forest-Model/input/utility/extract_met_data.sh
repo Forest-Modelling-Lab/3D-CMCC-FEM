@@ -15,6 +15,10 @@ echo "choose a site and write (in capital letters)"
 read  \site 
 echo "site choiced :" "$site"
 
+//echo "chose a variable"
+//read \variable
+
+
 #control file
 if [[ -a EXTRACTED_"$site".txt ]] ; then
   echo 'file EXTRACTED_'"$site"'.txt still exist '
