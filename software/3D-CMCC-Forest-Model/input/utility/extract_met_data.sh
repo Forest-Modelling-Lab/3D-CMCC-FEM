@@ -8,21 +8,35 @@
 
 cd CRA_MET_DATA
 
-filesToParse=($(find -type f -name '*.gz'))
+
 
 
 echo "choose a site and write (in capital letters)"
 read  \site 
 echo "site choiced :" "$site"
 
-//echo "chose a variable"
-//read \variable
+echo "chose a variable between: TMAX, TMIN, RAD, PREC, UMI"
+read \variable
 
+if  [[ "${variable}" == "TMAX" ]] || 
+    [[ "${variable}" == "TMIN" ]] || 
+    [[ "${variable}" == "RAD" ]] || 
+    [[ "${variable}" == "PREC" ]] || 
+    [[ "${variable}" == "UMI" ]] ; then
+    cd "${variable}"
+else
+  echo ''"$variable"' is a bad choice!!!'
+  exit 0
+fi
+
+
+
+filesToParse=($(find -type f -name '*.gz'))
 
 #control file
 if [[ -a EXTRACTED_"$site".txt ]] ; then
   echo 'file EXTRACTED_'"$site"'.txt still exist '
-  echo 'delete old  and create a new EXTRACTED_'"$site"'.txt '
+  echo 'delete old  OR create a new EXTRACTED_'"$site"'.txt '
   rm  EXTRACTED_"$site".txt
 else
   echo 'file doesnt exist'
@@ -30,22 +44,22 @@ else
 fi
 
 for I in ${filesToParse[@]} ; do
-	gunzip -dc ${I} | grep  "$site" >> EXTRACTED_"$site".txt
+	gunzip -dc ${I} | grep  "$site" >> EXTRACTED_"$site_$variable".txt
 done
 
 
 
 
 #control row
-if [[ -s EXTRACTED_"$site".txt ]] ; then
-  echo 'file EXTRACTED_'"$site"'.txt is valid'
+if [[ -s EXTRACTED_"$site_$variable".txt ]] ; then
+  echo 'file EXTRACTED_'"$site_$variable"'.txt is valid'
   else
-  echo 'file EXTRACTED_'"$site"'.txt is empty'
+  echo 'file EXTRACTED_'"$site_$variable"'.txt is empty'
 fi
 
 
 
-mv  EXTRACTED_"$site".txt .. 
+mv  EXTRACTED_"$site_$variable".txt .. 
 
 
 exit 0
