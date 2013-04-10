@@ -28,7 +28,7 @@
 #include <string.h>
 #include <time.h>
 
-//#include <netcdf.h>
+#include <netcdf.h>
 
 
 #include "compiler.h"
@@ -41,6 +41,16 @@
 
 /* constants */
 #define PROGRAM_VERSION	"5.0"
+
+
+/*netcdf*/
+#define FILE_NAME_NETCDF "prova.nc"
+
+/* Handle errors by printing an error message and exiting with a
+ * non-zero status. */
+#define ERR(e) {printf("Error: %s\n", nc_strerror(e)); return 2;}
+
+
 
 /* */
 enum {	MONTH = 0,
@@ -2059,6 +2069,16 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
+
+				//fixme prova netcdf
+				int ncid, retval;
+
+				   /* Create the file. */
+				/*
+				   if ((retval = nc_create(FILE_NAME_NETCDF, NC_CLOBBER, &ncid)))
+				      ERR(retval);
+				      */
+
 				//Get air pressure
 				Get_air_pressure (&m->cells[cell]);
 
