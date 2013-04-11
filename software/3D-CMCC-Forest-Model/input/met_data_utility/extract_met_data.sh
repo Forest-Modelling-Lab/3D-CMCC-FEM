@@ -1,4 +1,5 @@
-#!/bin/bash -x
+#!/bin/bash 
+# Authors: Alessio Collalti, Alessandro Candini
 
 #create folder of downloaded data
 # mkdir downloaded_files
@@ -6,62 +7,69 @@
 #TO DO scarica i file dal sito ucea
 # wget http://old.politicheagricole.it/ucea/forniture/index3.htm
 
-cd input/CRA_MET_DATA
+BASE_DIR="input/CRA_MET_DATA"
+OUT_DIR="output"
 
-echo "choose a site and write (in capital letters)"
-read  \site 
-echo "site choiced : ${site}"
+echo "Choose a site and write (in capital letters, i.e.: CASTEL DI SANGRO)"
+read  \SITE
+# On filenames, blanks are substituted with underscores: CASTEL DI SANGRO --> CASTEL_DI_SANGRO
+SITENAME=$(echo "${SITE}" | sed 's/\ /_/g')
 
-echo "chose a variable among: TMAX, TMIN, RAD, PREC, UMI"
-read \variable
+echo "Chose a variable among: TMAX, TMIN, RAD, PREC, UMI"
+read \VARIABLE
 
-if  [[ "${variable}" == "TMAX" ]] || 
-    [[ "${variable}" == "TMIN" ]] || 
-    [[ "${variable}" == "RAD" ]] || 
-    [[ "${variable}" == "PREC" ]] || 
-    [[ "${variable}" == "UMI" ]] ; then
-    cd "${variable}"
+if  [[ "${VARIABLE}" == "TMAX" ]] || 
+    [[ "${VARIABLE}" == "TMIN" ]] || 
+    [[ "${VARIABLE}" == "RAD" ]] || 
+    [[ "${VARIABLE}" == "PREC" ]] || 
+    [[ "${VARIABLE}" == "UMI" ]] ; then
+    IN_DIR="${BASE_DIR}/${VARIABLE}"
 else
-    echo "${variable} is a bad choice!!!"
+    echo "${VARIABLE} is a bad choice!!!"
     exit 0
 fi
 
-filesToParse=($(find -type f -name '*.gz'))
+LISTFILES=($(find "${IN_DIR}" -type f -name '*.gz'))
 
-for I in ${filesToParse[@]} ; do
-    yearTmp=$(echo "${I}" | cut -d _ -f 5)
-    year="${yearTmp:0:4}"
-    fileName=EXTRACTED_"${site}"_"${variable}"_"${year}".txt
-
-    #control file
-    if [[ -a "${fileName}" ]] ; then
-        echo "file ${fileName} still exist"
-        echo "delete old  OR create a new ${fileName}"
-        rm  ${fileName}
+# Check if file already exists
+for I in ${LISTFILES[@]} ; do
+    TMPYEAR=$(basename "${I}" | cut -d _ -f 5)
+    YEAR="${TMPYEAR:0:4}"
+    FILENAME=EXTRACTED_"${SITENAME}"_"${VARIABLE}"_"${YEAR}".txt
+    FILEPATH="${OUT_DIR}"/"${FILENAME}"
+    if [[ -a "${FILEPATH}" ]] ; then
+        echo "File ${FILEPATH} already exists: deleting it"
+        rm -v ${FILEPATH}
     else
-        echo "file doesnt exist"
-        echo "create${fileName}"
+        echo "File ${FILEPATH} doesn't exist: creating it"
     fi
-
-    gunzip -dc ${I} | grep  "${site}" >> "${fileName}" 
-
-    #control files
-    if [[ -s "${fileName}" ]] ; then
-        echo "file ${fileName} is valid"
-    else
-        echo "file ${fileName} is empty"
-    fi
-
-    #control if files contain NO DATA
-    echo 'control no data values...'
-    cat "${fileName}" | sed 's/--/-9999/g' > "${fileName}".tmp
-    mv "${fileName}".tmp "${fileName}"
-
-    
 done
 
+for I in ${LISTFILES[@]} ; do
+    TMPYEAR=$(basename "${I}" | cut -d _ -f 5)
+    YEAR="${TMPYEAR:0:4}"
+    FILENAME=EXTRACTED_"${SITENAME}"_"${VARIABLE}"_"${YEAR}".txt
+    FILEPATH="${OUT_DIR}"/"${FILENAME}"
 
+    # Decompress files (grep on site with blanks)
+    # If files are already present they will be over written
+    gunzip -dc ${I} | grep "${SITE}" >> "${FILEPATH}"
+    if [ "${?}" -ne "0" ] ; then
+        echo "--> ERROR: File ${I} is corrupted! :-("
+        # exit 1
+    fi
 
+    # Check if file are equal to or bigger than zero
+    if [[ -s "${FILEPATH}" ]] ; then
+        echo "File ${FILEPATH} is bigger than 0 bytes"
+    else
+        echo "file ${FILEPATH} is empty"
+    fi
 
+    echo -ne 'Check if file contains NO DATA\n\n'
+    cat "${FILEPATH}" | sed 's/--/-9999/g' > "${FILEPATH}".tmp
+    mv "${FILEPATH}".tmp "${FILEPATH}"
+
+done
 
 exit 0
