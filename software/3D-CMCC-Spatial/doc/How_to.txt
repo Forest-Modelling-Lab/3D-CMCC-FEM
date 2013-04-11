@@ -7,6 +7,13 @@
 ./3D_CMCC_Spatial.sh /home/alessio/Scrivania/forSE/software/3D-CMCC-Spatial/input/MADONIE_30m_2002-2020_20121224000001_input.zip 30 /home/alessio/Scrivania/forSE/software/3D-CMCC-Spatial/output/
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+--se faccio modifiche al SOLO codice allora devo cambiare l'eseguibile che si trova nella dir 3D-CMCC-Spatial  in bin con l'eseguibile del codice del modello nuovo
+
+--se faccio modifiche a SPECIES.TXT devo decomprimere il file .zip che si trova in 3D-CMCC-Spatial nella dir input dentro la cartella txt sosituire con il nuovo SPECIES.TXT  e modificare la directory
+con una nuova firma ricompattare e poi modificare quando rilancio il codice con la nuova firma
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
