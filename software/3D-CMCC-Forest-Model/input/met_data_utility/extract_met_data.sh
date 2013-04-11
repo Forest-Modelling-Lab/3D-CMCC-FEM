@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 #create folder of downloaded data
 # mkdir downloaded_files
@@ -6,13 +6,13 @@
 #TO DO scarica i file dal sito ucea
 # wget http://old.politicheagricole.it/ucea/forniture/index3.htm
 
-cd CRA_MET_DATA
+cd input/CRA_MET_DATA
 
 echo "choose a site and write (in capital letters)"
 read  \site 
 echo "site choiced : ${site}"
 
-echo "chose a variable between: TMAX, TMIN, RAD, PREC, UMI"
+echo "chose a variable among: TMAX, TMIN, RAD, PREC, UMI"
 read \variable
 
 if  [[ "${variable}" == "TMAX" ]] || 
@@ -57,8 +57,11 @@ for I in ${filesToParse[@]} ; do
     cat "${fileName}" | sed 's/--/-9999/g' > "${fileName}".tmp
     mv "${fileName}".tmp "${fileName}"
 
-    mv  "${fileName}" .. 
+    
 done
+
+
+
 
 
 exit 0
