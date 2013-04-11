@@ -37,29 +37,34 @@ filesToParse=($(find -type f -name '*.gz'))
 if [[ -a EXTRACTED_"$site".txt ]] ; then
   echo 'file EXTRACTED_'"$site"'.txt still exist '
   echo 'delete old  OR create a new EXTRACTED_'"$site"'.txt '
-  rm  EXTRACTED_"$site".txt
+  rm  EXTRACTED_"$site_$variable".txt
 else
   echo 'file doesnt exist'
-  echo 'create  EXTRACTED_'"$site"'.txt '
+  echo 'create  EXTRACTED_'"$site"_"$variable"'.txt '
 fi
 
 for I in ${filesToParse[@]} ; do
-	gunzip -dc ${I} | grep  "$site" >> EXTRACTED_"$site_$variable".txt
+	gunzip -dc ${I} | grep  "$site" >> EXTRACTED_"$site"_"$variable".txt
 done
 
 
 
 
-#control row
-if [[ -s EXTRACTED_"$site_$variable".txt ]] ; then
-  echo 'file EXTRACTED_'"$site_$variable"'.txt is valid'
+#control files
+if [[ -s EXTRACTED_"$site"_"$variable".txt ]] ; then
+  echo 'file EXTRACTED_'"$site"_"$variable"'.txt is valid'
   else
-  echo 'file EXTRACTED_'"$site_$variable"'.txt is empty'
+  echo 'file EXTRACTED_'"$site"_"$variable"'.txt is empty'
 fi
 
+#control if files contain NO DATA
+echo 'control no data values...'
+cat EXTRACTED_"$site"_"$variable".txt | sed 's/--/-9999/g' > EXTRACTED_"$site"_"$variable".txt.tmp
+mv EXTRACTED_"$site"_"$variable".txt.tmp EXTRACTED_"$site"_"$variable".txt
 
 
-mv  EXTRACTED_"$site_$variable".txt .. 
+
+mv  EXTRACTED_"$site"_"$variable".txt .. 
 
 
 exit 0
