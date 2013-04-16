@@ -57,14 +57,16 @@ for I in ${LISTFILES[@]} ; do
     echo "${I}"
     gunzip -dc ${I} | grep "${SITE}" >> "${FILEPATH}"
     if [ "${?}" -ne "0" ] ; then
-        echo "--> ERROR: File ${I} is corrupted! :-("
+        #Marconi: inserted the error message in the output.txt to denote which months have not been processed for the specific site 
+        echo "--> ERROR: File ${I} is corrupted! :-(" >> "${FILEPATH}"
         # exit 1
     fi   
     
     #Marconi: check if there's some months lacking: 
 		COUNTER=$(gunzip -dc ${I} | grep -c "${SITE}")
 		if [[ "${COUNTER}" == "0" ]] ; then
-  		echo "--> ERROR: no ${SITE} data found for ${I}! "
+		  #Marconi: inserted the error message in the output.txt to denote which months have not been processed for the specific site 
+  		echo "--> ERROR: no ${SITE} data found for ${I}! " >> "${SITEPATH}"
     fi
 	
     # Check if file are equal to or bigger than zero
