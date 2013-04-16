@@ -659,19 +659,20 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					//------------------------------------------------------------------------------------------------------------------
 					//solar declination
-					solarDeclination = -asin(sin(23.45 * Pi / 180.0) * cos(2.0 * Pi * (actualDate +10) / 365.0));
+					solarDeclination = asin(-sin(23.45 * Pi / 180.0) * cos(2.0 * Pi * (actualDate +10) / 365.0));
 					Log("\nsolarDeclination = %g", solarDeclination);
 
 					// there are some potential dicrepancies with literature versions; watch out! c computes angle operation ALWAYS as radiants!
 
-					Cfactor = cos(site->lat) * cos(solarDeclination);
-					Sfactor = sin(site->lat) * sin(solarDeclination);
+					//and what if they're in radiants and not degrees!?!?!
+					Cfactor = cos(site->lat * 2 * Pi / 360.0) * cos(solarDeclination);
+					Sfactor = sin(site->lat * 2 * Pi / 360.0) * sin(solarDeclination);
 					Log("\nC value = %g\nS value = %g", Cfactor, Sfactor);
 
 					//------------------------------------------------------------------------------------------------------------------
 
 
-					daylength = 12 + (24.0 / Pi) * asin(tan(site->lat) - tan(solarDeclination) * Pi / 180.0);
+					daylength = 12 + (24.0 / Pi) * asin(Sfactor / Cfactor);
 					Log("\nDaylength = %g hours\n", daylength);
 
 					//compare with get_daylenght(&m->cells[cell])

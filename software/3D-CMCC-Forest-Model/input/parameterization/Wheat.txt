@@ -165,11 +165,60 @@ MINAGEMANAG -9999         //Minimum age for Managment (Q. cerris)
 MINDBHMANAG -9999         //Minimum DBH for Managment
 AV_SHOOT    -9999         //average number of shoot after cut
 
-// --------------------------------------
-//
-// --------------------------------------
+// ------------------------------------------------------------------------------------------
+//																CROPMODEL
+// ------------------------------------------------------------------------------------------
 
-Z_PHYLLOCRON    95  //
+//GENERAL
 
+//ATMOSPHERIC
+Z_ALBEDO			// field albedo
+Z_SCATTERLIGHT = 0.2;			//scatter of light parameter; set as zhang's
+
+
+
+//PLANT DEVELOPMENT
+Z_PHENOLOGY
+Z_FIRSTLAI
+Z_PLANTS
+Z_MAXDEVELOPMENT_TEMPERATURE
+Z_BASALTEMPERATURE
+Z_PHOTOPERIODCOEFF
+Z_VERNALIZATION_COEFF
+
+//PHOTOSYNTHESIS
+Z_OPTIMUM_PHOTORATE
+Z_INITIAL_LIGHTUSEEFFICIENCY
+
+//RESPIRATION
+Z_LEAFRESPIRATION
+Z_STEMRESPIRATION
+Z_GRAINRESPIRATION
+Z_ROOTRESPIRATION
+
+
+//BIOMASS ALLOCATION
+Z_GENETIC1
+Z_GENETIC2
+Z_GENETIC3
+Z_GENETIC4
+
+Z_LEAFBIOMASS
+Z_STEMBIOMASS
+Z_GRAINBIOMASS
+Z_ROOTBIOMASS
+
+//STAGE LIMITS
+STAGELIMIT1
+STAGELIMIT2
+STAGELIMIT3
+STAGELIMIT4
+STAGELIMIT5
+STAGELIMIT6
+STAGELIMIT7
+STAGELIMIT8
+
+//TEMPERATURE
+Z_FIRST_SOILSURFACE_TEMPERATURE
 
 

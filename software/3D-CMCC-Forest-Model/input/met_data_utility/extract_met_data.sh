@@ -29,7 +29,8 @@ else
     exit 0
 fi
 
-LISTFILES=($(find "${IN_DIR}" -type f -name '*.gz'))
+#Marconi: added sort -- version command, to be sure listfiles are sorted BEFORE being read
+LISTFILES=($((find "${IN_DIR}" -type f -name '*.gz') | sort --version-sort) )
 
 # Check if file already exists
 for I in ${LISTFILES[@]} ; do
@@ -53,12 +54,19 @@ for I in ${LISTFILES[@]} ; do
 
     # Decompress files (grep on site with blanks)
     # If files are already present they will be over written
+    echo "${I}"
     gunzip -dc ${I} | grep "${SITE}" >> "${FILEPATH}"
     if [ "${?}" -ne "0" ] ; then
         echo "--> ERROR: File ${I} is corrupted! :-("
         # exit 1
+    fi   
+    
+    #Marconi: check if there's some months lacking: 
+		COUNTER=$(gunzip -dc ${I} | grep -c "${SITE}")
+		if [[ "${COUNTER}" == "0" ]] ; then
+  		echo "--> ERROR: no ${SITE} data found for ${I}! "
     fi
-
+	
     # Check if file are equal to or bigger than zero
     if [[ -s "${FILEPATH}" ]] ; then
         echo "File ${FILEPATH} is bigger than 0 bytes"
