@@ -21,7 +21,7 @@ SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
 SLA1	7               //Specific Laef Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
-SLA	200             //Specific Leaf Area cm^2/gC  	 172 Bartelink, 1997				
+SLA	200             //Specific Leaf Area cm^2/gC  	 172 Bartelink, 1997	400	from ettore		
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.40            //Branch and Bark fraction at age 0
