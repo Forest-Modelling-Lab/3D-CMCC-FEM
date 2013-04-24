@@ -351,7 +351,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n"
 				"-thermic_sum = %g °C\n"
-				"-daylength = %g hrs\n",
+				"-day %d month %d daylength = %g hrs\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
@@ -364,6 +364,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].d[day].rain,
 				met[month].d[day].swc,
 				met[month].d[day].thermic_sum,
+				day +1,
+				month +1,
 				met[month].d[day].daylength);
 
 		if (settings->spatial == 's')

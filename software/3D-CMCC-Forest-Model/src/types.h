@@ -648,6 +648,8 @@ enum {
 	FRAC_DAY_FOLIAGE_REMOVE,	//number of leaf fall days/tot number of veg days
 	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
 
+	THERMIC_SUM_FOR_END_VEG, //thermic sum at the end of leaf fall period
+
 
 	FOLIAGE_REDUCTION_RATE,
 

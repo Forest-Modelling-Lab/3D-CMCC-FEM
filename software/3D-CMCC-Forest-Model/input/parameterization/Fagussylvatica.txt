@@ -50,7 +50,7 @@ GROWTHTMAX	35      //Maximum temperature for growth
 GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001
 GROWTHSTART	1500       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C  for fagus through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH	10      //minimum day length for fagus through satellite images
+MINDAYLENGTH	12      //minimum day length for fagus through satellite images
 
 //SOIL WATER
 //modified 13 feb 2012
