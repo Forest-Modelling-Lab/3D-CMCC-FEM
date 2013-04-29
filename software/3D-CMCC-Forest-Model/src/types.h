@@ -161,6 +161,7 @@ typedef struct
 	light_estab_intolerant,
 	maxlai,
 	defaultlai,
+	gdd_basis,
 	maxdays,
 	maxrg,
 	maxtavg,
