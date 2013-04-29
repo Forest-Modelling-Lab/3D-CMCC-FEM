@@ -45,7 +45,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
-extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -78,7 +78,7 @@ extern void Get_daylight_avg_teperature (CELL * c,  int day, int month, int year
 
 //following BIOME-BGC 4.2 src
 //compute nightime average air temperature
-extern void Get_nightime_avg_teperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -182,6 +182,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		}
 	}
 }
+
 
 void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 {
@@ -301,6 +302,9 @@ extern void Get_air_pressure (CELL *c)
 
 void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 {
+	static int doy;
+
+
 	if (settings->time == 'm')
 	{
 		Log("***************\n");
@@ -337,6 +341,12 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 	}
 	else
 	{
+		if (day == 0 && month == 0)
+		{
+			doy = 0;
+		}
+		doy += 1;
+
 		Log("***************\n");
 		Log("**Daily MET DATA**\n");
 		Log("-average solar_rad = %g MJ/m^2/day\n"
@@ -351,7 +361,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n"
 				"-thermic_sum = %g °C\n"
-				"-day %d month %d daylength = %g hrs\n",
+				"-day %d month %d daylength = %g hrs\n"
+				"-DOY = %d\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
@@ -366,7 +377,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].d[day].thermic_sum,
 				day +1,
 				month +1,
-				met[month].d[day].daylength);
+				met[month].d[day].daylength,
+				doy);
 
 		if (settings->spatial == 's')
 		{

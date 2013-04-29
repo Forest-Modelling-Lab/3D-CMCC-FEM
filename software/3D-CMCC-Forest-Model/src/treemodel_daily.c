@@ -109,7 +109,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Temp += met[month].d[day].tavg;
 		Yearly_Rain += met[month].d[day].rain;
 
-		Print_met_data (met, vpd,  month, day);
+		Print_met_data (met, vpd, month, day);
 
 
 		if (met[month].d[day].tavg > 0)
