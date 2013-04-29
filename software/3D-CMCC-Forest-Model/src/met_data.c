@@ -302,6 +302,7 @@ extern void Get_air_pressure (CELL *c)
 
 void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 {
+	//here is valid only into function
 	static int doy;
 
 
