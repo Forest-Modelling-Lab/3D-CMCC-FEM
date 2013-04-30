@@ -112,6 +112,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Print_met_data (met, vpd, month, day);
 
 
+
 		if (met[month].d[day].tavg > 0)
 		{
 			m->cells[cell].available_soil_water += met[month].d[day].rain;
@@ -217,6 +218,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 							}
+
+							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
 							//vegetative period for deciduous
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)

@@ -252,10 +252,16 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 				Log("**Maximum Growth**\n");
 				Log("allocating only into foliage and stem pools\n");
 
+
+				//fixme scegliere se usare Magnani o meno
 				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+/*
 				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 / s->value[STEM_LEAF]);
 				s->value[DEL_STEMS_CTEM] = (s->value[NPP]-s->value[DEL_FOLIAGE_CTEM]);
+*/
+
+				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP];
 
 				//old version
 				//s->value[DEL_FOLIAGE_CTEM] = s->value[NPP];
@@ -450,7 +456,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 				//recompute LAI
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
-				Log("++Lai = %g\n", s->value[LAI]);
+				Log("day = %d month %d ++Lai = %g\n", day, month, s->value[LAI]);
 
 
 				s->value[DEL_RESERVE_CTEM] = 0;
