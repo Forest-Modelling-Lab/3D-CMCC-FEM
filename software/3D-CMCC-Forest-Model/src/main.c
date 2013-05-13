@@ -28,7 +28,7 @@
 #include <string.h>
 #include <time.h>
 
-#include <netcdf.h>
+//#include <netcdf.h>
 
 
 #include "compiler.h"
