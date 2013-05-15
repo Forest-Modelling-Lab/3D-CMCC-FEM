@@ -30,6 +30,8 @@ int main(int argc, char *argv[])
 	file init;
 	file ndep_file;
 
+	printf ("starting Biome....\n");
+
 	/* system time variables */
 	struct tm *tm_ptr;
 	time_t lt;
@@ -447,6 +449,13 @@ int main(int argc, char *argv[])
 
 	bgc_logfile_finish();
 	free(argv_zero);
+
+	if (EXIT_SUCCESS == 0)
+	printf ("...finishing successfully Biome \n");
+	else
+	printf ("...finishing un-successfully Biome \n");
+
+
 	return EXIT_SUCCESS;
 } /* end of main */
 	
