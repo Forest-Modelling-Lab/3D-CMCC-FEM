@@ -367,8 +367,8 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 
 extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET_DATA *const met, const int month, const int years, int height, int age, int species)
 {
-	Log("> x = %g\n", c->x);
-	Log("> y = %g\n", c->y);
+	Log("> x = %d\n", c->x);
+	Log("> y = %d\n", c->y);
 	Log("> z = %d\n", c->heights[height].z);
 	Log("> height = %g\n", c->heights[height].value);
 	Log("> age = %d\n", c->heights[height].ages[age].value);

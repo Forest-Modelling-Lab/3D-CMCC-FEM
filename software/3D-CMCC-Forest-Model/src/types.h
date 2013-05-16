@@ -865,6 +865,8 @@ typedef struct {
 	float daily_npp, monthly_npp, annual_npp;
 	float daily_et, monthly_et, annual_et;
 
+	int dead_tree;
+
 
 
 } CELL;

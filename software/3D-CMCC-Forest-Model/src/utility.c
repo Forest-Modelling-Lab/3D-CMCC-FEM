@@ -156,17 +156,28 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 
 extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
 {
-	Monthly_Log ("-%s %10s %10s %10s\n", "YEAR", "MONTH", "GPP", "NPP");
-	Monthly_Log ("-%d %10d %13g %10g\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp);
+		if(month == 0)
+	{
+		Monthly_Log("Monthly summary output from 3D-CMCC FEM\n");
+		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
+		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
+		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n\n\n");
+		Monthly_Log ("-%s %10s %10s %10s %10s\n", "YEAR", "MONTH", "GPP", "NPP", "ET");
+	}
+	Monthly_Log ("-%d %10d %10g %10g %10g\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et);
 }
 
 extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years)
 {
-
-
-	Annual_Log ("-%s %10s %10s\n", "YEAR", "GPP", "NPP");
-	Annual_Log ("-%d %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp);
-
+	if (years == 0)
+	{
+		Annual_Log("Annual summary output from 3D-CMCC FEM\n");
+		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
+		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
+		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n\n\n");
+		Annual_Log ("-%s %10s %10s  %9s\n", "YEAR", "GPP", "NPP", "ET");
+	}
+	Annual_Log ("-%d %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et);
 }
 
 void Get_a_Power_Function (AGE *a, SPECIES *s)

@@ -2,9 +2,6 @@
 
 
 
-//LIST OF THINGS TODO
-//TODO SOIL LAYER ask simona
-//TODO RUN MODEL FOR ROCCA
 //TODO SIMULAZIONI DA bareground
 //TODO RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
 //TODO INSERIRE UN MAX NUMBER OF LAYER IN FUNZIONE DEL TREE HEIGHT (chiedere Arianna)
@@ -41,7 +38,6 @@
 
 /* constants */
 #define PROGRAM_VERSION	"5.0"
-
 
 /*netcdf*/
 #define FILE_NAME_NETCDF "prova.nc"
@@ -2343,7 +2339,6 @@ int main(int argc, char *argv[])
 						Log("****************END OF MONTH*******************\n");
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
-
 					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
 					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 				}
