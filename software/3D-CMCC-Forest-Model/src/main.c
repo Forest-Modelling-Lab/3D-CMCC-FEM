@@ -191,21 +191,16 @@ const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
-//static const char err_output_path_no_delimiter[] = "output path must end with a \"%c\"\n\n";
-//static const char err_unable_open_output_path[] = "unable to open output path.\n";
 static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
 static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
 static const char err_settings_already_specified[] = "settings already specified (%s)! \"%s\" skipped.\n";
-//static const char err_resolution_already_specified[] = "resolution already specified (%s)! \"%s\" skipped.\n";
-//static const char err_version_already_specified[] = "version already specified (%s)! \"%s\" skipped.\n";
 static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
 static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
 static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
 static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
 static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
 static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
-//static const char err_met_not_specified[] = "met not specified.";
-//static const char err_zero_years_elaboration[] = "years of elaboration should be at least 1.\n";
+
 
 
 
@@ -518,7 +513,12 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	YOS *yos = NULL, // mandatory
 			*yos_no_leak;
 
-	if (!file) return NULL;
+	if (!file)
+	{
+		return NULL;
+		Log("NULL Met file!!\n");
+	}
+
 
 	// reset
 	*yos_count = 0;
@@ -533,6 +533,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	{
 		// get token length
 		i = strlen(token);
+		Log("i = %d\n", i);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -554,6 +555,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			//
 			Log("yos_no_leak out of memory.\n");
 			Log("yos_no_leak = %d\n", yos_no_leak);
+			Log("yos = %d\n", yos);
 			free(yos);
 			return NULL;
 		}
@@ -568,7 +570,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
 		if( !filename )
 		{
-			fprintf(stderr, "Cannot allocate memory for filename.\n");
+			fprintf(stderr, "Cannot allocate memory for %s.\n", file);
 			return NULL;
 		}
 		bzero(filename, BUFFER_SIZE-1);
@@ -2073,8 +2075,6 @@ int main(int argc, char *argv[])
 		/* free rows */
 		free(rows);
 
-		Log("files founded = %d\n", files_founded_count);
-
 		/* check matrix */
 		if ( !m )
 		{
@@ -2083,11 +2083,14 @@ int main(int argc, char *argv[])
 		}
 
 		// import Years Of Simulation (years met files)
+		Log("processing met data files...\n");
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
+
 		if ( !yos || yos > 1000)
 		{
-			Log("Met File not imported yos = 0 or yos > 1000!!\n");
+			Log("Met File %s not imported yos = 0 or yos > 1000!!\n", input_met_path);
 			Log("Yos = %d\n", yos);
+			Log("years of simulation = %d\n", years_of_simulation);
 			Log("...exit");
 			matrix_free(m);
 			return -1;
