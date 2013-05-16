@@ -165,6 +165,7 @@ static const char msg_site_path[]		=	"site path = %s\n";
 static const char msg_settings_path[]	=	"settings path = %s\n";
 //static const char msg_output_path[]		=	"output path = %s\n";
 static const char msg_output_file[]		=	"output file = %s\n\n";
+static const char msg_annual_output_file[]		=	"annual output file = %s\n\n";
 static const char msg_processing[]		=	"processing %s...\n";
 static const char msg_ok[]				=	"ok";
 static const char msg_summary[]			=	"\n%d file%s found: %d processed, %d skipped.\n\n";
@@ -383,6 +384,29 @@ int get_output_filename(char *arg, char *param, void *p)
 			printf("With -outname flag set -outpath not set: using default output file (prog_path/output.txt)");
 	}
 	Log("output file name = %s\n", out_filename);
+	return 1;
+}
+
+int get_annual_output_filename(char *arg, char *param, void *p)
+{
+	if ( !param )
+	{
+		printf(err_arg_needs_param, arg);
+		return 0;
+	}
+
+	if ( annual_out_filename )
+		printf(err_outname_already_specified, annual_out_filename, param);
+	else
+	{
+		annual_out_filename = param;
+
+		if( output_path )
+			strcat(annual_output_file, annual_out_filename);
+		else
+			printf("With -annual_outname flag set -anual_outpath not set: using default output file (prog_path/output.txt)");
+	}
+	Log("annual_output file name = %s\n", annual_out_filename);
 	return 1;
 }
 
@@ -1463,6 +1487,16 @@ int main(int argc, char *argv[])
 			bzero(out_filename, BUFFER_SIZE-1);
 			strcpy(out_filename, argv[i+1]);
 			break;
+		case 'e': // Output file name (with path)
+			annual_out_filename = malloc(sizeof(*annual_out_filename)*BUFFER_SIZE);
+			if( !annual_out_filename )
+			{
+				fprintf(stderr, "Cannot allocate memory for annual_out_filename.\n");
+				return 1;
+			}
+			bzero(annual_out_filename, BUFFER_SIZE-1);
+			strcpy(annual_out_filename, argv[i+1]);
+			break;
 		case 'd': // Dataset filename
 			dataset_filename = malloc(sizeof(*dataset_filename)*BUFFER_SIZE);
 			if( !dataset_filename )
@@ -1560,6 +1594,25 @@ int main(int argc, char *argv[])
 		}
 		bzero(output_file, BUFFER_SIZE-1);
 		strcpy(output_file, out_filename);
+
+	}
+
+
+	if( annual_out_filename == NULL )
+	{
+		fprintf(stderr, "Error: annual output filename option is missing!\n");
+		usage();
+	}
+	else
+	{
+		annual_output_file = malloc(sizeof(*annual_output_file)*BUFFER_SIZE);
+		if( !annual_output_file )
+		{
+			fprintf(stderr, "Cannot allocate memory for annual output_file.\n");
+			return 1;
+		}
+		bzero(annual_output_file, BUFFER_SIZE-1);
+		strcpy(annual_output_file, annual_out_filename);
 
 	}
 
@@ -1807,6 +1860,10 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strTmp2);
 	strcat (out_filename, strTmp3);
 
+	strcat (annual_out_filename, strTmp);
+	strcat (annual_out_filename, strTmp2);
+	strcat (annual_out_filename, strTmp3);
+
 
 
 	char strSizeCell[10] = "";
@@ -1814,6 +1871,9 @@ int main(int argc, char *argv[])
 
 	strcat (out_filename, strSizeCell);
 	strcat (out_filename, "_");
+
+	strcat (annual_out_filename, strSizeCell);
+	strcat (annual_out_filename, "_");
 
 	//add data to output.txt
 	time_t rawtime;
@@ -1825,6 +1885,9 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+	strcat (annual_out_filename, strData);
+	strcat (annual_out_filename, "_");
+
 	//sprintf(strData, "%d", data->tm_mon+1);
 	//strcat (out_filename, strData);
 	//strcat (out_filename, "_");
@@ -1833,10 +1896,18 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+	sprintf(strData, "%s", szMonth[data->tm_mon]);
+	strcat (annual_out_filename, strData);
+	strcat (annual_out_filename, "_");
+
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+
+	sprintf(strData, "%d", data->tm_mday);
+	strcat (annual_out_filename, strData);
+	strcat (annual_out_filename, "_");
 
 	/*
 	//check if daylight savings time
@@ -1870,6 +1941,8 @@ int main(int argc, char *argv[])
 
 	strcat (out_filename, ".txt");
 
+	strcat (annual_out_filename, ".txt");
+
 
 
 	if ( !logInit(out_filename) )
@@ -1878,7 +1951,7 @@ int main(int argc, char *argv[])
 		puts("Unable to log to file: check logfile path!");
 	}
 
-	annual_logInit ("porcamerda.txt");
+	annual_logInit (annual_out_filename);
 
 	Annual_Log (copyright);
 
@@ -1893,6 +1966,7 @@ int main(int argc, char *argv[])
 	printf(msg_site_path, site_path);
 	printf(msg_settings_path, settings_path);
 	printf(msg_output_file, output_file);
+	printf(msg_annual_output_file, annual_output_file);
 
 	/* get files */
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
