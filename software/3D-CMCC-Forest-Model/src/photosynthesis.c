@@ -206,8 +206,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		c->annual_gpp = 0;
 		c->annual_npp = 0;
 	}
-	c->annual_gpp += c->monthly_gpp;
-	c->annual_npp += c->monthly_npp;
+	c->annual_gpp += s->value[POINT_GPP_g_C];
+	c->annual_npp += s->value[NPP];
 
 
 
