@@ -13,3 +13,8 @@ for Xterm configurations
 for Xterm configurations
 
 -hold -geometry 180x30 -e ./Debug/3D_CMCC_Forest_Model -i input/parameterization -o output/output -d input/initialization_data/1526_963_input.txt -m input/met_data/1526_961_2007.txt -s input/site_data/1526_963_site.txt -c input/model_settings/settings.txt
+
+//16 May 2013
+
+
+-i input/parameterization -o output/complete_output/output  -f output/monthly_output/monthly_output  -e output/annual_output/annual_output -d input/initialization_data/1526_963_input.txt -m input/met_data/1526_961_2007.txt -s input/site_data/1526_963_site.txt -c input/model_settings/settings.txt

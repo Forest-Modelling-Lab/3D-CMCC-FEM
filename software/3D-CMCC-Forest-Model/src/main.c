@@ -2108,6 +2108,11 @@ int main(int argc, char *argv[])
 			matrix_free(m);
 			return -1;
 		}
+		else
+		{
+			Log("yos = %d\n\n\n\n", yos);
+			Log("years of simulation = %d\n\n\n\n", years_of_simulation);
+		}
 
 
 
