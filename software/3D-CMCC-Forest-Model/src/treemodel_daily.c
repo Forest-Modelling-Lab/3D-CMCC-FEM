@@ -378,7 +378,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						/*END OF YEAR*/
 
-						if (day == 31 && month == DECEMBER)
+						if (day == 30 && month == DECEMBER)
 						{
 							Log("*****END OF YEAR******\n");
 
@@ -602,12 +602,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 //Saplings_counter -= 1;
                             }
 							 */
-
 						}
 					}
 					else
 					{
-						if(day == 31 && month == DECEMBER)
+
+						if(day == 30 && month == DECEMBER)
 						{
 							Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							Log("SAPLINGS\n");
@@ -696,11 +696,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//}
 
 
-		//averaged monthly met data
-		if (month == DECEMBER)
-		{
-			Get_annual_average_values_met_data (&m->cells[cell], Yearly_Solar_Rad, Yearly_Vpd, Yearly_Temp, Yearly_Rain );
-		}
 
 
 

@@ -1953,7 +1953,7 @@ int main(int argc, char *argv[])
 
 	annual_logInit (annual_out_filename);
 
-	Annual_Log (copyright);
+	Annual_Log ("annual output file\n");
 
 	/* show copyright*/
 	Log(copyright);

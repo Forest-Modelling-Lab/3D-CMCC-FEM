@@ -132,6 +132,7 @@ extern void Get_annual_average_values_met_data (CELL *c, float Yearly_Solar_Rad,
 
 extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 {
+
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
 	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
 	Log("END of Year Yearly Cumulated GPP for layer %d  = %g gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_G_C]);
@@ -157,7 +158,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 
 	//CUMULATIVE BALANCE FOR ENTIRE CELL
-	Log("**CUMULATIVE BALANCE for cell (%g, %g) ** \n", c->x, c->y);
+	Log("**CUMULATIVE BALANCE for cell (%d, %d) ** \n", c->x, c->y);
 
 	//DO NOT CHANGE THESE LINES!!!!!!!!!!
 	Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, c->x, c->y, c->gpp);
@@ -166,6 +167,14 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//DO NOT CHANGE THIS LINE!!!!!!!!!!
 	Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, c->x, c->y, c->total_yearly_evapotransipration);
 	Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  c->available_soil_water);
+
+
+
+	Annual_Log("**CUMULATIVE BALANCE for cell (%d, %d) ** \n", c->x, c->y);
+	Annual_Log ("-%s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "ASW");
+	Annual_Log ("-%d %10g %10g %10g %10g\n", yos[years].year, c->gpp, c->npp, c->total_yearly_evapotransipration, c->available_soil_water);
+
+
 
 	c->gpp = 0;
 	c->npp = 0;
