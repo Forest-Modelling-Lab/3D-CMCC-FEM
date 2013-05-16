@@ -75,7 +75,7 @@ const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", 
 
 
 /* global variables */
-char *program_path		=	NULL,	// mandatory
+char 	*program_path		=	NULL,	// mandatory
 		*input_dir			=	NULL,	// mandatory
 		*input_path		=	NULL,	// mandatory
 		*dataset_filename	=	NULL,	// mandatory
@@ -137,7 +137,8 @@ static char copyright[] =
 
 static const char comma_delimiter[] = ",\r\n";
 static const char met_delimiter[] = " ,\t\r\n";
-static const char *met_columns[MET_COLUMNS] = {	"Month",
+static const char *met_columns[MET_COLUMNS] = {
+		"Month",
 		"n_days",
 		"Rg_f",
 		"Ta_f",
@@ -159,18 +160,17 @@ static const char msg_dataset_not_specified[] =
 #endif
 		"\n";
  */
-static const char msg_dataset_path[]	=	"dataset path = %s\n";
-static const char msg_site_path[]		=	"site path = %s\n";
-static const char msg_met_path[]		=	"met path = %s\n";
-static const char msg_settings_path[]	=	"settings path = %s\n";
-//static const char msg_output_path[]		=	"output path = %s\n";
-static const char msg_output_file[]		=	"output file = %s\n\n";
-static const char msg_monthly_output_file[]		=	"monthly output file = %s\n\n";
-static const char msg_annual_output_file[]		=	"annual output file = %s\n\n";
-static const char msg_processing[]		=	"processing %s...\n";
-static const char msg_ok[]				=	"ok";
-static const char msg_summary[]			=	"\n%d file%s found: %d processed, %d skipped.\n\n";
-static const char msg_usage[]			=	"usage: 3D-CMCC parameters\n\n"
+static const char msg_dataset_path[]			=	"dataset path = %s\n";
+static const char msg_site_path[]				=	"site path = %s\n";
+static const char msg_met_path[]				=	"met path = %s\n";
+static const char msg_settings_path[]			=	"settings path = %s\n";
+static const char msg_output_file[]				=	"output file path = %s\n";
+static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
+static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
+static const char msg_processing[]				=	"processing %s...\n";
+static const char msg_ok[]						=	"ok";
+static const char msg_summary[]					=	"\n%d file%s found: %d processed, %d skipped.\n\n";
+static const char msg_usage[]					=	"usage: 3D-CMCC parameters\n\n"
 		"  allowed parameters:\n\n"
 		"    -dataset=XXXXX_YYYY.txt -> file to be processed"
 		"    -met=XXXXX -> met file\n"
@@ -365,7 +365,7 @@ int get_monthly_output_filename(char *arg, char *param, void *p)
 		if( output_path )
 			strcat(monthly_output_file, monthly_out_filename);
 		else
-			printf("With -monthly_outname flag set -monthly_outpath not set: using default output file (prog_path/output.txt)");
+			printf("With -monthly_outname flag set -monthly_outpath not set: using default output file (prog_path/monthly_output.txt)");
 	}
 	Log("monthly_output file name = %s\n", monthly_out_filename);
 	return 1;
@@ -388,7 +388,7 @@ int get_annual_output_filename(char *arg, char *param, void *p)
 		if( output_path )
 			strcat(annual_output_file, annual_out_filename);
 		else
-			printf("With -annual_outname flag set -anual_outpath not set: using default output file (prog_path/output.txt)");
+			printf("With -annual_outname flag set -anual_outpath not set: using default output file (prog_path/annual_output.txt)");
 	}
 	Log("annual_output file name = %s\n", annual_out_filename);
 	return 1;
@@ -492,7 +492,7 @@ void usage(void)
 
 /*import met data file*/
 //------------------------------------------------------------------------------
-//
+//bug model doesn't import more then one met file !!!!
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {
 	int i = 0,
@@ -523,6 +523,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	// reset
 	*yos_count = 0;
 
+	Log("filename = %s\n", file);
+	Log("yos_count = %d\n", *yos_count);
+	Log("yos = %d\n", yos);
+
+
 	//
 	for (token = mystrtok(file, comma_delimiter, &p); token; token = mystrtok(NULL, comma_delimiter, &p) )
 	{
@@ -544,12 +549,17 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 		// alloc memory for yos
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
-		if ( !yos_no_leak )
+		if ( !yos_no_leak || yos_no_leak > 1000 )
 		{
 			//
-			Log("out of memory.\n");
+			Log("yos_no_leak out of memory.\n");
+			Log("yos_no_leak = %d\n", yos_no_leak);
 			free(yos);
 			return NULL;
+		}
+		else
+		{
+			Log("ok yos_no_leak\n");
 		}
 
 		// assign memory
@@ -2076,7 +2086,9 @@ int main(int argc, char *argv[])
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 		if ( !yos || yos > 1000)
 		{
-			Log("Met File not imported yos = 0 or yos > 1000!!\n\n");
+			Log("Met File not imported yos = 0 or yos > 1000!!\n");
+			Log("Yos = %d\n", yos);
+			Log("...exit");
 			matrix_free(m);
 			return -1;
 		}
@@ -2085,10 +2097,6 @@ int main(int argc, char *argv[])
 			Log("yos = %d\n\n\n\n", yos);
 			Log("years of simulation = %d\n\n\n\n", years_of_simulation);
 		}
-
-
-
-		Log("out_filename = %s\n", out_filename);
 
 		Log("\n3D-CMCC MODEL START\n");
 		Log("***************************************************\n");
