@@ -630,6 +630,16 @@ enum {
 
 	STEMCONST,
 
+	//MONTHLY CUMULATIVE VARIABLES
+	MONTHLY_NPP,                     //Yearly NPP
+	MONTHLY_NPP_UDC,
+	MONTHLY_NPP_FL,
+	IND_MONTHLY_NPP,                 //Individual NPP
+	CUM_MONTHLY_NPP,                 //Sum of all years NPP (included simulation years)
+	MONTHLY_GPP_G_C,                 //Yearly GPP
+	MONTHLY_POINT_GPP_G_C,
+	MONTHLY_RAIN,                    //Yearly Rain
+
 
 	//YEARLY CUMULATIVE VARIABLES
 	YEARLY_NPP,                     //Yearly NPP
