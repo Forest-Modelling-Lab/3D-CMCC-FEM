@@ -88,6 +88,9 @@ char *program_path		=	NULL,	// mandatory
 		*output_path		=	NULL,	// mandatory
 		*out_filename		=	NULL,	// mandatory
 		*output_file		= 	NULL,	// mandatory
+		*annual_output_path		=	NULL,	// mandatory
+		*annual_out_filename		=	NULL,	// mandatory
+		*annual_output_file		= 	NULL,	// mandatory
 		*settings_path		=	NULL;	// mandatory
 //*resolution		= 	NULL,	// mandatory
 //*vers_arg			= 	NULL;	// mandatory
@@ -1874,6 +1877,10 @@ int main(int argc, char *argv[])
 		log_enabled = 0;
 		puts("Unable to log to file: check logfile path!");
 	}
+
+	annual_logInit ("porcamerda.txt");
+
+	Annual_Log (copyright);
 
 	/* show copyright*/
 	Log(copyright);
