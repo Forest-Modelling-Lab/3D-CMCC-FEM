@@ -36,6 +36,39 @@ void logClose(void)
 	if ( file_log )	fclose(file_log);
 }
 
+//for monthly output
+static FILE *monthly_file_log ;
+
+int monthly_logInit(char * monthly_logFileName)
+{
+	monthly_file_log = fopen(monthly_logFileName, "w");
+
+	if ( !monthly_file_log ) return 0;
+
+	return 1;
+}
+
+void Monthly_Log(const char *szText, ...)
+{
+	char szBuffer[BUFFER_SIZE] = { 0 };
+	//va_list pArgList = { 0 };
+	va_list pArgList;
+
+	va_start(pArgList, szText);
+	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	va_end(pArgList);
+
+	fputs(szBuffer, stdout);
+
+	if ( log_enabled && monthly_file_log )
+		fputs(szBuffer, monthly_file_log);
+}
+
+void monthly_logClose(void)
+{
+	if ( monthly_file_log )	fclose(monthly_file_log);
+}
+
 //for annual output
 static FILE *annual_file_log ;
 

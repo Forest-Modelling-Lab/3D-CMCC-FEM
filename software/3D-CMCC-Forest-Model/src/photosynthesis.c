@@ -119,6 +119,15 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		}
 
 
+		//stand level
+		if (settings->time == 'd')
+		{
+			//c->daily_gpp
+		}
+
+
+
+
 		//Monthly Stand (area covered by canopy) GPP in grams of C
 		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
 		//Log("CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);

@@ -88,6 +88,9 @@ char *program_path		=	NULL,	// mandatory
 		*output_path		=	NULL,	// mandatory
 		*out_filename		=	NULL,	// mandatory
 		*output_file		= 	NULL,	// mandatory
+		*monthly_output_path		=	NULL,	// mandatory
+		*monthly_out_filename		=	NULL,	// mandatory
+		*monthly_output_file		= 	NULL,	// mandatory
 		*annual_output_path		=	NULL,	// mandatory
 		*annual_out_filename		=	NULL,	// mandatory
 		*annual_output_file		= 	NULL,	// mandatory
@@ -165,6 +168,7 @@ static const char msg_site_path[]		=	"site path = %s\n";
 static const char msg_settings_path[]	=	"settings path = %s\n";
 //static const char msg_output_path[]		=	"output path = %s\n";
 static const char msg_output_file[]		=	"output file = %s\n\n";
+static const char msg_monthly_output_file[]		=	"monthly output file = %s\n\n";
 static const char msg_annual_output_file[]		=	"annual output file = %s\n\n";
 static const char msg_processing[]		=	"processing %s...\n";
 static const char msg_ok[]				=	"ok";
@@ -387,6 +391,29 @@ int get_output_filename(char *arg, char *param, void *p)
 	return 1;
 }
 
+int get_monthly_output_filename(char *arg, char *param, void *p)
+{
+	if ( !param )
+	{
+		printf(err_arg_needs_param, arg);
+		return 0;
+	}
+
+	if (monthly_out_filename )
+		printf(err_outname_already_specified, monthly_out_filename, param);
+	else
+	{
+		monthly_out_filename = param;
+
+		if( output_path )
+			strcat(monthly_output_file, monthly_out_filename);
+		else
+			printf("With -monthly_outname flag set -monthly_outpath not set: using default output file (prog_path/output.txt)");
+	}
+	Log("monthly_output file name = %s\n", monthly_out_filename);
+	return 1;
+}
+
 int get_annual_output_filename(char *arg, char *param, void *p)
 {
 	if ( !param )
@@ -493,14 +520,16 @@ void usage(void)
 	fprintf(stderr, "\nMandatory options:\n");
 	fprintf(stderr, "\t-i\tinput directory\t\t\t\t\t(i.e.: -i /path/to/input/directory/)\n");
 	fprintf(stderr, "\t-o\toutput filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
+	fprintf(stderr, "\t-e\tmonthly output filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
+	fprintf(stderr, "\t-f\tannual output filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
 	fprintf(stderr, "\t-d\tdataset filename stored into input directory\t(i.e.: -d input.txt)\n");
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
 	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
-	fprintf(stderr, "\t-s\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
+	fprintf(stderr, "\t-c\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
 	fprintf(stderr, "\nOptional options:\n");
 	fprintf(stderr, "\t-h\tprint this help\n");
 	fprintf(stderr, "\nLaunch example:\n");
-	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -d /path/to/input.txt -m /path/to/1999.txt,/path/to/2003.txt,/path/to/2009.txt -s /path/to/site.txt -c /path/to/settings.txt\n");
+	fprintf(stderr, "\t./3D-CMCC Model -i /path/to/input/directory/ -o /path/to/CMCC.log -f /path/to/CMCC.log -e /path/to/CMCC.log -d /path/to/input.txt -m /path/to/1999.txt,/path/to/2003.txt,/path/to/2009.txt -s /path/to/site.txt -c /path/to/settings.txt\n");
 	exit(1);
 }
 
@@ -1487,7 +1516,17 @@ int main(int argc, char *argv[])
 			bzero(out_filename, BUFFER_SIZE-1);
 			strcpy(out_filename, argv[i+1]);
 			break;
-		case 'e': // Output file name (with path)
+		case 'f': // Monthly Output file name (with path)
+			monthly_out_filename = malloc(sizeof(*monthly_out_filename)*BUFFER_SIZE);
+			if( !monthly_out_filename )
+			{
+				fprintf(stderr, "Cannot allocate memory for monthly_out_filename.\n");
+				return 1;
+			}
+			bzero(monthly_out_filename, BUFFER_SIZE-1);
+			strcpy(monthly_out_filename, argv[i+1]);
+			break;
+		case 'e': // Annual Output file name (with path)
 			annual_out_filename = malloc(sizeof(*annual_out_filename)*BUFFER_SIZE);
 			if( !annual_out_filename )
 			{
@@ -1594,6 +1633,24 @@ int main(int argc, char *argv[])
 		}
 		bzero(output_file, BUFFER_SIZE-1);
 		strcpy(output_file, out_filename);
+
+	}
+
+	if(monthly_out_filename == NULL )
+	{
+		fprintf(stderr, "Error: monthly output filename option is missing!\n");
+		usage();
+	}
+	else
+	{
+		monthly_output_file = malloc(sizeof(*monthly_output_file)*BUFFER_SIZE);
+		if( !monthly_output_file )
+		{
+			fprintf(stderr, "Cannot allocate memory for monthly output_file.\n");
+			return 1;
+		}
+		bzero(monthly_output_file, BUFFER_SIZE-1);
+		strcpy(monthly_output_file, monthly_out_filename);
 
 	}
 
@@ -1860,6 +1917,10 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strTmp2);
 	strcat (out_filename, strTmp3);
 
+	strcat (monthly_out_filename, strTmp);
+	strcat (monthly_out_filename, strTmp2);
+	strcat (monthly_out_filename, strTmp3);
+
 	strcat (annual_out_filename, strTmp);
 	strcat (annual_out_filename, strTmp2);
 	strcat (annual_out_filename, strTmp3);
@@ -1871,6 +1932,9 @@ int main(int argc, char *argv[])
 
 	strcat (out_filename, strSizeCell);
 	strcat (out_filename, "_");
+
+	strcat (monthly_out_filename, strSizeCell);
+	strcat (monthly_out_filename, "_");
 
 	strcat (annual_out_filename, strSizeCell);
 	strcat (annual_out_filename, "_");
@@ -1885,6 +1949,9 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+	strcat (monthly_out_filename, strData);
+	strcat (monthly_out_filename, "_");
+
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
@@ -1896,6 +1963,9 @@ int main(int argc, char *argv[])
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
 
+	strcat (monthly_out_filename, strData);
+	strcat (monthly_out_filename, "_");
+
 	sprintf(strData, "%s", szMonth[data->tm_mon]);
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
@@ -1903,6 +1973,9 @@ int main(int argc, char *argv[])
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
+
+	strcat (monthly_out_filename, strData);
+	strcat (monthly_out_filename, "_");
 
 
 	sprintf(strData, "%d", data->tm_mday);
@@ -1941,18 +2014,22 @@ int main(int argc, char *argv[])
 
 	strcat (out_filename, ".txt");
 
+	strcat (monthly_out_filename, ".txt");
+
 	strcat (annual_out_filename, ".txt");
 
 
-
+	//Create output files
 	if ( !logInit(out_filename) )
 	{
 		log_enabled = 0;
 		puts("Unable to log to file: check logfile path!");
 	}
 
-	annual_logInit (annual_out_filename);
+	monthly_logInit (monthly_out_filename);
+	Monthly_Log ("monthly output file\n");
 
+	annual_logInit (annual_out_filename);
 	Annual_Log ("annual output file\n");
 
 	/* show copyright*/
@@ -1966,6 +2043,7 @@ int main(int argc, char *argv[])
 	printf(msg_site_path, site_path);
 	printf(msg_settings_path, settings_path);
 	printf(msg_output_file, output_file);
+	printf(msg_monthly_output_file, annual_output_file);
 	printf(msg_annual_output_file, annual_output_file);
 
 	/* get files */
@@ -2289,9 +2367,13 @@ int main(int argc, char *argv[])
 					files_not_processed_count );
 
 	logClose();
+	monthly_logClose();
+	annual_logClose();
 
 	// Free memory
 	free(output_file);
+	free(monthly_output_file);
+	free(annual_output_file);
 
 	/* free memory at exit */
 	return 0;

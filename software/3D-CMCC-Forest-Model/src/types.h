@@ -860,6 +860,13 @@ typedef struct {
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
 
+	//cumulative variables cell related
+	float daily_gpp, monthly_gpp, annual_gpp;
+	float daily_npp, monthly_npp, annual_npp;
+	float daily_et, monthly_et, annual_et;
+
+
+
 } CELL;
 
 /* */
