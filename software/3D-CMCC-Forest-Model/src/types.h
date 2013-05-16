@@ -1005,6 +1005,7 @@ extern void Get_annual_average_values_modifiers (SPECIES *);
 extern void Get_annual_average_values_met_data (CELL *, float, float, float, float);
 extern void Get_EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
 extern void Get_EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int);
+extern void Get_EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
 extern void Get_average_biomass (SPECIES *);
 extern void Get_total_class_level_biomass (SPECIES *);
 extern void Get_renovation (CELL *, HEIGHT *, SPECIES *);

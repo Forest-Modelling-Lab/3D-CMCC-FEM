@@ -476,12 +476,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
-							if ( height == 0)
-							{
-								Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
-							}
-
-
 							//MANAGEMENT
 							//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
 

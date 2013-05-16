@@ -1465,6 +1465,8 @@ int main(int argc, char *argv[])
 	YOS *yos;
 	ROW *rows;
 	MATRIX *m;
+
+
 	//	const ARGUMENT args[] = {
 	//		{ "dataset",	get_input_path,		NULL },
 	//		{ "site",	get_site_path,		NULL },
@@ -2027,10 +2029,10 @@ int main(int argc, char *argv[])
 	}
 
 	monthly_logInit (monthly_out_filename);
-	Monthly_Log ("monthly output file\n");
+	Monthly_Log ("monthly output file at stand level\n\n");
 
 	annual_logInit (annual_out_filename);
-	Annual_Log ("annual output file\n");
+	Annual_Log ("annual output file at stand level\n\n");
 
 	/* show copyright*/
 	Log(copyright);
@@ -2337,16 +2339,19 @@ int main(int argc, char *argv[])
 							}
 							Log("****************END OF DAY*******************\n");
 						}
+
 						Log("****************END OF MONTH*******************\n");
+						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
+
+					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
+					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 				}
 			}
 			else
 			{
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
-
-			Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
 
 			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 		}

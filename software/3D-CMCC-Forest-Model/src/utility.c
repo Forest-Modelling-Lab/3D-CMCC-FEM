@@ -154,42 +154,18 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 	}
 }
 
+extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
+{
+	Monthly_Log ("-%s %10s %10s %10s\n", "YEAR", "MONTH", "GPP", "NPP");
+	Monthly_Log ("-%d %10d %13g %10g\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp);
+}
+
 extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years)
 {
 
-	//CUMULATIVE BALANCE FOR ENTIRE CELL
-	Log("**CUMULATIVE BALANCE for cell (%d, %d) ** \n", c->x, c->y);
 
-	//DO NOT CHANGE THESE LINES!!!!!!!!!!
-	Log("[%d] [%g, %g] EOY TOTAL Cumulated GPP = %g [gCm^-2 year^-1]\n",yos[years].year, c->x, c->y, c->gpp);
-	Log("[%d] [%g, %g] EOY TOTAL Cumulated NPP = %g [tDM/area year^-1]\n",yos[years].year, c->x, c->y, c->npp);
-
-	//DO NOT CHANGE THIS LINE!!!!!!!!!!
-	Log("[%d] [%g, %g] EOY TOTAL Cumulated Evapotranspiration = %g [mm m^-2 year^-1]\n",yos[years].year, c->x, c->y, c->total_yearly_evapotransipration);
-	Log("[%d] EOY Available Soil Water = %g mm H2o/m^2\n",yos[years].year,  c->available_soil_water);
-
-
-
-	Annual_Log("**CUMULATIVE BALANCE for cell (%d, %d) ** \n", c->x, c->y);
-	Annual_Log ("-%s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "ASW");
-	Annual_Log ("-%d %10g %10g %10g %10g\n", yos[years].year, c->gpp, c->npp, c->total_yearly_evapotransipration, c->available_soil_water);
-
-
-
-	c->gpp = 0;
-	c->npp = 0;
-	c->total_yearly_evapotransipration = 0;
-
-
-
-	/*
-    Total_Run_Evapotranspiration +=  (c->total_yearly_evapotransipration + c->total_yearly_soil_evaporation );
-    Log("-TOTAL EVAPOTRASPIRATION  = %g mm H2o\n", c->total_yearly_evapotransipration);
-    Log("-TOTAL SOIL EVAPORATION = %g mm H2o\n", c->total_yearly_soil_evaporation);
-    Log("-TOTAL EVAPORATION = %g mm H2o\n", c->total_yearly_evapotransipration + c->total_yearly_soil_evaporation);
-    Log("-Available soil water = %g\n", c->available_soil_water);
-	 */
-
+	Annual_Log ("-%s %10s %10s\n", "YEAR", "GPP", "NPP");
+	Annual_Log ("-%d %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp);
 
 }
 
