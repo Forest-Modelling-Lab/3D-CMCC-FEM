@@ -161,6 +161,7 @@ static const char msg_dataset_not_specified[] =
  */
 static const char msg_dataset_path[]	=	"dataset path = %s\n";
 static const char msg_site_path[]		=	"site path = %s\n";
+static const char msg_met_path[]		=	"met path = %s\n";
 static const char msg_settings_path[]	=	"settings path = %s\n";
 //static const char msg_output_path[]		=	"output path = %s\n";
 static const char msg_output_file[]		=	"output file = %s\n\n";
@@ -277,46 +278,6 @@ int get_settings_path(char *arg, char *param, void *p) {
 	/* ok */
 	return 1;
 }
-
-/*int get_resolution(char *arg, char *param, void *p) {
-	if ( !param )
-	{
-		printf(err_arg_needs_param, arg);
-		return 0;
-	}
-
-	if ( resolution )
-	{
-		printf(err_resolution_already_specified, resolution, param);
-	}
-	else
-	{
-		resolution = param;
-	}
-
-	// ok
-	return 1;
-}
-
-int get_version(char *arg, char *param, void *p) {
-	if ( !param )
-	{
-		printf(err_arg_needs_param, arg);
-		return 0;
-	}
-
-	if ( vers_arg )
-	{
-		printf(err_version_already_specified, vers_arg, param);
-	}
-	else
-	{
-		vers_arg = param;
-	}
-
-	// ok
-	return 1;
-}*/
 
 /* */
 int get_met_path(char *arg, char *param, void *p)
@@ -535,12 +496,12 @@ void usage(void)
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {
 	int i = 0,
-			column = 0,
-			month = 0,
-			day = 0,
-			error_flag = 0,
-			error,
-			columns[MET_COLUMNS];
+		column = 0,
+		month = 0,
+		day = 0,
+		error_flag = 0,
+		error,
+		columns[MET_COLUMNS];
 
 
 
@@ -557,13 +518,13 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	YOS *yos = NULL, // mandatory
 			*yos_no_leak;
 
-	if ( !file ) return NULL;
+	if (!file) return NULL;
 
 	// reset
 	*yos_count = 0;
 
 	//
-	for ( token = mystrtok(file, comma_delimiter, &p); token; token = mystrtok(NULL, comma_delimiter, &p) )
+	for (token = mystrtok(file, comma_delimiter, &p); token; token = mystrtok(NULL, comma_delimiter, &p) )
 	{
 		// get token length
 		i = strlen(token);
@@ -579,7 +540,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		free(yos);
 		return NULL;
 		}
-		 */
+		*/
+
 		// alloc memory for yos
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
 		if ( !yos_no_leak )
@@ -748,6 +710,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						//set value for monthly version
 						if (settings->time == 'm')
 						{
+
+							//printf("opening met file year %d \n", year);
 							switch ( i )
 							{
 							//unused in monthly version just used in daily version
@@ -1021,6 +985,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						//set values for daily version
 						else
 						{
+							//Log("opening met file year %d \n", year);
 							if (strncmp (settings->daymet, "off", 3)== 0)
 							{
 								switch ( i )
@@ -1454,9 +1419,13 @@ int main(int argc, char *argv[])
 
 	int cell;
 
+
+
 	//int site_data;  // if site data ok = 1, else = 0
 
 	MET_DATA *met;
+
+
 
 	YOS *yos;
 	ROW *rows;
@@ -2039,6 +2008,7 @@ int main(int argc, char *argv[])
 	/* show paths */
 	printf(msg_dataset_path, input_path);
 	printf(msg_site_path, site_path);
+	printf(msg_met_path, input_met_path);
 	printf(msg_settings_path, settings_path);
 	printf(msg_output_file, output_file);
 	printf(msg_monthly_output_file, annual_output_file);
@@ -2093,6 +2063,8 @@ int main(int argc, char *argv[])
 		/* free rows */
 		free(rows);
 
+		Log("files founded = %d\n", files_founded_count);
+
 		/* check matrix */
 		if ( !m )
 		{
@@ -2102,9 +2074,9 @@ int main(int argc, char *argv[])
 
 		// import Years Of Simulation (years met files)
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
-		if ( !yos )
+		if ( !yos || yos > 1000)
 		{
-			Log("Met File not imported!!\n\n");
+			Log("Met File not imported yos = 0 or yos > 1000!!\n\n");
 			matrix_free(m);
 			return -1;
 		}
