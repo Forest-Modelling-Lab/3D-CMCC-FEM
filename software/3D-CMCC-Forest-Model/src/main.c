@@ -549,6 +549,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		*/
 
 		// alloc memory for yos
+		//fixme bug is here!!!!!!
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
 		if ( !yos_no_leak || yos_no_leak > 1000 )
 		{
@@ -2086,7 +2087,7 @@ int main(int argc, char *argv[])
 		Log("processing met data files...\n");
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 
-		if ( !yos || yos > 1000)
+		if ( !yos || yos > 10000)
 		{
 			Log("Met File %s not imported yos = 0 or yos > 1000!!\n", input_met_path);
 			Log("Yos = %d\n", yos);
