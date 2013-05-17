@@ -523,7 +523,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	// reset
 	*yos_count = 0;
 
-	Log("filename = %s\n", file);
+	Log("comma_separated_files = %s\n", file);
 	Log("yos_count = %d\n", *yos_count);
 	Log("yos = %d\n", yos);
 
@@ -534,6 +534,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// get token length
 		i = strlen(token);
 		Log("i = %d\n", i);
+		Log("token = %s\n", token);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -551,19 +552,19 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// alloc memory for yos
 		//fixme bug is here!!!!!!
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
-		if ( !yos_no_leak || yos_no_leak > 1000 )
-		{
-			//
-			Log("yos_no_leak out of memory.\n");
-			Log("yos_no_leak = %d\n", yos_no_leak);
-			Log("yos = %d\n", yos);
-			free(yos);
-			return NULL;
-		}
-		else
-		{
-			Log("ok yos_no_leak\n");
-		}
+		/* if ( !yos_no_leak || yos_no_leak > 1000 ) */
+		/* { */
+		/* 	// */
+		/* 	Log("yos_no_leak out of memory.\n"); */
+		/* 	Log("yos_no_leak = %d\n", yos_no_leak); */
+		/* 	Log("yos = %d\n", yos); */
+		/* 	free(yos); */
+		/* 	return NULL; */
+		/* } */
+		/* else */
+		/* { */
+		/* 	Log("ok yos_no_leak\n"); */
+		/* } */
 
 		// assign memory
 		yos = yos_no_leak;
@@ -2087,20 +2088,20 @@ int main(int argc, char *argv[])
 		Log("processing met data files...\n");
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 
-		if ( !yos || yos > 10000)
-		{
-			Log("Met File %s not imported yos = 0 or yos > 1000!!\n", input_met_path);
-			Log("Yos = %d\n", yos);
-			Log("years of simulation = %d\n", years_of_simulation);
-			Log("...exit");
-			matrix_free(m);
-			return -1;
-		}
-		else
-		{
-			Log("yos = %d\n\n\n\n", yos);
-			Log("years of simulation = %d\n\n\n\n", years_of_simulation);
-		}
+		/* if ( !yos || yos > 10000) */
+		/* { */
+		/* 	Log("Met File %s not imported yos = 0 or yos > 1000!!\n", input_met_path); */
+		/* 	Log("Yos = %d\n", yos); */
+		/* 	Log("years of simulation = %d\n", years_of_simulation); */
+		/* 	Log("...exit"); */
+		/* 	matrix_free(m); */
+		/* 	return -1; */
+		/* } */
+		/* else */
+		/* { */
+		/* 	Log("yos = %d\n\n\n\n", yos); */
+		/* 	Log("years of simulation = %d\n\n\n\n", years_of_simulation); */
+		/* } */
 
 		Log("\n3D-CMCC MODEL START\n");
 		Log("***************************************************\n");
