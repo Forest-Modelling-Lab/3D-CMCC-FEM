@@ -500,6 +500,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		error,
 		columns[MET_COLUMNS];
 
+	Log("yos_count qui= %d\n", *yos_count);
+	//Log("yos qui= %d\n", (YOS) *yos);
+
 
 
 	char year[5],
@@ -526,7 +529,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	*yos_count = 0;
 
 	/* Log("comma_separated_files = %s\n", file); */
-	/* Log("yos_count = %d\n", *yos_count); */
+	Log("yos_count 1 = %d\n", *yos_count);
 	/* Log("yos = %d\n", yos); */
 
 
@@ -537,7 +540,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		i = strlen(token);
 		Log("i = %d\n", i);
 		Log("single file (one of the comma separated list) = %s\n", token);
-		Log("yos = %s\n", yos);
+		Log("yos = %d\n", yos);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -555,6 +558,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// alloc memory for yos
 		//fixme bug is here!!!!!!
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
+		//italo yos_no_leak = realloc(yos, (++*yos_count)*sizeof(YOS));
 		/* if ( !yos_no_leak || yos_no_leak > 1000 ) */
 		/* { */
 		/* 	// */
@@ -569,13 +573,14 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		/* 	Log("ok yos_no_leak\n"); */
 		/* } */
 
-		Log("yos_no_leak = %s\n", yos_no_leak);
-		Log("yos = %s\n", yos);
+		Log("yos_no_leak = %d\n", yos_no_leak);
+		Log("yos = %d\n", yos);
 
 		// assign memory
 		yos = yos_no_leak;
 
 		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
+		//italo filename = malloc(sizeof(char)*BUFFER_SIZE);
 		if( !filename )
 		{
 			fprintf(stderr, "Cannot allocate memory for %s\n", file);
@@ -666,7 +671,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// check if each columns was assigned
 		for ( i = 0; i < MET_COLUMNS; i++ )
 		{
-
 			if ( -1 == columns[i] )
 			{
 				printf("met column %s not found.\n\n", met_columns[i]);
@@ -674,7 +678,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				fclose(f);
 				return NULL;
 			}
-
 		}
 
 		// reset
@@ -700,10 +703,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
-				Log("day = %d\n", day);
-				Log("month = %d\n", month);
+				//Log("day = %d\n", day);
+				//Log("month = %d\n", month);
 				//Log("MONTH = %d\n", MONTHS);
-				Log("column = %d\n", column);
+				//Log("column = %d\n", column);
 				Log("yos = %d\n", yos);
 				//Log("MET_COLUMNS = %d\n", MET_COLUMNS);
 
@@ -728,6 +731,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						return NULL;
 					}
 				}
+
+				Log("importing file = %s\n", token);
 
 				for ( i = 0; i < MET_COLUMNS; i++ )
 				{
@@ -1011,7 +1016,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						//set values for daily version
 						else
 						{
-							//Log("opening met file year %d \n", year);
+							Log("opening met file year nella funzione main %d \n", yos);
 							if (strncmp (settings->daymet, "off", 3)== 0)
 							{
 								switch ( i )
@@ -1756,70 +1761,6 @@ int main(int argc, char *argv[])
 		free(tmp);
 	}
 
-	/*	if( resolution == NULL )
-	{
-		fprintf(stderr, "Error: resolution option is missing!\n");
-		usage();
-	}
-	else
-	{
-		char *tmp = NULL;
-		tmp = malloc(sizeof(*tmp)*BUFFER_SIZE);
-		if( !tmp )
-		{
-			fprintf(stderr, "Cannot allocate memory for tmp.\n");
-			return 1;
-		}
-		bzero(tmp, BUFFER_SIZE-1);
-		strcat(tmp, resolution);
-		strcpy(resolution, tmp);
-		sizeCell = atoi(resolution);
-
-
-		if( (sizeCell < 10) || (sizeCell > 100) )
-		{
-			fprintf(stderr, "Error: resolution of the point must be included 10 or 100 meters!\n");
-			exit(2);
-		}
-
-
-		// DEFINE SIZE CELL IN SQUARE METERS (10000 m^2 = 1ha); its value is:
-		// 100   for pixels of 10x10   meters resolutionsu
-		// 10000 for pixels of 100x100 meters resolution
-		sizeCell = sizeCell*sizeCell;
-
-
-		free(tmp);
-	}
-
-
-	if( vers_arg == NULL )
-	{
-		fprintf(stderr, "Error: version option is missing!\n");
-		usage();
-	}
-	else
-	{
-		char *tmp = NULL;
-		tmp = malloc(sizeof(*tmp)*BUFFER_SIZE);
-		if( !tmp )
-		{
-			fprintf(stderr, "Cannot allocate memory for version.\n");
-			return 1;
-		}
-		bzero(tmp, BUFFER_SIZE-1);
-		strcat(tmp, vers_arg);
-		strcpy(vers_arg, tmp);
-		version = *vers_arg;
-		if( (version != 's') && (version != 'u') )
-		{
-			fprintf(stderr, "Error: version must be 's' or 'u'!\n");
-			exit(2);
-			free(tmp);
-		}
-	}*/
-
-
 
 	/* get program path */
 	program_path = get_current_directory();
@@ -2021,10 +1962,10 @@ int main(int argc, char *argv[])
 	Annual_Log ("annual output file at stand level\n\n");
 
 	/* show copyright*/
-	Log(copyright);
+	//Log(copyright);
 
 	/* show banner */
-	Log(banner);
+	//Log(banner);
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
@@ -2094,6 +2035,7 @@ int main(int argc, char *argv[])
 		// import Years Of Simulation (years met files)
 		Log("processing met data files...\n");
 		Log("input_met_path = %s\n", input_met_path);
+		Log("years_of_simulation = %d\n", years_of_simulation);
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 
 		/* if ( !yos || yos > 10000) */
@@ -2110,7 +2052,7 @@ int main(int argc, char *argv[])
 		/* 	Log("yos = %d\n\n\n\n", yos); */
 		/* 	Log("years of simulation = %d\n\n\n\n", years_of_simulation); */
 		/* } */
-
+		/*
 		Log("\n3D-CMCC MODEL START\n");
 		Log("***************************************************\n");
 
@@ -2168,7 +2110,7 @@ int main(int argc, char *argv[])
 							Log("************************************************************\n");
 						}
 
-						/*compute number of vegetative months*/
+						//compute number of vegetative months
 						for (month = 0; month < MONTHS; month++)
 						{
 							//Check for temperatures
@@ -2226,13 +2168,12 @@ int main(int argc, char *argv[])
 			{
 
 				//fixme prova netcdf
-				int ncid, retval;
+				//int ncid, retval;
 
-				   /* Create the file. */
-				/*
-				   if ((retval = nc_create(FILE_NAME_NETCDF, NC_CLOBBER, &ncid)))
-				      ERR(retval);
-				      */
+				   // Create the file
+
+				   //if ((retval = nc_create(FILE_NAME_NETCDF, NC_CLOBBER, &ncid)))
+				   //   ERR(retval);
 
 				//Get air pressure
 				Get_air_pressure (&m->cells[cell]);
@@ -2341,14 +2282,13 @@ int main(int argc, char *argv[])
 					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 				}
 			}
+
 			else
 			{
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
-
-			Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 		}
-
+*/
 		/* free memory */
 		free(yos);
 		matrix_free(m);

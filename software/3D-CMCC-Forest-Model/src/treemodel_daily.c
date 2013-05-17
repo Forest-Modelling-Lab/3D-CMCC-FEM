@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-extern const char *szMonth[MONTHS];
+extern  const char *szMonth[MONTHS];
 //extern int MonthLength[];
 extern int DaysInMonth[];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
