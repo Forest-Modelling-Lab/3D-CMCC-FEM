@@ -537,6 +537,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		i = strlen(token);
 		Log("i = %d\n", i);
 		Log("single file (one of the comma separated list) = %s\n", token);
+		Log("yos = %s\n", yos);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -568,13 +569,16 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		/* 	Log("ok yos_no_leak\n"); */
 		/* } */
 
+		Log("yos_no_leak = %s\n", yos_no_leak);
+		Log("yos = %s\n", yos);
+
 		// assign memory
 		yos = yos_no_leak;
 
 		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
 		if( !filename )
 		{
-			fprintf(stderr, "Cannot allocate memory for %s.\n", file);
+			fprintf(stderr, "Cannot allocate memory for %s\n", file);
 			return NULL;
 		}
 		bzero(filename, BUFFER_SIZE-1);
@@ -612,6 +616,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			free(yos);
 			return NULL;
 		}
+		Log("yos_count = %d\n", yos_count);
+		Log("yos[*yos_count-1].year = %d\n", yos[*yos_count-1].year);
 
 		Log("token: %s\n", token);
 		// open file
@@ -690,13 +696,17 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			// skip empty lines
 			if ( '\0' == buffer[0] ) continue;
 
+			Log("Settings->time = %c\n", settings->time);
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
 				Log("day = %d\n", day);
 				Log("month = %d\n", month);
-				Log("MONTH = %d\n", MONTHS);
-				Log("MET_COLUMNS = %d\n", MET_COLUMNS);
+				//Log("MONTH = %d\n", MONTHS);
+				Log("column = %d\n", column);
+				Log("yos = %d\n", yos);
+				//Log("MET_COLUMNS = %d\n", MET_COLUMNS);
+
 
 				if (settings->time == 'm')
 				{
@@ -718,8 +728,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						return NULL;
 					}
 				}
-
-
 
 				for ( i = 0; i < MET_COLUMNS; i++ )
 				{
@@ -1055,7 +1063,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 												Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
 												yos[*yos_count-1].m[month].d[day].solar_rad = NO_DATA;
 											}
-
 										}
 									}
 									//CONTROL
@@ -1350,8 +1357,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											}
 										}
 									}
-									//Log("%d-%s-ndvi_lai = %g\n",yos[*yos_count-1].m[month].d[day].n_days, szMonth[month], yos[*yos_count-1].m[month].d[day].ndvi_lai);
-									//Log("mese = %d\n", yos[*yos_count -1].m);
 									break;
 								}
 							}
@@ -1366,9 +1371,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							}
 						}
 					}
-
 				}
-
 			}
 			if (settings->time == 'd')
 			{
