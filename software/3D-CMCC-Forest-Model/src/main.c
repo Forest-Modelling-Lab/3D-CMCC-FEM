@@ -525,9 +525,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	// reset
 	*yos_count = 0;
 
-	Log("comma_separated_files = %s\n", file);
-	Log("yos_count = %d\n", *yos_count);
-	Log("yos = %d\n", yos);
+	/* Log("comma_separated_files = %s\n", file); */
+	/* Log("yos_count = %d\n", *yos_count); */
+	/* Log("yos = %d\n", yos); */
 
 
 	//
@@ -613,6 +613,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			return NULL;
 		}
 
+		Log("token: %s\n", token);
 		// open file
 		f = fopen(token, "r");
 		if ( !f )
@@ -638,6 +639,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// parse header
 		for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 		{
+            Log("Column %d\n", column);
 			for ( i = 0; i < MET_COLUMNS; i++ )
 			{
 				if ( !mystricmp(token2, met_columns[i]) )
@@ -691,10 +693,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
-				//Log("day = %d\n", day);
-				//Log("month = %d\n", month);
-				//Log("MONTH = %d\n", MONTHS);
-				//Log("MET_COLUMNS = %d\n", MET_COLUMNS);
+				Log("day = %d\n", day);
+				Log("month = %d\n", month);
+				Log("MONTH = %d\n", MONTHS);
+				Log("MET_COLUMNS = %d\n", MET_COLUMNS);
 
 				if (settings->time == 'm')
 				{
