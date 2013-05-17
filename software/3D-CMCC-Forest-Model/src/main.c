@@ -488,6 +488,8 @@ void usage(void)
 /*import met data file*/
 //------------------------------------------------------------------------------
 //bug model doesn't import more then one met file !!!!
+// *file is the comma separated files list!!! not a single file
+// initially yos_count is equal to 0
 YOS *ImportYosFiles(char *file, int *const yos_count)
 {
 	int i = 0,
@@ -534,7 +536,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// get token length
 		i = strlen(token);
 		Log("i = %d\n", i);
-		Log("token = %s\n", token);
+		Log("single file (one of the comma separated list) = %s\n", token);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -586,7 +588,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		char *pch,
 		*tmp_filename;
 
-		tmp_filename = (char*)malloc(sizeof(char)*1024);
+		tmp_filename = (char*)malloc(sizeof(char)*BUFFER_SIZE);
 		if( !tmp_filename )
 		{
 			fprintf(stderr, "Cannot allocate memory for tmp_filename.\n");
@@ -2086,6 +2088,7 @@ int main(int argc, char *argv[])
 
 		// import Years Of Simulation (years met files)
 		Log("processing met data files...\n");
+		Log("input_met_path = %s\n", input_met_path);
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 
 		/* if ( !yos || yos > 10000) */
