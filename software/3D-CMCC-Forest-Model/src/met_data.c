@@ -294,6 +294,8 @@ extern void Get_air_pressure (CELL *c)
 		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
 		(p. 168)*/
 
+	//todo initialize t2
+
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	c->air_pressure = P_STD * pow (t1, t2);
 	//Log("Air pressure = %g Pa\n", c->air_pressure);

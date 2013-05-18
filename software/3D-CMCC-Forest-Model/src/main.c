@@ -541,6 +541,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		Log("i = %d\n", i);
 		Log("single file (one of the comma separated list) = %s\n", token);
 		Log("yos = %d\n", yos);
+		Log("years_of_simulation in YOS = %d\n", years_of_simulation);
+		Log("yos_count 2 = %d\n", *yos_count);
+		Log("yos_no_leak = %d\n", yos_no_leak);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -621,7 +624,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			free(yos);
 			return NULL;
 		}
-		Log("yos_count = %d\n", yos_count);
+		Log("yos_count meno uno = %d\n", yos_count-1);
 		Log("yos[*yos_count-1].year = %d\n", yos[*yos_count-1].year);
 
 		Log("token: %s\n", token);
