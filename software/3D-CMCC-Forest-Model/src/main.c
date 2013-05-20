@@ -973,7 +973,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		Log("input path = %s\n", input_path);
-		Log("...input file imported\n");
+		Log("...input file imported\n\n");
 	}
 
 

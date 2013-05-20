@@ -144,8 +144,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// 123 is the x coordinate of the cell,
 		// 4567 is the y coordinate of the cell,
 		// 2007 is the year
-		Log("Settings->time = %c\n", settings->time);
-		Log("opening met file '%s' \n", filename);
+
+		Log("..opening met file '%s' \n", filename);
 
 		char *pch,
 		*tmp_filename;
