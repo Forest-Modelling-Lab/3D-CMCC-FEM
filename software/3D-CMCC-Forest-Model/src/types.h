@@ -924,7 +924,7 @@ extern void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
-extern void GetDayLength (CELL *, int, int, int, int, YOS *);
+extern void Get_Day_Length (CELL *, int, int, int, int, YOS *);
 extern void GetDayLength_3PG (CELL *, const MET_DATA *const, int , int );
 extern void Get_Abscission_DayLength (CELL *);
 extern int Get_Establishment_LPJ (SPECIES *const, float, float);

@@ -157,6 +157,8 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
 {
+	if (!day)
+		Log("computing Get_thermic_sum...\n");
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 

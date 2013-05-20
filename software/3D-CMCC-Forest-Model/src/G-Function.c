@@ -29,10 +29,12 @@ extern int sort_by_years(const void *a, const void *b)
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void GetDayLength ( CELL * c,  int day, int month, int years, int MonthLength ,  YOS  *yos)
+void Get_Day_Length ( CELL * c,  int day, int month, int years, int MonthLength ,  YOS  *yos)
 {
-	MET_DATA *met;
+	if (!day)
+		Log("computing Get_Day_Length...\n");
 
+	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
 	//compute yearday for GeDdayLength function

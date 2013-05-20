@@ -1081,12 +1081,11 @@ int main(int argc, char *argv[])
 							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
-
 							//Get thermic_sum
-							//Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
 							//Get day length
-							//GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 /*
 							if(m->cells[cell].landuse == F)
@@ -1298,7 +1297,7 @@ int main(int argc, char *argv[])
 							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
 							//Get day length
-							GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
 
 							if(m->cells[cell].landuse == F)
