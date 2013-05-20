@@ -487,7 +487,6 @@ void usage(void)
 
 /*import met data file*/
 //------------------------------------------------------------------------------
-//bug model doesn't import more then one met file !!!!
 // *file is the comma separated files list!!! not a single file
 // initially yos_count is equal to 0
 YOS *ImportYosFiles(char *file, int *const yos_count)
@@ -499,11 +498,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		error_flag = 0,
 		error,
 		columns[MET_COLUMNS];
-
-	Log("yos_count qui= %d\n", *yos_count);
-	//Log("yos qui= %d\n", (YOS) *yos);
-
-
 
 	char year[5],
 	*filename,
@@ -528,22 +522,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	// reset
 	*yos_count = 0;
 
-	/* Log("comma_separated_files = %s\n", file); */
-	Log("yos_count 1 = %d\n", *yos_count);
-	/* Log("yos = %d\n", yos); */
-
-
 	//
 	for (token = mystrtok(file, comma_delimiter, &p); token; token = mystrtok(NULL, comma_delimiter, &p) )
 	{
 		// get token length
 		i = strlen(token);
-		Log("i = %d\n", i);
-		Log("single file (one of the comma separated list) = %s\n", token);
-		Log("yos = %d\n", yos);
-		Log("years_of_simulation in YOS = %d\n", years_of_simulation);
-		Log("yos_count 2 = %d\n", *yos_count);
-		Log("yos_no_leak = %d\n", yos_no_leak);
 
 		// if length is 0 skip to next token
 		if ( !i ) continue;
@@ -559,7 +542,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		*/
 
 		// alloc memory for yos
-		//fixme bug is here!!!!!!
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
 		//italo yos_no_leak = realloc(yos, (++*yos_count)*sizeof(YOS));
 		/* if ( !yos_no_leak || yos_no_leak > 1000 ) */
@@ -576,11 +558,17 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		/* 	Log("ok yos_no_leak\n"); */
 		/* } */
 
-		Log("yos_no_leak = %d\n", yos_no_leak);
-		Log("yos = %d\n", yos);
+		if ( !yos_no_leak )
+		{
+			//
+			Log("out of memory.\n");
+			free(yos);
+			return NULL;
+		}
 
 		// assign memory
 		yos = yos_no_leak;
+
 
 		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
 		//italo filename = malloc(sizeof(char)*BUFFER_SIZE);
@@ -596,6 +584,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// 123 is the x coordinate of the cell,
 		// 4567 is the y coordinate of the cell,
 		// 2007 is the year
+		Log("Settings->time = %c\n", settings->time);
+		Log("opening met file '%s' \n", filename);
 
 		char *pch,
 		*tmp_filename;
@@ -624,10 +614,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			free(yos);
 			return NULL;
 		}
-		Log("yos_count meno uno = %d\n", yos_count-1);
-		Log("yos[*yos_count-1].year = %d\n", yos[*yos_count-1].year);
-
-		Log("token: %s\n", token);
 		// open file
 		f = fopen(token, "r");
 		if ( !f )
@@ -653,7 +639,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// parse header
 		for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 		{
-            Log("Column %d\n", column);
 			for ( i = 0; i < MET_COLUMNS; i++ )
 			{
 				if ( !mystricmp(token2, met_columns[i]) )
@@ -702,15 +687,13 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			// skip empty lines
 			if ( '\0' == buffer[0] ) continue;
 
-			Log("Settings->time = %c\n", settings->time);
-
 			for ( column = 0, token2 = mystrtok(buffer, met_delimiter, &p2); token2; token2 = mystrtok(NULL, met_delimiter, &p2), column++ )
 			{
 				//Log("day = %d\n", day);
 				//Log("month = %d\n", month);
 				//Log("MONTH = %d\n", MONTHS);
 				//Log("column = %d\n", column);
-				Log("yos = %d\n", yos);
+				//Log("yos = %d\n", yos);
 				//Log("MET_COLUMNS = %d\n", MET_COLUMNS);
 
 
@@ -734,9 +717,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						return NULL;
 					}
 				}
-
-				Log("importing file = %s\n", token);
-
 				for ( i = 0; i < MET_COLUMNS; i++ )
 				{
 					if ( column == columns[i] )
@@ -1019,7 +999,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 						//set values for daily version
 						else
 						{
-							Log("opening met file year nella funzione main %d \n", yos);
 							if (strncmp (settings->daymet, "off", 3)== 0)
 							{
 								switch ( i )
@@ -1033,6 +1012,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										free(yos);
 										fclose(f);
 										return NULL;
+									}
+									else
+									{
+										Log("n_days = %d\n", yos[*yos_count-1].m[month].d[day].n_days);
 									}
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].n_days > (int)settings->maxdays)
@@ -1052,6 +1035,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										free(yos);
 										fclose(f);
 										return NULL;
+									}
+									else
+									{
+										Log("solar_rad = %g\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad)&& *yos_count > 1)
 									{
@@ -1089,6 +1076,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									else
+									{
+										Log("tavg = %g\n", yos[*yos_count-1].m[month].d[day].tavg);
+									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg)&& *yos_count > 1)
 									{
 										//the model gets the value of the day before
@@ -1123,6 +1114,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									else
+									{
+										Log("tmax = %g\n", yos[*yos_count-1].m[month].d[day].tmax);
+									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && *yos_count > 1)
 									{
 										//the model gets the value of the day before
@@ -1152,6 +1147,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										fclose(f);
 										return NULL;
 									}
+									else
+									{
+										Log("tmin = %g\n", yos[*yos_count-1].m[month].d[day].tmin);
+									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && *yos_count > 1)
 									{
 										//the model gets the value of the day before
@@ -1180,6 +1179,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										free(yos);
 										fclose(f);
 										return NULL;
+									}
+									else
+									{
+										Log("vpd = %g\n", yos[*yos_count-1].m[month].d[day].vpd);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && *yos_count > 1)
 									{
@@ -1243,6 +1246,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										free(yos);
 										fclose(f);
 										return NULL;
+									}
+									else
+									{
+										Log("rain = %g\n", yos[*yos_count-1].m[month].d[day].rain);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain) && *yos_count > 1)
 									{
