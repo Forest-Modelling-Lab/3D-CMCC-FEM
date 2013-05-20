@@ -65,10 +65,10 @@ enum {	MONTH = 0,
 	MET_COLUMNS };
 
 //Last cumulative days in months
-extern int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
+int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
 
 //Days in Months
-extern int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY",
 		"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
@@ -976,9 +976,6 @@ int main(int argc, char *argv[])
 		Log("Site File not imported!!\n\n");
 		return -1;
 	}
-
-
-
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
@@ -1030,18 +1027,120 @@ int main(int argc, char *argv[])
 		else
 		{
 			Log("....Met files imported!\n\n");
-
 		}
-		/*
+
 		Log("\n3D-CMCC MODEL START\n");
+		Log("years_of_simulation = %d\n", years_of_simulation);
 		Log("***************************************************\n");
 
 		for (years = 0; years < years_of_simulation; years++)
 		{
-			matrix_summary (m, years, yos);
+			Log("\n-Year simulated = %d\n", yos[years].year);
 
-			Log("\n-YEARS OF SIMULATION = %d\n", yos[years].year);
+			//fixme important!!!
+			//matrix_summary (m, years, yos);
 
+
+			if (settings->time == 'd')
+			{
+				for ( cell = 0; cell < m->cells_count; cell++)
+				{
+					if ((site->sand_perc == -999.0) ||
+							(site->clay_perc == -999.0) ||
+							(site->silt_perc == -999.0) ||
+							(site->bulk_dens == -999.0) ||
+							(site->soil_depth == -999.0) )
+					{
+						Log("NO SOIL DATA AVAILABLE\n");
+						//exit
+						return 0;
+					}
+
+					//Get air pressure
+					Get_air_pressure (&m->cells[cell]);
+					//check hemisphere
+					if (site->lat > 0)
+					{
+						m->cells[cell].north = 0;
+					}
+					else
+					{
+						m->cells[cell].north = 1;
+					}
+				}
+				//run for all cells to check land use
+				for ( cell = 0; cell < m->cells_count; cell++)
+				{
+					//compute days of veg
+					for (month = 0; month < MONTHS; month++)
+					{
+						for (day = 0; day < DaysInMonth[month]; day++)
+						{
+							//Check for daily temperatures
+							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
+
+							//Get thermic_sum
+							//Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
+							//Get day length
+							//GetDayLength (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							//GetDayLength_3PG (&m->cells[cell], met, month, day);
+/*
+							if(m->cells[cell].landuse == F)
+							{
+								//Get vegetative days
+								Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+							}
+							else if (m->cells[cell].landuse == Z)
+							{
+								//sergio
+							}
+							*/
+						}
+						for (day = 0; day < DaysInMonth[month]; day++)
+						{
+							Print_met_daily_data (yos, day, month, years);
+						}
+					}
+				}
+			}
+			else if (settings->time == 'm')
+			{
+				for ( cell = 0; cell < m->cells_count; cell++)
+				{
+					//Get air pressure
+					Get_air_pressure (&m->cells[cell]);
+
+					if ((site->sand_perc == -999.0) ||
+							(site->clay_perc == -999.0) ||
+							(site->silt_perc == -999.0) ||
+							(site->bulk_dens == -999.0) ||
+							(site->soil_depth == -999.0) )
+					{
+						Log("NO SOIL DATA AVAILABLE\n");
+						return 0;
+					}
+					//check hemisphere
+					if (site->lat > 0)
+					{
+						m->cells[cell].north = 0;
+					}
+					else
+					{
+						m->cells[cell].north = 1;
+					}
+				}
+			}
+			else
+			{
+				Log("UNCORRECT TIME STEP CHOICED!!!\n");
+				return 0;
+			}
+
+			/*
 
 			if (settings->time == 'm')
 			{
@@ -1146,7 +1245,6 @@ int main(int argc, char *argv[])
 			}
 			else if (settings->time == 'd')//run for daily version
 			{
-
 				//fixme prova netcdf
 				//int ncid, retval;
 
@@ -1262,16 +1360,19 @@ int main(int argc, char *argv[])
 					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 				}
 			}
-
 			else
 			{
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
+			*/
+			Log("...%d finished to simulate\n\n", yos[years].year);
 		}
-*/
+
 		/* free memory */
 		free(yos);
 		matrix_free(m);
+
+		Log("azzo\n\n\n");
 
 		/* increment processed files count */
 		++files_processed_count;

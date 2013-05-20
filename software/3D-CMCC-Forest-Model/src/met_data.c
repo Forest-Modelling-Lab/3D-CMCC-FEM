@@ -7,12 +7,45 @@
 #include "types.h"
 #include "constants.h"
 
-
-//following Running et al., 1987
-extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
 {
 	MET_DATA *met;
+	assert(yos);
 	met = (MET_DATA*) yos[years].m;
+
+	if (settings->time == 'd')
+	{
+		Log("n_days %10d "
+				"Rg_f %10g "
+				"Tavg %10g "
+				"Tmax %10g "
+				"Tmin %10g "
+				"Precip %10g "
+				"Tday %10g "
+				"Tnight %10g \n",
+				met[month].d[day].n_days,
+				met[month].d[day].solar_rad,
+				met[month].d[day].tavg,
+				met[month].d[day].tmax,
+				met[month].d[day].tmin,
+				met[month].d[day].rain,
+				met[month].d[day].tday,
+				met[month].d[day].tnight);
+	}
+
+}
+
+
+//following Running et al., 1987
+extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+{
+	if (!day )
+			Log("computing Get_avg_temperature...\n");
+
+	MET_DATA *met;
+	// check parameters
+	met = (MET_DATA*) yos[years].m;
+
 
 	if (settings->time == 'd')
 	{
@@ -22,13 +55,14 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 			{
 				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 			}
+			else
 			{
 				met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 				//Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 			}
 		}
 	}
-	else
+	else if (settings->time = "m")
 	{
 		if ( met[month].tavg == NO_DATA)
 		{
@@ -41,12 +75,20 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 			}
 		}
 	}
+	else
+	{
+		Log("NO TIME STEP CHOICED!!\n");
+	}
+
 }
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
 extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
+	if (!day)
+		Log("computing Get_daylight_avg_temperature...\n");
+
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
@@ -80,6 +122,9 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 //compute nightime average air temperature
 extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
+	if (!day)
+		Log("computing Get_nightime_avg_temperature...\n");
+
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
@@ -297,8 +342,9 @@ extern void Get_air_pressure (CELL *c)
 	//todo initialize t2
 
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
+	t2 = G_STD / (LR_STD * (R / MA));
 	c->air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %g Pa\n", c->air_pressure);
+	Log("Air pressure = %g Pa\n", c->air_pressure);
 
 }
 
@@ -351,8 +397,9 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 		doy += 1;
 
 		Log("***************\n");
-		Log("**Daily MET DATA**\n");
-		Log("-average solar_rad = %g MJ/m^2/day\n"
+		Log("**Daily MET DATA day %d month %d**\n", day+1, month+1);
+		Log("n_day = %d\n"
+				"-average solar_rad = %g MJ/m^2/day\n"
 				"-tavg = %g °C\n"
 				"-tmax = %g °C\n"
 				"-tmin = %g °C\n"
@@ -366,6 +413,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-thermic_sum = %g °C\n"
 				"-day %d month %d daylength = %g hrs\n"
 				"-DOY = %d\n",
+				met[month].d[day].n_days,
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,

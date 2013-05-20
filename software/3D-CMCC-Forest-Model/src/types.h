@@ -993,6 +993,7 @@ extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 extern void Get_stool_mortality (SPECIES *, int);
 extern void Get_annual_forest_structure (CELL *);
+extern void Print_met_daily_data (const YOS *const , int , int , int );
 void Print_met_data (const MET_DATA *const, float, int, int);
 extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 extern void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);

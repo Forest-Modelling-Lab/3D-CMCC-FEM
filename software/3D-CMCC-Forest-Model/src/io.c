@@ -587,7 +587,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("n_days = %d\n", yos[*yos_count-1].m[month].d[day].n_days);
+										//Log("n_days = %d\n", yos[*yos_count-1].m[month].d[day].n_days);
 									}
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].n_days > (int)settings->maxdays)
@@ -610,7 +610,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("solar_rad = %g\n", yos[*yos_count-1].m[month].d[day].solar_rad);
+										//Log("solar_rad = %g\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad)&& *yos_count > 1)
 									{
@@ -650,12 +650,13 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("tavg = %g\n", yos[*yos_count-1].m[month].d[day].tavg);
+										//Log("tavg = %g\n", yos[*yos_count-1].m[month].d[day].tavg);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg)&& *yos_count > 1)
 									{
 										//the model gets the value of the day before
-										//Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										//Log ("* TAVG -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										/*
 										yos[*yos_count-1].m[month].d[day].tavg = yos[*yos_count-1].m[month].d[day-1].tavg;
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
 										{
@@ -668,6 +669,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 												yos[*yos_count-1].m[month].d[day].tavg = NO_DATA;
 											}
 										}
+										*/
 									}
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].tavg > settings->maxtavg)
@@ -688,7 +690,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("tmax = %g\n", yos[*yos_count-1].m[month].d[day].tmax);
+										//Log("tmax = %g\n", yos[*yos_count-1].m[month].d[day].tmax);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && *yos_count > 1)
 									{
@@ -721,7 +723,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("tmin = %g\n", yos[*yos_count-1].m[month].d[day].tmin);
+										//Log("tmin = %g\n", yos[*yos_count-1].m[month].d[day].tmin);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && *yos_count > 1)
 									{
@@ -754,7 +756,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("vpd = %g\n", yos[*yos_count-1].m[month].d[day].vpd);
+										//Log("vpd = %g\n", yos[*yos_count-1].m[month].d[day].vpd);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && *yos_count > 1)
 									{
@@ -821,7 +823,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										Log("rain = %g\n", yos[*yos_count-1].m[month].d[day].rain);
+										//Log("rain = %g\n", yos[*yos_count-1].m[month].d[day].rain);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain) && *yos_count > 1)
 									{
