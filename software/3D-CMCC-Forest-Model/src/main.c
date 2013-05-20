@@ -1022,7 +1022,7 @@ int main(int argc, char *argv[])
 		{
 			Log("Met File %s not imported !!\n", input_met_path);
 			matrix_free(m);
-		 	return -1;
+			return -1;
 		}
 		else
 		{
@@ -1097,13 +1097,59 @@ int main(int argc, char *argv[])
 							{
 								//sergio
 							}
-
 						}
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							Print_met_daily_data (yos, day, month, years);
 						}
 					}
+					for (month = 0; month < MONTHS; month++)
+					{
+						for (day = 0; day < DaysInMonth[month]; day++ )
+						{
+							if(m->cells[cell].landuse == F)
+							{
+								if (settings->version == 'f')
+								{
+
+									//run for FEM version
+									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
+									{
+										Log("tree model daily failed.");
+									}
+									else
+									{
+										puts(msg_ok);
+										//run for SOIL function
+										soil_model_daily (m, yos, years, month, day, years_of_simulation);
+									}
+								}
+								else
+								{
+									//run for BGC version
+								}
+							}
+							if(m->cells[cell].landuse == Z)
+							{
+								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
+								{
+									Log("crop model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									//	soil_model (m, yos, years, month, years_of_simulation);
+								}
+							}
+							Log("****************END OF DAY (%d)*******************\n", day+1);
+						}
+
+						Log("****************END OF MONTH (%d)*******************\n", month+1);
+						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
+					}
+					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
+					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 				}
 			}
 			else if (settings->time == 'm')
@@ -1365,7 +1411,7 @@ int main(int argc, char *argv[])
 			{
 				Log("NO TIME STEP CHOICED!!!\n");
 			}
-			*/
+			 */
 			Log("...%d finished to simulate\n\n", yos[years].year);
 		}
 
