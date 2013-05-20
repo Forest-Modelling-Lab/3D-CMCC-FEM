@@ -218,16 +218,18 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 //compute annual number of vegetative days
 extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int MonthLength, int DaysInMonth)
 {
-	MET_DATA *met;
+
 	static int height;
 	static int age;
 	static int species;
 
 
-
+	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
+	if (!day)
+		Log("computing Get_Veg_Days...\n");
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{

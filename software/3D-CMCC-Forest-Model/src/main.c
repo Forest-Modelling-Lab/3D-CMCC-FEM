@@ -1087,7 +1087,7 @@ int main(int argc, char *argv[])
 							//Get day length
 							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							//GetDayLength_3PG (&m->cells[cell], met, month, day);
-/*
+
 							if(m->cells[cell].landuse == F)
 							{
 								//Get vegetative days
@@ -1097,7 +1097,7 @@ int main(int argc, char *argv[])
 							{
 								//sergio
 							}
-							*/
+
 						}
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
@@ -1131,6 +1131,8 @@ int main(int argc, char *argv[])
 					{
 						m->cells[cell].north = 1;
 					}
+
+					//fixme copy all functions that are in settings daily
 				}
 			}
 			else
@@ -1370,8 +1372,6 @@ int main(int argc, char *argv[])
 		/* free memory */
 		free(yos);
 		matrix_free(m);
-
-		Log("azzo\n\n\n");
 
 		/* increment processed files count */
 		++files_processed_count;
