@@ -171,7 +171,7 @@ static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n"
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_processing[]				=	"processing %s...\n";
 static const char msg_ok[]						=	"ok";
-static const char msg_summary[]					=	"\n%d file%s found: %d processed, %d skipped.\n\n";
+static const char msg_summary[]					=	"\n%d input file%s found: %d processed, %d skipped.\n\n";
 static const char msg_usage[]					=	"usage: 3D-CMCC parameters\n\n"
 		"  allowed parameters:\n\n"
 		"    -dataset=XXXXX_YYYY.txt -> file to be processed"
@@ -970,6 +970,11 @@ int main(int argc, char *argv[])
 
 		return 1;
 	}
+	else
+	{
+		Log("input path = %s\n", input_path);
+		Log("...input file imported\n");
+	}
 
 
 	/* reset */
@@ -986,6 +991,7 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
+		Log("site path = %s\n", site_path);
 		Log("...Site File imported!!\n\n");
 	}
 	/* loop for searching file */
@@ -1007,7 +1013,6 @@ int main(int argc, char *argv[])
 		puts(msg_ok);
 
 		/* build matrix */
-		Log("Creating matrix....\n");
 		m = matrix_create(rows, rows_count, input_dir);
 
 		/* free rows */
@@ -1024,11 +1029,10 @@ int main(int argc, char *argv[])
 			Log("....Matrix created!!\n\n");
 		}
 
-		// import Years Of Simulation (years met files)
-		Log("Processing met data files...\n");
 		Log("input_met_path = %s\n", input_met_path);
-		Log("years_of_simulation = %d\n", years_of_simulation);
+		// import Years Of Simulation (years met files)
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
+
 
 		if ( !yos )
 		{
