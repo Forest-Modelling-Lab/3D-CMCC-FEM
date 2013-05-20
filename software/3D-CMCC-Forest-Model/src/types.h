@@ -902,6 +902,7 @@ settings_t *settings;
 
 
 // External functions
+extern YOS *ImportYosFiles(char *, int *const );
 extern int tree_model (MATRIX *const, const YOS *const, const int, const int, const int);
 extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
