@@ -135,8 +135,9 @@ static char copyright[] =
 		"\n";
 
 
-static const char comma_delimiter[] = ",\r\n";
-static const char met_delimiter[] = " ,\t\r\n";
+//static const char comma_delimiter[] = ",\r\n";
+//static const char met_delimiter[] = " ,\t\r\n";
+/*
 static const char *met_columns[MET_COLUMNS] = {
 		"Month",
 		"n_days",
@@ -150,6 +151,7 @@ static const char *met_columns[MET_COLUMNS] = {
 		"SWC",
 		"LAI"
 };
+*/
 
 /* messages */
 /*
@@ -513,7 +515,7 @@ int main(int argc, char *argv[])
 
 	int cell;
 
-	MET_DATA *met;
+	//MET_DATA *met;
 
 
 
@@ -634,6 +636,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		strcat(input_dir, "/");
+		printf("All mandatory parameter has been used\n");
 	}
 
 	if( out_filename == NULL )
@@ -800,9 +803,14 @@ int main(int argc, char *argv[])
 	error = importSettingsFile(settings_path);
 	if ( error )
 	{
-		Log("Settings File not imported!!\n\n");
+		printf("Settings File not imported!!\n\n");
 		return -1;
 	}
+	else
+	{
+		printf("...Settings File imported!!\n\n");
+	}
+
 
 	//define output file name in function of model settings
 	char strTmp[3], strTmp2[4], strTmp3[3];
@@ -940,10 +948,10 @@ int main(int argc, char *argv[])
 	Annual_Log ("annual output file at stand level\n\n");
 
 	/* show copyright*/
-	//Log(copyright);
+	Log(copyright);
 
 	/* show banner */
-	//Log(banner);
+	Log(banner);
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
@@ -975,6 +983,10 @@ int main(int argc, char *argv[])
 	{
 		Log("Site File not imported!!\n\n");
 		return -1;
+	}
+	else
+	{
+		Log("...Site File imported!!\n\n");
 	}
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
@@ -1030,17 +1042,13 @@ int main(int argc, char *argv[])
 		}
 
 		Log("\n3D-CMCC MODEL START\n");
-		Log("years_of_simulation = %d\n", years_of_simulation);
+		Log("total years_of_simulation = %d\n", years_of_simulation);
 		Log("***************************************************\n");
 
 		for (years = 0; years < years_of_simulation; years++)
 		{
-			Log("\n-Year simulated = %d\n", yos[years].year);
-
 			//fixme important!!!
 			//matrix_summary (m, years, yos);
-
-
 			if (settings->time == 'd')
 			{
 				for ( cell = 0; cell < m->cells_count; cell++)
@@ -1074,6 +1082,11 @@ int main(int argc, char *argv[])
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
+						if (month == 0)
+							Log("\n-Year simulated = %d\n", yos[years].year);
+
+						Log("Month simulated = %d\n", month +1);
+
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							//Check for daily temperatures
@@ -1111,7 +1124,6 @@ int main(int argc, char *argv[])
 							{
 								if (settings->version == 'f')
 								{
-
 									//run for FEM version
 									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
