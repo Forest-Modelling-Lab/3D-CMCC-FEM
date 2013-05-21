@@ -958,13 +958,13 @@ int main(int argc, char *argv[])
 		puts("Unable to log to file: check logfile path!");
 	}
 	daily_logInit (daily_out_filename);
-	Daily_Log ("daily output file at stand level\n\n");
+	Daily_Log ("daily output file at cell level\n\n");
 
 	monthly_logInit (monthly_out_filename);
-	Monthly_Log ("monthly output file at stand level\n\n");
+	Monthly_Log ("monthly output file at cell level\n\n");
 
 	annual_logInit (annual_out_filename);
-	Annual_Log ("annual output file at stand level\n\n");
+	Annual_Log ("annual output file at cell level\n\n");
 
 	/* show copyright*/
 	Log(copyright);
@@ -1181,6 +1181,7 @@ int main(int argc, char *argv[])
 								}
 							}
 							Log("****************END OF DAY (%d)*******************\n", day+1);
+							Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, years, month, day);
 						}
 						Log("****************END OF MONTH (%d)*******************\n", month+1);
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);

@@ -154,6 +154,27 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 	}
 }
 
+
+
+
+extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
+{
+	if(day  == 0 && month == 0 && years == 0)
+	{
+		Daily_Log("Daily summary output from 3D-CMCC FEM\n");
+		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
+		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
+		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n\n\n");
+	}
+	if (day == 0 && month == 0)
+	{
+		Daily_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET");
+	}
+	Daily_Log ("-%d %10d %10d %10g %10g %10g\n", yos[years].year,  month+1, day+1, c->daily_gpp, c->daily_npp, c->daily_et);
+
+}
+
+
 extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
 {
 	if(month == 0 && years == 0)

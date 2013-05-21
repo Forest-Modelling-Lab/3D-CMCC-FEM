@@ -1,4 +1,4 @@
-annual output file at stand level
+annual output file at cell level
 
 Annual summary output from 3D-CMCC FEM
 Annual GPP = annual total gross primary production (gC/m2/year)

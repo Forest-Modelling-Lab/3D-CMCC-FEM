@@ -1,4 +1,4 @@
-monthly output file at stand level
+monthly output file at cell level
 
 Monthly summary output from 3D-CMCC FEM
 Monthly GPP = monthly total gross primary production (gC/m2/month)

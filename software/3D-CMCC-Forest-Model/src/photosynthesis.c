@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height)
+void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
 {
 	float Alpha_C;
 	float Epsilon;
@@ -188,10 +188,19 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 	}
 
+	//DAILY GPP/NPP
+	//cell level
 
+	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
+	{
+		c->daily_gpp = 0;
+		c->daily_npp = 0;
+	}
+	c->daily_gpp += s->value[POINT_GPP_g_C];
+	c->daily_npp += s->value[NPP];
 
 	//MONTHLY GPP/NPP
-	//stand level
+	//cell level
 
 	if (day == 0)
 	{
@@ -202,7 +211,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	c->monthly_npp += s->value[NPP];
 
 	//ANNUAL GPP/NPP
-	//stand level
+	//cell level
 	if (month == 0)
 	{
 		c->annual_gpp = 0;

@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, float vpd, int height)
+extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, float vpd, int height, int age, int species)
 {
 
 
@@ -286,6 +286,17 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		s->value[DAILY_TRANSP] = 0;
 	}
 
+	//DAILY ET
+	//cell level
+
+	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
+	{
+		c->daily_et = 0;
+	}
+	//summing all classes ET
+	c->daily_et += s->value[DAILY_TRANSP];
+
+
 	//MONTHLY ET
 	//stand level
 
@@ -294,7 +305,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		c->monthly_et = 0;
 	}
 	c->monthly_et += s->value[DAILY_TRANSP];
-	if (month == 0)
+
+	//ANNUAL ET
+	//stand level
+
+	if (day == 0 && month == 0)
 	{
 		c->annual_et = 0;
 	}
