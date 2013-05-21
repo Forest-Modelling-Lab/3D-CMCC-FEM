@@ -36,6 +36,39 @@ void logClose(void)
 	if ( file_log )	fclose(file_log);
 }
 
+//for daily output
+static FILE *daily_file_log ;
+
+int daily_logInit(char * daily_logFileName)
+{
+	daily_file_log = fopen(daily_logFileName, "w");
+
+	if ( !daily_file_log ) return 0;
+
+	return 1;
+}
+
+void Daily_Log(const char *szText, ...)
+{
+	char szBuffer[BUFFER_SIZE] = { 0 };
+	//va_list pArgList = { 0 };
+	va_list pArgList;
+
+	va_start(pArgList, szText);
+	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	va_end(pArgList);
+
+	fputs(szBuffer, stdout);
+
+	if ( log_enabled && daily_file_log )
+		fputs(szBuffer, daily_file_log);
+}
+
+void daily_logClose(void)
+{
+	if ( daily_file_log )	fclose(daily_file_log);
+}
+
 //for monthly output
 static FILE *monthly_file_log ;
 
