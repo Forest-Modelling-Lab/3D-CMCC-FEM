@@ -79,6 +79,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
+
+		//compute species-specific phenological phase
+		Get_phenology_phase (&m->cells[cell], met, years, month, day, years_of_simulation);
+
 		Log("***************************************************\n");
 
 		//*************SITE CHARACTERISTIC******************

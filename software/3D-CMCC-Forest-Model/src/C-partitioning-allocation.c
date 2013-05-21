@@ -14,7 +14,7 @@
 //Deciduous carbon allocation routine
 void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
 {
-	int phenology_phase;
+	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
 	float  s0Ctem = s->value[S0CTEM];
 	float  r0Ctem = s->value[R0CTEM];
@@ -101,83 +101,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 	if (settings->spatial == 'u')
 	{
-		//defining phenological phase
-		if(settings->time == 'd')
-		{
-			if (met[month].d[day].daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
-			{
-				//Leaf fall
-				phenology_phase = 0;
-			}
-			else
-			{
-				//Beginning of growing season
-				if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
-				{
-					phenology_phase = 1;
-				}
-				//arealf of beginning of growing season
-				if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
-				{
-					phenology_phase = 2;
-				}
-				//Full growing season
-				if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
-				{
-					phenology_phase = 3;
-				}
-				//Unvegetative period
-				if (s->counter[VEG_UNVEG] == 0)
-				{
-					phenology_phase = 4;
-				}
-			}
-		}
-		else
-		{
-			if (met[month].daylength < s->value[MINDAYLENGTH]  && month > 6/*c->abscission_daylength*/)
-			{
-				//Leaf fall
-				phenology_phase = 0;
-			}
-			else
-			{
-				//Beginning of growing season
-				if (s->value[LAI] <= s->value[PEAK_Y_LAI] * 0.5 )
-				{
-					phenology_phase = 1;
-				}
-				//arealf of beginning of growing season
-				if (s->value[LAI] > (s->value[PEAK_Y_LAI] * 0.5)  && s->value[LAI] < s->value[PEAK_Y_LAI])
-				{
-					phenology_phase = 2;
-				}
-				//Full growing season
-				if(fabs (s->value[LAI] - s->value[PEAK_Y_LAI]) < 0.1)
-				{
-					phenology_phase = 3;
-				}
-				//Unvegetative period
-				if (s->counter[VEG_UNVEG] == 0)
-				{
-					phenology_phase = 4;
-				}
-			}
-		}
-
 		oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
-
-		//Log ("PEAK_Y_LAI  = %g \n", s->value[PEAK_Y_LAI]);
-		//Log ("LAI  = %g \n", s->value[LAI]);
-		//Log ("VEG MONTH = % d \n", s->counter[VEG_MONTHS]);
-		//Log ("Stand NPP = %g tDM/area\n", s->value[NPP]);
-		//Log ("Monthly Solar Radiation = %g \n", Monthly_solar_radiation );
-		//Log ("Par = %g \n", Par);
-		//Log ("s->value[APAR] = %g \n", s->value[APAR]);
-		//Log ("Par_Over = %g \n", Par_over);
-		//Log ("Light trasmitted = %g %%\n", Light_trasm * 100);
-
-
 		//7 May 2012
 		//compute static ratio of allocation between fine and coarse root
 		//deriving data from values reported for BIOME-BGC
@@ -249,9 +173,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 		}
 
-		Log("PHENOLOGICAL PHASE = %d\n", phenology_phase);
+		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 
-		switch (phenology_phase)
+		switch (s->phenology_phase)
 		{
 		Log("LAI = %g \n", s->value[LAI]);
 		/************************************************************/
@@ -859,17 +783,21 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			//Beginning of growing season
 			if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
 			{
-				phenology_phase = 1;
+				s->phenology_phase = 1;
 			}
 			//arealf of beginning of growing season
 			if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
 			{
-				phenology_phase = 2;
+				s->phenology_phase = 2;
 			}
 			//Full growing season or "||" end of growing season
 			if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
 			{
-				phenology_phase = 3;
+				s->phenology_phase = 3;
+			}
+			if (met[month].ndvi_lai == 0)
+			{
+				s->phenology_phase = 4;
 			}
 		}
 		else
@@ -877,17 +805,21 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			//Beginning of growing season
 			if (met[month].d[day].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
 			{
-				phenology_phase = 1;
+				s->phenology_phase = 1;
 			}
 			//areal of beginning of growing season
 			if (met[month].d[day].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].d[day].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
 			{
-				phenology_phase = 2;
+				s->phenology_phase = 2;
 			}
 			//Full growing season or "||" end of growing season
 			if((fabs (met[month].d[day].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
 			{
-				phenology_phase = 3;
+				s->phenology_phase = 3;
+			}
+			if (met[month].d[day].ndvi_lai == 0)
+			{
+				s->phenology_phase = 4;
 			}
 		}
 
@@ -966,9 +898,9 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 		}
 
-		switch (phenology_phase)
+		switch (s->phenology_phase)
 		{
-		Log("PHENOLOGICAL PHASE = %d\n", phenology_phase);
+		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 		if (settings->time == 'm')
 		{
 			Log("NDVI-LAI = %g \n", met[month].ndvi_lai);
