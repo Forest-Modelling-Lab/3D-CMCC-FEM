@@ -1,0 +1,904 @@
+Creating matrix....
+....Matrix created!!
+
+Processing met data files...
+input_met_path = input/met_data/1526_961_2007.txt,input/met_data/1526_961_2008.txt
+years_of_simulation = 0
+Settings->time = d
+opening met file '1526_961_2007.txt' 
+Settings->time = d
+opening met file '1526_961_2008.txt' 
+....Met files imported!
+
+
+3D-CMCC MODEL START
+years_of_simulation = 2
+***************************************************
+
+-Year simulated = 2007
+Air pressure = 95460.8 Pa
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f        5.1 Tavg     10.736 Tmax       13.1 Tmin        7.1 Precip          1 Tday    11.7998 Tnight     9.4499 
+n_days          2 Rg_f        6.1 Tavg     8.5876 Tmax       10.4 Tmin        5.8 Precip        0.2 Tday    9.40318 Tnight    7.60159 
+n_days          3 Rg_f        6.1 Tavg     7.2208 Tmax        9.9 Tmin        3.1 Precip          0 Tday    8.42644 Tnight    5.76322 
+n_days          4 Rg_f        6.1 Tavg     6.8086 Tmax         10 Tmin        1.9 Precip          0 Tday    8.24473 Tnight    5.07237 
+n_days          5 Rg_f        6.1 Tavg     8.2844 Tmax       11.2 Tmin        3.8 Precip        0.2 Tday    9.59642 Tnight    6.69821 
+n_days          6 Rg_f        6.1 Tavg     7.1996 Tmax        9.8 Tmin        3.2 Precip          0 Tday    8.36978 Tnight    5.78489 
+n_days          7 Rg_f        6.1 Tavg      8.236 Tmax       10.6 Tmin        4.6 Precip          0 Tday     9.2998 Tnight     6.9499 
+n_days          8 Rg_f        6.1 Tavg      8.936 Tmax       11.3 Tmin        5.3 Precip        3.4 Tday     9.9998 Tnight     7.6499 
+n_days          9 Rg_f        6.1 Tavg     9.9724 Tmax       12.1 Tmin        6.7 Precip          0 Tday    10.9298 Tnight    8.81491 
+n_days         10 Rg_f        6.1 Tavg      7.836 Tmax       10.2 Tmin        4.2 Precip          0 Tday     8.8998 Tnight     6.5499 
+n_days         11 Rg_f        6.1 Tavg      8.027 Tmax        9.8 Tmin        5.3 Precip          0 Tday    8.82485 Tnight    7.06243 
+n_days         12 Rg_f        6.1 Tavg    12.6572 Tmax       15.1 Tmin        8.9 Precip          0 Tday    13.7565 Tnight    11.3282 
+n_days         13 Rg_f        6.1 Tavg     9.6328 Tmax       13.1 Tmin        4.3 Precip          0 Tday     11.193 Tnight    7.74652 
+n_days         14 Rg_f        6.1 Tavg     8.2694 Tmax       10.2 Tmin        5.3 Precip          0 Tday    9.13817 Tnight    7.21908 
+n_days         15 Rg_f        6.1 Tavg     9.2906 Tmax       11.3 Tmin        6.2 Precip          0 Tday    10.1948 Tnight    8.19742 
+n_days         16 Rg_f        6.1 Tavg     5.7966 Tmax        8.2 Tmin        2.1 Precip          0 Tday    6.87813 Tnight    4.48907 
+n_days         17 Rg_f        6.1 Tavg    11.8784 Tmax       14.4 Tmin          8 Precip        5.4 Tday    13.0131 Tnight    10.5066 
+n_days         18 Rg_f        6.1 Tavg     9.2238 Tmax       12.1 Tmin        4.8 Precip          0 Tday    10.5181 Tnight    7.65904 
+n_days         19 Rg_f        6.1 Tavg    14.5448 Tmax       18.8 Tmin          8 Precip          0 Tday    16.4596 Tnight    12.2298 
+n_days         20 Rg_f        6.1 Tavg    13.6752 Tmax       17.3 Tmin        8.1 Precip          0 Tday    15.3064 Tnight    11.7032 
+n_days         21 Rg_f        6.1 Tavg     14.733 Tmax       16.9 Tmin       11.4 Precip          0 Tday    15.7081 Tnight    13.5541 
+n_days         22 Rg_f        6.1 Tavg     14.136 Tmax       16.5 Tmin       10.5 Precip          0 Tday    15.1998 Tnight    12.8499 
+n_days         23 Rg_f        6.1 Tavg    11.7842 Tmax         16 Tmin        5.3 Precip       13.2 Tday    13.6813 Tnight    9.49066 
+n_days         24 Rg_f        6.1 Tavg     6.3846 Tmax          8 Tmin        3.9 Precip          7 Tday    7.11153 Tnight    5.50577 
+n_days         25 Rg_f        6.1 Tavg      6.539 Tmax        9.1 Tmin        2.6 Precip        7.4 Tday    7.69145 Tnight    5.14572 
+n_days         26 Rg_f        6.1 Tavg     5.8724 Tmax          8 Tmin        2.6 Precip        2.4 Tday    6.82982 Tnight    4.71491 
+n_days         27 Rg_f        6.1 Tavg     5.9602 Tmax        8.6 Tmin        1.9 Precip          0 Tday    7.14811 Tnight    4.52405 
+n_days         28 Rg_f        6.1 Tavg     7.7326 Tmax       12.5 Tmin        0.4 Precip          0 Tday    9.87793 Tnight    5.13897 
+n_days         29 Rg_f        6.1 Tavg     9.2388 Tmax       13.1 Tmin        3.3 Precip          0 Tday    10.9763 Tnight    7.13817 
+n_days         30 Rg_f        6.1 Tavg     9.8236 Tmax         14 Tmin        3.4 Precip          0 Tday     11.703 Tnight    7.55149 
+n_days         31 Rg_f        6.1 Tavg     9.9084 Tmax       14.4 Tmin          3 Precip          0 Tday    11.9296 Tnight    7.46481 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f        8.1 Tavg    12.2662 Tmax       15.3 Tmin        7.6 Precip          0 Tday    13.6314 Tnight    10.6157 
+n_days          2 Rg_f        9.1 Tavg     10.751 Tmax       14.1 Tmin        5.6 Precip          0 Tday     12.258 Tnight    8.92902 
+n_days          3 Rg_f        9.1 Tavg    11.2538 Tmax       16.1 Tmin        3.8 Precip          0 Tday    13.4346 Tnight     8.6173 
+n_days          4 Rg_f        9.1 Tavg     9.1358 Tmax       12.8 Tmin        3.5 Precip          0 Tday    10.7847 Tnight    7.14234 
+n_days          5 Rg_f        9.1 Tavg    10.3144 Tmax       15.2 Tmin        2.8 Precip          0 Tday    12.5129 Tnight    7.65646 
+n_days          6 Rg_f        9.1 Tavg      9.057 Tmax       12.8 Tmin        3.3 Precip          0 Tday    10.7414 Tnight    7.02068 
+n_days          7 Rg_f        9.1 Tavg    11.5662 Tmax       14.6 Tmin        6.9 Precip        0.6 Tday    12.9314 Tnight     9.9157 
+n_days          8 Rg_f        9.1 Tavg     12.939 Tmax       15.5 Tmin          9 Precip        0.2 Tday    14.0915 Tnight    11.5457 
+n_days          9 Rg_f        9.1 Tavg    10.4514 Tmax       11.2 Tmin        9.3 Precip          0 Tday    10.7883 Tnight    10.0441 
+n_days         10 Rg_f        9.1 Tavg    12.0754 Tmax       14.4 Tmin        8.5 Precip       21.4 Tday    13.1215 Tnight    10.8107 
+n_days         11 Rg_f        9.1 Tavg    12.7782 Tmax       16.6 Tmin        6.9 Precip        0.2 Tday     14.498 Tnight     10.699 
+n_days         12 Rg_f        9.1 Tavg    10.3844 Tmax       13.3 Tmin        5.9 Precip          0 Tday    11.6964 Tnight    8.79821 
+n_days         13 Rg_f        9.1 Tavg     12.457 Tmax       16.2 Tmin        6.7 Precip       15.2 Tday    14.1413 Tnight    10.4207 
+n_days         14 Rg_f        9.1 Tavg    11.9902 Tmax       16.6 Tmin        4.9 Precip          0 Tday    14.0646 Tnight    9.48231 
+n_days         15 Rg_f        9.1 Tavg    11.7936 Tmax         14 Tmin        8.4 Precip          0 Tday    12.7865 Tnight    10.5932 
+n_days         16 Rg_f        9.1 Tavg    12.1722 Tmax       15.6 Tmin        6.9 Precip        0.6 Tday    13.7147 Tnight    10.3074 
+n_days         17 Rg_f        9.1 Tavg    10.4298 Tmax       13.7 Tmin        5.4 Precip          0 Tday    11.9014 Tnight    8.65069 
+n_days         18 Rg_f        9.1 Tavg     6.1544 Tmax        7.1 Tmin        4.7 Precip          0 Tday    6.57992 Tnight    5.63996 
+n_days         19 Rg_f        9.1 Tavg      8.733 Tmax       10.9 Tmin        5.4 Precip       15.4 Tday    9.70815 Tnight    7.55408 
+n_days         20 Rg_f        9.1 Tavg    11.1146 Tmax       14.7 Tmin        5.6 Precip        1.4 Tday     12.728 Tnight    9.16401 
+n_days         21 Rg_f        9.1 Tavg    11.8512 Tmax       13.9 Tmin        8.7 Precip        0.6 Tday    12.7732 Tnight    10.7366 
+n_days         22 Rg_f        9.1 Tavg    11.5448 Tmax       15.8 Tmin          5 Precip        8.2 Tday    13.4596 Tnight    9.22982 
+n_days         23 Rg_f        9.1 Tavg    12.1024 Tmax       16.2 Tmin        5.8 Precip        0.2 Tday    13.9463 Tnight    9.87316 
+n_days         24 Rg_f        9.1 Tavg    12.7632 Tmax       15.6 Tmin        8.4 Precip          0 Tday    14.0398 Tnight    11.2199 
+n_days         25 Rg_f        9.1 Tavg    12.8238 Tmax       15.7 Tmin        8.4 Precip          0 Tday    14.1181 Tnight     11.259 
+n_days         26 Rg_f        9.1 Tavg    13.0752 Tmax       16.7 Tmin        7.5 Precip        0.8 Tday    14.7064 Tnight    11.1032 
+n_days         27 Rg_f        9.1 Tavg    13.4538 Tmax       18.3 Tmin          6 Precip        1.8 Tday    15.6346 Tnight    10.8173 
+n_days         28 Rg_f        9.1 Tavg    12.1448 Tmax       16.4 Tmin        5.6 Precip          0 Tday    14.0596 Tnight    9.82982 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      13.15 Tavg    15.1146 Tmax       18.7 Tmin        9.6 Precip          0 Tday     16.728 Tnight     13.164 
+n_days          2 Rg_f      13.15 Tavg    15.3116 Tmax       18.7 Tmin       10.1 Precip          0 Tday    16.8364 Tnight    13.4682 
+n_days          3 Rg_f      13.15 Tavg    13.5206 Tmax       17.5 Tmin        7.4 Precip          0 Tday    15.3113 Tnight    11.3557 
+n_days          4 Rg_f      13.15 Tavg    16.6992 Tmax       21.9 Tmin        8.7 Precip          0 Tday    19.0396 Tnight    13.8698 
+n_days          5 Rg_f      13.15 Tavg    15.9296 Tmax       20.5 Tmin        8.9 Precip          0 Tday    17.9863 Tnight    13.4431 
+n_days          6 Rg_f      13.15 Tavg    15.4418 Tmax       19.5 Tmin        9.2 Precip          0 Tday     17.268 Tnight     13.234 
+n_days          7 Rg_f      13.15 Tavg    12.3816 Tmax       13.8 Tmin       10.2 Precip        9.2 Tday    13.0199 Tnight    11.6099 
+n_days          8 Rg_f      13.15 Tavg    13.8782 Tmax       17.7 Tmin          8 Precip          0 Tday     15.598 Tnight     11.799 
+n_days          9 Rg_f      13.15 Tavg    13.1874 Tmax       16.3 Tmin        8.4 Precip          0 Tday    14.5881 Tnight     11.494 
+n_days         10 Rg_f      13.15 Tavg    11.5238 Tmax       14.4 Tmin        7.1 Precip          0 Tday    12.8181 Tnight    9.95904 
+n_days         11 Rg_f      13.15 Tavg    11.6118 Tmax       13.7 Tmin        8.4 Precip          0 Tday    12.5515 Tnight    10.4757 
+n_days         12 Rg_f      13.15 Tavg    13.4388 Tmax       17.3 Tmin        7.5 Precip          0 Tday    15.1763 Tnight    11.3382 
+n_days         13 Rg_f      13.15 Tavg    15.3538 Tmax       20.2 Tmin        7.9 Precip          0 Tday    17.5346 Tnight    12.7173 
+n_days         14 Rg_f      13.15 Tavg    15.5812 Tmax       19.6 Tmin        9.4 Precip          0 Tday    17.3897 Tnight    13.3948 
+n_days         15 Rg_f      13.15 Tavg    16.3538 Tmax       21.2 Tmin        8.9 Precip          0 Tday    18.5346 Tnight    13.7173 
+n_days         16 Rg_f      13.15 Tavg    16.6174 Tmax       21.7 Tmin        8.8 Precip          0 Tday    18.9046 Tnight    13.8523 
+n_days         17 Rg_f      13.15 Tavg     14.775 Tmax       19.7 Tmin        7.2 Precip          0 Tday    16.9913 Tnight    12.0956 
+n_days         18 Rg_f      13.15 Tavg    13.1418 Tmax       17.2 Tmin        6.9 Precip          0 Tday     14.968 Tnight     10.934 
+n_days         19 Rg_f      13.15 Tavg     10.839 Tmax       13.4 Tmin        6.9 Precip         19 Tday    11.9915 Tnight    9.44572 
+n_days         20 Rg_f      13.15 Tavg     6.0178 Tmax        8.5 Tmin        2.2 Precip        4.2 Tday    7.13479 Tnight     4.6674 
+n_days         21 Rg_f      13.15 Tavg     7.6934 Tmax       11.2 Tmin        2.3 Precip          0 Tday    9.27137 Tnight    5.78568 
+n_days         22 Rg_f      13.15 Tavg     7.4542 Tmax        9.7 Tmin          4 Precip          0 Tday    8.46481 Tnight     6.2324 
+n_days         23 Rg_f      13.15 Tavg     9.2054 Tmax       13.5 Tmin        2.6 Precip          0 Tday     11.138 Tnight    6.86898 
+n_days         24 Rg_f      13.15 Tavg     8.9086 Tmax       12.1 Tmin          4 Precip        1.2 Tday    10.3447 Tnight    7.17237 
+n_days         25 Rg_f      13.15 Tavg     9.6418 Tmax       13.7 Tmin        3.4 Precip       15.2 Tday     11.468 Tnight      7.434 
+n_days         26 Rg_f      13.15 Tavg    11.7872 Tmax       16.2 Tmin          5 Precip       17.8 Tday     13.773 Tnight    9.38648 
+n_days         27 Rg_f      13.15 Tavg      11.56 Tmax       15.5 Tmin        5.5 Precip          0 Tday     13.333 Tnight     9.4165 
+n_days         28 Rg_f      13.15 Tavg    11.0874 Tmax       14.2 Tmin        6.3 Precip          0 Tday    12.4881 Tnight    9.39404 
+n_days         29 Rg_f      13.15 Tavg    11.6208 Tmax       14.3 Tmin        7.5 Precip        0.2 Tday    12.8264 Tnight    10.1632 
+n_days         30 Rg_f      13.15 Tavg    13.8722 Tmax       17.3 Tmin        8.6 Precip          0 Tday    15.4147 Tnight    12.0074 
+n_days         31 Rg_f      13.15 Tavg    13.6538 Tmax       18.5 Tmin        6.2 Precip          0 Tday    15.8346 Tnight    11.0173 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      17.23 Tavg    15.1962 Tmax       20.2 Tmin        7.5 Precip          0 Tday    17.4479 Tnight     12.474 
+n_days          2 Rg_f      17.23 Tavg    17.4296 Tmax         22 Tmin       10.4 Precip          0 Tday    19.4863 Tnight    14.9431 
+n_days          3 Rg_f      17.23 Tavg    14.6146 Tmax       18.2 Tmin        9.1 Precip        2.8 Tday     16.228 Tnight     12.664 
+n_days          4 Rg_f      17.23 Tavg    12.0634 Tmax       13.6 Tmin        9.7 Precip          1 Tday    12.7549 Tnight    11.2274 
+n_days          5 Rg_f      17.23 Tavg    14.9722 Tmax       18.4 Tmin        9.7 Precip          0 Tday    16.5147 Tnight    13.1074 
+n_days          6 Rg_f      17.23 Tavg    16.3992 Tmax       21.6 Tmin        8.4 Precip          0 Tday    18.7396 Tnight    13.5698 
+n_days          7 Rg_f      17.23 Tavg    15.4568 Tmax       20.5 Tmin        7.7 Precip          0 Tday    17.7262 Tnight    12.7131 
+n_days          8 Rg_f      17.23 Tavg    15.2144 Tmax       20.1 Tmin        7.7 Precip          0 Tday    17.4129 Tnight    12.5565 
+n_days          9 Rg_f      17.23 Tavg    16.1598 Tmax       21.4 Tmin        8.1 Precip          0 Tday    18.5179 Tnight    13.3089 
+n_days         10 Rg_f      17.23 Tavg    17.0264 Tmax       22.7 Tmin        8.3 Precip          0 Tday    19.5795 Tnight    13.9398 
+n_days         11 Rg_f      17.23 Tavg    18.3264 Tmax         24 Tmin        9.6 Precip          0 Tday    20.8795 Tnight    15.2398 
+n_days         12 Rg_f      17.23 Tavg    20.4234 Tmax       25.9 Tmin         12 Precip          0 Tday    22.8879 Tnight    17.4439 
+n_days         13 Rg_f      17.23 Tavg    21.3872 Tmax       25.8 Tmin       14.6 Precip          0 Tday     23.373 Tnight    18.9865 
+n_days         14 Rg_f      17.23 Tavg    17.6722 Tmax       21.1 Tmin       12.4 Precip          0 Tday    19.2147 Tnight    15.8074 
+n_days         15 Rg_f      17.23 Tavg     19.587 Tmax       25.3 Tmin       10.8 Precip          0 Tday    22.1578 Tnight    16.4789 
+n_days         16 Rg_f      17.23 Tavg     21.375 Tmax       26.3 Tmin       13.8 Precip          0 Tday    23.5913 Tnight    18.6956 
+n_days         17 Rg_f      17.23 Tavg    18.9296 Tmax       23.5 Tmin       11.9 Precip          0 Tday    20.9863 Tnight    16.4431 
+n_days         18 Rg_f      17.23 Tavg     17.887 Tmax       23.6 Tmin        9.1 Precip          0 Tday    20.4579 Tnight    14.7789 
+n_days         19 Rg_f      17.23 Tavg    17.9052 Tmax       23.5 Tmin        9.3 Precip          0 Tday    20.4229 Tnight    14.8614 
+n_days         20 Rg_f      17.23 Tavg     21.581 Tmax       26.9 Tmin       13.4 Precip          0 Tday    23.9745 Tnight    18.6873 
+n_days         21 Rg_f      17.23 Tavg    22.2718 Tmax       28.3 Tmin         13 Precip          0 Tday    24.9845 Tnight    18.9922 
+n_days         22 Rg_f      17.23 Tavg    22.8022 Tmax       28.2 Tmin       14.5 Precip          0 Tday    25.2312 Tnight    19.8656 
+n_days         23 Rg_f      17.23 Tavg    21.8476 Tmax       27.6 Tmin         13 Precip          0 Tday    24.4362 Tnight    18.7181 
+n_days         24 Rg_f      17.23 Tavg    22.1718 Tmax       28.2 Tmin       12.9 Precip          0 Tday    24.8845 Tnight    18.8922 
+n_days         25 Rg_f      17.23 Tavg    21.2416 Tmax       26.6 Tmin         13 Precip          0 Tday    23.6529 Tnight    18.3264 
+n_days         26 Rg_f      17.23 Tavg    19.6054 Tmax       23.9 Tmin         13 Precip          0 Tday     21.538 Tnight     17.269 
+n_days         27 Rg_f      17.23 Tavg    19.5114 Tmax       24.2 Tmin       12.3 Precip          0 Tday    21.6213 Tnight    16.9606 
+n_days         28 Rg_f      17.23 Tavg    19.3658 Tmax         25 Tmin       10.7 Precip          0 Tday    21.9012 Tnight    16.3006 
+n_days         29 Rg_f      17.23 Tavg    18.9326 Tmax       23.7 Tmin       11.6 Precip          0 Tday    21.0779 Tnight     16.339 
+n_days         30 Rg_f      17.23 Tavg    17.2298 Tmax       20.5 Tmin       12.2 Precip        0.2 Tday    18.7014 Tnight    15.4507 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      20.79 Tavg     18.669 Tmax       23.2 Tmin       11.7 Precip        2.2 Tday    20.7079 Tnight     16.204 
+n_days          2 Rg_f      20.79 Tavg    16.7722 Tmax       20.2 Tmin       11.5 Precip        3.6 Tday    18.3147 Tnight    14.9074 
+n_days          3 Rg_f      20.79 Tavg     18.054 Tmax       21.6 Tmin       12.6 Precip          0 Tday    19.6497 Tnight    16.1249 
+n_days          4 Rg_f      20.79 Tavg    17.9784 Tmax       20.5 Tmin       14.1 Precip       12.6 Tday    19.1131 Tnight    16.6066 
+n_days          5 Rg_f      20.79 Tavg     16.845 Tmax       19.8 Tmin       12.3 Precip          7 Tday    18.1747 Tnight    15.2374 
+n_days          6 Rg_f      20.79 Tavg    16.4782 Tmax       20.3 Tmin       10.6 Precip        6.6 Tday     18.198 Tnight     14.399 
+n_days          7 Rg_f      20.79 Tavg    19.1992 Tmax       24.4 Tmin       11.2 Precip          0 Tday    21.5396 Tnight    16.3698 
+n_days          8 Rg_f      20.79 Tavg    20.5324 Tmax       26.6 Tmin       11.2 Precip          0 Tday    23.2628 Tnight    17.2314 
+n_days          9 Rg_f      20.79 Tavg    20.0418 Tmax       24.1 Tmin       13.8 Precip          0 Tday     21.868 Tnight     17.834 
+n_days         10 Rg_f      20.79 Tavg    21.7476 Tmax       27.5 Tmin       12.9 Precip          0 Tday    24.3362 Tnight    18.6181 
+n_days         11 Rg_f      20.79 Tavg    22.1326 Tmax       26.9 Tmin       14.8 Precip          0 Tday    24.2779 Tnight     19.539 
+n_days         12 Rg_f      20.79 Tavg    23.0962 Tmax       28.1 Tmin       15.4 Precip          0 Tday    25.3479 Tnight     20.374 
+n_days         13 Rg_f      20.79 Tavg    23.1294 Tmax         29 Tmin       14.1 Precip          0 Tday    25.7712 Tnight    19.9356 
+n_days         14 Rg_f      20.79 Tavg    24.0324 Tmax       30.1 Tmin       14.7 Precip          0 Tday    26.7628 Tnight    20.7314 
+n_days         15 Rg_f      20.79 Tavg    19.8994 Tmax       23.8 Tmin       13.9 Precip          0 Tday    21.6547 Tnight    17.7773 
+n_days         16 Rg_f      20.79 Tavg    18.9144 Tmax       23.8 Tmin       11.4 Precip       14.4 Tday    21.1129 Tnight    16.2565 
+n_days         17 Rg_f      20.79 Tavg     18.775 Tmax       23.7 Tmin       11.2 Precip          0 Tday    20.9913 Tnight    16.0956 
+n_days         18 Rg_f      20.79 Tavg    17.9692 Tmax       21.2 Tmin         13 Precip          0 Tday    19.4231 Tnight    16.2115 
+n_days         19 Rg_f      20.79 Tavg    19.4568 Tmax       24.5 Tmin       11.7 Precip          0 Tday    21.7262 Tnight    16.7131 
+n_days         20 Rg_f      20.79 Tavg    22.2446 Tmax       27.8 Tmin       13.7 Precip          0 Tday    24.7445 Tnight    19.2223 
+n_days         21 Rg_f      20.79 Tavg    23.4324 Tmax       29.5 Tmin       14.1 Precip          0 Tday    26.1628 Tnight    20.1314 
+n_days         22 Rg_f      20.79 Tavg     26.102 Tmax       32.8 Tmin       15.8 Precip          0 Tday    29.1161 Tnight    22.4581 
+n_days         23 Rg_f      20.79 Tavg     26.672 Tmax       31.4 Tmin       19.4 Precip          0 Tday    28.7996 Tnight    24.0998 
+n_days         24 Rg_f      20.79 Tavg    27.9356 Tmax       32.9 Tmin       20.3 Precip          0 Tday    30.1696 Tnight    25.2348 
+n_days         25 Rg_f      20.79 Tavg    28.1992 Tmax       33.4 Tmin       20.2 Precip          0 Tday    30.5396 Tnight    25.3698 
+n_days         26 Rg_f      20.79 Tavg    25.3296 Tmax       29.9 Tmin       18.3 Precip          0 Tday    27.3863 Tnight    22.8431 
+n_days         27 Rg_f      20.79 Tavg    23.3054 Tmax       27.6 Tmin       16.7 Precip        0.2 Tday     25.238 Tnight     20.969 
+n_days         28 Rg_f      20.79 Tavg    18.4176 Tmax       22.2 Tmin       12.6 Precip       16.6 Tday    20.1197 Tnight    16.3598 
+n_days         29 Rg_f      20.79 Tavg    14.6996 Tmax       17.3 Tmin       10.7 Precip       14.2 Tday    15.8698 Tnight    13.2849 
+n_days         30 Rg_f      20.79 Tavg     17.054 Tmax       20.6 Tmin       11.6 Precip        0.4 Tday    18.6497 Tnight    15.1249 
+n_days         31 Rg_f      20.79 Tavg    19.6052 Tmax       25.2 Tmin         11 Precip          0 Tday    22.1229 Tnight    16.5614 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      22.67 Tavg     19.851 Tmax       23.2 Tmin       14.7 Precip        1.8 Tday     21.358 Tnight     18.029 
+n_days          2 Rg_f      22.67 Tavg    18.6692 Tmax       21.9 Tmin       13.7 Precip          0 Tday    20.1231 Tnight    16.9115 
+n_days          3 Rg_f      22.67 Tavg    17.5026 Tmax       20.3 Tmin       13.2 Precip        2.8 Tday    18.7614 Tnight    15.9807 
+n_days          4 Rg_f      22.67 Tavg      23.19 Tmax       29.1 Tmin       14.1 Precip          0 Tday    25.8495 Tnight    19.9748 
+n_days          5 Rg_f      22.67 Tavg    24.2932 Tmax       29.1 Tmin       16.9 Precip         17 Tday    26.4563 Tnight    21.6781 
+n_days          6 Rg_f      22.67 Tavg     22.572 Tmax       27.3 Tmin       15.3 Precip          8 Tday    24.6996 Tnight    19.9998 
+n_days          7 Rg_f      22.67 Tavg    22.3628 Tmax       27.8 Tmin         14 Precip          0 Tday    24.8095 Tnight    19.4048 
+n_days          8 Rg_f      22.67 Tavg    23.3508 Tmax         28 Tmin       16.2 Precip        0.2 Tday    25.4429 Tnight    20.8215 
+n_days          9 Rg_f      22.67 Tavg    25.2386 Tmax       30.4 Tmin       17.3 Precip          0 Tday    27.5612 Tnight    22.4306 
+n_days         10 Rg_f      22.67 Tavg     25.478 Tmax       30.6 Tmin       17.6 Precip        0.2 Tday    27.7829 Tnight    22.6915 
+n_days         11 Rg_f      22.67 Tavg    25.0386 Tmax       30.2 Tmin       17.1 Precip          0 Tday    27.3612 Tnight    22.2306 
+n_days         12 Rg_f      22.67 Tavg    24.2022 Tmax       29.6 Tmin       15.9 Precip          0 Tday    26.6312 Tnight    21.2656 
+n_days         13 Rg_f      22.67 Tavg    24.8688 Tmax       30.7 Tmin       15.9 Precip          0 Tday    27.4928 Tnight    21.6964 
+n_days         14 Rg_f      22.67 Tavg     26.396 Tmax       32.7 Tmin       16.7 Precip          0 Tday    29.2328 Tnight    22.9664 
+n_days         15 Rg_f      22.67 Tavg    25.3328 Tmax       28.8 Tmin         20 Precip          0 Tday     26.893 Tnight    23.4465 
+n_days         16 Rg_f      22.67 Tavg    25.7902 Tmax       30.4 Tmin       18.7 Precip          0 Tday    27.8646 Tnight    23.2823 
+n_days         17 Rg_f      22.67 Tavg     25.063 Tmax       29.2 Tmin       18.7 Precip          0 Tday    26.9246 Tnight    22.8123 
+n_days         18 Rg_f      22.67 Tavg     26.296 Tmax       32.6 Tmin       16.6 Precip          0 Tday    29.1328 Tnight    22.8664 
+n_days         19 Rg_f      22.67 Tavg    28.4294 Tmax       34.3 Tmin       19.4 Precip          0 Tday    31.0712 Tnight    25.2356 
+n_days         20 Rg_f      22.67 Tavg     30.293 Tmax       36.4 Tmin       20.9 Precip          0 Tday    33.0412 Tnight    26.9706 
+n_days         21 Rg_f      22.67 Tavg    27.6174 Tmax       32.7 Tmin       19.8 Precip          0 Tday    29.9046 Tnight    24.8523 
+n_days         22 Rg_f      22.67 Tavg    28.8144 Tmax       33.7 Tmin       21.3 Precip          0 Tday    31.0129 Tnight    26.1565 
+n_days         23 Rg_f      22.67 Tavg    26.8356 Tmax       31.8 Tmin       19.2 Precip          0 Tday    29.0696 Tnight    24.1348 
+n_days         24 Rg_f      22.67 Tavg    26.6688 Tmax       32.5 Tmin       17.7 Precip          0 Tday    29.2928 Tnight    23.4964 
+n_days         25 Rg_f      22.67 Tavg    30.7932 Tmax       35.6 Tmin       23.4 Precip          0 Tday    32.9563 Tnight    28.1781 
+n_days         26 Rg_f      22.67 Tavg     26.278 Tmax       31.4 Tmin       18.4 Precip          0 Tday    28.5829 Tnight    23.4915 
+n_days         27 Rg_f      22.67 Tavg    23.4478 Tmax       27.9 Tmin       16.6 Precip          0 Tday    25.4513 Tnight    21.0256 
+n_days         28 Rg_f      22.67 Tavg    24.0174 Tmax       29.1 Tmin       16.2 Precip          0 Tday    26.3046 Tnight    21.2523 
+n_days         29 Rg_f      22.67 Tavg    23.5808 Tmax       30.2 Tmin       13.4 Precip          0 Tday    26.5594 Tnight    19.9797 
+n_days         30 Rg_f      22.67 Tavg    26.1112 Tmax       32.1 Tmin       16.9 Precip          0 Tday    28.8062 Tnight    22.8531 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      22.56 Tavg     26.581 Tmax       31.9 Tmin       18.4 Precip          0 Tday    28.9746 Tnight    23.6873 
+n_days          2 Rg_f      22.56 Tavg    25.4628 Tmax       30.9 Tmin       17.1 Precip          0 Tday    27.9095 Tnight    22.5048 
+n_days          3 Rg_f      22.56 Tavg    24.8144 Tmax       29.7 Tmin       17.3 Precip          0 Tday    27.0129 Tnight    22.1565 
+n_days          4 Rg_f      22.56 Tavg     23.563 Tmax       27.7 Tmin       17.2 Precip          0 Tday    25.4246 Tnight    21.3123 
+n_days          5 Rg_f      22.56 Tavg    23.2446 Tmax       28.8 Tmin       14.7 Precip          0 Tday    25.7445 Tnight    20.2223 
+n_days          6 Rg_f      22.56 Tavg    24.1324 Tmax       30.2 Tmin       14.8 Precip          0 Tday    26.8628 Tnight    20.8314 
+n_days          7 Rg_f      22.56 Tavg    25.1748 Tmax       31.4 Tmin       15.6 Precip          0 Tday    27.9761 Tnight    21.7881 
+n_days          8 Rg_f      22.56 Tavg    25.7748 Tmax         32 Tmin       16.2 Precip          0 Tday    28.5761 Tnight    22.3881 
+n_days          9 Rg_f      22.56 Tavg    26.4082 Tmax       32.2 Tmin       17.5 Precip        0.2 Tday    29.0145 Tnight    23.2573 
+n_days         10 Rg_f      22.56 Tavg    25.3174 Tmax       30.4 Tmin       17.5 Precip        0.2 Tday    27.6046 Tnight    22.5523 
+n_days         11 Rg_f      22.56 Tavg    21.6508 Tmax       26.3 Tmin       14.5 Precip          0 Tday    23.7429 Tnight    19.1215 
+n_days         12 Rg_f      22.56 Tavg     23.578 Tmax       28.7 Tmin       15.7 Precip          0 Tday    25.8829 Tnight    20.7914 
+n_days         13 Rg_f      22.56 Tavg     25.196 Tmax       31.5 Tmin       15.5 Precip          0 Tday    28.0328 Tnight    21.7664 
+n_days         14 Rg_f      22.56 Tavg     27.802 Tmax       34.5 Tmin       17.5 Precip          0 Tday    30.8161 Tnight     24.158 
+n_days         15 Rg_f      22.56 Tavg     30.499 Tmax         37 Tmin       20.5 Precip          0 Tday    33.4245 Tnight    26.9622 
+n_days         16 Rg_f      22.56 Tavg    30.6264 Tmax       36.3 Tmin       21.9 Precip          0 Tday    33.1795 Tnight    27.5398 
+n_days         17 Rg_f      22.56 Tavg    30.2596 Tmax       36.8 Tmin       20.2 Precip          0 Tday    33.2028 Tnight    26.7014 
+n_days         18 Rg_f      22.56 Tavg    31.5354 Tmax       37.8 Tmin       21.9 Precip          0 Tday    34.3545 Tnight    28.1272 
+n_days         19 Rg_f      22.56 Tavg    31.4354 Tmax       37.7 Tmin       21.8 Precip          0 Tday    34.2545 Tnight    28.0272 
+n_days         20 Rg_f      22.56 Tavg     30.393 Tmax       36.5 Tmin         21 Precip          0 Tday    33.1412 Tnight    27.0706 
+n_days         21 Rg_f      22.56 Tavg     29.984 Tmax       35.5 Tmin       21.5 Precip          0 Tday    32.4662 Tnight    26.9831 
+n_days         22 Rg_f      22.56 Tavg    28.8386 Tmax         34 Tmin       20.9 Precip          0 Tday    31.1612 Tnight    26.0306 
+n_days         23 Rg_f      22.56 Tavg    30.6566 Tmax         37 Tmin       20.9 Precip          0 Tday    33.5111 Tnight    27.2056 
+n_days         24 Rg_f      22.56 Tavg    30.1326 Tmax       34.9 Tmin       22.8 Precip          0 Tday    32.2779 Tnight     27.539 
+n_days         25 Rg_f      22.56 Tavg    29.1992 Tmax       34.4 Tmin       21.2 Precip          0 Tday    31.5396 Tnight    26.3698 
+n_days         26 Rg_f      22.56 Tavg    29.4476 Tmax       35.2 Tmin       20.6 Precip          0 Tday    32.0362 Tnight    26.3181 
+n_days         27 Rg_f      22.56 Tavg    29.9628 Tmax       35.4 Tmin       21.6 Precip          0 Tday    32.4095 Tnight    27.0048 
+n_days         28 Rg_f      22.56 Tavg    30.4052 Tmax         36 Tmin       21.8 Precip          0 Tday    32.9229 Tnight    27.3614 
+n_days         29 Rg_f      22.56 Tavg    30.6326 Tmax       35.4 Tmin       23.3 Precip          0 Tday    32.7779 Tnight     28.039 
+n_days         30 Rg_f      22.56 Tavg    28.5658 Tmax       34.2 Tmin       19.9 Precip          0 Tday    31.1012 Tnight    25.5006 
+n_days         31 Rg_f      22.56 Tavg    25.7176 Tmax       29.5 Tmin       19.9 Precip          0 Tday    27.4197 Tnight    23.6598 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       19.2 Tavg     26.287 Tmax         32 Tmin       17.5 Precip          0 Tday    28.8578 Tnight    23.1789 
+n_days          2 Rg_f       19.2 Tavg    28.3022 Tmax       33.7 Tmin         20 Precip          0 Tday    30.7312 Tnight    25.3656 
+n_days          3 Rg_f       19.2 Tavg    26.4054 Tmax       30.7 Tmin       19.8 Precip          0 Tday     28.338 Tnight     24.069 
+n_days          4 Rg_f       19.2 Tavg    25.2842 Tmax       29.5 Tmin       18.8 Precip          0 Tday    27.1813 Tnight    22.9907 
+n_days          5 Rg_f       19.2 Tavg    24.4206 Tmax       28.4 Tmin       18.3 Precip          0 Tday    26.2113 Tnight    22.2557 
+n_days          6 Rg_f       19.2 Tavg    26.1324 Tmax       32.2 Tmin       16.8 Precip          0 Tday    28.8628 Tnight    22.8314 
+n_days          7 Rg_f       19.2 Tavg    26.6688 Tmax       32.5 Tmin       17.7 Precip          0 Tday    29.2928 Tnight    23.4964 
+n_days          8 Rg_f       19.2 Tavg    25.6538 Tmax       30.5 Tmin       18.2 Precip          0 Tday    27.8346 Tnight    23.0173 
+n_days          9 Rg_f       19.2 Tavg    23.8842 Tmax       28.1 Tmin       17.4 Precip          0 Tday    25.7813 Tnight    21.5907 
+n_days         10 Rg_f       19.2 Tavg    19.6632 Tmax       22.5 Tmin       15.3 Precip        9.6 Tday    20.9398 Tnight    18.1199 
+n_days         11 Rg_f       19.2 Tavg    21.5418 Tmax       25.6 Tmin       15.3 Precip        0.4 Tday     23.368 Tnight     19.334 
+n_days         12 Rg_f       19.2 Tavg     24.384 Tmax       29.9 Tmin       15.9 Precip          0 Tday    26.8662 Tnight    21.3831 
+n_days         13 Rg_f       19.2 Tavg    25.0628 Tmax       30.5 Tmin       16.7 Precip          0 Tday    27.5095 Tnight    22.1048 
+n_days         14 Rg_f       19.2 Tavg    27.0718 Tmax       33.1 Tmin       17.8 Precip          0 Tday    29.7845 Tnight    23.7922 
+n_days         15 Rg_f       19.2 Tavg     28.287 Tmax         34 Tmin       19.5 Precip          0 Tday    30.8578 Tnight    25.1789 
+n_days         16 Rg_f       19.2 Tavg    28.3234 Tmax       33.8 Tmin       19.9 Precip          0 Tday    30.7879 Tnight    25.3439 
+n_days         17 Rg_f       19.2 Tavg    27.2446 Tmax       32.8 Tmin       18.7 Precip          0 Tday    29.7445 Tnight    24.2223 
+n_days         18 Rg_f       19.2 Tavg    26.4144 Tmax       31.3 Tmin       18.9 Precip          0 Tday    28.6129 Tnight    23.7565 
+n_days         19 Rg_f       19.2 Tavg    25.4688 Tmax       31.3 Tmin       16.5 Precip          0 Tday    28.0928 Tnight    22.2964 
+n_days         20 Rg_f       19.2 Tavg    24.8994 Tmax       28.8 Tmin       18.9 Precip          0 Tday    26.6547 Tnight    22.7773 
+n_days         21 Rg_f       19.2 Tavg    24.0024 Tmax       28.1 Tmin       17.7 Precip          0 Tday    25.8463 Tnight    21.7732 
+n_days         22 Rg_f       19.2 Tavg    26.6568 Tmax       31.7 Tmin       18.9 Precip          0 Tday    28.9262 Tnight    23.9131 
+n_days         23 Rg_f       19.2 Tavg    25.9418 Tmax         30 Tmin       19.7 Precip          1 Tday     27.768 Tnight     23.734 
+n_days         24 Rg_f       19.2 Tavg    24.7176 Tmax       28.5 Tmin       18.9 Precip          0 Tday    26.4197 Tnight    22.6598 
+n_days         25 Rg_f       19.2 Tavg    31.6082 Tmax       37.4 Tmin       22.7 Precip          0 Tday    34.2145 Tnight    28.4573 
+n_days         26 Rg_f       19.2 Tavg     32.372 Tmax       37.1 Tmin       25.1 Precip          0 Tday    34.4996 Tnight    29.7998 
+n_days         27 Rg_f       19.2 Tavg    31.4598 Tmax       36.7 Tmin       23.4 Precip          0 Tday    33.8179 Tnight    28.6089 
+n_days         28 Rg_f       19.2 Tavg    30.0264 Tmax       35.7 Tmin       21.3 Precip          0 Tday    32.5795 Tnight    26.9398 
+n_days         29 Rg_f       19.2 Tavg    29.5446 Tmax       35.1 Tmin         21 Precip          0 Tday    32.0445 Tnight    26.5223 
+n_days         30 Rg_f       19.2 Tavg    29.9448 Tmax       34.2 Tmin       23.4 Precip        0.2 Tday    31.8596 Tnight    27.6298 
+n_days         31 Rg_f       19.2 Tavg     25.757 Tmax       29.5 Tmin         20 Precip          0 Tday    27.4413 Tnight    23.7207 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      14.89 Tavg    22.8388 Tmax       26.7 Tmin       16.9 Precip          0 Tday    24.5763 Tnight    20.7382 
+n_days          2 Rg_f      14.89 Tavg    25.3144 Tmax       30.2 Tmin       17.8 Precip          0 Tday    27.5129 Tnight    22.6565 
+n_days          3 Rg_f      14.89 Tavg     25.572 Tmax       30.3 Tmin       18.3 Precip          0 Tday    27.6996 Tnight    22.9998 
+n_days          4 Rg_f      14.89 Tavg     21.269 Tmax       25.8 Tmin       14.3 Precip          0 Tday     23.308 Tnight     18.804 
+n_days          5 Rg_f      14.89 Tavg    17.0782 Tmax       20.9 Tmin       11.2 Precip          0 Tday     18.798 Tnight     14.999 
+n_days          6 Rg_f      14.89 Tavg     16.766 Tmax       21.1 Tmin       10.1 Precip          2 Tday    18.7163 Tnight    14.4081 
+n_days          7 Rg_f      14.89 Tavg    20.4294 Tmax       26.3 Tmin       11.4 Precip          0 Tday    23.0712 Tnight    17.2356 
+n_days          8 Rg_f      14.89 Tavg    23.1688 Tmax         29 Tmin       14.2 Precip          0 Tday    25.7928 Tnight    19.9964 
+n_days          9 Rg_f      14.89 Tavg    22.1932 Tmax         27 Tmin       14.8 Precip          0 Tday    24.3563 Tnight    19.5781 
+n_days         10 Rg_f      14.89 Tavg    21.8358 Tmax       25.5 Tmin       16.2 Precip        9.8 Tday    23.4847 Tnight    19.8423 
+n_days         11 Rg_f      14.89 Tavg    22.6358 Tmax       26.3 Tmin         17 Precip          0 Tday    24.2847 Tnight    20.6423 
+n_days         12 Rg_f      14.89 Tavg    23.5932 Tmax       28.4 Tmin       16.2 Precip          0 Tday    25.7563 Tnight    20.9781 
+n_days         13 Rg_f      14.89 Tavg    23.3476 Tmax       29.1 Tmin       14.5 Precip          0 Tday    25.9362 Tnight    20.2181 
+n_days         14 Rg_f      14.89 Tavg    22.7628 Tmax       28.2 Tmin       14.4 Precip          0 Tday    25.2095 Tnight    19.8048 
+n_days         15 Rg_f      14.89 Tavg    24.6688 Tmax       30.5 Tmin       15.7 Precip          0 Tday    27.2928 Tnight    21.4964 
+n_days         16 Rg_f      14.89 Tavg     24.266 Tmax       28.6 Tmin       17.6 Precip          0 Tday    26.2163 Tnight    21.9081 
+n_days         17 Rg_f      14.89 Tavg     25.257 Tmax         29 Tmin       19.5 Precip          0 Tday    26.9413 Tnight    23.2207 
+n_days         18 Rg_f      14.89 Tavg    25.5238 Tmax       28.4 Tmin       21.1 Precip        0.8 Tday    26.8181 Tnight     23.959 
+n_days         19 Rg_f      14.89 Tavg    22.9538 Tmax       27.8 Tmin       15.5 Precip          0 Tday    25.1346 Tnight    20.3173 
+n_days         20 Rg_f      14.89 Tavg    19.2388 Tmax       23.1 Tmin       13.3 Precip          0 Tday    20.9763 Tnight    17.1382 
+n_days         21 Rg_f      14.89 Tavg    20.1962 Tmax       25.2 Tmin       12.5 Precip          0 Tday    22.4479 Tnight     17.474 
+n_days         22 Rg_f      14.89 Tavg    21.6022 Tmax         27 Tmin       13.3 Precip          0 Tday    24.0312 Tnight    18.6656 
+n_days         23 Rg_f      14.89 Tavg    23.0294 Tmax       28.9 Tmin         14 Precip          0 Tday    25.6712 Tnight    19.8356 
+n_days         24 Rg_f      14.89 Tavg    22.7084 Tmax       27.2 Tmin       15.8 Precip          0 Tday    24.7296 Tnight    20.2648 
+n_days         25 Rg_f      14.89 Tavg    23.7174 Tmax       28.8 Tmin       15.9 Precip          0 Tday    26.0046 Tnight    20.9523 
+n_days         26 Rg_f      14.89 Tavg    20.0146 Tmax       23.6 Tmin       14.5 Precip        0.6 Tday     21.628 Tnight     18.064 
+n_days         27 Rg_f      14.89 Tavg    16.1178 Tmax       18.6 Tmin       12.3 Precip       31.8 Tday    17.2348 Tnight    14.7674 
+n_days         28 Rg_f      14.89 Tavg     17.448 Tmax       20.6 Tmin       12.6 Precip          7 Tday    18.8664 Tnight    15.7332 
+n_days         29 Rg_f      14.89 Tavg     18.251 Tmax       21.6 Tmin       13.1 Precip          0 Tday    19.7581 Tnight     16.429 
+n_days         30 Rg_f      14.89 Tavg      21.29 Tmax       27.2 Tmin       12.2 Precip          0 Tday    23.9495 Tnight    18.0748 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       10.5 Tavg    23.8022 Tmax       29.2 Tmin       15.5 Precip          0 Tday    26.2312 Tnight    20.8656 
+n_days          2 Rg_f       10.5 Tavg    24.9962 Tmax         30 Tmin       17.3 Precip          0 Tday    27.2479 Tnight     22.274 
+n_days          3 Rg_f       10.5 Tavg    24.6476 Tmax       30.4 Tmin       15.8 Precip          0 Tday    27.2362 Tnight    21.5181 
+n_days          4 Rg_f       10.5 Tavg     25.387 Tmax       31.1 Tmin       16.6 Precip          0 Tday    27.9579 Tnight    22.2789 
+n_days          5 Rg_f       10.5 Tavg    25.0354 Tmax       31.3 Tmin       15.4 Precip          0 Tday    27.8545 Tnight    21.6272 
+n_days          6 Rg_f       10.5 Tavg    22.1752 Tmax       25.8 Tmin       16.6 Precip        0.4 Tday    23.8064 Tnight    20.2032 
+n_days          7 Rg_f       10.5 Tavg    18.5814 Tmax       21.3 Tmin       14.4 Precip        0.4 Tday    19.8048 Tnight    17.1024 
+n_days          8 Rg_f       10.5 Tavg     19.866 Tmax       24.2 Tmin       13.2 Precip          0 Tday    21.8163 Tnight    17.5082 
+n_days          9 Rg_f       10.5 Tavg    18.0692 Tmax       21.3 Tmin       13.1 Precip          0 Tday    19.5231 Tnight    16.3115 
+n_days         10 Rg_f       10.5 Tavg    16.8178 Tmax       19.3 Tmin         13 Precip        0.8 Tday    17.9348 Tnight    15.4674 
+n_days         11 Rg_f       10.5 Tavg    16.0572 Tmax       18.5 Tmin       12.3 Precip          0 Tday    17.1565 Tnight    14.7282 
+n_days         12 Rg_f       10.5 Tavg    18.1266 Tmax       22.5 Tmin       11.4 Precip          0 Tday    20.0946 Tnight    15.7473 
+n_days         13 Rg_f       10.5 Tavg    18.7236 Tmax       22.9 Tmin       12.3 Precip          0 Tday     20.603 Tnight    16.4515 
+n_days         14 Rg_f       10.5 Tavg      16.06 Tmax         20 Tmin         10 Precip          0 Tday     17.833 Tnight    13.9165 
+n_days         15 Rg_f       10.5 Tavg    16.4598 Tmax       21.7 Tmin        8.4 Precip          0 Tday    18.8179 Tnight    13.6089 
+n_days         16 Rg_f       10.5 Tavg    16.3204 Tmax       21.6 Tmin        8.2 Precip          0 Tday    18.6962 Tnight    13.4481 
+n_days         17 Rg_f       10.5 Tavg    17.7356 Tmax       22.7 Tmin       10.1 Precip          0 Tday    19.9696 Tnight    15.0348 
+n_days         18 Rg_f       10.5 Tavg    18.0298 Tmax       21.3 Tmin         13 Precip        4.2 Tday    19.5014 Tnight    16.2507 
+n_days         19 Rg_f       10.5 Tavg     12.751 Tmax       16.1 Tmin        7.6 Precip          0 Tday    14.2581 Tnight     10.929 
+n_days         20 Rg_f       10.5 Tavg      8.639 Tmax       11.2 Tmin        4.7 Precip          0 Tday    9.79145 Tnight    7.24573 
+n_days         21 Rg_f       10.5 Tavg     7.9996 Tmax       10.6 Tmin          4 Precip          0 Tday    9.16978 Tnight    6.58489 
+n_days         22 Rg_f       10.5 Tavg     7.2634 Tmax        8.8 Tmin        4.9 Precip        0.4 Tday    7.95487 Tnight    6.42744 
+n_days         23 Rg_f       10.5 Tavg    10.4358 Tmax       14.1 Tmin        4.8 Precip        0.4 Tday    12.0847 Tnight    8.44234 
+n_days         24 Rg_f       10.5 Tavg    12.5056 Tmax       15.5 Tmin        7.9 Precip        0.2 Tday    13.8531 Tnight    10.8765 
+n_days         25 Rg_f       10.5 Tavg    11.8876 Tmax       13.7 Tmin        9.1 Precip        2.8 Tday    12.7032 Tnight    10.9016 
+n_days         26 Rg_f       10.5 Tavg    16.0996 Tmax       18.7 Tmin       12.1 Precip       10.4 Tday    17.2698 Tnight    14.6849 
+n_days         27 Rg_f       10.5 Tavg    18.1086 Tmax       21.3 Tmin       13.2 Precip          0 Tday    19.5447 Tnight    16.3724 
+n_days         28 Rg_f       10.5 Tavg     17.372 Tmax       22.1 Tmin       10.1 Precip          0 Tday    19.4996 Tnight    14.7998 
+n_days         29 Rg_f       10.5 Tavg    16.1358 Tmax       19.8 Tmin       10.5 Precip          0 Tday    17.7847 Tnight    14.1423 
+n_days         30 Rg_f       10.5 Tavg    17.0238 Tmax       19.9 Tmin       12.6 Precip       17.8 Tday    18.3181 Tnight     15.459 
+n_days         31 Rg_f       10.5 Tavg    13.7786 Tmax         15 Tmin       11.9 Precip          0 Tday    14.3282 Tnight    13.1141 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       6.61 Tavg    10.9392 Tmax       12.2 Tmin          9 Precip        2.8 Tday    11.5066 Tnight    10.2533 
+n_days          2 Rg_f       6.61 Tavg    12.8026 Tmax       15.6 Tmin        8.5 Precip          0 Tday    14.0614 Tnight    11.2807 
+n_days          3 Rg_f       6.61 Tavg    14.2146 Tmax       17.8 Tmin        8.7 Precip          0 Tday     15.828 Tnight     12.264 
+n_days          4 Rg_f       6.61 Tavg    14.3812 Tmax       18.4 Tmin        8.2 Precip          0 Tday    16.1897 Tnight    12.1948 
+n_days          5 Rg_f       6.61 Tavg    13.5752 Tmax       17.2 Tmin          8 Precip          0 Tday    15.2064 Tnight    11.6032 
+n_days          6 Rg_f       6.61 Tavg     9.3512 Tmax       11.4 Tmin        6.2 Precip          0 Tday    10.2732 Tnight    8.23658 
+n_days          7 Rg_f       6.61 Tavg    12.2752 Tmax       15.9 Tmin        6.7 Precip          0 Tday    13.9064 Tnight    10.3032 
+n_days          8 Rg_f       6.61 Tavg    11.6812 Tmax       15.7 Tmin        5.5 Precip          0 Tday    13.4897 Tnight    9.49483 
+n_days          9 Rg_f       6.61 Tavg     12.466 Tmax       16.8 Tmin        5.8 Precip        0.6 Tday    14.4163 Tnight    10.1082 
+n_days         10 Rg_f       6.61 Tavg    10.0872 Tmax       14.5 Tmin        3.3 Precip          0 Tday     12.073 Tnight    7.68648 
+n_days         11 Rg_f       6.61 Tavg    11.2874 Tmax       14.4 Tmin        6.5 Precip          0 Tday    12.6881 Tnight    9.59403 
+n_days         12 Rg_f       6.61 Tavg    12.1722 Tmax       15.6 Tmin        6.9 Precip          0 Tday    13.7147 Tnight    10.3074 
+n_days         13 Rg_f       6.61 Tavg    10.5782 Tmax       14.4 Tmin        4.7 Precip        0.4 Tday     12.298 Tnight    8.49901 
+n_days         14 Rg_f       6.61 Tavg     7.5572 Tmax         10 Tmin        3.8 Precip       11.6 Tday    8.65646 Tnight    6.22823 
+n_days         15 Rg_f       6.61 Tavg      6.636 Tmax          9 Tmin          3 Precip          0 Tday     7.6998 Tnight     5.3499 
+n_days         16 Rg_f       6.61 Tavg     5.2968 Tmax        6.4 Tmin        3.6 Precip        3.2 Tday    5.79324 Tnight    4.69662 
+n_days         17 Rg_f       6.61 Tavg     5.0664 Tmax        6.8 Tmin        2.4 Precip          0 Tday    5.84652 Tnight    4.12326 
+n_days         18 Rg_f       6.61 Tavg     5.2118 Tmax        7.3 Tmin          2 Precip          0 Tday    6.15149 Tnight    4.07574 
+n_days         19 Rg_f       6.61 Tavg     6.5268 Tmax        9.6 Tmin        1.8 Precip          0 Tday    7.90974 Tnight    4.85487 
+n_days         20 Rg_f       6.61 Tavg     7.7842 Tmax         12 Tmin        1.3 Precip          0 Tday    9.68131 Tnight    5.49066 
+n_days         21 Rg_f       6.61 Tavg     9.2722 Tmax       12.7 Tmin          4 Precip          0 Tday    10.8147 Tnight    7.40735 
+n_days         22 Rg_f       6.61 Tavg    12.6812 Tmax       16.7 Tmin        6.5 Precip          0 Tday    14.4897 Tnight    10.4948 
+n_days         23 Rg_f       6.61 Tavg    17.1604 Tmax       18.5 Tmin       15.1 Precip          0 Tday    17.7632 Tnight    16.4316 
+n_days         24 Rg_f       6.61 Tavg    15.1632 Tmax         18 Tmin       10.8 Precip          2 Tday    16.4398 Tnight    13.6199 
+n_days         25 Rg_f       6.61 Tavg    13.7996 Tmax       16.4 Tmin        9.8 Precip        0.4 Tday    14.9698 Tnight    12.3849 
+n_days         26 Rg_f       6.61 Tavg    14.1934 Tmax       17.7 Tmin        8.8 Precip          0 Tday    15.7714 Tnight    12.2857 
+n_days         27 Rg_f       6.61 Tavg     11.051 Tmax       14.4 Tmin        5.9 Precip          0 Tday     12.558 Tnight    9.22903 
+n_days         28 Rg_f       6.61 Tavg     10.345 Tmax       13.3 Tmin        5.8 Precip          0 Tday    11.6748 Tnight    8.73738 
+n_days         29 Rg_f       6.61 Tavg     7.1756 Tmax        8.2 Tmin        5.6 Precip        6.4 Tday    7.63658 Tnight    6.61829 
+n_days         30 Rg_f       6.61 Tavg      9.448 Tmax       12.6 Tmin        4.6 Precip        0.8 Tday    10.8664 Tnight     7.7332 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+-TOTAL VEGETATIVE DAYS = 151 
+
+n_days          1 Rg_f        5.1 Tavg     8.8722 Tmax       12.3 Tmin        3.6 Precip          0 Tday    10.4147 Tnight    7.00735 
+n_days          2 Rg_f        5.1 Tavg    10.7268 Tmax       13.8 Tmin          6 Precip          0 Tday    12.1097 Tnight    9.05487 
+n_days          3 Rg_f        5.1 Tavg     11.051 Tmax       14.4 Tmin        5.9 Precip        1.2 Tday     12.558 Tnight    9.22903 
+n_days          4 Rg_f        5.1 Tavg     9.8782 Tmax       13.7 Tmin          4 Precip          0 Tday     11.598 Tnight      7.799 
+n_days          5 Rg_f        5.1 Tavg     8.3358 Tmax         12 Tmin        2.7 Precip          0 Tday    9.98469 Tnight    6.34234 
+n_days          6 Rg_f        5.1 Tavg     8.4782 Tmax       12.3 Tmin        2.6 Precip          0 Tday     10.198 Tnight      6.399 
+n_days          7 Rg_f        5.1 Tavg     8.6358 Tmax       12.3 Tmin          3 Precip        0.2 Tday    10.2847 Tnight    6.64234 
+n_days          8 Rg_f        5.1 Tavg     9.5058 Tmax       11.2 Tmin        6.9 Precip        2.8 Tday    10.2682 Tnight     8.5841 
+n_days          9 Rg_f        5.1 Tavg     8.0966 Tmax       10.5 Tmin        4.4 Precip          5 Tday    9.17813 Tnight    6.78906 
+n_days         10 Rg_f        5.1 Tavg     9.7632 Tmax       12.6 Tmin        5.4 Precip        1.4 Tday    11.0398 Tnight    8.21988 
+n_days         11 Rg_f        5.1 Tavg     7.7694 Tmax        9.7 Tmin        4.8 Precip          0 Tday    8.63817 Tnight    6.71908 
+n_days         12 Rg_f        5.1 Tavg     7.4996 Tmax       10.1 Tmin        3.5 Precip          0 Tday    8.66978 Tnight    6.08489 
+n_days         13 Rg_f        5.1 Tavg     7.3694 Tmax        9.3 Tmin        4.4 Precip          0 Tday    8.23817 Tnight    6.31909 
+n_days         14 Rg_f        5.1 Tavg     3.5996 Tmax        6.2 Tmin       -0.4 Precip          0 Tday    4.76978 Tnight    2.18489 
+n_days         15 Rg_f        5.1 Tavg     0.3634 Tmax        1.9 Tmin         -2 Precip          0 Tday    1.05487 Tnight  -0.472565 
+n_days         16 Rg_f        5.1 Tavg     1.8784 Tmax        4.4 Tmin         -2 Precip          0 Tday    3.01312 Tnight    0.50656 
+n_days         17 Rg_f        5.1 Tavg      4.724 Tmax        6.3 Tmin        2.3 Precip          0 Tday     5.4332 Tnight     3.8666 
+n_days         18 Rg_f        5.1 Tavg     5.1572 Tmax        7.6 Tmin        1.4 Precip          0 Tday    6.25646 Tnight    3.82823 
+n_days         19 Rg_f        5.1 Tavg     5.3208 Tmax          8 Tmin        1.2 Precip          0 Tday    6.52644 Tnight    3.86322 
+n_days         20 Rg_f        5.1 Tavg     6.7146 Tmax       10.3 Tmin        1.2 Precip          0 Tday    8.32803 Tnight    4.76401 
+n_days         21 Rg_f        5.1 Tavg     6.3448 Tmax       10.6 Tmin       -0.2 Precip          0 Tday    8.25964 Tnight    4.02982 
+n_days         22 Rg_f        5.1 Tavg      7.545 Tmax       10.5 Tmin          3 Precip        0.2 Tday    8.87475 Tnight    5.93738 
+n_days         23 Rg_f        5.1 Tavg     7.5816 Tmax          9 Tmin        5.4 Precip        0.2 Tday    8.21988 Tnight    6.80994 
+n_days         24 Rg_f        5.1 Tavg     9.4422 Tmax       10.9 Tmin        7.2 Precip          0 Tday    10.0982 Tnight    8.64911 
+n_days         25 Rg_f        5.1 Tavg     9.8118 Tmax       11.9 Tmin        6.6 Precip        0.2 Tday    10.7515 Tnight    8.67574 
+n_days         26 Rg_f        5.1 Tavg     6.0724 Tmax        8.2 Tmin        2.8 Precip          8 Tday    7.02982 Tnight    4.91491 
+n_days         27 Rg_f        5.1 Tavg     6.3814 Tmax        9.1 Tmin        2.2 Precip          0 Tday    7.60477 Tnight    4.90239 
+n_days         28 Rg_f        5.1 Tavg     5.9238 Tmax        8.8 Tmin        1.5 Precip          0 Tday    7.21809 Tnight    4.35905 
+n_days         29 Rg_f        5.1 Tavg     5.9814 Tmax        8.7 Tmin        1.8 Precip          0 Tday    7.20477 Tnight    4.50239 
+n_days         30 Rg_f       10.1 Tavg     5.9692 Tmax        9.2 Tmin          1 Precip        1.8 Tday    7.42306 Tnight    4.21153 
+n_days         31 Rg_f        5.1 Tavg     7.1602 Tmax        9.8 Tmin        3.1 Precip          0 Tday    8.34811 Tnight    5.72405 
+...2007 finished to simulate
+
+
+-Year simulated = 2008
+Air pressure = 95460.8 Pa
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f        5.1 Tavg      13.16 Tmax       17.1 Tmin        7.1 Precip          1 Tday     14.933 Tnight    11.0165 
+n_days          2 Rg_f        6.1 Tavg     8.5876 Tmax       10.4 Tmin        5.8 Precip        0.2 Tday    9.40318 Tnight    7.60159 
+n_days          3 Rg_f        6.1 Tavg     7.2208 Tmax        9.9 Tmin        3.1 Precip          0 Tday    8.42644 Tnight    5.76322 
+n_days          4 Rg_f        6.1 Tavg     6.8086 Tmax         10 Tmin        1.9 Precip          0 Tday    8.24473 Tnight    5.07237 
+n_days          5 Rg_f        6.1 Tavg     8.2844 Tmax       11.2 Tmin        3.8 Precip        0.2 Tday    9.59642 Tnight    6.69821 
+n_days          6 Rg_f        6.1 Tavg     7.1996 Tmax        9.8 Tmin        3.2 Precip          0 Tday    8.36978 Tnight    5.78489 
+n_days          7 Rg_f        6.1 Tavg      8.236 Tmax       10.6 Tmin        4.6 Precip          0 Tday     9.2998 Tnight     6.9499 
+n_days          8 Rg_f        6.1 Tavg      8.936 Tmax       11.3 Tmin        5.3 Precip        3.4 Tday     9.9998 Tnight     7.6499 
+n_days          9 Rg_f        6.1 Tavg     9.9724 Tmax       12.1 Tmin        6.7 Precip          0 Tday    10.9298 Tnight    8.81491 
+n_days         10 Rg_f        6.1 Tavg      7.836 Tmax       10.2 Tmin        4.2 Precip          0 Tday     8.8998 Tnight     6.5499 
+n_days         11 Rg_f        6.1 Tavg      8.027 Tmax        9.8 Tmin        5.3 Precip          0 Tday    8.82485 Tnight    7.06243 
+n_days         12 Rg_f        6.1 Tavg    12.6572 Tmax       15.1 Tmin        8.9 Precip          0 Tday    13.7565 Tnight    11.3282 
+n_days         13 Rg_f        6.1 Tavg     9.6328 Tmax       13.1 Tmin        4.3 Precip          0 Tday     11.193 Tnight    7.74652 
+n_days         14 Rg_f        6.1 Tavg     8.2694 Tmax       10.2 Tmin        5.3 Precip          0 Tday    9.13817 Tnight    7.21908 
+n_days         15 Rg_f        6.1 Tavg     9.2906 Tmax       11.3 Tmin        6.2 Precip          0 Tday    10.1948 Tnight    8.19742 
+n_days         16 Rg_f        6.1 Tavg     5.7966 Tmax        8.2 Tmin        2.1 Precip          0 Tday    6.87813 Tnight    4.48907 
+n_days         17 Rg_f        6.1 Tavg    11.8784 Tmax       14.4 Tmin          8 Precip        5.4 Tday    13.0131 Tnight    10.5066 
+n_days         18 Rg_f        6.1 Tavg     9.2238 Tmax       12.1 Tmin        4.8 Precip          0 Tday    10.5181 Tnight    7.65904 
+n_days         19 Rg_f        6.1 Tavg    14.5448 Tmax       18.8 Tmin          8 Precip          0 Tday    16.4596 Tnight    12.2298 
+n_days         20 Rg_f        6.1 Tavg    13.6752 Tmax       17.3 Tmin        8.1 Precip          0 Tday    15.3064 Tnight    11.7032 
+n_days         21 Rg_f        6.1 Tavg     14.733 Tmax       16.9 Tmin       11.4 Precip          0 Tday    15.7081 Tnight    13.5541 
+n_days         22 Rg_f        6.1 Tavg     14.136 Tmax       16.5 Tmin       10.5 Precip          0 Tday    15.1998 Tnight    12.8499 
+n_days         23 Rg_f        6.1 Tavg    11.7842 Tmax         16 Tmin        5.3 Precip       13.2 Tday    13.6813 Tnight    9.49066 
+n_days         24 Rg_f        6.1 Tavg     6.3846 Tmax          8 Tmin        3.9 Precip          7 Tday    7.11153 Tnight    5.50577 
+n_days         25 Rg_f        6.1 Tavg      6.539 Tmax        9.1 Tmin        2.6 Precip        7.4 Tday    7.69145 Tnight    5.14572 
+n_days         26 Rg_f        6.1 Tavg     5.8724 Tmax          8 Tmin        2.6 Precip        2.4 Tday    6.82982 Tnight    4.71491 
+n_days         27 Rg_f        6.1 Tavg     5.9602 Tmax        8.6 Tmin        1.9 Precip          0 Tday    7.14811 Tnight    4.52405 
+n_days         28 Rg_f        6.1 Tavg     7.7326 Tmax       12.5 Tmin        0.4 Precip          0 Tday    9.87793 Tnight    5.13897 
+n_days         29 Rg_f        6.1 Tavg     9.2388 Tmax       13.1 Tmin        3.3 Precip          0 Tday    10.9763 Tnight    7.13817 
+n_days         30 Rg_f        6.1 Tavg     9.8236 Tmax         14 Tmin        3.4 Precip          0 Tday     11.703 Tnight    7.55149 
+n_days         31 Rg_f        6.1 Tavg     9.9084 Tmax       14.4 Tmin          3 Precip          0 Tday    11.9296 Tnight    7.46481 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f        8.1 Tavg    12.2662 Tmax       15.3 Tmin        7.6 Precip          0 Tday    13.6314 Tnight    10.6157 
+n_days          2 Rg_f        9.1 Tavg     10.751 Tmax       14.1 Tmin        5.6 Precip          0 Tday     12.258 Tnight    8.92902 
+n_days          3 Rg_f        9.1 Tavg    11.2538 Tmax       16.1 Tmin        3.8 Precip          0 Tday    13.4346 Tnight     8.6173 
+n_days          4 Rg_f        9.1 Tavg     9.1358 Tmax       12.8 Tmin        3.5 Precip          0 Tday    10.7847 Tnight    7.14234 
+n_days          5 Rg_f        9.1 Tavg    10.3144 Tmax       15.2 Tmin        2.8 Precip          0 Tday    12.5129 Tnight    7.65646 
+n_days          6 Rg_f        9.1 Tavg      9.057 Tmax       12.8 Tmin        3.3 Precip          0 Tday    10.7414 Tnight    7.02068 
+n_days          7 Rg_f        9.1 Tavg    11.5662 Tmax       14.6 Tmin        6.9 Precip        0.6 Tday    12.9314 Tnight     9.9157 
+n_days          8 Rg_f        9.1 Tavg     12.939 Tmax       15.5 Tmin          9 Precip        0.2 Tday    14.0915 Tnight    11.5457 
+n_days          9 Rg_f        9.1 Tavg    10.4514 Tmax       11.2 Tmin        9.3 Precip          0 Tday    10.7883 Tnight    10.0441 
+n_days         10 Rg_f        9.1 Tavg    12.0754 Tmax       14.4 Tmin        8.5 Precip       21.4 Tday    13.1215 Tnight    10.8107 
+n_days         11 Rg_f        9.1 Tavg    12.7782 Tmax       16.6 Tmin        6.9 Precip        0.2 Tday     14.498 Tnight     10.699 
+n_days         12 Rg_f        9.1 Tavg    10.3844 Tmax       13.3 Tmin        5.9 Precip          0 Tday    11.6964 Tnight    8.79821 
+n_days         13 Rg_f        9.1 Tavg     12.457 Tmax       16.2 Tmin        6.7 Precip       15.2 Tday    14.1413 Tnight    10.4207 
+n_days         14 Rg_f        9.1 Tavg    11.9902 Tmax       16.6 Tmin        4.9 Precip          0 Tday    14.0646 Tnight    9.48231 
+n_days         15 Rg_f        9.1 Tavg    11.7936 Tmax         14 Tmin        8.4 Precip          0 Tday    12.7865 Tnight    10.5932 
+n_days         16 Rg_f        9.1 Tavg    12.1722 Tmax       15.6 Tmin        6.9 Precip        0.6 Tday    13.7147 Tnight    10.3074 
+n_days         17 Rg_f        9.1 Tavg    10.4298 Tmax       13.7 Tmin        5.4 Precip          0 Tday    11.9014 Tnight    8.65069 
+n_days         18 Rg_f        9.1 Tavg     6.1544 Tmax        7.1 Tmin        4.7 Precip          0 Tday    6.57992 Tnight    5.63996 
+n_days         19 Rg_f        9.1 Tavg      8.733 Tmax       10.9 Tmin        5.4 Precip       15.4 Tday    9.70815 Tnight    7.55408 
+n_days         20 Rg_f        9.1 Tavg    11.1146 Tmax       14.7 Tmin        5.6 Precip        1.4 Tday     12.728 Tnight    9.16401 
+n_days         21 Rg_f        9.1 Tavg    11.8512 Tmax       13.9 Tmin        8.7 Precip        0.6 Tday    12.7732 Tnight    10.7366 
+n_days         22 Rg_f        9.1 Tavg    11.5448 Tmax       15.8 Tmin          5 Precip        8.2 Tday    13.4596 Tnight    9.22982 
+n_days         23 Rg_f        9.1 Tavg    12.1024 Tmax       16.2 Tmin        5.8 Precip        0.2 Tday    13.9463 Tnight    9.87316 
+n_days         24 Rg_f        9.1 Tavg    12.7632 Tmax       15.6 Tmin        8.4 Precip          0 Tday    14.0398 Tnight    11.2199 
+n_days         25 Rg_f        9.1 Tavg    12.8238 Tmax       15.7 Tmin        8.4 Precip          0 Tday    14.1181 Tnight     11.259 
+n_days         26 Rg_f        9.1 Tavg    13.0752 Tmax       16.7 Tmin        7.5 Precip        0.8 Tday    14.7064 Tnight    11.1032 
+n_days         27 Rg_f        9.1 Tavg    13.4538 Tmax       18.3 Tmin          6 Precip        1.8 Tday    15.6346 Tnight    10.8173 
+n_days         28 Rg_f        9.1 Tavg    12.1448 Tmax       16.4 Tmin        5.6 Precip          0 Tday    14.0596 Tnight    9.82982 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      13.15 Tavg    15.1146 Tmax       18.7 Tmin        9.6 Precip          0 Tday     16.728 Tnight     13.164 
+n_days          2 Rg_f      13.15 Tavg    15.3116 Tmax       18.7 Tmin       10.1 Precip          0 Tday    16.8364 Tnight    13.4682 
+n_days          3 Rg_f      13.15 Tavg    13.5206 Tmax       17.5 Tmin        7.4 Precip          0 Tday    15.3113 Tnight    11.3557 
+n_days          4 Rg_f      13.15 Tavg    16.6992 Tmax       21.9 Tmin        8.7 Precip          0 Tday    19.0396 Tnight    13.8698 
+n_days          5 Rg_f      13.15 Tavg    15.9296 Tmax       20.5 Tmin        8.9 Precip          0 Tday    17.9863 Tnight    13.4431 
+n_days          6 Rg_f      13.15 Tavg    15.4418 Tmax       19.5 Tmin        9.2 Precip          0 Tday     17.268 Tnight     13.234 
+n_days          7 Rg_f      13.15 Tavg    12.3816 Tmax       13.8 Tmin       10.2 Precip        9.2 Tday    13.0199 Tnight    11.6099 
+n_days          8 Rg_f      13.15 Tavg    13.8782 Tmax       17.7 Tmin          8 Precip          0 Tday     15.598 Tnight     11.799 
+n_days          9 Rg_f      13.15 Tavg    13.1874 Tmax       16.3 Tmin        8.4 Precip          0 Tday    14.5881 Tnight     11.494 
+n_days         10 Rg_f      13.15 Tavg    11.5238 Tmax       14.4 Tmin        7.1 Precip          0 Tday    12.8181 Tnight    9.95904 
+n_days         11 Rg_f      13.15 Tavg    11.6118 Tmax       13.7 Tmin        8.4 Precip          0 Tday    12.5515 Tnight    10.4757 
+n_days         12 Rg_f      13.15 Tavg    13.4388 Tmax       17.3 Tmin        7.5 Precip          0 Tday    15.1763 Tnight    11.3382 
+n_days         13 Rg_f      13.15 Tavg    15.3538 Tmax       20.2 Tmin        7.9 Precip          0 Tday    17.5346 Tnight    12.7173 
+n_days         14 Rg_f      13.15 Tavg    15.5812 Tmax       19.6 Tmin        9.4 Precip          0 Tday    17.3897 Tnight    13.3948 
+n_days         15 Rg_f      13.15 Tavg    16.3538 Tmax       21.2 Tmin        8.9 Precip          0 Tday    18.5346 Tnight    13.7173 
+n_days         16 Rg_f      13.15 Tavg    16.6174 Tmax       21.7 Tmin        8.8 Precip          0 Tday    18.9046 Tnight    13.8523 
+n_days         17 Rg_f      13.15 Tavg     14.775 Tmax       19.7 Tmin        7.2 Precip          0 Tday    16.9913 Tnight    12.0956 
+n_days         18 Rg_f      13.15 Tavg    13.1418 Tmax       17.2 Tmin        6.9 Precip          0 Tday     14.968 Tnight     10.934 
+n_days         19 Rg_f      13.15 Tavg     10.839 Tmax       13.4 Tmin        6.9 Precip         19 Tday    11.9915 Tnight    9.44572 
+n_days         20 Rg_f      13.15 Tavg     6.0178 Tmax        8.5 Tmin        2.2 Precip        4.2 Tday    7.13479 Tnight     4.6674 
+n_days         21 Rg_f      13.15 Tavg     7.6934 Tmax       11.2 Tmin        2.3 Precip          0 Tday    9.27137 Tnight    5.78568 
+n_days         22 Rg_f      13.15 Tavg     7.4542 Tmax        9.7 Tmin          4 Precip          0 Tday    8.46481 Tnight     6.2324 
+n_days         23 Rg_f      13.15 Tavg     9.2054 Tmax       13.5 Tmin        2.6 Precip          0 Tday     11.138 Tnight    6.86898 
+n_days         24 Rg_f      13.15 Tavg     8.9086 Tmax       12.1 Tmin          4 Precip        1.2 Tday    10.3447 Tnight    7.17237 
+n_days         25 Rg_f      13.15 Tavg     9.6418 Tmax       13.7 Tmin        3.4 Precip       15.2 Tday     11.468 Tnight      7.434 
+n_days         26 Rg_f      13.15 Tavg    11.7872 Tmax       16.2 Tmin          5 Precip       17.8 Tday     13.773 Tnight    9.38648 
+n_days         27 Rg_f      13.15 Tavg      11.56 Tmax       15.5 Tmin        5.5 Precip          0 Tday     13.333 Tnight     9.4165 
+n_days         28 Rg_f      13.15 Tavg    11.0874 Tmax       14.2 Tmin        6.3 Precip          0 Tday    12.4881 Tnight    9.39404 
+n_days         29 Rg_f      13.15 Tavg    11.6208 Tmax       14.3 Tmin        7.5 Precip        0.2 Tday    12.8264 Tnight    10.1632 
+n_days         30 Rg_f      13.15 Tavg    13.8722 Tmax       17.3 Tmin        8.6 Precip          0 Tday    15.4147 Tnight    12.0074 
+n_days         31 Rg_f      13.15 Tavg    13.6538 Tmax       18.5 Tmin        6.2 Precip          0 Tday    15.8346 Tnight    11.0173 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      17.23 Tavg    15.1962 Tmax       20.2 Tmin        7.5 Precip          0 Tday    17.4479 Tnight     12.474 
+n_days          2 Rg_f      17.23 Tavg    17.4296 Tmax         22 Tmin       10.4 Precip          0 Tday    19.4863 Tnight    14.9431 
+n_days          3 Rg_f      17.23 Tavg    14.6146 Tmax       18.2 Tmin        9.1 Precip        2.8 Tday     16.228 Tnight     12.664 
+n_days          4 Rg_f      17.23 Tavg    12.0634 Tmax       13.6 Tmin        9.7 Precip          1 Tday    12.7549 Tnight    11.2274 
+n_days          5 Rg_f      17.23 Tavg    14.9722 Tmax       18.4 Tmin        9.7 Precip          0 Tday    16.5147 Tnight    13.1074 
+n_days          6 Rg_f      17.23 Tavg    16.3992 Tmax       21.6 Tmin        8.4 Precip          0 Tday    18.7396 Tnight    13.5698 
+n_days          7 Rg_f      17.23 Tavg    15.4568 Tmax       20.5 Tmin        7.7 Precip          0 Tday    17.7262 Tnight    12.7131 
+n_days          8 Rg_f      17.23 Tavg    15.2144 Tmax       20.1 Tmin        7.7 Precip          0 Tday    17.4129 Tnight    12.5565 
+n_days          9 Rg_f      17.23 Tavg    16.1598 Tmax       21.4 Tmin        8.1 Precip          0 Tday    18.5179 Tnight    13.3089 
+n_days         10 Rg_f      17.23 Tavg    17.0264 Tmax       22.7 Tmin        8.3 Precip          0 Tday    19.5795 Tnight    13.9398 
+n_days         11 Rg_f      17.23 Tavg    18.3264 Tmax         24 Tmin        9.6 Precip          0 Tday    20.8795 Tnight    15.2398 
+n_days         12 Rg_f      17.23 Tavg    20.4234 Tmax       25.9 Tmin         12 Precip          0 Tday    22.8879 Tnight    17.4439 
+n_days         13 Rg_f      17.23 Tavg    21.3872 Tmax       25.8 Tmin       14.6 Precip          0 Tday     23.373 Tnight    18.9865 
+n_days         14 Rg_f      17.23 Tavg    17.6722 Tmax       21.1 Tmin       12.4 Precip          0 Tday    19.2147 Tnight    15.8074 
+n_days         15 Rg_f      17.23 Tavg     19.587 Tmax       25.3 Tmin       10.8 Precip          0 Tday    22.1578 Tnight    16.4789 
+n_days         16 Rg_f      17.23 Tavg     21.375 Tmax       26.3 Tmin       13.8 Precip          0 Tday    23.5913 Tnight    18.6956 
+n_days         17 Rg_f      17.23 Tavg    18.9296 Tmax       23.5 Tmin       11.9 Precip          0 Tday    20.9863 Tnight    16.4431 
+n_days         18 Rg_f      17.23 Tavg     17.887 Tmax       23.6 Tmin        9.1 Precip          0 Tday    20.4579 Tnight    14.7789 
+n_days         19 Rg_f      17.23 Tavg    17.9052 Tmax       23.5 Tmin        9.3 Precip          0 Tday    20.4229 Tnight    14.8614 
+n_days         20 Rg_f      17.23 Tavg     21.581 Tmax       26.9 Tmin       13.4 Precip          0 Tday    23.9745 Tnight    18.6873 
+n_days         21 Rg_f      17.23 Tavg    22.2718 Tmax       28.3 Tmin         13 Precip          0 Tday    24.9845 Tnight    18.9922 
+n_days         22 Rg_f      17.23 Tavg    22.8022 Tmax       28.2 Tmin       14.5 Precip          0 Tday    25.2312 Tnight    19.8656 
+n_days         23 Rg_f      17.23 Tavg    21.8476 Tmax       27.6 Tmin         13 Precip          0 Tday    24.4362 Tnight    18.7181 
+n_days         24 Rg_f      17.23 Tavg    22.1718 Tmax       28.2 Tmin       12.9 Precip          0 Tday    24.8845 Tnight    18.8922 
+n_days         25 Rg_f      17.23 Tavg    21.2416 Tmax       26.6 Tmin         13 Precip          0 Tday    23.6529 Tnight    18.3264 
+n_days         26 Rg_f      17.23 Tavg    19.6054 Tmax       23.9 Tmin         13 Precip          0 Tday     21.538 Tnight     17.269 
+n_days         27 Rg_f      17.23 Tavg    19.5114 Tmax       24.2 Tmin       12.3 Precip          0 Tday    21.6213 Tnight    16.9606 
+n_days         28 Rg_f      17.23 Tavg    19.3658 Tmax         25 Tmin       10.7 Precip          0 Tday    21.9012 Tnight    16.3006 
+n_days         29 Rg_f      17.23 Tavg    18.9326 Tmax       23.7 Tmin       11.6 Precip          0 Tday    21.0779 Tnight     16.339 
+n_days         30 Rg_f      17.23 Tavg    17.2298 Tmax       20.5 Tmin       12.2 Precip        0.2 Tday    18.7014 Tnight    15.4507 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      20.79 Tavg     18.669 Tmax       23.2 Tmin       11.7 Precip        2.2 Tday    20.7079 Tnight     16.204 
+n_days          2 Rg_f      20.79 Tavg    16.7722 Tmax       20.2 Tmin       11.5 Precip        3.6 Tday    18.3147 Tnight    14.9074 
+n_days          3 Rg_f      20.79 Tavg     18.054 Tmax       21.6 Tmin       12.6 Precip          0 Tday    19.6497 Tnight    16.1249 
+n_days          4 Rg_f      20.79 Tavg    17.9784 Tmax       20.5 Tmin       14.1 Precip       12.6 Tday    19.1131 Tnight    16.6066 
+n_days          5 Rg_f      20.79 Tavg     16.845 Tmax       19.8 Tmin       12.3 Precip          7 Tday    18.1747 Tnight    15.2374 
+n_days          6 Rg_f      20.79 Tavg    16.4782 Tmax       20.3 Tmin       10.6 Precip        6.6 Tday     18.198 Tnight     14.399 
+n_days          7 Rg_f      20.79 Tavg    19.1992 Tmax       24.4 Tmin       11.2 Precip          0 Tday    21.5396 Tnight    16.3698 
+n_days          8 Rg_f      20.79 Tavg    20.5324 Tmax       26.6 Tmin       11.2 Precip          0 Tday    23.2628 Tnight    17.2314 
+n_days          9 Rg_f      20.79 Tavg    20.0418 Tmax       24.1 Tmin       13.8 Precip          0 Tday     21.868 Tnight     17.834 
+n_days         10 Rg_f      20.79 Tavg    21.7476 Tmax       27.5 Tmin       12.9 Precip          0 Tday    24.3362 Tnight    18.6181 
+n_days         11 Rg_f      20.79 Tavg    22.1326 Tmax       26.9 Tmin       14.8 Precip          0 Tday    24.2779 Tnight     19.539 
+n_days         12 Rg_f      20.79 Tavg    23.0962 Tmax       28.1 Tmin       15.4 Precip          0 Tday    25.3479 Tnight     20.374 
+n_days         13 Rg_f      20.79 Tavg    23.1294 Tmax         29 Tmin       14.1 Precip          0 Tday    25.7712 Tnight    19.9356 
+n_days         14 Rg_f      20.79 Tavg    24.0324 Tmax       30.1 Tmin       14.7 Precip          0 Tday    26.7628 Tnight    20.7314 
+n_days         15 Rg_f      20.79 Tavg    19.8994 Tmax       23.8 Tmin       13.9 Precip          0 Tday    21.6547 Tnight    17.7773 
+n_days         16 Rg_f      20.79 Tavg    18.9144 Tmax       23.8 Tmin       11.4 Precip       14.4 Tday    21.1129 Tnight    16.2565 
+n_days         17 Rg_f      20.79 Tavg     18.775 Tmax       23.7 Tmin       11.2 Precip          0 Tday    20.9913 Tnight    16.0956 
+n_days         18 Rg_f      20.79 Tavg    17.9692 Tmax       21.2 Tmin         13 Precip          0 Tday    19.4231 Tnight    16.2115 
+n_days         19 Rg_f      20.79 Tavg    19.4568 Tmax       24.5 Tmin       11.7 Precip          0 Tday    21.7262 Tnight    16.7131 
+n_days         20 Rg_f      20.79 Tavg    22.2446 Tmax       27.8 Tmin       13.7 Precip          0 Tday    24.7445 Tnight    19.2223 
+n_days         21 Rg_f      20.79 Tavg    23.4324 Tmax       29.5 Tmin       14.1 Precip          0 Tday    26.1628 Tnight    20.1314 
+n_days         22 Rg_f      20.79 Tavg     26.102 Tmax       32.8 Tmin       15.8 Precip          0 Tday    29.1161 Tnight    22.4581 
+n_days         23 Rg_f      20.79 Tavg     26.672 Tmax       31.4 Tmin       19.4 Precip          0 Tday    28.7996 Tnight    24.0998 
+n_days         24 Rg_f      20.79 Tavg    27.9356 Tmax       32.9 Tmin       20.3 Precip          0 Tday    30.1696 Tnight    25.2348 
+n_days         25 Rg_f      20.79 Tavg    28.1992 Tmax       33.4 Tmin       20.2 Precip          0 Tday    30.5396 Tnight    25.3698 
+n_days         26 Rg_f      20.79 Tavg    25.3296 Tmax       29.9 Tmin       18.3 Precip          0 Tday    27.3863 Tnight    22.8431 
+n_days         27 Rg_f      20.79 Tavg    23.3054 Tmax       27.6 Tmin       16.7 Precip        0.2 Tday     25.238 Tnight     20.969 
+n_days         28 Rg_f      20.79 Tavg    18.4176 Tmax       22.2 Tmin       12.6 Precip       16.6 Tday    20.1197 Tnight    16.3598 
+n_days         29 Rg_f      20.79 Tavg    14.6996 Tmax       17.3 Tmin       10.7 Precip       14.2 Tday    15.8698 Tnight    13.2849 
+n_days         30 Rg_f      20.79 Tavg     17.054 Tmax       20.6 Tmin       11.6 Precip        0.4 Tday    18.6497 Tnight    15.1249 
+n_days         31 Rg_f      20.79 Tavg    19.6052 Tmax       25.2 Tmin         11 Precip          0 Tday    22.1229 Tnight    16.5614 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      22.67 Tavg     19.851 Tmax       23.2 Tmin       14.7 Precip        1.8 Tday     21.358 Tnight     18.029 
+n_days          2 Rg_f      22.67 Tavg    18.6692 Tmax       21.9 Tmin       13.7 Precip          0 Tday    20.1231 Tnight    16.9115 
+n_days          3 Rg_f      22.67 Tavg    17.5026 Tmax       20.3 Tmin       13.2 Precip        2.8 Tday    18.7614 Tnight    15.9807 
+n_days          4 Rg_f      22.67 Tavg      23.19 Tmax       29.1 Tmin       14.1 Precip          0 Tday    25.8495 Tnight    19.9748 
+n_days          5 Rg_f      22.67 Tavg    24.2932 Tmax       29.1 Tmin       16.9 Precip         17 Tday    26.4563 Tnight    21.6781 
+n_days          6 Rg_f      22.67 Tavg     22.572 Tmax       27.3 Tmin       15.3 Precip          8 Tday    24.6996 Tnight    19.9998 
+n_days          7 Rg_f      22.67 Tavg    22.3628 Tmax       27.8 Tmin         14 Precip          0 Tday    24.8095 Tnight    19.4048 
+n_days          8 Rg_f      22.67 Tavg    23.3508 Tmax         28 Tmin       16.2 Precip        0.2 Tday    25.4429 Tnight    20.8215 
+n_days          9 Rg_f      22.67 Tavg    25.2386 Tmax       30.4 Tmin       17.3 Precip          0 Tday    27.5612 Tnight    22.4306 
+n_days         10 Rg_f      22.67 Tavg     25.478 Tmax       30.6 Tmin       17.6 Precip        0.2 Tday    27.7829 Tnight    22.6915 
+n_days         11 Rg_f      22.67 Tavg    25.0386 Tmax       30.2 Tmin       17.1 Precip          0 Tday    27.3612 Tnight    22.2306 
+n_days         12 Rg_f      22.67 Tavg    24.2022 Tmax       29.6 Tmin       15.9 Precip          0 Tday    26.6312 Tnight    21.2656 
+n_days         13 Rg_f      22.67 Tavg    24.8688 Tmax       30.7 Tmin       15.9 Precip          0 Tday    27.4928 Tnight    21.6964 
+n_days         14 Rg_f      22.67 Tavg     26.396 Tmax       32.7 Tmin       16.7 Precip          0 Tday    29.2328 Tnight    22.9664 
+n_days         15 Rg_f      22.67 Tavg    25.3328 Tmax       28.8 Tmin         20 Precip          0 Tday     26.893 Tnight    23.4465 
+n_days         16 Rg_f      22.67 Tavg    25.7902 Tmax       30.4 Tmin       18.7 Precip          0 Tday    27.8646 Tnight    23.2823 
+n_days         17 Rg_f      22.67 Tavg     25.063 Tmax       29.2 Tmin       18.7 Precip          0 Tday    26.9246 Tnight    22.8123 
+n_days         18 Rg_f      22.67 Tavg     26.296 Tmax       32.6 Tmin       16.6 Precip          0 Tday    29.1328 Tnight    22.8664 
+n_days         19 Rg_f      22.67 Tavg    28.4294 Tmax       34.3 Tmin       19.4 Precip          0 Tday    31.0712 Tnight    25.2356 
+n_days         20 Rg_f      22.67 Tavg     30.293 Tmax       36.4 Tmin       20.9 Precip          0 Tday    33.0412 Tnight    26.9706 
+n_days         21 Rg_f      22.67 Tavg    27.6174 Tmax       32.7 Tmin       19.8 Precip          0 Tday    29.9046 Tnight    24.8523 
+n_days         22 Rg_f      22.67 Tavg    28.8144 Tmax       33.7 Tmin       21.3 Precip          0 Tday    31.0129 Tnight    26.1565 
+n_days         23 Rg_f      22.67 Tavg    26.8356 Tmax       31.8 Tmin       19.2 Precip          0 Tday    29.0696 Tnight    24.1348 
+n_days         24 Rg_f      22.67 Tavg    26.6688 Tmax       32.5 Tmin       17.7 Precip          0 Tday    29.2928 Tnight    23.4964 
+n_days         25 Rg_f      22.67 Tavg    30.7932 Tmax       35.6 Tmin       23.4 Precip          0 Tday    32.9563 Tnight    28.1781 
+n_days         26 Rg_f      22.67 Tavg     26.278 Tmax       31.4 Tmin       18.4 Precip          0 Tday    28.5829 Tnight    23.4915 
+n_days         27 Rg_f      22.67 Tavg    23.4478 Tmax       27.9 Tmin       16.6 Precip          0 Tday    25.4513 Tnight    21.0256 
+n_days         28 Rg_f      22.67 Tavg    24.0174 Tmax       29.1 Tmin       16.2 Precip          0 Tday    26.3046 Tnight    21.2523 
+n_days         29 Rg_f      22.67 Tavg    23.5808 Tmax       30.2 Tmin       13.4 Precip          0 Tday    26.5594 Tnight    19.9797 
+n_days         30 Rg_f      22.67 Tavg    26.1112 Tmax       32.1 Tmin       16.9 Precip          0 Tday    28.8062 Tnight    22.8531 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      22.56 Tavg     26.581 Tmax       31.9 Tmin       18.4 Precip          0 Tday    28.9746 Tnight    23.6873 
+n_days          2 Rg_f      22.56 Tavg    25.4628 Tmax       30.9 Tmin       17.1 Precip          0 Tday    27.9095 Tnight    22.5048 
+n_days          3 Rg_f      22.56 Tavg    24.8144 Tmax       29.7 Tmin       17.3 Precip          0 Tday    27.0129 Tnight    22.1565 
+n_days          4 Rg_f      22.56 Tavg     23.563 Tmax       27.7 Tmin       17.2 Precip          0 Tday    25.4246 Tnight    21.3123 
+n_days          5 Rg_f      22.56 Tavg    23.2446 Tmax       28.8 Tmin       14.7 Precip          0 Tday    25.7445 Tnight    20.2223 
+n_days          6 Rg_f      22.56 Tavg    24.1324 Tmax       30.2 Tmin       14.8 Precip          0 Tday    26.8628 Tnight    20.8314 
+n_days          7 Rg_f      22.56 Tavg    25.1748 Tmax       31.4 Tmin       15.6 Precip          0 Tday    27.9761 Tnight    21.7881 
+n_days          8 Rg_f      22.56 Tavg    25.7748 Tmax         32 Tmin       16.2 Precip          0 Tday    28.5761 Tnight    22.3881 
+n_days          9 Rg_f      22.56 Tavg    26.4082 Tmax       32.2 Tmin       17.5 Precip        0.2 Tday    29.0145 Tnight    23.2573 
+n_days         10 Rg_f      22.56 Tavg    25.3174 Tmax       30.4 Tmin       17.5 Precip        0.2 Tday    27.6046 Tnight    22.5523 
+n_days         11 Rg_f      22.56 Tavg    21.6508 Tmax       26.3 Tmin       14.5 Precip          0 Tday    23.7429 Tnight    19.1215 
+n_days         12 Rg_f      22.56 Tavg     23.578 Tmax       28.7 Tmin       15.7 Precip          0 Tday    25.8829 Tnight    20.7914 
+n_days         13 Rg_f      22.56 Tavg     25.196 Tmax       31.5 Tmin       15.5 Precip          0 Tday    28.0328 Tnight    21.7664 
+n_days         14 Rg_f      22.56 Tavg     27.802 Tmax       34.5 Tmin       17.5 Precip          0 Tday    30.8161 Tnight     24.158 
+n_days         15 Rg_f      22.56 Tavg     30.499 Tmax         37 Tmin       20.5 Precip          0 Tday    33.4245 Tnight    26.9622 
+n_days         16 Rg_f      22.56 Tavg    30.6264 Tmax       36.3 Tmin       21.9 Precip          0 Tday    33.1795 Tnight    27.5398 
+n_days         17 Rg_f      22.56 Tavg    30.2596 Tmax       36.8 Tmin       20.2 Precip          0 Tday    33.2028 Tnight    26.7014 
+n_days         18 Rg_f      22.56 Tavg    31.5354 Tmax       37.8 Tmin       21.9 Precip          0 Tday    34.3545 Tnight    28.1272 
+n_days         19 Rg_f      22.56 Tavg    31.4354 Tmax       37.7 Tmin       21.8 Precip          0 Tday    34.2545 Tnight    28.0272 
+n_days         20 Rg_f      22.56 Tavg     30.393 Tmax       36.5 Tmin         21 Precip          0 Tday    33.1412 Tnight    27.0706 
+n_days         21 Rg_f      22.56 Tavg     29.984 Tmax       35.5 Tmin       21.5 Precip          0 Tday    32.4662 Tnight    26.9831 
+n_days         22 Rg_f      22.56 Tavg    28.8386 Tmax         34 Tmin       20.9 Precip          0 Tday    31.1612 Tnight    26.0306 
+n_days         23 Rg_f      22.56 Tavg    30.6566 Tmax         37 Tmin       20.9 Precip          0 Tday    33.5111 Tnight    27.2056 
+n_days         24 Rg_f      22.56 Tavg    30.1326 Tmax       34.9 Tmin       22.8 Precip          0 Tday    32.2779 Tnight     27.539 
+n_days         25 Rg_f      22.56 Tavg    29.1992 Tmax       34.4 Tmin       21.2 Precip          0 Tday    31.5396 Tnight    26.3698 
+n_days         26 Rg_f      22.56 Tavg    29.4476 Tmax       35.2 Tmin       20.6 Precip          0 Tday    32.0362 Tnight    26.3181 
+n_days         27 Rg_f      22.56 Tavg    29.9628 Tmax       35.4 Tmin       21.6 Precip          0 Tday    32.4095 Tnight    27.0048 
+n_days         28 Rg_f      22.56 Tavg    30.4052 Tmax         36 Tmin       21.8 Precip          0 Tday    32.9229 Tnight    27.3614 
+n_days         29 Rg_f      22.56 Tavg    30.6326 Tmax       35.4 Tmin       23.3 Precip          0 Tday    32.7779 Tnight     28.039 
+n_days         30 Rg_f      22.56 Tavg    28.5658 Tmax       34.2 Tmin       19.9 Precip          0 Tday    31.1012 Tnight    25.5006 
+n_days         31 Rg_f      22.56 Tavg    25.7176 Tmax       29.5 Tmin       19.9 Precip          0 Tday    27.4197 Tnight    23.6598 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       19.2 Tavg     26.287 Tmax         32 Tmin       17.5 Precip          0 Tday    28.8578 Tnight    23.1789 
+n_days          2 Rg_f       19.2 Tavg    28.3022 Tmax       33.7 Tmin         20 Precip          0 Tday    30.7312 Tnight    25.3656 
+n_days          3 Rg_f       19.2 Tavg    26.4054 Tmax       30.7 Tmin       19.8 Precip          0 Tday     28.338 Tnight     24.069 
+n_days          4 Rg_f       19.2 Tavg    25.2842 Tmax       29.5 Tmin       18.8 Precip          0 Tday    27.1813 Tnight    22.9907 
+n_days          5 Rg_f       19.2 Tavg    24.4206 Tmax       28.4 Tmin       18.3 Precip          0 Tday    26.2113 Tnight    22.2557 
+n_days          6 Rg_f       19.2 Tavg    26.1324 Tmax       32.2 Tmin       16.8 Precip          0 Tday    28.8628 Tnight    22.8314 
+n_days          7 Rg_f       19.2 Tavg    26.6688 Tmax       32.5 Tmin       17.7 Precip          0 Tday    29.2928 Tnight    23.4964 
+n_days          8 Rg_f       19.2 Tavg    25.6538 Tmax       30.5 Tmin       18.2 Precip          0 Tday    27.8346 Tnight    23.0173 
+n_days          9 Rg_f       19.2 Tavg    23.8842 Tmax       28.1 Tmin       17.4 Precip          0 Tday    25.7813 Tnight    21.5907 
+n_days         10 Rg_f       19.2 Tavg    19.6632 Tmax       22.5 Tmin       15.3 Precip        9.6 Tday    20.9398 Tnight    18.1199 
+n_days         11 Rg_f       19.2 Tavg    21.5418 Tmax       25.6 Tmin       15.3 Precip        0.4 Tday     23.368 Tnight     19.334 
+n_days         12 Rg_f       19.2 Tavg     24.384 Tmax       29.9 Tmin       15.9 Precip          0 Tday    26.8662 Tnight    21.3831 
+n_days         13 Rg_f       19.2 Tavg    25.0628 Tmax       30.5 Tmin       16.7 Precip          0 Tday    27.5095 Tnight    22.1048 
+n_days         14 Rg_f       19.2 Tavg    27.0718 Tmax       33.1 Tmin       17.8 Precip          0 Tday    29.7845 Tnight    23.7922 
+n_days         15 Rg_f       19.2 Tavg     28.287 Tmax         34 Tmin       19.5 Precip          0 Tday    30.8578 Tnight    25.1789 
+n_days         16 Rg_f       19.2 Tavg    28.3234 Tmax       33.8 Tmin       19.9 Precip          0 Tday    30.7879 Tnight    25.3439 
+n_days         17 Rg_f       19.2 Tavg    27.2446 Tmax       32.8 Tmin       18.7 Precip          0 Tday    29.7445 Tnight    24.2223 
+n_days         18 Rg_f       19.2 Tavg    26.4144 Tmax       31.3 Tmin       18.9 Precip          0 Tday    28.6129 Tnight    23.7565 
+n_days         19 Rg_f       19.2 Tavg    25.4688 Tmax       31.3 Tmin       16.5 Precip          0 Tday    28.0928 Tnight    22.2964 
+n_days         20 Rg_f       19.2 Tavg    24.8994 Tmax       28.8 Tmin       18.9 Precip          0 Tday    26.6547 Tnight    22.7773 
+n_days         21 Rg_f       19.2 Tavg    24.0024 Tmax       28.1 Tmin       17.7 Precip          0 Tday    25.8463 Tnight    21.7732 
+n_days         22 Rg_f       19.2 Tavg    26.6568 Tmax       31.7 Tmin       18.9 Precip          0 Tday    28.9262 Tnight    23.9131 
+n_days         23 Rg_f       19.2 Tavg    25.9418 Tmax         30 Tmin       19.7 Precip          1 Tday     27.768 Tnight     23.734 
+n_days         24 Rg_f       19.2 Tavg    24.7176 Tmax       28.5 Tmin       18.9 Precip          0 Tday    26.4197 Tnight    22.6598 
+n_days         25 Rg_f       19.2 Tavg    31.6082 Tmax       37.4 Tmin       22.7 Precip          0 Tday    34.2145 Tnight    28.4573 
+n_days         26 Rg_f       19.2 Tavg     32.372 Tmax       37.1 Tmin       25.1 Precip          0 Tday    34.4996 Tnight    29.7998 
+n_days         27 Rg_f       19.2 Tavg    31.4598 Tmax       36.7 Tmin       23.4 Precip          0 Tday    33.8179 Tnight    28.6089 
+n_days         28 Rg_f       19.2 Tavg    30.0264 Tmax       35.7 Tmin       21.3 Precip          0 Tday    32.5795 Tnight    26.9398 
+n_days         29 Rg_f       19.2 Tavg    29.5446 Tmax       35.1 Tmin         21 Precip          0 Tday    32.0445 Tnight    26.5223 
+n_days         30 Rg_f       19.2 Tavg    29.9448 Tmax       34.2 Tmin       23.4 Precip        0.2 Tday    31.8596 Tnight    27.6298 
+n_days         31 Rg_f       19.2 Tavg     25.757 Tmax       29.5 Tmin         20 Precip          0 Tday    27.4413 Tnight    23.7207 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f      14.89 Tavg    22.8388 Tmax       26.7 Tmin       16.9 Precip          0 Tday    24.5763 Tnight    20.7382 
+n_days          2 Rg_f      14.89 Tavg    25.3144 Tmax       30.2 Tmin       17.8 Precip          0 Tday    27.5129 Tnight    22.6565 
+n_days          3 Rg_f      14.89 Tavg     25.572 Tmax       30.3 Tmin       18.3 Precip          0 Tday    27.6996 Tnight    22.9998 
+n_days          4 Rg_f      14.89 Tavg     21.269 Tmax       25.8 Tmin       14.3 Precip          0 Tday     23.308 Tnight     18.804 
+n_days          5 Rg_f      14.89 Tavg    17.0782 Tmax       20.9 Tmin       11.2 Precip          0 Tday     18.798 Tnight     14.999 
+n_days          6 Rg_f      14.89 Tavg     16.766 Tmax       21.1 Tmin       10.1 Precip          2 Tday    18.7163 Tnight    14.4081 
+n_days          7 Rg_f      14.89 Tavg    20.4294 Tmax       26.3 Tmin       11.4 Precip          0 Tday    23.0712 Tnight    17.2356 
+n_days          8 Rg_f      14.89 Tavg    23.1688 Tmax         29 Tmin       14.2 Precip          0 Tday    25.7928 Tnight    19.9964 
+n_days          9 Rg_f      14.89 Tavg    22.1932 Tmax         27 Tmin       14.8 Precip          0 Tday    24.3563 Tnight    19.5781 
+n_days         10 Rg_f      14.89 Tavg    21.8358 Tmax       25.5 Tmin       16.2 Precip        9.8 Tday    23.4847 Tnight    19.8423 
+n_days         11 Rg_f      14.89 Tavg    22.6358 Tmax       26.3 Tmin         17 Precip          0 Tday    24.2847 Tnight    20.6423 
+n_days         12 Rg_f      14.89 Tavg    23.5932 Tmax       28.4 Tmin       16.2 Precip          0 Tday    25.7563 Tnight    20.9781 
+n_days         13 Rg_f      14.89 Tavg    23.3476 Tmax       29.1 Tmin       14.5 Precip          0 Tday    25.9362 Tnight    20.2181 
+n_days         14 Rg_f      14.89 Tavg    22.7628 Tmax       28.2 Tmin       14.4 Precip          0 Tday    25.2095 Tnight    19.8048 
+n_days         15 Rg_f      14.89 Tavg    24.6688 Tmax       30.5 Tmin       15.7 Precip          0 Tday    27.2928 Tnight    21.4964 
+n_days         16 Rg_f      14.89 Tavg     24.266 Tmax       28.6 Tmin       17.6 Precip          0 Tday    26.2163 Tnight    21.9081 
+n_days         17 Rg_f      14.89 Tavg     25.257 Tmax         29 Tmin       19.5 Precip          0 Tday    26.9413 Tnight    23.2207 
+n_days         18 Rg_f      14.89 Tavg    25.5238 Tmax       28.4 Tmin       21.1 Precip        0.8 Tday    26.8181 Tnight     23.959 
+n_days         19 Rg_f      14.89 Tavg    22.9538 Tmax       27.8 Tmin       15.5 Precip          0 Tday    25.1346 Tnight    20.3173 
+n_days         20 Rg_f      14.89 Tavg    19.2388 Tmax       23.1 Tmin       13.3 Precip          0 Tday    20.9763 Tnight    17.1382 
+n_days         21 Rg_f      14.89 Tavg    20.1962 Tmax       25.2 Tmin       12.5 Precip          0 Tday    22.4479 Tnight     17.474 
+n_days         22 Rg_f      14.89 Tavg    21.6022 Tmax         27 Tmin       13.3 Precip          0 Tday    24.0312 Tnight    18.6656 
+n_days         23 Rg_f      14.89 Tavg    23.0294 Tmax       28.9 Tmin         14 Precip          0 Tday    25.6712 Tnight    19.8356 
+n_days         24 Rg_f      14.89 Tavg    22.7084 Tmax       27.2 Tmin       15.8 Precip          0 Tday    24.7296 Tnight    20.2648 
+n_days         25 Rg_f      14.89 Tavg    23.7174 Tmax       28.8 Tmin       15.9 Precip          0 Tday    26.0046 Tnight    20.9523 
+n_days         26 Rg_f      14.89 Tavg    20.0146 Tmax       23.6 Tmin       14.5 Precip        0.6 Tday     21.628 Tnight     18.064 
+n_days         27 Rg_f      14.89 Tavg    16.1178 Tmax       18.6 Tmin       12.3 Precip       31.8 Tday    17.2348 Tnight    14.7674 
+n_days         28 Rg_f      14.89 Tavg     17.448 Tmax       20.6 Tmin       12.6 Precip          7 Tday    18.8664 Tnight    15.7332 
+n_days         29 Rg_f      14.89 Tavg     18.251 Tmax       21.6 Tmin       13.1 Precip          0 Tday    19.7581 Tnight     16.429 
+n_days         30 Rg_f      14.89 Tavg      21.29 Tmax       27.2 Tmin       12.2 Precip          0 Tday    23.9495 Tnight    18.0748 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       10.5 Tavg    23.8022 Tmax       29.2 Tmin       15.5 Precip          0 Tday    26.2312 Tnight    20.8656 
+n_days          2 Rg_f       10.5 Tavg    24.9962 Tmax         30 Tmin       17.3 Precip          0 Tday    27.2479 Tnight     22.274 
+n_days          3 Rg_f       10.5 Tavg    24.6476 Tmax       30.4 Tmin       15.8 Precip          0 Tday    27.2362 Tnight    21.5181 
+n_days          4 Rg_f       10.5 Tavg     25.387 Tmax       31.1 Tmin       16.6 Precip          0 Tday    27.9579 Tnight    22.2789 
+n_days          5 Rg_f       10.5 Tavg    25.0354 Tmax       31.3 Tmin       15.4 Precip          0 Tday    27.8545 Tnight    21.6272 
+n_days          6 Rg_f       10.5 Tavg    22.1752 Tmax       25.8 Tmin       16.6 Precip        0.4 Tday    23.8064 Tnight    20.2032 
+n_days          7 Rg_f       10.5 Tavg    18.5814 Tmax       21.3 Tmin       14.4 Precip        0.4 Tday    19.8048 Tnight    17.1024 
+n_days          8 Rg_f       10.5 Tavg     19.866 Tmax       24.2 Tmin       13.2 Precip          0 Tday    21.8163 Tnight    17.5082 
+n_days          9 Rg_f       10.5 Tavg    18.0692 Tmax       21.3 Tmin       13.1 Precip          0 Tday    19.5231 Tnight    16.3115 
+n_days         10 Rg_f       10.5 Tavg    16.8178 Tmax       19.3 Tmin         13 Precip        0.8 Tday    17.9348 Tnight    15.4674 
+n_days         11 Rg_f       10.5 Tavg    16.0572 Tmax       18.5 Tmin       12.3 Precip          0 Tday    17.1565 Tnight    14.7282 
+n_days         12 Rg_f       10.5 Tavg    18.1266 Tmax       22.5 Tmin       11.4 Precip          0 Tday    20.0946 Tnight    15.7473 
+n_days         13 Rg_f       10.5 Tavg    18.7236 Tmax       22.9 Tmin       12.3 Precip          0 Tday     20.603 Tnight    16.4515 
+n_days         14 Rg_f       10.5 Tavg      16.06 Tmax         20 Tmin         10 Precip          0 Tday     17.833 Tnight    13.9165 
+n_days         15 Rg_f       10.5 Tavg    16.4598 Tmax       21.7 Tmin        8.4 Precip          0 Tday    18.8179 Tnight    13.6089 
+n_days         16 Rg_f       10.5 Tavg    16.3204 Tmax       21.6 Tmin        8.2 Precip          0 Tday    18.6962 Tnight    13.4481 
+n_days         17 Rg_f       10.5 Tavg    17.7356 Tmax       22.7 Tmin       10.1 Precip          0 Tday    19.9696 Tnight    15.0348 
+n_days         18 Rg_f       10.5 Tavg    18.0298 Tmax       21.3 Tmin         13 Precip        4.2 Tday    19.5014 Tnight    16.2507 
+n_days         19 Rg_f       10.5 Tavg     12.751 Tmax       16.1 Tmin        7.6 Precip          0 Tday    14.2581 Tnight     10.929 
+n_days         20 Rg_f       10.5 Tavg      8.639 Tmax       11.2 Tmin        4.7 Precip          0 Tday    9.79145 Tnight    7.24573 
+n_days         21 Rg_f       10.5 Tavg     7.9996 Tmax       10.6 Tmin          4 Precip          0 Tday    9.16978 Tnight    6.58489 
+n_days         22 Rg_f       10.5 Tavg     7.2634 Tmax        8.8 Tmin        4.9 Precip        0.4 Tday    7.95487 Tnight    6.42744 
+n_days         23 Rg_f       10.5 Tavg    10.4358 Tmax       14.1 Tmin        4.8 Precip        0.4 Tday    12.0847 Tnight    8.44234 
+n_days         24 Rg_f       10.5 Tavg    12.5056 Tmax       15.5 Tmin        7.9 Precip        0.2 Tday    13.8531 Tnight    10.8765 
+n_days         25 Rg_f       10.5 Tavg    11.8876 Tmax       13.7 Tmin        9.1 Precip        2.8 Tday    12.7032 Tnight    10.9016 
+n_days         26 Rg_f       10.5 Tavg    16.0996 Tmax       18.7 Tmin       12.1 Precip       10.4 Tday    17.2698 Tnight    14.6849 
+n_days         27 Rg_f       10.5 Tavg    18.1086 Tmax       21.3 Tmin       13.2 Precip          0 Tday    19.5447 Tnight    16.3724 
+n_days         28 Rg_f       10.5 Tavg     17.372 Tmax       22.1 Tmin       10.1 Precip          0 Tday    19.4996 Tnight    14.7998 
+n_days         29 Rg_f       10.5 Tavg    16.1358 Tmax       19.8 Tmin       10.5 Precip          0 Tday    17.7847 Tnight    14.1423 
+n_days         30 Rg_f       10.5 Tavg    17.0238 Tmax       19.9 Tmin       12.6 Precip       17.8 Tday    18.3181 Tnight     15.459 
+n_days         31 Rg_f       10.5 Tavg    13.7786 Tmax         15 Tmin       11.9 Precip          0 Tday    14.3282 Tnight    13.1141 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+n_days          1 Rg_f       6.61 Tavg    10.9392 Tmax       12.2 Tmin          9 Precip        2.8 Tday    11.5066 Tnight    10.2533 
+n_days          2 Rg_f       6.61 Tavg    12.8026 Tmax       15.6 Tmin        8.5 Precip          0 Tday    14.0614 Tnight    11.2807 
+n_days          3 Rg_f       6.61 Tavg    14.2146 Tmax       17.8 Tmin        8.7 Precip          0 Tday     15.828 Tnight     12.264 
+n_days          4 Rg_f       6.61 Tavg    14.3812 Tmax       18.4 Tmin        8.2 Precip          0 Tday    16.1897 Tnight    12.1948 
+n_days          5 Rg_f       6.61 Tavg    13.5752 Tmax       17.2 Tmin          8 Precip          0 Tday    15.2064 Tnight    11.6032 
+n_days          6 Rg_f       6.61 Tavg     9.3512 Tmax       11.4 Tmin        6.2 Precip          0 Tday    10.2732 Tnight    8.23658 
+n_days          7 Rg_f       6.61 Tavg    12.2752 Tmax       15.9 Tmin        6.7 Precip          0 Tday    13.9064 Tnight    10.3032 
+n_days          8 Rg_f       6.61 Tavg    11.6812 Tmax       15.7 Tmin        5.5 Precip          0 Tday    13.4897 Tnight    9.49483 
+n_days          9 Rg_f       6.61 Tavg     12.466 Tmax       16.8 Tmin        5.8 Precip        0.6 Tday    14.4163 Tnight    10.1082 
+n_days         10 Rg_f       6.61 Tavg    10.0872 Tmax       14.5 Tmin        3.3 Precip          0 Tday     12.073 Tnight    7.68648 
+n_days         11 Rg_f       6.61 Tavg    11.2874 Tmax       14.4 Tmin        6.5 Precip          0 Tday    12.6881 Tnight    9.59403 
+n_days         12 Rg_f       6.61 Tavg    12.1722 Tmax       15.6 Tmin        6.9 Precip          0 Tday    13.7147 Tnight    10.3074 
+n_days         13 Rg_f       6.61 Tavg    10.5782 Tmax       14.4 Tmin        4.7 Precip        0.4 Tday     12.298 Tnight    8.49901 
+n_days         14 Rg_f       6.61 Tavg     7.5572 Tmax         10 Tmin        3.8 Precip       11.6 Tday    8.65646 Tnight    6.22823 
+n_days         15 Rg_f       6.61 Tavg      6.636 Tmax          9 Tmin          3 Precip          0 Tday     7.6998 Tnight     5.3499 
+n_days         16 Rg_f       6.61 Tavg     5.2968 Tmax        6.4 Tmin        3.6 Precip        3.2 Tday    5.79324 Tnight    4.69662 
+n_days         17 Rg_f       6.61 Tavg     5.0664 Tmax        6.8 Tmin        2.4 Precip          0 Tday    5.84652 Tnight    4.12326 
+n_days         18 Rg_f       6.61 Tavg     5.2118 Tmax        7.3 Tmin          2 Precip          0 Tday    6.15149 Tnight    4.07574 
+n_days         19 Rg_f       6.61 Tavg     6.5268 Tmax        9.6 Tmin        1.8 Precip          0 Tday    7.90974 Tnight    4.85487 
+n_days         20 Rg_f       6.61 Tavg     7.7842 Tmax         12 Tmin        1.3 Precip          0 Tday    9.68131 Tnight    5.49066 
+n_days         21 Rg_f       6.61 Tavg     9.2722 Tmax       12.7 Tmin          4 Precip          0 Tday    10.8147 Tnight    7.40735 
+n_days         22 Rg_f       6.61 Tavg    12.6812 Tmax       16.7 Tmin        6.5 Precip          0 Tday    14.4897 Tnight    10.4948 
+n_days         23 Rg_f       6.61 Tavg    17.1604 Tmax       18.5 Tmin       15.1 Precip          0 Tday    17.7632 Tnight    16.4316 
+n_days         24 Rg_f       6.61 Tavg    15.1632 Tmax         18 Tmin       10.8 Precip          2 Tday    16.4398 Tnight    13.6199 
+n_days         25 Rg_f       6.61 Tavg    13.7996 Tmax       16.4 Tmin        9.8 Precip        0.4 Tday    14.9698 Tnight    12.3849 
+n_days         26 Rg_f       6.61 Tavg    14.1934 Tmax       17.7 Tmin        8.8 Precip          0 Tday    15.7714 Tnight    12.2857 
+n_days         27 Rg_f       6.61 Tavg     11.051 Tmax       14.4 Tmin        5.9 Precip          0 Tday     12.558 Tnight    9.22903 
+n_days         28 Rg_f       6.61 Tavg     10.345 Tmax       13.3 Tmin        5.8 Precip          0 Tday    11.6748 Tnight    8.73738 
+n_days         29 Rg_f       6.61 Tavg     7.1756 Tmax        8.2 Tmin        5.6 Precip        6.4 Tday    7.63658 Tnight    6.61829 
+n_days         30 Rg_f       6.61 Tavg      9.448 Tmax       12.6 Tmin        4.6 Precip        0.8 Tday    10.8664 Tnight     7.7332 
+computing Get_avg_temperature...
+computing Get_daylight_avg_temperature...
+computing Get_nightime_avg_temperature...
+computing Get_thermic_sum...
+computing Get_Day_Length...
+computing Get_Veg_Days...
+-TOTAL VEGETATIVE DAYS = 152 
+
+n_days          1 Rg_f        5.1 Tavg     8.8722 Tmax       12.3 Tmin        3.6 Precip          0 Tday    10.4147 Tnight    7.00735 
+n_days          2 Rg_f        5.1 Tavg    10.7268 Tmax       13.8 Tmin          6 Precip          0 Tday    12.1097 Tnight    9.05487 
+n_days          3 Rg_f        5.1 Tavg     11.051 Tmax       14.4 Tmin        5.9 Precip        1.2 Tday     12.558 Tnight    9.22903 
+n_days          4 Rg_f        5.1 Tavg     9.8782 Tmax       13.7 Tmin          4 Precip          0 Tday     11.598 Tnight      7.799 
+n_days          5 Rg_f        5.1 Tavg     8.3358 Tmax         12 Tmin        2.7 Precip          0 Tday    9.98469 Tnight    6.34234 
+n_days          6 Rg_f        5.1 Tavg     8.4782 Tmax       12.3 Tmin        2.6 Precip          0 Tday     10.198 Tnight      6.399 
+n_days          7 Rg_f        5.1 Tavg     8.6358 Tmax       12.3 Tmin          3 Precip        0.2 Tday    10.2847 Tnight    6.64234 
+n_days          8 Rg_f        5.1 Tavg     9.5058 Tmax       11.2 Tmin        6.9 Precip        2.8 Tday    10.2682 Tnight     8.5841 
+n_days          9 Rg_f        5.1 Tavg     8.0966 Tmax       10.5 Tmin        4.4 Precip          5 Tday    9.17813 Tnight    6.78906 
+n_days         10 Rg_f        5.1 Tavg     9.7632 Tmax       12.6 Tmin        5.4 Precip        1.4 Tday    11.0398 Tnight    8.21988 
+n_days         11 Rg_f        5.1 Tavg     7.7694 Tmax        9.7 Tmin        4.8 Precip          0 Tday    8.63817 Tnight    6.71908 
+n_days         12 Rg_f        5.1 Tavg     7.4996 Tmax       10.1 Tmin        3.5 Precip          0 Tday    8.66978 Tnight    6.08489 
+n_days         13 Rg_f        5.1 Tavg     7.3694 Tmax        9.3 Tmin        4.4 Precip          0 Tday    8.23817 Tnight    6.31909 
+n_days         14 Rg_f        5.1 Tavg     3.5996 Tmax        6.2 Tmin       -0.4 Precip          0 Tday    4.76978 Tnight    2.18489 
+n_days         15 Rg_f        5.1 Tavg     0.3634 Tmax        1.9 Tmin         -2 Precip          0 Tday    1.05487 Tnight  -0.472565 
+n_days         16 Rg_f        5.1 Tavg     1.8784 Tmax        4.4 Tmin         -2 Precip          0 Tday    3.01312 Tnight    0.50656 
+n_days         17 Rg_f        5.1 Tavg      4.724 Tmax        6.3 Tmin        2.3 Precip          0 Tday     5.4332 Tnight     3.8666 
+n_days         18 Rg_f        5.1 Tavg     5.1572 Tmax        7.6 Tmin        1.4 Precip          0 Tday    6.25646 Tnight    3.82823 
+n_days         19 Rg_f        5.1 Tavg     5.3208 Tmax          8 Tmin        1.2 Precip          0 Tday    6.52644 Tnight    3.86322 
+n_days         20 Rg_f        5.1 Tavg     6.7146 Tmax       10.3 Tmin        1.2 Precip          0 Tday    8.32803 Tnight    4.76401 
+n_days         21 Rg_f        5.1 Tavg     6.3448 Tmax       10.6 Tmin       -0.2 Precip          0 Tday    8.25964 Tnight    4.02982 
+n_days         22 Rg_f        5.1 Tavg      7.545 Tmax       10.5 Tmin          3 Precip        0.2 Tday    8.87475 Tnight    5.93738 
+n_days         23 Rg_f        5.1 Tavg     7.5816 Tmax          9 Tmin        5.4 Precip        0.2 Tday    8.21988 Tnight    6.80994 
+n_days         24 Rg_f        5.1 Tavg     9.4422 Tmax       10.9 Tmin        7.2 Precip          0 Tday    10.0982 Tnight    8.64911 
+n_days         25 Rg_f        5.1 Tavg     9.8118 Tmax       11.9 Tmin        6.6 Precip        0.2 Tday    10.7515 Tnight    8.67574 
+n_days         26 Rg_f        5.1 Tavg     6.0724 Tmax        8.2 Tmin        2.8 Precip          8 Tday    7.02982 Tnight    4.91491 
+n_days         27 Rg_f        5.1 Tavg     6.3814 Tmax        9.1 Tmin        2.2 Precip          0 Tday    7.60477 Tnight    4.90239 
+n_days         28 Rg_f        5.1 Tavg     5.9238 Tmax        8.8 Tmin        1.5 Precip          0 Tday    7.21809 Tnight    4.35905 
+n_days         29 Rg_f        5.1 Tavg     5.9814 Tmax        8.7 Tmin        1.8 Precip          0 Tday    7.20477 Tnight    4.50239 
+n_days         30 Rg_f       10.1 Tavg     5.9692 Tmax        9.2 Tmin          1 Precip        1.8 Tday    7.42306 Tnight    4.21153 
+n_days         31 Rg_f        5.1 Tavg     7.1602 Tmax        9.8 Tmin        3.1 Precip          0 Tday    8.34811 Tnight    5.72405 
+...2008 finished to simulate
+
