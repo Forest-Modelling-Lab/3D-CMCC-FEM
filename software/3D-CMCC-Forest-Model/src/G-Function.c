@@ -31,8 +31,10 @@ extern int sort_by_years(const void *a, const void *b)
 
 void Get_Day_Length ( CELL * c,  int day, int month, int years, int MonthLength ,  YOS  *yos)
 {
+	/*
 	if (!day)
 		Log("computing Get_Day_Length...\n");
+		*/
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -228,8 +230,10 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 	met = (MET_DATA*) yos[years].m;
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
+	/*
 	if (!day)
 		Log("computing Get_Veg_Days...\n");
+		*/
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{

@@ -39,8 +39,10 @@ extern void Print_met_daily_data (const YOS *const yos, int day, int month, int 
 //following Running et al., 1987
 extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
 {
+	/*
 	if (!day )
 			Log("computing Get_avg_temperature...\n");
+			*/
 
 	MET_DATA *met;
 	// check parameters
@@ -83,8 +85,10 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 //compute daylight average air temperature
 extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
+	/*
 	if (!day)
 		Log("computing Get_daylight_avg_temperature...\n");
+		*/
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -119,8 +123,10 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 //compute nightime average air temperature
 extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
 {
+	/*
 	if (!day)
 		Log("computing Get_nightime_avg_temperature...\n");
+		*/
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -154,8 +160,10 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
 {
+	/*
 	if (!day)
 		Log("computing Get_thermic_sum...\n");
+		*/
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 

@@ -870,10 +870,6 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-	//sprintf(strData, "%d", data->tm_mon+1);
-	//strcat (out_filename, strData);
-	//strcat (out_filename, "_");
-
 	sprintf(strData, "%s", szMonth[data->tm_mon]);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
@@ -896,37 +892,6 @@ int main(int argc, char *argv[])
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
-
-	/*
-	//check if daylight savings time
-	if (data->tm_isdst == 0)
-	{
-		sprintf(strData, "%d", data->tm_hour+1);
-		strcat (out_filename, strData);
-		strcat (out_filename, ":");
-		sprintf(strData, "%d", data->tm_min);
-		strcat (out_filename, strData);
-	}
-	else if (data->tm_isdst > 0)
-	{
-		sprintf(strData, "%d", data->tm_hour);
-		strcat (out_filename, strData);
-		strcat (out_filename, ":");
-		sprintf(strData, "%d", data->tm_min);
-		strcat (out_filename, strData);
-	}
-	else
-	{
-		strcat (out_filename, "no_data_available");
-	}
-	 */
-
-
-
-
-	//sprintf(strData, "%d", data->tm_sec);
-	//strcat (out_filename, strData);
-
 	strcat (out_filename, ".txt");
 
 	strcat (monthly_out_filename, ".txt");
@@ -1054,9 +1019,6 @@ int main(int argc, char *argv[])
 		{
 			Log("\n-Year simulated = %d\n", yos[years].year);
 
-			//fixme important!!!
-			//matrix_summary (m, years, yos);
-
 			if (!years)
 				matrix_summary (m, years, yos);
 
@@ -1091,13 +1053,8 @@ int main(int argc, char *argv[])
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
-					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
-						if (month == 0)
-							Log("\n-Year simulated = %d\n", yos[years].year);
-
-						Log("--Month simulated = %d\n", month +1);
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							//Check for daily temperatures
@@ -1123,10 +1080,12 @@ int main(int argc, char *argv[])
 							}
 
 						}
+						/*
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
-							//Print_met_daily_data (yos, day, month, years);
+							Print_met_daily_data (yos, day, month, years);
 						}
+						*/
 					}
 					for (month = 0; month < MONTHS; month++)
 					{
