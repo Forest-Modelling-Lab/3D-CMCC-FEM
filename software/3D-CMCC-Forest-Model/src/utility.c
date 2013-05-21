@@ -198,10 +198,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("Annual summary output from 3D-CMCC FEM\n");
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
-		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n\n\n");
-		Annual_Log ("-%s %10s %10s  %9s\n", "YEAR", "GPP", "NPP", "ET");
+		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
+		Annual_Log("Annual AGB = annual above-ground biomass(tDM/area/year)\n");
+		Annual_Log("Annual BGB = annual below-ground biomass(tDM/area/year)\n\n\n");
+		Annual_Log ("-%s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB");
 	}
-	Annual_Log ("-%d %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et);
+	Annual_Log ("-%d %10g %10g %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb);
 }
 
 void Get_a_Power_Function (AGE *a, SPECIES *s)
