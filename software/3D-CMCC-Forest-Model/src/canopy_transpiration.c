@@ -259,7 +259,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 
 		//1Kg m^2 H2o correspond to 1mm H2o
-		Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
+		//Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
 		DailyTransp = CanopyTranspiration;
 
 		//initial transpiration from Penman-Monteith (mm/day converted to mm/month)
@@ -499,13 +499,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	{
 		/* convert evaporation into kg/m^2/month */
 		evap = evap * DaysInMonth;
-		Log("Montlhy transpiration from biome = %g\n", evap);
+		//Log("Montlhy transpiration from biome = %g\n", evap);
 	}
 	else
 	{
 		/* convert evaporation into kg/m^2/month */
-		Log("Daily transpiration from biome = %g\n", evap);
-		Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
+		//Log("Daily transpiration from biome = %g\n", evap);
+		//Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
 	}
 
 
