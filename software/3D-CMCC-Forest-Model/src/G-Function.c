@@ -377,7 +377,7 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("> height = %g\n", c->heights[height].value);
 	Log("> age = %d\n", c->heights[height].ages[age].value);
 	Log("> species = %s\n", c->heights[height].ages[age].species[species].name);
-	Log("> phenology = %d\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
+	Log("> phenology = %d\n", c->heights[height].ages[age].species[species].counter[PHENOLOGY]);
 	Log("> management = %d\n", c->heights[height].ages[age].species[species].management);
 	//Log("[%d] PEAK Y LAI IN THIS YEAR LAYER %d = %g\n",yos[years].year, m->cells[cell].heights[height].z,  m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI]);
 	Log("[%d] layer %d n tree = %d\n", yos[years].year,  c->heights[height].z, c->heights[height].ages[age].species[species].counter[N_TREE]);
