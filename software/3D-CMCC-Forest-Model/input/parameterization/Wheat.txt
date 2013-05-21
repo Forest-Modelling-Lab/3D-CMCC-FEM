@@ -1,0 +1,224 @@
+//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL   -9999           //4 = very shade intolerant
+                            //3 = shade intolerant
+                            //2 = shade tolerant
+                            //1 = very shade tolerant
+PHENOLOGY   -9999           //PHENOLOGY 0=deciduous, 1=evergreen
+ALPHA   -9999               //Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.75
+EPSILONgCPAR   -9999        // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+K   -9999                   //0.54 Extinction coefficient for absorption of PAR by canopy 
+ALBEDO  -9999
+//LEAF AREA INDEX
+LAIGCX  -9999               //LAI for maximum canopy conductance
+LAIMAXINTCPTN   -9999       //LAI for maximum rainfall interception
+MAXINTCPTN  -9999           //Maximum proportion of rainfall interception evaporated from canopy
+
+//SPECIFIC LEAF AREA
+SLA0    -9999               //Specific Leaf Area at age 0 (m^2/kg)
+SLA1    -9999               //Specific Laef Area for mature leaves (m^2/kg)
+TSLA    -9999               //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
+//SPECIFIC LEAF AREA 
+SLA -9999                   //Specific Leaf Area cm^2/gC  
+                            //from 256 to 175 Wang et al., 2006                 
+
+//FRACTION BRANCH-BARK
+FRACBB0 -9999              //Branch and Bark fraction at age 0 for C. sativa Ranger et al 1996
+FRACBB1 -9999              //Branch and Bark fraction for mature stands for C. sativa Ranger et al 1996
+TBB -9999                  //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+//MASS DENSITY
+RHOMIN  -9999              //Minimum Basic Density for young Trees t/m^3
+RHOMAX  -9999              //Maximum Basic Density for young Trees 
+TRHO    -9999              //Age at which rho = (RHOMIN + RHOMAX )/2
+DRYMAT_FRESHMAT -9999      //Conversion from Drymatter to Freshmatter 
+//VPD
+COEFFCOND   -9999         //Define stomatal responsee to VPD in mbar 
+BLCOND  -9999             //Canopy Boundary Layer conductance 
+MAXCOND -9999             //Maximum Canopy Conductance in m/sec Ethier & Livingston 2004
+//AGE for timber
+MAXAGE  -9999             //Determines rate of "physiological decline" of forest //modified
+RAGE    -9999             //Relative Age to give fAGE = 0.5
+NAGE    -9999             //Power of relative Age in function for Age
+//Age for shoots
+MAXAGE_S    -9999         //Determines rate of "physiological decline" of forest
+RAGE_S  -9999             //Relative Age to give fAGE = 0.5
+NAGE_S  -9999             //Power of relative Age in function for Age
+//TEMPERATURE
+GROWTHTMIN  -9999        //Minimum temperature for growth
+GROWTHTMAX  -9999        //Maximum temperature for growth
+GROWTHTOPT  -9999        //Optimum temperature for growth
+GROWTHSTART -9999        //average temperature for starting growth in °C
+GROWTHEND   -9999        //average temperature for ending growth in °C
+MINDAYLENGTH  -9999      //minimum day length for deciduous
+
+//SOIL WATER
+//modified 13 feb 2012
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN -9999           //for C. sativa Nardini Saleo 2000
+SWPCLOSE    -9999       //for C. sativa Nardini Saleo 2000
+SWCONST -9999           //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER -9999           //Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING for timber
+PFS2    -9999           //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20   -9999           //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX -9999               //Maximum fraction of NPP to Roots
+PRN -9999               //Minimum fraction of NPP to Roots
+//BIOMASS PARTITIONING for coppice (valore inventati per prova)
+PFS2_C  -9999           //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20_C -9999           //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX_C   -9999           //Maximum fraction of NPP to Roots
+PRN_C   -9999           //Minimum fraction of NPP to Roots
+
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
+OMEGA_CTEM  -9999       //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM  -9999           //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM  -9999           //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM  -9999           //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+RES0CTEM    -9999       //PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+EPSILON_CTEM    -9999   //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
+KAPPA   -9999           //ALLOCATION PARAMETER DIMENSIONLESS
+MIN_R0CTEM  -9999       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM  -9999       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION    -9999  //years from coppicing to consider tree as a timber
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF  -9999   //allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
+STEM_LEAF   -9999       //allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
+COARSE_ROOT_STEM    -9999    //allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
+
+
+//per specie caducifoglie LITTERFALL RATE = -9999 !!!!!!!!!!!!!!
+//LITTERFALL
+//FOLLOWING BIOME-BGC
+LEAF_FALL_FRAC_GROWING  -9999     //proportions of the growing season of leaf fall
+GAMMAFX -9999               //Maximum Litterfall rate (month^-1)
+GAMMAF0 -9999               //Litterfall rate at t = 0 (month^-1)
+TGAMMAF -9999               //Age at which litterfall rate has median value
+
+//TURNOVER
+FINERTTOVER -9999        //Average yearly fine root turnover rate
+COARSERTTOVER   -9999    //Average yearly coarse root turnover rate
+SAPWOODTTOVER   -9999    //Average yearly sapwood turnover rate 
+BRANCHTTOVER    -9999    //Average yearly branch turnover rate
+
+
+
+
+
+//MORTALITY
+WSX1000 -9999             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER   -9999         //Power in self-thinning rule
+MF  -9999                 //Fraction mean single tree foliage biomass lost per dead tree
+MR  -9999                 //Fraction mean single tree root biomass lost per dead tree
+MS  -9999                 //Fraction mean single tree stem biomass lost per dead tree
+//ALLOMETRIC RELATIONSHIPS
+DBHDCMAX    -9999         //Low Density
+DBHDCMIN    -9999         //High Density
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A         -9999       //a value from Kostner for Q. petreae in cm
+SAP_B         -9999       //b value from Kostner for Q. petreae in cm
+SAP_LEAF      -9999       //sapwood_max leaf area ratio in pipe model  for Q petreae   
+SAP_WRES    -9999         //Sapwood-Reserve biomass ratio used if no Wres data are available 
+                          //0.11 for deciduous 0.05 for evergreen  
+HMAX    -9999             //35  //Max Height in m see Morandini 1955
+DMAX    -9999             //Max Stem Diameter in cm see Morandini 1955
+HPOWER  -9999             //Slope of Asymptotic Height 
+RPOWER  -9999             //Slope of Asymptotic Crown-Radius 
+CHPOWER -9999             //Slope of Asymptotic Crown-Height 
+
+//CHAPMAN-RICHARDS relationships
+CRA -9999
+CRB -9999
+CRC -9999
+//CROWDING COMPETITION FUNCTION
+HDMAX   -9999             //Height to Base diameter ratio MAX  (Portoghesi)
+HDMIN   -9999             //Height to Base diameter ratio MIN  (Portoghesi)
+CANCOVERMAX -9999         //Maximum Canopy Cover
+CANCOVERMIN -9999         //Minimum Canopy Cover
+//DENSITY FUNCTION
+DENMAX  -9999             //Maximum density (trees/10000 m^2)
+DENMIN  -9999             //Minimum density (trees/10000 m^2)
+//ESTABLISHMENT
+MINPAREST   -9999         //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                          //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                          //broaldleaved summergreen
+MINRAIN -9999             //Minimum annual Rain Precipitation for Establishment
+                          //S. Sitch 2003
+//SEEDS PRODUCTION
+ADULT_AGE   -9999         //age at which consider tree as an adult tree
+MAXSEED -9999             //numero massimo semi prodotti dalla pianta (da TREEMIG) 
+MASTSEED   -9999          //ricorrenza anni di pasciona (da TREEMIG) 
+WEIGHTSEED  -9999         //peso frutto in g FOR Quercus sp (Bernetti)
+SEXAGE  -9999             //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY    -9999     //Geminability (Lischke H. & Loffler T. J.)
+MINTEMP -9999             //Minimum temperature for germination in °C
+ESTMAX  -9999             //Potential Establishment rate in the absence of competition
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT   -9999         //Fraction of NPP to Fruit Production
+
+
+//MANAGMENT
+ROTATION    -9999         //Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG -9999         //Minimum age for Managment (Q. cerris)
+MINDBHMANAG -9999         //Minimum DBH for Managment
+AV_SHOOT    -9999         //average number of shoot after cut
+
+// ------------------------------------------------------------------------------------------
+//																CROPMODEL
+// ------------------------------------------------------------------------------------------
+
+//GENERAL
+
+//ATMOSPHERIC
+Z_ALBEDO			// field albedo
+Z_SCATTERLIGHT = 0.2;			//scatter of light parameter; set as zhang's
+
+
+
+//PLANT DEVELOPMENT
+Z_PHENOLOGY
+Z_FIRSTLAI
+Z_PLANTS
+Z_MAXDEVELOPMENT_TEMPERATURE
+Z_BASALTEMPERATURE
+Z_PHOTOPERIODCOEFF
+Z_VERNALIZATION_COEFF
+
+//PHOTOSYNTHESIS
+Z_OPTIMUM_PHOTORATE
+Z_INITIAL_LIGHTUSEEFFICIENCY
+
+//RESPIRATION
+Z_LEAFRESPIRATION
+Z_STEMRESPIRATION
+Z_GRAINRESPIRATION
+Z_ROOTRESPIRATION
+
+
+//BIOMASS ALLOCATION
+Z_GENETIC1
+Z_GENETIC2
+Z_GENETIC3
+Z_GENETIC4
+
+Z_LEAFBIOMASS
+Z_STEMBIOMASS
+Z_GRAINBIOMASS
+Z_ROOTBIOMASS
+
+//STAGE LIMITS
+STAGELIMIT1
+STAGELIMIT2
+STAGELIMIT3
+STAGELIMIT4
+STAGELIMIT5
+STAGELIMIT6
+STAGELIMIT7
+STAGELIMIT8
+
+//TEMPERATURE
+Z_FIRST_SOILSURFACE_TEMPERATURE
+
+

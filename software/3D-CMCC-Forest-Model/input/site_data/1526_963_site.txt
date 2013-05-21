@@ -1,0 +1,37 @@
+SITENAME "Madonie - Italy" //Site Name
+
+LAT "37.53" //Site Latitude negative for south hemisphere
+LONG "14.20" //Site Longitude 
+ELEV "500.0" //Elevation in meters
+
+Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP
+
+CO2CONC "387.0" //CO2 concentration
+
+
+
+INITIALLITTER "2" //Initial Litter
+
+MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
+//MAXASW "300" //Maximum Available soil water in mm
+//MINASW "30" //It should be the 10% of the maxasw
+
+CLAY_PERC "11.81"	//PERCENTAGE OF CLAY (< 0,002 mm)
+SILT_PERC "23.5"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)
+SAND_PERC "64.69"	//PERCENTAGE OF SAND (0,05 - 2 mm)
+
+BULK_DENSITY "1.49"  //BULK DENSITY (g/cm3)
+
+SOIL_DEPTH "63.5" //SOIL DEPTH (cm)
+
+
+//SITE NUTRITION
+FR "0.8" //Fertility rating
+FN0 "0.5" //Value of fNutr when FR = 0
+FNN "0.5" //Power of (1 - FR) in fNutr
+M0 "0.2" //value of 'm' when FR = 0
+
+SN "1.76"	//Soil Mineral Nitrogen Content gN/m^2
+
+//MANAGMENT
+CUTTREE "100" //Cutted Trees for Pixel
