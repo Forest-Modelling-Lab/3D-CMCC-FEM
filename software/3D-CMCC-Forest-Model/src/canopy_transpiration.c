@@ -499,13 +499,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	{
 		/* convert evaporation into kg/m^2/month */
 		evap = evap * DaysInMonth;
-		Log("Montlhy transpiration from biome = %g\n", evap);
+		//Log("Montlhy transpiration from biome = %g\n", evap);
 	}
 	else
 	{
 		/* convert evaporation into kg/m^2/month */
-		Log("Daily transpiration from biome = %g\n", evap);
-		Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
+		//Log("Daily transpiration from biome = %g\n", evap);
+		//Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
 	}
 
 

@@ -202,8 +202,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 			Log("Biomass Foliage CTEM = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM] );
 
-			s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
-			Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
+			//s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
+			//Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
 
 			//recompute LAI
 			//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
@@ -691,39 +691,40 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
 			Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
+
 			Log("***LEAF FALL**\n");
 			//COMPUTE LITTERFALL using BIOME_BGC approach
 
 			/*
-				//todo check if move it into structure.c!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				if (settings->time == 'm')
-				{
-					//compute months of leaf fall taking an integer value
-					s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-					Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
-					//monthly rate of foliage reduction
+					//todo check if move it into structure.c!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					if (settings->time == 'm')
+					{
+						//compute months of leaf fall taking an integer value
+						s->value[MONTH_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+						Log("Months of leaf fall for deciduous = %g \n", s->value[MONTH_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
 
-					//currently the model considers a linear reduction in leaf fall
-					//it should be a negative sigmoid function
-					//todo: create a sigmoid function
-					foliage_reduction_rate = 1.0 / (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
-					Log("foliage reduction rate = %g \n", foliage_reduction_rate);
-					s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
-					Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
-				}
-				else
-				{
-					s->value[DAY_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-					Log("Days of leaf fall for deciduous = %g \n", s->value[DAY_FRAC_FOLIAGE_REMOVE]);
-					//monthly rate of foliage reduction
+						//currently the model considers a linear reduction in leaf fall
+						//it should be a negative sigmoid function
+						//todo: create a sigmoid function
+						foliage_reduction_rate = 1.0 / (s->value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
+						Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+						s->value[BIOMASS_FOLIAGE_CTEM] *= (1.0 - foliage_reduction_rate);
+						Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+					}
+					else
+					{
+						s->value[DAY_FRAC_FOLIAGE_REMOVE] =  ( s->value[LEAF_FALL_FRAC_GROWING]  * s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						Log("Days of leaf fall for deciduous = %g \n", s->value[DAY_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
 
-					//currently the model considers a linear reduction in leaf fall
-					//it should be a negative sigmoid function
-					//todo: create a sigmoid function
-					foliage_reduction_rate = 1.0 / (s->value[FRAC_DAY_FOLIAGE_REMOVE] + 1);
-					Log("foliage reduction rate = %g \n", foliage_reduction_rate);
+						//currently the model considers a linear reduction in leaf fall
+						//it should be a negative sigmoid function
+						//todo: create a sigmoid function
+						foliage_reduction_rate = 1.0 / (s->value[FRAC_DAY_FOLIAGE_REMOVE] + 1);
+						Log("foliage reduction rate = %g \n", foliage_reduction_rate);
 
-				}
+					}
 			 */
 			Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 			Log("foliage reduction rate %g \n", s->value[FOLIAGE_REDUCTION_RATE]);
@@ -735,6 +736,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			//recompute LAI
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2);
 			Log("++Lai = %g\n", s->value[LAI]);
+
 
 			break;
 
@@ -766,6 +768,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			Log("-Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
 			Log("-Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 			Log("-Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
+
+			Log("++Lai = %g\n", s->value[LAI]);
 
 			break;
 		}
