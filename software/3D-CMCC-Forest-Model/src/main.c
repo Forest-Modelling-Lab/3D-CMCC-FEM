@@ -135,8 +135,9 @@ static char copyright[] =
 		"\n";
 
 
-static const char comma_delimiter[] = ",\r\n";
-static const char met_delimiter[] = " ,\t\r\n";
+//static const char comma_delimiter[] = ",\r\n";
+//static const char met_delimiter[] = " ,\t\r\n";
+/*
 static const char *met_columns[MET_COLUMNS] = {
 		"Month",
 		"n_days",
@@ -150,6 +151,7 @@ static const char *met_columns[MET_COLUMNS] = {
 		"SWC",
 		"LAI"
 };
+*/
 
 /* messages */
 /*
@@ -169,7 +171,7 @@ static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n"
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_processing[]				=	"processing %s...\n";
 static const char msg_ok[]						=	"ok";
-static const char msg_summary[]					=	"\n%d file%s found: %d processed, %d skipped.\n\n";
+static const char msg_summary[]					=	"\n%d input file%s found: %d processed, %d skipped.\n\n";
 static const char msg_usage[]					=	"usage: 3D-CMCC parameters\n\n"
 		"  allowed parameters:\n\n"
 		"    -dataset=XXXXX_YYYY.txt -> file to be processed"
@@ -513,7 +515,7 @@ int main(int argc, char *argv[])
 
 	int cell;
 
-	MET_DATA *met;
+	//MET_DATA *met;
 
 
 
@@ -803,6 +805,10 @@ int main(int argc, char *argv[])
 		Log("Settings File not imported!!\n\n");
 		return -1;
 	}
+	else
+	{
+		printf ("...Settings file imported!!\n");
+	}
 
 	//define output file name in function of model settings
 	char strTmp[3], strTmp2[4], strTmp3[3];
@@ -940,10 +946,10 @@ int main(int argc, char *argv[])
 	Annual_Log ("annual output file at stand level\n\n");
 
 	/* show copyright*/
-	//Log(copyright);
+	Log(copyright);
 
 	/* show banner */
-	//Log(banner);
+	Log(banner);
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
@@ -962,6 +968,11 @@ int main(int argc, char *argv[])
 
 		return 1;
 	}
+	else
+	{
+		Log("input path = %s\n", input_path);
+		Log("...input file imported\n\n");
+	}
 
 
 	/* reset */
@@ -973,8 +984,13 @@ int main(int argc, char *argv[])
 	error = importSiteFile(site_path);
 	if ( error )
 	{
-		Log("Site File not imported!!\n\n");
+		Log("Site file not imported!!\n\n");
 		return -1;
+	}
+	else
+	{
+		Log("site path = %s\n", site_path);
+		Log("...Site file imported!!\n\n");
 	}
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
@@ -1015,7 +1031,6 @@ int main(int argc, char *argv[])
 		// import Years Of Simulation (years met files)
 		Log("Processing met data files...\n");
 		Log("input_met_path = %s\n", input_met_path);
-		Log("years_of_simulation = %d\n", years_of_simulation);
 		yos = ImportYosFiles(input_met_path, &years_of_simulation);
 
 		if ( !yos )
@@ -1030,7 +1045,7 @@ int main(int argc, char *argv[])
 		}
 
 		Log("\n3D-CMCC MODEL START\n");
-		Log("years_of_simulation = %d\n", years_of_simulation);
+		Log("Total years_of_simulation = %d\n", years_of_simulation);
 		Log("***************************************************\n");
 
 		for (years = 0; years < years_of_simulation; years++)
@@ -1074,6 +1089,10 @@ int main(int argc, char *argv[])
 					//compute days of veg
 					for (month = 0; month < MONTHS; month++)
 					{
+						if (month == 0)
+							Log("\n-Year simulated = %d\n", yos[years].year);
+
+						Log("--Month simulated = %d\n", month +1);
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							//Check for daily temperatures
@@ -1104,6 +1123,47 @@ int main(int argc, char *argv[])
 							Print_met_daily_data (yos, day, month, years);
 						}
 					}
+					for (month = 0; month < MONTHS; month++)
+					{
+						for (day = 0; day < DaysInMonth[month]; day++ )
+						{
+							if(m->cells[cell].landuse == F)
+							{
+								if (settings->version == 'f')
+								{
+									//run for FEM version
+									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
+									{
+										Log("tree model daily failed.");
+									}
+									else
+									{
+										puts(msg_ok);
+										//run for SOIL function
+										soil_model_daily (m, yos, years, month, day, years_of_simulation);
+									}
+								}
+								else
+								{
+									//run for BGC version
+								}
+							}
+							if(m->cells[cell].landuse == Z)
+							{
+								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
+								{
+									Log("crop model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									//	soil_model (m, yos, years, month, years_of_simulation);
+								}
+							}
+						}
+					}
+
 				}
 			}
 			else if (settings->time == 'm')
