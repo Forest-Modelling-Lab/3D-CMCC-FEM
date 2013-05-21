@@ -780,52 +780,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		Log("Spatial version \n");
 
 
-		//defining phenological phase from NDVI values of LAI
 
-		if (settings->time == 'm')
-		{
-			//Beginning of growing season
-			if (met[month].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
-			{
-				s->phenology_phase = 1;
-			}
-			//arealf of beginning of growing season
-			if (met[month].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
-			{
-				s->phenology_phase = 2;
-			}
-			//Full growing season or "||" end of growing season
-			if((fabs (met[month].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
-			{
-				s->phenology_phase = 3;
-			}
-			if (met[month].ndvi_lai == 0)
-			{
-				s->phenology_phase = 4;
-			}
-		}
-		else
-		{
-			//Beginning of growing season
-			if (met[month].d[day].ndvi_lai <= s->value[PEAK_Y_LAI] * 0.5 && month < 6 )
-			{
-				s->phenology_phase = 1;
-			}
-			//areal of beginning of growing season
-			if (met[month].d[day].ndvi_lai > (s->value[PEAK_Y_LAI] * 0.5)  && met[month].d[day].ndvi_lai < s->value[PEAK_Y_LAI] && month < 6)
-			{
-				s->phenology_phase = 2;
-			}
-			//Full growing season or "||" end of growing season
-			if((fabs (met[month].d[day].ndvi_lai - s->value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
-			{
-				s->phenology_phase = 3;
-			}
-			if (met[month].d[day].ndvi_lai == 0)
-			{
-				s->phenology_phase = 4;
-			}
-		}
 
 		oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
 

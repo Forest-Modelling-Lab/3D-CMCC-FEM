@@ -1202,7 +1202,82 @@ int main(int argc, char *argv[])
 						m->cells[cell].north = 1;
 					}
 
-					//fixme copy all functions that are in settings daily
+					//run for all cells to check land use
+					for ( cell = 0; cell < m->cells_count; cell++)
+					{
+						//Get air pressure
+						Get_air_pressure (&m->cells[cell]);
+
+						//run for forests
+						if (m->cells[cell].landuse == F)
+						{
+							Log("RUN FOR FORESTS\n");
+
+							//control version 's' or 'u' and change if asked
+							if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
+							{
+								settings->version = 'u';
+								Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
+								Log("\n\n\n************CHANGING VERSION..........***************\n");
+								Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
+								Log("Model version = %c\n\n\n\n", settings->version);
+								Log("Model spatial = %c\n\n\n\n", settings->spatial);
+								Log("************************************************************\n");
+							}
+
+							//compute number of vegetative months
+							for (month = 0; month < MONTHS; month++)
+							{
+								//Check for temperatures
+								Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+								Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+								Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
+								//todo add Get_thermic_sum if used
+
+								//Get vegetative months
+								Get_Veg_Months (&m->cells[cell], yos, month, years);
+							}
+							//run tree_model_M
+							for (month = 0; month < MONTHS; month++)
+							{
+								if ( !tree_model (m, yos, years, month, years_of_simulation) )
+								{
+									Log("tree model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									//currently soil_model uses equals values for all cells
+									//a struct is anyway defined in types.h for soil data
+									//soil_model (m, yos, years, month, years_of_simulation);
+								}
+							}
+						}
+						//run for crops
+						if  (m->cells[cell].landuse == Z)
+						{
+							Log("RUN FOR CROPS\n");
+							//run tree_model
+							for (month = 0; month < MONTHS; month++)
+							{
+								if (!crop_model_M (m, yos, years, month, years_of_simulation) )
+								{
+									Log("crop model failed.");
+								}
+								else
+								{
+									puts(msg_ok);
+									//look if put it here or move before tree_model  at the beginning of each month simulation
+									//currently soil_model uses equals values for all cells
+									//a struct is anyway defined in types.h for soil data
+									//soil_model (m, yos, years, month, years_of_simulation);
+								}
+							}
+						}
+					}
+					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
 				}
 			}
 			else
@@ -1211,231 +1286,7 @@ int main(int argc, char *argv[])
 				return 0;
 			}
 
-			/*
 
-			if (settings->time == 'm')
-			{
-				//check if soil data are available
-				for ( cell = 0; cell < m->cells_count; cell++)
-				{
-					if ((site->sand_perc == -999.0) ||
-							(site->clay_perc == -999.0) ||
-							(site->silt_perc == -999.0) ||
-							(site->bulk_dens == -999.0) ||
-							(site->soil_depth == -999.0) )
-					{
-						Log("NO SOIL DATA AVAILABLE\n");
-						return 0;
-					}
-					//check hemisphere
-					if (site->lat > 0)
-					{
-						m->cells[cell].north = 0;
-					}
-					else
-					{
-						m->cells[cell].north = 1;
-					}
-				}
-				//run for all cells to check land use
-				for ( cell = 0; cell < m->cells_count; cell++)
-				{
-					//Get air pressure
-					Get_air_pressure (&m->cells[cell]);
-
-					//run for forests
-					if (m->cells[cell].landuse == F)
-					{
-						Log("RUN FOR FORESTS\n");
-
-						//control version 's' or 'u' and change if asked
-						if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
-						{
-							settings->version = 'u';
-							Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
-							Log("\n\n\n************CHANGING VERSION..........***************\n");
-							Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
-							Log("Model version = %c\n\n\n\n", settings->version);
-							Log("Model spatial = %c\n\n\n\n", settings->spatial);
-							Log("************************************************************\n");
-						}
-
-						//compute number of vegetative months
-						for (month = 0; month < MONTHS; month++)
-						{
-							//Check for temperatures
-							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-
-							//todo add Get_thermic_sum if used
-
-							//Get vegetative months
-							Get_Veg_Months (&m->cells[cell], yos, month, years);
-						}
-						//run tree_model_M
-						for (month = 0; month < MONTHS; month++)
-						{
-							if ( !tree_model (m, yos, years, month, years_of_simulation) )
-							{
-								Log("tree model failed.");
-							}
-							else
-							{
-								puts(msg_ok);
-								//look if put it here or move before tree_model  at the beginning of each month simulation
-								//currently soil_model uses equals values for all cells
-								//a struct is anyway defined in types.h for soil data
-								//soil_model (m, yos, years, month, years_of_simulation);
-							}
-						}
-					}
-					//run for crops
-					if  (m->cells[cell].landuse == Z)
-					{
-						Log("RUN FOR CROPS\n");
-						//run tree_model
-						for (month = 0; month < MONTHS; month++)
-						{
-							if (!crop_model_M (m, yos, years, month, years_of_simulation) )
-							{
-								Log("crop model failed.");
-							}
-							else
-							{
-								puts(msg_ok);
-								//look if put it here or move before tree_model  at the beginning of each month simulation
-								//currently soil_model uses equals values for all cells
-								//a struct is anyway defined in types.h for soil data
-								//soil_model (m, yos, years, month, years_of_simulation);
-							}
-						}
-					}
-				}
-				Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
-			}
-			else if (settings->time == 'd')//run for daily version
-			{
-				//fixme prova netcdf
-				//int ncid, retval;
-
-				   // Create the file
-
-				   //if ((retval = nc_create(FILE_NAME_NETCDF, NC_CLOBBER, &ncid)))
-				   //   ERR(retval);
-
-				//Get air pressure
-				Get_air_pressure (&m->cells[cell]);
-
-
-				//check if soil data are available
-				for ( cell = 0; cell < m->cells_count; cell++)
-				{
-					if ((site->sand_perc == -999.0) ||
-							(site->clay_perc == -999.0) ||
-							(site->silt_perc == -999.0) ||
-							(site->bulk_dens == -999.0) ||
-							(site->soil_depth == -999.0) )
-					{
-						Log("NO SOIL DATA AVAILABLE\n");
-						return 0;
-					}
-
-					//check hemisphere
-					if (site->lat > 0)
-					{
-						m->cells[cell].north = 0;
-					}
-					else
-					{
-						m->cells[cell].north = 1;
-					}
-				}
-				//run for all cells to check land use
-				for ( cell = 0; cell < m->cells_count; cell++)
-				{
-					//compute days of veg
-					for (month = 0; month < MONTHS; month++)
-					{
-						for (day = 0; day < DaysInMonth[month]; day++)
-						{
-							//Check for daily temperatures
-							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-
-
-							//Get thermic_sum
-							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
-
-							//Get day length
-							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							//GetDayLength_3PG (&m->cells[cell], met, month, day);
-
-							if(m->cells[cell].landuse == F)
-							{
-								//Get vegetative days
-								Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
-							}
-							else if (m->cells[cell].landuse == Z)
-							{
-								//sergio
-							}
-						}
-					}
-					for (month = 0; month < MONTHS; month++)
-					{
-						for (day = 0; day < DaysInMonth[month]; day++ )
-						{
-							if(m->cells[cell].landuse == F)
-							{
-								if (settings->version == 'f')
-								{
-									//run for FEM version
-									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
-									{
-										Log("tree model daily failed.");
-									}
-									else
-									{
-										puts(msg_ok);
-										//run for SOIL function
-										soil_model_daily (m, yos, years, month, day, years_of_simulation);
-									}
-								}
-								else
-								{
-									//run for BGC version
-								}
-							}
-							if(m->cells[cell].landuse == Z)
-							{
-								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
-								{
-									Log("crop model failed.");
-								}
-								else
-								{
-									puts(msg_ok);
-								//look if put it here or move before tree_model  at the beginning of each month simulation
-								//	soil_model (m, yos, years, month, years_of_simulation);
-								}
-							}
-							Log("****************END OF DAY*******************\n");
-						}
-
-						Log("****************END OF MONTH*******************\n");
-						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
-					}
-					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
-					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
-				}
-			}
-			else
-			{
-				Log("NO TIME STEP CHOICED!!!\n");
-			}
-			*/
 			Log("...%d finished to simulate\n\n", yos[years].year);
 		}
 

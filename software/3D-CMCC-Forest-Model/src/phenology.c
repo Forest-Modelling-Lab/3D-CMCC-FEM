@@ -26,71 +26,124 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 			{
 				Log("--GET_DAILY PHENOLOGY for SPECIES %s --\n", c->heights[height].ages[age].species[species].name);
 				//defining phenology phase
-				if(settings->time == 'd') //for daily version
+				if (settings->spatial == 'u') //for unspatial version
 				{
-					if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					if(settings->time == 'd') //for daily version
 					{
-						if (met[month].d[day].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
+						if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+						{
+							if (met[month].d[day].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
+							{
+								//Leaf fall
+								c->heights[height].ages[age].species[species].phenology_phase = 0;
+							}
+							else
+							{
+								//Beginning of growing season
+								if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 )
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 1;
+								}
+								//arealf of beginning of growing season
+								if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
+										&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 2;
+								}
+								//Full growing season
+								if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 3;
+								}
+							}
+						}
+						else
+						{
+							//Unvegetative period
+							c->heights[height].ages[age].species[species].phenology_phase = 4;
+						}
+					}
+					else //for monthly version
+					{
+						if (met[month].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6)
 						{
 							//Leaf fall
 							c->heights[height].ages[age].species[species].phenology_phase = 0;
 						}
 						else
 						{
-							//Beginning of growing season
-							if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 )
+							if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
-								c->heights[height].ages[age].species[species].phenology_phase = 1;
+								//Beginning of growing season
+								if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 )
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 1;
+								}
+								//arealf of beginning of growing season
+								if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
+										&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 2;
+								}
+								//Full growing season
+								if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 3;
+								}
 							}
-							//arealf of beginning of growing season
-							if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
-									&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+							//Unvegetative period
+							else
 							{
-								c->heights[height].ages[age].species[species].phenology_phase = 2;
-							}
-							//Full growing season
-							if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 3;
+								c->heights[height].ages[age].species[species].phenology_phase = 4;
 							}
 						}
-					}
-					else
-					{
-						//Unvegetative period
-						c->heights[height].ages[age].species[species].phenology_phase = 4;
 					}
 				}
-				else //for monthly version
+				//defining phenological phase from NDVI values of LAI
+				else
 				{
-					if (met[month].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6)
+					if (settings->time == 'm')
 					{
-						//Leaf fall
-						c->heights[height].ages[age].species[species].phenology_phase = 0;
+						//Beginning of growing season
+						if (met[month].ndvi_lai <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 && month < 6 )
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 1;
+						}
+						//arealf of beginning of growing season
+						if (met[month].ndvi_lai > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)  && met[month].ndvi_lai
+								< c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] && month < 6)
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 2;
+						}
+						//Full growing season or "||" end of growing season
+						if((fabs (met[month].ndvi_lai - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 3;
+						}
+						if (met[month].ndvi_lai == 0)
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 4;
+						}
 					}
 					else
 					{
-						if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+						//Beginning of growing season
+						if (met[month].d[day].ndvi_lai <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 && month < 6 )
 						{
-							//Beginning of growing season
-							if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 )
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 1;
-							}
-							//arealf of beginning of growing season
-							if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
-									&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 2;
-							}
-							//Full growing season
-							if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 3;
-							}
+							c->heights[height].ages[age].species[species].phenology_phase = 1;
 						}
-						//Unvegetative period
-						else
+						//areal of beginning of growing season
+						if (met[month].d[day].ndvi_lai > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
+								&& met[month].d[day].ndvi_lai < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] && month < 6)
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 2;
+						}
+						//Full growing season or "||" end of growing season
+						if((fabs (met[month].d[day].ndvi_lai - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1 && month < 6) || month > 6)
+						{
+							c->heights[height].ages[age].species[species].phenology_phase = 3;
+						}
+						if (met[month].d[day].ndvi_lai == 0)
 						{
 							c->heights[height].ages[age].species[species].phenology_phase = 4;
 						}
