@@ -36,6 +36,8 @@
 #define NULL   ((void *) 0)
 #endif
 
+//speriamo!
+
 /* constants */
 #define PROGRAM_VERSION	"5.0"
 
