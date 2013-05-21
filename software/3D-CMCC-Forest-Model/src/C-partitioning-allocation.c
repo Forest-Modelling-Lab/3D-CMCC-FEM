@@ -96,7 +96,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 	 */
 
 	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , --\n", c->heights[height].z);
-	//Log("PEAK_LAI = %g \n", s->value[PEAK_Y_LAI]);
+	Log("VEG_UNVEG = %d \n", s->counter[VEG_UNVEG]);
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
@@ -804,6 +804,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 				break;
 			}
 		}
+		//fixme bug in allocation is here!!
 		else
 		{
 			Log("Unvegetative period \n");
@@ -819,6 +820,11 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			Log("delta_cR %d = 0 \n", c->heights[height].z);
 			Log("delta_S %d = 0 \n", c->heights[height].z);
 			Log("delta_Res %d = 0 \n", c->heights[height].z);
+			Log("-Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
+			Log("-Reserve Biomass (Wres) = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
+			Log("-Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+			Log("-Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+			Log("-Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 		}
 	}
 	if (settings->spatial == 's')
