@@ -370,6 +370,8 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 		return NULL;
 	}
 
+	Log("Creating matrix....\n");
+
 	/* init matrix */
 	m->cells = NULL;
 	m->cells_count = 0;

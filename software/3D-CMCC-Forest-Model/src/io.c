@@ -84,6 +84,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	YOS *yos = NULL, // mandatory
 			*yos_no_leak;
 
+	Log("Processing met data files...\n");
+
 	if (!file)
 	{
 		return NULL;
@@ -115,35 +117,20 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 		// alloc memory for yos
 		yos_no_leak = realloc(yos, (++*yos_count)*sizeof*yos_no_leak);
-		//italo yos_no_leak = realloc(yos, (++*yos_count)*sizeof(YOS));
-		/* if ( !yos_no_leak || yos_no_leak > 1000 ) */
-		/* { */
-		/* 	// */
-		/* 	Log("yos_no_leak out of memory.\n"); */
-		/* 	Log("yos_no_leak = %d\n", yos_no_leak); */
-		/* 	Log("yos = %d\n", yos); */
-		/* 	free(yos); */
-		/* 	return NULL; */
-		/* } */
-		/* else */
-		/* { */
-		/* 	Log("ok yos_no_leak\n"); */
-		/* } */
-
 		if ( !yos_no_leak )
 		{
-			//
-			Log("out of memory.\n");
+			Log("yos_no_leak out of memory.\n");
 			free(yos);
 			return NULL;
 		}
+
 
 		// assign memory
 		yos = yos_no_leak;
 
 
 		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
-		//italo filename = malloc(sizeof(char)*BUFFER_SIZE);
+
 		if( !filename )
 		{
 			fprintf(stderr, "Cannot allocate memory for %s\n", file);
@@ -156,7 +143,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// 123 is the x coordinate of the cell,
 		// 4567 is the y coordinate of the cell,
 		// 2007 is the year
-		Log("Settings->time = %c\n", settings->time);
 		Log("opening met file '%s' \n", filename);
 
 		char *pch,

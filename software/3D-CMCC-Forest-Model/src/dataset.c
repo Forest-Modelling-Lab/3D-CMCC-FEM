@@ -401,6 +401,8 @@ int importSiteFile(char *fileName)
 	int ret = 0;
 	FILE *site_fd = fopen(fileName, "r");
 
+	Log ("Importing Site file...\n");
+
 	if( !site_fd ) // error opening file
 	{
 		fprintf(stderr, "Error while open %s\n", fileName);
@@ -480,6 +482,8 @@ int importSettingsFile(char *fileName)
 {
 	int ret = 0;
 	FILE *settings_fd = fopen(fileName, "r");
+
+	Log("Importing setting file...\n");
 
 	if( !settings_fd ) // error opening file
 	{

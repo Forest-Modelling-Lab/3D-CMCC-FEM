@@ -1055,6 +1055,9 @@ int main(int argc, char *argv[])
 			//fixme important!!!
 			//matrix_summary (m, years, yos);
 
+			if (!years)
+				matrix_summary (m, years, yos);
+
 
 			if (settings->time == 'd')
 			{
@@ -1161,8 +1164,13 @@ int main(int argc, char *argv[])
 									//	soil_model (m, yos, years, month, years_of_simulation);
 								}
 							}
+							Log("****************END OF DAY (%d)*******************\n", day+1);
 						}
+						Log("****************END OF MONTH (%d)*******************\n", month+1);
+						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
+					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
+					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 
 				}
 			}
