@@ -405,8 +405,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", day+1, month+1);
-		Log("n_day = %d\n"
-				"-average solar_rad = %g MJ/m^2/day\n"
+		Log("-average solar_rad = %g MJ/m^2/day\n"
 				"-tavg = %g °C\n"
 				"-tmax = %g °C\n"
 				"-tmin = %g °C\n"
@@ -420,7 +419,6 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-thermic_sum = %g °C\n"
 				"-day %d month %d daylength = %g hrs\n"
 				"-DOY = %d\n",
-				met[month].d[day].n_days,
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
