@@ -801,6 +801,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		//Log("Percentage of fine roots against leaves = %g %%\n", (1 - Perc_leaves) * 100);
 
 
+
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
 		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
