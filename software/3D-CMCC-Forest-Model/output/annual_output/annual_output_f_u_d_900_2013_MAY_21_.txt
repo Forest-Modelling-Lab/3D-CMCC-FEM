@@ -1,53 +1,12 @@
-monthly output file at stand level
+annual output file at stand level
 
-Monthly summary output from 3D-CMCC FEM
-Monthly GPP = monthly total gross primary production (gC/m2/month)
-Monthly NPP = monthly total net primary production (tDM/m2/month)
-Monthly ET = monthly canopy transpiration(mm/month)
+Annual summary output from 3D-CMCC FEM
+Annual GPP = annual total gross primary production (gC/m2/year)
+Annual NPP = annual total net primary production (tDM/m2/year)
+Annual ET = annual canopy transpiration(mm/year)
 
 
-
--YEAR      MONTH        GPP        NPP         ET
-
--2007          1          0          0          0
--2007          2          0          0          0
--2007          3          0          0          0
--2007          4          0          0          0
--2007          5    138.298   0.120911    40.9539
--2007          6    237.444   0.207592    92.3176
--2007          7    117.161   0.102431    86.0794
--2007          8    167.594   0.146524    79.5177
--2007          9    192.059   0.167913    59.8955
--2007         10    62.2198  0.0543974    19.2516
--2007         11          0          0          0
--2007         12          0          0          0
-
--YEAR      MONTH        GPP        NPP         ET
-
--2008          1          0          0          0
--2008          2          0          0          0
--2008          3          0          0          0
--2008          4          0          0          0
--2008          5        nan        nan        nan
--2008          6        nan        nan        nan
--2008          7        nan        nan        nan
--2008          8        nan        nan        nan
--2008          9        nan        nan        nan
--2008         10        nan        nan        nan
--2008         11          0          0          0
--2008         12          0          0          0
-
--YEAR      MONTH        GPP        NPP         ET
-
--2009          1          0          0          0
--2009          2          0          0          0
--2009          3          0          0          0
--2009          4          0          0          0
--2009          5        nan        nan        nan
--2009          6        nan        nan        nan
--2009          7        nan        nan        nan
--2009          8        nan        nan        nan
--2009          9        nan        nan        nan
--2009         10        nan        nan        nan
--2009         11          0          0          0
--2009         12          0          0          0
+-YEAR        GPP        NPP         ET
+-2007    914.776   0.799769    378.016
+-2008    913.591     0.7929    380.157
+-2009    883.109   0.778049    376.458
