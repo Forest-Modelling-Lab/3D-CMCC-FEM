@@ -678,60 +678,69 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 					// loop on each species
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 					{
-						//*************FOREST INITIALIZATION DATA***********
-
-						Get_a_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
-
-						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
-						//HEIGHT VALUES ARE MANDATORY
-						if (	m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
+						if (years == 0)
 						{
-							Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], yos, years);
+							//*************FOREST INITIALIZATION DATA***********
+
+							Get_a_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
+
+							//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
+							//HEIGHT VALUES ARE MANDATORY
+							if (	m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
+							{
+								Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], yos, years);
+							}
+
+							Log(
+									"----- height = %g\n"
+									"----- age = %d\n"
+									"----- species n.%02d is %s\n"
+									"----- n = %d trees\n"
+									"----- n stumps = %d stumps\n"
+									"----- avdbh = %g cm\n"
+									"----- wf = %g tDM/ha\n"
+									"----- wr coarse = %g tDM/area\n"
+									"----- wr fine = %g tDM/area\n"
+									"----- ws = %g tDM/area\n"
+									"----- wres = %g tDM/area\n"
+									"----- lai = %g tDM/area\n",
+
+
+									m->cells[cell].heights[height].value,
+									m->cells[cell].heights[height].ages[age].value,
+									species + 1,
+									m->cells[cell].heights[height].ages[age].species[species].name,
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
+									m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
+									m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM],
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM],
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
+									m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 						}
+						else
+						{
 
-						Log(
-								"----- height = %g\n"
-								"----- age = %d\n"
-								"----- species n.%02d is %s\n"
-								"----- n = %d trees\n"
-								"----- n stumps = %d stumps\n"
-								"----- avdbh = %g cm\n"
-								"----- wf = %g tDM/ha\n"
-								"----- wr coarse = %g tDM/area\n"
-								"----- wr fine = %g tDM/area\n"
-								"----- ws = %g tDM/area\n"
-								"----- wres = %g tDM/area\n"
-								"----- lai = %g tDM/area\n",
-
-
-								m->cells[cell].heights[height].value,
-								m->cells[cell].heights[height].ages[age].value,
-								species + 1,
-								m->cells[cell].heights[height].ages[age].species[species].name,
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
-								m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-
+						}
 					}
 				}
 			}
+			if (years == 0)
+			{
 
-			/*Soil definition*/
-			Log("***************************************************\n");
-			Log("SOIL DATASET\n");
-			Log("Number of soil layers = %g\n", settings->soil_layer);
-			Log("***************************************************\n");
+				/*Soil definition*/
+				Log("***************************************************\n");
+				Log("SOIL DATASET\n");
+				Log("Number of soil layers = %g\n", settings->soil_layer);
+				Log("***************************************************\n");
 
-			Get_initialization_site_data (&m->cells[cell]);
+				Get_initialization_site_data (&m->cells[cell]);
+			}
 
 		}
 		else if (m->cells[cell].landuse == Z)

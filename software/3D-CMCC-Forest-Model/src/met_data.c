@@ -346,7 +346,7 @@ extern void Get_air_pressure (CELL *c)
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	t2 = G_STD / (LR_STD * (R / MA));
 	c->air_pressure = P_STD * pow (t1, t2);
-	Log("Air pressure = %g Pa\n", c->air_pressure);
+	//Log("Air pressure = %g Pa\n", c->air_pressure);
 
 }
 

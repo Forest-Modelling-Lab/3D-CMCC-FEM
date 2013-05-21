@@ -1052,7 +1052,8 @@ int main(int argc, char *argv[])
 		for (years = 0; years < years_of_simulation; years++)
 		{
 			//fixme important!!!
-			//matrix_summary (m, years, yos);
+			matrix_summary (m, years, yos);
+
 			if (settings->time == 'd')
 			{
 				for ( cell = 0; cell < m->cells_count; cell++)
