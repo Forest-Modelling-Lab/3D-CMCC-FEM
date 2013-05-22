@@ -1116,6 +1116,12 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			/**********************************************************************/
 		}
 	}
+
+	//for daily_Log file only if there's one class
+
+	//fixme model must compute it only if there's one class
+	c->daily_lai = s->value[LAI];
+
 	Log("******************************\n");
 }
 

@@ -164,13 +164,14 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily summary output from 3D-CMCC FEM\n");
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
-		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n\n\n");
+		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n");
+		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n\n\n");
 	}
 	if (day == 0 && month == 0)
 	{
-		Daily_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET");
+		Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET", "LAI");
 	}
-	Daily_Log ("-%d %10d %10d %10g %10g %10g\n", yos[years].year,  month+1, day+1, c->daily_gpp, c->daily_npp, c->daily_et);
+	Daily_Log ("-%d %10d %10d %10g %10g %10g %10g\n", yos[years].year,  month+1, day+1, c->daily_gpp, c->daily_npp, c->daily_et, c->daily_lai);
 
 }
 

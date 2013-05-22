@@ -865,6 +865,7 @@ typedef struct {
 	float daily_gpp, monthly_gpp, annual_gpp;
 	float daily_npp, monthly_npp, annual_npp;
 	float daily_et, monthly_et, annual_et;
+	float daily_lai; //printed only if there's one only class
 
 	int dead_tree;
 
