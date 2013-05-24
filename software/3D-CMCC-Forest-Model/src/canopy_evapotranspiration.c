@@ -13,6 +13,7 @@
 extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
 {
 
+	//TODO SET TO 0 RAIN INTERCEPTIO IF TAVG < 0 NO SNOW INTERCEPTION
 	float RainIntercepted;
 	float lessrain;
 	//quantitatively computes the amount of rain intercepted by each layer
