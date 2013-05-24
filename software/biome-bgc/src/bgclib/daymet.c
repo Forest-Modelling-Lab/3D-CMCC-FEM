@@ -20,6 +20,7 @@ int daymet(const metarr_struct* metarr, metvar_struct* metv, int metday)
 	int ok=1;
 	double tmax,tmin,tavg,tday;
 	
+	//TOCOPY
 	/* convert prcp from cm --> kg/m2 */
 	metv->prcp = metarr->prcp[metday] * 10.0;
 

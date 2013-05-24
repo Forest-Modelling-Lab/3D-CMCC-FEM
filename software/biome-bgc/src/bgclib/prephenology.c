@@ -330,6 +330,7 @@ phenarray_struct* phen)
 				mean_tavg += metarr->tavg[i];
 			}
 			mean_tavg /= (double)ndays;
+			//TODO CHECK IT
 			/* tree onset equation from Mike White, Aug. 1997 */
 			onset_critsum = exp(4.795 + 0.129*mean_tavg);
 			
