@@ -161,7 +161,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 	if(day  == 0 && month == 0 && years == 0)
 	{
-		Daily_Log("Daily summary output from 3D-CMCC FEM\n");
+		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n");
@@ -187,7 +187,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 	if(month == 0 && years == 0)
 	{
-		Monthly_Log("Monthly summary output from 3D-CMCC FEM\n");
+		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
 		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
 		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n\n\n");
@@ -211,7 +211,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 	if (years == 0)
 	{
-		Annual_Log("Annual summary output from 3D-CMCC FEM\n");
+		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");

@@ -1,6 +1,6 @@
 annual output file at cell level
 
-Annual summary output from 3D-CMCC FEM
+Annual summary output from 3D-CMCC version 'f', time 'd', spatial 'u'
 Annual GPP = annual total gross primary production (gC/m2/year)
 Annual NPP = annual total net primary production (tDM/m2/year)
 Annual ET = annual canopy transpiration(mm/year)

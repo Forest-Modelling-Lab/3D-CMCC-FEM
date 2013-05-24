@@ -1,6 +1,6 @@
 monthly output file at cell level
 
-Monthly summary output from 3D-CMCC FEM
+Monthly summary output from 3D-CMCC version 'f', time 'd', spatial 'u'
 Monthly GPP = monthly total gross primary production (gC/m2/month)
 Monthly NPP = monthly total net primary production (tDM/m2/month)
 Monthly ET = monthly canopy transpiration(mm/month)

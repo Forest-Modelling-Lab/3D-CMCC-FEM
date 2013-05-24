@@ -1,6 +1,6 @@
 daily output file at cell level
 
-Daily summary output from 3D-CMCC FEM
+Daily summary output from 3D-CMCC version 'f', time 'd', spatial 'u'
 Daily GPP = daily total gross primary production (gC/m2/day)
 Daily NPP = daily total net primary production (tDM/m2/day)
 Daily ET = daily canopy transpiration(mm/day)
