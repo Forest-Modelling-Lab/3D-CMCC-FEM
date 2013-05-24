@@ -191,32 +191,18 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	//DAILY GPP/NPP
 	//cell level
 
-	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
-	{
-		c->daily_gpp = 0;
-		c->daily_npp = 0;
-	}
 	c->daily_gpp += s->value[POINT_GPP_g_C];
 	c->daily_npp += s->value[NPP];
 
 	//MONTHLY GPP/NPP
 	//cell level
 
-	if (day == 0)
-	{
-		c->monthly_gpp = 0;
-		c->monthly_npp = 0;
-	}
 	c->monthly_gpp += s->value[POINT_GPP_g_C];
 	c->monthly_npp += s->value[NPP];
 
 	//ANNUAL GPP/NPP
 	//cell level
-	if (month == 0)
-	{
-		c->annual_gpp = 0;
-		c->annual_npp = 0;
-	}
+
 	c->annual_gpp += s->value[POINT_GPP_g_C];
 	c->annual_npp += s->value[NPP];
 

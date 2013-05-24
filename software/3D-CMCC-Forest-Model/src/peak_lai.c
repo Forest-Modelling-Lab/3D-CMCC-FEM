@@ -67,12 +67,14 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
 }
  */
 
-void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
+void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
 {
 	static float oldBasalArea;
 	static float sapwood_perc;
 
 	Log ("\nPEAK LAI FUNCTION\n\n");
+
+
 
 	//compute Basal Area
 	if (years == 0)
@@ -131,6 +133,15 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, int years, int month)
 	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* 2.0))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 	Log("Maximum foliage biomass = %g Kg/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]/s->counter[N_TREE]);
 	//Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+
+
+	//DAILY GPP/NPP
+	//cell level
+
+	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
+	{
+		c->annual_peak_lai = s->value[PEAK_Y_LAI];
+	}
 
 
 

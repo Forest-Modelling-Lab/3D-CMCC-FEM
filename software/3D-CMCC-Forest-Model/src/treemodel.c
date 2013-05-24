@@ -204,7 +204,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//Peak LAI is also used in spatial version to drive carbon allocation
 							if (month == JANUARY)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
+								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
 							}
 
 							//vegetative period for deciduous

@@ -866,6 +866,7 @@ typedef struct {
 	float daily_npp, monthly_npp, annual_npp;
 	float daily_et, monthly_et, annual_et;
 	float daily_lai; //printed only if there's one only class
+	float annual_peak_lai; //printed only if there's one only class
 
 	int dead_tree;
 
@@ -987,7 +988,7 @@ extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const,
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
 extern void Get_initial_lai (SPECIES *const s);
 extern void Get_peak_lai (SPECIES *const , int, int );
-extern void Get_peak_lai_from_pipe_model (SPECIES *const , int, int );
+extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
 extern void Get_turnover (SPECIES *const);
 extern void Get_Light_Recruitment (SPECIES *const, float, float);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);

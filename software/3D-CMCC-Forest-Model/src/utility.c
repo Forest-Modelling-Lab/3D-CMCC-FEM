@@ -173,6 +173,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	}
 	Daily_Log ("-%d %10d %10d %10g %10g %10g %10g\n", yos[years].year,  month+1, day+1, c->daily_gpp, c->daily_npp, c->daily_et, c->daily_lai);
 
+
+	//reset after printed at the end of the day
+	c->daily_gpp = 0;
+	c->daily_npp = 0;
+	c->daily_et = 0;
+	c->daily_lai = 0;
+
 }
 
 
@@ -190,7 +197,15 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log ("\n-%s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET");
 	}
 	Monthly_Log ("-%d %10d %10g %10g %10g\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et);
+
+	//reset after printed at the end of the month
+	c->monthly_gpp = 0;
+	c->monthly_npp = 0;
+	c->monthly_et = 0;
+
 }
+
+
 
 extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years)
 {
@@ -201,10 +216,20 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
 		Annual_Log("Annual AGB = annual above-ground biomass(tDM/area/year)\n");
-		Annual_Log("Annual BGB = annual below-ground biomass(tDM/area/year)\n\n\n");
-		Annual_Log ("-%s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB");
+		Annual_Log("Annual BGB = annual below-ground biomass(tDM/area/year)\n");
+		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n\n\n");
+		Annual_Log ("-%s %10s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB", "PEAK_LAI");
 	}
-	Annual_Log ("-%d %10g %10g %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb);
+	Annual_Log ("-%d %10g %10g %10g %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai);
+
+	//reset after printed at the end of the year
+	c->annual_gpp = 0;
+	c->annual_npp = 0;
+	c->annual_et = 0;
+	c->stand_agb = 0;
+	c->stand_bgb = 0;
+	c->annual_peak_lai = 0;
+
 }
 
 void Get_a_Power_Function (AGE *a, SPECIES *s)

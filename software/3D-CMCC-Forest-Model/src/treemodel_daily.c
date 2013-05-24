@@ -220,7 +220,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Peak LAI is also used in spatial version to drive carbon allocation
 							if (day == 0 && month == JANUARY)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], years, month);
+								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
 							}
 
 							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
