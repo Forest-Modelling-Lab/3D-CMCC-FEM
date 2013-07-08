@@ -126,6 +126,7 @@ HMAX	35              //35  //Max Height in m see Morandini 1955
 DMAX	100              //Max Stem Diameter in cm see Morandini 1955
 HPOWER	0.0353           //Slope of Asymptotic Height 
 RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
+b_RPOWER	0			//NOT FOUND
 CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
 
 //CHAPMAN-RICHARDS relationships

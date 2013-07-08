@@ -125,6 +125,7 @@ HMAX	40              //35  //Max Height in m for QUERCUS CERRIS for Chapman-Rich
 DMAX	80              //Max Stem Diameter in cm QUERCUS CERRIS
 HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubra
 RPOWER	0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
+b_RPOWER	0			//NOT FOUND
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
 
 

@@ -152,6 +152,7 @@ static const char *species_values[] = {
 		"DMAX",                       //Max Diameter in cm
 		"HPOWER",                     //Slope of Asymptotic Height from Sortie
 		"RPOWER",                     //Slope of Asymptotic Crown-Radius from Sortie
+		"b_RPOWER",
 		"CHPOWER",                    //Slope of Asymptotic Crown-Height from Sortie
 
 
