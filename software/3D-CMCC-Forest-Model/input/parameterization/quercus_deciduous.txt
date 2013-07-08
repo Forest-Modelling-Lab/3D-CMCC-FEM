@@ -128,6 +128,7 @@ HPOWER	0.042           //Slope of Asymptotic Height from Sortie for Quercus rubr
 RPOWER	0.119           //Slope of Asymptotic Crown-Radius from Sortie for Quercus rubra
 b_RPOWER	0			//NOT FOUND
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
+b_CHPOWER	0		 	//NOT FOUND
 
 //CHAPMAN-RICHARDS relationships
 CRA	34.597

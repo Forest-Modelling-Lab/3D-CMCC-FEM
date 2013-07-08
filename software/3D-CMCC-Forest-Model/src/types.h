@@ -322,6 +322,7 @@ enum {
 	RPOWER,                     //Slope of Asymptotic Crown-Radius from Sortie
 	b_RPOWER,
 	CHPOWER,                    //Slope of Asymptotic Crown-Height from Sortie
+	b_CHPOWER,
 
 
 

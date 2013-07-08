@@ -101,13 +101,13 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	// Tree Height in m
 	s->value[TREE_HEIGHT_SORTIE] = (1.35 +(s->value[HMAX] - 1.35) * ( 1 - exp ( - s->value[HPOWER] * s->value[AVDBH] )));
 	// Crown Radius in m
-	s->value[CROWN_RADIUS_SORTIE] = s->value[RPOWER] * s->value[AVDBH];
+	s->value[CROWN_RADIUS_SORTIE] = s->value[RPOWER] * (s->value[AVDBH] * exp (b_RPOWER));
 	}
 	Log("Tree Height from Sortie Allometry Function = %g m\n", s->value[TREE_HEIGHT_SORTIE] );
 	Log("Crown Radius from Sortie Allometry Function = %g m\n", s->value[CROWN_RADIUS_SORTIE]);
 
 	// Crown Height in m
-	s->value[CROWN_HEIGHT_SORTIE] = s->value[CHPOWER] * s->value[TREE_HEIGHT_SORTIE];
+	s->value[CROWN_HEIGHT_SORTIE] = (s->value[CHPOWER] * (s->value[TREE_HEIGHT_SORTIE] * exp (b_CHPOWER));
 	Log("Crown Height from Sortie Allometry Function = %g m\n", s->value[CROWN_HEIGHT_SORTIE]);
 
 	// Crown Diameter in m
