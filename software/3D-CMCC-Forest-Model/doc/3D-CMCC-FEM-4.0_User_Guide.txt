@@ -228,6 +228,18 @@ IMPORTANT: be sure to use the correct declaration of the output as grep paramete
 
 -ECLIPSE-
 
+To Run the model in Eclipse, using a non subvertioned version of the model simply follow these steps:
+1) save the 3D-CMCC-Forest-Model directory in the path you are going to use as Eclipse Workspace 
+2) open Eclipse (3.7 or higher have been tested to be working) and set your Workspace as the same path in which you've placed the Model's folder
+    - to do so click on File, then "switch Workspace" and click on "Other..."; here input your corrent path
+3) create a new C project (File -> New -> C project)
+4) EXTREMELY IMPORTANT! Call the new project with the very same name of the model directory (e.g. 3D_CMCC_Forest_Model)
+5) click next then finish (use cross GCC compiler as compiler, since is the one tested to work)
+6) you'll be asked to override the previous project having the same specified name; answer ok 
+    (it will use the model's source code, while it seems to replace old compiler with the new project's one)   
+
+
+
 FOR RUN IT INTO ECLIPSE PLATFORM YOU NEED TO INSTALL CDT 8.0.2 OR MORE from:
 http://www.eclipse.org/downloads/download.php?file=/tools/cdt/releases/indigo/dist/cdt-master-8.0.2.zip&mirror_id=189
 
