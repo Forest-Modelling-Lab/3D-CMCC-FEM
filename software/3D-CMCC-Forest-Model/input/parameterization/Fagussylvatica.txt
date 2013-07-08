@@ -47,7 +47,7 @@ NAGE_S	3               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	5       //Minimum temperature for growth 5  Rasse et al 2001
 GROWTHTMAX	35      //Maximum temperature for growth
-GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001
+GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
 GROWTHSTART	1400       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C  for fagus through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
 MINDAYLENGTH	12      //minimum day length for fagus through satellite images
