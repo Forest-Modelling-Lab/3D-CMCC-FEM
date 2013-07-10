@@ -1,0 +1,173 @@
+﻿//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL	3   	//4 = very shade intolerant
+		    	//3 = shade intolerant
+		    	//2 = shade tolerant
+		   	//1 = very shade tolerant
+PHENOLOGY	1 //PHENOLOGY 0=deciduous, 1=evergreen
+ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005
+EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
+K	0.6		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
+			//0.65      //Extinction coefficient for absorption of PAR by canopy 
+ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
+//LEAF AREA INDEX
+LAIGCX	3.333               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005
+LAIMAXINTCPTN	5       //LAI for maximum rainfall interception for P. sylvestris from Landsberg et al., 2005
+MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
+
+//SPECIFIC LEAF AREA 
+
+SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
+SLA1	7               //Specific Leaf Area for mature leaves (m^2/kg)
+TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
+//SPECIFIC LEAF AREA 
+SLA	50.11             //Specific Leaf Area cm^2/gC  	 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005			
+
+//FRACTION BRANCH-BARK
+FRACBB0	0.04            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
+FRACBB1	0.15            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
+TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+//MASS DENSITY
+RHOMIN	0.47             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Repala, 2006
+RHOMAX	0.41             //Maximum Basic Density for young Trees  for P. sylvestris from Repala, 2006
+TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
+DRYMAT_FRESHMAT	0.500    //Conversion from Drymatter to Freshmatter for P. sylvestris from Pietsch et al 2005
+//VPD
+COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris from Landsberg et al., 2005
+BLCOND	0.2            //Canopy Boundary Layer conductance for P. sylvestris from Landsberg et al., 2005
+MAXCOND	0.02            //Maximum Canopy Conductance in m/sec for P. sylvestris from Landsberg et al., 2005
+//AGE for timber
+MAXAGE	500             //Determines rate of "physiological decline" of forest for P. sylvestris from Landsberg et al., 2005
+RAGE	0.95            //Relative Age to give fAGE = 0.5 for P. sylvestris from Landsberg et al., 2005
+NAGE	4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005
+//Age for shoots
+MAXAGE_S	100     //Determines rate of "physiological decline" of forest
+RAGE_S	0.75            //Relative Age to give fAGE = 0.5
+NAGE_S	4               //Power of relative Age in function for Age
+//TEMPERATURE
+GROWTHTMIN	-2       //Minimum temperature for growth for P. sylvestris from Landsberg et al., 2005
+GROWTHTMAX	25      //Maximum temperature for growth for P. sylvestris from Landsberg et al., 2005
+GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and from Lyr & Garbe, 1995
+GROWTHSTART	0       //average temperature for starting growth in °C 
+GROWTHEND	0       //average temperature for ending growth in °C 
+MINDAYLENGTH	0      //minimum day length for deciduous
+
+//SOIL WATER
+//modified 13 feb 2012
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN	-0.5 //in KPa for P. sylvestris from Pietsch et al 2005
+SWPCLOSE	-2.2 //in KPa  for P. sylvestris from Pietsch et al 2005
+SWCONST	1	        //Costant in Soil Water modifier vs Moist Ratio
+SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING for timber
+PFS2	0.5             //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20	0.5             //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX	0.5	        //Maximum fraction of NPP to Roots
+PRN	0.2             //Minimum fraction of NPP to Roots
+//BIOMASS PARTITIONING for coppice (valore inventati per prova)
+PFS2_C	1               //Foliage:Stem Partitioning Ratio @ D = 2 cm
+PFS20_C	0.4             //Foliage:Stem Partitioning Ratio @ D = 20 cm
+PRX_C	0.30	        //Maximum fraction of NPP to Roots
+PRN_C	0.10            //Minimum fraction of NPP to Roots
+
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
+OMEGA_CTEM	0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
+S0CTEM	0.05             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needlleleaf deciduous from Arora et al 2005
+R0CTEM	0.89            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needlleleaf deciduous from Arora et al 2005 
+F0CTEM	0.06            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE  for Needlleleaf deciduous from Arora et al 2005
+RES0CTEM	0.22	//PARAMETER CONTROLLING ALLOCATION TO RESERVE (NOT USED)
+EPSILON_CTEM	30.8      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6 for Needlleleaf deciduous from Arora et al 2005
+KAPPA	1.6             //ALLOCATION PARAMETER DIMENSIONLESS for Needlleleaf deciduous from Arora et al 2005
+
+
+MIN_R0CTEM	0.1	//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF	1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
+STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 2.5 from Pietsch et al., 2005
+COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged for P. sylvestris from White et al., 2000, 0.29 from Pietsch et al., 2005
+
+
+//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
+//LITTERFALL
+//FOLLOWING BIOME-BGC
+LEAF_FALL_FRAC_GROWING	0		//proportions of the growing season of leaf fall 
+GAMMAFX	0.0255              //Maximum Litterfall rate (month^-1) for P. sylvestris from Landsberg et al., 2005
+GAMMAF0	0.0255               //Litterfall rate at t = 0 (month^-1) for P. sylvestris from Landsberg et al., 2005
+TGAMMAF	60               //Age at which litterfall rate has median value for P. sylvestris from Landsberg et al., 2005
+
+//TURNOVER
+FINERTTOVER	0.3825       //Average yearly fine root turnover rate for P. sylvestris from White et al., 2000
+COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
+SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
+BRANCHTTOVER	0.01	//Average yearly branch turnover rate
+
+
+
+//MORTALITY
+WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER	2       //Power in self-thinning rule
+MF	0.64               //Fraction mean single tree foliage biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+MR	0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+//ALLOMETRIC RELATIONSHIPS
+DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
+DBHDCMIN	0.14    //High Density for P. sylvestris from Ameztegui et al., 2012
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A	0.776         //a value for P. sylvestris from Xiao and Cuelemans 2013
+SAP_B	1.9156         //b value for P. sylvestris from Xiao and Cuelemans 2013
+SAP_LEAF	2000          //sapwood_max leaf area ratio in pipe model  for P. sylvestris from Hickler et al 2012
+SAP_WRES	0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
+HMAX	22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012
+DMAX	155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
+
+//not used just for comparison
+HPOWER	0.034           //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
+RPOWER	0.214           //Slope of Asymptotic Crown-Radius from Sortie for P. sylvestris from Ametzegui et al., 2012
+b_RPOWER  0.708		        //for P. sylvestris from Ametzegui et al., 2012
+CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
+b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
+
+//CHAPMAN-RICHARDS relationships
+CRA	19    //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
+CRB	0.11  //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
+CRC	1.48  //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
+
+//CROWDING COMPETITION FUNCTION
+HDMAX	1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
+HDMIN	0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
+CANCOVERMAX	0.95    //Maximum Canopy Cover
+CANCOVERMIN	0.0001  //Minimum Canopy Cover
+//DENSITY FUNCTION
+DENMAX	0.4             //Maximum density (trees/10000 m^2)
+DENMIN	0.01           //Minimum density (trees/10000 m^2)
+//ESTABLISHMENT
+MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                                        //broaldleaved summergreen
+MINRAIN	100             //Minimum annual Rain Precipitation for Establishment
+                                        //S. Sitch 2003
+//SEEDS PRODUCTION
+ADULT_AGE	5	//age at which consider tree as an adult tree
+MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
+MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
+WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti)
+SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.)
+MINTEMP	20              //Minimum temperature for germination in °C
+ESTMAX	0.24            //Potential Establishment rate in the absence of competition
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT	0.05    //Fraction of NPP to Fruit Production
+
+
+//MANAGMENT
+ROTATION	100     //Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG	80      //Minimum age for Managment (Q. cerris)
+MINDBHMANAG	27      //Minimum DBH for Managment
+AV_SHOOT	10      //average number of shoot after cut

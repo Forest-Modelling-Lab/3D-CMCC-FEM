@@ -29,7 +29,7 @@ FRACBB1	0.25            //Branch and Bark fraction for mature stands
 TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
 RHOMIN	0.4             //Minimum Basic Density for young Trees t/m^3
-RHOMAX	0.6             //Maximum Basic Density for young Trees (Ferrara-Nolè)
+RHOMAX	0.6             //Maximum Basic Density for young Trees (Ferrara-Nolè) 0.85 for Q. cerris from Knapic et al., 2007
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter (for Q. cerris L.) (M. Bascietto - G. Scarascia Mugnozza)
 //VPD

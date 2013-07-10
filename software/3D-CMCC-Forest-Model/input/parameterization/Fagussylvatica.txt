@@ -28,8 +28,8 @@ FRACBB0	0.40            //Branch and Bark fraction at age 0
 FRACBB1	0.125            //Branch and Bark fraction for mature stands
 TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
-RHOMIN	0.675             //Minimum Basic Density for young Trees t/m^3
-RHOMAX	0.82             //Maximum Basic Density for young Trees 
+RHOMIN	0.72             //Minimum Basic Density for young Trees t/m^3 Bouriaud et al., 2004
+RHOMAX	0.79             //Maximum Basic Density for young Trees 
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter 
 //VPD
