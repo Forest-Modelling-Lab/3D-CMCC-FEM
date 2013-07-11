@@ -21,15 +21,15 @@ SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
 SLA1	7               //Specific Leaf Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
-SLA	50.11             //Specific Leaf Area cm^2/gC  	 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005			
+SLA	50.11             //Specific Leaf Area cm^2/gC for P. sylvestris from Xiao and Cuelemans 2013, 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005			
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.04            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
-FRACBB1	0.15            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
+FRACBB1	0.15            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999
 TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
-RHOMIN	0.47             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Repala, 2006
-RHOMAX	0.41             //Maximum Basic Density for young Trees  for P. sylvestris from Repala, 2006
+RHOMIN	0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006
+RHOMAX	0.502             //Maximum Basic Density for young Trees  for P. sylvestris from Janssen et al., 1999 ,0.41 from Repala, 2006
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.500    //Conversion from Drymatter to Freshmatter for P. sylvestris from Pietsch et al 2005
 //VPD
