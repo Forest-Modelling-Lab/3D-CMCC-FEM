@@ -850,6 +850,37 @@ int main(int argc, char *argv[])
 		printf ("...Settings file imported!!\n");
 	}
 
+	// Import site.txt file
+	error = importSiteFile(site_path);
+	if ( error )
+	{
+		Log("Site file not imported!!\n\n");
+		return -1;
+	}
+	else
+	{
+		Log("site path = %s\n", site_path);
+		Log("...Site file imported!!\n\n");
+	}
+
+	//add site name to output files
+	char strSitename[20] = "";
+	sprintf(strSitename, "%s", site->sitename);
+
+	strcat (out_filename, "_");
+	strcat (out_filename, strSitename);
+
+	strcat (daily_out_filename, "_");
+	strcat (daily_out_filename, strSitename);
+
+	strcat (monthly_out_filename, "_");
+	strcat (monthly_out_filename, strSitename);
+
+	strcat (annual_out_filename, "_");
+	strcat (annual_out_filename, strSitename);
+
+
+
 	//define output file name in function of model settings
 	char strTmp[3], strTmp2[4], strTmp3[3];
 	strTmp[0] = '_';
@@ -864,6 +895,7 @@ int main(int argc, char *argv[])
 	strTmp3[0] = settings->time;
 	strTmp3[1] = '_';
 	strTmp3[2] = '\0';
+
 
 
 	strcat (out_filename, strTmp);
@@ -1001,7 +1033,7 @@ int main(int argc, char *argv[])
 	files_processed_count = 0;
 	files_not_processed_count = 0;
 	total_files_count = 0;
-
+/*
 	// Import site.txt file
 	error = importSiteFile(site_path);
 	if ( error )
@@ -1014,6 +1046,7 @@ int main(int argc, char *argv[])
 		Log("site path = %s\n", site_path);
 		Log("...Site file imported!!\n\n");
 	}
+*/
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
