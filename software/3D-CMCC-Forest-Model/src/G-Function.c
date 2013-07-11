@@ -62,7 +62,6 @@ void Get_Day_Length ( CELL * c,  int day, int month, int years, int MonthLength 
 
 
 //3PG version
-//todo control
 void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 {
 	// gets fraction of day when sun is "up"

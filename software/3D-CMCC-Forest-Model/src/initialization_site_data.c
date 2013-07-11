@@ -86,7 +86,7 @@ void Get_initialization_site_data (CELL *c)
 	//converts volumetric water content (m3/m3) --> (kg/m2)
 	// (cm)   effective depth of rooting zone
 	Log("Soil depth = %g cm\n", site->soil_depth);
-	Log("Soil depth = %g m\n", site->soil_depth / 100);
+	//Log("Soil depth = %g m\n", site->soil_depth / 100);
 	// (kgH2O/m2) soil water at field capacity
 	c->soilw_fc = (site->soil_depth / 100) * vwc_fc * 1000.0;
 	Log ("soilw_fc BIOME (MAXASW FC BIOME)= %g (kgH2O/m2)\n", c->soilw_fc);
