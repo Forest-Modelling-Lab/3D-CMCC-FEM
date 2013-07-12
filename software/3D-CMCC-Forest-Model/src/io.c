@@ -152,6 +152,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		if( !tmp_filename )
 		{
 			fprintf(stderr, "Cannot allocate memory for tmp_filename.\n");
+			Log ("Cannot allocate memory for tmp_filename.\n");
 			exit(1);
 		}
 
@@ -177,6 +178,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		if ( !f )
 		{
 			printf("unable to open met data file !\n");
+			Log("unable to open met data file !\n");
 			free(yos);
 			return NULL;
 		}
@@ -185,6 +187,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		if ( !fgets(buffer, BUFFER_SIZE, f) )
 		{
 			printf("empty met data file ?\n");
+			Log ("empty met data file ?\n");
 			free(yos);
 			fclose(f);
 			return NULL;
@@ -260,6 +263,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 					if ( month == MONTHS  )
 					{
 						printf("bad monthly format data for monthly met file, too many rows for a year.\n\n");
+						Log("bad monthly format data for monthly met file, too many rows for a year.\n\n");
 						free(yos);
 						fclose(f);
 						return NULL;
@@ -270,6 +274,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 					if (day > 365)
 					{
 						printf("bad monthly format data for daily met file, too many rows for a year.\n\n");
+						Log("bad monthly format data for daily met file, too many rows for a year.\n\n");
 						free(yos);
 						fclose(f);
 						return NULL;
@@ -292,6 +297,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -310,6 +316,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -338,6 +345,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -364,6 +372,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -387,6 +396,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -408,6 +418,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -428,6 +439,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -448,6 +460,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -483,6 +496,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								if ( error_flag )
 								{
 									printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+									Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 									free(yos);
 									fclose(f);
 									return NULL;
@@ -508,6 +522,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( error_flag )
 									{
 										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -566,7 +581,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].n_days = convert_string_to_int(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -589,7 +605,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -629,7 +646,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].tavg = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -669,7 +687,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].tmax = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -702,7 +721,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].tmin = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -735,7 +755,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].vpd = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -771,7 +792,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].ts_f = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -802,7 +824,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].rain = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -852,7 +875,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									yos[*yos_count-1].m[month].d[day].swc = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
-										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 										free(yos);
 										fclose(f);
 										return NULL;
@@ -887,7 +911,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 										if ( error_flag )
 										{
-											printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+											printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+											Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
 											free(yos);
 											fclose(f);
 											return NULL;
@@ -969,6 +994,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			if ( month != MONTHS )
 			{
 				printf("missing values in met data file, %d months imported instead of %d !\n", month+1, MONTHS);
+				Log("missing values in met data file, %d months imported instead of %d !\n", month+1, MONTHS);
 				free(yos);
 				return NULL;
 			}
