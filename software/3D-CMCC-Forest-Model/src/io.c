@@ -981,6 +981,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 					++month;
 					day = 0;
 				}
+				else
+				{
+					Log("error!\n");
+				}
 			}
 			else
 			{
@@ -999,6 +1003,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				return NULL;
 			}
 		}
+		Log ("ok met data\n");
 
 
 		fclose(f);
@@ -1009,6 +1014,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	{
 		qsort(yos, *yos_count, sizeof*yos, sort_by_years);
 	}
+
+	Log ("ok met data\n");
 
 	// return pointer
 	return yos;
