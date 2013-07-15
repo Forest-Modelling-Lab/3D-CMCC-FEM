@@ -1066,7 +1066,6 @@ int main(int argc, char *argv[])
 		puts(msg_ok);
 
 		/* build matrix */
-		Log("Creating matrix....\n");
 		m = matrix_create(rows, rows_count, input_dir);
 
 		/* free rows */

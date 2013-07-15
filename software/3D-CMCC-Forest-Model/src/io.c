@@ -1015,7 +1015,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		qsort(yos, *yos_count, sizeof*yos, sort_by_years);
 	}
 
-	Log ("ok met data\n");
+	Log ("ok met data importing\n");
 
 	// return pointer
 	return yos;
