@@ -334,7 +334,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								//CONTROL
 								if (yos[*yos_count-1].m[month].solar_rad > settings->maxrg )
 								{
-									Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, MonthName[month] );
+									Log("ERROR IN RG DATA Rg > MAXRg in year %s month %s!!!!\n", year, MonthName[month] );
 								}
 								//convert daily average solar radiation to monthly solar radiation
 								//m[month].solar_rad *= m[month].n_days;
@@ -638,7 +638,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].solar_rad > settings->maxrg )
 									{
-										Log("ERROR IN RG DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										Log("ERROR IN RG DATA Rg > MAXRg in year %s month %s day %d!!!!\n", year, MonthName[month], day );
 									}
 									break;
 
