@@ -981,9 +981,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 					++month;
 					day = 0;
 				}
-				else
+				if (day > giorninelmese[month])
 				{
-					Log("error!\n");
+					Log("day exceeds daysinmonth error!\n");
 				}
 			}
 			else
