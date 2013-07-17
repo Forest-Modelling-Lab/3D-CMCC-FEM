@@ -167,6 +167,7 @@ typedef struct
 	maxvpd,
 	maxprecip,
 	switchtounspatial;
+
 } settings_t;
 
 
@@ -798,7 +799,6 @@ typedef struct {
 	int cum_dayOfyear;
 	float abscission_daylength;
 
-	float thermic_sum;
 
 	float net_radiation;
 	float net_radiation_for_dominated;
@@ -870,6 +870,8 @@ typedef struct {
 	float annual_peak_lai; //printed only if there's one only class
 
 	int dead_tree;
+
+	float thermic_sum;
 
 
 

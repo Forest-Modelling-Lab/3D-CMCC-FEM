@@ -164,6 +164,9 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
+	Log("day = %d, month = %d\n", day+1, month+1);
+	Log("previous thermic sum = %g\n", met[month].d[day].thermic_sum);
+
 	if (day == 0 && month == 0)
 	{
 		met[month].d[day].thermic_sum = 0;
@@ -177,7 +180,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 			met[month].d[day].thermic_sum = 0;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-			Log("tavg NO_DATA!!\n");
+		Log("tavg NO_DATA!!\n");
 	}
 	else
 	{
