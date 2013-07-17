@@ -10,8 +10,8 @@
 #define LEAP_YEAR_ROWS	17568
 #define YEAR_ROWS	17520
 //#define BUFFER_SIZE	4096
-#define PATH_SIZE 	1024	/* TODO : CHECK IT */
-#define FILENAME_SIZE	256	/* TODO : CHECK IT */
+#define PATH_SIZE 	8192	/* TODO : CHECK IT */
+#define FILENAME_SIZE	8192	/* TODO : CHECK IT */
 
 /* defines */
 #define IS_LEAP_YEAR(x)		(((x) % 4 == 0 && (x) % 100 != 0) || (x) % 400 == 0)

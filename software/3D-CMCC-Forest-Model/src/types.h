@@ -884,7 +884,7 @@ typedef struct {
 
 
 /* constants */
-#define MET_FILENAME_LEN                18
+#define MET_FILENAME_LEN                1024
 
 /* defines */
 #define Minimum(a, b)  (((a) < (b)) ? (a) : (b))
@@ -896,7 +896,7 @@ typedef struct {
 
 //#define LOGFILE		"output.txt"
 /* #define BUFFER_SIZE	4096 */
-#define BUFFER_SIZE	65536
+#define BUFFER_SIZE	585600
 
 
 
