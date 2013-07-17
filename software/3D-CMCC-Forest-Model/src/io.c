@@ -403,7 +403,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmin) && *yos_count > 1)
 								{
-									//Log ("* T_AVG -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+									//Log ("* TMIN -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tmin = yos[*yos_count-2].m[month].tmin;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmin))
@@ -700,7 +700,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && *yos_count > 1)
 									{
 										//the model gets the value of the day before
-										//Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										//Log ("* TMAX -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count].m[month].d[day-1].tmax;
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 										{
@@ -734,7 +734,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && *yos_count > 1)
 									{
 										//the model gets the value of the day before
-										Log ("* TAV -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										Log ("* TMIN -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 										Log("Getting previous years values !!\n");
 										yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count].m[month].d[day-1].tmin;
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
