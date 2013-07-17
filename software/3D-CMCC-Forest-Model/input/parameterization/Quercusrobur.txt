@@ -4,12 +4,12 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	0 //PHENOLOGY 0=deciduous, 1=evergreen
-ALPHA	0.0236		// Canopy quantum efficiency (molC/molPAR) for Q. robur Averaged value from Morecroft and Roberts 1999 Funct Ecology,
+ALPHA	0.045		// Canopy quantum efficiency (molC/molPAR) 0.0236 for Q. robur Averaged value from Morecroft and Roberts 1999 Funct Ecology,
 					// 0.045 for Q. robur from Morecroft et al 2003
 EPSILONgCPAR	0.0850 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 0.085 from Carrara et al., 2004
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
-			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
+
 ALBEDO	0.2
 //LEAF AREA INDEX
 LAIGCX	4               //LAI for maximum canopy conductance
@@ -47,9 +47,9 @@ RAGE_S	0.75            //Relative Age to give fAGE = 0.5
 NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth
-GROWTHTMAX	30      //Maximum temperature for growth
+GROWTHTMAX	35      //Maximum temperature for growth
 GROWTHTOPT	25      //Optimum temperature for growth for Q. robur from Lyr & Garbe, 1995
-GROWTHSTART	1100       //average temperature for starting growth in °C for q. robur Hickler et al 2012 (7.5 for Quercus robur from Morecroft et al 2003) CONTROL!!!!!!!!!
+GROWTHSTART	800       //average temperature for starting growth in °C 1100 for q. robur Hickler et al 2012 (7.5 for Quercus robur from Morecroft et al 2003) CONTROL!!!!!!!!!
 GROWTHEND	2       //average temperature for ending growth in °C
 MINDAYLENGTH	11      //minimum day length for deciduous
 
@@ -120,7 +120,7 @@ DBHDCMIN	0.20    //High Density for Q. robur from Bellio and Pividori, 2009
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.034         //a value from Kostner for Q. petreae in cm
 SAP_B	2.384         //b value from Kostner for Q. petreae in cm
-SAP_LEAF	4000          //sapwood_max leaf area ratio in pipe model  for Q. robur from Hickler et al 2012
+SAP_LEAF	6000          //sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	52              //Max Height in m for Q. robur from Lischke et al, user_guide

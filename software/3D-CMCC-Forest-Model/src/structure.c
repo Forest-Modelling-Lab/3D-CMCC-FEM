@@ -814,7 +814,6 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 								//check
 								if(leaf_fall_counter == 1)
 								{
-									Log("entro\n");
 									//assign value of thermic sum
 									c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
 									Log("thermic_sum END OF VEG = %g °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);

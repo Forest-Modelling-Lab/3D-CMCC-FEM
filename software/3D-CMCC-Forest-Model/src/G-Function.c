@@ -231,7 +231,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
 	if (!day && !month)
-		Log("computing Get_Veg_Days...\n");
+		Log("computing Get_Veg_Days...for year %d\n", years);
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -260,7 +260,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							if (met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART])
 							{
 								c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
-								Log("thermic_sum %g day %d month %d\n", met[month].d[day].thermic_sum, day+1 , month+1);
+								//Log("thermic_sum %g day %d month %d\n", met[month].d[day].thermic_sum, day+1 , month+1);
 							}
 						}
 						else
@@ -268,7 +268,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							if (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH])
 							{
 								c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
-								Log("day_length %g day %d month %d\n", met[month].d[day].daylength, day+1 , month+1);
+								//Log("day_length %g day %d month %d\n", met[month].d[day].daylength, day+1 , month+1);
 							}
 						}
 						/*

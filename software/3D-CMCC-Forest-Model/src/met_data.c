@@ -160,79 +160,39 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
 {
-	/*
-	if (!day)
-		Log("computing Get_thermic_sum...\n");
-		*/
+
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	static float previous_tday;
-	static float previous_tavg;
-	static float previous_thermic_sum;
-
-	//to compute thermic sum model takes into account tday or tavg of the day before (except for the first day of the first month)
-
-	//reset annualy thermic sum
-	if(day == 0 && month == 0)
+	if (day == 0 && month == 0)
 	{
 		met[month].d[day].thermic_sum = 0;
-		previous_thermic_sum = 0;
 
-		if (met[month].d[day].tday != NO_DATA)
+		if(met[month].d[day].tavg > settings->gdd_basis)
 		{
-			if (met[month].d[day].tday > settings->gdd_basis)
-			{
-				previous_thermic_sum = met[month].d[day].tday - settings->gdd_basis;
-			}
-			previous_tday = met[month].d[day].tday;
+			met[month].d[day].thermic_sum = met[month].d[day].tavg - settings->gdd_basis;
 		}
 		else
 		{
-			if (met[month].d[day].tavg > settings->gdd_basis)
-			{
-				previous_thermic_sum = met[month].d[day].tavg - settings->gdd_basis;
-			}
-			previous_tavg = met[month].d[day].tavg;
+			met[month].d[day].thermic_sum = 0;
 		}
-		met[month].d[day].thermic_sum += previous_thermic_sum;
+		if (met[month].d[day].tavg == NO_DATA)
+			Log("tavg NO_DATA!!\n");
 	}
 	else
 	{
-		if (previous_tday != NO_DATA)
+		if(met[month].d[day].tavg > settings->gdd_basis)
 		{
-			//fixme look if use a general base temp or a species specific base temp
-			if (previous_tday > settings->gdd_basis)
-			{
-				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tday - settings->gdd_basis);
-				previous_tday = met[month].d[day].tday;
-				previous_thermic_sum = met[month].d[day].thermic_sum;
-			}
-			else
-			{
-				met[month].d[day].thermic_sum = previous_thermic_sum + 0;
-				previous_tday = met[month].d[day].tday;
-				previous_thermic_sum = met[month].d[day].thermic_sum;
-			}
+			met[month].d[day].thermic_sum += (met[month].d[day].tavg -settings->gdd_basis);
 		}
-		//if no tmax and/or tmin are availables
 		else
 		{
-			//fixme look if use a general base temp or a species specific base temp
-			if (previous_tavg > settings->gdd_basis)
-			{
-				met[month].d[day].thermic_sum = previous_thermic_sum + (previous_tavg - settings->gdd_basis);
-				previous_tavg = met[month].d[day].tavg;
-				previous_thermic_sum = met[month].d[day].thermic_sum;
-			}
-			else
-			{
-				met[month].d[day].thermic_sum = previous_thermic_sum + 0;
-				previous_tavg = met[month].d[day].tavg;
-				previous_thermic_sum = met[month].d[day].thermic_sum;
-			}
+			met[month].d[day].thermic_sum += met[month].d[day].thermic_sum;
 		}
+		if (met[month].d[day].tavg == NO_DATA)
+		Log("tavg NO_DATA!!\n");
 	}
+	Log ("day = %d month = %d GDD = %g\n",day+1, month+1, met[month].d[day].thermic_sum);
 }
 
 

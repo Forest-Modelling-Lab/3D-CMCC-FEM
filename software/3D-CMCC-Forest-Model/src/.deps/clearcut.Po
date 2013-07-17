@@ -1,0 +1,1 @@
+clearcut.o: clearcut.c
