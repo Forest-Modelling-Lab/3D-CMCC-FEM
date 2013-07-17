@@ -354,7 +354,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		}
 		else
 		{
-			Log("- Vegetative Days =  %d months\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+			Log("- Vegetative Days =  %d days\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 		}
 	}
 	else
@@ -365,7 +365,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		}
 		else
 		{
-			Log("- Vegetative Days =  %d months\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+			Log("- Vegetative Days =  %d days\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 		}
 	}
 

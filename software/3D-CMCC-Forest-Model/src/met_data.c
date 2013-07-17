@@ -164,8 +164,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	Log("day = %d, month = %d\n", day+1, month+1);
-	Log("previous thermic sum = %g\n", met[month].d[day].thermic_sum);
+	static float previous_thermic_sum;
 
 	if (day == 0 && month == 0)
 	{
@@ -174,10 +173,12 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		if(met[month].d[day].tavg > settings->gdd_basis)
 		{
 			met[month].d[day].thermic_sum = met[month].d[day].tavg - settings->gdd_basis;
+			previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = 0;
+			previous_thermic_sum = 0;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 		Log("tavg NO_DATA!!\n");
@@ -186,16 +187,16 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 	{
 		if(met[month].d[day].tavg > settings->gdd_basis)
 		{
-			met[month].d[day].thermic_sum += (met[month].d[day].tavg -settings->gdd_basis);
+			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg -settings->gdd_basis);
+			previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
 		{
-			met[month].d[day].thermic_sum += met[month].d[day].thermic_sum;
+			met[month].d[day].thermic_sum = previous_thermic_sum;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 		Log("tavg NO_DATA!!\n");
 	}
-	Log ("day = %d month = %d GDD = %g\n",day+1, month+1, met[month].d[day].thermic_sum);
 }
 
 
