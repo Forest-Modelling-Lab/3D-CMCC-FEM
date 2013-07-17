@@ -238,7 +238,22 @@ To Run the model in Eclipse, using a non subvertioned version of the model simpl
 6) you'll be asked to override the previous project having the same specified name; answer ok 
     (it will use the model's source code, while it seems to replace old compiler with the new project's one)   
 
+HOW TO INCREASE ECLIPSE AVAILABLE HEAP SIZE
+Some JVMs put restrictions on the total amount of memory available on the heap. If you are getting OutOfMemoryErrors while running Eclipse, 
+the VM can be told to let the heap grow to a larger amount by passing the -vmargs command to the Eclipse launcher (http://wiki.eclipse.org/FAQ_How_do_I_increase_the_heap_size_available_to_Eclipse%3F)
 
+follows a short how to:
+1) search for the location of your eclipse.ini file (usually usr/lib/eclipse)
+2) open eclipse.ini using gedit command from terminal as super user (sudo gedit eclipse.ini)
+3) BE EXTREMELY CAREFUL TO FOLLOW ECLIPSE DEVELOPERS RULES 
+    - Each option and each argument to an option must be on its own line.    
+    - All lines after -vmargs are passed as arguments to the JVM, so all arguments and options 
+      for eclipse must be specified before -vmargs (just like when you use arguments on the command-line)
+    - Any use of -vmargs on the command-line replaces all -vmargs settings in the .ini file unless --launcher
+      .appendVmargs is specified either in the .ini file or on the command-line. (doc) 
+4) in line 12 change -Xms40m into -Xms512m  (just replace 40 with 512 without changing the rest of the line)
+5) in line 13 change -Xmx256m into -Xmx1024m  (just replace 256 with 11024 without changing the rest of the line)
+6) save eclipse.ini and restart eclipse
 
 FOR RUN IT INTO ECLIPSE PLATFORM YOU NEED TO INSTALL CDT 8.0.2 OR MORE from:
 http://www.eclipse.org/downloads/download.php?file=/tools/cdt/releases/indigo/dist/cdt-master-8.0.2.zip&mirror_id=189
