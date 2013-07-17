@@ -4,7 +4,7 @@ LAT "51.18" //Site Latitude negative for south hemisphere (Carrara et al., 2004)
 LONG "4.31" //Site Longitude (Carrara et al., 2004)
 ELEV "16" //Elevation in meters (Carrara et al., 2004)
 
-Y   "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
+Y "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
 
 CO2CONC "387.0" //CO2 concentration
 

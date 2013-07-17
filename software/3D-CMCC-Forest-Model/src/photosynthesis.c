@@ -134,18 +134,14 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		Log("***************************** NPP-'%c' *************************** \n", settings->time);
 
-		//Log("Assimilate Use Efficiency Y = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[Y]);
+		//Log("Assimilate Use Efficiency Y = %g\n", site->Y);
 
 		//Monthly layer NPP
 		// "*" 2 to convert gC in DM
 		// "/" 1000000 to convert gDM into tonsDM
 
-		//Log("saizsel = %g \n", settings->sizeCell);
-		//Log("canopicover = %g \n", s->value[CANOPY_COVER_DBHDC]);
-
-
 		s->value[NPP] = ((s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]) * 2 * site->Y)/1000000)  ;    // assumes respiratory rate is constant
-		//Log("Respiration rate = %g \n", site->Y);
+		Log("cazzo di NPP = %g\n", s->value[NPP]);
 
 		if (settings->time == 'm')
 		{
