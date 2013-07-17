@@ -229,10 +229,10 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 	met = (MET_DATA*) yos[years].m;
 
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
-	/*
-	if (!day)
+
+	if (!day && !month)
 		Log("computing Get_Veg_Days...\n");
-		*/
+
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
@@ -251,14 +251,39 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
 							//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 						}
+						//todo decidere se utilizzare la somma termica o il growth start
 						//todo decidere se utlizzare growthend o mindaylenght
 						//fixme change GROWTHSTART with a variable for thermic_sum
 						//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
-						if (((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)) && c->north == 0)
+						if (month <= 6)
+						{
+							if (met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART])
+							{
+								c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
+								Log("thermic_sum %g day %d month %d\n", met[month].d[day].thermic_sum, day+1 , month+1);
+							}
+						}
+						else
+						{
+							if (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH])
+							{
+								c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
+								Log("day_length %g day %d month %d\n", met[month].d[day].daylength, day+1 , month+1);
+							}
+						}
+						/*
+						if (met[month].d[day].tday >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6)
 						{
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
+							Log("day %d month %d\n", day , month);
 							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						}
+						*/
+
+						if (c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
+						{
+							Log("First day of growing season day = %d month %d\n", day, month);
 						}
 					}
 					else

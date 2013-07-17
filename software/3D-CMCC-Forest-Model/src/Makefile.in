@@ -62,14 +62,15 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_3D_CMCC_Forest_Model_OBJECTS = allometry.$(OBJEXT) \
-	biomass.$(OBJEXT) canopy_cover.$(OBJEXT) \
+am_3D_CMCC_Forest_Model_OBJECTS = G-Function.$(OBJEXT) \
+	allometry.$(OBJEXT) biomass.$(OBJEXT) canopy_cover.$(OBJEXT) \
 	canopy_evapotranspiration.$(OBJEXT) \
 	canopy_transpiration.$(OBJEXT) clearcut.$(OBJEXT) \
 	common.$(OBJEXT) crowding-competition.$(OBJEXT) \
 	dataset.$(OBJEXT) dendrometry.$(OBJEXT) \
-	establishment.$(OBJEXT) garbage.$(OBJEXT) G-Function.$(OBJEXT) \
-	initialization_biomass_data.$(OBJEXT) lai.$(OBJEXT) \
+	establishment.$(OBJEXT) garbage.$(OBJEXT) \
+	initialization_biomass_data.$(OBJEXT) \
+	initialization_site_data.$(OBJEXT) lai.$(OBJEXT) \
 	layer_cover.$(OBJEXT) light.$(OBJEXT) litterfall.$(OBJEXT) \
 	log.$(OBJEXT) main.$(OBJEXT) management.$(OBJEXT) \
 	matrix.$(OBJEXT) met_data.$(OBJEXT) modifiers.$(OBJEXT) \
@@ -190,6 +191,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 3D_CMCC_Forest_Model_SOURCES = \
+	G-Function.c\
 	allometry.c\
 	biomass.c\
 	canopy_cover.c\
@@ -204,8 +206,8 @@ top_srcdir = @top_srcdir@
 	dendrometry.c\
 	establishment.c\
 	garbage.c\
-	G-Function.c\
 	initialization_biomass_data.c\
+	initialization_site_data.c\
 	lai.c\
 	layer_cover.c\
 	light.c\
@@ -335,6 +337,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/establishment.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/garbage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/initialization_biomass_data.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/initialization_site_data.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lai.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/layer_cover.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/light.Po@am__quote@
