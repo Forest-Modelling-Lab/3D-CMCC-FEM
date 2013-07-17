@@ -1167,11 +1167,12 @@ int main(int argc, char *argv[])
 							}
 
 						}
-
+/*
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							Print_met_daily_data (yos, day, month, years);
 						}
+*/
 
 					}
 					for (month = 0; month < MONTHS; month++)
