@@ -140,16 +140,15 @@ The text file must be created following this logic architecture
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
 The second required input file is the meteorological data file named using the year of simulation, 
-(e.g. "2007.txt") containing the monthly meteorological data information for that year.
+(e.g. "2007.txt") containing the daily or monthly meteorological data information for that year.
 Years of simulation depends on the number of the met data file passed as argument.
 Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
 Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
-If the model runs in "spatial version" monthly LAI values are mandatory otherwise they are not considered in processes.
-Columns with "_sqc" postfix have not to be considered.
+If the model runs in "spatial version" daily or monthly LAI values are mandatory otherwise they are not considered in processes.
 
 Each variable must be separated by one tab character.
 
-example for year 2007 in spatial version 
+example for year 2007 in monthly/spatial version (add Tmax and Tmin)
 Month	n_days		Rg_f		Ta_f		VPD_f		Ts_f	Precip		SWC		LAI
 1		31			6.1			6.51536		4.07277		-9999	47.9239		-9999	0.001
 2		28			9.1			5.49226		3.0353		-9999	67.6175		-9999	0.001
@@ -165,17 +164,31 @@ Month	n_days		Rg_f		Ta_f		VPD_f		Ts_f	Precip		SWC		LAI
 12		31			5.1			2.09226		2.1539		-9999	144.279		-9999	0.001
 
 
+example for year 2007 in daily/unspatial version
+
+Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
+1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
+1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
+1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
+1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
+
+
 if you don't have optional data set value as -9999
 -9999 = NO DATA
 
 -Units:
--Rg_f = Mean monthly global radiation (MJ m^-2 day^-1)
--Ta_f = Monthly average temperature (°C)
+-Rg_f = Mean daily global radiation (MJ m^-2 day^-1)
+-Ta_f = Daily/Monthly average temperature (°C)
+-Tmax = Daily/Monthly Maximum temperature (°C)
+-Tmin = Daily/Monthly Minimum temperature (°C)
 -VPD_f or RH_f = Vapour Pressure Deficit (mbar) or Relative humidity (%)
 -Ts_f = Soil temperature (°C)
--Precip = Cumulated monthly precipitation (mm month^-1)
--SWC = Soil water content (mm month^-1)
+-Precip = Cumulated daily/monthly precipitation (mm day/month^-1)
+-SWC = Soil water content (mm day/month^-1)
 -LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
+
+
+model gets the value of the previous if a mandatory variable is a -9999 starting from the 2 January of the first year of simulation
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
