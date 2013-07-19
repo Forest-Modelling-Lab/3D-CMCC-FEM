@@ -671,11 +671,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 				//loop on each age
 				for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
 				{
-					Log("--- age n.%02d is %d yrs and has %d species '%s' \n\n",
+					Log("--- age n.%02d is %d yrs and has %d species \n\n",
 							age + 1,
 							m->cells[cell].heights[height].ages[age].value,
-							m->cells[cell].heights[height].ages[age].species_count,
-							m->cells[cell].heights[height].ages[age].species[species].name);
+							m->cells[cell].heights[height].ages[age].species_count
+							/*m->cells[cell].heights[height].ages[age].species[species].name*/);
 
 					// loop on each species
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
