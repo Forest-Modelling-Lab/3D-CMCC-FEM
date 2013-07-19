@@ -135,9 +135,9 @@ CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
 
 //CHAPMAN-RICHARDS relationships
-CRA	19    //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
-CRB	0.11  //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
-CRC	1.48  //for Jack Pine for others see Kershaw et al; Newton and Amponsah 2007
+CRA	32    //for P. sylvestris from Rupsys et al., 2010
+CRB	0.04  //for P. sylvestris from Rupsys et al., 2010
+CRC	0.99  //for P. sylvestris from Rupsys et al., 2010
 
 //CROWDING COMPETITION FUNCTION
 HDMAX	1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
