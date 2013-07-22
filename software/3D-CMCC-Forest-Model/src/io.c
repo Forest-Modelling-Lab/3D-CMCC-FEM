@@ -179,6 +179,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		strcpy(year, pch);
 		year[4] = '\0';
 
+
+
 		yos[*yos_count-1].year = convert_string_to_int(year, &error);
 		if ( error )
 		{
@@ -1051,6 +1053,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				++month;
 			}
 		}
+
 
 		// check for month
 		if (settings->time == 'm')
