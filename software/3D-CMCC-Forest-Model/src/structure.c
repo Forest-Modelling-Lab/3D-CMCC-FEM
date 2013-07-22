@@ -919,7 +919,7 @@ extern void Get_daily_numbers_of_layers (CELL *const c)
 	static float current_height;
 	static float previous_height;
 
-	//height differences in meter to consider trees in two different layers
+
 	c->daily_layer_number = 0;
 
 	Log("\n--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
@@ -1225,7 +1225,7 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 				}
 			}
 		}
-		Log("Monthly Dominant layer is z = %d\n", c->top_layer);
+		Log("Daily/Monthly Dominant layer is z = %d\n", c->top_layer);
 	}
 	//Log("-Species in veg period = %d\n", c->Veg_Counter);
 }

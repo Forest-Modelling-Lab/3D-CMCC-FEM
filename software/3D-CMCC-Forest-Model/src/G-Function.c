@@ -375,7 +375,14 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	}
 	else
 	{
-		Log("- Monthly LAI from Model= %g \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+		if(settings->time == 'm')
+		{
+			Log("- Monthly LAI from Model= %g \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+		}
+		else
+		{
+			Log("- Daily LAI from Model= %g \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+		}
 	}
 	Log("- ASW layer %d month %d  = %g mm\n",  c->heights[height].z, month + 1, c->available_soil_water);
 

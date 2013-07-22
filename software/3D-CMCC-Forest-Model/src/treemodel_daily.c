@@ -341,15 +341,33 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						//evergreen
 						else
 						{
-							//vegetative period is always equal to 1 for evergreen
+							//PEAK LAI
+							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 
-							Log("*****VEGETATIVE PERIOD FOR %s SPECIES DAY %d MONTH %d*****\n", m->cells[cell].heights[height].ages[age].species[species].name, day, szMonth[month] );
+							//Peak LAI is also used in spatial version to drive carbon allocation
+							if (day == 0 && month == JANUARY)
+							{
+								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
+							}
+							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+
+							Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
 							Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 
-							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
-							Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
-							Log("LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
+							Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
+
+							if (settings->spatial == 'u')
+							{
+								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								{
+									Log("ATTENTION LAI > PEAK LAI\n");
+									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
+								}
+							}
+
 
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
