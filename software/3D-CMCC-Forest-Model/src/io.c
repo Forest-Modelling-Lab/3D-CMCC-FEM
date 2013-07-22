@@ -943,7 +943,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
 										{
 											//Log ("* SWC -NO DATA- in previous year!!!!\n" );
-
 											//the model gets the value of the year before
 											yos[*yos_count-1].m[month].d[day].swc = yos[*yos_count-2].m[month].d[day].swc;
 
@@ -954,12 +953,11 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											}
 										}
 									}
-/*									if executed it terminates the program
 									else
 									{
 										previous_swc = yos[*yos_count-1].m[month].d[day].swc;
 									}
-*/
+
 									//Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
 									break;
 								case Ndvi_Lai: //Get LAI in spatial version

@@ -189,6 +189,7 @@ if you don't have optional data set value as -9999
 
 
 model gets the value of the previous if a mandatory variable is a -9999 starting from the 2 January of the first year of simulation
+IMPORTANT: for now the model can't hold any -9999 on january the first for the very first year of simulation!!!!
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
