@@ -141,7 +141,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		// "/" 1000000 to convert gDM into tonsDM
 
 		s->value[NPP] = ((s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]) * 2 * site->Y)/1000000)  ;    // assumes respiratory rate is constant
-		Log("cazzo di NPP = %g\n", s->value[NPP]);
+
 
 		if (settings->time == 'm')
 		{

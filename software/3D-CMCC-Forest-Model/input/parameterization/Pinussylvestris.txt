@@ -74,9 +74,9 @@ PRN_C	0.10            //Minimum fraction of NPP to Roots
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM	0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM	0.05             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needlleleaf deciduous from Arora et al 2005
-R0CTEM	0.89            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needlleleaf deciduous from Arora et al 2005 
-F0CTEM	0.06            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE  for Needlleleaf deciduous from Arora et al 2005
+S0CTEM	0.05             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+R0CTEM	0.89            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
+F0CTEM	0.06            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM   for Needleleaf deciduous from Arora et al 2005
 RES0CTEM	0.22	//PARAMETER CONTROLLING ALLOCATION TO RESERVE (NOT USED)
 EPSILON_CTEM	30.8      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6 for Needlleleaf deciduous from Arora et al 2005
 KAPPA	1.6             //ALLOCATION PARAMETER DIMENSIONLESS for Needlleleaf deciduous from Arora et al 2005

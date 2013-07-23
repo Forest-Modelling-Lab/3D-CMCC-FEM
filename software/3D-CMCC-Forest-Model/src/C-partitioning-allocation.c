@@ -1235,13 +1235,13 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
 
 		pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-		//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
+		Log("Roots CTEM ratio  = %g %%\n", pR_CTEM * 100);
 		pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-		//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+		Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 
-		//reserve ratio
+		//foliage ratio
 		pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-		//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+		Log("Foliage CTEM ratio = %g %%\n", pF_CTEM * 100);
 
 		//7 May 2012
 		//compute fine and coarse root biomass
@@ -1304,13 +1304,15 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 			s->value[DEL_LITTER] = gammaF * s->value[BIOMASS_FOLIAGE_CTEM];
 			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
+			Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
+
 			s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
 			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 			//recompute LAI
 			Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
 		}
-		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		Log("++Lai = %g\n", s->value[LAI]);
 
 
@@ -1423,6 +1425,12 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 		Log("++Lai = %g\n", s->value[LAI]);
 
+	}
+
+	//for daily_Log file only if there's one class
+	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
+	{
+		c->daily_lai = s->value[LAI];
 	}
 
 
