@@ -37,7 +37,7 @@ COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris f
 BLCOND	0.2            //Canopy Boundary Layer conductance for P. sylvestris from Landsberg et al., 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec for P. sylvestris from Landsberg et al., 2005
 //AGE for timber
-MAXAGE	500             //Determines rate of "physiological decline" of forest for P. sylvestris from Landsberg et al., 2005
+MAXAGE	100             //Determines rate of "physiological decline" of forest for P. sylvestris from Zahele et al., 2005 ,500 from Landsberg et al., 2005
 RAGE	0.95            //Relative Age to give fAGE = 0.5 for P. sylvestris from Landsberg et al., 2005
 NAGE	4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005
 //Age for shoots
