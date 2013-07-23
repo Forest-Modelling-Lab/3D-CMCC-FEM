@@ -1219,7 +1219,7 @@ int main(int argc, char *argv[])
 						Log("****************END OF MONTH (%d)*******************\n", month+1);
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
-					Log("****************END OF YEAR (%d)*******************\n", yos[years].year);
+					Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n\n\n\n\n\n", yos[years].year);
 					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
 
 				}

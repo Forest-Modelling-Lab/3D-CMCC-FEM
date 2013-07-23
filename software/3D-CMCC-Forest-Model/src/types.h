@@ -985,14 +985,14 @@ extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const 
 //evergreen routine for carbon allocation
 extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
-extern void Get_litterfall (CELL *c, SPECIES *const s, const int);
+extern void Get_litter (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
 extern void Get_litterfall_evergreen_CTEM (HEIGHT *, const int, const int);
 extern void Get_canopy_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int,  int, int, float, int, int, int);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
-extern void Get_initial_lai (SPECIES *const s);
+extern void Get_initial_lai (SPECIES *const s, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
 extern void Get_turnover (SPECIES *const);
@@ -1008,7 +1008,7 @@ extern void Set_z_value ( CELL *, float, int);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 extern void Get_stool_mortality (SPECIES *, int);
-extern void Get_annual_forest_structure (CELL *);
+extern void Get_forest_structure (CELL *);
 extern void Print_met_daily_data (const YOS *const , int , int , int );
 void Print_met_data (const MET_DATA *const, float, int, int);
 extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);

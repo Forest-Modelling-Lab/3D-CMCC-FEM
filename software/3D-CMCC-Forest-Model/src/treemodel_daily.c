@@ -68,14 +68,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
-			Get_annual_forest_structure (&m->cells[cell]);
+			//Get_forest_structure (&m->cells[cell]);
 			Get_tree_BB (&m->cells[cell],  years);
 		}
 
 		//daily forest structure
 		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
 		Get_daily_numbers_of_layers (&m->cells[cell]);
-		Get_daily_layer_cover (&m->cells[cell],  met, month, day);
+		Get_daily_layer_cover (&m->cells[cell], met, month, day);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
 		Get_Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
@@ -97,7 +97,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
-
 
 
 
@@ -151,6 +150,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("Moist ratio = %g\n", m->cells[cell].soil_moist_ratio);
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
+
+
+
+
+		Get_forest_structure (&m->cells[cell]);
 
 
 
@@ -241,7 +245,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] == 1 && settings->spatial == 'u')
 								{
-									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years);
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
 										Log("ATTENTION LAI > PEAK LAI\n");
@@ -360,7 +364,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							if (settings->spatial == 'u')
 							{
-								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years);
 								if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 								{
 									Log("ATTENTION LAI > PEAK LAI\n");
@@ -386,6 +390,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
+							Get_litterfall_evergreen_CTEM (m->cells[cell].heights, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1);
+
 							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
 									DaysInMonth[month], years, height, age);
 
@@ -404,6 +410,15 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						}
 
 						/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
+
+
+						//to prevent jumps in dendrometric values it must be computed at the beginning of each month
+						if (day == 0)
+						{
+							Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
+							//DENDROMETRY
+							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
+						}
 
 						/*END OF YEAR*/
 
@@ -443,13 +458,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                             }
 							 */
 
-							Get_litterfall (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
+							Get_litter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
 							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Get_WUE (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
+							//Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 
@@ -491,7 +506,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_AGB_BGB_biomass (&m->cells[cell], height, age, species);
 
 							//DENDROMETRY
-							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
+							//Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 
 							//TURNOVER
 							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);

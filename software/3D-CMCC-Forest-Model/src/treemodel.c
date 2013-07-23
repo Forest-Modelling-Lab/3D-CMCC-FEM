@@ -91,7 +91,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
-			Get_annual_forest_structure (&m->cells[cell]);
+			Get_forest_structure (&m->cells[cell]);
 			Get_tree_BB (&m->cells[cell],  years);
 		}
 
@@ -219,7 +219,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] == 1 && settings->spatial == 'u')
 								{
-									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species]);
+									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years);
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
 										Log("ATTENTION LAI > PEAK LAI\n");
@@ -405,7 +405,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             }
 							 */
 
-							Get_litterfall (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
+							Get_litter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
 							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 

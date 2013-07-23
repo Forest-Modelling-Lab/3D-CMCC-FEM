@@ -168,7 +168,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Get_annual_forest_structure (CELL *const c)
+void Get_forest_structure (CELL *const c)
 {
 	int height;
 	int age;
@@ -186,6 +186,8 @@ void Get_annual_forest_structure (CELL *const c)
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
+
+	Log("Get_forest_structure\n");
 
 
 	if (settings->spatial == 'u')
@@ -358,6 +360,8 @@ void Get_annual_forest_structure (CELL *const c)
 
 
 					//Crown Diameter using DBH-DC
+
+					Log("-AvDBH  = %g m\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
 					Log("-Crown Diameter from DBHDC function  = %g m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
