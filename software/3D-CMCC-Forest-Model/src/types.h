@@ -286,6 +286,7 @@ enum {
 	//LITTERFALL
 	//FOLLOWING BIOME-BGC
 	LEAF_FALL_FRAC_GROWING,		//proportions of the growing season of leaf fall
+	LEAF_LIFE_SPAN,				//Leaf life span
 	GAMMAFX,                    //Maximum Litterfall rate (month^-1)
 	GAMMAF0,                    //Litterfall rate at t = 0 (month^-1)
 	TGAMMAF,                    //Age at which litterfall rate has median value
@@ -608,6 +609,7 @@ enum {
 	DEL_ROSS_STEM,                       //perdita di STEM che vanno nella lettiera
 	DEL_ROSS_BRANCH,                    //perdita di radici grosse che vanno nella lettiera
 	TOTAL_LITTER,                   //Lettiera totale
+	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
 
 
 	FRACBB,
@@ -986,6 +988,7 @@ extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, con
 extern void Get_litterfall (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
+extern void Get_litterfall_evergreen_CTEM (HEIGHT *, const int, const int);
 extern void Get_canopy_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int,  int, int, float, int, int, int);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);

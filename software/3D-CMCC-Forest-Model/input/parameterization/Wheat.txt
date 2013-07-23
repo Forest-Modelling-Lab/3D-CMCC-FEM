@@ -92,6 +92,7 @@ COARSE_ROOT_STEM    -9999    //allocation new coarse root C:new stem (ratio) see
 //LITTERFALL
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  -9999     //proportions of the growing season of leaf fall
+LEAF_LIFE_SPAN  -9999     //Leaf life span
 GAMMAFX -9999               //Maximum Litterfall rate (month^-1)
 GAMMAF0 -9999               //Litterfall rate at t = 0 (month^-1)
 TGAMMAF -9999               //Age at which litterfall rate has median value

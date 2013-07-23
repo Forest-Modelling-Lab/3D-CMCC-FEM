@@ -94,6 +94,7 @@ COARSE_ROOT_STEM	0.3	//allocation new coarse root C:new stem (ratio) see Mollico
 //LITTERFALL
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
+LEAF_LIFE_SPAN  0.5     //Leaf life span for Q. ilex from Chiesi et al., 2007
 GAMMAFX	0.5              //Maximum Litterfall rate (month^-1)
 GAMMAF0	0.5               //Litterfall rate at t = 0 (month^-1)
 TGAMMAF	5               //Age at which litterfall rate has median value
