@@ -82,6 +82,9 @@ MIN_R0CTEM  -9999       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 MAX_S0CTEM  -9999       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION    -9999  //years from coppicing to consider tree as a timber
 
+CONES_PERC  0 //fraction of NPP allocated for reproduction (0 for broadleaf)
+CONES_LIFE_SPAN 0 //Life span for cones (yr)
+
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF  -9999   //allocation new fine root C:new leaf (ratio) see Chiesi et al., 2007
 STEM_LEAF   -9999       //allocation new stem C:new leaf (ratio) see Chiesi et al., 2007

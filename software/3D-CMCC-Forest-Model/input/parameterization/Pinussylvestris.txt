@@ -86,6 +86,9 @@ MIN_R0CTEM	0.1	//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
 
+CONES_PERC  10 //fraction of NPP allocated for reproduction (0 for broadleaf)
+CONES_LIFE_SPAN 3 //Life span for cones (yr)
+
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF	1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
 STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 2.5 from Pietsch et al., 2005

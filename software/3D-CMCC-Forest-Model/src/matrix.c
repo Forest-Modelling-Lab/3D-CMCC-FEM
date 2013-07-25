@@ -110,6 +110,10 @@ static const char *species_values[] = {
 		"MAX_S0CTEM",                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 		"YEARS_FOR_CONVERSION",        //years from coppicing to consider tree as a timber
 
+		"CONES_PERC",
+		"CONES_LIFE_SPAN",
+
+
 
 		//FINE COARSE ROOT RATIO
 		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
