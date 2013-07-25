@@ -220,7 +220,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											m->cells[cell].heights[height].ages[age].species[species].management);
 
 						//deciduous
-						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0 )
+						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
 							//for unspatial version growth start, growthend/mindaylength and month drives start and end of growing season
 							//PEAK LAI
@@ -233,11 +233,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							}
 
 							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-
 							//vegetative period for deciduous
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
-								Log("*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
+								Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;

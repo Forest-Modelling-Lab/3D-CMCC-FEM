@@ -938,6 +938,7 @@ extern void Get_daily_numbers_of_layers (CELL *const c)
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
 				current_height = c->heights[height].value;
+
 				if (c->heights_count > 1 )
 				{
 					if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
@@ -1203,6 +1204,8 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 
 	assert(heights);
 
+	Log("!!!!!!!!!!!!!!!!daily_layer number = %d\n", c->daily_layer_number);
+
 	if (c->daily_layer_number != 0)
 	{
 		Log("-Dominant Light Index Function-\n");
@@ -1217,6 +1220,7 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 				{
 					if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
 					{
+
 						if (settings->spatial == 'u')
 						{
 							c->top_layer = c->heights[height].z;

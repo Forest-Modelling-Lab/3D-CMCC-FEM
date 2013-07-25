@@ -165,7 +165,7 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 						{
 							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
 							//todo decidere se utlizzare tday o tavg growthend o mindaylenght
 							if (((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
@@ -192,7 +192,7 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 						{
 							c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE] = 0;
 						}
-						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 ||c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
 							if (met[month].ndvi_lai >= 0.5)
 							{
@@ -242,7 +242,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 			{
 				if (settings->spatial == 'u')
 				{
-					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 					{
 
 						//reset 'day_veg_for_litterfall_rate'
@@ -424,6 +424,10 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("[%d] layer %d > ws = %g\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]);
 	Log("[%d] layer %d > wres = %g\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM]);
 	Log("[%d] layer %d > wres tree = %g gC/trees\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] * 1000000 / c->heights[height].ages[age].species[species].counter[N_TREE]);
+	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.2 )
+	{
+		Log("[%d] layer %d > wcones = %g\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_CONES_CTEM]);
+	}
 	Log("[%d] layer %d > Dead Trees = %d\n",yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].counter[DEL_STEMS]);
 	Log("> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 	Log("*****************************\n");

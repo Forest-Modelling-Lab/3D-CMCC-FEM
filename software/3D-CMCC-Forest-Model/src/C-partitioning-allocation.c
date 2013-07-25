@@ -75,6 +75,11 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			leaf_fall_counter = 0;
 	}
 
+	if (day == 0 && month == 0 && years == 0)
+	{
+		s->value[BIOMASS_CONES_CTEM] = 0;
+	}
+
 
 
 	//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
@@ -334,6 +339,19 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			//Log("Foliage CTEM ratio = %g %%\n", pF_CTEM * 100);
 
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if (s->value[PHENOLOGY] == 0.2)
+			{
+				//NPP for reproduction
+				s->value[DEL_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+				s->value[NPP] -= s->value[DEL_CONES_CTEM];
+				s->value[BIOMASS_CONES_CTEM] += s->value[DEL_CONES_CTEM];
+				Log("Biomass increment into cones = %g tDM/area\n", s->value[DEL_CONES_CTEM]);
+
+				//reproductive life span
+				s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+			}
+
 
 			// Biomass allocation
 
@@ -349,7 +367,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 			if(( s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]) != s->value[DEL_ROOTS_TOT_CTEM])
 			{
-				Log("ERROR IN ROOTS ALLOCATION  \n");
+				Log("ERROR IN ROOTS ALLOCATION del coarse + del fine = %g, del tot = %g \n", (s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]), s->value[DEL_ROOTS_TOT_CTEM]);
 			}
 
 
@@ -525,6 +543,17 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if (s->value[PHENOLOGY] == 0.2)
+			{
+				//NPP for reproduction
+				s->value[BIOMASS_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+				s->value[NPP] -= s->value[BIOMASS_CONES_CTEM];
+				Log("Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_CONES_CTEM]);
+
+				//reproductive life span
+				s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+			}
 
 			// Biomass allocation
 
@@ -620,6 +649,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if (s->value[PHENOLOGY] == 0.2)
+			{
+				//NPP for reproduction
+				s->value[BIOMASS_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+				s->value[NPP] -= s->value[BIOMASS_CONES_CTEM];
+				Log("Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_CONES_CTEM]);
+
+				//reproductive life span
+				s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+			}
 
 
 			// Biomass allocation
@@ -919,6 +960,18 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			//Log("Foliage CTEM ratio = %g %%\n", pF_CTEM * 100);
 
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if (s->value[PHENOLOGY] == 0.2)
+			{
+				//NPP for reproduction
+				s->value[BIOMASS_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+				s->value[NPP] -= s->value[BIOMASS_CONES_CTEM];
+				Log("Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_CONES_CTEM]);
+
+				//reproductive life span
+				s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+			}
+
 
 			// Biomass allocation
 
@@ -934,7 +987,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 			if(( s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]) != s->value[DEL_ROOTS_TOT_CTEM])
 			{
-				Log("ERROR IN ROOTS ALLOCATION  \n");
+				Log("ERROR IN ROOTS ALLOCATION del coarse + del fine = %g, del tot = %g \n", (s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]), s->value[DEL_ROOTS_TOT_CTEM]);
 			}
 
 
@@ -1012,6 +1065,20 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+
+
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if (s->value[PHENOLOGY] == 0.2)
+			{
+				//NPP for reproduction
+				s->value[DEL_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+				s->value[NPP] -= s->value[DEL_CONES_CTEM];
+				s->value[BIOMASS_CONES_CTEM] += s->value[DEL_CONES_CTEM];
+				Log("Biomass increment into cones = %g tDM/area\n", s->value[DEL_CONES_CTEM]);
+
+				//reproductive life span
+				//s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+			}
 
 
 			// Biomass allocation
@@ -1205,6 +1272,11 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 	}
 	 */
 
+	if (day == 0 && month == 0 && years == 0)
+	{
+		s->value[BIOMASS_CONES_CTEM] = 0;
+	}
+
 
 
 	if (settings->spatial == 'u')
@@ -1234,7 +1306,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
 
-		Log("++inizio Lai = %g\n", s->value[LAI]);
+
 
 		pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 		Log("Roots CTEM ratio  = %g %%\n", pR_CTEM * 100);
@@ -1245,9 +1317,24 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 		Log("Foliage CTEM ratio = %g %%\n", pF_CTEM * 100);
 
+
+		//REPRODUCTION ONLY FOR NEEDLE LEAF
+		if (s->value[PHENOLOGY] == 1.2)
+		{
+			//NPP for reproduction
+			s->value[DEL_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+			s->value[NPP] -= s->value[DEL_CONES_CTEM];
+			s->value[BIOMASS_CONES_CTEM] += s->value[DEL_CONES_CTEM];
+			Log("Biomass increment into cones = %g tDM/area\n", s->value[DEL_CONES_CTEM]);
+
+			//reproductive life span
+			//s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+		}
+
+
 		//7 May 2012
 		//compute fine and coarse root biomass
-		s->value[DEL_ROOTS_TOT_CTEM] = s->value[NPP] *  pR_CTEM;
+		s->value[DEL_ROOTS_TOT_CTEM] = s->value[NPP] * pR_CTEM;
 		s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM]  * Perc_fine;
 		Log("BiomassRoots increment into fine roots = %g tDM/area\n", s->value[DEL_ROOTS_FINE_CTEM]);
 		s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_coarse;
@@ -1255,7 +1342,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 
 		if(( s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]) != s->value[DEL_ROOTS_TOT_CTEM])
 		{
-			Log("ERROR IN ROOTS ALLOCATION  \n");
+			Log("ERROR IN ROOTS ALLOCATION del coarse + del fine = %g, del tot = %g \n", (s->value[DEL_ROOTS_FINE_CTEM] + s->value[DEL_ROOTS_COARSE_CTEM]), s->value[DEL_ROOTS_TOT_CTEM]);
 		}
 
 
@@ -1271,6 +1358,10 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		s->value[DEL_BB] = s->value[DEL_STEMS_CTEM] * s->value[FRACBB];
 		//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
 		//Log("Branch and bark Biomass (del_BB)= %g tDM/area\n", s->value[DEL_BB]);
+		if (s->value[PHENOLOGY] == 1.2)
+		{
+			Log("Cones Biomass (Wc) = %g tDM/area\n", s->value[BIOMASS_CONES_CTEM]);
+		}
 
 		//allocation to stem
 		s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
@@ -1359,6 +1450,19 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 		//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
+		//REPRODUCTION ONLY FOR NEEDLE LEAF
+		if (s->value[PHENOLOGY] == 1.2)
+		{
+			//NPP for reproduction
+			s->value[DEL_CONES_CTEM] = s->value[NPP] * s->value[CONES_PERC];
+			s->value[NPP] -= s->value[DEL_CONES_CTEM];
+			s->value[BIOMASS_CONES_CTEM] += s->value[DEL_CONES_CTEM];
+			Log("Biomass increment into cones = %g tDM/area\n", s->value[DEL_CONES_CTEM]);
+
+			//reproductive life span
+			//s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
+		}
+
 		//7 May 2012
 		//comnpute fine and coarse root biomass
 		s->value[DEL_ROOTS_TOT_CTEM] = s->value[NPP] *  pR_CTEM;
@@ -1385,6 +1489,11 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 		s->value[DEL_BB] = s->value[DEL_STEMS_CTEM] * s->value[FRACBB];
 		//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
 		//Log("Branch and bark Biomass (del_BB)= %g tDM/area\n", s->value[DEL_BB]);
+
+		if (s->value[PHENOLOGY] == 1.2)
+		{
+			Log("Cones Biomass (Wc) = %g tDM/area\n", s->value[BIOMASS_CONES_CTEM]);
+		}
 
 		//allocation to stem
 		s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
