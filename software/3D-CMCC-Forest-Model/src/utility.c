@@ -66,7 +66,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				if (settings->spatial == 'u')
 				{
 					//reset foliage biomass for deciduous
-					if ( c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0)
+					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 					{
 						c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
 

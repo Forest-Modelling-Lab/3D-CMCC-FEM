@@ -570,6 +570,7 @@ enum {
 	BIOMASS_STEM_CTEM,
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
+	BIOMASS_CONES_CTEM,   //only for coniferous
 	//NITROGEN
 	//nitrogen biomass monthly increment
 	NITROGEN_DEL_ROOTS_TOT_CTEM,

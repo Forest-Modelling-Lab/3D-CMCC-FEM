@@ -3,7 +3,7 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		    	//3 = shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
-PHENOLOGY	1 //PHENOLOGY 0=deciduous, 1=evergreen
+PHENOLOGY	1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005
 EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ

@@ -53,7 +53,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 
 
-	if (s->value[PHENOLOGY] == 1 && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
+	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
 		if (settings->spatial == 'u')
 		{
@@ -144,7 +144,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 
 		s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
 
-		if (s->value[PHENOLOGY] == 0)
+		if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 		{
 			s->value[BIOMASS_FOLIAGE_CTEM] = 0;
 		}

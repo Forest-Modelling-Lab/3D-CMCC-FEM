@@ -56,7 +56,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE \n\n");
 
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 || s->value[PHENOLOGY] == 1)
+	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
 
 

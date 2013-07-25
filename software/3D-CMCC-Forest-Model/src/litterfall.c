@@ -45,7 +45,7 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 
 	Log("*LITTERFALL*\n");
 
-	if ( height->ages[age].species[species].value[PHENOLOGY] == 0) /*for deciduous*/
+	if ( height->ages[age].species[species].value[PHENOLOGY] == 0.1 || height->ages[age].species[species].value[PHENOLOGY] == 0.2) /*for deciduous*/
 	{
 		Log("DECIDUOUS POPULATION\n");
 

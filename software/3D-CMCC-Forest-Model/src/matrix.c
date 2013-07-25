@@ -17,7 +17,7 @@ static const char *species_values[] = {
 
 		"LIGHT_TOL",                  //light Tolerance
 
-		"PHENOLOGY",				//PHENOLOGY 0 = deciduous,  1 = evergreen
+		"PHENOLOGY",				//PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen
 
 		"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
 		"EPSILONgCPAR",               // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)

@@ -13,7 +13,7 @@ void Get_initial_lai (SPECIES *const s, const int years)
 {
 
 
-	if (s->value[PHENOLOGY] == 0)
+	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
 		if (settings->time == 'm')
 		{
