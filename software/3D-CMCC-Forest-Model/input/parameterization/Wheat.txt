@@ -131,7 +131,11 @@ b_RPOWER	0			//NOT FOUND
 CHPOWER -9999             //Slope of Asymptotic Crown-Height 
 b_CHPOWER	0		 	//NOT FOUND
 
-//CHAPMAN-RICHARDS relationships
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P -9999   //
+STEMPOWER_P -9999   //
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA -9999
 CRB -9999
 CRC -9999

@@ -135,7 +135,11 @@ b_RPOWER  0.708		        //for P. sylvestris from Ametzegui et al., 2012
 CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
 b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
 
-//CHAPMAN-RICHARDS relationships
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P 0.1227    //For P. sylvestris from Yuste et al 2005
+STEMPOWER_P 2.3272    //For P. sylvestris from Yuste et al 2005
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA	32    //for P. sylvestris from Rupsys et al., 2010
 CRB	0.04  //for P. sylvestris from Rupsys et al., 2010
 CRC	0.99  //for P. sylvestris from Rupsys et al., 2010

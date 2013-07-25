@@ -157,6 +157,9 @@ static const char *species_values[] = {
 		"CHPOWER",                    //Slope of Asymptotic Crown-Height from Sortie
 		"b_CHPOWER",
 
+		"STEMCONST_P",
+		"STEMPOWER_P",
+
 
 
 		//CHAPMAN-RICHARDS relationships

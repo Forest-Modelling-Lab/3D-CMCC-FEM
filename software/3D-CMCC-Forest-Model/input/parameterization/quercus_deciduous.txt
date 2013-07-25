@@ -131,7 +131,15 @@ b_RPOWER	0			//NOT FOUND
 CHPOWER	0.413           //Slope of Asymptotic Crown-Height from Sortie for Quercus rubra
 b_CHPOWER	0		 	//NOT FOUND
 
-//CHAPMAN-RICHARDS relationships
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P -9999   //
+STEMPOWER_P -9999   //
+
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P -9999   //
+STEMPOWER_P -9999   //
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA	34.597
 CRB	0.038
 CRC	1.104

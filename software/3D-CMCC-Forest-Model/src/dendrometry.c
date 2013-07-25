@@ -25,17 +25,27 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 	//Log("OLD Tree Height from Chapman-Richards function from previous year = %g m\n", oldTreeHeight);
 
-	if (oldavDBH < 9)
+	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
-	}
-	else if (oldavDBH > 9 && oldavDBH < 15)
-	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+		//use generic stemconst stempower values
+
+		if (oldavDBH < 9)
+		{
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+		}
+		else if (oldavDBH > 9 && oldavDBH < 15)
+		{
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+		}
+		else
+		{
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+		}
 	}
 	else
 	{
-		s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+		//use site specific stemconst stempower values
+		s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_P)))*s->value[STEMCONST_P];
 	}
 	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
 
