@@ -96,7 +96,7 @@ COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged
 //LITTERFALL
 //FOLLOWING BIOME-BGC, CTEM
 LEAF_FALL_FRAC_GROWING	0		//proportions of the growing season of leaf fall 
-LEAF_LIFE_SPAN  0.4     //Leaf life span for P. sylvestris from White et al., 2000
+LEAF_LIFE_SPAN  0.345     //Leaf life span for P. sylvestris from White et al., 2000
 //GAMMAFX	0.0255              //Maximum Litterfall rate (month^-1) for P. sylvestris from Landsberg et al., 2005
 //GAMMAF0	0.0255               //Litterfall rate at t = 0 (month^-1) for P. sylvestris from Landsberg et al., 2005
 //TGAMMAF	60               //Age at which litterfall rate has median value for P. sylvestris from Landsberg et al., 2005

@@ -256,6 +256,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 		//put for comparison with biome module
 		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 
+
 		if ( s->value[F_SW] > 1  )
 		{
 			Log("PROBLEM IN fSW !!!!!!!!!!\n");
@@ -440,6 +441,8 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		s->value[F_T] = 1;
 	}
 
+	c->daily_f_t = s->value[F_T];
+
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_T] += s->value[F_T];
@@ -467,6 +470,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
+	c->daily_f_vpd = s->value[F_VPD];
 	Log("fVPD = %g\n", s->value[F_VPD]);
 
 	//average yearly f_vpd modifiers
@@ -517,6 +521,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 
 	/*SOIL WATER MODIFIER*/
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+	c->daily_f_sw = s->value[F_SW];
 
 	if ( s->value[F_SW] > 1  )
 	{
@@ -567,6 +572,8 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		s->value[F_PSI] = (s->value[SWPCLOSE] - psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 	}
 	Log("F_PSI = %g\n", s->value[F_PSI]);
+
+	c->daily_f_psi = s->value[F_PSI];
 
 
 	//average yearly f_sw modifiers

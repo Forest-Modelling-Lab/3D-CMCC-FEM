@@ -874,6 +874,8 @@ typedef struct {
 	float daily_lai; //printed only if there's one only class
 	float annual_peak_lai; //printed only if there's one only class
 
+	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+
 	int dead_tree;
 
 	float thermic_sum;
