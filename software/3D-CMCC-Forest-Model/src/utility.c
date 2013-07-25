@@ -217,11 +217,16 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 
 
-extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years)
+extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
 {
+	static float avg_gpp, avg_npp, avg_et, avg_agb, avg_bgb;
+
+	static float first_agb, first_bgb;
+
 	if (years == 0)
 	{
 		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		Annual_Log("years of simulation = %d\n", years_of_simulation);
 		Annual_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
@@ -232,6 +237,35 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log ("-%s %10s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB", "PEAK_LAI");
 	}
 	Annual_Log ("-%d %10g %10g %10g %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai);
+
+	if (years == 0)
+	{
+		avg_gpp = 0;
+		avg_npp = 0;
+		avg_et = 0;
+		first_agb = c->stand_agb;
+		first_bgb = c->stand_bgb;
+	}
+
+	avg_gpp += c->annual_gpp;
+	avg_npp += c->annual_npp;
+	avg_et += c->annual_et;
+
+	if (years == years_of_simulation -1)
+	{
+		avg_gpp /= years_of_simulation -1;
+		avg_npp /= years_of_simulation -1;
+		avg_et /= years_of_simulation -1;
+		avg_agb = (c->stand_agb - first_agb)/ (years_of_simulation -1);
+		avg_bgb = (c->stand_bgb - first_bgb)/ (years_of_simulation -1);
+		Annual_Log ("-----------------------------------------------------------------------\n");
+		Annual_Log ("-AVG %11g %10g %10g %10g %10g\n", avg_gpp, avg_npp, avg_et, avg_agb, avg_bgb);
+	}
+
+
+
+
+
 
 	//reset after printed at the end of the year
 	c->annual_gpp = 0;

@@ -1220,7 +1220,7 @@ int main(int argc, char *argv[])
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
 					Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n\n\n\n\n\n", yos[years].year);
-					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
+					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years, years_of_simulation);
 
 				}
 			}

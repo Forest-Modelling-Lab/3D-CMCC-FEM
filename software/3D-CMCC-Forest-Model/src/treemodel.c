@@ -469,7 +469,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							if ( height == 0)
 							{
-								Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years);
+								Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years,years_of_simulation);
 							}
 
 
