@@ -46,7 +46,9 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
-		s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
+		s->value[AVDBH] = pow(s->value[AV_STEM_MASS] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
+		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
+
 	}
 	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
 
@@ -55,6 +57,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	{
 		Log("Old AVDBH = %g cm\n", oldavDBH);
 		Log("ERROR in Average DBH !!!!!!!\n");
+		s->value[AVDBH] = oldavDBH;
 	}
 	else
 	{
@@ -100,6 +103,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	/*control*/
 	if ( oldTreeHeight > h->value)
 	{
+		h->value = oldTreeHeight;
 		Log("ERROR in TREE HEIGHT!!!\n");
 	}
 

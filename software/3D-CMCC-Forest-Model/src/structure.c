@@ -361,7 +361,7 @@ void Get_forest_structure (CELL *const c)
 
 					//Crown Diameter using DBH-DC
 
-					Log("-AvDBH  = %g m\n", c->heights[height].ages[age].species[species].value[AVDBH]);
+					Log("-AvDBH  = %g cm\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
 					Log("-Crown Diameter from DBHDC function  = %g m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);

@@ -55,7 +55,7 @@ void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int 
 
 	Log("***CAI & MAI***\n");
 
-
+	//sergio if prec_volume stands for precedent (year) volume, shouldn't the CAI be quantified before updating prec_volume? in this way it shold alway return ~0, being the product of the same formula expressed with the same quantities
 
 	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TRHO]));
 	/*STAND VOLUME-(STEM VOLUME)*/

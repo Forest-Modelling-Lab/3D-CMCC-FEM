@@ -277,6 +277,12 @@ void Get_Mortality (SPECIES *const s, int years)
 
 		s->counter[DEL_STEMS] = (float)s->counter[N_TREE] - 1000 * n;
 		Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEL_STEMS]);
+
+		//SERGIO CONTROL: if del_stems < 0 set it to its minimum plausible value; that is 0
+		if (s->counter[DEL_STEMS] < 0)
+		{
+			s->counter[DEL_STEMS]	 = 0;
+		}
 		//control
 		if (s->counter[DEL_STEMS] > s->counter[N_TREE])
 		{
