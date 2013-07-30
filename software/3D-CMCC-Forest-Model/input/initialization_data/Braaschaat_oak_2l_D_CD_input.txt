@@ -1,6 +1,0 @@
-x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai
-0,0,F,65,Quercusrobur,T,153,0,27.8702247,17.46013224,0,3.050584038,0,68.43667505,0,0
-0,0,F,65,Quercusrobur,T,40,0,42.90469356,20.43523364,0,2.193301788,0,47.60517147,0,0
-
-
-
