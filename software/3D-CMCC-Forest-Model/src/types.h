@@ -911,6 +911,7 @@ typedef struct {
 //#define LOGFILE		"output.txt"
 /* #define BUFFER_SIZE	4096 */
 #define BUFFER_SIZE	585600
+#define BUFFER_SIZE_LOG 67500
 
 
 

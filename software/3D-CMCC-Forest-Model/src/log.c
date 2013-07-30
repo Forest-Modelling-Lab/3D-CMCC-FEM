@@ -17,12 +17,12 @@ int logInit(char * logFileName)
 
 void Log(const char *szText, ...)
 {
-	char szBuffer[BUFFER_SIZE] = { 0 };
+	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
 	//va_list pArgList = { 0 };
 	va_list pArgList;
 
 	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
 	va_end(pArgList);
 
 	fputs(szBuffer, stdout);
@@ -50,12 +50,12 @@ int daily_logInit(char * daily_logFileName)
 
 void Daily_Log(const char *szText, ...)
 {
-	char szBuffer[BUFFER_SIZE] = { 0 };
+	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
 	//va_list pArgList = { 0 };
 	va_list pArgList;
 
 	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
 	va_end(pArgList);
 
 	fputs(szBuffer, stdout);
@@ -83,12 +83,12 @@ int monthly_logInit(char * monthly_logFileName)
 
 void Monthly_Log(const char *szText, ...)
 {
-	char szBuffer[BUFFER_SIZE] = { 0 };
+	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
 	//va_list pArgList = { 0 };
 	va_list pArgList;
 
 	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
 	va_end(pArgList);
 
 	fputs(szBuffer, stdout);
@@ -116,12 +116,12 @@ int annual_logInit(char * annual_logFileName)
 
 void Annual_Log(const char *szText, ...)
 {
-	char szBuffer[BUFFER_SIZE] = { 0 };
+	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
 	//va_list pArgList = { 0 };
 	va_list pArgList;
 
 	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE, szText, pArgList);
+	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
 	va_end(pArgList);
 
 	fputs(szBuffer, stdout);
