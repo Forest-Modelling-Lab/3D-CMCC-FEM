@@ -177,7 +177,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET", "LAI", "F_SW", "F_PSI", "F_T", "F_VPD");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(0)", "NPP(0)", "ET(0)", "LAI(0)", "F_SW", "F_PSI", "F_T", "F_VPD");
 		}
 		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_npp[0], c->daily_et[0], c->daily_lai[0], c->daily_f_sw, c->daily_f_psi, c->daily_f_t, c->daily_f_vpd);
 	}
