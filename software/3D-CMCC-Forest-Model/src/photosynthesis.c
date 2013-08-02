@@ -231,7 +231,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			c->monthly_gpp[1] += s->value[POINT_GPP_g_C];
 			c->monthly_npp[1] += s->value[NPP];
 		}
-		else
+		if (c->heights[height].z == 0)
 		{
 			c->daily_gpp[0] += s->value[POINT_GPP_g_C];
 			c->daily_npp[0] += s->value[NPP];
@@ -239,6 +239,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			c->monthly_npp[0] += s->value[NPP];
 		}
 	}
+
+	c->daily_tot_gpp += s->value[POINT_GPP_g_C];
+	c->daily_tot_gpp += s->value[NPP];
 
 	c->monthly_tot_gpp += s->value[POINT_GPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];

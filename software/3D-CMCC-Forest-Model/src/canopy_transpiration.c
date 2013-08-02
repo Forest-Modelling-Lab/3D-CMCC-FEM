@@ -325,7 +325,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			c->daily_et[1] += s->value[DAILY_TRANSP];
 			c->monthly_et[1] += s->value[DAILY_TRANSP];
 		}
-		else
+		if (c->heights[height].z == 0)
 		{
 			c->daily_et[0] += s->value[DAILY_TRANSP];
 			c->monthly_et[0] += s->value[DAILY_TRANSP];
