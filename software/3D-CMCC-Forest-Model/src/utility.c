@@ -180,6 +180,11 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(0)", "NPP(0)", "ET(0)", "LAI(0)", "F_SW", "F_PSI", "F_T", "F_VPD");
 		}
 		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_npp[0], c->daily_et[0], c->daily_lai[0], c->daily_f_sw, c->daily_f_psi, c->daily_f_t, c->daily_f_vpd);
+
+		//reset
+		c->daily_gpp[0] = 0;
+		c->daily_npp[0] = 0;
+		c->daily_et[0] = 0;
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
@@ -189,6 +194,15 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(1)", "GPP(0)", "NPP(1)", "NPP(0)","ET(1)", "ET(0)","LAI(1)", "LAI(0)");
 		}
 		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[1],c->daily_gpp[0], c->daily_npp[1], c->daily_npp[0], c->daily_et[1], c->daily_et[0], c->daily_lai[1], c->daily_lai[0]);
+
+		//reset
+		c->daily_gpp[1] = 0;
+		c->daily_npp[1] = 0;
+		c->daily_et[1] = 0;
+		c->daily_gpp[0] = 0;
+		c->daily_npp[0] = 0;
+		c->daily_et[0] = 0;
+
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
@@ -198,6 +212,18 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "NPP(2)","NPP(1)", "NPP(0)","ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)");
 		}
 		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_lai[2], c->daily_lai[1], c->daily_lai[0]);
+
+		//reset
+		c->daily_gpp[2] = 0;
+		c->daily_npp[2] = 0;
+		c->daily_et[2] = 0;
+		c->daily_gpp[1] = 0;
+		c->daily_npp[1] = 0;
+		c->daily_et[1] = 0;
+		c->daily_gpp[0] = 0;
+		c->daily_npp[0] = 0;
+		c->daily_et[0] = 0;
+
 	}
 
 
@@ -227,16 +253,76 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
 		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}
+	/*
 	if(month == 0)
 	{
 		Monthly_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET", "DEAD TREE");
 	}
-	Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
+	//Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
+	*/
 
+
+	if (c->annual_layer_number == 1)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s  %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "DEAD TREE(0)");
+		}
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g \n", yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0] /*, c->monthly_dead_tree[0]*/);
+
+
+		//reset
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_tot_gpp = 0;
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 2)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "DEAD TREE(1)", "DEAD TREE(0)");
+		}
+		Monthly_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g \n", yos[years].year, month+1, c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,c->monthly_et[1], c->monthly_et[0]/*, c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+
+		//reset
+		c->monthly_gpp[1] = 0;
+		c->monthly_npp[1] = 0;
+		c->monthly_et[1] = 0;
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_tot_gpp = 0;
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 3)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)","ET(1)", "ET(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)");
+		}
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,c->monthly_et[2],c->monthly_et[1], c->monthly_et[0]/*, c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+
+		//reset
+		c->monthly_gpp[2] = 0;
+		c->monthly_npp[2] = 0;
+		c->monthly_et[2] = 0;
+		c->monthly_gpp[1] = 0;
+		c->monthly_npp[1] = 0;
+		c->monthly_et[1] = 0;
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_tot_gpp = 0;
+		c->monthly_tot_npp = 0;
+	}
 	//reset after printed at the end of the month
+	/*
 	c->monthly_gpp = 0;
 	c->monthly_npp = 0;
 	c->monthly_et = 0;
+	*/
 
 }
 

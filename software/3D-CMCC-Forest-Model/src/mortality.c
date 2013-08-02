@@ -53,7 +53,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_co
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
-			c->dead_tree += 1;
+			//c->dead_tree += 1;
 			//todo in this case the model takes into account not NTREE of layer but just for class
 			//insert a variable linked to cell for ntree
 			layer_cover = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
