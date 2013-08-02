@@ -1,4 +1,4 @@
-SITENAME "Brasschaat-Oak_1l" //Site Name
+SITENAME "Brasschaat-Oak_2l" //Site Name
 
 LAT "51.18" //Site Latitude negative for south hemisphere (Carrara et al., 2004)
 LONG "4.31" //Site Longitude (Carrara et al., 2004)
