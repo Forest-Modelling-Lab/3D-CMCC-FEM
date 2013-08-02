@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_number, int z)
+void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_cover, int tree_number, int z)
 {
 	//int oldNtree;
 	int deadtree;
@@ -53,6 +53,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, float layer_cover, int tree_n
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
+			c->dead_tree += 1;
 			//todo in this case the model takes into account not NTREE of layer but just for class
 			//insert a variable linked to cell for ntree
 			layer_cover = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;

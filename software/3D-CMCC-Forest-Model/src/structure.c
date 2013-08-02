@@ -459,7 +459,7 @@ void Get_forest_structure (CELL *const c)
 							//mortality
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
-							Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+							Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c, layer_cover, tree_number, c->heights[height].z);
 						}
 						else
 						{
@@ -474,7 +474,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c,layer_cover, tree_number, c->heights[height].z);
 							}
 							else
 							{
@@ -488,7 +488,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c, layer_cover, tree_number, c->heights[height].z);
 							}
 							else
 							{
@@ -505,7 +505,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c, layer_cover, tree_number, c->heights[height].z);
 							}
 							else
 							{
@@ -519,7 +519,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c,layer_cover, tree_number, c->heights[height].z);
 							}
 							else
 							{
@@ -533,7 +533,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z);
+								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c,layer_cover, tree_number, c->heights[height].z);
 							}
 							else
 							{

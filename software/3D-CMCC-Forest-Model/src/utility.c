@@ -33,6 +33,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->stand_agb = 0;
 				c->stand_bgb = 0;
 				c->evapotranspiration = 0;
+				c->dead_tree = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_MONTHS] = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
@@ -200,13 +201,14 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
 		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
 		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
-		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n\n\n");
+		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
+		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}
 	if(month == 0)
 	{
-		Monthly_Log ("\n-%s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET");
+		Monthly_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET", "DEAD TREE");
 	}
-	Monthly_Log ("-%d %10d %10g %10g %10g\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et);
+	Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
 
 	//reset after printed at the end of the month
 	c->monthly_gpp = 0;
@@ -223,6 +225,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	static float first_agb, first_bgb;
 
+
 	if (years == 0)
 	{
 		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
@@ -233,10 +236,11 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
 		Annual_Log("Annual AGB = annual above-ground biomass(tDM/area/year)\n");
 		Annual_Log("Annual BGB = annual below-ground biomass(tDM/area/year)\n");
-		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n\n\n");
-		Annual_Log ("-%s %10s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB", "PEAK_LAI");
+		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
+		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
+		Annual_Log ("-%s %10s %10s %10s %10s %10s %10s %10s\n", "YEAR", "GPP", "NPP", "ET", "AGB", "BGB", "PEAK_LAI", "DEAD_TREE");
 	}
-	Annual_Log ("-%d %10g %10g %10g %10g %10g %10g\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai);
+	Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
 
 	if (years == 0)
 	{
@@ -258,7 +262,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_et /= years_of_simulation -1;
 		avg_agb = (c->stand_agb - first_agb)/ (years_of_simulation -1);
 		avg_bgb = (c->stand_bgb - first_bgb)/ (years_of_simulation -1);
-		Annual_Log ("-----------------------------------------------------------------------\n");
+		Annual_Log ("----------------------------------------------------------------------------------\n");
 		Annual_Log ("-AVG %11g %10g %10g %10g %10g\n", avg_gpp, avg_npp, avg_et, avg_agb, avg_bgb);
 	}
 

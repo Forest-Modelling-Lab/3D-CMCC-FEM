@@ -847,6 +847,7 @@ typedef struct {
 	float evapotranspiration;
 	float stand_agb;
 	float stand_bgb;
+	int dead_tree;
 	float litter;
 	float av_yearly_daylength;
 	float av_yearly_par_soil;
@@ -881,7 +882,7 @@ typedef struct {
 
 	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
-	int dead_tree;
+	//int dead_tree;
 
 	float thermic_sum;
 
@@ -1031,7 +1032,7 @@ extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
-extern void Get_layer_cover_mortality (SPECIES *, float, int, int );
+extern void Get_layer_cover_mortality (SPECIES *, CELL *, float, int, int );
 extern void Get_soil_water_balance (CELL *const);
 extern void Get_annual_average_values_modifiers (SPECIES *);
 extern void Get_annual_average_values_met_data (CELL *, float, float, float, float);
