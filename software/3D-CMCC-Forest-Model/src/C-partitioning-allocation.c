@@ -1216,7 +1216,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		{
 			c->daily_lai[1] = s->value[LAI];
 		}
-		else
+		if (c->heights[height].z == 0)
 		{
 			c->daily_lai[0] = s->value[LAI];
 		}
