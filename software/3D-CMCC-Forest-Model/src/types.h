@@ -874,10 +874,10 @@ typedef struct {
 
 
 	//cumulative variables cell related
-	float daily_gpp, monthly_gpp, annual_gpp;
-	float daily_npp, monthly_npp, annual_npp;
-	float daily_et, monthly_et, annual_et;
-	float daily_lai; //printed only if there's one only class
+	float daily_gpp[3], monthly_gpp, annual_gpp;
+	float daily_npp[3], monthly_npp, annual_npp;
+	float daily_et[3], monthly_et, annual_et;
+	float daily_lai[3]; //printed only if there's one only class
 	float annual_peak_lai; //printed only if there's one only class
 
 	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;

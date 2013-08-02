@@ -256,27 +256,27 @@ void Get_Mortality (SPECIES *const s, int years)
 		n = (float)s->counter[N_TREE] / 1000;
 		Log("n = %g\n", n);
 		x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
-		//Log("x1 = %g\n", x1);
+		Log("x1 = %g\n", x1);
 		i = 0;
 		while ( 1 )
 		{
 			i = i + 1;
-			//Log("i = %d\n", i);
+			Log("i = %d\n", i);
 			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
-			//Log("X2 = %f\n", x2);
+			Log("X2 = %f\n", x2);
 			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM_CTEM];
-			//Log("fN = %f\n", fN);
+			Log("fN = %f\n", fN);
 			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
-			//Log("dfN = %f\n", dfN);
+			Log("dfN = %f\n", dfN);
 			dN = -fN / dfN;
-			//Log("dN = %f\n", dN);
+			Log("dN = %f\n", dN);
 			n = n + dN;
-			//Log("n = %f\n", n);
+			Log("n = %f\n", n);
 			if ((fabs(dN) <= eps) || (i >= 5))
 				break;
 		}
 
-		s->counter[DEL_STEMS] = (float)s->counter[N_TREE] - 1000 * n;
+		s->counter[DEL_STEMS] = s->counter[N_TREE] - 1000 * n;
 		Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEL_STEMS]);
 
 		//SERGIO CONTROL: if del_stems < 0 set it to its minimum plausible value; that is 0

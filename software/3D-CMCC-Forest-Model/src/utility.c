@@ -173,18 +173,41 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily F_T = Daily temperature modifier\n");
 		Daily_Log("Daily F_PSI = Daily VPD modifier\n\n\n");
 	}
-	if (day == 0 && month == 0)
+	if (c->annual_layer_number == 1)
 	{
-		Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET", "LAI", "F_SW", "F_PSI", "F_T", "F_VPD");
+		if (day == 0 && month == 0)
+		{
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP", "NPP", "ET", "LAI", "F_SW", "F_PSI", "F_T", "F_VPD");
+		}
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_npp[0], c->daily_et[0], c->daily_lai[0], c->daily_f_sw, c->daily_f_psi, c->daily_f_t, c->daily_f_vpd);
 	}
-	Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year,  month+1, day+1, c->daily_gpp, c->daily_npp, c->daily_et, c->daily_lai, c->daily_f_sw, c->daily_f_psi, c->daily_f_t, c->daily_f_vpd);
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 2)
+	{
+		if (day == 0 && month == 0)
+		{
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(1)", "GPP(0)", "NPP(1)", "NPP(0)","ET(1)", "ET(0)","LAI(1)", "LAI(0)");
+		}
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g  %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[1],c->daily_gpp[0], c->daily_npp[1], c->daily_npp[0], c->daily_et[1], c->daily_et[0], c->daily_lai[1], c->daily_lai[0]);
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 3)
+	{
+		if (day == 0 && month == 0)
+		{
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "NPP(2)","NPP(1)", "NPP(0)","ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)");
+		}
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_lai[2], c->daily_lai[1], c->daily_lai[0]);
+	}
 
 
 	//reset after printed at the end of the day
+	/*
 	c->daily_gpp = 0;
 	c->daily_npp = 0;
 	c->daily_et = 0;
 	c->daily_lai = 0;
+	*/
 	c->daily_f_sw = 0;
 	c->daily_f_psi = 0;
 	c->daily_f_t = 0;

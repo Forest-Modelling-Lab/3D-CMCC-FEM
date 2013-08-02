@@ -31,7 +31,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	//float DailyPar;
 	float Gap_Cover = 0;
 
-	Log("\nGET_LIGHT_ROUTINE\n\n");
+	Log("\nGET LIGHT ROUTINE\n\n");
 
 	if (settings->time == 'm')
 	{

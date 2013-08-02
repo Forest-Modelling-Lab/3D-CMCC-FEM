@@ -1185,9 +1185,41 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 	}
 
 	//for daily_Log file only if there's one class
+	/*
 	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
 	{
 		c->daily_lai = s->value[LAI];
+	}
+	*/
+	if (c->annual_layer_number == 1)
+	{
+		c->daily_lai[0] = s->value[LAI];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->daily_lai[1] = s->value[LAI];
+		}
+		else
+		{
+			c->daily_lai[0] = s->value[LAI];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->daily_lai[2] = s->value[LAI];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->daily_lai[1] = s->value[LAI];
+		}
+		else
+		{
+			c->daily_lai[0] = s->value[LAI];
+		}
 	}
 
 	Log("******************************\n");
@@ -1538,9 +1570,41 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CEL
 	}
 
 	//for daily_Log file only if there's one class
+	/*
 	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
 	{
 		c->daily_lai = s->value[LAI];
+	}
+	*/
+	if (c->annual_layer_number == 1)
+	{
+		c->daily_lai[0] = s->value[LAI];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->daily_lai[1] = s->value[LAI];
+		}
+		else
+		{
+			c->daily_lai[0] = s->value[LAI];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->daily_lai[2] = s->value[LAI];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->daily_lai[1] = s->value[LAI];
+		}
+		else
+		{
+			c->daily_lai[0] = s->value[LAI];
+		}
 	}
 
 

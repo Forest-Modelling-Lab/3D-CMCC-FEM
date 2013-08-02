@@ -185,10 +185,49 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	}
 
 	//DAILY GPP/NPP
-	//cell level
+	//summing all classes gpp and npp
+	/*
+	 * c->daily_gpp += s->value[POINT_GPP_g_C];
+	 * c->daily_npp += s->value[NPP];
+	 */
 
-	c->daily_gpp += s->value[POINT_GPP_g_C];
-	c->daily_npp += s->value[NPP];
+	if (c->annual_layer_number == 1)
+	{
+		c->daily_gpp[0] = s->value[POINT_GPP_g_C];
+		c->daily_npp[0] = s->value[NPP];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->daily_gpp[1] = s->value[POINT_GPP_g_C];
+			c->daily_npp[1] = s->value[NPP];
+		}
+		else
+		{
+			c->daily_gpp[0] = s->value[POINT_GPP_g_C];
+			c->daily_npp[0] = s->value[NPP];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->daily_gpp[2] = s->value[POINT_GPP_g_C];
+			c->daily_npp[2] = s->value[NPP];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->daily_gpp[1] = s->value[POINT_GPP_g_C];
+			c->daily_npp[1] = s->value[NPP];
+		}
+		else
+		{
+			c->daily_gpp[0] = s->value[POINT_GPP_g_C];
+			c->daily_npp[0] = s->value[NPP];
+		}
+	}
+
 
 	//MONTHLY GPP/NPP
 	//cell level

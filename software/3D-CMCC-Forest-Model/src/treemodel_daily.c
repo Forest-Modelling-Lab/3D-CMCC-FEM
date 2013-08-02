@@ -93,7 +93,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-
+		Log("%d-%d-%d\n", met[month].d[day].n_days, month+1, yos[years].year);
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
@@ -151,12 +151,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
-
-
-
 		Get_forest_structure (&m->cells[cell]);
-
-
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -232,7 +227,15 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
 							}
 
-							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+
+							if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0)
+							{
+								Log("ERROR!!!!! LAI <= 0!!!!!\n");
+							}
+							else
+							{
+								Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+							}
 							//vegetative period for deciduous
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
@@ -249,6 +252,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									{
 										Log("ATTENTION LAI > PEAK LAI\n");
 										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
+									}
+									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0 )
+									{
+										Log("ATTENTION LAI <= 0 !!!!!!!!!!\n");
 									}
 								}
 
@@ -469,7 +476,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							/*MORTALITY*/
 							//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-							Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
+							Log("Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+							//Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 
 							//todo
 							//WHEN MORTALITY OCCURED IN MULTILAYERED FOREST MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
@@ -485,10 +493,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
 							if(m->cells[cell].heights[height].z < m->cells[cell].heights[height].top_layer)
 							{
-								Log("MORTALITY FOR LOWER LAYER \n");
+								Log("Get_Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 								/*Mortality based on Growth efficiency(LPJ)*/
 								//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
-								Log("MORTALITY FOR LOWER LAYER BASED ON LIGHT AVAILABILITY\n");
 							}
 
 							if ( m->cells[cell].heights[height].ages[age].species[species].management == C)
