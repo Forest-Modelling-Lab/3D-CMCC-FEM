@@ -299,6 +299,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	{
 		c->daily_et[0] += s->value[DAILY_TRANSP];
 		c->monthly_et[0] += s->value[DAILY_TRANSP];
+		c->annual_et[0] += s->value[DAILY_TRANSP];
 	}
 	if (c->annual_layer_number == 2)
 	{
@@ -306,11 +307,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		{
 			c->daily_et[1] += s->value[DAILY_TRANSP];
 			c->monthly_et[1] += s->value[DAILY_TRANSP];
+			c->annual_et[1] += s->value[DAILY_TRANSP];
 		}
 		else
 		{
 			c->daily_et[0] += s->value[DAILY_TRANSP];
 			c->monthly_et[0] += s->value[DAILY_TRANSP];
+			c->annual_et[0] += s->value[DAILY_TRANSP];
 		}
 	}
 	if (c->annual_layer_number == 3)
@@ -319,20 +322,24 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		{
 			c->daily_et[2] += s->value[DAILY_TRANSP];
 			c->monthly_et[2] += s->value[DAILY_TRANSP];
+			c->annual_et[2] += s->value[DAILY_TRANSP];
 		}
 		if (c->heights[height].z == 1)
 		{
 			c->daily_et[1] += s->value[DAILY_TRANSP];
 			c->monthly_et[1] += s->value[DAILY_TRANSP];
+			c->annual_et[1] += s->value[DAILY_TRANSP];
 		}
 		if (c->heights[height].z == 0)
 		{
 			c->daily_et[0] += s->value[DAILY_TRANSP];
 			c->monthly_et[0] += s->value[DAILY_TRANSP];
+			c->annual_et[0] += s->value[DAILY_TRANSP];
 		}
 	}
 
 	c->monthly_tot_et += s->value[DAILY_TRANSP];
+	c->annual_tot_et += s->value[DAILY_TRANSP];
 
 
 	//MONTHLY ET

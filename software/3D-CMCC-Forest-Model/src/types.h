@@ -874,11 +874,11 @@ typedef struct {
 
 
 	//cumulative variables cell related
-	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp, annual_tot_gpp;
-	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp, annual_tot_npp;
-	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et, annual_tot_et;
+	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	float daily_lai[3];
-	float annual_peak_lai;
+	float annual_peak_lai[10];
 
 	float monthly_dead_tree[3], annual_dead_tree[3];
 

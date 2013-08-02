@@ -137,12 +137,42 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, i
 
 	//DAILY GPP/NPP
 	//cell level
-
+	/*
 	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
 	{
 		c->annual_peak_lai = s->value[PEAK_Y_LAI];
 	}
-
+	*/
+	if (c->annual_layer_number == 1)
+	{
+		c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->annual_peak_lai[1] += s->value[PEAK_Y_LAI];
+		}
+		else
+		{
+			c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->annual_peak_lai[2] += s->value[PEAK_Y_LAI];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->annual_peak_lai[1] += s->value[PEAK_Y_LAI];
+		}
+		if (c->heights[height].z == 0)
+		{
+			c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
+		}
+	}
 
 
 
