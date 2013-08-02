@@ -332,6 +332,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 	}
 
+	c->monthly_tot_et += s->value[DAILY_TRANSP];
+
 
 	//MONTHLY ET
 	//stand level
