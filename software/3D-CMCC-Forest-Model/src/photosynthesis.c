@@ -252,8 +252,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		}
 	}
 
+	Log("cazzo %g porca zozza %g\n", c->daily_gpp[0], c->daily_tot_gpp);
 	c->daily_tot_gpp += s->value[POINT_GPP_g_C];
 	c->daily_tot_gpp += s->value[NPP];
+
+	Log("cazzo %g porca zozza %g\n", c->daily_gpp[0], c->daily_tot_gpp);
 
 	c->monthly_tot_gpp += s->value[POINT_GPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];
