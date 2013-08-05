@@ -338,6 +338,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 	}
 
+	c->daily_tot_et += s->value[DAILY_TRANSP];
 	c->monthly_tot_et += s->value[DAILY_TRANSP];
 	c->annual_tot_et += s->value[DAILY_TRANSP];
 

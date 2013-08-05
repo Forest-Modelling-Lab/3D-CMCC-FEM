@@ -187,15 +187,16 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_et[0] = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
+		c->daily_tot_et = 0;
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)","LAI(1)", "LAI(0)");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)","LAI(1)", "LAI(0)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_lai[1], c->daily_lai[0]);
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[1], c->daily_lai[0]);
 
 		//reset
 		c->daily_gpp[1] = 0;
@@ -206,6 +207,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_et[0] = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
+		c->daily_tot_et = 0;
 
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
@@ -213,9 +215,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_lai[2], c->daily_lai[1], c->daily_lai[0]);
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[2], c->daily_lai[1], c->daily_lai[0]);
 
 		//reset
 		c->daily_gpp[2] = 0;
@@ -229,6 +231,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_et[0] = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
+		c->daily_tot_et = 0;
 
 	}
 
