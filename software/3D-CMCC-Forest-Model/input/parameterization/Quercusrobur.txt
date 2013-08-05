@@ -38,8 +38,8 @@ COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar
 BLCOND	0.005            //Canopy Boundary Layer conductance Q. robur from Pietsch et al 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
 //AGE for timber
-MAXAGE	120             //Determines rate of "physiological decline" of forest
-RAGE	0.75            //Relative Age to give fAGE = 0.5
+MAXAGE	150             //Determines rate of "physiological decline" of forest
+RAGE	0.80            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
 MAXAGE_S	100     //Determines rate of "physiological decline" of forest
@@ -48,7 +48,7 @@ NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth
 GROWTHTMAX	35      //Maximum temperature for growth
-GROWTHTOPT	25      //Optimum temperature for growth for Q. robur from Lyr & Garbe, 1995
+GROWTHTOPT	20      //Optimum temperature for growth 25 for Q. robur from Lyr & Garbe, 1995
 GROWTHSTART	583       //average temperature for starting growth in °C 1100 for q. robur Hickler et al 2012 (7.5 for Quercus robur from Morecroft et al 2003) CONTROL!!!!!!!!!
 GROWTHEND	2       //average temperature for ending growth in °C
 MINDAYLENGTH	11      //minimum day length for deciduous
@@ -90,7 +90,7 @@ CONES_LIFE_SPAN 0 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) Q. robur from Pietsch et al 2005
-STEM_LEAF	2.234	//1.32 allocation new stem C:new leaf (ratio) for Q. robur see White et al 2000 1.32 for Q. robur from Pietsch et al 2005
+STEM_LEAF	1.32 //2.234	//1.32 allocation new stem C:new leaf (ratio) for Q. robur see White et al 2000 1.32 for Q. robur from Pietsch et al 2005
 COARSE_ROOT_STEM	0.158	//0.26 allocation new coarse root C:new stem (ratio) for Q. robur see White et al 2000 0.26 from Q. robur from Pietsch et al 2005
 
 

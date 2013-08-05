@@ -264,7 +264,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							{
 								Log("species %s First day of growing season day = %d month %d\n", c->heights[height].ages[age].species[species].name, day, month);
 							}
-							Log("day %d month %d day_veg = %d\n", day+1 , month+1, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+							//Log("day %d month %d day_veg = %d\n", day+1 , month+1, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						}
 					}

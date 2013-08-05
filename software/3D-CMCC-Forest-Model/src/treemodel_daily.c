@@ -230,9 +230,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							}
 
 
-							if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0)
+							if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0)
 							{
-								Log("ERROR!!!!! LAI <= 0!!!!!\n");
+								Log("ERROR!!!!! LAI < 0!!!!!\n");
 							}
 							else
 							{

@@ -120,8 +120,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 
-		//Monthly Stand (area covered by canopy) GPP in grams of C
-		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * (settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+
+		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * s->value[CANOPY_COVER_DBHDC];
 		//Log("CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
 		//Log("Monthly  Stand GPP (per area covered)= %g gC/ha covered month\n", s->value[GPP_g_C]);
 
@@ -193,31 +193,31 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 	if (c->annual_layer_number == 1)
 	{
-		c->daily_gpp[0] += s->value[POINT_GPP_g_C];
+		c->daily_gpp[0] += s->value[GPP_g_C];
 		c->daily_npp[0] += s->value[NPP];
-		c->monthly_gpp[0] += s->value[POINT_GPP_g_C];
+		c->monthly_gpp[0] += s->value[GPP_g_C];
 		c->monthly_npp[0] += s->value[NPP];
-		c->annual_gpp[0] += s->value[POINT_GPP_g_C];
+		c->annual_gpp[0] += s->value[GPP_g_C];
 		c->annual_npp[0] += s->value[NPP];
 	}
 	if (c->annual_layer_number == 2)
 	{
 		if (c->heights[height].z == 1)
 		{
-			c->daily_gpp[1] += s->value[POINT_GPP_g_C];
+			c->daily_gpp[1] += s->value[GPP_g_C];
 			c->daily_npp[1] += s->value[NPP];
-			c->monthly_gpp[1] += s->value[POINT_GPP_g_C];
+			c->monthly_gpp[1] += s->value[GPP_g_C];
 			c->monthly_npp[1] += s->value[NPP];
-			c->annual_gpp[1] += s->value[POINT_GPP_g_C];
+			c->annual_gpp[1] += s->value[GPP_g_C];
 			c->annual_npp[1] += s->value[NPP];
 		}
 		else
 		{
-			c->daily_gpp[0] += s->value[POINT_GPP_g_C];
+			c->daily_gpp[0] += s->value[GPP_g_C];
 			c->daily_npp[0] += s->value[NPP];
-			c->monthly_gpp[0] += s->value[POINT_GPP_g_C];
+			c->monthly_gpp[0] += s->value[GPP_g_C];
 			c->monthly_npp[0] += s->value[NPP];
-			c->annual_gpp[0] += s->value[POINT_GPP_g_C];
+			c->annual_gpp[0] += s->value[GPP_g_C];
 			c->annual_npp[0] += s->value[NPP];
 		}
 	}
@@ -225,40 +225,40 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	{
 		if (c->heights[height].z == 2)
 		{
-			c->daily_gpp[2] += s->value[POINT_GPP_g_C];
+			c->daily_gpp[2] += s->value[GPP_g_C];
 			c->daily_npp[2] += s->value[NPP];
-			c->monthly_gpp[2] += s->value[POINT_GPP_g_C];
+			c->monthly_gpp[2] += s->value[GPP_g_C];
 			c->monthly_npp[2] += s->value[NPP];
-			c->annual_gpp[2] += s->value[POINT_GPP_g_C];
+			c->annual_gpp[2] += s->value[GPP_g_C];
 			c->annual_npp[2] += s->value[NPP];
 		}
 		if (c->heights[height].z == 1)
 		{
-			c->daily_gpp[1] += s->value[POINT_GPP_g_C];
+			c->daily_gpp[1] += s->value[GPP_g_C];
 			c->daily_npp[1] += s->value[NPP];
-			c->monthly_gpp[1] += s->value[POINT_GPP_g_C];
+			c->monthly_gpp[1] += s->value[GPP_g_C];
 			c->monthly_npp[1] += s->value[NPP];
-			c->annual_gpp[1] += s->value[POINT_GPP_g_C];
+			c->annual_gpp[1] += s->value[GPP_g_C];
 			c->annual_npp[1] += s->value[NPP];
 		}
 		if (c->heights[height].z == 0)
 		{
-			c->daily_gpp[0] += s->value[POINT_GPP_g_C];
+			c->daily_gpp[0] += s->value[GPP_g_C];
 			c->daily_npp[0] += s->value[NPP];
-			c->monthly_gpp[0] += s->value[POINT_GPP_g_C];
+			c->monthly_gpp[0] += s->value[GPP_g_C];
 			c->monthly_npp[0] += s->value[NPP];
-			c->annual_gpp[0] += s->value[POINT_GPP_g_C];
+			c->annual_gpp[0] += s->value[GPP_g_C];
 			c->annual_npp[0] += s->value[NPP];
 		}
 	}
 
-	c->daily_tot_gpp += s->value[POINT_GPP_g_C];
+	c->daily_tot_gpp += s->value[GPP_g_C];
 	c->daily_tot_npp += s->value[NPP];
 
-	c->monthly_tot_gpp += s->value[POINT_GPP_g_C];
+	c->monthly_tot_gpp += s->value[GPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];
 
-	c->annual_tot_gpp += s->value[POINT_GPP_g_C];
+	c->annual_tot_gpp += s->value[GPP_g_C];
 	c->annual_tot_npp += s->value[NPP];
 
 
