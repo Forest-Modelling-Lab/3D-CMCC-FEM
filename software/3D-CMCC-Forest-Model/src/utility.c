@@ -548,7 +548,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 
 	//compute average values
-	if (years == years_of_simulation -1)
+	if (years == years_of_simulation -1 && years_of_simulation > 1)
 	{
 		if (c->annual_layer_number == 1)
 		{
@@ -574,7 +574,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation -1;
 			avg_et_tot /= years_of_simulation -1;
 			Annual_Log ("-------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10 \n",
+			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g \n",
 					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot);
 		}
 		if (c->annual_layer_number == 3)

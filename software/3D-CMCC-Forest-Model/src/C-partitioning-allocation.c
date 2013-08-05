@@ -630,7 +630,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 			break;
 			/**********************************************************************/
 		case 0:
-			Log("(DayLength < Abscission DayLength)\n");
+			Log("(DayLength < MINDAYLENGTH Abscission DayLength)\n");
 			Log("allocating into the three pools Ws+Wr+Wreserve \nwith leaf fall\n");
 
 			//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
@@ -639,7 +639,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 			if (leaf_fall_counter == 1)
 			{
-				tmp_foliage_biomass_to_remove = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
+				s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
+				Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 			}
 
 
@@ -767,10 +768,11 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 					}
 			 */
+			Log("++Lai before Leaf fall= %g\n", s->value[LAI]);
 			Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 			Log("foliage reduction rate %g \n", s->value[FOLIAGE_REDUCTION_RATE]);
-			Log("biomass foliage to remove %g \n", tmp_foliage_biomass_to_remove);
-			s->value[BIOMASS_FOLIAGE_CTEM] -= tmp_foliage_biomass_to_remove;;
+			Log("biomass foliage to remove %g \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+			s->value[BIOMASS_FOLIAGE_CTEM] -= s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];;
 			Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 

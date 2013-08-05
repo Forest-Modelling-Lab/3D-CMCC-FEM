@@ -59,7 +59,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
-	//daily loop on each cell
+	//annual daily loop on each cell before start with treemodel_daily
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 
@@ -191,10 +191,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
-					if (day == 0)
+					/*if (day == 0)
 						{
 							Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 						}
+						*/
+					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 					{
