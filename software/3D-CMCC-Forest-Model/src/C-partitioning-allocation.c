@@ -38,8 +38,6 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 	float Biomass_exceeding;
 
-	static int leaf_fall_counter; //temporary foliage biomass for leaf fall;
-	static float tmp_foliage_biomass_to_remove;
 
 	//CTEM VERSION
 
@@ -62,8 +60,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		Par_over = c->par - s->value[APAR];
 		Light_trasm = Par_over / Monthly_solar_radiation;
 
-		if (month == 0)
-			leaf_fall_counter = 0;
+		//if (month == 0)
+			//leaf_fall_counter = 0;
 	}
 	else
 	{
@@ -71,8 +69,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		Par_over = c->par - s->value[APAR];
 		Light_trasm = Par_over /Daily_solar_radiation;
 
-		if (day == 0 && month == 0)
-			leaf_fall_counter = 0;
+		//if (day == 0 && month == 0)
+			//leaf_fall_counter = 0;
 	}
 
 	if (day == 0 && month == 0 && years == 0)
@@ -635,9 +633,8 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 			//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
 			//have a linear decrease of foliage biomass and then LAI values
-			leaf_fall_counter += 1;
 
-			if (leaf_fall_counter == 1)
+			if (s->counter[LEAF_FALL_COUNTER] == 1)
 			{
 				s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
 				Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);

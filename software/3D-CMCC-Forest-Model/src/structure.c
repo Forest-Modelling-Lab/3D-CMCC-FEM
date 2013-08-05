@@ -740,10 +740,9 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	static int species;
 	static int counter;
 
-	static int leaf_fall_counter;
 
-	if (day == 0 && month == 0)
-		leaf_fall_counter = 0;
+
+
 
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
@@ -760,6 +759,12 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
+
+				if (day == 0 && month == 0)
+				{
+					c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 0;
+				}
+
 				/*PHENOLOGY = 0 FOR DECIDUOUS*/
 				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 				{
@@ -814,21 +819,22 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 							{
 
-								leaf_fall_counter += 1;
+								Log("DAY_FRAC_FOLIAGE_REMOVE %g\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
+
+								c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  += 1;
 								//check
-								if(leaf_fall_counter == 1)
+								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  == 1)
 								{
 									//assign value of thermic sum
 									c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
-									Log("thermic_sum END OF VEG = %g °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
+									//Log("thermic_sum END OF VEG = %g °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
 								}
 
 								//check
-								if(leaf_fall_counter <= (int)c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE])
+								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE])
 								{
 									/*days of leaf fall*/
 									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-
 								}
 								else
 								{
