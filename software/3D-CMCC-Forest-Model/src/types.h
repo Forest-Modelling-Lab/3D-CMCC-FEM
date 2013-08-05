@@ -847,7 +847,7 @@ typedef struct {
 	float evapotranspiration;
 	float stand_agb;
 	float stand_bgb;
-	int dead_tree;
+
 	float litter;
 	float av_yearly_daylength;
 	float av_yearly_par_soil;
@@ -873,14 +873,14 @@ typedef struct {
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
 
-	//cumulative variables cell related
+	//cumulative variables layer related
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	float daily_lai[3];
 	float annual_peak_lai[10];
 
-	float monthly_dead_tree[3], annual_dead_tree[3];
+	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
 
 	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
@@ -1034,7 +1034,7 @@ extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
-extern void Get_layer_cover_mortality (SPECIES *, CELL *, float, int, int );
+extern void Get_layer_cover_mortality (SPECIES *, CELL *, float, int, int , int);
 extern void Get_soil_water_balance (CELL *const);
 extern void Get_annual_average_values_modifiers (SPECIES *);
 extern void Get_annual_average_values_met_data (CELL *, float, float, float, float);

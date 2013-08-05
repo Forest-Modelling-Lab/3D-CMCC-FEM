@@ -33,7 +33,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->stand_agb = 0;
 				c->stand_bgb = 0;
 				c->evapotranspiration = 0;
-				c->dead_tree = 0;
+				//c->dead_tree = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_MONTHS] = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
@@ -177,37 +177,44 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)", "DEAD TREE (0)", "DEAD TREE (tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g \n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0], c->daily_tot_et, c->daily_lai[0]);
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10d %10d \n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0], c->daily_tot_et, c->daily_lai[0], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_dead_tree[0] = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
 		c->daily_tot_et = 0;
+		c->daily_tot_dead_tree = 0;
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)","LAI(1)", "LAI(0)");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)","LAI(1)", "LAI(0)", "DEAD TREE (1)", "DEAD TREE (0)", "DEAD TREE (tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[1], c->daily_lai[0]);
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[1], c->daily_lai[0], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_et[1] = 0;
+		c->daily_dead_tree[1] = 0;
+
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_dead_tree[0] = 0;
+
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
 		c->daily_tot_et = 0;
+		c->daily_tot_dead_tree = 0;
 
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
@@ -215,23 +222,30 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)");
+			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)", "DEAD TREE (2)", "DEAD TREE (1)", "DEAD TREE (0)", "DEAD TREE (tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g  %10g\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[2], c->daily_lai[1], c->daily_lai[0]);
+		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[2], c->daily_lai[1], c->daily_lai[0], c->daily_dead_tree[2], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[2] = 0;
 		c->daily_npp[2] = 0;
 		c->daily_et[2] = 0;
+		c->daily_dead_tree[2] = 0;
+
 		c->daily_gpp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_et[1] = 0;
+		c->daily_dead_tree[1] = 0;
+
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_dead_tree[0] = 0;
+
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
 		c->daily_tot_et = 0;
+		c->daily_tot_dead_tree = 0;
 
 	}
 
@@ -275,61 +289,78 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "DEAD TREE(0)");
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g \n", yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0], c->monthly_tot_et /*, c->monthly_dead_tree[0]*/);
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10d %10d \n", yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 
 		//reset
 		c->monthly_gpp[0] = 0;
 		c->monthly_npp[0] = 0;
 		c->monthly_et[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
 		c->monthly_tot_gpp = 0;
 		c->monthly_tot_npp = 0;
 		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
+
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "DEAD TREE(1)", "DEAD TREE(0)");
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g  \n", yos[years].year, month+1, c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et/*, c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, month+1, c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 		//reset
 		c->monthly_gpp[1] = 0;
 		c->monthly_npp[1] = 0;
 		c->monthly_et[1] = 0;
+		c->monthly_dead_tree[1] = 0;
+
 		c->monthly_gpp[0] = 0;
 		c->monthly_npp[0] = 0;
 		c->monthly_et[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
 		c->monthly_tot_gpp = 0;
 		c->monthly_tot_npp = 0;
 		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
+
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)","ET(1)", "ET(0)", "ET(tot)","DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)");
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)","ET(1)", "ET(0)", "ET(tot)","DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g\n", yos[years].year, month+1, c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[2],c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et/*, c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n", yos[years].year, month+1, c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[2],c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 		//reset
 		c->monthly_gpp[2] = 0;
 		c->monthly_npp[2] = 0;
 		c->monthly_et[2] = 0;
+		c->monthly_dead_tree[2] = 0;
+
 		c->monthly_gpp[1] = 0;
 		c->monthly_npp[1] = 0;
 		c->monthly_et[1] = 0;
+		c->monthly_dead_tree[1] = 0;
+
 		c->monthly_gpp[0] = 0;
 		c->monthly_npp[0] = 0;
 		c->monthly_et[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
 		c->monthly_tot_gpp = 0;
 		c->monthly_tot_npp = 0;
 		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
 	}
 	//reset after printed at the end of the month
 	/*
@@ -397,9 +428,9 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "PEAK_LAI(0)", "DEAD TREE(0)");
+			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "PEAK_LAI(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g \n", yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, c->annual_et[0], c->annual_tot_et , c->annual_peak_lai[0]/*, c->monthly_dead_tree[0]*/);
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10d %10d\n", yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, c->annual_et[0], c->annual_tot_et , c->annual_peak_lai[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 		//compute average
 		avg_gpp[0] += c->annual_gpp[0];
@@ -413,9 +444,13 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[0] = 0;
 		c->annual_npp[0] = 0;
 		c->annual_et[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
 		c->annual_tot_gpp = 0;
 		c->annual_tot_npp = 0;
 		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
 		c->annual_peak_lai[0] = 0;
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
@@ -423,9 +458,9 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s %10s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "DAY","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(1)", "DEAD TREE(0)");
+			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Annual_Log ("-%d  %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g \n", yos[years].year, c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[1], c->annual_peak_lai[0]/*, c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
 
 		//compute average
 		avg_gpp[1] += c->annual_gpp[1];
@@ -442,12 +477,18 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[1] = 0;
 		c->annual_npp[1] = 0;
 		c->annual_et[1] = 0;
+		c->annual_dead_tree[1] = 0;
+
 		c->annual_gpp[0] = 0;
 		c->annual_npp[0] = 0;
 		c->annual_et[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
 		c->annual_tot_gpp = 0;
 		c->annual_tot_npp = 0;
 		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
 	}
@@ -456,9 +497,9 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)", "ET(1)", "ET(0)", "ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)");
+			Annual_Log ("\n-%s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)", "ET(1)", "ET(0)", "ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g \n", yos[years].year, c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[2], c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0]/*, c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0]*/);
+		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %14d %13d %12d %13d \n", yos[years].year, c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[2], c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_dead_tree[2], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
 
 		//compute average
 		avg_gpp[2] += c->annual_gpp[2];
@@ -479,15 +520,23 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[2] = 0;
 		c->annual_npp[2] = 0;
 		c->annual_et[2] = 0;
+		c->annual_dead_tree[2] = 0;
+
 		c->annual_gpp[1] = 0;
 		c->annual_npp[1] = 0;
 		c->annual_et[1] = 0;
+		c->annual_dead_tree[1] = 0;
+
 		c->annual_gpp[0] = 0;
 		c->annual_npp[0] = 0;
 		c->annual_et[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
 		c->annual_tot_gpp = 0;
 		c->annual_tot_npp = 0;
 		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
 		c->annual_peak_lai[2] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
@@ -543,7 +592,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation -1;
 			avg_et_tot /= years_of_simulation -1;
 
-			Annual_Log ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g \n",
 					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[2], avg_et[1], avg_et[0], avg_et_tot);
 

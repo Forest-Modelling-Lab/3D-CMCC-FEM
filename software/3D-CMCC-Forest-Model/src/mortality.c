@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_cover, int tree_number, int z)
+void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_cover, int tree_number, int z, int height)
 {
 	//int oldNtree;
 	int deadtree;
@@ -53,7 +53,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_co
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
-			//c->dead_tree += 1;
+
 			//todo in this case the model takes into account not NTREE of layer but just for class
 			//insert a variable linked to cell for ntree
 			layer_cover = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
@@ -61,6 +61,57 @@ void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_co
 		}
 		//oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
+
+		if (c->annual_layer_number == 1)
+		{
+			c->daily_dead_tree[0] += deadtree;
+			c->monthly_dead_tree[0] += deadtree;
+			c->annual_dead_tree[0] += deadtree;
+		}
+		if (c->annual_layer_number == 2)
+		{
+			if (c->heights[height].z == 1)
+			{
+				c->daily_dead_tree[1] += deadtree;
+				c->monthly_dead_tree[1] += deadtree;
+				c->annual_dead_tree[1] += deadtree;
+			}
+			else
+			{
+				c->daily_dead_tree[0] += deadtree;
+				c->monthly_dead_tree[0] += deadtree;
+				c->annual_dead_tree[0] += deadtree;
+			}
+		}
+		if (c->annual_layer_number == 3)
+		{
+			if (c->heights[height].z == 2)
+			{
+				c->daily_dead_tree[2] += deadtree;
+				c->monthly_dead_tree[2] += deadtree;
+				c->annual_dead_tree[2] += deadtree;
+			}
+			if (c->heights[height].z == 1)
+			{
+				c->daily_dead_tree[1] += deadtree;
+				c->monthly_dead_tree[1] += deadtree;
+				c->annual_dead_tree[1] += deadtree;
+			}
+			if (c->heights[height].z == 0)
+			{
+				c->daily_dead_tree[0] += deadtree;
+				c->monthly_dead_tree[0] += deadtree;
+				c->annual_dead_tree[0] += deadtree;
+			}
+		}
+
+		c->daily_tot_dead_tree += deadtree;
+		c->monthly_tot_dead_tree += deadtree;
+		c->annual_tot_dead_tree += deadtree;
+
+
+
+
 
 		s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
 
@@ -120,7 +171,7 @@ void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_co
 
 
 /*Age mortality function from LPJ*/
-
+//todo add to log results this function
 void Get_Age_Mortality (SPECIES *const s, AGE *const a)
 {
 
