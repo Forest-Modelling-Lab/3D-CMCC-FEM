@@ -113,9 +113,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 				s->value[MONTHLY_GPP_g_C] = 0;
 			}
 			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-			Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+			Log("day %d month %d Daily/Monthly GPP in grams of C for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 			s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
-			Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
+			//Log("Monthly GPP in grams of C for layer %d = %g \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
 		}
 
 
@@ -169,7 +169,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 
 	}
-	else //Un Veg period
+	else if (s->counter[VEG_UNVEG] == 0)//Un Veg period
 	{
 		Log("Unvegetative period !! \n");
 		s->value[GPP_g_C] = 0;
@@ -260,6 +260,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 	c->annual_tot_gpp += s->value[GPP_g_C];
 	c->annual_tot_npp += s->value[NPP];
+
+	Log("daily log GPP = %g\n", c->daily_gpp[1]);
 
 
 	//MONTHLY GPP/NPP

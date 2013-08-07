@@ -72,6 +72,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Get_tree_BB (&m->cells[cell],  years);
 		}
 
+		Get_forest_structure (&m->cells[cell]);
+
 		//daily forest structure
 		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
 		Get_daily_numbers_of_layers (&m->cells[cell]);
@@ -151,7 +153,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
-		Get_forest_structure (&m->cells[cell]);
+
 
 		// sort by heights
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -249,7 +251,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] == 1 && settings->spatial == 'u')
 								{
-									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years);
+									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
 										Log("ATTENTION LAI > PEAK LAI\n");
@@ -372,7 +374,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							if (settings->spatial == 'u')
 							{
-								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years);
+								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
 								if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 								{
 									Log("ATTENTION LAI > PEAK LAI\n");
@@ -398,7 +400,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
-							Get_litterfall_evergreen_CTEM (m->cells[cell].heights, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1);
+							Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
 									DaysInMonth[month], years, height, age);

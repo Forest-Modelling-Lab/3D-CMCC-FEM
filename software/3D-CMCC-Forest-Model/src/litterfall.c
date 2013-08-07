@@ -85,28 +85,25 @@ void Get_litterfall_evergreen (HEIGHT *height, float oldWf, const int age, const
 
 }
 
-extern void Get_litterfall_evergreen_CTEM (HEIGHT *height, const int age, const int species)
+extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 {
 	static float normal_daily_turnover_rate;
 	static float normal_monthly_turnover_rate;
 
-	Log("*LITTERFALL*\n");
+	Log("\n\n-(CTEM) LITTERFALL RATE-\n");
 
 	if (settings->time == 'd')
 	{
-		normal_daily_turnover_rate = height->ages[age].species[species].value[LEAF_LIFE_SPAN]/365.0;
-		height->ages[age].species[species].value[LITTERFALL_RATE] = (height->ages[age].species[species].value[F_SW]
-																	  *height->ages[age].species[species].value[F_T]
-																		*normal_daily_turnover_rate);
-		Log("*LITTERFALL_RATE = %g\n", height->ages[age].species[species].value[LITTERFALL_RATE]);
+		normal_daily_turnover_rate = s->value[LEAF_LIFE_SPAN]* (1.0 / 365.0);
+		Log("normal_daily_turnover_rate = %g\n", normal_daily_turnover_rate);
+		s->value[LITTERFALL_RATE] = (s->value[F_SW] * s->value[F_T] * normal_daily_turnover_rate);
+		Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
 
 	}
 	else
 	{
-		normal_monthly_turnover_rate = height->ages[age].species[species].value[LEAF_LIFE_SPAN]/12.0;
-		height->ages[age].species[species].value[LITTERFALL_RATE] = (height->ages[age].species[species].value[F_SW]
-																		  *height->ages[age].species[species].value[F_T]
-																			*normal_monthly_turnover_rate);
-		Log("*LITTERFALL_RATE = %g\n", height->ages[age].species[species].value[LITTERFALL_RATE]);
+		normal_monthly_turnover_rate = s->value[LEAF_LIFE_SPAN]/12.0;
+		s->value[LITTERFALL_RATE] = (s->value[F_SW] * s->value[F_T] * normal_monthly_turnover_rate);
+		Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
 	}
 }

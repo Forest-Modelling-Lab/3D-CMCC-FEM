@@ -1005,11 +1005,11 @@ extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, con
 extern void Get_litter (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
-extern void Get_litterfall_evergreen_CTEM (HEIGHT *, const int, const int);
+extern void Get_litterfall_evergreen_CTEM (SPECIES *const);
 extern void Get_canopy_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int,  int, int, float, int, int, int);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
-extern void Get_initial_lai (SPECIES *const s, const int);
+extern void Get_initial_lai (SPECIES *const s, const int, const int, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
 extern void Get_turnover (SPECIES *const);

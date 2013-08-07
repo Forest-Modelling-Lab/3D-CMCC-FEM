@@ -792,7 +792,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 						/*compute annual days of leaf fall*/
 						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-						                                                                                  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						                                                                                                                                      * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						//Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 
@@ -1087,7 +1087,7 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 
 	Log("\nGET_DAILY_FOREST_STRUCTURE_ROUTINE\n");
 
-	Log("Determines Effective Layer Cover \n");
+	Log("Determine Effective Layer Cover \n");
 
 	for (height = c->heights_count - 1; height >= 0; height -- )
 	{

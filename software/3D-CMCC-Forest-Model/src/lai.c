@@ -9,7 +9,7 @@
 
 //TO COMPUTE YEARLY PEAK LAI FROM PROVIOUS YEARLY LAI
 
-void Get_initial_lai (SPECIES *const s, const int years)
+void Get_initial_lai (SPECIES *const s, const int years, const int month, const int day)
 {
 
 
@@ -112,7 +112,7 @@ void Get_initial_lai (SPECIES *const s, const int years)
 	}
 	else
 	{
-		if (years == 0)
+		if (years == 0 && month == 0 && day == 0)
 		{
 			//Get biomass from reserves
 			if (settings->time == 'm')
