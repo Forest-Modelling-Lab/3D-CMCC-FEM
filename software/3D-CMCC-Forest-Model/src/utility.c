@@ -156,6 +156,396 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 }
 
 
+extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
+{
+	static float avg_gpp[3], avg_npp[3], avg_et[3], avg_gpp_tot, avg_npp_tot, avg_et_tot;
+
+	if (years == 0)
+	{
+		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		Annual_Log("years of simulation = %d\n", years_of_simulation);
+		Annual_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
+		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
+		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
+		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
+		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
+		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
+	}
+
+	//reset
+	if (years == 0)
+	{
+		if (c->annual_layer_number == 1)
+		{
+			avg_gpp[0] = 0;
+			avg_npp[0] = 0;
+			avg_et[0] = 0;
+		}
+		if (c->annual_layer_number == 2)
+		{
+			avg_gpp[1] = 0;
+			avg_npp[1] = 0;
+			avg_et[1] = 0;
+			avg_gpp[0] = 0;
+			avg_npp[0] = 0;
+			avg_et[0] = 0;
+		}
+		if (c->annual_layer_number == 3)
+		{
+			avg_gpp[2] = 0;
+			avg_npp[2] = 0;
+			avg_et[2] = 0;
+			avg_gpp[1] = 0;
+			avg_npp[1] = 0;
+			avg_et[1] = 0;
+			avg_gpp[0] = 0;
+			avg_npp[0] = 0;
+			avg_et[0] = 0;
+		}
+	}
+
+	//Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
+
+
+	if (c->annual_layer_number == 1)
+	{
+		if (years == 0)
+		{
+			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "PEAK_LAI(0)",
+					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d\n",
+				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, c->annual_et[0],
+				c->annual_tot_et , c->annual_peak_lai[0], c->annual_cc[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+
+		//compute average
+		avg_gpp[0] += c->annual_gpp[0];
+		avg_npp[0] += c->annual_npp[0];
+		avg_et[0] += c->annual_et[0];
+		avg_gpp_tot += c->annual_gpp[0];
+		avg_npp_tot += c->annual_npp[0];
+		avg_et_tot += c->annual_et[0];
+
+		//reset
+		c->annual_gpp[0] = 0;
+		c->annual_npp[0] = 0;
+		c->annual_et[0] = 0;
+		c->annual_cc[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
+		c->annual_tot_gpp = 0;
+		c->annual_tot_npp = 0;
+		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
+		c->annual_peak_lai[0] = 0;
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 2)
+	{
+		if (years == 0)
+		{
+			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)",
+					"PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n",
+				yos[years].year, c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[1], c->annual_npp[0],
+				c->annual_tot_npp, c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[1], c->annual_peak_lai[0],
+				c->annual_cc[1], c->annual_cc[0], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
+
+		//compute average
+		avg_gpp[1] += c->annual_gpp[1];
+		avg_npp[1] += c->annual_npp[1];
+		avg_et[1] += c->annual_et[1];
+		avg_gpp[0] += c->annual_gpp[0];
+		avg_npp[0] += c->annual_npp[0];
+		avg_et[0] += c->annual_et[0];
+		avg_gpp_tot += c->annual_gpp[1] + c->annual_gpp[0];
+		avg_npp_tot += c->annual_npp[1] + c->annual_npp[0];
+		avg_et_tot += c->annual_et[1] + c->annual_et[0];
+
+		//reset
+		c->annual_gpp[1] = 0;
+		c->annual_npp[1] = 0;
+		c->annual_et[1] = 0;
+		c->annual_cc[1] = 0;
+		c->annual_dead_tree[1] = 0;
+
+		c->annual_gpp[0] = 0;
+		c->annual_npp[0] = 0;
+		c->annual_et[0] = 0;
+		c->annual_cc[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
+		c->annual_tot_gpp = 0;
+		c->annual_tot_npp = 0;
+		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
+		c->annual_peak_lai[1] = 0;
+		c->annual_peak_lai[0] = 0;
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 3)
+	{
+		if (years == 0)
+		{
+			Annual_Log ("\n-%s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)", "ET(1)", "ET(0)",
+					"ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %14d %13d %12d %13d \n",
+				yos[years].year, c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[2], c->annual_npp[1],
+				c->annual_npp[0], c->annual_tot_npp, c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[2],
+				c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_cc[2],c->annual_cc[1], c->annual_cc[0],
+				c->annual_dead_tree[2], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
+
+		//compute average
+		avg_gpp[2] += c->annual_gpp[2];
+		avg_npp[2] += c->annual_npp[2];
+		avg_et[2] += c->annual_et[2];
+		avg_gpp[1] += c->annual_gpp[1];
+		avg_npp[1] += c->annual_npp[1];
+		avg_et[1] += c->annual_et[1];
+		avg_gpp[0] += c->annual_gpp[0];
+		avg_npp[0] += c->annual_npp[0];
+		avg_et[0] += c->annual_et[0];
+		avg_gpp_tot += c->annual_gpp[2] +c->annual_gpp[1] + c->annual_gpp[0];
+		avg_npp_tot += c->annual_npp[2] +c->annual_npp[1] + c->annual_npp[0];
+		avg_et_tot += c->annual_et[2] + c->annual_et[1] + c->annual_et[0];
+
+
+		//reset
+		c->annual_gpp[2] = 0;
+		c->annual_npp[2] = 0;
+		c->annual_et[2] = 0;
+		c->annual_cc[2] = 0;
+		c->annual_dead_tree[2] = 0;
+
+		c->annual_gpp[1] = 0;
+		c->annual_npp[1] = 0;
+		c->annual_et[1] = 0;
+		c->annual_cc[1] = 0;
+		c->annual_dead_tree[1] = 0;
+
+		c->annual_gpp[0] = 0;
+		c->annual_npp[0] = 0;
+		c->annual_et[0] = 0;
+		c->annual_cc[0] = 0;
+		c->annual_dead_tree[0] = 0;
+
+		c->annual_tot_gpp = 0;
+		c->annual_tot_npp = 0;
+		c->annual_tot_et = 0;
+		c->annual_tot_dead_tree = 0;
+
+		c->annual_peak_lai[2] = 0;
+		c->annual_peak_lai[1] = 0;
+		c->annual_peak_lai[0] = 0;
+
+	}
+
+
+
+
+
+	//compute average values
+	if (years == years_of_simulation -1 && years_of_simulation > 1)
+	{
+		if (c->annual_layer_number == 1)
+		{
+			avg_gpp[0] /= years_of_simulation -1;
+			avg_npp[0] /= years_of_simulation -1;
+			avg_et[0] /= years_of_simulation -1;
+			avg_gpp_tot /= years_of_simulation -1;
+			avg_npp_tot /= years_of_simulation -1;
+			avg_et_tot /= years_of_simulation -1;
+			Annual_Log ("------------------------------------------------------------------------------------\n");
+			Annual_Log ("-AVG %12g %10g %10g  %10g %10g %10g\n",
+					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, avg_et[0], avg_et_tot);
+		}
+		if (c->annual_layer_number == 2)
+		{
+			avg_gpp[1] /= years_of_simulation -1;
+			avg_npp[1] /= years_of_simulation -1;
+			avg_et[1] /= years_of_simulation -1;
+			avg_gpp[0] /= years_of_simulation -1;
+			avg_npp[0] /= years_of_simulation -1;
+			avg_et[0] /= years_of_simulation -1;
+			avg_gpp_tot /= years_of_simulation -1;
+			avg_npp_tot /= years_of_simulation -1;
+			avg_et_tot /= years_of_simulation -1;
+			Annual_Log ("-------------------------------------------------------------------------------------------------------------------\n");
+			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g \n",
+					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot);
+		}
+		if (c->annual_layer_number == 3)
+		{
+			avg_gpp[2] /= years_of_simulation -1;
+			avg_npp[2] /= years_of_simulation -1;
+			avg_et[2] /= years_of_simulation -1;
+			avg_gpp[1] /= years_of_simulation -1;
+			avg_npp[1] /= years_of_simulation -1;
+			avg_et[1] /= years_of_simulation -1;
+			avg_gpp[0] /= years_of_simulation -1;
+			avg_npp[0] /= years_of_simulation -1;
+			avg_et[0] /= years_of_simulation -1;
+			avg_gpp_tot /= years_of_simulation -1;
+			avg_npp_tot /= years_of_simulation -1;
+			avg_et_tot /= years_of_simulation -1;
+
+			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g \n",
+					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[2], avg_et[1], avg_et[0], avg_et_tot);
+
+
+			//
+			//}
+		}
+	}
+
+
+//reset after printed at the end of the year
+/*
+	c->annual_gpp = 0;
+	c->annual_npp = 0;
+	c->annual_et = 0;
+	c->stand_agb = 0;
+	c->stand_bgb = 0;
+	c->annual_peak_lai = 0;
+ */
+
+}
+
+extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
+{
+	if(month == 0 && years == 0)
+	{
+		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		Monthly_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
+		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
+		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
+		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
+		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
+	}
+	/*
+	if(month == 0)
+	{
+		Monthly_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET", "DEAD TREE");
+	}
+	//Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
+	 */
+
+
+	if (c->annual_layer_number == 1)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "MONTH", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10d %10d \n",
+				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0],
+				c->monthly_tot_et, c->monthly_cc[0],c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+
+
+		//reset
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_cc[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
+		c->monthly_tot_gpp = 0;
+		c->monthly_tot_npp = 0;
+		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
+
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 2)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)",
+					"ET(0)", "ET(tot)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n",
+				yos[years].year, month+1, c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[1], c->monthly_npp[0],
+				c->monthly_tot_npp, c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et, c->monthly_cc[1], c->monthly_cc[0],
+				c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+
+		//reset
+		c->monthly_gpp[1] = 0;
+		c->monthly_npp[1] = 0;
+		c->monthly_et[1] = 0;
+		c->monthly_cc[1] = 0;
+		c->monthly_dead_tree[1] = 0;
+
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_cc[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
+		c->monthly_tot_gpp = 0;
+		c->monthly_tot_npp = 0;
+		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
+
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 3)
+	{
+		if (month == 0)
+		{
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)",
+					"ET(2)","ET(1)", "ET(0)", "ET(tot)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
+					"DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n",
+				yos[years].year, month+1, c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
+				c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[2],c->monthly_et[1],
+				c->monthly_et[0], c->monthly_tot_et, c->monthly_cc[2], c->monthly_cc[1], c->monthly_cc[0],
+				c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+
+		//reset
+		c->monthly_gpp[2] = 0;
+		c->monthly_npp[2] = 0;
+		c->monthly_et[2] = 0;
+		c->monthly_cc[2] = 0;
+		c->monthly_dead_tree[2] = 0;
+
+		c->monthly_gpp[1] = 0;
+		c->monthly_npp[1] = 0;
+		c->monthly_et[1] = 0;
+		c->monthly_cc[1] = 0;
+		c->monthly_dead_tree[1] = 0;
+
+		c->monthly_gpp[0] = 0;
+		c->monthly_npp[0] = 0;
+		c->monthly_et[0] = 0;
+		c->monthly_cc[0] = 0;
+		c->monthly_dead_tree[0] = 0;
+
+		c->monthly_tot_gpp = 0;
+		c->monthly_tot_npp = 0;
+		c->monthly_tot_et = 0;
+		c->monthly_tot_dead_tree = 0;
+	}
+	//reset after printed at the end of the month
+	/*
+	c->monthly_gpp = 0;
+	c->monthly_npp = 0;
+	c->monthly_et = 0;
+	 */
+
+}
+
 
 
 extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
@@ -283,356 +673,6 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 }
 
-
-extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
-{
-	if(month == 0 && years == 0)
-	{
-		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Monthly_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
-		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
-		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
-		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
-		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
-	}
-	/*
-	if(month == 0)
-	{
-		Monthly_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET", "DEAD TREE");
-	}
-	//Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
-	 */
-
-
-	if (c->annual_layer_number == 1)
-	{
-		if (month == 0)
-		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10d %10d \n", yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
-
-
-		//reset
-		c->monthly_gpp[0] = 0;
-		c->monthly_npp[0] = 0;
-		c->monthly_et[0] = 0;
-		c->monthly_dead_tree[0] = 0;
-
-		c->monthly_tot_gpp = 0;
-		c->monthly_tot_npp = 0;
-		c->monthly_tot_et = 0;
-		c->monthly_tot_dead_tree = 0;
-
-	}
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 2)
-	{
-		if (month == 0)
-		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, month+1, c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
-
-		//reset
-		c->monthly_gpp[1] = 0;
-		c->monthly_npp[1] = 0;
-		c->monthly_et[1] = 0;
-		c->monthly_dead_tree[1] = 0;
-
-		c->monthly_gpp[0] = 0;
-		c->monthly_npp[0] = 0;
-		c->monthly_et[0] = 0;
-		c->monthly_dead_tree[0] = 0;
-
-		c->monthly_tot_gpp = 0;
-		c->monthly_tot_npp = 0;
-		c->monthly_tot_et = 0;
-		c->monthly_tot_dead_tree = 0;
-
-	}
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 3)
-	{
-		if (month == 0)
-		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)","ET(1)", "ET(0)", "ET(tot)","DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n", yos[years].year, month+1, c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[2],c->monthly_et[1], c->monthly_et[0], c->monthly_tot_et, c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
-
-		//reset
-		c->monthly_gpp[2] = 0;
-		c->monthly_npp[2] = 0;
-		c->monthly_et[2] = 0;
-		c->monthly_dead_tree[2] = 0;
-
-		c->monthly_gpp[1] = 0;
-		c->monthly_npp[1] = 0;
-		c->monthly_et[1] = 0;
-		c->monthly_dead_tree[1] = 0;
-
-		c->monthly_gpp[0] = 0;
-		c->monthly_npp[0] = 0;
-		c->monthly_et[0] = 0;
-		c->monthly_dead_tree[0] = 0;
-
-		c->monthly_tot_gpp = 0;
-		c->monthly_tot_npp = 0;
-		c->monthly_tot_et = 0;
-		c->monthly_tot_dead_tree = 0;
-	}
-	//reset after printed at the end of the month
-	/*
-	c->monthly_gpp = 0;
-	c->monthly_npp = 0;
-	c->monthly_et = 0;
-	 */
-
-}
-
-
-
-extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
-{
-	static float avg_gpp[3], avg_npp[3], avg_et[3], avg_gpp_tot, avg_npp_tot, avg_et_tot;
-
-	if (years == 0)
-	{
-		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Annual_Log("years of simulation = %d\n", years_of_simulation);
-		Annual_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
-		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
-		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
-		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
-		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
-		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
-	}
-
-	//reset
-	if (years == 0)
-	{
-		if (c->annual_layer_number == 1)
-		{
-			avg_gpp[0] = 0;
-			avg_npp[0] = 0;
-			avg_et[0] = 0;
-		}
-		if (c->annual_layer_number == 2)
-		{
-			avg_gpp[1] = 0;
-			avg_npp[1] = 0;
-			avg_et[1] = 0;
-			avg_gpp[0] = 0;
-			avg_npp[0] = 0;
-			avg_et[0] = 0;
-		}
-		if (c->annual_layer_number == 3)
-		{
-			avg_gpp[2] = 0;
-			avg_npp[2] = 0;
-			avg_et[2] = 0;
-			avg_gpp[1] = 0;
-			avg_npp[1] = 0;
-			avg_et[1] = 0;
-			avg_gpp[0] = 0;
-			avg_npp[0] = 0;
-			avg_et[0] = 0;
-		}
-	}
-
-	//Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
-
-
-	if (c->annual_layer_number == 1)
-	{
-		if (years == 0)
-		{
-			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "PEAK_LAI(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10d %10d\n", yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, c->annual_et[0], c->annual_tot_et , c->annual_peak_lai[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
-
-		//compute average
-		avg_gpp[0] += c->annual_gpp[0];
-		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
-		avg_gpp_tot += c->annual_gpp[0];
-		avg_npp_tot += c->annual_npp[0];
-		avg_et_tot += c->annual_et[0];
-
-		//reset
-		c->annual_gpp[0] = 0;
-		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
-		c->annual_dead_tree[0] = 0;
-
-		c->annual_tot_gpp = 0;
-		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
-		c->annual_tot_dead_tree = 0;
-
-		c->annual_peak_lai[0] = 0;
-	}
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 2)
-	{
-		if (years == 0)
-		{
-			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
-
-		//compute average
-		avg_gpp[1] += c->annual_gpp[1];
-		avg_npp[1] += c->annual_npp[1];
-		avg_et[1] += c->annual_et[1];
-		avg_gpp[0] += c->annual_gpp[0];
-		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
-		avg_gpp_tot += c->annual_gpp[1] + c->annual_gpp[0];
-		avg_npp_tot += c->annual_npp[1] + c->annual_npp[0];
-		avg_et_tot += c->annual_et[1] + c->annual_et[0];
-
-		//reset
-		c->annual_gpp[1] = 0;
-		c->annual_npp[1] = 0;
-		c->annual_et[1] = 0;
-		c->annual_dead_tree[1] = 0;
-
-		c->annual_gpp[0] = 0;
-		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
-		c->annual_dead_tree[0] = 0;
-
-		c->annual_tot_gpp = 0;
-		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
-		c->annual_tot_dead_tree = 0;
-
-		c->annual_peak_lai[1] = 0;
-		c->annual_peak_lai[0] = 0;
-	}
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 3)
-	{
-		if (years == 0)
-		{
-			Annual_Log ("\n-%s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)", "ET(1)", "ET(0)", "ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %14d %13d %12d %13d \n", yos[years].year, c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[2], c->annual_npp[1], c->annual_npp[0], c->annual_tot_npp, c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_dead_tree[2], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
-
-		//compute average
-		avg_gpp[2] += c->annual_gpp[2];
-		avg_npp[2] += c->annual_npp[2];
-		avg_et[2] += c->annual_et[2];
-		avg_gpp[1] += c->annual_gpp[1];
-		avg_npp[1] += c->annual_npp[1];
-		avg_et[1] += c->annual_et[1];
-		avg_gpp[0] += c->annual_gpp[0];
-		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
-		avg_gpp_tot += c->annual_gpp[2] +c->annual_gpp[1] + c->annual_gpp[0];
-		avg_npp_tot += c->annual_npp[2] +c->annual_npp[1] + c->annual_npp[0];
-		avg_et_tot += c->annual_et[2] + c->annual_et[1] + c->annual_et[0];
-
-
-		//reset
-		c->annual_gpp[2] = 0;
-		c->annual_npp[2] = 0;
-		c->annual_et[2] = 0;
-		c->annual_dead_tree[2] = 0;
-
-		c->annual_gpp[1] = 0;
-		c->annual_npp[1] = 0;
-		c->annual_et[1] = 0;
-		c->annual_dead_tree[1] = 0;
-
-		c->annual_gpp[0] = 0;
-		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
-		c->annual_dead_tree[0] = 0;
-
-		c->annual_tot_gpp = 0;
-		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
-		c->annual_tot_dead_tree = 0;
-
-		c->annual_peak_lai[2] = 0;
-		c->annual_peak_lai[1] = 0;
-		c->annual_peak_lai[0] = 0;
-
-	}
-
-
-
-
-
-	//compute average values
-	if (years == years_of_simulation -1 && years_of_simulation > 1)
-	{
-		if (c->annual_layer_number == 1)
-		{
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
-			Annual_Log ("------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG %12g %10g %10g  %10g %10g %10g\n",
-					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, avg_et[0], avg_et_tot);
-		}
-		if (c->annual_layer_number == 2)
-		{
-			avg_gpp[1] /= years_of_simulation -1;
-			avg_npp[1] /= years_of_simulation -1;
-			avg_et[1] /= years_of_simulation -1;
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
-			Annual_Log ("-------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g \n",
-					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot);
-		}
-		if (c->annual_layer_number == 3)
-		{
-			avg_gpp[2] /= years_of_simulation -1;
-			avg_npp[2] /= years_of_simulation -1;
-			avg_et[2] /= years_of_simulation -1;
-			avg_gpp[1] /= years_of_simulation -1;
-			avg_npp[1] /= years_of_simulation -1;
-			avg_et[1] /= years_of_simulation -1;
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
-
-			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG %12g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g \n",
-					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[2], avg_et[1], avg_et[0], avg_et_tot);
-
-
-			//
-			//}
-		}
-	}
-
-
-//reset after printed at the end of the year
-/*
-	c->annual_gpp = 0;
-	c->annual_npp = 0;
-	c->annual_et = 0;
-	c->stand_agb = 0;
-	c->stand_bgb = 0;
-	c->annual_peak_lai = 0;
- */
-
-}
 
 void Get_a_Power_Function (AGE *a, SPECIES *s)
 {
