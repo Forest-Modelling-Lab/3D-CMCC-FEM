@@ -177,14 +177,18 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)", "DEAD TREE (0)", "DEAD TREE (tot)");
+			Daily_Log ("\n-%s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10d %10d \n", yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0], c->daily_tot_et, c->daily_lai[0], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d \n",
+				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0],
+				c->daily_tot_et, c->daily_lai[0], c->daily_cc[0], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_npp = 0;
@@ -196,19 +200,26 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)","LAI(1)", "LAI(0)", "DEAD TREE (1)", "DEAD TREE (0)", "DEAD TREE (tot)");
+			Daily_Log ("\n-%s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)",
+					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n", yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[1], c->daily_lai[0], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d %8d\n",
+				yos[years].year, month+1, day+1, c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[1], c->daily_npp[0],
+				c->daily_tot_npp, c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[1], c->daily_lai[0], c->daily_cc[1], c->daily_cc[0],
+				c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_et[1] = 0;
+		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
 
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
 
 		c->daily_tot_gpp = 0;
@@ -222,24 +233,32 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (day == 0 && month == 0)
 		{
-			Daily_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)","LAI(2)","LAI(1)", "LAI(0)", "DEAD TREE (2)", "DEAD TREE (1)", "DEAD TREE (0)", "DEAD TREE (tot)");
+			Daily_Log ("\n-%s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %7s %7s %7s %7s\n\n",
+					"YEAR", "MONTH", "DAY","GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)",
+					"LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %10d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n", yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[2], c->daily_lai[1], c->daily_lai[0], c->daily_dead_tree[2], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d %8d %8d\n",
+				yos[years].year, month+1, day+1, c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp, c->daily_npp[2], c->daily_npp[1],
+				c->daily_npp[0], c->daily_tot_npp, c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et, c->daily_lai[2], c->daily_lai[1],
+				c->daily_lai[0], c->daily_cc[2], c->daily_cc[1],c->daily_cc[0],c->daily_dead_tree[2], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 		//reset
 		c->daily_gpp[2] = 0;
 		c->daily_npp[2] = 0;
 		c->daily_et[2] = 0;
+		c->daily_cc[2] = 0;
 		c->daily_dead_tree[2] = 0;
 
 		c->daily_gpp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_et[1] = 0;
+		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
 
 		c->daily_gpp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_et[0] = 0;
+		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
 
 		c->daily_tot_gpp = 0;
