@@ -430,14 +430,6 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
 		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}
-	/*
-	if(month == 0)
-	{
-		Monthly_Log ("\n-%s %10s %10s %10s %10s %10s\n\n", "YEAR", "MONTH", "GPP", "NPP", "ET", "DEAD TREE");
-	}
-	//Monthly_Log ("-%d %10d %10g %10g %10g %10d\n", yos[years].year, month+1, c->monthly_gpp, c->monthly_npp, c->monthly_et, c->dead_tree);
-	 */
-
 
 	if (c->annual_layer_number == 1)
 	{
@@ -448,7 +440,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		}
 		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10d %10d \n",
 				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0],
-				c->monthly_tot_et, c->monthly_cc[0],c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+				c->monthly_tot_et, c->monthly_cc[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 
 		//reset

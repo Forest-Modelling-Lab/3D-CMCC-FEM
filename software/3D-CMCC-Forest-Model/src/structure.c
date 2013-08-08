@@ -488,7 +488,7 @@ void Get_forest_structure (CELL *const c)
 							}
 							else
 							{
-								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
+								//Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 							}
 						}
 						else
@@ -502,7 +502,7 @@ void Get_forest_structure (CELL *const c)
 							}
 							else
 							{
-								Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
+								//Log ("NO MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 							}
 						}
 
