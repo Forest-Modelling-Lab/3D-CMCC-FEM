@@ -1,0 +1,28 @@
+annual output file at cell level
+
+Annual summary output from 3D-CMCC version 'f', time 'd', spatial 'u'
+
+
+Cell 0, 0, Lat = 51.18, Long  = 4.31
+
+
+Annual GPP = annual total gross primary production (gC/m2/year)
+Annual NPP = annual total net primary production (tDM/m2/year)
+Annual ET = annual canopy transpiration(mm/year)
+Annual AGB = annual above-ground biomass(tDM/area/year)
+Annual BGB = annual below-ground biomass(tDM/area/year)
+Annual PEAK_LAI = annual Peak Lai (m^2/m^2)
+
+
+-YEAR        GPP        NPP         ET        AGB        BGB   PEAK_LAI
+-2001    1352.54    3.25916    399.063    145.858    7.79313          0
+-2002    1317.55    5.83806    564.862    147.907    9.24369          0
+-2003    866.134    3.62341     343283    149.075    10.4501          0
+-2004    614.058    2.58359     214138    149.953    11.3007          0
+-2005    825.789    3.47877     321137    151.209    12.4891          0
+-2006    569.183       2.42     233308    152.033    13.2879          0
+-2007    516.036    2.22444     201202    152.774    13.9977          0
+-2008    489.867     2.1405     191409    153.487    14.6746          0
+-2009    592.333    2.52833     255532    154.363    15.5065          0
+-2010    518.179    2.20043     224163    155.099    16.2108          0
+-2011    462.248    2.01951     196850    155.742    16.8516          0

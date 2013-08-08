@@ -1,0 +1,13 @@
+annual output file at cell level
+
+Annual summary output from 3D-CMCC FEM
+Annual GPP = annual total gross primary production (gC/m2/year)
+Annual NPP = annual total net primary production (tDM/m2/year)
+Annual ET = annual canopy transpiration(mm/year)
+Annual AGB = annual above-ground biomass(tDM/area/year)
+Annual BGB = annual below-ground biomass(tDM/area/year)
+
+
+-YEAR        GPP        NPP         ET        AGB        BGB
+-2007    1171.35    1.02408    402.641    15.9265    5.95566
+-2008     1184.8    1.03238    406.473    16.0077    6.32302
