@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_cover, int tree_number, int z, int height)
+void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree_number, int z, int height)
 {
 	//int oldNtree;
 	int deadtree;
@@ -105,10 +105,12 @@ void Get_layer_cover_mortality ( SPECIES *const s, CELL *const c, float layer_co
 			}
 		}
 
+		Monthly_Log ("layer number %d monthly dead = %d deadtree %d tot %d\n", c->annual_layer_number, c->monthly_dead_tree[0], deadtree, c->monthly_tot_dead_tree);
+
 		c->daily_tot_dead_tree += deadtree;
 		c->monthly_tot_dead_tree += deadtree;
 		c->annual_tot_dead_tree += deadtree;
-
+		Monthly_Log ("monthly dead = %d tot %d\n",deadtree, c->monthly_tot_dead_tree);
 
 
 
