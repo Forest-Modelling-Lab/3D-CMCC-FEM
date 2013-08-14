@@ -452,10 +452,11 @@ void Get_forest_structure (CELL *const c)
 
 		//the model makes die trees of the lower height class for that layer because
 		//it passes through the function sort_by_height_desc the height classes starting from the lowest
+
+		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
+
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
-
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
@@ -469,7 +470,7 @@ void Get_forest_structure (CELL *const c)
 							//mortality
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
-							Get_layer_cover_mortality (&c, &c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z, height);
+							Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 						}
 						break;
 					case 2:
@@ -480,7 +481,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c,layer_cover, tree_number, c->heights[height].z, height);
+								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							}
 						}
 						else
@@ -490,7 +491,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (&c->heights[height].ages[age].species[species], &c, layer_cover, tree_number, c->heights[height].z, height);
+								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							}
 						}
 
@@ -503,7 +504,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (&c, &c->heights[height].ages[age].species[species],  layer_cover, tree_number, c->heights[height].z, height);
+								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							}
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
@@ -513,7 +514,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (&c, &c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z, height);
+								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							}
 						}
 						else
@@ -523,7 +524,7 @@ void Get_forest_structure (CELL *const c)
 								//mortality
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
-								Get_layer_cover_mortality (&c, &c->heights[height].ages[age].species[species], layer_cover, tree_number, c->heights[height].z, height);
+								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							}
 						}
 						break;

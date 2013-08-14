@@ -15,7 +15,7 @@ Monthly DEAD TREE = monthly dead tree (n tree/cell)
 
 -YEAR      MONTH     GPP(0)  GPP (tot)     NPP(0)  NPP (tot)      ET(0)   ET (tot)      CC(0) DEAD TREE(0) DEAD TREE(tot)
 
--2001          1          0          0          0          0          0          0    78.7022          0      32567 
+-2001          1          0          0          0          0          0          0    78.7022          0      32693 
 -2001          2          0          0          0          0          0          0    78.7022          0          0 
 -2001          3          0          0          0          0          0          0    78.7022          0          0 
 -2001          4          0          0          0          0          0          0    78.7022          0          0 
@@ -159,10 +159,10 @@ Monthly DEAD TREE = monthly dead tree (n tree/cell)
 -2010          7     206.37     206.37    1.98116    1.98116     88.201     88.201    98.8323          0          0 
 -2010          8    196.647    196.647    1.88781    1.88781    64.8207    64.8207    99.3286          0          0 
 -2010          9    164.154    164.154    1.57588    1.57588    51.3558    51.3558    99.8134          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 1 tot 32767
+layer number -1972181496 monthly dead = 0 deadtree 1 tot 32767
 monthly dead = 1 tot 32768
 -2010         10    86.8276    86.8276   0.833545   0.833545    33.4484    33.4484    99.8848          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 1 tot 32768
+layer number -1972181496 monthly dead = 0 deadtree 1 tot 32768
 monthly dead = 1 tot 32769
 -2010         11    4.39447    4.39447  0.0421869  0.0421869     3.2024     3.2024    99.7537          0          0 
 -2010         12          0          0          0          0          0          0    99.7619          0          0 
@@ -175,19 +175,19 @@ monthly dead = 1 tot 32769
 -2011          4          0          0          0          0          0          0    99.7619          0          0 
 -2011          5    74.0106    74.0106   0.710501   0.710501    34.6684    34.6684    99.7619          0          0 
 -2011          6    208.999    208.999    2.00639    2.00639    80.0496    80.0496    99.8864          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 2 tot 32769
+layer number -1972181496 monthly dead = 0 deadtree 2 tot 32769
 monthly dead = 2 tot 32771
 -2011          7    213.548    213.548    2.05006    2.05006    72.7306    72.7306    99.7257          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 1 tot 32771
+layer number -1972181496 monthly dead = 0 deadtree 1 tot 32771
 monthly dead = 1 tot 32772
 -2011          8    211.201    211.201    2.02753    2.02753    67.2842    67.2842    99.9222          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 2 tot 32772
+layer number -1972181496 monthly dead = 0 deadtree 2 tot 32772
 monthly dead = 2 tot 32774
 -2011          9    173.523    173.523    1.66582    1.66582    54.7085    54.7085    99.7704          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 1 tot 32774
+layer number -1972181496 monthly dead = 0 deadtree 1 tot 32774
 monthly dead = 1 tot 32775
 -2011         10     93.857     93.857   0.901027   0.901027    34.6034    34.6034    99.8493          0          0 
-layer number 1143821112 monthly dead = 0 deadtree 1 tot 32775
+layer number -1972181496 monthly dead = 0 deadtree 1 tot 32775
 monthly dead = 1 tot 32776
 -2011         11    18.9974    18.9974   0.182375   0.182375    11.6396    11.6396    99.7324          0          0 
 -2011         12          0          0          0          0          0          0    99.7686          0          0 

@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree_number, int z, int height)
+extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species, float layer_cover, int tree_number)
 {
 	//int oldNtree;
 	int deadtree;
@@ -19,28 +19,33 @@ void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
 
-	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", z);
+	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
 
 	Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CONTROL ROOT BIOMASS!!!\n");
 
 
 	//Layer coverage mortality for timber
 	//mortality occurs directly for timber
-	if (s->management == T)
+	if (c->heights[height].ages[age].species[species].management == T)
 	{
 
 		Log("Layer coverage mortality for timber \n");
 
 		//compute average biomass
-		s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
-		s->value[AV_FINE_ROOT_MASS] = s->value[BIOMASS_ROOTS_FINE_CTEM] / (float)s->counter[N_TREE];
-		s->value[AV_COARSE_ROOT_MASS] = s->value[BIOMASS_ROOTS_COARSE_CTEM] / (float)s->counter[N_TREE];
-		s->value[AV_RESERVE_BIOMASS] = s->value[BIOMASS_RESERVE_CTEM] / (float)s->counter[N_TREE];
+		c->heights[height].ages[age].species[species].value[AV_STEM_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
+																			/ (float)c->heights[height].ages[age].species[species].counter[N_TREE];
+		c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]
+																		  / (float)c->heights[height].ages[age].species[species].counter[N_TREE];
+		c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
+																		   / (float)c->heights[height].ages[age].species[species].counter[N_TREE];
+		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS] = c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM]
+																		  / (float)c->heights[height].ages[age].species[species].counter[N_TREE];
 		//Log(" Av stem mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
-		Log("Canopy Cover in while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
+																 + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stem Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
+		Log("Canopy Cover in while = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
 
 		// levato
@@ -51,13 +56,15 @@ void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
-			s->counter[N_TREE] -= 1;
+			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 			deadtree += 1;
 
 			//todo in this case the model takes into account not NTREE of layer but just for class
 			//insert a variable linked to cell for ntree
-			layer_cover = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
-			s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
+			layer_cover = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+						   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
+			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 		}
 		//oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
@@ -105,27 +112,24 @@ void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree
 			}
 		}
 
-		Monthly_Log ("layer number %d monthly dead = %d deadtree %d tot %d\n", c->annual_layer_number, c->monthly_dead_tree[0], deadtree, c->monthly_tot_dead_tree);
-
 		c->daily_tot_dead_tree += deadtree;
 		c->monthly_tot_dead_tree += deadtree;
 		c->annual_tot_dead_tree += deadtree;
-		Monthly_Log ("monthly dead = %d tot %d\n",deadtree, c->monthly_tot_dead_tree);
 
 
+		c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 
-
-		s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
-
-		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[AV_FINE_ROOT_MASS] * deadtree);
-		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (s->value[AV_COARSE_ROOT_MASS] * deadtree);
-		s->value[BIOMASS_STEM_CTEM] -= (s->value[AV_STEM_MASS] * deadtree);
-		s->value[BIOMASS_RESERVE_CTEM] -= (s->value[AV_RESERVE_BIOMASS] * deadtree);
-		Log("Tot Root Biomass after reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass after reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
-		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
+		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS] * deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS] * deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS] * deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS] * deadtree);
+		Log("Tot Root Biomass after reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
+																+ c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stem Biomass after reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
+		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
-		Log("Canopy Cover after while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Canopy Cover after while = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
 		//reset dead tree
 		deadtree = 0;
@@ -137,7 +141,8 @@ void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree
 		Log("Layer coverage mortality for coppice \n");
 
 		//compute average biomass
-		s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_STUMP];
+		c->heights[height].ages[age].species[species].value[AV_STEM_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
+																			/ (float)c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//Log(" Av stump mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
 
@@ -145,27 +150,28 @@ void Get_layer_cover_mortality (CELL *c, SPECIES *s, float layer_cover, int tree
 		//s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM])/ (float)s->counter[N_TREE];
 		//Log(" Av root mass = %g tDM/tree\n", s->value[AV_ROOT_MASS] );
 
-		oldNstump = s->counter[N_STUMP];
+		oldNstump = c->heights[height].ages[age].species[species].counter[N_STUMP];
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
-			s->counter[N_STUMP] -= 1;
+			c->heights[height].ages[age].species[species].counter[N_STUMP] -= 1;
 			deadstump += 1;
 			//layer_cover = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_STUMP] / settings->sizeCell;
-			s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / settings->sizeCell;
+			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 		}
-		oldNstump -= s->counter[N_STUMP];
+		oldNstump -= c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stump Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
-		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[AV_ROOT_MASS] * deadstump);
-		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (s->value[AV_ROOT_MASS] * deadstump);
-		s->value[BIOMASS_STEM_CTEM] -= (s->value[AV_STEM_MASS] * deadstump);
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stump Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
-		Log("Number of Trees = %d trees \n", s->counter[N_STUMP]);
+		Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM] + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stump Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
+		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_ROOT_MASS] * deadstump);
+		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_ROOT_MASS] * deadstump);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS] * deadstump);
+		Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM] + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stump Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
+		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_STUMP]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadstump );
-		Log("Canopy Cover in while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Canopy Cover in while = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
 	}
 
