@@ -305,7 +305,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"YEAR", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "ET(2)", "ET(1)", "ET(0)",
 					"ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Annual_Log ("-%d  %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %14d %13d %12d %13d \n",
+		Annual_Log ("-%d  %6g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %14d %13d %12d %13d \n",
 				yos[years].year, c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[2], c->annual_npp[1],
 				c->annual_npp[0], c->annual_tot_npp, c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[2],
 				c->annual_peak_lai[1], c->annual_peak_lai[0], c->annual_cc[2],c->annual_cc[1], c->annual_cc[0],
