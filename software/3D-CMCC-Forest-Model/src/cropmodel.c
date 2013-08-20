@@ -9,7 +9,7 @@
 #include <string.h>
 
 extern  const char *szMonth[MONTHS];
-
+//sergio
 
 
 
