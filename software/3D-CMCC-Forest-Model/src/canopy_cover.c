@@ -22,9 +22,6 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	float Av_root_mass;
 
 
-
-
-
 	Log("** CANOPY COVER DBH-DC Function FOR LAYER %d **\n", z);
 
 
