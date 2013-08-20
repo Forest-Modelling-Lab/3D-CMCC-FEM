@@ -118,13 +118,13 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.26    //Low Density for Q. robur from Bellio and Pividori, 2009
-DBHDCMIN	0.20    //High Density for Q. robur from Bellio and Pividori, 2009
+DBHDCMAX	0.40    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009
+DBHDCMIN	0.26    //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A	0.034         //a value from Kostner for Q. petreae in cm
+SAP_A	0.043         //a value from Kostner for Q. petreae in cm
 SAP_B	2.384         //b value from Kostner for Q. petreae in cm
-SAP_LEAF	9000          //sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
+SAP_LEAF	9700          //9700 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	52              //Max Height in m for Q. robur from Lischke et al, user_guide
@@ -142,7 +142,7 @@ STEMCONST_P 0.0654   //For Q. robur from Yuste et al 2005
 STEMPOWER_P 2.5753   //For Q. robur from Yuste et al 2005
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA	14.5 //for Q. robur from PhD thesis Bellio ??????????? seems to be quite low
+CRA	52 //for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
 CRB	0.096  //for Q. robur from PhD thesis Bellio
 CRC	1.272  //for Q. robur from PhD thesis Bellio
 

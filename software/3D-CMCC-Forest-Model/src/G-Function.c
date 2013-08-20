@@ -365,6 +365,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		else
 		{
 			Log("- Daily LAI from Model= %g \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+			Log("- Crown Diameter = %g \n", c->heights[height].z, c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 			Log("- Canopy Cover = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 		}
 	}
