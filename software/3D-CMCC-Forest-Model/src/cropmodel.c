@@ -10,6 +10,8 @@
 
 extern  const char *szMonth[MONTHS];
 
+//rimesso ciao
+
 
 //define
 #define SNOW_COEFF 15 		// snow cm;
