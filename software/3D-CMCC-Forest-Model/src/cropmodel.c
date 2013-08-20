@@ -10,7 +10,7 @@
 
 extern  const char *szMonth[MONTHS];
 
-//rimesso ciao
+
 
 
 //define
