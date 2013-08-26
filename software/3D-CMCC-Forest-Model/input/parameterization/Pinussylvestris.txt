@@ -90,7 +90,7 @@ CONES_PERC  0.1 //fraction of NPP allocated for reproduction (0 for broadleaf)
 CONES_LIFE_SPAN 3 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
+FINE_ROOT_LEAF	0.523 //1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
 STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 2.5 from Pietsch et al., 2005
 COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged for P. sylvestris from White et al., 2000, 0.29 from Pietsch et al., 2005
 
@@ -99,7 +99,7 @@ COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged
 //LITTERFALL
 //FOLLOWING BIOME-BGC, CTEM
 LEAF_FALL_FRAC_GROWING	0		//proportions of the growing season of leaf fall 
-LEAF_LIFE_SPAN  0.345     //Leaf life span for P. sylvestris from White et al., 2000
+LEAF_LIFE_SPAN  0.33     //Leaf life span  for P. sylvestris from Mollicone et al , 0.345 from White et al., 2000
 //GAMMAFX	0.0255              //Maximum Litterfall rate (month^-1) for P. sylvestris from Landsberg et al., 2005
 //GAMMAF0	0.0255               //Litterfall rate at t = 0 (month^-1) for P. sylvestris from Landsberg et al., 2005
 //TGAMMAF	60               //Age at which litterfall rate has median value for P. sylvestris from Landsberg et al., 2005
@@ -120,7 +120,7 @@ MR	0.64             //Fraction mean single tree root biomass lost per dead tree 
 MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
 DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
-DBHDCMIN	0.14    //High Density for P. sylvestris from Ameztegui et al., 2012
+DBHDCMIN	0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.776         //a value for P. sylvestris from Xiao and Cuelemans 2013

@@ -253,7 +253,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+			Annual_Log ("\n-%s %10s  %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %7s %10s %10s %10s %10s\n\n",
 					"YEAR", "GPP(1)", "GPP(0)", "GPP (tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)",
 					"PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}

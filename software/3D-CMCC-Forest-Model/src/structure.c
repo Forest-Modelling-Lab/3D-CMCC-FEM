@@ -373,7 +373,9 @@ void Get_forest_structure (CELL *const c)
 
 					//Canopy Cover using DBH-DC
 
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
+					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+																							  * c->heights[height].ages[age].species[species].counter[N_TREE]
+																							  / settings->sizeCell;
 
 				}
 			}
