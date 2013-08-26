@@ -3,33 +3,6 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
-O_SRCS += \
-../src/G-Function.o \
-../src/allometry.o \
-../src/biomass.o \
-../src/canopy_cover.o \
-../src/canopy_evapotranspiration.o \
-../src/canopy_transpiration.o \
-../src/clearcut.o \
-../src/common.o \
-../src/crowding-competition.o \
-../src/dataset.o \
-../src/dendrometry.o \
-../src/establishment.o \
-../src/garbage.o \
-../src/initialization_biomass_data.o \
-../src/initialization_site_data.o \
-../src/lai.o \
-../src/layer_cover.o \
-../src/light.o \
-../src/litterfall.o \
-../src/log.o \
-../src/main.o \
-../src/management.o \
-../src/matrix.o \
-../src/met_data.o \
-../src/modifiers.o 
-
 C_SRCS += \
 ../src/C-partitioning-allocation.c \
 ../src/G-Function.c \
