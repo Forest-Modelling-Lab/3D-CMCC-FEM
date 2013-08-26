@@ -326,6 +326,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	Log("- z = %d\n", c->heights[height].z);
 	Log("- Class Age = %d years \n", c->heights[height].ages[age].value);
 	Log("- Species = %s\n", c->heights[height].ages[age].species[species].name);
+	Log("- DBH = %g\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 	Log("- Height = %g m\n", c->heights[height].value);
 	Log("- Number of trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 
