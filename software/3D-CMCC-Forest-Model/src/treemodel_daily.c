@@ -70,6 +70,23 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Get_annual_numbers_of_layers (&m->cells[cell]);
 			//Get_forest_structure (&m->cells[cell]);
 			Get_tree_BB (&m->cells[cell],  years);
+
+			//fixme sergio: i've inserted here the variables which need to be set to 0 at the begining of each year of simulation
+			if (years == 0)
+			{
+				m->cells->daily_dead_tree[0] = 0;
+				m->cells->daily_dead_tree[0] = 0;
+				m->cells->daily_dead_tree[0] = 0;
+				m->cells->daily_tot_dead_tree = 0;
+				m->cells->monthly_dead_tree[0] = 0;
+				m->cells->monthly_dead_tree[1] = 0;
+				m->cells->monthly_dead_tree[2] = 0;
+				m->cells->monthly_tot_dead_tree = 0;
+				m->cells->annual_dead_tree[0] = 0;
+				m->cells->annual_dead_tree[1] = 0;
+				m->cells->annual_dead_tree[2] = 0;
+				m->cells->annual_tot_dead_tree = 0;
+			}
 		}
 
 		Get_forest_structure (&m->cells[cell]);
