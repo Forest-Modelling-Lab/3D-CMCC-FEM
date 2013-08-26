@@ -95,7 +95,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 
 	if (settings->time == 'd')
 	{
-		if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin)
+		if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
 		{
 			met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
 		}
@@ -107,7 +107,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 	}
 	else
 	{
-		if (met[month].tmax != NO_DATA && met[month].tmin)
+		if (met[month].tmax != NO_DATA && met[month].tmin != NO_DATA)
 		{
 			met[month].tday = 0.45 * (met[month].tmax - met[month].tavg) + met[month].tavg;
 		}
