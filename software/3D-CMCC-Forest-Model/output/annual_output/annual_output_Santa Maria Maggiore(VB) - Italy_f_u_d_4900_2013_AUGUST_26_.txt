@@ -1,0 +1,20 @@
+annual output file at cell level
+
+Annual summary output from 3D-CMCC version 'f', time 'd', spatial 'u'
+years of simulation = 1
+
+
+Cell 0, 0, Lat = 46.15, Long  = 8.45
+
+
+Annual GPP = annual total gross primary production (gC/m2/year)
+Annual NPP = annual total net primary production (tDM/m2/year)
+Annual ET = annual canopy transpiration(mm/year)
+Annual PEAK_LAI = annual Peak Lai (m^2/m^2)
+Annual Dead tree = annual dead tree (n tree/cell)
+
+
+
+-YEAR     GPP(0)  GPP (tot)     NPP(0)  NPP (tot)      ET(0)   ET (tot) PEAK_LAI(0)      CC(0) DEAD TREE(0) DEAD TREE(tot)
+
+-1995    397.512    397.512    1.90885    1.90885    21.7562    21.7562      4.569    76.0011        445        445
