@@ -53,7 +53,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
 
 	/*control*/
-	if (oldavDBH > s->value[AVDBH]  )
+	if (oldavDBH > s->value[AVDBH])
 	{
 		Log("Old AVDBH = %g cm\n", oldavDBH);
 		Log("ERROR in Average DBH !!!!!!!\n");
