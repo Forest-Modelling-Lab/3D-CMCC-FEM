@@ -1221,6 +1221,39 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		}
 	}
 
+	/*compute annual stem increment*/
+	if (c->annual_layer_number == 1)
+	{
+		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+		}
+		else
+		{
+			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+		}
+		if (c->heights[height].z == 0)
+		{
+			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		}
+	}
+
+
 	Log("******************************\n");
 }
 
@@ -1228,7 +1261,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s,  AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
+void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 
