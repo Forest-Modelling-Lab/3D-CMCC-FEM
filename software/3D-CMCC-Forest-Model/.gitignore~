@@ -1,3 +1,10 @@
+# ignore every files .o or .d
 *.o
-/Debug
-/output
+# *.d
+
+# ignore these directories  
+#/Debug
+#/output/annual_output/
+#/output/daily_output/
+#/output/monthly_output/
+#/output/debug_output/
