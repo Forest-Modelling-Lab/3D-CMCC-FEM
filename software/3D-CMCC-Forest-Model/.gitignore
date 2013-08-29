@@ -2,6 +2,9 @@
 *.o
 *.d
 
+# ignore temporary files
+*~
+
 # ignore these directories  
 /Debug
 /output/annual_output/
