@@ -61,7 +61,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		Light_trasm = Par_over / Monthly_solar_radiation;
 
 		//if (month == 0)
-			//leaf_fall_counter = 0;
+		//leaf_fall_counter = 0;
 	}
 	else
 	{
@@ -70,7 +70,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		Light_trasm = Par_over /Daily_solar_radiation;
 
 		//if (day == 0 && month == 0)
-			//leaf_fall_counter = 0;
+		//leaf_fall_counter = 0;
 	}
 
 	if (day == 0 && month == 0 && years == 0)
@@ -1189,7 +1189,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 	{
 		c->daily_lai = s->value[LAI];
 	}
-	*/
+	 */
 	if (c->annual_layer_number == 1)
 	{
 		c->daily_lai[0] = s->value[LAI];
@@ -1609,7 +1609,7 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL
 	{
 		c->daily_lai = s->value[LAI];
 	}
-	*/
+	 */
 	if (c->annual_layer_number == 1)
 	{
 		c->daily_lai[0] = s->value[LAI];
@@ -1640,6 +1640,39 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL
 			c->daily_lai[0] = s->value[LAI];
 		}
 	}
+
+	/*compute annual stem increment*/
+	if (c->annual_layer_number == 1)
+	{
+		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+		}
+		else
+		{
+			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+		}
+		if (c->heights[height].z == 0)
+		{
+			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		}
+	}
+
 
 
 	Log("******************************\n");
