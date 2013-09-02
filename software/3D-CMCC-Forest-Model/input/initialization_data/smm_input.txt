@@ -1,4 +1,4 @@
 x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai
-0,0,F,27,Pinussylvestris,T,869,0,20.95,14.54,5.65,0,0,0,0,0
+0,0,F,27,Pinussylvestris,T,869,0,20.95,14.54,0,0,0,0,0,0
 
 
