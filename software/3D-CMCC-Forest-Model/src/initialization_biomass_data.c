@@ -85,6 +85,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
 			//use generic stemconst stempower values
+			Log("..computing stem biomass from generic stempower and stemconst\n");
 			if (s->value[AVDBH] < 9)
 			{
 				s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
@@ -101,11 +102,14 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		else
 		{
 			//use site specific stemconst stempower values
-			Log("Using site related stemconst stempower\n");
+			Log("..computing stem biomass using site related stemconst and stempower\n");
+			Log("STEM POWER = %g\n", s->value[STEMPOWER_P]);
+			Log("STEM CONST = %g\n", s->value[STEMCONST_P]);
 			s->value[AV_STEM_MASS]  = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
 
 		//1000 to convert Kg into tons
+		Log("-Individual stem biomass in Kg = %g\n", s->value[AV_STEM_MASS]);
 		s->value[BIOMASS_STEM_CTEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE] / 1000;
 		Log("-Stem Biomass initialization data from DBH = %g \n", s->value[BIOMASS_STEM_CTEM]);
 
@@ -131,8 +135,9 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	sapwood_perc = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	Log("sapwood perc = %g%\n", sapwood_perc);
+	Log("Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
 	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc);
-	Log("WS_SAP = %g tDM tree\n", s->value[WS_sap]);
+	Log("Sapwood biomass = %g tDM class cell \n", s->value[WS_sap]);
 
 
 
