@@ -891,7 +891,7 @@ typedef struct {
 
 	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
-	float annual_delta_ws[3];
+	float annual_delta_ws[3], annual_ws[3];
 	float annual_dbh[3];
 
 	//int dead_tree;

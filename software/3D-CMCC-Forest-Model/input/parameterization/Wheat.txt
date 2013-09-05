@@ -145,8 +145,6 @@ CRC -9999
 //CROWDING COMPETITION FUNCTION
 HDMAX   -9999             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   -9999             //Height to Base diameter ratio MIN  (Portoghesi)
-CANCOVERMAX -9999         //Maximum Canopy Cover
-CANCOVERMIN -9999         //Minimum Canopy Cover
 //DENSITY FUNCTION
 DENMAX  -9999             //Maximum density (trees/10000 m^2)
 DENMIN  -9999             //Minimum density (trees/10000 m^2)

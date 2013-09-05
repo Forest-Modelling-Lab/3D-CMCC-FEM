@@ -1225,16 +1225,19 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 	if (c->annual_layer_number == 1)
 	{
 		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 	}
 	if (c->annual_layer_number == 2)
 	{
 		if (c->heights[height].z == 1)
 		{
 			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
 		}
 		else
 		{
 			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 		}
 	}
 	if (c->annual_layer_number == 3)
@@ -1242,14 +1245,17 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 		if (c->heights[height].z == 2)
 		{
 			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[2] = s->value[BIOMASS_STEM_CTEM];
 		}
 		if (c->heights[height].z == 1)
 		{
 			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
 		}
 		if (c->heights[height].z == 0)
 		{
 			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 		}
 	}
 
@@ -1645,16 +1651,19 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL
 	if (c->annual_layer_number == 1)
 	{
 		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+		c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 	}
 	if (c->annual_layer_number == 2)
 	{
 		if (c->heights[height].z == 1)
 		{
 			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
 		}
 		else
 		{
 			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 		}
 	}
 	if (c->annual_layer_number == 3)
@@ -1662,14 +1671,17 @@ void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL
 		if (c->heights[height].z == 2)
 		{
 			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[2] = s->value[BIOMASS_STEM_CTEM];
 		}
 		if (c->heights[height].z == 1)
 		{
 			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
 		}
 		if (c->heights[height].z == 0)
 		{
 			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
+			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
 		}
 	}
 

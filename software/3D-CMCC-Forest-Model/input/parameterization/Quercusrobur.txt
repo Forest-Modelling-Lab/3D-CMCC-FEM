@@ -149,8 +149,6 @@ CRC	1.272  //for Q. robur from PhD thesis Bellio
 //CROWDING COMPETITION FUNCTION
 HDMAX	2.5             //Height to Base diameter ratio MAX  for Q. robur from Bellio and Pividori, 2009
 HDMIN	0.4             //Height to Base diameter ratio MIN  for Q. robur from Bellio and Pividori, 2009
-CANCOVERMAX	0.95    //Maximum Canopy Cover
-CANCOVERMIN	0.0001  //Minimum Canopy Cover
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
 DENMIN	0.01           //Minimum density (trees/10000 m^2)
