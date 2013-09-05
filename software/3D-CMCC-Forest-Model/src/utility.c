@@ -217,12 +217,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
-					"YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "PEAK_LAI(0)",
+			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %8s %8s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "PEAK_LAI(0)",
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
-		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
-				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, c->annual_et[0],
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
+				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, ((c->annual_tot_npp/settings->sizeCell)*1000000)/2, c->annual_et[0],
 				c->annual_tot_et , c->annual_peak_lai[0], c->annual_cc[0], c->annual_dead_tree[0], c->annual_tot_dead_tree, c->annual_delta_ws[0], c->annual_ws[0]);
 
 		//compute average or total
@@ -390,8 +390,8 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation -1;
 			avg_et_tot /= years_of_simulation -1;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG/TOT %4g %10g %10g %10g %10g %10g %48d\n",
-					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, avg_et[0], avg_et_tot, tot_dead_tree_tot);
+			Annual_Log ("-AVG/TOT %6g %10g %10g %10g %12g %9g %10g %49d\n",
+					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
 		{
