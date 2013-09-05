@@ -24,8 +24,8 @@ TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 SLA	50.11             //Specific Leaf Area cm^2/gC for P. sylvestris from Xiao and Cuelemans 2013, 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005			
 
 //FRACTION BRANCH-BARK
-FRACBB0	0.04            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
-FRACBB1	0.15            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999
+FRACBB0	0.29            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
+FRACBB1	0.29            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999
 TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
 RHOMIN	0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006

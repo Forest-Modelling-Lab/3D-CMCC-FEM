@@ -57,7 +57,7 @@ void Get_turnover (SPECIES *const s)
 
 
     Log("****Stem turnover****\n");
-    //in LPJ the turnover of the stem in considered as the ampunt of sapwood that pass to the heartwood
+    //in LPJ the turnover of the stem in considered as the amount of sapwood that pass to the heartwood
 
     s->value[DEL_ROSS_STEM] =  s->value[BIOMASS_STEM_CTEM]* s->value[SAPWOODTTOVER];
     Log("Average yearly Stem turnover rate  = %g\n", s->value[SAPWOODTTOVER]);
