@@ -390,7 +390,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation -1;
 			avg_et_tot /= years_of_simulation -1;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG/TOT %g %10g %10g  %10g %10g %10g %48d\n",
+			Annual_Log ("-AVG/TOT %4g %10g %10g %10g %10g %10g %48d\n",
 					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)

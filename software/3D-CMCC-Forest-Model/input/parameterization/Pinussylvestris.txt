@@ -7,8 +7,7 @@ PHENOLOGY	1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf
 ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005
 EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-K	0.6		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
-			//0.65      //Extinction coefficient for absorption of PAR by canopy 
+K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
 ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
 //LEAF AREA INDEX
 LAIGCX	3.333               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005
@@ -45,7 +44,7 @@ MAXAGE_S	100     //Determines rate of "physiological decline" of forest
 RAGE_S	0.75            //Relative Age to give fAGE = 0.5
 NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN	-2       //Minimum temperature for growth for P. sylvestris from Landsberg et al., 2005
+GROWTHTMIN	-2       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005
 GROWTHTMAX	25      //Maximum temperature for growth for P. sylvestris from Landsberg et al., 2005
 GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and from Lyr & Garbe, 1995
 GROWTHSTART	0       //average temperature for starting growth in °C 

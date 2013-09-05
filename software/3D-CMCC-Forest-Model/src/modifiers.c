@@ -450,12 +450,16 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 
 
 	/*FROST MODIFIER*/
-
-	//I dati di Rocca non hanno i giorni di gelo!!!!!!!!!!!!!!!!!!!!!!!!
-	//Log("Frost Days = %g\n", met[month].frostdays);
-	//s->value[F_FROST] = ( 1 - (met[month].frostdays / (float)daysinmonth));
-	//Log("fFROST - Frost modifier = %g\n", s->value[F_FROST]);
-	s->value[F_FROST] = 1;
+	if(met[month].d[day].tday < s->value[GROWTHTMIN])
+	{
+		s->value[F_FROST] = 0;
+		Log("fFROST - Frost modifier = %g\n", s->value[F_FROST]);
+	}
+	else
+	{
+		s->value[F_FROST] = 1;
+		Log("fFROST - Frost modifier = %g\n", s->value[F_FROST]);
+	}
 
 
 	/*VPD MODIFIER*/
