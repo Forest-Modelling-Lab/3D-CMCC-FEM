@@ -118,7 +118,7 @@ MF	0.64               //Fraction mean single tree foliage biomass lost per dead 
 MR	0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.25    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
+DBHDCMAX	0.26    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
 DBHDCMIN	0.15    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
@@ -138,8 +138,8 @@ CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P 0.05503    // Cenciala For P. sylvestris from Yuste et al 2005 0.1227
-STEMPOWER_P 2.54070    //Cenciala For P. sylvestris from Yuste et al 2005 2.3272
+STEMCONST_P 0.06552    // E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227
+STEMPOWER_P 2.50626    //E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA	32    //for P. sylvestris from Rupsys et al., 2010
