@@ -88,15 +88,18 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 			Log("..computing stem biomass from generic stempower and stemconst\n");
 			if (s->value[AVDBH] < 9)
 			{
-				s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
+				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
+						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
 			}
 			else if (s->value[AVDBH] > 9 && s->value[AVDBH] < 15)
 			{
-				s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
+				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_B));
+						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
 			}
 			else
 			{
-				s->value[AV_STEM_MASS]  = (pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
+				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
+						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
 			}
 		}
 		else
@@ -105,7 +108,8 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 			Log("..computing stem biomass using site related stemconst and stempower\n");
 			Log("STEM POWER = %g\n", s->value[STEMPOWER_P]);
 			Log("STEM CONST = %g\n", s->value[STEMCONST_P]);
-			s->value[AV_STEM_MASS]  = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
+			s->value[AV_STEM_MASS]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
+					//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
 
 		//1000 to convert Kg into tons
