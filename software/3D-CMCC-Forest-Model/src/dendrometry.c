@@ -81,6 +81,11 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] *  s->value[AVDBH]) , s->value[CRC]);
 	Log("-Tree Height using Chapman-Richard function = %g m\n", h->value);
 
+	if (h->value > s->value[HMAX])
+	{
+		Log("Chapaman-Richards function for tree height exceeds HMAX\n");
+		h->value = s->value[HMAX];
+	}
 	/*Tree Height using SORTIE */
 	if (s->value[AVDBH]> 10)
 	{
