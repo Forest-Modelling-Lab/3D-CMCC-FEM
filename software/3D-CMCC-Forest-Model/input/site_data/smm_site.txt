@@ -4,7 +4,7 @@ LAT "46.15" //Site Latitude negative for south hemisphere
 LONG "8.45" //Site Longitude 
 ELEV "1050.0" //Elevation in meters
 
-Y	"0.47" // Assimilate use efficiency-Respiration rate-GPP/NPP (unchanged)
+Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP (unchanged)
 
 CO2CONC "387.0" //CO2 concentration
 
@@ -26,7 +26,7 @@ SOIL_DEPTH "50" //SOIL DEPTH (cm) estimated from EU SOIL MAPS
 
 
 //SITE NUTRITION
-FR "0.6" //Fertility rating (estimated)
+FR "0.7" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
