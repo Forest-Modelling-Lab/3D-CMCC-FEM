@@ -49,17 +49,19 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			Alpha_C = s->value[ALPHA] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST];
 			Log("Alpha C (Effective Quantum Canopy Efficiency)= %g molC/molPAR\n", Alpha_C);
 
-			Epsilon = Alpha_C * MOLPAR_MJ * GDM_MOL;
+
+			//convert epsilon from gCMJ^-1 to molCmolPAR^-1
+			Epsilon = Alpha_C * MOLPAR_MJ * GC_MOL;
 			//Log("Epsilon (LUE) = %g gDM/MJ\n", Epsilon);
 		}
 		else
 		{
 			Log("NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
-			Epsilon = s->value[EPSILONgCPAR] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]  * s->value[F_FROST];
+			Epsilon = s->value[EPSILONgCMJ] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]  * s->value[F_FROST];
 			Log("Epsilon (LUE) = %g gDM/MJ\n", Epsilon);
 
-			Alpha_C = Epsilon / (MOLPAR_MJ * GDM_MOL);
+			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
 			Log("Alpha C = %g molC/molPAR\n", Alpha_C);
 		}
 

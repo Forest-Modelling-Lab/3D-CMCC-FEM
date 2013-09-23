@@ -5,8 +5,7 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	0.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.0297		//   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR	0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
-			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
+EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy (for Q. cerris Chiesi et al 2007)
 			//0.65      //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 ALBEDO	0.2

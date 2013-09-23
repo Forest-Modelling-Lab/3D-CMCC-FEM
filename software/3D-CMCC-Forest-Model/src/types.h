@@ -186,7 +186,7 @@ enum {
 
 
 	ALPHA,                      // Canopy quantum efficiency (molC/molPAR)
-	EPSILONgCPAR,               // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)
+	EPSILONgCMJ,               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 	//Y,                          // Assimilate use efficiency-Respiration rate-GPP/NP
 	//EPSILONgCMJ,                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 

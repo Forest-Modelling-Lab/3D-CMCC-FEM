@@ -5,7 +5,7 @@ LIGHT_TOL   -9999           //4 = very shade intolerant
                             //1 = very shade tolerant
 PHENOLOGY   -9999           //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   -9999               //Wang et al, 2006   // Canopy quantum efficiency (molC/molPAR)0.75
-EPSILONgCPAR   -9999        // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
+EPSILONgCMJ   -9999        // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 K   -9999                   //0.54 Extinction coefficient for absorption of PAR by canopy 
 ALBEDO  -9999
 //LEAF AREA INDEX

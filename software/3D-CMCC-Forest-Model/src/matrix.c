@@ -20,7 +20,7 @@ static const char *species_values[] = {
 		"PHENOLOGY",				//PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen
 
 		"ALPHA",                      // Canopy quantum efficiency (molC/molPAR)
-		"EPSILONgCPAR",               // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) for Quercus rubra (Waring et al, 1995)
+		"EPSILONgCMJ",               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 		//"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
 		//"EPSILONgCMJ",                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 

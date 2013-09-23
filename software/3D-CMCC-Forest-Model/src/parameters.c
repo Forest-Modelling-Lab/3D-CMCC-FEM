@@ -20,7 +20,7 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 			Log("\n\n\n\n***********************************************************************************\n");
 			Log("VALUE LIST FOR THE MAIN PARAMETERS FOR = %s\n", s->name);
 			Log("ALPHA= %g \n"
-					"EPSILONgCPAR= %g \n"
+					"EPSILONgCMJ= %g \n"
 					//"Y= %g \n"
 					"K= %g \n"
 					"LAIGCX= %g \n"
@@ -53,7 +53,7 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					"STEMPOWER_B= %g \n"
 					"STEMPOWER_C= %g \n",
 					s->value[ALPHA],
-					s->value[EPSILONgCPAR],
+					s->value[EPSILONgCMJ],
 					//s->value[Y],
 					s->value[K],
 					s->value[LAIGCX],
