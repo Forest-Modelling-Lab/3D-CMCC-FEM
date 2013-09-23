@@ -46,7 +46,7 @@ NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth
 GROWTHTMAX	30      //Maximum temperature for growth
-GROWTHTOPT	20      //Optimum temperature for growth
+GROWTHTOPT	20      //Optimum temperature for growth 15.05 for Roccarespampani see Horn and Shulze 2011
 GROWTHSTART	2       //average temperature for starting growth in °C (for Quercus cerris Cermak et al 2008), GDD 1900for q. pubescens, 1100for q. robur from Hickler et al 2012
 GROWTHEND	2       //average temperature for ending growth in °C
 MINDAYLENGTH	11      //minimum day length for deciduous

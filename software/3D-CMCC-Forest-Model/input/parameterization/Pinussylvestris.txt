@@ -45,7 +45,7 @@ NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	-2       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005
 GROWTHTMAX	25      //Maximum temperature for growth for P. sylvestris from Landsberg et al., 2005
-GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and from Lyr & Garbe, 1995
+GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
 GROWTHSTART	0       //average temperature for starting growth in °C 
 GROWTHEND	0       //average temperature for ending growth in °C 
 MINDAYLENGTH	0      //minimum day length for deciduous

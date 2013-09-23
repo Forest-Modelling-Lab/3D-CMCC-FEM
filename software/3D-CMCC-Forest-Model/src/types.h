@@ -898,6 +898,8 @@ typedef struct {
 
 	float thermic_sum;
 
+	float soil_respiration;
+
 
 
 } CELL;
