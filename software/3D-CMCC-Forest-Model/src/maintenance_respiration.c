@@ -155,7 +155,7 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 	Log("--STEM\n");
 
 	//convert biomass foliage from DM to Carbon then compute Nitrogen content using CN ratio
-	stem_nitrogen = ((s->value[BIOMASS_STEM_CTEM]/2.0)*1000.0) / s->value[CN_LIVE_WOODS];
+	stem_nitrogen = ((s->value[WS_sap]/2.0)*1000.0) / s->value[CN_LIVE_WOODS];
 	Log("Stem nitrogen content = %g KgN/cell\n", stem_nitrogen);
 
 	// live stem maintenance respiration
@@ -168,7 +168,7 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 
 
 
-
+	//IT MUST TAKES INTO ACCOUNT ONLY LIVE roots NOT ALL roots!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Log("--COARSE ROOT\n");
 
 	//convert biomass foliage from DM to Carbon then compute Nitrogen content using CN ratio
@@ -182,6 +182,11 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 	Log("Coarse root maintenance respiration = %g KgC/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
 	s->value[COARSE_ROOT_MAINT_RESP] *=  2.0/ 1000.0;
 	Log("Coarse root maintenance respiration = %g tDM/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
+
+
+	//COMPUTE TOTAL MAINTENANCE RESPIRATION
+	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP];
+	Log("TOTAL maintenance respiration = %g tDM/day cell\n", s->value[TOTAL_MAINT_RESP]);
 
 }
 
