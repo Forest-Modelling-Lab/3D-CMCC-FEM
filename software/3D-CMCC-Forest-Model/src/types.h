@@ -126,6 +126,12 @@ typedef struct
 	fnn,
 	m0,
 	sN,
+	//following Nolè et al 2009
+	rlai,
+	slai,
+	qsoil,
+	ksoil,
+	p0,
 	cutTree;
 } site_t;
 
@@ -497,16 +503,20 @@ enum {
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
-	GPP_t_DM,                       //Gross Primary Production  tDM/ha month
-	GPP_g_C,                        //Gross Primary Production  gC/m^2 month
+	GPP_t_DM,                       //Gross Primary Production  tDM/ha
+	GPP_g_C,                        //Gross Primary Production  gC/m^2
 	DAILY_GPP_g_C,                  //Class Daily Gross Primary Production gC/m^2 day
 	MONTHLY_GPP_g_C,				//Class Monthly Gross Primary Production gC/m^2 month
 	STAND_GPP_g_C,                  //Monthly Stand GPP in grams of C
 	STAND_GPP_t_C,                  //Monthly Stand GPP in tonnes of C
 	STAND_YEARLY_GPP_g_C,           //Yearly Stand GPP in grams of C
-	NPP,                            //Net Primary Production  tDM/area
-
 	POINT_GPP_g_C,
+
+	NPP,                            //Net Primary Production  tDM/area
+	NPP_g_C, 						//Net Primary Production in grams of C
+
+	AUT_RESPIRATION,				//autotrophic respiration in grams of C/m^2
+
 
 
 	WUE,                            //Water use efficiency (gDM/mm)
@@ -880,6 +890,7 @@ typedef struct {
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
 
 	float daily_cc[3], monthly_cc[3], annual_cc[3];
 
@@ -899,6 +910,10 @@ typedef struct {
 	float thermic_sum;
 
 	float soil_respiration;
+	float aut_respiration; //autotrophic respiration
+	float het_respiration; //heterotrophic respiration
+	float ter;  //total ecosystem respiration
+
 
 
 

@@ -17,9 +17,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	float GPPmolC;
 	float DailyGPPgC;
 	float DailyNPP;
-	float MonthlyNPP;
+	static float MonthlyNPP;
 	float DailyGPPmolC;
 	float StandGPPtC;
+	float Daily_aut_respiration;
+	static float Monthly_aut_respiration;
 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
 	if (settings->time == 'm')
@@ -144,14 +146,16 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		// "/" 1000000 to convert gDM into tonsDM
 
 		s->value[NPP] = ((s->value[GPP_g_C] * settings->sizeCell * 2 * site->Y) / 1000000);    // assumes respiratory rate is constant
+		s->value[NPP_g_C] = s->value[GPP_g_C] * site->Y;
 
 
 		if (settings->time == 'm')
 		{
 			//Monthy layer GPP in grams of C/m^2
 			//Convert molC into grams
-			Log("Monthly NPP (per area covered) for layer %d = %g \n", c->heights[height].z, s->value[NPP]);
-			DailyNPP = s->value[GPP_g_C] / DaysInMonth;
+			Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, s->value[NPP]);
+			Log("Monthly NPP (per area covered) for layer %d = %g gC/m^2\n", c->heights[height].z, s->value[NPP_g_C]);
+			DailyNPP = s->value[NPP] / DaysInMonth;
 			//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
 		}
 		else
@@ -162,13 +166,36 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			{
 				MonthlyNPP = 0;
 			}
-			Log("Daily NPP in grams of C (per area covered) for layer %d = %g \n", c->heights[height].z , s->value[NPP] );
+			Log("Daily NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z , s->value[NPP]);
+			Log("Daily NPP (per area covered) for layer %d = %g gC/m^2\n", c->heights[height].z, s->value[NPP_g_C]);
 			MonthlyNPP += s->value[NPP];
-			Log("Monthly NPP (per area covered) for layer %d = %g \n", c->heights[height].z, MonthlyNPP);
+			Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}
 
-		Log("Daily/Monthly Stand GPP (absolute) = %g \n", s->value[POINT_GPP_g_C] );
-		Log("Daily/Monthly Stand NPP (per area covered) = %g \n", s->value[NPP] );
+		/*AUTOTROPHIC RESPIRATION*/
+
+		Log("***************************** AUTOTROPHIC RESPIRATION*************************** \n");
+		s->value[AUT_RESPIRATION] = s->value[GPP_g_C] - s->value[NPP_g_C];
+
+		if (settings->time == 'm')
+		{
+			//Monthly layer Autotrophic respiration in grams of C/m^2
+			//Convert molC into grams
+			Log("Monthly Autotrophic respiration for layer %d = %g gC/m^2\n", c->heights[height].z, s->value[AUT_RESPIRATION]);
+			Daily_aut_respiration = s->value[AUT_RESPIRATION] / DaysInMonth;
+			//Log("Daily Autotrophic respiration in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+		}
+		else
+		{
+			//Daily layer Autotrophic respiration in grams of C/m^2
+			if (day == 0)
+			{
+				Monthly_aut_respiration = 0;
+			}
+			Log("Daily Autotrophic respiration (per area covered) for layer %d = %g gC/m^2\n", c->heights[height].z, s->value[AUT_RESPIRATION]);
+			Monthly_aut_respiration += s->value[AUT_RESPIRATION];
+			Log("Monthly Autotrophic respiration for layer %d = %g gC/m^2\n", c->heights[height].z, Monthly_aut_respiration);
+		}
 
 
 	}
@@ -185,23 +212,32 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Daily/Monthly Stand GPP (absolute) = %g gC/m^2 yr\n", s->value[POINT_GPP_g_C] );
 		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
 
+
+		//TODO
+		//AUTOTROPHIC RESPIRATION (AS MAINTAINANCE RESPIRATION) SHOULD BE ACCOUNTED IN UNVEG PERIOD!!!!!
+
 	}
 
 	//DAILY GPP/NPP
-	//summing all classes gpp and npp
+	//summing up all classes gpp and npp and autotrophic respiration
 	/*
 	 * c->daily_gpp += s->value[POINT_GPP_g_C];
 	 * c->daily_npp += s->value[NPP];
 	 */
 
+	//TODO change all if with a for
+
 	if (c->annual_layer_number == 1)
 	{
 		c->daily_gpp[0] += s->value[GPP_g_C];
 		c->daily_npp[0] += s->value[NPP];
+		c->daily_aut_resp[0] += s->value[AUT_RESPIRATION];
 		c->monthly_gpp[0] += s->value[GPP_g_C];
 		c->monthly_npp[0] += s->value[NPP];
+		c->monthly_aut_resp[0] += s->value[AUT_RESPIRATION];
 		c->annual_gpp[0] += s->value[GPP_g_C];
 		c->annual_npp[0] += s->value[NPP];
+		c->annual_aut_resp[0] += s->value[AUT_RESPIRATION];
 	}
 	if (c->annual_layer_number == 2)
 	{
@@ -209,19 +245,25 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			c->daily_gpp[1] += s->value[GPP_g_C];
 			c->daily_npp[1] += s->value[NPP];
+			c->daily_aut_resp[1] += s->value[AUT_RESPIRATION];
 			c->monthly_gpp[1] += s->value[GPP_g_C];
 			c->monthly_npp[1] += s->value[NPP];
+			c->monthly_aut_resp[1] += s->value[AUT_RESPIRATION];
 			c->annual_gpp[1] += s->value[GPP_g_C];
 			c->annual_npp[1] += s->value[NPP];
+			c->annual_aut_resp[1] += s->value[AUT_RESPIRATION];
 		}
 		else
 		{
 			c->daily_gpp[0] += s->value[GPP_g_C];
 			c->daily_npp[0] += s->value[NPP];
+			c->daily_aut_resp[0] += s->value[AUT_RESPIRATION];
 			c->monthly_gpp[0] += s->value[GPP_g_C];
 			c->monthly_npp[0] += s->value[NPP];
+			c->monthly_aut_resp[0] += s->value[AUT_RESPIRATION];
 			c->annual_gpp[0] += s->value[GPP_g_C];
 			c->annual_npp[0] += s->value[NPP];
+			c->annual_aut_resp[0] += s->value[AUT_RESPIRATION];
 		}
 	}
 	if (c->annual_layer_number == 3)
@@ -230,39 +272,51 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			c->daily_gpp[2] += s->value[GPP_g_C];
 			c->daily_npp[2] += s->value[NPP];
+			c->daily_aut_resp[2] += s->value[AUT_RESPIRATION];
 			c->monthly_gpp[2] += s->value[GPP_g_C];
 			c->monthly_npp[2] += s->value[NPP];
+			c->monthly_aut_resp[2] += s->value[AUT_RESPIRATION];
 			c->annual_gpp[2] += s->value[GPP_g_C];
 			c->annual_npp[2] += s->value[NPP];
+			c->annual_aut_resp[2] += s->value[AUT_RESPIRATION];
 		}
 		if (c->heights[height].z == 1)
 		{
 			c->daily_gpp[1] += s->value[GPP_g_C];
 			c->daily_npp[1] += s->value[NPP];
+			c->daily_aut_resp[1] += s->value[AUT_RESPIRATION];
 			c->monthly_gpp[1] += s->value[GPP_g_C];
 			c->monthly_npp[1] += s->value[NPP];
+			c->monthly_aut_resp[1] += s->value[AUT_RESPIRATION];
 			c->annual_gpp[1] += s->value[GPP_g_C];
 			c->annual_npp[1] += s->value[NPP];
+			c->annual_aut_resp[1] += s->value[AUT_RESPIRATION];
 		}
 		if (c->heights[height].z == 0)
 		{
 			c->daily_gpp[0] += s->value[GPP_g_C];
 			c->daily_npp[0] += s->value[NPP];
+			c->daily_aut_resp[0] += s->value[AUT_RESPIRATION];
 			c->monthly_gpp[0] += s->value[GPP_g_C];
 			c->monthly_npp[0] += s->value[NPP];
+			c->monthly_aut_resp[0] += s->value[AUT_RESPIRATION];
 			c->annual_gpp[0] += s->value[GPP_g_C];
 			c->annual_npp[0] += s->value[NPP];
+			c->annual_aut_resp[0] += s->value[AUT_RESPIRATION];
 		}
 	}
 
 	c->daily_tot_gpp += s->value[GPP_g_C];
 	c->daily_tot_npp += s->value[NPP];
+	c->daily_tot_aut_resp += s->value[AUT_RESPIRATION];
 
 	c->monthly_tot_gpp += s->value[GPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];
+	c->monthly_tot_aut_resp += s->value[AUT_RESPIRATION];
 
 	c->annual_tot_gpp += s->value[GPP_g_C];
 	c->annual_tot_npp += s->value[NPP];
+	c->annual_tot_aut_resp += s->value[AUT_RESPIRATION];
 	Log("***************************** ANNUAL GPP-NPP *************************** \n");
 
 	Log("*********************** CLASS LEVEL ANNUAL GPP-NPP ********************** \n");
@@ -274,9 +328,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("-CLASS LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", s->value[YEARLY_NPP]);
 
 	Log("*********************** STAND LEVEL ANNUAL GPP-NPP ********************** \n");
+
 	//cell level
 	c->gpp += s->value[POINT_GPP_g_C];
 	c->npp += s->value[NPP];
+	c->aut_respiration += s->value[AUT_RESPIRATION];
 	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", c->gpp);
 	Log("-CELL LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", c->npp);
