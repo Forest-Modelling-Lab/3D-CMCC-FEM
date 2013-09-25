@@ -593,6 +593,14 @@ enum {
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
 	BIOMASS_CONES_CTEM,   //only for coniferous
+
+	//Maintenance respiration
+	DAILY_LEAF_MAINT_RESP,
+	NIGHTLY_LEAF_MAINT_RESP,
+	TOT_DAY_LEAF_MAINT_RESP,
+
+
+
 	//NITROGEN
 	//nitrogen biomass monthly increment
 	NITROGEN_DEL_ROOTS_TOT_CTEM,
@@ -1030,11 +1038,11 @@ extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, int, float, const MET_DATA *const);
 extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 //deciduous routine for carbon allocation
-extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
-extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
+extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
 
-extern void maintainance_respiration (SPECIES *const, const MET_DATA *const);
+extern void Get_maintenance_respiration (SPECIES *const, const MET_DATA *const, int, int);
 
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);

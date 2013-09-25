@@ -306,7 +306,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
-								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
+								D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
+								Log("cazzo = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER]);
+
+								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], met, month, day);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -342,7 +345,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
-								M_D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
+								D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
 
 								/* Soil Water Balance*/
 
@@ -419,8 +422,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							M_E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
+							E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
 									DaysInMonth[month], years, height, age);
+
+							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], met, month, day);
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 

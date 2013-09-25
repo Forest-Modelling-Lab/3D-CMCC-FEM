@@ -29,7 +29,7 @@ C_SRCS += \
 ../src/litterfall.c \
 ../src/log.c \
 ../src/main.c \
-../src/maintainance_respiration.c \
+../src/maintenance_respiration.c \
 ../src/management.c \
 ../src/matrix.c \
 ../src/met_data.c \
@@ -79,7 +79,7 @@ OBJS += \
 ./src/litterfall.o \
 ./src/log.o \
 ./src/main.o \
-./src/maintainance_respiration.o \
+./src/maintenance_respiration.o \
 ./src/management.o \
 ./src/matrix.o \
 ./src/met_data.o \
@@ -129,7 +129,7 @@ C_DEPS += \
 ./src/litterfall.d \
 ./src/log.d \
 ./src/main.d \
-./src/maintainance_respiration.d \
+./src/maintenance_respiration.d \
 ./src/management.d \
 ./src/matrix.d \
 ./src/met_data.d \

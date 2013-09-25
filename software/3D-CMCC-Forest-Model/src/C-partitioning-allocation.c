@@ -12,7 +12,7 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
+void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
 {
 	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
@@ -1267,7 +1267,7 @@ void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, cons
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
+void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
 {
 	//CTEM VERSION
 
