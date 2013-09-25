@@ -90,6 +90,13 @@ FINE_ROOT_LEAF  -9999   //allocation new fine root C:new leaf (ratio) see Chiesi
 STEM_LEAF   -9999       //allocation new stem C:new leaf (ratio) see Chiesi et al., 2007
 COARSE_ROOT_STEM    -9999    //allocation new coarse root C:new stem (ratio) see Chiesi et al., 2007 
 
+//BIOME C:N RATIOS
+CN_LEAVES   -9999  //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_LITTER   -9999  //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_FINE_ROOTS   -9999  // CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_LIVE_WOODS   -9999  //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_DEAD_WOODS   -9999  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+
 
 //per specie caducifoglie LITTERFALL RATE = -9999 !!!!!!!!!!!!!!
 //LITTERFALL

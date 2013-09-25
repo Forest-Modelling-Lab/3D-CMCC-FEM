@@ -91,9 +91,14 @@ CONES_LIFE_SPAN 0 //Life span for cones (yr)
 FINE_ROOT_LEAF	1.4	//allocation new fine root C:new leaf (ratio) see Mollicone et al 2002
 STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
 COARSE_ROOT_STEM	0.36	//allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
-//FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) see Pietsch et al., 2005
-//STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) see see Pietsch et al., 2005
-//COARSE_ROOT_STEM	0.115	//allocation new coarse root C:new stem (ratio) see Pietsch et al., 2005
+
+
+//BIOME C:N RATIOS
+CN_LEAVES   20.3  //CN of leaves (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
+CN_LITTER   38  //CN of leaf litter (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
+CN_FINE_ROOTS   112  // CN of fine roots (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
+CN_LIVE_WOODS   48.2  //CN of live woods (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
+CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!!!! for Q. cerris from Chiesi et al., 2007
 
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!

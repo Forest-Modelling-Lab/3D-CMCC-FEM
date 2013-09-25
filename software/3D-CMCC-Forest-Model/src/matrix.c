@@ -115,10 +115,17 @@ static const char *species_values[] = {
 
 
 
-		//FINE COARSE ROOT RATIO
+		//BIOME ALLOCATION RATIOS
 		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
 		"STEM_LEAF",		//allocation new stem C:new leaf (ratio)
 		"COARSE_ROOT_STEM",	//allocation new coarse root C:new stem (ratio)
+
+		//BIOME C:N RATIOS
+		"CN_LEAVES",  //CN of leaves (kgC/kgN)
+		"CN_LITTER",  //CN of leaf litter (kgC/kgN)
+		"CN_FINE_ROOTS",  // CN of fine roots (kgC/kgN)
+		"CN_LIVE_WOODS",  //CN of live woods (kgC/kgN)
+		"CN_DEAD_WOODS",  //CN of dead woods (kgC/kgN)
 
 		//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 		//LITTERFALL

@@ -29,6 +29,7 @@ C_SRCS += \
 ../src/litterfall.c \
 ../src/log.c \
 ../src/main.c \
+../src/maintainance_respiration.c \
 ../src/management.c \
 ../src/matrix.c \
 ../src/met_data.c \
@@ -40,6 +41,7 @@ C_SRCS += \
 ../src/photosynthesis.c \
 ../src/renovation.c \
 ../src/soil_evaporation.c \
+../src/soil_respiration.c \
 ../src/soil_water_balance.c \
 ../src/soilmodel.c \
 ../src/sort.c \
@@ -77,6 +79,7 @@ OBJS += \
 ./src/litterfall.o \
 ./src/log.o \
 ./src/main.o \
+./src/maintainance_respiration.o \
 ./src/management.o \
 ./src/matrix.o \
 ./src/met_data.o \
@@ -88,6 +91,7 @@ OBJS += \
 ./src/photosynthesis.o \
 ./src/renovation.o \
 ./src/soil_evaporation.o \
+./src/soil_respiration.o \
 ./src/soil_water_balance.o \
 ./src/soilmodel.o \
 ./src/sort.o \
@@ -125,6 +129,7 @@ C_DEPS += \
 ./src/litterfall.d \
 ./src/log.d \
 ./src/main.d \
+./src/maintainance_respiration.d \
 ./src/management.d \
 ./src/matrix.d \
 ./src/met_data.d \
@@ -136,6 +141,7 @@ C_DEPS += \
 ./src/photosynthesis.d \
 ./src/renovation.d \
 ./src/soil_evaporation.d \
+./src/soil_respiration.d \
 ./src/soil_water_balance.d \
 ./src/soilmodel.d \
 ./src/sort.d \

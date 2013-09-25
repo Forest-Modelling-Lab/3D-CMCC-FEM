@@ -92,6 +92,12 @@ FINE_ROOT_LEAF	1.2	//allocation new fine root C:new leaf (ratio) Q. robur from P
 STEM_LEAF	1.32 //2.234	//1.32 allocation new stem C:new leaf (ratio) for Q. robur see White et al 2000 1.32 for Q. robur from Pietsch et al 2005
 COARSE_ROOT_STEM	0.158	//0.26 allocation new coarse root C:new stem (ratio) for Q. robur see White et al 2000 0.26 from Q. robur from Pietsch et al 2005
 
+//BIOME C:N RATIOS
+CN_LEAVES   16.6  //CN of leaves (kgC/kgN) for Q. robur from Mollicone et al., 2002
+CN_LITTER   30  //CN of leaf litter (kgC/kgN) for Q. robur from Mollicone et al., 2002
+CN_FINE_ROOTS   48  // CN of fine roots (kgC/kgN) for Q. robur from Mollicone et al., 2002
+CN_LIVE_WOODS   50  //CN of live woods (kgC/kgN) for Q. robur from Mollicone et al., 2002
+CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007  check it!!!!!!!!!!!!!!!!!
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL

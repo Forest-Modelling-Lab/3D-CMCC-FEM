@@ -91,6 +91,13 @@ FINE_ROOT_LEAF	1	//allocation new fine root C:new leaf (ratio) see Mollicone et 
 STEM_LEAF	1	//allocation new stem C:new leaf (ratio) see Mollicone et al 2002
 COARSE_ROOT_STEM	0.3	//allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
 
+//BIOME C:N RATIOS
+CN_LEAVES   42  //CN of leaves (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_LITTER   49  //CN of leaf litter (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_FINE_ROOTS   42  // CN of fine roots (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_LIVE_WOODS   42  //CN of live woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+CN_DEAD_WOODS   300  //CN of dead woods (kgC/kgN) for Q. ilex from Chiesi et al., 2007
+
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL

@@ -291,6 +291,14 @@ enum {
 	STEM_LEAF,		//allocation new stem C:new leaf (ratio)
 	COARSE_ROOT_STEM,	//allocation new coarse root C:new stem (ratio)
 
+
+	//BIOME C:N RATIOS
+	CN_LEAVES,  //CN of leaves (kgC/kgN)
+	CN_LITTER,  //CN of leaf litter (kgC/kgN)
+	CN_FINE_ROOTS,  // CN of fine roots (kgC/kgN)
+	CN_LIVE_WOODS,  //CN of live woods (kgC/kgN)
+	CN_DEAD_WOODS,  //CN of dead woods (kgC/kgN)
+
 	//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 	//LITTERFALL
 	//FOLLOWING BIOME-BGC
@@ -1025,6 +1033,9 @@ extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 extern void M_D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
 extern void M_E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
+
+extern void maintainance_respiration (SPECIES *const, const MET_DATA *const);
+
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
