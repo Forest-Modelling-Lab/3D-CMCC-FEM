@@ -15,7 +15,7 @@
 
 //FOLLOWING BIOME-BGC
 
-void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int month, int day)
+void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 
 	//maintenance respiration routine
@@ -64,9 +64,9 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 	{
 		Log("--FOLIAGE\n");
 
-		//convert biomass foliage from DM to Carbon then compute Nitrogen content using CN ratio
-		leaf_nitrogen = ((s->value[BIOMASS_FOLIAGE_CTEM] / 2.0) * 1000.0) / s->value[CN_LEAVES];
-		Log("Foliage nitrogen content = %g KgN/cell\n", leaf_nitrogen);
+		//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
+		leaf_nitrogen = ((s->value[BIOMASS_FOLIAGE_CTEM] / 2.0) * 1000000.0) / s->value[CN_LEAVES];
+		Log("Foliage nitrogen content = %g gN/cell\n", leaf_nitrogen);
 		t1 = leaf_nitrogen * mrpern;
 
 
@@ -75,12 +75,10 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 		//changing from biome
 		//n_area = 1.0/(s->value[SLA]*s->value[CN_LEAVES]);
 		//todo not clear why divide for 24?!?
-		s->value[DAILY_LEAF_MAINT_RESP] = t1 * pow(q10, exponent) * (met[month].d[day].daylength/24.0);
-		Log("daily leaf maintenance respiration = %g KgC/KgN/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
+		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent) * (met[month].d[day].daylength/24.0)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+		Log("daily leaf maintenance respiration = %g gC/day m^2\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
-		//upscale to cell level and convert from kgC to tons of DM
-		s->value[DAILY_LEAF_MAINT_RESP] *= 2.0 / 1000.0;
-		Log("daily leaf maintenance respiration = %g tDM/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
+
 
 		//for day respiration, also determine rates of maintenance respiration
 		//per unit of projected leaf area in the sunlit and shaded portions of
@@ -108,15 +106,11 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 
 		// leaf, night
 		exponent = (met[month].d[day].tnight - 20.0) / 10.0;
-		s->value[NIGHTLY_LEAF_MAINT_RESP]= t1 * pow(q10, exponent) * ((24.0 - met[month].d[day].daylength)/24.0);
-		Log("nightly leaf maintenance respiration = %g KgC/KgN/day m^2\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
-
-		s->value[NIGHTLY_LEAF_MAINT_RESP] *=  2.0/ 1000.0;
-		//Log("nightly leaf maintenance respiration = %g tDM/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
-
+		s->value[NIGHTLY_LEAF_MAINT_RESP]= (t1 * pow(q10, exponent) * ((24.0 - met[month].d[day].daylength)/24.0)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+		Log("nightly leaf maintenance respiration = %g gC/day m^2\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 		//day+night
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
-		Log("Total daily leaf maintenance respiration = %g tDM/ha cell\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+		Log("Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 	}
 	else //no leaves on
 	{
@@ -136,13 +130,11 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 		exponent = (tsoil - 20.0) / 10.0;
 		t1 = pow(q10, exponent);
 
-		//convert biomass root from DM to Carbon then compute Nitrogen content using CN ratio
-		fine_root_nitrogen = ((s->value[BIOMASS_ROOTS_FINE_CTEM] / 2.0)*1000.0) / s->value[CN_FINE_ROOTS];
-		Log("Fine root nitrogen content = %g KgN/cell\n", fine_root_nitrogen);
-		s->value[FINE_ROOT_MAINT_RESP] = leaf_nitrogen * mrpern * t1;
-		Log("Fine root maintenance respiration = %g KgC/day cell\n", s->value[FINE_ROOT_MAINT_RESP]);
-		s->value[FINE_ROOT_MAINT_RESP] *=  2.0/ 1000.0;
-		Log("Fine root maintenance respiration = %g tDM/day cell\n", s->value[FINE_ROOT_MAINT_RESP]);
+		//convert biomass root from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
+		fine_root_nitrogen = ((s->value[BIOMASS_ROOTS_FINE_CTEM] / 2.0)*1000000.0) / s->value[CN_FINE_ROOTS];
+		Log("Fine root nitrogen content = %g gN/cell\n", fine_root_nitrogen);
+		s->value[FINE_ROOT_MAINT_RESP] = ((leaf_nitrogen * mrpern * t1)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+		Log("Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
 	}
 	else //no fine roots on
 	{
@@ -154,39 +146,112 @@ void Get_maintenance_respiration (SPECIES *s, const MET_DATA *const met, int mon
 	// TREE-specific fluxes
 	Log("--STEM\n");
 
-	//convert biomass foliage from DM to Carbon then compute Nitrogen content using CN ratio
-	stem_nitrogen = ((s->value[WS_sap]/2.0)*1000.0) / s->value[CN_LIVE_WOODS];
-	Log("Stem nitrogen content = %g KgN/cell\n", stem_nitrogen);
+	//convert biomass foliage from tones of DM to grams of Carbon then compute Nitrogen content using CN ratio
+	stem_nitrogen = ((s->value[WS_sap]/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
+	Log("Stem nitrogen content = %g gN/cell\n", stem_nitrogen);
 
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	s->value[STEM_MAINT_RESP] = stem_nitrogen * mrpern * t1;
-	Log("Stem maintenance respiration = %g KgC/day cell\n", s->value[STEM_MAINT_RESP]);
-	s->value[STEM_MAINT_RESP] *=  2.0/ 1000.0;
-	Log("Stem maintenance respiration = %g tDM/day cell\n", s->value[STEM_MAINT_RESP]);
-
+	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+	Log("Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
 
 	//IT MUST TAKES INTO ACCOUNT ONLY LIVE roots NOT ALL roots!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	Log("--COARSE ROOT\n");
 
-	//convert biomass foliage from DM to Carbon then compute Nitrogen content using CN ratio
-	coarse_root_nitrogen = ((s->value[BIOMASS_ROOTS_COARSE_CTEM]/2.0)*1000.0) / s->value[CN_LIVE_WOODS];
-	Log("coarse root nitrogen content = %g KgN/cell\n", coarse_root_nitrogen);
+	//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
+	coarse_root_nitrogen = ((s->value[BIOMASS_ROOTS_COARSE_CTEM]/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
+	Log("coarse root nitrogen content = %g gN/cell\n", coarse_root_nitrogen);
 
 	//live coarse root maintenance respiration
 	exponent = (tsoil - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	s->value[COARSE_ROOT_MAINT_RESP] = coarse_root_nitrogen * mrpern * t1;
-	Log("Coarse root maintenance respiration = %g KgC/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
-	s->value[COARSE_ROOT_MAINT_RESP] *=  2.0/ 1000.0;
-	Log("Coarse root maintenance respiration = %g tDM/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
+	s->value[COARSE_ROOT_MAINT_RESP] = ((coarse_root_nitrogen * mrpern * t1)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+	Log("Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
+
 
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP];
+	Log("TOTAL maintenance respiration = %g gC/day m^2\n", s->value[TOTAL_MAINT_RESP]);
+
+
+	//TODO change all if with a for
+
+	if (c->annual_layer_number == 1)
+	{
+		c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+		c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+		c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->daily_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+			c->monthly_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+			c->annual_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+		}
+		else
+		{
+			c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+			c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+			c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->daily_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
+			c->monthly_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
+			c->annual_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->daily_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+			c->monthly_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+			c->annual_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
+		}
+		if (c->heights[height].z == 0)
+		{
+			c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+			c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+			c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
+		}
+	}
+
+	c->daily_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
+	c->monthly_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
+	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
+
+
+	//convert to tDM/ cell resolution
+	//upscale to cell level and convert from gC to tons of DM
+	s->value[DAILY_LEAF_MAINT_RESP] *= 2.0 / 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	//Log("daily leaf maintenance respiration = %g tDM/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
+
+	s->value[NIGHTLY_LEAF_MAINT_RESP] *=  2.0/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	//Log("nightly leaf maintenance respiration = %g tDM/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
+
+	//day+night
+	s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+	Log("Total daily leaf maintenance respiration = %g tDM/ha cell\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+
+	s->value[FINE_ROOT_MAINT_RESP] *=  2.0/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	Log("Fine root maintenance respiration = %g tDM/day cell\n", s->value[FINE_ROOT_MAINT_RESP]);
+
+	s->value[STEM_MAINT_RESP] *=  2.0/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	Log("Stem maintenance respiration = %g tDM/day cell\n", s->value[STEM_MAINT_RESP]);
+
+	s->value[COARSE_ROOT_MAINT_RESP] *=  2.0/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	Log("Coarse root maintenance respiration = %g tDM/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
+
+	//COMPUTE TOTAL MAINTENANCE RESPIRATION
+	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP];
 	Log("TOTAL maintenance respiration = %g tDM/day cell\n", s->value[TOTAL_MAINT_RESP]);
+
 
 }
 

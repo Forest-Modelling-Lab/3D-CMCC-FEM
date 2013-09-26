@@ -913,6 +913,8 @@ typedef struct {
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
 
+	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
+
 	float daily_cc[3], monthly_cc[3], annual_cc[3];
 
 
@@ -1047,7 +1049,7 @@ extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const ME
 //evergreen routine for carbon allocation
 extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
 
-extern void Get_maintenance_respiration (SPECIES *const, const MET_DATA *const, int, int);
+extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
 
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);

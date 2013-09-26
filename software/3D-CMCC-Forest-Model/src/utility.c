@@ -160,6 +160,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 	static float avg_gpp[3], avg_npp[3], avg_et[3], avg_gpp_tot, avg_npp_tot, avg_et_tot;
 	static int tot_dead_tree_tot;
+	static int tot_maint_resp_tot;
 
 	if (years == 0)
 	{
@@ -167,6 +168,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("years of simulation = %d\n", years_of_simulation);
 		Annual_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
+		Annual_Log("Annual RM = annual total maintenance respiration (gC/m2/year)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
 		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
@@ -177,6 +179,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	if (years == 0)
 	{
 		avg_gpp_tot = 0;
+		tot_maint_resp_tot = 0;
 		avg_npp_tot = 0;
 		avg_et_tot = 0;
 		tot_dead_tree_tot = 0;
@@ -217,12 +220,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0)
 		{
-			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %8s %8s %10s %10s %10s %10s %10s %10s\n\n",
-					"YEAR", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "PEAK_LAI(0)",
+			Annual_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %8s %8s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "GPP(0)", "GPP (tot)", "RM(0)", "RM (tot)","NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "PEAK_LAI(0)",
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
-		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
-				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_npp[0], c->annual_tot_npp, ((c->annual_tot_npp/settings->sizeCell)*1000000)/2, c->annual_et[0],
+		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
+				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_maint_resp[0], c->annual_tot_maint_resp, c->annual_npp[0], c->annual_tot_npp, ((c->annual_tot_npp/settings->sizeCell)*1000000)/2, c->annual_et[0],
 				c->annual_tot_et , c->annual_peak_lai[0], c->annual_cc[0], c->annual_dead_tree[0], c->annual_tot_dead_tree, c->annual_delta_ws[0], c->annual_ws[0]);
 
 		//compute average or total
@@ -232,10 +235,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_gpp_tot += c->annual_gpp[0];
 		avg_npp_tot += c->annual_npp[0];
 		avg_et_tot += c->annual_et[0];
+		tot_maint_resp_tot += c->annual_tot_maint_resp;
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
 		//reset
 		c->annual_gpp[0] = 0;
+		c->annual_maint_resp[0] = 0;
 		c->annual_npp[0] = 0;
 		c->annual_et[0] = 0;
 		c->annual_cc[0] = 0;
@@ -244,6 +249,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_tot_gpp = 0;
 		c->annual_tot_npp = 0;
 		c->annual_tot_et = 0;
+		c->annual_tot_maint_resp = 0;
 		c->annual_tot_dead_tree = 0;
 
 		c->annual_peak_lai[0] = 0;
@@ -453,6 +459,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Monthly_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
 		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
+		Monthly_Log("Monthly RM = monthly total maintenance respiration (gC/m2/month)\n");
 		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
 		Monthly_Log("Monthly ET = monthly canopy transpiration(mm/month)\n");
 		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
@@ -462,22 +469,24 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
-					"YEAR", "MONTH", "GPP(0)", "GPP (tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
+			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+					"YEAR", "MONTH", "GPP(0)", "GPP (tot)", "RM(0)", "RM(tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10d %10d \n",
-				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0],
+		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d \n",
+				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_maint_resp[0], c->monthly_tot_maint_resp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0],
 				c->monthly_tot_et, c->monthly_cc[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
 
 		//reset
 		c->monthly_gpp[0] = 0;
+		c->monthly_maint_resp[0] = 0;
 		c->monthly_npp[0] = 0;
 		c->monthly_et[0] = 0;
 		c->monthly_cc[0] = 0;
 		c->monthly_dead_tree[0] = 0;
 
 		c->monthly_tot_gpp = 0;
+		c->monthly_tot_maint_resp = 0;
 		c->monthly_tot_npp = 0;
 		c->monthly_tot_et = 0;
 		c->monthly_tot_dead_tree = 0;
@@ -577,10 +586,6 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
-		Daily_Log("Daily F_SW = Daily Soil water modifier\n");
-		Daily_Log("Daily F_PSI = Daily Soil water modifier-BIOME\n");
-		Daily_Log("Daily F_T = Daily temperature modifier\n");
-		Daily_Log("Daily F_PSI = Daily VPD modifier\n\n\n");
 	}
 	if (c->annual_layer_number == 1)
 	{
