@@ -1,0 +1,9 @@
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/smm_input.txt
+-m input/met_data/000_000_1995.txt,input/met_data/000_000_1996.txt,input/met_data/000_000_1997.txt,input/met_data/000_000_1998.txt,input/met_data/000_000_1999.txt,input/met_data/000_000_2000.txt,input/met_data/000_000_2001.txt,input/met_data/000_000_2002.txt,input/met_data/000_000_2003.txt,input/met_data/000_000_2004.txt,input/met_data/000_000_2005.txt
+-s input/site_data/smm_site.txt
+-c input/model_settings/smm_settings.txt
