@@ -909,7 +909,7 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 
 extern void Get_daily_numbers_of_layers (CELL *const c)
 {
-	//determines number of layer in function of:
+	//determines number of vegetative layer in function of:
 	//-differences between tree height classes
 	//-vegetative or un-vegetative period
 	static int height;

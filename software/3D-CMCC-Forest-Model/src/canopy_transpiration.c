@@ -67,13 +67,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			if(met[month].tday == NO_DATA)
 			{
 				rhoAir = 1.292 - (0.00428 * met[month].tavg);
-				c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+				c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
 			else
 			{
 				rhoAir = 1.292 - (0.00428 * met[month].tday);
-				c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+				c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
 		}
@@ -82,13 +82,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			if(met[month].d[day].tday == NO_DATA)
 			{
 				rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
-				c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+				c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
 			else
 			{
 				rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
-				c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300/c->air_pressure;
+				c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
 		}
