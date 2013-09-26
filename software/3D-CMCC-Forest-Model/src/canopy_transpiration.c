@@ -278,7 +278,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			s->value[DAILY_TRANSP] = CanopyTranspiration;
 			s->value[MONTH_TRANSP] += s->value[DAILY_TRANSP];
 			Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
-
 		}
 	}
 	else
@@ -286,13 +285,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		s->value[DAILY_TRANSP] = 0;
 	}
 
-	//DAILY ET
-	//cell level
-
-	//summing all classes ET
-	/*
-	c->daily_et += s->value[DAILY_TRANSP];
-	*/
+	Annual_Log("Canopy Transpiration layer %d = %g mm-Kg H2o/m^2/month\n", c->heights[height].z, s->value[DAILY_TRANSP]);
 
 
 	if (c->annual_layer_number == 1)
@@ -337,6 +330,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			c->annual_et[0] += s->value[DAILY_TRANSP];
 		}
 	}
+	Annual_Log("numb layer %d\n", c->annual_layer_number);
+	Annual_Log("prova et1 %g\n", c->annual_et[1]);
+	Annual_Log("prova et0 %g\n", c->annual_et[0]);
 
 	c->daily_tot_et += s->value[DAILY_TRANSP];
 	c->monthly_tot_et += s->value[DAILY_TRANSP];

@@ -244,8 +244,15 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
 		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
-				yos[years].year, c->annual_gpp[0], c->annual_tot_gpp, c->annual_maint_resp[0], c->annual_tot_maint_resp, c->annual_npp[0], c->annual_tot_npp, ((c->annual_tot_npp/settings->sizeCell)*1000000)/2, c->annual_et[0],
-				c->annual_tot_et , c->annual_peak_lai[0], c->annual_cc[0], c->annual_dead_tree[0], c->annual_tot_dead_tree, c->annual_delta_ws[0], c->annual_ws[0]);
+				yos[years].year,
+				c->annual_gpp[0], c->annual_tot_gpp,
+				c->annual_maint_resp[0], c->annual_tot_maint_resp,
+				c->annual_npp[0], c->annual_tot_npp,
+				((c->annual_tot_npp/settings->sizeCell)*1000000)/2,
+				c->annual_et[0], c->annual_tot_et ,
+				c->annual_peak_lai[0], c->annual_cc[0],
+				c->annual_dead_tree[0], c->annual_tot_dead_tree,
+				c->annual_delta_ws[0], c->annual_ws[0]);
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -288,9 +295,14 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"Ws(1)", "Ws(0)");
 		}
 		Annual_Log ("-%d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %12d %12d\n",
-				yos[years].year, c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp, c->annual_maint_resp[1],c->annual_maint_resp[0], c->annual_tot_maint_resp, c->annual_npp[1], c->annual_npp[0],
-				c->annual_tot_npp, c->annual_et[1], c->annual_et[0], c->annual_tot_et, c->annual_peak_lai[1], c->annual_peak_lai[0],
-				c->annual_cc[1], c->annual_cc[0], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
+				yos[years].year,
+				c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
+				c->annual_maint_resp[1],c->annual_maint_resp[0], c->annual_tot_maint_resp,
+				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp,
+				c->annual_et[1], c->annual_et[0], c->annual_tot_et,
+				c->annual_peak_lai[1], c->annual_peak_lai[0],
+				c->annual_cc[1], c->annual_cc[0],
+				c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree);
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -652,9 +664,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		//check if layer number is changed since last yearly run
 		if(previous_layer_number != c->annual_layer_number)
 		{
-			Monthly_Log ("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+			Daily_Log ("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
-
 	}
 	if (c->annual_layer_number == 1)
 	{
