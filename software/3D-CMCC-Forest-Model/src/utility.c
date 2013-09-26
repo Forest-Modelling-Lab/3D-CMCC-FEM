@@ -383,45 +383,45 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (c->annual_layer_number == 1)
 		{
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
+			avg_gpp[0] /= years_of_simulation;
+			avg_npp[0] /= years_of_simulation;
+			avg_et[0] /= years_of_simulation;
+			avg_gpp_tot /= years_of_simulation;
+			avg_npp_tot /= years_of_simulation;
+			avg_et_tot /= years_of_simulation;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("-AVG/TOT %6g %10g %10g %10g %12g %9g %10g %49d\n",
 					  avg_gpp[0], avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
 		{
-			avg_gpp[1] /= years_of_simulation -1;
-			avg_npp[1] /= years_of_simulation -1;
-			avg_et[1] /= years_of_simulation -1;
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
+			avg_gpp[1] /= years_of_simulation;
+			avg_npp[1] /= years_of_simulation;
+			avg_et[1] /= years_of_simulation;
+			avg_gpp[0] /= years_of_simulation;
+			avg_npp[0] /= years_of_simulation;
+			avg_et[0] /= years_of_simulation;
+			avg_gpp_tot /= years_of_simulation;
+			avg_npp_tot /= years_of_simulation;
+			avg_et_tot /= years_of_simulation;
 			Annual_Log ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("-AVG/TOT %7g %10g %10g %10g %10g %10g %10g %10g %10g %76d \n",
 					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 3)
 		{
-			avg_gpp[2] /= years_of_simulation -1;
-			avg_npp[2] /= years_of_simulation -1;
-			avg_et[2] /= years_of_simulation -1;
-			avg_gpp[1] /= years_of_simulation -1;
-			avg_npp[1] /= years_of_simulation -1;
-			avg_et[1] /= years_of_simulation -1;
-			avg_gpp[0] /= years_of_simulation -1;
-			avg_npp[0] /= years_of_simulation -1;
-			avg_et[0] /= years_of_simulation -1;
-			avg_gpp_tot /= years_of_simulation -1;
-			avg_npp_tot /= years_of_simulation -1;
-			avg_et_tot /= years_of_simulation -1;
+			avg_gpp[2] /= years_of_simulation;
+			avg_npp[2] /= years_of_simulation;
+			avg_et[2] /= years_of_simulation;
+			avg_gpp[1] /= years_of_simulation;
+			avg_npp[1] /= years_of_simulation;
+			avg_et[1] /= years_of_simulation;
+			avg_gpp[0] /= years_of_simulation;
+			avg_npp[0] /= years_of_simulation;
+			avg_et[0] /= years_of_simulation;
+			avg_gpp_tot /= years_of_simulation;
+			avg_npp_tot /= years_of_simulation;
+			avg_et_tot /= years_of_simulation;
 
 			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("-AVG/TOT %8g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %42d \n",
