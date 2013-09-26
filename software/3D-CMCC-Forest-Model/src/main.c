@@ -39,7 +39,7 @@
 //speriamo!
 
 /* constants */
-#define PROGRAM_VERSION	"5.0"
+#define PROGRAM_VERSION	"5.1"
 
 /*netcdf*/
 #define FILE_NAME_NETCDF "prova.nc"
@@ -106,14 +106,14 @@ int log_enabled		=	1,	// default is on
 static FILES *files_founded;
 
 /* strings */
-static const char banner[] =	"\n\n3D-CMCC Forest Model v."PROGRAM_VERSION"\n\n"
+static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n\n"
 		"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"(use -h parameter for more information)\n\n\n";
 
 static char copyright[] =
 		"\n\n\n\n"
-		"This version of 3D-CMCC Forest Model has been developed by:\n"
+		"This version of 3D-CMCC Forest Ecosystem Model has been developed by:\n"
 		"Alessio Collalti [a.collalti@unitus.it - alessio.collalti@cmcc.it],\n"
 		"Alessio Ribeca,\n"
 		"Alessandro Candini [candini@meeo.it].\n"
@@ -137,6 +137,7 @@ static char copyright[] =
 		"of relying on this software. Use of this software assumes agreement to this condition of use.\n"
 		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
 		"was released by CMCC-UNITUS. \n"
+		"for more information see Collalti et al., 2014 Ecological Modelling \n"
 		"\n";
 
 
