@@ -147,9 +147,9 @@ STEMCONST_P 0.0654   //For Q. robur from Yuste et al 2005
 STEMPOWER_P 2.5753   //For Q. robur from Yuste et al 2005
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA	21 //Present value deducted from fitting Yuste 2005 with chapman_richards :    for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
-CRB	0.05985  //for Q. robur from PhD thesis Bellio
-CRC	1.074  //for Q. robur from PhD thesis Bellio
+CRA	52 //21 Present value deducted from fitting Yuste 2005 with chapman_richards :    for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
+CRB	0.096  //0.05985 for Q. robur from PhD thesis Bellio
+CRC	1.272  //1.074 for Q. robur from PhD thesis Bellio
 
 //CROWDING COMPETITION FUNCTION
 HDMAX	2.5             //Height to Base diameter ratio MAX  for Q. robur from Bellio and Pividori, 2009

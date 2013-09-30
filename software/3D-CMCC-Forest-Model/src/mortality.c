@@ -76,6 +76,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
+
+
 			Log("layer cover prima while = %g\n", layer_cover);
 			Log("Crown area %g\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
 			Log("Crown area %g%%\n", (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell);
