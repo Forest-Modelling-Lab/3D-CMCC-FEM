@@ -94,12 +94,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 		case 1:
 			while (c->layer_cover_dominant >= settings->max_layer_cover)
 			{
-				Log("layer cover prima while = %g\n", c->layer_cover_dominant);
+				//Log("layer cover prima while = %g\n", c->layer_cover_dominant);
 				c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 				deadtree += 1;
 
 				c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-				Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
+				//Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
 				c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 			}
 			break;
@@ -108,12 +108,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			{
 				while (c->layer_cover_dominant >= settings->max_layer_cover)
 				{
-					Log("layer cover prima while = %g\n", c->layer_cover_dominant);
+					//Log("layer cover prima while = %g\n", c->layer_cover_dominant);
 					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 					deadtree += 1;
 
 					c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-					Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
+					//Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
@@ -121,12 +121,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			{
 				while (c->layer_cover_dominated >= settings->max_layer_cover)
 				{
-					Log("layer cover prima while = %g\n", c->layer_cover_dominated);
+					//Log("layer cover prima while = %g\n", c->layer_cover_dominated);
 					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 					deadtree += 1;
 
 					c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-					Log("layer cover dopo while = %g\n", c->layer_cover_dominated);
+					//Log("layer cover dopo while = %g\n", c->layer_cover_dominated);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
@@ -136,12 +136,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			{
 				while (c->layer_cover_dominant >= settings->max_layer_cover)
 				{
-					Log("layer cover prima while = %g\n", c->layer_cover_dominant);
+					//Log("layer cover prima while = %g\n", c->layer_cover_dominant);
 					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 					deadtree += 1;
 
 					c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-					Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
+					//Log("layer cover dopo while = %g\n", c->layer_cover_dominant);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
@@ -149,12 +149,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			{
 				while (c->layer_cover_dominated >= settings->max_layer_cover)
 				{
-					Log("layer cover prima while = %g\n", c->layer_cover_dominated);
+					//Log("layer cover prima while = %g\n", c->layer_cover_dominated);
 					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 					deadtree += 1;
 
 					c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-					Log("layer cover dopo while = %g\n", c->layer_cover_dominated);
+					//Log("layer cover dopo while = %g\n", c->layer_cover_dominated);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
@@ -162,12 +162,12 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			{
 				while (c->layer_cover_subdominated >= settings->max_layer_cover)
 				{
-					Log("layer cover prima while = %g\n", c->layer_cover_subdominated);
+					//Log("layer cover prima while = %g\n", c->layer_cover_subdominated);
 					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 					deadtree += 1;
 
 					c->layer_cover_subdominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-					Log("layer cover dopo while = %g\n", c->layer_cover_subdominated);
+					//Log("layer cover dopo while = %g\n", c->layer_cover_subdominated);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
