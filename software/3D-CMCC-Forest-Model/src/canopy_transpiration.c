@@ -210,6 +210,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 		else
 		{
+			Log("daily layer number = %d\n", c->daily_layer_number);
 			switch (c->daily_layer_number)
 			{
 			case 1:
@@ -227,8 +228,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				else
 				{
 					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %g \n", c->net_radiation);
+					Log("Etransp for dominated layer = %g J/m^2/sec\n", Etransp);
+					Log("NET RADIATION = %g \n", c->net_radiation_for_dominated);
 				}
 				break;
 			case 3:
@@ -241,14 +242,14 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				if ( c->heights[height].z == c->top_layer - 1 )
 				{
 					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+					Log("Etransp for dominated layer = %g J/m^2/sec\n", Etransp);
 					Log("Net radiation = %g \n", c->net_radiation);
 				}
 				else
 				{
 					Etransp = (e20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
-					Log("Net radiation = %g \n", c->net_radiation);
+					Log("Etransp for subdominant layer = %g J/m^2/sec\n", Etransp);
+					Log("Net radiation = %g \n", c->net_radiation_for_subdominated);
 				}
 
 				break;

@@ -206,9 +206,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				{
 					Gap_Cover = 0.05;
 				}
-
+				//FIXME
 				//Net Radiation for lower layer
-				c->net_radiation_for_dominated += (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
+				c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
 						+ (c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
 				Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_dominated);
 
