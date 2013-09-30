@@ -147,7 +147,7 @@ STEMCONST_P 0.0654   //For Q. robur from Yuste et al 2005
 STEMPOWER_P 2.5753   //For Q. robur from Yuste et al 2005
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA	52        //21 value deducted from fitting Yuste 2005 with chapman_richards : //for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
+CRA	21        //21 value deducted from fitting Yuste 2005 with chapman_richards : previously used 52 //for Q. robur 14.5 from PhD thesis Bellio ??????????? seems to be quite low
 CRB	0.05985   // 0.05985 value deducted from fitting Yuste 2005 values with Chapman-Richards //0.096 for Q. robur from PhD thesis Bellio
 CRC	1.074     // 1.074 value deducted from fitting Yuste 2005 values with Chapman-Richards //1.272 for Q. robur from PhD thesis Bellio
 
