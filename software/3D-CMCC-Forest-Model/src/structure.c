@@ -376,6 +376,7 @@ void Get_forest_structure (CELL *const c)
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
 																							  * c->heights[height].ages[age].species[species].counter[N_TREE]
 																							  / settings->sizeCell;
+					Log("Canopy cover DBH-DC class related = %g\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
 				}
 			}
@@ -473,7 +474,6 @@ void Get_forest_structure (CELL *const c)
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
 							Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}
 						break;
 					case 2:
@@ -485,7 +485,6 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else
@@ -496,7 +495,6 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 
@@ -510,7 +508,6 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
@@ -521,7 +518,6 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else
@@ -532,31 +528,59 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								c->layer_cover_subdominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						break;
-
-						Log("Layer cover after mortality function\n");
-						if (c->annual_layer_number == 1)
-						{
-							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
-						}
-						if (c->annual_layer_number == 2)
-						{
-							Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
-							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
-						}
-						if (c->annual_layer_number > 2)
-						{
-							Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-							Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
-						}
 					}
 				}
 			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
+
+		//recompute coverage
+		for ( height = c->heights_count - 1; height >= 0; height-- )
+		{
+			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+			{
+				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+				{
+					switch (c->annual_layer_number)
+					{
+					case 1:
+						c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						break;
+					case 2:
+						if (c->heights[height].z == c->annual_layer_number- 1)
+						{
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							Log("<<Layer cover in layer dominant = %g %% \n", c->layer_cover_dominant * 100);
+						}
+						else
+						{
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							Log("<<Layer cover in layer dominated = %g %% \n", c->layer_cover_dominated * 100);
+						}
+						break;
+					case 3:
+						if (c->heights[height].z == c->annual_layer_number- 1)
+						{
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+						}
+						else if (c->heights[height].z == c->annual_layer_number - 2)
+						{
+							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							Log("<<Layer cover in layer dominated = %g %% \n", c->layer_cover_dominated * 100);
+						}
+						else
+						{
+							c->layer_cover_subdominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							Log("<<Layer cover in layer subdominated = %g %% \n", c->layer_cover_subdominated * 100);
+						}
+						break;
+					}
+				}
+			}
+		}
+
 	}
 	else
 	{

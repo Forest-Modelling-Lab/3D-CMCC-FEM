@@ -18,6 +18,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
+	Log("*****GET_LAYER_COVER_MORTALITY*****\n");
+
 
 	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d, species %s height %g dbh %g !!!\n", c->heights[height].z, c->heights[height].ages[age].species[species].name,
 			c->heights[height].value, c->heights[height].ages[age].species[species].value[AVDBH]);
@@ -43,9 +45,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 																		  / (float)c->heights[height].ages[age].species[species].counter[N_TREE];
 		//Log(" Av stem mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
-																 + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
+		//Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]+ c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
+		//Log("Stem Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
 
 
 
@@ -75,14 +76,14 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
+			Log("layer cover prima while = %g\n", layer_cover);
+			Log("Crown area %g\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
+			Log("Crown area %g%%\n", (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell);
 			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 			deadtree += 1;
-			Log("up\n");
 
-			//todo in this case the model takes into account not NTREE of layer but just for class
-			//insert a variable linked to cell for ntree
-			layer_cover = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-						   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
+			layer_cover = layer_cover - (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell;
+			Log("layer cover dopo while = %g\n", layer_cover);
 			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
 																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 		}

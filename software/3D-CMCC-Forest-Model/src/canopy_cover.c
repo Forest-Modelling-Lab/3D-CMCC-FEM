@@ -70,7 +70,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	}
 	 */
 
-
+	//mortality class related
 	if (s->value[CANOPY_COVER_DBHDC] >= 1)
 	{
 		Log ("MORTALITY BASED ON HIGH CANOPY COVER!!!\n");
