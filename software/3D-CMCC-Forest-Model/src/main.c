@@ -1336,7 +1336,7 @@ int main(int argc, char *argv[])
 			}
 
 
-			Log("...%d finished to simulate\n\n", yos[years].year);
+			Log("...%d finished to simulate\n\n\n\n\n\n", yos[years].year);
 		}
 
 		/* free memory */

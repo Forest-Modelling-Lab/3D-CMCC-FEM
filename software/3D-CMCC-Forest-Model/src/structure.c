@@ -247,13 +247,13 @@ void Get_forest_structure (CELL *const c)
 			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
 
-		if (c->heights_count == 1)
+		if (c->annual_layer_number == 1)
 		{
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
 			Log("Density in layer 0 = %g trees/area\n", c->density_dominant);
 		}
-		if (c->heights_count == 2)
+		if (c->annual_layer_number == 2)
 		{
 			Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominant_counter);
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominated_counter);
@@ -262,7 +262,7 @@ void Get_forest_structure (CELL *const c)
 			Log("Density in layer 1 = %g trees/area\n", c->density_dominant);
 			Log("Density in layer 0 = %g trees/area\n", c->density_dominated);
 		}
-		if (c->heights_count > 2)
+		if (c->annual_layer_number > 2)
 		{
 			Log("Number of adult height classes in layer 2 = %d\n", c->height_class_in_layer_dominant_counter);
 			Log("Number of adult height classes in layer 1 = %d\n", c->height_class_in_layer_dominated_counter);
