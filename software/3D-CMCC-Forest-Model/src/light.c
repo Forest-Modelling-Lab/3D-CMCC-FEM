@@ -174,10 +174,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];
 
 				//Net Radiation for lower layer
-				c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+				//c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 
 				//Par for lower layer
-				c->par_for_dominated = (c->par- s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				//c->par_for_dominated = (c->par- s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 			}
 			else if ( c->dominant_veg_counter > 1 && c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
@@ -191,10 +191,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				}
 
 				//Net Radiation for lower layer
-				c->net_radiation_for_dominated += ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+				//c->net_radiation_for_dominated += ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 
 				//Par for lower layer
-				c->par_for_dominated += (c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * (float)settings->sizeCell);
+				//c->par_for_dominated += (c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * (float)settings->sizeCell);
 
 			}
 			else //last height
@@ -206,7 +206,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				{
 					Gap_Cover = 0.05;
 				}
-				//FIXME
+
+
+				//FIXME CONTROL IF USE A LAYER CANOPY COVER INSTED CLASS CANOPY COVER
+
 				//Net Radiation for lower layer
 				c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
 						+ (c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
