@@ -907,7 +907,7 @@ typedef struct {
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
 
-	//cumulative variables layer related
+	//cumulative variables layer related used in annual-monthly-daily Log
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
