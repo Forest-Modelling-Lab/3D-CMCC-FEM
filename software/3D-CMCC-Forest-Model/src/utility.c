@@ -240,11 +240,11 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n-%s %5s %10s %10s %10s %10s %10s %10s %10s %8s %8s %10s %10s %10s %10s %10s %10s\n\n",
+			Annual_Log ("\n%s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "HC(0)", "GPP(0)", "GPP (tot)", "RM(0)", "RM (tot)","NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "PEAK_LAI(0)",
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
-		Annual_Log ("-%d %5d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %14d %11g %11g\n",
+		Annual_Log ("%d \t%5d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%14d \t%11g \t%11g\n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter,
 				c->annual_gpp[0], c->annual_tot_gpp,
@@ -291,12 +291,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n-%s %5s %5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %7s %10s %10s %10s %10s %10s\n\n",
+			Annual_Log ("\n%s \t%5s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%7s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "RM(1)", "RM(0)", "RM(tot)","NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)",
 					"PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Ws(1)", "Ws(0)");
 		}
-		Annual_Log ("-%d %5d %5d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %12d %12d %12d\n",
+		Annual_Log ("%d \t%5d \t%5d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%12d \t%12d\n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter,
 				c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
@@ -358,11 +358,11 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n-%s %5s %5s %5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %7s %10s %10s\n\n",
+			Annual_Log ("\n%s \t%5s \t%5s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s %7s \t%10s \t%10s\n\n",
 					"YEAR", "HC(2)", "HC(1)", "HC(0)", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "RM(2)", "RM(1)", "RM(0)", "RM (tot)", "NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(2)", "ET(1)", "ET(0)",
 					"ET(tot)", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Annual_Log ("-%d %5d %5d %5d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n",
+		Annual_Log ("%d \t%5d \t%5d \t%5d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \t%10d \t%10d\n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter,
 				c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
@@ -450,7 +450,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_et_tot /= years_of_simulation;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG/TOT %11g %10g %10g %10g %10g %10g %12g %9g %10g %49d\n",
+			Annual_Log ("AVG/TOT \t\t%6g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12g \t%9g \t%10g \t\t\t\t%49d\n",
 					  avg_gpp[0], avg_gpp_tot, avg_rm[0], avg_rm_tot,avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
@@ -468,7 +468,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_et_tot /= years_of_simulation;
 			Annual_Log ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG/TOT %19g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %76d \n",
+			Annual_Log ("AVG/TOT \t\t\t%14g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t\t\t\t\t\t\t%76d \n",
 					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_rm[1], avg_rm[0], avg_rm_tot, avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 3)
@@ -491,7 +491,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_et_tot /= years_of_simulation;
 
 			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("-AVG/TOT %25g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %42d \n",
+			Annual_Log ("AVG/TOT \t\t\t\t%21g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t\t\t\t\t\t\t\t\t%42d \n",
 					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_rm[2], avg_rm[1], avg_rm[0], avg_rm_tot,avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[2], avg_et[1], avg_et[0], avg_et_tot, tot_dead_tree_tot);
 
 
@@ -533,10 +533,10 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "MONTH", "GPP(0)", "GPP (tot)", "RM(0)", "RM(tot)", "NPP(0)", "NPP (tot)", "ET(0)", "ET (tot)", "CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d \n",
+		Monthly_Log ("%d \t%10d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \n",
 				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_maint_resp[0], c->monthly_tot_maint_resp, c->monthly_npp[0], c->monthly_tot_npp, c->monthly_et[0],
 				c->monthly_tot_et, c->monthly_cc[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
 
@@ -561,11 +561,11 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP (tot)", "RM(1)", "RM(0)", "RM (tot)","NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)",
 					"ET(0)", "ET(tot)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d\n",
+		Monthly_Log ("%d \t%10d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \t%10d\n",
 				yos[years].year, month+1,
 				c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_maint_resp[1],c->monthly_maint_resp[0], c->monthly_tot_maint_resp,
@@ -601,12 +601,12 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n-%s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n\n",
+			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "RM(2)","RM(1)", "RM(0)", "RM(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)",
 					"ET(2)","ET(1)", "ET(0)", "ET(tot)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
 					"DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("-%d %10d %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10g %10d %10d %10d %10d\n",
+		Monthly_Log ("%d \t%10d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \t%10d \t%10d\n",
 				yos[years].year, month+1,
 				c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_maint_resp[2], c->monthly_maint_resp[1],c->monthly_maint_resp[0], c->monthly_tot_maint_resp,
@@ -679,10 +679,10 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n-%s %8s  %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s\n\n",
+			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
 					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "RM(0)", "RM(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d \n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
 				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_maint_resp[0], c->daily_tot_maint_resp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0],
 				c->daily_tot_et, c->daily_lai[0], c->daily_cc[0], c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
@@ -707,11 +707,11 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n-%s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s\n\n",
+			Daily_Log ("\n%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
 					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "RM(1)", "RM(0)", "RM(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d %8d\n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_maint_resp[1], c->daily_maint_resp[0], c->daily_tot_maint_resp,
@@ -750,11 +750,11 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n-%s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %8s %7s %7s %7s %7s\n\n",
+			Daily_Log ("\n\t%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%7s \t%7s \t%7s \t%7s\n\n",
 					"YEAR", "MONTH", "DAY", "GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "RM(2)","RM(1)", "RM(0)", "RM(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)",
 					"LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("-%d %8d %8d %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8.3g %8d %8d %8d %8d\n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d \t%8d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_maint_resp[2], c->daily_maint_resp[1],c->daily_maint_resp[0], c->daily_tot_maint_resp,
