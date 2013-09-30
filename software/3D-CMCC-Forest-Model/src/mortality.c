@@ -19,7 +19,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
 
-	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d !!!\n", c->heights[height].z);
+	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d, species %s height %g dbh %g !!!\n", c->heights[height].z, c->heights[height].ages[age].species[species].name,
+			c->heights[height].value, c->heights[height].ages[age].species[species].value[AVDBH]);
 
 	Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CONTROL ROOT BIOMASS!!!\n");
 
@@ -45,19 +46,38 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 		Log("Tot Root Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]
 																 + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass before reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
-		Log("Canopy Cover in while = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
 
-		// levato
-		//s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM])/ (float)s->counter[N_TREE];
-		//Log(" Av root mass = %g tDM/tree\n", s->value[AV_ROOT_MASS] );
 
-		//oldNtree = s->counter[N_TREE];
+		//check if cc passed to function is correct
+		if (c->annual_layer_number == 1 && c->layer_cover_dominant >= settings->max_layer_cover)
+		{
+			Log("Layer cover in layer 0 passed to while = %g %% \n", c->layer_cover_dominant * 100);
+		}
+		if (c->annual_layer_number == 2 && (c->layer_cover_dominant >= settings->max_layer_cover || c->layer_cover_dominated >= settings->max_layer_cover))
+		{
+			if(c->layer_cover_dominant >= settings->max_layer_cover)
+			Log("Layer cover in layer 1 passed to while= %g %%\n", c->layer_cover_dominant * 100);
+			if(c->layer_cover_dominated >= settings->max_layer_cover)
+			Log("Layer cover in layer 0 passed to while= %g %% \n", c->layer_cover_dominated * 100);
+		}
+		if (c->annual_layer_number > 2 && (c->layer_cover_dominant >= settings->max_layer_cover || c->layer_cover_dominated >= settings->max_layer_cover || c->layer_cover_subdominated >= settings->max_layer_cover))
+		{
+			if(c->layer_cover_dominant >= settings->max_layer_cover)
+			Log("Layer cover in layer 2 passed to while= %g %%\n", c->layer_cover_dominant * 100);
+			if(c->layer_cover_dominated >= settings->max_layer_cover)
+			Log("Layer cover in layer 1 passed to while= %g %% \n", c->layer_cover_dominated * 100);
+			if(c->layer_cover_subdominated >= settings->max_layer_cover)
+			Log("Layer cover in layer 0 passed to while= %g %% \n", c->layer_cover_subdominated * 100);
+		}
+
+
 
 		while (layer_cover >= settings->max_layer_cover )
 		{
 			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
 			deadtree += 1;
+			Log("up\n");
 
 			//todo in this case the model takes into account not NTREE of layer but just for class
 			//insert a variable linked to cell for ntree
@@ -66,8 +86,6 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
 																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 		}
-		//oldNtree -= s->counter[N_TREE];
-		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
 
 		if (c->annual_layer_number == 1)
 		{
@@ -129,7 +147,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 		Log("Stem Biomass after reduction = %g tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
-		Log("Canopy Cover after while = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
+
+
 
 		//reset dead tree
 		deadtree = 0;

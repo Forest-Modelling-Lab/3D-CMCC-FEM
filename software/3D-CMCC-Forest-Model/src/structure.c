@@ -425,13 +425,13 @@ void Get_forest_structure (CELL *const c)
 			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
 
-		if (c->heights_count == 1)
+		if (c->annual_layer_number == 1)
 		{
 			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
 
 			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominant * 100;
 		}
-		if (c->heights_count == 2)
+		if (c->annual_layer_number == 2)
 		{
 			Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
 			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
@@ -440,7 +440,7 @@ void Get_forest_structure (CELL *const c)
 			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominated * 100;
 
 		}
-		if (c->heights_count > 2)
+		if (c->annual_layer_number > 2)
 		{
 			Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
 			Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
@@ -473,6 +473,7 @@ void Get_forest_structure (CELL *const c)
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
 							Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						}
 						break;
 					case 2:
@@ -484,6 +485,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else
@@ -494,6 +496,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 
@@ -507,6 +510,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
@@ -517,6 +521,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						else
@@ -527,9 +532,27 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								c->layer_cover_subdominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 							}
 						}
 						break;
+
+						Log("Layer cover after mortality function\n");
+						if (c->annual_layer_number == 1)
+						{
+							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+						}
+						if (c->annual_layer_number == 2)
+						{
+							Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
+							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+						}
+						if (c->annual_layer_number > 2)
+						{
+							Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
+							Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+							Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+						}
 					}
 				}
 			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
