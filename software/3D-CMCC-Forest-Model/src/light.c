@@ -432,15 +432,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					//percentuale coperta
 					Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];
 					//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICiE COPERTA
-					c->par_for_soil = (c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					c->net_radiation_for_soil = ( c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-
-					//percentuale scoperta
-					c->par_for_soil += (c->par_for_dominated * (Gap_Cover * settings->sizeCell));
-					c->par_for_soil /= settings->sizeCell;
-
-					c->net_radiation_for_soil += (c->net_radiation_for_dominated * (Gap_Cover * settings->sizeCell));
-					c->net_radiation_for_soil /= settings->sizeCell;
+					c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+ (c->par_for_dominated * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+					c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+(c->net_radiation_for_dominated * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+					Log("Net radiation for soil = %gW/m^2/hour \n", c->net_radiation_for_soil);
 					Log("Par for soil = %g molPAR/m^2 month\n", c->par_for_soil);
 				}
 				else
