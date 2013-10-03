@@ -374,16 +374,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					if (c->dominated_veg_counter == 1 ) //first height class proccessess
 					{
 						Log("First height class processed\n");
-
 						Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
-
-						//Net Radiation for lower layer
-						c->net_radiation_for_subdominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
-
-						//Par for lower layer
-						c->par_for_subdominated = (c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-
-						Log("Par for lower layer = %g molPAR/m^2 day/month\n", c->par_for_subdominated);
 					}
 					else if (c->dominated_veg_counter > 1 && c->dominated_veg_counter < c->height_class_in_layer_dominated_counter)
 					{
