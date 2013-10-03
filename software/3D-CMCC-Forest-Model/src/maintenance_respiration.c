@@ -153,7 +153,8 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]));
+	//todo NOT CLEAR FOR WHAT DIVIDE
+	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
 	Log("Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
 
@@ -227,6 +228,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 
 
+	//todo see if could be better to multiply for ratio N/C
 	//convert to tDM/ cell resolution
 	//upscale to cell level and convert from gC to tons of DM
 	s->value[DAILY_LEAF_MAINT_RESP] *= 2.0 / 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
