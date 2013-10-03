@@ -14,7 +14,7 @@
 
 void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const int years)
 {
-	float sapwood_perc;
+	//float sapwood_perc;
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -137,10 +137,10 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log("SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
-	sapwood_perc = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
-	Log("sapwood perc = %g%\n", sapwood_perc);
+	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
+	Log("sapwood perc = %g%\n", s->value[SAPWOOD_PERC]);
 	Log("Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
-	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * sapwood_perc);
+	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC]);
 	Log("Sapwood biomass = %g tDM class cell \n", s->value[WS_sap]);
 
 

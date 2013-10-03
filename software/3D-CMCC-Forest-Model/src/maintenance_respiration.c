@@ -43,7 +43,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	float exponent;
 	//float n_area_sun, n_area_shade, dlmr_area_sun, dlmr_area_shade;
 
-	float n_area/*, dlmr_area*/;
+	//float n_area/*, dlmr_area*/;
 
 	float leaf_nitrogen;
 	float fine_root_nitrogen;
@@ -147,13 +147,12 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	Log("--STEM\n");
 
 	//convert biomass foliage from tones of DM to grams of Carbon then compute Nitrogen content using CN ratio
-	stem_nitrogen = ((s->value[WS_sap]/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
+	stem_nitrogen = (((s->value[BIOMASS_STEM_CTEM]*s->value[SAPWOOD_PERC])/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
 	Log("Stem nitrogen content = %g gN/cell\n", stem_nitrogen);
 
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	//todo NOT CLEAR FOR WHAT DIVIDE
 	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
 	Log("Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
@@ -162,7 +161,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	Log("--COARSE ROOT\n");
 
 	//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
-	coarse_root_nitrogen = ((s->value[BIOMASS_ROOTS_COARSE_CTEM]/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
+	coarse_root_nitrogen = (((s->value[BIOMASS_ROOTS_COARSE_CTEM]*s->value[SAPWOOD_PERC])/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
 	Log("coarse root nitrogen content = %g gN/cell\n", coarse_root_nitrogen);
 
 	//live coarse root maintenance respiration

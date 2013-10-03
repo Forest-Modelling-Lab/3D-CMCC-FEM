@@ -70,7 +70,7 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
 void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
 {
 	static float oldBasalArea;
-	static float sapwood_perc;
+	//static float sapwood_perc;
 
 	Log ("\nPEAK LAI FUNCTION\n\n");
 
@@ -106,13 +106,13 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, i
 	s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
 	Log("heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
 
-	sapwood_perc = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
-	Log("Sapwood/Basal Area = %g \n", sapwood_perc );
-	Log("Sapwood/Basal Area = %g %%\n",sapwood_perc * 100 );
+	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
+	Log("Sapwood/Basal Area = %g \n", s->value[SAPWOOD_PERC] );
+	Log("Sapwood/Basal Area = %g %%\n",s->value[SAPWOOD_PERC] * 100 );
 
 
 	//compute sapwood pools and heatwood pool
-	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * sapwood_perc;
+	s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC];
 	Log("Stem biomass = %g tDM/area \n", s->value[BIOMASS_STEM_CTEM]);
 	Log("Sapwood biomass = %g tDM/area \n", s->value[WS_sap]);
 	s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
