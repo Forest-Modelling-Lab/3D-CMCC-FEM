@@ -180,6 +180,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				//c->par_for_dominated = (c->par- s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 			}
+			//FIXME
 			else if ( c->dominant_veg_counter > 1 && c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
 			{
 				Log("Second but not last height class proccessing....\n");
