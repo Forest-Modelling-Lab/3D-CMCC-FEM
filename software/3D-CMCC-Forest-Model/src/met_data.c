@@ -412,15 +412,24 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 }
 
-void Get_soil_temperature (CELL * c, int day, int month, int years, int DaysInMonth[month], YOS *yos, int years_of_simulation)
+void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
 	float avg = 0;
 	int i;
 	int day_temp = day;
 	int month_temp = month;
+	int weight;
 	const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 	//Log("\n\nGET_SOIL_TEMPERATURE\n");
+
+	/*following BIOME-bgc 4.1.2*/
+	/* for this version, an 11-day running weighted average of daily
+	average temperature is used as the soil temperature at 10 cm.
+	For days 1-10, a 1-10 day running weighted average is used instead.
+	The tail of the running average is weighted linearly from 1 to 11.
+	There are no corrections for snowpack or vegetation cover.
+	*/
 
 	MET_DATA *met;
 	// check parameters
@@ -428,38 +437,42 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, int DaysInMo
 
 
 	//FIXME model doesn't get for the fist 10 days of the year the averaged values
-	if (day < 10 && month == 0)
+
+	//FIXME i DONT KNOW WEIGHT FOR AVERAGE
+	if (day < 11.0 && month == 0)
 	{
 		met[month_temp].d[day_temp].tsoil = met[month].d[day].tavg;
 	}
 	else
 	{
-		for (i=0; i <10; i++)
+		for (i=0; i <11; i++)
 		{
-			if (day > 9)
+			weight = 11-i;
+
+			if (day > 10.0)
 			{
-				avg += met[month_temp].d[day_temp].tavg;
+				avg += (met[month_temp].d[day_temp].tavg * weight);
 				day_temp--;
 			}
 			else
 			{
 				if(day_temp == 0)
 				{
-					avg += met[month_temp].d[day_temp].tavg;
+					avg += (met[month_temp].d[day_temp].tavg * weight);
 					month_temp--;
-					day_temp = days_per_month[month_temp] - 1;
+					day_temp = days_per_month[month_temp] - 1.0;
 				}
 				else
 				{
-					avg += met[month_temp].d[day_temp].tavg;
+					avg += (met[month_temp].d[day_temp].tavg * weight);
 					day_temp--;
 				}
 			}
 		}
-
-
-		met[month].d[day].tsoil = avg /10;
+		avg = avg / 77;
+		met[month].d[day].tsoil = avg;
 	}
+	Log("TSOIL = %g\n", met[month].d[day].tsoil);
 }
 
 
