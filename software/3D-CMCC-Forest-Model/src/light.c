@@ -217,7 +217,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		{
 			c->net_radiation_for_subdominated = c->net_radiation_for_dominated;
 			c->par_for_subdominated = c->par_for_dominated;
-			if ( !c->height_class_in_layer_subdominated_counter ) //no trees in subdominated layer
+			if ( !c->height_class_in_layer_subdominated_counter ) //no trees in sub-dominated layer
 			{
 				if ( c->height_class_in_layer_dominant_counter == 1)
 				{

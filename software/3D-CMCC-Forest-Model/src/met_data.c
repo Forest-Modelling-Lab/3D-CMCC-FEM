@@ -7,6 +7,8 @@
 #include "types.h"
 #include "constants.h"
 
+extern  const char *szMonth[MONTHS];
+
 extern void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
 {
 	MET_DATA *met;
@@ -42,7 +44,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 	/*
 	if (!day )
 			Log("computing Get_avg_temperature...\n");
-			*/
+	 */
 
 	MET_DATA *met;
 	// check parameters
@@ -88,7 +90,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 	/*
 	if (!day)
 		Log("computing Get_daylight_avg_temperature...\n");
-		*/
+	 */
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -126,7 +128,7 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 	/*
 	if (!day)
 		Log("computing Get_nightime_avg_temperature...\n");
-		*/
+	 */
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -181,7 +183,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 			previous_thermic_sum = 0;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-		Log("tavg NO_DATA!!\n");
+			Log("tavg NO_DATA!!\n");
 	}
 	else
 	{
@@ -195,7 +197,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 			met[month].d[day].thermic_sum = previous_thermic_sum;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-		Log("tavg NO_DATA!!\n");
+			Log("tavg NO_DATA!!\n");
 	}
 }
 
@@ -408,20 +410,71 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 }
 
-void Get_soil_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+void Get_soil_temperature (CELL * c, int day, int month, int years, int DaysInMonth[month], YOS *yos, int years_of_simulation)
 {
-	static float avg;
-	static int i;
-	float peso[10];
-	/*
-	for (i=0; i<10; i++)
+	float avg = 0;
+	int i;
+	int day_temp = day;
+	int month_temp = month;
+	const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	Log("\n\nGET_SOIL_TEMPERATURE\n");
+
+	MET_DATA *met;
+	// check parameters
+	met = (MET_DATA*) yos[years].m;
+
+	Log("years %d\n", years);
+	Log("month %s\n", szMonth[month]);
+	Log("day %d\n\n", day_temp);
+	//FIXME model doesn't get for the fist 10 days of the year the averaged values
+	if (day < 10 && month == 0)
 	{
-		if
+		met[month_temp].d[day_temp].tsoil = met[month].d[day].tavg;
 	}
-	*/
+	else
+	{
+		for (i=0; i <10; i++)
+		{
+			Log("i=%d\n", i);
+			if (day > 9)
+			{
+
+				avg += met[month_temp].d[day_temp].tavg;
+				Log("day temp %d\n", day_temp);
+				Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
+				day_temp--;
+			}
+			else
+			{
+				if(day_temp == 0)
+				{
+					Log("day temp %d\n", day_temp);
+					Log("mont temp = %d\n", month_temp);
+					Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
+					avg += met[month_temp].d[day_temp].tavg;
+					month_temp--;
+					day_temp = days_per_month[month_temp] - 1;
+				}
+				else
+				{
+					Log("day temp %d\n", day_temp);
+					Log("month %d\n", month_temp);
+					Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
+					avg += met[month_temp].d[day_temp].tavg;
+					day_temp--;
+				}
+			}
+			Log("\n");
+		}
+
+
+		met[month].d[day].tsoil = avg /10;
+	}
 
 
 
+	Log("TSOIL= %g\n", met[month].d[day].tsoil);
 }
 
 
