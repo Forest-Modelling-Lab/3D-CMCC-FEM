@@ -55,10 +55,6 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 	Log("\nGET_MAINTENANCE_RESPIRATION\n");
 
-	//TODO FIND A BETTER EQUATIONS FOR TSOIL (BIOME uses a 11 day weighted average of tavg)
-	tsoil = met[month].d[day].tavg;
-
-
 	// leaf day and night maintenance respiration when leaves on
 	if (s->counter[VEG_UNVEG] == 1)
 	{
@@ -127,7 +123,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		Log("--FINE ROOT\n");
-		exponent = (tsoil - 20.0) / 10.0;
+		exponent = (met[month].d[day].tsoil - 20.0) / 10.0;
 		t1 = pow(q10, exponent);
 
 		//convert biomass root from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
@@ -165,7 +161,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	Log("coarse root nitrogen content = %g gN/cell\n", coarse_root_nitrogen);
 
 	//live coarse root maintenance respiration
-	exponent = (tsoil - 20.0) / 10.0;
+	exponent = (met[month].d[day].tsoil - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
 	s->value[COARSE_ROOT_MAINT_RESP] = ((coarse_root_nitrogen * mrpern * t1)/settings->sizeCell);
 	Log("Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);

@@ -382,7 +382,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-swc = %g %vol\n"
 				"-thermic_sum = %g °C\n"
 				"-day %d month %d daylength = %g hrs\n"
-				"-DOY = %d\n",
+				"-DOY = %d\n"
+				"-tsoil = %g °C\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
@@ -398,7 +399,8 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				day +1,
 				month +1,
 				met[month].d[day].daylength,
-				doy);
+				doy,
+				met[month].d[day].tsoil);
 
 		if (settings->spatial == 's')
 		{
@@ -418,15 +420,13 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, int DaysInMo
 	int month_temp = month;
 	const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-	Log("\n\nGET_SOIL_TEMPERATURE\n");
+	//Log("\n\nGET_SOIL_TEMPERATURE\n");
 
 	MET_DATA *met;
 	// check parameters
 	met = (MET_DATA*) yos[years].m;
 
-	Log("years %d\n", years);
-	Log("month %s\n", szMonth[month]);
-	Log("day %d\n\n", day_temp);
+
 	//FIXME model doesn't get for the fist 10 days of the year the averaged values
 	if (day < 10 && month == 0)
 	{
@@ -436,45 +436,30 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, int DaysInMo
 	{
 		for (i=0; i <10; i++)
 		{
-			Log("i=%d\n", i);
 			if (day > 9)
 			{
-
 				avg += met[month_temp].d[day_temp].tavg;
-				Log("day temp %d\n", day_temp);
-				Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
 				day_temp--;
 			}
 			else
 			{
 				if(day_temp == 0)
 				{
-					Log("day temp %d\n", day_temp);
-					Log("mont temp = %d\n", month_temp);
-					Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
 					avg += met[month_temp].d[day_temp].tavg;
 					month_temp--;
 					day_temp = days_per_month[month_temp] - 1;
 				}
 				else
 				{
-					Log("day temp %d\n", day_temp);
-					Log("month %d\n", month_temp);
-					Log("tavg = %g\n", met[month_temp].d[day_temp].tavg);
 					avg += met[month_temp].d[day_temp].tavg;
 					day_temp--;
 				}
 			}
-			Log("\n");
 		}
 
 
 		met[month].d[day].tsoil = avg /10;
 	}
-
-
-
-	Log("TSOIL= %g\n", met[month].d[day].tsoil);
 }
 
 
