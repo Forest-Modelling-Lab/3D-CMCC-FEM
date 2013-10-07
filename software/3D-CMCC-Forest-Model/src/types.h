@@ -907,6 +907,8 @@ typedef struct {
 	float air_pressure;
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
+	float gapcover[3];
+
 
 	//cumulative variables layer related used in annual-monthly-daily Log
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
@@ -987,6 +989,7 @@ extern int is_valid_met(const char *const);
 extern void Get_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_daylight_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_nightime_avg_temperature (CELL *, int, int, int, int, YOS *);
+extern void Get_soil_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_thermic_sum (CELL *, int, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);

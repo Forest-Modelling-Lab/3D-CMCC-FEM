@@ -407,3 +407,23 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 	Log("***************\n");
 
 }
+
+void Get_soil_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+{
+	static float avg;
+	static int i;
+	float peso[10];
+	/*
+	for (i=0; i<10; i++)
+	{
+		if
+	}
+	*/
+
+
+
+}
+
+
+
+

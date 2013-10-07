@@ -1149,6 +1149,8 @@ int main(int argc, char *argv[])
 							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
 							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_soil_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
 
 							//Get thermic_sum
 							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);

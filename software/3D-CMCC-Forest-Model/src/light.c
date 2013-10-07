@@ -29,7 +29,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	float Month_Radiation;
 	float Daily_Radiation;
 	//float DailyPar;
-	float Gap_Cover = 0;
+	//float Gap_Cover = 0;
 
 	Log("\nGET LIGHT ROUTINE\n\n");
 
@@ -141,16 +141,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		{
 			Log("Only one height class in dominant light\n");
 
-			Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];
-			Log("Canopy Cover = %g \n", s->value[CANOPY_COVER_DBHDC]);
-			Log("Gap Cover = %g \n", Gap_Cover);
+			c->gapcover[c->top_layer]= 1 - s->value[CANOPY_COVER_DBHDC];
 
 			//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
-			c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
+			c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
 			Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_dominated);
 
 			//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
-			c->par_for_dominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + (c->par * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+			c->par_for_dominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
 			Log("Average Par for lower layer = %g molPAR/m^2 day/month\n", c->par_for_dominated);
 		}
 		else
@@ -158,52 +156,49 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("More than one height class in dominant light\n");
 			Log("dominant counter = %d\n", c->dominant_veg_counter);
 			//first and higher height class enter
-			//first height class proccessess
+			//first height class processes
 			if (c->dominant_veg_counter == 1 )
 			{
 				Log("First height class processing....\n");
-				Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];
+				c->gapcover[c->top_layer] = 1 - s->value[CANOPY_COVER_DBHDC];
 
 			}
-			//FIXME
 			else if ( c->dominant_veg_counter > 1 && c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
 			{
 				Log("Second but not last height class processing....\n");
-				Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+				c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
 
-				if (Gap_Cover < 0)
+				if (c->gapcover[c->top_layer] < 0)
 				{
-					Gap_Cover = 0.05;
+					c->gapcover[c->top_layer] = 0.05;
 				}
 			}
 			else //last height
 			{
 				Log("Last height class processing....\n");
-				Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+				c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
 
-				if (Gap_Cover < 0)
+				if (c->gapcover[c->top_layer] < 0)
 				{
-					Gap_Cover = 0.05;
+					c->gapcover[c->top_layer] = 0.05;
 				}
-				//FIXME CONTROL IF USE A LAYER CANOPY COVER INSTED CLASS CANOPY COVER
 				if (c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
 				{
 					Log("Second but not last height class processing....\n");
-					Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+					c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
 
-					if (Gap_Cover < 0)
+					if (c->gapcover[c->top_layer] < 0)
 					{
-						Gap_Cover = 0.05;
+						c->gapcover[c->top_layer] = 0.05;
 					}
 				}
 				//FIXME NEW VERSION
-				//light transmitted should takes into account all classes "LightTrasmitted" not only the last one class
 				else
 				{
-					c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * ((1.0- Gap_Cover) * settings->sizeCell))
-							+ (c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
-					c->par_for_dominated = (c->par - s->value[APAR]) * ((1.0- Gap_Cover) * settings->sizeCell)+
-							c->par * (Gap_Cover * settings->sizeCell)/ settings->sizeCell;
+					c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell))
+							+ (c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+					c->par_for_dominated = (c->par - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
+							c->par * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
 				}
 				//FIXME OLD VERSION
 				//Net Radiation for lower layer
@@ -287,17 +282,19 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				if ( c->height_class_in_layer_dominated_counter == 1)    //only one height class in layer
 				{
 					Log("Only one height class in layer dominated\n");
-					Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+					c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
+					Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
+
 					//percentuale coperta
 					//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICIE COPERTA
 
 					//Net Radiation for lower layer
 					c->net_radiation_for_subdominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-							+ c->net_radiation * (Gap_Cover * (float)settings->sizeCell)) / settings->sizeCell;
+							+ c->net_radiation * (c->gapcover[c->top_layer-1] * (float)settings->sizeCell)) / settings->sizeCell;
 					Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_subdominated);
 
 					c->par_for_subdominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-							+ (c->par * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+							+ (c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell)))/settings->sizeCell;
 
 					Log("Par for subdominated = %g molPAR/m^2 day/month\n", c->par_for_subdominated);
 				}
@@ -306,13 +303,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					Log("More height classes in layer dominated\n");
 					if (c->dominated_veg_counter == 1 ) //first height class proccessess
 					{
-						Log("First height class processed\n");
-						Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
 					}
 					else if ( c->dominated_veg_counter > 1 && c->dominated_veg_counter < c->height_class_in_layer_dominated_counter )
 					{
 						Log("Second and more height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
 					}
 					else //last height
 					{
@@ -320,24 +318,23 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						//Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
 						//Log("Free space in layer = %g\n", Gap_Cover);
 
-						//FIXME CONTROL IF USE A LAYER CANOPY COVER INSTED CLASS CANOPY COVER
 						if (c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
 						{
-							Log("Second but not last height class proccessing....\n");
-							Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+							Log("Second but not last height class processing....\n");
+							c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
 
-							if (Gap_Cover < 0)
+							if (c->gapcover[c->top_layer-1] < 0)
 							{
-								Gap_Cover = 0.05;
+								c->gapcover[c->top_layer-1] = 0.05;
 							}
 						}
 						//FIXME NEW VERSION
 						else
 						{
-							c->net_radiation_for_subdominated = (((c->net_radiation * LightTrasmitted) * ((1.0- Gap_Cover) * settings->sizeCell))
-									+ (c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
-							c->par_for_subdominated = ((c->par - s->value[APAR]) * ((1.0- Gap_Cover) * settings->sizeCell)
-									+ c->par * (Gap_Cover * settings->sizeCell))/settings->sizeCell;
+							c->net_radiation_for_subdominated = (((c->net_radiation * LightTrasmitted) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell))
+									+ (c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell))) / settings->sizeCell;
+							c->par_for_subdominated = ((c->par - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell)
+									+ c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell))/settings->sizeCell;
 						}
 
 						//FIXME OLDVERSION
@@ -358,14 +355,15 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				{
 					//percentuale coperta
 					//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICIE COPERTA
-					Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+					c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 
 					//Net Radiation for lower layer
-					c->net_radiation_for_subdominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + c->net_radiation * (Gap_Cover * (float)settings->sizeCell)) / settings->sizeCell;
+					c->net_radiation_for_subdominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + c->net_radiation
+													* (c->gapcover[c->top_layer-1] * (float)settings->sizeCell)) / settings->sizeCell;
 					Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_subdominated);
 
 					c->par_for_subdominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-							+ (c->par * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+							+ (c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell)))/settings->sizeCell;
 					Log("Par for lower layer or soil = %g molPAR/m^2 day/month\n", c->par_for_subdominated);
 				}
 				else
@@ -374,24 +372,25 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					if (c->dominated_veg_counter == 1 ) //first height class proccessess
 					{
 						Log("First height class processed\n");
-						Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 					}
 					else if (c->dominated_veg_counter > 1 && c->dominated_veg_counter < c->height_class_in_layer_dominated_counter)
 					{
 						Log("Second and more height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
 					}
 					else //last height
 					{
 						Log("Last height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
 
 						//Net Radiation for lower layer
-						c->net_radiation_for_subdominated += (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)) + c->net_radiation * (Gap_Cover * (float)settings->sizeCell)) / settings->sizeCell;
+						c->net_radiation_for_subdominated += (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
+								+ c->net_radiation * (c->gapcover[c->top_layer-1] * (float)settings->sizeCell)) / settings->sizeCell;
 						Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_subdominated);
 
-						c->par_for_subdominated += ((c->par - s->value[APAR]) * ((1.0-Gap_Cover) * settings->sizeCell)
-								+c->par * (Gap_Cover * settings->sizeCell))/settings->sizeCell;
+						c->par_for_subdominated += ((c->par - s->value[APAR]) * ((1.0-c->gapcover[c->top_layer-1]) * settings->sizeCell)
+								+c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell))/settings->sizeCell;
 						Log("Par for  lower layer = %g molPAR/m^2 day/month\n", c->par_for_subdominated);
 					}
 				}
@@ -421,12 +420,12 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				{
 					Log("Only one height class in layer subdominated\n");
 					//percentuale coperta
-					Gap_Cover = 1 - s->value[CANOPY_COVER_DBHDC];
+					c->gapcover[c->top_layer-2] = 1 - s->value[CANOPY_COVER_DBHDC];
 					//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICiE COPERTA
 					c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-							+ (c->par_for_dominated * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+							+ (c->par_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
 					c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-							+(c->net_radiation_for_dominated * (Gap_Cover * settings->sizeCell)))/settings->sizeCell;
+							+(c->net_radiation_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
 					Log("Net radiation for soil = %gW/m^2/hour \n", c->net_radiation_for_soil);
 					Log("Par for soil = %g molPAR/m^2 month\n", c->par_for_soil);
 				}
@@ -436,20 +435,21 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					if (c->subdominated_veg_counter == 1 ) //first height class processes
 					{
 						Log("First height class processed\n");
-						Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 						//Par for lower layer
 					}
 					else if ( c->subdominated_veg_counter > 1 && c->subdominated_veg_counter < c->height_class_in_layer_subdominated_counter )
 					{
 						Log("Second and more height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 					}
 					else //last height
 					{
 						Log("Last height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
-						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- Gap_Cover) * settings->sizeCell))/settings->sizeCell;
-						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- Gap_Cover) * settings->sizeCell))/settings->sizeCell;
+						c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
+						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
+						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2])
+								* settings->sizeCell))/settings->sizeCell;
 						Log("Net radiation for soil = %gW/m^2/hour \n", c->net_radiation_for_soil);
 						Log("Par for soil = %g molPAR/m^2 day/month\n", c->par_for_soil);
 					}
@@ -460,14 +460,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				if ( c->height_class_in_layer_subdominated_counter == 1) //first height  class processed
 				{
 					//percentuale coperta
-					Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+					c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 					//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICIE COPERTA
 					c->par_for_soil = (c->par_for_dominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 					//percentuale scoperta
-					c->par_for_soil += (c->par_for_dominated * (Gap_Cover * settings->sizeCell));
+					c->par_for_soil += (c->par_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell));
 					c->par_for_soil /= settings->sizeCell;
-					c->net_radiation_for_soil += c->net_radiation_for_dominated * (Gap_Cover * settings->sizeCell);
+					c->net_radiation_for_soil += c->net_radiation_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell);
 					c->net_radiation_for_soil /= settings->sizeCell;
 					Log("Par for layer = %g molPAR/m^2 day/month\n", c->par_for_soil);
 				}
@@ -477,19 +477,19 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					if (c->subdominated_veg_counter == 1 ) //first height class proccessess
 					{
 						Log("First height class processed\n");
-						Gap_Cover = 1.0 - s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 					}
 					else if (c->subdominated_veg_counter > 1 && c->subdominated_veg_counter < c->height_class_in_layer_subdominated_counter)
 					{
 						Log("Second and more height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
+						c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 					}
 					else //last height
 					{
 						Log("Last height class processed\n");
-						Gap_Cover -= s->value[CANOPY_COVER_DBHDC];
-						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- Gap_Cover) * settings->sizeCell))/settings->sizeCell;
-						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- Gap_Cover) * settings->sizeCell))/settings->sizeCell;
+						c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
+						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
+						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
 						Log("Net radiation for soil = %gW/m^2/hour \n", c->net_radiation_for_soil);
 						Log("Par for soil = %g molPAR/m^2 day/month\n", c->par_for_soil);
 					}
