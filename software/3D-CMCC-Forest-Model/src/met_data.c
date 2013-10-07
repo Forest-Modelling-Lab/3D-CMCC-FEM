@@ -381,7 +381,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				"-rain = %g mm\n"
 				"-swc = %g %vol\n"
 				"-thermic_sum = %g °C\n"
-				"-day %d month %d daylength = %g hrs\n"
+				"-daylength = %g hrs\n"
 				"-DOY = %d\n"
 				"-tsoil = %g °C\n",
 				met[month].d[day].solar_rad,
@@ -396,8 +396,6 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 				met[month].d[day].rain,
 				met[month].d[day].swc,
 				met[month].d[day].thermic_sum,
-				day +1,
-				month +1,
 				met[month].d[day].daylength,
 				doy,
 				met[month].d[day].tsoil);
@@ -472,7 +470,6 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 		avg = avg / 77;
 		met[month].d[day].tsoil = avg;
 	}
-	Log("TSOIL = %g\n", met[month].d[day].tsoil);
 }
 
 
