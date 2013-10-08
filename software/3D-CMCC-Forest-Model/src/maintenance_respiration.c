@@ -50,7 +50,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	float coarse_root_nitrogen;
 	float stem_nitrogen;
 
-	float tsoil;
+	float gt;
 
 
 	Log("\nGET_MAINTENANCE_RESPIRATION\n");
@@ -142,15 +142,23 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	// TREE-specific fluxes
 	Log("--STEM\n");
 
+	/*following lpj*/
+	gt = exp (308.56 * ((1.0/56.02) - (1.0/(met[month].d[day].tavg + 46.02))));
+	Log("gt = %g\n", gt);
+
+
 	//convert biomass foliage from tones of DM to grams of Carbon then compute Nitrogen content using CN ratio
 	stem_nitrogen = (((s->value[BIOMASS_STEM_CTEM]*s->value[SAPWOOD_PERC])/2.0)*1000000.0) / s->value[CN_LIVE_WOODS];
 	Log("Stem nitrogen content = %g gN/cell\n", stem_nitrogen);
+
+	Log("LPJ stem maintenance respiration = %g gC/day m^2\n", (0.066 * stem_nitrogen *gt)/settings->sizeCell);
 
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
 	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
 	Log("Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
+
 
 
 	//IT MUST TAKES INTO ACCOUNT ONLY LIVE roots NOT ALL roots!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

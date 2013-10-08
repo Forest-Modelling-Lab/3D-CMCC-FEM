@@ -46,7 +46,7 @@
 #define eps                   0.0001
 #define e				  2.71828183     //nepero/eulero number
 
-#define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME
+#define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ
 
 
 
