@@ -56,6 +56,8 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	Log("-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 
+
+
 	/*Canopy Cover using DBH-DC*/
 
 	s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / settings->sizeCell;

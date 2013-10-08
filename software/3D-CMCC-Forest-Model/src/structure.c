@@ -278,6 +278,7 @@ void Get_forest_structure (CELL *const c)
 		height = 0;
 
 
+
 		//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
 
@@ -291,6 +292,22 @@ void Get_forest_structure (CELL *const c)
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
 					Log("** CANOPY COVER from DBH-DC Function FOR LAYER %d  species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].name);
+
+
+					/*compute maximum crown area*/
+					//TODO CHECK IF USE IT
+					/*for references and variables see "Forest Mensuration" book 4th edition
+					 * B. Husch, T.W. Beers, J.A. Kershaw Jr.
+					 * edited by John Wiley & Sons, Inc
+					 *
+					 * and Krajicek, et al., "Crown competition: a measure of density.
+					 * For. Sci. 7:36-42
+					 */
+					//currently not used
+					c->heights[height].ages[age].species[species].value[MCA]= ((100*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
+					                                 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+					Log("-MCA = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
+
 
 
 					if (c->heights_count == 1)
@@ -377,7 +394,6 @@ void Get_forest_structure (CELL *const c)
 					                                                                                                                              * c->heights[height].ages[age].species[species].counter[N_TREE]
 					                                                                                                                                                                                      / settings->sizeCell;
 					Log("Canopy cover DBH-DC class related = %g\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
-
 				}
 			}
 		}
