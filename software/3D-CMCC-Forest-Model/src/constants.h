@@ -44,7 +44,12 @@
 #define Pi               3.141592654     //Pi greco
 #define ln2              0.693147181
 #define eps                   0.0001
-#define e				  2.71828183     //numero di nepero/eulero
+#define e				  2.71828183     //nepero/eulero number
+
+#define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME
+
+
+
 
 
 

@@ -145,6 +145,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		// "*" 2 to convert gC in DM
 		// "/" 1000000 to convert gDM into tonsDM
 
+
+		//todo move NPP calculation in a different source file and call it after photosynthesis>mainteinance_respiration>growth>respiration
+
 		s->value[NPP] = ((s->value[GPP_g_C] * settings->sizeCell * 2 * site->Y) / 1000000);    // assumes respiratory rate is constant
 		s->value[NPP_g_C] = s->value[GPP_g_C] * site->Y;
 
@@ -172,6 +175,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}
 
+
+
+		//todo delete all this part of autotrophic respiration
 		/*AUTOTROPHIC RESPIRATION*/
 
 		Log("***************************** AUTOTROPHIC RESPIRATION*************************** \n");
@@ -211,11 +217,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		Log("Daily/Monthly Stand GPP (absolute) = %g gC/m^2 yr\n", s->value[POINT_GPP_g_C] );
 		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
-
-
-		//TODO
-		//AUTOTROPHIC RESPIRATION (AS MAINTAINANCE RESPIRATION) SHOULD BE ACCOUNTED IN UNVEG PERIOD!!!!!
-
 	}
 
 	//DAILY GPP/NPP
