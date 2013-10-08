@@ -138,7 +138,7 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log("SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
-	Log("sapwood perc = %g%\n", s->value[SAPWOOD_PERC]);
+	Log("sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
 	Log("Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
 	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC]);
 	Log("Sapwood biomass = %g tDM class cell \n", s->value[WS_sap]);
