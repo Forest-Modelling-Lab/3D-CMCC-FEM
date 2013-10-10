@@ -1,0 +1,53 @@
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/Braaschaat_oak_1l_input.txt
+-m input/met_data/123_456_2001.txt,input/met_data/123_456_2002.txt,input/met_data/123_456_2003.txt,input/met_data/123_456_2004.txt,,input/met_data/123_456_2005.txt,input/met_data/123_456_2006.txt,input/met_data/123_456_2007.txt,input/met_data/123_456_2008.txt,input/met_data/123_456_2009.txt,input/met_data/123_456_2010.txt,input/met_data/123_456_2011.txt
+-s input/site_data/Brasschaat_oak_1l_site.txt
+-c input/model_settings/Brasschaat_settings.txt
+
+
+-i input/parameterization 
+-o output/debug_output/debug_output 
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/Braaschaat_oak_2l_input.txt
+-m input/met_data/123_456_2001.txt,input/met_data/123_456_2002.txt,input/met_data/123_456_2003.txt,input/met_data/123_456_2004.txt,input/met_data/123_456_2005.txt,input/met_data/123_456_2006.txt,input/met_data/123_456_2007.txt,input/met_data/123_456_2008.txt,input/met_data/123_456_2009.txt,input/met_data/123_456_2010.txt,input/met_data/123_456_2011.txt
+-s input/site_data/Brasschaat_oak_2l_site.txt 
+-c input/model_settings/Brasschaat_settings.txt
+
+
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/Braaschaat_oak_3l_input.txt
+-m input/met_data/123_456_2001.txt,input/met_data/123_456_2002.txt,input/met_data/123_456_2003.txt,input/met_data/123_456_2004.txt,input/met_data/123_456_2005.txt,input/met_data/123_456_2006.txt,input/met_data/123_456_2007.txt,input/met_data/123_456_2008.txt,input/met_data/123_456_2009.txt,input/met_data/123_456_2010.txt,input/met_data/123_456_2011.txt
+-s input/site_data/Brasschaat_oak_3l_site.txt
+-c input/model_settings/Brasschaat_settings.txt
+
+
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/Braaschaat_pine_1l_input.txt
+-m input/met_data/123_456_2001.txt,input/met_data/123_456_2002.txt,input/met_data/123_456_2003.txt,input/met_data/123_456_2004.txt,input/met_data/123_456_2005.txt,input/met_data/123_456_2006.txt,input/met_data/123_456_2007.txt,input/met_data/123_456_2008.txt,input/met_data/123_456_2009.txt,input/met_data/123_456_2010.txt,input/met_data/123_456_2011.txt
+-s input/site_data/Brasschaat_pine_1l_site.txt
+-c input/model_settings/Brasschaat_settings.txt
+
+
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/Braaschaat_pine_2l_input.txt
+-m input/met_data/123_456_2001.txt,input/met_data/123_456_2002.txt,input/met_data/123_456_2003.txt,input/met_data/123_456_2004.txt,input/met_data/123_456_2005.txt,input/met_data/123_456_2006.txt,input/met_data/123_456_2007.txt,input/met_data/123_456_2008.txt,input/met_data/123_456_2009.txt,input/met_data/123_456_2010.txt,input/met_data/123_456_2011.txt
+-s input/site_data/Brasschaat_pine_2l_site.txt
+-c input/model_settings/Brasschaat_settings.txt

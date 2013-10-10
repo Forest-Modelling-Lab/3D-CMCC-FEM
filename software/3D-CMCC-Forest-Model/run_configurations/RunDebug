@@ -1,0 +1,9 @@
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/initialization_data/smm_input.txt
+-m input/met_data/123_456_2001.txt
+-s input/site_data/Run_debug.txt
+-c input/model_settings/Brasschaat_settings.txt
