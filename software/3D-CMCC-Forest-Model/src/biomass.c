@@ -64,7 +64,7 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 
 		}
 
-		Log("Basal Area for this layer = %g m^2/tree\n", s->value[BASAL_AREA]);
+		Log("Basal Area for this layer = %g cm^2/tree\n", s->value[BASAL_AREA]*10000);
 		Log("Stand Basal Area for this layer = %g m^2/area\n", s->value[STAND_BASAL_AREA]);
 
 
@@ -73,7 +73,7 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 		//see Kostner et al in Biogeochemistry of Forested Catchments in a Changing Environment, Matzner, Springer for Q. petraea
 		s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 
-		Log("sapwood from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
+		Log("sapwood area from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
 		s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
 		Log("heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
 

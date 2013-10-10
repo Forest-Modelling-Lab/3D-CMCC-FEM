@@ -98,7 +98,7 @@ CN_LEAVES   20.3  //CN of leaves (kgC/kgN) for F. sylvatica from Mollicone et al
 CN_LITTER   38  //CN of leaf litter (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
 CN_FINE_ROOTS   112  // CN of fine roots (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
 CN_LIVE_WOODS   48.2  //CN of live woods (kgC/kgN) for F. sylvatica from Mollicone et al., 2002
-CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!!!! for Q. cerris from Chiesi et al., 2007
+CN_DEAD_WOODS   730  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005
 
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!

@@ -6,7 +6,7 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 PHENOLOGY	1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005
 EPSILONgCMJ	1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011 
-K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
+K	0.51		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
 ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
 //LEAF AREA INDEX
 LAIGCX	3.333               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005
@@ -19,11 +19,11 @@ SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
 SLA1	7               //Specific Leaf Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
-SLA	68.0             //Specific Leaf Area cm^2/gC for P. sylvestris from Xiao and Cuelemans 2013, 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005			
+SLA	43.0             //Specific Leaf Area cm^2/gC for P. sylvestris , 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006		
 
 //FRACTION BRANCH-BARK
-FRACBB0	0.29            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag
-FRACBB1	0.29            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999
+FRACBB0	0.29            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+FRACBB1	0.29            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 //MASS DENSITY
 RHOMIN	0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006
@@ -93,11 +93,11 @@ STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylves
 COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged for P. sylvestris from White et al., 2000, 0.29 from Pietsch et al., 2005
 
 //BIOME C:N RATIOS
-CN_LEAVES   45  //CN of leaves (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
-CN_LITTER   149  //CN of leaf litter (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
-CN_FINE_ROOTS   45  // CN of fine roots (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
-CN_LIVE_WOODS   45  //CN of live woods (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
-CN_DEAD_WOODS   730  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!!!! for P. pinaster from Chiesi et al., 2007
+CN_LEAVES   33.1  //CN of leaves (kgC/kgN) for P. sylvestris see PIetsch et al 2005  45 from Mollicone et al., 2002
+CN_LITTER   132  //CN of leaf litter (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
+CN_FINE_ROOTS   38  // CN of fine roots (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
+CN_LIVE_WOODS   50  //CN of live woods (kgC/kgN)  see PIetsch et al 2005, 58 for P. sylvestris Chiesi for P. pinaster  45 for P. sylvestris from Mollicone et al., 2002
+CN_DEAD_WOODS   1400  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!!!! for P. pinaster from Chiesi et al., 2007
 
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
@@ -124,16 +124,16 @@ MF	0.64               //Fraction mean single tree foliage biomass lost per dead 
 MR	0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
-DBHDCMIN	0.155    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
+DBHDCMAX	0.30    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
+DBHDCMIN	0.18    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.776         //a value for P. sylvestris from Xiao and Cuelemans 2013
 SAP_B	1.9156         //b value for P. sylvestris from Xiao and Cuelemans 2013
-SAP_LEAF	2000          //sapwood_max leaf area ratio in pipe model  for P. sylvestris from Hickler et al 2012
+SAP_LEAF	2000          //sapwood_max leaf area ratio in pipe model  for P. sylvestris from Hickler et al 2012 (1000 see also Law et al., 2001 for P. ponderosa)
 SAP_WRES	0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX	22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012
+HMAX	22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012, 
 DMAX	155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
 
 //not used just for comparison
@@ -144,8 +144,8 @@ CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P 0.06552    // E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227
-STEMPOWER_P 2.50626    //E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272
+STEMCONST_P 0.06552    // E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
+STEMPOWER_P 2.50626    //E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA	32    //for P. sylvestris from Rupsys et al., 2010
