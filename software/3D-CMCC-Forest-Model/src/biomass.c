@@ -44,9 +44,12 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 {
 	float oldBasalArea;
 
+	Log("GET_BIOMASS_INCREMENT_BOY\n");
+
 	//compute Basal Area
 		if (years == 0)
 		{
+			Log("avdbh = %g\n",s->value[AVDBH] );
 			s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
 			s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
 		}

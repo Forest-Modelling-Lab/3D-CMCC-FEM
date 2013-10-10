@@ -189,13 +189,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
-				if (day == 0 && month == JANUARY)
-				{
-					Get_biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
-				}
 				//loop on each species
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
+					if (day == 0 && month == JANUARY)
+					{
+						Get_biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
+					}
 					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
 					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
