@@ -40,8 +40,57 @@ void Get_tree_BB (CELL *const c,  int years)
 		}
 	}
 }
+void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
+{
+	float oldBasalArea;
 
-void Get_biomass_increment (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
+	//compute Basal Area
+		if (years == 0)
+		{
+			s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
+			s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+		}
+		else
+		{
+			oldBasalArea = s->value[BASAL_AREA];
+			s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
+			s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+			Log("old basal area = %g \n", oldBasalArea);
+			Log(" Basal Area Increment= %g m^2/tree \n", s->value[BASAL_AREA] - oldBasalArea);
+			Log(" Basal Area Increment= %g cm^2/tree \n", (s->value[BASAL_AREA] - oldBasalArea) * 10000);
+
+		}
+
+		Log("Basal Area for this layer = %g m^2/tree\n", s->value[BASAL_AREA]);
+		Log("Stand Basal Area for this layer = %g m^2/area\n", s->value[STAND_BASAL_AREA]);
+
+
+		//Log("**Kostner eq** \n");
+		//sapwood area
+		//see Kostner et al in Biogeochemistry of Forested Catchments in a Changing Environment, Matzner, Springer for Q. petraea
+		s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+
+		Log("sapwood from Kostner = %g cm^2\n", s->value[SAPWOOD_AREA]);
+		s->value[HEARTWOOD_AREA] = (s->value[BASAL_AREA] * 10000) - s->value[SAPWOOD_AREA];
+		Log("heartwood from Wang et al 2010 = %g cm^2\n", s->value[HEARTWOOD_AREA]);
+
+		s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA] / 10000) / s->value[BASAL_AREA];
+		Log("Sapwood/Basal Area = %g \n", s->value[SAPWOOD_PERC] );
+		Log("Sapwood/Basal Area = %g %%\n",s->value[SAPWOOD_PERC] * 100 );
+
+
+		//compute sapwood pools and heatwood pool
+		s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC];
+		Log("Stem biomass = %g tDM/area \n", s->value[BIOMASS_STEM_CTEM]);
+		Log("Sapwood biomass = %g tDM/area \n", s->value[WS_sap]);
+		s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
+		Log("Heartwood biomass = %g tDM/area \n", s->value[WS_heart]);
+
+
+
+}
+
+void Get_biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
 	float MassDensity;

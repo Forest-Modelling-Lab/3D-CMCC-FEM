@@ -7,7 +7,6 @@
 #include "types.h"
 #include "constants.h"
 
-extern  const char *szMonth[MONTHS];
 
 extern void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
 {

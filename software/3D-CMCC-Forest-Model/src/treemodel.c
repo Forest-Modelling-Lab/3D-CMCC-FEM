@@ -155,17 +155,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 				}
 				if (month == JANUARY)
 				{
-					//todo make a better function
-					//compute volume
-					float MassDensity;
-					MassDensity = m->cells[cell].heights[height].ages[age].species[species].value[RHOMAX]
-								  + (m->cells[cell].heights[height].ages[age].species[species].value[RHOMIN]
-								 - m->cells[cell].heights[height].ages[age].species[species].value[RHOMAX])
-								 * exp(-ln2 * (m->cells[cell].heights[height].ages[age].value
-								 / m->cells[cell].heights[height].ages[age].species[species].value[TRHO]));
-					m->cells[cell].heights[height].ages[age].species[species].value[PREVIOUS_VOLUME] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
-																									   * (1 - m->cells[cell].heights[height].ages[age].species[species].value[FRACBB])
-																									   /MassDensity;
+					Get_biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 				}
 				//loop on each species
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
@@ -459,7 +449,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
 
 							//ANNUAL BIOMASS INCREMENT
-							Get_biomass_increment ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
+							Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
 
 							Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
 
