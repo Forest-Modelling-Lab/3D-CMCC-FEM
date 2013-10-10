@@ -547,6 +547,8 @@ enum {
 	WS,                            //Stem Biomass
 	WS_sap,
 	WS_heart,
+	WRC_sap,
+	WRC_heart,
 	DEL_WS,                        //Stem Biomass Increment
 	DEL_BB,                        //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
@@ -725,12 +727,12 @@ enum {
 
 	//SAPLINGS
 
-	LAI_SAP,
-	AVDBH_SAP,
-	TREE_HEIGHT_SAP,
-	WF_SAP,
-	WR_SAP,
-	WS_SAP,
+	LAI_SAPLING,
+	AVDBH_SAPLING,
+	TREE_HEIGHT_SAPLING,
+	WF_SAPLING,
+	WR_SAPLING,
+	WS_SAPLING,
 
 
 	PERC,

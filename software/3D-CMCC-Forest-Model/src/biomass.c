@@ -82,9 +82,13 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 		//compute sapwood pools and heatwood pool
 		s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC];
 		Log("Stem biomass = %g tDM/area \n", s->value[BIOMASS_STEM_CTEM]);
-		Log("Sapwood biomass = %g tDM/area \n", s->value[WS_sap]);
+		Log("Sapwood stem biomass = %g tDM/area \n", s->value[WS_sap]);
 		s->value[WS_heart] = s->value[BIOMASS_STEM_CTEM] - s->value[WS_sap];
-		Log("Heartwood biomass = %g tDM/area \n", s->value[WS_heart]);
+		Log("Heartwood stem biomass = %g tDM/area \n", s->value[WS_heart]);
+		s->value[WRC_sap] =  (s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[SAPWOOD_PERC]);
+		Log("Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap]);
+		s->value[WRC_heart] = s->value[BIOMASS_ROOTS_COARSE_CTEM] - s->value[WRC_sap];
+		Log("Heartwood coarse rootbiomass = %g tDM/area \n", s->value[WRC_heart]);
 
 
 

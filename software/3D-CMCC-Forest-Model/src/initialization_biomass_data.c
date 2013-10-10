@@ -141,7 +141,10 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
 	Log("Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
 	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC]);
-	Log("Sapwood biomass = %g tDM class cell \n", s->value[WS_sap]);
+	Log("Sapwood stem biomass = %g tDM class cell \n", s->value[WS_sap]);
+	s->value[WRC_sap] =  (s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[SAPWOOD_PERC]);
+	Log("Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap]);
+
 
 	Log("-Maximum Crown Area from forest mensuration = %g m^2\n", ((100*Pi)/(4*settings->sizeCell)) * (9.7344+(11.48612*s->value[AVDBH]+(3.345241* pow(s->value[AVDBH], 2)))));
 

@@ -563,14 +563,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 int i;
 
                                 //SET VALUES
-                                m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE_SAP] = 0;
-                                m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP] = settings->lai_sapling;
-                                //m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP] = settings->avdbh_sapling;
-                                m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAP] = settings->height_sapling;
-                                m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP] = settings->wf_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP] = settings->wr_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP] = settings->ws_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE_SAPLING] = 0;
+                                m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING] = settings->lai_sapling;
+                                //m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING] = settings->avdbh_sapling;
+                                m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAPLING] = settings->height_sapling;
+                                m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING] = settings->wf_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING] = settings->wr_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
+                                m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING] = settings->ws_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
 
 
                                 Log("\n\n----A new Height class must be created---------\n\n");
@@ -583,13 +583,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 r.species = m->cells[cell].heights[height].ages[age].species[species].name;
                                 r.phenology = m->cells[cell].heights[height].ages[age].species[species].phenology;
                                 r.management = m->cells[cell].heights[height].ages[age].species[species].management;
-                                r.lai = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP];
-                                r.n = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                r.avdbh = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP];
-                                r.height = m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAP];
-                                r.wf = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP];
-                                r.wr = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP];
-                                r.ws = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP];
+                                r.lai = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING];
+                                r.n = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING];
+                                r.avdbh = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING];
+                                r.height = m->cells[cell].heights[height].ages[age].species[species].value[TREE_HELINGIGHT_SAPLING];
+                                r.wf = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING];
+                                r.wr = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING];
+                                r.ws = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING];
 
 
 
@@ -630,12 +630,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].name = m->cells[cell].heights[height].ages[age].species[species].name;
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].phenology = m->cells[cell].heights[height].ages[age].species[species].phenology;
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].management = m->cells[cell].heights[height].ages[age].species[species].management;
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].counter[N_TREE] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[AVDBH] = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_ROOTS_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_STEM_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].counter[N_TREE] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[AVDBH] = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_ROOTS_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_STEM_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING];
 
                                 //height class summary
                                 Log("**********************************\n");
