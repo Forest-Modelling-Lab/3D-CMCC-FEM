@@ -24,6 +24,7 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
+#include "dislin.h"
 
 //#include <netcdf.h>
 
@@ -35,8 +36,6 @@
 #ifndef NULL
 #define NULL   ((void *) 0)
 #endif
-
-//speriamo!
 
 /* constants */
 #define PROGRAM_VERSION	"5.1"
@@ -547,6 +546,12 @@ int main(int argc, char *argv[])
 	int cell;
 
 	//MET_DATA *met;
+
+	/*
+    disini ();
+    messag ("This is a test", 100, 100);
+    disfin ();
+    */
 
 
 
