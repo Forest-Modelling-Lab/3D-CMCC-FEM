@@ -352,44 +352,82 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height)
 	{
 		if (c->heights[height].z == 2)
 		{
-			c->daily_growth_resp[2] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_gowth_resp[2] += s->value[TOTAL_MAINT_RESP];
-			c->annual_growth_resp[2] += s->value[TOTAL_MAINT_RESP];
+			c->daily_growth_resp[2] += s->value[TOTAL_GROWTH_RESP];
+			c->monthly_gowth_resp[2] += s->value[TOTAL_GROWTH_RESP];
+			c->annual_growth_resp[2] += s->value[TOTAL_GROWTH_RESP];
 		}
 		if (c->heights[height].z == 1)
 		{
-			c->daily_growth_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_gowth_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->annual_growth_resp[1] += s->value[TOTAL_MAINT_RESP];
+			c->daily_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
+			c->monthly_gowth_resp[1] += s->value[TOTAL_GROWTH_RESP];
+			c->annual_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
 		}
 		if (c->heights[height].z == 0)
 		{
-			c->daily_growth_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_gowth_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->annual_growth_resp[0] += s->value[TOTAL_MAINT_RESP];
+			c->daily_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
+			c->monthly_gowth_resp[0] += s->value[TOTAL_GROWTH_RESP];
+			c->annual_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
 		}
 	}
 
-	c->daily_tot_growth_resp += s->value[TOTAL_MAINT_RESP];
-	c->monthly_tot_growth_resp += s->value[TOTAL_MAINT_RESP];
-	c->annual_tot_growth_resp += s->value[TOTAL_MAINT_RESP];
+	c->daily_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	c->monthly_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	c->annual_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
 }
 
-void Get_autorphic_respiration (SPECIES *s, CELL *const c, int height)
+void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
 
 	Log("\nGET_AUTOTROPHIC_RESPIRATION\n");
 
+	//TODO change all if with a for
 
+	if (c->annual_layer_number == 1)
+	{
+		c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	}
+	if (c->annual_layer_number == 2)
+	{
+		if (c->heights[height].z == 1)
+		{
+			c->daily_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->monthly_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->annual_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		}
+		else
+		{
+			c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		}
+	}
+	if (c->annual_layer_number == 3)
+	{
+		if (c->heights[height].z == 2)
+		{
+			c->daily_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->monthly_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->annual_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		}
+		if (c->heights[height].z == 1)
+		{
+			c->daily_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->monthly_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->annual_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		}
+		if (c->heights[height].z == 0)
+		{
+			c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+			c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		}
+	}
 
-
-
-
-
-
-
-
-
+	c->daily_tot_aut_resp += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	c->monthly_tot_aut_resp += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	c->annual_tot_aut_resp += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 }
 
 

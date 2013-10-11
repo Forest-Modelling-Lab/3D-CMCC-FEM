@@ -928,6 +928,7 @@ typedef struct {
 
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
+	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
 
 	float daily_cc[3], monthly_cc[3], annual_cc[3];
 
@@ -1066,6 +1067,7 @@ extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, c
 
 extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
 extern void Get_growth_respiration (SPECIES *const, CELL *, int);
+extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);
