@@ -7,6 +7,7 @@ C_SRCS += \
 ../src/C-partitioning-allocation.c \
 ../src/G-Function.c \
 ../src/allometry.c \
+../src/aut_respiration.c \
 ../src/biomass.c \
 ../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
@@ -20,7 +21,6 @@ C_SRCS += \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/garbage.c \
-../src/growth_respiration.c \
 ../src/initialization_biomass_data.c \
 ../src/initialization_site_data.c \
 ../src/io.c \
@@ -30,7 +30,6 @@ C_SRCS += \
 ../src/litterfall.c \
 ../src/log.c \
 ../src/main.c \
-../src/maintenance_respiration.c \
 ../src/management.c \
 ../src/matrix.c \
 ../src/met_data.c \
@@ -58,6 +57,7 @@ OBJS += \
 ./src/C-partitioning-allocation.o \
 ./src/G-Function.o \
 ./src/allometry.o \
+./src/aut_respiration.o \
 ./src/biomass.o \
 ./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
@@ -71,7 +71,6 @@ OBJS += \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/garbage.o \
-./src/growth_respiration.o \
 ./src/initialization_biomass_data.o \
 ./src/initialization_site_data.o \
 ./src/io.o \
@@ -81,7 +80,6 @@ OBJS += \
 ./src/litterfall.o \
 ./src/log.o \
 ./src/main.o \
-./src/maintenance_respiration.o \
 ./src/management.o \
 ./src/matrix.o \
 ./src/met_data.o \
@@ -109,6 +107,7 @@ C_DEPS += \
 ./src/C-partitioning-allocation.d \
 ./src/G-Function.d \
 ./src/allometry.d \
+./src/aut_respiration.d \
 ./src/biomass.d \
 ./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
@@ -122,7 +121,6 @@ C_DEPS += \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/garbage.d \
-./src/growth_respiration.d \
 ./src/initialization_biomass_data.d \
 ./src/initialization_site_data.d \
 ./src/io.d \
@@ -132,7 +130,6 @@ C_DEPS += \
 ./src/litterfall.d \
 ./src/log.d \
 ./src/main.d \
-./src/maintenance_respiration.d \
 ./src/management.d \
 ./src/matrix.d \
 ./src/met_data.d \

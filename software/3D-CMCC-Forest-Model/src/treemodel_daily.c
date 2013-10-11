@@ -300,7 +300,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
-								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell]);
+								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -340,7 +340,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
-								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell]);
+								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/* Soil Water Balance*/
 
@@ -422,7 +422,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
-							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell]);
+							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 
