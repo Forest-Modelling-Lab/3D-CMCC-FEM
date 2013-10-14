@@ -265,6 +265,9 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 
 
+
+	//todo use ti if you need to upscale from grams to tons and from m^2 to cell resolution
+
 	//todo is correct multply for "settings->sizeCell * s->value[CANOPY_COVER_DBHDC]"
 	//convert to tDM/ cell resolution
 	//upscale to cell level and convert from gC to tons of DM
@@ -275,11 +278,11 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	//Log("nightly leaf maintenance respiration = %g tDM/day cell\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 	//day+night
-	s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
-	Log("Total daily leaf maintenance respiration = %g tDM/ha cell\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+	//s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+	//Log("Total daily leaf maintenance respiration = %g tDM/ha cell\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
-	s->value[FINE_ROOT_MAINT_RESP] *=  GC_GDM/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
-	Log("Fine root maintenance respiration = %g tDM/day cell\n", s->value[FINE_ROOT_MAINT_RESP]);
+	//s->value[FINE_ROOT_MAINT_RESP] *=  GC_GDM/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
+	//Log("Fine root maintenance respiration = %g tDM/day cell\n", s->value[FINE_ROOT_MAINT_RESP]);
 
 	//s->value[STEM_MAINT_RESP] *=  GC_GDM/ 1000000.0 *(settings->sizeCell * s->value[CANOPY_COVER_DBHDC]);
 	//Log("Stem maintenance respiration = %g tDM/day cell\n", s->value[STEM_MAINT_RESP]);
@@ -288,8 +291,8 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	//Log("Coarse root maintenance respiration = %g tDM/day cell\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
-	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP];
-	Log("TOTAL maintenance respiration = %g tDM/day cell\n", s->value[TOTAL_MAINT_RESP]);
+	//s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]/*+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP]*/;
+	//Log("TOTAL maintenance respiration = %g tDM/day cell\n", s->value[TOTAL_MAINT_RESP]);
 
 
 }
@@ -387,6 +390,8 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 		c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 		c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 		c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		Log(" aut resp %g\n", c->daily_aut_resp[0]);
+
 	}
 	if (c->annual_layer_number == 2)
 	{
