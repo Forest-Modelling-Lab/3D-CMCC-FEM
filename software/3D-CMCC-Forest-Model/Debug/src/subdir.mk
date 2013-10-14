@@ -4,6 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../src/C-assimilation.c \
+../src/C-fluxes.c \
 ../src/C-partitioning-allocation.c \
 ../src/G-Function.c \
 ../src/allometry.c \
@@ -54,6 +56,8 @@ C_SRCS += \
 ../src/wue.c 
 
 OBJS += \
+./src/C-assimilation.o \
+./src/C-fluxes.o \
 ./src/C-partitioning-allocation.o \
 ./src/G-Function.o \
 ./src/allometry.o \
@@ -104,6 +108,8 @@ OBJS += \
 ./src/wue.o 
 
 C_DEPS += \
+./src/C-assimilation.d \
+./src/C-fluxes.d \
 ./src/C-partitioning-allocation.d \
 ./src/G-Function.d \
 ./src/allometry.d \

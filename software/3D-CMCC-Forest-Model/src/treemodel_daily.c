@@ -295,14 +295,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//m->cells[cell].evapotranspiration = 0;
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-
-								D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
-
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-
-								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-
+								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, height);
+								E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
+										DaysInMonth[month], years, height, age);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -333,18 +332,18 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 								}
 
-								//Productivity
-								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
-								D_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month,  day, DaysInMonth[month], years,  height, age, species);
 
+								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-
-								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-
+								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, height);
+								E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
+										DaysInMonth[month], years, height, age);
 
 								/* Soil Water Balance*/
 
@@ -417,18 +416,19 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							Get_soil_water_balance (&m->cells[cell]);
 
-							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-
 							Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 
+
+
+
+							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
+							Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+							Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+							Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, height);
 							E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
 									DaysInMonth[month], years, height, age);
-
-							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-
-							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-
-							Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 

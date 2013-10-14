@@ -124,10 +124,10 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 		Log("BIOME Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
-		Log("--FOLIAGE LPJ\n");
+		//Log("--FOLIAGE LPJ\n");
 
-		s->value[TOT_DAY_LEAF_MAINT_RESP]= (r_lpj * leaf_nitrogen * gt)/settings->sizeCell;
-		Log("LPJ Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+		//s->value[TOT_DAY_LEAF_MAINT_RESP]= (r_lpj * leaf_nitrogen * gt)/settings->sizeCell;
+		//Log("LPJ Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 	}
 	else //no leaves on
@@ -154,9 +154,9 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 		s->value[FINE_ROOT_MAINT_RESP] = ((leaf_nitrogen * mrpern * t1)/settings->sizeCell);
 		Log("BIOME Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
 
-		Log("--FINE ROOT LPJ\n");
-		s->value[FINE_ROOT_MAINT_RESP] = (r_lpj * leaf_nitrogen * gtsoil)/settings->sizeCell;
-		Log("LPJ Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
+		//Log("--FINE ROOT LPJ\n");
+		//s->value[FINE_ROOT_MAINT_RESP] = (r_lpj * leaf_nitrogen * gtsoil)/settings->sizeCell;
+		//Log("LPJ Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
 
 	}
 	else //no fine roots on
@@ -167,7 +167,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 
 	/*	NOT USED*/
-/*
+	/*
 	// TREE-specific fluxes
 	Log("--STEM BIOME-BGC\n");
 
@@ -207,7 +207,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	Log("--COARSE ROOT BIOME-BGC\n");
 	s->value[COARSE_ROOT_MAINT_RESP] = ((r_lpj * coarse_root_nitrogen * gtsoil)/settings->sizeCell);
 	Log("LPJ Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
-	*/
+	 */
 
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
@@ -299,35 +299,49 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 //FOLLOWING BIOME-BGC
 
-void Get_growth_respiration (SPECIES *s, CELL *const c, int height)
+void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int month, int years)
 {
 
 	Log("\nGET_GROWTH_RESPIRATION\n");
 
-	//COMPUTE GROWTH RESPIRATION
-	s->value[LEAF_GROWTH_RESP] = s->value[DEL_FOLIAGE_CTEM] * GRPERC;
-	Log("daily leaf growth respiration = %g gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
+	//to prevent negative values in the first years first month first day of the simulation
+	if (day != 0 && month != 0 && years != 0)
+	{
 
-	s->value[FINE_ROOT_GROWTH_RESP] = s->value[DEL_ROOTS_FINE_CTEM]* GRPERC;
-	Log("daily fine root growth respiration = %g gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
+		//COMPUTE GROWTH RESPIRATION
+		s->value[LEAF_GROWTH_RESP] = s->value[DEL_FOLIAGE_CTEM] * GRPERC;
+		Log("daily leaf growth respiration = %g gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
 
-	s->value[STEM_GROWTH_RESP] = s->value[DEL_STEMS_CTEM]* GRPERC;
-	Log("daily stem growth respiration = %g gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
+		s->value[FINE_ROOT_GROWTH_RESP] = s->value[DEL_ROOTS_FINE_CTEM]* GRPERC;
+		Log("daily fine root growth respiration = %g gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-	s->value[COARSE_ROOT_GROWTH_RESP] = s->value[DEL_ROOTS_COARSE_CTEM]* GRPERC;
-	Log("daily coarse root growth respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+		s->value[STEM_GROWTH_RESP] = s->value[DEL_STEMS_CTEM]* GRPERC;
+		Log("daily stem growth respiration = %g gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
 
-	s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] + s->value[FINE_ROOT_GROWTH_RESP] + s->value[STEM_GROWTH_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
-	Log("daily total growth respiration = %g gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
+		s->value[COARSE_ROOT_GROWTH_RESP] = s->value[DEL_ROOTS_COARSE_CTEM]* GRPERC;
+		Log("daily coarse root growth respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
 
-	//THEN REMOVE FROM ASSIMILATED BIOMASS
-	//TODO CHECK IF USE
-	/*
-	 *s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[LEAF_GROWTH_RESP];
-	 *s->value[BIOMASS_ROOTS_FINE_CTEM] -=  s->value[FINE_ROOT_GROWTH_RESP];
-	 *s->value[BIOMASS_STEM_CTEM] -=  s->value[STEM_GROWTH_RESP];
-	 *s->value[BIOMASS_ROOTS_COARSE_CTEM] -=  s->value[COARSE_ROOT_GROWTH_RESP];	 *
-	 */
+		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] + s->value[FINE_ROOT_GROWTH_RESP] + s->value[STEM_GROWTH_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+		Log("daily total growth respiration = %g gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
+	}
+	else
+	{
+		//COMPUTE GROWTH RESPIRATION
+		s->value[LEAF_GROWTH_RESP] = 0.0;
+		Log("daily leaf growth respiration = %g gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
+
+		s->value[FINE_ROOT_GROWTH_RESP] = 0.0;
+		Log("daily fine root growth respiration = %g gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
+
+		s->value[STEM_GROWTH_RESP] = 0.0;
+		Log("daily stem growth respiration = %g gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
+
+		s->value[COARSE_ROOT_GROWTH_RESP] = 0.0;
+		Log("daily coarse root growth respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+
+		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] + s->value[FINE_ROOT_GROWTH_RESP] + s->value[STEM_GROWTH_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+		Log("TOTAL growth respiration = %g gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
+	}
 	//TODO change all if with a for
 
 	if (c->annual_layer_number == 1)
@@ -383,6 +397,13 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 	Log("\nGET_AUTOTROPHIC_RESPIRATION\n");
 
+	//compute autotrophic respiration for each classes
+	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	Log("TOTAL autotrophic respiration = %g gC/day m^2\n", s->value[TOTAL_AUT_RESP]);
+
+
+	//compute autotrophic respiration for each layer
+
 	//TODO change all if with a for
 
 	if (c->annual_layer_number == 1)
@@ -390,8 +411,6 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 		c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 		c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 		c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		Log(" aut resp %g\n", c->daily_aut_resp[0]);
-
 	}
 	if (c->annual_layer_number == 2)
 	{

@@ -65,10 +65,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			Log("Alpha C = %g molC/molPAR\n", Alpha_C);
 		}
 
-
-		/*Productivity*/
-
-
 		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
 		/*GPP*/
@@ -135,7 +131,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		/*NPP*/
 
-		Log("***************************** NPP-'%c' *************************** \n", settings->time);
+		//Log("***************************** NPP-'%c' *************************** \n", settings->time);
 
 		//Log("Assimilate Use Efficiency Y = %g\n", site->Y);
 
@@ -144,6 +140,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		// "/" 1000000 to convert gDM into tonsDM
 
 
+		/*
 		//todo move NPP calculation in a different source file and call it after photosynthesis>mainteinance_respiration>growth>respiration
 
 		s->value[NPP] = ((s->value[GPP_g_C] * settings->sizeCell * GC_GDM * site->Y) / 1000000);    // assumes respiratory rate is constant
@@ -172,51 +169,45 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			MonthlyNPP += s->value[NPP];
 			Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}
+		*/
 	}
 	else if (s->counter[VEG_UNVEG] == 0)//Un Veg period
 	{
-		Log("Unvegetative period !! \n");
+		Log("Un-vegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
 		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %g \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 
+		/*
 		s->value[NPP] = 0;
 		Log("Daily/Monthly NPP for layer %d = %g  tDM/sizecell yr\n", c->heights[height].z, s->value[NPP]);
 
 		Log("Daily/Monthly Stand GPP (absolute) = %g gC/m^2 yr\n", s->value[POINT_GPP_g_C] );
 		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
+		*/
 	}
-
+/*
 	//TODO change all if with a for
 
 	if (c->annual_layer_number == 1)
 	{
 		c->daily_gpp[0] += s->value[GPP_g_C];
-		c->daily_npp[0] += s->value[NPP];
 		c->monthly_gpp[0] += s->value[GPP_g_C];
-		c->monthly_npp[0] += s->value[NPP];
 		c->annual_gpp[0] += s->value[GPP_g_C];
-		c->annual_npp[0] += s->value[NPP];
 	}
 	if (c->annual_layer_number == 2)
 	{
 		if (c->heights[height].z == 1)
 		{
 			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->daily_npp[1] += s->value[NPP];
 			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->monthly_npp[1] += s->value[NPP];
 			c->annual_gpp[1] += s->value[GPP_g_C];
-			c->annual_npp[1] += s->value[NPP];
 		}
 		else
 		{
 			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->daily_npp[0] += s->value[NPP];
 			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->monthly_npp[0] += s->value[NPP];
 			c->annual_gpp[0] += s->value[GPP_g_C];
-			c->annual_npp[0] += s->value[NPP];
 		}
 	}
 	if (c->annual_layer_number == 3)
@@ -224,58 +215,41 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		if (c->heights[height].z == 2)
 		{
 			c->daily_gpp[2] += s->value[GPP_g_C];
-			c->daily_npp[2] += s->value[NPP];
 			c->monthly_gpp[2] += s->value[GPP_g_C];
-			c->monthly_npp[2] += s->value[NPP];
 			c->annual_gpp[2] += s->value[GPP_g_C];
-			c->annual_npp[2] += s->value[NPP];
 		}
 		if (c->heights[height].z == 1)
 		{
 			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->daily_npp[1] += s->value[NPP];
 			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->monthly_npp[1] += s->value[NPP];
 			c->annual_gpp[1] += s->value[GPP_g_C];
-			c->annual_npp[1] += s->value[NPP];
 		}
 		if (c->heights[height].z == 0)
 		{
 			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->daily_npp[0] += s->value[NPP];
 			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->monthly_npp[0] += s->value[NPP];
 			c->annual_gpp[0] += s->value[GPP_g_C];
-			c->annual_npp[0] += s->value[NPP];
 		}
 	}
 
 	c->daily_tot_gpp += s->value[GPP_g_C];
-	c->daily_tot_npp += s->value[NPP];
-
 	c->monthly_tot_gpp += s->value[GPP_g_C];
-	c->monthly_tot_npp += s->value[NPP];
-
 	c->annual_tot_gpp += s->value[GPP_g_C];
-	c->annual_tot_npp += s->value[NPP];
 
-	Log("***************************** ANNUAL GPP-NPP *************************** \n");
+	Log("***************************** ANNUAL GPP *************************** \n");
 
-	Log("*********************** CLASS LEVEL ANNUAL GPP-NPP ********************** \n");
+	Log("*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
 	//class level
 	s->value[YEARLY_POINT_GPP_G_C] += s->value[POINT_GPP_g_C];
-	s->value[YEARLY_NPP] += s->value[NPP];
 	Log("-CLASS LEVEL\n");
 	Log("-CLASS LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_G_C]);
-	Log("-CLASS LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", s->value[YEARLY_NPP]);
 
-	Log("*********************** STAND LEVEL ANNUAL GPP-NPP ********************** \n");
+	Log("*********************** STAND LEVEL ANNUAL GPP ********************** \n");
 
 	//cell level
 	c->gpp += s->value[POINT_GPP_g_C];
-	c->npp += s->value[NPP];
 	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", c->gpp);
-	Log("-CELL LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", c->npp);
+	*/
 
 }

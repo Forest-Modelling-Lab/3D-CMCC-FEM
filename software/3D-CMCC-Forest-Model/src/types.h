@@ -614,6 +614,13 @@ enum {
 	COARSE_ROOT_GROWTH_RESP,
 	TOTAL_GROWTH_RESP,
 
+	//Autotrophic respiration
+	LEAF_AUT_RESP,
+	FINE_ROOT_AUT_RESP,
+	STEM_AUT_RESP,
+	COARSE_ROOT_AUT_RESP,
+	TOTAL_AUT_RESP,
+
 
 
 
@@ -1066,8 +1073,10 @@ extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const ME
 extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
 
 extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
-extern void Get_growth_respiration (SPECIES *const, CELL *, int);
+extern void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
 extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
+extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int);
+extern void Get_C_fluxes (SPECIES *const, CELL *const, int);
 
 extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);
