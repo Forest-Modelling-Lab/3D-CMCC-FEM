@@ -18,7 +18,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 	//float DailyNPP;
 	//float MonthlyNPP;
 
-	Log ("\nGET_C-ASSIMILATION_ROUTINE\n\n");
+	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
 
 	if (s->counter[VEG_UNVEG] == 1 && s->value[GPP_g_C] > 0)

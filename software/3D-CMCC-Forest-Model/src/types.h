@@ -1070,7 +1070,7 @@ extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 //deciduous routine for carbon allocation
 extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
-extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, AGE *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
+extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
 extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
 extern void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);

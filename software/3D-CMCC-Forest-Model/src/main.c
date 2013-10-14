@@ -1221,7 +1221,7 @@ int main(int argc, char *argv[])
 									//	soil_model (m, yos, years, month, years_of_simulation);
 								}
 							}
-							Log("****************END OF DAY (%d)*******************\n", day+1);
+							Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
 							Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, years, month, day);
 						}
 						Log("****************END OF MONTH (%d)*******************\n", month+1);

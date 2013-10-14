@@ -18,12 +18,17 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
 	Log("\nGET_C-Fluxes_ROUTINE\n");
-	if (day > 0 && month > 0)
+	if (s->counter[VEG_DAYS] > 1.0)
 	{
 		Log("respiration fraction = %g %%\n", (s->value[GPP_g_C]* 100)/s->value[TOTAL_AUT_RESP]);
+		s->value[GPP_g_C] -= s->value[TOTAL_AUT_RESP];
+		Log("C-fluxes = %g gC/m^2 day/month\n", s->value[GPP_g_C]);
 	}
-	s->value[GPP_g_C] -= s->value[TOTAL_AUT_RESP];
-	Log("C-fluxes = %g gC/m^2 day/month\n", s->value[GPP_g_C]);
+	else
+	{
+		Log("C-fluxes = %g gC/m^2 day/month\n", s->value[GPP_g_C]);
+	}
+
 
 
 	//TODO change all if with a for

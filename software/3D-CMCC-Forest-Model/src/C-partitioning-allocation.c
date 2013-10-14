@@ -12,7 +12,7 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age, int species)
+void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
 	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
@@ -39,21 +39,18 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	float Biomass_exceeding;
 
 
-	Log("Cazzo %g\n", met[month].d[day].solar_rad);
-
 	//CTEM VERSION
 
 	Log("\nGET_ALLOCATION_ROUTINE\n\n");
 	Log("Carbon allocation routine for deciduous\n");
 
 
-
-		//Log ("S0CTEM  = %g \n", s0Ctem);
-		//Log ("R0CTEM  = %g \n", r0Ctem);
-		//Log ("F0CTEM  = %g \n", f0Ctem );
-		//Log ("OMEGA_CTEM  = %g \n", omegaCtem);
-		//Log ("EPSILON_CTEM  = %g \n", epsilon);
-		//Log ("KAPPA_CTEM  = %g \n", kappa);
+	//Log ("S0CTEM  = %g \n", s0Ctem);
+	//Log ("R0CTEM  = %g \n", r0Ctem);
+	//Log ("F0CTEM  = %g \n", f0Ctem );
+	//Log ("OMEGA_CTEM  = %g \n", omegaCtem);
+	//Log ("EPSILON_CTEM  = %g \n", epsilon);
+	//Log ("KAPPA_CTEM  = %g \n", kappa);
 
 
 	if (settings->time == 'm')
@@ -85,8 +82,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	}
 
 
-		if (s->value[NPP] > 0)
-		{
+	if (s->value[NPP] > 0)
+	{
 		//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
 		//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
 		//I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
@@ -1290,7 +1287,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int years, int height, int age)
+void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
 	//CTEM VERSION
 
