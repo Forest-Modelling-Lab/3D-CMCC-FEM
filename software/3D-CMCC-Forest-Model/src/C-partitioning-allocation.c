@@ -39,14 +39,12 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	float Biomass_exceeding;
 
 
+	Log("Cazzo %g\n", met[month].d[day].solar_rad);
+
 	//CTEM VERSION
 
 	Log("\nGET_ALLOCATION_ROUTINE\n\n");
-
-	if (s->value[NPP > 0])
-	{
-
-		Log("Carbon allocation routine for deciduous\n");
+	Log("Carbon allocation routine for deciduous\n");
 
 
 
@@ -57,32 +55,38 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		//Log ("EPSILON_CTEM  = %g \n", epsilon);
 		//Log ("KAPPA_CTEM  = %g \n", kappa);
 
-		if (settings->time == 'm')
+
+	if (settings->time == 'm')
+	{
+		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over / Monthly_solar_radiation;
+
+		//if (month == 0)
+		//leaf_fall_counter = 0;
+	}
+	else
+	{
+
+		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
+
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over /Daily_solar_radiation;
+
+		//if (day == 0 && month == 0)
+		//leaf_fall_counter = 0;
+
+	}
+
+
+	if (day == 0 && month == 0 && years == 0)
+	{
+		s->value[BIOMASS_CONES_CTEM] = 0;
+	}
+
+
+		if (s->value[NPP] > 0)
 		{
-			Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-			Par_over = c->par - s->value[APAR];
-			Light_trasm = Par_over / Monthly_solar_radiation;
-
-			//if (month == 0)
-			//leaf_fall_counter = 0;
-		}
-		else
-		{
-			Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
-			Par_over = c->par - s->value[APAR];
-			Light_trasm = Par_over /Daily_solar_radiation;
-
-			//if (day == 0 && month == 0)
-			//leaf_fall_counter = 0;
-		}
-
-		if (day == 0 && month == 0 && years == 0)
-		{
-			s->value[BIOMASS_CONES_CTEM] = 0;
-		}
-
-
-
 		//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
 		//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
 		//I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
@@ -91,14 +95,14 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 		//todo use it if a better function of fSW is developed
 		/*
-	if (reductor == s->value[F_SW])
-	{
-		Log("reductor in CTEM is F_SW \n");
-	}
-	else
-	{
-		Log("reductor in CTEM is F_NUTR \n");
-	}
+		if (reductor == s->value[F_SW])
+		{
+			Log("reductor in CTEM is F_SW \n");
+		}
+		else
+		{
+			Log("reductor in CTEM is F_NUTR \n");
+		}
 		 */
 
 		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , --\n", c->heights[height].z);
@@ -1486,23 +1490,27 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *
 			Log("++DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
 
 			//Log("OldWf = %g\n", oldWf);
-			if(s->value[NPP]>0)
+
+			Log("-LITTERFALL FOR EVEGREEN-\n");
+			s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
+			Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
+			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
+
+			Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITTFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
+			if (s->value[DEL_FOLIAGE_CTEM]<s->value[DEL_LITTER])
 			{
-				Log("-LITTERFALL FOR EVEGREEN-\n");
-				s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
-				Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
-				Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
-
-				Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITTFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
-
-				s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
-				Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-
-				//recompute LAI
-				//Log("SLA in mod = %g KgC/m^2 \n", s->value[SLAmkg]);
+				Log("Del_litter exceeds del_foliage!!\n");
+				s->value[DEL_FOLIAGE_CTEM] = s->value[DEL_LITTER];
 			}
+
+			s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
+			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+			//recompute LAI
+			//Log("SLA in mod = %g KgC/m^2 \n", s->value[SLAmkg]);
+
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
-			Log("++Lai = %g\n", s->value[LAI]);
+			Log("Lai after litterfall = %g\n", s->value[LAI]);
 
 
 		}
@@ -1609,43 +1617,41 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, AGE * const a, CELL *
 			Log("Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 			s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
 			Log("Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
+
+			//leaf litterfall
+
+			//gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0])* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
+			//Log("Litterfall rate = %g\n", gammaF);
+
+			//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
+
+			//Log("OldWf = %g\n", oldWf);
+			s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
+			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
+
+			s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
+			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+			//recompute LAI
+			Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
+			Log("++Lai = %g\n", s->value[LAI]);
 		}
-		else
-		{
-			s->value[DEL_FOLIAGE_CTEM] = 0;
-			s->value[DEL_ROOTS_FINE_CTEM] = 0;
-			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-			s->value[DEL_STEMS_CTEM]= 0;
-			s->value[DEL_RESERVE_CTEM]= 0;
-			s->value[DEL_BB]= 0;
+	}
+	else
+	{
+		s->value[DEL_FOLIAGE_CTEM] = 0;
+		s->value[DEL_ROOTS_FINE_CTEM] = 0;
+		s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+		s->value[DEL_STEMS_CTEM]= 0;
+		s->value[DEL_RESERVE_CTEM]= 0;
+		s->value[DEL_BB]= 0;
 
-			Log("delta_F %d = 0 \n", c->heights[height].z);
-			Log("delta_fR %d = 0 \n", c->heights[height].z);
-			Log("delta_cR %d = 0 \n", c->heights[height].z);
-			Log("delta_S %d = 0 \n", c->heights[height].z);
-			Log("delta_Res %d = 0 \n", c->heights[height].z);
-		}
-
-
-		//leaf litterfall
-
-		//gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0])* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
-		//Log("Litterfall rate = %g\n", gammaF);
-
-		//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
-
-		//Log("OldWf = %g\n", oldWf);
-		s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
-		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
-
-		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
-		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-
-		//recompute LAI
-		Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
-		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
-		Log("++Lai = %g\n", s->value[LAI]);
-
+		Log("delta_F %d = 0 \n", c->heights[height].z);
+		Log("delta_fR %d = 0 \n", c->heights[height].z);
+		Log("delta_cR %d = 0 \n", c->heights[height].z);
+		Log("delta_S %d = 0 \n", c->heights[height].z);
+		Log("delta_Res %d = 0 \n", c->heights[height].z);
 	}
 
 	//for daily_Log file only if there's one class

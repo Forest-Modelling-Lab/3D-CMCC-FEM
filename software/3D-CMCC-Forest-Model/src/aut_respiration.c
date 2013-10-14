@@ -167,47 +167,46 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 
 	/*	NOT USED*/
-	/*
+
 	// TREE-specific fluxes
-	Log("--STEM BIOME-BGC\n");
+	//Log("--STEM BIOME-BGC\n");
 
 	//convert biomass foliage from tones of DM to grams of Carbon then compute Nitrogen content using CN ratio
 	stem_nitrogen = (((s->value[WS_sap])/GC_GDM)*1000000.0) / s->value[CN_LIVE_WOODS];
-	Log("Stem nitrogen content = %g gN/cell\n", stem_nitrogen);
+	//Log("Stem nitrogen content = %g gN/cell\n", stem_nitrogen);
 
 
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
-	Log("BIOME Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
+	//s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
+	//Log("BIOME Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
 
 
-	Log("--STEM BIOME-BGC\n");
-	s->value[STEM_MAINT_RESP] = (r_lpj * stem_nitrogen * gt)/settings->sizeCell;
-	Log("LPJ stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
+	//Log("--STEM BIOME-LPJ\n");
+	//s->value[STEM_MAINT_RESP] = (r_lpj * stem_nitrogen * gt)/settings->sizeCell;
+	//Log("LPJ stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
 
 
 	//IT MUST TAKES INTO ACCOUNT ONLY LIVE roots NOT ALL roots!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	Log("--COARSE ROOT BIOME-BGC\n");
+	//Log("--COARSE ROOT BIOME-BGC\n");
 
 	//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
 	coarse_root_nitrogen = (((s->value[WRC_sap])/GC_GDM)*1000000.0) / s->value[CN_LIVE_WOODS];
-	Log("coarse root nitrogen content = %g gN/cell\n", coarse_root_nitrogen);
+	//Log("coarse root nitrogen content = %g gN/cell\n", coarse_root_nitrogen);
 
 	//live coarse root maintenance respiration
 	exponent = (met[month].d[day].tsoil - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	s->value[COARSE_ROOT_MAINT_RESP] = ((coarse_root_nitrogen * mrpern * t1)/settings->sizeCell);
-	Log("BIOME Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
+	//s->value[COARSE_ROOT_MAINT_RESP] = ((coarse_root_nitrogen * mrpern * t1)/settings->sizeCell);
+	//Log("BIOME Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 
-	Log("--COARSE ROOT BIOME-BGC\n");
-	s->value[COARSE_ROOT_MAINT_RESP] = ((r_lpj * coarse_root_nitrogen * gtsoil)/settings->sizeCell);
-	Log("LPJ Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
-	 */
+	//Log("--COARSE ROOT LPJ\n");
+	//s->value[COARSE_ROOT_MAINT_RESP] = ((r_lpj * coarse_root_nitrogen * gtsoil)/settings->sizeCell);
+	//Log("LPJ Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
@@ -305,7 +304,7 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 	Log("\nGET_GROWTH_RESPIRATION\n");
 
 	//to prevent negative values in the first years first month first day of the simulation
-	if (day != 0 && month != 0 && years != 0)
+	if (day > 0 && month > 0)
 	{
 
 		//COMPUTE GROWTH RESPIRATION
