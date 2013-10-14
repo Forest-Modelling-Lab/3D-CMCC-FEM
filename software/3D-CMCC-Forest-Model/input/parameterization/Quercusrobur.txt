@@ -123,8 +123,8 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.40    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009
-DBHDCMIN	0.26    //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
+DBHDCMAX	0.26    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009
+DBHDCMIN	0.18    //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.043         //a value from Kostner for Q. petreae in cm
@@ -152,8 +152,8 @@ CRB	0.05985   // 0.05985 value deducted from fitting Yuste 2005 values with Chap
 CRC	1.074     // 1.074 value deducted from fitting Yuste 2005 values with Chapman-Richards //1.272 for Q. robur from PhD thesis Bellio
 
 //CROWDING COMPETITION FUNCTION
-HDMAX	2.5             //Height to Base diameter ratio MAX  for Q. robur from Bellio and Pividori, 2009
-HDMIN	0.4             //Height to Base diameter ratio MIN  for Q. robur from Bellio and Pividori, 2009
+HDMAX	2.5             //Height to Base diameter ratio MAX  for Q. robur 2.5 from Bellio and Pividori, 2009
+HDMIN	0.4             //Height to Base diameter ratio MIN  for Q. robur 0.4 from Bellio and Pividori, 2009
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
 DENMIN	0.01           //Minimum density (trees/10000 m^2)
