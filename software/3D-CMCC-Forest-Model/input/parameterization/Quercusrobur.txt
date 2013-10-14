@@ -123,8 +123,8 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.40    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009
-DBHDCMIN	0.26    //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
+DBHDCMAX	0.26    //Low Density 0.26 for Q. robur from Bellio and Pividori, 2009
+DBHDCMIN	0.18    //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.043         //a value from Kostner for Q. petreae in cm
