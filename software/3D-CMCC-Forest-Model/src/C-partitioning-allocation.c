@@ -81,6 +81,13 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		s->value[BIOMASS_CONES_CTEM] = 0;
 	}
 
+	if (s->counter[LEAF_FALL_COUNTER] == 1)
+	{
+		Log("First day of Leaf fall\n");
+		s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
+		Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+	}
+
 
 	if (s->value[NPP] > 0)
 	{
@@ -637,12 +644,6 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
 				//have a linear decrease of foliage biomass and then LAI values
-
-				if (s->counter[LEAF_FALL_COUNTER] == 1)
-				{
-					s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
-					Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
-				}
 
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
