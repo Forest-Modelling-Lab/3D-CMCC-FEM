@@ -78,7 +78,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 		//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
 		leaf_nitrogen = ((s->value[BIOMASS_FOLIAGE_CTEM] / GC_GDM) * 1000000.0) / s->value[CN_LEAVES];
-		Log("Foliage nitrogen content = %g gN/cell\n", leaf_nitrogen);
+		//Log("Foliage nitrogen content = %g gN/cell\n", leaf_nitrogen);
 		t1 = leaf_nitrogen * mrpern;
 
 
@@ -88,7 +88,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 		//n_area = 1.0/(s->value[SLA]*s->value[CN_LEAVES]);
 		//todo not clear why divide for 24?!?
 		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent) * (met[month].d[day].daylength/24.0)/settings->sizeCell);
-		Log("daily leaf maintenance respiration = %g gC/day m^2\n", s->value[DAILY_LEAF_MAINT_RESP]);
+		//Log("daily leaf maintenance respiration = %g gC/day m^2\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 
 
@@ -119,7 +119,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 		// leaf, night
 		exponent = (met[month].d[day].tnight - 20.0) / 10.0;
 		s->value[NIGHTLY_LEAF_MAINT_RESP]= (t1 * pow(q10, exponent) * ((24.0 - met[month].d[day].daylength)/24.0)/settings->sizeCell);
-		Log("nightly leaf maintenance respiration = %g gC/day m^2\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
+		//Log("nightly leaf maintenance respiration = %g gC/day m^2\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 		//day+night
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 		Log("BIOME Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
@@ -135,6 +135,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 		s->value[DAILY_LEAF_MAINT_RESP] = 0.0;
 		s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.0;
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= 0.0;
+		Log("BIOME Total daily leaf maintenance respiration = %g gC/day m^2\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 	}
 
 
@@ -150,7 +151,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 		//convert biomass root from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
 		fine_root_nitrogen = ((s->value[BIOMASS_ROOTS_FINE_CTEM] / GC_GDM)*1000000.0) / s->value[CN_FINE_ROOTS];
-		Log("Fine root nitrogen content = %g gN/cell\n", fine_root_nitrogen);
+		//Log("Fine root nitrogen content = %g gN/cell\n", fine_root_nitrogen);
 		s->value[FINE_ROOT_MAINT_RESP] = ((leaf_nitrogen * mrpern * t1)/settings->sizeCell);
 		Log("BIOME Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
 
@@ -162,6 +163,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	else //no fine roots on
 	{
 		s->value[FINE_ROOT_MAINT_RESP] = 0.0;
+		Log("BIOME Fine root maintenance respiration = %g gC/day m^2\n", s->value[FINE_ROOT_MAINT_RESP]);
 	}
 
 
@@ -179,8 +181,8 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	// live stem maintenance respiration
 	exponent = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
-	//s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
-	//Log("BIOME Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
+	s->value[STEM_MAINT_RESP] = ((stem_nitrogen * mrpern * t1)/settings->sizeCell);
+	Log("BIOME Stem maintenance respiration = %g gC/day m^2\n", s->value[STEM_MAINT_RESP]);
 
 
 
@@ -210,7 +212,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
-	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]/*+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP]*/;
+	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]/*+s->value[COARSE_ROOT_MAINT_RESP]*/;
 	Log("TOTAL maintenance respiration = %g gC/day m^2\n", s->value[TOTAL_MAINT_RESP]);
 
 
