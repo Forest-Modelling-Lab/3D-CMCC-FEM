@@ -123,7 +123,7 @@ THINPOWER   -9999         //Power in self-thinning rule
 MF  -9999                 //Fraction mean single tree foliage biomass lost per dead tree
 MR  -9999                 //Fraction mean single tree root biomass lost per dead tree
 MS  -9999                 //Fraction mean single tree stem biomass lost per dead tree
-//ALLOMETRIC RELATIONSHIPS
+//ALLOMETRIC RELATIONSHIPS //CUURENTLY NOT USED
 DBHDCMAX    -9999         //Low Density
 DBHDCMIN    -9999         //High Density
 
@@ -154,7 +154,7 @@ HDMAX   -9999             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   -9999             //Height to Base diameter ratio MIN  (Portoghesi)
 //DENSITY FUNCTION
 DENMAX  -9999             //Maximum density (trees/10000 m^2)
-DENMIN  -9999             //Minimum density (trees/10000 m^2)
+DENMIN  -9999             //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST   -9999         //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                           //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT

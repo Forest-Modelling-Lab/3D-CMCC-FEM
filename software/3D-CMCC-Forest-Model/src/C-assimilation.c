@@ -21,19 +21,28 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
 
-	if (s->counter[VEG_UNVEG] == 1 && s->value[GPP_g_C] > 0)
+	if (s->counter[VEG_UNVEG] == 1 && s->value[GPP_g_C] > 0.0)
 	{
 
-		s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
-		s->value[NPP_g_C] = s->value[GPP_g_C] * site->Y;
+		Log("GPP = %g\n", s->value[GPP_g_C]);
+		Log("Total aut respiration = %g\n", s->value[TOTAL_AUT_RESP]);
+		Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
+
+		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+		//upscale to cell level
+		s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+
+		//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
+
 
 
 		if (settings->time == 'm')
 		{
 			//Monthy layer GPP in grams of C/m^2
 			//Convert molC into grams
-			Log("Monthly NPP = %g tDM/area\n", s->value[NPP]);
 			Log("Monthly NPP = %g gC/m^2\n",  s->value[NPP_g_C]);
+			Log("Monthly NPP = %g tDM/area\n", s->value[NPP]);
+
 			//DailyNPP = s->value[NPP] / DaysInMonth;
 			//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
 		}
@@ -45,17 +54,19 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 			{
 				//MonthlyNPP = 0;
 			}
-			Log("Daily NPP = %g tDM/area\n",  s->value[NPP]);
 			Log("Daily NPP = %g gC/m^2\n", s->value[NPP_g_C]);
+			Log("Daily NPP = %g tDM/area\n",  s->value[NPP]);
+
 			//MonthlyNPP += s->value[NPP];
 			//Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}
 	}
 	else
 	{
-		s->value[NPP] = 0;
-		Log("Daily/Monthly NPP = %g  tDM/sizecell yr\n", s->value[NPP]);
-		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
+		s->value[NPP_g_C] = 0.0;
+		s->value[NPP] = 0.0;
+		Log("Daily/Monthly NPP = %g gC/m^2\n", s->value[NPP_g_C]);
+		Log("Daily/Monthly NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
 	}
 
 

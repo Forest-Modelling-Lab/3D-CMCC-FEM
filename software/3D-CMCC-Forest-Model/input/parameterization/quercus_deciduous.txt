@@ -123,7 +123,7 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density
+DBHDCMAX	0.24    //Low Density //CUURENTLY NOT USED
 DBHDCMIN	0.16    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
@@ -157,7 +157,7 @@ HDMAX	1.4             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN	0.7             //Height to Base diameter ratio MIN  (Portoghesi)
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
-DENMIN	0.01           //Minimum density (trees/10000 m^2)
+DENMIN	0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                                         //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT

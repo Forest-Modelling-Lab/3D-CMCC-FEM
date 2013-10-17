@@ -186,7 +186,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Daily/Monthly Stand NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
 		*/
 	}
-/*
+
 	//TODO change all if with a for
 
 	if (c->annual_layer_number == 1)
@@ -250,6 +250,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	c->gpp += s->value[POINT_GPP_g_C];
 	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", c->gpp);
-	*/
+
 
 }

@@ -124,7 +124,7 @@ MF	0.64               //Fraction mean single tree foliage biomass lost per dead 
 MR	0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 ??????????????????
+DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
 DBHDCMIN	0.16    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
@@ -157,7 +157,7 @@ HDMAX	1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vo
 HDMIN	0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
 //DENSITY FUNCTION
 DENMAX	0.4             //Maximum density (trees/10000 m^2)
-DENMIN	0.01           //Minimum density (trees/10000 m^2)
+DENMIN	0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                                         //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
