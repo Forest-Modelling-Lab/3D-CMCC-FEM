@@ -435,7 +435,6 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 	//FIXME model doesn't get for the fist 10 days of the year the averaged values
 
-	//FIXME i DONT KNOW WEIGHT FOR AVERAGE
 	if (day < 11.0 && month == 0)
 	{
 		met[month_temp].d[day_temp].tsoil = met[month].d[day].tavg;
