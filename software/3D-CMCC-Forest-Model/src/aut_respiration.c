@@ -74,7 +74,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	// leaf day and night maintenance respiration when leaves on
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		Log("--FOLIAGE BIOME-BGC\n");
+		//Log("--FOLIAGE BIOME-BGC\n");
 
 		//convert biomass foliage from tons of DM to grams of Carbon then compute Nitrogen content using CN ratio
 		leaf_nitrogen = ((s->value[BIOMASS_FOLIAGE_CTEM] / GC_GDM) * 1000000.0) / s->value[CN_LEAVES];
