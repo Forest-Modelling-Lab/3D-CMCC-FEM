@@ -304,11 +304,21 @@ void Get_forest_structure (CELL *const c)
 					 * For. Sci. 7:36-42
 					 */
 					//currently not used
-					c->heights[height].ages[age].species[species].value[MCA]= ((100*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
+					c->heights[height].ages[age].species[species].value[MCA]= ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
 					                                 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 					Log("-MCA = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 					c->heights[height].ages[age].species[species].value[MCD]= 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 					Log("-MCD = %g m^2\n", c->heights[height].ages[age].species[species].value[MCD]);
+
+
+					/*compute DBHDCmax and DENmin from MCA*/
+					/*17 Oct 2013*/
+					c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]/c->heights[height].ages[age].species[species].value[AVDBH];
+					Log("-recomputed DBHDCMAX = %g \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+
+					//DENMIN = (SizeCell/MCA)/Sizecell
+					c->heights[height].ages[age].species[species].value[DENMIN] = 1.0/c->heights[height].ages[age].species[species].value[MCA];
+					Log("-recomputed DENMIN = %g tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 
 
 					if (c->heights_count == 1)
