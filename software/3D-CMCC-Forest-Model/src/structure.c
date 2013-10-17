@@ -307,15 +307,16 @@ void Get_forest_structure (CELL *const c)
 					c->heights[height].ages[age].species[species].value[MCA]= ((100*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
 					                                 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 					Log("-MCA = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
-
+					c->heights[height].ages[age].species[species].value[MCD]= 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
+					Log("-MCD = %g m^2\n", c->heights[height].ages[age].species[species].value[MCD]);
 
 
 					if (c->heights_count == 1)
 					{
-						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-						Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+						Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
 					}
 					else
 					{
@@ -324,25 +325,25 @@ void Get_forest_structure (CELL *const c)
 							if (c->heights[height].z == 2)
 							{
 								//settings->dominant
-								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX])
 										/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-										* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-								Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+										* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+								Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
 							}
 							else if (c->heights[height].z == 1)
 							{
-								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 										/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-										* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-								Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+										* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+								Log("DBHDC effective to apply for dominated = %g\n", DBHDCeffective);
 							}
 							else
 							{
 								//SUBDOMINATED
-								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 										/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-										* (c->density_subdominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-								Log("DBHDC effective to apply = %g\n", DBHDCeffective);;
+										* (c->density_subdominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+								Log("DBHDC effective to apply for subdominated = %g\n", DBHDCeffective);;
 
 							}
 						}
@@ -351,17 +352,17 @@ void Get_forest_structure (CELL *const c)
 							if (c->heights[height].z == 2)
 							{
 								//settings->dominant
-								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 										/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-										* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-								Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+										* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+								Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
 							}
 							else
 							{
-								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+								DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 										/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-										* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-								Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+										* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+								Log("DBHDC effective to apply for dominated = %g\n", DBHDCeffective);
 							}
 						}
 					}
@@ -372,7 +373,13 @@ void Get_forest_structure (CELL *const c)
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-						Log("DBHDC effective applied = %g\n", DBHDCeffective);
+						Log("DBHDC effective applied is DBHDCMAX = %g\n", DBHDCeffective);
+					}
+					if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
+					{
+						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
+						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
+						Log("DBHDC effective applied is DBHDCMIN = %g\n", DBHDCeffective);
 					}
 
 

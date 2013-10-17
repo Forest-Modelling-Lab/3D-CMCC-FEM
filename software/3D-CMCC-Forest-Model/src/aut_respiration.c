@@ -212,7 +212,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
-	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]+ s->value[STEM_MAINT_RESP]/*+s->value[COARSE_ROOT_MAINT_RESP]*/;
+	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]/*+ s->value[STEM_MAINT_RESP]+s->value[COARSE_ROOT_MAINT_RESP]*/;
 	Log("TOTAL maintenance respiration = %g gC/day m^2\n", s->value[TOTAL_MAINT_RESP]);
 
 

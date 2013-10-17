@@ -423,6 +423,7 @@ enum {
 	CROWN_AREA_LPJ,                 //Crown Area in m^2 from LPJ
 	CROWN_DIAMETER_LPJ,             //Crown Diameter in m from LPJ
 	MCA,                            //Maximum Crown Area in m^2
+	MCD,                            //Maximum Crown Diameter in m^2
 	DBHDC_EFF,                      //Crown Diameter from DBH in function of density
 	CROWN_DIAMETER_DBHDC_FUNC,      //Crown Diameter in m from DBHDC function
 	CROWN_AREA_DBHDC_FUNC,          //Crown Area in m^2 from DBHDC function
