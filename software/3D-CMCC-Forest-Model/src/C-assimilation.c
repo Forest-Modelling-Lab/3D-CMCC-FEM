@@ -18,6 +18,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 	//float DailyNPP;
 	//float MonthlyNPP;
 
+
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
 
