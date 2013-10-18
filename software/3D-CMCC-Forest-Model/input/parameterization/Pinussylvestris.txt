@@ -90,7 +90,7 @@ CONES_LIFE_SPAN 3 //Life span for cones (yr)
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF	0.523 //1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
 STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 2.5 from Pietsch et al., 2005
-COARSE_ROOT_STEM	0.4396	//allocation new coarse root C:new stem (ratio) averaged for P. sylvestris from White et al., 2000, 0.29 from Pietsch et al., 2005
+COARSE_ROOT_STEM	0.1693	//allocation new coarse root C:new stem (ratio) averaged deducted from Xiao et al., 2003 for P. sylvestris 0.4396 from White et al., 2000, 0.29 from Pietsch et al., 2005
 
 //BIOME C:N RATIOS
 CN_LEAVES   33.1  //CN of leaves (kgC/kgN) for P. sylvestris see PIetsch et al 2005  45 from Mollicone et al., 2002
