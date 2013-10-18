@@ -30,8 +30,16 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 		Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
 
 		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-		//upscale to cell level
-		s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+		if (s->value[NPP_g_C] < 0.0)
+		{
+			s->value[NPP_g_C] = 0.0;
+			s->value[NPP] = 0.0;
+		}
+		else
+		{
+			//upscale class NPP to class cell level
+			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+		}
 
 		//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
 
