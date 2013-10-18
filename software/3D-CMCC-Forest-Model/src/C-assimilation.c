@@ -12,11 +12,12 @@
 #include "constants.h"
 
 
-void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int day, int height)
+void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
 {
 
 	//float DailyNPP;
 	//float MonthlyNPP;
+	static float prev_negative_npp;
 
 
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
@@ -29,7 +30,33 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 		Log("Total aut respiration = %g\n", s->value[TOTAL_AUT_RESP]);
 		Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
 
-		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+		if (day == 0 && month == 0 && years == 0)
+		{
+
+			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+		}
+		else
+		{
+			//conservation of biomass
+			/*
+			if (s->value[NPP_g_C] < 0.0)
+			{
+				/used if previous day NPP is negative to maintain carbon balance
+				Log("previous negative NPP day value = %g gCm^2yr \n", s->value[NPP_g_C]);
+				s->value[NPP_g_C] -= (s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP]);
+				Log("-NPP day value = %g gCm^2yr \n", s->value[NPP_g_C]);
+			}
+			else
+			{
+				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+			}
+			*/
+			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+		}
+
+
+
+		/*
 		if (s->value[NPP_g_C] < 0.0)
 		{
 			s->value[NPP_g_C] = 0.0;
@@ -40,14 +67,17 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int month, int da
 			//upscale class NPP to class cell level
 			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 		}
+		*/
 
+		//upscale class NPP to class cell level
+		s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 		//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
 
 
 
 		if (settings->time == 'm')
 		{
-			//Monthy layer GPP in grams of C/m^2
+			//Monthly layer GPP in grams of C/m^2
 			//Convert molC into grams
 			Log("Monthly NPP = %g gC/m^2\n",  s->value[NPP_g_C]);
 			Log("Monthly NPP = %g tDM/area\n", s->value[NPP]);
