@@ -203,7 +203,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	exponent = (met[month].d[day].tsoil - 20.0) / 10.0;
 	t1 = pow(q10, exponent);
 	s->value[COARSE_ROOT_MAINT_RESP] = ((coarse_root_nitrogen * mrpern * t1)/settings->sizeCell);
-	//Log("BIOME Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
+	Log("BIOME Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 
 	//Log("--COARSE ROOT LPJ\n");
