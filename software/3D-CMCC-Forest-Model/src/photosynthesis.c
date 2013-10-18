@@ -240,16 +240,17 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 	Log("*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
 	//class level
-	s->value[YEARLY_POINT_GPP_G_C] += s->value[POINT_GPP_g_C];
+	s->value[YEARLY_POINT_GPP_G_C] += s->value[GPP_g_C];
 	Log("-CLASS LEVEL\n");
 	Log("-CLASS LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_G_C]);
 
 	Log("*********************** STAND LEVEL ANNUAL GPP ********************** \n");
 
 	//cell level
-	c->gpp += s->value[POINT_GPP_g_C];
+	c->gpp += s->value[GPP_g_C];
 	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly GPP (absolute) = %g gC/m^2 yr\n", c->gpp);
+
 
 
 }
