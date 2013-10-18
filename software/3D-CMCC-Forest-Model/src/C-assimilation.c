@@ -15,9 +15,7 @@
 void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
 {
 
-	//float DailyNPP;
-	//float MonthlyNPP;
-	static float prev_negative_npp;
+	float loss_of_froots, loss_of_foliage;
 
 
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
@@ -29,45 +27,31 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		Log("GPP = %g\n", s->value[GPP_g_C]);
 		Log("Total aut respiration = %g\n", s->value[TOTAL_AUT_RESP]);
 		Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
+		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+		Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
 
-		if (day == 0 && month == 0 && years == 0)
-		{
-
-			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-		}
-		else
-		{
-			//conservation of biomass
-			/*
-			if (s->value[NPP_g_C] < 0.0)
-			{
-				/used if previous day NPP is negative to maintain carbon balance
-				Log("previous negative NPP day value = %g gCm^2yr \n", s->value[NPP_g_C]);
-				s->value[NPP_g_C] -= (s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP]);
-				Log("-NPP day value = %g gCm^2yr \n", s->value[NPP_g_C]);
-			}
-			else
-			{
-				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-			}
-			*/
-			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-		}
-
-
-
-		/*
+		//for principle of conservation of mass
 		if (s->value[NPP_g_C] < 0.0)
 		{
-			s->value[NPP_g_C] = 0.0;
-			s->value[NPP] = 0.0;
-		}
-		else
-		{
+			//used if previous day NPP is negative to conserve biomass assuming the loss
+			//of biomass in foliage and fine roots
+
 			//upscale class NPP to class cell level
 			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+			Log("npp lost for respiration = %g tDM/ha \n", fabs(s->value[NPP]));
+
+			loss_of_froots = (fabs(s->value[NPP])*s->value[FINE_ROOT_LEAF]);
+			Log("froots lost for respiration = %g tDM/ha \n", loss_of_froots);
+			loss_of_foliage = (fabs(s->value[NPP]) - loss_of_froots);
+			Log("foliage lost for respiration = %g tDM/ha \n", loss_of_foliage);
+			s->value[BIOMASS_ROOTS_FINE_CTEM] -= loss_of_froots;
+			s->value[BIOMASS_FOLIAGE_CTEM] -= loss_of_foliage;
 		}
-		*/
+		/*recompute NPP*/
+		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+
+
+
 
 		//upscale class NPP to class cell level
 		s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
