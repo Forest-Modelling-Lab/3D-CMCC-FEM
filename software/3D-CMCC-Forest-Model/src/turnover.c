@@ -34,7 +34,7 @@ void Get_turnover (SPECIES *const s)
 
 	s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROSS_FINE];
 
-	/*
+
 
     Log("****   coarse root turnover****\n");
     s->value[DEL_ROSS_COARSE] =  s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[COARSERTTOVER];
@@ -48,14 +48,14 @@ void Get_turnover (SPECIES *const s)
          s->value[BIOMASS_ROOTS_COARSE_CTEM] -= s->value[DEL_ROOTS_COARSE_CTEM];
     }
 
-    oldWrc = s->value[BIOMASS_ROOTS_COARSE_CTEM];
+    //oldWrc = s->value[BIOMASS_ROOTS_COARSE_CTEM];
 
 
     //Coarse Root Biomass less root turnover
 
     s->value[BIOMASS_ROOTS_COARSE_CTEM] -= s->value[DEL_ROSS_COARSE];
 
-
+    /*
     Log("****Stem turnover****\n");
     //in LPJ the turnover of the stem in considered as the amount of sapwood that pass to the heartwood
 
