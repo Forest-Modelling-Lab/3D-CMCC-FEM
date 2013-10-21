@@ -15,6 +15,7 @@
 
 void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
 {
+	int i;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
 	Log("\nGET_C-Fluxes_ROUTINE\n");
@@ -23,53 +24,11 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	s->value[GPP_g_C] -= s->value[TOTAL_AUT_RESP];
 	Log("C-fluxes = %g gC/m^2 day/month\n", s->value[GPP_g_C]);
 
+	i = c->heights[height].z;
 
-
-
-	//TODO change all if with a for
-
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_gpp[0] += s->value[GPP_g_C];
-		c->monthly_gpp[0] += s->value[GPP_g_C];
-		c->annual_gpp[0] += s->value[GPP_g_C];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->annual_gpp[1] += s->value[GPP_g_C];
-		}
-		else
-		{
-			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->annual_gpp[0] += s->value[GPP_g_C];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_gpp[2] += s->value[GPP_g_C];
-			c->monthly_gpp[2] += s->value[GPP_g_C];
-			c->annual_gpp[2] += s->value[GPP_g_C];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->annual_gpp[1] += s->value[GPP_g_C];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->annual_gpp[0] += s->value[GPP_g_C];
-		}
-	}
+	c->daily_gpp[i] += s->value[GPP_g_C];
+	c->monthly_gpp[i] += s->value[GPP_g_C];
+	c->annual_gpp[i] += s->value[GPP_g_C];
 
 	c->daily_tot_gpp += s->value[GPP_g_C];
 	c->monthly_tot_gpp += s->value[GPP_g_C];

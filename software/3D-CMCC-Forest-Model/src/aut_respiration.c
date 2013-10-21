@@ -18,6 +18,7 @@
 void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 
+	int i;
 	//maintenance respiration routine
 	//Uses reference values at 20 deg C and an empirical relationship between
 	//tissue N content and respiration rate given in:
@@ -215,51 +216,10 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP] /*+ s->value[STEM_MAINT_RESP] +s->value[COARSE_ROOT_MAINT_RESP]*/;
 	Log("TOTAL maintenance respiration = %g gC/day m^2\n", s->value[TOTAL_MAINT_RESP]);
 
-
-	//TODO change all if with a for
-
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-		c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-		c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->annual_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-		}
-		else
-		{
-			c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
-			c->annual_maint_resp[2] += s->value[TOTAL_MAINT_RESP];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-			c->annual_maint_resp[1] += s->value[TOTAL_MAINT_RESP];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->monthly_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-			c->annual_maint_resp[0] += s->value[TOTAL_MAINT_RESP];
-		}
-	}
+	i = c->heights[height].z;
+	c->daily_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
+	c->monthly_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
+	c->annual_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
 
 	c->daily_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->monthly_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
@@ -269,6 +229,9 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 //FOLLOWING BIOME-BGC
 void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int month, int years)
 {
+
+	int i;
+
 
 	Log("\nGET_GROWTH_RESPIRATION\n");
 
@@ -310,50 +273,12 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] + s->value[FINE_ROOT_GROWTH_RESP] + s->value[STEM_GROWTH_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
 		Log("TOTAL growth respiration = %g gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
 	}
-	//TODO change all if with a for
 
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-		c->monthly_gowth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-		c->annual_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-			c->monthly_gowth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-			c->annual_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-		}
-		else
-		{
-			c->daily_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-			c->monthly_gowth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-			c->annual_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_growth_resp[2] += s->value[TOTAL_GROWTH_RESP];
-			c->monthly_gowth_resp[2] += s->value[TOTAL_GROWTH_RESP];
-			c->annual_growth_resp[2] += s->value[TOTAL_GROWTH_RESP];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-			c->monthly_gowth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-			c->annual_growth_resp[1] += s->value[TOTAL_GROWTH_RESP];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-			c->monthly_gowth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-			c->annual_growth_resp[0] += s->value[TOTAL_GROWTH_RESP];
-		}
-	}
+	i = c->heights[height].z;
+
+	c->daily_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
+	c->monthly_gowth_resp[i] += s->value[TOTAL_GROWTH_RESP];
+	c->annual_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
 
 	c->daily_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	c->monthly_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
@@ -362,6 +287,7 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 
 void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
+	int i;
 
 	Log("\nGET_AUTOTROPHIC_RESPIRATION\n");
 
@@ -372,50 +298,11 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 	//compute autotrophic respiration for each layer
 
-	//TODO change all if with a for
+	i = c->heights[height].z;
 
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->monthly_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->annual_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		}
-		else
-		{
-			c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->monthly_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->annual_aut_resp[2] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->monthly_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->annual_aut_resp[1] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->monthly_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-			c->annual_aut_resp[0] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		}
-	}
+	c->daily_aut_resp[i] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	c->monthly_aut_resp[i] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+	c->annual_aut_resp[i] += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 
 	c->daily_tot_aut_resp += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 	c->monthly_tot_aut_resp += s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];

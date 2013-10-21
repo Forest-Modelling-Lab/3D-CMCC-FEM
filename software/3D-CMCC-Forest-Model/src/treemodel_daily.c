@@ -149,8 +149,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*check for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
 
-
-		//control
+		/*check soil water balance*/
 		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
 			Log("ASW > MAXASW !!!\n");

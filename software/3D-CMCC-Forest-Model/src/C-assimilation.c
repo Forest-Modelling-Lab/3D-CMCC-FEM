@@ -14,7 +14,7 @@
 
 void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
 {
-
+	int i;
 	float loss_of_froots, loss_of_foliage;
 
 
@@ -35,6 +35,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		{
 			//used if previous day NPP is negative to conserve biomass assuming the loss
 			//of biomass in foliage and fine roots
+
+			//fixme if deciduous remove carbon from non structural carbon (pers communication Prof P. De Angelis)
 
 			//upscale class NPP to class cell level
 			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
@@ -92,49 +94,11 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		Log("Daily/Monthly NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
 	}
 
+	i = c->heights[height].z;
 
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_npp[0] += s->value[NPP];
-		c->monthly_npp[0] += s->value[NPP];
-		c->annual_npp[0] += s->value[NPP];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_npp[1] += s->value[NPP];
-			c->monthly_npp[1] += s->value[NPP];
-			c->annual_npp[1] += s->value[NPP];
-		}
-		else
-		{
-			c->daily_npp[0] += s->value[NPP];
-			c->monthly_npp[0] += s->value[NPP];
-			c->annual_npp[0] += s->value[NPP];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_npp[2] += s->value[NPP];
-			c->monthly_npp[2] += s->value[NPP];
-			c->annual_npp[2] += s->value[NPP];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_npp[1] += s->value[NPP];
-			c->monthly_npp[1] += s->value[NPP];
-			c->annual_npp[1] += s->value[NPP];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_npp[0] += s->value[NPP];
-			c->monthly_npp[0] += s->value[NPP];
-			c->annual_npp[0] += s->value[NPP];
-		}
-	}
+	c->daily_npp[i] += s->value[NPP];
+	c->monthly_npp[i] += s->value[NPP];
+	c->annual_npp[i] += s->value[NPP];
 
 	c->daily_tot_npp += s->value[NPP];
 	c->monthly_tot_npp += s->value[NPP];

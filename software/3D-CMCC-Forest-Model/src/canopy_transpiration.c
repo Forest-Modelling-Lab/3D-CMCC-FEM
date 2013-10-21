@@ -11,6 +11,8 @@
 extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, float vpd, int height, int age, int species)
 {
 
+	int i;
+
 
 	static float CanCond;
 	static float CanopyTranspiration;
@@ -288,52 +290,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	//Annual_Log("Canopy Transpiration layer %d = %g mm-Kg H2o/m^2/month\n", c->heights[height].z, s->value[DAILY_TRANSP]);
 
+	i = c->heights[height].z;
 
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_et[0] += s->value[DAILY_TRANSP];
-		c->monthly_et[0] += s->value[DAILY_TRANSP];
-		c->annual_et[0] += s->value[DAILY_TRANSP];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_et[1] += s->value[DAILY_TRANSP];
-			c->monthly_et[1] += s->value[DAILY_TRANSP];
-			c->annual_et[1] += s->value[DAILY_TRANSP];
-		}
-		else
-		{
-			c->daily_et[0] += s->value[DAILY_TRANSP];
-			c->monthly_et[0] += s->value[DAILY_TRANSP];
-			c->annual_et[0] += s->value[DAILY_TRANSP];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_et[2] += s->value[DAILY_TRANSP];
-			c->monthly_et[2] += s->value[DAILY_TRANSP];
-			c->annual_et[2] += s->value[DAILY_TRANSP];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_et[1] += s->value[DAILY_TRANSP];
-			c->monthly_et[1] += s->value[DAILY_TRANSP];
-			c->annual_et[1] += s->value[DAILY_TRANSP];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_et[0] += s->value[DAILY_TRANSP];
-			c->monthly_et[0] += s->value[DAILY_TRANSP];
-			c->annual_et[0] += s->value[DAILY_TRANSP];
-		}
-	}
-	//Annual_Log("numb layer %d\n", c->annual_layer_number);
-	//Annual_Log("prova et1 %g\n", c->annual_et[1]);
-	//Annual_Log("prova et0 %g\n", c->annual_et[0]);
+	c->daily_et[i] += s->value[DAILY_TRANSP];
+	c->monthly_et[i] += s->value[DAILY_TRANSP];
+	c->annual_et[i] += s->value[DAILY_TRANSP];
 
 	c->daily_tot_et += s->value[DAILY_TRANSP];
 	c->monthly_tot_et += s->value[DAILY_TRANSP];

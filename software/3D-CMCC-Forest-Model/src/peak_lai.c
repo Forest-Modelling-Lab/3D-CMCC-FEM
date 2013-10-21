@@ -69,7 +69,8 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
 
 void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
 {
-	static float oldBasalArea;
+	int i;
+	//static float oldBasalArea;
 	//static float sapwood_perc;
 
 	Log ("\nPEAK LAI FUNCTION\n\n");
@@ -98,36 +99,14 @@ void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, i
 		c->annual_peak_lai = s->value[PEAK_Y_LAI];
 	}
 	*/
-	if (c->annual_layer_number == 1)
-	{
-		c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->annual_peak_lai[1] += s->value[PEAK_Y_LAI];
-		}
-		else
-		{
-			c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->annual_peak_lai[2] += s->value[PEAK_Y_LAI];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->annual_peak_lai[1] += s->value[PEAK_Y_LAI];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->annual_peak_lai[0] += s->value[PEAK_Y_LAI];
-		}
-	}
+
+
+	//fixme useful only for one class per layer
+
+	i = c->heights[height].z;
+
+	c->annual_peak_lai[i] = s->value[PEAK_Y_LAI];
+
 
 
 

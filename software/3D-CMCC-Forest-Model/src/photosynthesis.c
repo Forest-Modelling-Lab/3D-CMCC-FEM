@@ -10,6 +10,7 @@
 
 void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
 {
+	int i;
 	float Alpha_C;
 	float Epsilon;
 	float Optimum_GPP;
@@ -187,50 +188,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		*/
 	}
 
-	//TODO change all if with a for
+	i = c->heights[height].z;
 
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_gpp[0] += s->value[GPP_g_C];
-		c->monthly_gpp[0] += s->value[GPP_g_C];
-		c->annual_gpp[0] += s->value[GPP_g_C];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->annual_gpp[1] += s->value[GPP_g_C];
-		}
-		else
-		{
-			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->annual_gpp[0] += s->value[GPP_g_C];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_gpp[2] += s->value[GPP_g_C];
-			c->monthly_gpp[2] += s->value[GPP_g_C];
-			c->annual_gpp[2] += s->value[GPP_g_C];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_gpp[1] += s->value[GPP_g_C];
-			c->monthly_gpp[1] += s->value[GPP_g_C];
-			c->annual_gpp[1] += s->value[GPP_g_C];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_gpp[0] += s->value[GPP_g_C];
-			c->monthly_gpp[0] += s->value[GPP_g_C];
-			c->annual_gpp[0] += s->value[GPP_g_C];
-		}
-	}
+	c->daily_gpp[i] += s->value[GPP_g_C];
+	c->monthly_gpp[i] += s->value[GPP_g_C];
+	c->annual_gpp[i] += s->value[GPP_g_C];
 
 	c->daily_tot_gpp += s->value[GPP_g_C];
 	c->monthly_tot_gpp += s->value[GPP_g_C];

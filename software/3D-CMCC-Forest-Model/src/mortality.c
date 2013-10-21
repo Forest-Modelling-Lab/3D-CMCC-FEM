@@ -10,6 +10,7 @@
 
 extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species, float layer_cover, int tree_number)
 {
+	int i;
 	//int oldNtree;
 	int deadtree;
 	int oldNstump;
@@ -168,55 +169,19 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 					c->layer_cover_subdominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
 					//Log("layer cover dopo while = %g\n", c->layer_cover_subdominated);
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
+					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+																						   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
 			break;
 		}
 
 
-		if (c->annual_layer_number == 1)
-		{
-			c->daily_dead_tree[0] += deadtree;
-			c->monthly_dead_tree[0] += deadtree;
-			c->annual_dead_tree[0] += deadtree;
-		}
-		if (c->annual_layer_number == 2)
-		{
-			if (c->heights[height].z == 1)
-			{
-				c->daily_dead_tree[1] += deadtree;
-				c->monthly_dead_tree[1] += deadtree;
-				c->annual_dead_tree[1] += deadtree;
-			}
-			else
-			{
-				c->daily_dead_tree[0] += deadtree;
-				c->monthly_dead_tree[0] += deadtree;
-				c->annual_dead_tree[0] += deadtree;
-			}
-		}
-		if (c->annual_layer_number == 3)
-		{
-			if (c->heights[height].z == 2)
-			{
-				c->daily_dead_tree[2] += deadtree;
-				c->monthly_dead_tree[2] += deadtree;
-				c->annual_dead_tree[2] += deadtree;
-			}
-			if (c->heights[height].z == 1)
-			{
-				c->daily_dead_tree[1] += deadtree;
-				c->monthly_dead_tree[1] += deadtree;
-				c->annual_dead_tree[1] += deadtree;
-			}
-			if (c->heights[height].z == 0)
-			{
-				c->daily_dead_tree[0] += deadtree;
-				c->monthly_dead_tree[0] += deadtree;
-				c->annual_dead_tree[0] += deadtree;
-			}
-		}
+		i = c->annual_layer_number;
+
+		c->daily_dead_tree[i] += deadtree;
+		c->monthly_dead_tree[i] += deadtree;
+		c->annual_dead_tree[i] += deadtree;
 
 		c->daily_tot_dead_tree += deadtree;
 		c->monthly_tot_dead_tree += deadtree;
@@ -250,7 +215,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 		//compute average biomass
 		c->heights[height].ages[age].species[species].value[AV_STEM_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]
-		                                                                                                                        / (float)c->heights[height].ages[age].species[species].counter[N_STUMP];
+																			/ (float)c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//Log(" Av stump mass = %g tDM/tree\n", s->value[AV_STEM_MASS] );
 
 

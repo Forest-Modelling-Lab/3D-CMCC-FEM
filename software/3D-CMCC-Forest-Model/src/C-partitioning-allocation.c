@@ -14,6 +14,9 @@
 //Deciduous carbon allocation routine
 void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
+
+	int i;
+
 	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
 	float  s0Ctem = s->value[S0CTEM];
@@ -1217,77 +1220,14 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		Log("delta_S %d = 0 \n", c->heights[height].z);
 		Log("delta_Res %d = 0 \n", c->heights[height].z);
 	}
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_lai[0] = s->value[LAI];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_lai[1] = s->value[LAI];
-		}
-		else
-		{
-			c->daily_lai[0] = s->value[LAI];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_lai[2] = s->value[LAI];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_lai[1] = s->value[LAI];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_lai[0] = s->value[LAI];
-		}
-	}
-
-	/*compute annual stem increment*/
-	if (c->annual_layer_number == 1)
-	{
-		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-		c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
-		}
-		else
-		{
-			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[2] = s->value[BIOMASS_STEM_CTEM];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-		}
-	}
 
 
-	Log("******************************\n");
+	i = c->heights[height].z;
+
+	c->daily_lai[i] = s->value[LAI];
+	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
+	c->annual_ws[i] = s->value[BIOMASS_STEM_CTEM];
+		Log("******************************\n");
 }
 
 /**/
@@ -1304,7 +1244,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	Log("Version = %c \n", settings->version);
 	Log("Spatial = %c \n", settings->spatial);
 
-
+	int i;
 
 
 	//allocation parameter. their sum must be = 1
@@ -1667,77 +1607,11 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		c->daily_lai = s->value[LAI];
 	}
 	 */
-	if (c->annual_layer_number == 1)
-	{
-		c->daily_lai[0] = s->value[LAI];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->daily_lai[1] = s->value[LAI];
-		}
-		else
-		{
-			c->daily_lai[0] = s->value[LAI];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->daily_lai[2] = s->value[LAI];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->daily_lai[1] = s->value[LAI];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->daily_lai[0] = s->value[LAI];
-		}
-	}
+	i = c->heights[height].z;
 
-	/*compute annual stem increment*/
-	if (c->annual_layer_number == 1)
-	{
-		c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-		c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-	}
-	if (c->annual_layer_number == 2)
-	{
-		if (c->heights[height].z == 1)
-		{
-			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
-		}
-		else
-		{
-			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-		}
-	}
-	if (c->annual_layer_number == 3)
-	{
-		if (c->heights[height].z == 2)
-		{
-			c->annual_delta_ws[2] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[2] = s->value[BIOMASS_STEM_CTEM];
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->annual_delta_ws[1] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[1] = s->value[BIOMASS_STEM_CTEM];
-		}
-		if (c->heights[height].z == 0)
-		{
-			c->annual_delta_ws[0] += s->value[DEL_STEMS_CTEM];
-			c->annual_ws[0] = s->value[BIOMASS_STEM_CTEM];
-		}
-	}
-
-
-
+	c->daily_lai[i] = s->value[LAI];
+	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
+	c->annual_ws[i] = s->value[BIOMASS_STEM_CTEM];
 	Log("******************************\n");
 
 

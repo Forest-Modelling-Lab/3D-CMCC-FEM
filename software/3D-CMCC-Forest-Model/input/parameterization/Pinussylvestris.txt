@@ -4,12 +4,14 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 		    	//2 = shade tolerant
 		   	//1 = very shade tolerant
 PHENOLOGY	1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005
+ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005, 0.05 for P. sylvestris, from Xenakis et al., 2008
 EPSILONgCMJ	1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011 
-K	0.51		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005
+K	0.51		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005, 0.52 for P. sylvestris, from Xenakis et al., 2008
+
 ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
+
 //LEAF AREA INDEX
-LAIGCX	3.333               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005
+LAIGCX	3.33               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception for P. sylvestris from Landsberg et al., 2005
 MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
@@ -22,9 +24,9 @@ TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 SLA	43.0             //Specific Leaf Area cm^2/gC for P. sylvestris , 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006		
 
 //FRACTION BRANCH-BARK
-FRACBB0	0.29            //Branch and Bark fraction at age 0 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
-FRACBB1	0.29            //Branch and Bark fraction for mature stands deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
-TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+FRACBB0	0.30            //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+FRACBB1	0.1            //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
+TBB	10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 //MASS DENSITY
 RHOMIN	0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006
 RHOMAX	0.502             //Maximum Basic Density for young Trees  for P. sylvestris from Janssen et al., 1999 ,0.41 from Repala, 2006
@@ -32,20 +34,20 @@ TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.500    //Conversion from Drymatter to Freshmatter for P. sylvestris from Pietsch et al 2005
 //VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris from Landsberg et al., 2005
-BLCOND	0.2            //Canopy Boundary Layer conductance for P. sylvestris from Landsberg et al., 2005
-MAXCOND	0.02            //Maximum Canopy Conductance in m/sec for P. sylvestris from Landsberg et al., 2005
+BLCOND	0.005            //Canopy Boundary Layer conductance for P. sylvestris from Landsberg et al., 2005
+MAXCOND	0.02            //Maximum Canopy Conductance in m/sec for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
 //AGE for timber
-MAXAGE	100             //Determines rate of "physiological decline" of forest for P. sylvestris from Zahele et al., 2005 ,500 from Landsberg et al., 2005
-RAGE	0.95            //Relative Age to give fAGE = 0.5 for P. sylvestris from Landsberg et al., 2005
-NAGE	4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005
+MAXAGE	100             //Determines rate of "physiological decline" of forest for P. sylvestris from Zahele et al., 120 for P. sylvestris, from Xenakis et al., 2008, 2005 ,500 from Landsberg et al., 2005
+RAGE	0.95            //Relative Age to give fAGE = 0.5 for P. sylvestris from Landsberg et al., 2005 for P. sylvestris, from Xenakis et al., 2008
+NAGE	4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005, 
 //Age for shoots
 MAXAGE_S	100     //Determines rate of "physiological decline" of forest
 RAGE_S	0.75            //Relative Age to give fAGE = 0.5
 NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN	-2       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005
-GROWTHTMAX	25      //Maximum temperature for growth for P. sylvestris from Landsberg et al., 2005
-GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
+GROWTHTMIN	-2       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005, -5 for P. sylvestris, from Xenakis et al., 2008
+GROWTHTMAX	25      //Maximum temperature for growth for P. sylvestris from Landsberg et al., 2005, 35 for P. sylvestris, from Xenakis et al., 2008
+GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and for P. sylvestris, from Xenakis et al., 2008 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
 GROWTHSTART	0       //average temperature for starting growth in °C 
 GROWTHEND	0       //average temperature for ending growth in °C 
 MINDAYLENGTH	0      //minimum day length for deciduous
