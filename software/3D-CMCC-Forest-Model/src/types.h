@@ -922,6 +922,7 @@ typedef struct {
 	int saplings_counter;
 	float snow;  //amount of snow in Kg H2O
 	float snow_subl; //sublimated snow
+	float snow_to_soil;
 	float gcorr;
 	float air_pressure;
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
@@ -1148,7 +1149,7 @@ extern void Get_a_Power_Function (AGE *, SPECIES *);
 
 extern void Get_air_pressure (CELL *c);
 
-extern void Get_snow_met_data (CELL *c, const MET_DATA *const, int, int);
+extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
 
 
 //sergio's functions

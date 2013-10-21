@@ -201,7 +201,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 }
 
 
-void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
+void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 {
 
 	//FOLLOWING BIOME APPROACH
@@ -212,6 +212,10 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
 	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation
 	float melt, t_melt, r_melt, r_sub;
+
+
+	Log("-GET SNOW MET DATA-\n");
+
 
 
 	t_melt = r_melt = r_sub = 0;
@@ -233,40 +237,79 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	{
 		/*no snow calculations in monthly time step*/
 	}
-	Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
-	Log("incident radiation for soil = %g\n", incident_rad);
+	//Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
+	//Log("incident radiation for soil = %g\n", incident_rad);
 
 	if (settings->time == 'd')
 	{
-		if (c->snow != 0)
+		/* temperature and radiation melt from snowpack */
+		if (met[month].d[day].tavg > 0.0)
 		{
-			/* temperature and radiation melt from snowpack */
-			if (met[month].d[day].tavg > 0)
+			if (c->snow > 0.0)
 			{
+				Log("tavg = %g\n", met[month].d[day].tavg);
+				Log("snow = %g\n", c->snow);
+				Log("Snow melt!!\n");
 				r_melt = incident_rad / LATENT_HEAT_FUSION;
 				melt = t_melt + r_melt;
+
 
 				if (melt > c->snow)
 				{
 					melt = c->snow;
-					//add snow to soil water
-					c->available_soil_water += c->snow;
 					/*reset snow*/
 					c->snow = 0;
 				}
+				//add snow to soil water
+				/*check for balance*/
+				c->snow_to_soil = melt;
+				if (c->snow_to_soil < c->snow)
+				{
+					c->available_soil_water += c->snow_to_soil;
+					c->snow -= c->snow_to_soil;
+				}
+				else
+				{
+					c->available_soil_water += c->snow;
+					c->snow = 0.0;
+				}
+				Log("snow to soil = %g\n", c->snow_to_soil);
 			}
-			/* sublimation from snowpack */
-			else
+
+		}
+		/* sublimation from snowpack */
+		else
+		{
+			Log("tavg = %g\n", met[month].d[day].tavg);
+			Log("snow = %g\n", c->snow);
+			Log("rain becomes snow\n");
+			c->snow += met[month].d[day].rain;
+			Log("Day %d month %d snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , c->snow);
+			met[month].d[day].rain = 0;
+			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+			//Log("r_sub = %g\n", r_sub);
+			if (c->snow > 0.0)
 			{
-				r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-				Log("r_sub = %g\n", r_sub);
 				/*snow sublimation*/
 				if (r_sub > c->snow)
 				{
+					Log("Snow sublimation!!\n");
 					r_sub = c->snow;
 					c->snow_subl = r_sub;
-					/*reset*/
-					c->snow = 0;
+					/*check for balance*/
+					if (c->snow_subl < c->snow)
+					{
+						c->snow -= c->snow_subl;
+					}
+					else
+					{
+						c->snow_subl = c->snow;
+						c->snow = 0.0;
+					}
+				}
+				else
+				{
+					c->snow_subl = 0.0;
 				}
 			}
 		}
@@ -275,6 +318,7 @@ void Get_snow_met_data (CELL *c, const MET_DATA *const met, int month, int day)
 	{
 		/*no snow calculations in monthly time step*/
 	}
+	Log("*****************************************\n");
 }
 
 /*
@@ -426,7 +470,7 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	For days 1-10, a 1-10 day running weighted average is used instead.
 	The tail of the running average is weighted linearly from 1 to 11.
 	There are no corrections for snowpack or vegetation cover.
-	*/
+	 */
 
 	MET_DATA *met;
 	// check parameters
@@ -434,6 +478,22 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 
 	//FIXME model doesn't get for the fist 10 days of the year the averaged values
+	//TODO CHECK SOIL TEMPÈERATURE COORECTION FROM BIOME
+	/* soil temperature correction using difference from
+				annual average tair */
+	/*file bgc.c
+	/*
+	 *
+			tdiff = tair_avg - metv.tsoil;
+			if (ws.snoww)
+			{
+				metv.tsoil += 0.83 * tdiff;
+			}
+			else
+			{
+				metv.tsoil += 0.2 * tdiff;
+			}
+	 */
 
 	if (day < 11.0 && month == 0)
 	{

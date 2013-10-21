@@ -126,7 +126,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//used if vpd is in kPa to convert it into mbar
 		/*
 		vpd =  met[month].d[day].vpd * 10.0; //Get_vpd (met, month);
-		*/
+		 */
 		//used if vpd is in hPa to convert it into mbar
 		vpd =  met[month].d[day].vpd ; //Get_vpd (met, month);
 
@@ -140,21 +140,16 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 
 
-		if (met[month].d[day].tavg > 0)
+		if (met[month].d[day].tavg > 0.0)
 		{
 			m->cells[cell].available_soil_water += met[month].d[day].rain;
 			Log("Day %d month %d ASW = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
-			if (m->cells[cell].snow != 0)
-			{
-				/*control snow*/
-				Get_snow_met_data (&m->cells[cell], met, month, day);
-			}
 		}
-		else
-		{
-			m->cells[cell].snow += met[month].d[day].rain;
-			Log("Day %d month %d ASW as snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].snow);
-		}
+
+		/*check for snow*/
+		Get_snow_met_data (&m->cells[cell], met, month, day);
+
+
 		//control
 		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
@@ -204,7 +199,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						{
 							Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 						}
-						*/
+					 */
 					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
@@ -222,8 +217,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						/*modifiers*/
 						Get_daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-											met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
-											m->cells[cell].heights[height].ages[age].species[species].management);
+								met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
+								m->cells[cell].heights[height].ages[age].species[species].management);
 
 						//deciduous
 						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
