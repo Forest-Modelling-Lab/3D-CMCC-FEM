@@ -34,7 +34,7 @@ TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 DRYMAT_FRESHMAT	0.504    //Conversion from Drymatter to Freshmatter for Q. robur from Pietsch et al 2005
 //VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
-BLCOND	0.005            //Canopy Boundary Layer conductance Q. robur from Pietsch et al 2005
+BLCOND	0.2            // it was 0.005 before removing VPDconv Canopy Boundary Layer conductance Q. robur from Pietsch et al 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
 //AGE for timber
 MAXAGE	150             //Determines rate of "physiological decline" of forest
@@ -48,7 +48,7 @@ NAGE_S	4               //Power of relative Age in function for Age
 GROWTHTMIN	0       //Minimum temperature for growth
 GROWTHTMAX	35      //Maximum temperature for growth
 GROWTHTOPT	17.66      //Optimum temperature for growth 25 for Q. robur from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011, 14 from Carrara et al., 2004
-GROWTHSTART	583       //average temperature for starting growth in °C 1100 for q. robur Hickler et al 2012 (7.5 for Quercus robur from Morecroft et al 2003) CONTROL!!!!!!!!!
+GROWTHSTART	400       //400 Sergio 22/10 previously 583 average temperature for starting growth in °C 1100 for q. robur Hickler et al 2012 (7.5 for Quercus robur from Morecroft et al 2003) CONTROL!!!!!!!!!
 GROWTHEND	2       //average temperature for ending growth in °C
 MINDAYLENGTH	11      //minimum day length for deciduous
 
@@ -155,7 +155,7 @@ CRC	1.074     // 1.074 value deducted from fitting Yuste 2005 values with Chapma
 HDMAX	2.5             //Height to Base diameter ratio MAX  for Q. robur 2.5 from Bellio and Pividori, 2009
 HDMIN	0.4             //Height to Base diameter ratio MIN  for Q. robur 0.4 from Bellio and Pividori, 2009
 //DENSITY FUNCTION
-DENMAX	0.1             //Maximum density (trees/10000 m^2)
+DENMAX	0.3             //Sergio .3 previously 0.1 /Maximum density (trees/10000 m^2)
 DENMIN	0.02           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
