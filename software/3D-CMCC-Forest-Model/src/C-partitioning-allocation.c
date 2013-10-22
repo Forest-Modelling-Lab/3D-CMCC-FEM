@@ -1586,6 +1586,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	}
 	else
 	{
+		Log("NPP < 0, no allocation occurs!!\n");
 		s->value[DEL_FOLIAGE_CTEM] = 0;
 		s->value[DEL_ROOTS_FINE_CTEM] = 0;
 		s->value[DEL_ROOTS_COARSE_CTEM] = 0;

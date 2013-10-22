@@ -177,7 +177,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 		}
 
 
-		i = c->annual_layer_number;
+		i = c->heights[height].z;
 
 		c->daily_dead_tree[i] += deadtree;
 		c->monthly_dead_tree[i] += deadtree;

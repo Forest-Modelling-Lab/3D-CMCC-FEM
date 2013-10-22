@@ -90,6 +90,26 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 	Log("BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log("SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
+	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
+	Log("HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
+
+/*
+	float heart_wood_diameter, heart_wood_stem_mass;
+
+	heart_wood_diameter = 2.0 * sqrt( s->value[HEARTWOOD_AREA]/Pi);
+	Log("HEART_WOOD_diameter = %g cm\n", heart_wood_diameter);
+	heart_wood_stem_mass = s->value[STEMCONST_P] * pow ((2.0 * sqrt( s->value[HEARTWOOD_AREA]/Pi)), s->value[STEMPOWER_P]);
+	Log("HEART_WOOD_STEM MASS = %g Kg\n",  heart_wood_stem_mass);
+
+	Log("HEART_WOOD_STEM PERC = %g \n", (heart_wood_stem_mass*100.0)/s->value[AV_STEM_MASS]);
+
+	Log("SAP_WOOD_STEM PERC = %g \n",  100.0 - (heart_wood_stem_mass*100.0)/s->value[AV_STEM_MASS]);
+
+*/
+
+
+
+
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	Log("sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
 	Log("Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);

@@ -241,11 +241,11 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
+			Annual_Log ("\n%s \t%2s \t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "HC(0)", "GPP(0)", "GPP (tot)", "AR(0)", "AR (tot)","Y(%tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "PEAK_LAI(0)",
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
-		Annual_Log ("%d \t%5d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g  \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%14d \t%11g \t%11g\n",
+		Annual_Log ("%d \t%2d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g  \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%14d \t%11g \t%11g\n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter,
 				c->annual_gpp[0], c->annual_tot_gpp,
@@ -456,7 +456,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_et_tot /= years_of_simulation;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("AVG/TOT \t\t%6g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12g \t%9g \t%10g \t\t\t\t%49d\n",
+			Annual_Log ("AVG/TOT \t\t%5g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12g \t%9g \t%10g \t\t\t\t%49d\n",
 					  avg_gpp[0], avg_gpp_tot, avg_ar[0], avg_ar_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_et[0], avg_et_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)

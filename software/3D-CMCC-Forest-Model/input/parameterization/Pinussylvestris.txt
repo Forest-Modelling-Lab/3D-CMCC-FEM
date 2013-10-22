@@ -130,8 +130,8 @@ DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1 
 DBHDCMIN	0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A	0.776         //a value for P. sylvestris from Xiao and Cuelemans 2013
-SAP_B	1.9156         //b value for P. sylvestris from Xiao and Cuelemans 2013
+SAP_A	0.7783         //a value for P. sylvestris from Xiao and Cuelemans 2004, 0.776 for P. sylvestris from Xiao and Cuelemans 2013
+SAP_B	1.9138         //b value for P. sylvestris from Xiao and Cuelemans 2004, 1.9156  for P. sylvestris from Xiao and Cuelemans 2013
 SAP_LEAF	2000          //sapwood_max leaf area ratio in pipe model  for P. sylvestris from Hickler et al 2012 (1000 see also Law et al., 2001 for P. ponderosa)
 SAP_WRES	0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling

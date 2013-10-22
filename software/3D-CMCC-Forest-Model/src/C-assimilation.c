@@ -33,6 +33,10 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		//for principle of conservation of mass
 		if (s->value[NPP_g_C] < 0.0)
 		{
+
+			s->value[NPP_g_C] = 0;
+			/*
+			 fixme AS IT SHOUL BE...
 			//used if previous day NPP is negative to conserve biomass assuming the loss
 			//of biomass in foliage and fine roots
 
@@ -48,6 +52,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			Log("foliage lost for respiration = %g tDM/ha \n", loss_of_foliage);
 			s->value[BIOMASS_ROOTS_FINE_CTEM] -= loss_of_froots;
 			s->value[BIOMASS_FOLIAGE_CTEM] -= loss_of_foliage;
+			*/
 		}
 		/*recompute NPP*/
 		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
