@@ -1,5 +1,5 @@
-x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wres,Lai
-0,0,F,65,Quercusrobur,T,129,0,32.1234455261,18.4098916718,0,4.301798948,0,96.29736279,0,0
+x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+0,0,F,65,Quercusrobur,T,129,0,32.1234455261,18.4098916718,0,4.301798948,0,96.29736279,0,0,0
 
 
 
