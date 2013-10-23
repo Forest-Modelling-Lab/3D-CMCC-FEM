@@ -62,11 +62,16 @@ void Get_Day_Length ( CELL * c,  int day, int month, int years, int MonthLength 
 
 
 //3PG version
-void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
+void GetDayLength_3PG (CELL * c, int day, int month, int years, int MonthLength ,  YOS  *yos)
 {
 	// gets fraction of day when sun is "up"
 	float sLat, cLat, sinDec, cosH0;
 	//int dayOfYear;
+
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	Log("GET DAY LENGTH 3-PG\n");
 
 	if (day == 0 && month == 0)
 	{
@@ -94,8 +99,8 @@ void GetDayLength_3PG (CELL * c, const MET_DATA *const met, int month, int day)
 	}
 	else
 	{
-		c->daylength_3PG = acos(cosH0) / Pi;
-		Log("daylength 3PG = %g \n", c->daylength_3PG);
+		c->daylength_3PG = ((acos(cosH0) / Pi) * 86400);
+		Log("daylength 3PG = %g hours\n", c->daylength_3PG);
 	}
 }
 

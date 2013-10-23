@@ -88,8 +88,13 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
 			//4 Dec 2012 add Albedo
 			//todo check if albedo is necessary
-			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6)) / met[month].daylength) * (1 - s->value[ALBEDO]);
+			/*net radiation considering albedo*/
+			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6.0)) * ((int)met[month].daylength/24.0)) * (1 - s->value[ALBEDO]/2.0);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
+
+			/*net radiation with no coverage (gaps)*/
+			c->net_radiation_no_albedo = (QA + QB * (met[month].solar_rad * pow (10.0,  6.0)) * ((int)met[month].daylength/24.0));
+			Log("Hourly Net Radiation NO ALBEDO = %g W/m^2/hour\n", c->net_radiation_no_albedo);
 
 
 			Month_Radiation = met[month].solar_rad * DaysInMonth;
@@ -110,6 +115,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//todo check if albedo is necessary
 			c->par = (Month_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
 			Log("Par for layer '%d' = %g molPAR/m^2 month\n", c->heights[height].z, c->par);
+
+			c->par_no_albedo = (Month_Radiation * MOLPAR_MJ);
+			Log("Par NO ALBDO for layer '%d' = %g molPAR/m^2 month\n", c->heights[height].z, c->par_no_albedo);
+
 		}
 		else
 		{
@@ -119,8 +128,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
 			//ALBEDO/2
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength) * (1 - (s->value[ALBEDO]/2));
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * ((int)met[month].d[day].daylength/24.0)) * (1 - (s->value[ALBEDO]/2.0));
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
+
+			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * ((int)met[month].d[day].daylength/24.0));
+			Log("Hourly Net Radiation NO ALBEDO = %g W/m^2/hour\n", c->net_radiation_no_albedo);
 
 			Daily_Radiation = met[month].d[day].solar_rad;
 
@@ -133,8 +145,13 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
 			//PAR is reflected than net_radiation (Jones 1992)
 			//albedo is not considered for lower layers as BIOME doesn't considers albedo for shaded leaves
-			c->par = (Daily_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/3));
+			//CONSIDERING THAT ALBEDO SHOULD BE CONSIDERED ONLY FOR SUN LEAVES AND THAT SUN LEAVES REPRESENT 50%
+			//ALBEDO IS 1/6
+			c->par = (Daily_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
 			Log("Par for layer '%d' = %g molPAR/m^2 day\n", c->heights[height].z, c->par);
+
+			c->par_no_albedo = (Daily_Radiation * MOLPAR_MJ);
+			Log("Par for layer '%d' NO ALBEDO= %g molPAR/m^2 day\n", c->heights[height].z, c->par_no_albedo);
 		}
 
 		c->par_over_dominant_canopy = c->par;
@@ -152,11 +169,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("GapCover = %g\n", c->gapcover[c->top_layer]);
 
 			//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
-			c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+			c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
 			Log("Hourly Net Radiation for lower layer = %g  W/m^2/hour\n", c->net_radiation_for_dominated);
 
 			//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
-			c->par_for_dominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+			c->par_for_dominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + (c->par_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
 			Log("Average Par for lower layer = %g molPAR/m^2 day/month\n", c->par_for_dominated);
 		}
 		else
@@ -207,9 +224,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				else
 				{
 					c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell))
-							+ (c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+							+ (c->net_radiation_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
 					c->par_for_dominated = (c->par - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
-							c->par * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
+							c->par_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
 				}
 				//FIXME OLD VERSION
 				//Net Radiation for lower layer

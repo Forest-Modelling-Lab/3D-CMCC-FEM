@@ -866,12 +866,18 @@ typedef struct {
 
 
 	float net_radiation;
+	float net_radiation_no_albedo;
 	float net_radiation_for_dominated;
+	float net_radiation_for_dominated_no_albedo; //not need to be used
 	float net_radiation_for_subdominated;
+	float net_radiation_for_subdominated_no_albedo; //not need to be used
 	float net_radiation_for_soil;
 	float par;
+	float par_no_albedo;
 	float par_for_dominated;
+	float par_for_dominated_no_albedo; //not need to be used
 	float par_for_subdominated;
+	float par_for_subdominated_no_albedo; //not need to be used
 	float par_for_soil;
 	float par_over_dominant_canopy;
 	float gpp;     //in g of C m^2
@@ -1024,7 +1030,7 @@ extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
 extern void Get_Day_Length (CELL *, int, int, int, int, YOS *);
-extern void GetDayLength_3PG (CELL *, const MET_DATA *const, int , int );
+extern void GetDayLength_3PG (CELL *, int, int, int, int, YOS *);
 extern void Get_Abscission_DayLength (CELL *);
 extern int Get_Establishment_LPJ (SPECIES *const, float, float);
 extern int logInit(char*);

@@ -1162,7 +1162,7 @@ int main(int argc, char *argv[])
 
 							//Get day length
 							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							//GetDayLength_3PG (&m->cells[cell], met, month, day);
+							//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
 							if(m->cells[cell].landuse == F)
 							{

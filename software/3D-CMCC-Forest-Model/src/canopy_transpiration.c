@@ -170,20 +170,22 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			switch (c->monthly_layer_number)
 			{
 			case 1:
-				Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+				//convert radiation from hours to seconds
+				Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 				Log("Net radiation = %g W/m^2/hour\n", c->net_radiation);
 				break;
 			case 2:
 				if ( c->heights[height].z == c->top_layer )
 				{
-					Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+					//convert radiation from hours to seconds
+					Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 				else
 				{
-					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
@@ -191,19 +193,20 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			case 3:
 				if ( c->heights[height].z == c->top_layer )
 				{
-					Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+					//convert radiation from hours to seconds
+					Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 				if ( c->heights[height].z == c->top_layer - 1 )
 				{
-					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 				else
 				{
-					Etransp = (e20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
@@ -211,7 +214,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				break;
 			}
 			//FIXME BEING ALL IN SECONDS SHOUD I MULPLY FOR SECONDS IN DAYLENGTH NON FOR HOURS IN DAYLENGTH??
-			CanopyTranspiration = Etransp / lambda * met[month].daylength;         // converted to kg-mm H2o/m2/day
+			CanopyTranspiration = Etransp / lambda * met[month].daylength * 3600.0;         // converted to kg-mm H2o/m2/day
 
 		}
 		else
@@ -220,20 +223,22 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			switch (c->daily_layer_number)
 			{
 			case 1:
-				Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+				//convert radiation from hours to seconds
+				Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 				Log("NET RADIATION = %g \n", c->net_radiation);
 				break;
 			case 2:
 				if ( c->heights[height].z == c->top_layer )
 				{
-					Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+					//convert radiation from hours to seconds
+					Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 				else
 				{
-					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominated layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation_for_dominated);
 				}
@@ -241,19 +246,20 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			case 3:
 				if ( c->heights[height].z == c->top_layer )
 				{
-					Etransp = (e20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+					//convert radiation from hours to seconds
+					Etransp = (e20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 				if ( c->heights[height].z == c->top_layer - 1 )
 				{
-					Etransp = (e20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for dominated layer = %g J/m^2/sec\n", Etransp);
 					Log("Net radiation = %g \n", c->net_radiation);
 				}
 				else
 				{
-					Etransp = (e20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
+					Etransp = (e20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
 					Log("Etransp for subdominant layer = %g J/m^2/sec\n", Etransp);
 					Log("Net radiation = %g \n", c->net_radiation_for_subdominated);
 				}
@@ -261,7 +267,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				break;
 			}
 
-			CanopyTranspiration = Etransp / lambda * met[month].d[day].daylength;   // converted to kg-mm H2o/m2/day
+
+			//canopy transpiration is computed in seconds needs to be converted in hours of sun then day
+			CanopyTranspiration = Etransp / lambda * (met[month].d[day].daylength * 3600.0);   // converted to kg-mm H2o/m2/day
 
 		}
 
