@@ -145,7 +145,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// Penman-Monteith equation for computing canopy transpiration
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
-		// removed VPDconst: VPD has already been converted in its % value (it is not in mbar anymore)
+		// removed VPDconv: VPD has already been converted in its % value (it is not in mbar anymore)
 		// todo has it been introduced in case of inputted  measured vpd? in that case use  switch for the equation
 		defTerm = rhoAir * lambda * (vpd) * s->value[BLCOND];
 		Log("defTerm = %g\n", defTerm);
