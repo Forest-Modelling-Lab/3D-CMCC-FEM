@@ -28,7 +28,7 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 	static float delDBH;       //DBH increment
 	static float oldWS;
 
-
+	Log("GET CROWDING COMPETITION FUNCTION\n");
 
 	/* WS before allocation of delWS */
 	oldWS = s->value[BIOMASS_STEM_CTEM] -  s->value[DEL_STEMS_CTEM];

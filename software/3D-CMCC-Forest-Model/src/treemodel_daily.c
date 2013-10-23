@@ -440,6 +440,16 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 						}
 
+						//FIXME SEVERAL PROCESSES SHOULD HAPPEN AT THE END OF THE MONTH NOT AT THE END OF THE YEAR
+						/*processes at the end of month*/
+						/*
+						if (day == (DaysInMonth[month]-1))
+						{
+							//TURNOVER
+							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
+						}
+						*/
+
 						/*END OF YEAR*/
 
 						if (day == 30 && month == DECEMBER)
@@ -520,7 +530,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
-							Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
+							//DON'T DELETE IT!!!!
+							//currently not used
+							//Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
 
 							//ABG and BGB
 							Get_AGB_BGB_biomass (&m->cells[cell], height, age, species);
@@ -529,6 +541,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 
 							//TURNOVER
+							//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
 							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
 
 							//ANNUAL BIOMASS INCREMENT
@@ -662,6 +675,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							 */
 						}
 					}
+					/*FUNCTIONS FOR SAPLINGS*/
 					else
 					{
 

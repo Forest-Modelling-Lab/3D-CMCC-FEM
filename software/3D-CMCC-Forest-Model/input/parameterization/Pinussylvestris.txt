@@ -113,7 +113,7 @@ LEAF_LIFE_SPAN  0.33     //Leaf life span  for P. sylvestris from Mollicone et a
 
 //TURNOVER
 FINERTTOVER	0.3825       //Average yearly fine root turnover rate for P. sylvestris from White et al., 2000
-COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
+COARSERTTOVER	0.07	//Average yearly coarse root turnover rate from Xenakis et al., 2007, Landsberg et al., 2005
 SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 
