@@ -285,6 +285,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			}
 		}*/
 	}
+
+
+	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 	else //DOMINATED LAYERS
 	{
 		//dominated layer
