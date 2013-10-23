@@ -210,7 +210,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 				break;
 			}
-
+			//FIXME BEING ALL IN SECONDS SHOUD I MULPLY FOR SECONDS IN DAYLENGTH NON FOR HOURS IN DAYLENGTH??
 			CanopyTranspiration = Etransp / lambda * met[month].daylength;         // converted to kg-mm H2o/m2/day
 
 		}

@@ -105,8 +105,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
 			//PAR is reflected than net_radiation (Jones 1992)
 			//albedo is not considered for lower layers as BIOME doesn't considers albedo for shaded leaves
+			//CONSIDERING THAT ALBEDO SHOULD BE CONSIDERED ONLY FOR SUN LEAVES AND THAT SUN LEAVES REPRESENT 50%
+			//ALBEDO IS 1/6
 			//todo check if albedo is necessary
-			c->par = (Month_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/3));
+			c->par = (Month_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
 			Log("Par for layer '%d' = %g molPAR/m^2 month\n", c->heights[height].z, c->par);
 		}
 		else
@@ -115,7 +117,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
 			//4 Dec 2012 add Albedo
 			//todo check if albedo is necessary
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength) * (1 - s->value[ALBEDO]);
+			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
+			//ALBEDO/2
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength) * (1 - (s->value[ALBEDO]/2));
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 			Daily_Radiation = met[month].d[day].solar_rad;
