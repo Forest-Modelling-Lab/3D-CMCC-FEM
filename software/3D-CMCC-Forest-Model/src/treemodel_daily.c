@@ -33,9 +33,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	static float Yearly_Rain;
 	//static float Total_Rain;
 
-
-
-
 	//compute VPD
 	static float vpd;
 
@@ -106,6 +103,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//*************SITE CHARACTERISTIC******************
 
+		/*CUURENTLY NOT USED*/
 		Get_Abscission_DayLength (&m->cells[cell]);
 
 	}
@@ -116,8 +114,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
-
-
 
 		//compute vpd
 		//TODO remove if used VPD
@@ -138,8 +134,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		Print_met_data (met, vpd, month, day);
 
-
-
 		if (met[month].d[day].tavg > 0.0)
 		{
 			m->cells[cell].available_soil_water += met[month].d[day].rain;
@@ -158,7 +152,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Log("ASW day %d month %d = %g mm\n", day+1, month+1, m->cells[cell].available_soil_water);
 		}
 
-		//compute moist ratio
+		/*compute moist ratio*/
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
 		Log("Moist ratio = %g\n", m->cells[cell].soil_moist_ratio);
 
@@ -166,16 +160,15 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 
 
-		// sort by heights
+		/*sort by heights*/
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
-		//loop on each heights starting from highest to lower
-
+		/*loop on each heights starting from highest to lower*/
 		Log("******CELL x = %d, y = %d STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
-			//loop on each ages
+			/*loop on each ages*/
 			for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 			{
 				/*increment age after first year*/
@@ -183,7 +176,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
-				//loop on each species
+				/*loop on each species*/
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
 					if (day == 0 && month == JANUARY)
@@ -194,11 +187,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
-					/*if (day == 0)
-						{
-							Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
-						}
-					 */
 					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 					/*Loop for adult trees*/
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
