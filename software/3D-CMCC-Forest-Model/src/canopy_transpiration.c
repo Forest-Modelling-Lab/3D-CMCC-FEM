@@ -17,7 +17,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C
-	float rhoAir = 1.2;       // density of air, kg/m3
+	float rhoAir /*= 1.2*/;       // density of air, kg/m3
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const VPDconv = 0.000622; // convert VPD to saturation deficit = 18/29/1000
 	static float defTerm;
@@ -64,6 +64,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
 		/* temperature and pressure correction factor for conductances */
 		//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
+		/*
 
 		if (settings->time == 'm')
 		{
@@ -79,6 +80,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
+			Log("RhoAir = %g\n", rhoAir);
 		}
 		else
 		{
@@ -94,7 +96,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 				Log("gcorr = %g\n", c->gcorr);
 			}
+			Log("RhoAir = %g\n", rhoAir);
 		}
+		*/
+
+
 
 
 		/*Canopy Conductance*/
