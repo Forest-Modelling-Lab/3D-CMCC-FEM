@@ -293,6 +293,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 					s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 					Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
+					//allocation to branch and bark
+					s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+					Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
 					//allocation to non structural reserve pool
 					s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
 					Log("Reserve Biomass (Wres) = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
@@ -403,6 +407,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
 				//allocation to foliage
 				s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 				Log("Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -506,6 +514,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 					s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 					Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
+					//allocation to branch and bark
+					s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+					Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
 					//allocation to non structural reserve pool
 					s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
 					Log("Reserve Biomass (Wres) = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
@@ -600,6 +612,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
+
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 
 				//allocation to non structural reserve pool
 				s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
@@ -702,6 +718,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				//allocation to stem
 				s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
+
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
 				//allocation to non structural reserve pool
@@ -1021,6 +1041,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
 				//allocation to foliage
 				s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 				Log("Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -1124,6 +1148,10 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
+
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 
 				//allocation to non structural reserve pool
 				s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
@@ -1410,6 +1438,10 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 			Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
 
+			//allocation to branch and bark
+			s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+			Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
 			//allocation to foliage
 			s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 			Log("Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -1538,6 +1570,10 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			Log("BiomassStemBB increment CTEM = %g tDM/area\n", s->value[DEL_BB]);
 			//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
 			//Log("Branch and bark Biomass (del_BB)= %g tDM/area\n", s->value[DEL_BB]);
+
+			//allocation to branch and bark
+			s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+			Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 
 			if (s->value[PHENOLOGY] == 1.2)
 			{

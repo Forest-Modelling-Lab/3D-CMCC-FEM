@@ -33,10 +33,12 @@ void Get_turnover (SPECIES *const s)
 	// Fine Root Biomass less root turnover
 
 	s->value[BIOMASS_ROOTS_FINE_CTEM] -= s->value[DEL_ROSS_FINE];
+	Log("Fine Root Biomass  = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 
 
 
     Log("****   coarse root turnover****\n");
+    Log("Coarse Root Biomass  = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
     s->value[DEL_ROSS_COARSE] =  s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[COARSERTTOVER];
     Log("Average yearly coarse Root turnover rate  = %g\n", s->value[COARSERTTOVER]);
     Log("Coarse Root Biomass lost = %g tDM/ha\n", s->value[DEL_ROSS_COARSE]);
@@ -54,6 +56,7 @@ void Get_turnover (SPECIES *const s)
     //Coarse Root Biomass less root turnover
 
     s->value[BIOMASS_ROOTS_COARSE_CTEM] -= s->value[DEL_ROSS_COARSE];
+    Log("Coarse Root Biomass  = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
     /*
     Log("****Stem turnover****\n");

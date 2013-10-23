@@ -97,13 +97,13 @@ extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 		normal_daily_turnover_rate = s->value[LEAF_LIFE_SPAN]* (1.0 / 365.0);
 		Log("normal_daily_turnover_rate = %g\n", normal_daily_turnover_rate);
 		s->value[LITTERFALL_RATE] = (s->value[F_SW] * s->value[F_T] * normal_daily_turnover_rate);
-		Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
+		//Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
 
 	}
 	else
 	{
 		normal_monthly_turnover_rate = s->value[LEAF_LIFE_SPAN]/12.0;
 		s->value[LITTERFALL_RATE] = (s->value[F_SW] * s->value[F_T] * normal_monthly_turnover_rate);
-		Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
+		//Log("*LITTERFALL_RATE_FROM_CTEM = %g\n\n", s->value[LITTERFALL_RATE]);
 	}
 }
