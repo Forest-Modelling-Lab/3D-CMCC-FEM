@@ -17,7 +17,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C
-	float rhoAir;       // density of air, kg/m3
+	float rhoAir = 1.2;       // density of air, kg/m3
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const VPDconv = 0.000622; // convert VPD to saturation deficit = 18/29/1000
 	static float defTerm;
@@ -61,9 +61,10 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
 
-
+		//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
 		/* temperature and pressure correction factor for conductances */
 		//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
+
 		if (settings->time == 'm')
 		{
 			if(met[month].tday == NO_DATA)
@@ -94,6 +95,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				Log("gcorr = %g\n", c->gcorr);
 			}
 		}
+
 
 		/*Canopy Conductance*/
 
@@ -147,7 +149,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 		// removed VPDconv: VPD has already been converted in its % value (it is not in mbar anymore)
 		// todo has it been introduced in case of inputted  measured vpd? in that case use  switch for the equation
-		defTerm = rhoAir * lambda * (vpd) * s->value[BLCOND];
+		defTerm = rhoAir * lambda * (vpd * VPDconv) * s->value[BLCOND];
 		Log("defTerm = %g\n", defTerm);
 		duv = (1.0 + e20 + s->value[BLCOND] / CanCond);
 		//Log("duv = %g\n", duv);
