@@ -798,6 +798,7 @@ typedef struct {
 	PREC wrc;
 	PREC wrf;
 	PREC ws;
+	PREC wbb;
 	PREC wres;
 	PREC lai;
 

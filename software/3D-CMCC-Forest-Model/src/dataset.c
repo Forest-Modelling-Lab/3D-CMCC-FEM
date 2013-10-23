@@ -31,6 +31,7 @@ enum {
 	WRC_COLUMN,
 	WRF_COLUMN,
 	WS_COLUMN,
+	WBB_COLUMN,
 	WRES_COLUMN,
 	LAI_COLUMN,
 	COLUMNS
@@ -77,6 +78,7 @@ static const char *header[COLUMNS] = {
 		"WRC",
 		"WRF",
 		"WS",
+		"WBB",
 		"WRES",
 		"LAI"
 };
@@ -350,6 +352,10 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 
 						case WS_COLUMN:
 							rows[*rows_count-1].ws = value;
+							break;
+
+						case WBB_COLUMN:
+							rows[*rows_count-1].wbb = value;
 							break;
 
 						case WRES_COLUMN:

@@ -271,6 +271,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].value[BIOMASS_ROOTS_COARSE_CTEM] = row->wrc;
 	a->species[a->species_count-1].value[BIOMASS_ROOTS_FINE_CTEM] = row->wrf;
 	a->species[a->species_count-1].value[BIOMASS_STEM_CTEM] = row->ws;
+	a->species[a->species_count-1].value[BIOMASS_STEM_BRANCH_CTEM] = row->wbb;
 	a->species[a->species_count-1].value[BIOMASS_RESERVE_CTEM] = row->wres;
 	a->species[a->species_count-1].value[LAI] = row->lai;
 
@@ -726,6 +727,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								"----- wr coarse = %g tDM/area\n"
 								"----- wr fine = %g tDM/area\n"
 								"----- ws = %g tDM/area\n"
+								"----- wbb = %g tDM/area\n"
 								"----- wres = %g tDM/area\n"
 								"----- lai = %g tDM/area\n",
 
@@ -741,6 +743,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
