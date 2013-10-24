@@ -30,7 +30,7 @@ TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 RHOMIN	0.4             //Minimum Basic Density for young Trees t/m^3
 RHOMAX	0.6             //Maximum Basic Density for young Trees (Ferrara-Nolè) 0.96 for Q. ilex from Knapic et al., 2007
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
-DRYMAT_FRESHMAT	0.58    //Conversion from Drymatter to Freshmatter (for Q. cerris L.) (M. Bascietto - G. Scarascia Mugnozza)
+
 //VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
 BLCOND	0.01            //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)

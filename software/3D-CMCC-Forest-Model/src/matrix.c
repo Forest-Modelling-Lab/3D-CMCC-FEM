@@ -53,7 +53,6 @@ static const char *species_values[] = {
 		"RHOMIN",                     //Minimum Basic Density for young Trees
 		"RHOMAX",                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 		"TRHO",                       //Age at which rho = (RHOMIN + RHOMAX )/2
-		"DRYMAT_FRESHMAT",				//Conversion from Drymatter to Freshmatter
 
 		//VPD
 		"COEFFCOND",                  //Define stomatal responsee to VPD in m/sec

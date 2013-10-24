@@ -29,7 +29,7 @@ TBB -9999                  //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 RHOMIN  -9999              //Minimum Basic Density for young Trees t/m^3
 RHOMAX  -9999              //Maximum Basic Density for young Trees 
 TRHO    -9999              //Age at which rho = (RHOMIN + RHOMAX )/2
-DRYMAT_FRESHMAT -9999      //Conversion from Drymatter to Freshmatter 
+
 //VPD
 COEFFCOND   -9999         //Define stomatal responsee to VPD in mbar 
 BLCOND  -9999             //Canopy Boundary Layer conductance 

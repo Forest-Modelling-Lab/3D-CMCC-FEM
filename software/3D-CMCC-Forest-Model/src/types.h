@@ -226,7 +226,6 @@ enum {
 	RHOMIN,                     //Minimum Basic Density for young Trees
 	RHOMAX,                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 	TRHO,                       //Age at which rho = (RHOMIN + RHOMAX )/2
-	FRESHMAT,                   //Conversion from Drymatter to Freshmatter
 
 	//VPD
 	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec
