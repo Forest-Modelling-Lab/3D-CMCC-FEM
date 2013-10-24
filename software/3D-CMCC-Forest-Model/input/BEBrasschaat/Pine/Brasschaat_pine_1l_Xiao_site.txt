@@ -1,0 +1,43 @@
+SITENAME "Brasschaat-Pine_1l-Xiao" //Site Name
+
+LAT "51.18" //Site Latitude negative for south hemisphere (Carrara et al., 2004)
+LONG "4.31" //Site Longitude (Carrara et al., 2004)
+ELEV "16" //Elevation in meters (Carrara et al., 2004)
+
+Y "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
+
+CO2CONC "387.0" //CO2 concentration
+
+
+
+INITIALLITTER "21" //Initial Litter (deducted from Janssens et al., 1999)
+
+MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
+//MAXASW "300" //Maximum Available soil water in mm
+//MINASW "30" //It should be the 10% of the maxasw
+
+CLAY_PERC "7"   //PERCENTAGE OF CLAY (< 0,002 mm) (deducted from Janssens et al., 1999)
+SILT_PERC "8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) (deducted from Janssens et al., 1999)
+SAND_PERC "85"   //PERCENTAGE OF SAND (0,05 - 2 mm) (deducted from Janssens et al., 1999)
+
+BULK_DENSITY "1.5"  //BULK DENSITY (g/cm3) (deducted from Janssens et al., 1999)
+
+SOIL_DEPTH "135" //SOIL DEPTH (cm) (averaged value from 120/150 cm from Carrara et al., 2004)
+
+
+//SITE NUTRITION
+FR "0.8" //Fertility rating
+FN0 "0.5" //Value of fNutr when FR = 0
+FNN "0.5" //Power of (1 - FR) in fNutr
+M0 "0.2" //value of 'm' when FR = 0
+SN "1.76"   //Soil Mineral Nitrogen Content gN/m^2
+
+//SOIL RESPIRATION
+RLAI "0.48" //SOIL RESPIRATION AL LAI = 0 gC m^2 day^-1
+SLAI "0.31" //BASAL RATE OF SOIL RESPIRATION FOR LAI gC m^2 day^-1
+QSOIL "0.03918" //EXPONENTIAL RELATIONSHIPBETWEEN SOIL RESPIRATION AND TEMPERATURE C°^-1
+KSOIL "2.15" //HALF SATURATION CONSTANT OF THE HYPERBOLIC RELATIONSHIP OF SOIL RESPIRATION WITH MONTHLY/DAILY PRECIPITATION mm
+P0 "1.55" //NON-WATER-LIMITED SOIL RESPIRATION IN MONTHS/DAYS WITHOUT RAIN mm
+
+//MANAGMENT
+CUTTREE "100" //Cutted Trees for Pixel
