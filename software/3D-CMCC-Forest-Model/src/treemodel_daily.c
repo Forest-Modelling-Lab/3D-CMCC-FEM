@@ -430,13 +430,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						//FIXME SEVERAL PROCESSES SHOULD HAPPEN AT THE END OF THE MONTH NOT AT THE END OF THE YEAR
 						/*processes at the end of month*/
-						/*
+
 						if (day == (DaysInMonth[month]-1))
 						{
-							//TURNOVER
-							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
+							//MONTHLY TURNOVER
+							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 						}
-						*/
+
 
 						/*END OF YEAR*/
 
@@ -530,7 +530,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							//TURNOVER
 							//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
-							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
+							//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 							//ANNUAL BIOMASS INCREMENT
 							Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);

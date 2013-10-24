@@ -1100,7 +1100,7 @@ extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const,
 extern void Get_initial_lai (SPECIES *const s, const int, const int, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
-extern void Get_turnover (SPECIES *const);
+extern void Get_turnover (SPECIES *const, int);
 extern void Get_Light_Recruitment (SPECIES *const, float, float);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int, int, int, int, int);

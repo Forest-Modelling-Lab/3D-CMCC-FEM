@@ -447,7 +447,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 
 							//TURNOVER
-							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species]);
+							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 							//ANNUAL BIOMASS INCREMENT
 							Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);

@@ -90,9 +90,9 @@ CONES_PERC  0.15 //fraction of NPP allocated for reproduction (0 for broadleaf) 
 CONES_LIFE_SPAN 3 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	0.523 //1.334	//allocation new fine root C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
+FINE_ROOT_LEAF	0.523 //allocation new fine root C:new leaf (ratio) averaged 1.334 2.56for P. sylvestris from White et al., 2000, 0.523 from Pietsch et al., 2005
 STEM_LEAF	2.1225	//allocation new stem C:new leaf (ratio) averaged for P. sylvestris from White et al., 2000, 2.5 from Pietsch et al., 2005
-COARSE_ROOT_STEM	0.1693	//allocation new coarse root C:new stem (ratio) averaged deducted from Xiao et al., 2003 for P. sylvestris 0.4396 from White et al., 2000, 0.29 from Pietsch et al., 2005
+COARSE_ROOT_STEM	0.29	//allocation new coarse root C:new stem (ratio) 0.145038168 averaged deducted from Xiao et al., 2003 for P. sylvestris 0.4396 from White et al., 2000, 0.29 from Pietsch et al., 2005
 
 //BIOME C:N RATIOS
 CN_LEAVES   33.1  //CN of leaves (kgC/kgN) for P. sylvestris see PIetsch et al 2005  45 from Mollicone et al., 2002
@@ -112,8 +112,12 @@ LEAF_LIFE_SPAN  0.33     //Leaf life span  for P. sylvestris from Mollicone et a
 //TGAMMAF	60               //Age at which litterfall rate has median value for P. sylvestris from Landsberg et al., 2005
 
 //TURNOVER
-FINERTTOVER	0.3825       //Average yearly fine root turnover rate for P. sylvestris from White et al., 2000
-COARSERTTOVER	0.07	//Average yearly coarse root turnover rate from Xenakis et al., 2007, Landsberg et al., 2005
+FINERTTOVER	0.066666667       //Average MONTHLY fine root turnover rate 
+							//0.031875 CONVERTED FROM 0.3825 YR^-1 for P. sylvestris from White et al., 2000, 
+							//0.061666667 month^-1, 0.74 YR^-1 from Jansenn 2002
+							//0.066666667 month^-1  0.8  YR^-1 from Gill and Jackson 2000
+COARSERTTOVER	0.07	//Average MONTHLY coarse root turnover rate DON0T USE 3-pg VALUES!!! (IT TAKES INTO ACCOUNT FINE + COARSE)
+                        //from Xenakis et al., 2007, Landsberg et al., 2005 
 SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 
@@ -146,8 +150,8 @@ CHPOWER	1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796 		 	//for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P 0.06552    // E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
-STEMPOWER_P 2.50626    //E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
+STEMCONST_P 0.1227    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
+STEMPOWER_P 2.3272    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA	32    //for P. sylvestris from Rupsys et al., 2010
