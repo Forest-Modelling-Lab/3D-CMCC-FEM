@@ -21,7 +21,7 @@ SLA0	4               //Specific Leaf Area at age 0 (m^2/kg)
 SLA1	7               //Specific Leaf Area for mature leaves (m^2/kg)
 TSLA	2.5             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
 //SPECIFIC LEAF AREA 
-SLA	44.0             //Specific Leaf Area cm^2/gC AVG VALUE FROM xIAO ET AL., 2006for P. sylvestris , 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006		
+SLA	39.0             //Specific Leaf Area cm^2/gC AVG VALUE FROM xIAO ET AL., 2006for P. sylvestris , 68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006 for 30.9 dbh class from Xiao2006
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.30            //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
@@ -119,7 +119,7 @@ FINERTTOVER	0.066666667       //Average MONTHLY fine root turnover rate
 COARSERTTOVER	0.02	//deducted from Yuste et al., 2005
 						//Average MONTHLY coarse root turnover rate DON0T USE 3-pg VALUES!!! (IT TAKES INTO ACCOUNT FINE + COARSE)
                         //from 3-PG 0.07 from Xenakis et al., 2007, Landsberg et al., 2005 
-SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
+SAPWOODTTOVER	0.0025	//Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 
 

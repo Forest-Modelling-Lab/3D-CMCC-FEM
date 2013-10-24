@@ -20,21 +20,7 @@ void Get_turnover (SPECIES *const s, int DaysInMonth)
 	float stem_turnover_rate;
 
 	Log("****MONTHLY TURNOVER****\n");
-	/*
-	if (settings->time == 'd')
-	{
-		//parameter values are often in monthly time step
-		fine_root_turnover_rate = s->value[FINERTTOVER]/DaysInMonth;
-		coarse_root_turnover_rate = s->value[COARSERTTOVER]/DaysInMonth;
-		stem_turnover_rate = s->value[SAPWOODTTOVER]/DaysInMonth;
-	}
-	else
-	{
-		fine_root_turnover_rate = s->value[FINERTTOVER];
-		coarse_root_turnover_rate = s->value[COARSERTTOVER];
-		stem_turnover_rate = s->value[SAPWOODTTOVER];
-	}
-	*/
+
 
 	fine_root_turnover_rate = s->value[FINERTTOVER];
 	coarse_root_turnover_rate = s->value[COARSERTTOVER];
@@ -82,8 +68,8 @@ void Get_turnover (SPECIES *const s, int DaysInMonth)
 
 	s->value[BIOMASS_ROOTS_COARSE_CTEM] -= s->value[DEL_ROSS_COARSE];
 	Log("Coarse Root Biomass  = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
+/*
 
-	/*
     Log("****Stem turnover****\n");
     //in LPJ the turnover of the stem in considered as the amount of sapwood that pass to the heartwood
 
@@ -97,11 +83,12 @@ void Get_turnover (SPECIES *const s, int DaysInMonth)
          s->value[BIOMASS_STEM_CTEM] -= s->value[DEL_ROSS_STEM];
     }
 
-    oldWs = s->value[BIOMASS_STEM_CTEM];
+    //oldWs = s->value[BIOMASS_STEM_CTEM];
 
     // Fine Root Biomass less root turnover
 
     s->value[BIOMASS_STEM_CTEM] -= s->value[DEL_ROSS_STEM];
-	 */
+    */
+
 
 }
