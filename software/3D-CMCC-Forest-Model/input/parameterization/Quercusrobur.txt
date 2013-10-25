@@ -37,7 +37,7 @@ COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar
 BLCOND	0.2            // it was 0.005 before removing VPDconv Canopy Boundary Layer conductance Q. robur from Pietsch et al 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
 //AGE for timber
-MAXAGE	150             //Determines rate of "physiological decline" of forest for Q. robur from Godet 1986 (see also Yuste et al 2005)
+MAXAGE	200             //Determines rate of "physiological decline" of forest for Q. robur from Godet 1986 (see also Yuste et al 2005)
 RAGE	0.80            //Relative Age to give fAGE = 0.5
 NAGE	4               //Power of relative Age in function for Age
 //Age for shoots
