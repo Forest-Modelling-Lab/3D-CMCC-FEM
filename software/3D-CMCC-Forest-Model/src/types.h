@@ -290,6 +290,7 @@ enum {
 	FINE_ROOT_LEAF,	//allocation new fine root C:new leaf (ratio)
 	STEM_LEAF,		//allocation new stem C:new leaf (ratio)
 	COARSE_ROOT_STEM,	//allocation new coarse root C:new stem (ratio)
+	LIVE_TOTAL_WOOD,	//new live C:new total wood (ratio)
 
 
 	//BIOME C:N RATIOS
@@ -598,6 +599,9 @@ enum {
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
 	BIOMASS_CONES_CTEM,   //only for coniferous
+
+	BIOMASS_LIVE_WOOD,
+	BIOMASS_DEAD_WOOD,
 
 	//Maintenance respiration
 	DAILY_LEAF_MAINT_RESP,

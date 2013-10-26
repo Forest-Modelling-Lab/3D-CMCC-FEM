@@ -93,6 +93,18 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 		s->value[WRC_heart] = s->value[BIOMASS_ROOTS_COARSE_CTEM] - s->value[WRC_sap];
 		Log("Heartwood coarse rootbiomass = %g tDM/area \n", s->value[WRC_heart]);
 
+		/*COMPUTE BIOMASS LIVE WOOD*/
+		s->value[BIOMASS_LIVE_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
+										s->value[BIOMASS_ROOTS_COARSE_CTEM]+
+										s->value[BIOMASS_STEM_BRANCH_CTEM])*
+										s->value[LIVE_TOTAL_WOOD];
+		Log("Live biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
+		s->value[BIOMASS_DEAD_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
+										s->value[BIOMASS_ROOTS_COARSE_CTEM]+
+										s->value[BIOMASS_STEM_BRANCH_CTEM])*
+										(1.0 -s->value[LIVE_TOTAL_WOOD]);
+		Log("Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
+
 
 
 }

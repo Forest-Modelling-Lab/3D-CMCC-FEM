@@ -118,6 +118,7 @@ static const char *species_values[] = {
 		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
 		"STEM_LEAF",		//allocation new stem C:new leaf (ratio)
 		"COARSE_ROOT_STEM",	//allocation new coarse root C:new stem (ratio)
+		"LIVE_TOTAL_WOOD",	//allocation new live wood C:new total wood C (ratio)
 
 		//BIOME C:N RATIOS
 		"CN_LEAVES",  //CN of leaves (kgC/kgN)

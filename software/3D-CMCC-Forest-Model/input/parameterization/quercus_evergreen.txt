@@ -90,6 +90,7 @@ CONES_LIFE_SPAN 0 //Life span for cones (yr)
 FINE_ROOT_LEAF	1	//allocation new fine root C:new leaf (ratio) see Mollicone et al 2002
 STEM_LEAF	1	//allocation new stem C:new leaf (ratio) see Mollicone et al 2002
 COARSE_ROOT_STEM	0.3	//allocation new coarse root C:new stem (ratio) see Mollicone et al 2002
+LIVE_TOTAL_WOOD	0.05	//new live C:new total wood (ratio) ?????? for coniferous P. Thornton pers. comm.
 
 //BIOME C:N RATIOS
 CN_LEAVES   42  //CN of leaves (kgC/kgN) for Q. ilex from Chiesi et al., 2007
