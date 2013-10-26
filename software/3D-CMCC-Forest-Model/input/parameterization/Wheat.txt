@@ -113,10 +113,7 @@ FINERTTOVER -9999        //Average yearly fine root turnover rate
 COARSERTTOVER   -9999    //Average yearly coarse root turnover rate
 SAPWOODTTOVER   -9999    //Average yearly sapwood turnover rate 
 BRANCHTTOVER    -9999    //Average yearly branch turnover rate
-
-
-
-
+LIVE_WOOD_TURNOVER	-9999 //Annual yearly live wood turnover rate
 
 //MORTALITY
 WSX1000 -9999             //Max stem mass (kg) per tree at 1000 trees/hectare

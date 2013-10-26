@@ -314,6 +314,7 @@ enum {
 	COARSERTTOVER,                  //Average monthly coarse root turnover rate
 	SAPWOODTTOVER,	                //Average yearly sapwood turnover rate
 	BRANCHTTOVER,	                //Average yearly branch turnover rate
+	LIVE_WOOD_TURNOVER,             //Average yearly live wood turnover rate
 	//RTTOVER,                    //Average monthly root turnover rate
 
 

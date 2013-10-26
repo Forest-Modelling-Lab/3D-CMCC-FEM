@@ -158,7 +158,17 @@ void Get_initialization_biomass_data (SPECIES *s, const YOS *const yos, const in
 		s->value[BIOMASS_ROOTS_FINE_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM];
 		Log("---Fine Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 	}
-
+	/*COMPUTE BIOMASS LIVE WOOD*/
+	s->value[BIOMASS_LIVE_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
+									s->value[BIOMASS_ROOTS_COARSE_CTEM]+
+									s->value[BIOMASS_STEM_BRANCH_CTEM])*
+									s->value[LIVE_TOTAL_WOOD];
+	Log("---Live biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
+	s->value[BIOMASS_DEAD_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
+									s->value[BIOMASS_ROOTS_COARSE_CTEM]+
+									s->value[BIOMASS_STEM_BRANCH_CTEM])*
+									(1.0 -s->value[LIVE_TOTAL_WOOD]);
+	Log("---Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
 
 
 }
