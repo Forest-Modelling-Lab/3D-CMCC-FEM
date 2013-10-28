@@ -83,20 +83,6 @@ static const char *species_values[] = {
 		"SWCONST",                    //Costant in Soil Water modifier vs Moist Ratio
 		"SWPOWER",                    //Power in Soil Water modifier vs Moist Ratio
 
-		//BIOMASS PARTITIONING for timber
-		"PFS2",                       //Foliage:Stem Partitioning Ratio @ D = 2 cm
-		"PFS20",                      //Foliage:Stem Partitioning Ratio @ D = 20 cm
-		"PRX",                        //Maximum fraction of NPP to Roots
-		"PRN",                        //Minimum fraction of NPP to Roots
-
-		//BIOMASS PARTITIONING for coppice
-		"PFS2_C",                      //Foliage:Stem Partitioning Ratio @ D = 2 cm
-		"PFS20_C",                     //Foliage:Stem Partitioning Ratio @ D = 20 cm
-		"PRX_C",                       //Maximum fraction of NPP to Roots
-		"PRN_C",                       //Minimum fraction of NPP to Roots
-
-
-
 		//BIOMASS PARTITIONING CTEM
 		"OMEGA_CTEM",                        //ALLOCATION PARAMETER
 		"S0CTEM",                           //PARAMETER CONTROLLING ALLOCATION TO STEM
@@ -132,9 +118,6 @@ static const char *species_values[] = {
 		//FOLLOWING BIOME-BGC
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
 		"LEAF_LIFE_SPAN",				//Leaf life span
-		//"GAMMAFX",                    //Maximum Litterfall rate (month^-1)
-		//"GAMMAF0",                    //Litterfall rate at t = 0 (month^-1)
-		//"TGAMMAF",                    //Age at which litterfall rate has median value
 
 		//ROOT TURNOVER
 		"FINERTTOVER",                    //Average yearly fine root turnover rate

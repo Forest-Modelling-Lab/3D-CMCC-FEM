@@ -60,18 +60,6 @@ SWPCLOSE	-2.5 //Q. robur from Cenciala and Tatarinov 2006
 SWCONST	1	        //Costant in Soil Water modifier vs Moist Ratio
 SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 
-//BIOMASS PARTITIONING for timber
-PFS2	0.5             //Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20	0.5             //Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX	0.5	        //Maximum fraction of NPP to Roots
-PRN	0.2             //Minimum fraction of NPP to Roots
-//BIOMASS PARTITIONING for coppice (valore inventati per prova)
-PFS2_C	1               //Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20_C	0.4             //Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX_C	0.30	        //Maximum fraction of NPP to Roots
-PRN_C	0.10            //Minimum fraction of NPP to Roots
-
-
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM	0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
 S0CTEM	0.53             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM (0.1 defualt value) for Q. robur from Balboa et al ppt
@@ -105,9 +93,6 @@ CN_DEAD_WOODS   451  //CN of dead woods (kgC/kgN) for Q. robur from Pietsch et a
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING	0.3		//proportions of the growing season of leaf fall Q. robur from Pietsch et al 2005
 LEAF_LIFE_SPAN  1     //Leaf life span
-//GAMMAFX	11              //Maximum Litterfall rate (month^-1)
-//GAMMAF0	9               //Litterfall rate at t = 0 (month^-1)
-//TGAMMAF	0               //Age at which litterfall rate has median value
 
 //TURNOVER
 FINERTTOVER	1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005

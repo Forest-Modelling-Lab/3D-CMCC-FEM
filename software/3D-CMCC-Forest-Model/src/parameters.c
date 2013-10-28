@@ -44,10 +44,6 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					"GROWTHTOPT= %g \n"
 					"GROWTHSTART= %g \n"
 					"GROWTHEND= %g \n"
-					"PFS2= %g \n"
-					"PFS20= %g \n"
-					"PRX= %g \n"
-					"PRN= %g \n"
 					"STEMCONST= %g \n"
 					"STEMPOWER_A= %g \n"
 					"STEMPOWER_B= %g \n"
@@ -77,10 +73,6 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					s->value[GROWTHTOPT],
 					s->value[GROWTHSTART],
 					s->value[GROWTHEND],
-					s->value[PFS2],
-					s->value[PFS20],
-					s->value[PRX],
-					s->value[PRN],
 					s->value[STEMCONST],
 					STEMPOWER_A,
 					STEMPOWER_B,

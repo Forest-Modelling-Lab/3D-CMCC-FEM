@@ -255,20 +255,6 @@ enum {
 	SWCONST,                    //Costant in Soil Water modifier vs Moist Ratio
 	SWPOWER,                    //Power in Soil Water modifier vs Moist Ratio
 
-	//BIOMASS PARTITIONING for timber
-	PFS2,                       //Foliage:Stem Partitioning Ratio @ D = 2 cm
-	PFS20,                      //Foliage:Stem Partitioning Ratio @ D = 20 cm
-	PRX,                        //Maximum fraction of NPP to Roots
-	PRN,                        //Minimum fraction of NPP to Roots
-
-	//BIOMASS PARTITIONING for coppice
-	PFS2_C,                      //Foliage:Stem Partitioning Ratio @ D = 2 cm
-	PFS20_C,                      //Foliage:Stem Partitioning Ratio @ D = 20 cm
-	PRX_C,                        //Maximum fraction of NPP to Roots
-	PRN_C,                        //Minimum fraction of NPP to Roots
-
-
-
 	//BIOMASS PARTITIONING CTEM
 	OMEGA_CTEM,                        //ALLOCATION PARAMETER
 	S0CTEM,                           //PARAMETER CONTROLLING ALLOCATION TO STEM
@@ -305,9 +291,6 @@ enum {
 	//FOLLOWING BIOME-BGC
 	LEAF_FALL_FRAC_GROWING,		//proportions of the growing season of leaf fall
 	LEAF_LIFE_SPAN,				//Leaf life span
-	//GAMMAFX,                    //Maximum Litterfall rate (month^-1)
-	//GAMMAF0,                    //Litterfall rate at t = 0 (month^-1)
-	//TGAMMAF,                    //Age at which litterfall rate has median value
 
 	//ROOT TURNOVER
 	FINERTTOVER,                    //Average monthly fine root turnover rate
@@ -401,11 +384,7 @@ enum {
 	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
 	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
 	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
-	APAR_DOMINATED,                 //Available Physiological Active Radiation 'molPAR/m^2' for DOMINATED LAYER
-	APAR_CAN_COVER,                 //Apar for Canopy Cover
-	LIGHT_ABSORB,                   //Fraction of Light Absorbed from Domain Canopy
-	LIGHT_TRASM,                    //Fraction of Light Trasmitted through Domain Canopy
-	LIGHT_ABSORB_UDC,               //Fraction of Light Absorbed from Dominated Canopy
+
 
 
 
@@ -418,8 +397,6 @@ enum {
 	CROWN_AREA_SORTIE,              //Crown Area from Sortie diameter
 	CROWN_HEIGHT_SORTIE,            //Crown Height in m from Sortie Standard
 	TREE_HEIGHT_SORTIE,             //Tree Height in m from Sortie function
-	TREE_HEIGHT_UDC,
-	TREE_HEIGHT_FL,
 	TREE_HEIGHT_LPJ,                //Tree Height in m from LPJ
 	CROWN_AREA_LPJ,                 //Crown Area in m^2 from LPJ
 	CROWN_DIAMETER_LPJ,             //Crown Diameter in m from LPJ
@@ -429,30 +406,14 @@ enum {
 	CROWN_DIAMETER_DBHDC_FUNC,      //Crown Diameter in m from DBHDC function
 	CROWN_AREA_DBHDC_FUNC,          //Crown Area in m^2 from DBHDC function
 	CANOPY_COVER_DBHDC_FUNC,        //Canopy Cover % of pixel covered from DBHDC function
-	FREE_CANOPY_COVER_DBHDC_FUNC,   //Fraction of Dominant Layer without Dominant Canopy Cover
 	CANOPY_COVER_DBHDC,
-	CANOPY_COVER,                   //Canopy Cover % of pixel covered
 	CANOPY_COVER_P,                 //Canopy Cover from Portoghesi Function % of pixel covered
 	FREE_CANOPY_COVER_P,
-	CANOPY_COVER_DOMINANT,
-	CANOPY_COVER_DOMINATED,
-	CANOPY_COVER_SORTIE,            //Canopy Cover % of pixel covered from Sortie Function
 	CANOPY_COVER_LPJ,               //Canopy Cover % of pixel covered from LPJ
-	GAP_COVER,
 	TREE_HEIGHT_CR,                 //Tree Height in m from CHAPMAN-RICHARDS FUNCTION
 	HD_EFF,                         //Effective HD ratio to give to Crowding Competition Function
-	DEL_HEIGHT,                     //Height increment from Crowding Competition Function in m
-	DEL_DBH,                        //DBH increment from Crowding Competition Function in m
 	CC_TREE_HEIGHT,                 //Tree Height in m from Crowding Competition Function in m
 	CC_AVDBH,                       //Average DBH from Crowding Competition Function in cm
-	T_MAX,                          //Max temperature (C°)
-	T_MIN,                          //Min temperature (C°)
-	T_AV,                           //Average temperature (C°)
-	FROST_DAYS,                     //Number of Frost Days
-	RAIN,                           //Rain in mm
-	MONTH_RAIN,                     //Monthly Rainfall (mm)
-	RH,                             //Relative Humidity (%)
-	VPD,                            //VPD (mbar)
 	F_VPD,                          //VPD modifier
 	//ALTER_VPD,                    //Alternative VPD
 	//ALTER_F_VPD,                  //Alternative VPD Modifier
@@ -490,28 +451,10 @@ enum {
 	AVERAGE_F_T,
 	AVERAGE_F_SW,
 
-
-
-	ALPHA_C,                        //effective quantum canopy efficiency
-	EPSILON,                        //Light Use Efficiency (gDM/MJ)
-	RAD_INT,                        //Radiation Incerception
-
-
 	//LAI
 	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
 	OLD_LAI,
-	LAI_3PG,
-	LAI_NASA_CASA,
-	LAI_CTEM,
-	LAI_LPJ,
-	SLA_LPJ,
 	SLAmkg,
-
-	INITIAL_M_C_LAI,             //FIRST MONTH OF GROWING SEASON LAI COMPUTED BY ONE/THIRD OF PREVIOUS YEARLY BIOMASS ALLOCATED FOR DECIDUOUS  see (Schwalm et al., 2004)
-
-
-	CUM_DAY_LENGTH,                 //Cumulated DayLength for recruitment
-	CUM_MONTH_LENGTH,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
@@ -527,31 +470,12 @@ enum {
 	NPP,                            //Net Primary Production  tDM/area
 	NPP_g_C, 						//Net Primary Production in grams of C
 
-	AUT_RESPIRATION,				//autotrophic respiration in grams of C/m^2
-
-
-
 	WUE,                            //Water use efficiency (gDM/mm)
 
-
-	//3PG ALLOCATION FUNCTION
-	PFS,                           //Foliage:Stem Partitioning Ratio
-	PR,                            //Ratio to Roots
-	PS,                            //Ratio to Stem
-	PF,                            //Ratio to Foliage
-	WF,                            //Foliage Biomass
-	DEL_WF,                        //Foliage Biomass Increment
-	WF_KG_M2,                      //Foliage Biomass in m^2/Kg for that CanopyCover
-	WRC,                            //Root Biomass
-	WRF,
-	WRT,
-	DEL_WR,                        //Root Biomass Increment
-	WS,                            //Stem Biomass
 	WS_sap,
 	WS_heart,
 	WRC_sap,
 	WRC_heart,
-	DEL_WS,                        //Stem Biomass Increment
 	DEL_BB,                        //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
 	DEL_TOTAL_W,                   //Total Biomass Increment
@@ -568,21 +492,6 @@ enum {
 	PEAK_LAI,                      //PEAK LAI DETERMINED BUY THE PREVIOUS YEAR BIOMASS ALLOCATED INTO FOLIAGE
 	PEAK_Y_LAI,                    //PEAK LAI FOR NEXT YEAR
 	MAX_BIOMASS_FOLIAGE_CTEM,
-
-	YEARLY_WF,
-	YEARLY_WS,
-	YEARLY_WR,
-
-
-	//NASA CASA ALLOCATION FUNCTION
-	LIGHT_NASA_CASA,
-	ROOTS_NASA_CASA,
-	STEM_NASA_CASA,
-	FOLIAGE_NASA_CASA,
-	BIOMASS_ROOTS_NASA_CASA,
-	BIOMASS_STEM_NASA_CASA,
-	BIOMASS_FOLIAGE_NASA_CASA,
-
 
 	//CTEM CARBON
 	//carbon biomass monthly increment
@@ -671,13 +580,8 @@ enum {
 
 
 	DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
-	DEL_ROSS_FINE,                       //perdita di radici fini che vanno nella lettiera
-	DEL_ROSS_COARSE,                    //perdita di radici grosse che vanno nella lettiera
-	DEL_ROSS_STEM,                       //perdita di STEM che vanno nella lettiera
-	DEL_ROSS_BRANCH,                    //perdita di radici grosse che vanno nella lettiera
 	TOTAL_LITTER,                   //Lettiera totale
 	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
-
 
 	FRACBB,
 
@@ -709,8 +613,6 @@ enum {
 	CUM_MONTHLY_NPP,                 //Sum of all years NPP (included simulation years)
 	MONTHLY_GPP_G_C,                 //Yearly GPP
 	MONTHLY_POINT_GPP_G_C,
-	MONTHLY_RAIN,                    //Yearly Rain
-
 
 	//YEARLY CUMULATIVE VARIABLES
 	YEARLY_NPP,                     //Yearly NPP
@@ -1053,11 +955,6 @@ extern void monthly_logClose(void);
 extern int annual_logInit(char*);
 extern void Annual_Log(const char *, ...);
 extern void annual_logClose(void);
-extern void Get_Lai_3DVT (SPECIES *const);
-extern void Get_Lai_3PG (SPECIES *const);
-extern void Get_Lai_NASACASA (SPECIES *const);
-extern void Get_Lai_LPJ (SPECIES *const);
-extern void Get_Lai_CTEM (SPECIES *const);
 extern void Get_Age_Mortality (SPECIES *const, AGE *const);
 extern void Get_Greff_Mortality (SPECIES *const);
 extern void Get_Mortality (SPECIES *const, int);
@@ -1075,15 +972,13 @@ void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, cons
 extern void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
 extern int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
 extern int Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
-extern void Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int);
-extern void Get_Partitioning_Allocation_NASACASA (SPECIES *const, int);
 extern void Get_Partitioning_Allocation_CTEM (SPECIES *const, int);
 //monthly allocation
 extern void M_Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
 extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
 extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
-extern void M_Get_Partitioning_Allocation_3PG (SPECIES *const, int, int, int, int, float, const MET_DATA *const);
-extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
+
+
 //deciduous routine for carbon allocation
 extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
@@ -1097,7 +992,6 @@ extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 extern void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 
-extern void SP_V_M_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
 extern void Get_litter (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
@@ -1118,7 +1012,6 @@ void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 extern float Get_vpd (const MET_DATA *const, int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
-extern void Set_z_value ( CELL *, float, int);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 extern void Get_stool_mortality (SPECIES *, int);

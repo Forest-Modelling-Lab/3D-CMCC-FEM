@@ -58,17 +58,6 @@ SWPCLOSE    -9999       //for C. sativa Nardini Saleo 2000
 SWCONST -9999           //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER -9999           //Power in Soil Water modifier vs Moist Ratio
 
-//BIOMASS PARTITIONING for timber
-PFS2    -9999           //Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20   -9999           //Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX -9999               //Maximum fraction of NPP to Roots
-PRN -9999               //Minimum fraction of NPP to Roots
-//BIOMASS PARTITIONING for coppice (valore inventati per prova)
-PFS2_C  -9999           //Foliage:Stem Partitioning Ratio @ D = 2 cm
-PFS20_C -9999           //Foliage:Stem Partitioning Ratio @ D = 20 cm
-PRX_C   -9999           //Maximum fraction of NPP to Roots
-PRN_C   -9999           //Minimum fraction of NPP to Roots
-
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM  -9999       //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
@@ -104,9 +93,6 @@ CN_DEAD_WOODS   -9999  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  -9999     //proportions of the growing season of leaf fall
 LEAF_LIFE_SPAN  -9999     //Leaf life span
-//GAMMAFX -9999               //Maximum Litterfall rate (month^-1)
-//GAMMAF0 -9999               //Litterfall rate at t = 0 (month^-1)
-//TGAMMAF -9999               //Age at which litterfall rate has median value
 
 //TURNOVER
 FINERTTOVER -9999        //Average yearly fine root turnover rate
