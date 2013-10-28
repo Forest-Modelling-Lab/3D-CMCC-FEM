@@ -284,6 +284,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								Log("month %d\n", month);
 								D_Get_Partitioning_Allocation_CTEM (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+								Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -325,6 +326,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								D_Get_Partitioning_Allocation_CTEM (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
+								Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 								/* Soil Water Balance*/
 
@@ -403,7 +405,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 							Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 							E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-
+							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 
 							Log("--------------------------------------------------------------------------\n\n\n");
@@ -430,12 +432,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						//FIXME SEVERAL PROCESSES SHOULD HAPPEN AT THE END OF THE MONTH NOT AT THE END OF THE YEAR
 						/*processes at the end of month*/
-
+						/*
 						if (day == (DaysInMonth[month]-1))
 						{
 							//MONTHLY TURNOVER
 							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 						}
+						*/
 
 
 						/*END OF YEAR*/

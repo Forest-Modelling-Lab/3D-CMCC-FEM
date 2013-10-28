@@ -735,7 +735,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								"----- wrc live = %g tDM/area\n"
 								"----- wbb live = %g tDM/area\n"
 								"----- w tot live = %g tDM/area\n"
-								"----- w toit dead = %g tDM/area\n"
+								"----- w tot dead = %g tDM/area\n"
 								"----- lai = %g tDM/area\n",
 
 								m->cells[cell].heights[height].value,

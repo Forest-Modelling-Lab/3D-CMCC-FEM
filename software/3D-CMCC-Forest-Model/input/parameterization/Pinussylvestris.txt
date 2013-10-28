@@ -113,7 +113,7 @@ LEAF_LIFE_SPAN  0.33     //Leaf life span  for P. sylvestris from Mollicone et a
 //TGAMMAF	60               //Age at which litterfall rate has median value for P. sylvestris from Landsberg et al., 2005
 
 //TURNOVER
-FINERTTOVER	0.066666667       //Average MONTHLY fine root turnover rate 
+FINERTTOVER	0.3825       //Average MONTHLY fine root turnover rate 
 							//0.031875 CONVERTED FROM 0.3825 YR^-1 for P. sylvestris from White et al., 2000, 
 							//0.061666667 month^-1, 0.74 YR^-1 from Jansenn 2002
 							//0.066666667 month^-1  0.8  YR^-1 from Gill and Jackson 2000
@@ -122,7 +122,7 @@ COARSERTTOVER	0.02	//deducted from Yuste et al., 2005
                         //from 3-PG 0.07 from Xenakis et al., 2007, Landsberg et al., 2005 
 SAPWOODTTOVER	0.0025	//Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
-LIVE_WOOD_TURNOVER	0.058333333 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
+LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
 
 
 

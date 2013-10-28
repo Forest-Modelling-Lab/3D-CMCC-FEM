@@ -94,15 +94,15 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 		Log("Heartwood coarse root biomass = %g tDM/area \n", s->value[WRC_heart]);
 
 		/*COMPUTE BIOMASS LIVE WOOD*/
-		s->value[BIOMASS_LIVE_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
-										s->value[BIOMASS_ROOTS_COARSE_CTEM]+
-										s->value[BIOMASS_STEM_BRANCH_CTEM])*
-										s->value[LIVE_TOTAL_WOOD];
+		s->value[BIOMASS_LIVE_WOOD] = s->value[BIOMASS_STEM_LIVE_WOOD]+
+										s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]+
+										s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]+
+										s->value[BIOMASS_ROOTS_FINE_CTEM]+
+										s->value[BIOMASS_FOLIAGE_CTEM];
 		Log("Live biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
-		s->value[BIOMASS_DEAD_WOOD] = (s->value[BIOMASS_STEM_CTEM]+
-										s->value[BIOMASS_ROOTS_COARSE_CTEM]+
-										s->value[BIOMASS_STEM_BRANCH_CTEM])*
-										(1.0 -s->value[LIVE_TOTAL_WOOD]);
+		s->value[BIOMASS_DEAD_WOOD] = s->value[BIOMASS_STEM_DEAD_WOOD]+
+										s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
+										s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
 		Log("Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
 
 
