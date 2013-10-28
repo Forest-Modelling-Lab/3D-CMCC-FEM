@@ -15,7 +15,6 @@ C_SRCS += \
 ../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_transpiration.c \
-../src/clearcut.c \
 ../src/common.c \
 ../src/cropmodel.c \
 ../src/cropmodel_daily.c \
@@ -28,7 +27,6 @@ C_SRCS += \
 ../src/initialization_site_data.c \
 ../src/io.c \
 ../src/lai.c \
-../src/layer_cover.c \
 ../src/light.c \
 ../src/litterfall.c \
 ../src/log.c \
@@ -47,13 +45,11 @@ C_SRCS += \
 ../src/soil_respiration.c \
 ../src/soil_water_balance.c \
 ../src/soilmodel.c \
-../src/sort.c \
 ../src/structure.c \
 ../src/treemodel.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
 ../src/utility.c \
-../src/vpd.c \
 ../src/wue.c 
 
 OBJS += \
@@ -68,7 +64,6 @@ OBJS += \
 ./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_transpiration.o \
-./src/clearcut.o \
 ./src/common.o \
 ./src/cropmodel.o \
 ./src/cropmodel_daily.o \
@@ -81,7 +76,6 @@ OBJS += \
 ./src/initialization_site_data.o \
 ./src/io.o \
 ./src/lai.o \
-./src/layer_cover.o \
 ./src/light.o \
 ./src/litterfall.o \
 ./src/log.o \
@@ -100,13 +94,11 @@ OBJS += \
 ./src/soil_respiration.o \
 ./src/soil_water_balance.o \
 ./src/soilmodel.o \
-./src/sort.o \
 ./src/structure.o \
 ./src/treemodel.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
 ./src/utility.o \
-./src/vpd.o \
 ./src/wue.o 
 
 C_DEPS += \
@@ -121,7 +113,6 @@ C_DEPS += \
 ./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_transpiration.d \
-./src/clearcut.d \
 ./src/common.d \
 ./src/cropmodel.d \
 ./src/cropmodel_daily.d \
@@ -134,7 +125,6 @@ C_DEPS += \
 ./src/initialization_site_data.d \
 ./src/io.d \
 ./src/lai.d \
-./src/layer_cover.d \
 ./src/light.d \
 ./src/litterfall.d \
 ./src/log.d \
@@ -153,13 +143,11 @@ C_DEPS += \
 ./src/soil_respiration.d \
 ./src/soil_water_balance.d \
 ./src/soilmodel.d \
-./src/sort.d \
 ./src/structure.d \
 ./src/treemodel.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
 ./src/utility.d \
-./src/vpd.d \
 ./src/wue.d 
 
 
