@@ -266,6 +266,16 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	//s->value[COARSE_ROOT_MAINT_RESP] = ((r_lpj * coarse_root_nitrogen * gtsoil)/settings->sizeCell);
 	//Log("LPJ Coarse root maintenance respiration = %g gC/day m^2\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
+	//fixme new maintenance respiration for live wood tissues (stem * coarse root)
+	//s->value[LIVE_STEM_MAINT_RESP]= ??
+	//s->value[LIVE_COARSE_ROOT_MAINT_RESP]= ??
+	//COMPUTE TOTAL MAINTENANCE RESPIRATION
+	//s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+
+	//								s->value[FINE_ROOT_MAINT_RESP] +
+	//								s->value[LIVE_STEM_MAINT_RESP] +
+	//								s->value[LIVE_COARSE_ROOT_MAINT_RESP];
+
+
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+s->value[FINE_ROOT_MAINT_RESP]/* + s->value[STEM_MAINT_RESP] +s->value[COARSE_ROOT_MAINT_RESP]*/;
