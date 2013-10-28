@@ -718,6 +718,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 						}
 
 						Log(
+								"\n\n----- CLASS DATASET-----\n"
 								"----- height = %g\n"
 								"----- age = %d\n"
 								"----- species n.%02d is %s\n"
@@ -730,8 +731,12 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								"----- ws = %g tDM/area\n"
 								"----- wbb = %g tDM/area\n"
 								"----- wres = %g tDM/area\n"
+								"----- ws live = %g tDM/area\n"
+								"----- wrc live = %g tDM/area\n"
+								"----- wbb live = %g tDM/area\n"
+								"----- w tot live = %g tDM/area\n"
+								"----- w toit dead = %g tDM/area\n"
 								"----- lai = %g tDM/area\n",
-
 
 								m->cells[cell].heights[height].value,
 								m->cells[cell].heights[height].ages[age].value,
@@ -746,6 +751,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_LIVE_WOOD],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_DEAD_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
 					}

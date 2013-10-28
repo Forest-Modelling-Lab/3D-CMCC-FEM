@@ -8,6 +8,7 @@ C_SRCS += \
 ../src/C-fluxes.c \
 ../src/C-partitioning-allocation.c \
 ../src/G-Function.c \
+../src/N-stock.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
 ../src/biomass.c \
@@ -60,6 +61,7 @@ OBJS += \
 ./src/C-fluxes.o \
 ./src/C-partitioning-allocation.o \
 ./src/G-Function.o \
+./src/N-stock.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
 ./src/biomass.o \
@@ -112,6 +114,7 @@ C_DEPS += \
 ./src/C-fluxes.d \
 ./src/C-partitioning-allocation.d \
 ./src/G-Function.d \
+./src/N-stock.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
 ./src/biomass.d \

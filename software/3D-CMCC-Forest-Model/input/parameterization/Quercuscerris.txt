@@ -114,7 +114,7 @@ FINERTTOVER	1       //Average yearly fine root turnover rate
 COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
 SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
-LIVE_WOOD_TURNOVER	0,058333333 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
+LIVE_WOOD_TURNOVER	0.058333333 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
 
 
 //MORTALITY
