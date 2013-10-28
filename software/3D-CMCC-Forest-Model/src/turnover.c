@@ -68,6 +68,13 @@ void Get_turnover (SPECIES *const s, int DaysInMonth)
 	//fixme new turnover for coarse root
 	//turnover must be only for live coarse root ??? (in tech guide it says that i for live and dead)
 
+	//fixme following biome
+	/* live wood turnover rates */
+	 /*
+		epv->day_livestemc_turnover_increment = epv->annmax_livestemc * epc->livewood_turnover / 365.0;
+		epv->day_livecrootc_turnover_increment = epv->annmax_livecrootc * epc->livewood_turnover / 365.0;
+	 */
+
 
 
 	//Coarse Root Biomass less root turnover
