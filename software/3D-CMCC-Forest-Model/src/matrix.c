@@ -752,7 +752,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_DEAD_WOOD],
