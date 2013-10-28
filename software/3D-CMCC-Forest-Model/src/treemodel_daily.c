@@ -277,13 +277,14 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//m->cells[cell].evapotranspiration = 0;
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 								//Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								D_Get_Partitioning_Allocation_CTEM (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-								Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
+								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -319,6 +320,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
@@ -397,6 +399,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 							Get_soil_water_balance (&m->cells[cell]);
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+							Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
 							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 							Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);

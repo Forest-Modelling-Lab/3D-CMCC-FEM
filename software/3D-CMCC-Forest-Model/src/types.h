@@ -639,22 +639,12 @@ enum {
 	BRANCH_AUT_RESP,
 	TOTAL_AUT_RESP,
 
-
-
-
 	//NITROGEN
-	//nitrogen biomass monthly increment
-	NITROGEN_DEL_ROOTS_TOT_CTEM,
-	NITROGEN_DEL_STEMS_CTEM,
-	NITROGEN_DEL_FOLIAGE_CTEM,
-	NITROGEN_DEL_RESERVE_CTEM, //?????
-	//nitrogen biomass pools
-	NITROGEN_BIOMASS_ROOTS_TOT_CTEM,
-	NITROGEN_BIOMASS_ROOTS_COARSE_CTEM,
-	NITROGEN_BIOMASS_ROOTS_FINE_CTEM,
-	NITROGEN_BIOMASS_STEM_CTEM,
-	NITROGEN_BIOMASS_FOLIAGE_CTEM,
-	NITROGEN_BIOMASS_RESERVE_CTEM, //?????
+	LEAF_NITROGEN,
+	FINE_ROOT_NITROGEN,
+	COARSE_ROOT_NITROGEN,
+	STEM_NITROGEN,
+	BRANCH_NITROGEN,
 
 
 	CLASS_AGB,
@@ -1098,6 +1088,8 @@ extern void M_Get_Partitioning_Allocation_NASACASA (SPECIES *const, int, float);
 extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
 extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+
+void Get_nitrogen (SPECIES *);
 
 extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
 extern void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
