@@ -603,6 +603,13 @@ enum {
 
 	BIOMASS_LIVE_WOOD,
 	BIOMASS_DEAD_WOOD,
+	BIOMASS_STEM_LIVE_WOOD,
+	BIOMASS_STEM_DEAD_WOOD,
+	BIOMASS_COARSE_ROOT_LIVE_WOOD,
+	BIOMASS_COARSE_ROOT_DEAD_WOOD,
+	BIOMASS_STEM_BRANCH_LIVE_WOOD,
+	BIOMASS_STEM_BRANCH_DEAD_WOOD,
+
 
 	//Maintenance respiration
 	DAILY_LEAF_MAINT_RESP,
@@ -1151,7 +1158,7 @@ extern void Get_daily_veg_counter (CELL *, SPECIES * , int);
 
 extern void Reset_annual_cumulative_variables (CELL *, const int);
 
-extern void Get_initialization_biomass_data (SPECIES *, const YOS *const, const int);
+extern void Get_initialization_biomass_data (SPECIES *, HEIGHT *, const int);
 extern void Get_initialization_site_data (CELL *);
 extern void Choose_management (CELL *, SPECIES *, int , int );
 

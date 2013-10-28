@@ -122,7 +122,7 @@ COARSERTTOVER	0.02	//deducted from Yuste et al., 2005
                         //from 3-PG 0.07 from Xenakis et al., 2007, Landsberg et al., 2005 
 SAPWOODTTOVER	0.0025	//Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
-LIVE_WOOD_TURNOVER	0,058333333 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
+LIVE_WOOD_TURNOVER	0.058333333 //Annual yearly live wood turnover rate converted from annual value 0.7 to monthly value
 
 
 

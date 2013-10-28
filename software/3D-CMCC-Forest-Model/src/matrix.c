@@ -714,7 +714,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0
 								))
 						{
-							Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], yos, years);
+							Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], years);
 						}
 
 						Log(
