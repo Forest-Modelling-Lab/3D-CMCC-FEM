@@ -482,7 +482,7 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	/* soil temperature correction using difference from
 				annual average tair */
 	/*file bgc.c
-	/*
+
 	 *
 			tdiff = tair_avg - metv.tsoil;
 			if (ws.snoww)

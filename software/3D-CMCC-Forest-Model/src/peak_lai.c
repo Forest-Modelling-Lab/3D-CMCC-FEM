@@ -67,13 +67,15 @@ void Get_peak_lai (SPECIES *const s, int years, int month)
 }
  */
 
-void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
+extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
 {
 	int i;
 	//static float oldBasalArea;
 	//static float sapwood_perc;
 
 	Log ("\nPEAK LAI FUNCTION\n\n");
+	Log("sap leaf = %g\n", s->value[SAP_LEAF]);
+	Log("sap area = %g\n", s->value[SAPWOOD_AREA]);
 	Log("Leaf Area from Kostner-LPJ = %g m^2\n", (s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]);
 	Log("Crown diameter = %g m^2\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
 	Log("Crown Area for Kostner = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);

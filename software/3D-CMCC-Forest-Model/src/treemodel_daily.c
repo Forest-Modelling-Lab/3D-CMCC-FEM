@@ -189,7 +189,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 					/*Loop for adult trees*/
-					if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
+					if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
 					{
 
 						if (day == 0 && month == JANUARY)
@@ -207,6 +207,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
 								m->cells[cell].heights[height].ages[age].species[species].management);
 
+						Log("CAzzo %g\n",m->cells[cell].heights[height].ages[age].species[species].value[SAPWOOD_AREA] );
+
 						//deciduous
 						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
@@ -215,6 +217,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
 
 							//Peak LAI is also used in spatial version to drive carbon allocation
+
 							if (day == 0 && month == JANUARY)
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
