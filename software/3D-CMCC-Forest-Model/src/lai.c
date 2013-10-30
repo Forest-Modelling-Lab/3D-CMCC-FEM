@@ -197,15 +197,27 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 
 
 						Log ("++Biomass foliage from reserves for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+						//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
+						// * 1000 to convert reserve biomass from tDM into KgDM
+                                                s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000.0 / GC_GDM) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+						Log("++Lai from reserves = %g\n", s->value[LAI]);
 						//Log ("++Biomass stem from reserves for initial LAI = %g \n", s->value[BIOMASS_STEM_CTEM]);
 						//Log ("++Biomass stem increment from reserves for initial LAI = %g \n", s->value[BIOMASS_RESERVE_CTEM]-s->value[BIOMASS_FOLIAGE_CTEM]);
 					}
+					else
+                                        {
+					    Log ("++Biomass foliage from init file for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+					    //todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per GC_GDM
+					    // * 1000 to convert reserve biomass from tDM into KgDM
+					    s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000.0 / GC_GDM) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+					    Log("++Lai from biomass foliage  = %g\n", s->value[LAI]);
 
-					//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+                                        }
+
+
 					// * 1000 to convert reserve biomass from tDM into KgDM
 
-					Log("++Lai from reserves = %g\n", s->value[LAI]);
+
 					//Log("++Canopy Cover = %g\n", s->value[CANOPY_COVER_DBHDC]);
 					//Log("++Size Cell = %g\n", settings->sizeCell);
 					//Log("++Sla = %g\n", s->value[SLAmkg]);

@@ -182,7 +182,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	}
 
 
-	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS
+	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
 	if (s->value[BIOMASS_ROOTS_FINE_CTEM] == 0 && (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
 		Log("\nNo Fine root Biomass Data are available for model initialization \n");
