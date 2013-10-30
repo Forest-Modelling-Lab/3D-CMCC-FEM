@@ -11,7 +11,7 @@ K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy Q. robur f
 
 ALBEDO	0.2
 //LEAF AREA INDEX
-LAIGCX	4               //LAI for maximum canopy conductance
+LAIGCX	5               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.30    //Maximum proportion of rainfall interception evaporated from canopy for Q. robur from Tatarinov and Cenciala 2006
 
@@ -116,7 +116,7 @@ DBHDCMIN	0.1   //High Density 0.20 for Q. robur from Bellio and Pividori, 2009
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.043         //a value from Kostner for Q. petreae in cm
 SAP_B	2.384         //b value from Kostner for Q. petreae in cm
-SAP_LEAF	9700          //9700 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
+SAP_LEAF	9700          //9700-9400 as in Kostner et al., sapwood_max leaf area ratio in pipe model  for 4000 Q. robur from Hickler et al 2012
 SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
 HMAX	52              //Max Height in m for Q. robur from Lischke et al, user_guide

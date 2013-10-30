@@ -17,7 +17,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C
-	float rhoAir /*= 1.2*/;       // density of air, kg/m3
+	float rhoAir = 1.2;       // density of air, kg/m3
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const VPDconv = 0.000622; // convert VPD to saturation deficit = 18/29/1000
 	static float defTerm;
@@ -64,7 +64,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
 		/* temperature and pressure correction factor for conductances */
 		//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
-		/*
+
 
 		if (settings->time == 'm')
 		{
@@ -98,7 +98,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			}
 			Log("RhoAir = %g\n", rhoAir);
 		}
-		*/
+
 
 
 
@@ -153,8 +153,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// Penman-Monteith equation for computing canopy transpiration
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
-		// removed VPDconv: VPD has already been converted in its % value (it is not in mbar anymore)
-		// todo has it been introduced in case of inputted  measured vpd? in that case use  switch for the equation
+
 		defTerm = rhoAir * lambda * (vpd * VPDconv) * s->value[BLCOND];
 		Log("defTerm = %g\n", defTerm);
 		duv = (1.0 + e20 + s->value[BLCOND] / CanCond);
@@ -213,7 +212,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				else
 				{
 					Etransp = (e20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %g J/m^2/sec\n", Etransp);
+					Log("Etransp for subdominant layer = %g J/m^2/sec\n", Etransp);
 					Log("NET RADIATION = %g \n", c->net_radiation);
 				}
 
@@ -225,7 +224,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 		else
 		{
-			Log("daily layer number = %d\n", c->daily_layer_number);
+			Log("daily vegetative layer number = %d\n", c->daily_layer_number);
 			switch (c->daily_layer_number)
 			{
 			case 1:
