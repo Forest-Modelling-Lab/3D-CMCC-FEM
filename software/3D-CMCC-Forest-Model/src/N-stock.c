@@ -18,6 +18,7 @@
 
 void Get_nitrogen (SPECIES *s)
 {
+        Log("\nGET NITROGEN STOCK\n");
 	/*computing Nitrogen content from tons DM/ha to gC/m^2 and then as in BIOME to KgC*/
 	s->value[LEAF_NITROGEN] = (((s->value[BIOMASS_FOLIAGE_CTEM] / GC_GDM) * 1000.0) /settings->sizeCell) / s->value[CN_LEAVES];
 	Log("Foliage nitrogen content = %g kgN/m^2\n", s->value[LEAF_NITROGEN]);

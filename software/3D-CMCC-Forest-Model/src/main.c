@@ -1104,7 +1104,7 @@ int main(int argc, char *argv[])
 			Log("....Met files imported!\n\n");
 		}
 
-		Log("\n3D-CMCC MODEL START\n");
+		Log("\n3D-CMCC MODEL START....\n\n\n\n");
 		Log("Total years_of_simulation = %d\n", years_of_simulation);
 		Log("***************************************************\n");
 
