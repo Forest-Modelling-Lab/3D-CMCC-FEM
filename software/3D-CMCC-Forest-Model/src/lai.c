@@ -12,6 +12,8 @@
 void Get_initial_lai (SPECIES *const s, const int years, const int month, const int day)
 {
 
+  static float frac_to_foliage_stem;
+
 
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
@@ -65,32 +67,39 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 		else
 		{
 			Log("\n--GET_INITIAL_DAILY_LAI--\n");
+			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS] );
 
-			//todo make a better function that 'share' over a time the biomass_reserve and not only on one day
-			if (s->counter[VEG_DAYS]  == 1)
+			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003
+			 *model allocates reserve within the first 10 days after budburst*/
+			if (s->counter[VEG_DAYS] == 1)
+			  {
+				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+			    frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / 10.0;
+			    Log("fraction of reserve to allocate into foliage and stem pools within 10 days after budburst");
+			    Log(" = %g tDM area \n", frac_to_foliage_stem);
+			  }
+			if (s->counter[VEG_DAYS] <= 10)
 			{
-				Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-				Log("++Reserve biomass for each tree in g = %g \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
+				//Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				//Log("++Reserve biomass for each tree in g = %g \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
 
 				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
-				s->value[BIOMASS_FOLIAGE_CTEM] = s->value[BIOMASS_RESERVE_CTEM] * (1.0 / s->value[STEM_LEAF]);
+				//fixme see if share reserve between stem and foliage or just foliage
+				s->value[BIOMASS_FOLIAGE_CTEM] = (frac_to_foliage_stem/2.0) * (1.0 / s->value[STEM_LEAF]);
 				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				Log("ratio of reserve for foliage = %g% \n", (1.0 / s->value[STEM_LEAF] * 100));
 
-				s->value[BIOMASS_RESERVE_CTEM] -= s->value[BIOMASS_FOLIAGE_CTEM];
-				Log("++Reserves pools less foliage = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_stem;
+				Log("++Reserves pools less foliage transfer= %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 
 				//not sure if allocate the remaining reserves for stem
-				s->value[BIOMASS_STEM_CTEM] += (s->value[BIOMASS_RESERVE_CTEM]-s->value[BIOMASS_FOLIAGE_CTEM]);
+				s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem/2.0) * s->value[STEM_LEAF];
 				Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
 
-				s->value[BIOMASS_RESERVE_CTEM] = 0;
 				Log("++Reserves pools less foliage + stem = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-
-
 				Log ("++Biomass foliage from reserves for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 				//Log ("++Biomass stem from reserves for initial LAI = %g \n", s->value[BIOMASS_STEM_CTEM]);
 				//Log ("++Biomass stem increment from reserves for initial LAI = %g \n", s->value[BIOMASS_RESERVE_CTEM]-s->value[BIOMASS_FOLIAGE_CTEM]);

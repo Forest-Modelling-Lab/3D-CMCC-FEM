@@ -680,6 +680,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 					// loop on each species
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 					{
+						if (years == 0)
+						{
+							Get_biome_fraction (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
+						}
+
 						//*************FOREST INITIALIZATION DATA***********
 
 						Get_a_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);

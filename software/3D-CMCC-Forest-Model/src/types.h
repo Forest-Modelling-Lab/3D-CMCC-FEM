@@ -520,6 +520,13 @@ enum {
 	BIOMASS_STEM_BRANCH_DEAD_WOOD,
 
 
+	//converted biome fraction
+	FINE_ROOT_LEAF_FRAC,
+	STEM_LEAF_FRAC,
+	COARSE_ROOT_STEM_FRAC,
+	LIVE_TOTAL_WOOD_FRAC,
+
+
 	//Maintenance respiration
 	DAILY_LEAF_MAINT_RESP,
 	NIGHTLY_LEAF_MAINT_RESP,
@@ -1060,6 +1067,9 @@ extern void Get_a_Power_Function (AGE *, SPECIES *);
 extern void Get_air_pressure (CELL *c);
 
 extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
+
+
+extern void Get_biome_fraction (SPECIES *const);
 
 
 //sergio's functions

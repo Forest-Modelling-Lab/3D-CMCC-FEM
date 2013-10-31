@@ -190,10 +190,12 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg -settings->gdd_basis);
 			previous_thermic_sum = met[month].d[day].thermic_sum;
+			//Log ("day = %d month = %d somma termica %g\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum;
+			//Log ("day = %d month = %d somma termica %g\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			Log("tavg NO_DATA!!\n");
