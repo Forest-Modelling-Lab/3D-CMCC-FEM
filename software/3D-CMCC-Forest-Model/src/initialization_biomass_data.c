@@ -135,7 +135,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("\nNo Coarse root Biomass Data are available for model initialization \n");
 		Log("...Generating input Coarse root Biomass biomass data from DBH data...\n");
 		//compute coarse root biomass using root to shoot ratio
-		s->value[BIOMASS_ROOTS_COARSE_CTEM]  = s->value[BIOMASS_STEM_CTEM] * s->value[COARSE_ROOT_STEM];
+		s->value[BIOMASS_ROOTS_COARSE_CTEM] = s->value[BIOMASS_STEM_CTEM] * s->value[COARSE_ROOT_STEM];
 		Log("--Coarse Root Biomass initialization data from Stem Biomass = %g \n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 	}
 	else
@@ -171,7 +171,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			{
 				Log("\nNo Foliage Biomass Data are available for model initialization \n");
 				Log("...Generating input Foliage Biomass biomass data\n");
-				s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_RESERVE_CTEM] * (1.0/s->value[STEM_LEAF]);
+				s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_RESERVE_CTEM] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				Log("----Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 			}
 		}
@@ -200,17 +200,17 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	/*COMPUTE BIOMASS LIVE WOOD*/
 	//FIXME assuming LIVE_DEAD WOOD RATIO AS IN BIOME
 	/*FOR STEM*/
-	s->value[BIOMASS_STEM_LIVE_WOOD]= s->value[BIOMASS_STEM_CTEM] * s->value[LIVE_TOTAL_WOOD];
+	s->value[BIOMASS_STEM_LIVE_WOOD]= s->value[BIOMASS_STEM_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Stem Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 	s->value[BIOMASS_STEM_DEAD_WOOD]= s->value[BIOMASS_STEM_CTEM] -s->value[BIOMASS_STEM_LIVE_WOOD];
 	Log("-Dead Stem Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 	/*FOR COARSE ROOT*/
-	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]= s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD];
+	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]= s->value[BIOMASS_ROOTS_COARSE_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Coarse Root Biomass = %g tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]= s->value[BIOMASS_ROOTS_COARSE_CTEM] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD];
 	Log("-Dead Coarse Root Biomass = %g tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 	/*FOR BRANCH*/
-	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]= s->value[BIOMASS_STEM_BRANCH_CTEM] * s->value[LIVE_TOTAL_WOOD];
+	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]= s->value[BIOMASS_STEM_BRANCH_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Stem Branch Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]= s->value[BIOMASS_STEM_BRANCH_CTEM] -s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD];
 	Log("-Dead Stem Branch Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);

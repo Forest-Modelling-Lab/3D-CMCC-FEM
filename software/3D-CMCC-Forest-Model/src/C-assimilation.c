@@ -42,16 +42,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 
 			//fixme if deciduous remove carbon from non structural carbon (pers communication Prof P. De Angelis)
 
-			//upscale class NPP to class cell level
-			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-			Log("npp lost for respiration = %g tDM/ha \n", fabs(s->value[NPP]));
 
-			loss_of_froots = (fabs(s->value[NPP])*s->value[FINE_ROOT_LEAF]);
-			Log("froots lost for respiration = %g tDM/ha \n", loss_of_froots);
-			loss_of_foliage = (fabs(s->value[NPP]) - loss_of_froots);
-			Log("foliage lost for respiration = %g tDM/ha \n", loss_of_foliage);
-			s->value[BIOMASS_ROOTS_FINE_CTEM] -= loss_of_froots;
-			s->value[BIOMASS_FOLIAGE_CTEM] -= loss_of_foliage;
 			*/
 		}
 		/*recompute NPP*/

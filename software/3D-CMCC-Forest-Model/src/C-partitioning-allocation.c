@@ -122,6 +122,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//7 May 2012
 			//compute static ratio of allocation between fine and coarse root
 			//deriving data from values reported for BIOME-BGC
+			//fixme see if chage with new parameters checked in "Get_biome_fraction"
 			s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 			//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 			Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
@@ -207,7 +208,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 				/*
-				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 / s->value[STEM_LEAF]);
+				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				s->value[DEL_STEMS_CTEM] = (s->value[NPP]-s->value[DEL_FOLIAGE_CTEM]);
 				 */
 
@@ -312,19 +313,19 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 					//check for live and dead tissues
 					/*stem*/
-					s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] * s->value[LIVE_TOTAL_WOOD]);
+					s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 					Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
-					s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD]));
+					s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 					Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 					/*coarse root*/
-					s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD]);
+					s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 					Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
-					s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD]));
+					s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 					Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 					/*branch and bark*/
-					s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD]);
+					s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 					Log("Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
-					s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD]));
+					s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 					Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 					s->value[DEL_FOLIAGE_CTEM] = 0;
@@ -1480,8 +1481,8 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 
 			//7 May 2012
-			//compute static ratio of allocation between fine and coarse root
-			//deriving data from values reported for BIOME-BGC
+			//compute static ratio of allocation between fine
+			//fixme see if chage with new parameters checked in "Get_biome_fraction"
 			s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 			//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 			Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
@@ -1639,6 +1640,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//7 May 2012
 			//compute static ratio of allocation between fine and coarse root
 			//deriving data from values reported for BIOME-BGC
+			//fixme see if chage with new parameters checked in "Get_biome_fraction"
 			s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 			//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 			Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);

@@ -1069,7 +1069,7 @@ extern void Get_air_pressure (CELL *c);
 extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
 
 
-extern void Get_biome_fraction (SPECIES *const);
+extern void Get_biome_fraction (SPECIES *);
 
 
 //sergio's functions

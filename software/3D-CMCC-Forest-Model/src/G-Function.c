@@ -20,8 +20,17 @@ extern int sort_by_years(const void *a, const void *b)
 }
 
 
-extern void Get_biome_fraction (SPECIES *const s);
+extern void Get_biome_fraction (SPECIES * s)
 {
+	/*using biome parameter recompute values to have fraction*/
+	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
+	Log("biome fine root leaf frac = %g\n", s->value[FINE_ROOT_LEAF_FRAC]);
+	s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
+	Log("biome stem leaf frac = %g\n", s->value[STEM_LEAF_FRAC]);
+	s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
+	Log("biome coarse root stem frac = %g\n", s->value[COARSE_ROOT_STEM_FRAC]);
+	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
+	Log("biome live wood total wood frac = %g\n", s->value[LIVE_TOTAL_WOOD_FRAC]);
 
 }
 
