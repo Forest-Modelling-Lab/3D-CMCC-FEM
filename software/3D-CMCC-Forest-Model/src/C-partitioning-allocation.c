@@ -200,7 +200,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("(LAI < PEAK_Y_LAI * 0.5) \n");
 				Log("LAI = %g \n", s->value[LAI]);
 				Log("**Maximum Growth**\n");
-				Log("allocating only into foliage and stem pools\n");
+				Log("allocating only into foliage  pools\n");
 
 
 				//fixme scegliere se usare Magnani o meno
@@ -508,13 +508,13 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 
 					pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-					//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
+					Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 					pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-					//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+					Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 
 					//reserve ratio
 					pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-					//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+					Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
 
 					// Biomass allocation
@@ -612,13 +612,14 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			case 3:
 				Log("(LAI == PEAK LAI)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
+				//fixme REMOVE RESERVE ALLOCATION
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-				//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
+				Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 				pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-				//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+				Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 				pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-				//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+				Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
@@ -732,17 +733,18 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			case 0:
 				Log("(DayLength < MINDAYLENGTH Abscission DayLength)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve \nwith leaf fall\n");
+				//FIXME ALLOCATE ALL BIOMASS INTO ONLY RESERVE POOL
 
 				//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
 				//have a linear decrease of foliage biomass and then LAI values
 
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-				//Log("Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
+				Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 				pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-				//Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+				Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 				pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-				//Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+				Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
