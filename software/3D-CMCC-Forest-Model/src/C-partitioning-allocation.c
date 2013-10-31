@@ -612,7 +612,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			case 3:
 				Log("(LAI == PEAK LAI)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
-				//fixme REMOVE RESERVE ALLOCATION
+				//fixme REMOVE RESERVE ALLOCATION see also Scartazza et al., 2013
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 				Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
@@ -733,7 +733,9 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			case 0:
 				Log("(DayLength < MINDAYLENGTH Abscission DayLength)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve \nwith leaf fall\n");
-				//FIXME ALLOCATE ALL BIOMASS INTO ONLY RESERVE POOL
+
+
+				//FIXME ALLOCATE ALL BIOMASS INTO ONLY RESERVE POOL see also Scartazza et al., 2013
 
 				//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
 				//have a linear decrease of foliage biomass and then LAI values
