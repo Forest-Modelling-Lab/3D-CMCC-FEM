@@ -21,7 +21,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
 
-	if (s->counter[VEG_UNVEG] == 1 && s->value[GPP_g_C] > 0.0)
+	if (s->counter[VEG_UNVEG] == 1)
 	{
 
 		Log("GPP = %g\n", s->value[GPP_g_C]);
@@ -30,32 +30,38 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
 		Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
 
-		//for principle of conservation of mass
+		/*for principle of conservation of mass*/
+		/*used if previous day NPP is negative to conserve mass assuming the loss
+		of reserve*/
 		if (s->value[NPP_g_C] < 0.0)
 		{
+			//fixme remove after insert reserve also for coniferous
+			if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+			{
+				s->value[BIOMASS_RESERVE_CTEM] -=s->value[NPP_g_C];
 
-			s->value[NPP_g_C] = 0;
-			/*
-			 fixme AS IT SHOUL BE...
-			//used if previous day NPP is negative to conserve biomass assuming the loss
-			//of biomass in foliage and fine roots
+				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+				{
+					s->value[BIOMASS_RESERVE_CTEM] = 0;
+					Log("All reserve has been consumed for respiration!!!\n");
+				}
 
-			//fixme if deciduous remove carbon from non structural carbon (pers communication Prof P. De Angelis)
+				s->value[NPP_g_C] = 0;
+			}
+			//fixme remove after insert reserve also for coniferous
+			if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+			{
+				s->value[NPP_g_C] = 0;
+			}
 
-
-			*/
+			s->value[NPP] = 0;
 		}
-		/*recompute NPP*/
-		s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-
-
-
-
-		//upscale class NPP to class cell level
-		s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-		//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
-
-
+		else
+		{
+			//upscale class NPP to class cell level
+			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+			//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
+		}
 
 		if (settings->time == 'm')
 		{
@@ -69,15 +75,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		}
 		else
 		{
-			//Daily layer GPP in grams of C/m^2
-			//Convert molC into grams
-			if (day == 0)
-			{
-				//MonthlyNPP = 0;
-			}
 			Log("Daily NPP = %g gC/m^2\n", s->value[NPP_g_C]);
 			Log("Daily NPP = %g tDM/area\n",  s->value[NPP]);
-
 			//MonthlyNPP += s->value[NPP];
 			//Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}

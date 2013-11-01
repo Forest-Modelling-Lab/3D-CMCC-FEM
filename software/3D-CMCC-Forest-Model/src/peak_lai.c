@@ -7,65 +7,6 @@
 #include "types.h"
 #include "constants.h"
 
-//TO COMPUTE YEARLY PEAK LAI FROM PROVIOUS YEARLY LAI
-/*
-void Get_peak_lai (SPECIES *const s, int years, int month)
-{
-
-    if (years == 0 )
-    {
-        //JANUARY
-        if (month == 0)
-        {
-            s->value[PEAK_Y_LAI] = s->value[LAI];
-            Log("Peak Y Lai from input data = %g \n", s->value[PEAK_Y_LAI]);
-
-            s->value[OLD_LAI] = 0;
-        }
-        else
-        {
-            s->value[PEAK_LAI] = Maximum (s->value[OLD_LAI], s->value[LAI]);
-            //Log("Peak Lai = %g \n", s->value[PEAK_Y_LAI]);
-
-            if (s->value[LAI] > s->value[PEAK_Y_LAI] )
-            {
-                Log ("LAI > Peak Y Lai \n ");
-                //s->value[LAI] = s->value[PEAK_Y_LAI];
-            }
-
-
-        }
-        if (month == 11)
-        {
-            s->value[PEAK_Y_LAI] = s->value[PEAK_LAI];
-            s->value[PEAK_LAI] = 0;
-        }
-    }
-    else
-    {
-        if (month == 0)
-        {
-            s->value[OLD_LAI] = 0;
-        }
-
-        s->value[PEAK_LAI] = Maximum (s->value[OLD_LAI], s->value[LAI]);
-        Log("Peak Lai = %g \n", s->value[PEAK_LAI]);
-        Log("Peak Y Lai = %g \n", s->value[PEAK_Y_LAI]);
-
-
-        if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] > m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
-        {
-            m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
-        }
-
-        if (month == 11)
-        {
-            s->value[PEAK_Y_LAI] = s->value[PEAK_LAI];
-            s->value[PEAK_LAI] = 0;
-        }
-    }
-}
- */
 
 extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
 {
