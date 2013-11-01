@@ -36,6 +36,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			//fixme remove after insert reserve also for coniferous
 			if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 			{
+				/*following Barbaroux et al., 2003*/
 				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)

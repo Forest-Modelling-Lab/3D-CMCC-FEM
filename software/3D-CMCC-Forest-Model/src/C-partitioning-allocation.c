@@ -617,7 +617,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			case 3:
 				Log("(LAI == PEAK LAI)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
-				//fixme REMOVE RESERVE ALLOCATION??? see also Scartazza et al., 2013
+				/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
+
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 				Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
@@ -765,11 +766,12 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 					//reproductive life span
 					s->value[BIOMASS_CONES_CTEM] -= (s->value[BIOMASS_CONES_CTEM] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
-
-				s->value[BIOMASS_RESERVE_CTEM] += s->value[NPP];
+				s->value[DEL_RESERVE_CTEM]= s->value[NPP];
+				s->value[BIOMASS_RESERVE_CTEM] += s->value[DEL_RESERVE_CTEM];
 
 /*
 				// Biomass allocation
+
 
 				s->value[DEL_ROOTS_TOT_CTEM] = s->value[NPP] * pR_CTEM;
 				Log("BiomassRoots increment CTEM = %g tDM/area\n", s->value[DEL_ROOTS_TOT_CTEM]);
