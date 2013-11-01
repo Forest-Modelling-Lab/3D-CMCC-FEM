@@ -232,6 +232,7 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	//compute autotrophic respiration for each classes
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 	Log("TOTAL autotrophic respiration = %g gC/day m^2\n", s->value[TOTAL_AUT_RESP]);
+	Log("TOTAL autotrophic respiration = %g tDM/cell \n", (s->value[TOTAL_AUT_RESP] * GC_GDM /1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
 
 	//compute autotrophic respiration for each layer

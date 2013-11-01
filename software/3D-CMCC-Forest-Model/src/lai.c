@@ -7,12 +7,12 @@
 #include "types.h"
 #include "constants.h"
 
-//TO COMPUTE YEARLY PEAK LAI FROM PROVIOUS YEARLY LAI
 
 void Get_initial_lai (SPECIES *const s, const int years, const int month, const int day)
 {
 
   static float frac_to_foliage_stem;
+  float biomass_for_peak_lai;
 
 
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -69,26 +69,31 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 		}
 		else
 		{
-			Log("\n--GET_INITIAL_DAILY_LAI--\n");
+			Log("\n--GET_DAILY_LAI--\n");
 			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS] );
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003
 			 *model allocates reserve within the first 10 days after budburst*/
+			/*following Barbouroux et al.,days are 30*/
 			if (s->counter[VEG_DAYS] == 1)
 			  {
 				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-			    frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / 10.0;
-			    Log("fraction of reserve to allocate into foliage and stem pools within 10 days after budburst");
+			    frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / 30.0;
+			    Log("fraction of reserve to allocate into foliage and stem pools");
 			    Log(" = %g tDM area \n", frac_to_foliage_stem);
 			  }
-			if (s->counter[VEG_DAYS] <= 10  && s->value[LAI] < s->value[PEAK_Y_LAI] )
+			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI])
 			{
-				//Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-				//Log("++Reserve biomass for each tree in g = %g \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
+				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+				 * and Barbaroux et al., 2002,
+				the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+				 */
 
-				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
-				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
-				//fixme see if share reserve between stem and foliage or just foliage
+
+				Log("++Lai before reserve allocation = %g\n", s->value[LAI]);
+				Log("++Peak Lai = %g\n", s->value[PEAK_Y_LAI]);
+
+				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[STEM_LEAF_FRAC]) * 100 );
 				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
@@ -97,8 +102,6 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_stem;
-				Log("++Reserves pools less foliage transfer= %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-
 
 				//not sure if allocate the remaining reserves for stem
 				s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem * s->value[STEM_LEAF_FRAC]);
@@ -113,15 +116,28 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 
 				//todo LAI is computed from biomass in DM while SLA is in C!!! probably SLA has to be converted into DM multiplying it per 2
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-				// * 1000 to convert reserve biomass from tDM into KgDM
+
+				/*check if re-transfer foliage biomass to reserve*/
+				if (s->value[LAI] > s->value[PEAK_Y_LAI])
+				{
+					Log("LAI exceeds Peak Lai\n");
+					biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000;
+					/*re-transfer mass to reserve*/
+					s->value[BIOMASS_RESERVE_CTEM] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE_CTEM]);
+					Log("++Reserves pools plus exceeding foliage biomass = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+					s->value[BIOMASS_FOLIAGE_CTEM] = biomass_for_peak_lai;
+					/*recompute correct LAI*/
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+				}
 
 				Log("++Lai from reserves = %g\n", s->value[LAI]);
 				//Log("++Canopy Cover = %g\n", s->value[CANOPY_COVER_DBHDC]);
 				//Log("++Size Cell = %g\n", settings->sizeCell);
 				//Log("++Sla = %g\n", s->value[SLAmkg]);
 			}
-			else
+			if(s->value[LAI] > s->value[PEAK_Y_LAI])
 			{
+				Log("LAI > PEAK_Y_LAI\n");
 				Log("Unused reserve = %g tDM/cell \n", s->value [BIOMASS_RESERVE_CTEM]);
 				Log("++Lai = %g\n", s->value[LAI]);
 			}

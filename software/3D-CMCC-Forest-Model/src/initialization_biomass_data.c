@@ -144,7 +144,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Coarse Root Biomass from init file = %g \n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 	}
 
-
+	/*reserve*/
 	if (s->value[BIOMASS_RESERVE_CTEM] == 0 || s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
 		if (s->value[BIOMASS_RESERVE_CTEM] == 0)
@@ -154,8 +154,11 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 			//see if change with the ratio reported from Barbaroux et al., 2002
 
-			s->value[BIOMASS_RESERVE_CTEM]= s->value[WS_sap] * s->value[SAP_WRES];
-			Log("-----Reserve Biomass initialization data  = %g KgDM/tree\n", s->value[BIOMASS_RESERVE_CTEM]);
+			s->value[BIOMASS_RESERVE_CTEM] = s->value[WS_sap] * s->value[SAP_WRES];
+			Log("-----Reserve Biomass initialization data  = %g tDM/cell \n", s->value[BIOMASS_RESERVE_CTEM]);
+			Log("-----Reserve Biomass initialization data  = %g KgC/cell \n", s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000);
+			Log("-----Reserve Biomass initialization data  = %g KgC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
+
 		}
 		else
 		{
