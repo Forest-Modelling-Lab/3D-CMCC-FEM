@@ -89,7 +89,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//4 Dec 2012 add Albedo
 			//todo check if albedo is necessary
 			/*net radiation considering albedo*/
-			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6.0)) * ((int)met[month].daylength/24.0)) * (1 - s->value[ALBEDO]/2.0);
+			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0, 6.0)) * ((int)met[month].daylength/24.0)) * (1 - s->value[ALBEDO]/2.0);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 			/*net radiation with no coverage (gaps)*/
