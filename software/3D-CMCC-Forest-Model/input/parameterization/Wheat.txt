@@ -90,6 +90,7 @@ CN_DEAD_WOODS   -9999  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et
 
 //per specie caducifoglie LITTERFALL RATE = -9999 !!!!!!!!!!!!!!
 //LITTERFALL
+BUD_BURST	-9999					//days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  -9999     //proportions of the growing season of leaf fall
 LEAF_LIFE_SPAN  -9999     //Leaf life span

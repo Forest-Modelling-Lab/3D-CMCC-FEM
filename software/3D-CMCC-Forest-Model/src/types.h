@@ -289,6 +289,7 @@ enum {
 	//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 	//LITTERFALL
 	//FOLLOWING BIOME-BGC
+	BUD_BURST,					//days of bud burst at the beginning of growing season (only for deciduous)
 	LEAF_FALL_FRAC_GROWING,		//proportions of the growing season of leaf fall
 	LEAF_LIFE_SPAN,				//Leaf life span
 
@@ -684,6 +685,7 @@ enum {
 	VEG_UNVEG,
 	VEG_MONTHS,
 	VEG_DAYS,
+	BUD_BURST_COUNTER,
 
 	DAY_VEG_FOR_LITTERFALL_RATE,
 	MONTH_VEG_FOR_LITTERFALL_RATE,

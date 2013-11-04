@@ -93,6 +93,7 @@ CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
+BUD_BURST	30					//days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_LIFE_SPAN  1     //Leaf life span

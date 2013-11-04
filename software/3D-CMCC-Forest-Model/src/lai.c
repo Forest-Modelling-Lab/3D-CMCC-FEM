@@ -15,6 +15,7 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
   float biomass_for_peak_lai;
 
 
+
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
 		if (settings->time == 'm')
@@ -72,23 +73,25 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 			Log("\n--GET_DAILY_LAI--\n");
 			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS] );
 
-			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003
-			 *model allocates reserve within the first 10 days after budburst*/
-			/*following Barbouroux et al.,days are 30*/
+			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 			if (s->counter[VEG_DAYS] == 1)
-			  {
-				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-			    frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / 30.0;
-			    Log("fraction of reserve to allocate into foliage and stem pools");
-			    Log(" = %g tDM area \n", frac_to_foliage_stem);
-			  }
-			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI])
+			{
+				s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
+				Log("Days for bud burst = %g\n", s->value[BUD_BURST]);
+			}
+			/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
+			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
 			{
 				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				 * and Barbaroux et al., 2002,
 				the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 				 */
+				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
+				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
+				frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
 
+				s->counter[BUD_BURST_COUNTER] --;
+				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 				Log("++Lai before reserve allocation = %g\n", s->value[LAI]);
 				Log("++Peak Lai = %g\n", s->value[PEAK_Y_LAI]);

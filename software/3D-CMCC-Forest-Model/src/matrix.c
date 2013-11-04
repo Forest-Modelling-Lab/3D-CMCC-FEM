@@ -115,6 +115,7 @@ static const char *species_values[] = {
 
 		//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 		//LITTERFALL
+		"BUD_BURST",					//days of bud burst at the beginning of growing season (only for deciduous)
 		//FOLLOWING BIOME-BGC
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
 		"LEAF_LIFE_SPAN",				//Leaf life span
