@@ -89,6 +89,7 @@ void Get_initial_lai (SPECIES *const s, const int years, const int month, const 
 				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 				frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
+				Log("recomputed fraction of reserve for foliage and stems = %g\n", frac_to_foliage_stem);
 
 				s->counter[BUD_BURST_COUNTER] --;
 				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
