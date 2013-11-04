@@ -89,11 +89,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//4 Dec 2012 add Albedo
 			//todo check if albedo is necessary
 			/*net radiation considering albedo*/
-			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0, 6.0)) * ((int)met[month].daylength/24.0)) * (1 - s->value[ALBEDO]/2.0);
+			c->net_radiation = ((QA + QB * (met[month].solar_rad * pow (10.0, 6.0)) * (1 - s->value[ALBEDO]/2.0))) / met[month].daylength;
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
 			/*net radiation with no coverage (gaps)*/
-			c->net_radiation_no_albedo = (QA + QB * (met[month].solar_rad * pow (10.0,  6.0)) * ((int)met[month].daylength/24.0));
+			c->net_radiation_no_albedo = ((QA + QB * (met[month].solar_rad * pow (10.0, 6.0))) / met[month].daylength);
 			Log("Hourly Net Radiation NO ALBEDO = %g W/m^2/hour\n", c->net_radiation_no_albedo);
 
 
@@ -128,10 +128,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
 			//ALBEDO/2
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * ((int)met[month].d[day].daylength/24.0)) * (1 - (s->value[ALBEDO]/2.0));
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * (1 - (s->value[ALBEDO]/2.0)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation = %g W/m^2/hour\n", c->net_radiation);
 
-			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * ((int)met[month].d[day].daylength/24.0));
+			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation NO ALBEDO = %g W/m^2/hour\n", c->net_radiation_no_albedo);
 
 			Daily_Radiation = met[month].d[day].solar_rad;
