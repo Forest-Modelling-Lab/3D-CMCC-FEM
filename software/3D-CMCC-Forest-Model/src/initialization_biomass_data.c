@@ -180,6 +180,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		}
 		else
 		{
+			Log("Ok foliage biomass..\n");
 			Log("---Foliage Biomass from init file  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 		}
 	}
