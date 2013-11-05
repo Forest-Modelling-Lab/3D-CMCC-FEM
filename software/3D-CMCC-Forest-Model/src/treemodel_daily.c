@@ -226,10 +226,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								Log("ERROR!!!!! LAI < 0!!!!!\n");
 							}
-							else
-							{
-								Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-							}
 							//vegetative period for deciduous
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
@@ -241,7 +237,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								if (settings->spatial == 'u')
 								{
-									Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
+									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
 										Log("ATTENTION LAI > PEAK LAI\n");
@@ -366,7 +362,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
 							}
-							Log("control LAI day = %d, month = %d, +-LAI = %g\n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+
 
 							Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
@@ -377,15 +373,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							if (settings->spatial == 'u')
 							{
-								Get_initial_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
-								if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
-								{
-									Log("ATTENTION LAI > PEAK LAI\n");
-									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
-								}
+								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
 							}
-
-
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);

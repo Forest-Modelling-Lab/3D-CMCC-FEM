@@ -91,6 +91,16 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 	}
 
+	//7 May 2012
+	//compute static ratio of allocation between fine and coarse root
+	//deriving data from values reported for BIOME-BGC
+	//fixme see if change with new parameters checked in "Get_biome_fraction"
+	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
+	//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
+	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
+	//Log("Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
+	Perc_coarse = 1- Perc_fine;
+
 
 	if (s->value[NPP] > 0)
 	{
@@ -119,15 +129,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		if (settings->spatial == 'u')
 		{
 			oldW = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
-			//7 May 2012
-			//compute static ratio of allocation between fine and coarse root
-			//deriving data from values reported for BIOME-BGC
-			//fixme see if chage with new parameters checked in "Get_biome_fraction"
-			s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-			//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
-			Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-			//Log("Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
-			Perc_coarse = 1- Perc_fine;
+
 			//Log("Percentage of coarse root against total root= %g %%\n", Perc_coarse * 100 );
 
 			//23 May 2012
@@ -742,14 +744,14 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				//leaf fall counter to compute in the first day of leaf fall the amount of biomass to remove to
 				//have a linear decrease of foliage biomass and then LAI values
 
-/*
+				/*
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 				Log("Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 				pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 				Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 				pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 				Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
-*/
+				 */
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
 				{
@@ -764,7 +766,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_RESERVE_CTEM]= s->value[NPP];
 				s->value[BIOMASS_RESERVE_CTEM] += s->value[DEL_RESERVE_CTEM];
 
-/*
+				/*
 				// Biomass allocation
 
 
@@ -815,7 +817,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
 				Log("Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
-*/
+				 */
 				//check for live and dead tissues
 				/*stem*/
 				//s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
@@ -837,7 +839,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("Foliage Biomass (Wf) = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				s->value[DEL_FOLIAGE_CTEM] = 0;
-/*
+				/*
 				s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
 				s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE_CTEM];
 				s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -858,7 +860,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
 				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
 				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
-*/
+				 */
 
 				Log("***LEAF FALL**\n");
 				//COMPUTE LITTERFALL using BIOME_BGC approach
@@ -1354,7 +1356,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
 	c->annual_ws[i] = s->value[BIOMASS_STEM_CTEM];
-		Log("******************************\n");
+	Log("******************************\n");
 }
 
 /**/
@@ -1403,24 +1405,36 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	//float gammaF;
 	//float oldWf;
 
+	float Biomass_exceeding;
+
+	if (settings->time == 'm')
+	{
+		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over / Monthly_solar_radiation;
+	}
+	else
+	{
+		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
+		Par_over = c->par - s->value[APAR];
+		Light_trasm = Par_over /Daily_solar_radiation;
+	}
+
+	s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
+
+	//7 May 2012
+	//compute static ratio of allocation between fine
+	//fixme see if chage with new parameters checked in "Get_biome_fraction"
+	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
+	//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
+	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
+	//Log("Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
+	Perc_coarse = 1- Perc_fine;
+	//Log("Percentage of coarse root against total root= %g %%\n", Perc_coarse * 100 );
+
 
 	if(s->value[NPP] > 0)
 	{
-
-		if (settings->time == 'm')
-		{
-			Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-			Par_over = c->par - s->value[APAR];
-			Light_trasm = Par_over / Monthly_solar_radiation;
-		}
-		else
-		{
-			Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
-			Par_over = c->par - s->value[APAR];
-			Light_trasm = Par_over /Daily_solar_radiation;
-		}
-
-		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
 		//Log("fracBB = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[FRACBB]);
 
 		//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
@@ -1445,6 +1459,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		}
 		 */
 
+		//fixme if setted to 0, cones are negative during simulation
 		if (day == 0 && month == 0 && years == 0)
 		{
 			s->value[BIOMASS_CONES_CTEM] = 0;
@@ -1578,9 +1593,126 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD]));
 			Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
-			Log("++Lai = %g\n", s->value[LAI]);
-			Log("++DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
+			/*recompute LAI after allocation*/
+			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000.0 / GC_GDM) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLAmkg];
+			Log("++Lai after allocation = %g\n", s->value[LAI]);
+			//control if new Lai exceeds Peak Lai
+			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			{
+				Log("ATTENTION LAI > PEAK_Y_LAI!!! reallocate biomass exceeding\n");
+				Log("LAI = %g \n", s->value[LAI]);
+
+
+				Log("Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
+
+				Biomass_exceeding = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+				Log("Foliar Biomass exceeding = %g tDM \n", Biomass_exceeding);
+				Log("Biomass Foliage = %g tDM/area \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				s->value[BIOMASS_FOLIAGE_CTEM] = s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+				Log("Max Biomass Foliage = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+				Log("Biomass Foliage = %g tDM/area \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+				Log("Roots CTEM ratio = %g %%\n",  pR_CTEM * 100);
+				pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+				Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+
+				//reserve ratio
+				pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+				Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+
+
+				// Biomass allocation
+
+				s->value[DEL_ROOTS_TOT_CTEM] = Biomass_exceeding * pR_CTEM;
+				Log("BiomassRoots increment CTEM = %g tDM/area\n", s->value[DEL_ROOTS_TOT_CTEM]);
+
+
+				//7 May 2012
+				//compute fine and coarse root biomass increment
+				s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_fine;
+				Log("BiomassRoots into fine roots = %g tDM/area\n", s->value[DEL_ROOTS_FINE_CTEM]);
+				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_coarse;
+				Log("BiomassRoots into coarse roots = %g tDM/area\n", s->value[DEL_ROOTS_COARSE_CTEM]);
+
+
+				s->value[DEL_STEMS_CTEM] = Biomass_exceeding *  pS_CTEM;
+				Log("BiomassStem increment CTEM = %g tDM/area\n", s->value[DEL_STEMS_CTEM]);
+
+				s->value[DEL_RESERVE_CTEM] = Biomass_exceeding * pF_CTEM;
+				Log("BiomassReserve increment CTEM = %g tDM/area\n", s->value[DEL_RESERVE_CTEM] );
+
+				//Total Stem Biomass
+				//remove the part allocated to the branch and bark
+				s->value[DEL_BB] = s->value[DEL_STEMS_CTEM] * s->value[FRACBB];
+				Log("BiomassStemBB increment CTEM = %g tDM/area\n", s->value[DEL_BB]);
+				//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
+				//Log("Branch and bark Biomass (del_BB)= %g tDM/area\n", s->value[DEL_BB]);
+
+				//allocation to stem
+				s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
+				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
+				Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
+
+				//allocation to branch and bark
+				s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+				Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
+				//allocation to non structural reserve pool
+				s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
+				Log("Reserve Biomass (Wres) = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
+
+				//allocation to roots
+				s->value[BIOMASS_ROOTS_TOT_CTEM] +=  s->value[DEL_ROOTS_TOT_CTEM];
+				Log("Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+
+				s->value[BIOMASS_ROOTS_FINE_CTEM] += s->value[DEL_ROOTS_FINE_CTEM];
+				Log("Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+				s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
+				Log("Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
+
+				//check for live and dead tissues
+				/*stem*/
+				s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+				Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+				s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+				Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+				/*coarse root*/
+				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+				Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+				s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+				Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+				/*branch and bark*/
+				s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+				Log("Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+				Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+
+				s->value[DEL_FOLIAGE_CTEM] = 0;
+
+				Log("LAI setted to Peak Lai = %g \n", s->value[PEAK_Y_LAI]);
+				s->value[LAI] = s->value[PEAK_Y_LAI];
+
+				// Total Biomass Increment
+				s->value[DEL_TOTAL_W] = s->value[DEL_FOLIAGE_CTEM] + s->value[DEL_ROOTS_TOT_CTEM] + s->value[DEL_STEMS_CTEM];
+				Log("Increment Monthly Total Biomass  (delTotalW) = %g tDM/area\n", s->value[DEL_TOTAL_W]);
+
+
+				// Total Biomass
+				s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_TOT_CTEM];
+				Log("Previous Total W = %g tDM/area\n", oldW);
+				Log("Total Biomass = %g tDM/area\n", s->value[TOTAL_W]);
+
+
+				s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
+				s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE_CTEM];
+				s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
+				s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE_CTEM];
+				s->value[DEL_Y_WRES] += s->value[DEL_RESERVE_CTEM];
+				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
+				s->value[DEL_Y_BB] += s->value[DEL_BB];
+			}
 
 			//Log("OldWf = %g\n", oldWf);
 
@@ -1602,7 +1734,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//recompute LAI
 			//Log("SLA in mod = %g KgC/m^2 \n", s->value[SLAmkg]);
 
-			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
+			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			Log("Lai after litterfall = %g\n", s->value[LAI]);
 
 
@@ -1734,14 +1866,6 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD]));
 			Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			//leaf litterfall
-
-			//gammaF = s->value[GAMMAFX] * s->value[GAMMAF0] / (s->value[GAMMAF0] + (s->value[GAMMAFX] - s->value[GAMMAF0])* exp(-12 * log(1 + s->value[GAMMAFX] / s->value[GAMMAF0]) * a->value / s->value[TGAMMAF]));
-			//Log("Litterfall rate = %g\n", gammaF);
-
-			//oldWf = s->value[BIOMASS_FOLIAGE_CTEM];
-
-			//Log("OldWf = %g\n", oldWf);
 			s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
 			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
@@ -1749,14 +1873,14 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 			//recompute LAI
-			Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
+
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] *  1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * 2.0);
 			Log("++Lai = %g\n", s->value[LAI]);
 		}
 	}
 	else
 	{
-		Log("NPP < 0, no allocation occurs!!\n");
+		Log("NPP < 0, no allocationoccurs!!\n");
 		s->value[DEL_FOLIAGE_CTEM] = 0;
 		s->value[DEL_ROOTS_FINE_CTEM] = 0;
 		s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -1769,6 +1893,144 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		Log("delta_cR %d = 0 \n", c->heights[height].z);
 		Log("delta_S %d = 0 \n", c->heights[height].z);
 		Log("delta_Res %d = 0 \n", c->heights[height].z);
+
+		/*check if LAI > PEAK_Y_LAI*/
+		if (s->value[LAI] > s->value[PEAK_Y_LAI])
+		{
+			Log("ATTENTION LAI > PEAK_Y_LAI!!! reallocate biomass exceeding\n");
+			Log("LAI = %g \n", s->value[LAI]);
+
+
+			Log("Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
+
+			Biomass_exceeding = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+			Log("Foliar Biomass exceeding = %g tDM \n", Biomass_exceeding);
+			Log("Biomass Foliage = %g tDM/area \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			s->value[BIOMASS_FOLIAGE_CTEM] = s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+			Log("Max Biomass Foliage = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+			Log("Biomass Foliage = %g tDM/area \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+			Log("Roots CTEM ratio = %g %%\n",  pR_CTEM * 100);
+			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+			Log("Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
+
+			//reserve ratio
+			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+			Log("Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+
+
+			// Biomass allocation
+
+			s->value[DEL_ROOTS_TOT_CTEM] = Biomass_exceeding * pR_CTEM;
+			Log("BiomassRoots increment CTEM = %g tDM/area\n", s->value[DEL_ROOTS_TOT_CTEM]);
+
+
+			//7 May 2012
+			//compute fine and coarse root biomass increment
+			s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_fine;
+			Log("BiomassRoots into fine roots = %g tDM/area\n", s->value[DEL_ROOTS_FINE_CTEM]);
+			s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT_CTEM] * Perc_coarse;
+			Log("BiomassRoots into coarse roots = %g tDM/area\n", s->value[DEL_ROOTS_COARSE_CTEM]);
+
+
+			s->value[DEL_STEMS_CTEM] = Biomass_exceeding *  pS_CTEM;
+			Log("BiomassStem increment CTEM = %g tDM/area\n", s->value[DEL_STEMS_CTEM]);
+
+			s->value[DEL_RESERVE_CTEM] = Biomass_exceeding * pF_CTEM;
+			Log("BiomassReserve increment CTEM = %g tDM/area\n", s->value[DEL_RESERVE_CTEM] );
+
+			//Total Stem Biomass
+			//remove the part allocated to the branch and bark
+			s->value[DEL_BB] = s->value[DEL_STEMS_CTEM] * s->value[FRACBB];
+			Log("BiomassStemBB increment CTEM = %g tDM/area\n", s->value[DEL_BB]);
+			//Log("Branch and bark fraction = %g %%\n", s->value[FRACBB] * 100);
+			//Log("Branch and bark Biomass (del_BB)= %g tDM/area\n", s->value[DEL_BB]);
+
+			//allocation to stem
+			s->value[DEL_STEMS_CTEM] -= s->value[DEL_BB];
+			s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
+			Log("Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM]);
+
+			//allocation to branch and bark
+			s->value[BIOMASS_STEM_BRANCH_CTEM] += s->value[DEL_BB];
+			Log("Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
+
+			//allocation to non structural reserve pool
+			s->value[BIOMASS_RESERVE_CTEM] +=  s->value[DEL_RESERVE_CTEM];
+			Log("Reserve Biomass (Wres) = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
+
+			//allocation to roots
+			s->value[BIOMASS_ROOTS_TOT_CTEM] +=  s->value[DEL_ROOTS_TOT_CTEM];
+			Log("Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+
+			s->value[BIOMASS_ROOTS_FINE_CTEM] += s->value[DEL_ROOTS_FINE_CTEM];
+			Log("Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+			s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
+			Log("Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
+
+			//check for live and dead tissues
+			/*stem*/
+			s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+			Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+			s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+			Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+			/*coarse root*/
+			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+			Log("Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+			Log("Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+			/*branch and bark*/
+			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+			Log("Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+			Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+
+			s->value[DEL_FOLIAGE_CTEM] = 0;
+
+			Log("LAI setted to Peak Lai = %g \n", s->value[PEAK_Y_LAI]);
+			s->value[LAI] = s->value[PEAK_Y_LAI];
+
+			// Total Biomass Increment
+			s->value[DEL_TOTAL_W] = s->value[DEL_FOLIAGE_CTEM] + s->value[DEL_ROOTS_TOT_CTEM] + s->value[DEL_STEMS_CTEM];
+			Log("Increment Monthly Total Biomass  (delTotalW) = %g tDM/area\n", s->value[DEL_TOTAL_W]);
+
+
+			// Total Biomass
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_ROOTS_TOT_CTEM];
+			Log("Total Biomass = %g tDM/area\n", s->value[TOTAL_W]);
+
+
+			s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
+			s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE_CTEM];
+			s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
+			s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE_CTEM];
+			s->value[DEL_Y_WRES] += s->value[DEL_RESERVE_CTEM];
+			s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
+			s->value[DEL_Y_BB] += s->value[DEL_BB];
+		}
+
+		Log("-LITTERFALL FOR EVEGREEN-\n");
+		s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
+		Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
+		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
+
+		Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITTFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
+		if (s->value[DEL_FOLIAGE_CTEM]<s->value[DEL_LITTER])
+		{
+			Log("Del_litter exceeds del_foliage!!\n");
+			s->value[DEL_FOLIAGE_CTEM] = s->value[DEL_LITTER];
+		}
+
+		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
+		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+		//recompute LAI
+		//Log("SLA in mod = %g KgC/m^2 \n", s->value[SLAmkg]);
+
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+		Log("Lai after litterfall = %g\n", s->value[LAI]);
 	}
 
 	//for daily_Log file only if there's one class

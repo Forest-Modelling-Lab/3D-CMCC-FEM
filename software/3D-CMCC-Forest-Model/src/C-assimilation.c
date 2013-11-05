@@ -47,9 +47,20 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 
 				s->value[NPP_g_C] = 0;
 			}
-			//fixme remove after insert reserve also for coniferous
+			//fixme see for correct use of reserve for evergreen
 			if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 			{
+				/*following Barbaroux et al., 2003*/
+				//FIXME AS IT SHOULD BE
+				/*
+				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+
+				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+				{
+					s->value[BIOMASS_RESERVE_CTEM] = 0;
+					Log("All reserve has been consumed for respiration!!!\n");
+				}
+				*/
 				s->value[NPP_g_C] = 0;
 			}
 

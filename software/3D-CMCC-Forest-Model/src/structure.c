@@ -293,7 +293,6 @@ void Get_forest_structure (CELL *const c)
                 {
                   Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %g species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
-
                   /*compute maximum crown area*/
                   //TODO CHECK IF USE IT
                   /*for references and variables see "Forest Mensuration" book 4th edition
@@ -302,10 +301,11 @@ void Get_forest_structure (CELL *const c)
                    *
                    * and Krajicek, et al., "Crown competition: a measure of density.
                    * For. Sci. 7:36-42
+                   *
+                   * Lhotka and Loewenstein 2008, Can J For Res
                    */
-                  //currently not used
                   c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-                                                                                                                                                                                      +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+																		  +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
                   Log("-MCA (Maximum Crown Area) = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
                   c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
                   Log("-MCD (Maximum Crown Diameter) = %g m\n", c->heights[height].ages[age].species[species].value[MCD]);

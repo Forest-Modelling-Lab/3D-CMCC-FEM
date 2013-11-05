@@ -27,10 +27,10 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 
 	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000;
 	Log("Maximum foliage biomass = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
-	Log("Maximum foliage biomass = %g gDM/tree \n", (s->value[MAX_BIOMASS_FOLIAGE_CTEM] /s->counter[N_TREE])* 1000000);
+	//Log("Maximum foliage biomass = %g gDM/tree \n", (s->value[MAX_BIOMASS_FOLIAGE_CTEM] /s->counter[N_TREE])* 1000000);
 
 	s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-	Log("Maximum foliage biomass = %g Kg/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]/s->counter[N_TREE]);
+	//Log("Maximum foliage biomass = %g Kg/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]/s->counter[N_TREE]);
 	//Log("SLA in mod= %g KgC/m^2 \n", s->value[SLAmkg]);
 
 
