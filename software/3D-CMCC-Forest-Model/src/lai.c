@@ -82,6 +82,7 @@ void Get_lai (SPECIES *const s, const int years, const int month, const int day)
 			/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
 			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
 			{
+				Log("VEG_DAYS < 30, LAI < PEAK_LAI, RESERVE > 0\n");
 				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				 * and Barbaroux et al., 2002,
 				the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -137,6 +138,10 @@ void Get_lai (SPECIES *const s, const int years, const int month, const int day)
 			{
 				Log("LAI > PEAK_Y_LAI\n");
 				Log("Unused reserve = %g tDM/cell \n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Lai = %g\n", s->value[LAI]);
+			}
+			else
+			{
 				Log("++Lai = %g\n", s->value[LAI]);
 			}
 		}

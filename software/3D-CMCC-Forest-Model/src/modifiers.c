@@ -423,7 +423,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	{
 		if ((met[month].d[day].tday <= s->value[GROWTHTMIN]) || (met[month].d[day].tday >= s->value[GROWTHTMAX]))
 		{
-			Log("tday > GROWTHTMAX\n");
+			Log("tday < o > GROWTHTMIN o GROWTHTMAX\n");
 			s->value[F_T] = 0;
 			Log("F_T = 0 \n");
 		}

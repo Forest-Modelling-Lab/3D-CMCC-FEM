@@ -759,11 +759,29 @@ typedef struct {
 /* */
 //all variables related to the soil site
 typedef struct {
-
 	float variabile;
-
-
 } SOIL;
+
+
+//fixme
+typedef struct {
+	int class;
+
+	//cumulative variables class related used in annual-monthly-daily Log
+	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+
+	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
+	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
+	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	float daily_cc[3], monthly_cc[3], annual_cc[3];
+	float daily_lai[3];
+	float annual_peak_lai[10];
+	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
+	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+
+} CLASS;
 
 /* */
 //all variables related to the cell (stand) are here defined
@@ -775,6 +793,7 @@ typedef struct {
 
 	HEIGHT *heights;
 	SOIL *soils;
+	CLASS *class;
 	int heights_count; //number of heights
 	int soils_count;
 

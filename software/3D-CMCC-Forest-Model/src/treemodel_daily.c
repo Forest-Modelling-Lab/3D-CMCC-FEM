@@ -238,11 +238,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								if (settings->spatial == 'u')
 								{
 									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
-									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] >= m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI])
-									{
-										Log("ATTENTION LAI > PEAK LAI\n");
-										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI];
-									}
+
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0 )
 									{
 										Log("ATTENTION LAI <= 0 !!!!!!!!!!\n");

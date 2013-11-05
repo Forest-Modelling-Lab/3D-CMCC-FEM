@@ -15,8 +15,6 @@
 void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
 {
 	int i;
-	float loss_of_froots, loss_of_foliage;
-
 
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
@@ -88,6 +86,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		else
 		{
 			Log("Daily NPP = %g gC/m^2\n", s->value[NPP_g_C]);
+			Log("Daily NPP = %g gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 			Log("Daily NPP = %g tDM/area\n",  s->value[NPP]);
 			//MonthlyNPP += s->value[NPP];
 			//Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
