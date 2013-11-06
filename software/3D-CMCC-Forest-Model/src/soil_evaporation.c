@@ -11,19 +11,11 @@
 extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int day, int DaysInMonth, float Net_Radiation, int top_layer, int z,
 		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter)
 {
-	
-
-	float const e20 = 2.2;          // rate of change of saturated VP with T at 20C
-	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
-	float const PsycConst = 65;      //psychrometer costant
-	float const EvapoCoeff = 1.32;        //Priestley Taylor Coefficient
 	static float PotEvap;            //Potential evapotranspiration
 
 	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n\n");
 
 	/*following Gerten et al., 2004*/
-
-
 
 	//todo: a better function that also take into account gaps
 	//model uses Net radiation of last height class in last layer * its percentage of light transmitted
@@ -102,7 +94,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		}
 	}
 
-	PotEvap = (e20 / (e20 + PsycConst )) * (Net_Radiation/3600.0) / lambda;
+	PotEvap = (E20 / (E20 + PSYCCONST )) * (Net_Radiation/3600.0) / LAMBDA;
 	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
 	Log("Net radiation for soil evaporation = %g W/m^2/sec\n", Net_Radiation/3600.0);
 
@@ -110,12 +102,12 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 
 	if (settings->time == 'm')
 	{
-		c->soil_evaporation = PotEvap * EvapoCoeff * c->soil_moist_ratio * (met[month].daylength * 3600.0) * DaysInMonth;
+		c->soil_evaporation = PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].daylength * 3600.0) * DaysInMonth;
 		Log("Monthly Soil Evaporation = %g \n", c->soil_evaporation );
 	}
 	else
 	{
-		c->soil_evaporation = (PotEvap * EvapoCoeff * c->soil_moist_ratio * (met[month].d[day].daylength * 3600.0)) + c->snow_subl;
+		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].d[day].daylength * 3600.0)) + c->snow_subl;
 		Log("Daily Soil Evaporation = %g \n", c->soil_evaporation );
 	}
 

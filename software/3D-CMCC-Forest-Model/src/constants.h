@@ -40,8 +40,14 @@
 #define EPAR        			4.55      //(umol/J) PAR photon energy ratio */
 #define SLAMKG				     0.1	  //Convert SLA IN cm ^2/gC in m^2/KgC
 
+#define E20						2.2       //rate of change of saturated VPD with T at 20C
+#define LAMBDA				2460000       //latent heat of vapourisation of H2O (J/kg)
+#define VPDCONV			   0.000622       //convert VPD to saturation deficit = 18/29/1000
+#define PSYCCONST				 65       //psychrometer costant
+#define EVAPOCOEFF			   1.32       //Priestley Taylor Coefficient
 
-//COSTANT
+
+//COSTANTS
 #define Pi               3.141592654     //Pi greco
 #define ln2              0.693147181
 #define eps                   0.0001
