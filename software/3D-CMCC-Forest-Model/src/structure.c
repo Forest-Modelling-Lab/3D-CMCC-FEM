@@ -305,7 +305,7 @@ void Get_forest_structure (CELL *const c)
 					 * Lhotka and Loewenstein 2008, Can J For Res
 					 */
 					c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-					                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+																				 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 					Log("-MCA (Maximum Crown Area) = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 					c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 					Log("-MCD (Maximum Crown Diameter) = %g m\n", c->heights[height].ages[age].species[species].value[MCD]);
@@ -321,6 +321,7 @@ void Get_forest_structure (CELL *const c)
 					Log("-recomputed DENMIN = %g tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 
 					/*define DBHDC taking into account layer density*/
+					/*assuming a linear decrement of crown area based on increment of density as reported by Hasenauer, 1997*/
 					/*only one dominant layer*/
 					switch(c->annual_layer_number)
 					{
