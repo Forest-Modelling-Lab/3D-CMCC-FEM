@@ -13,7 +13,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	int i;
 
-
+//fixme move to constants.h
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C

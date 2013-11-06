@@ -134,6 +134,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		Print_met_data (met, vpd, month, day);
 
+		/*add rain to soil pool*/
 		if (met[month].d[day].tavg > 0.0)
 		{
 			m->cells[cell].available_soil_water += met[month].d[day].rain;
@@ -216,6 +217,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							//Peak LAI is also used in spatial version to drive carbon allocation
 
+
+
 							if (day == 0 && month == JANUARY)
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
@@ -253,6 +256,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
+								/*evapotranspiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
 								//compute soil evaporation in the last loop of height

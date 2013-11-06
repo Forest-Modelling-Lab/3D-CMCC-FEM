@@ -14,6 +14,7 @@ C_SRCS += \
 ../src/biomass.c \
 ../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
+../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
 ../src/common.c \
 ../src/cropmodel.c \
@@ -22,6 +23,7 @@ C_SRCS += \
 ../src/dataset.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
+../src/evapotranspiration.c \
 ../src/garbage.c \
 ../src/initialization_biomass_data.c \
 ../src/initialization_site_data.c \
@@ -63,6 +65,7 @@ OBJS += \
 ./src/biomass.o \
 ./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
+./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
 ./src/common.o \
 ./src/cropmodel.o \
@@ -71,6 +74,7 @@ OBJS += \
 ./src/dataset.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
+./src/evapotranspiration.o \
 ./src/garbage.o \
 ./src/initialization_biomass_data.o \
 ./src/initialization_site_data.o \
@@ -112,6 +116,7 @@ C_DEPS += \
 ./src/biomass.d \
 ./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
+./src/canopy_interception.d \
 ./src/canopy_transpiration.d \
 ./src/common.d \
 ./src/cropmodel.d \
@@ -120,6 +125,7 @@ C_DEPS += \
 ./src/dataset.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
+./src/evapotranspiration.d \
 ./src/garbage.d \
 ./src/initialization_biomass_data.d \
 ./src/initialization_site_data.d \

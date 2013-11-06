@@ -305,7 +305,7 @@ void Get_forest_structure (CELL *const c)
 					 * Lhotka and Loewenstein 2008, Can J For Res
 					 */
 					c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-																				 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+					                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 					Log("-MCA (Maximum Crown Area) = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 					c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 					Log("-MCD (Maximum Crown Diameter) = %g m\n", c->heights[height].ages[age].species[species].value[MCD]);
@@ -321,7 +321,6 @@ void Get_forest_structure (CELL *const c)
 					Log("-recomputed DENMIN = %g tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 
 					/*define DBHDC taking into account layer density*/
-					/*assuming a linear decrement of crown area based on increment of density as reported by Hasenauer, 1997*/
 					/*only one dominant layer*/
 					switch(c->annual_layer_number)
 					{
@@ -769,7 +768,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	static int height;
 	static int age;
 	static int species;
-	static int counter;
+
 
 
 
@@ -777,8 +776,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
-
-	counter = 0;
+	c->Veg_Counter = 0;
 
 	Log("\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
 
@@ -808,7 +806,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 								if (met[month].d[day].ndvi_lai > 0.1)
 								{
 									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-									counter += 1;
+									c->Veg_Counter += 1;
 									Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 								}
 								//unveg period
@@ -841,7 +839,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 										|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 								{
 									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-									counter += 1;
+									c->Veg_Counter += 1;
 									Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 								}
 								else
@@ -866,6 +864,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 										{
 											/*days of leaf fall*/
 											c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+											c->Veg_Counter += 1;
 										}
 										else
 										{
@@ -887,13 +886,13 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
-							counter += 1;
+							c->Veg_Counter += 1;
 							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 						}
 			}
 		}
 	}
-	Log("classes in veg period = %d\n", counter);
+	Log("classes in veg period = %d\n", c->Veg_Counter);
 }
 
 
