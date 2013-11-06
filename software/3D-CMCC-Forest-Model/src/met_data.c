@@ -203,6 +203,70 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 }
 
 
+extern void Get_air_pressure (CELL *c)
+{
+	float t1, t2;
+
+	/*compute air pressure*/
+	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
+	/* From the discussion on atmospheric statics in:
+	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
+		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
+		(p. 168)*/
+
+	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
+	t2 = G_STD / (LR_STD * (R / MA));
+	c->air_pressure = P_STD * pow (t1, t2);
+	//Log("Air pressure = %g Pa\n", c->air_pressure);
+
+}
+
+
+extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
+	/* temperature and pressure correction factor for conductances */
+	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
+
+
+	if (settings->time == 'm')
+	{
+		if(met[month].tday == NO_DATA)
+		{
+			met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
+			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		else
+		{
+			met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
+			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		Log("RhoAir = %g\n", met[month].rho_air);
+	}
+	else
+	{
+		if(met[month].d[day].tday == NO_DATA)
+		{
+			met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
+			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		else
+		{
+			met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
+			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+			Log("gcorr = %g\n", c->gcorr);
+		}
+		Log("RhoAir = %g\n", met[month].d[day].rho_air);
+	}
+}
+
+
 void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 {
 
@@ -346,23 +410,6 @@ float Get_vpd (const MET_DATA *const met, int month)
 }
  */
 
-extern void Get_air_pressure (CELL *c)
-{
-	float t1, t2;
-
-	/*compute air pressure*/
-	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
-	/* From the discussion on atmospheric statics in:
-	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
-		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
-		(p. 168)*/
-
-	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
-	t2 = G_STD / (LR_STD * (R / MA));
-	c->air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %g Pa\n", c->air_pressure);
-
-}
 
 void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 {

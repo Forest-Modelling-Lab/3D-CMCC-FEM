@@ -17,7 +17,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static float CanCond;
 	static float CanopyTranspiration;
 	float const e20 = 2.2;          // rate of change of saturated VPD with T at 20C
-	float rhoAir = 1.2;       // density of air, kg/m3
+	//float rhoAir = 1.2;       // density of air, kg/m3
+	float rhoAir;
 	float const lambda = 2460000;   // latent heat of vapourisation of H2O (J/kg)
 	float const VPDconv = 0.000622; // convert VPD to saturation deficit = 18/29/1000
 	static float defTerm;
@@ -57,6 +58,15 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE \n\n");
 
+	if (settings->time == 'd')
+	{
+		rhoAir = met[month].d[day].rho_air;
+	}
+	else
+	{
+		rhoAir = met[month].rho_air;
+	}
+
 	//Veg period
 	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
@@ -65,7 +75,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		/* temperature and pressure correction factor for conductances */
 		//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
 
-
+		/*
 		if (settings->time == 'm')
 		{
 			if(met[month].tday == NO_DATA)
@@ -98,6 +108,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			}
 			Log("RhoAir = %g\n", rhoAir);
 		}
+		*/
 
 
 
@@ -309,6 +320,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	i = c->heights[height].z;
 
+	//fixme it is just canopy transp no et!!!!
 	c->daily_et[i] += s->value[DAILY_TRANSP];
 	c->monthly_et[i] += s->value[DAILY_TRANSP];
 	c->annual_et[i] += s->value[DAILY_TRANSP];
