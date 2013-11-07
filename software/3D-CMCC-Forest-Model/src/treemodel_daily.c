@@ -379,7 +379,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							}
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
+
+							/*evapotranspiration block*/
 							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+							Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
 							//compute soil evaporation in the last loop of height
 							if( height == 0)

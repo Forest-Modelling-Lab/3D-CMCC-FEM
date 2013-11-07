@@ -464,15 +464,15 @@ void Get_forest_structure (CELL *const c)
 		{
 			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
 
-			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominant * 100;
+			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominant;
 		}
 		if (c->annual_layer_number == 2)
 		{
 			Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
 			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
 
-			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominant * 100;
-			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominated * 100;
+			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominant;
+			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominated;
 
 		}
 		if (c->annual_layer_number > 2)
@@ -481,9 +481,9 @@ void Get_forest_structure (CELL *const c)
 			Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
 			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
 
-			c->daily_cc[2] = c->monthly_cc[2] = c->annual_cc[2] = c->layer_cover_dominant * 100;
-			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominated * 100;
-			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_subdominated * 100;
+			c->daily_cc[2] = c->monthly_cc[2] = c->annual_cc[2] = c->layer_cover_dominant;
+			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominated;
+			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_subdominated;
 		}
 
 
