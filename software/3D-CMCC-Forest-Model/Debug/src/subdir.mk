@@ -13,6 +13,7 @@ C_SRCS += \
 ../src/aut_respiration.c \
 ../src/biomass.c \
 ../src/canopy_cover.c \
+../src/canopy_evaporation.c \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
@@ -64,6 +65,7 @@ OBJS += \
 ./src/aut_respiration.o \
 ./src/biomass.o \
 ./src/canopy_cover.o \
+./src/canopy_evaporation.o \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
@@ -115,6 +117,7 @@ C_DEPS += \
 ./src/aut_respiration.d \
 ./src/biomass.d \
 ./src/canopy_cover.d \
+./src/canopy_evaporation.d \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_interception.d \
 ./src/canopy_transpiration.d \

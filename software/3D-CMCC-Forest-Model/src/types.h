@@ -424,6 +424,7 @@ enum {
 	DAILY_TRANSP,
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	RAIN_INTERCEPTED,
+	CANOPY_EVAPOTRANSPIRATION,
 	CANOPY_CONDUCTANCE,
 	EVAPOTRANSPIRATION,             //Evapotranspiration (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
@@ -879,8 +880,6 @@ typedef struct {
 
 	float gapcover[3];
 
-	float daily_canopy_transpiration[3];
-
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
@@ -888,6 +887,7 @@ typedef struct {
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	float daily_c_int[3];
 	float daily_c_transp[3];
+	float daily_c_evapotransp[3];
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
@@ -1035,7 +1035,6 @@ extern void Get_litter (CELL *c, SPECIES *const s, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const);
-extern void Get_canopy_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int,  int, int, float, int, int, int);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
 extern void Get_lai (SPECIES *const s, const int, const int, const int);
@@ -1104,8 +1103,10 @@ extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
 extern void Get_biome_fraction (SPECIES *);
 
 /*evapotranspiration block*/
-extern void Get_canopy_interception (SPECIES * s, CELL *c, const MET_DATA *const, int, int, int);
-extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int, int);
+extern void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
+extern void Get_canopy_interception (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
+extern void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
+extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
 
 
 //sergio's functions

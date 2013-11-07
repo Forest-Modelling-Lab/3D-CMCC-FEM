@@ -254,16 +254,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 				{
 					/*control*/
-					if (c->available_soil_water > c->daily_c_transp[c->top_layer])
-					{
-						c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
-					}
-					else
+					if (c->available_soil_water < c->daily_c_transp[c->top_layer])
 					{
 						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 						c->daily_c_transp[c->top_layer] = c->available_soil_water;
 					}
-					Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
 				}
 			}
 			/*dominated*/
@@ -280,16 +275,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 					{
 						/*control*/
-						if (c->available_soil_water > c->daily_c_transp[c->top_layer])
-						{
-							c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
-						}
-						else
+						if (c->available_soil_water < c->daily_c_transp[c->top_layer-1])
 						{
 							Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-							c->daily_c_transp[c->top_layer] = c->available_soil_water;
+							c->daily_c_transp[c->top_layer-1] = c->available_soil_water;
 						}
-						Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
 					}
 				}
 				/*subdominated layer*/
@@ -303,16 +293,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 					{
 						/*control*/
-						if (c->available_soil_water > c->daily_c_transp[c->top_layer])
-						{
-							c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
-						}
-						else
+						if (c->available_soil_water < c->daily_c_transp[c->top_layer-2])
 						{
 							Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-							c->daily_c_transp[c->top_layer] = c->available_soil_water;
+							c->daily_c_transp[c->top_layer-2] = c->available_soil_water;
 						}
-						Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
 					}
 				}
 			}
