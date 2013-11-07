@@ -13,7 +13,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 {
 	static float PotEvap;            //Potential evapotranspiration
 
-	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n\n");
+	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
 
 	/*following Gerten et al., 2004*/
 
@@ -96,7 +96,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 
 	PotEvap = (E20 / (E20 + PSYCCONST )) * (Net_Radiation/3600.0) / LAMBDA;
 	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
-	Log("Net radiation for soil evaporation = %g W/m^2/sec\n", Net_Radiation/3600.0);
+	//Log("Net radiation for soil evaporation = %g W/m^2/sec\n", Net_Radiation/3600.0);
 
 	c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 
@@ -112,7 +112,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	}
 
 	c->total_yearly_soil_evaporation += c->soil_evaporation;
-	Log("Total Soil Evaporation = %g mm\n", c->total_yearly_soil_evaporation);
+	Log("Total Yearly Soil Evaporation = %g mm\n", c->total_yearly_soil_evaporation);
 
 }
 

@@ -60,7 +60,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	float evap;
 	float evap_dayl ; //calculate the time required to evaporate all the canopy water
 
-	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE \n\n");
+	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
 
 	if (settings->time == 'd')
 	{
@@ -182,7 +182,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 		else
 		{
-			Log("daily vegetative layer number = %d\n", c->daily_layer_number);
 			switch (c->daily_layer_number)
 			{
 			case 1:
@@ -305,13 +304,18 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		else
 		{
 			s->value[DAILY_TRANSP] = 0.0;
-			Log("Canopy interception = %g mm\n", s->value[DAILY_TRANSP]);
+			Log("Canopy transpiration = %g mm\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->heights[height].z] = 0.0;
-			Log("Intercepted water from dominant layer = %g mm \n", c->daily_c_transp[c->heights[height].z]);
-			c->water_to_atmosphere = 0.0 ;
-			Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
+			Log("Traspirated water from layer %d = %g mm \n", c->heights[height].z, c->daily_c_transp[c->heights[height].z]);
 		}
+
+		/*compute total daily transpiration*/
+		c->daily_tot_c_transp += c->daily_c_transp[c->heights[height].z];
+		Log("Daily total canopy transpiration = %g \n", c->daily_tot_c_transp);
+
 	}
+
+
 	/*no interception if tavg < 0 (snow), or outside growing season*/
 
 	//fixme do it as in daily version and following daily transpiration!!!
@@ -564,7 +568,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 		/* calculate the time required to evaporate all the canopy water */
 		evap_dayl = met[month].d[day].rain/e;
-		Log("evap_dayl = %g\n", evap_dayl);
+		//Log("evap_dayl = %g\n", evap_dayl);
 
 
 }

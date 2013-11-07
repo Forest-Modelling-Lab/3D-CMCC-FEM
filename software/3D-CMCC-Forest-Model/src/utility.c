@@ -158,7 +158,7 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 
 extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
 {
-	static float avg_gpp[3], avg_npp[3], avg_et[3], avg_gpp_tot, avg_npp_tot, avg_et_tot;
+	static float avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_ce_tot;
 	static float avg_ar[3], avg_ar_tot;
 	static int tot_dead_tree_tot;
 
@@ -175,7 +175,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("Annual RA = annual total autotrophic respiration (gC/m2/year)\n");
 		Annual_Log("Annual Y = NPP/GPP ratio (%)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
-		Annual_Log("Annual ET = annual canopy transpiration(mm/year)\n");
+		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
 		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
 		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
 		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
@@ -189,7 +189,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_gpp_tot = 0;
 		avg_ar_tot = 0;
 		avg_npp_tot = 0;
-		avg_et_tot = 0;
+		avg_ce_tot = 0;
 		tot_dead_tree_tot = 0;
 
 		if (c->annual_layer_number == 1)
@@ -197,33 +197,33 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_gpp[0] = 0;
 			avg_ar[0] = 0;
 			avg_npp[0] = 0;
-			avg_et[0] = 0;
+			avg_ce[0] = 0;
 		}
 		if (c->annual_layer_number == 2)
 		{
 			avg_gpp[1] = 0;
 			avg_ar[1] = 0;
 			avg_npp[1] = 0;
-			avg_et[1] = 0;
+			avg_ce[1] = 0;
 			avg_gpp[0] = 0;
 			avg_ar[0] = 0;
 			avg_npp[0] = 0;
-			avg_et[0] = 0;
+			avg_ce[0] = 0;
 		}
 		if (c->annual_layer_number == 3)
 		{
 			avg_gpp[2] = 0;
 			avg_ar[2] = 0;
 			avg_npp[2] = 0;
-			avg_et[2] = 0;
+			avg_ce[2] = 0;
 			avg_gpp[1] = 0;
 			avg_ar[1] = 0;
 			avg_npp[1] = 0;
-			avg_et[1] = 0;
+			avg_ce[1] = 0;
 			avg_gpp[0] = 0;
 			avg_ar[0] = 0;
 			avg_npp[0] = 0;
-			avg_et[0] = 0;
+			avg_ce[0] = 0;
 		}
 	}
 	else
@@ -243,7 +243,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%2s \t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "HC(0)", "GPP(0)", "GPP (tot)", "AR(0)", "AR (tot)","Y(%tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","ET(0)", "ET (tot)", "ASW", "PEAK_LAI(0)",
+					"YEAR", "HC(0)", "GPP(0)", "GPP (tot)", "AR(0)", "AR (tot)","Y(%tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","CE(0)", "CE(tot)", "ASW", "PEAK_LAI(0)",
 					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Ws", "Ws");
 		}
 		Annual_Log ("%d \t%2d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%14d \t%11g \t%11g\n",
@@ -254,7 +254,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				((c->annual_tot_aut_resp * 100.0)/c->annual_tot_gpp),
 				c->annual_npp[0], c->annual_tot_npp,
 				((c->annual_tot_npp/settings->sizeCell)*1000000)/2,
-				c->annual_et[0], c->annual_tot_et ,
+				c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp ,
 				c->available_soil_water,
 				c->annual_peak_lai[0], c->annual_cc[0],
 				c->annual_dead_tree[0], c->annual_tot_dead_tree,
@@ -266,24 +266,24 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
+		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[0];
 		avg_npp_tot += c->annual_npp[0];
-		avg_et_tot += c->annual_et[0];
+		avg_ce_tot += c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
 		//reset
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
+		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
 
 		c->annual_tot_gpp = 0;
 		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
+		c->annual_tot_c_evapotransp = 0;
 		c->annual_tot_aut_resp = 0;
 		c->annual_tot_dead_tree = 0;
 
@@ -296,7 +296,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%5s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%7s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(1)", "ET(0)", "ET (tot)", "ASW"
+					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "CE(1)", "CE(0)", "CE (tot)", "ASW"
 					"PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Ws(1)", "Ws(0)");
 		}
@@ -307,7 +307,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp,
 				(c->annual_aut_resp[1]*100)/ c->annual_gpp[1],((c->annual_aut_resp[0]*100)/ c->annual_gpp[0]),(c->annual_tot_aut_resp*100)/c->annual_tot_gpp,
 				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp,
-				c->annual_et[1], c->annual_et[0], c->annual_tot_et,
+				c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
 				c->available_soil_water,
 				c->annual_peak_lai[1], c->annual_peak_lai[0],
 				c->annual_cc[1], c->annual_cc[0],
@@ -319,15 +319,15 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_gpp[1] += c->annual_gpp[1];
 		avg_ar[1] += c->annual_aut_resp[1];
 		avg_npp[1] += c->annual_npp[1];
-		avg_et[1] += c->annual_et[1];
+		avg_ce[1] += c->annual_c_evapotransp[1];
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
+		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[1] + c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[1] + c->annual_aut_resp[0];
 		avg_npp_tot += c->annual_npp[1] + c->annual_npp[0];
-		avg_et_tot += c->annual_et[1] + c->annual_et[0];
+		avg_ce_tot += c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
 
@@ -335,7 +335,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[1] = 0;
 		c->annual_aut_resp[1] = 0;
 		c->annual_npp[1] = 0;
-		c->annual_et[1] = 0;
+		c->annual_c_evapotransp[1] = 0;
 		c->annual_cc[1] = 0;
 		c->annual_dead_tree[1] = 0;
 		c->annual_delta_ws[1] = 0;
@@ -344,7 +344,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
+		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
 		c->annual_delta_ws[0] = 0;
@@ -353,7 +353,9 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_tot_gpp = 0;
 		c->annual_tot_aut_resp = 0;
 		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
+		c->annual_tot_c_evapotransp = 0;
+		c->annual_tot_dead_tree = 0;
+
 		c->annual_tot_dead_tree = 0;
 
 		c->annual_peak_lai[1] = 0;
@@ -366,8 +368,8 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Annual_Log ("\n%s \t%5s \t%5s \t%5s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s %7s \t%10s \t%10s\n\n",
 					"YEAR", "HC(2)", "HC(1)", "HC(0)", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)",
-					"Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)", "ET(2)", "ET(1)", "ET(0)",
-					"ET(tot)", "ASW", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
+					"Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)", "CE(2)", "CE(1)", "CE(0)",
+					"CE(tot)", "ASW", "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
 					"DEAD TREE(0)", "DEAD TREE(tot)");
 		}
 		Annual_Log ("%d \t%5d \t%5d \t%5d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \t%10d \t%10d\n",
@@ -377,7 +379,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->annual_aut_resp[2], c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp,
 				(c->annual_aut_resp[2]*100.0)/c->annual_gpp[2],((c->annual_aut_resp[1]*100.0)/c->annual_gpp[1]),((c->annual_aut_resp[0]*100.0)/c->annual_gpp[0]),(c->annual_tot_aut_resp*100.0)/c->annual_tot_gpp,
 				c->annual_npp[2], c->annual_npp[1],	c->annual_npp[0], c->annual_tot_npp,
-				c->annual_et[2],c->annual_et[1], c->annual_et[0], c->annual_tot_et,
+				c->annual_c_evapotransp[2],c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
 				c->available_soil_water,
 				c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0],
 				c->annual_cc[2],c->annual_cc[1], c->annual_cc[0],
@@ -389,19 +391,19 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		avg_gpp[2] += c->annual_gpp[2];
 		avg_ar[2] += c->annual_aut_resp[2];
 		avg_npp[2] += c->annual_npp[2];
-		avg_et[2] += c->annual_et[2];
+		avg_ce[2] += c->annual_c_evapotransp[2];
 		avg_gpp[1] += c->annual_gpp[1];
 		avg_ar[1] += c->annual_aut_resp[1];
 		avg_npp[1] += c->annual_npp[1];
-		avg_et[1] += c->annual_et[1];
+		avg_ce[1] += c->annual_c_evapotransp[1];
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_npp[0] += c->annual_npp[0];
-		avg_et[0] += c->annual_et[0];
+		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[2] +c->annual_gpp[1] + c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[2] +c->annual_aut_resp[1] + c->annual_aut_resp[0];
 		avg_npp_tot += c->annual_npp[2] +c->annual_npp[1] + c->annual_npp[0];
-		avg_et_tot += c->annual_et[2] + c->annual_et[1] + c->annual_et[0];
+		avg_ce_tot += c->annual_c_evapotransp[2] + c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
 
@@ -410,7 +412,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[2] = 0;
 		c->annual_aut_resp[2] = 0;
 		c->annual_npp[2] = 0;
-		c->annual_et[2] = 0;
+		c->annual_c_evapotransp[2] = 0;
 		c->annual_cc[2] = 0;
 		c->annual_dead_tree[2] = 0;
 		c->annual_delta_ws[2] = 0;
@@ -419,7 +421,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[1] = 0;
 		c->annual_aut_resp[1] = 0;
 		c->annual_npp[1] = 0;
-		c->annual_et[1] = 0;
+		c->annual_c_evapotransp[1] = 0;
 		c->annual_cc[1] = 0;
 		c->annual_dead_tree[1] = 0;
 		c->annual_delta_ws[1] = 0;
@@ -428,7 +430,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_npp[0] = 0;
-		c->annual_et[0] = 0;
+		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
 		c->annual_delta_ws[0] = 0;
@@ -437,7 +439,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_tot_gpp = 0;
 		c->annual_tot_aut_resp = 0;
 		c->annual_tot_npp = 0;
-		c->annual_tot_et = 0;
+		c->annual_tot_c_evapotransp = 0;
 		c->annual_tot_dead_tree = 0;
 
 		c->annual_peak_lai[2] = 0;
@@ -454,58 +456,58 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_gpp[0] /= years_of_simulation;
 			avg_ar[0] /= years_of_simulation;
 			avg_npp[0] /= years_of_simulation;
-			avg_et[0] /= years_of_simulation;
+			avg_ce[0] /= years_of_simulation;
 			avg_gpp_tot /= years_of_simulation;
 			avg_ar_tot /= years_of_simulation;
 			avg_npp_tot /= years_of_simulation;
-			avg_et_tot /= years_of_simulation;
+			avg_ce_tot /= years_of_simulation;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("AVG/TOT \t\t%5g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12g \t%9g \t%10g \t\t\t\t%49d\n",
-					  avg_gpp[0], avg_gpp_tot, avg_ar[0], avg_ar_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_et[0], avg_et_tot, tot_dead_tree_tot);
+					  avg_gpp[0], avg_gpp_tot, avg_ar[0], avg_ar_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
 		{
 			avg_gpp[1] /= years_of_simulation;
 			avg_ar[1] /= years_of_simulation;
 			avg_npp[1] /= years_of_simulation;
-			avg_et[1] /= years_of_simulation;
+			avg_ce[1] /= years_of_simulation;
 			avg_gpp[0] /= years_of_simulation;
 			avg_ar[0] /= years_of_simulation;
 			avg_npp[0] /= years_of_simulation;
-			avg_et[0] /= years_of_simulation;
+			avg_ce[0] /= years_of_simulation;
 			avg_gpp_tot /= years_of_simulation;
 			avg_ar_tot /= years_of_simulation;
 			avg_npp_tot /= years_of_simulation;
-			avg_et_tot /= years_of_simulation;
+			avg_ce_tot /= years_of_simulation;
 			Annual_Log ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("AVG/TOT \t\t\t%14g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t\t\t\t\t\t\t%76d \n",
 					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[1], avg_ar[0], avg_ar_tot, (avg_ar[1]*100.0)/avg_gpp[1],
-					 ((avg_ar[0]*100.0)/avg_gpp[0]),(avg_ar_tot*100.0)/avg_gpp_tot,avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[1], avg_et[0], avg_et_tot, tot_dead_tree_tot);
+					 ((avg_ar[0]*100.0)/avg_gpp[0]),(avg_ar_tot*100.0)/avg_gpp_tot,avg_npp[1], avg_npp[0], avg_npp_tot, avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 3)
 		{
 			avg_gpp[2] /= years_of_simulation;
 			avg_ar[2] /= years_of_simulation;
 			avg_npp[2] /= years_of_simulation;
-			avg_et[2] /= years_of_simulation;
+			avg_ce[2] /= years_of_simulation;
 			avg_gpp[1] /= years_of_simulation;
 			avg_ar[1] /= years_of_simulation;
 			avg_npp[1] /= years_of_simulation;
-			avg_et[1] /= years_of_simulation;
+			avg_ce[1] /= years_of_simulation;
 			avg_gpp[0] /= years_of_simulation;
 			avg_ar[0] /= years_of_simulation;
 			avg_npp[0] /= years_of_simulation;
-			avg_et[0] /= years_of_simulation;
+			avg_ce[0] /= years_of_simulation;
 			avg_gpp_tot /= years_of_simulation;
 			avg_ar_tot /= years_of_simulation;
 			avg_npp_tot /= years_of_simulation;
-			avg_et_tot /= years_of_simulation;
+			avg_ce_tot /= years_of_simulation;
 
 			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("AVG/TOT \t\t\t\t%17g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t\t\t\t\t\t\t\t\t%42d \n",
 					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[2], avg_ar[1], avg_ar[0], avg_ar_tot,
 					(avg_ar[2]*100.0)/avg_gpp[2], (avg_ar[1]*100.0)/avg_gpp[1], (avg_ar[0]*100.0)/avg_gpp[0], (avg_ar_tot*100.0)/avg_gpp_tot,
-					avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_et[2], avg_et[1], avg_et[0], avg_et_tot, tot_dead_tree_tot);
+					avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_ce[2], avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
 
 
 			//

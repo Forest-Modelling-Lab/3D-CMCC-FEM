@@ -880,14 +880,16 @@ typedef struct {
 
 	float gapcover[3];
 
+	float daily_evapotranspiration;
+
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
-	float daily_c_int[3];
-	float daily_c_transp[3];
-	float daily_c_evapotransp[3];
+	float daily_c_int[3], daily_tot_c_int;
+	float daily_c_transp[3], daily_tot_c_transp;
+	float daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;

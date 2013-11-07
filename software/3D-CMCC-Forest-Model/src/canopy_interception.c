@@ -63,6 +63,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 					/*last height dominant class processed*/
 					if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 					{
+						//fixme remove form here and use in soil water balance routine
 						/*control*/
 						if (met[month].d[day].rain > c->daily_c_int[c->top_layer])
 						{
@@ -140,10 +141,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 			s->value[RAIN_INTERCEPTED] = 0.0;
 			Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
 			c->daily_c_int[c->heights[height].z] = 0.0;
-			Log("intercepted water from dominant layer = %g mm \n", c->daily_c_int[c->heights[height].z]);
-			c->water_to_soil = met[month].d[day].rain;
-			Log("water to soil = %g mm\n", c->water_to_soil);
+			Log("Intercepted water from layer %d = %g mm \n", c->heights[height].z, c->daily_c_int[c->heights[height].z]);
 		}
+
+		/*compute total daily interception*/
+		c->daily_tot_c_int += c->daily_c_int[c->heights[height].z];
+		Log("Daily total canopy transpiration = %g \n", c->daily_tot_c_int);
 	}
 	/*no interception if tavg < 0 (snow), or outside growing season*/
 
