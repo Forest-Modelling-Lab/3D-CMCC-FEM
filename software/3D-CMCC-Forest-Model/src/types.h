@@ -845,6 +845,7 @@ typedef struct {
 	double layer_cover_dominant;
 	float layer_cover_dominated;
 	float layer_cover_subdominated;
+	float rain_intercepted;
 	float evapotranspiration;
 	float stand_agb;
 	float stand_bgb;
@@ -1084,7 +1085,7 @@ extern void Choose_management (CELL *, SPECIES *, int , int );
 extern void Get_tree_BB (CELL *, int);
 
 
-extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int, int);
+
 
 extern void Get_a_Power_Function (AGE *, SPECIES *);
 
@@ -1094,6 +1095,10 @@ extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
 
 
 extern void Get_biome_fraction (SPECIES *);
+
+/*evapotranspiration block*/
+extern void Get_canopy_interception (SPECIES * s, CELL *c, const MET_DATA *const, int, int, int);
+extern void Get_evapotranspiration (SPECIES * s, CELL *c, const MET_DATA *const, int, int, int);
 
 
 //sergio's functions
