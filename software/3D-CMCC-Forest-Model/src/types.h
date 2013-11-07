@@ -878,7 +878,7 @@ typedef struct {
 
 	float gapcover[3];
 
-
+	float daily_canopy_transpiration[3];
 	float daily_canopy_interception[3];
 
 

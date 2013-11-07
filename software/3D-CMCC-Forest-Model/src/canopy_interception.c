@@ -56,6 +56,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 			{
 				s->value[RAIN_INTERCEPTED] = (met[month].d[day].rain * s->value[FRAC_RAIN_INTERC]) * s->value[CANOPY_COVER_DBHDC];
 				c->daily_canopy_interception[c->top_layer] += s->value[RAIN_INTERCEPTED];
+				//fixme do the same thing for canopy transpiration!!!!
 				/*last height dominant class processed*/
 				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 				{
