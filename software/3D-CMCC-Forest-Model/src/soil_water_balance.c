@@ -12,14 +12,23 @@
 #include "types.h"
 #include "constants.h"
 
-extern void Get_soil_water_balance (CELL *const c)
+//fixme  maybe it can be moved to soil_model.c
+extern void Get_soil_water_balance (CELL *c,  const MET_DATA *const met, int month, int day)
 {
 
-	Log("*********GET DAILY/MONTHLY SOIL WATER BALACE************\n");
-	/*Take off Evapotranspiration*/
-	c->available_soil_water -= c->evapotranspiration ;
+	Log("*********GET %c SOIL WATER BALACE************\n", settings->time);
+	/*compute water to atmosphere*/
+	c->water_to_atmosphere = c->daily_evapotranspiration;
+	Log("Water lost to atmosphere = %g \n", c->water_to_atmosphere);
 
+	/*compute water to soil pool*/
+	c->water_to_soil = met[month].d[day].rain - c->daily_tot_c_int;
+	Log("Water to soil = %g \n", c->water_to_soil);
+
+	/*Take off Evapotranspiration*/
+	c->available_soil_water -= c->daily_evapotranspiration ;
 	Log("ASW at the END of day/month less Evapotraspiration = %g mm\n", c->available_soil_water);
+
 	if ( c->available_soil_water < c->max_asw * site->min_frac_maxasw)
 	{
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");

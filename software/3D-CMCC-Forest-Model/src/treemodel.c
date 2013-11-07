@@ -240,7 +240,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//todo check its position into treemodel
 								Get_snow_met_data (&m->cells[cell], met, month, day);
 
-								Get_soil_water_balance (&m->cells[cell]);
+								Get_soil_water_balance (&m->cells[cell], met, month, day);
 
 								/*reset Evapotranspiration*/
 								//m->cells[cell].evapotranspiration = 0;
@@ -335,7 +335,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
-							Get_soil_water_balance (&m->cells[cell]);
+							Get_soil_water_balance (&m->cells[cell], met, month, day);
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 

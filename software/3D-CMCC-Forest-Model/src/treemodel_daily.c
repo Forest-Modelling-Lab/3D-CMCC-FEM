@@ -270,7 +270,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 
 								/*if here asymmetric competition, otherwise inside the previous if*/
-								Get_soil_water_balance (&m->cells[cell]);
+								Get_soil_water_balance (&m->cells[cell], met, month, day);
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -324,7 +324,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								}
 								/*if here asymmetric competition, otherwise inside the previous if*/
-								Get_soil_water_balance (&m->cells[cell]);
+								Get_soil_water_balance (&m->cells[cell], met, month, day);
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -383,7 +383,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							}
 
 							/*if here asymmetric competition, otherwise inside the previous if*/
-							Get_soil_water_balance (&m->cells[cell]);
+							Get_soil_water_balance (&m->cells[cell], met, month, day);
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 							Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);

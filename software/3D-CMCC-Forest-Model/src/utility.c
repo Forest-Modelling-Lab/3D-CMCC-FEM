@@ -674,7 +674,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily AR = daily total autotrophic respiration (gCM/m2/day)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
-		Daily_Log("Daily ET = daily canopy transpiration(mm/day)\n");
+		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
 	}
 
@@ -695,11 +695,12 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "NPP(0)", "NPP(tot)","ET(0)", "ET(tot)", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
+					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
-				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_aut_resp[0], c->daily_tot_aut_resp, c->daily_npp[0], c->daily_tot_npp, c->daily_et[0],
-				c->daily_tot_et, c->daily_lai[0], c->daily_cc[0]*100, c->daily_dead_tree[0], c->daily_tot_dead_tree);
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
+				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_aut_resp[0], c->daily_tot_aut_resp, c->daily_npp[0], c->daily_tot_npp,
+				c->daily_c_evapotransp[0],	c->daily_tot_c_evapotransp, c->available_soil_water,
+				c->daily_lai[0], c->daily_cc[0]*100, c->daily_dead_tree[0], c->daily_tot_dead_tree);
 
 
 		previous_layer_number = c->annual_layer_number;
@@ -709,30 +710,28 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_c_int[0] = 0;
+		c->daily_c_transp[0] = 0;
+		c->daily_c_evapotransp[0] = 0;
 		c->daily_et[0] = 0;
 		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
-		c->daily_tot_gpp = 0;
-		c->daily_tot_aut_resp = 0;
-		c->daily_tot_npp = 0;
-		c->daily_tot_et = 0;
-		c->daily_tot_dead_tree = 0;
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","ET(1)", "ET(0)", "ET(tot)",
+			Daily_Log ("\n%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d\n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp,
 				c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp,
-				c->daily_et[1], c->daily_et[0], c->daily_tot_et,
+				c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
+				c->available_soil_water,
 				c->daily_lai[1], c->daily_lai[0],
 				c->daily_cc[1]*100, c->daily_cc[0]*100,
 				c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
@@ -744,6 +743,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_c_int[1] = 0;
+		c->daily_c_transp[1] = 0;
+		c->daily_c_evapotransp[1] = 0;
 		c->daily_et[1] = 0;
 		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
@@ -752,15 +753,11 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_c_int[0] = 0;
+		c->daily_c_transp[0] = 0;
+		c->daily_c_evapotransp[0] = 0;
 		c->daily_et[0] = 0;
 		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
-
-		c->daily_tot_gpp = 0;
-		c->daily_tot_aut_resp = 0;
-		c->daily_tot_npp = 0;
-		c->daily_tot_et = 0;
-		c->daily_tot_dead_tree = 0;
 
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
@@ -768,16 +765,18 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n\t%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%7s \t%7s \t%7s \t%7s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)", "ET(2)","ET(1)", "ET(0)",
+			Daily_Log ("\n\t%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%7s \t%7s \t%7s \t%7s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)",
+					"CE(2)","CE(1)", "CE(0)", "ASW",
 					"LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d \t%8d\n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \t%8d \t%8d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp,
 				c->daily_npp[2], c->daily_npp[1],c->daily_npp[0], c->daily_tot_npp,
-				c->daily_et[2],c->daily_et[1], c->daily_et[0], c->daily_tot_et,
+				c->daily_c_evapotransp[2],c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
+				c->available_soil_water,
 				c->daily_lai[2], c->daily_lai[1], c->daily_lai[0],
 				c->daily_cc[2]*100, c->daily_cc[1]*100,c->daily_cc[0]*100,
 				c->daily_dead_tree[2], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
@@ -789,6 +788,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[2] = 0;
 		c->daily_npp[2] = 0;
 		c->daily_c_int[2] = 0;
+		c->daily_c_transp[2] = 0;
+		c->daily_c_evapotransp[2] = 0;
 		c->daily_et[2] = 0;
 		c->daily_cc[2] = 0;
 		c->daily_dead_tree[2] = 0;
@@ -797,6 +798,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_c_int[1] = 0;
+		c->daily_c_transp[1] = 0;
+		c->daily_c_evapotransp[1] = 0;
 		c->daily_et[1] = 0;
 		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
@@ -805,17 +808,24 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_aut_resp[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_c_int[0] = 0;
+		c->daily_c_transp[0] = 0;
+		c->daily_c_evapotransp[0] = 0;
 		c->daily_et[0] = 0;
 		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
 
-		c->daily_tot_gpp = 0;
-		c->daily_tot_aut_resp = 0;
-		c->daily_tot_npp = 0;
-		c->daily_tot_et = 0;
-		c->daily_tot_dead_tree = 0;
+
 
 	}
+
+	c->daily_tot_gpp = 0;
+	c->daily_tot_aut_resp = 0;
+	c->daily_tot_npp = 0;
+	c->daily_tot_c_int = 0;
+	c->daily_tot_c_transp = 0;
+	c->daily_tot_c_evapotransp = 0;
+	c->daily_tot_et = 0;
+	c->daily_tot_dead_tree = 0;
 
 
 	//reset after printed at the end of the day
