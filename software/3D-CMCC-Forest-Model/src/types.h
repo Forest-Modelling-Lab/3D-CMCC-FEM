@@ -846,6 +846,7 @@ typedef struct {
 	float layer_cover_dominated;
 	float layer_cover_subdominated;
 	float rain_intercepted;
+	float water_to_soil;
 	float evapotranspiration;
 	float stand_agb;
 	float stand_bgb;
@@ -876,6 +877,9 @@ typedef struct {
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
 	float gapcover[3];
+
+
+	float daily_canopy_interception[3];
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
