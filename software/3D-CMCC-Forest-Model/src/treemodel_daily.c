@@ -258,6 +258,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								/*evapotranspiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
 								//compute soil evaporation in the last loop of height
 								if( height == 0)
@@ -297,6 +298,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 							}
+							/*outside growing season*/
 							else
 							{
 
@@ -312,9 +314,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 								}
 
-
+								/*evapotranspiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-
+								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);

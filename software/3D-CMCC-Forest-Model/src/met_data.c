@@ -238,13 +238,13 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLengt
 		{
 			met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
 			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %g\n", c->gcorr);
 		}
 		else
 		{
 			met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
 			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %g\n", c->gcorr);
 		}
 		Log("RhoAir = %g\n", met[month].rho_air);
 	}
@@ -254,15 +254,15 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLengt
 		{
 			met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
 			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %g\n", c->gcorr);
 		}
 		else
 		{
 			met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
 			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %g\n", c->gcorr);
 		}
-		Log("RhoAir = %g\n", met[month].d[day].rho_air);
+		//Log("RhoAir = %g\n", met[month].d[day].rho_air);
 	}
 }
 
