@@ -82,10 +82,9 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 					if (c->heights[height].z == c->top_layer-1)
 					{
 						s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
-						Log("Canopy interception (absolute) = %g mm\n", s->value[RAIN_INTERCEPTED]);
+						Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
 						c->daily_c_int[c->top_layer-1] += s->value[RAIN_INTERCEPTED];
 						Log("intercepted water from dominated layer = %g mm \n", c->daily_c_int[c->top_layer-1]);
-						//fixme do the same thing for canopy transpiration!!!!
 						/*last height dominated class processed*/
 						if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 						{
@@ -104,13 +103,10 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 					/*subdominated layer*/
 					else
 					{
-						s->value[RAIN_INTERCEPTED] = (c->water_to_soil * s->value[FRAC_RAIN_INTERC]);
-						Log("Canopy interception (absolute) = %g mm\n", s->value[RAIN_INTERCEPTED]);
-						s->value[RAIN_INTERCEPTED] *= s->value[CANOPY_COVER_DBHDC];
-						Log("Canopy interception (relative) = %g mm\n", s->value[RAIN_INTERCEPTED]);
+						s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+						Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
 						c->daily_c_int[c->top_layer-2] += s->value[RAIN_INTERCEPTED];
 						Log("intercepted water from subdominated layer = %g mm \n", c->daily_c_int[c->top_layer-2]);
-						//fixme do the same thing for canopy transpiration!!!!
 						/*last height subdominated class processed*/
 						if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 						{

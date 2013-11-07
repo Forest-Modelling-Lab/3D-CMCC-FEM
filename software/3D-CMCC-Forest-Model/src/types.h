@@ -847,6 +847,7 @@ typedef struct {
 	float layer_cover_subdominated;
 	float rain_intercepted;
 	float water_to_soil;
+	float water_to_atmosphere;
 	float evapotranspiration;
 	float stand_agb;
 	float stand_bgb;
@@ -886,6 +887,7 @@ typedef struct {
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	float daily_c_int[3];
+	float daily_c_transp[3];
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;

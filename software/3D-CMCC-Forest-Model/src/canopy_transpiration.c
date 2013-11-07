@@ -1,4 +1,12 @@
-/*canopy transpiration.c*/
+/*
+ * canopy_transpiration2.c
+ *
+ *  Created on: 07/nov/2013
+ *      Author: alessio
+ */
+
+
+
 
 /* includes */
 #include <stdio.h>
@@ -63,15 +71,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		rhoAir = met[month].rho_air;
 	}
 
+
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
+	if (s->counter[VEG_UNVEG] == 1)
 	{
-
 		/*Canopy Conductance*/
-
-		//Lai is different among layers so CanCond is different
-		//Log("Lai for Can Cond = %g\n", s->value[LAI]);
-
 		//todo get maximum stomatal conductance from biome data instead canopy max conductance
 
 		if (settings->time == 'm')
@@ -119,21 +123,11 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 
 		defTerm = rhoAir * LAMBDA * (vpd * VPDCONV) * s->value[BLCOND];
-		Log("defTerm = %g\n", defTerm);
+		//Log("defTerm = %g\n", defTerm);
 		duv = (1.0 + E20 + s->value[BLCOND] / CanCond);
 		//Log("duv = %g\n", duv);
 
-		//10 July 2012
-		//net radiation should be takes into account of the ALBEDO effect
-		//for APAR the ALBEDO is 1/3 as large for PAR because less PAR is reflected than NetRad
-		//see Biome-BGC 4.2 tech report
 
-
-		/*
-	Etransp = (e20 * (c->net_radiation * ( 1 - s->value[MAXALB])) + defTerm) / duv;
-	Log("Etransp con ALBEDO = %g J/m^2/sec\n", Etransp);
-	Log("NET RADIATION with ALBEDO = %g \n", c->net_radiation * (1 - s->value[MAXALB]));
-		 */
 		if(settings->time == 'm')
 		{
 			switch (c->monthly_layer_number)
@@ -239,275 +233,435 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 			//canopy transpiration is computed in seconds needs to be converted in hours of sun then day
 			CanopyTranspiration = Etransp / LAMBDA * (met[month].d[day].daylength * 3600.0);   // converted to kg-mm H2o/m2/day
-
+			Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
+			DailyTransp = CanopyTranspiration;
 		}
+	}
 
-		//1Kg m^2 H2o correspond to 1mm H2o
-		Log("Daily Canopy Transpiration = %g mm-Kg H2o/m^2/day\n", CanopyTranspiration);
-		DailyTransp = CanopyTranspiration;
-
-		//initial transpiration from Penman-Monteith (mm/day converted to mm/month)
-		if (settings->time == 'm')
+	/*daily*/
+	if (settings->time == 'd' )
+	{
+		if (s->counter[VEG_UNVEG] == 1)
 		{
-			s->value[MONTH_TRANSP] = CanopyTranspiration * DaysInMonth;
-			Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
+			/*dominant layer*/
+			if (c->heights[height].z == c->top_layer)
+			{
+				s->value[DAILY_TRANSP] = CanopyTranspiration * s->value[CANOPY_COVER_DBHDC];
+				Log("Canopy trasnpiration = %g mm\n", s->value[DAILY_TRANSP]);
+				c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
+				Log("Canopy transpiration from dominant layer = %g mm \n", c->daily_c_transp[c->top_layer]);
+				/*last height dominant class processed*/
+				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
+				{
+					/*control*/
+					if (c->available_soil_water > c->daily_c_transp[c->top_layer])
+					{
+						c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
+					}
+					else
+					{
+						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+						c->daily_c_transp[c->top_layer] = c->available_soil_water;
+					}
+					Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
+				}
+			}
+			/*dominated*/
+			else
+			{
+				/*dominated layer*/
+				if (c->heights[height].z == c->top_layer-1)
+				{
+					s->value[DAILY_TRANSP] =  CanopyTranspiration * s->value[CANOPY_COVER_DBHDC];
+					Log("Canopy trasnpiration = %g mm\n", s->value[DAILY_TRANSP]);
+					c->daily_c_transp[c->top_layer-1] += s->value[DAILY_TRANSP];
+					Log("Canopy transpiration  water from dominated layer = %g mm \n", c->daily_c_transp[c->top_layer-1]);
+					/*last height dominated class processed*/
+					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
+					{
+						/*control*/
+						if (c->available_soil_water > c->daily_c_transp[c->top_layer])
+						{
+							c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
+						}
+						else
+						{
+							Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+							c->daily_c_transp[c->top_layer] = c->available_soil_water;
+						}
+						Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
+					}
+				}
+				/*subdominated layer*/
+				else
+				{
+					s->value[DAILY_TRANSP] =  CanopyTranspiration * s->value[CANOPY_COVER_DBHDC];
+					Log("Canopy trasnpiration = %g mm\n", s->value[DAILY_TRANSP]);
+					c->daily_c_transp[c->top_layer-2] += s->value[DAILY_TRANSP];
+					Log("Canopy transpiration  water from dominated layer = %g mm \n", c->daily_c_transp[c->top_layer-2]);
+					/*last height subdominated class processed*/
+					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
+					{
+						/*control*/
+						if (c->available_soil_water > c->daily_c_transp[c->top_layer])
+						{
+							c->water_to_atmosphere = c->daily_c_transp[c->top_layer];
+						}
+						else
+						{
+							Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+							c->daily_c_transp[c->top_layer] = c->available_soil_water;
+						}
+						Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
+					}
+				}
+			}
 		}
 		else
 		{
-			if (day == 0)
-			{
-				s->value[MONTH_TRANSP] = 0;
-				Log("Monthly Canopy Transpiration at day 0 = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
-			}
-			s->value[DAILY_TRANSP] = CanopyTranspiration;
-			s->value[MONTH_TRANSP] += s->value[DAILY_TRANSP];
-			Log("Monthly Canopy Transpiration = %g mm-Kg H2o/m^2/month\n", s->value[MONTH_TRANSP]);
+			s->value[DAILY_TRANSP] = 0.0;
+			Log("Canopy interception = %g mm\n", s->value[DAILY_TRANSP]);
+			c->daily_c_transp[c->heights[height].z] = 0.0;
+			Log("Intercepted water from dominant layer = %g mm \n", c->daily_c_transp[c->heights[height].z]);
+			c->water_to_atmosphere = 0.0 ;
+			Log("water to atmosphere = %g mm\n", c->water_to_atmosphere);
 		}
 	}
-	else
+	/*no interception if tavg < 0 (snow), or outside growing season*/
+
+	//fixme do it as in daily version and following daily transpiration!!!
+	/*monthly*/
+	/*
+	if (settings->time == 'm' )
 	{
-		s->value[DAILY_TRANSP] = 0;
+		if (met[month].tavg > 0.0 && met[month].rain > 0.0)
+		{
+			if (s->counter[VEG_UNVEG] == 1)
+			{
+				if (c->heights[height].z == c->top_layer)
+				{
+					s->value[RAIN_INTERCEPTED] = (met[month].rain * s->value[FRAC_RAIN_INTERC]) * s->value[CANOPY_COVER_DBHDC];
+					Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
+					c->daily_c_int[c->top_layer] += s->value[RAIN_INTERCEPTED];
+					//fixme do the same thing for canopy transpiration!!!!
+					//last height dominant class processed
+					if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
+					{
+						//compute effective amount of water intercepted
+						c->daily_c_int[c->top_layer] *= met[month].rain * c->gapcover[c->top_layer];
+						Log("intercepted water from top layer = %g mm \n", c->daily_c_int[c->top_layer]);
+					}
+				}
+			}
+			else
+			{
+				s->value[RAIN_INTERCEPTED] = 0.0;
+				Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
+				c->daily_c_int[c->top_layer] = 0.0;
+				Log("Intercepted water from top layer = %g mm \n", c->daily_c_int[c->top_layer]);
+			}
+		}
+		else
+		{
+			s->value[RAIN_INTERCEPTED] = 0.0;
+			Log("Canopy interception = %g mm\n", s->value[RAIN_INTERCEPTED]);
+			c->daily_c_int[c->top_layer] = 0.0;
+			Log("intercepted water from top layer = %g mm \n", c->daily_c_int[c->top_layer]);
+		}
 	}
-
-	//Annual_Log("Canopy Transpiration layer %d = %g mm-Kg H2o/m^2/month\n", c->heights[height].z, s->value[DAILY_TRANSP]);
-
-	i = c->heights[height].z;
-
-	//fixme it is just canopy transp no et!!!!
-	c->daily_et[i] += s->value[DAILY_TRANSP];
-	c->monthly_et[i] += s->value[DAILY_TRANSP];
-	c->annual_et[i] += s->value[DAILY_TRANSP];
-
-	c->daily_tot_et += s->value[DAILY_TRANSP];
-	c->monthly_tot_et += s->value[DAILY_TRANSP];
-	c->annual_tot_et += s->value[DAILY_TRANSP];
-
-
-	//MONTHLY ET
-	//stand level
-	/*
-	c->monthly_et += s->value[DAILY_TRANSP];
 	*/
 
-	//ANNUAL ET
-	//stand level
-/*
-	c->annual_et += s->value[DAILY_TRANSP];
-	*/
-
-	//5 october 2012 "simplified evapotranspiration modifier" f(E), Angelo Nolè
-	//alpha e beta andranno inserite come specie specifiche!!!!
-	/*
-
-	s->value[F_EVAPO] = 1 - exp (- alpha_evapo * pow (c->soil_moist_ratio, beta_evapo));
-	Log("ANGELO F_EVAPO = %g \n", s->value[F_EVAPO] );
 
 
-	s->value[MONTH_TRANSP] *= s->value[F_EVAPO];
-	Log("ANGELO MonthTransp = %g \n", s->value[MONTH_TRANSP]);
-	 */
 
 
+
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/*BIOME VERSION*/
 
 	/* leaf boundary-layer conductance */
-	gl_bl_corr = s->value[BLCOND]* c->gcorr;
-	//Log("gl_bl_corr = %g\n", gl_bl_corr);
+		gl_bl_corr = s->value[BLCOND]* c->gcorr;
+		//Log("gl_bl_corr = %g\n", gl_bl_corr);
 
-	/* leaf cuticular conductance */
-	//todo insert CCOND into species.txt
-	gl_c_corr = /*s->value[CCOND]*/ 0.00006 * c->gcorr;
-	//Log("gl_c_corr = %g\n", gl_c_corr);
-
-
-	/* leaf stomatal conductance: first generate multipliers, then apply them
-	to maximum stomatal conductance */
-	/* calculate stomatal conductance radiation multiplier: */
+		/* leaf cuticular conductance */
+		//todo insert CCOND into species.txt
+		gl_c_corr = /*s->value[CCOND]*/ 0.00006 * c->gcorr;
+		//Log("gl_c_corr = %g\n", gl_c_corr);
 
 
-	/* photosynthetic photon flux density  */
-	ppfd_sun = s->value[APAR] * EPAR;
-	//Log("ppfd_sun = %g\n", ppfd_sun);
-
-	/* photosynthetic photon flux density conductance control */
-	ppfd_sun /= (PPFD50 + ppfd_sun);
-	//Log("ppfd_sun = %g\n", ppfd_sun);
+		/* leaf stomatal conductance: first generate multipliers, then apply them
+		to maximum stomatal conductance */
+		/* calculate stomatal conductance radiation multiplier: */
 
 
-	/* apply all multipliers to the maximum stomatal conductance */
-	//Currently I will use the 3-PG modifiers
-	final_ppfd_sun = ppfd_sun * s->value[F_SW] * s->value[F_T] * s->value[F_VPD];
-	//Log("final_ppfd_sun = %g\n", final_ppfd_sun);
-	gl_s_sun = /*s->value[MAX_STOM_COND]*/ 0.006 * final_ppfd_sun * c->gcorr;
-	//Log("gl_s_sun = %g\n", gl_s_sun);
+		/* photosynthetic photon flux density  */
+		ppfd_sun = s->value[APAR] * EPAR;
+		//Log("ppfd_sun = %g\n", ppfd_sun);
 
-	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
-
-	gl_e_wv = gl_bl_corr;
-	//Log("gl_e_wv = %g\n", gl_e_wv);
+		/* photosynthetic photon flux density conductance control */
+		ppfd_sun /= (PPFD50 + ppfd_sun);
+		//Log("ppfd_sun = %g\n", ppfd_sun);
 
 
+		/* apply all multipliers to the maximum stomatal conductance */
+		//Currently I will use the 3-PG modifiers
+		final_ppfd_sun = ppfd_sun * s->value[F_SW] * s->value[F_T] * s->value[F_VPD];
+		//Log("final_ppfd_sun = %g\n", final_ppfd_sun);
+		gl_s_sun = /*s->value[MAX_STOM_COND]*/ 0.006 * final_ppfd_sun * c->gcorr;
+		//Log("gl_s_sun = %g\n", gl_s_sun);
 
-	/* Leaf conductance to transpired water vapor, per unit projected
-	LAI.  This formula is derived from stomatal and cuticular conductances
-	in parallel with each other, and both in series with leaf boundary
-	layer conductance. */
+		/* Leaf conductance to evaporated water vapor, per unit projected LAI */
 
-	gl_t_wv_sun = (gl_bl_corr * (gl_s_sun))/(gl_bl_corr + gl_s_sun + gl_c_corr);
-	//Log("gl_t_wv_sun = %g\n", gl_t_wv_sun);
-
-	/* Leaf conductance to sensible heat, per unit all-sided LAI */
-
-	gl_sh = gl_bl_corr;
-	//Log("gl_sh = %g\n", gl_sh);
+		gl_e_wv = gl_bl_corr;
+		//Log("gl_e_wv = %g\n", gl_e_wv);
 
 
-	if (settings->time == 'm')
-	{
-		if (settings->spatial == 'u')
+
+		/* Leaf conductance to transpired water vapor, per unit projected
+		LAI.  This formula is derived from stomatal and cuticular conductances
+		in parallel with each other, and both in series with leaf boundary
+		layer conductance. */
+
+		gl_t_wv_sun = (gl_bl_corr * (gl_s_sun))/(gl_bl_corr + gl_s_sun + gl_c_corr);
+		//Log("gl_t_wv_sun = %g\n", gl_t_wv_sun);
+
+		/* Leaf conductance to sensible heat, per unit all-sided LAI */
+
+		gl_sh = gl_bl_corr;
+		//Log("gl_sh = %g\n", gl_sh);
+
+
+		if (settings->time == 'm')
 		{
-			lai = s->value[LAI];
+			if (settings->spatial == 'u')
+			{
+				lai = s->value[LAI];
+			}
+			else
+			{
+				lai = met[month].ndvi_lai;
+			}
 		}
 		else
 		{
-			lai = met[month].ndvi_lai;
+			if (settings->spatial == 'u')
+			{
+				lai = s->value[LAI];
+			}
+			else
+			{
+				lai = met[month].d[day].ndvi_lai;
+			}
 		}
-	}
-	else
-	{
-		if (settings->spatial == 'u')
+
+		/* Canopy conductance to evaporated water vapor */
+
+		gc_e_wv = gl_e_wv * lai;
+		//Log("LAI = %g\n", lai);
+		//Log("gc_e_wv = %g\n", gc_e_wv);
+
+		/* Canopy conductane to sensible heat */
+
+		gc_sh = gl_sh * lai;
+		//Log("gc_sh = %g\n", gc_sh);
+
+
+		rv = 1.0/gc_e_wv;
+		//Log("rv = %g\n", rv);
+
+		rh = 1.0/gc_sh;
+		//Log("rh = %g\n", rh);
+		//todo make a better function using values from light.c
+
+		swabs = c->net_radiation * (1 -exp (-s->value[K]+lai));
+		//Log("swabs = %g\n", swabs);
+
+
+		/*PENMAN-MONTEITH*/
+		/* call penman-monteith function, returns e in kg/m2/s */
+
+		//todo per finire la parte di BIOME devo inserire anche la parte di VPD
+		/* assign tavg (Celsius) and tav_k (Kelvins) */
+		if (settings->time == 'm')
 		{
-			lai = s->value[LAI];
+			if (met[month].tday == NO_DATA)
+			{
+				tav_k = met[month].tavg + 273.15;
+				/* calculate density of air (rho) as a function of air temperature */
+				rhoAir = 1.292 - (0.00428 * met[month].tavg);
+				/* calculate latent heat of vaporization as a function of ta */
+				lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
+				/* calculate temperature offsets for slope estimate */
+				t1 = met[month].tavg+dt;
+				t2 = met[month].tavg-dt;
+			}
+			else
+			{
+				tav_k = met[month].tday + 273.15;
+				/* calculate density of air (rho) as a function of air temperature */
+				rhoAir = 1.292 - (0.00428 * met[month].tday);
+				/* calculate latent heat of vaporization as a function of ta */
+				lhvap = 2.5023e6 - 2430.54 * met[month].tday;
+				/* calculate temperature offsets for slope estimate */
+				t1 = met[month].tday+dt;
+				t2 = met[month].tday-dt;
+			}
 		}
 		else
 		{
-			lai = met[month].d[day].ndvi_lai;
+			if (met[month].tday == NO_DATA)
+			{
+				tav_k = met[month].d[day].tavg + 273.15;
+				/* calculate density of air (rho) as a function of air temperature */
+				rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
+				/* calculate latent heat of vaporization as a function of ta */
+				lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
+				/* calculate temperature offsets for slope estimate */
+				t1 = met[month].d[day].tavg+dt;
+				t2 = met[month].d[day].tavg-dt;
+			}
+			else
+			{
+				tav_k = met[month].d[day].tday + 273.15;
+				/* calculate density of air (rho) as a function of air temperature */
+				rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
+				/* calculate latent heat of vaporization as a function of ta */
+				lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
+				/* calculate temperature offsets for slope estimate */
+				t1 = met[month].d[day].tday+dt;
+				t2 = met[month].d[day].tday-dt;
+			}
 		}
-	}
-
-	/* Canopy conductance to evaporated water vapor */
-
-	gc_e_wv = gl_e_wv * lai;
-	//Log("LAI = %g\n", lai);
-	//Log("gc_e_wv = %g\n", gc_e_wv);
-
-	/* Canopy conductane to sensible heat */
-
-	gc_sh = gl_sh * lai;
-	//Log("gc_sh = %g\n", gc_sh);
-
-
-	rv = 1.0/gc_e_wv;
-	//Log("rv = %g\n", rv);
-
-	rh = 1.0/gc_sh;
-	//Log("rh = %g\n", rh);
-	//todo make a better function using values from light.c
-
-	swabs = c->net_radiation * (1 -exp (-s->value[K]+lai));
-	//Log("swabs = %g\n", swabs);
-
-
-	/*PENMAN-MONTEITH*/
-	/* call penman-monteith function, returns e in kg/m2/s */
-
-	//todo per finire la parte di BIOME devo inserire anche la parte di VPD
-	/* assign tavg (Celsius) and tav_k (Kelvins) */
-	if (settings->time == 'm')
-	{
-		if (met[month].tday == NO_DATA)
-		{
-			tav_k = met[month].tavg + 273.15;
-			/* calculate density of air (rho) as a function of air temperature */
-			rhoAir = 1.292 - (0.00428 * met[month].tavg);
-			/* calculate latent heat of vaporization as a function of ta */
-			lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
-			/* calculate temperature offsets for slope estimate */
-			t1 = met[month].tavg+dt;
-			t2 = met[month].tavg-dt;
-		}
-		else
-		{
-			tav_k = met[month].tday + 273.15;
-			/* calculate density of air (rho) as a function of air temperature */
-			rhoAir = 1.292 - (0.00428 * met[month].tday);
-			/* calculate latent heat of vaporization as a function of ta */
-			lhvap = 2.5023e6 - 2430.54 * met[month].tday;
-			/* calculate temperature offsets for slope estimate */
-			t1 = met[month].tday+dt;
-			t2 = met[month].tday-dt;
-		}
-	}
-	else
-	{
-		if (met[month].tday == NO_DATA)
-		{
-			tav_k = met[month].d[day].tavg + 273.15;
-			/* calculate density of air (rho) as a function of air temperature */
-			rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
-			/* calculate latent heat of vaporization as a function of ta */
-			lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
-			/* calculate temperature offsets for slope estimate */
-			t1 = met[month].d[day].tavg+dt;
-			t2 = met[month].d[day].tavg-dt;
-		}
-		else
-		{
-			tav_k = met[month].d[day].tday + 273.15;
-			/* calculate density of air (rho) as a function of air temperature */
-			rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
-			/* calculate latent heat of vaporization as a function of ta */
-			lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
-			/* calculate temperature offsets for slope estimate */
-			t1 = met[month].d[day].tday+dt;
-			t2 = met[month].d[day].tday-dt;
-		}
-	}
 
 
 
-	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = rhoAir * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
+		/* calculate resistance to radiative heat transfer through air, rr */
+		rr = rhoAir * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
 
-	/* calculate combined resistance to convective and radiative heat transfer,
-    parallel resistances : rhr = (rh * rr) / (rh + rr) */
-	rhr = (rh * rr) / (rh + rr);
+		/* calculate combined resistance to convective and radiative heat transfer,
+	    parallel resistances : rhr = (rh * rr) / (rh + rr) */
+		rhr = (rh * rr) / (rh + rr);
 
-	/* calculate saturation vapor pressures at t1 and t2 */
-	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+		/* calculate saturation vapor pressures at t1 and t2 */
+		pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+		pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
-	/* calculate slope of pvs vs. T curve, at ta */
-	esse = (pvs1-pvs2) / (t1-t2);
+		/* calculate slope of pvs vs. T curve, at ta */
+		esse = (pvs1-pvs2) / (t1-t2);
 
-	/* calculate evaporation, in W/m^2  */
-	evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
-			( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
+		/* calculate evaporation, in W/m^2  */
+		evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
+				( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
 
-	/* covert evaporation into kg/m^2/s */
-	evap /= lhvap;
+		/* covert evaporation into kg/m^2/s */
+		evap /= lhvap;
 
-	/* convert evaporation into kg/m^2/day */
-	evap *= 84600;
-	//Log("Daily transpiration from biome = %g\n", evap);
-
-	if (settings->time == 'm')
-	{
-		/* convert evaporation into kg/m^2/month */
-		evap = evap * DaysInMonth;
-		//Log("Montlhy transpiration from biome = %g\n", evap);
-	}
-	else
-	{
-		/* convert evaporation into kg/m^2/month */
+		/* convert evaporation into kg/m^2/day */
+		evap *= 84600;
 		//Log("Daily transpiration from biome = %g\n", evap);
-		//Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
-	}
+
+		if (settings->time == 'm')
+		{
+			/* convert evaporation into kg/m^2/month */
+			evap = evap * DaysInMonth;
+			//Log("Montlhy transpiration from biome = %g\n", evap);
+		}
+		else
+		{
+			/* convert evaporation into kg/m^2/month */
+			//Log("Daily transpiration from biome = %g\n", evap);
+			//Log("Montlhy transpiration from biome = %g\n", evap*DaysInMonth);
+		}
 
 
-	/* calculate the time required to evaporate all the canopy water */
-	evap_dayl = met[month].d[day].rain/e;
-	Log("evap_dayl = %g\n", evap_dayl);
-
+		/* calculate the time required to evaporate all the canopy water */
+		evap_dayl = met[month].d[day].rain/e;
+		Log("evap_dayl = %g\n", evap_dayl);
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
