@@ -236,24 +236,12 @@ void Get_biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, 
 	}
 	else
 	{
-		if (settings->presence == 't')
-		{
-			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-			Log("CURRENT Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
-			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = s->value[VOLUME] / (float)c->heights[height].ages[age].value ;
-			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI]);
-		}
-		else
-		{
-			Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
-			s->value[CAI] = s->value[VOLUME] * s->value[PERC] - s->value[PREVIOUS_VOLUME];
-			Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (float)c->heights[height].ages[age].value ;
-			Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI] );
-		}
+		Log("PREVIOUS Volume = %g m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
+		s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
+		s->value[CAI] = s->value[VOLUME] * s->value[PERC] - s->value[PREVIOUS_VOLUME];
+		Log("Yearly Stand CAI = %g m^3/area/yr\n", s->value[CAI]);
+		s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (float)c->heights[height].ages[age].value ;
+		Log("Yearly Stand MAI = %g m^3/area/yr \n", s->value[MAI] );
 	}
 }
 
@@ -270,20 +258,11 @@ void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 
 
 	Log("-for Stand\n");
-	if (settings->presence == 't')
-	{
-		c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB];
-		Log("Yearly Stand AGB = %g tDM/area year\n", c->stand_agb);
-		c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB];
-		Log("Yearly Stand BGB = %g tDM/area year\n", c->stand_bgb);
-	}
-	else
-	{
-		c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB] * c->heights[height].ages[age].species[species].value[PERC];
-		Log("Yearly Stand AGB = %g tDM/area year\n", c->stand_agb);
-		c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB] * c->heights[height].ages[age].species[species].value[PERC];
-		Log("Yearly Stand BGB = %g tDM/area year\n", c->stand_bgb);
-	}
+
+	c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB] * c->heights[height].ages[age].species[species].value[PERC];
+	Log("Yearly Stand AGB = %g tDM/area year\n", c->stand_agb);
+	c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB] * c->heights[height].ages[age].species[species].value[PERC];
+	Log("Yearly Stand BGB = %g tDM/area year\n", c->stand_bgb);
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
 

@@ -625,13 +625,13 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		Log ("Temporal scale = daily \n");
 	}
 
-	if (settings->presence == 't')
+	if (settings->sym_water_competition == 'y')
 	{
-		Log ("Vegetation Presence = total \n");
+		Log ("Symmetric water competition\n");
 	}
 	else
 	{
-		Log ("Vegetation Presence = percentage \n");
+		Log ("Asymmetric water competition\n");
 	}
 
 	/*Site definition*/

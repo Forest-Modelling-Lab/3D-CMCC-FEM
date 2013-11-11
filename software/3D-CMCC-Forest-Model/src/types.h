@@ -145,7 +145,7 @@ typedef struct
 	char version,
 		spatial, // must be 's' or 'u' (spatial or unspatial)
 		time,  // must be 'm' or 'd' (monthly or daily)
-		presence; // must be 't' or 'p' (total or percentage)
+		sym_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
 
 	char daymet[3];
 

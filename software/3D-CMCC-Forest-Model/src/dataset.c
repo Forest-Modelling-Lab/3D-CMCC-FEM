@@ -536,7 +536,7 @@ int importSettingsFile(char *fileName)
 						break;
 						//todo maybe delete it and changed with plot/regional scale spatial resolution
 					case 3:
-						settings->presence = *pch;
+						settings->sym_water_competition = *pch;
 						break;
 					case 4:
 						strncpy (settings->daymet, (const char*)pch, 3);

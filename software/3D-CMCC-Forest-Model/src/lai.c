@@ -71,13 +71,20 @@ void Get_lai (SPECIES *const s, const int years, const int month, const int day)
 		else
 		{
 			Log("\n--GET_DAILY_LAI--\n");
-			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS] );
+			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS]);
+			Log("BIOMASS_RESERVE_CTEM = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+			Log("PEAK_Y_LAI = %g\n", s->value[PEAK_Y_LAI]);
+			Log("LAI = %g\n", s->counter[LAI]);
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 			if (s->counter[VEG_DAYS] == 1)
 			{
 				s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
 				Log("Days for bud burst = %g\n", s->value[BUD_BURST]);
+			}
+			if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+			{
+				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
 			}
 			/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
 			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)

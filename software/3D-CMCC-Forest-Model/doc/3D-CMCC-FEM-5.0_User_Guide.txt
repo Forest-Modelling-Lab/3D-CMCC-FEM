@@ -95,7 +95,7 @@ The file "settings.txt" permits to set the model run, choosing:
 -between "s" or "u" the version spatial or un-spatial of the model,
 -its cell resolution and other parameters to run the model.
 
--keep "presence" set to 't'
+
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 

@@ -74,7 +74,6 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	{
 
 		/*foliage*/
-
 		exponent_tday = (met[month].d[day].tday - 20.0) / 10.0;
 
 		t1 = pow(q10, exponent_tday);
