@@ -154,7 +154,53 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 				}
 				else
 				{
-					c->heights[height].ages[age].species[species].phenology_phase = 3;
+					//defining phenology phase
+						if (settings->spatial == 'u') //for unspatial version
+						{
+							if(settings->time == 'd') //for daily version
+							{
+								//fixme
+								/* a very simplistic way to define a phenological phase for evergreen*/
+								/*just two phase are considered
+								 * shoot elongation
+								 * secondary growth*/
+								/*see Ludeke et al., 1194*/
+								/*Beginning of growing season*/
+								if (met[month].d[day].tday >= c->heights[height].ages[age].species[species].value[GROWTHSTART]
+									 && c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]
+									 && month < 6)
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 1;
+								}
+								/*normal growth*/
+								if (c->heights[height].ages[age].species[species].value[LAI] > c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 2;
+								}
+							}
+							else
+							{
+								//fixme
+								/* a very simplistic way to define a phenological phase for evergreen*/
+								/*just two phase are considered
+								 * shoot elongation
+								 * secondary growth*/
+								/*see Ludeke et al., 1194*/
+								/*Beginning of growing season*/
+								if (met[month].tday >= c->heights[height].ages[age].species[species].value[GROWTHSTART]
+									 && c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]
+									 && month < 6)
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 1;
+								}
+								/*normal growth*/
+								if (c->heights[height].ages[age].species[species].value[LAI] > c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								{
+									c->heights[height].ages[age].species[species].phenology_phase = 2;
+								}
+								//fixme check for other possible solutions
+							}
+						}
 				}
 				Log("phenology phase = %d\n", c->heights[height].ages[age].species[species].phenology_phase);
 			}

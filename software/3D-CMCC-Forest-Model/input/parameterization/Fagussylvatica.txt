@@ -48,10 +48,9 @@ GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 
 GROWTHSTART	120       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C ettore with t base = 5°C
 						//1400 through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH	12      //minimum day length for fagus through satellite images
+MINDAYLENGTH	11.30      //minimum day length for fagus from ettore  12 through satellite images
 
 //SOIL WATER
-//modified 13 feb 2012
 //define the soil water modifier response in function of needless of the species to the soil water content
 SWPOPEN	-0.6 //for Fagus sylvatica Mollicone et al., 2002
 SWPCLOSE	-2.3 //For Fagus sylvatica Mollicone et al., 2002

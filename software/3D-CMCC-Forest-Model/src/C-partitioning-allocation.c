@@ -1518,7 +1518,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			//7 May 2012
 			//compute static ratio of allocation between fine
-			//fixme see if chage with new parameters checked in "Get_biome_fraction"
+			//fixme see if change with new parameters checked in "Get_biome_fraction"
 			s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 			//Log("Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 			Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
@@ -1535,6 +1535,25 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//(Arora V. K., Boer G. J., GCB, 2005)
 
 			Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
+
+			Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+			/*
+
+			switch (s->phenology_phase)
+			{
+			case 1:
+				Log("LAI = %g \n", s->value[LAI]);
+				Log("**Maximum Growth**\n");
+				Log("Allocating into foliage and stem pools\n");
+
+
+				break;
+			case 2:
+
+
+				break;
+			}
+			*/
 
 
 
@@ -1650,14 +1669,14 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//control if new Lai exceeds Peak Lai
 			if (s->value[LAI] > s->value[PEAK_Y_LAI])
 			{
-				Log("ATTENTION LAI > PEAK_Y_LAI!!! reallocate biomass exceeding\n");
+				Log("ATTENTION LAI > PEAK_Y_LAI!!! reallocate foliage biomass exceeding\n");
 				Log("LAI = %g \n", s->value[LAI]);
 
 
-				Log("Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
+				Log("Re-allocating foliage exceeding biomass into the three pools Ws+Wr+Wreserve\n");
 
 				Biomass_exceeding = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM];
-				Log("Foliar Biomass exceeding = %g tDM \n", Biomass_exceeding);
+				Log("Foliage Biomass exceeding = %g tDM \n", Biomass_exceeding);
 				Log("Biomass Foliage = %g tDM/area \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 				s->value[BIOMASS_FOLIAGE_CTEM] = s->value[MAX_BIOMASS_FOLIAGE_CTEM];
 				Log("Max Biomass Foliage = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
@@ -1764,36 +1783,6 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 			}
-/*
-			Log("-LITTERFALL FOR EVEGREEN-\n");
-			s->value[DEL_LITTER] = gammaF s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
-			Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
-			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
-
-			Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITTFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
-			if (s->value[DEL_FOLIAGE_CTEM]<s->value[DEL_LITTER])
-			{
-				Log("Del_litter exceeds del_foliage!!\n");
-				s->value[DEL_FOLIAGE_CTEM] = s->value[DEL_LITTER];
-			}
-
-			s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
-			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-
-			//recompute LAI
-			//for dominant layer with sunlit foliage
-			if (c->top_layer == c->heights[height].z)
-			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-			}
-			//for dominated shaded foliage
-			else
-			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
-			}
-			Log("Lai after litterfall = %g\n", s->value[LAI]);
-*/
-
 		}
 
 		if (settings->spatial == 's')
@@ -2074,36 +2063,6 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 			s->value[DEL_Y_BB] += s->value[DEL_BB];
 		}
-
-		/*
-		Log("-LITTERFALL FOR EVEGREEN-\n");
-		s->value[DEL_LITTER] = gammaF s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
-		Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
-		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
-
-		Log("BALANCE BETWEEN BIOM FOLIAGE INC - LITTFALL = %g\n", s->value[DEL_FOLIAGE_CTEM] - s->value[DEL_LITTER]);
-		if (s->value[DEL_FOLIAGE_CTEM]<s->value[DEL_LITTER])
-		{
-			Log("Del_litter exceeds del_foliage!!\n");
-			s->value[DEL_FOLIAGE_CTEM] = s->value[DEL_LITTER];
-		}
-
-		s->value[BIOMASS_FOLIAGE_CTEM] -=  s->value[DEL_LITTER];
-		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-
-		//recompute LAI
-		//for dominant layer with sunlit foliage
-		if (c->top_layer == c->heights[height].z)
-		{
-			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-		}
-		//for dominated shaded foliage
-		else
-		{
-			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
-		}
-		Log("Lai after litterfall = %g\n", s->value[LAI]);
-		*/
 	}
 
 	//for daily_Log file only if there's one class

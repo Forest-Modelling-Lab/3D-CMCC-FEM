@@ -12,17 +12,16 @@ extern void Get_litter (CELL *c, SPECIES *const s, const int years)
 	Log("****LITTER BIOMASS****\n");
 	//inserire anche la biomassa dei semi non germogliati
 
-    if (!years)
-      {
-          c->litter += s->value[DEL_LITTER] + site->initialLitter;
-          Log("Total Litter = %g tDM/area\n", c->litter);
-      }
-      else
-      {
-          c->litter += s->value[DEL_LITTER];
-          Log("Total Litter = %g tDM/area\n", c->litter);
-      }
-
+	if (!years)
+  {
+	  c->litter += s->value[DEL_LITTER] + site->initialLitter;
+	  Log("Total Litter = %g tDM/area\n", c->litter);
+  }
+  else
+  {
+	  c->litter += s->value[DEL_LITTER];
+	  Log("Total Litter = %g tDM/area\n", c->litter);
+  }
 	//reset
 	s->value[DEL_LITTER] = 0;
 }

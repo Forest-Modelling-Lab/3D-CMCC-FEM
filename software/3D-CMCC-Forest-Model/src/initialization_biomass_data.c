@@ -157,7 +157,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			s->value[BIOMASS_RESERVE_CTEM] = s->value[WS_sap] * s->value[SAP_WRES];
 			Log("-----Reserve Biomass initialization data  = %g tDM/cell \n", s->value[BIOMASS_RESERVE_CTEM]);
 			Log("-----Reserve Biomass initialization data  = %g KgC/cell \n", s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000);
-			Log("-----Reserve Biomass initialization data  = %g KgC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
+			Log("-----Reserve Biomass initialization data  = %g gC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
 
 		}
 		else
