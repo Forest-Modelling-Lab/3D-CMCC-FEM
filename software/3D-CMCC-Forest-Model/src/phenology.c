@@ -166,7 +166,7 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 								 * secondary growth*/
 								/*see Ludeke et al., 1194*/
 								/*Beginning of growing season*/
-								if (met[month].d[day].tday >= c->heights[height].ages[age].species[species].value[GROWTHSTART]
+								if (met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART]
 									 && c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]
 									 && month < 6)
 								{
