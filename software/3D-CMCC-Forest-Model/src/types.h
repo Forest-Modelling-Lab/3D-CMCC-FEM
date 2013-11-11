@@ -145,7 +145,7 @@ typedef struct
 	char version,
 		spatial, // must be 's' or 'u' (spatial or unspatial)
 		time,  // must be 'm' or 'd' (monthly or daily)
-		sym_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
+		symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
 
 	char daymet[3];
 
@@ -210,14 +210,9 @@ enum {
 	LAIMAXINTCPTN,              //LAI for maximum rainfall interception
 	MAXINTCPTN,                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 
-
-	//SPECIFIC LEAF AREA 3PG
-	SLA0,                       //Specific Leaf Area at age 0 (m^2/kg)
-	SLA1,                       //Specific Laef Area for mature leaves (m^2/kg)
-	TSLA,                       //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
-
 	//SPECIFIC LEAF AREA 3DVTModel
 	SLA,                         //Specific Leaf Area cm^2/g
+	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
 
 	//FRACTION BRANCH-BARK
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)

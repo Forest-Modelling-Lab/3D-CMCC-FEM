@@ -13,13 +13,11 @@ LAIGCX	4               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.2    //Maximum proportion of rainfall interception evaporated from canopy
 
-//SPECIFIC LEAF AREA
-SLA0	0               //Specific Leaf Area at age 0 (m^2/kg)
-SLA1	0               //Specific Laef Area for mature leaves (m^2/kg)
-TSLA	0             //Age at which Specific Leaf Area = (SLA0 + SLA1)/2 (years)
+
 //SPECIFIC LEAF AREA 
 SLA	256             //Specific Leaf Area cm^2/gC  
-					//from 256 to 175 Wang et al., 2006					
+					//from 256 to 175 Wang et al., 2006		
+SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA			
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.2            //Branch and Bark fraction at age 0 for C. sativa Ranger et al 1996

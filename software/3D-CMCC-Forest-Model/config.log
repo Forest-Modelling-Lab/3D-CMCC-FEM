@@ -252,7 +252,7 @@ configure:4089: checking sys/param.h usability
 configure:4089: gcc -c -g -O2  conftest.c >&5
 configure:4089: $? = 0
 configure:4089: result: yes
-configure:4089: checking sys/param.h sym_water_competition
+configure:4089: checking sys/param.h symmetric_water_competition
 configure:4089: gcc -E  conftest.c
 configure:4089: $? = 0
 configure:4089: result: yes
@@ -264,7 +264,7 @@ configure:4089: checking math.h usability
 configure:4089: gcc -c -g -O2  conftest.c >&5
 configure:4089: $? = 0
 configure:4089: result: yes
-configure:4089: checking math.h sym_water_competition
+configure:4089: checking math.h symmetric_water_competition
 configure:4089: gcc -E  conftest.c
 configure:4089: $? = 0
 configure:4089: result: yes

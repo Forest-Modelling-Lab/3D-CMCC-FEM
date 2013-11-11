@@ -261,16 +261,33 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
-								//compute soil evaporation in the last loop of height
-								if( height == 0)
+								/*check for symmetric water competition*/
+								/*if symmetric competition for water*/
+								Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
+								if (settings->symmetric_water_competition == 'y')
 								{
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									if( height == 0)
+									{
+										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										Get_soil_water_balance (&m->cells[cell], met, month, day);
+									}
 								}
-
-								/*if here asymmetric competition, otherwise inside the previous if*/
-								Get_soil_water_balance (&m->cells[cell], met, month, day);
+								/*asymmetric water competition*/
+								else
+								{
+									/*removing at each loop an amount of water transpired by each class*/
+									if( height == 0)
+									{
+										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									}
+									Get_soil_water_balance (&m->cells[cell], met, month, day);
+								}
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -316,15 +333,33 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-								//compute soil evaporation in the last loop of height
-								if( height == 0)
+								/*check for symmetric water competition*/
+								/*if symmetric competition for water*/
+								Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
+								if (settings->symmetric_water_competition == 'y')
 								{
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									if( height == 0)
+									{
+										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										Get_soil_water_balance (&m->cells[cell], met, month, day);
+									}
 								}
-								/*if here asymmetric competition, otherwise inside the previous if*/
-								Get_soil_water_balance (&m->cells[cell], met, month, day);
+								/*asymmetric water competition*/
+								else
+								{
+									/*removing at each loop an amount of water transpired by each class*/
+									if( height == 0)
+									{
+										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									}
+									Get_soil_water_balance (&m->cells[cell], met, month, day);
+								}
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -374,16 +409,33 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 							Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 							Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-							//compute soil evaporation in the last loop of height
-							if( height == 0)
+							/*check for symmetric water competition*/
+							/*if symmetric competition for water*/
+							Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
+							if (settings->symmetric_water_competition == 'y')
 							{
-								Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-										m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-								Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+								if( height == 0)
+								{
+									/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_soil_water_balance (&m->cells[cell], met, month, day);
+								}
 							}
-
-							/*if here asymmetric competition, otherwise inside the previous if*/
-							Get_soil_water_balance (&m->cells[cell], met, month, day);
+							/*asymmetric water competition*/
+							else
+							{
+								/*removing at each loop an amount of water transpired by each class*/
+								if( height == 0)
+								{
+									/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+								}
+								Get_soil_water_balance (&m->cells[cell], met, month, day);
+							}
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 							Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
