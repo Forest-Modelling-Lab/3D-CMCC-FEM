@@ -211,7 +211,7 @@ enum {
 	MAXINTCPTN,                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 
 	//SPECIFIC LEAF AREA 3DVTModel
-	SLA,                         //Specific Leaf Area cm^2/g
+	SLA,                         //Specific Leaf Area cm^2/g for sunlit leaves
 	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
 
 	//FRACTION BRANCH-BARK
@@ -1028,13 +1028,13 @@ extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 extern void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 
-extern void Get_litter (CELL *c, SPECIES *const s, const int);
+extern void Get_litter (CELL *, SPECIES *const, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
-extern void Get_lai (SPECIES *const s, const int, const int, const int);
+extern void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
 extern void Get_turnover (SPECIES *const, int);

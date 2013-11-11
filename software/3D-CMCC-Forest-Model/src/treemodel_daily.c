@@ -240,7 +240,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								if (settings->spatial == 'u')
 								{
-									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
+									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 
 									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0 )
 									{
@@ -400,7 +400,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							if (settings->spatial == 'u')
 							{
-								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month, day);
+								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 							}
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);

@@ -36,7 +36,7 @@ static const char *species_values[] = {
 		"MAXINTCPTN",                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 
 		//SPECIFIC LEAF AREA
-		"SLA",                        //Specific Leaf Area cm^2/g
+		"SLA",                        //Specific Leaf Area cm^2/g for sunlit leaves
 		"SLA_RATIO",                  //(DIM) ratio of shaded to sunlit projected SLA
 
 		//FRACTION BRANCH-BARK

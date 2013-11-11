@@ -15,7 +15,7 @@ MAXINTCPTN	0.2    //Maximum proportion of rainfall interception evaporated from 
 
 
 //SPECIFIC LEAF AREA 
-SLA	256             //Specific Leaf Area cm^2/gC  
+SLA	256             //Specific Leaf Area cm^2/gC for sunlit leaves
 					//from 256 to 175 Wang et al., 2006		
 SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA			
 

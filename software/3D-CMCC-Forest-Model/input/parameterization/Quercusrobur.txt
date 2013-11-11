@@ -16,7 +16,7 @@ LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.30    //Maximum proportion of rainfall interception evaporated from canopy for Q. robur from Tatarinov and Cenciala 2006
 
 //SPECIFIC LEAF AREA 
-SLA	345             //Specific Leaf Area cm^2/gC  	 Q. robur from Pietsch et al 2005	
+SLA	345             //Specific Leaf Area cm^2/gC for sunlit leaves 	 Q. robur from Pietsch et al 2005	
 SLA_RATIO	1.49       //(DIM) ratio of shaded to sunlit projected SLA  for Q. robur from Mollicone et al., 2002 				
 
 //FRACTION BRANCH-BARK

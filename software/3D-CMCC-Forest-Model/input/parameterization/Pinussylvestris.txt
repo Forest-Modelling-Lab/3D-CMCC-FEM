@@ -16,7 +16,7 @@ LAIMAXINTCPTN	5       //LAI for maximum rainfall interception for P. sylvestris 
 MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
-SLA	39.0             //Specific Leaf Area cm^2/gC AVG VALUE FROM xIAO ET AL., 2006for P. sylvestris , 
+SLA	39.0             //Specific Leaf Area cm^2/gC for sunlit leaves AVG VALUE FROM xIAO ET AL., 2006for P. sylvestris , 
 					//68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006 for 30.9 dbh class from Xiao2006
 					//38.6 Simpson et al., 2001
 SLA_RATIO	2.52    //(DIM) ratio of shaded to sunlit projected SLA  for P. sylvestris from Mollicone et al., 2002 	

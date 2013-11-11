@@ -14,7 +14,7 @@ LAIMAXINTCPTN   -9999       //LAI for maximum rainfall interception
 MAXINTCPTN  -9999           //Maximum proportion of rainfall interception evaporated from canopy
 
 //SPECIFIC LEAF AREA 
-SLA -9999                   //Specific Leaf Area cm^2/gC  
+SLA -9999                   //Specific Leaf Area cm^2/gC  for sunlit leaves
                             //from 256 to 175 Wang et al., 2006                 
 SLA_RATIO	-9999           //(DIM) ratio of shaded to sunlit projected SLA
 
