@@ -247,7 +247,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			}
 			else
 			{
-				Log("++Lai from previous day = %g\n", s->value[LAI]);
+				Log("++Lai from previous day allocation = %g\n", s->value[LAI]);
 			}
 			if (s->value[LAI] > s->value[PEAK_Y_LAI])
 			{

@@ -297,7 +297,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								D_Get_Partitioning_Allocation_CTEM (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
+								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -369,7 +369,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								D_Get_Partitioning_Allocation_CTEM (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
+								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 
 								Log("Available Soil Water at day %d month %d year of simulation %d = %g mm\n",day, month+1, years, m->cells[cell].available_soil_water);
@@ -444,9 +444,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 							//Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 							Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-							Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
+							//Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 							E_Get_Partitioning_Allocation_CTEM ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
+							Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 
 							Log("--------------------------------------------------------------------------\n\n\n");
@@ -470,18 +470,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//DENDROMETRY
 							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 						}
-
-						//FIXME SEVERAL PROCESSES SHOULD HAPPEN AT THE END OF THE MONTH NOT AT THE END OF THE YEAR
-						/*processes at the end of month*/
-						/*
-						if (day == (DaysInMonth[month]-1))
-						{
-							//MONTHLY TURNOVER
-							Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
-						}
-						*/
-
-
 						/*END OF YEAR*/
 
 						if (day == 30 && month == DECEMBER)
@@ -574,7 +562,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							//TURNOVER
 							//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
-							//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], DaysInMonth[month]);
+							//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 							//ANNUAL BIOMASS INCREMENT
 							Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);

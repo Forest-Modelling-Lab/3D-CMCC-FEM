@@ -16,8 +16,8 @@ LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.30    //Maximum proportion of rainfall interception evaporated from canopy for Q. robur from Tatarinov and Cenciala 2006
 
 //SPECIFIC LEAF AREA 
-SLA	345             //Specific Leaf Area cm^2/gC for sunlit leaves 	 Q. robur from Pietsch et al 2005	
-SLA_RATIO	1.49       //(DIM) ratio of shaded to sunlit projected SLA  for Q. robur from Mollicone et al., 2002 				
+SLA	345             //Specific Leaf Area cm^2/gC for sunlit leaves Q. robur 480 from Pietsch et al 2005	
+SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. robur 1.49 from Mollicone et al., 2002 				
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.1            //Branch and Bark fraction at age 0 for Q. robur from Yuste et al., 2005,  0.27 from Balboa et al ppt
@@ -92,7 +92,7 @@ LEAF_FALL_FRAC_GROWING	0.3		//proportions of the growing season of leaf fall Q. 
 LEAF_LIFE_SPAN  1     //Leaf life span
 
 //TURNOVER
-FINERTTOVER	1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
+LEAVES_FINERTTOVER	1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
 COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
 SAPWOODTTOVER	0.025	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate

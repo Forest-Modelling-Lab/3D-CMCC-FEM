@@ -1764,11 +1764,9 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 			}
-
-			//Log("OldWf = %g\n", oldWf);
-
+/*
 			Log("-LITTERFALL FOR EVEGREEN-\n");
-			s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
+			s->value[DEL_LITTER] = gammaF s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
 			Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
 			Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
@@ -1783,18 +1781,18 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 			//recompute LAI
-			/*for dominant layer with sunlit foliage*/
+			//for dominant layer with sunlit foliage
 			if (c->top_layer == c->heights[height].z)
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			}
-			/*for dominated shaded foliage*/
+			//for dominated shaded foliage
 			else
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 			}
 			Log("Lai after litterfall = %g\n", s->value[LAI]);
-
+*/
 
 		}
 
@@ -2077,8 +2075,9 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[DEL_Y_BB] += s->value[DEL_BB];
 		}
 
+		/*
 		Log("-LITTERFALL FOR EVEGREEN-\n");
-		s->value[DEL_LITTER] = /*gammaF*/ s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
+		s->value[DEL_LITTER] = gammaF s->value[LITTERFALL_RATE] * s->value[BIOMASS_FOLIAGE_CTEM];
 		Log("Litterfall rate = %g\n", s->value[LITTERFALL_RATE]);
 		Log("Foliage Biomass to litter from evergreen population = %g tDM/area\n", s->value[DEL_LITTER]);
 
@@ -2093,17 +2092,18 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		Log("Foliage Biomass at the end of year less Litterfall (Wf + oldWf) in tDM/area = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 		//recompute LAI
-		/*for dominant layer with sunlit foliage*/
+		//for dominant layer with sunlit foliage
 		if (c->top_layer == c->heights[height].z)
 		{
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 		}
-		/*for dominated shaded foliage*/
+		//for dominated shaded foliage
 		else
 		{
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 		}
 		Log("Lai after litterfall = %g\n", s->value[LAI]);
+		*/
 	}
 
 	//for daily_Log file only if there's one class

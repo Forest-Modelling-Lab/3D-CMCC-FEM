@@ -116,7 +116,7 @@ static const char *species_values[] = {
 		"LEAF_LIFE_SPAN",				//Leaf life span
 
 		//ROOT TURNOVER
-		"FINERTTOVER",                    //Average yearly fine root turnover rate
+		"LEAVES_FINERTTOVER",             //Average yearly leaves and fine root turnover rate
 		"COARSERTTOVER",                  //Average yearly coarse root turnover rate
 		"SAPWOODTTOVER",	              //Average yearly sapwood turnover rate
 		"BRANCHTTOVER",	                  //Average yearly branch turnover rate

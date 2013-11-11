@@ -93,7 +93,7 @@ LEAF_FALL_FRAC_GROWING  -9999     //proportions of the growing season of leaf fa
 LEAF_LIFE_SPAN  -9999     //Leaf life span
 
 //TURNOVER
-FINERTTOVER -9999        //Average yearly fine root turnover rate
+LEAVES_FINERTTOVER -9999        //Average yearly fine root turnover rate
 COARSERTTOVER   -9999    //Average yearly coarse root turnover rate
 SAPWOODTTOVER   -9999    //Average yearly sapwood turnover rate 
 BRANCHTTOVER    -9999    //Average yearly branch turnover rate
