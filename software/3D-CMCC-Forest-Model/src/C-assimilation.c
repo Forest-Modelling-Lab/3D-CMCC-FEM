@@ -23,8 +23,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	{
 		Log("GPP = %g\n", s->value[GPP_g_C]);
 		Log("Reserve biomass = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-		Log("Total aut respiration = %g\n", s->value[TOTAL_AUT_RESP]);
-		Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
+		Log("Total aut respiration = %g gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
+
 
 		/*for principle of conservation of mass*/
 		/*used if previous day NPP is negative to conserve mass assuming the loss
@@ -36,6 +36,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			{
 				/*following Barbaroux et al., 2003*/
 				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 				{
@@ -49,16 +50,16 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 			{
 				/*following Barbaroux et al., 2003*/
-				//FIXME AS IT SHOULD BE
-				/*
+
 				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 				{
 					s->value[BIOMASS_RESERVE_CTEM] = 0;
 					Log("All reserve has been consumed for respiration!!!\n");
 				}
-				*/
+
 				s->value[NPP_g_C] = 0;
 			}
 
@@ -67,10 +68,12 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		else
 		{
 			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+			Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
 			Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
 			//upscale class NPP to class cell level
 			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 			//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
+
 		}
 
 		if (settings->time == 'm')

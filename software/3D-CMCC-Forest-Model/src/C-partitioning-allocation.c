@@ -1799,9 +1799,6 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 				Log("Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-				s->value[DEL_RESERVE_CTEM] = 0;
-
-
 				s->value[DEL_Y_WS] += s->value[DEL_STEMS_CTEM];
 				s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE_CTEM];
 				s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -1810,11 +1807,11 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
 
-				Log("aF %d = %g \n", c->heights[height].z, pF_CTEM);
+				Log("aF %d = 0 \n", c->heights[height].z, pF_CTEM);
 				Log("afR %d = %g \n", c->heights[height].z, Perc_fine * pR_CTEM);
 				Log("acR %d = %g \n", c->heights[height].z, Perc_coarse * pR_CTEM);
 				Log("aS %d = %g \n", c->heights[height].z, pS_CTEM);
-				Log("aRes %d = 0 \n", c->heights[height].z);
+				Log("aRes %d = %g \n", c->heights[height].z, pF_CTEM);
 
 				Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
 				Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
