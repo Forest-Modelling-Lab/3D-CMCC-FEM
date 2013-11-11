@@ -547,7 +547,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
-							if(m->cells[cell].heights[height].z < m->cells[cell].heights[height].top_layer)
+							if(m->cells[cell].heights[height].z < m->cells[cell].top_layer)
 							{
 								Log("Get_Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 								/*Mortality based on Growth efficiency(LPJ)*/

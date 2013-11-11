@@ -26,16 +26,16 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 
 
 	/*for dominant layer with sunlit foliage*/
-	if (c->heights[height].top_layer == c->heights[height].z)
+	if (c->top_layer == c->heights[height].z)
 	{
 		s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for sunlit  leaves = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+		Log("Maximum foliage biomass for sunlit leaves = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 	}
 	/*for dominated shaded foliage*/
 	else
 	{
 		s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for shaded  leaves = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+		Log("Maximum foliage biomass for shaded leaves = %g tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 	}
 
 

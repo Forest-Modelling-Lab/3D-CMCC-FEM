@@ -291,7 +291,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								//compute soil evaporation in the last loop of height
 								if( height == 0)
 								{
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation,  m->cells[cell].heights[height].top_layer, m->cells[cell].heights[height].z,
+									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation,  m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
 
 									if (m->cells[cell].available_soil_water <= m->cells[cell].soil_evaporation )
@@ -422,7 +422,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
-							if(m->cells[cell].heights[height].z < m->cells[cell].heights[height].top_layer)
+							if(m->cells[cell].heights[height].z < m->cells[cell].top_layer)
 							{
 								Log("MORTALITY FOR LOWER LAYER \n");
 								/*Mortality based on Growth efficiency(LPJ)*/

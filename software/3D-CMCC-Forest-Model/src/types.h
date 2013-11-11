@@ -750,7 +750,7 @@ typedef struct {
 	int ages_count;
 
 	int z;
-	int top_layer;
+	//int top_layer;
 
 } HEIGHT;
 

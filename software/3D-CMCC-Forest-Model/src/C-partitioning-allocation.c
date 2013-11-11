@@ -223,7 +223,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
-				if (c->heights[height].top_layer == c->heights[height].z)
+				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
@@ -473,7 +473,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
-				if (c->heights[height].top_layer == c->heights[height].z)
+				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
@@ -890,7 +890,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
-				if (c->heights[height].top_layer == c->heights[height].z)
+				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
@@ -1053,7 +1053,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
-				if (c->heights[height].top_layer == c->heights[height].z)
+				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
@@ -1152,7 +1152,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
-				if (c->heights[height].top_layer == c->heights[height].z)
+				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
@@ -1637,7 +1637,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			/*recompute LAI after allocation*/
 			/*for dominant layer with sunlit foliage*/
-			if (c->heights[height].top_layer == c->heights[height].z)
+			if (c->top_layer == c->heights[height].z)
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			}
@@ -1784,7 +1784,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			//recompute LAI
 			/*for dominant layer with sunlit foliage*/
-			if (c->heights[height].top_layer == c->heights[height].z)
+			if (c->top_layer == c->heights[height].z)
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			}
@@ -1932,7 +1932,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			//recompute LAI
 			/*for dominant layer with sunlit foliage*/
-			if (c->heights[height].top_layer == c->heights[height].z)
+			if (c->top_layer == c->heights[height].z)
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			}
@@ -2094,7 +2094,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 		//recompute LAI
 		/*for dominant layer with sunlit foliage*/
-		if (c->heights[height].top_layer == c->heights[height].z)
+		if (c->top_layer == c->heights[height].z)
 		{
 			s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 		}
