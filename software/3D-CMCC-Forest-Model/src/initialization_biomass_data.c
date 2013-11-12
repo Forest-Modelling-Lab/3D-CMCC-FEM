@@ -17,7 +17,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	//float sapwood_perc;
 
 
-/*
+	/*
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && s->value[LAI] == 0 && s->value[BIOMASS_FOLIAGE_CTEM] == 0)
 	{
 		if (settings->spatial == 'u')
@@ -26,7 +26,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			exit (1);
 		}
 	}
-	*/
+	 */
 
 	Log("\n\n...checking initial biomass data...\n");
 
@@ -43,17 +43,17 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			if (s->value[AVDBH] < 9)
 			{
 				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
-						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
+				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
 			}
 			else if (s->value[AVDBH] > 9 && s->value[AVDBH] < 15)
 			{
 				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_B));
-						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
+				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
 			}
 			else
 			{
 				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
-						//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
+				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
 			}
 		}
 		else
@@ -63,7 +63,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			Log("STEM POWER = %g\n", s->value[STEMPOWER_P]);
 			Log("STEM CONST = %g\n", s->value[STEMCONST_P]);
 			s->value[AV_STEM_MASS]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
-					//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
+			//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
 
 		//1000 to convert Kg into tons
@@ -84,7 +84,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	Log("   SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	Log("   HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
-/*
+	/*
 	float heart_wood_diameter, heart_wood_stem_mass;
 
 	heart_wood_diameter = 2.0 * sqrt( s->value[HEARTWOOD_AREA]/Pi);
@@ -96,7 +96,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 
 	Log("SAP_WOOD_STEM PERC = %g \n",  100.0 - (heart_wood_stem_mass*100.0)/s->value[AV_STEM_MASS]);
 
-*/
+	 */
 
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	Log("   sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
@@ -145,45 +145,45 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	}
 
 	/*reserve*/
-	if (s->value[BIOMASS_RESERVE_CTEM] == 0 || s->value[BIOMASS_FOLIAGE_CTEM] == 0)
+
+	if (s->value[BIOMASS_RESERVE_CTEM] == 0)
 	{
-		if (s->value[BIOMASS_RESERVE_CTEM] == 0)
+		Log("\nNo Reserve Biomass Data are available for model initialization \n");
+		Log("...Generating input Reserve Biomass biomass data\n");
+		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
+		//see if change with the ratio reported from Barbaroux et al., 2002
+
+		s->value[BIOMASS_RESERVE_CTEM] = s->value[WS_sap] * s->value[SAP_WRES];
+		Log("-----Reserve Biomass initialization data  = %g tDM/cell \n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("-----Reserve Biomass initialization data  = %g KgC/cell \n", s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000);
+		Log("-----Reserve Biomass initialization data  = %g gC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
+
+	}
+	else
+	{
+		Log("Ok reserve biomass..\n");
+		Log("---Reserve from init file = %g \n", s->value[BIOMASS_RESERVE_CTEM]);
+	}
+	if (s->value[BIOMASS_FOLIAGE_CTEM] == 0)
+	{
+		if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 		{
-			Log("\nNo Reserve Biomass Data are available for model initialization \n");
-			Log("...Generating input Reserve Biomass biomass data\n");
-			//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
-			//see if change with the ratio reported from Barbaroux et al., 2002
-
-			s->value[BIOMASS_RESERVE_CTEM] = s->value[WS_sap] * s->value[SAP_WRES];
-			Log("-----Reserve Biomass initialization data  = %g tDM/cell \n", s->value[BIOMASS_RESERVE_CTEM]);
-			Log("-----Reserve Biomass initialization data  = %g KgC/cell \n", s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000);
-			Log("-----Reserve Biomass initialization data  = %g gC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
-
+			/*nothing to do for deciduous*/
 		}
 		else
 		{
-			Log("---Reserve from init file = %g \n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
-		}
-		if (s->value[BIOMASS_FOLIAGE_CTEM] == 0)
-		{
-			if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-			{
-				/*nothing to do for deciduous*/
-			}
-			else
-			{
-				Log("\nNo Foliage Biomass Data are available for model initialization \n");
-				Log("...Generating input Foliage Biomass biomass data\n");
-				s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_RESERVE_CTEM] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				Log("----Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
-			}
-		}
-		else
-		{
-			Log("Ok foliage biomass..\n");
-			Log("---Foliage Biomass from init file  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			Log("\nNo Foliage Biomass Data are available for model initialization \n");
+			Log("...Generating input Foliage Biomass biomass data\n");
+			s->value[BIOMASS_FOLIAGE_CTEM] =  s->value[BIOMASS_RESERVE_CTEM] * (1.0 - s->value[STEM_LEAF_FRAC]);
+			Log("----Foliage Biomass initialization data  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 		}
 	}
+	else
+	{
+		Log("Ok foliage biomass..\n");
+		Log("---Foliage Biomass from init file  = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+	}
+
 
 
 	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
@@ -197,6 +197,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	}
 	else
 	{
+		Log("Ok fine root biomass..\n");
 		Log("---Fine Root Biomass from init file  = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 	}
 
@@ -221,14 +222,14 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 
 
 	s->value[BIOMASS_LIVE_WOOD] = s->value[BIOMASS_STEM_LIVE_WOOD]+
-									s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]+
-									s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]+
-									s->value[BIOMASS_ROOTS_FINE_CTEM]+
-									s->value[BIOMASS_FOLIAGE_CTEM];
+			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]+
+			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]+
+			s->value[BIOMASS_ROOTS_FINE_CTEM]+
+			s->value[BIOMASS_FOLIAGE_CTEM];
 	Log("---Live biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
 	s->value[BIOMASS_DEAD_WOOD] = s->value[BIOMASS_STEM_DEAD_WOOD]+
-									s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
-									s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
+			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
+			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
 	Log("---Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
 
 

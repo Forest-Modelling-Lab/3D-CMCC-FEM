@@ -348,6 +348,8 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	Log("- DBH = %g\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 	Log("- Height = %g m\n", c->heights[height].value);
 	Log("- Number of trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
+	Log("- Ws = %g \n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]);
+
 
 
 	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)

@@ -686,19 +686,9 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 
 						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
 						//HEIGHT VALUES ARE MANDATORY
-						if (	(m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 &&
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 &&
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 &&
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0)
-								||
-								(m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]== 0 ||
-										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM]== 0 ||
-										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM]== 0 ||
-										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] == 0
-								))
-						{
-							Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], years);
-						}
+
+						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], years);
+
 
 						Log(
 								"\n\n----- CLASS DATASET-----\n"

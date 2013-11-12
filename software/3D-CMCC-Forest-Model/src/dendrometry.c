@@ -46,9 +46,9 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
+		Log("Average stem mass = %g\n", s->value[AV_STEM_MASS]);
 		s->value[AVDBH] = pow(s->value[AV_STEM_MASS] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
-
 	}
 	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
 

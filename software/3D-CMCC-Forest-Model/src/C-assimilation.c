@@ -26,54 +26,62 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		Log("Total aut respiration = %g gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
 
 
-		/*for principle of conservation of mass*/
-		/*used if previous day NPP is negative to conserve mass assuming the loss
-		of reserve*/
-		if (s->value[GPP_g_C] < s->value[TOTAL_AUT_RESP])
+		if (s->value[BIOMASS_RESERVE_CTEM] > 0.0)
 		{
-			//fixme remove after insert reserve also for coniferous
-			if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-			{
-				/*following Barbaroux et al., 2003*/
-				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-				Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
-				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+			/*for principle of conservation of mass*/
+			/*used if previous day NPP is negative to conserve mass assuming the loss
+		of reserve*/
+			if (s->value[GPP_g_C] < s->value[TOTAL_AUT_RESP])
+			{
+				//fixme remove after insert reserve also for coniferous
+				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
-					s->value[BIOMASS_RESERVE_CTEM] = 0;
-					Log("All reserve has been consumed for respiration!!!\n");
+					/*following Barbaroux et al., 2003*/
+					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+
+					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+					{
+						s->value[BIOMASS_RESERVE_CTEM] = 0;
+						Log("All reserve has been consumed for respiration!!!\n");
+					}
+
+					s->value[NPP_g_C] = 0;
+				}
+				//fixme see for correct use of reserve for evergreen
+				if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+				{
+					/*following Barbaroux et al., 2003*/
+
+					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+
+					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+					{
+						s->value[BIOMASS_RESERVE_CTEM] = 0;
+						Log("All reserve has been consumed for respiration!!!\n");
+					}
+
+					s->value[NPP_g_C] = 0;
 				}
 
-				s->value[NPP_g_C] = 0;
+				s->value[NPP] = 0;
 			}
-			//fixme see for correct use of reserve for evergreen
-			if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+			else
 			{
-				/*following Barbaroux et al., 2003*/
+				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+				Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
+				Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
+				//upscale class NPP to class cell level
+				s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
 
-				s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-				Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-
-				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
-				{
-					s->value[BIOMASS_RESERVE_CTEM] = 0;
-					Log("All reserve has been consumed for respiration!!!\n");
-				}
-
-				s->value[NPP_g_C] = 0;
 			}
-
-			s->value[NPP] = 0;
 		}
 		else
 		{
-			s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-			Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
-			Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
-			//upscale class NPP to class cell level
-			s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-			//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
-
+			Log("ATTENTION biomass reserve < 0!!!!!!\n");
 		}
 
 		if (settings->time == 'm')

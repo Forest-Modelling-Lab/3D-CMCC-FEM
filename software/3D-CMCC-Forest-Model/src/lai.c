@@ -95,9 +95,9 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
 			}
 			/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
-			if (s->counter[VEG_DAYS] <= 30 && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
+			if (s->counter[VEG_DAYS] <= s->counter[BUD_BURST_COUNTER] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
 			{
-				Log("VEG_DAYS < 30, LAI < PEAK_LAI, RESERVE > 0\n");
+				Log("VEG_DAYS < %d LAI < PEAK_LAI, RESERVE > 0\n", s->counter[BUD_BURST_COUNTER]);
 				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				 * and Barbaroux et al., 2002,
 				the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -105,7 +105,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 				frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
-				Log("recomputed fraction of reserve for foliage and stems = %g\n", frac_to_foliage_stem);
+				Log("fraction of reserve for foliage and stems = %g\n", frac_to_foliage_stem);
 
 				s->counter[BUD_BURST_COUNTER] --;
 				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
@@ -121,12 +121,10 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_stem * (1.0 - s->value[STEM_LEAF_FRAC]));
 				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_stem;
-
 				s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem * s->value[STEM_LEAF_FRAC]);
 				Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
 
-
+				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_stem;
 
 				Log("++Reserves pools less foliage + stem = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 				Log ("++Biomass foliage from reserves for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);

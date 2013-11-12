@@ -189,6 +189,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			return NULL;
 		}
 		// open file
+
 		f = fopen(token, "r");
 		if ( !f )
 		{
@@ -847,6 +848,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//the model gets the value of the day before
 										//Log ("* TS_F -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 										yos[*yos_count-1].m[month].d[day].ts_f = previous_ts_f;
+										/*
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f))
 										{
 											//Log ("********* TS_F -NO DATA- in previous year!!!!\n" );
@@ -860,6 +862,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 												yos[*yos_count-1].m[month].d[day].ts_f = NO_DATA;
 											}
 										}
+										*/
 									}
 									else
 									{
@@ -940,6 +943,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("********* SWC -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 										//Log("Getting previous years values !!\n");
 										yos[*yos_count-1].m[month].d[day].swc = previous_swc;
+										/*
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].swc))
 										{
 											//Log ("* SWC -NO DATA- in previous year!!!!\n" );
@@ -952,6 +956,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 												yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
 											}
 										}
+										*/
 									}
 									else
 									{
