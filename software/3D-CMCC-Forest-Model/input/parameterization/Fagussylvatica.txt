@@ -12,7 +12,7 @@ K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO	0.2
 
-LAIGCX	5              //LAI for maximum canopy conductance
+LAIGCX	8              //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.33    //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
 
@@ -29,10 +29,9 @@ RHOMIN	0.64             //Minimum Basic Density for young Trees t/m^3 0.72 Bouri
 RHOMAX	0.64             //Maximum Basic Density for young Trees  0.79 Bouriaud et al., 2004, 0.64 ettore
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
-//VPD
 COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
-BLCOND	0.2            //Canopy Boundary Layer conductance see Pietsch et al., 2005
-MAXCOND	0.2            //Maximum Canopy Conductance in m/sec from ettore
+BLCOND	0.02            //Canopy Boundary Layer conductance see 0.2 for stomatal Pietsch et al., 2005
+MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 0.2 from ettore 0.02 Breuer et al, 2003, Kelliher et al., 1995
 //AGE for timber
 MAXAGE	150             //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE	0.75            //Relative Age to give fAGE = 0.5
