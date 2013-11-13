@@ -12,7 +12,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 	Log("\nGET_DENDROMETRY_ROUTINE\n");
 
-	Log("\n**Average DBH 3PG**\n");
+	Log("\n**Average DBH**\n");
 	Log("**Tree Height from CC function**\n");
 
 	/*compute Tree AVDBH*/
@@ -50,7 +50,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		s->value[AVDBH] = pow(s->value[AV_STEM_MASS] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 	}
-	Log("-New Average DBH from 3PG CLASSIC = %g cm\n", s->value[AVDBH]);
+	Log("-New Average DBH = %g cm\n", s->value[AVDBH]);
 
 	/*control*/
 	if (oldavDBH > s->value[AVDBH])
@@ -61,7 +61,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	}
 	else
 	{
-		Log("-DBH increment from 3PG CLASSIC = %g cm\n", s->value[AVDBH] - oldavDBH);
+		Log("-DBH increment = %g cm\n", s->value[AVDBH] - oldavDBH);
 
 	}
 
@@ -87,6 +87,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		h->value = s->value[HMAX];
 	}
 	/*Tree Height using SORTIE */
+	/*
 	if (s->value[AVDBH]> 10)
 	{
 		//Log("SORTIE FUNC DBH > 10 cm\n");
@@ -99,8 +100,8 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		//Log("SORTIE FUNC DBH < 10 cm\n");
 
 		s->value[TREE_HEIGHT_SORTIE] = 0.1 + 30 *( 1.0 - exp ( - 0.03 * s->value[AVDBH] ));
-		Log("-Tree Height using Sortie function < 10 cm= %g m\n", s->value[TREE_HEIGHT_SORTIE]);
-	}
+		L
+*/
 
 
 

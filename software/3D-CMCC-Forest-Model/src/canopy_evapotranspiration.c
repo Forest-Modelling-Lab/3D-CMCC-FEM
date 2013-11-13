@@ -99,9 +99,9 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 		Log("Evapotraspirated water from layer %d = %g mm \n", c->heights[height].z, c->daily_c_evapotransp[c->heights[height].z]);
 	}
 
-	/*compute total daily interception*/
-	c->daily_tot_c_evapotransp += c->daily_c_int[c->heights[height].z];
-	Log("Daily total canopy transpiration = %g \n", c->daily_c_evapotransp);
+	/*compute total daily canopy evapotranspiration*/
+	c->daily_tot_c_evapotransp += c->daily_c_evapotransp[c->heights[height].z];
+	Log("Daily total canopy transpiration = %g \n", c->daily_tot_c_evapotransp);
 
 	i = c->heights[height].z;
 

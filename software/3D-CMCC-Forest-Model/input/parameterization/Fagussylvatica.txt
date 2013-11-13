@@ -111,7 +111,7 @@ MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
 DBHDCMAX	0.20    //Low Density //CUURENTLY NOT USED
-DBHDCMIN	0.16    //High Density
+DBHDCMIN	0.14    //High Density from ettore
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A	0.674         //a value from Kostner for 
