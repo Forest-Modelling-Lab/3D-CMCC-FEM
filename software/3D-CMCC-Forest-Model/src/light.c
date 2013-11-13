@@ -166,9 +166,13 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			if ( c->height_class_in_layer_dominant_counter == 1 )
 			{
 				Log("Only one height class in dominant light\n");
-
 				c->gapcover[c->top_layer]= 1 - s->value[CANOPY_COVER_DBHDC];
 				Log("GapCover = %g\n", c->gapcover[c->top_layer]);
+				if(c->gapcover[c->top_layer] < 0.0)
+				{
+					c->gapcover[c->top_layer] = 0;
+					Log("GapCover = %g\n", c->gapcover[c->top_layer]);
+				}
 
 				//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
 				c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
@@ -189,6 +193,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					Log("First height class processing....\n");
 					c->gapcover[c->top_layer] = 1 - s->value[CANOPY_COVER_DBHDC];
 					Log("GapCover = %g\n", c->gapcover[c->top_layer]);
+					if(c->gapcover[c->top_layer] < 0.0)
+					{
+						c->gapcover[c->top_layer] = 0;
+						Log("GapCover = %g\n", c->gapcover[c->top_layer]);
+					}
 
 				}
 				else if ( c->dominant_veg_counter > 1 && c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
@@ -196,10 +205,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					Log("Second but not last height class processing....\n");
 					c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
 					Log("GapCover = %g\n", c->gapcover[c->top_layer]);
-
-					if (c->gapcover[c->top_layer] < 0)
+					if(c->gapcover[c->top_layer] < 0.0)
 					{
-						c->gapcover[c->top_layer] = 0.05;
+						c->gapcover[c->top_layer] = 0;
+						Log("GapCover = %g\n", c->gapcover[c->top_layer]);
 					}
 				}
 				else //last height
@@ -208,18 +217,19 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
 					Log("GapCover = %g\n", c->gapcover[c->top_layer]);
 
-					if (c->gapcover[c->top_layer] < 0)
+					if(c->gapcover[c->top_layer] < 0.0)
 					{
-						c->gapcover[c->top_layer] = 0.05;
+						c->gapcover[c->top_layer] = 0;
+						Log("GapCover = %g\n", c->gapcover[c->top_layer]);
 					}
 					if (c->dominant_veg_counter < c->height_class_in_layer_dominant_counter)
 					{
 						Log("Second but not last height class processing....\n");
 						c->gapcover[c->top_layer] -= s->value[CANOPY_COVER_DBHDC];
-
-						if (c->gapcover[c->top_layer] < 0)
+						if(c->gapcover[c->top_layer] < 0.0)
 						{
-							c->gapcover[c->top_layer] = 0.05;
+							c->gapcover[c->top_layer] = 0;
+							Log("GapCover = %g\n", c->gapcover[c->top_layer]);
 						}
 					}
 					//FIXME NEW VERSION
@@ -277,6 +287,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						Log("Only one height class in layer dominated\n");
 						c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 						Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
+						if(c->gapcover[c->top_layer - 1] < 0.0)
+						{
+							c->gapcover[c->top_layer - 1] = 0;
+							Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+						}
 
 						if (c->gapcover[c->top_layer] <= 0.5)
 						{
@@ -309,12 +324,22 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						{
 							c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 							Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
+							if(c->gapcover[c->top_layer - 1] < 0.0)
+							{
+								c->gapcover[c->top_layer - 1] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+							}
 						}
 						else if ( c->dominated_veg_counter > 1 && c->dominated_veg_counter < c->height_class_in_layer_dominated_counter )
 						{
 							Log("Second and more height class processed\n");
 							c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 							Log("gapcover layer %d  = %g\n", c->top_layer, c->gapcover[c->top_layer-1]);
+							if(c->gapcover[c->top_layer - 1] < 0.0)
+							{
+								c->gapcover[c->top_layer - 1] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+							}
 						}
 						else //last height
 						{
@@ -326,10 +351,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							{
 								Log("Second but not last height class processing....\n");
 								c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
-
-								if (c->gapcover[c->top_layer-1] < 0)
+								if(c->gapcover[c->top_layer - 1] < 0.0)
 								{
-									c->gapcover[c->top_layer-1] = 0.05;
+									c->gapcover[c->top_layer - 1] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
 								}
 							}
 							//FIXME NEW VERSION
@@ -379,18 +404,33 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							Log("First height class processed\n");
 							c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-1]);
+							if(c->gapcover[c->top_layer - 1] < 0.0)
+							{
+								c->gapcover[c->top_layer - 1] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+							}
 						}
 						else if (c->dominated_veg_counter > 1 && c->dominated_veg_counter < c->height_class_in_layer_dominated_counter)
 						{
 							Log("Second and more height class processed\n");
 							c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-1]);
+							if(c->gapcover[c->top_layer - 1] < 0.0)
+							{
+								c->gapcover[c->top_layer - 1] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+							}
 						}
 						else //last height
 						{
 							Log("Last height class processed\n");
 							c->gapcover[c->top_layer-1] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-1]);
+							if(c->gapcover[c->top_layer - 1] < 0.0)
+							{
+								c->gapcover[c->top_layer - 1] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 1]);
+							}
 
 							//Net Radiation for lower layer
 							c->net_radiation_for_subdominated += (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
@@ -430,6 +470,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						//percentuale coperta
 						c->gapcover[c->top_layer-2] = 1 - s->value[CANOPY_COVER_DBHDC];
 						Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+						if(c->gapcover[c->top_layer - 2] < 0.0)
+						{
+							c->gapcover[c->top_layer - 2] = 0;
+							Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+						}
 						//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICiE COPERTA
 						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 								+ (c->par_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
@@ -446,6 +491,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							Log("First height class processed\n");
 							c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 							//Par for lower layer
 						}
 						else if ( c->subdominated_veg_counter > 1 && c->subdominated_veg_counter < c->height_class_in_layer_subdominated_counter )
@@ -453,12 +503,22 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							Log("Second and more height class processed\n");
 							c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 						}
 						else //last height
 						{
 							Log("Last height class processed\n");
 							c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
 							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2])
@@ -474,7 +534,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					{
 						//percentuale coperta
 						c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
-						//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICIE COPERTA
+						if(c->gapcover[c->top_layer - 2] < 0.0)
+							{
+								c->gapcover[c->top_layer - 2] = 0;
+								Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+							}
 						c->par_for_soil = (c->par_for_dominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 						//percentuale scoperta
@@ -492,18 +556,33 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							Log("First height class processed\n");
 							c->gapcover[c->top_layer-2] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 						}
 						else if (c->subdominated_veg_counter > 1 && c->subdominated_veg_counter < c->height_class_in_layer_subdominated_counter)
 						{
 							Log("Second and more height class processed\n");
 							c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 						}
 						else //last height
 						{
 							Log("Last height class processed\n");
 							c->gapcover[c->top_layer-2] -= s->value[CANOPY_COVER_DBHDC];
 							Log("GapCover = %g\n", c->gapcover[c->top_layer-2]);
+							if(c->gapcover[c->top_layer - 2] < 0.0)
+								{
+									c->gapcover[c->top_layer - 2] = 0;
+									Log("GapCover = %g\n", c->gapcover[c->top_layer - 2]);
+								}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
 							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;

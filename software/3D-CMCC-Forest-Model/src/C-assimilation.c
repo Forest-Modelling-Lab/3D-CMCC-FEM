@@ -19,6 +19,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
 
 
+	//vedi il caso se la gpp compensa solo in parte la respirazione, la restante parte va presa dall nsc
+
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		Log("GPP = %g\n", s->value[GPP_g_C]);

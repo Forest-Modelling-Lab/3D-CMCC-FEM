@@ -146,7 +146,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA 
 
 		/*compute total daily interception*/
 		c->daily_tot_c_int += c->daily_c_int[c->heights[height].z];
-		Log("Daily total canopy transpiration = %g \n", c->daily_tot_c_int);
+		Log("Daily total canopy interception = %g \n", c->daily_tot_c_int);
 	}
 	/*no interception if tavg < 0 (snow), or outside growing season*/
 
