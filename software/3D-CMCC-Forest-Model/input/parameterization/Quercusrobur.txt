@@ -58,9 +58,9 @@ SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM	0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
-S0CTEM	0.53             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM (0.1 defualt value) for Q. robur from Balboa et al ppt
-R0CTEM	0.40            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS (0.55 default value) for Q. robur from Balboa et al ppt
-F0CTEM	0.07            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE (0.35 defult value) for Q. robur from Balboa et al ppt
+S0CTEM	0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM (0.1 defualt value) for 0.53 Q. robur from Balboa et al ppt
+R0CTEM	0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS (0.55 default value) 0.40 for Q. robur from Balboa et al ppt
+F0CTEM	0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE (0.35 defult value) 0.07 for Q. robur from Balboa et al ppt
 RES0CTEM	0.22	//PARAMETER CONTROLLING ALLOCATION TO RESERVE (NOT USED)
 EPSILON_CTEM	40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
 KAPPA	1.6             //ALLOCATION PARAMETER DIMENSIONLESS

@@ -1397,6 +1397,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
 	c->annual_ws[i] = s->value[BIOMASS_STEM_CTEM];
+	c->annual_delta_wres[i] += s->value[DEL_RESERVE_CTEM];
+	c->annual_wres[i] = s->value[BIOMASS_RESERVE_CTEM];
 	Log("******************************\n");
 }
 

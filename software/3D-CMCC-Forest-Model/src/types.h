@@ -907,6 +907,8 @@ typedef struct {
 	float annual_delta_ws[3], annual_ws[3];
 	float annual_dbh[3];
 
+	float annual_delta_wres[3], annual_wres[3];
+
 	//int dead_tree;
 
 	float thermic_sum;
