@@ -249,13 +249,18 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			s->value[BIOMASS_ROOTS_FINE_CTEM]+
 			s->value[BIOMASS_FOLIAGE_CTEM];
 	Log("---Live biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
+	Log("---Live biomass following BIOME = %g %% \n", (s->value[BIOMASS_LIVE_WOOD]*100.0)/ (s->value[BIOMASS_STEM_CTEM]+
+			s->value[BIOMASS_ROOTS_COARSE_CTEM]+
+			s->value[BIOMASS_STEM_BRANCH_CTEM]+
+			s->value[BIOMASS_ROOTS_FINE_CTEM]+
+			s->value[BIOMASS_FOLIAGE_CTEM]));
 	s->value[BIOMASS_DEAD_WOOD] = s->value[BIOMASS_STEM_DEAD_WOOD]+
 			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
 	Log("---Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
 
 
-	Log("**********reserves following live tissues  BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES] );
+	Log("***reserves following live tissues  BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES] );
 
 
 }

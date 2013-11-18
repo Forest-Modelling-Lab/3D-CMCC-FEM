@@ -40,7 +40,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 	float t1;
 	float q10 = 2.0;
-	float mrpern = 0.1584; //0.218; //linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 from Dufrene et al 2005
+	float mrpern = 0.1584; //0.218; //linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campili et al., 2013 and from Dufrene et al 2005
 	float exponent_tday;
 	float exponent_tnight;
 	float exponent_tavg;
