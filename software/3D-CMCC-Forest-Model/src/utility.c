@@ -672,7 +672,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Daily_Log("\n\nCell %d, %d, Lat = %g, Long  = %g\n\n\n", c->x, c->y, site->lat, site->lon );
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
-		Daily_Log("Daily AR = daily total autotrophic respiration (gCM/m2/day)\n");
+		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
@@ -694,11 +695,14 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
+			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "Cf", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
-				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp, c->daily_aut_resp[0], c->daily_tot_aut_resp, c->daily_npp[0], c->daily_tot_npp,
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
+				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp,
+				c->daily_aut_resp[0], c->daily_tot_aut_resp,
+				c->daily_c_flux,
+				c->daily_npp[0], c->daily_tot_npp,
 				c->daily_c_evapotransp[0],	c->daily_tot_c_evapotransp, c->available_soil_water,
 				c->daily_lai[0], c->daily_cc[0]*100, c->daily_dead_tree[0], c->daily_tot_dead_tree);
 

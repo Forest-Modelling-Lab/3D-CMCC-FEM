@@ -475,6 +475,9 @@ enum {
 	WS_heart,
 	WRC_sap,
 	WRC_heart,
+	WBB_sap,
+	WBB_heart,
+	WTOT_sap,
 	DEL_BB,                        //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
 	DEL_TOTAL_W,                   //Total Biomass Increment
@@ -913,6 +916,10 @@ typedef struct {
 	float het_respiration; //heterotrophic respiration
 	float ter;  //total ecosystem respiration
 
+
+
+	float daily_c_flux;
+	float daily_w_res;
 
 
 

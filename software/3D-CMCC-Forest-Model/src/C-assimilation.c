@@ -16,7 +16,14 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 {
 	int i;
 
+	int counter;
+
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
+
+	if (day == 0 && month == 0)
+	{
+		counter = 0;
+	}
 
 
 	//vedi il caso se la gpp compensa solo in parte la respirazione, la restante parte va presa dall nsc
@@ -40,6 +47,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
 					/*following Barbaroux et al., 2003*/
+					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
+
 					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
@@ -55,6 +64,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 				if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 				{
 					/*following Barbaroux et al., 2003*/
+					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
 					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
@@ -63,6 +73,9 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					{
 						s->value[BIOMASS_RESERVE_CTEM] = 0;
 						Log("All reserve has been consumed for respiration!!!\n");
+						Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+						counter ++;
+						Log ("days with negative balance = %d\n", counter);
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -84,6 +97,10 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		else
 		{
 			Log("ATTENTION biomass reserve < 0!!!!!!\n");
+			s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+			Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+			counter ++;
+			Log ("days with negative balance = %d\n", counter);
 		}
 
 		if (settings->time == 'm')
@@ -116,6 +133,14 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			s->value[BIOMASS_RESERVE_CTEM] -= ((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			Log("Reserve consumed for respiration = %g tDM/cell \n", (s->value[TOTAL_AUT_RESP] * GC_GDM /1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 			Log("Reserve Biomass = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
+		}
+		if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+		{
+			Log("ATTENTION biomass reserve < 0!!!!!!\n");
+			s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+			Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+			counter ++;
+			Log ("days with negative balance = %d\n", counter);
 		}
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;

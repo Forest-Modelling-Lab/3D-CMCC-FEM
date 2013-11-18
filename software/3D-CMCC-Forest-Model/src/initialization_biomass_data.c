@@ -77,13 +77,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Stem Biomass from init file = %g\n", s->value[BIOMASS_STEM_CTEM]);
 	}
 
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2), 2)) * Pi);
-	//Log("   AvDBH = %g cm \n", s->value[AVDBH]);
-	//Log("   BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
-	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
-	Log("   SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
-	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
-	Log("   HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
+
 	/*
 	float heart_wood_diameter, heart_wood_stem_mass;
 
@@ -98,13 +92,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 
 	 */
 
-	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
-	Log("   sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
-	Log("   Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
-	s->value[WS_sap] =  (s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC]);
-	Log("   Sapwood stem biomass = %g tDM class cell \n", s->value[WS_sap]);
-	s->value[WRC_sap] =  (s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[SAPWOOD_PERC]);
-	Log("   Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap]);
+
 
 	if (s->value[BIOMASS_STEM_BRANCH_CTEM]== 0 )
 	{
@@ -130,6 +118,8 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Stem Branch Biomass from init file = %g\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 	}
 
+
+
 	if(s->value[BIOMASS_ROOTS_COARSE_CTEM]== 0)
 	{
 		Log("\nNo Coarse root Biomass Data are available for model initialization \n");
@@ -144,6 +134,29 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Coarse Root Biomass from init file = %g \n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 	}
 
+	/*sapwood calculation*/
+	Log("SAPWOOD CALCULATION using sapwood area\n");
+	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2), 2)) * Pi);
+	//Log("   AvDBH = %g cm \n", s->value[AVDBH]);
+	//Log("   BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
+	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+	Log("   SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
+	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
+	Log("   HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
+	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
+	Log("   sapwood perc = %g%\n", s->value[SAPWOOD_PERC]*100);
+	Log("   Stem_biomass = %g class cell \n", s->value[BIOMASS_STEM_CTEM]);
+	s->value[WS_sap] = (s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC]);
+	Log("   Sapwood stem biomass = %g tDM class cell \n", s->value[WS_sap]);
+	s->value[WRC_sap] =  (s->value[BIOMASS_ROOTS_COARSE_CTEM] * s->value[SAPWOOD_PERC]);
+	Log("   Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap]);
+	s->value[WBB_sap] = (s->value[BIOMASS_STEM_BRANCH_CTEM] * s->value[SAPWOOD_PERC]);
+	Log("   Sapwood branch and bark biomass = %g tDM class cell \n", s->value[WBB_sap]);
+	s->value[WTOT_sap] = s->value[WS_sap] + s->value[WRC_sap] + s->value[WBB_sap];
+	Log("   Total Sapwood biomass = %g tDM class cell \n", s->value[WTOT_sap]);
+
+
+
 	/*reserve*/
 
 	if (s->value[BIOMASS_RESERVE_CTEM] == 0)
@@ -153,7 +166,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002
 
-		s->value[BIOMASS_RESERVE_CTEM] = s->value[WS_sap] * s->value[SAP_WRES];
+		s->value[BIOMASS_RESERVE_CTEM] = s->value[WTOT_sap] * s->value[SAP_WRES];
 		Log("-----Reserve Biomass initialization data  = %g tDM/cell \n", s->value[BIOMASS_RESERVE_CTEM]);
 		Log("-----Reserve Biomass initialization data  = %g KgC/cell \n", s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000);
 		Log("-----Reserve Biomass initialization data  = %g gC/tree \n", (s->value[BIOMASS_RESERVE_CTEM]/GC_GDM * 1000)/s->value[N_TREE]);
@@ -201,20 +214,29 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Fine Root Biomass from init file  = %g \n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 	}
 
+	s->value[BIOMASS_ROOTS_TOT_CTEM] = s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM];
+	Log("---Total Root Biomass = %g \n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
+
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
 	//FIXME assuming LIVE_DEAD WOOD RATIO AS IN BIOME
 	/*FOR STEM*/
+	Log("\n*******************************\n");
+	Log("Total Stem Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_CTEM]);
 	s->value[BIOMASS_STEM_LIVE_WOOD]= s->value[BIOMASS_STEM_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Stem Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 	s->value[BIOMASS_STEM_DEAD_WOOD]= s->value[BIOMASS_STEM_CTEM] -s->value[BIOMASS_STEM_LIVE_WOOD];
 	Log("-Dead Stem Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+
 	/*FOR COARSE ROOT*/
+	Log("Total Root Biomass = %g tDM/cell\n", s->value[BIOMASS_ROOTS_TOT_CTEM]);
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]= s->value[BIOMASS_ROOTS_COARSE_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Coarse Root Biomass = %g tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]= s->value[BIOMASS_ROOTS_COARSE_CTEM] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD];
 	Log("-Dead Coarse Root Biomass = %g tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+
 	/*FOR BRANCH*/
+	Log("Total BB Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]= s->value[BIOMASS_STEM_BRANCH_CTEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Stem Branch Biomass = %g tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]= s->value[BIOMASS_STEM_BRANCH_CTEM] -s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD];
@@ -231,6 +253,9 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
 	Log("---Dead biomass following BIOME = %g tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
+
+
+	Log("**********reserves following live tissues  BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES] );
 
 
 }
