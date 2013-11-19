@@ -23,7 +23,7 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");
 
 	c->daily_evapotranspiration = c->daily_tot_c_evapotransp + c->soil_evaporation;
-	Log("Daily total EVAPOTRANSPIRATION = %g \n", c->daily_c_evapotransp);
+	Log("Daily total EVAPOTRANSPIRATION = %g \n", c->daily_evapotranspiration);
 }
 
 

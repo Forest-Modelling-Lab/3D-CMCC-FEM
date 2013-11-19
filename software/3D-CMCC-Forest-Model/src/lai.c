@@ -20,7 +20,6 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 	{
 		if (settings->time == 'm')
 		{
-
 			Log("\n--GET_INITIAL_MONTH_LAI--\n");
 
 			if (s->counter[VEG_MONTHS]  == 1)
@@ -84,6 +83,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			Log("PEAK_Y_LAI = %g\n", s->value[PEAK_Y_LAI]);
 			Log("LAI = %g\n", s->counter[LAI]);
 
+
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 			if (s->counter[VEG_DAYS] == 1)
 			{
@@ -104,6 +104,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				 */
 				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
+				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (1-e^-s->value[BUD_BURST])
 				frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
 				Log("fraction of reserve for foliage and stems = %g\n", frac_to_foliage_stem);
 

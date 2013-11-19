@@ -128,7 +128,7 @@ void GetDayLength_3PG (CELL * c, int day, int month, int years, int MonthLength 
 void Get_Abscission_DayLength ( CELL * c)
 {
 	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
-	Log("Abscission day length = %g hrs\n", c->abscission_daylength);
+	//Log("Abscission day length = %g hrs\n", c->abscission_daylength);
 }
 
 extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)

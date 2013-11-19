@@ -43,9 +43,12 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		of reserve*/
 			if (s->value[GPP_g_C] < s->value[TOTAL_AUT_RESP])
 			{
-				//fixme remove after insert reserve also for coniferous
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
+					//todo
+					//todo
+					//Angelo only for broadleaved decidous and evergreen set a minimum value for BIOMASS_RESERVE_CTEM after which it cannot goes on
+					//and stop VEG_PERIOD
 					/*following Barbaroux et al., 2003*/
 					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
