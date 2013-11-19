@@ -1,0 +1,9 @@
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/ITCollelongo/Collelongo_input_2007.txt
+-m input/ITCollelongo/001_001_2007.txt
+-s input/ITCollelongo/Collelongo_site.txt
+-c input/ITCollelongo/Collelongo_settings.txt
