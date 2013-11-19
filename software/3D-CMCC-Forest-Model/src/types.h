@@ -1035,6 +1035,7 @@ extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA 
 extern void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
 extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
+extern void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
 extern void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 
 extern void Get_litter (CELL *, SPECIES *const, const int);

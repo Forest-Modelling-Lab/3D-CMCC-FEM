@@ -288,6 +288,10 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									}
 									Get_soil_water_balance (&m->cells[cell], met, month, day);
 								}
+								if (height == 0)
+								{
+									Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
+								}
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -359,6 +363,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									}
 									Get_soil_water_balance (&m->cells[cell], met, month, day);
+								}
+
+								if (height == 0)
+								{
+									Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
 								}
 
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
@@ -435,6 +444,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								}
 								Get_soil_water_balance (&m->cells[cell], met, month, day);
+							}
+
+							if (height == 0)
+							{
+								Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
 							}
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
