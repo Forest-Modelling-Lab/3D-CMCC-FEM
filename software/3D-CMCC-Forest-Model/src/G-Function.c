@@ -280,9 +280,11 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							if (c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
 							{
-							    Log ("somma termica %g\n", met[month].d[day].thermic_sum);
 								Log("species %s First day of growing season day = %d month = %d\n", c->heights[height].ages[age].species[species].name, day+1, month+1);
 							}
+
+
+
 							//Log("day %d month %d day_veg = %d\n", day+1 , month+1, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						}
@@ -296,6 +298,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 					{
 						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
 												                                                                                  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						Log("Last day of growing season day %d\n", (int)c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
 						//add leaf fall days
 						c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += (int)(c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]
 																											 * c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]);

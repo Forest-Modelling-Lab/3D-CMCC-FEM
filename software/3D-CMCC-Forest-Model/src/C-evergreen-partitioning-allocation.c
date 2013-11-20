@@ -13,7 +13,7 @@
 #include "types.h"
 #include "constants.h"
 
-/**/
+
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
@@ -54,9 +54,6 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	//float oldWf;
 
 	float Biomass_exceeding;
-
-	i = c->heights[height].z;
-
 
 	if (settings->time == 'm')
 	{
@@ -991,3 +988,4 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 }
 
 /**/
+

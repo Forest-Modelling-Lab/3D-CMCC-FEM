@@ -7,6 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
+/**/
 
 void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, float Yearly_Rain, float canopy_cover_dominant )
 {

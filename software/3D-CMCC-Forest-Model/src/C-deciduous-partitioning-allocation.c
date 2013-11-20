@@ -1,9 +1,3 @@
-/*
- * C-deciduous-partitioning-allocation.c
- *
- *  Created on: 20/nov/2013
- *      Author: alessio
- */
 
 
 /* includes */
@@ -13,7 +7,6 @@
 #include "types.h"
 #include "constants.h"
 
-/**/
 
 
 //VERSION CURRENTLY USED
@@ -46,8 +39,6 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 
 	float Biomass_exceeding;
-
-	i = c->heights[height].z;
 
 
 	//CTEM VERSION
@@ -1417,19 +1408,18 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				/**********************************************************************/
 			}
 		}
-
-		//for daily_Log file only if there's one class
-		/*
-	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
-	{
-		c->daily_lai = s->value[LAI];
-	}
-		 */
+		/*budburst phase*/
+		if (s->counter[VEG_DAYS] <= s->counter[BUD_BURST_COUNTER] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
+		{
+			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+			s->value[DEL_STEMS_CTEM]= 0;
+			s->value[DEL_BB]= 0;
+		}
 	}
 	else
 	{
 
-
+		/*budburst phase*/
 		if (s->counter[VEG_DAYS] <= s->counter[BUD_BURST_COUNTER] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
 		{
 			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -1442,8 +1432,19 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			s->value[DEL_ROOTS_FINE_CTEM] = 0;
 			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 			s->value[DEL_STEMS_CTEM]= 0;
-			s->value[DEL_RESERVE_CTEM]= 0;
+			s->value[DEL_RESERVE_CTEM]= -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);;
 			s->value[DEL_BB]= 0;
+		}
+		if (s->counter[VEG_UNVEG] == 0)
+		{
+			s->value[DEL_RESERVE_CTEM] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+		}
+		else
+		{
+			if (s->value[GPP_g_C] > 0.0)
+			{
+				s->value[DEL_RESERVE_CTEM] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + s->value[GPP_g_C];
+			}
 		}
 		Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
 		Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
@@ -1460,6 +1461,11 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	}
 
 
+	i = c->heights[height].z;
+
+
+
+
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
 	c->annual_ws[i] = s->value[BIOMASS_STEM_CTEM];
@@ -1469,4 +1475,3 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 }
 
 /**/
-
