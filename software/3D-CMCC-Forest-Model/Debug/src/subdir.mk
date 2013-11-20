@@ -5,6 +5,8 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/C-assimilation.c \
+../src/C-deciduous-partitioning-allocation.c \
+../src/C-evergreen-partitioning-allocation.c \
 ../src/C-fluxes.c \
 ../src/C-partitioning-allocation.c \
 ../src/G-Function.c \
@@ -56,6 +58,8 @@ C_SRCS += \
 
 OBJS += \
 ./src/C-assimilation.o \
+./src/C-deciduous-partitioning-allocation.o \
+./src/C-evergreen-partitioning-allocation.o \
 ./src/C-fluxes.o \
 ./src/C-partitioning-allocation.o \
 ./src/G-Function.o \
@@ -107,6 +111,8 @@ OBJS += \
 
 C_DEPS += \
 ./src/C-assimilation.d \
+./src/C-deciduous-partitioning-allocation.d \
+./src/C-evergreen-partitioning-allocation.d \
 ./src/C-fluxes.d \
 ./src/C-partitioning-allocation.d \
 ./src/G-Function.d \
