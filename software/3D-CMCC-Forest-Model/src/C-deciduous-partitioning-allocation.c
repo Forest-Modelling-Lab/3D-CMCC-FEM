@@ -88,6 +88,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	{
 		Log("First day of Leaf fall\n");
 		s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE_CTEM] * s->value[FOLIAGE_REDUCTION_RATE];
+		Log("foliage biomass to remove = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 		Log("Daily amount of foliage biomass to remove = %g\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 	}
 
@@ -723,6 +724,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[BIOMASS_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_COARSE_CTEM];
 				Log("Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
+				Log("Foliage Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
 				//check for live and dead tissues
 				/*stem*/
 				s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
@@ -795,13 +798,12 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_RESERVE_CTEM]= s->value[NPP];
 				s->value[BIOMASS_RESERVE_CTEM] += s->value[DEL_RESERVE_CTEM];
 
-
-
-
-				Log("Foliage Biomass (Wf) = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
-
+				s->value[DEL_STEMS_CTEM] = 0;
+				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_ROOTS_TOT_CTEM] = 0;
 				s->value[DEL_FOLIAGE_CTEM] = 0;
-
+				s->value[DEL_BB] = 0;
 
 				Log("***LEAF FALL**\n");
 				//COMPUTE LITTERFALL using BIOME_BGC approach
@@ -809,7 +811,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 				Log("foliage reduction rate %g \n", s->value[FOLIAGE_REDUCTION_RATE]);
 				Log("biomass foliage to remove %g \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
-				s->value[BIOMASS_FOLIAGE_CTEM] -= s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];;
+				s->value[BIOMASS_FOLIAGE_CTEM] -= s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
 				Log("Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 

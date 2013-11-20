@@ -820,16 +820,16 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 							{
 
 								/*compute annual days of leaf fall*/
-								c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] = (int) c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-																											  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE];
-								Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
+								c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+																											  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+								Log("Days of leaf fall for deciduous = %d day\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
 								//monthly rate of foliage reduction
 
 								//currently the model considers a linear reduction in leaf fall
 								//it should be a negative sigmoid function
 								//todo: create a sigmoid function
-								c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-								//Log("foliage reduction rate = %g,  = %g%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+								c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
+								Log("foliage reduction rate = %g,  = %g%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
 
 
 								//todo decidere se utlizzare growthend o mindaylenght
@@ -848,7 +848,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 									if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 									{
 
-										Log("DAY_FRAC_FOLIAGE_REMOVE %g\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
+										Log("DAY_FRAC_FOLIAGE_REMOVE %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
 										c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  += 1;
 										//check
@@ -860,7 +860,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 										}
 
 										//check
-										if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE])
+										if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE])
 										{
 											/*days of leaf fall*/
 											c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;

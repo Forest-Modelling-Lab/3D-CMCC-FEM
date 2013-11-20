@@ -296,8 +296,9 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 					//compute last year day the number of days for leaf fall
 					if (day == 30 && month == DECEMBER)
 					{
-						c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  (int) c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-												                                                        * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE];
+						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+												                                                        * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						Log("Day frac foliage remove = %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] );
 						//add leaf fall days
 						c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += (int)(c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]
 																											 * c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]);

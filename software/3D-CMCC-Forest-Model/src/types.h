@@ -639,7 +639,7 @@ enum {
 
 	//DAILY PHENOLOGY
 	FRAC_DAY_FOLIAGE_REMOVE,	//number of leaf fall days/tot number of veg days
-	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
+
 
 	THERMIC_SUM_FOR_END_VEG, //thermic sum at the end of leaf fall period
 
@@ -687,6 +687,7 @@ enum {
 	VEG_MONTHS,
 	VEG_DAYS,
 	BUD_BURST_COUNTER,
+	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
 
 	DAY_VEG_FOR_LITTERFALL_RATE,
 	MONTH_VEG_FOR_LITTERFALL_RATE,
