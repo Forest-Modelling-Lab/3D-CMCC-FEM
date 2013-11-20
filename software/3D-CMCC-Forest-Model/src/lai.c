@@ -105,9 +105,9 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				 */
 				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
-				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (1-e^-s->value[BUD_BURST])
+				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (e^-s->value[BUD_BURST])
 				//fixme try to allocate just a part of total reserve not all
-				frac_to_foliage_fineroot = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
+				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE_CTEM] * 0.5) / s->counter[BUD_BURST_COUNTER];
 				Log("fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
 
 				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_fineroot;
