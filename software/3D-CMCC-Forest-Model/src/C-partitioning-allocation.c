@@ -203,13 +203,14 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("(LAI < PEAK_Y_LAI * 0.5) \n");
 				Log("LAI = %g \n", s->value[LAI]);
 				Log("**Maximum Growth**\n");
-				Log("Bud burst phase allocating only into foliage and stem pools\n");
+				Log("Bud burst phase allocating only into foliage and fine root pools\n");
 
 
 				//fixme scegliere se usare Magnani o meno
 				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 
+				/*
 				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				s->value[DEL_STEMS_CTEM] = (s->value[NPP] - s->value[DEL_FOLIAGE_CTEM]);
 
@@ -220,6 +221,16 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
+				*/
+				/*allocating into fine root and foliage*/
+				s->value[DEL_FOLIAGE_CTEM] += (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				Log("Biomass NPP allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
+				Log("Biomass NPP allocated to fine root pool = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+
+
 
 				//recompute LAI
 				/*for dominant layer with sunlit foliage*/
@@ -235,7 +246,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("++Lai = %g\n", s->value[LAI]);
 
 				//s->value[DEL_STEMS_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_STEMS_CTEM] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT_CTEM] = 0;
 				s->value[DEL_RESERVE_CTEM] = 0;
@@ -1078,6 +1089,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("allocating only into foliage pools\n");
 
 				s->value[DEL_FOLIAGE_CTEM] = s->value[NPP];
+				Log("DEL FOLIAGE = %g\n", s->value[DEL_FOLIAGE_CTEM]);
 				s->value[BIOMASS_FOLIAGE_CTEM] +=  s->value[DEL_FOLIAGE_CTEM];
 				Log("BiomassFoliage CTEM = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_CTEM] );
 
@@ -1408,18 +1420,29 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	}
 	else
 	{
-		s->value[DEL_FOLIAGE_CTEM] = 0;
-		s->value[DEL_ROOTS_FINE_CTEM] = 0;
-		s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-		s->value[DEL_STEMS_CTEM]= 0;
-		s->value[DEL_RESERVE_CTEM]= 0;
-		s->value[DEL_BB]= 0;
 
-		Log("delta_F %d = 0 \n", c->heights[height].z);
-		Log("delta_fR %d = 0 \n", c->heights[height].z);
-		Log("delta_cR %d = 0 \n", c->heights[height].z);
-		Log("delta_S %d = 0 \n", c->heights[height].z);
-		Log("delta_Res %d = 0 \n", c->heights[height].z);
+
+		if (s->counter[VEG_DAYS] <= s->counter[BUD_BURST_COUNTER] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE_CTEM] > 0)
+		{
+			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+			s->value[DEL_STEMS_CTEM]= 0;
+			s->value[DEL_BB]= 0;
+		}
+		else
+		{
+			s->value[DEL_FOLIAGE_CTEM] = 0;
+			s->value[DEL_ROOTS_FINE_CTEM] = 0;
+			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+			s->value[DEL_STEMS_CTEM]= 0;
+			s->value[DEL_RESERVE_CTEM]= 0;
+			s->value[DEL_BB]= 0;
+		}
+		Log("delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE_CTEM] );
+		Log("delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
+		Log("delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+		Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
+		Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
+		Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 		c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
 		c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
 		c->daily_delta_wbb[i] = s->value[DEL_BB];
@@ -1583,6 +1606,7 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 			//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 
+/*
 			s->value[DEL_FOLIAGE_CTEM] = s->value[NPP] * (1.0 - s->value[STEM_LEAF_FRAC]);
 			s->value[DEL_STEMS_CTEM] = (s->value[NPP] - s->value[DEL_FOLIAGE_CTEM]);
 
@@ -1593,6 +1617,15 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 			Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
+*/
+				/*allocating into fine root and foliage*/
+				s->value[DEL_FOLIAGE_CTEM] += (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				Log("Biomass NPP allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
+				Log("Biomass NPP allocated to fine root pool = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+
 
 			//recompute LAI
 			/*for dominant layer with sunlit foliage*/

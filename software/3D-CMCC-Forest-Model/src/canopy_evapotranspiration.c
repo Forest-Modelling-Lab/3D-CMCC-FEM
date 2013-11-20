@@ -101,7 +101,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 
 	/*compute total daily canopy evapotranspiration*/
 	c->daily_tot_c_evapotransp += c->daily_c_evapotransp[c->heights[height].z];
-	Log("Daily total canopy transpiration = %g \n", c->daily_tot_c_evapotransp);
+	Log("Daily total canopy evapotranspiration = %g \n", c->daily_tot_c_evapotransp);
 
 	i = c->heights[height].z;
 
@@ -109,7 +109,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 	c->monthly_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->annual_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];
 
-	c->daily_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
+	//c->daily_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->monthly_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->annual_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 

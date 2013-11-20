@@ -112,7 +112,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	}
 
 	c->total_yearly_soil_evaporation += c->soil_evaporation;
-	Log("Total Yearly Soil Evaporation = %g mm\n", c->total_yearly_soil_evaporation);
+	//Log("Total Yearly Soil Evaporation = %g mm\n", c->total_yearly_soil_evaporation);
 
 }
 
