@@ -820,9 +820,9 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 							{
 
 								/*compute annual days of leaf fall*/
-								c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] =  ( c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-								                                                                                                                                      * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-								//Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
+								c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE] = (int) c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+																											  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE];
+								Log("Days of leaf fall for deciduous = %g day\n", c->heights[height].ages[age].species[species].value[DAY_FRAC_FOLIAGE_REMOVE]);
 								//monthly rate of foliage reduction
 
 								//currently the model considers a linear reduction in leaf fall
