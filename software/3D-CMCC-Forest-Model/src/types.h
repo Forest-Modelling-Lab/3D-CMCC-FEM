@@ -904,10 +904,16 @@ typedef struct {
 
 	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
-	float annual_delta_ws[3], annual_ws[3];
+	float daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
+	float daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
+	float daily_delta_wbb[3], daily_wbb[3], monthly_delta_wbb[3], monthly_wbb[3], annual_delta_wbb[3], annual_wbb[3];
+	float daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
+	float daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
+	float daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
+
+
 	float annual_dbh[3];
 
-	float annual_delta_wres[3], annual_wres[3];
 
 	//int dead_tree;
 

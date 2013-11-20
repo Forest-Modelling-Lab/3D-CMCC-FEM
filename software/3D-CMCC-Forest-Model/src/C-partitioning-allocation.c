@@ -358,6 +358,12 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 					s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 					s->value[DEL_Y_BB] += s->value[DEL_BB];
 				}
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 
 				break;
 				/************************************************************/
@@ -623,6 +629,12 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 					s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 					s->value[DEL_Y_BB] += s->value[DEL_BB];
 				}
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 
 				break;
 				/************************************************************************/
@@ -743,13 +755,18 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
 				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 
-
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 
 
 				break;
 				/**********************************************************************/
 			case 0:
-				Log("(DayLength < MINDAYLENGTH Abscission DayLength)\n");
+				Log("(DayLength < MINDAYLENGTH)\n");
 				Log("LEAF FALL\n");
 				//Log("allocating into the three pools Ws+Wr+Wreserve \nwith leaf fall\n");
 				Log("allocating into W reserve pool\n");
@@ -900,6 +917,13 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				}
 				Log("++Lai = %g\n", s->value[LAI]);
 
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
+
 
 				break;
 
@@ -933,6 +957,13 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("-Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE_CTEM]);
 
 				Log("++Lai = %g\n", s->value[LAI]);
+
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 
 				break;
 			}
@@ -1256,7 +1287,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("BiomassRoots into coarse roots = %g tDM/area\n", s->value[DEL_ROOTS_COARSE_CTEM]);
 
 
-				s->value[DEL_STEMS_CTEM] = s->value[NPP] *  pS_CTEM;
+				s->value[DEL_STEMS_CTEM] = s->value[NPP] * pS_CTEM;
 				Log("BiomassStem increment CTEM = %g tDM/area\n", s->value[DEL_STEMS_CTEM]);
 
 				s->value[DEL_RESERVE_CTEM] = s->value[NPP] * pF_CTEM;
@@ -1389,10 +1420,19 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 		Log("delta_cR %d = 0 \n", c->heights[height].z);
 		Log("delta_S %d = 0 \n", c->heights[height].z);
 		Log("delta_Res %d = 0 \n", c->heights[height].z);
+		c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+		c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+		c->daily_delta_wbb[i] = s->value[DEL_BB];
+		c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+		c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+		c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 	}
 
 
 	i = c->heights[height].z;
+
+
+
 
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_ws[i] += s->value[DEL_STEMS_CTEM];
@@ -1690,6 +1730,13 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_Y_WRES] += s->value[DEL_RESERVE_CTEM];
 				s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT_CTEM];
 				s->value[DEL_Y_BB] += s->value[DEL_BB];
+
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
 			}
 			break;
 			case 2:
@@ -1819,6 +1866,14 @@ void E_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS_CTEM]);
 				Log("delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE_CTEM]);
 				Log("delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
+
+				c->daily_delta_ws[i] = s->value[DEL_STEMS_CTEM];
+				c->daily_delta_wf[i] = s->value[DEL_FOLIAGE_CTEM];
+				c->daily_delta_wbb[i] = s->value[DEL_BB];
+				c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
+				c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+				c->daily_delta_wres[i] = s->value[DEL_RESERVE_CTEM];
+
 				break;
 			}
 

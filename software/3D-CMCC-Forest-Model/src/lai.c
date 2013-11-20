@@ -11,7 +11,7 @@
 void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month, const int day, const int height)
 {
 
-	static float frac_to_foliage_stem;
+	static float frac_to_foliage_fineroot;
 	float biomass_for_peak_lai;
 
 
@@ -105,8 +105,9 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (1-e^-s->value[BUD_BURST])
-				frac_to_foliage_stem = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
-				Log("fraction of reserve for foliage and stems = %g\n", frac_to_foliage_stem);
+				//fixme try to allocate just a part of total reserve not all
+				frac_to_foliage_fineroot = s->value[BIOMASS_RESERVE_CTEM] / s->counter[BUD_BURST_COUNTER];
+				Log("fraction of reserve for foliage and stems = %g\n", frac_to_foliage_fineroot);
 
 				s->counter[BUD_BURST_COUNTER] --;
 				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
@@ -118,13 +119,13 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 
 				//FIXME ALLOCATING into foliage and fine root
 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
-				Log("ratio of reserve for stem = %g% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
+				Log("ratio of reserve for fine root = %g% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
 
-				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_stem * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-				s->value[BIOMASS_ROOTS_FINE_CTEM] += (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]);
-				Log("Biomass stem = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+				s->value[BIOMASS_ROOTS_FINE_CTEM] += (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
+				Log("Biomass fine root = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 
 				/*
  * 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
@@ -140,12 +141,9 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				*/
 
 
-				//s->value[BIOMASS_FOLIAGE_CTEM] += frac_to_foliage_stem;
-				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_stem;
+				//s->value[BIOMASS_FOLIAGE_CTEM] += frac_to_foliage_fineroot;
 
-				Log("++Reserves pools less foliage + stem = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-				Log ("++Biomass foliage from reserves for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("++Reserves pools less foliage + fine root = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)

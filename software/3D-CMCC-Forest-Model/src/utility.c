@@ -680,6 +680,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
+		Daily_Log("Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
+		Daily_Log("Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
+		Daily_Log("Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
+		Daily_Log("Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
+		Daily_Log("Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
+		Daily_Log("Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
+
 	}
 
 	if (years == 0)
@@ -698,16 +705,25 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "Cf", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)");
+			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "Cf", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8d \t%8d \n",
+		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g "
+				"\t%8.3g \t%8.3g \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \n",
 				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[0], c->daily_tot_aut_resp,
 				c->daily_c_flux,
 				c->daily_npp[0], c->daily_tot_npp,
-				c->daily_c_evapotransp[0],	c->daily_tot_c_evapotransp, c->available_soil_water,
-				c->daily_lai[0], c->daily_cc[0]*100, c->daily_dead_tree[0], c->daily_tot_dead_tree);
+				c->daily_c_evapotransp[0],	c->daily_tot_c_evapotransp,
+				c->available_soil_water,
+				c->daily_lai[0], c->daily_cc[0]*100,
+				c->daily_dead_tree[0], c->daily_tot_dead_tree,
+				c->daily_delta_wf[0],
+				c->daily_delta_ws[0],
+				c->daily_delta_wbb[0],
+				c->daily_delta_wfr[0],
+				c->daily_delta_wcr[0],
+				c->daily_delta_wres[0]);
 
 
 		previous_layer_number = c->annual_layer_number;
