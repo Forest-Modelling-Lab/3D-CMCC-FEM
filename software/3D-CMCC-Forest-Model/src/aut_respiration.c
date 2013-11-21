@@ -49,11 +49,6 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 	//float n_area/*, dlmr_area*/;
 
-	float leaf_nitrogen;
-	float fine_root_nitrogen;
-	float coarse_root_nitrogen;
-	float stem_nitrogen;
-	float branch_nitrogen;
 
 	Log("\nGET_MAINTENANCE_RESPIRATION\n");
 	/*
@@ -186,8 +181,11 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 	}
 	else
 	{
-		//COMPUTE GROWTH RESPIRATION using previous day biomass increment
-		if (s->value[NPP] > 0.0)
+		if (s->value[DEL_FOLIAGE_CTEM] > 0.0
+				|| s->value[DEL_ROOTS_FINE_CTEM] > 0.0
+				|| s->value[DEL_STEMS_CTEM] > 0.0
+				|| s->value[DEL_ROOTS_COARSE_CTEM] > 0.0
+				|| s->value[DEL_BB] > 0.0)
 		{
 			s->value[LEAF_GROWTH_RESP] = (((s->value[DEL_FOLIAGE_CTEM]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)) * GRPERC;
 			Log("daily leaf growth respiration = %g gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
