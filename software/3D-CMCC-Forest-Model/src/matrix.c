@@ -701,6 +701,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								"----- wf = %g tDM/ha\n"
 								"----- wr coarse = %g tDM/area\n"
 								"----- wr fine = %g tDM/area\n"
+								"----- wr tot = %g tDM/area\n"
 								"----- ws = %g tDM/area\n"
 								"----- wbb = %g tDM/area\n"
 								"----- wres = %g tDM/area\n"
@@ -721,6 +722,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_CTEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],

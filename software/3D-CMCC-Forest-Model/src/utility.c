@@ -242,22 +242,23 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%2s \t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "HC(0)", "GPP(0)", "GPP (tot)", "AR(0)", "AR (tot)","Y(%tot)", "NPP(0)", "NPP(tot)", "NPP(gC/m2yr)","CE(0)", "CE(tot)", "ASW", "PEAK_LAI(0)",
-					"CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)", "DELTA-Wres", "Wres");
+			Annual_Log ("\n%s \t%2s \t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \n\n",
+					"YEAR", "HC(0)", "GPP (tot)", "AR (tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "PEAK_LAI",
+					"CC(tot)", "DEAD TREE(tot)", "DELTA-Wres", "Wres");
 		}
-		Annual_Log ("%d \t%2d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%12d \t%14d \t%11g \t%11g \n",
+		Annual_Log ("%d \t%2d \t%10g \t%10g \t%10g \t%10g\t%10g \t%10g \t%10g \t%10g \t%12g \t%14d \t%11g \t%11g \n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter,
-				c->annual_gpp[0], c->annual_tot_gpp,
-				c->annual_aut_resp[0], c->annual_tot_aut_resp,
+				c->annual_tot_gpp,
+				c->annual_tot_aut_resp,
 				((c->annual_tot_aut_resp * 100.0)/c->annual_tot_gpp),
-				c->annual_npp[0], c->annual_tot_npp,
-				((c->annual_tot_npp/settings->sizeCell)*1000000)/2,
-				c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp ,
+				c->annual_tot_npp,
+				c->annual_tot_npp_g_c,
+				c->annual_tot_c_evapotransp ,
 				c->available_soil_water,
-				c->annual_peak_lai[0], c->annual_cc[0],
-				c->annual_dead_tree[0], c->annual_tot_dead_tree,
+				c->annual_peak_lai[0],
+				c->annual_cc[0],
+				c->annual_tot_dead_tree,
 				c->annual_delta_wres[0], c->annual_wres[0]);
 
 		previous_layer_number = c->annual_layer_number;
@@ -551,12 +552,18 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "MONTH", "GPP(0)", "GPP (tot)", "AR(0)", "AR(tot)", "NPP(0)", "NPP (tot)", "CE(0)", "CE(tot)", "CC(0)", "DEAD TREE(0)", "DEAD TREE(tot)");
+			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
+					"YEAR", "MONTH", "GPP (tot)", "AR(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "CC(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%10d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \t%10d \n",
-				yos[years].year, month+1, c->monthly_gpp[0], c->monthly_tot_gpp, c->monthly_aut_resp[0], c->monthly_tot_aut_resp, c->monthly_npp[0], c->monthly_tot_npp,
-				c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp, c->monthly_cc[0], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+		Monthly_Log ("%d \t%10d \t%10g \t%10g \t%10g \t%10g \t%10g \t%10g \t%10d \n",
+				yos[years].year, month+1,
+				c->monthly_tot_gpp,
+				c->monthly_tot_aut_resp,
+				c->monthly_tot_npp,
+				c->monthly_tot_npp_g_c,
+				c->monthly_tot_c_evapotransp,
+				c->monthly_cc[0],
+				c->monthly_tot_dead_tree);
 
 
 		//reset
@@ -570,6 +577,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->monthly_tot_gpp = 0;
 		c->monthly_tot_aut_resp = 0;
 		c->monthly_tot_npp = 0;
+		c->monthly_tot_npp_g_c = 0;
 		c->monthly_tot_c_evapotransp = 0;
 		c->monthly_tot_dead_tree = 0;
 
@@ -705,25 +713,29 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(0)", "GPP(tot)", "AR(0)", "AR(tot)", "Cf", "NPP(0)", "NPP(tot)","CE(0)", "CE(tot)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "DEADTREE(tot)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres");
+			Daily_Log ("\n%s \t%8s  \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "NPP(0)", "NPPgC", "CE(0)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g "
-				"\t%8.3g \t%8.3g \t%8d \t%8d \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \t%8.3g \n",
-				yos[years].year, month+1, day+1, c->daily_gpp[0], c->daily_tot_gpp,
-				c->daily_aut_resp[0], c->daily_tot_aut_resp,
+		Daily_Log ("%d \t%8d \t%8d \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g "
+				"\t%8.6g \t%8d \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g\n",
+				yos[years].year, month+1, day+1, c->daily_gpp[0],
+				c->daily_aut_resp[0],
+				c->daily_aut_resp_tDM[0],
 				c->daily_c_flux,
-				c->daily_npp[0], c->daily_tot_npp,
-				c->daily_c_evapotransp[0],	c->daily_tot_c_evapotransp,
+				c->daily_npp[0],
+				c->daily_npp_g_c[0],
+				c->daily_c_evapotransp[0],
 				c->available_soil_water,
-				c->daily_lai[0], c->daily_cc[0]*100,
-				c->daily_dead_tree[0], c->daily_tot_dead_tree,
+				c->daily_lai[0],
+				c->daily_cc[0]*100,
+				c->daily_dead_tree[0],
 				c->daily_delta_wf[0],
 				c->daily_delta_ws[0],
 				c->daily_delta_wbb[0],
 				c->daily_delta_wfr[0],
 				c->daily_delta_wcr[0],
-				c->daily_delta_wres[0]);
+				c->daily_delta_wres[0],
+				c->daily_wres[0]);
 
 
 		previous_layer_number = c->annual_layer_number;
@@ -731,7 +743,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		//reset
 		c->daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
+		c->daily_aut_resp_tDM[0] = 0;
 		c->daily_npp[0] = 0;
+		c->daily_npp_g_c[0]= 0;
 		c->daily_c_int[0] = 0;
 		c->daily_c_transp[0] = 0;
 		c->daily_c_evapotransp[0] = 0;

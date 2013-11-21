@@ -52,8 +52,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					/*following Barbaroux et al., 2003*/
 					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
-					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+					//Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
@@ -69,16 +69,14 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					/*following Barbaroux et al., 2003*/
 					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
-					s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+					//Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
 						s->value[BIOMASS_RESERVE_CTEM] = 0;
 						Log("All reserve has been consumed for respiration!!!\n");
 						Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-						counter ++;
-						Log ("days with negative balance = %d\n", counter);
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -100,10 +98,6 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		else
 		{
 			Log("ATTENTION biomass reserve < 0!!!!!!\n");
-			s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-			Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-			counter ++;
-			Log ("days with negative balance = %d\n", counter);
 		}
 
 		if (settings->time == 'm')
@@ -127,23 +121,10 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	}
 	else
 	{
-		/*for principle of conservation of mass*/
-		/*used if previous day NPP is negative to conserve mass assuming the loss
-		of reserve*/
-		if (s->value[TOTAL_AUT_RESP] > 0.0)
-		{
-			Log("Reserve Biomass = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
-			s->value[BIOMASS_RESERVE_CTEM] -= ((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			Log("Reserve consumed for respiration = %g tDM/cell \n", (s->value[TOTAL_AUT_RESP] * GC_GDM /1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
-			Log("Reserve Biomass = %g tDM/area\n", s->value[BIOMASS_RESERVE_CTEM]);
-		}
+
 		if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 		{
 			Log("ATTENTION biomass reserve < 0!!!!!!\n");
-			s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-			Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-			counter ++;
-			Log ("days with negative balance = %d\n", counter);
 		}
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;
@@ -154,12 +135,18 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	i = c->heights[height].z;
 
 	c->daily_npp[i] += s->value[NPP];
+	c->daily_npp_g_c[i] += s->value[NPP_g_C];
 	c->monthly_npp[i] += s->value[NPP];
+	c->monthly_npp_g_c[i] += s->value[NPP_g_C];
 	c->annual_npp[i] += s->value[NPP];
+	c->annual_npp_g_c[i] += s->value[NPP_g_C];
 
 	c->daily_tot_npp += s->value[NPP];
+	c->daily_tot_npp_g_c += s->value[NPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];
+	c->monthly_tot_npp_g_c += s->value[NPP_g_C];
 	c->annual_tot_npp += s->value[NPP];
+	c->annual_tot_npp_g_c += s->value[NPP_g_C];
 
 	Log("***************************** ANNUAL NPP *************************** \n");
 

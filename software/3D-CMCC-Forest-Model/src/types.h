@@ -777,6 +777,7 @@ typedef struct {
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	float daily_aut_resp_tDM[3];
 	float daily_cc[3], monthly_cc[3], annual_cc[3];
 	float daily_lai[3];
 	float annual_peak_lai[10];
@@ -886,14 +887,17 @@ typedef struct {
 	//cumulative variables layer related used in annual-monthly-daily Log
 	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
 	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	float daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	float daily_c_int[3], daily_tot_c_int;
 	float daily_c_transp[3], daily_tot_c_transp;
 	float daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
+
 	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	float daily_aut_resp_tDM[3];
 
 	float daily_cc[3], monthly_cc[3], annual_cc[3];
 
