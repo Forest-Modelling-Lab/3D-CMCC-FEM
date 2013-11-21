@@ -37,6 +37,9 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	float Perc_coarse;
 	//float Perc_leaves;              //percentage of leaves in first growing season
 
+	static float frac_to_foliage_fineroot;
+	float biomass_for_peak_lai;
+
 
 	float Biomass_exceeding;
 
@@ -198,13 +201,123 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 			switch (s->phenology_phase)
 			{
-			Log("LAI = %g \n", s->value[LAI]);
 			/************************************************************/
 			case 1:
+				Log("BUDBURST\n");
+				Log("Bud burst phase using reserve pools\n");
+				Log("Allocating only into foliage and fine root pools\n");
+				Log("LAI = %g \n", s->value[LAI]);
+				/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
+				if (s->counter[VEG_DAYS] == 1)
+				{
+					s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
+					Log("Days for bud burst = %g\n", s->value[BUD_BURST]);
+				}
+				if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+				{
+					Log("ATTENTION BIOMASS RESERVE < 0.0\n");
+				}
+				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+				 * and Barbaroux et al., 2002,
+								the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+				 */
+				/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
+				 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
+				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (e^-s->value[BUD_BURST])
+				//fixme try to allocate just a part of total reserve not all
+				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE_CTEM] * 0.5) / s->counter[BUD_BURST_COUNTER];
+				Log("fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
+
+				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_fineroot;
+
+				s->counter[BUD_BURST_COUNTER] --;
+				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
+
+				Log("++Lai before reserve allocation = %g\n", s->value[LAI]);
+				Log("++Peak Lai = %g\n", s->value[PEAK_Y_LAI]);
+
+				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+
+				//FIXME ALLOCATING into foliage and fine root
+				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for fine root = %g% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
+
+				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				Log("Biomass reserve allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+				s->value[BIOMASS_ROOTS_FINE_CTEM] += (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
+				Log("Biomass reserve allocated to fine root pool = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+
+				/*
+				 * 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[STEM_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+
+				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_stem * (1.0 - s->value[STEM_LEAF_FRAC]));
+				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+				s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem * s->value[STEM_LEAF_FRAC]);
+				Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
+				 */
+				//s->value[BIOMASS_FOLIAGE_CTEM] += frac_to_foliage_fineroot;
+
+				Log("++Reserves pools less foliage + fine root = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+
+				/*for dominant layer with sunlit foliage*/
+				if (c->top_layer == c->heights[height].z)
+				{
+					Log("computing LAI for dominant trees\n");
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+				}
+				/*for dominated shaded foliage*/
+				else
+				{
+					Log("computing LAI for dominated trees\n");
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				}
+
+				/*check if re-transfer foliage biomass to reserve*/
+				if (s->value[LAI] > s->value[PEAK_Y_LAI])
+				{
+					Log("LAI exceeds Peak Lai\n");
+
+					/*for dominant layer with sunlit foliage*/
+					if (c->top_layer == c->heights[height].z)
+					{
+						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000;
+					}
+					/*for dominated shaded foliage*/
+					else
+					{
+						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
+					}
+					/*re-transfer mass to reserve*/
+					s->value[BIOMASS_RESERVE_CTEM] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE_CTEM]);
+					Log("++Reserves pools plus exceeding foliage biomass = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+					s->value[BIOMASS_FOLIAGE_CTEM] = biomass_for_peak_lai;
+					/*recompute correct LAI*/
+					/*for dominant layer with sunlit foliage*/
+					if (c->top_layer == c->heights[height].z)
+					{
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+					}
+					/*for dominated shaded foliage*/
+					else
+					{
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+					}
+				}
+
+				Log("++Lai from reserves = %g\n", s->value[LAI]);
+
+				break;
+			case 2:
 				Log("(LAI < PEAK_Y_LAI * 0.5) \n");
 				Log("LAI = %g \n", s->value[LAI]);
 				Log("**Maximum Growth**\n");
-				Log("Bud burst phase allocating only into foliage and fine root pools\n");
+				Log("Allocating only into foliage and fine root pools\n");
 
 
 				//fixme scegliere se usare Magnani o meno
@@ -222,7 +335,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				s->value[BIOMASS_STEM_CTEM] +=  s->value[DEL_STEMS_CTEM];
 				Log("Biomass Stem CTEM = %g tDM/area\n", s->value[BIOMASS_STEM_CTEM] );
-				*/
+				 */
 				/*allocating into fine root and foliage*/
 				s->value[DEL_FOLIAGE_CTEM] += (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 				Log("Biomass NPP allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
@@ -379,7 +492,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				break;
 				/************************************************************/
-			case 2:
+			case 3:
 				Log("**Normal Growth**\n");
 				Log("Day length > %g \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
 				Log("(LAI MAX * 0.5 < LAI < LAI MAX)\n");
@@ -650,7 +763,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				break;
 				/************************************************************************/
-			case 3:
+			case 4:
 				Log("(LAI == PEAK LAI)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
 				/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
@@ -779,7 +892,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				break;
 				/**********************************************************************/
-			case 0:
+			case 5:
 				Log("(DayLength < MINDAYLENGTH)\n");
 				Log("LEAF FALL\n");
 				Log("allocating into W reserve pool\n");
@@ -838,7 +951,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 				break;
 
-			case 4:
+			case 0:
 
 				Log("Unvegetative period \n");
 
@@ -1313,11 +1426,117 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 	else
 	{
 		Log("Negative Fluxes NPP = 0\n");
-		if (s->phenology_phase >= 1 && s->phenology_phase <= 3)
+		if (s->phenology_phase == 1 )
 		{
+			Log("BUDBURST\n");
+			Log("Bud burst phase using reserve pools\n");
+			Log("Allocating only into foliage and fine root pools\n");
+			Log("LAI = %g \n", s->value[LAI]);
+			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
+			if (s->counter[VEG_DAYS] == 1)
+			{
+				s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
+				Log("Days for bud burst = %g\n", s->value[BUD_BURST]);
+			}
+			if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+			{
+				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
+			}
+			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+			 * and Barbaroux et al., 2002,
+											the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+			 */
+			/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
+			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
+			//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (e^-s->value[BUD_BURST])
+			//fixme try to allocate just a part of total reserve not all
+			frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE_CTEM] * 0.5) / s->counter[BUD_BURST_COUNTER];
+			Log("fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
+
+			s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_fineroot;
+
+			s->counter[BUD_BURST_COUNTER] --;
+			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
+
+			Log("++Lai before reserve allocation = %g\n", s->value[LAI]);
+			Log("++Peak Lai = %g\n", s->value[PEAK_Y_LAI]);
+
+			Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+
+			//FIXME ALLOCATING into foliage and fine root
+			Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+			Log("ratio of reserve for fine root = %g% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
+
+			s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+			Log("Biomass reserve allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+
+			s->value[BIOMASS_ROOTS_FINE_CTEM] += (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
+			Log("Biomass reserve allocated to fine root pool = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+
+			/*
+			 * 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+							Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+							Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[STEM_LEAF_FRAC]) * 100 );
+							Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+
+							s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_stem * (1.0 - s->value[STEM_LEAF_FRAC]));
+							Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+
+							s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem * s->value[STEM_LEAF_FRAC]);
+							Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
+			 */
+			//s->value[BIOMASS_FOLIAGE_CTEM] += frac_to_foliage_fineroot;
+
+			Log("++Reserves pools less foliage + fine root = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+
+			/*for dominant layer with sunlit foliage*/
+			if (c->top_layer == c->heights[height].z)
+			{
+				Log("computing LAI for dominant trees\n");
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+			}
+			/*for dominated shaded foliage*/
+			else
+			{
+				Log("computing LAI for dominated trees\n");
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+			}
+
+			/*check if re-transfer foliage biomass to reserve*/
+			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			{
+				Log("LAI exceeds Peak Lai\n");
+
+				/*for dominant layer with sunlit foliage*/
+				if (c->top_layer == c->heights[height].z)
+				{
+					biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000;
+				}
+				/*for dominated shaded foliage*/
+				else
+				{
+					biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
+				}
+				/*re-transfer mass to reserve*/
+				s->value[BIOMASS_RESERVE_CTEM] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("++Reserves pools plus exceeding foliage biomass = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				s->value[BIOMASS_FOLIAGE_CTEM] = biomass_for_peak_lai;
+				/*recompute correct LAI*/
+				/*for dominant layer with sunlit foliage*/
+				if (c->top_layer == c->heights[height].z)
+				{
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+				}
+				/*for dominated shaded foliage*/
+				else
+				{
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				}
+			}
 			Log("dentro\n");
 			s->value[DEL_RESERVE_CTEM] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)
-					+ ((s->value[GPP_g_C] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+									+ ((s->value[GPP_g_C] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			s->value[DEL_FOLIAGE_CTEM] = 0;
 			s->value[DEL_ROOTS_FINE_CTEM] = 0;
 			s->value[DEL_ROOTS_COARSE_CTEM] = 0;

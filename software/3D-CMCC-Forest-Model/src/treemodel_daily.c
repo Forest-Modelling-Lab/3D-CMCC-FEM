@@ -237,7 +237,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-
+/*
 								if (settings->spatial == 'u')
 								{
 									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
@@ -247,13 +247,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Log("ATTENTION LAI <= 0 !!!!!!!!!!\n");
 									}
 								}
-
+*
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
 										&& m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
 								{
 									Log("ERROR VEG_UNVEG = 1 BUT LAI = 0!!!!!\n");
 								}
-
+*/
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 								/*evapotranspiration block*/
@@ -406,12 +406,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 							Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-
+/*
 							if (settings->spatial == 'u')
 							{
 								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 							}
-
+*/
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 							/*evapotranspiration block*/

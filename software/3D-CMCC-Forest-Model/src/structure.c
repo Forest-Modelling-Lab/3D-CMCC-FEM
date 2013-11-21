@@ -1240,8 +1240,6 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 
 	assert(heights);
 
-	Log("!!!!!!!!!!!!!!!!daily_layer number = %d\n", c->daily_layer_number);
-
 	if (c->daily_layer_number != 0)
 	{
 		Log("-Dominant Light Index Function-\n");
