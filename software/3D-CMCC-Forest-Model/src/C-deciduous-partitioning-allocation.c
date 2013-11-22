@@ -215,6 +215,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+		Log("LAI = %f \n", s->value[LAI]);
+		Log("PEAK LAI = %f \n", s->value[PEAK_Y_LAI]);
 
 
 		switch (s->phenology_phase)
