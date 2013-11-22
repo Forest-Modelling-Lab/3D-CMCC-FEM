@@ -10,7 +10,7 @@
 //not used
 void Get_allometry (SPECIES *const s, AGE *const a, int years)
 {
-	float WFkgm2;
+	double WFkgm2;
 
 	Log("\n*********ALLOMETRY FUNCTION *********\n");
 	/*
@@ -24,26 +24,26 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	if (!years)
 	{
 	s->value[INITIAL_TREE_HEIGHT_CR] = 1.3 + s->value[CRA] * pow (1 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
-	Log("Initial Tree Height from Chapman-Richards function = %g m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
+	Log("Initial Tree Height from Chapman-Richards function = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
 	//control
 	if (s->value[INITIAL_TREE_HEIGHT_CR] > s->value[HMAX])
 	{
 	s->value[INITIAL_TREE_HEIGHT_CR] = s->value[HMAX];
 	Log("Initial Tree Height CR > HMAX !!  \n");
-	Log("Initial Tree Height = HMAX  = %g m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
+	Log("Initial Tree Height = HMAX  = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
 	}
 
 	}
 	else
 	{
 	s->value[TREE_HEIGHT_CR] = 1.3 + s->value[CRA] * pow (1 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
-	Log("Tree Height from Chapman-Richards function = %g m\n", s->value[TREE_HEIGHT_CR]);
+	Log("Tree Height from Chapman-Richards function = %f m\n", s->value[TREE_HEIGHT_CR]);
 	//control
 	if (s->value[TREE_HEIGHT_CR] > s->value[HMAX])
 	{
 	s->value[TREE_HEIGHT_CR] = s->value[HMAX];
 	Log("Tree Height CR > HMAX !!  \n");
-	Log("Tree Height = HMAX  = %g m\n", s->value[TREE_HEIGHT_CR]);
+	Log("Tree Height = HMAX  = %f m\n", s->value[TREE_HEIGHT_CR]);
 	}
 	}
 	 */
@@ -65,16 +65,16 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	s->value[CROWN_AREA_LPJ] = s->value[KALLOMA] * pow (( s->value[AVDBH] / 100) , s->value[KRP] );
 	}
 
-	Log("LPJ Height = %g m\n", s->value[TREE_HEIGHT_LPJ]);
-	Log("LPJ Crown Area = %g m^2\n", s->value[CROWN_AREA_LPJ] );
+	Log("LPJ Height = %f m\n", s->value[TREE_HEIGHT_LPJ]);
+	Log("LPJ Crown Area = %f m^2\n", s->value[CROWN_AREA_LPJ] );
 
 	s->value[CROWN_DIAMETER_LPJ] = sqrt (s->value[CROWN_AREA_LPJ]  / ( Pi / 4) ) ;
-	Log("LPJ Crown Diameter = %g m\n", s->value[CROWN_DIAMETER_LPJ]);
+	Log("LPJ Crown Diameter = %f m\n", s->value[CROWN_DIAMETER_LPJ]);
 
 
 	s->value[CANOPY_COVER_LPJ] = s->counter[N_TREE] * s->value[CROWN_AREA_LPJ] / SIZECELL ;
 
-	Log("LPJ Canopy Cover = %g m^2\n", s->value[CANOPY_COVER_LPJ]);
+	Log("LPJ Canopy Cover = %f m^2\n", s->value[CANOPY_COVER_LPJ]);
 	Log("-------------------------\n");
 	 */
 
@@ -98,16 +98,16 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	// Crown Radius in m
 	s->value[CROWN_RADIUS_SORTIE] = s->value[RPOWER] * (s->value[AVDBH] * exp (b_RPOWER));
 	}
-	Log("Tree Height from Sortie Allometry Function = %g m\n", s->value[TREE_HEIGHT_SORTIE] );
-	Log("Crown Radius from Sortie Allometry Function = %g m\n", s->value[CROWN_RADIUS_SORTIE]);
+	Log("Tree Height from Sortie Allometry Function = %f m\n", s->value[TREE_HEIGHT_SORTIE] );
+	Log("Crown Radius from Sortie Allometry Function = %f m\n", s->value[CROWN_RADIUS_SORTIE]);
 
 	// Crown Height in m
 	s->value[CROWN_HEIGHT_SORTIE] = (s->value[CHPOWER] * (s->value[TREE_HEIGHT_SORTIE] * exp (b_CHPOWER));
-	Log("Crown Height from Sortie Allometry Function = %g m\n", s->value[CROWN_HEIGHT_SORTIE]);
+	Log("Crown Height from Sortie Allometry Function = %f m\n", s->value[CROWN_HEIGHT_SORTIE]);
 
 	// Crown Diameter in m
 	s->value[CROWN_DIAMETER_SORTIE] = s->value[CROWN_RADIUS_SORTIE] * 2;
-	Log("Crown Diameter from Sortie Allometry Function = %g m\n", s->value[CROWN_DIAMETER_SORTIE]);
+	Log("Crown Diameter from Sortie Allometry Function = %f m\n", s->value[CROWN_DIAMETER_SORTIE]);
 	Log("-------------------------\n");
 	 */
 
@@ -127,18 +127,18 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	//This function convert Biomass allocated in foliage compart from tDM/ha in KgDM/Area Effectively covered by Trees
 	Log("**3D-CMCC Model LAI Function**\n");
 
-	Log("Wf Foliage Biomass from previous year = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-	Log("Canopy Cover in LOWER Layer = %g \n", s->value[CANOPY_COVER_DBHDC]);
+	Log("Wf Foliage Biomass from previous year = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+	Log("Canopy Cover in LOWER Layer = %f \n", s->value[CANOPY_COVER_DBHDC]);
 
 
 
 	WFkgm2 = s->value[BIOMASS_FOLIAGE_CTEM]* (1000 / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
-	Log("Foliage Biomass to LAI function = %g Kg/m^2\n", WFkgm2);
-	Log("SLA-3D-CMCC Model = %g cm^2/g\n", s->value[SLA]);
-	//Log("SLA-3D-CMCC Model = %g m^2/Kg\n", SLAmkg);
+	Log("Foliage Biomass to LAI function = %f Kg/m^2\n", WFkgm2);
+	Log("SLA-3D-CMCC Model = %f cm^2/g\n", s->value[SLA]);
+	//Log("SLA-3D-CMCC Model = %f m^2/Kg\n", SLAmkg);
 
 	s->value[LAI] = WFkgm2  * SLAMKG ;
-	Log("LAI-3D-CMCC Forest Model = %g\n" , s->value[LAI]);
+	Log("LAI-3D-CMCC Forest Model = %f\n" , s->value[LAI]);
 
 
 }

@@ -17,7 +17,7 @@
 #define IS_LEAP_YEAR(x)		(((x) % 4 == 0 && (x) % 100 != 0) || (x) % 400 == 0)
 #define SIZE_OF_ARRAY(a)	sizeof((a))/sizeof((a)[0])
 #define IS_INVALID_VALUE(value)	((INVALID_VALUE==(value)))
-#define ARE_FLOATS_EQUAL(a,b)	(((a)==(b)))			/* TODO : CHECK IT */
+#define ARE_DOUBLES_EQUAL(a,b)	(((a)==(b)))			/* TODO : CHECK IT */
 #define IS_FLAG_SET(v, m)	(((v) & (m)) == (m))
 #if defined (_WIN32)
 #define FOLDER_DELIMITER '\\'

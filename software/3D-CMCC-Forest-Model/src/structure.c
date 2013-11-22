@@ -55,8 +55,8 @@ void Get_annual_numbers_of_layers (CELL *const c)
 	int height;
 	int age;
 	int species;
-	float current_height;
-	float previous_height;
+	double current_height;
+	double previous_height;
 
 
 
@@ -107,25 +107,25 @@ void Get_annual_numbers_of_layers (CELL *const c)
 			{
 			case 1:
 				c->heights[height].z = c->annual_layer_number - 1;
-				//Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
+				//Log("height %f, z %d\n", c->heights[height].value, c->heights[height].z);
 				break;
 			case 2:
 				if (height == c->heights_count - 1 )
 				{
 					c->heights[height].z = c->annual_layer_number - 1;
-					//Log("height %g, z %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height %f, z %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
-						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+						//Log("height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 					else
 					{
 						c->heights[height].z = c->heights[height+1].z;
-						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+						//Log("height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 				}
 				break;
@@ -133,19 +133,19 @@ void Get_annual_numbers_of_layers (CELL *const c)
 				if (height == c->heights_count - 1)
 				{
 					c->heights[height].z = c->annual_layer_number - 1;
-					//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+					//Log("height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
-						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+						//Log("height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 					else
 					{
 						c->heights[height].z = c->heights[height+1].z;
-						//Log("height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+						//Log("height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 				}
 				break;
@@ -173,9 +173,9 @@ void Get_forest_structure (CELL *const c)
 	int height;
 	int age;
 	int species;
-	float DBHDCeffective;
+	double DBHDCeffective;
 	int tree_number;
-	float layer_cover;
+	double layer_cover;
 
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
@@ -244,14 +244,14 @@ void Get_forest_structure (CELL *const c)
 						break;
 					}
 				}
-			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
+			}		//Log("Height class = %f is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
 
 		if (c->annual_layer_number == 1)
 		{
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
-			Log("Density in layer 0 = %g trees/area\n", c->density_dominant);
+			Log("Density in layer 0 = %f trees/area\n", c->density_dominant);
 		}
 		if (c->annual_layer_number == 2)
 		{
@@ -259,8 +259,8 @@ void Get_forest_structure (CELL *const c)
 			Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominated_counter);
 			Log("Tree number in layer 1 = %d \n", c->tree_number_dominant);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_dominated);
-			Log("Density in layer 1 = %g trees/area\n", c->density_dominant);
-			Log("Density in layer 0 = %g trees/area\n", c->density_dominated);
+			Log("Density in layer 1 = %f trees/area\n", c->density_dominant);
+			Log("Density in layer 0 = %f trees/area\n", c->density_dominated);
 		}
 		if (c->annual_layer_number > 2)
 		{
@@ -270,9 +270,9 @@ void Get_forest_structure (CELL *const c)
 			Log("Tree number in layer 2 = %d \n", c->tree_number_dominant);
 			Log("Tree number in layer 1 = %d \n", c->tree_number_dominated);
 			Log("Tree number in layer 0 = %d \n", c->tree_number_subdominated);
-			Log("Density in layer 2 = %g trees/area\n", c->density_dominant);
-			Log("Density in layer 1 = %g trees/area\n", c->density_dominated);
-			Log("Density in layer 0 = %g trees/area\n", c->density_subdominated);
+			Log("Density in layer 2 = %f trees/area\n", c->density_dominant);
+			Log("Density in layer 1 = %f trees/area\n", c->density_dominated);
+			Log("Density in layer 0 = %f trees/area\n", c->density_subdominated);
 		}
 
 		height = 0;
@@ -291,7 +291,7 @@ void Get_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %g species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
+					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
 					/*compute maximum crown area*/
 					//TODO CHECK IF USE IT
@@ -306,19 +306,19 @@ void Get_forest_structure (CELL *const c)
 					 */
 					c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
 					                                                            +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
-					Log("-MCA (Maximum Crown Area) = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
+					Log("-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 					c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
-					Log("-MCD (Maximum Crown Diameter) = %g m\n", c->heights[height].ages[age].species[species].value[MCD]);
+					Log("-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
 
 
 					/*compute DBHDCmax and DENmin from MCA*/
 					/*17 Oct 2013*/
 					c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]/c->heights[height].ages[age].species[species].value[AVDBH];
-					Log("-recomputed DBHDCMAX = %g \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+					Log("-recomputed DBHDCMAX = %f \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
 
 					//DENMIN = (SizeCell/MCA)/Sizecell
 					c->heights[height].ages[age].species[species].value[DENMIN] = 1.0/c->heights[height].ages[age].species[species].value[MCA];
-					Log("-recomputed DENMIN = %g tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
+					Log("-recomputed DENMIN = %f tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 
 					/*define DBHDC taking into account layer density*/
 					/*only one dominant layer*/
@@ -330,7 +330,7 @@ void Get_forest_structure (CELL *const c)
 						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-						Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
+						Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
 						break;
 						/*two layer*/
 					case 2:
@@ -340,7 +340,7 @@ void Get_forest_structure (CELL *const c)
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
 						}
 						/*dominated layer*/
 						else
@@ -348,7 +348,7 @@ void Get_forest_structure (CELL *const c)
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominated = %g\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominated = %f\n", DBHDCeffective);
 						}
 						break;
 						/*three layers*/
@@ -359,7 +359,7 @@ void Get_forest_structure (CELL *const c)
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominant = %g\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
 						}
 						/*dominated layer*/
 						if (c->heights[height].z == 1)
@@ -367,7 +367,7 @@ void Get_forest_structure (CELL *const c)
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominated = %g\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominated = %f\n", DBHDCeffective);
 						}
 						/*subdominant layer*/
 						else
@@ -375,7 +375,7 @@ void Get_forest_structure (CELL *const c)
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_subdominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for subdominated = %g\n", DBHDCeffective);
+							Log("DBHDC effective to apply for subdominated = %f\n", DBHDCeffective);
 						}
 						break;
 					}
@@ -384,26 +384,26 @@ void Get_forest_structure (CELL *const c)
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-						Log("DBHDC effective applied is DBHDCMAX = %g\n", DBHDCeffective);
+						Log("DBHDC effective applied is DBHDCMAX = %f\n", DBHDCeffective);
 					}
 					if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
-						Log("DBHDC effective applied is DBHDCMIN = %g\n", DBHDCeffective);
+						Log("DBHDC effective applied is DBHDCMIN = %f\n", DBHDCeffective);
 					}
 
 
 					//Crown Diameter using DBH-DC
 
-					Log("-AvDBH  = %g cm\n", c->heights[height].ages[age].species[species].value[AVDBH]);
+					Log("-AvDBH  = %f cm\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
-					Log("-Crown Diameter from DBHDC function  = %g m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
+					Log("-Crown Diameter from DBHDC function  = %f m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 
 					//Crown Area using DBH-DC
 					c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-					Log("-Crown Area from DBHDC function = %g m^2\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
+					Log("-Crown Area from DBHDC function = %f m^2\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
 
 
 					//Canopy Cover using DBH-DC
@@ -411,7 +411,7 @@ void Get_forest_structure (CELL *const c)
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
 					                                                                                                                              * c->heights[height].ages[age].species[species].counter[N_TREE]
 					                                                                                                                                                                                      / settings->sizeCell;
-					Log("Canopy cover DBH-DC class related = %g\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
+					Log("Canopy cover DBH-DC class related = %f\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 				}
 			}
 		}
@@ -457,19 +457,19 @@ void Get_forest_structure (CELL *const c)
 						break;
 					}
 				}
-			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
+			}		//Log("Height class = %f is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
 
 		if (c->annual_layer_number == 1)
 		{
-			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 
 			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominant;
 		}
 		if (c->annual_layer_number == 2)
 		{
-			Log("Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
-			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+			Log("Layer cover in layer 1 = %f %%\n", c->layer_cover_dominant * 100);
+			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 
 			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominant;
 			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominated;
@@ -477,9 +477,9 @@ void Get_forest_structure (CELL *const c)
 		}
 		if (c->annual_layer_number > 2)
 		{
-			Log("Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-			Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-			Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+			Log("Layer cover in layer 2 = %f %%\n", c->layer_cover_dominant * 100);
+			Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
+			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 
 			c->daily_cc[2] = c->monthly_cc[2] = c->annual_cc[2] = c->layer_cover_dominant;
 			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominated;
@@ -508,7 +508,7 @@ void Get_forest_structure (CELL *const c)
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
 							Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-							Log("Recomputed Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+							Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 						}
 						break;
 					case 2:
@@ -520,7 +520,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								Log("Recomputed Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+								Log("Recomputed Layer cover in layer 1 = %f %% \n", c->layer_cover_dominant * 100);
 							}
 						}
 						else
@@ -531,7 +531,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								Log("Recomputed Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+								Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 							}
 						}
 
@@ -545,7 +545,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								Log("Recomputed Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
+								Log("Recomputed Layer cover in layer 2 = %f %% \n", c->layer_cover_dominant * 100);
 							}
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
@@ -556,7 +556,7 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								Log("Recomputed Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+								Log("Recomputed Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
 							}
 						}
 						else
@@ -567,13 +567,13 @@ void Get_forest_structure (CELL *const c)
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
 								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
-								Log("Recomputed Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+								Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 							}
 						}
 						break;
 					}
 				}
-			}		//Log("Height class = %g is in layer %d \n", c->heights[height].value, c->heights[height].z);
+			}		//Log("Height class = %f is in layer %d \n", c->heights[height].value, c->heights[height].z);
 		}
 	}
 	else
@@ -594,19 +594,19 @@ void Get_forest_structure (CELL *const c)
 					DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
 							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 							* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-					Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+					Log("DBHDC effective to apply = %f\n", DBHDCeffective);
 
 
 					//control
 					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-						Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+						Log("DBHDC effective to apply = %f\n", DBHDCeffective);
 					}
 					else if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
 					{
 						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
-						Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+						Log("DBHDC effective to apply = %f\n", DBHDCeffective);
 					}
 
 
@@ -614,17 +614,17 @@ void Get_forest_structure (CELL *const c)
 					//Crown Diameter using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
-					Log("-Crown Diameter from DBHDC function  = %g m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
+					Log("-Crown Diameter from DBHDC function  = %f m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 
 					//Crown Area using DBH-DC
 					c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-					Log("-Crown Area from DBHDC function = %g m^2\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
+					Log("-Crown Area from DBHDC function = %f m^2\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
 
 
 					//Canopy Cover using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
-					Log("-Canopy Cover from DBHDC function = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
+					Log("-Canopy Cover from DBHDC function = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 					//Canopy Layer Cover
 					c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 
@@ -636,7 +636,7 @@ void Get_forest_structure (CELL *const c)
 		Log("Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 		Log("Tree number in layer 0 = %d \n", c->tree_number_dominant);
 		c->density_dominant = c->tree_number_dominant / settings->sizeCell;
-		Log("Density in layer 0 = %g trees/area\n", c->density_dominant);
+		Log("Density in layer 0 = %f trees/area\n", c->density_dominant);
 
 		if (c->layer_cover_dominant >=  settings->max_layer_cover)
 		{
@@ -663,7 +663,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 
 	counter = 0;
 
-	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%g, %g)****\n", c->x, c->y);
+	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%f, %f)****\n", c->x, c->y);
 
 	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
 
@@ -673,7 +673,7 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				Log("--GET VEGETATIVE PERIOD for height = %g, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
+				Log("--GET VEGETATIVE PERIOD for height = %f, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
 
 				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 				{
@@ -699,14 +699,14 @@ void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int mont
 						//compute months of leaf fall taking an integer value
 						c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] =  (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
 						                                                                                                                                       * c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-						Log("Months of leaf fall for deciduous = %g \n", c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE]);
+						Log("Months of leaf fall for deciduous = %f \n", c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 
 						//currently the model considers a linear reduction in leaf fall
 						//it should be a negative sigmoid function
 						//todo: create a sigmoid function
 						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
-						Log("foliage reduction rate = %g \n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] );
+						Log("foliage reduction rate = %f \n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] );
 
 
 
@@ -829,7 +829,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 								//it should be a negative sigmoid function
 								//todo: create a sigmoid function
 								c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-								Log("foliage reduction rate = %g,  = %g%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+								Log("foliage reduction rate = %f,  = %f%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
 
 
 								//todo decidere se utlizzare growthend o mindaylenght
@@ -856,7 +856,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 										{
 											//assign value of thermic sum
 											c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
-											//Log("thermic_sum END OF VEG = %g °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
+											//Log("thermic_sum END OF VEG = %f °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
 										}
 
 										//check
@@ -905,8 +905,8 @@ extern void Get_monthly_numbers_of_layers (CELL *const c)
 	static int height;
 	static int age;
 	static int species;
-	static float current_height;
-	static float previous_height;
+	static double current_height;
+	static double previous_height;
 
 	//height differences in meter to consider trees in two different layers
 	c->monthly_layer_number = 0;
@@ -956,8 +956,8 @@ extern void Get_daily_numbers_of_layers (CELL *const c)
 	static int height;
 	static int age;
 	static int species;
-	static float current_height;
-	static float previous_height;
+	static double current_height;
+	static double previous_height;
 
 
 	c->daily_layer_number = 0;
@@ -1034,17 +1034,17 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 						case 2:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
+							//Log("Layer cover in layer 2 = %f %% \n", c->layer_cover_dominant * 100);
 							break;
 						case 1:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+							//Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
 							break;
 						case 0:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+							//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 							break;
 						}
 					}
@@ -1055,12 +1055,12 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 						case 1:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+							//Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominant * 100);
 							break;
 						case 0:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+							//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 							break;
 						}
 					}
@@ -1068,7 +1068,7 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 					{
 						//Log("z = %d\n", c->heights[height].z);
 						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+						//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 					}
 				}
 				else
@@ -1084,18 +1084,18 @@ void Get_monthly_layer_cover (CELL * c, const MET_DATA *const met, int month)
 
 	if (c->monthly_layer_number == 1)
 	{
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 	}
 	if (c->monthly_layer_number == 2)
 	{
-		Log("Vegetated Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 1 = %f %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 	}
 	if (c->monthly_layer_number > 2)
 	{
-		Log("Vegetated Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-		Log("Vegetated Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+		Log("Vegetated Layer cover in layer 2 = %f %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 	}
 	Log("*************************************************** \n");
 
@@ -1134,17 +1134,17 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 						case 2:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 2 = %g %% \n", c->layer_cover_dominant * 100);
+							//Log("Layer cover in layer 2 = %f %% \n", c->layer_cover_dominant * 100);
 							break;
 						case 1:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
+							//Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
 							break;
 						case 0:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+							//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 							break;
 						}
 					}
@@ -1155,12 +1155,12 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 						case 1:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
+							//Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominant * 100);
 							break;
 						case 0:
 							//Log("z = %d\n", c->heights[height].z);
 							c->layer_cover_dominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+							//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 							break;
 						}
 					}
@@ -1168,7 +1168,7 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 					{
 						//Log("z = %d\n", c->heights[height].z);
 						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						//Log("Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+						//Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 					}
 				}
 				else
@@ -1184,18 +1184,18 @@ void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int 
 
 	if (c->daily_layer_number == 1)
 	{
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 	}
 	if (c->daily_layer_number == 2)
 	{
-		Log("Vegetated Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 1 = %f %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 	}
 	if (c->daily_layer_number > 2)
 	{
-		Log("Vegetated Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-		Log("Vegetated Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-		Log("Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
+		Log("Vegetated Layer cover in layer 2 = %f %%\n", c->layer_cover_dominant * 100);
+		Log("Vegetated Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
+		Log("Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 	}
 	Log("*************************************************** \n");
 

@@ -19,11 +19,11 @@ extern void Get_WUE (SPECIES *s)
 	if (settings->time == 'm')
 	{
 		s->value[WUE] = 100 * ( s->value[YEARLY_NPP] / s->counter[VEG_MONTHS]) / (s->value[MONTHLY_EVAPOTRANSPIRATION] / s->counter[VEG_MONTHS]);
-		//Log("Average Water use efficiency = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
+		//Log("Average Water use efficiency = %f\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
 	}
 	else
 	{
 		s->value[WUE] = 100 * ( s->value[YEARLY_NPP] / s->counter[VEG_DAYS]) / (s->value[MONTHLY_EVAPOTRANSPIRATION] / s->counter[VEG_DAYS]);
-		//Log("Average Water use efficiency = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
+		//Log("Average Water use efficiency = %f\n", m->cells[cell].heights[height].ages[age].species[species].value[WUE]);
 	}
 }

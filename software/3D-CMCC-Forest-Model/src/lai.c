@@ -11,8 +11,8 @@
 void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month, const int day, const int height)
 {
 
-	static float frac_to_foliage_fineroot;
-	float biomass_for_peak_lai;
+	static double frac_to_foliage_fineroot;
+	double biomass_for_peak_lai;
 
 
 	/*for deciduous*/
@@ -24,32 +24,32 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 
 			if (s->counter[VEG_MONTHS]  == 1)
 			{
-				Log("++Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
-				Log("++Reserve biomass for each tree in g = %g \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
+				Log("++Reserves pools = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Reserve biomass for each tree in g = %f \n", (s->value[BIOMASS_RESERVE_CTEM] * 1000000) / s->counter[N_TREE]);
 
 				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				//but Scartazza et al 2013 says only in foliages
 				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 				s->value[BIOMASS_FOLIAGE_CTEM] = s->value[BIOMASS_RESERVE_CTEM] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
-				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[STEM_LEAF_FRAC] * 100));
+				Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[STEM_LEAF_FRAC] * 100));
 
 				s->value[BIOMASS_RESERVE_CTEM] -= s->value[BIOMASS_FOLIAGE_CTEM];
-				Log("++Reserves pools less foliage = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Reserves pools less foliage = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 
 				//not sure if allocate the remaining reserves for stem
 				s->value[BIOMASS_STEM_CTEM] += (s->value[BIOMASS_RESERVE_CTEM] * s->value[STEM_LEAF_FRAC]);
-				Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
+				Log("Biomass stem = %f\n", s->value[BIOMASS_STEM_CTEM]);
 
-				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+				Log("ratio of reserve for stem = %f% \n", s->value[STEM_LEAF_FRAC] * 100);
 
 				s->value[BIOMASS_RESERVE_CTEM] = 0;
-				Log("++Reserves pools less foliage + stem = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Reserves pools less foliage + stem = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 
-				Log ("++Biomass foliage from reserves for initial LAI = %g \n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log ("++Biomass foliage from reserves for initial LAI = %f \n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 
 				/*for dominant layer with sunlit foliage*/
@@ -65,30 +65,30 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 				}
 
-				Log("++Lai from reserves = %g\n", s->value[LAI]);
-				//Log("++Canopy Cover = %g\n", s->value[CANOPY_COVER_DBHDC]);
-				//Log("++Size Cell = %g\n", settings->sizeCell);
-				//Log("++Sla = %g\n", s->value[SLAmkg]);
+				Log("++Lai from reserves = %f\n", s->value[LAI]);
+				//Log("++Canopy Cover = %f\n", s->value[CANOPY_COVER_DBHDC]);
+				//Log("++Size Cell = %f\n", settings->sizeCell);
+				//Log("++Sla = %f\n", s->value[SLAmkg]);
 			}
 			else
 			{
-				Log("++Lai = %g\n", s->value[LAI]);
+				Log("++Lai = %f\n", s->value[LAI]);
 			}
 		}
 		else
 		{
 			Log("\n--GET_DAILY_LAI--\n");
 			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS]);
-			Log("BIOMASS_RESERVE_CTEM = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-			Log("PEAK_Y_LAI = %g\n", s->value[PEAK_Y_LAI]);
-			Log("LAI = %g\n", s->value[LAI]);
+			Log("BIOMASS_RESERVE_CTEM = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
+			Log("PEAK_Y_LAI = %f\n", s->value[PEAK_Y_LAI]);
+			Log("LAI = %f\n", s->value[LAI]);
 
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 			if (s->counter[VEG_DAYS] == 1)
 			{
 				s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
-				Log("Days for bud burst = %g\n", s->value[BUD_BURST]);
+				Log("Days for bud burst = %f\n", s->value[BUD_BURST]);
 			}
 			if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 			{
@@ -108,46 +108,46 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE_CTEM] * (e^-s->value[BUD_BURST])
 				//fixme try to allocate just a part of total reserve not all
 				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE_CTEM] * 0.5) / s->counter[BUD_BURST_COUNTER];
-				Log("fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
+				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 
 				s->value[BIOMASS_RESERVE_CTEM] -= frac_to_foliage_fineroot;
 
 				s->counter[BUD_BURST_COUNTER] --;
 				Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-				Log("++Lai before reserve allocation = %g\n", s->value[LAI]);
-				Log("++Peak Lai = %g\n", s->value[PEAK_Y_LAI]);
+				Log("++Lai before reserve allocation = %f\n", s->value[LAI]);
+				Log("++Peak Lai = %f\n", s->value[PEAK_Y_LAI]);
 
-				Log("Reserves pools = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("Reserves pools = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 				//FIXME ALLOCATING into foliage and fine root
-				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
-				Log("ratio of reserve for fine root = %g% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
+				Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for fine root = %f% \n", s->value[FINE_ROOT_LEAF_FRAC] * 100);
 
 				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				Log("Biomass reserve allocated to foliage pool = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("Biomass reserve allocated to foliage pool = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 
 				s->value[BIOMASS_ROOTS_FINE_CTEM] += (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
-				Log("Biomass reserve allocated to fine root pool = %g\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
+				Log("Biomass reserve allocated to fine root pool = %f\n", s->value[BIOMASS_ROOTS_FINE_CTEM]);
 
 				/*
- * 				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
-				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
-				Log("ratio of reserve for foliage = %g% \n", (1.0 - s->value[STEM_LEAF_FRAC]) * 100 );
-				Log("ratio of reserve for stem = %g% \n", s->value[STEM_LEAF_FRAC] * 100);
+ * 				Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[FINE_ROOT_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for stem = %f% \n", s->value[STEM_LEAF_FRAC] * 100);
+				Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[STEM_LEAF_FRAC]) * 100 );
+				Log("ratio of reserve for stem = %f% \n", s->value[STEM_LEAF_FRAC] * 100);
 
 				s->value[BIOMASS_FOLIAGE_CTEM] += (frac_to_foliage_stem * (1.0 - s->value[STEM_LEAF_FRAC]));
-				Log("Biomass foliage = %g\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+				Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
 				s->value[BIOMASS_STEM_CTEM] += (frac_to_foliage_stem * s->value[STEM_LEAF_FRAC]);
-				Log("Biomass stem = %g\n", s->value[BIOMASS_STEM_CTEM]);
+				Log("Biomass stem = %f\n", s->value[BIOMASS_STEM_CTEM]);
 				*/
 
 
 				//s->value[BIOMASS_FOLIAGE_CTEM] += frac_to_foliage_fineroot;
 
-				Log("++Reserves pools less foliage + fine root = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Reserves pools less foliage + fine root = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
@@ -179,7 +179,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					}
 					/*re-transfer mass to reserve*/
 					s->value[BIOMASS_RESERVE_CTEM] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE_CTEM]);
-					Log("++Reserves pools plus exceeding foliage biomass = %g tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
+					Log("++Reserves pools plus exceeding foliage biomass = %f tDM/area\n", s->value [BIOMASS_RESERVE_CTEM]);
 					s->value[BIOMASS_FOLIAGE_CTEM] = biomass_for_peak_lai;
 					/*recompute correct LAI*/
 					/*for dominant layer with sunlit foliage*/
@@ -194,17 +194,17 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					}
 				}
 
-				Log("++Lai from reserves = %g\n", s->value[LAI]);
+				Log("++Lai from reserves = %f\n", s->value[LAI]);
 			}
 			if(s->value[LAI] > s->value[PEAK_Y_LAI])
 			{
 				Log("LAI > PEAK_Y_LAI\n");
-				Log("Unused reserve = %g tDM/cell \n", s->value [BIOMASS_RESERVE_CTEM]);
-				Log("++Lai = %g\n", s->value[LAI]);
+				Log("Unused reserve = %f tDM/cell \n", s->value [BIOMASS_RESERVE_CTEM]);
+				Log("++Lai = %f\n", s->value[LAI]);
 			}
 			else
 			{
-				Log("++Lai = %g\n", s->value[LAI]);
+				Log("++Lai = %f\n", s->value[LAI]);
 			}
 		}
 	}
@@ -231,12 +231,12 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					{
 						s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 					}
-					Log("++Lai from foliage-reserve = %g\n", s->value[LAI]);
+					Log("++Lai from foliage-reserve = %f\n", s->value[LAI]);
 				}
 			}
 			else
 			{
-				Log("++Lai = %g\n", s->value[LAI]);
+				Log("++Lai = %f\n", s->value[LAI]);
 			}
 		}
 		else
@@ -261,11 +261,11 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 				}
-				Log("++Lai from foliage or reserve = %g\n", s->value[LAI]);
+				Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 			}
 			else
 			{
-				Log("++Lai from previous day allocation = %g\n", s->value[LAI]);
+				Log("++Lai from previous day allocation = %f\n", s->value[LAI]);
 			}
 			if (s->value[LAI] > s->value[PEAK_Y_LAI])
 			{

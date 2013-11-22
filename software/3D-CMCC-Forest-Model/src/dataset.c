@@ -420,7 +420,7 @@ int importSiteFile(char *fileName)
 				*buffer = malloc(sizeof(*buffer)*1024);
 
 		site = malloc(sizeof(site_t));
-		float *tmpPointer = &(site->lat);
+		double *tmpPointer = &(site->lat);
 
 		if(!buffer)
 		{
@@ -447,7 +447,7 @@ int importSiteFile(char *fileName)
 						strcpy(site->sitename, pch);
 						break;
 					default:
-						*tmpPointer = atof(pch); // Convert each token in a float
+						*tmpPointer = atof(pch); // Convert each token in a double
 						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
 						break;
 					}
@@ -502,7 +502,7 @@ int importSettingsFile(char *fileName)
 				*buffer = malloc(sizeof(*buffer)*1024);
 
 		settings = malloc(sizeof(settings_t));
-		float *tmpPointer = &(settings->sizeCell);
+		double *tmpPointer = &(settings->sizeCell);
 
 		if(!buffer)
 		{
@@ -546,7 +546,7 @@ int importSettingsFile(char *fileName)
 						tmpPointer++;
 						break;
 					default:
-						*tmpPointer = atof(pch); // Convert each token in a float
+						*tmpPointer = atof(pch); // Convert each token in a double
 						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
 						break;
 					}

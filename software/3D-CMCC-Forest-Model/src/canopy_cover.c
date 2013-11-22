@@ -10,16 +10,16 @@
 
 
 
-float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
+double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 {
 	//DBH-CrownDiameter Function
 	//Effective ratio dbh-crown diameter in function of Density (Ntree/10000 m^2)
 	static int oldNtree;
 	static int deadtree;
-	float DBHDCeffective;
-	//float CrownDiameterDBHDC;
-	float Av_stem_mass;
-	float Av_root_mass;
+	double DBHDCeffective;
+	//double CrownDiameterDBHDC;
+	double Av_stem_mass;
+	double Av_root_mass;
 
 
 	Log("** CANOPY COVER DBH-DC Function FOR LAYER %d **\n", z);
@@ -27,34 +27,34 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	/*Density*/
 
-	s->value[DENSITY] = (float)s->counter[N_TREE] / settings->sizeCell;
+	s->value[DENSITY] = (double)s->counter[N_TREE] / settings->sizeCell;
 	Log("Tree Number = %d trees/area\n", s->counter[N_TREE]);
-	Log("Density = %g trees/area\n", s->value[DENSITY]);
+	Log("Density = %f trees/area\n", s->value[DENSITY]);
 
 
 	/*DBH-DC Ratio effective*/
 	//todo model should take into account also variations for dbh increments
 	//todo invert dbhdc max with min
 	DBHDCeffective = (( s->value[DBHDCMAX] - s->value[DBHDCMIN] ) / ( s->value[DENMAX] - s->value[DENMIN] ) * (s->value[DENSITY] - s->value[DENMIN] ) + s->value[DBHDCMIN]);
-	Log("DBHDC effective to apply = %g\n", DBHDCeffective);
+	Log("DBHDC effective to apply = %f\n", DBHDCeffective);
 
 
 	if (DBHDCeffective > s->value[DBHDCMAX])
 	{
 		//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
 		DBHDCeffective = s->value[DBHDCMAX];
-		Log("DBHDC effective applied = %g\n", DBHDCeffective);
+		Log("DBHDC effective applied = %f\n", DBHDCeffective);
 	}
 
 
 	/*Crown Diameter using DBH-DC*/
 
 	s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * DBHDCeffective;
-	Log("-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+	Log("-Crown Diameter from DBHDC function  = %f m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
 
 	/*Crown Area using DBH-DC*/
 	s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-	Log("-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+	Log("-Crown Area from DBHDC function = %f m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 
 
@@ -79,11 +79,11 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		Log ("MORTALITY BASED ON HIGH CANOPY COVER!!!\n");
 
 		//compute average biomass
-		Av_stem_mass = s->value[BIOMASS_STEM_CTEM] / (float)s->counter[N_TREE];
-		Log(" Av stem mass = %g tDM/tree\n", Av_stem_mass );
+		Av_stem_mass = s->value[BIOMASS_STEM_CTEM] / (double)s->counter[N_TREE];
+		Log(" Av stem mass = %f tDM/tree\n", Av_stem_mass );
 
-		Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM]) / (float)s->counter[N_TREE];
-		Log(" Av root mass = %g tDM/tree\n", Av_root_mass );
+		Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM]) / (double)s->counter[N_TREE];
+		Log(" Av root mass = %f tDM/tree\n", Av_root_mass );
 
 		oldNtree = s->counter[N_TREE];
 
@@ -95,16 +95,16 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		}
 		oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (Av_root_mass * deadtree);
-		Log("Tot Root Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
-		Log("Stem Biomass before reduction = %g tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
+		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
-		Log("Canopy Cover in while = %g \n", s->value[CANOPY_COVER_DBHDC]);
+		Log("Canopy Cover in while = %f \n", s->value[CANOPY_COVER_DBHDC]);
 	}
 
 	return s->value[CANOPY_COVER_DBHDC];
@@ -117,7 +117,7 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	s->value[HD_EFF] = s->value[TREE_HEIGHT_CR] / (s->value[AVDBH] / 100);
 
-	Log("H/D effective ratio  = %g\n", s->value[HD_EFF] );
+	Log("H/D effective ratio  = %f\n", s->value[HD_EFF] );
 
 
 
@@ -130,10 +130,10 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	//Crown Diameter
 
 	s->value[CROWN_DIAMETER] = s->value[AVDBH] * s->value[DBHDC];
-	s->value[CANOPY_COVER_P] = ((float)s->counter[N_TREE]  * (((Pi / 4) * (pow (s->value[CROWN_DIAMETER], 2))))) / SIZECELL;
+	s->value[CANOPY_COVER_P] = ((double)s->counter[N_TREE]  * (((Pi / 4) * (pow (s->value[CROWN_DIAMETER], 2))))) / SIZECELL;
 
-	Log("Crown Diameter using Portoghesi relationship = %g m\n", s->value[CROWN_DIAMETER]);
-	Log("Canopy Cover from 'Portoghesi'= %g %%\n", s->value[CANOPY_COVER_P] * 100 );
+	Log("Crown Diameter using Portoghesi relationship = %f m\n", s->value[CROWN_DIAMETER]);
+	Log("Canopy Cover from 'Portoghesi'= %f %%\n", s->value[CANOPY_COVER_P] * 100 );
 
 
 	if (s->value[CANOPY_COVER_P] < 1)
@@ -155,8 +155,8 @@ float Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 
 	s->value[FREE_CANOPY_COVER_P] = 1 - s->value[CANOPY_COVER_P];
-	Log("Free Canopy Cover from 'Portoghesi'= %g \n", s->value[FREE_CANOPY_COVER_P]);
-	Log("Free Canopy Cover from 'Portoghesi'= %g %%\n", s->value[FREE_CANOPY_COVER_P] * 100);
+	Log("Free Canopy Cover from 'Portoghesi'= %f \n", s->value[FREE_CANOPY_COVER_P]);
+	Log("Free Canopy Cover from 'Portoghesi'= %f %%\n", s->value[FREE_CANOPY_COVER_P] * 100);
 	Log("---------------------------------------\n");
 	 */
 }

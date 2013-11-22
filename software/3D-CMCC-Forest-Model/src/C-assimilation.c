@@ -30,9 +30,9 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		Log("GPP = %g\n", s->value[GPP_g_C]);
-		Log("Reserve biomass = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
-		Log("Total aut respiration = %g gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
+		Log("GPP = %f\n", s->value[GPP_g_C]);
+		Log("Reserve biomass = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
 
 
 		if (s->value[BIOMASS_RESERVE_CTEM] > 0.0)
@@ -53,7 +53,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
 					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					//Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+					//Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
@@ -70,13 +70,13 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
 
 					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					//Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+					//Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
 						s->value[BIOMASS_RESERVE_CTEM] = 0;
 						Log("All reserve has been consumed for respiration!!!\n");
-						Log("Reserve biomass after respiration costs = %g\n", s->value[BIOMASS_RESERVE_CTEM]);
+						Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -87,8 +87,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			else
 			{
 				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-				Log("Fraction of respiration = %g %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
-				Log("NPP_g_C = %g\n", s->value[NPP_g_C]);
+				Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
+				Log("NPP_g_C = %f\n", s->value[NPP_g_C]);
 				//upscale class NPP to class cell level
 				s->value[NPP] = ((s->value[NPP_g_C] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 				//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
@@ -104,19 +104,19 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		{
 			//Monthly layer GPP in grams of C/m^2
 			//Convert molC into grams
-			Log("Monthly NPP = %g gC/m^2\n",  s->value[NPP_g_C]);
-			Log("Monthly NPP = %g tDM/area\n", s->value[NPP]);
+			Log("Monthly NPP = %f gC/m^2\n",  s->value[NPP_g_C]);
+			Log("Monthly NPP = %f tDM/area\n", s->value[NPP]);
 
 			//DailyNPP = s->value[NPP] / DaysInMonth;
-			//Log("Daily GPP in grams of C for this layer = %g molC/m^2 day\n", DailyGPPgC);
+			//Log("Daily GPP in grams of C for this layer = %f molC/m^2 day\n", DailyGPPgC);
 		}
 		else
 		{
-			Log("Daily NPP = %g gC/m^2\n", s->value[NPP_g_C]);
-			Log("Daily NPP = %g gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
-			Log("Daily NPP = %g tDM/area\n",  s->value[NPP]);
+			Log("Daily NPP = %f gC/m^2\n", s->value[NPP_g_C]);
+			Log("Daily NPP = %f gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+			Log("Daily NPP = %f tDM/area\n",  s->value[NPP]);
 			//MonthlyNPP += s->value[NPP];
-			//Log("Monthly NPP (per area covered) for layer %d = %g tDM/area\n", c->heights[height].z, MonthlyNPP);
+			//Log("Monthly NPP (per area covered) for layer %d = %f tDM/area\n", c->heights[height].z, MonthlyNPP);
 		}
 	}
 	else
@@ -128,8 +128,8 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		}
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;
-		Log("Daily/Monthly NPP = %g gC/m^2\n", s->value[NPP_g_C]);
-		Log("Daily/Monthly NPP (per area covered) = %g  tDM/sizecell yr\n", s->value[NPP]);
+		Log("Daily/Monthly NPP = %f gC/m^2\n", s->value[NPP_g_C]);
+		Log("Daily/Monthly NPP (per area covered) = %f  tDM/sizecell yr\n", s->value[NPP]);
 	}
 
 	i = c->heights[height].z;
@@ -154,14 +154,14 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	//class level
 	s->value[YEARLY_NPP] += s->value[NPP];
 	Log("-CLASS LEVEL\n");
-	Log("-CLASS LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", s->value[YEARLY_NPP]);
+	Log("-CLASS LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", s->value[YEARLY_NPP]);
 
 	Log("*********************** STAND LEVEL ANNUAL NPP ********************** \n");
 
 	//cell level
 	c->npp += s->value[NPP];
 	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly NPP (per area covered) = %g tDM/sizecell yr\n", c->npp);
+	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->npp);
 
 }
 

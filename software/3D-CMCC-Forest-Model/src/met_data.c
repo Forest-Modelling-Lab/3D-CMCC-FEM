@@ -61,7 +61,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 			else
 			{
 				met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
-				//Log("tmax = %g, tmin = %g day = %d month = %d recomputed tavg = %g\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
+				//Log("tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 			}
 		}
 	}
@@ -165,7 +165,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	static float previous_thermic_sum;
+	static double previous_thermic_sum;
 
 	if (day == 0 && month == 0)
 	{
@@ -190,12 +190,12 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg -settings->gdd_basis);
 			previous_thermic_sum = met[month].d[day].thermic_sum;
-			//Log ("day = %d month = %d somma termica %g\n",day+1, month+1,  met[month].d[day].thermic_sum);
+			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		else
 		{
 			met[month].d[day].thermic_sum = previous_thermic_sum;
-			//Log ("day = %d month = %d somma termica %g\n",day+1, month+1,  met[month].d[day].thermic_sum);
+			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		if (met[month].d[day].tavg == NO_DATA)
 			Log("tavg NO_DATA!!\n");
@@ -205,7 +205,7 @@ extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthL
 
 extern void Get_air_pressure (CELL *c)
 {
-	float t1, t2;
+	double t1, t2;
 
 	/*compute air pressure*/
 	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
@@ -217,7 +217,7 @@ extern void Get_air_pressure (CELL *c)
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	t2 = G_STD / (LR_STD * (R / MA));
 	c->air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %g Pa\n", c->air_pressure);
+	//Log("Air pressure = %f Pa\n", c->air_pressure);
 
 }
 
@@ -238,15 +238,15 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLengt
 		{
 			met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
 			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %f\n", c->gcorr);
 		}
 		else
 		{
 			met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
 			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %f\n", c->gcorr);
 		}
-		Log("RhoAir = %g\n", met[month].rho_air);
+		Log("RhoAir = %f\n", met[month].rho_air);
 	}
 	else
 	{
@@ -254,15 +254,15 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLengt
 		{
 			met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
 			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %f\n", c->gcorr);
 		}
 		else
 		{
 			met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
 			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %g\n", c->gcorr);
+			//Log("gcorr = %f\n", c->gcorr);
 		}
-		//Log("RhoAir = %g\n", met[month].d[day].rho_air);
+		//Log("RhoAir = %f\n", met[month].d[day].rho_air);
 	}
 }
 
@@ -274,10 +274,10 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	/* temperature and radiation snowmelt,
 	from Joseph Coughlan PhD thesis, 1991 */
 
-	static float snow_abs = 0.6; // absorptivity of snow
-	static float t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
-	float incident_rad;  //incident radiation (kJ/m2/d) incident radiation
-	float melt, t_melt, r_melt, r_sub;
+	static double snow_abs = 0.6; // absorptivity of snow
+	static double t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
+	double incident_rad;  //incident radiation (kJ/m2/d) incident radiation
+	double melt, t_melt, r_melt, r_sub;
 
 
 	Log("-GET SNOW MET DATA-\n");
@@ -303,8 +303,8 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	{
 		/*no snow calculations in monthly time step*/
 	}
-	//Log("net_radiation for soil = %g\n", c->net_radiation_for_soil);
-	//Log("incident radiation for soil = %g\n", incident_rad);
+	//Log("net_radiation for soil = %f\n", c->net_radiation_for_soil);
+	//Log("incident radiation for soil = %f\n", incident_rad);
 
 	if (settings->time == 'd')
 	{
@@ -313,8 +313,8 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 		{
 			if (c->snow > 0.0)
 			{
-				Log("tavg = %g\n", met[month].d[day].tavg);
-				Log("snow = %g\n", c->snow);
+				Log("tavg = %f\n", met[month].d[day].tavg);
+				Log("snow = %f\n", c->snow);
 				Log("Snow melt!!\n");
 				r_melt = incident_rad / LATENT_HEAT_FUSION;
 				melt = t_melt + r_melt;
@@ -339,21 +339,21 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 					c->available_soil_water += c->snow;
 					c->snow = 0.0;
 				}
-				Log("snow to soil = %g\n", c->snow_to_soil);
+				Log("snow to soil = %f\n", c->snow_to_soil);
 			}
 
 		}
 		/* sublimation from snowpack */
 		else
 		{
-			Log("tavg = %g\n", met[month].d[day].tavg);
-			Log("snow = %g\n", c->snow);
+			Log("tavg = %f\n", met[month].d[day].tavg);
+			Log("snow = %f\n", c->snow);
 			Log("rain becomes snow\n");
 			c->snow += met[month].d[day].rain;
-			Log("Day %d month %d snow = %g (mm-kgH2O/m2)\n", day+1, month+1 , c->snow);
+			Log("Day %d month %d snow = %f (mm-kgH2O/m2)\n", day+1, month+1 , c->snow);
 			met[month].d[day].rain = 0;
 			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-			//Log("r_sub = %g\n", r_sub);
+			//Log("r_sub = %f\n", r_sub);
 			if (c->snow > 0.0)
 			{
 				/*snow sublimation*/
@@ -388,11 +388,11 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 }
 
 /*
-float Get_vpd (const MET_DATA *const met, int month)
+double Get_vpd (const MET_DATA *const met, int month)
 {
-	float svp;
-	float vp;
-	float vpd;
+	double svp;
+	double vp;
+	double vpd;
 
 	//Log("\n GET_VPD_ROUTINE \n");
 
@@ -400,18 +400,18 @@ float Get_vpd (const MET_DATA *const met, int month)
 	//compute vpd
 	//see triplex model Peng et al., 2002
 	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tavg + 237.3));
-	//Log("svp = %g\n", svp);
+	//Log("svp = %f\n", svp);
 	vp = met[month].rh * (svp /100);
-	//Log("vp = %g\n", vp);
+	//Log("vp = %f\n", vp);
 	vpd = svp -vp;
-	//Log("vpd = %g \n", vpd);
+	//Log("vpd = %f \n", vpd);
 
 	return vpd;
 }
  */
 
 
-void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
+void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 {
 	//here is valid only into function
 	static int doy;
@@ -421,18 +421,18 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 	{
 		Log("***************\n");
 		Log("**Monthly MET DATA**\n");
-		Log("-average solar_rad = %g MJ/m^2/day\n"
-				"-tavg = %g °C\n"
-				"-tmax = %g °C\n"
-				"-tmin = %g °C\n"
-				"-tday = %g °C\n"
-				"-tnight = %g °C\n"
-				//"-rh = %g %%\n"
-				"-vpd = %g mbar\n"
-				"-ts_f = %g °C\n"
-				"-rain = %g mm\n"
-				"-swc = %g %vol\n"
-				"-daylength = %g hrs\n",
+		Log("-average solar_rad = %f MJ/m^2/day\n"
+				"-tavg = %f °C\n"
+				"-tmax = %f °C\n"
+				"-tmin = %f °C\n"
+				"-tday = %f °C\n"
+				"-tnight = %f °C\n"
+				//"-rh = %f %%\n"
+				"-vpd = %f mbar\n"
+				"-ts_f = %f °C\n"
+				"-rain = %f mm\n"
+				"-swc = %f %vol\n"
+				"-daylength = %f hrs\n",
 				met[month].solar_rad,
 				met[month].tavg,
 				met[month].tmax,
@@ -448,7 +448,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 		if (settings->spatial == 's')
 		{
-			Log("-lai from NDVI = %g \n", met[month].ndvi_lai);
+			Log("-lai from NDVI = %f \n", met[month].ndvi_lai);
 		}
 	}
 	else
@@ -461,21 +461,21 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", day+1, month+1);
-		Log("-average solar_rad = %g MJ/m^2/day\n"
-				"-tavg = %g °C\n"
-				"-tmax = %g °C\n"
-				"-tmin = %g °C\n"
-				"-tday = %g °C\n"
-				"-tnight = %g °C\n"
-				//"-rh = %g %%\n"
-				"-vpd = %g mbar\n"
-				"-ts_f = %g °C\n"
-				"-rain = %g mm\n"
-				"-swc = %g %vol\n"
-				"-thermic_sum = %g °C\n"
-				"-daylength = %g hrs\n"
+		Log("-average solar_rad = %f MJ/m^2/day\n"
+				"-tavg = %f °C\n"
+				"-tmax = %f °C\n"
+				"-tmin = %f °C\n"
+				"-tday = %f °C\n"
+				"-tnight = %f °C\n"
+				//"-rh = %f %%\n"
+				"-vpd = %f mbar\n"
+				"-ts_f = %f °C\n"
+				"-rain = %f mm\n"
+				"-swc = %f %vol\n"
+				"-thermic_sum = %f °C\n"
+				"-daylength = %f hrs\n"
 				"-DOY = %d\n"
-				"-tsoil = %g °C\n",
+				"-tsoil = %f °C\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
@@ -494,7 +494,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 		if (settings->spatial == 's')
 		{
-			Log("-lai from NDVI = %g \n", met[month].d[day].ndvi_lai);
+			Log("-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
 		}
 	}
 
@@ -504,7 +504,7 @@ void Print_met_data (const MET_DATA *const met, float vpd, int month, int day)
 
 void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
-	float avg = 0;
+	double avg = 0;
 	int i;
 	int day_temp = day;
 	int month_temp = month;

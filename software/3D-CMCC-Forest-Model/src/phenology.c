@@ -24,7 +24,7 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %g--\n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[PHENOLOGY]);
+				Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %f--\n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 
 				//defining phenology phase
 				if (settings->spatial == 'u') //for unspatial version

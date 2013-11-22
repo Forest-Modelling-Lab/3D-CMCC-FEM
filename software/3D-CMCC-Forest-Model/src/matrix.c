@@ -388,7 +388,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 		{
 
 			/* check cell */
-			if ( ARE_FLOATS_EQUAL(rows[row].x, m->cells[cell].x) && ARE_FLOATS_EQUAL(rows[row].y, m->cells[cell].y) )
+			if ( ARE_DOUBLES_EQUAL(rows[row].x, m->cells[cell].x) && ARE_DOUBLES_EQUAL(rows[row].y, m->cells[cell].y) )
 			{
 				/* update flag */
 				equal_flag |= EQUAL_CELL;
@@ -396,7 +396,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 				for (height = 0; height < m->cells[cell].heights_count; ++height)
 				{
 					//equal heights?
-					if ( ARE_FLOATS_EQUAL(rows[row].height, m->cells[cell].heights[height].value) )
+					if ( ARE_DOUBLES_EQUAL(rows[row].height, m->cells[cell].heights[height].value) )
 					{
 						//update flag
 						equal_flag |= EQUAL_HEIGHT;
@@ -543,7 +543,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 								++y;
 
 								// DEBUG
-								//Log("imported %s = %g (row %d)\n", token, value, i);
+								//Log("imported %s = %f (row %d)\n", token, value, i);
 
 								break;
 							}
@@ -592,7 +592,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	//cell MUST be squares
 	resol = sqrt (settings->sizeCell);
 
-	Log ("Cell resolution = %d x %d = %g m^2\n", resol, resol, settings->sizeCell);
+	Log ("Cell resolution = %d x %d = %f m^2\n", resol, resol, settings->sizeCell);
 	if (settings->version == 'f')
 	{
 		Log ("Model version = FEM \n");
@@ -633,9 +633,9 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	Log("***************************************************\n");
 	Log("SITE DATASET\n");
 	Log("Site Name = %s\n", site->sitename);
-	Log("Latitude = %g° \n", site->lat);
-	Log("Longitude = %g° \n", site->lon);
-	Log("Elevation = %g m\n", site->elev);
+	Log("Latitude = %f° \n", site->lat);
+	Log("Longitude = %f° \n", site->lon);
+	Log("Elevation = %f m\n", site->elev);
 	if (site->lat > 0) Log("North hemisphere\n");
 	else Log("South hemisphere\n");
 	Log("***************************************************\n");
@@ -659,7 +659,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 			for ( height = 0; height < m->cells[cell].heights_count; height++ )
 			{
 				Log("**(%d)\n", height + 1);
-				Log("-- height n.%02d is %g m and has %d age classes\n",
+				Log("-- height n.%02d is %f m and has %d age classes\n",
 						height + 1,
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages_count);
@@ -692,25 +692,25 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 
 						Log(
 								"\n\n----- CLASS DATASET-----\n"
-								"----- height = %g\n"
+								"----- height = %f\n"
 								"----- age = %d\n"
 								"----- species n.%02d is %s\n"
 								"----- n = %d trees\n"
 								"----- n stumps = %d stumps\n"
-								"----- avdbh = %g cm\n"
-								"----- wf = %g tDM/ha\n"
-								"----- wr coarse = %g tDM/area\n"
-								"----- wr fine = %g tDM/area\n"
-								"----- wr tot = %g tDM/area\n"
-								"----- ws = %g tDM/area\n"
-								"----- wbb = %g tDM/area\n"
-								"----- wres = %g tDM/area\n"
-								"----- ws live = %g tDM/area\n"
-								"----- wrc live = %g tDM/area\n"
-								"----- wbb live = %g tDM/area\n"
-								"----- w tot live = %g tDM/area\n"
-								"----- w tot dead = %g tDM/area\n"
-								"----- lai = %g tDM/area\n",
+								"----- avdbh = %f cm\n"
+								"----- wf = %f tDM/ha\n"
+								"----- wr coarse = %f tDM/area\n"
+								"----- wr fine = %f tDM/area\n"
+								"----- wr tot = %f tDM/area\n"
+								"----- ws = %f tDM/area\n"
+								"----- wbb = %f tDM/area\n"
+								"----- wres = %f tDM/area\n"
+								"----- ws live = %f tDM/area\n"
+								"----- wrc live = %f tDM/area\n"
+								"----- wbb live = %f tDM/area\n"
+								"----- w tot live = %f tDM/area\n"
+								"----- w tot dead = %f tDM/area\n"
+								"----- lai = %f tDM/area\n",
 
 								m->cells[cell].heights[height].value,
 								m->cells[cell].heights[height].ages[age].value,
@@ -740,7 +740,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 			/*Soil definition*/
 			Log("***************************************************\n");
 			Log("SOIL DATASET\n");
-			Log("Number of soil layers = %g\n", settings->soil_layer);
+			Log("Number of soil layers = %f\n", settings->soil_layer);
 			Log("***************************************************\n");
 
 			Get_initialization_site_data (&m->cells[cell]);

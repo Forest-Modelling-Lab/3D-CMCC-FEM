@@ -110,7 +110,7 @@ typedef struct {
 typedef struct
 {
 	char sitename[1024];
-	float lat,
+	double lat,
 	lon,
 	elev,
 	Y,
@@ -149,7 +149,7 @@ typedef struct
 
 	char daymet[3];
 
-	float sizeCell,
+	double sizeCell,
 	//dominant,
 	//dominated,
 	//subdominated,
@@ -761,7 +761,7 @@ typedef struct {
 /* */
 //all variables related to the soil site
 typedef struct {
-	float variabile;
+	double variabile;
 } SOIL;
 
 
@@ -770,19 +770,19 @@ typedef struct {
 	int class;
 
 	//cumulative variables class related used in annual-monthly-daily Log
-	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
-	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+	double daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
-	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
-	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
-	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
-	float daily_aut_resp_tDM[3];
-	float daily_cc[3], monthly_cc[3], annual_cc[3];
-	float daily_lai[3];
-	float annual_peak_lai[10];
+	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
+	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
+	double daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	double daily_aut_resp_tDM[3];
+	double daily_cc[3], monthly_cc[3], annual_cc[3];
+	double daily_lai[3];
+	double annual_peak_lai[10];
 	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
-	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
 } CLASS;
 
@@ -801,30 +801,30 @@ typedef struct {
 	int soils_count;
 
 	int yearday;
-	float daylength_3PG;
+	double daylength_3PG;
 	int cum_dayOfyear;
-	float abscission_daylength;
+	double abscission_daylength;
 
 
-	float net_radiation;
-	float net_radiation_no_albedo;
-	float net_radiation_for_dominated;
-	float net_radiation_for_dominated_no_albedo; //not need to be used
-	float net_radiation_for_subdominated;
-	float net_radiation_for_subdominated_no_albedo; //not need to be used
-	float net_radiation_for_soil;
-	float par;
-	float par_no_albedo;
-	float par_for_dominated;
-	float par_for_dominated_no_albedo; //not need to be used
-	float par_for_subdominated;
-	float par_for_subdominated_no_albedo; //not need to be used
-	float par_for_soil;
-	float par_over_dominant_canopy;
-	float gpp;     //in g of C m^2
-	float npp;     //in tonnes of DM per hectare
-	float av_gpp;
-	float av_npp;
+	double net_radiation;
+	double net_radiation_no_albedo;
+	double net_radiation_for_dominated;
+	double net_radiation_for_dominated_no_albedo; //not need to be used
+	double net_radiation_for_subdominated;
+	double net_radiation_for_subdominated_no_albedo; //not need to be used
+	double net_radiation_for_soil;
+	double par;
+	double par_no_albedo;
+	double par_for_dominated;
+	double par_for_dominated_no_albedo; //not need to be used
+	double par_for_subdominated;
+	double par_for_subdominated_no_albedo; //not need to be used
+	double par_for_soil;
+	double par_over_dominant_canopy;
+	double gpp;     //in g of C m^2
+	double npp;     //in tonnes of DM per hectare
+	double av_gpp;
+	double av_npp;
 	int height_class_in_layer_dominant_counter;
 	int height_class_in_layer_dominated_counter;
 	int height_class_in_layer_subdominated_counter;
@@ -832,107 +832,107 @@ typedef struct {
 	int dominated_veg_counter;
 	int subdominated_veg_counter;
 	int Veg_Counter;
-	float soil_evaporation;
-	float available_soil_water;
+	double soil_evaporation;
+	double available_soil_water;
 	int tree_number_dominant;
 	int tree_number_dominated;
 	int tree_number_subdominated;
-	float density_dominant;
-	float density_dominated;
-	float density_subdominated;
-	float canopy_cover_dominant;
-	float canopy_cover_dominated;
-	float canopy_cover_subdominated;
+	double density_dominant;
+	double density_dominated;
+	double density_subdominated;
+	double canopy_cover_dominant;
+	double canopy_cover_dominated;
+	double canopy_cover_subdominated;
 	double layer_cover_dominant;
-	float layer_cover_dominated;
-	float layer_cover_subdominated;
-	float rain_intercepted;
-	float water_to_soil;
-	float water_to_atmosphere;
-	float evapotranspiration;
-	float stand_agb;
-	float stand_bgb;
+	double layer_cover_dominated;
+	double layer_cover_subdominated;
+	double rain_intercepted;
+	double water_to_soil;
+	double water_to_atmosphere;
+	double evapotranspiration;
+	double stand_agb;
+	double stand_bgb;
 
-	float litter;
-	float av_yearly_daylength;
-	float av_yearly_par_soil;
-	float total_yearly_evapotransipration;
-	float total_yearly_soil_evaporation;
-	float soil_moist_ratio;
-	float av_soil_moist_ratio;
-	float max_asw;
-	float psi_sat;//soil saturated matric potential
-	float vwc_sat;//soil saturated Volumetric water content
-	float soil_b; //soil moisture parameter
-	float soilw_sat; //(kgH2O/m2) soilwater at saturation
-	float soilw_fc; //(kgH2O/m2) soilwater at field capacity
+	double litter;
+	double av_yearly_daylength;
+	double av_yearly_par_soil;
+	double total_yearly_evapotransipration;
+	double total_yearly_soil_evaporation;
+	double soil_moist_ratio;
+	double av_soil_moist_ratio;
+	double max_asw;
+	double psi_sat;//soil saturated matric potential
+	double vwc_sat;//soil saturated Volumetric water content
+	double soil_b; //soil moisture parameter
+	double soilw_sat; //(kgH2O/m2) soilwater at saturation
+	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
 	int annual_layer_number;
 	int monthly_layer_number;
 	int daily_layer_number;
 	int top_layer;
 	int saplings_counter;
-	float snow;  //amount of snow in Kg H2O
-	float snow_subl; //sublimated snow
-	float snow_to_soil;
-	float gcorr;
-	float air_pressure;
+	double snow;  //amount of snow in Kg H2O
+	double snow_subl; //sublimated snow
+	double snow_to_soil;
+	double gcorr;
+	double air_pressure;
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
-	float gapcover[3];
+	double gapcover[3];
 
-	float daily_evapotranspiration;
+	double daily_evapotranspiration;
 
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
-	float daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	float daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
-	float daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
-	float daily_c_int[3], daily_tot_c_int;
-	float daily_c_transp[3], daily_tot_c_transp;
-	float daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
-	float daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+	double daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
+	double daily_c_int[3], daily_tot_c_int;
+	double daily_c_transp[3], daily_tot_c_transp;
+	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
+	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 
 
-	float daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
-	float daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
-	float daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
-	float daily_aut_resp_tDM[3];
+	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
+	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
+	double daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	double daily_aut_resp_tDM[3];
 
-	float daily_cc[3], monthly_cc[3], annual_cc[3];
+	double daily_cc[3], monthly_cc[3], annual_cc[3];
 
 
-	float daily_lai[3];
-	float annual_peak_lai[10];
+	double daily_lai[3];
+	double annual_peak_lai[10];
 
 	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
 
-	float daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
-	float daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
-	float daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
-	float daily_delta_wbb[3], daily_wbb[3], monthly_delta_wbb[3], monthly_wbb[3], annual_delta_wbb[3], annual_wbb[3];
-	float daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
-	float daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
-	float daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
+	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
+	double daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
+	double daily_delta_wbb[3], daily_wbb[3], monthly_delta_wbb[3], monthly_wbb[3], annual_delta_wbb[3], annual_wbb[3];
+	double daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
+	double daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
+	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
 
 
-	float annual_dbh[3];
+	double annual_dbh[3];
 
 
 	//int dead_tree;
 
-	float thermic_sum;
+	double thermic_sum;
 
-	float soil_respiration;
-	float aut_respiration; //autotrophic respiration
-	float het_respiration; //heterotrophic respiration
-	float ter;  //total ecosystem respiration
+	double soil_respiration;
+	double aut_respiration; //autotrophic respiration
+	double het_respiration; //heterotrophic respiration
+	double ter;  //total ecosystem respiration
 
 
 
-	float daily_c_flux;
-	float daily_w_res;
+	double daily_c_flux;
+	double daily_w_res;
 
 
 
@@ -990,7 +990,7 @@ extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, c
 extern int sort_by_years(const void *, const void *);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
-extern float Get_canopy_cover (SPECIES *const, int, int, int);
+extern double Get_canopy_cover (SPECIES *const, int, int, int);
 extern void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
@@ -998,7 +998,7 @@ extern int importSettingsFile(char *);
 extern void Get_Day_Length (CELL *, int, int, int, int, YOS *);
 extern void GetDayLength_3PG (CELL *, int, int, int, int, YOS *);
 extern void Get_Abscission_DayLength (CELL *);
-extern int Get_Establishment_LPJ (SPECIES *const, float, float);
+extern int Get_Establishment_LPJ (SPECIES *const, double, double);
 extern int logInit(char*);
 extern void Log(const char *, ...);
 extern void logClose(void);
@@ -1015,8 +1015,8 @@ extern void Get_Age_Mortality (SPECIES *const, AGE *const);
 extern void Get_Greff_Mortality (SPECIES *const);
 extern void Get_Mortality (SPECIES *const, int);
 //extern void Get_stool_mortality (SPECIES *const, int);
-extern void Get_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, float, float, int, int);
-extern void Get_daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, float, float, int, int);
+extern void Get_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, double, double, int, int);
+extern void Get_daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int);
 extern void Get_Management (SPECIES *const, AGE *const, int);
 extern void Clearcut_Timber (SPECIES *const, int, int, int);
 extern void Clearcut_Coppice (SPECIES *const, int, int, int);
@@ -1025,12 +1025,12 @@ extern void matrix_free(MATRIX *);
 extern void matrix_summary(const MATRIX *const, int, const YOS *const);
 void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
 //yearly allocation
-extern void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
+extern void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
 extern int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
 extern int Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 extern void Get_Partitioning_Allocation_CTEM (SPECIES *const, int);
 //monthly allocation
-extern void M_Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, float, float);
+extern void M_Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
 extern int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
 extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 
@@ -1051,29 +1051,29 @@ extern void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 
 extern void Get_litter (CELL *, SPECIES *const, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
-extern void Get_litterfall_evergreen (HEIGHT *, float, const int, const int, int);
+extern void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const);
 extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
-extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, float, int, int, float, float, int);
+extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, double, int, int, double, double, int);
 extern void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
 extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
 extern void Get_turnover (SPECIES *, CELL *, int, int);
-extern void Get_Light_Recruitment (SPECIES *const, float, float);
+extern void Get_Light_Recruitment (SPECIES *const, double, double);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
 extern void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int, int, int, int, int);
 extern void Get_biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
 extern void Get_biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
 void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 extern void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
-extern float Get_vpd (const MET_DATA *const, int);
+extern double Get_vpd (const MET_DATA *const, int);
 extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 extern void Get_stool_mortality (SPECIES *, int);
 extern void Get_forest_structure (CELL *);
 extern void Print_met_daily_data (const YOS *const , int , int , int );
-void Print_met_data (const MET_DATA *const, float, int, int);
+void Print_met_data (const MET_DATA *const, double, int, int);
 extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 extern void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
@@ -1083,10 +1083,10 @@ extern int Get_number_of_layers (CELL *);
 extern void Get_annual_numbers_of_layers (CELL *);
 void Get_monthly_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
-extern void Get_layer_cover_mortality (CELL *, int, int, int, float, int);
+extern void Get_layer_cover_mortality (CELL *, int, int, int, double, int);
 extern void Get_soil_water_balance (CELL *const, const MET_DATA *const, int, int);
 extern void Get_annual_average_values_modifiers (SPECIES *);
-extern void Get_annual_average_values_met_data (CELL *, float, float, float, float);
+extern void Get_annual_average_values_met_data (CELL *, double, double, double, double);
 extern void Get_EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
 extern void Get_EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int);
 extern void Get_EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
@@ -1121,9 +1121,9 @@ extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
 extern void Get_biome_fraction (SPECIES *);
 
 /*evapotranspiration block*/
-extern void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
+extern void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 extern void Get_canopy_interception (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
-extern void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, float, int, int, int);
+extern void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
 
 

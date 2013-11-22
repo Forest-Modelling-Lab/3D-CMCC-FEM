@@ -81,7 +81,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 
 
-	static float previous_solar_rad,
+	static double previous_solar_rad,
 	previous_tavg,
 	previous_tmax,
 	previous_tmin,
@@ -491,7 +491,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 
 									}
-									//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
+									//Log("precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
 								}
 								/*
 								   else
@@ -629,7 +629,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("solar_rad = %g\n", yos[*yos_count-1].m[month].d[day].solar_rad);
+										//Log("solar_rad = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
 									{
@@ -638,7 +638,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* SOLAR RAD -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1 );
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].solar_rad = previous_solar_rad;
-										//Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].solar_rad);
+										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
 										{
 											//Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
@@ -676,7 +676,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("tavg = %g\n", yos[*yos_count-1].m[month].d[day].tavg);
+										//Log("tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
 									}
 									/*
 									( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
@@ -707,7 +707,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										//Log("ERROR IN TAV DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									}
-									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
 
 								case TMAX: //TMAX -  maximum temperature
@@ -722,7 +722,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("tmax = %g\n", yos[*yos_count-1].m[month].d[day].tmax);
+										//Log("tmax = %f\n", yos[*yos_count-1].m[month].d[day].tmax);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
@@ -730,7 +730,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* TMAX -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1 );
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].tmax = previous_tmax;
-										//Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].tmax);
+										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].tmax);
 										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count].m[month].d[day-1].tmax;
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 										{
@@ -748,7 +748,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										previous_tmax = yos[*yos_count-1].m[month].d[day].tmax;
 									}
-									//Log("%d-%s-tavg = %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
 
 								case TMIN: //TMIN -  minimum temperature
@@ -763,7 +763,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("tmin = %g\n", yos[*yos_count-1].m[month].d[day].tmin);
+										//Log("tmin = %f\n", yos[*yos_count-1].m[month].d[day].tmin);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
@@ -771,7 +771,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* TMIN -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1 );
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].tmin = previous_tmin;
-										//Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].tmin);
+										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].tmin);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 										{
 											//the model gets the value of the year before
@@ -802,7 +802,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("vpd = %g\n", yos[*yos_count-1].m[month].d[day].vpd);
+										//Log("vpd = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
@@ -810,7 +810,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* VPD -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1 );
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].vpd = previous_vpd;
-										//Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].vpd);
+										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd))
 										{
 											//Log ("********* VPD -NO DATA- in previous year!!!!\n" );
@@ -830,7 +830,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										previous_vpd = yos[*yos_count-1].m[month].d[day].vpd;
 									}
-									//Log("%d-%s-vpd = %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
+									//Log("%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
 									break;
 
 								case TS_F: // ts_f   Soil temperature
@@ -868,7 +868,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										previous_ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
 									}
-									//Log("%d-%s-ts_f = %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].ts_f);
+									//Log("%d-%s-ts_f = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].ts_f);
 									break;
 
 								case PRECIP:  //Precip - rain
@@ -883,7 +883,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("rain = %g\n", yos[*yos_count-1].m[month].d[day].rain);
+										//Log("rain = %f\n", yos[*yos_count-1].m[month].d[day].rain);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
@@ -891,7 +891,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										//Log ("* PRECIPITATION -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1 );
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].rain = previous_rain;
-										//Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].rain);
+										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].rain))
 										{
 											//Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
@@ -906,7 +906,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											}
 
 										}
-										//Log("precipitation of previous year = %g mm\n", yos[*yos_count-1].m[month].rain);
+										//Log("precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
 									}
 									else
 									{
@@ -924,7 +924,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										//Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									}
-									//Log("%d-%s-precip = %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
+									//Log("%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
 									break;
 
 								case SWC: //Soil Water Content (%)
@@ -963,7 +963,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										previous_swc = yos[*yos_count-1].m[month].d[day].swc;
 									}
 
-									//Log("%d-%s-swc= %g\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
+									//Log("%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
 									break;
 								case Ndvi_Lai: //Get LAI in spatial version
 									if (settings->spatial == 's')
@@ -1006,7 +1006,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 												Log("********* INVALID DATA LAI > MAXLAI in year %s month %s!!!!\n", year, MonthName[month] );
 												Log("Getting previous day values.. !!\n");
 												yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
-												Log("..value of the previous day = %g\n", yos[*yos_count-1].m[month].d[day].ndvi_lai);
+												Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].ndvi_lai);
 											}
 										}
 										//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI

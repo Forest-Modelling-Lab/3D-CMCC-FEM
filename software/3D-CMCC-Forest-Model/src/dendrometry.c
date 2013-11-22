@@ -7,8 +7,8 @@
 
 void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 {
-	float oldavDBH;
-	float oldTreeHeight;
+	double oldavDBH;
+	double oldTreeHeight;
 
 	Log("\nGET_DENDROMETRY_ROUTINE\n");
 
@@ -19,11 +19,11 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 	oldavDBH = s->value[AVDBH];
 
-	//Log("OLD Average DBH from 3PG CLASSIC from previous year = %g cm\n", oldavDBH);
+	//Log("OLD Average DBH from 3PG CLASSIC from previous year = %f cm\n", oldavDBH);
 
 	oldTreeHeight = h->value;
 
-	//Log("OLD Tree Height from Chapman-Richards function from previous year = %g m\n", oldTreeHeight);
+	//Log("OLD Tree Height from Chapman-Richards function from previous year = %f m\n", oldTreeHeight);
 
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
@@ -46,22 +46,22 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
-		Log("Average stem mass = %g\n", s->value[AV_STEM_MASS]);
+		Log("Average stem mass = %f\n", s->value[AV_STEM_MASS]);
 		s->value[AVDBH] = pow(s->value[AV_STEM_MASS] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 	}
-	Log("-New Average DBH = %g cm\n", s->value[AVDBH]);
+	Log("-New Average DBH = %f cm\n", s->value[AVDBH]);
 
 	/*control*/
 	if (oldavDBH > s->value[AVDBH])
 	{
-		Log("Old AVDBH = %g cm\n", oldavDBH);
+		Log("Old AVDBH = %f cm\n", oldavDBH);
 		Log("ERROR in Average DBH !!!!!!!\n");
 		s->value[AVDBH] = oldavDBH;
 	}
 	else
 	{
-		Log("-DBH increment = %g cm\n", s->value[AVDBH] - oldavDBH);
+		Log("-DBH increment = %f cm\n", s->value[AVDBH] - oldavDBH);
 
 	}
 
@@ -79,7 +79,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	//CRB represents exponential decay parameter
 	//CRC represents shape parameters
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] *  s->value[AVDBH]) , s->value[CRC]);
-	Log("-Tree Height using Chapman-Richard function = %g m\n", h->value);
+	Log("-Tree Height using Chapman-Richard function = %f m\n", h->value);
 
 	if (h->value > s->value[HMAX])
 	{
@@ -93,7 +93,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		//Log("SORTIE FUNC DBH > 10 cm\n");
 
 		s->value[TREE_HEIGHT_SORTIE] = (1.35 +(s->value[HMAX] - 1.35) * ( 1.0 - exp ( - s->value[HPOWER] * s->value[AVDBH] )));
-		Log("-Tree Height using Sortie function > 10 cm = %g m\n", s->value[TREE_HEIGHT_SORTIE]);
+		Log("-Tree Height using Sortie function > 10 cm = %f m\n", s->value[TREE_HEIGHT_SORTIE]);
 	}
 	else
 	{

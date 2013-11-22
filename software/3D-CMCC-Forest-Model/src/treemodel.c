@@ -25,21 +25,21 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 	int day = 0;
 
-	static float Light_Absorb_for_establishment;
-	static float Light_for_establishment;
+	static double Light_Absorb_for_establishment;
+	static double Light_for_establishment;
 
 	//Yearly average met data
-	static float Yearly_Solar_Rad;
-	static float Yearly_Temp;
-	static float Yearly_Vpd;
-	static float Yearly_Rain;
-	//static float Total_Rain;
+	static double Yearly_Solar_Rad;
+	static double Yearly_Temp;
+	static double Yearly_Vpd;
+	static double Yearly_Rain;
+	//static double Total_Rain;
 
 
 
 
 	//compute VPD
-	static float vpd;
+	static double vpd;
 
 	/*fruit*/
 	/*logistic equation*/
@@ -53,9 +53,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 	//static int strata;
 
 	//SOIL NITROGEN CONTENT see Peng et al., 2002
-	//static float N_avl;  //Total nitrogen available for tree growth see Peng et al., 2002
-	//const float Ka = 0.6;  //see Peng et al., 2002
-	//const float Kb = 0.0005; //see Peng et al., 2002
+	//static double N_avl;  //Total nitrogen available for tree growth see Peng et al., 2002
+	//const double Ka = 0.6;  //see Peng et al., 2002
+	//const double Kb = 0.0005; //see Peng et al., 2002
 
 	// check parameters
 	assert(m && yos);
@@ -69,7 +69,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		/*soil water initialization*/
 		m->cells[cell].available_soil_water += met[month].rain;
-		Log("Beginning month  %d ASW = %g (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
+		Log("Beginning month  %d ASW = %f (mm-kgH2O/m2)\n", month  + 1 , m->cells[cell].available_soil_water);
 
 		/*snow initialization*/
 		m->cells[cell].snow = 0;
@@ -80,7 +80,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 			Log("ASW > MAXASW !!!\n");
 			//if the asw exceeds maxasw the plus is considered lost for turn off
 			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
-			Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
+			Log("ASW month %d = %f mm\n", month + 1, m->cells[cell].available_soil_water);
 		}
 
 		Get_Abscission_DayLength (&m->cells[cell]);
@@ -124,7 +124,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		//compute moist ratio
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
-		Log("Moist ratio outside modifier = %g\n", m->cells[cell].soil_moist_ratio);
+		Log("Moist ratio outside modifier = %f\n", m->cells[cell].soil_moist_ratio);
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
 
@@ -140,7 +140,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 		Log("*****************CELL x = %d, y = %d STRUCTURE*********************\n", m->cells[cell].x, m->cells[cell].y);
 
-		Log("ASW month %d = %g mm\n", month + 1, m->cells[cell].available_soil_water);
+		Log("ASW month %d = %f mm\n", month + 1, m->cells[cell].available_soil_water);
 
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
@@ -254,13 +254,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								if (height == 0)
 								{
 									Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
-									Log("PAR OVER CANOPY = %g \n",  m->cells[cell].par_over_dominant_canopy);
-									Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
-									Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
+									Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
+									Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
+									Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
 								}
 								if (settings->spatial == 'u')
 								{
-									Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 							}
 							else
@@ -271,12 +271,12 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 								if (settings->spatial == 'u')
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-									//Log("PHENOLOGY LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									//Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 								else
 								{
-									Log("++Lai layer %d = %g\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
+									Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].ndvi_lai);
 								}
 
 								//Productivity
@@ -300,10 +300,10 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 									}
 
 									m->cells[cell].available_soil_water -=  m->cells[cell].soil_evaporation;
-									//Log("Available Soil Water at month %d years %d with LPJ soil evaporation = %g mm\n",month, years, m->cells[cell].available_soil_water);
+									//Log("Available Soil Water at month %d years %d with LPJ soil evaporation = %f mm\n",month, years, m->cells[cell].available_soil_water);
 
 								}
-								Log("Available Soil Water at month %d year of simulation %d = %g mm\n",month+1, years, m->cells[cell].available_soil_water);
+								Log("Available Soil Water at month %d year of simulation %d = %f mm\n",month+1, years, m->cells[cell].available_soil_water);
 
 								Log("*****************************************************************************\n");
 								Log("*****************************************************************************\n");
@@ -320,7 +320,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS] += 1;
 							Log("VEG_MONTHS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_MONTHS]);
-							Log("LAI = %g \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+							Log("LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 
 
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
@@ -350,9 +350,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							if (m->cells[cell].heights[height].z == 0)
 							{
 								Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
-								Log("PAR OVER CANOPY = %g \n",  m->cells[cell].par_over_dominant_canopy);
-								Log("PAR FOR SOIL = %g \n", m->cells[cell].par_for_soil);
-								Log("Average Light Absorbed for establishment = %g \n", Light_Absorb_for_establishment);
+								Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
+								Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
+								Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
 							}
 						}
 
@@ -368,7 +368,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 							/*FRUIT ALLOCATION*/
 							//Only for dominant layer
 
-							//Log("Dominant Canopy Cover = %g\n", m->cells[cell].canopy_cover_dominant);
+							//Log("Dominant Canopy Cover = %f\n", m->cells[cell].canopy_cover_dominant);
 
 							/*
                            if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
@@ -389,8 +389,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             }
                             else
                             {
-                            Log("Yearly Rain = %g\n", Yearly_Rain);
-                            Log("Minimum Rain for Establishment = %g\n", m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN]);
+                            Log("Yearly Rain = %f\n", Yearly_Rain);
+                            Log("Minimum Rain for Establishment = %f\n", m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN]);
                             Log("NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
                             }
                             }
@@ -560,13 +560,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 Log("species = %s\n", r.species);
                                 Log("phenology = %d\n", r.phenology);
                                 Log("management = %d\n", r.management);
-                                Log("lai = %g\n", r.lai);
+                                Log("lai = %f\n", r.lai);
                                 Log("n tree = %d\n", r.n);
-                                Log("avdbh = %g\n", r.avdbh);
-                                Log("height = %g\n", r.height);
-                                Log("wf = %g\n", r.wf);
-                                Log("wr = %g\n", r.wr);
-                                Log("ws = %g\n", r.ws);
+                                Log("avdbh = %f\n", r.avdbh);
+                                Log("height = %f\n", r.height);
+                                Log("wf = %f\n", r.wf);
+                                Log("wr = %f\n", r.wr);
+                                Log("ws = %f\n", r.ws);
 
                                 Saplings_counter += 1;
                                 Log("Sapling Classes counter = %d\n", Saplings_counter);
@@ -579,7 +579,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
                                 m->cells[cell].heights[height].value = 1 ;
-                                Log("Height class passing from Sapling to Adult = %g m\n", m->cells[cell].heights[height].value);
+                                Log("Height class passing from Sapling to Adult = %f m\n", m->cells[cell].heights[height].value);
 
                                 //Saplings_counter -= 1;
                             }
@@ -602,7 +602,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							/*Saplings mortality based on light availability*/
 							Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
-							Log("Radiation for soil =  %g W/m^2\n", Light_for_establishment);
+							Log("Radiation for soil =  %f W/m^2\n", Light_for_establishment);
 
 
 							if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
@@ -669,7 +669,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
-		//Log("Nitrogen available = %g g m^-2\n", N_avl);
+		//Log("Nitrogen available = %f g m^-2\n", N_avl);
 
 
 		//    Log("************************************ \n");

@@ -1270,7 +1270,7 @@ int main(int argc, char *argv[])
 							if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
 							{
 								settings->version = 'u';
-								Log("--Years to switch from s to u = %g\n\n\n\n\n", settings->switchtounspatial);
+								Log("--Years to switch from s to u = %f\n\n\n\n\n", settings->switchtounspatial);
 								Log("\n\n\n************CHANGING VERSION..........***************\n");
 								Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
 								Log("Model version = %c\n\n\n\n", settings->version);

@@ -20,7 +20,7 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	Log("\nGET_C-Fluxes_ROUTINE\n");
 
 	c->daily_c_flux = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-	Log("c-flux = %g\n", c->daily_c_flux);
+	Log("c-flux = double\n", c->daily_c_flux);
 
 
 }

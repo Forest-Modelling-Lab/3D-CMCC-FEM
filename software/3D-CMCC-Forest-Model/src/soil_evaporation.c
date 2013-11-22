@@ -8,10 +8,10 @@
 #include "constants.h"
 
 
-extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int day, int DaysInMonth, float Net_Radiation, int top_layer, int z,
-		float Net_Radiation_for_dominated, float Net_Radiation_for_subdominated, int Veg_counter)
+extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int day, int DaysInMonth, double Net_Radiation, int top_layer, int z,
+		double Net_Radiation_for_dominated, double Net_Radiation_for_subdominated, int Veg_counter)
 {
-	static float PotEvap;            //Potential evapotranspiration
+	static double PotEvap;            //Potential evapotranspiration
 
 	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
 
@@ -46,7 +46,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 				}
 				break;
 			case 1:
-				Log("Net radiation from dominant layer = %g W/m^2/hours\n", Net_Radiation_for_dominated);
+				Log("Net radiation from dominant layer = %f W/m^2/hours\n", Net_Radiation_for_dominated);
 				Net_Radiation = Net_Radiation_for_dominated;
 				break;
 			}
@@ -83,7 +83,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 				}
 				break;
 			case 1:
-				Log("Net radiation from dominant layer = %g W/m^2/hour\n", Net_Radiation_for_dominated);
+				Log("Net radiation from dominant layer = %f W/m^2/hour\n", Net_Radiation_for_dominated);
 				Net_Radiation = Net_Radiation_for_dominated;
 				break;
 			}
@@ -95,24 +95,24 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	}
 
 	PotEvap = (E20 / (E20 + PSYCCONST )) * (Net_Radiation/3600.0) / LAMBDA;
-	Log("Net radiation for soil evaporation = %g W/m^2/hour\n", Net_Radiation);
-	//Log("Net radiation for soil evaporation = %g W/m^2/sec\n", Net_Radiation/3600.0);
+	Log("Net radiation for soil evaporation = %f W/m^2/hour\n", Net_Radiation);
+	//Log("Net radiation for soil evaporation = %f W/m^2/sec\n", Net_Radiation/3600.0);
 
 	c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 
 	if (settings->time == 'm')
 	{
 		c->soil_evaporation = PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].daylength * 3600.0) * DaysInMonth;
-		Log("Monthly Soil Evaporation = %g \n", c->soil_evaporation );
+		Log("Monthly Soil Evaporation = %f \n", c->soil_evaporation );
 	}
 	else
 	{
 		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].d[day].daylength * 3600.0)) + c->snow_subl;
-		Log("Daily Soil Evaporation = %g \n", c->soil_evaporation );
+		Log("Daily Soil Evaporation = %f \n", c->soil_evaporation );
 	}
 
 	c->total_yearly_soil_evaporation += c->soil_evaporation;
-	//Log("Total Yearly Soil Evaporation = %g mm\n", c->total_yearly_soil_evaporation);
+	//Log("Total Yearly Soil Evaporation = %f mm\n", c->total_yearly_soil_evaporation);
 
 }
 
