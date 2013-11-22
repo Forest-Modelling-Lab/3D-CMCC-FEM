@@ -19,9 +19,11 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	//recompute GPP
 	Log("\nGET_C-Fluxes_ROUTINE\n");
 
-	c->daily_c_flux = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
-	Log("c-flux = double\n", c->daily_c_flux);
+	s->value[C_FLUX] = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
+	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
+	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
+	c->daily_c_flux = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
 
 }
 

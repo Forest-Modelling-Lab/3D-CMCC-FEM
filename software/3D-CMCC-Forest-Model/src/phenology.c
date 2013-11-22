@@ -38,35 +38,48 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 							{
 								//Beginning of growing season
 
-								if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5 )
+								//BUDBURST
+								if (c->heights[height].ages[age].species[species].counter[VEG_DAYS] <= c->heights[height].ages[age].species[species].value[BUD_BURST])
 								{
-									//BUDBURST
-									if (c->heights[height].ages[age].species[species].counter[VEG_DAYS] <= c->heights[height].ages[age].species[species].value[BUD_BURST]
-										&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]
-									    && c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM] > 0)
+									if (c->heights[height].ages[age].species[species].value[LAI] < (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5))
 									{
 										c->heights[height].ages[age].species[species].phenology_phase = 1;
 									}
-									else
+									//Maximum Growth
+									else if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
+											&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
 										c->heights[height].ages[age].species[species].phenology_phase = 2;
 									}
+									//Full growing season
+									else
+									{
+										c->heights[height].ages[age].species[species].phenology_phase = 4;
+									}
 								}
-								//
-								if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
-										&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+								else
 								{
-									c->heights[height].ages[age].species[species].phenology_phase = 3;
-								}
-								//Full growing season
-								if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
-								{
-									c->heights[height].ages[age].species[species].phenology_phase = 4;
-								}
-								if (met[month].d[day].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
-								{
-									//Leaf fall
-									c->heights[height].ages[age].species[species].phenology_phase = 5;
+									//Maximum Growth
+									if (c->heights[height].ages[age].species[species].value[LAI] <= (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5))
+									{
+										c->heights[height].ages[age].species[species].phenology_phase = 2;
+									}
+									//Maximum Growth
+									if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
+											&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
+									{
+										c->heights[height].ages[age].species[species].phenology_phase = 3;
+									}
+									//Full growing season
+									if(fabs (c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]) < 0.1)
+									{
+										c->heights[height].ages[age].species[species].phenology_phase = 4;
+									}
+									if (met[month].d[day].daylength < c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
+									{
+										//Leaf fall
+										c->heights[height].ages[age].species[species].phenology_phase = 5;
+									}
 								}
 							}
 							else

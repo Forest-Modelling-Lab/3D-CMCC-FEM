@@ -31,8 +31,6 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 			{
 				s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 				Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-				c->daily_c_evapotransp[c->top_layer] += s->value[CANOPY_EVAPOTRANSPIRATION];
-				Log("Canopy evapotranspiration from dominant layer = %f mm \n", c->daily_c_evapotransp[c->top_layer]);
 				/*last height dominant class processed*/
 				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 				{
@@ -52,8 +50,6 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				{
 					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-					c->daily_c_evapotransp[c->top_layer-1] += s->value[CANOPY_EVAPOTRANSPIRATION];
-					Log("Canopy evapotranspiration from dominant layer = %f mm \n", c->daily_c_evapotransp[c->top_layer-1]);
 					/*last height dominant class processed*/
 					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 					{
@@ -70,8 +66,6 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				{
 					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-					c->daily_c_evapotransp[c->top_layer-2] += s->value[CANOPY_EVAPOTRANSPIRATION];
-					Log("Canopy evapotranspiration from dominant layer = %f mm \n", c->daily_c_evapotransp[c->top_layer-2]);
 					/*last height dominant class processed*/
 					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 					{
@@ -99,17 +93,13 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 		Log("Evapotraspirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_evapotransp[c->heights[height].z]);
 	}
 
-	/*compute total daily canopy evapotranspiration*/
-	c->daily_tot_c_evapotransp += c->daily_c_evapotransp[c->heights[height].z];
-	Log("Daily total canopy evapotranspiration = %f \n", c->daily_tot_c_evapotransp);
-
 	i = c->heights[height].z;
 
 	c->daily_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->monthly_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->annual_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];
 
-	//c->daily_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
+	c->daily_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->monthly_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 	c->annual_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 

@@ -60,22 +60,6 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[DEL_Y_WRES] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WR] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_BB] = 0;
-
-
-
-				//reset only in unspatial version
-				if (settings->spatial == 'u')
-				{
-					//reset foliage biomass for deciduous
-					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
-					{
-						c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM];
-
-						//reset LAI
-						c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] = 0;
-					}
-				}
-
 			}
 		}
 	}

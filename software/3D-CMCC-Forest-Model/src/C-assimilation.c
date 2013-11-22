@@ -16,15 +16,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 {
 	int i;
 
-	int counter;
-
 	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
-
-	if (day == 0 && month == 0)
-	{
-		counter = 0;
-	}
-
 
 	//vedi il caso se la gpp compensa solo in parte la respirazione, la restante parte va presa dall nsc
 
@@ -41,7 +33,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			/*for principle of conservation of mass*/
 			/*used if previous day NPP is negative to conserve mass assuming the loss
 		of reserve*/
-			if (s->value[GPP_g_C] < s->value[TOTAL_AUT_RESP])
+			if (s->value[C_FLUX] < 0.0 )
 			{
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
@@ -50,10 +42,6 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					//Angelo only for broadleaved decidous and evergreen set a minimum value for BIOMASS_RESERVE_CTEM after which it cannot goes on
 					//and stop VEG_PERIOD
 					/*following Barbaroux et al., 2003*/
-					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
-
-					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					//Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
 
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
@@ -66,12 +54,6 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 				//fixme see for correct use of reserve for evergreen
 				if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 				{
-					/*following Barbaroux et al., 2003*/
-					s->value[TOTAL_AUT_RESP] -= s->value[GPP_g_C];
-
-					//s->value[BIOMASS_RESERVE_CTEM] -=((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					//Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
-
 					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
 					{
 						s->value[BIOMASS_RESERVE_CTEM] = 0;
@@ -86,7 +68,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 			}
 			else
 			{
-				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
+				s->value[NPP_g_C] = s->value[C_FLUX];
 				Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
 				Log("NPP_g_C = %f\n", s->value[NPP_g_C]);
 				//upscale class NPP to class cell level
