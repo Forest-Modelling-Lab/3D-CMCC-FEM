@@ -717,7 +717,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "NPP(0)", "NPPgC", "CE(0)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		Daily_Log ("%d \t%8d \t%8d \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g "
-				"\t%8.6g \t%8d \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g\n",
+				"\t%8.6g \t%8d \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.6g \t%8.9g\n",
 				yos[years].year, month+1, day+1, c->daily_gpp[0],
 				c->daily_aut_resp[0],
 				c->daily_aut_resp_tDM[0],
