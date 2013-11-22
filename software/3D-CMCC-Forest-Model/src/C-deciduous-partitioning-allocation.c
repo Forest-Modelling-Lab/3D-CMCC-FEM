@@ -265,6 +265,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				s->value[DEL_STEMS_CTEM] = 0;
 				s->value[DEL_BB] = 0;
 
+
 				s->value[BIOMASS_FOLIAGE_CTEM] += s->value[DEL_FOLIAGE_CTEM];
 				Log("Biomass reserve allocated to foliage pool = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
 
