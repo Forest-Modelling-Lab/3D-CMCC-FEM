@@ -3,9 +3,9 @@
 -b output/daily_output/daily_output
 -f output/monthly_output/monthly_output
 -e output/annual_output/annual_output
--d input/BEBrasschaat/Braaschaat_oak_1l_input.txt
+-d input/BEBrasschaat/Oak/Braaschaat_oak_1l_input.txt
 -m input/BEBrasschaat/123_456_2001.txt,input/BEBrasschaat/123_456_2002.txt,input/BEBrasschaat/123_456_2003.txt,input/BEBrasschaat/123_456_2004.txt,,input/BEBrasschaat/123_456_2005.txt,input/BEBrasschaat/123_456_2006.txt,input/BEBrasschaat/123_456_2007.txt,input/BEBrasschaat/123_456_2008.txt,input/BEBrasschaat/123_456_2009.txt,input/BEBrasschaat/123_456_2010.txt,input/BEBrasschaat/123_456_2011.txt
--s input/BEBrasschaat/Brasschaat_oak_1l_site.txt
+-s input/BEBrasschaat/Oak/Brasschaat_oak_1l_site.txt
 -c input/BEBrasschaat/Brasschaat_settings.txt
 
 
@@ -14,9 +14,9 @@
 -b output/daily_output/daily_output
 -f output/monthly_output/monthly_output
 -e output/annual_output/annual_output
--d input/BEBrasschaat/Braaschaat_oak_2l_input.txt
+-d input/BEBrasschaat/Oak/Braaschaat_oak_2l_input.txt
 -m input/BEBrasschaat/123_456_2001.txt,input/BEBrasschaat/123_456_2002.txt,input/BEBrasschaat/123_456_2003.txt,input/BEBrasschaat/123_456_2004.txt,,input/BEBrasschaat/123_456_2005.txt,input/BEBrasschaat/123_456_2006.txt,input/BEBrasschaat/123_456_2007.txt,input/BEBrasschaat/123_456_2008.txt,input/BEBrasschaat/123_456_2009.txt,input/BEBrasschaat/123_456_2010.txt,input/BEBrasschaat/123_456_2011.txt
--s input/BEBrasschaat/Brasschaat_oak_2l_site.txt
+-s input/BEBrasschaat/Oak/Brasschaat_oak_2l_site.txt
 -c input/BEBrasschaat/Brasschaat_settings.txt
 
 
@@ -25,9 +25,9 @@
 -b output/daily_output/daily_output
 -f output/monthly_output/monthly_output
 -e output/annual_output/annual_output
--d input/BEBrasschaat/Braaschaat_oak_3l_input.txt
+-d input/BEBrasschaat/Oak/Braaschaat_oak_3l_input.txt
 -m input/BEBrasschaat/123_456_2001.txt,input/BEBrasschaat/123_456_2002.txt,input/BEBrasschaat/123_456_2003.txt,input/BEBrasschaat/123_456_2004.txt,,input/BEBrasschaat/123_456_2005.txt,input/BEBrasschaat/123_456_2006.txt,input/BEBrasschaat/123_456_2007.txt,input/BEBrasschaat/123_456_2008.txt,input/BEBrasschaat/123_456_2009.txt,input/BEBrasschaat/123_456_2010.txt,input/BEBrasschaat/123_456_2011.txt
--s input/BEBrasschaat/Brasschaat_oak_3l_site.txt
+-s input/BEBrasschaat/Oak/Brasschaat_oak_3l_site.txt
 -c input/BEBrasschaat/Brasschaat_settings.txt
 
 
