@@ -221,7 +221,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 							if (day == 0 && month == JANUARY)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
+								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 							}
 
 
@@ -396,7 +396,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Peak LAI is also used in spatial version to drive carbon allocation
 							if (day == 0 && month == JANUARY)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, height, age);
+								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 							}
 
 

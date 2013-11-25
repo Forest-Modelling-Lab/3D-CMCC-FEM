@@ -337,8 +337,8 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				/*partitioning*/
 				/*re-transfer mass to reserve*/
 				s->value[DEL_FOLIAGE_CTEM] -= (s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-				s->value[DEL_RESERVE_CTEM] = s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+				//s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_RESERVE_CTEM] += s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM];
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT_CTEM] = 0;
 				s->value[DEL_STEMS_CTEM] = 0;
@@ -508,7 +508,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 
 
 				/*partitioning*/
-				/*re-transfer mass to reserve*/
+				/*re-transfer mass to other pools*/
 				s->value[DEL_FOLIAGE_CTEM] -= (s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 				s->value[DEL_ROOTS_TOT_CTEM] += (s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM]) * pR_CTEM;
 				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[DEL_ROOTS_TOT_CTEM] * Perc_fine);
@@ -687,7 +687,7 @@ void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const 
 				Log("Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
 
 				/*partitioning*/
-				/*re-transfer mass to reserve*/
+				/*re-transfer mass to other pools*/
 				s->value[DEL_FOLIAGE_CTEM] -= (s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 				s->value[DEL_ROOTS_TOT_CTEM] += (s->value[BIOMASS_FOLIAGE_CTEM] - s->value[MAX_BIOMASS_FOLIAGE_CTEM]) * pR_CTEM;
 				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[DEL_ROOTS_TOT_CTEM] * Perc_fine);

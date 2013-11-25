@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int height, int age)
+extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int day, int height, int age)
 {
 	int i;
 	//static double oldBasalArea;
@@ -38,7 +38,20 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
 	}
 
-
+	/*check compatibility of LAI and Biomass with init data for evergreen*/
+	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
+	{
+		Log("azz\n");
+		if ((s->value[LAI] > s->value[PEAK_Y_LAI]) || (s->value[BIOMASS_FOLIAGE_CTEM] > s->value[MAX_BIOMASS_FOLIAGE_CTEM]))
+		{
+			s->value[LAI] = s->value[PEAK_Y_LAI];
+			Log("Initial LAI > PEAK LAI, recompute it\n");
+			Log("recomputed LAI = %f\n", s->value[LAI]);
+			/*then recompute foliage biomass*/
+			s->value[BIOMASS_FOLIAGE_CTEM] = s->value[MAX_BIOMASS_FOLIAGE_CTEM];
+			Log("recomputed FOLIAGE BIOMASS = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+		}
+	}
 
 	//DAILY GPP/NPP
 	//cell level

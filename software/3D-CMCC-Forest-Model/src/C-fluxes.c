@@ -15,6 +15,9 @@
 
 void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
 {
+	int i;
+
+	i = c->heights[height].z;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
 	Log("\nGET_C-Fluxes_ROUTINE\n");
@@ -23,7 +26,8 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
 	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
-	c->daily_c_flux = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
+	c->daily_c_flux[i] = s->value[C_FLUX];
+	c->daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);;
 
 }
 

@@ -901,6 +901,8 @@ typedef struct {
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	double daily_aut_resp[3], daily_tot_aut_resp, monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
 	double daily_aut_resp_tDM[3];
+	double daily_c_flux[3];
+	double daily_c_flux_tDM[3];
 
 	double daily_cc[3], monthly_cc[3], annual_cc[3];
 
@@ -934,7 +936,7 @@ typedef struct {
 
 
 
-	double daily_c_flux;
+
 	double daily_w_res;
 
 
@@ -1060,7 +1062,7 @@ extern void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const,
 extern void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, double, int, int, double, double, int);
 extern void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
 extern void Get_peak_lai (SPECIES *const , int, int );
-extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int );
+extern void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
 extern void Get_turnover (SPECIES *, CELL *, int, int);
 extern void Get_Light_Recruitment (SPECIES *const, double, double);
 extern void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);

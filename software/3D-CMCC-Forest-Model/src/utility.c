@@ -450,8 +450,8 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_ce_tot /= years_of_simulation;
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("AVG/TOT \t\t%5f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%12f \t%9f \t%10f \t\t\t\t%49d\n",
-					  avg_gpp[0], avg_gpp_tot, avg_ar[0], avg_ar_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp[0], avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/2 ,avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
+			Annual_Log ("AVG/TOT \t\t%5f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t%49d\n",
+					   avg_gpp_tot, avg_ar_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/GC_GDM , avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
 		{
@@ -661,6 +661,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 {
 
 	static int previous_layer_number;
+	static int doy;
 
 	if(day  == 0 && month == 0 && years == 0)
 	{
@@ -668,7 +669,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
 		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
+		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
@@ -695,17 +698,20 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	}
 	if (c->annual_layer_number == 1)
 	{
-		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s  \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "NPP(0)", "NPPgC", "CE(0)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
+			doy = 1;
+
+			Daily_Log ("\n%s \t%4s \t%8s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
+					"DOY", "YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
-				"\t%8.6f \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.9f\n",
-				yos[years].year, month+1, day+1, c->daily_gpp[0],
+		Daily_Log ("%d \t%8d \t%8d \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+				"\t%8.6f \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.9f \t%8.9f\n",
+				doy++, yos[years].year, month+1, day+1, c->daily_gpp[0],
 				c->daily_aut_resp[0],
 				c->daily_aut_resp_tDM[0],
-				c->daily_c_flux,
+				c->daily_c_flux[0],
+				c->daily_c_flux_tDM[0],
 				c->daily_npp[0],
 				c->daily_npp_g_c[0],
 				c->daily_c_evapotransp[0],
@@ -728,6 +734,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_aut_resp_tDM[0] = 0;
+		c->daily_c_flux_tDM[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_npp_g_c[0]= 0;
 		c->daily_c_int[0] = 0;
