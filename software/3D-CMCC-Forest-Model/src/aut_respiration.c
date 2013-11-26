@@ -162,11 +162,11 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 		s->value[FINE_ROOT_GROWTH_RESP] = 0.0;
 		Log("daily fine root growth respiration = %f gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-		s->value[STEM_GROWTH_RESP] = 0.0;
-		Log("daily stem growth respiration = %f gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
-
 		s->value[COARSE_ROOT_GROWTH_RESP] = 0.0;
 		Log("daily coarse root growth respiration = %f gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+
+		s->value[STEM_GROWTH_RESP] = 0.0;
+		Log("daily stem growth respiration = %f gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
 
 		s->value[BRANCH_GROWTH_RESP] = 0.0;
 		Log("daily branch respiration = %f gC/day m^2\n", s->value[BRANCH_GROWTH_RESP]);

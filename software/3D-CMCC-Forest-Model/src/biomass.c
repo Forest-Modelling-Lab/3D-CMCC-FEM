@@ -83,7 +83,7 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 		Log("Sapwood/Basal Area = %f %%\n",s->value[SAPWOOD_PERC] * 100);
 
 
-		//compute sapwood pools and heatwood pool
+		//compute sap wood pools and heart wood pool
 		s->value[WS_sap] =  s->value[BIOMASS_STEM_CTEM] * s->value[SAPWOOD_PERC];
 		Log("Stem biomass = %f tDM/area \n", s->value[BIOMASS_STEM_CTEM]);
 		Log("Sapwood stem biomass = %f tDM/area \n", s->value[WS_sap]);
@@ -281,6 +281,6 @@ extern void Get_average_biomass (SPECIES *s)
 extern void Get_total_class_level_biomass (SPECIES *s)
 {
 	// Total Biomass less Litterfall and Root turnover
-	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] +s->value[BIOMASS_STEM_CTEM];
+	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] + s->value[BIOMASS_ROOTS_COARSE_CTEM] +s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_STEM_BRANCH_CTEM];
 	Log("Total Biomass less Litterfall and Root Turnover = %f tDM/area\n", s->value[TOTAL_W]);
 }

@@ -478,10 +478,11 @@ enum {
 	WBB_sap,
 	WBB_heart,
 	WTOT_sap,
-	DEL_BB,                        //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
+	                       //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
 	DEL_TOTAL_W,                   //Total Biomass Increment
 	TOTAL_W,
+	DEL_Y_WTS,
 	DEL_Y_WS,                       //Yearly cumulated stem biomass increment
 	DEL_Y_WF,                       //Yearly cumulated foliage biomass increment
 	DEL_Y_WR,                       //Yearly cumulated root biomass increment
@@ -502,12 +503,15 @@ enum {
 	DEL_FOLIAGE_CTEM,
 	DEL_RESERVE_CTEM,
 	DEL_CONES_CTEM,
+	DEL_BB,
+	DEL_TOT_STEM,				//STEM + BRANCH AND BARK
 	//carbon biomass pools
 	BIOMASS_ROOTS_TOT_CTEM,
 	BIOMASS_ROOTS_COARSE_CTEM,
 	BIOMASS_ROOTS_FINE_CTEM,
 	BIOMASS_STEM_CTEM,
 	BIOMASS_STEM_BRANCH_CTEM,
+	BIOMASS_TOT_STEM_CTEM, //STEM + BRANCH AND BARK
 	BIOMASS_FOLIAGE_CTEM,
 	BIOMASS_RESERVE_CTEM,
 	BIOMASS_CONES_CTEM,   //only for coniferous
@@ -915,6 +919,7 @@ typedef struct {
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
 	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
+	double daily_delta_wts[3], daily_wts[3], monthly_delta_wts[3], monthly_wts[3], annual_delta_wts[3], annual_wts[3];
 	double daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
 	double daily_delta_wbb[3], daily_wbb[3], monthly_delta_wbb[3], monthly_wbb[3], annual_delta_wbb[3], annual_wbb[3];
 	double daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];

@@ -20,6 +20,9 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	//double CrownDiameterDBHDC;
 	double Av_stem_mass;
 	double Av_root_mass;
+	double Av_bb_mass;
+	double Av_res_mass;
+	double Av_foliage_mass;  //only for evergreen
 
 
 	Log("** CANOPY COVER DBH-DC Function FOR LAYER %d **\n", z);
@@ -85,6 +88,15 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM]) / (double)s->counter[N_TREE];
 		Log(" Av root mass = %f tDM/tree\n", Av_root_mass );
 
+		Av_bb_mass = s->value[BIOMASS_STEM_BRANCH_CTEM] / (double)s->counter[N_TREE];
+
+		Av_res_mass = s->value[BIOMASS_RESERVE_CTEM] / (double)s->counter[N_TREE];
+
+		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+		{
+			Av_foliage_mass = s->value[BIOMASS_FOLIAGE_CTEM] / (double)s->counter[N_TREE];
+		}
+
 		oldNtree = s->counter[N_TREE];
 
 		while ( s->value[CANOPY_COVER_DBHDC] >= 1 )
@@ -97,9 +109,19 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		//s->value[BIOMASS_FOLIAGE_CTEM] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
 		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
+
+
 		s->value[BIOMASS_ROOTS_FINE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_ROOTS_COARSE_CTEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_STEM_CTEM] -= (Av_root_mass * deadtree);
+		s->value[BIOMASS_STEM_BRANCH_CTEM] -= (Av_bb_mass * deadtree);
+		s->value[BIOMASS_RESERVE_CTEM] -= (Av_res_mass * deadtree);
+		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+		{
+			s->value[BIOMASS_FOLIAGE_CTEM] -= (Av_foliage_mass * deadtree);
+		}
+
+
 		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE_CTEM] + s->value[BIOMASS_ROOTS_FINE_CTEM] );
 		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_CTEM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);

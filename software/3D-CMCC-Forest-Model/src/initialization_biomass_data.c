@@ -118,6 +118,10 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 		Log("---Stem Branch Biomass from init file = %f\n", s->value[BIOMASS_STEM_BRANCH_CTEM]);
 	}
 
+	/*computing total stem biomass*/
+	s->value[BIOMASS_TOT_STEM_CTEM] = s->value[BIOMASS_STEM_CTEM] + s->value[BIOMASS_STEM_BRANCH_CTEM];
+	Log("--Total stem biomass (Ws + Wbb) = %f\n", s->value[BIOMASS_TOT_STEM_CTEM]);
+
 
 
 	if(s->value[BIOMASS_ROOTS_COARSE_CTEM]== 0)
