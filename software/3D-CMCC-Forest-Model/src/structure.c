@@ -305,20 +305,28 @@ void Get_forest_structure (CELL *const c)
 					 * Lhotka and Loewenstein 2008, Can J For Res
 					 */
 					c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-					                                                            +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+					                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 					Log("-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 					c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 					Log("-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
 
 
-					/*compute DBHDCmax and DENmin from MCA*/
-					/*17 Oct 2013*/
-					c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]/c->heights[height].ages[age].species[species].value[AVDBH];
-					Log("-recomputed DBHDCMAX = %f \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+					if (c->heights[height].ages[age].species[species].value[DBHDCMAX] == -9999
+							&& c->heights[height].ages[age].species[species].value[DENMIN] == -9999)
+					{
+						/*recompute DBHDCmax and DENmin from MCA*/
+						/*17 Oct 2013*/
+						c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]
+						                                                                                                                    /c->heights[height].ages[age].species[species].value[AVDBH];
+						Log("-recomputed DBHDCMAX = %f \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
 
-					//DENMIN = (SizeCell/MCA)/Sizecell
-					c->heights[height].ages[age].species[species].value[DENMIN] = 1.0/c->heights[height].ages[age].species[species].value[MCA];
-					Log("-recomputed DENMIN = %f tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
+						//DENMIN = (SizeCell/MCA)/Sizecell
+						c->heights[height].ages[age].species[species].value[DENMIN] = 1.0/c->heights[height].ages[age].species[species].value[MCA];
+						Log("-recomputed DENMIN = %f tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
+					}
+
+
+
 
 					/*define DBHDC taking into account layer density*/
 					/*only one dominant layer*/
@@ -326,6 +334,14 @@ void Get_forest_structure (CELL *const c)
 					{
 					/*only one layer*/
 					case 1:
+						if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
+						{
+							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
+						}
+						if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMIN])
+						{
+							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
+						}
 
 						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
@@ -337,6 +353,14 @@ void Get_forest_structure (CELL *const c)
 						/*dominant layers*/
 						if (c->heights[height].z == 1)
 						{
+							if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
+							{
+								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
+							}
+							if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMIN])
+							{
+								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
+							}
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
@@ -345,6 +369,14 @@ void Get_forest_structure (CELL *const c)
 						/*dominated layer*/
 						else
 						{
+							if (c->density_dominated > c->heights[height].ages[age].species[species].value[DENMAX])
+							{
+								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMAX];
+							}
+							if (c->density_dominated < c->heights[height].ages[age].species[species].value[DENMIN])
+							{
+								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMIN];
+							}
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
@@ -356,6 +388,14 @@ void Get_forest_structure (CELL *const c)
 						/*dominant layers*/
 						if (c->heights[height].z == 2)
 						{
+							if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
+							{
+								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
+							}
+							if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMIN])
+							{
+								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
+							}
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
@@ -364,6 +404,14 @@ void Get_forest_structure (CELL *const c)
 						/*dominated layer*/
 						if (c->heights[height].z == 1)
 						{
+							if (c->density_dominated > c->heights[height].ages[age].species[species].value[DENMAX])
+							{
+								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMAX];
+							}
+							if (c->density_dominated < c->heights[height].ages[age].species[species].value[DENMIN])
+							{
+								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMIN];
+							}
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
@@ -372,6 +420,14 @@ void Get_forest_structure (CELL *const c)
 						/*subdominant layer*/
 						else
 						{
+							if (c->density_subdominated > c->heights[height].ages[age].species[species].value[DENMAX])
+							{
+								c->density_subdominated = c->heights[height].ages[age].species[species].value[DENMAX];
+							}
+							if (c->density_subdominated < c->heights[height].ages[age].species[species].value[DENMIN])
+							{
+								c->density_subdominated = c->heights[height].ages[age].species[species].value[DENMIN];
+							}
 							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_subdominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
@@ -795,100 +851,100 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 				}
 
 				/*PHENOLOGY = 0 FOR DECIDUOUS*/
-						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
-						{
-							Log("-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
-							if (settings->spatial == 's')
-							{
-								//Log("Spatial version \n");
+				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+				{
+					Log("-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
+					if (settings->spatial == 's')
+					{
+						//Log("Spatial version \n");
 
-								//veg period
-								if (met[month].d[day].ndvi_lai > 0.1)
-								{
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-									c->Veg_Counter += 1;
-									Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
-								}
-								//unveg period
-								else
-								{
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-									Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
-								}
-							}
-							else
-							{
-
-								/*compute annual days of leaf fall*/
-								c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-																											  * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-								Log("Days of leaf fall for deciduous = %d day\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
-								//monthly rate of foliage reduction
-
-								//currently the model considers a linear reduction in leaf fall
-								//it should be a negative sigmoid function
-								//todo: create a sigmoid function
-								c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-								Log("foliage reduction rate = %f,  = %f%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
-
-
-								//todo decidere se utlizzare growthend o mindaylenght
-								//lo stesso approccio deve essere usato anche in Get_Veg_Days func
-								//currently model can simulate only forests in boreal hemisphere
-								if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-										|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0))
-								{
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-									c->Veg_Counter += 1;
-									Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
-								}
-								else
-								{
-									//check for case 0 of allocation
-									if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
-									{
-
-										Log("DAY_FRAC_FOLIAGE_REMOVE %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
-
-										c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  += 1;
-										//check
-										if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  == 1)
-										{
-											//assign value of thermic sum
-											c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
-											//Log("thermic_sum END OF VEG = %f °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
-										}
-
-										//check
-										if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE])
-										{
-											/*days of leaf fall*/
-											c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-											c->Veg_Counter += 1;
-										}
-										else
-										{
-											/*outside days of leaf fall*/
-											c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-										}
-
-									}
-									else
-									{
-										c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-										Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
-									}
-								}
-							}
-						}
-						/*PHENOLOGY = 1 FOR EVERGREEN*/
-						else
+						//veg period
+						if (met[month].d[day].ndvi_lai > 0.1)
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-							Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
 							c->Veg_Counter += 1;
 							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
 						}
+						//unveg period
+						else
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+							Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+						}
+					}
+					else
+					{
+
+						/*compute annual days of leaf fall*/
+						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+						                                                                                                                                           * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						Log("Days of leaf fall for deciduous = %d day\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
+						//monthly rate of foliage reduction
+
+						//currently the model considers a linear reduction in leaf fall
+						//it should be a negative sigmoid function
+						//todo: create a sigmoid function
+						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
+						Log("foliage reduction rate = %f,  = %f%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+
+
+						//todo decidere se utlizzare growthend o mindaylenght
+						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
+						//currently model can simulate only forests in boreal hemisphere
+						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
+								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0))
+						{
+							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							c->Veg_Counter += 1;
+							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+						}
+						else
+						{
+							//check for case 0 of allocation
+							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
+							{
+
+								Log("DAY_FRAC_FOLIAGE_REMOVE %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
+
+								c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  += 1;
+								//check
+								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  == 1)
+								{
+									//assign value of thermic sum
+									c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
+									//Log("thermic_sum END OF VEG = %f °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
+								}
+
+								//check
+								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE])
+								{
+									/*days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+									c->Veg_Counter += 1;
+								}
+								else
+								{
+									/*outside days of leaf fall*/
+									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+								}
+
+							}
+							else
+							{
+								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+								Log("%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+							}
+						}
+					}
+				}
+				/*PHENOLOGY = 1 FOR EVERGREEN*/
+				else
+				{
+					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					c->Veg_Counter += 1;
+					Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+				}
 			}
 		}
 	}

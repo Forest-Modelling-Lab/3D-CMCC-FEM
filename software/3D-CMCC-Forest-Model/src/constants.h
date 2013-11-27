@@ -17,7 +17,7 @@
 #define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
 #define QB                       0.8      //Slope of Net vs Solar Radiation
 
-#define GC_GDM                  2.22      //convert grams C to grams DM
+#define GC_GDM                     2      //convert grams C to grams DM
 #define MOLPAR_MJ                2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
 #define GDM_MOL                   24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
 #define GC_MOL                    12      //Convert molC to grams of C
