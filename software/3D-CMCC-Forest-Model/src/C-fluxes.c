@@ -27,6 +27,7 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
 	c->daily_c_flux[i] = s->value[C_FLUX];
+	c->daily_tot_c_flux += s->value[C_FLUX];
 	c->daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);;
 
 }

@@ -759,14 +759,15 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
+			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
+					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8.3f \t%8d \t%8d \t%8d\n",
+		Daily_Log ("%d \t%4d \t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp,
+				c->daily_c_flux[1], c->daily_c_flux[0], c->daily_tot_c_flux,
 				c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp,
 				c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
 				c->available_soil_water,
@@ -779,6 +780,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		//reset
 		c->daily_gpp[1] = 0;
 		c->daily_aut_resp[1] = 0;
+		c->daily_c_flux[1] = 0;
 		c->daily_npp[1] = 0;
 		c->daily_c_int[1] = 0;
 		c->daily_c_transp[1] = 0;
@@ -789,6 +791,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 		c->daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
+		c->daily_c_flux[0] = 0;
 		c->daily_npp[0] = 0;
 		c->daily_c_int[0] = 0;
 		c->daily_c_transp[0] = 0;
@@ -858,6 +861,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	c->daily_tot_gpp = 0;
 	c->daily_tot_aut_resp = 0;
+	c->daily_tot_c_flux;
 	c->daily_tot_npp = 0;
 	c->daily_tot_c_int = 0;
 	c->daily_tot_c_transp = 0;
