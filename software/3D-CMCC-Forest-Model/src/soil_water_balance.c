@@ -23,9 +23,12 @@ extern void Get_soil_water_balance (CELL *c,  const MET_DATA *const met, int mon
 
 
 
-	/*compute water to soil pool*/
-	c->water_to_soil = met[month].d[day].rain - c->daily_tot_c_int;
+	/*compute water remaining into the soil pool*/
+	c->water_to_soil = met[month].d[day].rain - c->daily_evapotranspiration;
 	Log("Water to soil = %f \n", c->water_to_soil);
+
+	c->daily_tot_w_flux = c->water_to_soil - c->water_to_atmosphere;
+	Log("Daily_w_flux = %f\n", c->daily_tot_w_flux);
 
 	/*Take off Evapotranspiration*/
 	c->available_soil_water -= c->daily_evapotranspiration ;

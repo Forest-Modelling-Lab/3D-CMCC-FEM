@@ -908,6 +908,8 @@ typedef struct {
 	double daily_c_flux[3], daily_tot_c_flux, monthly_c_flux[3], monthly_tot_c_flux, annual_c_flux[3], annual_tot_c_flux;
 	double daily_c_flux_tDM[3];
 
+	double daily_tot_w_flux;
+
 	double daily_cc[3], monthly_cc[3], annual_cc[3];
 
 

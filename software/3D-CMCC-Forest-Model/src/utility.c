@@ -693,6 +693,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
+		Daily_Log("Daily ASW = daily Available Soil Water(mm/day)\n");
+		Daily_Log("Daily Wfl = daily water fluxes (mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
 		Daily_Log("Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
 		Daily_Log("Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
@@ -722,9 +724,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			doy = 1;
 
 			Daily_Log ("\n%s \t%4s \t%8s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n\n",
-					"DOY", "YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
+					"DOY", "YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+		Daily_Log ("%d \t%8d \t%8d \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 				"\t%8.6f \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.9f \t%8.9f\n",
 				doy++, yos[years].year, month+1, day+1, c->daily_gpp[0],
 				c->daily_aut_resp[0],
@@ -735,6 +737,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_npp_g_c[0],
 				c->daily_c_evapotransp[0],
 				c->available_soil_water,
+				c->daily_tot_w_flux,
 				c->daily_lai[0],
 				c->daily_cc[0]*100,
 				c->daily_dead_tree[0],
