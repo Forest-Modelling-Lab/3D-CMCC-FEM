@@ -158,7 +158,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("HC(n) = height class counter for n layer\n");
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
-		Annual_Log("Annual Cf = daily c-fluxes (gC/m2/year)\n");
+		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
 		Annual_Log("Annual Y = NPP/GPP ratio (%)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");

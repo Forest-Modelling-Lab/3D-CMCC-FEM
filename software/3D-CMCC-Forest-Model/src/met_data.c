@@ -526,7 +526,7 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	met = (MET_DATA*) yos[years].m;
 
 
-	//FIXME model doesn't get for the fist 10 days of the year the averaged values
+	//FIXME model doesn't get for the first 10 days of the year the averaged values
 	//TODO CHECK SOIL TEMPÈERATURE COORECTION FROM BIOME
 	/* soil temperature correction using difference from
 				annual average tair */

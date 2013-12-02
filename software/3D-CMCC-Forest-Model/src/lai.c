@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-
+// CUURENTLY NOT USED
 void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month, const int day, const int height)
 {
 

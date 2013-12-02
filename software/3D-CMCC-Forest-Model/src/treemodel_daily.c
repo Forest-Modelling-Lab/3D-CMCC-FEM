@@ -18,6 +18,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 {
 	MET_DATA *met;
 
+	int i;
+
 	static int cell;
 	static int height;
 	static int age;
@@ -72,8 +74,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			if (years == 0)
 			{
 				m->cells->daily_dead_tree[0] = 0;
-				m->cells->daily_dead_tree[0] = 0;
-				m->cells->daily_dead_tree[0] = 0;
+				m->cells->daily_dead_tree[1] = 0;
+				m->cells->daily_dead_tree[2] = 0;
 				m->cells->daily_tot_dead_tree = 0;
 				m->cells->monthly_dead_tree[0] = 0;
 				m->cells->monthly_dead_tree[1] = 0;
@@ -218,21 +220,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						//deciduous
 						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
-							//for unspatial version growth start, growthend/mindaylength and month drives start and end of growing season
-							//PEAK LAI
-							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
-
-							//Peak LAI is also used in spatial version to drive carbon allocation
-
-
-
 							if (day == 0 && month == JANUARY)
 							{
 								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 							}
-
-
-							if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0)
+							if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0.0)
 							{
 								Log("ERROR!!!!! LAI < 0!!!!!\n");
 							}
@@ -263,7 +255,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 */
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
-								/*evapotranspiration block*/
+								/*canopy evapo-transpiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
@@ -332,15 +324,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 									Log("day %d month %d MODEL_LAI = %f \n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-									//Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-									//Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 								}
 								else
 								{
 									Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 								}
 
-								/*evapotranspiration block*/
+								/*canopy evapo-transpiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
@@ -397,9 +387,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						//evergreen
 						else
 						{
-							//PEAK LAI
-							//Get_peak_lai (&m->cells[cell].heights[height].ages[age].species[species], years, month);
-
 							//Peak LAI is also used in spatial version to drive carbon allocation
 							if (day == 0 && month == JANUARY)
 							{
@@ -421,7 +408,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 */
 							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
-							/*evapotranspiration block*/
+							/*canopy evapo-transpiration block*/
 							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 							Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 							Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
@@ -545,7 +532,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							//Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 
 							//todo
-							//WHEN MORTALITY OCCURED IN MULTILAYERED FOREST MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
+							//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
 							//RECEIVES MORE LIGHT AND THEN GROWTH BETTER SO IT IS A NEW HEIGHT CLASS
 
 
