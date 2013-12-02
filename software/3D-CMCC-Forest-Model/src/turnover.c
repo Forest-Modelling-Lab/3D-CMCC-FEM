@@ -25,19 +25,19 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
 			Log("Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
 			Log("Daily litter fall = %f\n", s->value[LITTERFALL_RATE]);
-			s->value[BIOMASS_FOLIAGE_CTEM] -= (s->value[BIOMASS_FOLIAGE_CTEM] * s->value[LITTERFALL_RATE]);
-			Log("Foliage Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
-			s->value[DEL_LITTER] += (s->value[BIOMASS_FOLIAGE_CTEM] * s->value[LITTERFALL_RATE]);
+			s->value[BIOMASS_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
+			Log("Foliage Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[DEL_LITTER] += (s->value[BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
 			/*recompute LAI after turnover*/
 			/*for dominant layer with sunlit foliage*/
 			if (c->top_layer == c->heights[height].z)
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 			}
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE_CTEM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 			}
 			Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 
@@ -48,11 +48,11 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		/*daily fine root turnover*/
 		Log("****Fine root turnover****\n");
 		//turnover of fine root
-		if (s->value[BIOMASS_ROOTS_FINE_CTEM] > 0.0)
+		if (s->value[BIOMASS_ROOTS_FINE] > 0.0)
 		{
-			s->value[BIOMASS_ROOTS_FINE_CTEM] -= (s->value[BIOMASS_ROOTS_FINE_CTEM] * (s->value[LEAVES_FINERTTOVER]/365.0));
-			Log("Daily fine root turnover = %f tDM/cell\n", s->value[BIOMASS_ROOTS_FINE_CTEM] * (s->value[LEAVES_FINERTTOVER]/365.0));
-			Log("Fine root Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			s->value[BIOMASS_ROOTS_FINE] -= (s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
+			Log("Daily fine root turnover = %f tDM/cell\n", s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
+			Log("Fine root Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
 		}
 
 		/*daily stem turnover*/

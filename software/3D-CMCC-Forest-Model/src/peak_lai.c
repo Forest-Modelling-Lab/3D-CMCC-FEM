@@ -28,28 +28,28 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	/*for dominant layer with sunlit foliage*/
 	if (c->top_layer == c->heights[height].z)
 	{
-		s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for sunlit leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		Log("Maximum foliage biomass for sunlit leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 	/*for dominated shaded foliage*/
 	else
 	{
-		s->value[MAX_BIOMASS_FOLIAGE_CTEM] = ((s->value[PEAK_Y_LAI] / ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE_CTEM]);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 
 	/*check compatibility of LAI and Biomass with init data for evergreen*/
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
 	{
 		Log("azz\n");
-		if ((s->value[LAI] > s->value[PEAK_Y_LAI]) || (s->value[BIOMASS_FOLIAGE_CTEM] > s->value[MAX_BIOMASS_FOLIAGE_CTEM]))
+		if ((s->value[LAI] > s->value[PEAK_Y_LAI]) || (s->value[BIOMASS_FOLIAGE] > s->value[MAX_BIOMASS_FOLIAGE]))
 		{
 			s->value[LAI] = s->value[PEAK_Y_LAI];
 			Log("Initial LAI > PEAK LAI, recompute it\n");
 			Log("recomputed LAI = %f\n", s->value[LAI]);
 			/*then recompute foliage biomass*/
-			s->value[BIOMASS_FOLIAGE_CTEM] = s->value[MAX_BIOMASS_FOLIAGE_CTEM];
-			Log("recomputed FOLIAGE BIOMASS = %f\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+			s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
+			Log("recomputed FOLIAGE BIOMASS = %f\n", s->value[BIOMASS_FOLIAGE]);
 		}
 	}
 

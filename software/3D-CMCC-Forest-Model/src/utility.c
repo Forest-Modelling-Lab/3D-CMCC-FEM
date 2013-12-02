@@ -877,7 +877,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	c->daily_tot_gpp = 0;
 	c->daily_tot_aut_resp = 0;
-	c->daily_tot_c_flux;
+	c->daily_tot_c_flux = 0;
 	c->daily_tot_npp = 0;
 	c->daily_tot_c_int = 0;
 	c->daily_tot_c_transp = 0;

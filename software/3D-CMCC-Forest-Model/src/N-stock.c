@@ -20,9 +20,9 @@ void Get_nitrogen (SPECIES *s)
 {
         Log("\nGET NITROGEN STOCK\n");
 	/*computing Nitrogen content from tons DM/ha to KgC/m^2 and then as in BIOME to KgN*/
-	s->value[LEAF_NITROGEN] = (((s->value[BIOMASS_FOLIAGE_CTEM] / GC_GDM) * 1000.0) /settings->sizeCell) / s->value[CN_LEAVES];
+	s->value[LEAF_NITROGEN] = (((s->value[BIOMASS_FOLIAGE] / GC_GDM) * 1000.0) /settings->sizeCell) / s->value[CN_LEAVES];
 	Log("Foliage nitrogen content = %f kgN/m^2\n", s->value[LEAF_NITROGEN]);
-	s->value[FINE_ROOT_NITROGEN] = (((s->value[BIOMASS_ROOTS_FINE_CTEM] / GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_FINE_ROOTS];
+	s->value[FINE_ROOT_NITROGEN] = (((s->value[BIOMASS_ROOTS_FINE] / GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_FINE_ROOTS];
 	Log("Fine root nitrogen content = %f kgN/m^2\n", s->value[FINE_ROOT_NITROGEN]);
 	s->value[STEM_NITROGEN] = ((((s->value[BIOMASS_STEM_LIVE_WOOD])/GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_LIVE_WOODS];
 	Log("Live stem nitrogen content = %f kgN/m^2\n", s->value[STEM_NITROGEN]);

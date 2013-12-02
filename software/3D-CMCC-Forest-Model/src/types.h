@@ -494,27 +494,27 @@ enum {
 	//monthly partitioning-allocation
 	PEAK_LAI,                      //PEAK LAI DETERMINED BUY THE PREVIOUS YEAR BIOMASS ALLOCATED INTO FOLIAGE
 	PEAK_Y_LAI,                    //PEAK LAI FOR NEXT YEAR
-	MAX_BIOMASS_FOLIAGE_CTEM,
+	MAX_BIOMASS_FOLIAGE,
 
 	//CTEM CARBON
 	//carbon biomass monthly increment
-	DEL_ROOTS_TOT_CTEM,
-	DEL_STEMS_CTEM,
-	DEL_FOLIAGE_CTEM,
-	DEL_RESERVE_CTEM,
-	DEL_CONES_CTEM,
+	DEL_ROOTS_TOT,
+	DEL_STEMS,
+	DEL_FOLIAGE,
+	DEL_RESERVE,
+	DEL_CONES,
 	DEL_BB,
 	DEL_TOT_STEM,				//STEM + BRANCH AND BARK
 	//carbon biomass pools
-	BIOMASS_ROOTS_TOT_CTEM,
-	BIOMASS_ROOTS_COARSE_CTEM,
-	BIOMASS_ROOTS_FINE_CTEM,
-	BIOMASS_STEM_CTEM,
-	BIOMASS_STEM_BRANCH_CTEM,
-	BIOMASS_TOT_STEM_CTEM, //STEM + BRANCH AND BARK
-	BIOMASS_FOLIAGE_CTEM,
-	BIOMASS_RESERVE_CTEM,
-	BIOMASS_CONES_CTEM,   //only for coniferous
+	BIOMASS_ROOTS_TOT,
+	BIOMASS_ROOTS_COARSE,
+	BIOMASS_ROOTS_FINE,
+	BIOMASS_STEM,
+	BIOMASS_BRANCH,
+	BIOMASS_TOT_STEM, //STEM + BRANCH AND BARK
+	BIOMASS_FOLIAGE,
+	BIOMASS_RESERVE,
+	BIOMASS_CONES,   //only for coniferous
 
 	BIOMASS_LIVE_WOOD,
 	BIOMASS_DEAD_WOOD,
@@ -681,7 +681,7 @@ enum {
 	N_TREE,                         //Numbers of Tree per cell
 	N_STUMP,                        //Number of stumps for coppice
 	N_SEED,                        //Seeds number for cell
-	DEL_STEMS,                      //Dead Trees
+	DEAD_STEMS,                      //Dead Trees
 	REM_TREES,                      //Yearly Total dead-removed Trees
 	CUT_TREES,                      //Cut trees for Management
 	TOT_REM_TREES,                  //Total dead-removed Trees from the beginning of simulation

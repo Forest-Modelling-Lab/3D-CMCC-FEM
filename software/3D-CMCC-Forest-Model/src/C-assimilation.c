@@ -23,11 +23,11 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		Log("GPP = %f\n", s->value[GPP_g_C]);
-		Log("Reserve biomass = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
+		Log("Reserve biomass = %f\n", s->value[BIOMASS_RESERVE]);
 		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
 
 
-		if (s->value[BIOMASS_RESERVE_CTEM] > 0.0)
+		if (s->value[BIOMASS_RESERVE] > 0.0)
 		{
 
 			/*for principle of conservation of mass*/
@@ -39,13 +39,13 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 				{
 					//todo
 					//todo
-					//Angelo only for broadleaved decidous and evergreen set a minimum value for BIOMASS_RESERVE_CTEM after which it cannot goes on
+					//Angelo only for broadleaved decidous and evergreen set a minimum value for BIOMASS_RESERVE after which it cannot goes on
 					//and stop VEG_PERIOD
 					/*following Barbaroux et al., 2003*/
 
-					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+					if (s->value[BIOMASS_RESERVE] < 0.0)
 					{
-						s->value[BIOMASS_RESERVE_CTEM] = 0;
+						s->value[BIOMASS_RESERVE] = 0;
 						Log("All reserve has been consumed for respiration!!!\n");
 					}
 
@@ -54,11 +54,11 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 				//fixme see for correct use of reserve for evergreen
 				if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 				{
-					if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+					if (s->value[BIOMASS_RESERVE] < 0.0)
 					{
-						s->value[BIOMASS_RESERVE_CTEM] = 0;
+						s->value[BIOMASS_RESERVE] = 0;
 						Log("All reserve has been consumed for respiration!!!\n");
-						Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE_CTEM]);
+						Log("Reserve biomass after respiration costs = %f\n", s->value[BIOMASS_RESERVE]);
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -104,7 +104,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 	else
 	{
 
-		if (s->value[BIOMASS_RESERVE_CTEM] < 0.0)
+		if (s->value[BIOMASS_RESERVE] < 0.0)
 		{
 			Log("ATTENTION biomass reserve < 0!!!!!!\n");
 		}

@@ -247,12 +247,12 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stump;
 	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
-	a->species[a->species_count-1].value[BIOMASS_FOLIAGE_CTEM] = row->wf;
-	a->species[a->species_count-1].value[BIOMASS_ROOTS_COARSE_CTEM] = row->wrc;
-	a->species[a->species_count-1].value[BIOMASS_ROOTS_FINE_CTEM] = row->wrf;
-	a->species[a->species_count-1].value[BIOMASS_STEM_CTEM] = row->ws;
-	a->species[a->species_count-1].value[BIOMASS_STEM_BRANCH_CTEM] = row->wbb;
-	a->species[a->species_count-1].value[BIOMASS_RESERVE_CTEM] = row->wres;
+	a->species[a->species_count-1].value[BIOMASS_FOLIAGE] = row->wf;
+	a->species[a->species_count-1].value[BIOMASS_ROOTS_COARSE] = row->wrc;
+	a->species[a->species_count-1].value[BIOMASS_ROOTS_FINE] = row->wrf;
+	a->species[a->species_count-1].value[BIOMASS_STEM] = row->ws;
+	a->species[a->species_count-1].value[BIOMASS_BRANCH] = row->wbb;
+	a->species[a->species_count-1].value[BIOMASS_RESERVE] = row->wres;
 	a->species[a->species_count-1].value[LAI] = row->lai;
 
 	/* check memory */
@@ -719,13 +719,13 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
 								m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
 								m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_CTEM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE_CTEM],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD],

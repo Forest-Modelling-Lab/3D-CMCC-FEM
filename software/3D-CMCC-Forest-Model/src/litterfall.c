@@ -63,8 +63,8 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 		height->ages[age].species[species].value[DEL_LITTER] = gammaF * oldWf;
 		Log("Yearly Foliage Biomass to litter from evergreen population = %f tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
 
-		height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM] +=  (oldWf - height->ages[age].species[species].value[DEL_LITTER]);
-		Log("Yearly Foliage Biomass at the end of month less Litterfall (Wf + oldWf) in tDM/ha = %f\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE_CTEM]);
+		height->ages[age].species[species].value[BIOMASS_FOLIAGE] +=  (oldWf - height->ages[age].species[species].value[DEL_LITTER]);
+		Log("Yearly Foliage Biomass at the end of month less Litterfall (Wf + oldWf) in tDM/ha = %f\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE]);
 
 	}
 

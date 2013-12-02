@@ -306,7 +306,7 @@ void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int 
 
 			// Fraction of NPP to Stem
 			s->value[DEL_WS] = Stand_NPP * pS;
-			//Log("Increment Yearly Biomass allocated (delWs) = %g tDM/area\n", s->value[DEL_STEMS_CTEM]);
+			//Log("Increment Yearly Biomass allocated (delWs) = %g tDM/area\n", s->value[DEL_STEMS]);
 
 			//Total Stem Biomass
 			//remove the part allocated to the branch and bark
@@ -478,7 +478,7 @@ void M_Get_Partitioning_Allocation_3PG (SPECIES *const s, int z, int years, int 
 
 			// Fraction of NPP to Stem
 			s->value[DEL_WS] = Stand_NPP * pS;
-			//Log("Increment Yearly Biomass allocated (delWs) = %g tDM/area\n", s->value[DEL_STEMS_CTEM]);
+			//Log("Increment Yearly Biomass allocated (delWs) = %g tDM/area\n", s->value[DEL_STEMS]);
 
 			//Total Stem Biomass
 			//remove the part allocated to the branch and bark

@@ -31,7 +31,7 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 	Log("GET CROWDING COMPETITION FUNCTION\n");
 
 	/* WS before allocation of delWS */
-	oldWS = s->value[BIOMASS_STEM_CTEM] -  s->value[DEL_STEMS_CTEM];
+	oldWS = s->value[BIOMASS_STEM] -  s->value[DEL_STEMS];
 
 
 	if ( !years )
@@ -59,7 +59,7 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 		// Compute DBH & Height
 
 		// Compute Height increment
-		delHeight = (s->value[HD_EFF] /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS_CTEM];
+		delHeight = (s->value[HD_EFF] /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS];
 		Log("Height Increment = %f m\n", delHeight);
 		// Compute Height
 		s->value[CC_TREE_HEIGHT] = s->value[CC_TREE_HEIGHT] + delHeight;
@@ -69,7 +69,7 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 
 		// Compute DBH increment
 		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) +
-				(2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS_CTEM];
+				(2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS];
 		//Log("DBH Increment from CC Func  = %f m\n", delDBH);
 		Log("DBH Increment from CC Func  = %f cm\n", delDBH * 100);
 		// Compute DBH
@@ -105,9 +105,9 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 		// Compute DBH & Height
 
 		// Compute Height increment
-		delHeight = (s->value[HDMAX] /((s->value[HDMAX] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS_CTEM];
+		delHeight = (s->value[HDMAX] /((s->value[HDMAX] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS];
 		//Log("oldWS = %f \n", oldWS);
-		//Log("del WS = %f \n", s->value[DEL_STEMS_CTEM]);
+		//Log("del WS = %f \n", s->value[DEL_STEMS]);
 		Log("Height Increment from CC Func  = %f m\n", delHeight);
 		// Compute Height
 		s->value[CC_TREE_HEIGHT] = s->value[CC_TREE_HEIGHT] + delHeight;
@@ -117,7 +117,7 @@ void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, in
 		// Compute DBH increment
 
 		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (settings->max_layer_cover - settings->min_layer_cover)) * ( s->value[CANOPY_COVER_DBHDC] - settings->min_layer_cover) + s->value[HDMIN];
-		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS_CTEM];
+		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS];
 
 
 

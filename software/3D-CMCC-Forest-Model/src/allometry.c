@@ -128,12 +128,12 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	//This function convert Biomass allocated in foliage compart from tDM/ha in KgDM/Area Effectively covered by Trees
 	Log("**3D-CMCC Model LAI Function**\n");
 
-	Log("Wf Foliage Biomass from previous year = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE_CTEM]);
+	Log("Wf Foliage Biomass from previous year = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
 	Log("Canopy Cover in LOWER Layer = %f \n", s->value[CANOPY_COVER_DBHDC]);
 
 
 
-	WFkgm2 = s->value[BIOMASS_FOLIAGE_CTEM]* (1000 / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+	WFkgm2 = s->value[BIOMASS_FOLIAGE]* (1000 / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 	Log("Foliage Biomass to LAI function = %f Kg/m^2\n", WFkgm2);
 	Log("SLA-3D-CMCC Model = %f cm^2/g\n", s->value[SLA]);
 	//Log("SLA-3D-CMCC Model = %f m^2/Kg\n", SLAmkg);

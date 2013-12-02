@@ -178,7 +178,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							if (!years)
 							{
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE_CTEM]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE_CTEM];
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
 							}
 						}
 
@@ -548,9 +548,9 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAP];
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].counter[N_TREE] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[AVDBH] = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_FOLIAGE_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_FOLIAGE] = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAP];
                                 m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_ROOTS_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_STEM_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP];
+                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_STEM] = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAP];
 
                                 //height class summary
                                 Log("**********************************\n");
