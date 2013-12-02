@@ -30,6 +30,9 @@ extern void Get_soil_water_balance (CELL *c,  const MET_DATA *const met, int mon
 	c->daily_tot_w_flux = c->water_to_soil - (c->water_to_atmosphere - c->runoff);
 	Log("Daily_w_flux = %f \n", c->daily_tot_w_flux);
 
+	c->monthly_tot_w_flux += c->daily_tot_w_flux;
+	c->annual_tot_w_flux += c->daily_tot_w_flux;
+
 	/*Take off Evapotranspiration*/
 	c->available_soil_water -= c->daily_evapotranspiration ;
 	Log("ASW at the END of day/month less Evapotraspiration = %f mm\n", c->available_soil_water);

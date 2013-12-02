@@ -11,7 +11,7 @@
 
 //VERSION CURRENTLY USED
 //Deciduous carbon allocation routine
-void D_Get_Partitioning_Allocation_CTEM (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
 
 	int i;

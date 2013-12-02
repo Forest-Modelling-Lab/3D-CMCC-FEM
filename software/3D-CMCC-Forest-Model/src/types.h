@@ -908,7 +908,7 @@ typedef struct {
 	double daily_c_flux[3], daily_tot_c_flux, monthly_c_flux[3], monthly_tot_c_flux, annual_c_flux[3], annual_tot_c_flux;
 	double daily_c_flux_tDM[3];
 
-	double daily_tot_w_flux;
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 
 	double daily_cc[3], monthly_cc[3], annual_cc[3];
 
@@ -1050,9 +1050,9 @@ extern int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 
 
 //deciduous routine for carbon allocation
-extern void D_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+extern void D_Get_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
-extern void E_Get_Partitioning_Allocation_CTEM (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+extern void E_Get_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
 void Get_nitrogen (SPECIES *);
 
