@@ -941,6 +941,8 @@ typedef struct {
 	double het_respiration; //heterotrophic respiration
 	double ter;  //total ecosystem respiration
 
+	double runoff;
+
 
 
 

@@ -147,10 +147,17 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*check soil water balance*/
 		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
 		{
+			m->cells[cell].runoff = m->cells[cell].available_soil_water - m->cells[cell].max_asw;
+			Log("Runoff = %f\n", m->cells[cell].runoff);
 			Log("ASW > MAXASW !!!\n");
 			//if the asw exceeds maxasw the plus is considered lost for turn off
 			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
 			Log("ASW day %d month %d = %f mm\n", day+1, month+1, m->cells[cell].available_soil_water);
+		}
+		else
+		{
+			m->cells[cell].runoff = 0;
+			Log("Runoff = %f\n", m->cells[cell].runoff);
 		}
 
 		/*compute moist ratio*/
