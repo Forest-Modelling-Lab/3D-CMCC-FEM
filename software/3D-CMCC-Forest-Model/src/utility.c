@@ -545,6 +545,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
 		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
 		Monthly_Log("Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
+		Monthly_Log("Monthly ASW = monthly ASW (at the end of month) (mm)\n");
 		Monthly_Log("Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
 		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}
@@ -566,10 +567,10 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "MONTH", "GPP (tot)", "AR(tot)", "Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "Cw", "CC(0)", "DEAD TREE(tot)");
+			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
+					"YEAR", "MONTH", "GPP (tot)", "AR(tot)", "Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%10d \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10d \n",
+		Monthly_Log ("%d \t%10d \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10d \n",
 				yos[years].year, month+1,
 				c->monthly_tot_gpp,
 				c->monthly_tot_aut_resp,
@@ -577,6 +578,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->monthly_tot_npp,
 				c->monthly_tot_npp_g_c,
 				c->monthly_tot_c_evapotransp,
+				c->available_soil_water,
 				c->monthly_tot_w_flux,
 				c->monthly_cc[0],
 				c->monthly_tot_dead_tree);
@@ -595,17 +597,18 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
+			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
 					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
-					"CE(0)", "CE(tot)", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%5d \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5d \t%5d \t%5d\n",
+		Monthly_Log ("%d \t%5d \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5d \t%5d \t%5d\n",
 				yos[years].year, month+1,
 				c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp,
 				c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[1], c->monthly_npp[0],c->monthly_tot_npp,
 				c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
+				c->available_soil_water,
 				c->monthly_tot_w_flux,
 				c->monthly_cc[1], c->monthly_cc[0],
 				c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
@@ -632,19 +635,20 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0)
 		{
-			Monthly_Log ("\n%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
+			Monthly_Log ("\n%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
 					"YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)",
 					"NPP(2)","NPP(1)", "NPP(0)","NPP (tot)",
-					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
+					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
 					"DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%2d \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2d \t%2d \t%2d \t%2d\n",
+		Monthly_Log ("%d \t%2d \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2d \t%2d \t%2d \t%2d\n",
 				yos[years].year, month+1,
 				c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_aut_resp[2], c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp,
 				c->monthly_c_flux[2],c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,
 				c->monthly_c_evapotransp[2],c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
+				c->available_soil_water,
 				c->monthly_tot_w_flux,
 				c->monthly_cc[2], c->monthly_cc[1], c->monthly_cc[0],
 				c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
