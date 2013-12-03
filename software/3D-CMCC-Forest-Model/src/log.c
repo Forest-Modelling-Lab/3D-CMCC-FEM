@@ -260,7 +260,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"YEAR", "HC(0)", "GPP (tot)", "AR (tot)", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Cw", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE(tot)", "DELTA-Wres", "Wres");
 		}
-		Annual_Log ("%d \t%2d \t%10f \t%10f \t%10f \t%10f\t%10f \t%10f \t%10f \t%10f \t%10f \t%12f \t%12f \t%14d \t%11f \t%11f \n",
+		Annual_Log ("%d \t%2d \t%10.2f \t%10.2f \t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter,
 				c->annual_tot_gpp,
@@ -475,6 +475,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->annual_tot_aut_resp = 0;
 	c->annual_tot_c_flux = 0;
 	c->annual_tot_npp = 0;
+	c->annual_tot_npp_g_c = 0;
 	c->annual_tot_c_evapotransp = 0;
 	c->annual_tot_w_flux = 0;
 	c->annual_tot_dead_tree = 0;
@@ -702,6 +703,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->monthly_tot_aut_resp = 0;
 	c->monthly_tot_c_flux = 0;
 	c->monthly_tot_npp = 0;
+	c->monthly_tot_npp_g_c = 0;
 	c->monthly_tot_c_evapotransp = 0;
 	c->monthly_tot_w_flux = 0;
 	c->monthly_tot_dead_tree = 0;
