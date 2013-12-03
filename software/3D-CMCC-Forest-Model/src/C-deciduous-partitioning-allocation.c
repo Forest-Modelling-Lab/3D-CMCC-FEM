@@ -80,7 +80,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 	if (day == 0 && month == 0 && years == 0)
 	{
-		s->value[BIOMASS_CONES] = 0;
+		s->value[BIOMASS_FRUIT] = 0;
 	}
 
 
@@ -624,12 +624,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[DEL_CONES] = s->value[NPP] * s->value[CONES_PERC];
-					s->value[NPP] -= s->value[DEL_CONES];
-					s->value[BIOMASS_CONES] += s->value[DEL_CONES];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[DEL_CONES]);
+					s->value[DEL_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+					s->value[NPP] -= s->value[DEL_FRUIT];
+					s->value[BIOMASS_FRUIT] += s->value[DEL_FRUIT];
+					Log("Biomass increment into cones = %f tDM/area\n", s->value[DEL_FRUIT]);
 					//reproductive life span
-					s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
 				s->value[DEL_RESERVE] = 0;
@@ -813,12 +813,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_CONES] = s->value[NPP] * s->value[CONES_PERC];
-					s->value[NPP] -= s->value[BIOMASS_CONES];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_CONES]);
+					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
-					s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
 				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
@@ -920,12 +920,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_CONES] = s->value[NPP] * s->value[CONES_PERC];
-					s->value[NPP] -= s->value[BIOMASS_CONES];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_CONES]);
+					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
-					s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 				s->value[DEL_FOLIAGE] =  -s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
 				s->value[DEL_RESERVE] = s->value[NPP];
@@ -1244,12 +1244,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			if (s->value[PHENOLOGY] == 0.2)
 			{
 				//NPP for reproduction
-				s->value[BIOMASS_CONES] = s->value[NPP] * s->value[CONES_PERC];
-				s->value[NPP] -= s->value[BIOMASS_CONES];
-				Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_CONES]);
+				s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+				s->value[NPP] -= s->value[BIOMASS_FRUIT];
+				Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 				//reproductive life span
-				s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+				s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 			}
 
 
@@ -1383,13 +1383,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			if (s->value[PHENOLOGY] == 0.2)
 			{
 				//NPP for reproduction
-				s->value[DEL_CONES] = s->value[NPP] * s->value[CONES_PERC];
-				s->value[NPP] -= s->value[DEL_CONES];
-				s->value[BIOMASS_CONES] += s->value[DEL_CONES];
-				Log("Biomass increment into cones = %f tDM/area\n", s->value[DEL_CONES]);
+				s->value[DEL_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+				s->value[NPP] -= s->value[DEL_FRUIT];
+				s->value[BIOMASS_FRUIT] += s->value[DEL_FRUIT];
+				Log("Biomass increment into cones = %f tDM/area\n", s->value[DEL_FRUIT]);
 
 				//reproductive life span
-				//s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+				//s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 			}
 
 

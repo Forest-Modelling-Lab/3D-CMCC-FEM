@@ -208,7 +208,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	{
 		Log("\nNo Fine root Biomass Data are available for model initialization \n");
 		Log("...Generating input Fine root Biomass biomass data from DBH data...\n");
-		//FIXME assuming FINE_ROOT_LEAF RATIO AS IN BIOME
+		//assuming FINE_ROOT_LEAF RATIO AS IN BIOME
 		s->value[BIOMASS_ROOTS_FINE] = s->value[BIOMASS_FOLIAGE] * s->value[FINE_ROOT_LEAF];
 		Log("---Fine Root Biomass initialization data from Stem Biomass = %f \n", s->value[BIOMASS_ROOTS_FINE]);
 	}
@@ -223,7 +223,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
-	//FIXME assuming LIVE_DEAD WOOD RATIO AS IN BIOME
+	//assuming LIVE_DEAD WOOD RATIO AS IN BIOME
 	/*FOR STEM*/
 	Log("\n*******************************\n");
 	Log("Total Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM]);

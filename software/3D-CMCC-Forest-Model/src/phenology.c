@@ -13,7 +13,6 @@
 
 extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int years, const int month, const int day, const int years_of_simulation)
 {
-	int cell;
 	int height;
 	int age;
 	int species;
@@ -96,7 +95,7 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 							/*just two phase are considered
 							 * shoot elongation
 							 * secondary growth*/
-							/*see Ludeke et al., 1194*/
+							/*see Ludeke et al., 1994*/
 							/*Beginning of a "growing season"*/
 							if (met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART]
 													 && c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]

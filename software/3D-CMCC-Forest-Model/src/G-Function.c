@@ -269,10 +269,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
 							//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 						}
-						//todo decidere se utilizzare la somma termica o il growth start
-						//todo decidere se utlizzare growthend o mindaylenght
-						//fixme change GROWTHSTART with a variable for thermic_sum
-						//lo stesso approccio deve essere usato anche in Get_daily_vegetative_period func
+						//the same approach must be used in "Get_daily_vegetative_period" func
 
 						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
 								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6))
@@ -281,13 +278,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							if (c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
 							{
 								Log("species %s First day of growing season day = %d month = %d\n", c->heights[height].ages[age].species[species].name, day+1, month+1);
-							}
-
-
-
-							//Log("day %d month %d day_veg = %d\n", day+1 , month+1, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-							//Log("day %d month %d add one day to DAY_VEG_FOR_LITTERFALL_RATE %d\n", met[month].d[day].n_days, month, m->cells[cell].heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-						}
+							}	}
 					}
 					else
 					{
@@ -448,7 +439,7 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("[%d] layer %d > wbb live = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.2 )
 	{
-		Log("[%d] layer %d > wcones = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_CONES]);
+		Log("[%d] layer %d > wcones = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_FRUIT]);
 	}
 
 	Log("[%d] layer %d > w total = %f \n", yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE]+

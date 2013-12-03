@@ -389,12 +389,12 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[PHENOLOGY] == 1.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_CONES] = s->value[NPP] * s->value[CONES_PERC];
-					s->value[NPP] -= s->value[BIOMASS_CONES];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_CONES]);
+					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
-					s->value[BIOMASS_CONES] -= (s->value[BIOMASS_CONES] * (1 / s->value[CONES_LIFE_SPAN]));
+					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
 				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;

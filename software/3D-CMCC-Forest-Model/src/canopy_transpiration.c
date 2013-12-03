@@ -29,8 +29,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static double duv;                      // 'div' in 3pg
 	static double Etransp;
 	static double DailyTransp;
-	double alpha_evapo = 0.65;
-	double beta_evapo = 0.95;
+	//double alpha_evapo = 0.65;
+	//double beta_evapo = 0.95;
 	double t1, t2;
 	//static double MonthTransp;
 
@@ -176,7 +176,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 				break;
 			}
-			//FIXME BEING ALL IN SECONDS SHOUD I MULPLY FOR SECONDS IN DAYLENGTH NON FOR HOURS IN DAYLENGTH??
 			CanopyTranspiration = Etransp / LAMBDA * (met[month].daylength * 3600.0);         // converted to kg-mm H2o/m2/day
 
 		}

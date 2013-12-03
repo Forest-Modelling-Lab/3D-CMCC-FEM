@@ -36,7 +36,7 @@ void Get_litterfall_deciduous (SPECIES *const s)
 
 }
 
-
+/*
 void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, const int species, int years)
 {
 	double gammaF;
@@ -44,7 +44,7 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 
 	Log("*LITTERFALL*\n");
 
-	if ( height->ages[age].species[species].value[PHENOLOGY] == 0.1 || height->ages[age].species[species].value[PHENOLOGY] == 0.2) /*for deciduous*/
+	if ( height->ages[age].species[species].value[PHENOLOGY] == 0.1 || height->ages[age].species[species].value[PHENOLOGY] == 0.2)
 	{
 		Log("DECIDUOUS POPULATION\n");
 
@@ -57,7 +57,7 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 	}
 	else
 	{
-		Log("EVERGREEN POPULATION\n");  /*for evergreen*/
+		Log("EVERGREEN POPULATION\n");
 
 		Log("OldWf = %f\n", oldWf);
 		height->ages[age].species[species].value[DEL_LITTER] = gammaF * oldWf;
@@ -67,9 +67,8 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 		Log("Yearly Foliage Biomass at the end of month less Litterfall (Wf + oldWf) in tDM/ha = %f\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE]);
 
 	}
-
-
 }
+*/
 
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 {

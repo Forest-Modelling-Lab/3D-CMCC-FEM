@@ -264,7 +264,7 @@ enum {
 	MAX_S0CTEM,                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 	YEARS_FOR_CONVERSION,        //years from coppicing to consider tree as a timber
 
-	CONES_PERC,
+	FRUIT_PERC,
 	CONES_LIFE_SPAN,
 
 
@@ -502,7 +502,7 @@ enum {
 	DEL_STEMS,
 	DEL_FOLIAGE,
 	DEL_RESERVE,
-	DEL_CONES,
+	DEL_FRUIT,
 	DEL_BB,
 	DEL_TOT_STEM,				//STEM + BRANCH AND BARK
 	//carbon biomass pools
@@ -514,7 +514,7 @@ enum {
 	BIOMASS_TOT_STEM, //STEM + BRANCH AND BARK
 	BIOMASS_FOLIAGE,
 	BIOMASS_RESERVE,
-	BIOMASS_CONES,   //only for coniferous
+	BIOMASS_FRUIT,   //only for coniferous
 
 	BIOMASS_LIVE_WOOD,
 	BIOMASS_DEAD_WOOD,

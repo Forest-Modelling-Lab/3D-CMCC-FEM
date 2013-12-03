@@ -90,7 +90,7 @@ static const char *species_values[] = {
 		"MAX_S0CTEM",                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 		"YEARS_FOR_CONVERSION",        //years from coppicing to consider tree as a timber
 
-		"CONES_PERC",
+		"FRUIT_PERC",
 		"CONES_LIFE_SPAN",
 
 
