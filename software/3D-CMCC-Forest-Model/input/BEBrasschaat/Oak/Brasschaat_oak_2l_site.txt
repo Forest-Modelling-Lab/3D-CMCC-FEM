@@ -26,7 +26,7 @@ SOIL_DEPTH "135" //SOIL DEPTH (cm) (averaged value from 120/150 cm from Carrara 
 
 
 //SITE NUTRITION
-FR "0.8" //Fertility rating
+FR "0.65" // .8 Fertility rating
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
