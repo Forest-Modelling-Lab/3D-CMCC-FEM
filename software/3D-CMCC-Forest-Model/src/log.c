@@ -587,7 +587,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if (c->annual_layer_number == 1)
 	{
-		if (month == 0)
+		if (month == 0 && years == 0)
 		{
 			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
 					"YEAR", "MONTH", "GPP (tot)", "AR(tot)", "Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
@@ -616,7 +616,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
-		if (month == 0)
+		if (month == 0 && years == 0)
 		{
 			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
 					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
@@ -654,7 +654,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
-		if (month == 0)
+		if (month == 0 && years == 0)
 		{
 			Monthly_Log ("\n%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
 					"YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)",
@@ -804,12 +804,12 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
-		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
 					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
-		}
+			}
 		Daily_Log ("%d \t%4d \t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
 				yos[years].year, month+1, day+1,
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
@@ -851,7 +851,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
-		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			Daily_Log ("\n\t%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
 					"YEAR", "MONTH", "DAY", "GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(0)", "NPP(tot)",
