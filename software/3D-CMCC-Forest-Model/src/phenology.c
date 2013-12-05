@@ -48,6 +48,8 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 									else if (c->heights[height].ages[age].species[species].value[LAI] > (c->heights[height].ages[age].species[species].value[PEAK_Y_LAI] * 0.5)
 											&& c->heights[height].ages[age].species[species].value[LAI] < c->heights[height].ages[age].species[species].value[PEAK_Y_LAI])
 									{
+										Log("LAI = %f\n", c->heights[height].ages[age].species[species].value[LAI]);
+										Log("PEAK LAI = %f\n", c->heights[height].ages[age].species[species].value[PEAK_Y_LAI]);
 										c->heights[height].ages[age].species[species].phenology_phase = 2;
 									}
 									//Full growing season
