@@ -173,6 +173,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if (years == 0)
 	{
+		Annual_Log("Site name = %s\n", site->sitename);
 		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Annual_Log("years of simulation = %d\n", years_of_simulation);
 		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
@@ -560,6 +561,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if(month == 0 && years == 0)
 	{
+		Monthly_Log("Site name = %s\n", site->sitename);
 		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Monthly_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
 		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
@@ -719,6 +721,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if(day  == 0 && month == 0 && years == 0)
 	{
+		Daily_Log("Site name = %s\n", site->sitename);
 		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
