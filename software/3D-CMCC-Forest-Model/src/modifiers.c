@@ -285,6 +285,12 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 		Log("PHYSMOD uses F_SW * F_AGE\n");
 	}
 
+	//todo see if better
+	/*following Wei et al., 2014
+	s->value[PHYS_MOD]= (s->value[F_VPD] * s->value[F_SW]) * s->value[F_AGE];
+	Log("PhysMod = %f\n", s->value[PHYS_MOD]);
+	*/
+
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
 	//Log("Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
 
