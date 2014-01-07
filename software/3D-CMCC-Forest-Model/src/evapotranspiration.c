@@ -22,8 +22,17 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 {
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");
 
-	c->daily_evapotranspiration = c->daily_tot_c_evapotransp + c->soil_evaporation;
-	Log("Daily total EVAPOTRANSPIRATION = %f \n", c->daily_evapotranspiration);
+	c->daily_tot_et = c->daily_tot_c_evapotransp + c->soil_evaporation;
+	Log("Daily total EVAPOTRANSPIRATION = %f \n", c->daily_tot_et);
+	if (met[month].d[day].n_days == 1)
+	{
+		c->monthly_tot_et = 0;
+	}
+	c->monthly_tot_et += c->daily_tot_et;
+	Log("Monthly total EVAPOTRANSPIRATION = %f \n", c->monthly_tot_et);
+	//fixme add annual_tot_et
+
+
 }
 
 

@@ -858,7 +858,6 @@ typedef struct {
 	double rain_intercepted;
 	double water_to_soil;
 	double water_to_atmosphere;
-	double evapotranspiration;
 	double stand_agb;
 	double stand_bgb;
 
@@ -889,7 +888,6 @@ typedef struct {
 
 	double gapcover[3];
 
-	double daily_evapotranspiration;
 
 
 
