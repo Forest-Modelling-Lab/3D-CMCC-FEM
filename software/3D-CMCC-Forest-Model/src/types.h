@@ -935,6 +935,7 @@ typedef struct {
 	//int dead_tree;
 
 	double thermic_sum;
+	double cum_monthly_rain;
 
 	double soil_respiration;
 	double aut_respiration; //autotrophic respiration
@@ -998,6 +999,7 @@ extern void Get_daylight_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_nightime_avg_temperature (CELL *, int, int, int, int, YOS *);
 extern void Get_soil_temperature (CELL *, int, int, int, YOS *);
 extern void Get_rho_air (CELL *, int, int, int, int, YOS *);
+extern void Get_cum_monthly_rain (CELL *, int, int, int, int, YOS *);
 extern void Get_thermic_sum (CELL *, int, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
