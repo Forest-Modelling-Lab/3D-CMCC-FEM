@@ -95,6 +95,8 @@ typedef struct {
 	PREC ndvi_lai;
 	PREC daylength;
 	PREC thermic_sum; //monthly thermic sum NOT USED IN MONTHLY SIMUALATION
+	PREC avg_monthly_temp;
+	PREC cum_monthly_rain;
 	PREC rho_air;
 	MET_DAILY_DATA d[31];
 
@@ -935,7 +937,7 @@ typedef struct {
 	//int dead_tree;
 
 	double thermic_sum;
-	double cum_monthly_rain;
+
 
 	double soil_respiration;
 	double aut_respiration; //autotrophic respiration
@@ -994,15 +996,16 @@ extern void soil_model (MATRIX *const, const YOS *const, const int, const int, c
 extern void Get_phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
 extern void met_summary(MET_DATA *);
 extern int is_valid_met(const char *const);
-extern void Get_avg_temperature (CELL *, int, int, int, int, YOS *);
-extern void Get_daylight_avg_temperature (CELL *, int, int, int, int, YOS *);
-extern void Get_nightime_avg_temperature (CELL *, int, int, int, int, YOS *);
+extern void Get_avg_temperature (CELL *, int, int, int, YOS *);
+extern void Get_daylight_avg_temperature (CELL *, int, int, int, YOS *);
+extern void Get_nightime_avg_temperature (CELL *, int, int, int, YOS *);
 extern void Get_soil_temperature (CELL *, int, int, int, YOS *);
-extern void Get_rho_air (CELL *, int, int, int, int, YOS *);
+extern void Get_rho_air (CELL *, int, int, int, YOS *);
+extern void Get_avg_monthly_temp (CELL *, int, int, int, int, YOS *);
 extern void Get_cum_monthly_rain (CELL *, int, int, int, int, YOS *);
-extern void Get_thermic_sum (CELL *, int, int, int, int, YOS *);
+extern void Get_thermic_sum (CELL *, int, int, int, YOS *);
 extern void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
-extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int, int);
+extern void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
 extern int sort_by_years(const void *, const void *);
 extern int sort_by_heights_asc(const void * , const void * );
 extern int sort_by_heights_desc(const void * , const void * );
@@ -1011,7 +1014,7 @@ extern void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 extern ROW *import_dataset(const char *const, int *const);
 extern int importSiteFile(char *);
 extern int importSettingsFile(char *);
-extern void Get_Day_Length (CELL *, int, int, int, int, YOS *);
+extern void Get_Day_Length (CELL *, int, int, int, YOS *);
 extern void GetDayLength_3PG (CELL *, int, int, int, int, YOS *);
 extern void Get_Abscission_DayLength (CELL *);
 extern int Get_Establishment_LPJ (SPECIES *const, double, double);

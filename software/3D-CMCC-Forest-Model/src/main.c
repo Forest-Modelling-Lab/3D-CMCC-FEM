@@ -1151,21 +1151,24 @@ int main(int argc, char *argv[])
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							//Check for daily temperatures
-							Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_avg_temperature (&m->cells[cell], day, month, years, yos);
+							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
+							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
 							Get_soil_temperature (&m->cells[cell], day, month, years, yos);
-							Get_cum_monthly_rain (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_thermic_sum (&m->cells[cell], day, month, years, MonthLength[month], yos);
-							Get_rho_air (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							//for RothC
+							Get_avg_monthly_temp (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
+							Get_cum_monthly_rain (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
+							//
+							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
+							Get_rho_air (&m->cells[cell], day, month, years, yos);
 							//Get day length
-							Get_Day_Length (&m->cells[cell], day, month, years, MonthLength[month], yos);
+							Get_Day_Length (&m->cells[cell], day, month, years, yos);
 							//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
 
 							if(m->cells[cell].landuse == F)
 							{
 								//Get vegetative days
-								Get_Veg_Days (&m->cells[cell], yos, day, month, years, MonthLength[month], DaysInMonth[month]);
+								Get_Veg_Days (&m->cells[cell], yos, day, month, years, DaysInMonth[month]);
 							}
 							else if (m->cells[cell].landuse == Z)
 							{
@@ -1283,9 +1286,9 @@ int main(int argc, char *argv[])
 							for (month = 0; month < MONTHS; month++)
 							{
 								//Check for temperatures
-								Get_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-								Get_daylight_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
-								Get_nightime_avg_temperature (&m->cells[cell], day, month, years, MonthLength[month], yos);
+								Get_avg_temperature (&m->cells[cell], day, month, years, yos);
+								Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
+								Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
 
 								//todo add Get_thermic_sum if used
 

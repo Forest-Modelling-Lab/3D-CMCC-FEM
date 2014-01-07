@@ -38,7 +38,7 @@ extern void Print_met_daily_data (const YOS *const yos, int day, int month, int 
 
 
 //following Running et al., 1987
-extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS *yos)
+extern void Get_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day )
@@ -84,7 +84,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, int M
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
-extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day)
@@ -122,7 +122,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 
 //following BIOME-BGC 4.2 src
 //compute nightime average air temperature
-extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, int MonthLength, YOS  *yos)
+extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day)
@@ -158,7 +158,36 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 	}
 }
 
-extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
+extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+	static int counter;
+	static double temp_avg_monthly_temp;
+
+	//averaged monthly temp for RothC
+
+	if (settings->time == 'd')
+	{
+		if (met[month].d[day].n_days == 1)
+		{
+			counter = 0;
+			temp_avg_monthly_temp = 0;
+			met[month].avg_monthly_temp = 0;
+		}
+		if (met[month].d[day].tavg != NO_DATA)
+		{
+			counter ++;
+			temp_avg_monthly_temp += met[month].d[day].tavg;
+		}
+		if (met[month].d[day].n_days == DaysInMonth)
+		{
+			met[month].avg_monthly_temp = (temp_avg_monthly_temp / counter);
+		}
+	}
+}
+
+extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -169,36 +198,16 @@ extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int M
 	{
 		if (met[month].d[day].n_days == 1)
 		{
-			c->cum_monthly_rain = 0;
+			met[month].cum_monthly_rain = 0;
 		}
-		if (met[month].d[day].rain != 'NO_DATA')
+		if (met[month].d[day].rain != NO_DATA)
 		{
-			c->cum_monthly_rain += met[month].d[day].rain;
+			met[month].cum_monthly_rain += met[month].d[day].rain;
 		}
 	}
 }
 
-extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
-	//cumulated monthly rain for RothC
-
-	if (settings->time == 'd')
-	{
-		if (met[month].d[day].n_days == 1)
-		{
-			c->cum_monthly_rain = 0;
-		}
-		if (met[month].d[day].rain != 'NO_DATA')
-		{
-			c->cum_monthly_rain += met[month].d[day].rain;
-		}
-	}
-}
-
-extern void Get_thermic_sum (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
+extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 {
 
 	MET_DATA *met;
@@ -261,7 +270,7 @@ extern void Get_air_pressure (CELL *c)
 }
 
 
-extern void Get_rho_air (CELL * c, int day, int month, int years, int MonthLength, YOS *yos)
+extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -501,20 +510,22 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", day+1, month+1);
 		Log("-average solar_rad = %f MJ/m^2/day\n"
-				"-tavg = %f °C\n"
-				"-tmax = %f °C\n"
-				"-tmin = %f °C\n"
-				"-tday = %f °C\n"
-				"-tnight = %f °C\n"
+				"-tavg = %.2f °C\n"
+				"-tmax = %.2f °C\n"
+				"-tmin = %.2f °C\n"
+				"-tday = %.2f °C\n"
+				"-tnight = %.2f °C\n"
 				//"-rh = %f %%\n"
-				"-vpd = %f mbar\n"
-				"-ts_f = %f °C\n"
-				"-rain = %f mm\n"
-				"-swc = %f %vol\n"
-				"-thermic_sum = %f °C\n"
-				"-daylength = %f hrs\n"
+				"-vpd = %.2f mbar\n"
+				"-ts_f = %.2f °C\n"
+				"-rain = %.2f mm\n"
+				"-swc = %.2f %vol\n"
+				"-thermic_sum = %.2f °C\n"
+				"-daylength = %.2f hrs\n"
 				"-DOY = %d\n"
-				"-tsoil = %f °C\n",
+				"-tsoil = %.2f °C\n"
+				"-month avg temp = %.2f °C\n"
+				"-month cum rain = %.2f mm\n",
 				met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
@@ -529,7 +540,9 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				met[month].d[day].thermic_sum,
 				met[month].d[day].daylength,
 				doy,
-				met[month].d[day].tsoil);
+				met[month].d[day].tsoil,
+				met[month].avg_monthly_temp,
+				met[month].cum_monthly_rain);
 
 		if (settings->spatial == 's')
 		{

@@ -43,7 +43,7 @@ extern void Get_biome_fraction (SPECIES * s)
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Get_Day_Length ( CELL * c,  int day, int month, int years, int MonthLength ,  YOS  *yos)
+void Get_Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 {
 	/*
 	if (!day)
@@ -235,7 +235,7 @@ extern void Get_Veg_Months (CELL *const c, const YOS *const yos, const int month
 
 
 //compute annual number of vegetative days
-extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int MonthLength, int DaysInMonth)
+extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int DaysInMonth)
 {
 
 	static int height;
@@ -313,7 +313,7 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 					{
 						c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
 					}
-					if (day == MonthLength)
+					if (day == DaysInMonth)
 					{
 						Log("-MONTH = %d TOTAL VEGETATIVE DAYS for species %s = %d \n\n", month+1, c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 					}
