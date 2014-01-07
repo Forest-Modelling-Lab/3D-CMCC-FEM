@@ -228,6 +228,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Allocating only into foliage and fine root pools\n");
 			Log("LAI = %f \n", s->value[LAI]);
 
+			s->value[DAILY_DEL_LITTER] = 0;
+
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 
@@ -437,6 +439,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("**Maximum Growth**\n");
 			Log("Allocating only into foliage and fine root pools\n");
 
+			s->value[DAILY_DEL_LITTER] = 0;
+
 			//fixme scegliere se usare Magnani o meno
 			//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -635,6 +639,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Day length > %f \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
 			Log("(LAI MAX * 0.5 < LAI < LAI MAX)\n");
 			Log("allocating into the three pools Ws+Wr+Wf\n");
+
+			s->value[DAILY_DEL_LITTER] = 0;
 
 
 			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -837,6 +843,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("allocating into the three pools Ws+Wr+Wreserve\n");
 			/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
+			s->value[DAILY_DEL_LITTER] = 0;
+
 
 			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 			Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
@@ -968,6 +976,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 				s->value[DEL_FOLIAGE] =  -s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
+				s->value[DAILY_DEL_LITTER] = s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
 				s->value[DEL_RESERVE] = s->value[NPP];
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
@@ -1066,6 +1075,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		case 0:
 
 			Log("Unvegetative period \n");
+
+			s->value[DAILY_DEL_LITTER] = 0;
 
 			/*partitioning*/
 			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);

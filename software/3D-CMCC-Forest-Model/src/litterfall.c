@@ -10,6 +10,7 @@
 
 
 /*not used*/
+/*
 void Get_litterfall_deciduous (SPECIES *const s)
 {
 	//height->ages[age].species[species].value[BIOME_LITTERFALL_FRAC]
@@ -18,7 +19,7 @@ void Get_litterfall_deciduous (SPECIES *const s)
 	Log("Months of litterfall for deciduous = %d \n", s->counter[MONTH_FRAC_FOLIAGE_REMOVE]);
 
 }
-
+*/
 /*
 void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, const int species, int years)
 {
@@ -34,25 +35,26 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 		//LITTERFALL FOR DECIDUOUS
 		// pedita di foglie che cadono nella lettiera
 		//BISOGNA PRENDERE QUELLE DELL'ANNO PRECEDENTE
-		height->ages[age].species[species].value[DEL_LITTER] = oldWf;
+		height->ages[age].species[species].value[DAILY_DEL_LITTER] = oldWf;
 		//Log("Foliage to litter of previuos year = %f tDM/ha \n", oldWf);
-		Log("Yearly Foliage Biomass to litter from deciduous population = %f tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
+		Log("Yearly Foliage Biomass to litter from deciduous population = %f tDM/area\n", height->ages[age].species[species].value[DAILY_DEL_LITTER]);
 	}
 	else
 	{
 		Log("EVERGREEN POPULATION\n");
 
 		Log("OldWf = %f\n", oldWf);
-		height->ages[age].species[species].value[DEL_LITTER] = gammaF * oldWf;
-		Log("Yearly Foliage Biomass to litter from evergreen population = %f tDM/area\n", height->ages[age].species[species].value[DEL_LITTER]);
+		height->ages[age].species[species].value[DAILY_DEL_LITTER] = gammaF * oldWf;
+		Log("Yearly Foliage Biomass to litter from evergreen population = %f tDM/area\n", height->ages[age].species[species].value[DAILY_DEL_LITTER]);
 
-		height->ages[age].species[species].value[BIOMASS_FOLIAGE] +=  (oldWf - height->ages[age].species[species].value[DEL_LITTER]);
+		height->ages[age].species[species].value[BIOMASS_FOLIAGE] +=  (oldWf - height->ages[age].species[species].value[DAILY_DEL_LITTER]);
 		Log("Yearly Foliage Biomass at the end of month less Litterfall (Wf + oldWf) in tDM/ha = %f\n", height->ages[age].species[species].value[BIOMASS_FOLIAGE]);
 
 	}
 }
 */
 /*not used*/
+/*
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 {
 	static double normal_daily_turnover_rate;
@@ -75,3 +77,4 @@ extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 		//Log("*LITTERFALL_RATE_FROM_CTEM = %f\n\n", s->value[LITTERFALL_RATE]);
 	}
 }
+*/

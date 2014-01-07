@@ -597,7 +597,8 @@ enum {
 	AGEMORT,                        //Age probability mortality function
 
 
-	DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
+	DAILY_DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
+	MONTHLY_DEL_LITTER,
 	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
 
 	FRACBB,

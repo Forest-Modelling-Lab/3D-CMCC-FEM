@@ -27,7 +27,7 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 			Log("Daily litter fall = %f\n", s->value[LITTERFALL_RATE]);
 			s->value[BIOMASS_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
 			Log("Foliage Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
-			s->value[DEL_LITTER] += (s->value[BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
+			s->value[DAILY_DEL_LITTER] += (s->value[BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
 			/*recompute LAI after turnover*/
 			/*for dominant layer with sunlit foliage*/
 			if (c->top_layer == c->heights[height].z)
