@@ -396,7 +396,6 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
                             }
 							 */
 
-							Get_litter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years);
 
 							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 

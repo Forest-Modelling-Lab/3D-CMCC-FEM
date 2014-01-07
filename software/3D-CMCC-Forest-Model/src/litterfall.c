@@ -7,26 +7,9 @@
 #include "types.h"
 #include "constants.h"
 
-extern void Get_litter (CELL *c, SPECIES *const s, const int years)
-{
-	Log("****LITTER BIOMASS****\n");
-	//inserire anche la biomassa dei semi non germogliati
-
-	if (!years)
-  {
-	  c->litter += s->value[DEL_LITTER] + site->initialLitter;
-	  Log("Total Litter = %f tDM/area\n", c->litter);
-  }
-  else
-  {
-	  c->litter += s->value[DEL_LITTER];
-	  Log("Total Litter = %f tDM/area\n", c->litter);
-  }
-	//reset
-	s->value[DEL_LITTER] = 0;
-}
 
 
+/*not used*/
 void Get_litterfall_deciduous (SPECIES *const s)
 {
 	//height->ages[age].species[species].value[BIOME_LITTERFALL_FRAC]
@@ -69,7 +52,7 @@ void Get_litterfall_evergreen (HEIGHT *height, double oldWf, const int age, cons
 	}
 }
 */
-
+/*not used*/
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const s)
 {
 	static double normal_daily_turnover_rate;

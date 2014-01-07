@@ -598,7 +598,6 @@ enum {
 
 
 	DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
-	TOTAL_LITTER,                   //Lettiera totale
 	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
 
 	FRACBB,
@@ -1066,7 +1065,6 @@ extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, in
 extern void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
 extern void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 
-extern void Get_litter (CELL *, SPECIES *const, const int);
 extern void Get_litterfall_deciduous (SPECIES *const);
 extern void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 extern void Get_litterfall_evergreen_CTEM (SPECIES *const);
