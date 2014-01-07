@@ -1197,7 +1197,7 @@ int main(int argc, char *argv[])
 									{
 										puts(msg_ok);
 										//run for SOIL function
-										soil_model_daily (m, yos, years, month, day, years_of_simulation);
+										soil_model (m, yos, years, month, day, years_of_simulation);
 									}
 								}
 								else

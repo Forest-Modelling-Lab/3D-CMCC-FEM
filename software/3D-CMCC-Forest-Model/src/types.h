@@ -989,7 +989,7 @@ extern int tree_model (MATRIX *const, const YOS *const, const int, const int, co
 extern int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
 //extern int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
-extern void soil_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
+extern void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 extern void Get_phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
 extern void met_summary(MET_DATA *);
 extern int is_valid_met(const char *const);
