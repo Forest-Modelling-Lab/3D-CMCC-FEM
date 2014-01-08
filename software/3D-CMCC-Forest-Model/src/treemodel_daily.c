@@ -468,6 +468,24 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
 
+						/*LITTERFALL COMPUTATION AT CELL LEVEL*/
+						if (met[month].d[day].n_days == 1)
+						{
+							m->cells[cell].monthly_tot_litterfall = 0;
+
+							if (met[month].d[day].n_days == 1 && month == 'JANUARY')
+							{
+								m->cells[cell].annual_tot_litterfall = 0;
+							}
+						}
+
+						m->cells[cell].daily_tot_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
+						Log("Daily Litterfall = %f\n", m->cells[cell].daily_tot_litterfall);
+						m->cells[cell].monthly_tot_litterfall += m->cells[cell].daily_tot_litterfall;
+						Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_tot_litterfall);
+						m->cells[cell].annual_tot_litterfall += m->cells[cell].daily_tot_litterfall;
+						Log("Annual Litterfall = %f\n", m->cells[cell].annual_tot_litterfall);
+
 
 						//to prevent jumps in dendrometric values it must be computed at the beginning of each month
 						if (day == 0)
@@ -771,6 +789,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
 
+		m->cells[cell].daily_tot_litterfall = 0;
 		m->cells[cell].dominant_veg_counter = 0;
 		m->cells[cell].dominated_veg_counter = 0;
 		m->cells[cell].subdominated_veg_counter = 0;

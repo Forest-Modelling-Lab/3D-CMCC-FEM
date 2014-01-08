@@ -929,6 +929,9 @@ typedef struct {
 	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
 
 
+	double daily_tot_litterfall, monthly_tot_litterfall, annual_tot_litterfall;
+
+
 	double annual_dbh[3];
 
 

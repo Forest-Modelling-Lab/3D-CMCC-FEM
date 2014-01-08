@@ -18,7 +18,7 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 	{
 		//fixme see if add foliage turnover!!!!!
 
-		/*daily leaf turnover*/
+		/*daily leaf turnover for EVERGREEN*/
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
 			Log("****leaf turnover for evergreen****\n");
