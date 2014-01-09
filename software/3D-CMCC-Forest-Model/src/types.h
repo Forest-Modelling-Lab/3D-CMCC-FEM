@@ -138,6 +138,15 @@ typedef struct
 	ksoil,
 	p0,
 	cutTree;
+
+ 	// ROTHC SPECIFIC PARAMETERS
+	double kDPM,
+	kRPM,
+	kBIO,
+	kHUM,
+	partitioningToBio,
+	litterToDPM;
+
 } site_t;
 
 
@@ -771,6 +780,14 @@ typedef struct {
 //all variables related to the soil site
 typedef struct {
 	double variabile;
+ 	// ROTHC SPECIFIC VARIABLES
+	double decomposablePlantMaterial;
+	double resistantPlantMaterial;
+	double microbialBiomass;
+	double humifiedOM;
+	double inertOM;
+	double soilCO2;
+	double accumulatedSoilMoistDeficit;
 } SOIL;
 
 

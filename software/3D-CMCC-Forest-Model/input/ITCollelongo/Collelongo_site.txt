@@ -34,3 +34,11 @@ P0 "1.55" //NON-WATER-LIMITED SOIL RESPIRATION IN MONTHS/DAYS WITHOUT RAIN mm
 
 //MANAGMENT (optional)
 CUTTREE "100" //Cutted Trees for Pixel
+
+//ROTHC
+KDPM "-9999" //decomposition rate constant for Decomposable plant material (DPM)
+KRPM "-9999" //decomposition rate constant for Resistant plant material (RPM)
+KBIO "-9999" //decomposition rate constant for Microbial Biomass (BIO)
+KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
+PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
+LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
