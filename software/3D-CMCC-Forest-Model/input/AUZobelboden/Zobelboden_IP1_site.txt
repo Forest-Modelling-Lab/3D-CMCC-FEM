@@ -12,19 +12,19 @@ CO2CONC "387.0" //CO2 concentration (optional)
 
 //SOIL CAHARACTERISTICS (mandatory)
 INITIALLITTER "0" //Initial Litter
-MIN_FRAC_MAXASW "0" //Minimum fraction of asw based on maxasw (wilting point)
-CLAY_PERC "0"   //PERCENTAGE OF CLAY (< 0,002 mm) 
-SILT_PERC "0"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
-SAND_PERC "0"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
-BULK_DENSITY "0"  //BULK DENSITY (g/cm3)
-SOIL_DEPTH "0" //SOIL DEPTH (cm) 
+MIN_FRAC_MAXASW "0.3425" //Minimum fraction of asw based on maxasw (wilting point)
+CLAY_PERC "33"   //PERCENTAGE OF CLAY (< 0,002 mm) 
+SILT_PERC "54"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
+SAND_PERC "34"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
+BULK_DENSITY "0.783"  //BULK DENSITY (g/cm3)
+SOIL_DEPTH "50" //SOIL DEPTH (cm) 
 
 
 //SITE NUTRITION (mandatory)
-FR "0" // 0.8 Fertility rating
-FN0 "0" //Value of fNutr when FR = 0
-FNN "0" //Power of (1 - FR) in fNutr
-M0 "0" //value of 'm' when FR = 0
+FR "0.6" //Fertility rating ??
+FN0 "0.5" //Value of fNutr when FR = 0  ??
+FNN "0.5" //Power of (1 - FR) in fNutr ??
+M0 "0.2" //value of 'm' when FR = 0 ??
 SN "0"   //Soil Mineral Nitrogen Content gN/m^2
 
 //SOIL RESPIRATION (optional)
