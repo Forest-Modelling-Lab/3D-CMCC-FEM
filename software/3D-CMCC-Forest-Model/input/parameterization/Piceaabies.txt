@@ -4,7 +4,7 @@ LIGHT_TOL   3       //4 = very shade intolerant
                 //2 = shade tolerant
             //1 = very shade tolerant
 PHENOLOGY   1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.055       //Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005, 0.05 for P. sylvestris, from Xenakis et al., 2008
+ALPHA   0.065       //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies Seidl et al., 2005
 EPSILONgCMJ 1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011 
 K   0.51        //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
 
@@ -16,7 +16,7 @@ LAIMAXINTCPTN   5       //LAI for maximum rainfall interception for P. sylvestri
 MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
-SLA 94.0             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999
+SLA 94.0             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA  for Picea abies from Mollicone et al., 2002, 1.8  from Pietsch et al., 2005  
 
 //FRACTION BRANCH-BARK
@@ -24,26 +24,26 @@ FRACBB0 0.30            //Branch and Bark fraction at age 0 for P. sylvestris, f
 FRACBB1 0.1            //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
 TBB 10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 //MASS DENSITY
-RHOMIN  0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006
-RHOMAX  0.502             //Maximum Basic Density for young Trees  for P. sylvestris from Janssen et al., 1999 ,0.41 from Repala, 2006
+RHOMIN  0.43             //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
+RHOMAX  0.43             //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
-COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris from Landsberg et al., 2005
-BLCOND  0.2            //Canopy Boundary Layer conductance 0.2 for P. sylvestris from Landsberg et al., 2005
-MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
+COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies Seidl et al., 2012
+BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
+MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for ??? Seidl et al., 2012
 //AGE for timber
-MAXAGE  120             //Determines rate of "physiological decline" of forest 100 for P. sylvestris from Zahele et al., 120 for P. sylvestris, from Xenakis et al., 2008, 2005 ,500 from Landsberg et al., 2005
-RAGE    0.75            //Relative Age to give fAGE = 0.5 0.95 for P. sylvestris from Landsberg et al., 2005 for P. sylvestris, 0.75 from Xenakis et al., 2008
-NAGE    4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005, 
+MAXAGE  600             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
+NAGE    4               //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 //Age for shoots
-MAXAGE_S    100     //Determines rate of "physiological decline" of forest
+MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest 
 RAGE_S  0.75            //Relative Age to give fAGE = 0.5
 NAGE_S  4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN  -5       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005, -5 for P. sylvestris, from Xenakis et al., 2008
-GROWTHTMAX  35      //Maximum temperature for growth for 25 P. sylvestris from Landsberg et al., 2005, 35 for P. sylvestris, from Xenakis et al., 2008
-GROWTHTOPT  15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and for P. sylvestris, from Xenakis et al., 2008 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
+GROWTHTMIN  0       //Minimum temperature for growth  for Picea abies from p.c. Seidl 
+GROWTHTMAX  35      //Maximum temperature for growth for Picea abies from p.c. Seidl 
+GROWTHTOPT  17.5      //Optimum temperature for growth for Picea abies from p.c. Seidl 
 GROWTHSTART 200       //average temperature for starting growth in °C 
 GROWTHEND   0       //average temperature for ending growth in °C 
 MINDAYLENGTH    0      //minimum day length for deciduous
@@ -95,7 +95,7 @@ LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall
 LEAF_LIFE_SPAN  0.26     //Leaf life span  for Picea abies from Mollicone et al , 0.345 from White et al., 2000
 
 //TURNOVER
-LEAVES_FINERTTOVER  0.195       //Average YEARLY fine root turnover rate for Picea abies from Pietsch et al., 2005
+LEAVES_FINERTTOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
                             //varying from 0.182 to 0.400 yr-1 (for Picea abies see White et al., 1999)
 COARSERTTOVER   0.02    //deducted from Yuste et al., 2005
 SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
@@ -111,17 +111,16 @@ MF  0.64               //Fraction mean single tree foliage biomass lost per dead
 MR  0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS  0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
+DBHDCMAX    0.255    //Low Density for Picea abies Seidl et al., 2012
 DBHDCMIN    0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A   3.119 //0.7783         //a value for P. sylvestris from Xiao and Cuelemans 2004, 0.776 for P. sylvestris from Xiao and Cuelemans 2013, 3.119 FROM vERBEEK ET AL., 2007
 SAP_B   1.4544 //1.9138         //b value for P. sylvestris from Xiao and Cuelemans 2004, 1.9156  for P. sylvestris from Xiao and Cuelemans 2013, 1.4544 FROM vERBEEK ET AL., 2007
-SAP_LEAF    1500          //sapwood_max leaf area ratio in pipe model for P. sylvestris from Hickler et al 2012 (1000 see also Law et al., 2001 for P. ponderosa)
-                            //VARIABLE VALUES FROM 1300 TO 1800 for P. sylvestris from Brasschaat site see Verbeek et al 2007
+SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012, 
+HMAX    56              //  //Max Height in m for Picea abies Seidl et al., 2012
 DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
 
 //not used just for comparison
@@ -136,13 +135,13 @@ STEMCONST_P 0.1227    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; f
 STEMPOWER_P 2.3272    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA 32    //for P. sylvestris from Rupsys et al., 2010
-CRB 0.04  //for P. sylvestris from Rupsys et al., 2010
-CRC 0.99  //for P. sylvestris from Rupsys et al., 2010
+CRA 56    //for Picea abies Seidl et al., 2012
+CRB 0.0658  //for Picea abies from Pommerening et al., 2011 ????
+CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
 
 //CROWDING COMPETITION FUNCTION
-HDMAX   1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
-HDMIN   0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
+HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
+HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
 //DENSITY FUNCTION
 DENMAX  0.4             //Maximum density (trees/10000 m^2)
 DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
