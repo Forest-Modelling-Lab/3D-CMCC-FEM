@@ -91,7 +91,7 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	if (s->value[AVDBH]> 10)
 	{
 		//Log("SORTIE FUNC DBH > 10 cm\n");
-
+		//it is essentially a chapman-richards equation!!
 		s->value[TREE_HEIGHT_SORTIE] = (1.35 +(s->value[HMAX] - 1.35) * ( 1.0 - exp ( - s->value[HPOWER] * s->value[AVDBH] )));
 		Log("-Tree Height using Sortie function > 10 cm = %f m\n", s->value[TREE_HEIGHT_SORTIE]);
 	}
