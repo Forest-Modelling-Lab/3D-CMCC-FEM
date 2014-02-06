@@ -106,6 +106,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 			RelAge = (double)a->value / s->value[MAXAGE];
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE] )));
 			//Log("--Rel Age = %f years\n", RelAge);
+
 			Log("--Age = %d years\n", a->value);
 			Log("fAge - Age modifier for timber= %f\n", s->value[F_AGE]);
 		}

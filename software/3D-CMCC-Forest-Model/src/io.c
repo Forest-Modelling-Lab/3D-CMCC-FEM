@@ -901,7 +901,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
 										//the model gets the value of the day before
-										Log ("* PRECIPITATION -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day );
+										Log ("* PRECIPITATION -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1);
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].rain = previous_rain;
 										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);

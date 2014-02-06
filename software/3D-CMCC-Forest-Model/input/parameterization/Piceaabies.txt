@@ -16,7 +16,7 @@ LAIMAXINTCPTN   5       //LAI for maximum rainfall interception for P. sylvestri
 MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
-SLA 94.0             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
+SLA 42.5             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies 94.0 from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA  for Picea abies from Mollicone et al., 2002, 1.8  from Pietsch et al., 2005  
 
 //FRACTION BRANCH-BARK
@@ -33,7 +33,7 @@ COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies S
 BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
 MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for ??? Seidl et al., 2012
 //AGE for timber
-MAXAGE  600             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+MAXAGE  150             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE    4               //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 //Age for shoots
@@ -41,7 +41,7 @@ MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest
 RAGE_S  0.75            //Relative Age to give fAGE = 0.5
 NAGE_S  4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN  0       //Minimum temperature for growth  for Picea abies from p.c. Seidl 
+GROWTHTMIN  0       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl 
 GROWTHTMAX  35      //Maximum temperature for growth for Picea abies from p.c. Seidl 
 GROWTHTOPT  17.5      //Optimum temperature for growth for Picea abies from p.c. Seidl 
 GROWTHSTART 200       //average temperature for starting growth in °C 
@@ -111,13 +111,13 @@ MF  0.64               //Fraction mean single tree foliage biomass lost per dead
 MR  0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS  0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.255    //Low Density for Picea abies Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005
-DBHDCMIN    0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005
+DBHDCMAX    0.18    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMIN    0.16    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A   0.0851 //a value for Picea abies deducted from  p.c. Kostner and Clausnitzer et al., 2011
-SAP_B   1.684 //b value for Picea abies deducted from p.c. Kostner and Clausnitzer et al., 2011
-SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002
+SAP_A   3.119 //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
+SAP_B   1.4544 //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
+SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
 HMAX    56              //  //Max Height in m for Picea abies Seidl et al., 2012
