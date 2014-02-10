@@ -620,11 +620,11 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
+			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
 					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
 					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%5d \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5d \t%5d \t%5d\n",
+		Monthly_Log ("%d \t%5d \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5d \t%5d \t%5d\n",
 				yos[years].year, month+1,
 				c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp,

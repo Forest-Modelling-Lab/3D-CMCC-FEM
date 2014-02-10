@@ -509,7 +509,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", day+1, month+1);
-		Log("-average solar_rad = %f MJ/m^2/day\n"
+		Log("-average solar_rad = %.2f MJ/m^2/day\n"
 				"-tavg = %.2f °C\n"
 				"-tmax = %.2f °C\n"
 				"-tmin = %.2f °C\n"
