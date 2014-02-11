@@ -310,12 +310,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
-					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "CE(1)", "CE(0)", "CE (tot)", "ASW"
+			Annual_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
+					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW"
 					"Cw", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Wres(1)", "Wres(0)");
 		}
-		Annual_Log ("%d \t%4d \t%4d \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
+		Annual_Log ("%d \t%4d \t%4d \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
 				" \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
 				yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter,
@@ -323,7 +323,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp,
 				c->annual_c_flux[1], c->annual_c_flux[0], c->annual_tot_c_flux,
 				(c->annual_aut_resp[1]*100)/ c->annual_gpp[1],((c->annual_aut_resp[0]*100)/ c->annual_gpp[0]),(c->annual_tot_aut_resp*100)/c->annual_tot_gpp,
-				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp,
+				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
 				c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
 				c->available_soil_water,
 				c->annual_tot_w_flux,
