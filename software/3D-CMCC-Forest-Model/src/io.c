@@ -31,6 +31,8 @@ enum {	MONTH = 0,
 	PRECIP,
 	SWC,
 	Ndvi_Lai,
+	ET,
+	Littfall,
 
 
 	MET_COLUMNS };
@@ -46,7 +48,9 @@ static const char *met_columns[MET_COLUMNS] = {
 		"Ts_f",
 		"Precip",
 		"SWC",
-		"LAI"
+		"LAI",
+		"ET",
+		"LITTERFALL"
 };
 
 
@@ -596,6 +600,48 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 								}
 								break;
+							case ET: //Evapotranspiration for stand alone RothC
+									yos[*yos_count-1].m[month].et = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].et) && *yos_count > 1)
+									{
+										//Log ("* ET-NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										//Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].et = yos[*yos_count-2].m[month].et;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].et))
+										{
+											//Log ("********* ET -NO DATA- in previous year!!!!\n" );
+										}
+									}
+									break;
+							case Littfall: //Litterfall  for stand alone RothC
+									yos[*yos_count-1].m[month].littfall = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										Log("unable to convert value \"%s\" at column %d for %s\n", token2, column+1, MonthName[month]);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].littfall) && *yos_count > 1)
+									{
+										//Log ("* littfall-NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										//Log("Getting previous years values !!\n");
+										yos[*yos_count-1].m[month].littfall = yos[*yos_count-2].m[month].littfall;
+										if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].littfall))
+										{
+											//Log ("********* LITTFALL -NO DATA- in previous year!!!!\n" );
+										}
+									}
+									break;
 							}
 						}
 						//set values for daily version
@@ -1037,6 +1083,48 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 											}
 										}
 									}
+									break;
+								case ET: //ET for stand alone RothC
+									yos[*yos_count-1].m[month].d[day].et = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									else
+									{
+										//Log("et = %f\n", yos[*yos_count-1].m[month].d[day].et);
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+									{
+										//the model gets the value of the day before
+										Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
+									}
+									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+									break;
+								case Littfall: //Littfall for stand alone RothC
+									yos[*yos_count-1].m[month].d[day].littfall = convert_string_to_prec(token2, &error_flag);
+									if ( error_flag )
+									{
+										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										Log("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
+										free(yos);
+										fclose(f);
+										return NULL;
+									}
+									else
+									{
+										//Log("et = %f\n", yos[*yos_count-1].m[month].d[day].et);
+									}
+									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].littfall) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+									{
+										//the model gets the value of the day before
+										Log ("* littfall -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
+									}
+									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
 								}
 							}

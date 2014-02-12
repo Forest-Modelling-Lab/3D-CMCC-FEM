@@ -75,6 +75,9 @@ typedef struct{
 	PREC thermic_sum; //daily thermic sum
 	PREC rho_air;
 	PREC tsoil;
+	PREC et;
+	PREC littfall;
+
 }MET_DAILY_DATA;
 
 /* */
@@ -98,6 +101,9 @@ typedef struct {
 	PREC avg_monthly_temp;
 	PREC cum_monthly_rain;
 	PREC rho_air;
+	PREC et;
+	PREC littfall;
+
 	MET_DAILY_DATA d[31];
 
 } MET_DATA;
