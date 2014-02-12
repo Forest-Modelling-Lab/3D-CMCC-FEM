@@ -61,6 +61,8 @@ enum {	MONTH = 0,
 	PRECIP,
 	SWC,
 	Ndvi_Lai,
+	ET,
+	Littfall,
 
 
 	MET_COLUMNS };
@@ -140,33 +142,6 @@ static char copyright[] =
 		"\n";
 
 
-//static const char comma_delimiter[] = ",\r\n";
-//static const char met_delimiter[] = " ,\t\r\n";
-/*
-static const char *met_columns[MET_COLUMNS] = {
-		"Month",
-		"n_days",
-		"Rg_f",
-		"Ta_f",
-		"Tmax",
-		"Tmin",
-		"VPD_f",
-		"Ts_f",
-		"Precip",
-		"SWC",
-		"LAI"
-};
-*/
-
-/* messages */
-/*
-static const char msg_dataset_not_specified[] =
-		"dataset not specified."
-#if defined (_WIN32) || defined (linux)
-		" searching..."
-#endif
-		"\n";
- */
 static const char msg_dataset_path[]			=	"dataset path = %s\n";
 static const char msg_site_path[]				=	"site path = %s\n";
 static const char msg_met_path[]				=	"met path = %s\n";
