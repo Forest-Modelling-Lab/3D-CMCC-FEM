@@ -132,6 +132,8 @@ typedef struct
 	sand_perc,
 	bulk_dens,
 	soil_depth,
+	soil_cover,
+	soil_manure,
 	fr,
 	fn0,
 	fnn,
