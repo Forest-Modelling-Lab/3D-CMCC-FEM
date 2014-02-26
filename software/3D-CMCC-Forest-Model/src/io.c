@@ -1101,7 +1101,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
 										//the model gets the value of the day before
-										Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
+										//Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
 									}
 									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
@@ -1122,7 +1122,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].littfall) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 									{
 										//the model gets the value of the day before
-										Log ("* littfall -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
+										//Log ("* litterfall -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
 									}
 									//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 									break;
