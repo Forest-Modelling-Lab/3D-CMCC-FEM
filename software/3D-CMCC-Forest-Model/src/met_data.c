@@ -596,38 +596,46 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 			}
 	 */
 
-	if (day < 11.0 && month == 0)
+	//compute soil temperature if no data are available from met_data files
+	if (met[month].d[day].ts_f == -9999)
 	{
-		met[month_temp].d[day_temp].tsoil = met[month].d[day].tavg;
-	}
-	else
-	{
-		for (i=0; i <11; i++)
+		if (day < 11.0 && month == 0)
 		{
-			weight = 11-i;
+			met[month_temp].d[day_temp].tsoil = met[month].d[day].tavg;
+		}
+		else
+		{
+			for (i=0; i <11; i++)
+			{
+				weight = 11-i;
 
-			if (day > 10.0)
-			{
-				avg += (met[month_temp].d[day_temp].tavg * weight);
-				day_temp--;
-			}
-			else
-			{
-				if(day_temp == 0)
-				{
-					avg += (met[month_temp].d[day_temp].tavg * weight);
-					month_temp--;
-					day_temp = days_per_month[month_temp] - 1.0;
-				}
-				else
+				if (day > 10.0)
 				{
 					avg += (met[month_temp].d[day_temp].tavg * weight);
 					day_temp--;
 				}
+				else
+				{
+					if(day_temp == 0)
+					{
+						avg += (met[month_temp].d[day_temp].tavg * weight);
+						month_temp--;
+						day_temp = days_per_month[month_temp] - 1.0;
+					}
+					else
+					{
+						avg += (met[month_temp].d[day_temp].tavg * weight);
+						day_temp--;
+					}
+				}
 			}
+			avg = avg / 77;
+			met[month].d[day].tsoil = avg;
 		}
-		avg = avg / 77;
-		met[month].d[day].tsoil = avg;
+	}
+	else
+	{
+		met[month].d[day].tsoil = met[month].d[day].ts_f;
 	}
 }
 
