@@ -15,6 +15,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 {
 
 	int i;
+
 	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
 	double  s0Ctem = s->value[S0CTEM];
