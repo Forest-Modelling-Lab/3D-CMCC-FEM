@@ -41,9 +41,9 @@ MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest
 RAGE_S  0.75            //Relative Age to give fAGE = 0.5
 NAGE_S  4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN  -4       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl 
+GROWTHTMIN  0       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl 
 GROWTHTMAX  35      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
-GROWTHTOPT  16      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
+GROWTHTOPT  17.5      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
 GROWTHSTART 200       //average temperature for starting growth in °C 
 GROWTHEND   0       //average temperature for ending growth in °C 
 MINDAYLENGTH    0      //minimum day length for deciduous
@@ -131,8 +131,8 @@ CHPOWER 1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796             //for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P 0.1227    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
-STEMPOWER_P 2.3272    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
+STEMCONST_P 0.292    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
+STEMPOWER_P 2.0087    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
 CRA 56    //for Picea abies Seidl et al., 2012
