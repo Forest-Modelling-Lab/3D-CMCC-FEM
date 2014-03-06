@@ -1,8 +1,8 @@
-SITENAME "Renon - Italy" //Site Name
+SITENAME "Soroe - Denmark" //Site Name
 
-LAT "" //Site Latitude negative for south hemisphere
-LONG "" //Site Longitude 
-ELEV "" //Elevation in meters
+LAT "55.29" //Site Latitude negative for south hemisphere
+LONG "11.38" //Site Longitude 
+ELEV "40" //Elevation in meters
 
 Y	"" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
@@ -20,9 +20,9 @@ CLAY_PERC ""	//PERCENTAGE OF CLAY (< 0,002 mm) estimated
 SILT_PERC ""	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm) 
 
-BULK_DENSITY ""  //BULK DENSITY (g/cm3) NOT EDITED
+BULK_DENSITY "1.32"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 
-SOIL_DEPTH "60" //SOIL DEPTH (cm) estimated from EU SOIL MAPS
+SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
 SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
 
