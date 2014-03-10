@@ -4,7 +4,7 @@ LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 ELEV "40" //Elevation in meters
 
-Y	"" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
+Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
 CO2CONC "380.0" //CO2 concentration
 
@@ -16,9 +16,9 @@ MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point) 
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
 
-CLAY_PERC ""	//PERCENTAGE OF CLAY (< 0,002 mm) estimated 
-SILT_PERC ""	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
-SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm) 
+CLAY_PERC "20"	//PERCENTAGE OF CLAY (< 0,002 mm) estimated from Wikipedia definition of Loam
+SILT_PERC "40"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)  estimated from Wikipedia definition of Loam
+SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) estimated from Wikipedia definition of Loam
 
 BULK_DENSITY "1.32"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 
