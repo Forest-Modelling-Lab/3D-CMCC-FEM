@@ -1,0 +1,53 @@
+SITENAME "Hyytiala - Finland" //Site Name
+
+LAT "61.84" //Site Latitude negative for south hemisphere
+LONG "24.29" //Site Longitude 
+ELEV "181" //Elevation in meters
+
+Y	"" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
+
+CO2CONC "380.0" //CO2 concentration
+
+
+
+INITIALLITTER "" //Initial Litter (estimated)
+
+MIN_FRAC_MAXASW "" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+//MAXASW "160" //Maximum Available soil water in mm
+//MINASW "16" //It should be the 10% of the maxasw
+
+CLAY_PERC ""	//PERCENTAGE OF CLAY (< 0,002 mm) estimated 
+SILT_PERC ""	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
+SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm) 
+
+BULK_DENSITY ""  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
+
+SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
+SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
+SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
+
+
+//SITE NUTRITION
+FR "0.7" //Fertility rating (estimated)
+FN0 "0.5" //Value of fNutr when FR = 0
+FNN "0.5" //Power of (1 - FR) in fNutr
+M0 "0.2" //value of 'm' when FR = 0
+SN "1.76"	//Soil Mineral Nitrogen Content gN/m^2 NOT EDITED
+
+//SOIL RESPIRATION
+RLAI "0.48" //SOIL RESPIRATION AL LAI = 0 gC m^2 day^-1
+SLAI "0.31" //BASAL RATE OF SOIL RESPIRATION FOR LAI gC m^2 day^-1
+QSOIL "3.64" //EXPONENTIAL RELATIONSHIPBETWEEN SOIL RESPIRATION AND TEMPERATURE C°^-1
+KSOIL "2.15" //HALF SATURATION CONSTANT OF THE HYPERBOLIC RELATIONSHIP OF SOIL RESPIRATION WITH MONTHLY/DAILY PRECIPITATION mm
+P0 "1.55" //NON-WATER-LIMITED SOIL RESPIRATION IN MONTHS/DAYS WITHOUT RAIN mm
+
+//MANAGEMENT
+CUTTREE "188" //Cutted Trees for Pixel (stumps per ha in year 2005)
+
+//ROTHC
+KDPM "-9999" //decomposition rate constant for Decomposable plant material (DPM)
+KRPM "-9999" //decomposition rate constant for Resistant plant material (RPM)
+KBIO "-9999" //decomposition rate constant for Microbial Biomass (BIO)
+KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
+PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
+LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
