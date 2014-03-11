@@ -1,8 +1,8 @@
-SITENAME "Hyytiala - Finland" //Site Name
+SITENAME "Hesse - France" //Site Name
 
-LAT "61.84" //Site Latitude negative for south hemisphere
-LONG "24.29" //Site Longitude 
-ELEV "181" //Elevation in meters
+LAT "48.40" //Site Latitude negative for south hemisphere
+LONG "7.05" //Site Longitude 
+ELEV "305" //Elevation in meters
 
 Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
@@ -10,17 +10,17 @@ CO2CONC "380.0" //CO2 concentration
 
 
 
-INITIALLITTER "0" //Initial Litter
+INITIALLITTER "0" //Initial Litter (estimated)
 
-MIN_FRAC_MAXASW "0.07" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+MIN_FRAC_MAXASW "" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
 
-CLAY_PERC "11"	//PERCENTAGE OF CLAY (< 0,002 mm) estimated 
-SILT_PERC "19"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
-SAND_PERC "70"	//PERCENTAGE OF SAND (0,05 - 2 mm) 
+CLAY_PERC ""	//PERCENTAGE OF CLAY (< 0,002 mm) estimated 
+SILT_PERC ""	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
+SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm) 
 
-BULK_DENSITY "1.15"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
+BULK_DENSITY ""  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
