@@ -1,8 +1,8 @@
-SITENAME "Puechabon - France" //Site Name
+SITENAME "Tharandt - Germany" //Site Name
 
-LAT "43.74" //Site Latitude negative for south hemisphere
-LONG "3.59" //Site Longitude 
-ELEV "270" //Elevation in meters
+LAT "50.58" //Site Latitude negative for south hemisphere
+LONG "13.34" //Site Longitude 
+ELEV "380" //Elevation in meters
 
 Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
@@ -22,7 +22,7 @@ SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm)
 
 BULK_DENSITY ""  //BULK DENSITY (g/cm3) 
 
-SOIL_DEPTH "" //SOIL DEPTH (cm) 
+SOIL_DEPTH "150" //SOIL DEPTH (cm) 
 SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
 SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
 
