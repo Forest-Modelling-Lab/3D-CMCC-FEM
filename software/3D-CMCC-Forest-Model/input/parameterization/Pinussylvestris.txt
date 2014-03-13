@@ -44,8 +44,8 @@ RAGE_S	0.75            //Relative Age to give fAGE = 0.5
 NAGE_S	4               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	-5       //Minimum temperature for growth -2 for P. sylvestris from Landsberg et al., 2005, -5 for P. sylvestris, from Xenakis et al., 2008
-GROWTHTMAX	35      //Maximum temperature for growth for 25 P. sylvestris from Landsberg et al., 2005, 35 for P. sylvestris, from Xenakis et al., 2008
-GROWTHTOPT	15      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and for P. sylvestris, from Xenakis et al., 2008 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
+GROWTHTMAX	30      //Maximum temperature for growth for 25 P. sylvestris from Landsberg et al., 2005, 35 for P. sylvestris, from Xenakis et al., 2008
+GROWTHTOPT	18      //Optimum temperature for growth for P. sylvestris from Landsberg et al., 2005 and for P. sylvestris, from Xenakis et al., 2008 and from Lyr & Garbe, 1995, 17.66 for Brasschaat site see Horn and Shulze 2011
 GROWTHSTART	200       //average temperature for starting growth in °C 
 GROWTHEND	0       //average temperature for ending growth in °C 
 MINDAYLENGTH	0      //minimum day length for deciduous
