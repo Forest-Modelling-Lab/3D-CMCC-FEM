@@ -10,19 +10,19 @@ CO2CONC "380.0" //CO2 concentration
 
 
 
-INITIALLITTER "" //Initial Litter (estimated)
+INITIALLITTER "10.6" //Initial Litter Knohl et al., 2003
 
-MIN_FRAC_MAXASW "" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+MIN_FRAC_MAXASW "0.19" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
 
-CLAY_PERC ""	//PERCENTAGE OF CLAY (< 0,002 mm) 
-SILT_PERC ""	//PERCENTAGE OF SILT (0,002 - 0,05 mm) 
-SAND_PERC ""	//PERCENTAGE OF SAND (0,05 - 2 mm) 
+CLAY_PERC "40"	//PERCENTAGE OF CLAY (< 0,002 mm) Knohl et al., 2003
+SILT_PERC "56"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) Knohl et al., 2003
+SAND_PERC "4"	//PERCENTAGE OF SAND (0,05 - 2 mm) Knohl et al., 2003
 
-BULK_DENSITY ""  //BULK DENSITY (g/cm3) 
+BULK_DENSITY "1.13"  //BULK DENSITY (g/cm3) from soil calculator
 
-SOIL_DEPTH "150" //SOIL DEPTH (cm) 
+SOIL_DEPTH "60" //SOIL DEPTH (cm) Knohl et al., 2003
 SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
 SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
 
