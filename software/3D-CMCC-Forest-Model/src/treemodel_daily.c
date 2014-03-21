@@ -123,7 +123,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*
 		vpd =  met[month].d[day].vpd * 10.0; //Get_vpd (met, month);
 		 */
-		//used if vpd is in hPa to convert it into mbar
+
+		//if the VPD input data are in hPa to convert in mbar
+		//VPD USED MUST BE IN mbar
+		//used if vpd met data is in hPa to convert it into mbar
+		Log("converting hPa vpd met data into mbar vpd....\n");
 		vpd =  met[month].d[day].vpd ; //Get_vpd (met, month);
 
 		//average yearly met data

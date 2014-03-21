@@ -211,6 +211,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 		/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
 		//100 mm H20 m^-2 = 100 kg H20 m^-2
 		Log("available soil water %f mm\n", c->available_soil_water);
+		Log("moist ratio %f mm\n", c->soil_moist_ratio);
 
 		/* (DIM) volumetric water content */
 		vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
@@ -254,19 +255,27 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 			Log("fSW-F_PSI - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
 		}
 
-		//put for comparison with biome module
-		s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+		//FIXME CHECK IT
+		Log("ASW = %f\n", c->available_soil_water);
+		Log("MIN ASW = %f\n", c->max_asw * site->min_frac_maxasw);
 
-
-		if ( s->value[F_SW] > 1  )
+		if (c->available_soil_water <= c->max_asw * site->min_frac_maxasw)
 		{
-			Log("PROBLEM IN fSW !!!!!!!!!!\n");
-			s->value[F_SW] = 1;
-			Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
+			s->value[F_SW] = 0.5;
 		}
 		else
 		{
-			Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
+			s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+			if ( s->value[F_SW] > 1  )
+			{
+				Log("PROBLEM IN fSW !!!!!!!!!!\n");
+				s->value[F_SW] = 1;
+				Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
+			}
+			else
+			{
+				Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
+			}
 		}
 
 	}
@@ -290,7 +299,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	/*following Wei et al., 2014
 	s->value[PHYS_MOD]= (s->value[F_VPD] * s->value[F_SW]) * s->value[F_AGE];
 	Log("PhysMod = %f\n", s->value[PHYS_MOD]);
-	*/
+	 */
 
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
 	//Log("Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
@@ -531,19 +540,24 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	c->daily_f_sw = s->value[F_SW];
+	//FIXME CHECK IT
+	Log("ASW = %f\n", c->available_soil_water);
+	Log("MIN ASW = %f\n", c->max_asw * site->min_frac_maxasw);
+	Log("moist ratio = %f\n", c->soil_moist_ratio);
 
+
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	if ( s->value[F_SW] > 1  )
 	{
 		Log("PROBLEM IN fSW !!!!!!!!!!\n");
 		s->value[F_SW] = 1;
-		Log("fSW = %f\n", s->value[F_SW]);
+		Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
 	}
 	else
 	{
-		Log("fSW = %f\n", s->value[F_SW]);
+		Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
 	}
+
 
 
 	/*SOIL MATRIC POTENTIAL*/

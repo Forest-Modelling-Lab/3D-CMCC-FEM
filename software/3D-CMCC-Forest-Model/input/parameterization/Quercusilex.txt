@@ -31,7 +31,7 @@ TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 //VPD
 COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
-MAXCOND 0.021            //Maximum Canopy Conductance in m/sec (0.0025 (Hoff et al., 2002))
+MAXCOND 0.021            //Maximum Canopy Conductance in m/sec (0.0025 (Hoff et al., 2002))  Korner et al. 1979
 //AGE for timber
 MAXAGE  120             //Determines rate of "physiological decline" of forest //modified
 RAGE    0.75            //Relative Age to give fAGE = 0.5
@@ -53,8 +53,8 @@ MINDAYLENGTH  0      //minimum day length for decidu0us
 //define the soil water modifier response in function of needless of the species to the soil water content
 SWPOPEN -0.6 //For Q ilex Mollicone et al., 2002
 SWPCLOSE    -3.2 //For Q ilex Mollicone et al., 2002
-SWCONST 1           //Constant in Soil Water modifier vs Moist Ratio
-SWPOWER 5               //Power in Soil Water modifier vs Moist Ratio
+SWCONST 0.7           //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER 9               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM  0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
