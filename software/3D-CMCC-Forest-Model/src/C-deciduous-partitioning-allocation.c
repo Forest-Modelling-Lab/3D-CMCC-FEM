@@ -372,11 +372,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 				/*allocation*/
 				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
-				Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+				Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 				s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
 				Log("Total Stem Biomass (Wts) = %f\n", s->value[BIOMASS_TOT_STEM]);
 				s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
-				Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+				Log("Stem Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 				Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
 				s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];

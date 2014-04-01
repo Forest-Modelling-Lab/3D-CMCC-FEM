@@ -4,8 +4,8 @@ SITENAME "Collelongo" //Site Name
 //ALL VALUES COME FROM ETTORE DATA
 
 
-LAT "41.50" //Site Latitude negative for south hemisphere 
-LONG "13.51" //Site Longitude 
+LAT "41.94836" //Site Latitude negative for south hemisphere 
+LONG "13.58814" //Site Longitude 
 ELEV "1550" //Elevation in meters
 Y "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
 CO2CONC "387.0" //CO2 concentration (optional)
