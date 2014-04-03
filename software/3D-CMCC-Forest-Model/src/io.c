@@ -789,8 +789,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("* TMAX -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].tmax = previous_tmax;
-										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].tmax);
-										yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count].m[month].d[day-1].tmax;
+										Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day-1].tmax);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 										{
 											//the model gets the value of the year before
