@@ -412,7 +412,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmax) && *yos_count > 1)
 								{
-									//Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+									Log ("* T_MAX -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tmax = yos[*yos_count-2].m[month].tmax;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmax))
@@ -436,7 +436,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 								}
 								if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].tmin) && *yos_count > 1)
 								{
-									//Log ("* TMIN -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
+									Log ("* TMIN -NO DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									//Log("Getting previous years values !!\n");
 									yos[*yos_count-1].m[month].tmin = yos[*yos_count-2].m[month].tmin;
 									if ( IS_INVALID_VALUE (yos[*yos_count-2].m[month].tmin))
