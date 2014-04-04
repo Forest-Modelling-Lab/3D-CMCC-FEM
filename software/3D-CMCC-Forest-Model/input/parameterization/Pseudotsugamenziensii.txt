@@ -34,7 +34,7 @@ COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies S
 BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
 MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for ??? Seidl et al., 2012
 //AGE for timber
-MAXAGE  200             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+MAXAGE  150             //based on the fact that max average increment is 60-80 years in germany (bernetti)
 RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
 NAGE    4               //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
 //Age for shoots
@@ -59,9 +59,9 @@ SWPOWER 5               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM  0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
-S0CTEM  0.05             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
-R0CTEM  0.89            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
-F0CTEM  0.06            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM   for Needleleaf deciduous from Arora et al 2005
+S0CTEM  0.35             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM ffor P.menziesii at 28 years Nunes 2013 (and assuming .6 goes belove ground) 
+R0CTEM  0.6            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS assumed CHECK!!!
+F0CTEM  0.05            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM   for P.menziesii at 28 years Nunes 2013 (and assuming .6 goes belove ground) 
 RES0CTEM    0.22    //PARAMETER CONTROLLING ALLOCATION TO RESERVE (NOT USED)
 EPSILON_CTEM    5.49      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6 for Temperate/subpolar evergreen needleleaved Ludeke et al., 1994
 KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS for Temperate/subpolar evergreen needleleaved Ludeke et al., 1994
@@ -121,8 +121,8 @@ SAP_B   1.4544 //b value for Picea abies 1.684 deducted from p.c. Kostner and Cl
 SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
                             //0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    56              //  //Max Height in m for Picea abies Seidl et al., 2012
-DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
+HMAX    75              //  //Max Height in m for P. menziesii (Gellini Grossoni)
+DMAX    175              //Max Stem Diameter in cm for P. menziesii (Gellini Grossoni)
 
 //not used just for comparison
 HPOWER  0.034           //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
