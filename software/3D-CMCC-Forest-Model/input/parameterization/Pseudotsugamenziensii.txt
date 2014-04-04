@@ -136,7 +136,7 @@ STEMCONST_P 0.292    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; fr
 STEMPOWER_P 2.0087    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA 56    //for Picea abies Seidl et al., 2012
+CRA 75    //max average height, Gellini Grossoni Douglasia fir
 CRB 0.0658  //for Picea abies from Pommerening et al., 2011 ????
 CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
 
@@ -144,13 +144,13 @@ CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
 HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
 HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
 //DENSITY FUNCTION
-DENMAX  0.4             //Maximum density (trees/10000 m^2)
+DENMAX  0.25             //Bernetti suggests that very dense implants have 2500 plants per hectar Maximum density (trees/10000 m^2)
 DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST   4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
                                         //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
                                         //broaldleaved summergreen
-MINRAIN 100             //Minimum annual Rain Precipitation for Establishment
+MINRAIN 850             //Bernetti suggests average annual precipitation to be higher than 85M mm Minimum annual Rain Precipitation for Establishment
                                         //S. Sitch 2003
 //SEEDS PRODUCTION
 ADULT_AGE   20   //age at which consider tree as an adult tree
