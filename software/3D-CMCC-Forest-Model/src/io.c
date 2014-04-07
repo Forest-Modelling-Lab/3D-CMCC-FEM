@@ -75,7 +75,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		error,
 		columns[MET_COLUMNS];
 
-	char year[5],
+	char year[10],
 	*filename,
 	*token = NULL,
 	*token2 = NULL,
@@ -676,8 +676,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 								case RG_F: //Rg_f - solar_rad -daily average solar radiation
 									yos[*yos_count-1].m[month].d[day].solar_rad = convert_string_to_prec(token2, &error_flag);
-									//convert KJ to MJ
-									//yos[*yos_count-1].m[month].solar_rad = yos[*yos_count-1].m[month].solar_rad / 1000;
 									if ( error_flag )
 									{
 										printf("unable to convert value \"%s\" at column %d for %s day %d\n", token2, column+1, MonthName[month], day);
@@ -688,7 +686,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									}
 									else
 									{
-										//Log("solar_rad = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
 									}
 									if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
 									{
@@ -949,17 +946,17 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 										Log ("* PRECIPITATION -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day+1);
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].rain = previous_rain;
-										//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);
+										Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);
 										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].rain))
 										{
-											//Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
+											Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 
 											//the model gets the value of the year before
 											yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count-2].m[month].d[day].rain;
 
 											if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
 											{
-												//Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
+												Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
 												yos[*yos_count-1].m[month].d[day].rain = NO_DATA;
 											}
 
@@ -970,6 +967,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									{
 										previous_rain = yos[*yos_count-1].m[month].d[day].rain;
 									}
+
 									/*
 								   else
 								   {
@@ -980,12 +978,13 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].rain > settings->maxprecip)
 									{
-										//Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, MonthName[month] );
 									}
 									//Log("%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
 									break;
 
 								case SWC: //Soil Water Content (%)
+
 									yos[*yos_count-1].m[month].d[day].swc = convert_string_to_prec(token2, &error_flag);
 									if ( error_flag )
 									{
@@ -1150,7 +1149,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 				}
 				if (day > giorninelmese[month])
 				{
-					Log("day exceeds daysinmonth error!\n");
+					Log("day exceeds 'daysinmonth' error!\n");
 				}
 			}
 			else

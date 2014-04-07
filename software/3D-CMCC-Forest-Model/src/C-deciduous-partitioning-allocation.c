@@ -260,8 +260,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			if (s->value[NPP] > 0.0)
 			{
 				Log("Using reserve and npp\n");
+				/*
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);;
+				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
+				*/
+				s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot + s->value[NPP];
 				s->value[DEL_RESERVE] = - frac_to_foliage_fineroot;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
@@ -274,8 +277,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[BIOMASS_RESERVE] > 0)
 				{
 					Log("Using ONLY reserve\n");
+					/*
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
+					*/
+					s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot;
 					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
@@ -286,8 +292,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				else
 				{
 					Log("No reserve no NPP\n");
+					/*
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
 					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
+					*/
+					s->value[DEL_FOLIAGE] = 0;
+					s->value[DEL_ROOTS_FINE_CTEM] = 0;
+
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
 					s->value[DEL_TOT_STEM] = 0;

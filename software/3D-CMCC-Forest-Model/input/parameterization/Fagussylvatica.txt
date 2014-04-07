@@ -72,7 +72,7 @@ FRUIT_PERC  0 //fraction of NPP allocated for reproduction (0 for broadleaf)
 CONES_LIFE_SPAN 0 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF	1.4	//allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002
+FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
 STEM_LEAF	1	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
 COARSE_ROOT_STEM	0.36	//allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
 LIVE_TOTAL_WOOD	0.15	//new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%)
@@ -89,7 +89,7 @@ CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
-BUD_BURST	15					//days of bud burst at the beginning of growing season (only for deciduous)
+BUD_BURST	10					//days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall from Pietsch et al., 2005
 LEAF_LIFE_SPAN  1     //Leaf life span
