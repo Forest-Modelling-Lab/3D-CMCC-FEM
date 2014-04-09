@@ -1,0 +1,168 @@
+//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL	3   	//4 = very shade intolerant
+		    	//3 = shade intolerant
+		    	//2 = shade tolerant
+		   	//1 = very shade tolerant
+PHENOLOGY	0.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA	0.055		//   // Canopy quantum efficiency (molC/molPAR) 0.055 Vitale et al., 2012, 0.05 from Williams 1996 
+EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
+//Y	0.48 	// Assimilate use efficiency-Respiration rate-GPP/NPP
+			// EPSILONgCMJ	0.1782     // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
+K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996 
+			//0.65      //Extinction coefficient for absorption of PAR by canopy 
+ALBEDO	0.2
+
+LAIGCX	8              //LAI for maximum canopy conductance
+LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
+MAXINTCPTN	0.33    //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
+
+//SPECIFIC LEAF AREA 
+SLA	109.8             //Specific Leaf Area cm^2/gC sunlit leaves for Fagus s.	480 from Pietsch 2005,  78.18  Bartelink, 1998	109.8	from ettore		
+SLA_RATIO	2.3     //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
+
+//FRACTION BRANCH-BARK
+FRACBB0	0.40            //Branch and Bark fraction at age 0
+FRACBB1	0.125            //Branch and Bark fraction for mature stands (from Damesin et al., 2003)
+TBB	20              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+//MASS DENSITY
+RHOMIN	0.64             //Minimum Basic Density for young Trees t/m^3 0.72 Bouriaud et al., 2004, 0.64 ettore
+RHOMAX	0.64             //Maximum Basic Density for young Trees  0.79 Bouriaud et al., 2004, 0.64 ettore
+TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
+
+COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+BLCOND	0.02            //Canopy Boundary Layer conductance see 0.2 for stomatal Pietsch et al., 2005
+MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 0.2 from ettore 0.02 Breuer et al, 2003, Kelliher et al., 1995
+//AGE for timber
+MAXAGE	150             //Determines rate of "physiological decline" of forest //modified from ettore
+RAGE	0.75            //Relative Age to give fAGE = 0.5
+NAGE	10               //Power of relative Age in function for Age
+//Age for shoots
+MAXAGE_S	200     //Determines rate of "physiological decline" of forest
+RAGE_S	0.85            //Relative Age to give fAGE = 0.5
+NAGE_S	3               //Power of relative Age in function for Age
+//TEMPERATURE
+GROWTHTMIN	0       //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996 
+GROWTHTMAX	35      //Maximum temperature for growth 40 from Williams 1996 
+GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
+GROWTHSTART	120       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C ettore with t base = 5°C
+						//1400 through satellite images (1500 from Hickler et al 2012)
+GROWTHEND	5       //average temperature for ending growth in °C
+MINDAYLENGTH	11.30      //minimum day length for fagus from ettore, 12 through satellite images
+
+//SOIL WATER
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN	-0.6 //for Fagus sylvatica Mollicone et al., 2002
+SWPCLOSE	-2.3 //For Fagus sylvatica Mollicone et al., 2002
+SWCONST	1	        //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER	5               //Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
+OMEGA_CTEM	0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM	0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM	0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM	0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+RES0CTEM	0.22	//PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+EPSILON_CTEM	40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
+KAPPA	1.6             //ALLOCATION PARAMETER DIMENSIONLESS
+MIN_R0CTEM	0.1	//MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM	0.55	//MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION	30	//years from coppicing to consider tree as a timber
+
+FRUIT_PERC  0 //fraction of NPP allocated for reproduction (0 for broadleaf)
+CONES_LIFE_SPAN 0 //Life span for cones (yr)
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
+STEM_LEAF	1	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
+COARSE_ROOT_STEM	0.36	//allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
+LIVE_TOTAL_WOOD	0.15	//new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%)
+						//20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+
+
+//BIOME C:N RATIOS
+CN_LEAVES   18.6  //CN of leaves (kgC/kgN) 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli
+CN_LITTER   38  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
+CN_FINE_ROOTS   45  // CN of fine roots (kgC/kgN) 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
+CN_LIVE_WOODS   375.375  //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002 , 375 from Campioli et al., 2013
+CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
+
+
+//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
+//LITTERFALL
+BUD_BURST	10					//days of bud burst at the beginning of growing season (only for deciduous)
+//FOLLOWING BIOME-BGC
+LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall from Pietsch et al., 2005
+LEAF_LIFE_SPAN  1     //Leaf life span
+
+//TURNOVER
+LEAVES_FINERTTOVER	1       //Average yearly fine root turnover rate Rasse et al 2001
+COARSERTTOVER	0.02	//Average yearly coarse root turnover rate Rasse et al 2001, 0.05 Bartelink 1998, 0.02 Kurz et al., 1996
+SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate , 0.01 Bartelink 1998 
+BRANCHTTOVER	0.03	//Average yearly branch turnover rate 0.05 Bartelink 1998 
+LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate 
+
+
+
+//MORTALITY
+WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER	2       //Power in self-thinning rule
+MF	0               //Fraction mean single tree foliage biomass lost per dead tree
+MR	0.2             //Fraction mean single tree root biomass lost per dead tree
+MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
+//ALLOMETRIC RELATIONSHIPS
+DBHDCMAX	-9999    //Low Density //CUURENTLY NOT USED
+DBHDCMIN	0.14    //High Density from ettore
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A	0.674         //a value from Kostner for 
+SAP_B	1.992         //b value from Kostner for 
+SAP_LEAF	2100          //leaf area/sapwood max ratio in pipe model  185 from Williams 1996, 3410 Bartelink 1998 , 2100 from Kostner, 3310 from ettore
+SAP_WRES	0.11           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
+HMAX	48              //35  //Max Height in m  32.9 from Williams 1996 
+DMAX	100              //Max Stem Diameter in cm 
+HPOWER	0.0353           //Slope of Asymptotic Height 
+RPOWER	0.152           //Slope of Asymptotic Crown-Radius 
+b_RPOWER	0			//NOT FOUND
+CHPOWER	0.664           //Slope of Asymptotic Crown-Height 
+b_CHPOWER	0		 	//NOT FOUND
+
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P 0.2837   //from ettore
+STEMPOWER_P 2.134   //from ettore
+
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
+CRA	34.597
+CRB	0.038
+CRC	1.104
+//CROWDING COMPETITION FUNCTION
+HDMAX	1.71             //Height to Base diameter ratio MAX  (Portoghesi)
+HDMIN	0.2             //Height to Base diameter ratio MIN  (Portoghesi)
+//DENSITY FUNCTION
+DENMAX	0.1             //Maximum density (trees/10000 m^2)
+DENMIN	-9999           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
+//ESTABLISHMENT
+MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                                        //broaldleaved summergreen
+MINRAIN	100             //Minimum annual Rain Precipitation for Establishment
+                                        //S. Sitch 2003
+//SEEDS PRODUCTION
+ADULT_AGE	5	//age at which consider tree as an adult tree
+MAXSEED	20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
+MASTSEED	5       //ricorrenza anni di pasciona (da TREEMIG) 
+WEIGHTSEED	7       //peso frutto in g FOR Quercus sp (Bernetti) 3.5 from Williams 1996 
+SEXAGE	30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY	0.70    //Geminability (Lischke H. & Loffler T. J.) 0.286 from Williams 1996 
+MINTEMP	20              //Minimum temperature for germination in °C
+ESTMAX	0.24            //Potential Establishment rate in the absence of competition
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT	0.05    //Fraction of NPP to Fruit Production
+
+
+//MANAGMENT
+ROTATION	100     //Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG	80      //Minimum age for Managment (Q. cerris)
+MINDBHMANAG	27      //Minimum DBH for Managment
+AV_SHOOT	10      //average number of shoot after cut

@@ -185,6 +185,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
 		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
+		Annual_Log("Annual Wf = annual water-fluxes (mm/year)\n");
 		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
 		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
 	}
@@ -258,7 +259,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%2s \t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \n\n",
-					"YEAR", "HC(0)", "GPP (tot)", "AR (tot)", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Cw", "PEAK_LAI",
+					"YEAR", "HC(0)", "GPP (tot)", "AR (tot)", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE(tot)", "DELTA-Wres", "Wres");
 		}
 		Annual_Log ("%d \t%2d \t%10.2f \t%10.2f \t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \n",
@@ -312,7 +313,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Annual_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
 					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW"
-					"Cw", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
+					"Wf", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Wres(1)", "Wres(0)");
 		}
 		Annual_Log ("%d \t%4d \t%4d \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
@@ -386,7 +387,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
 					"YEAR", "HC(2)", "HC(1)", "HC(0)", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)",
-					"CE(2)", "CE(1)", "CE(0)", 	"CE(tot)", "ASW", "Cw",  "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)",
+					"CE(2)", "CE(1)", "CE(0)", 	"CE(tot)", "ASW", "Wf",  "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)",
 					"CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
 					"DEAD TREE(0)", "DEAD TREE(tot)", "Wres(2)", "Wres(1)", "Wres(0)");
 		}
