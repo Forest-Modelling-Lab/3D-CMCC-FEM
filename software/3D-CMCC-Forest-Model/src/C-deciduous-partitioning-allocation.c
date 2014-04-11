@@ -1602,6 +1602,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	c->annual_ws[i] = s->value[BIOMASS_STEM];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
 	c->annual_wres[i] = s->value[BIOMASS_RESERVE];
+	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE];
+	c->annual_wbb[i]= s->value[BIOMASS_BRANCH];
+	c->annual_wfr[i]= s->value[BIOMASS_ROOTS_FINE];
+	c->annual_wcr[i]= s->value[BIOMASS_ROOTS_COARSE];
+
 	Log("******************************\n");
 }
 
