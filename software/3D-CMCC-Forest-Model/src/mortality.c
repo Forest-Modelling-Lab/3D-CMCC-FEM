@@ -3,6 +3,8 @@
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 #include <math.h>
 #include "types.h"
 #include "constants.h"
@@ -45,7 +47,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS] = c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE]
 		                                                                                                                              / (double)c->heights[height].ages[age].species[species].counter[N_TREE];
 		c->heights[height].ages[age].species[species].value[AV_BB_BIOMASS] = c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH]
-		                                                                                                                              / (double)c->heights[height].ages[age].species[species].counter[N_TREE];
+		                                                                                                                         / (double)c->heights[height].ages[age].species[species].counter[N_TREE];
 		//Log(" Av stem mass = %f tDM/tree\n", s->value[AV_STEM_MASS] );
 
 		//Log("Tot Root Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]+ c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE] );
@@ -172,7 +174,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 					c->layer_cover_subdominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
 					//Log("layer cover dopo while = %f\n", c->layer_cover_subdominated);
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-																						   * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
+					                                                                                                                               * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
 				}
 			}
 			break;
@@ -180,8 +182,30 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 		if(c->heights[height].ages[age].species[species].counter[N_TREE] == 0)
 		{
+			//delete classes due to mortality
 			Log("All trees of species %s dbh %g height %g age %d are died!!!!\n",
 					c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].value, c->heights[height].ages[age].value);
+
+			Log("reducing counter for died classes...........\n");
+			Log("heights_count = %d, ages_count = %d\, species_count = %d \n", c->heights_count, c->heights[height].ages_count, c->heights[height].ages[age].species_count);
+			//free (c->heights[height].ages[age].species[species].name);
+
+			//todo it!!!
+			//fixme in this case to BE CANCELLED is the last PROCESSED class BUT NOT NECESSARILY THE CLASS REALLY DIED
+			if (c->heights[height].ages[age].species_count > 1)
+				Log("Reducing species_count..\n");
+				c->heights[height].ages[age].species_count --;
+			//free (c->heights[height].ages[age].species);
+			if(c->heights[height].ages_count > 1)
+				Log("Reducing ages_count..\n");
+				c->heights[height].ages_count --;
+			//free (c->heights[height].ages);
+
+			if (c->heights_count > 1)
+				Log("Reducing heights_count..\n");
+				c->heights_count --;
+
+
 		}
 
 
@@ -225,7 +249,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 		//compute average biomass
 		c->heights[height].ages[age].species[species].value[AV_STEM_MASS] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM]
-																			/ (double)c->heights[height].ages[age].species[species].counter[N_STUMP];
+		                                                                                                                        / (double)c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//Log(" Av stump mass = %f tDM/tree\n", s->value[AV_STEM_MASS] );
 
 

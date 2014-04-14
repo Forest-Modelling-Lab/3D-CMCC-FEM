@@ -738,6 +738,10 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Site name = %s\n", site->sitename);
 		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+
+
+		Daily_Log ("HC\n");
+
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
 		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
@@ -773,16 +777,18 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%4s \t%8s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n",
-					"DOY", "YEAR", "MONTH", "DAY", "GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
+			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n",
+					"DOY", "YEAR", "MONTH", "DAY", "HC","GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			doy = 1;
 		}
-		Daily_Log ("%d \t%8d \t%8d \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+		Daily_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 				"\t%8.6f \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.9f \t%8.9f\n",
-				doy++, yos[years].year, month+1, day+1, c->daily_gpp[0],
+				doy++, yos[years].year, month+1, day+1,
+				c->height_class_in_layer_dominant_counter,
+				c->daily_gpp[0],
 				c->daily_aut_resp[0],
 				c->daily_aut_resp_tDM[0],
 				c->daily_c_flux[0],
@@ -825,12 +831,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
+			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
+					"YEAR", "MONTH", "DAY", "HC", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 			}
-		Daily_Log ("%d \t%4d \t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
+		Daily_Log ("%d \t%4d \t%4d /t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
 				yos[years].year, month+1, day+1,
+				c->height_class_in_layer_dominant_counter,
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp,
 				c->daily_c_flux[1], c->daily_c_flux[0], c->daily_tot_c_flux,
