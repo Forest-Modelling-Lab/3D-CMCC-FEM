@@ -13,7 +13,7 @@
 #include "constants.h"
 
 //fixme  maybe it can be moved to soil_model.c
-extern void Get_soil_water_balance (CELL *c,  const MET_DATA *const met, int month, int day)
+extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
 	Log("*********GET %c SOIL WATER BALACE************\n", settings->time);

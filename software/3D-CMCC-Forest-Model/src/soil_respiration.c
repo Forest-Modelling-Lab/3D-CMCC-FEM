@@ -15,4 +15,5 @@
 void Get_soil_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day)
 {
 	//c->soil_respiration
+
 }

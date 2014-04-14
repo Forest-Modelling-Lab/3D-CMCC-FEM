@@ -518,13 +518,13 @@ void Get_forest_structure (CELL *const c)
 
 		if (c->annual_layer_number == 1)
 		{
-			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
+			Log("\nLayer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 
 			c->daily_cc[0] = c->monthly_cc[0] = c->annual_cc[0] = c->layer_cover_dominant;
 		}
 		if (c->annual_layer_number == 2)
 		{
-			Log("Layer cover in layer 1 = %f %%\n", c->layer_cover_dominant * 100);
+			Log("\nLayer cover in layer 1 = %f %%\n", c->layer_cover_dominant * 100);
 			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 
 			c->daily_cc[1] = c->monthly_cc[1] = c->annual_cc[1] = c->layer_cover_dominant;
@@ -533,7 +533,7 @@ void Get_forest_structure (CELL *const c)
 		}
 		if (c->annual_layer_number > 2)
 		{
-			Log("Layer cover in layer 2 = %f %%\n", c->layer_cover_dominant * 100);
+			Log("\nLayer cover in layer 2 = %f %%\n", c->layer_cover_dominant * 100);
 			Log("Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
 			Log("Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 

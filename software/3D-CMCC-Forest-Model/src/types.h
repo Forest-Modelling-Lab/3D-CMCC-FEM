@@ -625,6 +625,7 @@ enum {
 	AV_FINE_ROOT_MASS,
 	AV_COARSE_ROOT_MASS,
 	AV_RESERVE_BIOMASS,
+	AV_BB_BIOMASS,
 
 	BASAL_AREA,                     //Basal Area (m^2/area tree)
 	STAND_BASAL_AREA,
@@ -788,6 +789,7 @@ typedef struct {
 //all variables related to the soil site
 typedef struct {
 	double variabile;
+	//double soil_respiration;
  	// ROTHC SPECIFIC VARIABLES
 	double decomposablePlantMaterial;
 	double resistantPlantMaterial;
@@ -913,6 +915,8 @@ typedef struct {
 
 	double gapcover[3];
 
+	double soil_respiration;
+
 
 
 
@@ -924,6 +928,8 @@ typedef struct {
 	double daily_c_transp[3], daily_tot_c_transp;
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+
+	double nee;
 
 
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
@@ -964,8 +970,6 @@ typedef struct {
 
 	double thermic_sum;
 
-
-	double soil_respiration;
 	double aut_respiration; //autotrophic respiration
 	double het_respiration; //heterotrophic respiration
 	double ter;  //total ecosystem respiration

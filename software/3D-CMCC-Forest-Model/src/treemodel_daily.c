@@ -191,54 +191,56 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				/*loop on each species*/
 				for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
 				{
-					if (day == 0 && month == JANUARY)
+					if(m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE] > 0)
 					{
-						Get_biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
-					}
-					Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
-
-					Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
-
-					Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
-					/*Loop for adult trees*/
-					if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
-					{
-
 						if (day == 0 && month == JANUARY)
 						{
-							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
-
-							if (!years)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
-							}
+							Get_biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 						}
+						Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
-						/*modifiers*/
-						Get_daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-								met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
-								m->cells[cell].heights[height].ages[age].species[species].management);
+						Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
 
-						//deciduous
-						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
+						/*Loop for adult trees*/
+						if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
 						{
+
 							if (day == 0 && month == JANUARY)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
-							}
-							if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0.0)
-							{
-								Log("ERROR!!!!! LAI < 0!!!!!\n");
-							}
-							//vegetative period for deciduous
-							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-							{
-								Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
-								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
+								Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 
-								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
-								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-/*
+								if (!years)
+								{
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
+								}
+							}
+
+							/*modifiers*/
+							Get_daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
+									met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
+									m->cells[cell].heights[height].ages[age].species[species].management);
+
+							//deciduous
+							if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+							{
+								if (day == 0 && month == JANUARY)
+								{
+									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
+								}
+								if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0.0)
+								{
+									Log("ERROR!!!!! LAI < 0!!!!!\n");
+								}
+								//vegetative period for deciduous
+								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+								{
+									Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
+									Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
+
+									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
+									Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
+									/*
 								if (settings->spatial == 'u')
 								{
 									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
@@ -248,20 +250,172 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Log("ATTENTION LAI <= 0 !!!!!!!!!!\n");
 									}
 								}
-*
+									 *
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
 										&& m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
 								{
 									Log("ERROR VEG_UNVEG = 1 BUT LAI = 0!!!!!\n");
 								}
-*/
+									 */
+									Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
+
+									/*canopy evapo-transpiration block*/
+									Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+									Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+
+									/*check for symmetric water competition*/
+									/*if symmetric competition for water*/
+									Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
+									if (settings->symmetric_water_competition == 'y')
+									{
+										if( height == 0)
+										{
+											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+											Get_soil_water_balance (&m->cells[cell], met, month, day);
+										}
+									}
+									/*asymmetric water competition*/
+									else
+									{
+										/*removing at each loop an amount of water transpired by each class*/
+										if( height == 0)
+										{
+											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										}
+										Get_soil_water_balance (&m->cells[cell], met, month, day);
+									}
+									if (height == 0)
+									{
+										Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
+									}
+
+									Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+									Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
+									Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
+									Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+									Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
+									Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
+									D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+
+									Log("--------------------------------------------------------------------------\n\n\n");
+
+									if (height == 0)
+									{
+										Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
+										Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
+										Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
+										Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
+									}
+									if (settings->spatial == 'u')
+									{
+										Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									}
+								}
+								/*outside growing season*/
+								else
+								{
+
+									if (settings->spatial == 'u')
+									{
+										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
+										Log("day %d month %d MODEL_LAI = %f \n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									}
+									else
+									{
+										Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
+									}
+
+									/*canopy evapo-transpiration block*/
+									Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+									Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+									/*check for symmetric water competition*/
+									/*if symmetric competition for water*/
+									Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
+									if (settings->symmetric_water_competition == 'y')
+									{
+										if( height == 0)
+										{
+											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+											Get_soil_water_balance (&m->cells[cell], met, month, day);
+										}
+									}
+									/*asymmetric water competition*/
+									else
+									{
+										/*removing at each loop an amount of water transpired by each class*/
+										if( height == 0)
+										{
+											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
+													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										}
+										Get_soil_water_balance (&m->cells[cell], met, month, day);
+									}
+
+									if (height == 0)
+									{
+										Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
+									}
+
+									Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+									Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
+									Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
+									Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+									Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
+									Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
+									D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
+									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+
+
+									Log("Available Soil Water at day %d month %d year of simulation %d = %f mm\n",day, month+1, years, m->cells[cell].available_soil_water);
+
+									Log("*****************************************************************************\n");
+									Log("*****************************************************************************\n");
+								}
+							}
+							//evergreen
+							else
+							{
+								//Peak LAI is also used in spatial version to drive carbon allocation
+								if (day == 0 && month == JANUARY)
+								{
+									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
+								}
+
+
+								Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
+
+								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
+
+								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
+								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
+								/*
+							if (settings->spatial == 'u')
+							{
+								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
+							}
+								 */
 								Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 								/*canopy evapo-transpiration block*/
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-
 								/*check for symmetric water competition*/
 								/*if symmetric competition for water*/
 								Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
@@ -289,6 +443,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									}
 									Get_soil_water_balance (&m->cells[cell], met, month, day);
 								}
+
 								if (height == 0)
 								{
 									Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
@@ -301,216 +456,63 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 								Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-								D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+								//Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
+								E_Get_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
-								if (height == 0)
+								if (m->cells[cell].heights[height].z == 0)
 								{
 									Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
 									Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
 									Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
 									Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
 								}
-								if (settings->spatial == 'u')
+							}
+
+							/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
+
+							/*LITTERFALL COMPUTATION AT CELL LEVEL*/
+							if (met[month].d[day].n_days == 1)
+							{
+								m->cells[cell].monthly_tot_litterfall = 0;
+
+								if (met[month].d[day].n_days == 1 && month == 'JANUARY')
 								{
-									Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+									m->cells[cell].annual_tot_litterfall = 0;
 								}
 							}
-							/*outside growing season*/
-							else
+
+							m->cells[cell].daily_tot_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
+							Log("Daily Litterfall = %f\n", m->cells[cell].daily_tot_litterfall);
+							m->cells[cell].monthly_tot_litterfall += m->cells[cell].daily_tot_litterfall;
+							Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_tot_litterfall);
+							m->cells[cell].annual_tot_litterfall += m->cells[cell].daily_tot_litterfall;
+							Log("Annual Litterfall = %f\n", m->cells[cell].annual_tot_litterfall);
+
+
+							//to prevent jumps in dendrometric values it must be computed at the beginning of each month
+							if (day == 0)
 							{
-
-								if (settings->spatial == 'u')
-								{
-									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-									Log("day %d month %d MODEL_LAI = %f \n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-								}
-								else
-								{
-									Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
-								}
-
-								/*canopy evapo-transpiration block*/
-								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-								/*check for symmetric water competition*/
-								/*if symmetric competition for water*/
-								Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
-								if (settings->symmetric_water_competition == 'y')
-								{
-									if( height == 0)
-									{
-										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Get_soil_water_balance (&m->cells[cell], met, month, day);
-									}
-								}
-								/*asymmetric water competition*/
-								else
-								{
-									/*removing at each loop an amount of water transpired by each class*/
-									if( height == 0)
-									{
-										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-										Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-												m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									}
-									Get_soil_water_balance (&m->cells[cell], met, month, day);
-								}
-
-								if (height == 0)
-								{
-									Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
-								}
-
-								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
-								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
-								Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-								Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
-								Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-								D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-
-
-								Log("Available Soil Water at day %d month %d year of simulation %d = %f mm\n",day, month+1, years, m->cells[cell].available_soil_water);
-
-								Log("*****************************************************************************\n");
-								Log("*****************************************************************************\n");
+								Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
+								//DENDROMETRY
+								Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 							}
-						}
-						//evergreen
-						else
-						{
-							//Peak LAI is also used in spatial version to drive carbon allocation
-							if (day == 0 && month == JANUARY)
+							/*END OF YEAR*/
+
+							if (day == 30 && month == DECEMBER)
 							{
-								Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
-							}
+								Log("*****END OF YEAR******\n");
 
 
-							Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
+								/*FRUIT ALLOCATION*/
+								//Only for dominant layer
 
-							Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
+								//Log("Dominant Canopy Cover = %f\n", m->cells[cell].canopy_cover_dominant);
 
-							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
-							Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-/*
-							if (settings->spatial == 'u')
-							{
-								Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-							}
-*/
-							Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
-
-							/*canopy evapo-transpiration block*/
-							Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-							Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-							Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-							/*check for symmetric water competition*/
-							/*if symmetric competition for water*/
-							Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
-							if (settings->symmetric_water_competition == 'y')
-							{
-								if( height == 0)
-								{
-									/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Get_soil_water_balance (&m->cells[cell], met, month, day);
-								}
-							}
-							/*asymmetric water competition*/
-							else
-							{
-								/*removing at each loop an amount of water transpired by each class*/
-								if( height == 0)
-								{
-									/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-									Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-											m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-									Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								}
-								Get_soil_water_balance (&m->cells[cell], met, month, day);
-							}
-
-							if (height == 0)
-							{
-								Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
-							}
-
-							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-							Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
-							Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-							Get_growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
-							Get_autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-							Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
-							Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-							//Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
-							E_Get_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-							Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-
-
-							Log("--------------------------------------------------------------------------\n\n\n");
-
-							if (m->cells[cell].heights[height].z == 0)
-							{
-								Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
-								Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
-								Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
-								Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
-							}
-						}
-
-						/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
-
-						/*LITTERFALL COMPUTATION AT CELL LEVEL*/
-						if (met[month].d[day].n_days == 1)
-						{
-							m->cells[cell].monthly_tot_litterfall = 0;
-
-							if (met[month].d[day].n_days == 1 && month == 'JANUARY')
-							{
-								m->cells[cell].annual_tot_litterfall = 0;
-							}
-						}
-
-						m->cells[cell].daily_tot_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
-						Log("Daily Litterfall = %f\n", m->cells[cell].daily_tot_litterfall);
-						m->cells[cell].monthly_tot_litterfall += m->cells[cell].daily_tot_litterfall;
-						Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_tot_litterfall);
-						m->cells[cell].annual_tot_litterfall += m->cells[cell].daily_tot_litterfall;
-						Log("Annual Litterfall = %f\n", m->cells[cell].annual_tot_litterfall);
-
-
-						//to prevent jumps in dendrometric values it must be computed at the beginning of each month
-						if (day == 0)
-						{
-							Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-							//DENDROMETRY
-							Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
-						}
-						/*END OF YEAR*/
-
-						if (day == 30 && month == DECEMBER)
-						{
-							Log("*****END OF YEAR******\n");
-
-
-							/*FRUIT ALLOCATION*/
-							//Only for dominant layer
-
-							//Log("Dominant Canopy Cover = %f\n", m->cells[cell].canopy_cover_dominant);
-
-							/*
+								/*
                            if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
                            {
 						   Get_Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
@@ -534,77 +536,77 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                             Log("NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
                             }
                             }
-							 */
+								 */
 
 
-							Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
+								Get_total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							Get_WUE (&m->cells[cell].heights[height].ages[age].species[species]);
+								Get_WUE (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							//Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
+								//Get_average_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
+								Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 
-							/*MORTALITY*/
-							//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-							Log("Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
-							//Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
+								/*MORTALITY*/
+								//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
+								Log("Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+								//Get_Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 
-							//todo
-							//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
-							//RECEIVES MORE LIGHT AND THEN GROWTH BETTER SO IT IS A NEW HEIGHT CLASS
+								//todo
+								//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
+								//RECEIVES MORE LIGHT AND THEN GROWTH BETTER SO IT IS A NEW HEIGHT CLASS
 
 
-							/*Mortality based on tree Age(LPJ)*/
-							//Get_Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+								/*Mortality based on tree Age(LPJ)*/
+								//Get_Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
 
-							/*Mortality based on Growth efficiency(LPJ)*/
-							//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
-
-							/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
-							if(m->cells[cell].heights[height].z < m->cells[cell].top_layer)
-							{
-								Log("Get_Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 								/*Mortality based on Growth efficiency(LPJ)*/
 								//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
-							}
 
-							if ( m->cells[cell].heights[height].ages[age].species[species].management == C)
-							{
-								Get_stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
-							}
+								/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
+								if(m->cells[cell].heights[height].z < m->cells[cell].top_layer)
+								{
+									Log("Get_Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+									/*Mortality based on Growth efficiency(LPJ)*/
+									//Get_Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
+								}
 
-							//Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
+								if ( m->cells[cell].heights[height].ages[age].species[species].management == C)
+								{
+									Get_stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
+								}
 
-							/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
-							//DON'T DELETE IT!!!!
-							//currently not used
-							//Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
+								//Get_renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
-							//ABG and BGB
-							Get_AGB_BGB_biomass (&m->cells[cell], height, age, species);
+								/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
+								//DON'T DELETE IT!!!!
+								//currently not used
+								//Get_crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
 
-							//DENDROMETRY
-							//Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
+								//ABG and BGB
+								Get_AGB_BGB_biomass (&m->cells[cell], height, age, species);
 
-							//TURNOVER
-							//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
-							//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								//DENDROMETRY
+								//Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 
-							//ANNUAL BIOMASS INCREMENT
-							Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
+								//TURNOVER
+								//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
+								//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
-							Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
+								//ANNUAL BIOMASS INCREMENT
+								Get_biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
 
-							Get_annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
+								Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
 
-							Get_EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
+								Get_annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
 
-							//MANAGEMENT
-							//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
+								Get_EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
+
+								//MANAGEMENT
+								//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
 
 
-							/*
+								/*
                            if ( m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] != 0 && m->cells[cell].heights[height].z == m->cells[cell].top_layer )
                            {
 
@@ -719,72 +721,81 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
                                 //Saplings_counter -= 1;
                             }
-							 */
+								 */
+							}
 						}
-					}
-					/*FUNCTIONS FOR SAPLINGS*/
-					else
-					{
-
-						if(day == 30 && month == DECEMBER)
+						/*FUNCTIONS FOR SAPLINGS*/
+						else
 						{
-							Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
-							Log("SAPLINGS\n");
-							/*
+
+							if(day == 30 && month == DECEMBER)
+							{
+								Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+								Log("SAPLINGS\n");
+								/*
 	                           Saplings_counter += 1;
 	                           Log("-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
-							 */
-							Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
-							//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
+								 */
+								Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
+								//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
-							/*Saplings mortality based on light availability*/
-							Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
-							Log("Radiation for soil =  %f W/m^2\n", Light_for_establishment);
+								/*Saplings mortality based on light availability*/
+								Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
+								Log("Radiation for soil =  %f W/m^2\n", Light_for_establishment);
 
 
-							if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
-							{
-								if ( Light_for_establishment < settings->light_estab_very_tolerant)
+								if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
 								{
-									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-									Log("NO Light for Establishment\n");
+									if ( Light_for_establishment < settings->light_estab_very_tolerant)
+									{
+										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+										Log("NO Light for Establishment\n");
+									}
 								}
-							}
-							else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
-							{
-								if ( Light_for_establishment < settings->light_estab_tolerant)
+								else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
 								{
-									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-									Log("NO Light for Establishment\n");
+									if ( Light_for_establishment < settings->light_estab_tolerant)
+									{
+										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+										Log("NO Light for Establishment\n");
+									}
 								}
-							}
-							else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
-							{
-								if ( Light_for_establishment < settings->light_estab_intermediate)
+								else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
 								{
-									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-									Log("NO Light for Establishment\n");
+									if ( Light_for_establishment < settings->light_estab_intermediate)
+									{
+										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+										Log("NO Light for Establishment\n");
+									}
 								}
-							}
-							else
-							{
-								if ( Light_for_establishment < settings->light_estab_intolerant)
+								else
 								{
-									m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
-									Log("NO Light for Establishment\n");
+									if ( Light_for_establishment < settings->light_estab_intolerant)
+									{
+										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
+										Log("NO Light for Establishment\n");
+									}
 								}
-							}
-							/*
+								/*
 	                        if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 	                        {
 	                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
 	                        Saplings_counter -= 1;
 	                        }
-							 */
+								 */
 
-							Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
+							}
 						}
+					}
+					else
+					{
+						Log("\n\n**************************************************************\n"
+							"No trees for species %s s dbh %g height %g age %d are died!!!!\n"
+							"**************************************************************\n\n",
+					m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+					m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
 					}
 				}
 				Log("****************END OF SPECIES CLASS***************\n");
