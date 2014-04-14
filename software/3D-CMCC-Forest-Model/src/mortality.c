@@ -186,8 +186,8 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 			Log("All trees of species %s dbh %g height %g age %d are died!!!!\n",
 					c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].value, c->heights[height].ages[age].value);
 
-			Log("reducing counter for died classes...........\n");
-			Log("heights_count = %d, ages_count = %d\, species_count = %d \n", c->heights_count, c->heights[height].ages_count, c->heights[height].ages[age].species_count);
+			Log("reducing counter for died classes...........!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
+			Log("heights_count = %d, ages_count = %d, species_count = %d \n", c->heights_count, c->heights[height].ages_count, c->heights[height].ages[age].species_count);
 			//free (c->heights[height].ages[age].species[species].name);
 
 			//todo it!!!
@@ -200,7 +200,6 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 				Log("Reducing ages_count..\n");
 				c->heights[height].ages_count --;
 			//free (c->heights[height].ages);
-
 			if (c->heights_count > 1)
 				Log("Reducing heights_count..\n");
 				c->heights_count --;
