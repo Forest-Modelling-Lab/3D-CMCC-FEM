@@ -1,8 +1,8 @@
-SITENAME "Norunda - Sweden" //Site Name
+SITENAME "Castelporziano - Italy" //Site Name
 
-LAT "60.08649722" //Site Latitude negative for south hemisphere
-LONG "17.4795027" //Site Longitude 
-ELEV "45" //Elevation in meters
+LAT "41.7052493" //Site Latitude negative for south hemisphere
+LONG "12.3761058" //Site Longitude 
+ELEV "68.25" //Elevation in meters from ancillary data
 
 Y   "0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
@@ -12,23 +12,23 @@ CO2CONC "380.0" //CO2 concentration
 
 INITIALLITTER "0" //Initial Litter (estimated)
 
-MIN_FRAC_MAXASW "0.05" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
+MIN_FRAC_MAXASW "0.04838" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
 
-CLAY_PERC "4"   //PERCENTAGE OF CLAY (< 0,002 mm) from Lundin et al., 1999
-SILT_PERC "31"   //PERCENTAGE OF SILT (0,002 - 0,05 mm) from Lundin et al., 1999
-SAND_PERC "65"  //PERCENTAGE OF SAND (0,05 - 2 mm) from Lundin et al., 1999
+CLAY_PERC "4.95"   //PERCENTAGE OF CLAY (< 0,002 mm) from ancillary data
+SILT_PERC "4.23"   //PERCENTAGE OF SILT (0,002 - 0,05 mm) from ancillary data
+SAND_PERC "90.82"  //PERCENTAGE OF SAND (0,05 - 2 mm) from ancillary data
 
-BULK_DENSITY "1.55"  //BULK DENSITY (g/cm3) from asoil calculator
+BULK_DENSITY "1.215"  //BULK DENSITY (g/cm3) from ancillary data
 
-SOIL_DEPTH "100" //SOIL DEPTH (cm) from ????
+SOIL_DEPTH "100" //SOIL DEPTH (cm) from ancillary data, 50 from Valentini et al., 
 SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
 SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
 
 
 //SITE NUTRITION
-FR "0.7" //Fertility rating (estimated)
+FR "0.8" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
