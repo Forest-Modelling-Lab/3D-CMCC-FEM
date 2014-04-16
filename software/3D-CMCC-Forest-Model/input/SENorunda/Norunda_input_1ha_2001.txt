@@ -1,0 +1,3 @@
+x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+0,0,F,92,Piceaabies,T,506,0,16.28,20.7,0,0,0,0,0,0,0
+0,0,F,98,Pinussylvestris,T,304,0,31.96,24.9,0,0,0,0,0,0,0

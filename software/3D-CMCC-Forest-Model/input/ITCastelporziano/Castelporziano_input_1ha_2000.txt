@@ -1,2 +1,2 @@
 x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,54,Quercusilex,T,458,0,16,12.5,0,0,0,0,0,0,0
+0,0,F,54,QuercusilexCastel,T,458,0,16,12.5,0,0,0,0,0,0,0
