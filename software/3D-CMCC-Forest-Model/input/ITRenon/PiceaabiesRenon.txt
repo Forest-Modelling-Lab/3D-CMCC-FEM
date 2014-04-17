@@ -1,0 +1,171 @@
+//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL   3       //4 = very shade intolerant
+                //3 = shade intolerant
+                //2 = shade tolerant
+            //1 = very shade tolerant
+PHENOLOGY   1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA   0.065       //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies Seidl et al., 2005, 
+EPSILONgCMJ 1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  
+K   0.51        //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
+
+ALBEDO  0.095 //averaged for P. sylvestris from Breuer et al., 2003
+
+//LEAF AREA INDEX
+LAIGCX  3.33               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
+LAIMAXINTCPTN   5       //LAI for maximum rainfall interception for P. sylvestris from Landsberg et al., 2005
+MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
+
+//SPECIFIC LEAF AREA 
+SLA 42.5             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies 94.0 from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
+SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA  for Picea abies from Mollicone et al., 2002, 1.8  from Pietsch et al., 2005  
+
+//FRACTION BRANCH-BARK
+FRACBB0 0.30            //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
+FRACBB1 0.1            //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
+TBB 10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
+//MASS DENSITY
+RHOMIN  0.43             //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
+RHOMAX  0.43             //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
+TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
+
+//VPD
+COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies Seidl et al., 2012
+BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
+MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for ??? Seidl et al., 2012
+//AGE for timber
+MAXAGE  200             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
+RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
+NAGE    4               //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
+//Age for shoots
+MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest 
+RAGE_S  0.75            //Relative Age to give fAGE = 0.5
+NAGE_S  4               //Power of relative Age in function for Age
+//TEMPERATURE
+GROWTHTMIN  0       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl 
+GROWTHTMAX  30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
+GROWTHTOPT  15      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
+GROWTHSTART 200       //average temperature for starting growth in °C 
+GROWTHEND   0       //average temperature for ending growth in °C 
+MINDAYLENGTH    0      //minimum day length for deciduous
+
+//SOIL WATER
+//modified 13 feb 2012
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN -0.5 //in KPa for P. sylvestris from Pietsch et al 2005
+SWPCLOSE    -2.2 //in KPa  for P. sylvestris from Pietsch et al 2005
+SWCONST 1           //Costant in Soil Water modifier vs Moist Ratio
+SWPOWER 5               //Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
+OMEGA_CTEM  0.5     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005
+S0CTEM  0.05             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM for Needleleaf deciduous from Arora et al 2005
+R0CTEM  0.89            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS for Needleleaf deciduous from Arora et al 2005 
+F0CTEM  0.06            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE/MINIMUM RATIO TO C TO STEM   for Needleleaf deciduous from Arora et al 2005
+RES0CTEM    0.22    //PARAMETER CONTROLLING ALLOCATION TO RESERVE (NOT USED)
+EPSILON_CTEM    5.49      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6 for Temperate/subpolar evergreen needleleaved Ludeke et al., 1994
+KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS for Temperate/subpolar evergreen needleleaved Ludeke et al., 1994
+
+
+MIN_R0CTEM  0.1 //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM  0.55    //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION    30  //years from coppicing to consider tree as a timber
+
+FRUIT_PERC  0.20 //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005
+CONES_LIFE_SPAN 3 //Life span for cones (yrs)
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF  1.4 //allocation new fine root C:new leaf (ratio) for Picea abies from Mollicone et al. 2002
+STEM_LEAF   2.2  //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999
+COARSE_ROOT_STEM    0.29    //allocation new coarse root C:new stem (ratio) for Picea abies from Mollicone et al. 2002, varying from 0.159 to 0.230 see White et al., 1999
+LIVE_TOTAL_WOOD 0.071    //new live C:new total wood (ratio) for Picea abies from Mollicone et al. 2002
+
+//BIOME C:N RATIOS
+CN_LEAVES   42.73  //CN of leaves (kgC/kgN) for Picea abies from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
+CN_LITTER   58.2  //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
+CN_FINE_ROOTS   36.44  // CN of fine roots (kgC/kgN) for Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999
+CN_LIVE_WOODS   36.44  //CN of live woods (kgC/kgN) for Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
+CN_DEAD_WOODS   535  //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
+
+
+//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
+//LITTERFALL
+BUD_BURST   0                   //days of bud burst at the beginning of growing season (only for deciduous)
+//FOLLOWING BIOME-BGC, CTEM
+LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
+LEAF_LIFE_SPAN  0.26     //Leaf life span  for Picea abies from Mollicone et al , 0.345 from White et al., 2000
+
+//TURNOVER
+LEAVES_FINERTTOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
+                            //varying from 0.182 to 0.400 yr-1 (for Picea abies see White et al., 1999)
+COARSERTTOVER   0.02    //deducted from Yuste et al., 2005
+SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
+BRANCHTTOVER    0.01    //Average yearly branch turnover rate
+LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
+
+
+
+//MORTALITY
+WSX1000 550             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER   2       //Power in self-thinning rule
+MF  0.64               //Fraction mean single tree foliage biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+MR  0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+MS  0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
+//ALLOMETRIC RELATIONSHIPS
+DBHDCMAX    0.18    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMIN    0.16    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A   3.119 //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
+SAP_B   1.4544 //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
+SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
+SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+                            //0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
+HMAX    56              //  //Max Height in m for Picea abies Seidl et al., 2012
+DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
+
+//not used just for comparison
+HPOWER  0.034           //Slope of Asymptotic Height for P. sylvestris from Ametzegui et al., 2012
+RPOWER  0.214           //Slope of Asymptotic Crown-Radius from Sortie for P. sylvestris from Ametzegui et al., 2012
+b_RPOWER  0.708             //for P. sylvestris from Ametzegui et al., 2012
+CHPOWER 1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sylvestris from Ametzegui et al., 2012
+b_CHPOWER 0.796             //for P. sylvestris from Ametzegui et al., 2012
+
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P 0.292    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
+STEMPOWER_P 2.0087    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
+CRA 56    //for Picea abies Seidl et al., 2012
+CRB 0.0658  //for Picea abies from Pommerening et al., 2011 ????
+CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
+
+//CROWDING COMPETITION FUNCTION
+HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
+HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
+//DENSITY FUNCTION
+DENMAX  0.4             //Maximum density (trees/10000 m^2)
+DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
+//ESTABLISHMENT
+MINPAREST   4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                                        //broaldleaved summergreen
+MINRAIN 100             //Minimum annual Rain Precipitation for Establishment
+                                        //S. Sitch 2003
+//SEEDS PRODUCTION
+ADULT_AGE   5   //age at which consider tree as an adult tree
+MAXSEED 20000           //numero massimo semi prodotti dalla pianta (da TREEMIG) FOR Quercus sp
+MASTSEED    5       //ricorrenza anni di pasciona (da TREEMIG) FOR Quercus sp (Bernetti)
+WEIGHTSEED  7       //peso frutto in g FOR Quercus sp (Bernetti)
+SEXAGE  30              //Age at Sexual Maturity FOR Quercus sp (per Bernetti 75)
+GERMCAPACITY    0.70    //Geminability (Lischke H. & Loffler T. J.)
+MINTEMP 20              //Minimum temperature for germination in °C
+ESTMAX  0.24            //Potential Establishment rate in the absence of competition
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT   0.05    //Fraction of NPP to Fruit Production
+
+
+//MANAGMENT
+ROTATION    100     //Forest Rotation for Managment (Q. cerris)
+MINAGEMANAG 80      //Minimum age for Managment (Q. cerris)
+MINDBHMANAG 27      //Minimum DBH for Managment
+AV_SHOOT    10      //average number of shoot after cut
