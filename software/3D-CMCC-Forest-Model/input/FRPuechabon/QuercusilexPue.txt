@@ -8,7 +8,7 @@ ALPHA   0.044       //  // Canopy quantum efficiency (molC/molPAR) (0.02, Penuel
 EPSILONgCMJ 0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K   0.65        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
             //0.65      //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO  0.23    //0.12 (Hoff et al., 2002)
+ALBEDO  0.12    //0.12 (Hoff et al., 2002)
 
 //LEAF AREA INDEX
 LAIGCX  3.3               //LAI for maximum canopy conductance
@@ -29,7 +29,7 @@ RHOMAX  0.72             //Maximum Basic Density for young Trees
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
-COEFFCOND   0.09    //Define stomatal responsee to VPD in mbar 0.05 see Pietsch et al., 2005
+COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar 0.05 see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND 0.0025            //Maximum Canopy Conductance in m/sec Korner et al., 1979, (0.0025 (Hoff et al., 2002)) 0.021 Korner et al. 1979
 //AGE for timber
@@ -42,8 +42,8 @@ RAGE_S  0            //Relative Age to give fAGE = 0.5
 NAGE_S  0               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN  0       //0 Minimum temperature for growth (Hoff et al., 2002), 1 Fares et al., 2013
-GROWTHTMAX  40      //40 Maximum temperature for growth (Hoff et al., 2002), 39 Fares et al., 2013
-GROWTHTOPT  20      //20 Optimum temperature for growth (Fernandex et al., 2008) 23 Fares et al., 2013
+GROWTHTMAX  39      //40 Maximum temperature for growth (Hoff et al., 2002), 39 Fares et al., 2013
+GROWTHTOPT  23      //20 Optimum temperature for growth (Fernandex et al., 2008) 23 Fares et al., 2013
 GROWTHSTART 0       //average temperature for starting growth in °C
 GROWTHEND   0       //average temperature for ending growth in °C
 MINDAYLENGTH  0      //minimum day length for decidu0us
@@ -108,8 +108,8 @@ MF  0               //Fraction mean single tree foliage biomass lost per dead tr
 MR  0.2             //Fraction mean single tree root biomass lost per dead tree
 MS  0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.20    //Low Density //CUURENTLY NOT USED
-DBHDCMIN    0.18    //High Density
+DBHDCMAX    0.26    //Low Density //CUURENTLY NOT USED
+DBHDCMIN    0.16    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A   0.674         //a value from Kostner for Q. petreae in cm
@@ -137,7 +137,7 @@ CRC 1.104
 HDMAX   1.71             //Height to Base diameter ratio MAX  (Portoghesi)
 HDMIN   0.2             //Height to Base diameter ratio MIN  (Portoghesi)
 //DENSITY FUNCTION
-DENMAX  0.4             //Maximum density (trees/10000 m^2)
+DENMAX  0.8             //Maximum density (trees/10000 m^2)
 DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST   4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
