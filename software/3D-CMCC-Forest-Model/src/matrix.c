@@ -27,6 +27,7 @@ static const char *species_values[] = {
 
 		"K",                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 		"ALBEDO",
+		"GAMMA_LIGHT",
 
 
 

@@ -222,6 +222,7 @@ enum {
 	K,                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 
 	ALBEDO,
+	GAMMA_LIGHT,
 
 
 	//LEAF AREA INDEX
@@ -445,6 +446,7 @@ enum {
 	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
 	DENSITY,                        //Numbers of Tree per m^2
 	TREE_AREA,                      //Average Available Area per Tree in m^2
+	F_LIGHT,                        //LIGHT modifier
 	F_AGE,                          //AGE modifier
 	F_NUTR,                         //SOIL NUTRIENT Modifer
 	F_T,                            //TEMPERATURE modifier

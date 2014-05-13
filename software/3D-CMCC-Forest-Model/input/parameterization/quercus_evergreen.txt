@@ -9,6 +9,9 @@ EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 K	0.65		//Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO	0.23    //0.12 (Hoff et al., 2002)
+GAMMA_LIGHT -9999   //Light parameter for light modifier
+
+
 
 //LEAF AREA INDEX
 LAIGCX	3.3               //LAI for maximum canopy conductance

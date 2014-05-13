@@ -18,6 +18,19 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	Log("\n GET_MODIFIERS\n\n");
 
+	//LIGHT MODIFIER (Following Makela et al , 2008)
+	//FIXME chose which type of light use and differentiate for different layes
+	if (s->value[GAMMA_LIGHT] != -9999)
+	{
+	 	s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]*s->value[PAR])+1.0);
+	}
+	 else
+	 {
+		 s->value[F_LIGHT]= 1.0;
+	 }
+
+
+
 	/*TEMPERATURE MODIFIER*/
 
 	Log("--Temperature Average %f °C\n", met[month].tavg);
@@ -63,6 +76,9 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_T] += s->value[F_T];
+
+
+
 
 
 

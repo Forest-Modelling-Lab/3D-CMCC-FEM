@@ -44,7 +44,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			//Log("ALPHA AVAILABLE - MODEL USE ALPHA QUANTUM CANOPY EFFICIENCY!!!!\n");
 
-			Alpha_C = s->value[ALPHA] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST];
+			Alpha_C = s->value[ALPHA] * /*s->value[F_LIGHT]*/ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST];
 			Log("Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 
 
@@ -56,7 +56,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			Log("NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
-			Epsilon = s->value[EPSILONgCMJ] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]  * s->value[F_FROST];
+			Epsilon = s->value[EPSILONgCMJ] * /*s->value[F_LIGHT]*/ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]  * s->value[F_FROST];
 			Log("Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);

@@ -8,8 +8,10 @@ ALPHA	0.045		// Canopy quantum efficiency (molC/molPAR) 0.0236 for Q. robur Aver
 					// 0.045 for Q. robur from Morecroft et al 2003
 EPSILONgCMJ	1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011  0.085 from Carrara et al., 2004
 K	0.54		//0.54 Extinction coefficient for absorption of PAR by canopy Q. robur from Pietsch et al 2005
-
 ALBEDO	0.2
+GAMMA_LIGHT -9999   //Light parameter for light modifier
+
+
 //LEAF AREA INDEX
 LAIGCX	5               //LAI for maximum canopy conductance
 LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
