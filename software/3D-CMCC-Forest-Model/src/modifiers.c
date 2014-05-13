@@ -20,6 +20,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 
 	//LIGHT MODIFIER (Following Makela et al , 2008)
 	//FIXME chose which type of light use and differentiate for different layes
+	/*
 	if (s->value[GAMMA_LIGHT] != -9999)
 	{
 	 	s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]*s->value[PAR])+1.0);
@@ -28,6 +29,7 @@ void Get_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DA
 	 {
 		 s->value[F_LIGHT]= 1.0;
 	 }
+	 */
 
 
 
