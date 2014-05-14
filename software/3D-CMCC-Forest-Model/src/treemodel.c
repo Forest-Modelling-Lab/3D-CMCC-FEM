@@ -183,7 +183,7 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 						}
 
 						/*modifiers*/
-						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management);
+						Get_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, years, month, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 						//deciduous
 						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)

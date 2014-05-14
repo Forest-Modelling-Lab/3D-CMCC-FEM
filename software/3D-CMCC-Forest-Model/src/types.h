@@ -859,6 +859,7 @@ typedef struct {
 	double par_for_subdominated_no_albedo; //not need to be used
 	double par_for_soil;
 	double par_over_dominant_canopy;
+	double ppfd;
 	double gpp;     //in g of C m^2
 	double npp;     //in tonnes of DM per hectare
 	double av_gpp;
@@ -1066,8 +1067,8 @@ extern void Get_Age_Mortality (SPECIES *const, AGE *const);
 extern void Get_Greff_Mortality (SPECIES *const);
 extern void Get_Mortality (SPECIES *const, int);
 //extern void Get_stool_mortality (SPECIES *const, int);
-extern void Get_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, double, double, int, int);
-extern void Get_daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int);
+extern void Get_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, double, double, int, int, int);
+extern void Get_daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int, int);
 extern void Get_Management (SPECIES *const, AGE *const, int);
 extern void Clearcut_Timber (SPECIES *const, int, int, int);
 extern void Clearcut_Coppice (SPECIES *const, int, int, int);

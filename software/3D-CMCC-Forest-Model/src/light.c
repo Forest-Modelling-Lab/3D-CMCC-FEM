@@ -80,6 +80,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		//LIGHT DOMINANT
 		if ( c->heights[height].z == c->top_layer )
 		{
+
+
+
 			Log("**LIGHT DOMINANT**\n");
 			Log("Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
 
@@ -121,6 +124,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				c->par_no_albedo = (Month_Radiation * MOLPAR_MJ);
 				Log("Par NO ALBDO for layer '%d' = %f molPAR/m^2 month\n", c->heights[height].z, c->par_no_albedo);
 
+				//EPAR convert PAR to umolPPFD *1000 to obtain molPPFD
+				c->ppfd = ((c->par * EPAR)/1000.0);
+				Log("ppfd = %g molPPFD\n", c->ppfd);
+
 			}
 			else
 			{
@@ -154,6 +161,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				c->par_no_albedo = (Daily_Radiation * MOLPAR_MJ);
 				Log("Par for layer '%d' NO ALBEDO= %f molPAR/m^2 day\n", c->heights[height].z, c->par_no_albedo);
+
 			}
 
 			c->par_over_dominant_canopy = c->par;
@@ -161,6 +169,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//Apar
 			s->value[APAR] = c->par * LightAbsorb;
 			Log("Apar for layer '%d' = %f molPAR/m^2 day/month\n", c->heights[height].z, s->value[APAR]);
+
 
 			//only one height class in layer
 			if ( c->height_class_in_layer_dominant_counter == 1 )

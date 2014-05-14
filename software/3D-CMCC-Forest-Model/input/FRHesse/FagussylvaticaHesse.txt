@@ -11,7 +11,7 @@ EPSILONgCMJ	0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 0.71 for F. sylvatica Vitale et al., 2012, 0.5 from Williams 1996 
 			//0.65      //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO	0.2
-GAMMA_LIGHT 0.01   //Light parameter for light modifier
+GAMMA_LIGHT -9999   //Light parameter for light modifier
 
 
 LAIGCX	8              //LAI for maximum canopy conductance
@@ -31,8 +31,8 @@ RHOMIN	0.64             //Minimum Basic Density for young Trees t/m^3 0.72 Bouri
 RHOMAX	0.64             //Maximum Basic Density for young Trees  0.79 Bouriaud et al., 2004, 0.64 ettore
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
-COEFFCOND	0.04    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
-BLCOND	0.02            //Canopy Boundary Layer conductance see 0.2 for stomatal Pietsch et al., 2005
+COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+BLCOND	0.02            //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND	0.02            //Maximum Canopy Conductance in m/sec 0.2 from ettore 0.02 Breuer et al, 2003, Kelliher et al., 1995
 //AGE for timber
 MAXAGE	150             //Determines rate of "physiological decline" of forest //modified from ettore
@@ -44,9 +44,9 @@ RAGE_S	0.85            //Relative Age to give fAGE = 0.5
 NAGE_S	3               //Power of relative Age in function for Age
 //TEMPERATURE
 GROWTHTMIN	0       //Minimum temperature for growth 5  Rasse et al 2001 0 from Williams 1996 
-GROWTHTMAX	30      //Maximum temperature for growth 40 from Williams 1996 
-GROWTHTOPT	20      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
-GROWTHSTART	120       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C ettore with t base = 5°C
+GROWTHTMAX	35      //Maximum temperature for growth 40 from Williams 1996 
+GROWTHTOPT	19.4      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 from Lyr & Garbe, 1994
+GROWTHSTART	240       //240 calculated on 2001-2007 FRHesse; previously 120 (5 °C)average temperature or (GDD) thermic sum for starting growth in °C ettore with t base = 5°C
 						//1400 through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
 MINDAYLENGTH	11.30      //minimum day length for fagus from ettore, 12 through satellite images
