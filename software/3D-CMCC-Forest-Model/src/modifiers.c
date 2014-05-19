@@ -112,6 +112,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	//if the VPD is in KPa
 	//Convert to mbar
 	//1 Kpa = 10 mbar
+	//1 hPa = 1 mbar
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
