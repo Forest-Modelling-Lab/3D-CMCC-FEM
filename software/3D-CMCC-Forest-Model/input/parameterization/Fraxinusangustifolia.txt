@@ -1,0 +1,167 @@
+//NOTE: BETWEEN NAME VARIABLES AND VALUE MUST BE SEPARATED BY ONE TAG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+LIGHT_TOL   ?       //4 = very shade intolerant
+                //3 = shade intolerant
+                //2 = shade tolerant
+            //1 = very shade tolerant
+PHENOLOGY   0.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
+ALPHA   ?       //  // Canopy quantum efficiency (molC/molPAR) 
+EPSILONgCMJ ? // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
+K   ?        //Extinction coefficient for absorption of PAR by canopy 
+
+ALBEDO  ?    //
+GAMMA_LIGHT ?   //Light parameter for light modifier
+
+
+//LEAF AREA INDEX
+LAIGCX  ?               //LAI for maximum canopy conductance
+LAIMAXINTCPTN   ?       //LAI for maximum rainfall interception 
+MAXINTCPTN  ?    //Maximum proportion of rainfall interception evaporated from canopy
+
+//SPECIFIC LEAF AREA 
+SLA ?             //Specific Leaf Area cm^2/gC for sunlit leaves
+SLA_RATIO   ?       //(DIM) ratio of shaded to sunlit projected SLA                
+
+//FRACTION BRANCH-BARK
+FRACBB0 ?            //Branch and Bark fraction at age 0
+FRACBB1 ?            //Branch and Bark fraction for mature stands
+TBB ?              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
+//MASS DENSITY
+RHOMIN  ?             //Minimum Basic Density for young Trees t/m^3 
+RHOMAX  ?             //Maximum Basic Density for young Trees 
+TRHO    ?               //Age at which rho = (RHOMIN + RHOMAX )/2
+
+//VPD
+COEFFCOND   ?    //Define stomatal responsee to VPD in mbar 
+BLCOND  ?            //Canopy Boundary Layer conductance
+MAXCOND ?            //Maximum Canopy Conductance in m/sec
+//AGE for timber
+MAXAGE  ?             //Determines rate of "physiological decline" of forest //modified
+RAGE    ?            //Relative Age to give fAGE = 0.5
+NAGE    ?               //Power of relative Age in function for Age
+//Age for shoots (NOT USED)
+MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest
+RAGE_S  -9999            //Relative Age to give fAGE = 0.5
+NAGE_S  -9999               //Power of relative Age in function for Age
+//TEMPERATURE
+GROWTHTMIN  ?       //0 Minimum temperature for growth 
+GROWTHTMAX  ?      //40 Maximum temperature for growth
+GROWTHTOPT  ?      //20 Optimum temperature for growth 
+GROWTHSTART ?       //average temperature for starting growth in °C
+GROWTHEND   ?       //average temperature for ending growth in °C
+MINDAYLENGTH  ?      //minimum day length for decidu0us
+
+//SOIL WATER
+//modified 13 feb 2012
+//define the soil water modifier response in function of needless of the species to the soil water content
+SWPOPEN -9999 //
+SWPCLOSE    -9999 //
+SWCONST ?           //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER ?               //Power in Soil Water modifier vs Moist Ratio
+
+//BIOMASS PARTITIONING CTEM (see Arora et al., 2005) (DO NOT CHANGE)
+OMEGA_CTEM  0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
+S0CTEM  0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
+R0CTEM  0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
+F0CTEM  0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
+RES0CTEM    0.22    //PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+EPSILON_CTEM    40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
+KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS
+MIN_R0CTEM  0.1 //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
+MAX_S0CTEM  0.55    //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
+YEARS_FOR_CONVERSION    -9999   //years from coppicing to consider tree as a timber
+
+FRUIT_PERC  0 //fraction of NPP allocated for reproduction (0 for broadleaf)
+CONES_LIFE_SPAN 0 //Life span for cones (yr)
+
+//FINE/COARSE ROOT RATIO data get from BIOME_BGC
+FINE_ROOT_LEAF  ?   //allocation new fine root C:new leaf (ratio)
+STEM_LEAF   ?   //allocation new stem C:new leaf (ratio) 
+COARSE_ROOT_STEM    ? //allocation new coarse root C:new stem (ratio)
+LIVE_TOTAL_WOOD ?    //new live C:new total wood (ratio) 
+
+//BIOME C:N RATIOS
+CN_LEAVES   ?  //CN of leaves (kgC/kgN) 
+CN_LITTER   ?  //CN of leaf litter (kgC/kgN) 
+CN_FINE_ROOTS   ?  // CN of fine roots (kgC/kgN) 
+CN_LIVE_WOODS   ?  //CN of live woods (kgC/kgN)
+CN_DEAD_WOODS   ?  //CN of dead woods (kgC/kgN)
+
+
+//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
+//LITTERFALL
+BUD_BURST   ?                   //days of bud burst at the beginning of growing season (only for deciduous)
+//FOLLOWING BIOME-BGC
+LEAF_FALL_FRAC_GROWING  ?     //proportions of the growing season of leaf fall
+LEAF_LIFE_SPAN  0     //Leaf life span (just for evergreen)
+
+//TURNOVER
+LEAVES_FINERTTOVER  ?       //Average yearly fine root turnover rate 
+COARSERTTOVER   ?    //Average yearly coarse root turnover rate
+SAPWOODTTOVER   ?    //Average yearly sapwood turnover rate 
+BRANCHTTOVER    ?    //Average yearly branch turnover rate
+LIVE_WOOD_TURNOVER  ? //Annual yearly live wood turnover rate 
+
+
+
+//MORTALITY
+WSX1000 ?             //Max stem mass (kg) per tree at 1000 trees/hectare
+THINPOWER   ?       //Power in self-thinning rule
+MF  ?               //Fraction mean single tree foliage biomass lost per dead tree
+MR  ?             //Fraction mean single tree root biomass lost per dead tree
+MS  ?             //Fraction mean single tree stem biomass lost per dead tree
+//ALLOMETRIC RELATIONSHIPS (Crown diameter vs DBH, m^2/cm^-2))
+DBHDCMAX    ?    //Low Density 
+DBHDCMIN    ?    //High Density
+
+//SAPWOOD ALLOMETRIC RELATIONSHIP
+SAP_A   ?         //a value 
+SAP_B   ?         //b value 
+SAP_LEAF    ?          //sapwood_max leaf area ratio in pipe model  
+SAP_WRES    ?           //Sapwood-Reserve biomass ratio used if no Wres data are available 
+                            //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
+HMAX    ?              //35  //Max Height in m 
+DMAX    ?              //Max Stem Diameter in cm 
+HPOWER  ?           //Slope of Asymptotic Height 
+RPOWER  ?           //Slope of Asymptotic Crown-Radius 
+b_RPOWER    -9999           //NOT USED
+CHPOWER -9999           //Slope of Asymptotic Crown-Height 
+b_CHPOWER   -9999           //NOT USED
+
+//POWER FUNCTION to compute individual stem mass from DBH
+STEMCONST_P ?   //
+STEMPOWER_P ?   //
+
+//CHAPMAN-RICHARDS relationships to compute Height from DBH
+CRA ?
+CRB ?
+CRC ?
+//CROWDING COMPETITION FUNCTION
+HDMAX   ?             //Height to Base diameter ratio MAX  
+HDMIN   ?             //Height to Base diameter ratio MIN  
+//DENSITY FUNCTION
+DENMAX  ?             //Maximum density (trees/10000 m^2)
+DENMIN  ?           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
+//ESTABLISHMENT
+MINPAREST   -9999    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
+                                        //B. Smith, I. C. Prentice, and M. T. Sykes 2001 for Boreal/Temperate SHADE TOLLERANT
+                                        //broaldleaved summergreen
+MINRAIN -9999             //Minimum annual Rain Precipitation for Establishment
+                                        //S. Sitch 2003
+//SEEDS PRODUCTION
+ADULT_AGE   -9999   //age at which consider tree as an adult tree
+MAXSEED -9999           //numero massimo semi prodotti dalla pianta (da TREEMIG) 
+MASTSEED    -9999       //ricorrenza anni di pasciona (da TREEMIG) 
+WEIGHTSEED  -9999       //peso frutto in g 
+SEXAGE  -9999              //Age at Sexual Maturity 
+GERMCAPACITY    -9999    //Geminability
+MINTEMP -9999              //Minimum temperature for germination in °C
+ESTMAX  -9999            //Potential Establishment rate in the absence of competition
+//SEEDS PRODUCTION FROM LPJ
+FRACFRUIT   -9999    //Fraction of NPP to Fruit Production
+
+
+//MANAGMENT
+ROTATION    -9999     //Forest Rotation for Managment 
+MINAGEMANAG -9999      //Minimum age for Managment 
+MINDBHMANAG -9999      //Minimum DBH for Managment
+AV_SHOOT    -9999      //average number of shoot after cut
