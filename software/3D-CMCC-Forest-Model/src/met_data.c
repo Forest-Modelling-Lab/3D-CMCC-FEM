@@ -561,7 +561,7 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	int day_temp = day;
 	int month_temp = month;
 	int weight;
-	const int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 	//Log("\n\nGET_SOIL_TEMPERATURE\n");
 
@@ -579,7 +579,7 @@ void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 
 	//FIXME model doesn't get for the first 10 days of the year the averaged values
-	//TODO CHECK SOIL TEMPÈERATURE COORECTION FROM BIOME
+	//TODO CHECK SOIL TEMPÈERATURE CORRECTION FROM BIOME
 	/* soil temperature correction using difference from
 				annual average tair */
 	/*file bgc.c

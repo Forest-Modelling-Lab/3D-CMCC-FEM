@@ -313,12 +313,12 @@ enum {
 	LEAF_LIFE_SPAN,				//Leaf life span
 
 	//ROOT TURNOVER
-	LEAVES_FINERTTOVER,                    //Average monthly fine root turnover rate
-	COARSERTTOVER,                  //Average monthly coarse root turnover rate
-	SAPWOODTTOVER,	                //Average yearly sapwood turnover rate
-	BRANCHTTOVER,	                //Average yearly branch turnover rate
-	LIVE_WOOD_TURNOVER,             //Average yearly live wood turnover rate
-	//RTTOVER,                    //Average monthly root turnover rate
+	LEAVES_FINERTTOVER,                    //Average daily fine root turnover rate
+	COARSERTTOVER,                  //Average daily coarse root turnover rate
+	SAPWOODTTOVER,	                //Average daily sapwood turnover rate
+	BRANCHTTOVER,	                //Average daily branch turnover rate
+	LIVE_WOOD_TURNOVER,             //Average daily live wood turnover rate
+	//RTTOVER,                    //Average daily root turnover rate
 
 
 
