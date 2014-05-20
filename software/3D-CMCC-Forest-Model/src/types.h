@@ -166,7 +166,9 @@ typedef struct
 		time,  // must be 'm' or 'd' (monthly or daily)
 		symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
 
-	char daymet[3];
+	char daymet[4];
+	char rothC[4];
+	char dndc[4];
 
 	double sizeCell,
 	//dominant,

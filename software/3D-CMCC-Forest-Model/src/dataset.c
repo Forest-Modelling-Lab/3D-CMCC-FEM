@@ -542,6 +542,12 @@ int importSettingsFile(char *fileName)
 						strncpy (settings->daymet, (const char*)pch, 3);
 						break;
 					case 5:
+						strncpy (settings->rothC, (const char*)pch, 3);
+						break;
+					case 6:
+						strncpy (settings->dndc, (const char*)pch, 3);
+						break;
+					case 7:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;

@@ -1168,15 +1168,32 @@ int main(int argc, char *argv[])
 								if (settings->version == 'f')
 								{
 									//run for FEM version
-									if ( !tree_model_daily (m, yos, years, month, day, years_of_simulation) )
+									if (!tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
 										Log("tree model daily failed.");
 									}
 									else
 									{
 										puts(msg_ok);
-										//run for SOIL function
-										soil_model (m, yos, years, month, day, years_of_simulation);
+										//run for SOIL functions
+										//soil_model (m, yos, years, month, day, years_of_simulation);
+
+										if (!mystricmp(settings->dndc, "on"))
+										{
+											Log("RUNNING DNDC.....\n");
+											//TODO SERGIO
+											//soil_dndc......................................
+										}
+										else if (!mystricmp(settings->rothC, "on"))
+										{
+											Log("RUNNING ROTHC.....\n");
+											//TODO SERGIO
+											//soil_rothc.....................................
+										}
+										else
+										{
+											Log("No soil simulation!!!\n");
+										}
 									}
 								}
 								else
