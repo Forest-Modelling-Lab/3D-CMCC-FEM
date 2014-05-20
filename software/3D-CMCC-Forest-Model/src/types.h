@@ -153,7 +153,8 @@ typedef struct
 	kBIO,
 	kHUM,
 	partitioningToBio,
-	litterToDPM;
+	litterToDPM,
+	soilTimescale;
 
 } site_t;
 
@@ -802,6 +803,11 @@ typedef struct {
 	double inertOM;
 	double soilCO2;
 	double accumulatedSoilMoistDeficit;
+	double PrevMicrobialBiomass;
+	double PrevHumifiedOM;
+	double soil_het_resp;
+	double boolAccTSMD;
+
 } SOIL;
 
 
@@ -986,6 +992,8 @@ typedef struct {
 
 	double daily_w_res;
 
+	//RothC related cell level variables
+	double year_soil_het_resp;
 
 
 } CELL;
