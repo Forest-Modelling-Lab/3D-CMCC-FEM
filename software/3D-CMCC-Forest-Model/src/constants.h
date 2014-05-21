@@ -63,3 +63,21 @@
 #define  STEMPOWER_A	        2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
 #define  STEMPOWER_B	        2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
 #define  STEMPOWER_C	        2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
+
+//soil constants
+#define DRF   0.04//0.03
+#define EFFRB .67
+#define EFFAC .2
+#define RBO 0.02
+#define SRB 0.9
+#define KRCVL 0.25
+#define KRCL 0.074
+#define KRCR 0.02
+#define KRB    0.12
+#define HRB    0.04
+#define EFFNO  0.2
+//#define um_no3   .67
+//#define um_no2   .67
+//#define um_no    .34
+//#define um_n2o   .34
+

@@ -155,6 +155,12 @@ typedef struct
 	partitioningToBio,
 	litterToDPM,
 	soilTimescale;
+	//DNDC
+	//	double RFM;
+	double base_clay_N;
+	double max_clay_N;
+	double hydraulicConductivity;
+	double sd;
 
 } site_t;
 
@@ -808,6 +814,49 @@ typedef struct {
 	double soil_het_resp;
 	double boolAccTSMD;
 
+	/**************************************************************************************************
+	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
+	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
+	 *
+	 **************************************************************************************************/
+	//3d-cmcc-sgm
+	double sph; //check if removable (for sure in a single layer model)
+	double soilMoisture;
+	double soilTemp;
+	double ice;
+	double soc;
+	double doc;
+	double rcvl;
+	double rcr;
+	double rcl;
+	double CRB1;
+	double CRB2;
+	double crhl;
+	double crhr;
+	double dphum;
+	double no3;
+	double no2;
+	double nh4;
+	double nh3;
+	//double Eh;
+	double co2;
+	double day_O2;
+	double dcbavai;
+	double drcvl;
+	double DRCB1, DRCB2;
+	double soilDepth;
+	double clay_nh4;
+	double inert_C;
+	double LabP;
+	double AdsP;
+	//unknown
+	double sts,mmm;
+	double no, n2o;
+	double litco22, litco23;
+
+	double initialOrganicC;
+	double waterContent;
+
 } SOIL;
 
 
@@ -997,6 +1046,41 @@ typedef struct {
 	double temperatureModifier,
 	soilCoverModifier,
 	moistureModifier;
+
+	/**************************************************************************************************
+	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
+	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
+	 *
+	 **************************************************************************************************/
+	//daily soil variables; 3D-CMCC-SGM
+	double leafLittering, fineRootLittering,woodLittering,stemLittering, coarseRootLittering;
+	double soil_ph;
+	double DClitter;
+	//sergio; not clear till concepts and dynamics; what's that and how to replace&introcude in 3d-cmcc
+	double till_fact, tilq;
+	//dC
+	double day_C_mine;
+	double day_N_mine;
+	double day_N_assim;
+	double DChumads;
+	double DChumus;
+	double day_soil_nh3;
+	double wrcvl, wrcl, wrcr, wcrb, wcrh,whumus;
+	double wtcavai,w_no2,w_no3,w_n2o, w_nh4, w_nh3, wpool_no;
+	double day_clayn;
+	double leach_u, day_no2, flux_no2;
+	//double wFreezedoc;
+	double End_SON;
+	double runoff_N;
+	double day_clay_N, wsoc;
+	double previousSoilT;
+	double soilSurfaceT;
+	double temp_avet;
+	double yr_avet;
+	double rcnrvl, rcnb, rcnrl,rcnrr,rcnh, rcnh2;
+	double rcnm;
+
+	double AddC, AddCN, AddC1, AddC2, AddC3;
 
 } CELL;
 
