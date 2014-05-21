@@ -322,35 +322,38 @@ void soil_model_daily(MATRIX *const m, const YOS *const yos, const int years, co
 				//m->cells[cell].year_microbialBiomass += m->cells[cell].soils[soil].microbialBiomass;
 
 				m->cells[cell].year_soil_het_resp += m->cells[cell].soils[soil].soil_het_resp ;
-				soil_Log("\n\nn_day: \t %d", met[month].d[day].n_days);
-				soil_Log("\n*********************\nRothamsted Carbon Model routine"
-						"\nday: \t %d\nmonth: \t %d"
-						"\nTair: \t %f"
-						"\nrain: \t %f"
-						"\nlitter: \t%f"
-						"\nETO: \t%f"
-						"\n\ntemperature modifier: \t%g"
-						"\nsoilCover factor: \t %f"
-						"\nmoisture Factor: \t %f"
-						"\nsoil respiration: \t %f"
-						"\nmicrobial biomass: \t %f"
-						"\nhumified OM: \t %f"
-						"\nresistant OM: \t %f"
-						"\ndecomposable OM: \t %f"
-						"\ninertOM:\t %f"
-						"\nratioCO2 / BIO + HUM:\t %f", day, month, met->avg_monthly_temp, met->cum_monthly_rain, m->cells[cell].monthly_tot_litterfall , m->cells[cell].monthly_tot_et,  temperatureModifier, soilCoverModifier,moistureModifier,m->cells[cell].soils[soil].soil_het_resp ,m->cells[cell].soils[soil].microbialBiomass,
-						m->cells[cell].soils[soil].humifiedOM,m->cells[cell].soils[soil].resistantPlantMaterial,m->cells[cell].soils[soil].decomposablePlantMaterial, m->cells[cell].soils[soil].inertOM, ratioCO2);
-
-
-				soil_Log("\n****parameter to decomposition:****"
-						"\na:\t%f"
-						"\nb:\t%f"
-						"\nc:\t%f"
-						"\nt:\t%f"
-						"\nfactor:\t%f",  temperatureModifier, moistureModifier, soilCoverModifier,site->soilTimescale,  temperatureModifier *  moistureModifier *  soilCoverModifier * site->soilTimescale);
-
-				soil_Log("\n");
+//				soil_Log("\n\nn_day: \t %d", met[month].d[day].n_days);
+//				soil_Log("\n*********************\nRothamsted Carbon Model routine"
+//						"\nday: \t %d\nmonth: \t %d"
+//						"\nTair: \t %f"
+//						"\nrain: \t %f"
+//						"\nlitter: \t%f"
+//						"\nETO: \t%f"
+//						"\n\ntemperature modifier: \t%g"
+//						"\nsoilCover factor: \t %f"
+//						"\nmoisture Factor: \t %f"
+//						"\nsoil respiration: \t %f"
+//						"\nmicrobial biomass: \t %f"
+//						"\nhumified OM: \t %f"
+//						"\nresistant OM: \t %f"
+//						"\ndecomposable OM: \t %f"
+//						"\ninertOM:\t %f"
+//						"\nratioCO2 / BIO + HUM:\t %f", day, month, met->avg_monthly_temp, met->cum_monthly_rain, m->cells[cell].monthly_tot_litterfall , m->cells[cell].monthly_tot_et,  temperatureModifier, soilCoverModifier,moistureModifier,m->cells[cell].soils[soil].soil_het_resp ,m->cells[cell].soils[soil].microbialBiomass,
+//						m->cells[cell].soils[soil].humifiedOM,m->cells[cell].soils[soil].resistantPlantMaterial,m->cells[cell].soils[soil].decomposablePlantMaterial, m->cells[cell].soils[soil].inertOM, ratioCO2);
+//
+//
+//				soil_Log("\n****parameter to decomposition:****"
+//						"\na:\t%f"
+//						"\nb:\t%f"
+//						"\nc:\t%f"
+//						"\nt:\t%f"
+//						"\nfactor:\t%f",  temperatureModifier, moistureModifier, soilCoverModifier,site->soilTimescale,  temperatureModifier *  moistureModifier *  soilCoverModifier * site->soilTimescale);
+//
+//				soil_Log("\n");
 				m->cells[cell].monthly_tot_et =0;
+				m->cells[cell].temperatureModifier = temperatureModifier;
+				m->cells[cell].soilCoverModifier = soilCoverModifier;
+				m->cells[cell].moistureModifier = moistureModifier;
 			}
 		}
 	}

@@ -542,7 +542,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------"
 					"---------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("AVG/TOT \t\t%5f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t%49d\n",
-					   avg_gpp_tot, avg_ar_tot, avg_cf_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/GC_GDM , avg_ce_tot, tot_dead_tree_tot);
+					avg_gpp_tot, avg_ar_tot, avg_cf_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/GC_GDM , avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
 		{
@@ -563,8 +563,8 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			avg_ce_tot /= years_of_simulation;
 			Annual_Log ("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
 			Annual_Log ("AVG/TOT \t\t\t%14f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t\t\t%76d \n",
-					 avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[1], avg_ar[0], avg_ar_tot, avg_cf[1], avg_cf[0], avg_cf_tot, (avg_ar[1]*100.0)/avg_gpp[1],
-					 ((avg_ar[0]*100.0)/avg_gpp[0]),(avg_ar_tot*100.0)/avg_gpp_tot,avg_npp[1], avg_npp[0], avg_npp_tot, avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
+					avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[1], avg_ar[0], avg_ar_tot, avg_cf[1], avg_cf[0], avg_cf_tot, (avg_ar[1]*100.0)/avg_gpp[1],
+					((avg_ar[0]*100.0)/avg_gpp[0]),(avg_ar_tot*100.0)/avg_gpp_tot,avg_npp[1], avg_npp[0], avg_npp_tot, avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 3)
 		{
@@ -757,7 +757,6 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 }
 
 
-
 extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
 {
 
@@ -865,7 +864,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
 					"YEAR", "MONTH", "DAY", "HC(1)", "HC(0)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
-			}
+		}
 		Daily_Log ("%d \t%4d \t%4d \t%4d \t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
 				yos[years].year, month+1, day+1,
 				c->height_class_in_layer_dominant_counter,
@@ -995,5 +994,110 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->daily_f_psi = 0;
 	c->daily_f_t = 0;
 	c->daily_f_vpd = 0;
+
+}
+
+
+
+extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
+{
+
+	static int previous_layer_number;
+	static int doy;
+	int soil = 0;
+
+	if(day  == 0 && month == 0 && years == 0)
+	{
+		if (!mystricmp(settings->rothC, "on"))
+		{
+			soil_Log("RUNNING ROTHC.....\n");
+		}
+		else if (!mystricmp(settings->dndc, "on"))
+		{
+			soil_Log("RUNNING DNDC.....\n");
+			//fixSergio improve a multilayer based log, specular to the one used for the aboveground
+
+		}
+		else
+		{
+			soil_Log("No soil simulation!!!\n");
+		}
+	}
+	//		Daily_Log("Site name = %s\n", site->sitename);
+	//		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+	//		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+	//
+	//
+	//		Daily_Log ("HC\n");
+	//
+	//		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
+	//		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+	//		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
+	//		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
+	//		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
+	//		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
+	//		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
+	//		Daily_Log("Daily ASW = daily Available Soil Water(mm/day)\n");
+	//		Daily_Log("Daily Wfl = daily water fluxes (mm/day)\n");
+	//		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
+	//		Daily_Log("Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
+	//		Daily_Log("Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
+	//		Daily_Log("Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
+	//		Daily_Log("Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
+	//		Daily_Log("Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
+	//		Daily_Log("Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
+	//
+	//	}
+
+	if (years == 0)
+	{
+		previous_layer_number = c->annual_layer_number;
+	}
+	else
+	{
+		//potentially useless for soil, but what if we consider erosion losses or soil deposition? maintain it
+		//check if layer number is changed since last yearly run
+		if(previous_layer_number != c->annual_layer_number)
+		{
+			soil_Log("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+		}
+	}
+	if (!mystricmp(settings->dndc, "on"))
+	{
+		soil_Log("RUNNING DNDC.....\n");
+		//fixSergio improve a multilayer based log, specular to the one used for the aboveground
+
+	}
+	else if (!mystricmp(settings->rothC, "on"))
+	{
+		soil_Log("RUNNING ROTHC.....\n");
+		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
+		{
+			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
+					"DOY", "YEAR", "MONTH", "DAY", "Litter","ET", "fT", "cT", "moistT", "HResp", "MicPool", "LabPool", "ResPool", "HumPool", "IOM");
+		}
+		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		{
+			doy = 1;
+		}
+		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n",
+				doy++, yos[years].year, month+1, day+1,
+				c->monthly_tot_litterfall,
+				c->monthly_tot_et,
+				c->temperatureModifier,
+				c->soilCoverModifier,
+				c->moistureModifier,
+				c->soils[soil].soil_het_resp,
+				c->soils[soil].microbialBiomass,
+				c->soils[soil].decomposablePlantMaterial,
+				c->soils[soil].resistantPlantMaterial,
+				c->soils[soil].humifiedOM,
+				c->soils[soil].inertOM);
+
+
+		previous_layer_number = c->annual_layer_number;
+
+		//reset
+	}
 
 }

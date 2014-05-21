@@ -15,7 +15,7 @@
 
 
 
- /* enums */
+/* enums */
 
 typedef enum {
 	F = 0,      //forest
@@ -30,7 +30,7 @@ typedef enum {
 	D = 0,      //deciduous
 	E,          //evergreen
 } ePhenology;
-*/
+ */
 
 /* */
 typedef enum {
@@ -147,7 +147,7 @@ typedef struct
 	p0,
 	cutTree;
 
- 	// ROTHC SPECIFIC PARAMETERS
+	// ROTHC SPECIFIC PARAMETERS
 	double kDPM,
 	kRPM,
 	kBIO,
@@ -163,9 +163,9 @@ typedef struct
 typedef struct
 {
 	char version,
-		spatial, // must be 's' or 'u' (spatial or unspatial)
-		time,  // must be 'm' or 'd' (monthly or daily)
-		symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
+	spatial, // must be 's' or 'u' (spatial or unspatial)
+	time,  // must be 'm' or 'd' (monthly or daily)
+	symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
 
 	char daymet[4];
 	char rothC[4];
@@ -502,7 +502,7 @@ enum {
 	WBB_sap,
 	WBB_heart,
 	WTOT_sap,
-	                       //Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
+	//Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
 	DEL_TOTAL_W,                   //Total Biomass Increment
 	TOTAL_W,
@@ -795,7 +795,7 @@ typedef struct {
 typedef struct {
 	double variabile;
 	//double soil_respiration;
- 	// ROTHC SPECIFIC VARIABLES
+	// ROTHC SPECIFIC VARIABLES
 	double decomposablePlantMaterial;
 	double resistantPlantMaterial;
 	double microbialBiomass;
@@ -994,7 +994,9 @@ typedef struct {
 
 	//RothC related cell level variables
 	double year_soil_het_resp;
-
+	double temperatureModifier,
+	soilCoverModifier,
+	moistureModifier;
 
 } CELL;
 
@@ -1194,6 +1196,7 @@ extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, in
 //sergio's functions
 extern int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
 extern int crop_model_D (MATRIX *const, const YOS *const, const int, const int, const int, const int);
+extern void Get_EOD_soil_balance_cell_level (CELL *, const YOS *const , int, int, int);
 
 
 
