@@ -96,6 +96,9 @@ char 	*program_path		=	NULL,	// mandatory
 		*annual_output_path		=	NULL,	// mandatory
 		*annual_out_filename		=	NULL,	// mandatory
 		*annual_output_file		= 	NULL,	// mandatory
+		*soil_output_path		= NULL, 	//mandatory
+		*soil_out_filename		=	NULL,	// mandatory
+		*soil_output_file		= 	NULL,	// mandatory
 		*settings_path		=	NULL;	// mandatory
 //*resolution		= 	NULL,	// mandatory
 //*vers_arg			= 	NULL;	// mandatory
@@ -150,6 +153,7 @@ static const char msg_output_file[]				=	"output file path = %s\n";
 static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
+static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
 static const char msg_processing[]				=	"processing %s...\n";
 static const char msg_ok[]						=	"ok";
 static const char msg_summary[]					=	"\n%d input file%s found: %d processed, %d skipped.\n\n";
@@ -394,6 +398,28 @@ int get_annual_output_filename(char *arg, char *param, void *p)
 	Log("annual_output file name = %s\n", annual_out_filename);
 	return 1;
 }
+int get_soil_output_filename(char *arg, char *param, void *p)
+{
+	if ( !param )
+	{
+		printf(err_arg_needs_param, arg);
+		return 0;
+	}
+
+	if ( soil_out_filename )
+		printf(err_outname_already_specified, soil_out_filename, param);
+	else
+	{
+		soil_out_filename = param;
+
+		if( output_path )
+			strcat(soil_output_file, soil_out_filename);
+		else
+			printf("With -soil_outname flag set -soil_outpath not set: using default output file (prog_path/soil_output.txt)");
+	}
+	Log("soil_output file name = %s\n", soil_out_filename);
+	return 1;
+}
 
 /* */
 int set_prec_value(char *arg, char *param, void *p)
@@ -526,7 +552,7 @@ int main(int argc, char *argv[])
     disini ();
     messag ("This is a test", 100, 100);
     disfin ();
-    */
+	 */
 
 
 
@@ -596,6 +622,16 @@ int main(int argc, char *argv[])
 			}
 			bzero(annual_out_filename, BUFFER_SIZE-1);
 			strcpy(annual_out_filename, argv[i+1]);
+			break;
+		case 'n': // Soil Output file name (with path)
+			soil_out_filename = malloc(sizeof(*soil_out_filename)*BUFFER_SIZE);
+			if( !soil_out_filename )
+			{
+				fprintf(stderr, "Cannot allocate memory for soil_out_filename.\n");
+				return 1;
+			}
+			bzero(soil_out_filename, BUFFER_SIZE-1);
+			strcpy(soil_out_filename, argv[i+1]);
 			break;
 		case 'd': // Dataset filename
 			dataset_filename = malloc(sizeof(*dataset_filename)*BUFFER_SIZE);
@@ -713,7 +749,23 @@ int main(int argc, char *argv[])
 		strcpy(annual_output_file, annual_out_filename);
 
 	}
+	if( soil_out_filename == NULL )
+	{
+		fprintf(stderr, "Error: soil output filename option is missing!\n");
+		usage();
+	}
+	else
+	{
+		soil_output_file = malloc(sizeof(*soil_output_file)*BUFFER_SIZE);
+		if( !soil_output_file )
+		{
+			fprintf(stderr, "Cannot allocate memory for annual output_file.\n");
+			return 1;
+		}
+		bzero(soil_output_file, BUFFER_SIZE-1);
+		strcpy(soil_output_file, soil_out_filename);
 
+	}
 
 	if( dataset_filename == NULL )
 	{
@@ -979,6 +1031,8 @@ int main(int argc, char *argv[])
 	annual_logInit (annual_out_filename);
 	Annual_Log ("annual output file at cell level\n\n");
 
+	soil_logInit (soil_out_filename);
+	soil_Log ("soil output file at cell level\n\n");
 	/* show copyright*/
 	Log(copyright);
 
@@ -994,6 +1048,7 @@ int main(int argc, char *argv[])
 	printf(msg_daily_output_file, annual_output_file);
 	printf(msg_monthly_output_file, annual_output_file);
 	printf(msg_annual_output_file, annual_output_file);
+	printf(msg_soil_output_file, soil_output_file);
 
 	/* get files */
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
@@ -1014,7 +1069,7 @@ int main(int argc, char *argv[])
 	files_processed_count = 0;
 	files_not_processed_count = 0;
 	total_files_count = 0;
-/*
+	/*
 	// Import site.txt file
 	error = importSiteFile(site_path);
 	if ( error )
@@ -1027,7 +1082,7 @@ int main(int argc, char *argv[])
 		Log("site path = %s\n", site_path);
 		Log("...Site file imported!!\n\n");
 	}
-*/
+	 */
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
@@ -1072,7 +1127,7 @@ int main(int argc, char *argv[])
 		{
 			Log("Met File %s not imported !!\n", input_met_path);
 			matrix_free(m);
-		 	return -1;
+			return -1;
 		}
 		else
 		{
@@ -1151,12 +1206,12 @@ int main(int argc, char *argv[])
 							}
 
 						}
-/*
+						/*
 						for (day = 0; day < DaysInMonth[month]; day++)
 						{
 							Print_met_daily_data (yos, day, month, years);
 						}
-*/
+						 */
 
 					}
 					for (month = 0; month < MONTHS; month++)
@@ -1175,6 +1230,8 @@ int main(int argc, char *argv[])
 									else
 									{
 										puts(msg_ok);
+										soil_Log("\nsoilLog prova");
+
 										//run for SOIL functions
 										//soil_model (m, yos, years, month, day, years_of_simulation);
 
@@ -1210,6 +1267,7 @@ int main(int argc, char *argv[])
 								else
 								{
 									puts(msg_ok);
+									soil_Log("\nsoilLog prova");
 									//look if put it here or move before tree_model  at the beginning of each month simulation
 									//	soil_model (m, yos, years, month, years_of_simulation);
 								}
@@ -1358,13 +1416,13 @@ int main(int argc, char *argv[])
 	daily_logClose();
 	monthly_logClose();
 	annual_logClose();
-
+	soil_logClose();
 	// Free memory
 	free(output_file);
 	free(daily_output_file);
 	free(monthly_output_file);
 	free(annual_output_file);
-
+	free(soil_output_file);
 	/* free memory at exit */
 	return 0;
 }

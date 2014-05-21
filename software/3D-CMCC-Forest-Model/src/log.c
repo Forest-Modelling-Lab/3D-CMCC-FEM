@@ -134,7 +134,38 @@ void annual_logClose(void)
 {
 	if ( annual_file_log )	fclose(annual_file_log);
 }
+//for soil output Marconi Sergio
+static FILE *soil_file_log ;
 
+int soil_logInit(char * soil_logFileName)
+{
+	soil_file_log = fopen(soil_logFileName, "w");
+
+	if ( !soil_file_log ) return 0;
+
+	return 1;
+}
+
+void soil_Log(const char *szText, ...)
+{
+	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
+	//va_list pArgList = { 0 };
+	va_list pArgList;
+
+	va_start(pArgList, szText);
+	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
+	va_end(pArgList);
+
+	fputs(szBuffer, stdout);
+
+	if ( log_enabled && soil_file_log )
+		fputs(szBuffer, soil_file_log);
+}
+
+void soil_logClose(void)
+{
+	if ( soil_file_log )	fclose(soil_file_log);
+}
 
 extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 {
