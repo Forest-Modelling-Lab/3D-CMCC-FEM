@@ -51,7 +51,7 @@
 
 //this function should be used only for function not directly related to the forest layers, it just run at the end
 //of all physiological function for all forest/crop layers
-void soil_model_daily(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
+void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
 {
 	MET_DATA *met;
 	int iC;

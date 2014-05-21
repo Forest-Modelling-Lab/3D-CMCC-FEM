@@ -1197,7 +1197,10 @@ extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, in
 extern int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
 extern int crop_model_D (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 extern void Get_EOD_soil_balance_cell_level (CELL *, const YOS *const , int, int, int);
-
+extern void get_av_year_temperature(CELL * const, int, int, int, const MET_DATA *const);
+extern void soil_temperature(CELL * const, int, int, int, const MET_DATA *const);
+extern void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int, const int, const int);
+extern void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 
 
 
