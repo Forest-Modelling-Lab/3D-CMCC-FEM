@@ -912,6 +912,9 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, "_");
 	strcat (annual_out_filename, strSitename);
 
+	strcat (soil_out_filename, "_");
+	strcat (soil_out_filename, strSitename);
+
 
 
 	//define output file name in function of model settings
@@ -947,7 +950,9 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strTmp2);
 	strcat (annual_out_filename, strTmp3);
 
-
+	strcat (soil_out_filename, strTmp);
+	strcat (soil_out_filename, strTmp2);
+	strcat (soil_out_filename, strTmp3);
 
 	char strSizeCell[10] = "";
 	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
@@ -963,6 +968,9 @@ int main(int argc, char *argv[])
 
 	strcat (annual_out_filename, strSizeCell);
 	strcat (annual_out_filename, "_");
+
+	strcat (soil_out_filename, strSizeCell);
+	strcat (soil_out_filename, "_");
 
 	//add data to output.txt
 	time_t rawtime;
@@ -983,6 +991,9 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
+//	strcat (soil_out_filename, strData);
+//	strcat (soil_out_filename, "_");
+
 	sprintf(strData, "%s", szMonth[data->tm_mon]);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
@@ -995,6 +1006,9 @@ int main(int argc, char *argv[])
 
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
+
+//	strcat (soil_out_filename, strData);
+//	strcat (soil_out_filename, "_");
 
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (out_filename, strData);
@@ -1009,11 +1023,14 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
+//	strcat (soil_out_filename, strData);
+//	strcat (soil_out_filename, "_");
 
 	strcat (out_filename, ".txt");
 	strcat (daily_out_filename, ".txt");
 	strcat (monthly_out_filename, ".txt");
 	strcat (annual_out_filename, ".txt");
+	strcat (soil_out_filename, ".txt");
 
 
 	//Create output files
@@ -1239,6 +1256,26 @@ int main(int argc, char *argv[])
 										{
 											Log("RUNNING DNDC.....\n");
 											//TODO SERGIO
+											soil_Log("\nsoil_parameters:\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f",site->base_clay_N,
+													site->max_clay_N,
+													site->soil_no3,
+													site->soil_nh4,
+													site->hydraulicConductivity,
+													site->inSOC,
+													site->	litFract,
+													site->	humaFract,
+													site->humuFract,
+													site->	bioFract,
+													site->rcnrvl,
+													site->	rcnrl,
+													site->	rcnrr,
+													site->rcnb,
+													site->	rcnh,
+													site->rcnm,
+													site->rcnh2,
+													site->	DClitter,
+													site->	DChumads,
+													site->DChumus);
 											//soil_dndc......................................
 										}
 										else if (!mystricmp(settings->rothC, "on"))

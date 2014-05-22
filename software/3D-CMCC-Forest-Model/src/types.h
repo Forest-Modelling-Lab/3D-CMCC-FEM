@@ -155,12 +155,29 @@ typedef struct
 	partitioningToBio,
 	litterToDPM,
 	soilTimescale;
+
 	//DNDC
 	//	double RFM;
-	double base_clay_N;
-	double max_clay_N;
-	double hydraulicConductivity;
-	double sd;
+	double base_clay_N,
+	max_clay_N,
+	soil_no3,
+	soil_nh4,
+	hydraulicConductivity,
+	inSOC,
+	litFract,
+	humaFract,
+	humuFract,
+	bioFract,
+	rcnrvl,
+	rcnrl,
+	rcnrr,
+	rcnb,
+	rcnh,
+	rcnm,
+	rcnh2,
+	DClitter,
+	DChumads,
+	DChumus;
 
 } site_t;
 
@@ -1055,15 +1072,12 @@ typedef struct {
 	//daily soil variables; 3D-CMCC-SGM
 	double leafLittering, fineRootLittering,woodLittering,stemLittering, coarseRootLittering;
 	double soil_ph;
-	double DClitter;
 	//sergio; not clear till concepts and dynamics; what's that and how to replace&introcude in 3d-cmcc
 	double till_fact, tilq;
 	//dC
 	double day_C_mine;
 	double day_N_mine;
 	double day_N_assim;
-	double DChumads;
-	double DChumus;
 	double day_soil_nh3;
 	double wrcvl, wrcl, wrcr, wcrb, wcrh,whumus;
 	double wtcavai,w_no2,w_no3,w_n2o, w_nh4, w_nh3, wpool_no;
@@ -1077,8 +1091,6 @@ typedef struct {
 	double soilSurfaceT;
 	double temp_avet;
 	double yr_avet;
-	double rcnrvl, rcnb, rcnrl,rcnrr,rcnh, rcnh2;
-	double rcnm;
 
 	double AddC, AddCN, AddC1, AddC2, AddC3;
 

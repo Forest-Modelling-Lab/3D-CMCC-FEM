@@ -51,3 +51,26 @@ KBIO "-9999" //decomposition rate constant for Microbial Biomass (BIO)
 KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
 PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
 LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
+SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is computed
+
+//DNDC-DECOMPOSITION
+BASE_CLAY_N "-9999" //minimum value of N adsorbed on clay surface
+MAX_CLAY_N "-9999"  //maximum value of N adsorbed on clay surface
+SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil
+SOIL_NH4 "-9999"    //0.05000 in dndc general case; initial quantity of NH4 in soil
+HYDRAULICCONDUCITIVITY "0.063"  // hydraulic conducitivity in soil (assumed as constant for now: better assume it different in different layers);
+INSOC "2.942"       //initial soil organic carbon (taken from Chiti 2010)
+LITFRAC "0.01"      // fraction of SOC affering to the litter at the first day of simulation
+HUMAFRACT "0.025"   // fraction of SOC affering to the humus pool at the first day of simulation
+HUMUFRACT "0.965"   // fraction of SOC affering to the humads pool at the first day of simulation
+BIOFRACT "0.05"     // fraction of SOC affering to the microbial pool at the first day of simulation
+RCNRVL "0.5"        // fraction of SOC affering to the litter at the first day of simulation
+RCNRL "25.0"        //C/N ratio for very labile litter pool
+RCNRR "100.0"       //C/N ratio for labile litter pool
+RCNB "10.0"         //C/N ratio for labile microbic pool
+RCNH "10.0"         //C/N ratio for humads pool
+RCNM "10.0"         //C/N ratio for resistant microbic pool
+RCNH2 "500.0"       //C/N ratio for humus pool
+DCLITTER "1.0"      //litter loss fixed fraction (still sperimental)
+DCHUMADS "1.0"      //humads loss fixed fraction (still sperimental)
+DCHUMUS "1.0"       //humus loss fixed fraction (still sperimental)

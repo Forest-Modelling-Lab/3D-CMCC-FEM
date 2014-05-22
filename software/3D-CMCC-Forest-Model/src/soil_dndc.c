@@ -7,27 +7,28 @@
 
 //void soil_initialization(CELL *const c)
 //{
+//	double litterSOC;
 //	int l;
-//	float initialSOC, litterSOC, litFract, humadsFract, humusFract;
+
 //	for (l =0; l <c->soils_count; l++)
 //	{
 //		//taken from Chiti 2010,
-//		initialSOC = 2.942;
+//		site->inSOC = 2.942;
 //		//ratios taken from DNDC default (userGuide)
-//		litFract= 0.01000;
-//		humadsFract = 0.02500;
-//		humusFract= 0.96500;
+//		site->litFract= 0.01000;
+//		site->humaFract = 0.02500;
+//		site->humuFract= 0.96500;
 //		//			Soil_NO3(-)(mgN/kg)       0.50000
 //		//			Soil_NH4(+)(mgN/kg)       0.05000
 //		//			Soil_porosity            0.451000
-//		//actually, it should be initialSOC * humusFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->hydraulicConductivity));
-//		c->soils[l].dphum = initialSOC * humusFract * site->sd * 1000 * 10000 * site->hydraulicConductivity;
-//		c->soils[l].initialOrganicC = initialSOC * humadsFract * site->sd * 1000 * 10000 * site->hydraulicConductivity;
-//		litterSOC = initialSOC * litFract * site->sd * 1000 * 10000 * site->hydraulicConductivity;
-//		c->soils[l].inert_C = initialSOC * humadsFract * site->sd * 1000 * 10000 * site->hydraulicConductivity;
+//		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->hydraulicConductivity));
+//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
 //
-//		c->soils[l].soc = initialSOC; // ???
-//		c->soils[l].rcvl = initialSOC ;
+//		c->soils[l].soc = site->inSOC; // ???
+//		c->soils[l].rcvl = site->inSOC ;
 //		c->soils[l].rcr;
 //		c->soils[l].rcl;
 //		c->soils[l].CRB1;
@@ -55,23 +56,23 @@
 //		//	    s_NH4[1]   = s_IniNH4[1] * 0.7;
 //		//	    ClayNH4[1] = s_IniNH4[1] * 0.3;
 //	}
-//	site->sd = 0.601;
+//	site->bulk_dens = 0.601;
 //	site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
 //	site->base_clay_N;
 //	site->max_clay_N;
 //	c->till_fact;
 //	c->tilq;
-//	c->rcnrvl = 5.0;
-//	c->rcnb = 10.0;
-//	c->rcnrl= 25.0;
-//	c->rcnrr= 100.0;
-//	c->rcnh= 10.0;
-//	c->rcnh2= 500.0;
-//	c->rcnm = 10.0;
-//	c->soil_ph;
-//	c->DClitter=1.0;
-//	c->DChumads=1.0;
-//	c->DChumus=1.0;
+////	site->rcnrvl = 5.0;
+////	site->rcnb = 10.0;
+////	site->rcnrl= 25.0;
+////	site->rcnrr= 100.0;
+////	site->rcnh= 10.0;
+////	site->rcnh2= 500.0;
+////	site->rcnm = 10.0;
+////	c->soil_ph;
+////	site->DClitter=1.0;
+////	site->DChumads=1.0;
+////	site->DChumus=1.0;
 //
 //	//taken from dndc CreateInputFile.cpp
 //	//	RCNRVL = 5.;
@@ -89,12 +90,14 @@
 //	//	Soil_NO3(-)(mgN/kg)       0.50000
 //	//		Soil_NH4(+)(mgN/kg)       0.05000
 //	//	PassiveC = 0.0;
+//
+//
+//	//	Soil_NO3(-)(mgN/kg)       0.50000
+//	//		Soil_NH4(+)(mgN/kg)       0.05000
 //}
 //
 //
-////void alloc_litter_into_pools(float AddCN, float AddC, int oz, float AddC1, float AddC2,
-////										  float AddC3, float *dInertC, int IfStub,
-////										  float rcnrvl, float rcnrl, float rcnrr, float *nh4)
+//
 //void litter_partitioning(CELL *const c)
 //{
 //	float  RR1, RR2, RR3;
@@ -295,7 +298,7 @@ void soil_temperature(CELL * const c, int years, int month, int day, const MET_D
 		Min = c->soils[l].mmm;
 		Vwater = c->soils[l].waterContent * 10000.0; //m water/layer -> m3 water/layer/ha
 
-		Vmin = Min / (1000 * site->sd); //volume of mineral matter, m3/layer/ha
+		Vmin = Min / (1000 * site->bulk_dens); //volume of mineral matter, m3/layer/ha
 		Vorg = Org / 0.58 / (1000 * 0.4); //volume of organic matter, m3/layer/ha
 		Vsoil = Vmin + Vorg; //volume of soil, m3/layer/ha
 
@@ -647,7 +650,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 					m->cells[cell].soils[l].co2 += dlitter;
 					m->cells[cell].soils[l].day_O2 += dlitter;
 					if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
-					m->cells[cell].soils[l].nh4 += (dlitter / m->cells[cell].rcnrvl);
+					m->cells[cell].soils[l].nh4 += (dlitter / site->rcnrvl);
 					m->cells[cell].litter -= dlitter;
 					if ( m->cells[cell].litter <= 0.0000001 ) m->cells[cell].litter = 0.0;
 				}
@@ -659,7 +662,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 
 			/* potential CO2 from rcvl decomposition */
 			r_RFM = Maximum(0.0, Minimum(1.0, RFM));//max(0.7, min(1.0, RFM));
-			Frcvl = 2.0 * r_RFM * KRCVL * DDRF * m->cells[cell].DClitter * f_till_fact;//* f_till_fact
+			Frcvl = 2.0 * r_RFM * KRCVL * DDRF * site->DClitter * f_till_fact;//* f_till_fact
 			if(Frcvl>1.0)
 				Frcvl=1.0;
 
@@ -668,14 +671,14 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].DRCB1 = (m->cells[cell].soils[l].drcvl) * EFFRB;
 			sum_drcvl = (m->cells[cell].soils[l].drcvl) + (m->cells[cell].soils[l].DRCB1);
 			m->cells[cell].soils[l].rcvl -= sum_drcvl;
-			m->cells[cell].soils[l].nh4+= (sum_drcvl / m->cells[cell].rcnrvl);
+			m->cells[cell].soils[l].nh4+= (sum_drcvl / site->rcnrvl);
 			m->cells[cell].soils[l].co2+= m->cells[cell].soils[l].drcvl;
 			m->cells[cell].soils[l].day_O2+= m->cells[cell].soils[l].drcvl;
 
 			if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
 			m->cells[cell].soils[l].CRB1 += ((m->cells[cell].soils[l].DRCB1) * SRB);
 			m->cells[cell].soils[l].CRB2+= ((m->cells[cell].soils[l].DRCB1) * (1.0 - SRB));
-			m->cells[cell].soils[l].nh4 -= (m->cells[cell].soils[l].DRCB1 / m->cells[cell].rcnb);
+			m->cells[cell].soils[l].nh4 -= (m->cells[cell].soils[l].DRCB1 / site->rcnb);
 
 			// N demand for microbes formation
 			//DRNB1 = (*DRCB1) / rcnb;
@@ -683,8 +686,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			//FreeN1 = sum_drcvl / rcnrvl - DRNB1;
 
 			m->cells[cell].day_C_mine += m->cells[cell].soils[l].drcvl;
-			m->cells[cell].day_N_mine += m->cells[cell].soils[l].drcvl/m->cells[cell].rcnrvl;//1(sum_drcvl / rcnrvl);
-			m->cells[cell].day_N_assim += (m->cells[cell].soils[l].DRCB1 / m->cells[cell].rcnb);
+			m->cells[cell].day_N_mine += m->cells[cell].soils[l].drcvl/site->rcnrvl;//1(sum_drcvl / rcnrvl);
+			m->cells[cell].day_N_assim += (m->cells[cell].soils[l].DRCB1 / site->rcnb);
 
 			//----------------------------------------------------------------------------
 			// Decomposition of labile litter
@@ -693,7 +696,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			else  f_till_fact = m->cells[cell].till_fact;
 
 			/* potential CO2 from rcl decomposition */
-			Frcl = 2.0*RFM * KRCL * DDRF * m->cells[cell].DClitter * f_till_fact;//* f_till_fact
+			Frcl = 2.0*RFM * KRCL * DDRF * site->DClitter * f_till_fact;//* f_till_fact
 			if(Frcl>1.0)
 				Frcl=1.0;
 
@@ -706,10 +709,10 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			total_drcl = p_drcl + p_DRCB2;
 
 			/* N release from potential total rcl decomposition */
-			PTAN = total_drcl / m->cells[cell].rcnrl;
+			PTAN = total_drcl / site->rcnrl;
 
 			/* potential N demand for microbial formation */
-			PDN = p_DRCB2 / m->cells[cell].rcnb;
+			PDN = p_DRCB2 / site->rcnb;
 
 			/* net release of N */
 			ddN = PTAN - PDN;
@@ -755,15 +758,15 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].CRB2 += ((m->cells[cell].soils[l].DRCB2) * (1.0 - SRB));
 
 			m->cells[cell].day_C_mine += m->cells[cell].soils[l].litco22;//net C release
-			m->cells[cell].day_N_mine += m->cells[cell].soils[l].litco22 / m->cells[cell].rcnrl;//2(soils[l].litco22+*DRCB2) / rcnrl; //gross N mineralization
-			m->cells[cell].day_N_assim += m->cells[cell].soils[l].DRCB2 / m->cells[cell].rcnb;//N assimilation
+			m->cells[cell].day_N_mine += m->cells[cell].soils[l].litco22 / site->rcnrl;//2(soils[l].litco22+*DRCB2) / rcnrl; //gross N mineralization
+			m->cells[cell].day_N_assim += m->cells[cell].soils[l].DRCB2 / site->rcnb;//N assimilation
 
 			if(l<=(int)(0.15/site->hydraulicConductivity))
 			{
 				Ftill=0.01;
 				FungiLitterDecomposition = m->cells[cell].soils[l].rcl * Ftill * (RFM);
-				FungiN = FungiLitterDecomposition / m->cells[cell].rcnrl;
-				FungiMicrobe = FungiN * m->cells[cell].rcnb;
+				FungiN = FungiLitterDecomposition / site->rcnrl;
+				FungiMicrobe = FungiN * site->rcnb;
 				AdditionCO21 = FungiLitterDecomposition - FungiMicrobe;
 				m->cells[cell].soils[l].co2 += AdditionCO21;
 				m->cells[cell].soils[l].day_O2 += AdditionCO21;
@@ -778,12 +781,12 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 
 			//-------------------------------------------------------------------------------------
 			// Decomposition of resistant litter
-			TN1 = m->cells[cell].soils[l].rcr/m->cells[cell].rcnrr + (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/m->cells[cell].rcnb + m->cells[cell].soils[l].no3 +m->cells[cell].soils[l].nh4 ;
+			TN1 = m->cells[cell].soils[l].rcr/site->rcnrr + (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/site->rcnb + m->cells[cell].soils[l].no3 +m->cells[cell].soils[l].nh4 ;
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
 			/* potential CO2 from rcr decomposition */
-			Frcr = 2.0*RFM * KRCR * DDRF * m->cells[cell].DClitter * f_till_fact;//
+			Frcr = 2.0*RFM * KRCR * DDRF * site->DClitter * f_till_fact;//
 
 			if(Frcr>1.0) Frcr=1.0;
 			//sergio if(l==q+1) Frcr *= 1000.0;
@@ -798,10 +801,10 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			total_drcr = p_drcr + p_DRCB3;
 
 			/* N release from potential total rcr decomposition */
-			PTAN = total_drcr / m->cells[cell].rcnrr;
+			PTAN = total_drcr / site->rcnrr;
 
 			/* potential N demand for microbe formation */
-			PDN = p_DRCB3 / m->cells[cell].rcnb;
+			PDN = p_DRCB3 / site->rcnb;
 
 			/* deficiency of N */
 			ddN = PTAN - PDN;
@@ -847,8 +850,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].CRB1  += (DRCB3 * SRB);
 			m->cells[cell].soils[l].CRB2  += (DRCB3 * (1.0 - SRB));
 
-			TN2 = m->cells[cell].soils[l].rcr /m->cells[cell].rcnrr +
-					(m->cells[cell].soils[l].CRB1 +m->cells[cell].soils[l].CRB2 )/m->cells[cell].rcnb +
+			TN2 = m->cells[cell].soils[l].rcr /site->rcnrr +
+					(m->cells[cell].soils[l].CRB1 +m->cells[cell].soils[l].CRB2 )/site->rcnb +
 					m->cells[cell].soils[l].no3 +m->cells[cell].soils[l].nh4 ;
 
 			dTN = TN2 - TN1;
@@ -857,14 +860,14 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			if(m->cells[cell].soils[l].nh4 <0.0) m->cells[cell].soils[l].nh4  = 0.0;
 
 			m->cells[cell].day_C_mine += m->cells[cell].soils[l].litco23;//net C release
-			m->cells[cell].day_N_mine += m->cells[cell].soils[l].litco23 / m->cells[cell].rcnrr;//3(soils[l].litco23+DRCB3) / rcnrl; //gross N mineralization
-			m->cells[cell].day_N_assim += DRCB3 / m->cells[cell].rcnb;//N assimilation
+			m->cells[cell].day_N_mine += m->cells[cell].soils[l].litco23 / site->rcnrr;//3(soils[l].litco23+DRCB3) / rcnrl; //gross N mineralization
+			m->cells[cell].day_N_assim += DRCB3 / site->rcnb;//N assimilation
 
 			drcra = p_drcr;
 
 			lit_co2 = drcvl + m->cells[cell].soils[l].litco22 + m->cells[cell].soils[l].litco23;//!!!
 
-			sumn = drcvl / m->cells[cell].rcnrvl + m->cells[cell].soils[l].litco22 / m->cells[cell].rcnrl + drcra / m->cells[cell].rcnrr;   /* not accurate */
+			sumn = drcvl / site->rcnrvl + m->cells[cell].soils[l].litco22 / site->rcnrl + drcra / site->rcnrr;   /* not accurate */
 
 			m->cells[cell].soils[l].litco22 = 0.0;
 			drcvl = 0.0;
@@ -875,8 +878,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 
 				Ftill2=0.0001;//0.0005
 				FungiLitterDecomposition2 = m->cells[cell].soils[l].rcr  * Ftill * (RFM);
-				FungiN2 = FungiLitterDecomposition2 / m->cells[cell].rcnrr;
-				FungiMicrobe2 = FungiN2 * m->cells[cell].rcnb;
+				FungiN2 = FungiLitterDecomposition2 / site->rcnrr;
+				FungiMicrobe2 = FungiN2 * site->rcnb;
 				AdditionCO22 = FungiLitterDecomposition2 - FungiMicrobe2;
 				m->cells[cell].soils[l].co2  += AdditionCO22;
 				m->cells[cell].soils[l].day_O2  += AdditionCO22;
@@ -902,18 +905,18 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
-			TN1 = (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/m->cells[cell].rcnb +
-					m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].crhr/m->cells[cell].rcnh2;
+			TN1 = (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/site->rcnb +
+					m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].crhr/site->rcnh2;
 
 			/* microbe decomposition */
-			DCRB1 = RFM * KRB * DDRF * f_till_fact * m->cells[cell].soils[l].CRB1 * Fo * m->cells[cell].DChumads;
-			DCRB2 = RFM * HRB * DDRF * f_till_fact * m->cells[cell].soils[l].CRB2 * Fo * m->cells[cell].DChumads;
+			DCRB1 = RFM * KRB * DDRF * f_till_fact * m->cells[cell].soils[l].CRB1 * Fo * site->DChumads;
+			DCRB2 = RFM * HRB * DDRF * f_till_fact * m->cells[cell].soils[l].CRB2 * Fo * site->DChumads;
 			DCRB = DCRB1 + DCRB2;
 
 			m->cells[cell].soils[l].CRB1 -= (DCRB1);
 			m->cells[cell].soils[l].CRB2 -= (DCRB2);
 
-			m->cells[cell].soils[l].nh4 += (DCRB / m->cells[cell].rcnb);
+			m->cells[cell].soils[l].nh4 += (DCRB / site->rcnb);
 
 			/* efficiency */
 			FBBC = DCRB * EFFAC;	//    EFFAC = 0.2;
@@ -922,8 +925,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].CRB1 += (FBBC * SRB);
 			m->cells[cell].soils[l].CRB2 += (FBBC * (1.0 - SRB));
 
-			m->cells[cell].soils[l].nh4 -= (FBBC / m->cells[cell].rcnb);
-			m->cells[cell].day_N_assim += (FBBC / m->cells[cell].rcnb);
+			m->cells[cell].soils[l].nh4 -= (FBBC / site->rcnb);
+			m->cells[cell].day_N_assim += (FBBC / site->rcnb);
 
 			m->cells[cell].soils[l].dcbavai = FBBC;
 
@@ -931,8 +934,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			FBHC = DCRB * EFFNO;
 			m->cells[cell].soils[l].crhr += FBHC;
 
-			m->cells[cell].soils[l].nh4 -= (FBHC / m->cells[cell].rcnh2);
-			m->cells[cell].day_N_assim += (FBHC / m->cells[cell].rcnh);
+			m->cells[cell].soils[l].nh4 -= (FBHC / site->rcnh2);
+			m->cells[cell].day_N_assim += (FBHC / site->rcnh);
 
 
 			/* CO2 from net microbe decomposition */
@@ -941,14 +944,14 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].day_O2 += fb_co2;
 			if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
 			m->cells[cell].day_C_mine += fb_co2;
-			m->cells[cell].day_N_mine += fb_co2/ m->cells[cell].rcnb;//4
+			m->cells[cell].day_N_mine += fb_co2/ site->rcnb;//4
 
 			/* NH4 from net microbe decomposition */
-			fb_nh4 = (fb_co2) / m->cells[cell].rcnb;
+			fb_nh4 = (fb_co2) / site->rcnb;
 
 
-			TN2 = (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/m->cells[cell].rcnb +
-					m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].crhr/m->cells[cell].rcnh2;
+			TN2 = (m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2)/site->rcnb +
+					m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].crhr/site->rcnh2;
 			dTN = TN2 - TN1;
 			m->cells[cell].soils[l].nh4 -= dTN;
 			m->cells[cell].soils[l].nh4 = Maximum(0.0, m->cells[cell].soils[l].nh4);
@@ -964,8 +967,8 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			// humads decomposition */
 			Fclay = 0.5 * pow( site->clay_perc , -0.471);
 
-			k1 = 0.8 * RFM * hrh * DDRF * f_till_fact * Fclay * m->cells[cell].DChumads;//1.0
-			k2 = 0.8 * RFM * krh * DDRF * f_till_fact * Fclay * m->cells[cell].DChumads;//1.0
+			k1 = 0.8 * RFM * hrh * DDRF * f_till_fact * Fclay * site->DChumads;//1.0
+			k2 = 0.8 * RFM * krh * DDRF * f_till_fact * Fclay * site->DChumads;//1.0
 
 			if(l==(m->cells[cell].soils_count+5))
 			{
@@ -982,10 +985,10 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			//	*LabP  += dPP;
 			//	*OrgP  -= dPP;
 
-			TN1 = m->cells[cell].soils[l].crhr /m->cells[cell].rcnh2 + m->cells[cell].soils[l].crhl /
-					m->cells[cell].rcnh +m->cells[cell].soils[l].nh4  +
-					(m->cells[cell].soils[l].CRB1 +m->cells[cell].soils[l].CRB2 )/m->cells[cell].rcnb +
-					m->cells[cell].soils[l].dphum /m->cells[cell].rcnm;//new humads
+			TN1 = m->cells[cell].soils[l].crhr /site->rcnh2 + m->cells[cell].soils[l].crhl /
+					site->rcnh +m->cells[cell].soils[l].nh4  +
+					(m->cells[cell].soils[l].CRB1 +m->cells[cell].soils[l].CRB2 )/site->rcnb +
+					m->cells[cell].soils[l].dphum /site->rcnm;//new humads
 
 			m->cells[cell].soils[l].crhr  -= dchr;
 			m->cells[cell].soils[l].crhl  -= dchl;
@@ -994,7 +997,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].co2  += crhr_co2;
 			m->cells[cell].soils[l].day_O2  += crhr_co2;
 			if(m->cells[cell].soils[l].day_O2 <0.0) m->cells[cell].soils[l].day_O2 =0.0;
-			m->cells[cell].soils[l].nh4  += (crhr_co2 / m->cells[cell].rcnh2);
+			m->cells[cell].soils[l].nh4  += (crhr_co2 / site->rcnh2);
 
 			// efficiency */
 			dhbcr = dchr * 0.2;
@@ -1008,7 +1011,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			m->cells[cell].soils[l].co2  += crhl_co2;
 			m->cells[cell].soils[l].day_O2  += crhl_co2;
 			if(m->cells[cell].soils[l].day_O2 <0.0) m->cells[cell].soils[l].day_O2 =0.0;
-			m->cells[cell].soils[l].nh4  += (crhl_co2 / m->cells[cell].rcnh);
+			m->cells[cell].soils[l].nh4  += (crhl_co2 / site->rcnh);
 			// efficiency */
 			dhbcl = dchl * 0.15;
 			// new microbe
@@ -1017,9 +1020,9 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			nhuml = dchl - (dhbcl + crhl_co2);
 			m->cells[cell].soils[l].dphum  += nhuml;
 
-			TN2 = m->cells[cell].soils[l].crhr /m->cells[cell].rcnh2 + m->cells[cell].soils[l].crhl /
-					m->cells[cell].rcnh + m->cells[cell].soils[l].nh4  + (m->cells[cell].soils[l].CRB1 +
-							m->cells[cell].soils[l].CRB2 )/m->cells[cell].rcnb + m->cells[cell].soils[l].dphum /m->cells[cell].rcnm;
+			TN2 = m->cells[cell].soils[l].crhr /site->rcnh2 + m->cells[cell].soils[l].crhl /
+					site->rcnh + m->cells[cell].soils[l].nh4  + (m->cells[cell].soils[l].CRB1 +
+							m->cells[cell].soils[l].CRB2 )/site->rcnb + m->cells[cell].soils[l].dphum /site->rcnm;
 			dTN = TN2 - TN1;
 			m->cells[cell].soils[l].nh4  -= dTN;
 
@@ -1027,7 +1030,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 
 			humad_co2 = crhr_co2 + crhl_co2;
 			m->cells[cell].day_C_mine += humad_co2;
-			m->cells[cell].day_N_mine += (crhl_co2/m->cells[cell].rcnh + crhr_co2/m->cells[cell].rcnh2);
+			m->cells[cell].day_N_mine += (crhl_co2/site->rcnh + crhr_co2/site->rcnh2);
 
 			if (m->cells[cell].soils[l].soilTemp  >= 0.0)
 			{
@@ -1065,13 +1068,13 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			Ftemp = m->cells[cell].soils[l].soilTemp / 25.0;
 			Ftemp = Maximum(1.0, Minimum(0.001, Ftemp));
 
-			d_factor = 0.00001 * RFM * DDRF * f_till_fact * Fclay * Fdepth * m->cells[cell].DChumus * Ftemp;//0.0008
+			d_factor = 0.00001 * RFM * DDRF * f_till_fact * Fclay * Fdepth * site->DChumus * Ftemp;//0.0008
 
 			if(d_factor < 0.0) d_factor = 0.0;
 
 			d_humus = m->cells[cell].soils[l].dphum* d_factor;
 
-			TN1 = m->cells[cell].soils[l].dphum/m->cells[cell].rcnm + m->cells[cell].soils[l].nh4;
+			TN1 = m->cells[cell].soils[l].dphum/site->rcnm + m->cells[cell].soils[l].nh4;
 
 			m->cells[cell].soils[l].dphum -= d_humus;
 			if(m->cells[cell].soils[l].dphum < 0.0)
@@ -1080,16 +1083,16 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 				d_humus = 0.0;
 			}
 
-			m->cells[cell].soils[l].nh4 += (d_humus / m->cells[cell].rcnm);
+			m->cells[cell].soils[l].nh4 += (d_humus / site->rcnm);
 			m->cells[cell].soils[l].co2 += d_humus;
 			m->cells[cell].soils[l].day_O2 += d_humus;
 			if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
 
-			m->cells[cell].day_N_mine += (d_humus / m->cells[cell].rcnm);//6
+			m->cells[cell].day_N_mine += (d_humus / site->rcnm);//6
 
 			m->cells[cell].day_C_mine += d_humus;
 
-			TN2 = m->cells[cell].soils[l].dphum/m->cells[cell].rcnm + m->cells[cell].soils[l].nh4;
+			TN2 = m->cells[cell].soils[l].dphum/site->rcnm + m->cells[cell].soils[l].nh4;
 
 			dTN = TN2 - TN1;
 
@@ -1283,12 +1286,12 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 				if ( day == 31 &&month == DECEMBER && l==m->cells[cell].soils_count -1)
 				{
 
-					wrnvl = m->cells[cell].wrcvl / m->cells[cell].rcnrvl;
-					wrnl = m->cells[cell].wrcl / m->cells[cell].rcnrl;
-					wrnr =m->cells[cell].wrcr / m->cells[cell].rcnrr;
-					wnrb = m->cells[cell].wcrb /m->cells[cell].rcnb;
-					wnrh = m->cells[cell].wcrh / m->cells[cell].rcnh;
-					whumusn =m->cells[cell].whumus / m->cells[cell].rcnm;
+					wrnvl = m->cells[cell].wrcvl / site->rcnrvl;
+					wrnl = m->cells[cell].wrcl / site->rcnrl;
+					wrnr =m->cells[cell].wrcr / site->rcnrr;
+					wnrb = m->cells[cell].wcrb /site->rcnb;
+					wnrh = m->cells[cell].wcrh / site->rcnh;
+					whumusn =m->cells[cell].whumus / site->rcnm;
 
 					//todo m->cells[cell].End_SOC = m->cells[cell].wrcvl+m->cells[cell].wrcl+m->cells[cell].wrcr+m->cells[cell].wcrb+m->cells[cell].wcrh+m->cells[cell].whumus;
 
