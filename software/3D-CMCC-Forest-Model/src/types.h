@@ -158,8 +158,7 @@ typedef struct
 
 	//DNDC
 	//	double RFM;
-	double base_clay_N,
-	max_clay_N,
+	double soil_ph,
 	soil_no3,
 	soil_nh4,
 	hydraulicConductivity,

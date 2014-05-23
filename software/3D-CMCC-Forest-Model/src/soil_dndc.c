@@ -21,7 +21,6 @@ void soil_initialization(CELL *const c)
 //		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
 //		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
 //		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-		c->soil_ph = 5.6;
 
 		//gC/m-2 profile-1
 //		c->soils[l].dphum = site->inSOC * site->humuFract * 1000; // * site->soil_depth;
@@ -1161,8 +1160,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				// NH4+ adsorption on clay
 				TotalNH4 = m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].clay_nh4;
 
-				lbcn = site->base_clay_N * (double)pow(0.5, (double)l);
-				lmcn = site->max_clay_N * (double)pow(0.5, (double)l);
+				lbcn = m->cells[cell].base_clay_N * (double)pow(0.5, (double)l);
+				lmcn = m->cells[cell].max_clay_N * (double)pow(0.5, (double)l);
 
 				if(m->cells[cell].soils[l].clay_nh4 > lbcn) active_clay_nh4 = m->cells[cell].soils[l].clay_nh4 - lbcn;
 				else active_clay_nh4 = 0.0;
