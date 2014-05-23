@@ -10,7 +10,7 @@ CO2CONC "380.0" //CO2 concentration
 
 
 
-INITIALLITTER "" //Initial Litter (estimated)
+INITIALLITTER "-9999" //Initial Litter (estimated)
 
 MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 //MAXASW "160" //Maximum Available soil water in mm

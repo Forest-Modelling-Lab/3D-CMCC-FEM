@@ -7,30 +7,70 @@
 
 void soil_initialization(CELL *const c)
 {
-	double litterSOC;
+	double litterSOC, CRB, Thc;
 	int l;
+	double srh = .16;
 	//c->soils_count = 1;
 	for (l =0; l < c->soils_count; l++)
 	{
 		//taken from Chiti 2010,
 		//ratios taken from DNDC default (userGuide)
 		//			Soil_porosity            0.451000
-		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->hydraulicConductivity));
-		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->soil_depth));
+//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		c->soil_ph = 5.6;
+
+		//gC/m-2 profile-1
+//		c->soils[l].dphum = site->inSOC * site->humuFract * 1000; // * site->soil_depth;
+//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
+		litterSOC = site->inSOC * site->litFract; // * site->soil_depth;
+		c->soils[l].initialOrganicC = site->inSOC - litterSOC;
+//		c->soils[l].inert_C = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
+		CRB = RBO * c->soils[l].initialOrganicC;
+		c->soils[l].CRB1 = CRB * SRB;
+		c->soils[l].CRB2 = CRB * (1.0 - SRB);
+		Thc = c->soils[l].initialOrganicC - CRB;
+		c->soils[l].crhl = Thc * srh;
+		c->soils[l].crhr = Thc - c->soils[l].crhl;
+		c->soils[l].soilDepth = site->soil_depth;
+		//
+//		///////////////////////////
+//					double CRB, Thc;
+//					CRB = RBO * ocini[i];
+//					CRB1[i] = CRB * SRB;
+//					CRB2[i] = CRB * (1.0 - SRB);
+//					Thc = ocini[i] - CRB;
+//					crhl[i] = Thc * srh;
+//					crhr[i] = Thc - crhl[i];
+//					///////////////////////////////////
+////years != 0
+//		float rbo = 0.015 * 0.5 + 0.00001;
+//		float CRB = ocini[i] * rbo + 0.00001;
+//		CRB1[i] = CRB * SRB;
+//		CRB2[i] = CRB * (1.0 - SRB);
+//		float AHM = ocini[i] - CRB;
+//		if(AHM<=0.0) AHM = 0.0000001;
+//		crhl[i] = AHM * srh;
+//		crhr[i] = AHM * (1.0 - srh);
+//
+//		wcrb += (CRB1[i]+CRB2[i]);
+//		day_clay_N += clay_nh4[i];
+
+
 
 		c->soils[l].soc = site->inSOC; // ???
 		c->soils[l].rcvl = litterSOC *.005;
 		c->soils[l].rcr= litterSOC *.045;
 		c->soils[l].rcl= litterSOC *.95;
-		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
-		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
-		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * site->bulk_dens /1000000;
-		c->soils[l].nh4 = site->soil_nh4 * 0.7 * site->bulk_dens /1000000;
-		c->soils[l].no3 = site->soil_no3 *site->bulk_dens /1000000; //bulk_dens as mass
-
+//		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
+//		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
+		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * site->bulk_dens ;
+		c->soils[l].nh4 = site->soil_nh4 * 0.7 * 10*site->bulk_dens ;
+		c->soils[l].no3 = site->soil_no3 *10*site->bulk_dens ; //bulk_dens as mass
+		c->litter = litterSOC;
 		//	    Tranr[1] = Soil_OCatSurface * Soil_Litter * m;
 		//	    OCini[1] = Soil_OCatSurface * Soil_humads * m;
 		//	    Dphum[1] = Soil_OCatSurface * Soil_humus * m;
@@ -499,7 +539,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 		//soil_temperature(&m->cells[cell], years, month, day, met);
 
 		//effect of clay adsorption: according to Zhang no 2.3026
-		clayc = (double)(log(.14 / site->clay_perc) / 2.3026 + 1);
+		clayc = (double)(log(.14 / (site->clay_perc/100)) / 2.3026 + 1);
 		krh = (double).16 * clayc;
 		hrh = (double).006 * clayc;
 
@@ -518,7 +558,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			//this considered the imapct of soil clay and microbio
 			//activity in each layer
 
-			DDRF = (DRF - 0.02 * site->clay_perc) * Fl;	   // * pow(m->cells[cell].MicrobioIndex, 0.1);
+			DDRF = (DRF - 0.02 * site->clay_perc/100) * Fl;	   // * pow(m->cells[cell].MicrobioIndex, 0.1);
 			if ( DDRF < 0.0 ) DDRF = 0.0;
 
 			//		if(m->cells[cell].TTT>0.0)		//&& m->cells[cell].soils[l].soil_ph  != m->cells[cell].soils[l].sph)
@@ -807,7 +847,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 					(m->cells[cell].soils[l].CRB1 +m->cells[cell].soils[l].CRB2 )/site->rcnb +
 					m->cells[cell].soils[l].no3 +m->cells[cell].soils[l].nh4 ;
 
-			dTN = TN2 - TN1;
+			dTN = Maximum(TN2 - TN1, 0);
 
 			m->cells[cell].soils[l].nh4  -= dTN;
 			if(m->cells[cell].soils[l].nh4 <0.0) m->cells[cell].soils[l].nh4  = 0.0;
@@ -918,7 +958,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			else  f_till_fact =m->cells[cell].till_fact;
 
 			// humads decomposition */
-			Fclay = 0.5 * pow( site->clay_perc , -0.471);
+			Fclay = 0.5 * pow( site->clay_perc /100 , -0.471);
 
 			k1 = 0.8 * RFM * hrh * DDRF * f_till_fact * Fclay * site->DChumads;//1.0
 			k2 = 0.8 * RFM * krh * DDRF * f_till_fact * Fclay * site->DChumads;//1.0
@@ -1001,21 +1041,22 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
-			if(l>m->cells[cell].soils_count-1)
-			{
-				site->clay_perc= 0.01;
-				//previously soilDepth[l]
-				m->cells[cell].soils[l].soilDepth = 0.01;
-			}
+//			if(l>m->cells[cell].soils_count-1)
+//			{
+//				site->clay_perc= 0.01;
+//				//previously soilDepth[l]
+//				m->cells[cell].soils[l].soilDepth = 0.01;
+//			}
 
 			//if(st[l]<12)
-			Fclay = 0.1793 * pow(site->clay_perc, -0.471) * 20.0;
+			Fclay = 0.1793 * pow(site->clay_perc /100, -0.471) * 20.0;
 
 			Fclay=Maximum(0.0, Minimum(1.0, Fclay));
 
 			//if(st==12) Fclay *= 0.1;
-
-			Fdepth = (double)pow(10.0, (-20.0 * m->cells[cell].soils[l].soilDepth) + 1.0);
+			//fixSergio being a single layer, assumed the value at depth .5
+			//Fdepth = (double)pow(10.0, (-20.0 * m->cells[cell].soils[l].soilDepth) + 1.0);
+			Fdepth = (double)pow(10.0, (-20.0 * .5) + 1.0);
 			Fdepth=Maximum(0.0, Minimum(1.0, Fdepth));
 
 			Ftemp = m->cells[cell].soils[l].soilTemp / 25.0;
@@ -1061,11 +1102,11 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			wd2 = (double)pow(10.0, -5.0);
 			Kw = 1.945 * exp(0.0645 * m->cells[cell].soils[l].soilTemp) * wd1;//water dissociation constant
 			Ka = (1.416 + 0.01357 * m->cells[cell].soils[l].soilTemp) * wd2;//NH4+/NH3 equilibrium constant
-			hydrogen = (double)pow(10.0, -m->cells[cell].soil_ph);//mol/L
+			hydrogen = (double)pow(10.0, -site->);//mol/L
 			hydroxide = Kw / hydrogen;//mol/L
 
 			//suspect its porosity
-			V_water = m->cells[cell].soils[l].soilMoisture * site->hydraulicConductivity * 10000.0 * 1000.0;//liter water/ha in layer l
+			V_water = m->cells[cell].soils[l].soilMoisture * site->hydraulicConductivity * 1000.0;//liter water/m in layer l
 
 			mol_nh4 = 1000.0 * m->cells[cell].soils[l].nh4 / 14.0 / V_water;//kg N -> mol/L
 			mol_nh3 = mol_nh4 * hydroxide / Ka;//mol/L
@@ -1128,7 +1169,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 
 				totalN = m->cells[cell].soils[l].nh4 + active_clay_nh4;
 
-				FIXRATE = 0.5 * (7.2733*pow(site->clay_perc, 3.0) - 11.22*pow(site->clay_perc, 2.0) + 5.7198*site->clay_perc + 0.0263);//0.99
+				FIXRATE = 0.5 * (7.2733*pow(site->clay_perc /100, 3.0) - 11.22*pow(site->clay_perc /100, 2.0) + 5.7198*site->clay_perc/100 + 0.0263);//0.99
 
 				//FIXRATE =  0.0144 * (double)exp(0.0981*CEC[l]);
 
@@ -1379,7 +1420,7 @@ void soilCEC(CELL *const c)
 	for (soil = 0; soil< c->soils_count; soil++ )
 	{
 		//check it was clay
-		double xx = site->clay_perc * 100.0;// + (double)exp(soc[i]/m*1000.0-20.0);
+		double xx = site->clay_perc /100 * 100.0;// + (double)exp(soc[i]/m*1000.0-20.0);
 		//if(xx>100.0) xx=100.0;
 		c->soils[soil].CEC= 1.0802 * xx + 14.442;	//meq/100 g soil
 		c->soils[soil].CEC =c->soils[soil].CEC * 14.0 / 100000.0 * site->bulk_dens;	 //assumed m as bulk density//meq/100 g soil -> kg N/ha/layer
