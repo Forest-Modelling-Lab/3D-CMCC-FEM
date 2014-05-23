@@ -1205,6 +1205,7 @@ int main(int argc, char *argv[])
 							//for RothC
 							Get_avg_monthly_temp (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
 							Get_cum_monthly_rain (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
+
 							//
 							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
 							Get_rho_air (&m->cells[cell], day, month, years, yos);
@@ -1247,7 +1248,7 @@ int main(int argc, char *argv[])
 									else
 									{
 										puts(msg_ok);
-										soil_Log("\nsoilLog prova");
+//										soil_Log("\nsoilLog prova");
 
 										//run for SOIL functions
 										//soil_model (m, yos, years, month, day, years_of_simulation);
@@ -1256,33 +1257,14 @@ int main(int argc, char *argv[])
 										{
 											Log("RUNNING DNDC.....\n");
 											//TODO SERGIO
-											soil_Log("\nsoil_parameters:\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f\n%f",site->base_clay_N,
-													site->max_clay_N,
-													site->soil_no3,
-													site->soil_nh4,
-													site->hydraulicConductivity,
-													site->inSOC,
-													site->	litFract,
-													site->	humaFract,
-													site->humuFract,
-													site->	bioFract,
-													site->rcnrvl,
-													site->	rcnrl,
-													site->	rcnrr,
-													site->rcnb,
-													site->	rcnh,
-													site->rcnm,
-													site->rcnh2,
-													site->	DClitter,
-													site->	DChumads,
-													site->DChumus);
+											soil_dndc_sgm (m, yos, years, month, day, years_of_simulation);
 											//soil_dndc......................................
 										}
 										else if (!mystricmp(settings->rothC, "on"))
 										{
 											Log("RUNNING ROTHC.....\n");
 											//TODO SERGIO
-											//soil_rothc.....................................
+											soil_rothC (m, yos, years, month, day, years_of_simulation);
 										}
 										else
 										{
@@ -1311,6 +1293,8 @@ int main(int argc, char *argv[])
 							}
 							Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
 							Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, years, month, day);
+							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+
 						}
 						Log("****************END OF MONTH (%d)*******************\n", month+1);
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);

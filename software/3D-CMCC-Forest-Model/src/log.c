@@ -1064,8 +1064,122 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 	}
 	if (!mystricmp(settings->dndc, "on"))
 	{
-		soil_Log("RUNNING DNDC.....\n");
 		//fixSergio improve a multilayer based log, specular to the one used for the aboveground
+		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
+		{
+			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s "
+					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s"
+					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
+					"DOY", "YEAR", "MONTH", "DAY", "leafLittering","fineRootLittering", "woodLittering", "stemLittering", "coarseRootLittering", "day_C_mine",
+					"day_N_mine", "day_N_assim", "day_soil_nh3", "day_clayn", "day_clay_N",
+					"wrcvl", "wrcl", "wrcr", "wcrb", "wcrh","whumus", "wtcavai", "w_no3", "w_nh4", "w_nh3", "wsoc", "day_no2",
+					"runoff_N", "previousSoilT", "soilSurfaceT", "temp_avet", "yr_avet","base_clay_N", "max_clay_N",
+					"AddC", "AddCN", "AddC1", "AddC2", "AddC3");
+		}
+		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		{
+			doy = 1;
+		}
+		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
+				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
+				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n",
+				doy++, yos[years].year, month+1, day+1,
+				c->leafLittering,
+				c->fineRootLittering,
+				c->woodLittering,
+				c->stemLittering,
+				c->coarseRootLittering,
+				c->day_C_mine,
+				c->day_N_mine,
+				c->day_N_assim,
+				c->day_soil_nh3,
+				c->day_clayn,
+				c->day_clay_N,
+				c->wrcvl,
+				c->wrcl,
+				c->wrcr,
+				c->wcrb,
+				c->wcrh,
+				c->whumus,
+				c->wtcavai,
+				c->w_no3,
+				c->w_nh4,
+				c->w_nh3,
+				c->wsoc,
+				c->day_no2,
+				c->runoff_N,
+				c->previousSoilT,
+				c->soilSurfaceT,
+				c->temp_avet,
+				c->yr_avet,
+				c->base_clay_N,
+				c->max_clay_N,
+				c->AddC,
+				c->AddCN,
+				c->AddC1,
+				c->AddC2,
+				c->AddC3);
+
+		//soil structure variables
+		//fixSergio improve a multilayer based log, specular to the one used for the aboveground
+//		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
+//		{
+//			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s "
+//					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s"
+//					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n",
+//					"DOY", "YEAR", "MONTH", "DAY", "soilMoisture","soilTemp", "ice", "soc", "doc", "rcvl",
+//					"rcr", "rcl", "CRB1", "CRB2", "crhl",
+//					"crhr", "dphum", "no3", "no2", "nh4","nh3", "co2", "day_O2", "dcbavai", "drcvl", "DRCB1", "DRCB2",
+//					"soilDepth", "clay_nh4", "inert_C", "LabP", "AdsP","sts", "mmm",
+//					"initialOrganicC", "waterContent", "litco22", "litco23", "CEC");
+//		}
+//		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+//		{
+//			doy = 1;
+//		}
+//		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+//				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
+//				"\t%8.6f \t%8.6f \t%8.6f\t%8.6f\t%8.6f\t%8.6f\n \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
+//				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f ",
+//				doy++, yos[years].year, month+1, day+1,
+//				c->soils[0].soilMoisture,
+//				c->soils[0].soilTemp,
+//				c->soils[0].ice,
+//				c->soils[0].soc,
+//				c->soils[0].doc,
+//				c->soils[0].rcvl,
+//				c->soils[0].rcr,
+//				c->soils[0].rcl,
+//				c->soils[0].CRB1,
+//				c->soils[0].CRB2,
+//				c->soils[0].crhl,
+//
+//				c->soils[0].crhr,
+//				c->soils[0].dphum,
+//				c->soils[0].no3,
+//				c->soils[0].no2,
+//				c->soils[0].nh4,
+//				c->soils[0].nh3,
+//				c->soils[0].co2,
+//				c->soils[0].day_O2,
+//				c->soils[0].dcbavai,
+//				c->soils[0].drcvl,
+//				c->soils[0].DRCB1,
+//				c->soils[0].DRCB2,
+//				c->soils[0].soilDepth,
+//
+//				c->soils[0].clay_nh4,
+//				c->soils[0].inert_C,
+//				c->soils[0].LabP,
+//				c->soils[0].AdsP,
+//				c->soils[0].sts,
+//				c->soils[0].mmm,
+//				c->soils[0].initialOrganicC,
+//				c->soils[0].waterContent,
+//				c->soils[0].litco22,
+//				c->soils[0].litco23,
+//				c->soils[0].CEC);
 
 	}
 	else if (!mystricmp(settings->rothC, "on"))

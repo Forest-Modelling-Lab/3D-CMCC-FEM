@@ -5,216 +5,168 @@
 #include "types.h"
 #include "constants.h"
 
-//void soil_initialization(CELL *const c)
-//{
-//	double litterSOC;
-//	int l;
-
-//	for (l =0; l <c->soils_count; l++)
-//	{
-//		//taken from Chiti 2010,
-//		site->inSOC = 2.942;
-//		//ratios taken from DNDC default (userGuide)
-//		site->litFract= 0.01000;
-//		site->humaFract = 0.02500;
-//		site->humuFract= 0.96500;
-//		//			Soil_NO3(-)(mgN/kg)       0.50000
-//		//			Soil_NH4(+)(mgN/kg)       0.05000
-//		//			Soil_porosity            0.451000
-//		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->hydraulicConductivity));
-//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
-//
-//		c->soils[l].soc = site->inSOC; // ???
-//		c->soils[l].rcvl = site->inSOC ;
-//		c->soils[l].rcr;
-//		c->soils[l].rcl;
-//		c->soils[l].CRB1;
-//		c->soils[l].CRB2;
-//		c->soils[l].crhl;
-//		c->soils[l].crhr;
-//		c->soils[l].soilDepth;
-//		c->soils[l].clay_nh4;
-//		c->soils[l].inert_C;
-//
-//
-//		//	    Tranr[1] = Soil_OCatSurface * Soil_Litter * m;
-//		//	    OCini[1] = Soil_OCatSurface * Soil_humads * m;
-//		//	    Dphum[1] = Soil_OCatSurface * Soil_humus * m;
-//		//		CharC[1] = Soil_OCatSurface * PassiveC * m;
-//		//
-//		//	    s_NO3[1] = Soil_NO3 * m / 1000000.;
-//		//	    s_IniNH4[1] = Soil_NH4 * m / 1000000.;
-//		//
-//		//	    RCVL[1] = 0.0 * Tranr[1];
-//		//	    RCL[1]  = 0.0 * Tranr[1];
-//		//	    RCR[1]  = 1.0 * Tranr[1];
-//		//		Dbm = Soil_Density;
-//		//
-//		//	    s_NH4[1]   = s_IniNH4[1] * 0.7;
-//		//	    ClayNH4[1] = s_IniNH4[1] * 0.3;
-//	}
-//	site->bulk_dens = 0.601;
-//	site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
-//	site->base_clay_N;
-//	site->max_clay_N;
-//	c->till_fact;
-//	c->tilq;
-////	site->rcnrvl = 5.0;
-////	site->rcnb = 10.0;
-////	site->rcnrl= 25.0;
-////	site->rcnrr= 100.0;
-////	site->rcnh= 10.0;
-////	site->rcnh2= 500.0;
-////	site->rcnm = 10.0;
-////	c->soil_ph;
-////	site->DClitter=1.0;
-////	site->DChumads=1.0;
-////	site->DChumus=1.0;
-//
-//	//taken from dndc CreateInputFile.cpp
-//	//	RCNRVL = 5.;
-//	//	RCNRL  = 25.;
-//	//	RCNRR  = 100.;
-//	//    RCNB   = 10.0;
-//	//	RCNH   = 10.0;
-//	//	RCNM   = 10.0;
-//	//	PassiveCCN = 500.0;
-//	//	DClitter = 1.0;
-//	//	DChumads = 1.0;
-//	//	DChumus = 1.0;
-//	//	HumadCN = 10.0;
-//	//	HumusCN = 10.0;
-//	//	Soil_NO3(-)(mgN/kg)       0.50000
-//	//		Soil_NH4(+)(mgN/kg)       0.05000
-//	//	PassiveC = 0.0;
-//
-//
-//	//	Soil_NO3(-)(mgN/kg)       0.50000
-//	//		Soil_NH4(+)(mgN/kg)       0.05000
-//}
-//
-//
-//
-//void litter_partitioning(CELL *const c)
-//{
-//	float  RR1, RR2, RR3;
-//	float param1, param2, param3, param4, param5, param6;
-//	//dInertC = 0.0;
-//	float AddN = c->AddC / c->AddCN;
-//
-//	if ( c->AddCN >= rcnrvl && c->AddCN < rcnrl )
-//	{
-//		RR1 = rcnrvl;
-//		RR2 = rcnrl;
-//		c->AddC2 = (AddN - c->AddC/RR1) / (1.0/RR2 - 1.0/RR1);
-//		c->AddC1 = (c->AddC - c->AddC2);
-//		c->AddC3 = 0.0;
-//
-//	}
-//	else if ( c->AddCN >= rcnrl && c->AddCN <= rcnrr )
-//	{
-//		RR2 = rcnrl;
-//		RR3 = rcnrr;
-//		param3 = (1.0 / c->AddCN);
-//		param4 = (1.0 / RR2);
-//		param1 = param3 - param4;
-//		param5 = (1.0 / RR3);
-//		param6 = (1.0 / RR2);
-//		param2 = param5 - param6;
-//		c->AddC3 = (float)(c->AddC * (param1 / param2));
-//		c->AddC2 = (float)(c->AddC - c->AddC3);
-//		c->AddC1 = (float)0.0;
-//	}
-//	else if ( c->AddCN < rcnrvl )
-//	{
-//		float ActN = c->AddC/rcnrvl;
-//		c->AddC3 = 0.0;
-//		c->AddC2 = 0.0;
-//		c->AddC1 = c->AddC;
-//		nh4[1] += (c->AddC / (c->AddCN+0.0000001) - ActN);
-//		c->AddCN = rcnrvl;
-//	}
-//	else if ( c->AddCN > rcnrr )
-//	{
-//		//float ActC = AddC/ AddCN * rcnrr;
-//		c->AddC3 = c->AddC;//ActC;
-//		c->AddC2 = 0.0;
-//		c->AddC1 = 0.0;
-//
-//	}
-//
-//	if (c->AddC1 < 0.0) c->AddC1 = 0.0;
-//	if (c->AddC2 < 0.0) c->AddC2 = 0.0;
-//	if (c->AddC3 < 0.0) c->AddC3 = 0.0;
-//}
-//void tree_leaves_fall(MATRIX *const m, int const cell)
-//{
-//	float leaf_falln, leaf_fallc, AddC, AddCN;
-//	float AddC1, AddC2, AddC3, dInertC;
-//	double leafFall, day_nup;
-//	int   l, age,species,bVeg;
-//	for (height = m->cells[cell].heights_count -1; height >=0; height --)
-//	{
-//		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
-//		{
-//			for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
-//			{
-//				if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] ==1)
-//				{
-//					//vegetative period: the boolean variable is set to 1 (true) and it is sufficient to considered the top soil as not bare (exiting the nested for loop)
-//					day_nup += m->cells[cell].heights[height].ages[age].species[species].value[VEG_UNVEG];
-//					leafFall +=m->cells[cell].leafLittering + m->cells[cell].fineRootLittering+m->cells[cell].coarseRootLittering+m->cells[cell].stemLittering;
-//					bVeg = 1;
-//					break;
-//				}else
-//					// unvegetative period; in this case the nested loop goes on, to check if there is an height, age or species class in vegetative period
-//				{
-//					//in case of a bare topspoil, the maximum factor is divided by 1.8 to represent the reduced evapotranspiration from bare soil
-//				}
-//			}if(bVeg ==1) break;
-//		}if(bVeg==1) break;
-//	}
-//	//if ( crop[1] == 17 )
-//	{
-//		//	leaf_falln = day_nup[1] * leaf[1];
-//		//	leaf_fallc = leaf_falln * leafcn[1];
-//		//    AddC = leaf_fallc;
-//		//	AddCN = leafcn[1];
-//
-//		leaf_falln = day_nup * leafFall;
-//		/* #22-1, Add new Litter into soil litter pools */
-//		litter_partitioning(&m->cells[cell]);
-//
-//		for ( l = 0; l <= 1; l++ )
-//		{
-//			rcvl[l] += (AddC1 * 0.5);
-//			rcl[l] += (AddC2 * 0.5);
-//			rcr[l] += (AddC3 * 0.5);
-//		}
-//
-////		yr_addleafc = yr_addleafc + AddC1 +
-////				AddC2 + AddC3;
-////		yr_addleafn = yr_addleafn +
-////				AddC1 / rcnrvl +
-////				AddC2 / rcnrl +
-////				AddC3 / rcnrr;
-//		AddC1 = 0.0;
-//		AddC2 = 0.0;
-//		AddC3 = 0.0;
-//
-//		/* leaf_falln = 0;
-//	leaf_fallc = 0; */
-//
-//	}
-//}
-
-
-void get_av_year_temperature(CELL * const c, int years, int month, int day, const MET_DATA *const met )
+void soil_initialization(CELL *const c)
 {
+	double litterSOC;
 	int l;
+	//c->soils_count = 1;
+	for (l =0; l < c->soils_count; l++)
+	{
+		//taken from Chiti 2010,
+		//ratios taken from DNDC default (userGuide)
+		//			Soil_porosity            0.451000
+		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->hydraulicConductivity));
+		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->hydraulicConductivity;
+
+		c->soils[l].soc = site->inSOC; // ???
+		c->soils[l].rcvl = litterSOC *.005;
+		c->soils[l].rcr= litterSOC *.045;
+		c->soils[l].rcl= litterSOC *.95;
+		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
+		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
+		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * site->bulk_dens /1000000;
+		c->soils[l].nh4 = site->soil_nh4 * 0.7 * site->bulk_dens /1000000;
+		c->soils[l].no3 = site->soil_no3 *site->bulk_dens /1000000; //bulk_dens as mass
+
+		//	    Tranr[1] = Soil_OCatSurface * Soil_Litter * m;
+		//	    OCini[1] = Soil_OCatSurface * Soil_humads * m;
+		//	    Dphum[1] = Soil_OCatSurface * Soil_humus * m;
+		//		CharC[1] = Soil_OCatSurface * PassiveC * m;
+		//
+		//	    s_NO3[1] = Soil_NO3 * m / 1000000.;
+		//	    s_IniNH4[1] = Soil_NH4 * m / 1000000.;
+		//
+		//	    RCVL[1] = 0.0 * Tranr[1];
+		//	    RCL[1]  = 0.0 * Tranr[1];
+		//	    RCR[1]  = 1.0 * Tranr[1];
+		//		Dbm = Soil_Density;
+		//
+		//	    s_NH4[1]   = s_IniNH4[1] * 0.7;
+		//	    ClayNH4[1] = s_IniNH4[1] * 0.3;
+	}
+	//site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
+	//	c->till_fact;
+	//	c->tilq;
+	//	Soil_NO3(-)(mgN/kg)       0.50000
+	//	Soil_NH4(+)(mgN/kg)       0.05000
+}
+
+
+void tree_leaves_fall(MATRIX *const m, int const cell)
+{
+	int height;
+	int soil;
+	float  RR1, RR2, RR3;
+	float param1, param2, param3, param4, param5, param6;
+	//dInertC = 0.0;
+	float AddN;
+	//float leaf_falln, leaf_fallc;
+	float AddC1, AddC2, AddC3 = 0; //AddC, AddCN;
+	double leafFall, leaf_falln, day_nup;
+	int   l, age,species,bVeg;
+	AddN = m->cells[cell].AddC / m->cells[cell].AddCN;
+	for (height = m->cells[cell].heights_count -1; height >=0; height --)
+	{
+		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		{
+			for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+			{
+				if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] ==1)
+				{
+					//vegetative period: the boolean variable is set to 1 (true) and it is sufficient to considered the top soil as not bare (exiting the nested for loop)
+					day_nup += m->cells[cell].heights[height].ages[age].species[species].value[VEG_UNVEG];
+					leafFall +=m->cells[cell].leafLittering + m->cells[cell].fineRootLittering+m->cells[cell].coarseRootLittering+m->cells[cell].stemLittering;
+					bVeg = 1;
+					break;
+				}else
+					// unvegetative period; in this case the nested loop goes on, to check if there is an height, age or species class in vegetative period
+				{
+					//in case of a bare topspoil, the maximum factor is divided by 1.8 to represent the reduced evapotranspiration from bare soil
+				}
+			}if(bVeg ==1) break;
+		}if(bVeg==1) break;
+	}
+	//if ( crop[1] == 17 )
+
+	//	leaf_falln = day_nup[1] * leaf[1];
+	//	leaf_fallc = leaf_falln * leafcn[1];
+	//    AddC = leaf_fallc;
+	//	AddCN = leafcn[1];
+
+	leaf_falln = day_nup * leafFall;
+	/* #22-1, Add new Litter into soil litter pools */
+	if ( m->cells[cell].AddCN >= site->rcnrvl && m->cells[cell].AddCN < site->rcnrl )
+	{
+		RR1 = site->rcnrvl;
+		RR2 = site->rcnrl;
+		m->cells[cell].AddC2 = (AddN - m->cells[cell].AddC/RR1) / (1.0/RR2 - 1.0/RR1);
+		m->cells[cell].AddC1 = (m->cells[cell].AddC - m->cells[cell].AddC2);
+		m->cells[cell].AddC3 = 0.0;
+
+	}
+	if ( m->cells[cell].AddCN >= site->rcnrl && m->cells[cell].AddCN <= site->rcnrr )
+	{
+		RR2 = site->rcnrl;
+		RR3 = site->rcnrr;
+		param3 = (1.0 / m->cells[cell].AddCN);
+		param4 = (1.0 / RR2);
+		param1 = param3 - param4;
+		param5 = (1.0 / RR3);
+		param6 = (1.0 / RR2);
+		param2 = param5 - param6;
+		m->cells[cell].AddC3 = (float)(m->cells[cell].AddC * (param1 / param2));
+		m->cells[cell].AddC2 = (float)(m->cells[cell].AddC - m->cells[cell].AddC3);
+		m->cells[cell].AddC1 = (float)0.0;
+	}
+	if ( m->cells[cell].AddCN < site->rcnrvl )
+	{
+		float ActN = m->cells[cell].AddC/site->rcnrvl;
+		m->cells[cell].AddC3 = 0.0;
+		m->cells[cell].AddC2 = 0.0;
+		m->cells[cell].AddC1 = m->cells[cell].AddC;
+		//c->soils[0].nh4 += (c->AddC / (c->AddCN+0.0000001) - ActN);	//fixSergio [0] or better a for each layer?
+		for(soil = 0; soil < m->cells[cell].soils_count; soil ++) {m->cells[cell].soils[soil].nh4 += (m->cells[cell].AddC / (m->cells[cell].AddCN+0.0000001) - ActN);}
+		m->cells[cell].AddCN = site->rcnrvl;
+	}
+	if ( m->cells[cell].AddCN > site->rcnrr )
+	{
+		//float ActC = AddC/ AddCN * rcnrr;
+		m->cells[cell].AddC3 = m->cells[cell].AddC;//ActC;
+		m->cells[cell].AddC2 = 0.0;
+		m->cells[cell].AddC1 = 0.0;
+
+	}
+
+	if (m->cells[cell].AddC1 < 0.0) m->cells[cell].AddC1 = 0.0;
+	if (m->cells[cell].AddC2 < 0.0) m->cells[cell].AddC2 = 0.0;
+	if (m->cells[cell].AddC3 < 0.0) m->cells[cell].AddC3 = 0.0;
+	for ( l = 0; l <= 1; l++ )
+	{
+		m->cells[cell].soils[l].rcvl += (AddC1 * 0.5);
+		m->cells[cell].soils[l].rcl += (AddC2 * 0.5);
+		m->cells[cell].soils[l].rcr += (AddC3 * 0.5);
+	}
+
+	//		yr_addleafc = yr_addleafc + AddC1 +
+	//				AddC2 + AddC3;
+	//		yr_addleafn = yr_addleafn +
+	//				AddC1 / rcnrvl +
+	//				AddC2 / rcnrl +
+	//				AddC3 / rcnrr;
+	AddC1 = 0.0;
+	AddC2 = 0.0;
+	AddC3 = 0.0;
+
+	/* leaf_falln = 0;
+	leaf_fallc = 0; */
+}
+
+
+void get_av_year_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
+{
 	double tempSoilTemp;
 	c->temp_avet = 0;
 	//get permission to include it in main line 1200, getting rid of the following double loop
@@ -222,19 +174,14 @@ void get_av_year_temperature(CELL * const c, int years, int month, int day, cons
 	{
 		for (day = 0; day < 365; day++)
 		{
-			for (l=0; l<c->soils_count; l++)
-			{
-				tempSoilTemp += c->soils[l].soilTemp;
-			}
-			tempSoilTemp /= c->soils_count;
+			tempSoilTemp = met[month].d[day].tsoil;
 			c->temp_avet += tempSoilTemp;
-			tempSoilTemp =0;
 		}
 	}
 	c->temp_avet /= 365;
 }
 
-void soil_temperature(CELL * const c, int years, int month, int day, const MET_DATA *const met )
+void soil_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
 {
 	int l, n, qq;
 	double K[120], Z[120], C[120], outQ[120], Kave, dQ;
@@ -474,8 +421,9 @@ void soil_temperature(CELL * const c, int years, int month, int day, const MET_D
 
 //double ttn;
 
-void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
+void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
 {
+	MET_DATA *met;
 	double  clayc, krh, hrh, DDRF;
 	double drcvl,DRCB,lit_co2, DRCB1, DRCB2, sumn, fb_nh4, fb_co2, fh_nh4, fh_co2;
 	int    cell, l,ll, vv;
@@ -515,7 +463,6 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 	double adsPo=0.0;//quantity of P retained under ambient conditions, mg P/kg soil
 
 
-	MET_DATA *met;
 	assert(m);
 	met = (MET_DATA*) yos[years].m;
 	//annual daily loop on each cell before start
@@ -538,13 +485,19 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			//dcbavai=(double)0.0;
 			fh_co2=(double)0.0;
 			fh_nh4=(double)0.0;
+			soil_initialization(&m->cells[cell]);
+		}
+		else
+		{
+			tree_leaves_fall(m, cell);
 		}
 		if (day == 0 && month == JANUARY)
 		{
 			//reinitialize data
-			get_av_year_temperature(&m->cells[cell], years, month, day, met);
+			//get_av_year_temperature(&m->cells[cell], years, month, day, met);
 		}
-		soil_temperature(&m->cells[cell], years, month, day, met);
+		//soil_temperature(&m->cells[cell], years, month, day, met);
+
 		//effect of clay adsorption: according to Zhang no 2.3026
 		clayc = (double)(log(.14 / site->clay_perc) / 2.3026 + 1);
 		krh = (double).16 * clayc;
@@ -553,14 +506,14 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 		//limiting factors f(clay%)
 		if(krh>1.0) krh=1.0;
 		if(hrh>1.0) hrh=1.0;
-		for ( l = 0; l <m->cells[cell].soils_count;  l++ )
+		for ( l = 0; l < m->cells[cell].soils_count;  l++ )
 		{
 			Fl=1.0;
 			Fl = 0.6 * (double)pow(l, -0.1366);
 			if(Fl>1.3) Fl = 1.3;
 			if(Fl<0.0) Fl = 0.0;
 
-
+			m->cells[cell].soils[l].soilTemp = met[month].d[day].tsoil;
 			//DRF is defined as a constant (0.03)
 			//this considered the imapct of soil clay and microbio
 			//activity in each layer
@@ -1048,7 +1001,7 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
-			if(l>m->cells[cell].soils_count)
+			if(l>m->cells[cell].soils_count-1)
 			{
 				site->clay_perc= 0.01;
 				//previously soilDepth[l]
@@ -1193,32 +1146,33 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 					m->cells[cell].soils[l].nh4 += (m->cells[cell].soils[l].clay_nh4 - lmcn);
 					m->cells[cell].soils[l].clay_nh4 = lmcn;
 				}
-
-
-				if(l<(int)(0.2/site->hydraulicConductivity))
-				{
-					if(m->cells[cell].soils[l].rcvl>m->cells[cell].soils[l+1].rcvl)
+				//earthworms activity
+				if(m->cells[cell].soils_count > 1){
+					if(l+1<(int)(0.2/site->hydraulicConductivity))
 					{
-						ConsumedLitter1 = EarthWormActivity * m->cells[cell].soils[l].rcvl;
-						m->cells[cell].soils[l].rcvl -= ConsumedLitter1;
-						m->cells[cell].soils[l+1].rcvl += ConsumedLitter1;
-					}
+						EarthWormActivity = (float)pow(0.0001, (float)l+1);
+						if(m->cells[cell].soils[l].rcvl>m->cells[cell].soils[l+1].rcvl)
+						{
+							ConsumedLitter1 = EarthWormActivity * m->cells[cell].soils[l].rcvl;
+							m->cells[cell].soils[l].rcvl -= ConsumedLitter1;
+							m->cells[cell].soils[l+1].rcvl += ConsumedLitter1;
+						}
 
-					if(m->cells[cell].soils[l].rcl>m->cells[cell].soils[l+1].rcl)
-					{
-						ConsumedLitter2 = EarthWormActivity * m->cells[cell].soils[l].rcl;
-						m->cells[cell].soils[l].rcl -= ConsumedLitter2;
-						m->cells[cell].soils[l+1].rcl += ConsumedLitter2;
-					}
+						if(m->cells[cell].soils[l].rcl>m->cells[cell].soils[l+1].rcl)
+						{
+							ConsumedLitter2 = EarthWormActivity * m->cells[cell].soils[l].rcl;
+							m->cells[cell].soils[l].rcl -= ConsumedLitter2;
+							m->cells[cell].soils[l+1].rcl += ConsumedLitter2;
+						}
 
-					if(m->cells[cell].soils[l].rcr>m->cells[cell].soils[l+1].rcr)
-					{
-						ConsumedLitter3 = EarthWormActivity * m->cells[cell].soils[l].rcr;
-						m->cells[cell].soils[l].rcr -= ConsumedLitter3;
-						m->cells[cell].soils[l+1].rcr+= ConsumedLitter3;
+						if(m->cells[cell].soils[l].rcr>m->cells[cell].soils[l+1].rcr)
+						{
+							ConsumedLitter3 = EarthWormActivity * m->cells[cell].soils[l].rcr;
+							m->cells[cell].soils[l].rcr -= ConsumedLitter3;
+							m->cells[cell].soils[l+1].rcr+= ConsumedLitter3;
+						}
 					}
 				}
-				//}
 				// Recover layer lables
 				m->cells[cell].soils[l].initialOrganicC = m->cells[cell].soils[l].CRB1 + m->cells[cell].soils[l].CRB2 + m->cells[cell].soils[l].crhl+ m->cells[cell].soils[l].crhr;
 				//DOC consumption in soil
@@ -1418,4 +1372,22 @@ void soil_sgm(MATRIX *const m, const YOS *const yos, const int years, const int 
 		}
 	}
 }
+
+void soilCEC(CELL *const c)
+{
+	int soil;
+	for (soil = 0; soil< c->soils_count; soil++ )
+	{
+		//check it was clay
+		double xx = site->clay_perc * 100.0;// + (double)exp(soc[i]/m*1000.0-20.0);
+		//if(xx>100.0) xx=100.0;
+		c->soils[soil].CEC= 1.0802 * xx + 14.442;	//meq/100 g soil
+		c->soils[soil].CEC =c->soils[soil].CEC * 14.0 / 100000.0 * site->bulk_dens;	 //assumed m as bulk density//meq/100 g soil -> kg N/ha/layer
+		//CEC[i] = CEC[i] * 0.001; //fraction used for NH4
+	}
+	c->base_clay_N = 0.01 *c->soils[0].CEC;
+	c->max_clay_N = 2.0 * c->base_clay_N;
+}
+
+
 

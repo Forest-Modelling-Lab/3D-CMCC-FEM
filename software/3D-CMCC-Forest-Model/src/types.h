@@ -873,7 +873,7 @@ typedef struct {
 
 	double initialOrganicC;
 	double waterContent;
-
+	double CEC;
 } SOIL;
 
 
@@ -1070,28 +1070,29 @@ typedef struct {
 	 *
 	 **************************************************************************************************/
 	//daily soil variables; 3D-CMCC-SGM
-	double leafLittering, fineRootLittering,woodLittering,stemLittering, coarseRootLittering;
 	double soil_ph;
 	//sergio; not clear till concepts and dynamics; what's that and how to replace&introcude in 3d-cmcc
 	double till_fact, tilq;
 	//dC
+	double leafLittering, fineRootLittering,woodLittering,stemLittering, coarseRootLittering;
 	double day_C_mine;
 	double day_N_mine;
 	double day_N_assim;
 	double day_soil_nh3;
+	double day_clay_N, day_clayn;
 	double wrcvl, wrcl, wrcr, wcrb, wcrh,whumus;
 	double wtcavai,w_no2,w_no3,w_n2o, w_nh4, w_nh3, wpool_no;
-	double day_clayn;
+	double  wsoc;
 	double leach_u, day_no2, flux_no2;
 	//double wFreezedoc;
 	double End_SON;
 	double runoff_N;
-	double day_clay_N, wsoc;
+
 	double previousSoilT;
 	double soilSurfaceT;
 	double temp_avet;
 	double yr_avet;
-
+	double base_clay_N, max_clay_N;
 	double AddC, AddCN, AddC1, AddC2, AddC3;
 
 } CELL;
@@ -1174,6 +1175,9 @@ extern void annual_logClose(void);
 extern int soil_logInit(char*);
 extern void soil_Log(const char *, ...);
 extern void soil_logClose(void);
+extern int soilDebug_logInit(char*);
+extern void soilDebug_Log(const char *, ...);
+extern void soilDebug_logClose(void);
 extern void Get_Age_Mortality (SPECIES *const, AGE *const);
 extern void Get_Greff_Mortality (SPECIES *const);
 extern void Get_Mortality (SPECIES *const, int);
@@ -1297,6 +1301,8 @@ extern void get_av_year_temperature(CELL * const, int, int, int, const MET_DATA 
 extern void soil_temperature(CELL * const, int, int, int, const MET_DATA *const);
 extern void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int, const int, const int);
 extern void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const int, const int);
+void soil_initialization(CELL *c);
+void tree_leaves_fall(MATRIX *const, int const);
 
 
 

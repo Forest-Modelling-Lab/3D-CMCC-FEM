@@ -56,8 +56,8 @@ SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is compu
 //DNDC-DECOMPOSITION
 BASE_CLAY_N "-9999" //minimum value of N adsorbed on clay surface
 MAX_CLAY_N "-9999"  //maximum value of N adsorbed on clay surface
-SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil
-SOIL_NH4 "-9999"    //0.05000 in dndc general case; initial quantity of NH4 in soil
+SOIL_NO3 "0.5"    //0.50000 in dndc general case; initial quantity of NO3 in soil
+SOIL_NH4 "0.05"    //0.05000 in dndc general case; initial quantity of NH4 in soil
 HYDRAULICCONDUCITIVITY "0.063"  // hydraulic conducitivity in soil (assumed as constant for now: better assume it different in different layers);
 INSOC "2.942"       //initial soil organic carbon (taken from Chiti 2010)
 LITFRAC "0.01"      // fraction of SOC affering to the litter at the first day of simulation
