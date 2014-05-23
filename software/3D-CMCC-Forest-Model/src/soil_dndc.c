@@ -1159,7 +1159,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 
 				// NH4+ adsorption on clay
 				TotalNH4 = m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].clay_nh4;
-
+				soilCEC(&m->cells[cell]);
 				lbcn = m->cells[cell].base_clay_N * (double)pow(0.5, (double)l);
 				lmcn = m->cells[cell].max_clay_N * (double)pow(0.5, (double)l);
 
@@ -1325,7 +1325,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			/* P adsorption */
 			//Langmuir Equation
 
-			for(l=0; ll<m->cells[cell].soils_count; ll++)
+			for(ll=0; ll<m->cells[cell].soils_count; ll++)
 			{
 				TP = m->cells[cell].soils[ll].LabP + m->cells[cell].soils[ll].AdsP;//kg P/layer
 

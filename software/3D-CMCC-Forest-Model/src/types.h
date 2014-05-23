@@ -1302,6 +1302,7 @@ extern void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int,
 extern void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
+void soilCEC(CELL *const);
 
 
 
