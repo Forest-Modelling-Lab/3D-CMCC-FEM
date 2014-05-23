@@ -1101,7 +1101,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			wd2 = (double)pow(10.0, -5.0);
 			Kw = 1.945 * exp(0.0645 * m->cells[cell].soils[l].soilTemp) * wd1;//water dissociation constant
 			Ka = (1.416 + 0.01357 * m->cells[cell].soils[l].soilTemp) * wd2;//NH4+/NH3 equilibrium constant
-			hydrogen = (double)pow(10.0, -site->);//mol/L
+			hydrogen = (double)pow(10.0, -site->soil_ph);//mol/L
 			hydroxide = Kw / hydrogen;//mol/L
 
 			//suspect its porosity
