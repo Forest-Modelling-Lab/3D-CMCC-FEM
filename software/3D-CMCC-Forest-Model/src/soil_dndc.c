@@ -182,7 +182,7 @@ void tree_leaves_fall(MATRIX *const m, int const cell)
 	if (m->cells[cell].AddC1 < 0.0) m->cells[cell].AddC1 = 0.0;
 	if (m->cells[cell].AddC2 < 0.0) m->cells[cell].AddC2 = 0.0;
 	if (m->cells[cell].AddC3 < 0.0) m->cells[cell].AddC3 = 0.0;
-	for ( l = 0; l <= 1; l++ )
+	for ( l = 0; l < 1; l++ )
 	{
 		m->cells[cell].soils[l].rcvl += (AddC1 * 0.5);
 		m->cells[cell].soils[l].rcl += (AddC2 * 0.5);
@@ -528,8 +528,11 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 		}
 		else
 		{
-			tree_leaves_fall(m, cell);
+			m->cells[cell].soils[0].co2 = 0.0;
+			m->cells[cell].soils[0].day_O2 = 0.0;
 		}
+		tree_leaves_fall(m, cell);
+
 		if (day == 0 && month == JANUARY)
 		{
 			//reinitialize data
@@ -548,7 +551,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 		for ( l = 0; l < m->cells[cell].soils_count;  l++ )
 		{
 			Fl=1.0;
-			Fl = 0.6 * (double)pow(l, -0.1366);
+			Fl = 0.6 * (double)pow(l+1, -0.1366);
 			if(Fl>1.3) Fl = 1.3;
 			if(Fl<0.0) Fl = 0.0;
 
@@ -1354,6 +1357,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 					m->cells[cell].soils[ll].AdsP = TP * (dAdsP / TTP);
 					m->cells[cell].soils[ll].LabP = TP - m->cells[cell].soils[ll].AdsP;
 				}
+//				m->cells[cell].day_co2 += co2[l];
+//							co2[l] = 0.0;
 			}
 
 			//}
