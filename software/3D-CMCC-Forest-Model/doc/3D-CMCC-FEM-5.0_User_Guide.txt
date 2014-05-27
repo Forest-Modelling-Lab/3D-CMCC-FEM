@@ -42,8 +42,7 @@ Please also reference the following citation as the most recent and complete des
 "A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
 in a deciduous forest in Central Italy"
 Alessio Collalti, Lucia Perugini, Tommaso Chiti, Angelo Nolè, Giorgio Matteucci, Riccardo Valentini
- (in press).
-(this citation will be updated as soon as possible).
+Ecological modeling 2014
 If you have made any significant modifications to the code, please mention them in your manuscript.
 This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
 documentation, and users with specific questions about the algorithms used to estimate particular processes should read
@@ -123,7 +122,6 @@ The text file must be created following this logic architecture
 -- for each height->age class define the species
 --- for each height->age->species class define its state variables:
 
----- Phenology (D = deciduous, E = evergreen)
 ---- Management (T = timber, C = coppice)
 ---- N = number of trees per area related to that class
 ---- Stool = number of stool per area (only if Management is setted to C)
@@ -135,7 +133,6 @@ The text file must be created following this logic architecture
 ---- Ws = stem biomass in tDM per area for that class (which comprises branch and bark fraction)
 ---- Wres = non structural carbon in tDM per area for that class
 ---- Lai = leaf area index (m^2m^-2), mandatory only for evergreen
----- Perc = keep set to 1
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
@@ -149,19 +146,11 @@ If the model runs in "spatial version" daily or monthly LAI values are mandatory
 Each variable must be separated by one tab character.
 
 example for year 2007 in monthly/spatial version (add Tmax and Tmin)
-Month	n_days		Rg_f		Ta_f		VPD_f		Ts_f	Precip		SWC		LAI
-1		31			6.1			6.51536		4.07277		-9999	47.9239		-9999	0.001
-2		28			9.1			5.49226		3.0353		-9999	67.6175		-9999	0.001
-3		31			13.15		6.55381		3.06643		-9999	71.5099		-9999	0.371752
-4		30			17.23		12.2231		6.42148		-9999	47.1228		-9999	0.499816
-5		31			20.79		15.2538		7.38443		-9999	92.4132		-9999	2.05342
-6		30			22.67		19.4538		10.3544		-9999	56.627		-9999	3.60702
-7		31			22.56		23.1538		18.2293		-9999	8.49088		-9999	5.16062
-8		31			19.2		21.4538		12.9789		-9999	10.7388		-9999	5.16062
-9		30			14.89		15.1154		8.02734		-9999	74.7406		-9999	5.16062
-10		31			10.5		10.2385		3.20476		-9999	159.262		-9999	3.44075
-11		30			6.61		5.29226		3.0913		-9999	63.6759		-9999	1.72087
-12		31			5.1			2.09226		2.1539		-9999	144.279		-9999	0.001
+Month	n_days		Rg_f        Ta_f        Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
+1		31			6.1			6.51536		13.1    7.1     0.2     7.8     1       -9999   0
+2		28			9.1			5.49226		10.4    5.8     0.2     6.3     0.2     0.27    0
+3		31			13.15		9.9         3.1     0.2     3.3     0       0.39    0       0
+...
 
 
 example for year 2007 in daily/unspatial version
@@ -171,7 +160,7 @@ Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     
 1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
 1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
 1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
-
+...
 
 if you don't have optional data set value as -9999
 -9999 = NO DATA
@@ -181,8 +170,8 @@ if you don't have optional data set value as -9999
 -Ta_f = Daily/Monthly average temperature (°C)
 -Tmax = Daily/Monthly Maximum temperature (°C)
 -Tmin = Daily/Monthly Minimum temperature (°C)
--VPD_f or RH_f = Vapour Pressure Deficit (mbar) or Relative humidity (%)
--Ts_f = Soil temperature (°C)
+-VPD_f or RH_f = Daily/Monthly Vapour Pressure Deficit (mbar-hPa) or Relative humidity (%)
+-Ts_f = Daily/Monthly Soil temperature (°C)
 -Precip = Cumulated daily/monthly precipitation (mm day/month^-1)
 -SWC = Soil water content (mm day/month^-1)
 -LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
