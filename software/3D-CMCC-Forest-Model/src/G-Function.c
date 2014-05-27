@@ -277,8 +277,10 @@ extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int mont
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							if (c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
 							{
+								Log("GDD basis = %.0f\n", settings->gdd_basis);
 								Log("species %s First day of growing season day = %d month = %d\n", c->heights[height].ages[age].species[species].name, day+1, month+1);
-							}	}
+							}
+						}
 					}
 					else
 					{
