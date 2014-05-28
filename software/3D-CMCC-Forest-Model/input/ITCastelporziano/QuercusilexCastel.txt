@@ -6,9 +6,9 @@ LIGHT_TOL   4       //4 = very shade intolerant
 PHENOLOGY   1.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.044       //  // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011, 0.044 for Q. ilex Vitale et al., 2012))
 EPSILONgCMJ 0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
-K   0.65        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
+K   0.72        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
             //0.65      //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO  0.23    //0.12 (Hoff et al., 2002)
+ALBEDO  0.12    //0.12 (Hoff et al., 2002)
 GAMMA_LIGHT 0.039   //Light parameter for light modifier 0.039 see Bagnara et al., (0.0427 value Nolè PC)
 
 

@@ -7,7 +7,7 @@ ROTHC "off" //Must be  'on' or 'off'
 DNDC "off" //Must be  'on' or 'off'
 SIZECELL "100"  //Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 
-TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
+TREE_LAYER_LIMIT "5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
 
 SOIL_LAYER "0"  //define soil layer/s to consider
 
@@ -34,7 +34,7 @@ MAXLAI "6"
 DEFAULTLAI "6"
 
 //CONTROL MONTHLY MET DATA
-GDD_BASIS "0"
+GDD_BASIS "5"
 MAXDAYS "31"
 MAXRG "40"
 MAXTAVG "40"
