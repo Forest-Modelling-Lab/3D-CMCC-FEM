@@ -1,0 +1,4 @@
+x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
+0,0,F,113,PiceaabiesTharandt,T,343,0,33,26,0,0,0,0,0,0,0
+0,0,F,112,PinussylvestrisTharandt,T,72,0,33.1,26.1,0,0,0,0,0,0,0
+0,0,F,111,LarixdeciduaTharandt,T,62,0,33.2,26.1,0,0,0,0,0,0,0

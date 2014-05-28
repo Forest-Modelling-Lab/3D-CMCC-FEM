@@ -346,6 +346,7 @@ void Get_forest_structure (CELL *const c)
 						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+						Log("density in dominant layer = %f\n", c->density_dominant);
 						Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
 						break;
 						/*two layer*/

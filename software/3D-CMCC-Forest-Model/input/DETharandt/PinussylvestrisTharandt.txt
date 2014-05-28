@@ -9,6 +9,7 @@ EPSILONgCMJ	1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not avail
 K	0.52		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005, 0.52 for P. sylvestris, from Xenakis et al., 2008
 
 ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
+GAMMA_LIGHT -9999   //Light parameter for light modifier
 
 //LEAF AREA INDEX
 LAIGCX	3.33               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
@@ -116,7 +117,7 @@ MF	0.64               //Fraction mean single tree foliage biomass lost per dead 
 MR	0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS	0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
+DBHDCMAX	0.18    //Low Density 0.24 from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
 DBHDCMIN	0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
@@ -126,7 +127,7 @@ SAP_LEAF	1500          //sapwood_max leaf area ratio in pipe model for P. sylves
 							//VARIABLE VALUES FROM 1300 TO 1800 for P. sylvestris from Brasschaat site see Verbeek et al 2007
 SAP_WRES	0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
 							//0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
-HMAX	22.6              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012, 
+HMAX	30              //  //Max Height in m for for P. sylvestris from Ametzegui et al., 2012, 
 DMAX	155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
 
 //not used just for comparison
@@ -149,7 +150,7 @@ CRC	0.99  //for P. sylvestris from Rupsys et al., 2010
 HDMAX	1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
 HDMIN	0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
 //DENSITY FUNCTION
-DENMAX	0.4             //Maximum density (trees/10000 m^2)
+DENMAX	0.05             //Maximum density (trees/10000 m^2)
 DENMIN	0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED
 //ESTABLISHMENT
 MINPAREST	4.05    //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
