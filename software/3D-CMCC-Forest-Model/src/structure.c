@@ -175,12 +175,16 @@ void Get_forest_structure (CELL *const c)
 	int tree_number;
 	double layer_cover;
 
-
-
-	int density_max_max;
-	int density_max_min;
 	int dbh_max = 70;
 	int dbh_min = 10;
+
+	double maximum_n_tree,
+	maximum_area;
+
+	double minimum_n_tree,
+	minimum_area;
+
+
 
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
@@ -205,19 +209,6 @@ void Get_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					//define variable maximum density in function of tree crown form factor
-					//todo check for correct values for broad leaf or needle leaf
-					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.1)
-					{
-						density_max_max = 8000;
-						density_max_min = 80;
-					}
-					else
-					{
-						density_max_max = 8000;
-						density_max_min = 80;
-					}
-
 					//define numbers of height classes, tree number and density for each layer
 					switch (c->annual_layer_number)
 					{
@@ -309,16 +300,22 @@ void Get_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					Log("\n\n**GET MAXIMUM DENSITY BASED ON EFFECTIVE STAND DBH\n\n");
+					Log("\n\n**GET DATA FOR CANOPY HORIZONTAL STRUCTURE BASED ON EFFECTIVE STAND DBH\n\n");
 
-					c->heights[height].ages[age].species[species].value[DENMAX] = (((double)density_max_max - (double)density_max_min)/(dbh_min-dbh_max))
-							*(c->heights[height].ages[age].species[species].value[AVDBH]-dbh_min)+(double)density_max_max;
-					Log("effective maximum density for dbhdc function = %d\n", (int)c->heights[height].ages[age].species[species].value[DENMAX]);
-					Log("effective maximum density for dbhdc function = %f\n", c->heights[height].ages[age].species[species].value[DENMAX]/(double)settings->sizeCell);
-					Log("number of trees = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE]);
+					maximum_area = pow(((c->heights[height].ages[age].species[species].value[DBHDCMAX]*c->heights[height].ages[age].species[species].value[AVDBH])/2),2)*Pi;
+					Log("maximum area = %f\n", maximum_area);
+					maximum_n_tree =settings->sizeCell /maximum_area;
+					Log("number of maximum trees = %f\n", maximum_n_tree);
 
-					c->heights[height].ages[age].species[species].value[DENMIN] =
+					minimum_area = pow(((c->heights[height].ages[age].species[species].value[DBHDCMIN]*c->heights[height].ages[age].species[species].value[AVDBH])/2),2)*Pi;
+					Log("minimum area = %f\n", minimum_area);
+					minimum_n_tree = settings->sizeCell /minimum_area;
+					Log("number of minimum trees = %f\n", minimum_n_tree);
+					c->heights[height].ages[age].species[species].value[DENMAX] = maximum_n_tree/settings->sizeCell;
+					Log("effective maximum density for dbhdc function = %f\n", c->heights[height].ages[age].species[species].value[DENMAX]);
 
+					c->heights[height].ages[age].species[species].value[DENMIN] = minimum_n_tree/settings->sizeCell;
+					Log("effective minimum density for dbhdc function = %f\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 
 					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
@@ -347,13 +344,9 @@ void Get_forest_structure (CELL *const c)
 						c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]
 						                                                                                                                    /c->heights[height].ages[age].species[species].value[AVDBH];
 						Log("-recomputed DBHDCMAX = %f \n", c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-
-						//DENMIN = (SizeCell/MCA)/Sizecell
 						c->heights[height].ages[age].species[species].value[DENMIN] = 1.0/c->heights[height].ages[age].species[species].value[MCA];
 						Log("-recomputed DENMIN = %f tree/sizecell\n", c->heights[height].ages[age].species[species].value[DENMIN]);
 					}
-
-
 
 
 					/*define DBHDC taking into account layer density*/
@@ -362,13 +355,16 @@ void Get_forest_structure (CELL *const c)
 					{
 					/*only one layer*/
 					case 1:
-						if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
+						Log("density in dominant layer = %f\n", c->density_dominant);
+						if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMAX])
 						{
 							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
+							Log("1\n");
 						}
-						if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMIN])
+						if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMIN])
 						{
 							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
+							Log("2\n");
 						}
 
 						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
