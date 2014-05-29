@@ -58,8 +58,6 @@ void Get_annual_numbers_of_layers (CELL *const c)
 	double current_height;
 	double previous_height;
 
-
-
 	//height differences in meter to consider trees in two different layers
 
 	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
@@ -177,6 +175,13 @@ void Get_forest_structure (CELL *const c)
 	int tree_number;
 	double layer_cover;
 
+
+
+	int density_max_max;
+	int density_max_min;
+	int dbh_max = 70;
+	int dbh_min = 10;
+
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
 	c->height_class_in_layer_subdominated_counter = 0;
@@ -200,6 +205,19 @@ void Get_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
+					//define variable maximum density in function of tree crown form factor
+					//todo check for correct values for broad leaf or needle leaf
+					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.1)
+					{
+						density_max_max = 8000;
+						density_max_min = 80;
+					}
+					else
+					{
+						density_max_max = 8000;
+						density_max_min = 80;
+					}
+
 					//define numbers of height classes, tree number and density for each layer
 					switch (c->annual_layer_number)
 					{
@@ -291,29 +309,39 @@ void Get_forest_structure (CELL *const c)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
+					Log("\n\n**GET MAXIMUM DENSITY BASED ON EFFECTIVE STAND DBH\n\n");
 
-					/*compute maximum crown area*/
-					//TODO CHECK IF USE IT
-					/*for references and variables see "Forest Mensuration" book 4th edition
-					 * B. Husch, T.W. Beers, J.A. Kershaw Jr.
-					 * edited by John Wiley & Sons, Inc
-					 *
-					 * and Krajicek, et al., "Crown competition: a measure of density.
-					 * For. Sci. 7:36-42
-					 *
-					 * Lhotka and Loewenstein 2008, Can J For Res
-					 */
-					c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-					                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
-					Log("-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
-					c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
-					Log("-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
+					c->heights[height].ages[age].species[species].value[DENMAX] = (((double)density_max_max - (double)density_max_min)/(dbh_min-dbh_max))
+							*(c->heights[height].ages[age].species[species].value[AVDBH]-dbh_min)+(double)density_max_max;
+					Log("effective maximum density for dbhdc function = %d\n", (int)c->heights[height].ages[age].species[species].value[DENMAX]);
+					Log("effective maximum density for dbhdc function = %f\n", c->heights[height].ages[age].species[species].value[DENMAX]/(double)settings->sizeCell);
+					Log("number of trees = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE]);
+
+					c->heights[height].ages[age].species[species].value[DENMIN] =
+
+
+					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
 
 					if (c->heights[height].ages[age].species[species].value[DBHDCMAX] == -9999
 							&& c->heights[height].ages[age].species[species].value[DENMIN] == -9999)
 					{
+						/*compute maximum crown area*/
+						//TODO CHECK IF USE IT
+						/*for references and variables see "Forest Mensuration" book 4th edition
+						 * B. Husch, T.W. Beers, J.A. Kershaw Jr.
+						 * edited by John Wiley & Sons, Inc
+						 *
+						 * and Krajicek, et al., "Crown competition: a measure of density.
+						 * For. Sci. 7:36-42
+						 *
+						 * Lhotka and Loewenstein 2008, Can J For Res
+						 */
+						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
+							 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+						Log("-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
+						c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
+						Log("-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
 						/*recompute DBHDCmax and DENmin from MCA*/
 						/*17 Oct 2013*/
 						c->heights[height].ages[age].species[species].value[DBHDCMAX] = c->heights[height].ages[age].species[species].value[MCD]
@@ -466,8 +494,7 @@ void Get_forest_structure (CELL *const c)
 					//Canopy Cover using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-					                                                                                                                              * c->heights[height].ages[age].species[species].counter[N_TREE]
-					                                                                                                                                                                                      / settings->sizeCell;
+													  * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
 					Log("Canopy cover DBH-DC class related = %f\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 				}
 			}
