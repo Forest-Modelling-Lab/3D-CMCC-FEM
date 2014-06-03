@@ -6,7 +6,7 @@ LIGHT_TOL	3   	//4 = very shade intolerant
 PHENOLOGY	1.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA	0.055		//Canopy quantum efficiency (molC/molPAR) for P. sylvestris from Landsberg et al., 2005, 0.05 for P. sylvestris, from Xenakis et al., 2008
 EPSILONgCMJ	1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  for Brasschaat site see Horn and Shulze 2011 
-K	0.52		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005, 0.52 for P. sylvestris, from Xenakis et al., 2008
+K	0.51		//0.54 Extinction coefficient for absorption of PAR by canopy for P. sylvestris from Landsberg et al., 2005, 0.51 from Pietsch et al., 2005, 0.52 for P. sylvestris, from Xenakis et al., 2008
 
 ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT -9999   //Light parameter for light modifier

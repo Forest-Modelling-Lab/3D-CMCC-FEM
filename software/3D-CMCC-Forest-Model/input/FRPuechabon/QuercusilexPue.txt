@@ -6,7 +6,7 @@ LIGHT_TOL   4       //4 = very shade intolerant
 PHENOLOGY   1.1 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
 ALPHA   0.044       //  // Canopy quantum efficiency (molC/molPAR) (0.02, Penuelas et al., 1997; 0.056, Vats et al., 2011, 0.044 for Q. ilex Vitale et al., 2012))
 EPSILONgCMJ 0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
-K   0.72        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
+K   0.65        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
             //0.65      //Extinction coefficient for absorption of PAR by canopy 
 ALBEDO  0.12    //0.12 (Hoff et al., 2002)
 GAMMA_LIGHT -9999   //Light parameter for light modifier
@@ -31,7 +31,7 @@ RHOMAX  0.72             //Maximum Basic Density for young Trees
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
-COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar 0.05 see Pietsch et al., 2005
+COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar 0.05 see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
 MAXCOND 0.0025            //Maximum Canopy Conductance in m/sec Korner et al., 1979, (0.0025 (Hoff et al., 2002)) 0.021 Korner et al. 1979
 //AGE for timber
@@ -55,8 +55,8 @@ MINDAYLENGTH  0      //minimum day length for decidu0us
 //define the soil water modifier response in function of needless of the species to the soil water content
 SWPOPEN -0.6 //For Q ilex Mollicone et al., 2002
 SWPCLOSE    -3.2 //For Q ilex Mollicone et al., 2002
-SWCONST 0.5           //Constant in Soil Water modifier vs Moist Ratio
-SWPOWER 5               //Power in Soil Water modifier vs Moist Ratio
+SWCONST 0.4           //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER 3               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM  0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability
@@ -110,8 +110,8 @@ MF  0               //Fraction mean single tree foliage biomass lost per dead tr
 MR  0.2             //Fraction mean single tree root biomass lost per dead tree
 MS  0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.26    //Low Density //CUURENTLY NOT USED
-DBHDCMIN    0.16    //High Density
+DBHDCMAX    0.22    //Low Density
+DBHDCMIN    0.14    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
 SAP_A   0.674         //a value from Kostner for Q. petreae in cm

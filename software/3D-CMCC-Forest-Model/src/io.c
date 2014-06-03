@@ -978,7 +978,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 									//CONTROL
 									if (yos[*yos_count-1].m[month].d[day].rain > settings->maxprecip)
 									{
-										Log("ERROR IN PRECIP DATA in year %s month %s!!!!\n", year, MonthName[month] );
+										Log("ERROR IN PRECIP DATA in year %s month %s!!!! %f\n", year, MonthName[month], settings->maxprecip);
 									}
 									//Log("%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
 									break;
