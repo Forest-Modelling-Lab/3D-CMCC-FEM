@@ -178,11 +178,15 @@ void Get_forest_structure (CELL *const c)
 	int dbh_max = 70;
 	int dbh_min = 10;
 
-	double dbhdcmax_n_tree,
-	dbhdcmax_area;
+	double potential_maximum_crown_diameter,
+	potential_minimum_crown_diameter;
 
-	double dbhdcmin_n_tree,
-	dbhdcmin_area;
+	double potential_maximum_crown_area,
+	potential_minimum_crown_area;
+
+	double potential_maximum_density,
+	potential_minimum_density;
+
 
 
 
@@ -302,21 +306,26 @@ void Get_forest_structure (CELL *const c)
 				{
 					Log("\n\n**GET DATA FOR CANOPY HORIZONTAL STRUCTURE BASED ON EFFECTIVE STAND DBH\n\n");
 
-					Log("if Low density\n");
-					dbhdcmax_area = pow(((c->heights[height].ages[age].species[species].value[DBHDCMAX]*c->heights[height].ages[age].species[species].value[AVDBH])/2),2)*Pi;
-					Log("maximum crown area with DBHDCMAX = %f m^2\n", dbhdcmax_area);
-					dbhdcmax_n_tree =settings->sizeCell /dbhdcmax_area;
-					Log("number of maximum trees with DBHDCMAX = %f\n", dbhdcmax_n_tree);
-					Log("if High density\n");
-					dbhdcmin_area = pow(((c->heights[height].ages[age].species[species].value[DBHDCMIN]*c->heights[height].ages[age].species[species].value[AVDBH])/2),2)*Pi;
-					Log("minimum crown area with DBHDCMIN = %f m^2\n", dbhdcmin_area);
-					dbhdcmin_n_tree = settings->sizeCell /dbhdcmin_area;
-					Log("number of minimum trees with DBHDCMIN = %f\n", dbhdcmin_n_tree);
-					c->heights[height].ages[age].species[species].value[DENMAX] = dbhdcmin_n_tree/settings->sizeCell;
-					Log("effective density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX], c->heights[height].ages[age].species[species].value[DENMAX] * settings->sizeCell);
 
-					c->heights[height].ages[age].species[species].value[DENMIN] = dbhdcmax_n_tree/settings->sizeCell;
-					Log("effective density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN], c->heights[height].ages[age].species[species].value[DENMIN] * settings->sizeCell);
+					//we assume that at the beginning of simulation forest structure is in "equilibrium"
+
+					Log("if Low density\n");
+					potential_maximum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMAX]*c->heights[height].ages[age].species[species].value[AVDBH];
+					potential_maximum_crown_area = pow(((potential_maximum_crown_diameter)/2),2)*Pi;
+					Log("potential maximum crown area with DBHDCMAX = %f m^2\n", potential_maximum_crown_area);
+					potential_minimum_density =settings->sizeCell /potential_maximum_crown_area;
+					Log("number of potential minimum trees with DBHDCMAX = %f\n", potential_minimum_density);
+					Log("if High density\n");
+					potential_minimum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMIN]*c->heights[height].ages[age].species[species].value[AVDBH];
+					potential_minimum_crown_area = pow(((potential_minimum_crown_diameter)/2),2)*Pi;
+					Log("potential minimum crown area with DBHDCMIN = %f m^2\n", potential_minimum_crown_area);
+					potential_maximum_density = settings->sizeCell /potential_minimum_crown_area;
+					Log("number of potential maximum trees with DBHDCMIN = %f\n", potential_maximum_density);
+					c->heights[height].ages[age].species[species].value[DENMAX] = potential_maximum_density/settings->sizeCell;
+					Log("potential density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX], c->heights[height].ages[age].species[species].value[DENMAX] * settings->sizeCell);
+
+					c->heights[height].ages[age].species[species].value[DENMIN] = potential_minimum_density/settings->sizeCell;
+					Log("potential density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN], c->heights[height].ages[age].species[species].value[DENMIN] * settings->sizeCell);
 
 					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
