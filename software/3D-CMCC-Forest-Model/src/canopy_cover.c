@@ -38,7 +38,7 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 	/*DBH-DC Ratio effective*/
 	//todo model should take into account also variations for dbh increments
 	//todo invert dbhdc max with min
-	DBHDCeffective = (( s->value[DBHDCMAX] - s->value[DBHDCMIN] ) / ( s->value[DENMAX] - s->value[DENMIN] ) * (s->value[DENSITY] - s->value[DENMIN] ) + s->value[DBHDCMIN]);
+	DBHDCeffective = (( s->value[DBHDCMAX] - s->value[DBHDCMIN] ) / ( s->value[DENMAX] - s->value[DENMIN] ) * (s->value[DENSITY] - s->value[DENMIN] ) + s->value[DBHDCMAX]);
 	Log("DBHDC effective to apply = %f\n", DBHDCeffective);
 
 
