@@ -280,9 +280,10 @@ to make the model work under eclipse4.3 using git you shall follow this guide
     1.4) download from ubuntu software center jre 7 or jdk (if not installed)
 2) download from eclipse site the most recent version of Eclipse IDE for C/C++ Developers
     2.1) 32 bit version: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-cpp-kepler-R-linux-gtk.tar.gz
-    2.2) 64 bit version: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-java-kepler-R-linux-gtk-x86_64.tar.gz
+    2.2) 64 bit version: http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/R/eclipse-cpp-kepler-R-linux-gtk-x86_64.tar.gz
     2.3) extract the eclipse folder in the directory you want
 3) install egit from Eclipse Marketplace (Help->Eclipse Marketplace)
+
 4) import the project from master [3D-CMCC-FEM master]
     4.1) click on file->import. then click on Git folder and on projects from git
     4.2) click on url and then paste this into the url box "http://dev.cmcc.it/git/3D-CMCC-FEM.git"
