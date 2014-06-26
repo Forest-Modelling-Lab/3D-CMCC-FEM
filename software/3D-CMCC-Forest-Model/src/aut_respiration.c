@@ -190,16 +190,16 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 			s->value[LEAF_GROWTH_RESP] = (((s->value[DEL_FOLIAGE]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)) * GRPERC;
 			Log("daily leaf growth respiration = %f gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
 
-			s->value[FINE_ROOT_GROWTH_RESP] = (((s->value[DEL_ROOTS_FINE_CTEM])*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
+			s->value[FINE_ROOT_GROWTH_RESP] = (((s->value[DEL_ROOTS_FINE_CTEM]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
 			Log("daily fine root growth respiration = %f gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-			s->value[STEM_GROWTH_RESP] = (((s->value[DEL_STEMS])*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
+			s->value[STEM_GROWTH_RESP] = (((s->value[DEL_STEMS]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
 			Log("daily stem growth respiration = %f gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
 
-			s->value[COARSE_ROOT_GROWTH_RESP] = (((s->value[DEL_ROOTS_COARSE_CTEM])*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
+			s->value[COARSE_ROOT_GROWTH_RESP] = (((s->value[DEL_ROOTS_COARSE_CTEM]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
 			Log("daily coarse root growth respiration = %f gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
 
-			s->value[BRANCH_GROWTH_RESP] = (((s->value[DEL_BB])*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
+			s->value[BRANCH_GROWTH_RESP] = (((s->value[DEL_BB]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
 			Log("daily branch respiration = %f gC/day m^2\n", s->value[BRANCH_GROWTH_RESP]);
 
 			s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
