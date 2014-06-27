@@ -175,8 +175,6 @@ void Get_forest_structure (CELL *const c)
 	int tree_number;
 	double layer_cover;
 
-	int dbh_max = 70;
-	int dbh_min = 10;
 
 	double potential_maximum_crown_diameter,
 	potential_minimum_crown_diameter;
