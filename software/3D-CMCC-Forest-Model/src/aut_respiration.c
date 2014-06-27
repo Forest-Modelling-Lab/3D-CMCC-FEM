@@ -187,6 +187,7 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 				|| s->value[DEL_ROOTS_COARSE_CTEM] > 0.0
 				|| s->value[DEL_BB] > 0.0)
 		{
+			//converting to gC
 			s->value[LEAF_GROWTH_RESP] = (((s->value[DEL_FOLIAGE]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)) * GRPERC;
 			Log("daily leaf growth respiration = %f gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
 
