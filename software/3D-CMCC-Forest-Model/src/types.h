@@ -156,6 +156,12 @@ typedef struct
 	litterToDPM,
 	soilTimescale;
 
+	//to be integrated with dndc soil input values; leave them as foretold now
+	double DPM,
+	RPM,
+	HUM,
+	BIO;
+
 	//DNDC
 	//	double RFM;
 	double soil_ph,
@@ -717,6 +723,18 @@ enum {
 
 
 	PERC,
+	//Marconi
+	DAILY_FINEROOT_BIOMASS_TO_REMOVE,
+	DAILY_LEAVES_BIOMASS_TO_REMOVE,
+	OLD_BIOMASS_ROOTS_COARSE,
+	OLD_BIOMASS_ROOTS_FINE,
+	OLD_BIOMASS_STEM,
+	OLD_BIOMASS_BRANCH,
+	OLD_BIOMASS_LEAVES,
+
+	OLD_BIOMASS_STEM_LIVE_WOOD,
+	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
+	OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD,
 
 
 	VALUES
@@ -746,7 +764,8 @@ enum {
 	DAY_VEG_FOR_LITTERFALL_RATE,
 	MONTH_VEG_FOR_LITTERFALL_RATE,
 	LEAF_FALL_COUNTER,
-
+	//included by Marconi
+	//FROM_SEN_TO_EOY,
 
 	COUNTERS
 };
@@ -777,6 +796,20 @@ typedef struct {
 
 } ROW;
 
+// variables related to plant pools turnover; it can't be placed int he ordinary species structure, since there are up to 5 arrays
+typedef struct {
+	double fineroot[MAXTURNTIME];
+	double leaves[MAXTURNTIME];
+	double coarseRoots[MAXTURNTIME];
+	double branch[MAXTURNTIME];
+	double stem[MAXTURNTIME];
+
+	int FINERTOVER;
+	int COARSERTOVER;
+	int STEMTOVER;
+	int BRANCHTOVER;
+} TURNOVER;
+
 /* */
 //all variables related to the species class
 typedef struct {
@@ -787,6 +820,7 @@ typedef struct {
 	PREC value[VALUES];
 	int counter[COUNTERS];
 	int phenology_phase;
+	TURNOVER *turnover;
 } SPECIES;
 
 /* */
@@ -1073,7 +1107,9 @@ typedef struct {
 	//sergio; not clear till concepts and dynamics; what's that and how to replace&introcude in 3d-cmcc
 	double till_fact, tilq;
 	//dC
-	double leafLittering, fineRootLittering,woodLittering,stemLittering, coarseRootLittering;
+	double leafLittering, fineRootLittering,stemBrancLittering,stemLittering, coarseRootLittering;
+	double leaflitN, fineRootlitN,stemBranclitN,stemlitN, coarseRootlitN;
+
 	double day_C_mine;
 	double day_N_mine;
 	double day_N_assim;
@@ -1093,6 +1129,13 @@ typedef struct {
 	double yr_avet;
 	double base_clay_N, max_clay_N;
 	double AddC, AddCN, AddC1, AddC2, AddC3;
+
+	//potentially already existant
+	int doy, dos;
+
+	//todo to be remopved used just to evaluate total biomass flutctations in the several different compartments
+	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
+	double vpSat[365];
 
 } CELL;
 
@@ -1303,6 +1346,9 @@ extern void soil_rothC (MATRIX *const, const YOS *const, const int, const int, c
 void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
+int leaffalMarconi(CELL *);
+void get_vpsat(CELL * ,  int , int , int , YOS *, int);
+extern void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 
 
 

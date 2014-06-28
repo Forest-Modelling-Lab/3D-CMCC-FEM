@@ -218,10 +218,23 @@ static int alloc_struct(void **t, int *count, unsigned int size)
 	return 1;
 }
 
+static int fill_cell_for_turnover(SPECIES *const s, const ROW *const row, int turnover_counts)
+{
+	if ( !alloc_struct((void **)&s->turnover, &turnover_counts, sizeof(TURNOVER)))
+		{
+			return 0;
+		}
+	/* check memory */
+
+	// ok
+	return 1;
+}
+
 /* */
 static int fill_cell_from_species(AGE *const a, const ROW *const row)
 {
 	int i;
+	int turnover_counts;
 
 	// check parameter
 	assert(a && row);
@@ -262,8 +275,9 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 		return 0;
 	}
 
+	turnover_counts = &a->species_count;
 	// ok
-	return 1;
+	return fill_cell_for_turnover(&a->species[a->species_count-1], row, turnover_counts);
 }
 
 /* */
@@ -672,13 +686,13 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 							age + 1,
 							m->cells[cell].heights[height].ages[age].value,
 							m->cells[cell].heights[height].ages[age].species_count
-							/*m->cells[cell].heights[height].ages[age].species[species].name*/);
+					/*m->cells[cell].heights[height].ages[age].species[species].name*/);
 
 					// loop on each species
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 					{
 
-							Get_biome_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
+						Get_biome_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
 
 
 						//*************FOREST INITIALIZATION DATA***********

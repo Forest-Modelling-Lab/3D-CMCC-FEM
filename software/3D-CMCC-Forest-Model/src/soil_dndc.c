@@ -13,63 +13,76 @@ void soil_initialization(CELL *const c)
 	//c->soils_count = 1;
 	for (l =0; l < c->soils_count; l++)
 	{
+		//debug: assumed the whole soil as a single layer of 20cm
+		//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * site->soil_depth;
+		//		litterSOC = site->inSOC * site->litFract * site->bulk_dens  * site->soil_depth;
+		//		//c->soils[l].inert_C = site->inSOC * /*site->humuFract*/ .001 * site->bulk_dens * site->soil_depth;
+
+
 		//taken from Chiti 2010,
 		//ratios taken from DNDC default (userGuide)
 		//			Soil_porosity            0.451000
 		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->soil_depth));
-//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
 
 		//gC/m-2 profile-1
-//		c->soils[l].dphum = site->inSOC * site->humuFract * 1000; // * site->soil_depth;
-//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
-		litterSOC = site->inSOC * site->litFract; // * site->soil_depth;
-		c->soils[l].initialOrganicC = site->inSOC - litterSOC;
-//		c->soils[l].inert_C = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
-		CRB = RBO * c->soils[l].initialOrganicC;
+		//		c->soils[l].dphum = site->inSOC * site->humuFract * 1000; // * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
+		//		litterSOC = site->inSOC * site->litFract; // kg * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC - litterSOC; //kg
+		//		c->soils[l].inert_C = site->inSOC * site->humaFract * 1000; // * site->soil_depth;
+		site->soil_depth = .2;
+		CRB = site->bioFract * site->inSOC;	//kg
 		c->soils[l].CRB1 = CRB * SRB;
 		c->soils[l].CRB2 = CRB * (1.0 - SRB);
-		Thc = c->soils[l].initialOrganicC - CRB;
-		c->soils[l].crhl = Thc * srh;
-		c->soils[l].crhr = Thc - c->soils[l].crhl;
+		litterSOC = (site->inSOC - CRB)* site->litFract;
+		Thc = site->inSOC - CRB - litterSOC;
+		c->soils[l].crhl = Thc * site->humaFract * srh;
+		c->soils[l].crhr = Thc * site->humaFract * (1 - srh);
+		c->soils[l].dphum = Thc * site->humuFract;
 		c->soils[l].soilDepth = site->soil_depth;
-		//
-//		///////////////////////////
-//					double CRB, Thc;
-//					CRB = RBO * ocini[i];
-//					CRB1[i] = CRB * SRB;
-//					CRB2[i] = CRB * (1.0 - SRB);
-//					Thc = ocini[i] - CRB;
-//					crhl[i] = Thc * srh;
-//					crhr[i] = Thc - crhl[i];
-//					///////////////////////////////////
-////years != 0
-//		float rbo = 0.015 * 0.5 + 0.00001;
-//		float CRB = ocini[i] * rbo + 0.00001;
-//		CRB1[i] = CRB * SRB;
-//		CRB2[i] = CRB * (1.0 - SRB);
-//		float AHM = ocini[i] - CRB;
-//		if(AHM<=0.0) AHM = 0.0000001;
-//		crhl[i] = AHM * srh;
-//		crhr[i] = AHM * (1.0 - srh);
-//
-//		wcrb += (CRB1[i]+CRB2[i]);
-//		day_clay_N += clay_nh4[i];
 
 
+		c->soils[l].soc = c->soils[l].crhl+ c->soils[l].crhr+c->soils[l].dphum+
+				c->soils[l].CRB1 + c->soils[l].CRB2 + litterSOC; // ???
+		c->soils[l].inert_C = .049 * pow(c->soils[l].soc, 1.139);
 
-		c->soils[l].soc = site->inSOC; // ???
-		c->soils[l].rcvl = litterSOC *.005;
-		c->soils[l].rcr= litterSOC *.045;
-		c->soils[l].rcl= litterSOC *.95;
-//		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
-//		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
+		c->soils[l].rcvl = litterSOC *.10;
+		c->soils[l].rcr= litterSOC *.70;
+		c->soils[l].rcl= litterSOC *.20;
+		//		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
+		//		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
 		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * site->bulk_dens ;
 		c->soils[l].nh4 = site->soil_nh4 * 0.7 * 10*site->bulk_dens ;
 		c->soils[l].no3 = site->soil_no3 *10*site->bulk_dens ; //bulk_dens as mass
-		c->litter = litterSOC;
+		site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
+		//
+		//		///////////////////////////
+		//					double CRB, Thc;
+		//					CRB = RBO * ocini[i];
+		//					CRB1[i] = CRB * SRB;
+		//					CRB2[i] = CRB * (1.0 - SRB);
+		//					Thc = ocini[i] - CRB;
+		//					crhl[i] = Thc * srh;
+		//					crhr[i] = Thc - crhl[i];
+		//					///////////////////////////////////
+		////years != 0
+		//		float rbo = 0.015 * 0.5 + 0.00001;
+		//		float CRB = ocini[i] * rbo + 0.00001;
+		//		CRB1[i] = CRB * SRB;
+		//		CRB2[i] = CRB * (1.0 - SRB);
+		//		float AHM = ocini[i] - CRB;
+		//		if(AHM<=0.0) AHM = 0.0000001;
+		//		crhl[i] = AHM * srh;
+		//		crhr[i] = AHM * (1.0 - srh);
+		//
+		//		wcrb += (CRB1[i]+CRB2[i]);
+		//		day_clay_N += clay_nh4[i];
+
 		//	    Tranr[1] = Soil_OCatSurface * Soil_Litter * m;
 		//	    OCini[1] = Soil_OCatSurface * Soil_humads * m;
 		//	    Dphum[1] = Soil_OCatSurface * Soil_humus * m;
@@ -86,379 +99,299 @@ void soil_initialization(CELL *const c)
 		//	    s_NH4[1]   = s_IniNH4[1] * 0.7;
 		//	    ClayNH4[1] = s_IniNH4[1] * 0.3;
 	}
-	//site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
 	//	c->till_fact;
 	//	c->tilq;
 	//	Soil_NO3(-)(mgN/kg)       0.50000
 	//	Soil_NH4(+)(mgN/kg)       0.05000
 }
 
-
-void tree_leaves_fall(MATRIX *const m, int const cell)
+void tree_leaves_fall(MATRIX *const m, int const cell)	//, int years, int month, int day, const MET_DATA *const met
 {
-	int height;
-	int soil;
+	double AddN, AddC, AddCN, dInertC;
 	float  RR1, RR2, RR3;
-	float param1, param2, param3, param4, param5, param6;
-	//dInertC = 0.0;
-	float AddN;
-	//float leaf_falln, leaf_fallc;
-	float AddC1, AddC2, AddC3 = 0; //AddC, AddCN;
-	double leafFall, leaf_falln, day_nup;
-	int   l, age,species,bVeg;
-	AddN = m->cells[cell].AddC / m->cells[cell].AddCN;
-	for (height = m->cells[cell].heights_count -1; height >=0; height --)
+	float pa, pb, pc, pd, pe, pf;
+	int l;
+	double abovegroundCN = 50;
+	double belovegroundCN = 50.0; //debugging
+	float AddC1, AddC2, AddC3, OutN;
+
+	//if(m->cells[cell].fineRootLittering >.0005)m->cells[cell].fineRootLittering = 0.0005;
+	if(m->cells[cell].leafLittering+m->cells[cell].stemLittering + m->cells[cell].fineRootLittering +
+			m->cells[cell].coarseRootLittering + m->cells[cell].stemBrancLittering>0.0)
 	{
-		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		AddN = m->cells[cell].leaflitN +  m->cells[cell].stemlitN + m->cells[cell].stemBranclitN +  m->cells[cell].coarseRootlitN +
+				m->cells[cell].fineRootlitN;
+
+		//plantn[cwc] -= AddN;
+		//if(plantn[cwc]<0.0) plantn[cwc] = 0.0;
+
+		// Add dead shoot in stable
+		AddC = m->cells[cell].leafLittering+m->cells[cell].stemLittering + m->cells[cell].stemBrancLittering;
+		//bugfix CN too high for biome; neer gets AddC1
+		AddCN = AddC / ( m->cells[cell].leaflitN + m->cells[cell].stemlitN + m->cells[cell].stemBranclitN); //abovegroundCN;
+		//AddP = CropP[cwc] * 0.01 * AddC /0.4;
+
+
+		//alloc_litter_into_pools(&AddCN, &AddC, 1, &AddC1, &AddC2, &AddC3, &dInertC, 0, rcnrvl, rcnrl, rcnrr);
 		{
-			for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+			dInertC = 0.0;
+
+			if ( AddCN >= site->rcnrvl &&  AddCN < site->rcnrl )
 			{
-				if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] ==1)
-				{
-					//vegetative period: the boolean variable is set to 1 (true) and it is sufficient to considered the top soil as not bare (exiting the nested for loop)
-					day_nup += m->cells[cell].heights[height].ages[age].species[species].value[VEG_UNVEG];
-					leafFall +=m->cells[cell].leafLittering + m->cells[cell].fineRootLittering+m->cells[cell].coarseRootLittering+m->cells[cell].stemLittering;
-					bVeg = 1;
-					break;
-				}else
-					// unvegetative period; in this case the nested loop goes on, to check if there is an height, age or species class in vegetative period
-				{
-					//in case of a bare topspoil, the maximum factor is divided by 1.8 to represent the reduced evapotranspiration from bare soil
-				}
-			}if(bVeg ==1) break;
-		}if(bVeg==1) break;
-	}
-	//if ( crop[1] == 17 )
+				RR1 = site->rcnrvl;
+				RR2 = site->rcnrl;
 
-	//	leaf_falln = day_nup[1] * leaf[1];
-	//	leaf_fallc = leaf_falln * leafcn[1];
-	//    AddC = leaf_fallc;
-	//	AddCN = leafcn[1];
+				pc = (1.0 / AddCN);
+				pd = (1.0 / RR1);
+				pa = pc - pd;
+				pe = (1.0 / RR2);
+				pf = (1.0 / RR1);
+				pb = pe - pf;
 
-	leaf_falln = day_nup * leafFall;
-	/* #22-1, Add new Litter into soil litter pools */
-	if ( m->cells[cell].AddCN >= site->rcnrvl && m->cells[cell].AddCN < site->rcnrl )
-	{
-		RR1 = site->rcnrvl;
-		RR2 = site->rcnrl;
-		m->cells[cell].AddC2 = (AddN - m->cells[cell].AddC/RR1) / (1.0/RR2 - 1.0/RR1);
-		m->cells[cell].AddC1 = (m->cells[cell].AddC - m->cells[cell].AddC2);
-		m->cells[cell].AddC3 = 0.0;
+				AddC2 = AddC * (pa / pb);
+				AddC1 = (AddC - AddC2);
+				AddC3 = 0.0;
+			}
+			else if ( AddCN >= site->rcnrl && AddCN <= site->rcnrr )
+			{
+				RR2 = site->rcnrl;
+				RR3 = site->rcnrr;
+				pc = (1.0 / AddCN);
+				pd = (1.0 / RR2);
+				pa = pc - pd;
+				pe = (1.0 / RR3);
+				pf = (1.0 / RR2);
+				pb = pe - pf;
+				AddC3 = (float)(AddC * (pa / pb));
+				AddC2 = (float)(AddC - AddC3);
+				AddC1 = (float)0.0;
+			}
+			else if ( AddCN < site->rcnrvl )
+			{
+				float ActN = AddC/site->rcnrvl;
+				AddC3 = 0.0;
+				AddC2 = 0.0;
+				AddC1 = AddC;
+				m->cells[cell].soils[0].nh4 += (AddC / (AddCN+0.0000001) - ActN);
+				if( m->cells[cell].soils[0].nh4<0) m->cells[cell].soils[0].nh4	= .0000001;
+				AddCN = site->rcnrvl;
+			}
+			else if ( AddCN > site->rcnrr )
+			{
+				float ActC = AddC/ AddCN * site->rcnrr;
+				AddC3 = ActC;
+				AddC2 = 0.0;
+				AddC1 = 0.0;
 
-	}
-	if ( m->cells[cell].AddCN >= site->rcnrl && m->cells[cell].AddCN <= site->rcnrr )
-	{
-		RR2 = site->rcnrl;
-		RR3 = site->rcnrr;
-		param3 = (1.0 / m->cells[cell].AddCN);
-		param4 = (1.0 / RR2);
-		param1 = param3 - param4;
-		param5 = (1.0 / RR3);
-		param6 = (1.0 / RR2);
-		param2 = param5 - param6;
-		m->cells[cell].AddC3 = (float)(m->cells[cell].AddC * (param1 / param2));
-		m->cells[cell].AddC2 = (float)(m->cells[cell].AddC - m->cells[cell].AddC3);
-		m->cells[cell].AddC1 = (float)0.0;
-	}
-	if ( m->cells[cell].AddCN < site->rcnrvl )
-	{
-		float ActN = m->cells[cell].AddC/site->rcnrvl;
-		m->cells[cell].AddC3 = 0.0;
-		m->cells[cell].AddC2 = 0.0;
-		m->cells[cell].AddC1 = m->cells[cell].AddC;
-		//c->soils[0].nh4 += (c->AddC / (c->AddCN+0.0000001) - ActN);	//fixSergio [0] or better a for each layer?
-		for(soil = 0; soil < m->cells[cell].soils_count; soil ++) {m->cells[cell].soils[soil].nh4 += (m->cells[cell].AddC / (m->cells[cell].AddCN+0.0000001) - ActN);}
-		m->cells[cell].AddCN = site->rcnrvl;
-	}
-	if ( m->cells[cell].AddCN > site->rcnrr )
-	{
-		//float ActC = AddC/ AddCN * rcnrr;
-		m->cells[cell].AddC3 = m->cells[cell].AddC;//ActC;
-		m->cells[cell].AddC2 = 0.0;
-		m->cells[cell].AddC1 = 0.0;
+				//dInertC = AddC - ActC;
+				//inert_C[1] += dInertC;
+				//m->cells[cell].soils[0].inert_C += dInertC;
+				AddC = ActC;
+				AddCN = site->rcnrr;
+			}
 
-	}
-
-	if (m->cells[cell].AddC1 < 0.0) m->cells[cell].AddC1 = 0.0;
-	if (m->cells[cell].AddC2 < 0.0) m->cells[cell].AddC2 = 0.0;
-	if (m->cells[cell].AddC3 < 0.0) m->cells[cell].AddC3 = 0.0;
-	for ( l = 0; l < 1; l++ )
-	{
-		m->cells[cell].soils[l].rcvl += (AddC1 * 0.5);
-		m->cells[cell].soils[l].rcl += (AddC2 * 0.5);
-		m->cells[cell].soils[l].rcr += (AddC3 * 0.5);
-	}
-
-	//		yr_addleafc = yr_addleafc + AddC1 +
-	//				AddC2 + AddC3;
-	//		yr_addleafn = yr_addleafn +
-	//				AddC1 / rcnrvl +
-	//				AddC2 / rcnrl +
-	//				AddC3 / rcnrr;
-	AddC1 = 0.0;
-	AddC2 = 0.0;
-	AddC3 = 0.0;
-
-	/* leaf_falln = 0;
-	leaf_fallc = 0; */
-}
+			if (AddC1 < 0.0) AddC1 = 0.0;
+			if (AddC2 < 0.0) AddC2 = 0.0;
+			if (AddC3 < 0.0) AddC3 = 0.0;
 
 
-void get_av_year_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
-{
-	double tempSoilTemp;
-	c->temp_avet = 0;
-	//get permission to include it in main line 1200, getting rid of the following double loop
-	for (month = 0; month < MONTHS; month++)
-	{
-		for (day = 0; day < 365; day++)
-		{
-			tempSoilTemp = met[month].d[day].tsoil;
-			c->temp_avet += tempSoilTemp;
+
+			/*	if(IfStub==0)
+			{
+				AddToSoilC = 0.05 * (*AddC1 + *AddC2 + *AddC3 + dInertC);
+				AddToSoilN = 0.05* (*AddC1/rcnrvl + *AddC2/rcnrl + *AddC3/rcnrr);
+			 *AddC1 *= 0.95;
+			 *AddC2 *= 0.95;
+			 *AddC3 *= 0.95;
+				dInertC *= 0.95;
+			}
+			else
+			{
+				AddToSoilC = dInertC;
+				AddToSoilN = 0.0;
+				dInertC = 0.0;
+			}*/
+
+			/*	if(IfStub==1)//litter turn into stub
+			{
+			}
+			else//litter turn into soil C pools
+			{
+				float AddToSoilC, AddToSoilN;
+				AddToSoilC = (*AddC1 + *AddC2 + *AddC3 + dInertC);
+				AddToSoilN = (*AddC1/rcnrvl + *AddC2/rcnrl + *AddC3/rcnrr);
+
+				day_addC += AddToSoilC;
+				yr_addrc += AddToSoilC;
+				day_addrn += AddToSoilN;
+				yr_addrn += AddToSoilN;
+			}
+			 */
 		}
-	}
-	c->temp_avet /= 365;
-}
+		OutN = AddC1/site->rcnrvl + AddC2/site->rcnrl + AddC3/site->rcnrr;
 
-void soil_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
-{
-	int l, n, qq;
-	double K[120], Z[120], C[120], outQ[120], Kave, dQ;
-	double Org, Min, Vwater, Vmin, Vorg, Vsoil, TM, Csoil, Ksoil, a,dQQ, tempSoilTemp;
-	//double Mleaf;
+		m->cells[cell].soils[0].rcvl += AddC1;
+		m->cells[cell].soils[0].rcl += AddC2;
+		m->cells[cell].soils[0].rcr += AddC3;
+		m->cells[cell].AddC1 += AddC1;
+		m->cells[cell].AddC2 += AddC2;
+		m->cells[cell].AddC3 += AddC3;
+		//OrgP[1] += AddP;
 
+		//		day_addC += (AddC1 + AddC2 + AddC3);
+		//		day_addrn += (AddC1 / site->rcnrvl + AddC2 / site->rcnrl + AddC3 / site->rcnrr);
+		//		yr_addtc += (AddC1 + AddC2 + AddC3);
+		//		yr_addtn += (AddC1 / site->rcnrvl + AddC2 / site->rcnrl + AddC3 / site->rcnrr);
 
+		AddC1 = 0.0;
+		AddC2 = 0.0;
+		AddC3 = 0.0;
+		//		AddP = 0.0;
 
-	qq =c->soils_count;//q;//(int)(0.3/h);
-	//
-	//	Mleaf = (Grain_Wt[1] + Leaf_Wt[1] + Stem_Wt[1])/.58/1000.0;//ton try matter/ha
-	//
-	//	bcv1 = Mleaf / (Mleaf + (double)exp(7.563 - .0001297 * Mleaf));
-	//	bcv2 = (snow_pack * 100.0 / (snow_pack * 100.0 + (double)exp(2.303 - .2197 * snow_pack * 100.0)));
-
-	//c->albedo = albedo(bcv1, bcv2);
-
-	if ( years == 0 &&day == 0 && month == JANUARY ) c->previousSoilT = met[month].d[day].tavg;
-
-	double adjT = (met[month].d[day].tavg+met[month].d[day].tmax)*0.5;
-	//double adjT = air_temp;
-
-	double fsl;
-
-	//adjT = adjT / (double)pow((1.0+lai),0.2); //albedo * OldT + (1.0 - albedo) * adjT;
-	//adjT = albedo * OldT + (1.0 - albedo) * adjT;
-
-	if(c->snow==0.0)//&&surface_litter<=2000.0)
-	{
-		fsl = c->litter / 1000.0;//-0.1097*(double)log(surface_litter+0.0000001) + 1.3143;
-		fsl = Minimum(0.5, Maximum(0.0, fsl));
-
-		c->soilSurfaceT = c->previousSoilT * fsl + adjT * (1.0 - fsl);//min_temp * (1.0 - fsl);//
-		//Surf_Temp = min_temp;//OldT * fsl + min_temp * (1.0 - fsl);
-	}
-	else
-	{
-		double SnowDepth = c->snow*2000.0; //cm, snow pack thicknes
-		//Surf_Temp = 0.0 + adjT / (10.0 + SnowDepth);//
-		//Surf_Temp = max(0.0, Surf_Temp);
-		c->soilSurfaceT = adjT / (1.0 + SnowDepth);//
-
-	}
-
-	c->previousSoilT = c->soilSurfaceT;
-
-	//Volumatric heat capacity, J/(layer*K), and conductivity
-	for (l=0; l<qq; l++)
-	{
-		/*
-    if(temp[l]<=0.0 && air_temp> 0.0 && rainfall>0.0 )
-    {
-       int rain_layer = (int)(rainfall/0.005);
-       if(l<=rain_layer) temp[l] = air_temp;
-    }
-		 */
-		c->soils[l].waterContent = c->water_to_soil;
-		Org = c->soils[l].rcvl + c->soils[l].rcl+ c->soils[l].rcr + c->soils[l].CRB1 +
-				c->soils[l].CRB2 + c->soils[l].crhl+c->soils[l].crhr + c->soils[l].dphum; //kg C/layer/ha
-
-		Min = c->soils[l].mmm;
-		Vwater = c->soils[l].waterContent * 10000.0; //m water/layer -> m3 water/layer/ha
-
-		Vmin = Min / (1000 * site->bulk_dens); //volume of mineral matter, m3/layer/ha
-		Vorg = Org / 0.58 / (1000 * 0.4); //volume of organic matter, m3/layer/ha
-		Vsoil = Vmin + Vorg; //volume of soil, m3/layer/ha
-
-		TM = Org + Min;
-
-		Csoil = 4.0 * (3450000.0 * Vorg / Vsoil + 2350000.0 * Vmin / Vsoil); //J/(m3*K)
-		//if(st[1]>=12) Csoil *= 2.0;
-
-		C[l] = 0.5 * (Vsoil * Csoil + Vwater * 4180000.0); // J/(layer*K)
-
-
-		Ksoil = (0.0025 * Org / TM + 0.029 * Min / TM) * 10.0;
-
-		K[l] = 86400.0 * ((1.0 - c->soils[l].sts) * Ksoil + c->soils[l].sts * c->soils[l].soilMoisture * 0.0057);//
-		//J/(cm*day*K)
-
-		//		//Depth of layer, cm
-		//		//Z[l] = 100.0 * l * h[l]; // cm
-		//		if(l==0) Z[l] = site->hydraulicConductivity * 100.0;
-		//		else Z[l] = Z[l-1] + site->hydraulicConductivity* 100.0;
-
-	}
-
-	//Heat flux from layer L-1 down to L
-	for (n=0; n<200; n++)
-	{
-		for (l=0; l<qq; l++)
+		//root litter incorporation
+		for (l = 0; l < m->cells[cell].soils_count; l++ )
 		{
-			a = 5000.0; //10000
-			if (l==0)
+			if ( l >= 0 && l <= 2 )
 			{
-				double F_snow = 100.0 * c->snow;
-				if (F_snow < 1.0) F_snow = 1.0;
+				AddC = m->cells[cell].fineRootLittering +
+						m->cells[cell].coarseRootLittering * 0.5 / 3.0;
+				//AddP = CropP[cwc] * 0.01 /0.4 * sRoot * 0.5 / 3.0;
+			}
+			if ( l >= 3 && l <= 5 )
+			{
+				AddC = m->cells[cell].fineRootLittering +
+						m->cells[cell].coarseRootLittering * 0.4 / 3.0;
+				//AddP = CropP[cwc] * 0.01 /0.4 * sRoot * 0.4 / 3.0;
+			}
+			if ( l >= 6 && l < m->cells[cell].soils_count )
+			{
+				AddC = m->cells[cell].fineRootLittering +
+						m->cells[cell].coarseRootLittering * 0.1 / (float)(m->cells[cell].soils_count - 6);
+				//AddP = CropP[cwc] * 0.01 /0.4 * sRoot * 0.1 / (float)(q - 6);
+			}
+			AddCN =AddC / ( m->cells[cell].coarseRootlitN + m->cells[cell].fineRootlitN);//belovegroundCN;
+			//alloc_litter_into_pools(&AddCN, &AddC, 10, &AddC1, &AddC2, &AddC3, &dInertC, 0, rcnrvl, rcnrl, rcnrr);
+			{
+				dInertC = 0.0;
 
-				//heat transfer between air and first layer
+				if ( AddCN >= site->rcnrvl &&  AddCN < site->rcnrl )
+				{
+					RR1 = site->rcnrvl;
+					RR2 = site->rcnrl;
 
-				if(c->snow > 0.0)
-					outQ[l-1] = a * K[l] * (c->soilSurfaceT - c->soils[l].soilTemp) / Z[l] / F_snow;//J/(cm2*day)
+					pc = (1.0 / AddCN);
+					pd = (1.0 / RR1);
+					pa = pc - pd;
+					pe = (1.0 / RR2);
+					pf = (1.0 / RR1);
+					pb = pe - pf;
+
+					AddC2 = AddC * (pa / pb);
+					AddC1 = (AddC - AddC2);
+					AddC3 = 0.0;
+				}
+				else if ( AddCN >= site->rcnrl && AddCN <= site->rcnrr )
+				{
+					RR2 = site->rcnrl;
+					RR3 = site->rcnrr;
+					pc = (1.0 / AddCN);
+					pd = (1.0 / RR2);
+					pa = pc - pd;
+					pe = (1.0 / RR3);
+					pf = (1.0 / RR2);
+					pb = pe - pf;
+					AddC3 = (float)(AddC * (pa / pb));
+					AddC2 = (float)(AddC - AddC3);
+					AddC1 = (float)0.0;
+				}
+				else if ( AddCN < site->rcnrvl )
+				{
+					float ActN = AddC/site->rcnrvl;
+					AddC3 = 0.0;
+					AddC2 = 0.0;
+					AddC1 = AddC;
+					m->cells[cell].soils[0].nh4 += (AddC / (AddCN+0.0000001) - ActN);
+					if( m->cells[cell].soils[0].nh4<0) m->cells[cell].soils[0].nh4	= .0000001;
+					AddCN = site->rcnrvl;
+				}
+				else if ( AddCN > site->rcnrr )
+				{
+					float ActC = AddC/ AddCN * site->rcnrr;
+					AddC3 = ActC;
+					AddC2 = 0.0;
+					AddC1 = 0.0;
+
+					dInertC = AddC - ActC;
+					//inert_C[1] += dInertC;
+					//m->cells[cell].soils[0].inert_C += dInertC;
+					AddC = ActC;
+					AddCN = site->rcnrr;
+				}
+
+				if (AddC1 < 0.0) AddC1 = 0.0;
+				if (AddC2 < 0.0) AddC2 = 0.0;
+				if (AddC3 < 0.0) AddC3 = 0.0;
+
+
+
+				/*	if(IfStub==0)
+				{
+					AddToSoilC = 0.05 * (*AddC1 + *AddC2 + *AddC3 + dInertC);
+					AddToSoilN = 0.05* (*AddC1/rcnrvl + *AddC2/rcnrl + *AddC3/rcnrr);
+				 *AddC1 *= 0.95;
+				 *AddC2 *= 0.95;
+				 *AddC3 *= 0.95;
+					dInertC *= 0.95;
+				}
 				else
-					outQ[l-1] = a * K[l] * (c->soilSurfaceT - c->soils[l].soilTemp) / Z[l];
-			}
-
-			if (l<qq)
-			{
-				Kave = (K[l] + K[l+1]) / 2.0;
-				//heat from layer l to l+1
-				outQ[l] = a * Kave * (c->soils[l].soilTemp - c->soils[l +1].soilTemp) / (Z[l+1] - Z[l]);
-			}
-			else
-			{
-				//heat from bottom layer to deeper soil
-				outQ[l] = a * K[l] * (c->soils[l].soilTemp - c->yr_avet) / (200.0 - Z[l]);	//yr_ave_tj
-			}
-
-			dQ = outQ[l-1] - outQ[l];
-
-			double dT = dQ / C[l];
-
-			c->soils[l].soilTemp += dT;
-
-		} // l loop
-
-	} // n
-
-	for(l=0; l<qq; l++)
-	{
-		double pQ1, pQ2, d_ice=0;
-		double ps = site->hydraulicConductivity*c->soils[l].sts;
-		double max_water = ps * 10000.0;//ps
-
-		Vwater =c->soils[l].waterContent * 10000.0;  // m water -> m3 water/layer/ha
-
-		if (c->soils[l].soilTemp<=0.0) //freeze
-		{
-			if(Vwater>0.0&& c->soils[l].ice/10000.0<ps)
-			{
-				pQ1 = -c->soils[l].soilTemp * C[l]; //J/layer, heat release when T->0
-				pQ2 = Vwater * (4100000.0 - 2100000.0); //J/layer, water heat capacity
-
-				if (pQ1 > pQ2) //totally freeze
 				{
-					dQQ = pQ2; //J/layer/ha
-					c->soils[l].soilTemp += (dQQ / C[l]);
-					d_ice = Vwater; //m3 water/lay/ha
-					Vwater = 0.0;
+					AddToSoilC = dInertC;
+					AddToSoilN = 0.0;
+					dInertC = 0.0;
+				}*/
 
-					c->soils[l].ice += d_ice;//m3 water/lay/ha
-					c->soils[l].waterContent = 0.0; //Vwater / 10000.0; // m water/layer
-
-					//day_ice += d_ice/10000.0;
-					//if(day_ice<0.0) day_ice = 0.0;
-
-				}
-				else //partially freeze
+				/*	if(IfStub==1)//litter turn into stub
 				{
-					dQQ = pQ1;
-					c->soils[l].soilTemp = 0.0;
-					d_ice = dQQ / (4100000.0 - 2100000.0);
-
-					if(d_ice > Vwater)
-						d_ice = Vwater;//m3 water/lay/ha
-
-					Vwater -= d_ice;
-
-					c->soils[l].ice += d_ice; //m3 water/lay/ha
-
-					c->soils[l].waterContent -= (d_ice / 10000.0); // m water/layer
-					//day_ice += d_ice/10000.0;// m water/layer
-					//if(day_ice<0.0) day_ice = 0.0;
 				}
-
-				if(c->soils[l].ice/10000.0 > ps) c->soils[l].ice = ps * 10000.0;
-			}
-			else
-			{
-				d_ice = 0.0;
-			}
-
-		}
-		else  //thawing
-		{
-			if (c->soils[l].ice>0.0&&c->soils[l].soilTemp>0.0)
-			{
-				pQ1 = c->soils[l].soilTemp * C[l] * 0.05;//0.1;//0.05;
-				//pQ2 = 2.0 * ice[l] * (4100000.0 - 2100000.0);
-				pQ2 = c->soils[l].ice * (4100000.0 - 2100000.0);
-
-				if (pQ1 > pQ2) //totally thawing
+				else//litter turn into soil C pools
 				{
-					dQQ = pQ2;
-					c->soils[l].soilTemp -= dQQ / C[l];
-					d_ice = c->soils[l].ice;
+					float AddToSoilC, AddToSoilN;
+					AddToSoilC = (*AddC1 + *AddC2 + *AddC3 + dInertC);
+					AddToSoilN = (*AddC1/rcnrvl + *AddC2/rcnrl + *AddC3/rcnrr);
 
-					Vwater += d_ice;
-					c->soils[l].ice = 0.0;
-					c->soils[l].waterContent += d_ice / 10000.0; // m water/layer
-
-					//day_ice -= d_ice/10000.0;
-					//if(day_ice<0.0) day_ice = 0.0;
+					day_addC += AddToSoilC;
+					yr_addrc += AddToSoilC;
+					day_addrn += AddToSoilN;
+					yr_addrn += AddToSoilN;
 				}
-				else //partially thawing
-				{
-					dQQ = pQ1;
-					c->soils[l].soilTemp = 0.0;
-					//d_ice = -0.5 * pQ1 / (4100000.0 - 2100000.0);
-					d_ice = pQ1 / (4100000.0 - 2100000.0);
-					if(d_ice > c->soils[l].ice) d_ice = c->soils[l].ice;
-					Vwater += d_ice;
-					c->soils[l].ice -= d_ice;// m3 water/layer/ha
-
-					c->soils[l].waterContent += d_ice / 10000.0; // m water/layer
-					//day_ice -= d_ice/10000.0;
-					//if(day_ice<0.0) day_ice = 0.0;
-				}
-				if(c->soils[l].ice>max_water)
-					c->soils[l].ice= max_water;
+				 */
 			}
-			else
-			{
-				d_ice = 0.0;
-			}
-
+			m->cells[cell].soils[0].rcvl += AddC1;
+			m->cells[cell].soils[0].rcl += AddC2;
+			m->cells[cell].soils[0].rcr += AddC3;
+			m->cells[cell].AddC1 += AddC1;
+			m->cells[cell].AddC2 += AddC2;
+			m->cells[cell].AddC3 += AddC3;
+			//OrgP[l] += AddP;
+			AddC1 = 0.0;
+			AddC2 = 0.0;
+			AddC3 = 0.0;
+			//AddP = 0.0;
 		}
 
-		if (c->soils[l].ice < 0.0) c->soils[l].ice = 0.0;
+		//		float AddToSoilC, AddToSoilN;
+		//		AddToSoilC = sRoot;
+		//		AddToSoilN = sRoot/AddCN;
+		//
+		//		day_addC += AddToSoilC;
+		//		yr_addrc += AddToSoilC;
+		//		day_addrn += AddToSoilN;
+		//		yr_addrn += AddToSoilN;
+		//
+		//		sRoot = 0.0;
 
-		if (c->soils[l].waterContent < 0.0) c->soils[l].waterContent  = 0.0;
-
-		//c->total_ice += (c->soils[l].ice/10000.0); //m water for profile
-
-	}//layer loop
+	}
 }
-
-//double ttn;
 
 void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
 {
@@ -507,7 +440,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 	//annual daily loop on each cell before start
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-
+		//yeah does it work babe?
 		//*************FOREST CHARACTERISTIC*********************
 		//first day of the year: reset variables
 		if (day == 0 && month== JANUARY && years == 0 )
@@ -528,18 +461,33 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 		}
 		else
 		{
+			//
+			m->cells[cell].AddC = 0;
+			m->cells[cell].AddC1 = 0;
+			m->cells[cell].AddC2 = 0;
+			m->cells[cell].AddC3 = 0;
 			m->cells[cell].soils[0].co2 = 0.0;
 			m->cells[cell].soils[0].day_O2 = 0.0;
+			m->cells[cell].soils[0].drcvl = 0.0;
+			m->cells[cell].soils[0].DRCB1 = 0.0;
+			m->cells[cell].soils[0].DRCB2 = 0.0;
+			m->cells[cell].soils[0].litco22 = 0.0;
+			m->cells[cell].soils[0].litco23 = 0.0;
+
+			tree_leaves_fall(m, cell);
 		}
-		tree_leaves_fall(m, cell);
 
 		if (day == 0 && month == JANUARY)
 		{
 			//reinitialize data
-			//get_av_year_temperature(&m->cells[cell], years, month, day, met);
+			get_av_year_temperature(&m->cells[cell], years, month, day, met);
 		}
-		//soil_temperature(&m->cells[cell], years, month, day, met);
+		soil_temperature(&m->cells[cell], years, month, day, met);
 
+
+
+		m->cells[cell].soils[l].nh4 += 0.4;
+		m->cells[cell].till_fact = 1.0;
 		//effect of clay adsorption: according to Zhang no 2.3026
 		clayc = (double)(log(.14 / (site->clay_perc/100)) / 2.3026 + 1);
 		krh = (double).16 * clayc;
@@ -555,7 +503,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			if(Fl>1.3) Fl = 1.3;
 			if(Fl<0.0) Fl = 0.0;
 
-			m->cells[cell].soils[l].soilTemp = met[month].d[day].tsoil;
+			//m->cells[cell].soils[l].soilTemp = met[month].d[day].tsoil;
 			//DRF is defined as a constant (0.03)
 			//this considered the imapct of soil clay and microbio
 			//activity in each layer
@@ -563,20 +511,6 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			DDRF = (DRF - 0.02 * site->clay_perc/100) * Fl;	   // * pow(m->cells[cell].MicrobioIndex, 0.1);
 			if ( DDRF < 0.0 ) DDRF = 0.0;
 
-			//		if(m->cells[cell].TTT>0.0)		//&& m->cells[cell].soils[l].soil_ph  != m->cells[cell].soils[l].sph)
-			//		{
-			//
-			//			Frain = 0.5; //20.0 * rainfall;
-			//			if(Frain>1.0) Frain=1.0;
-			//
-			//			delta_ph = 6.7 * (met[month].d[day].rain / 0.05) + m->cells[cell].soil_ph * 1000.0;
-			//			delta_ph = 6.7 * Frain + m->cells[cell].soil_ph * 1000.0;
-			//			delta_ph /= (1000.0+Frain);
-			//
-			//			dev_ph = (m->cells[cell].soils[l].sph - m->cells[cell].soil_ph) * Frain;
-			//
-			//			m->cells[cell].soils[l].sph -= dev_ph;
-			//		}
 			//sergio: assumed bucket model for now (unilayer situation)
 			m->cells[cell].soils[l].soilMoisture = m->cells[cell].soil_moist_ratio;
 
@@ -600,7 +534,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 
 			if (RFMT <= 0.0) RFMT = 0.0;
 			RFM = RFMM * RFMT;
-			//RFM=Minimum(1.0, Maximum(0.0, RFM));
+			//RFM=Minimum(1.0, Maximum(0.0, RFM));	if(st[l]>=12) *RFM *= 0.01;//0.1;
+
 
 			if(m->cells[cell].soils[l].ice >0.0) RFM = (0.9 - m->cells[cell].soils[l].soilMoisture) * 0.05;//0.015;//
 			RFM=Minimum(1.0, Maximum(0.0, RFM));
@@ -609,52 +544,62 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			m->cells[cell].soils[l].soc = m->cells[cell].soils[l].rcvl + m->cells[cell].soils[l].rcl + m->cells[cell].soils[l].rcr + m->cells[cell].soils[l].CRB1 +
 					m->cells[cell].soils[l].CRB2 + m->cells[cell].soils[l].crhl +m->cells[cell].soils[l].crhr + m->cells[cell].soils[l].dphum;
 
-			if(day == 0 && month == 0 && years == 0)
-			{
-				ActSOC = m->cells[cell].soils[l].CRB1 + m->cells[cell].soils[l].CRB2 + m->cells[cell].soils[l].crhl + m->cells[cell].soils[l].crhr;
-				if(ActSOC<=0.0) Fhc = 0.0;
-				else Fhc = m->cells[cell].soils[l].crhl / (m->cells[cell].soils[l].crhl + m->cells[cell].soils[l].crhr);
-				CRB = 0.01 * ActSOC;
-				m->cells[cell].soils[l].CRB1 = CRB * SRB;
-				m->cells[cell].soils[l].CRB2 = CRB * (1.0 - SRB);
-				Thc = ActSOC - CRB;
-				m->cells[cell].soils[l].crhl = Thc * Fhc;
-				m->cells[cell].soils[l].crhr = Thc - m->cells[cell].soils[l].crhl;
-				new_ActSOC = m->cells[cell].soils[l].CRB1 + m->cells[cell].soils[l].CRB2 + m->cells[cell].soils[l].crhl +
-						m->cells[cell].soils[l].crhr;
-				if(new_ActSOC!=ActSOC)
-				{
-					dActSOC = new_ActSOC - ActSOC;
-					m->cells[cell].soils[l].crhr -= dActSOC;
-				}
-			}
-
 			m->cells[cell].soils[l].no3 += m->cells[cell].soils[l].no2;
 			m->cells[cell].soils[l].no2 = 0.0;
-			// Decomposition of surface litter
-			if ( l ==0)
+
+			//decomposition of surface litter
+			if((m->cells[cell].leafLittering + m->cells[cell].fineRootLittering+m->cells[cell].coarseRootLittering+
+					m->cells[cell].stemLittering+m->cells[cell].stemBrancLittering)>0.0&&met[month].d[day].tavg>0.0)
 			{
-				if(m->cells[cell].litter >0.0&& m->cells[cell].soils[l].soilTemp>0.0)
-				{
-					Ftw=  m->cells[cell].soils[l].soilTemp * 0.001;//0.005
+				float Ftw= met[month].d[day].tavg * 0.001;//0.005
+				float dS1, dS2, dS3, dS4, dS5;
 
-					//Ftw = temp[1] / 40.0 * day_wfps[1];
-					Ftw = Maximum(0.0, Minimum(Ftw, 0.5));
+				//Ftw = temp[1] / 40.0 * day_wfps[1];
+				Ftw = Maximum(0.0, Minimum(Ftw, 0.5));
 
-					dlitter = m->cells[cell].litter * Ftw;
-					m->cells[cell].soils[l].co2 += dlitter;
-					m->cells[cell].soils[l].day_O2 += dlitter;
-					if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
-					m->cells[cell].soils[l].nh4 += (dlitter / site->rcnrvl);
-					m->cells[cell].litter -= dlitter;
-					if ( m->cells[cell].litter <= 0.0000001 ) m->cells[cell].litter = 0.0;
-				}
+				dS1 = m->cells[cell].leafLittering * Ftw;
+				m->cells[cell].soils[l].co2 += dS1;
+				m->cells[cell].soils[l].day_O2 += dS1;
+				if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
+				m->cells[cell].soils[l].nh4 += (dS1 / site->rcnrvl);
+				m->cells[cell].leafLittering -= dS1;
+				if ( m->cells[cell].leafLittering <= 0.0000001 ) m->cells[cell].leafLittering = 0.0;
+
+				dS2 = m->cells[cell].fineRootLittering * Ftw;
+				m->cells[cell].soils[l].co2 += dS2;
+				m->cells[cell].soils[l].day_O2 += dS2;
+				if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
+				m->cells[cell].soils[l].nh4 += (dS2 / site->rcnrvl);
+				m->cells[cell].fineRootLittering -= dS2;
+				if ( m->cells[cell].fineRootLittering <= 0.0000001 ) m->cells[cell].fineRootLittering = 0.0;
+
+				dS3 = m->cells[cell].coarseRootLittering * Ftw;
+				m->cells[cell].soils[l].co2 += dS3;
+				m->cells[cell].soils[l].day_O2 += dS3;
+				if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
+				m->cells[cell].soils[l].nh4 += (dS3 / site->rcnrl);
+				m->cells[cell].coarseRootLittering -= dS3;
+				if ( m->cells[cell].coarseRootLittering <= 0.0000001 ) m->cells[cell].coarseRootLittering = 0.0;
+
+				dS4 = m->cells[cell].stemLittering * Ftw;
+				m->cells[cell].soils[l].co2 += dS4;
+				m->cells[cell].soils[l].day_O2 += dS4;
+				if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
+				m->cells[cell].soils[l].nh4 += (dS4 / site->rcnrr);
+				m->cells[cell].stemLittering -= dS4;
+				if ( m->cells[cell].stemLittering <= 0.0000001 ) m->cells[cell].stemLittering = 0.0;
+
+				dS5 = m->cells[cell].stemBrancLittering * Ftw;
+				m->cells[cell].soils[l].co2 += dS5;
+				m->cells[cell].soils[l].day_O2 += dS5;
+				if(m->cells[cell].soils[l].day_O2<0.0) m->cells[cell].soils[l].day_O2=0.0;
+				m->cells[cell].soils[l].nh4 += (dS5 / site->rcnrr);
+				m->cells[cell].stemBrancLittering -= dS5;
+				if ( m->cells[cell].stemBrancLittering <= 0.0000001 ) m->cells[cell].stemBrancLittering = 0.0;
 			}
 
 			// Decomposition of very labile litter
-			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
-			else  f_till_fact = m->cells[cell].till_fact;
-
+			f_till_fact = 1.0; // assumed no tillage on forested soils, thus even layer 0 is not tilled
 			/* potential CO2 from rcvl decomposition */
 			r_RFM = Maximum(0.0, Minimum(1.0, RFM));//max(0.7, min(1.0, RFM));
 			Frcvl = 2.0 * r_RFM * KRCVL * DDRF * site->DClitter * f_till_fact;//* f_till_fact
@@ -890,13 +835,12 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			DRCB = DRCB1 + DRCB2 + DRCB3;
 
 			// Life and death of soil microbes
-
-
 			//if(st[l]>=12) Fo=0.1;
 			//else Fo=0.7;
 			Fo=0.7;
 
 			//if ( l > (tilq + 3) ) f_till_fact = 1.0;
+			m->cells[cell].tilq = 1.0;
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
@@ -930,7 +874,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			m->cells[cell].soils[l].crhr += FBHC;
 
 			m->cells[cell].soils[l].nh4 -= (FBHC / site->rcnh2);
-			m->cells[cell].day_N_assim += (FBHC / site->rcnh);
+			//m->cells[cell].day_N_assim += (FBHC / site->rcnh);
 
 
 			/* CO2 from net microbe decomposition */
@@ -1043,12 +987,12 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			if (l>=m->cells[cell].tilq) f_till_fact = 1.0;// + 3
 			else  f_till_fact = m->cells[cell].till_fact;
 
-//			if(l>m->cells[cell].soils_count-1)
-//			{
-//				site->clay_perc= 0.01;
-//				//previously soilDepth[l]
-//				m->cells[cell].soils[l].soilDepth = 0.01;
-//			}
+			//			if(l>m->cells[cell].soils_count-1)
+			//			{
+			//				site->clay_perc= 0.01;
+			//				//previously soilDepth[l]
+			//				m->cells[cell].soils[l].soilDepth = 0.01;
+			//			}
 
 			//if(st[l]<12)
 			Fclay = 0.1793 * pow(site->clay_perc /100, -0.471) * 20.0;
@@ -1058,11 +1002,11 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			//if(st==12) Fclay *= 0.1;
 			//fixSergio being a single layer, assumed the value at depth .5
 			//Fdepth = (double)pow(10.0, (-20.0 * m->cells[cell].soils[l].soilDepth) + 1.0);
-			Fdepth = (double)pow(10.0, (-20.0 * .5) + 1.0);
+			Fdepth = (double)pow(10.0, (-20.0 * site->soil_depth) + 1.0); //it shouyld be layer depth
 			Fdepth=Maximum(0.0, Minimum(1.0, Fdepth));
 
 			Ftemp = m->cells[cell].soils[l].soilTemp / 25.0;
-			Ftemp = Maximum(1.0, Minimum(0.001, Ftemp));
+			Ftemp = Minimum(1.0, Maximum(0.001, Ftemp));
 
 			d_factor = 0.00001 * RFM * DDRF * f_till_fact * Fclay * Fdepth * site->DChumus * Ftemp;//0.0008
 
@@ -1108,7 +1052,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			hydroxide = Kw / hydrogen;//mol/L
 
 			//suspect its porosity
-			V_water = m->cells[cell].soils[l].soilMoisture * site->hydraulicConductivity * 1000.0;//liter water/m in layer l
+			V_water = m->cells[cell].soils[l].soilMoisture * site->hydraulicConductivity *10000 * 1000.0;//liter water/ha in layer l
 
 			mol_nh4 = 1000.0 * m->cells[cell].soils[l].nh4 / 14.0 / V_water;//kg N -> mol/L
 			mol_nh3 = mol_nh4 * hydroxide / Ka;//mol/L
@@ -1138,7 +1082,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 					Fsd = 1.0 * (double)(m->cells[cell].soils_count-l)/(double)m->cells[cell].soils_count;//-3.6735 * (double)pow((double)l, 2.0)/(double)q - 0.7551;//effect of depth
 					Fpo = 1.0;// - day_wfps[l];//effect of pores
 					//		double Fwi = 1.5 * wind_speed / (1.0 + wind_speed);//0.5, effect of wind speed
-					Fwi = .5;	//sergio debug
+					Fwi = .7;	//sergio debug
 					Fst = soil_T / (50.0 + soil_T);//10.0
 
 
@@ -1163,8 +1107,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				// NH4+ adsorption on clay
 				TotalNH4 = m->cells[cell].soils[l].nh4 + m->cells[cell].soils[l].clay_nh4;
 				soilCEC(&m->cells[cell]);
-				lbcn = m->cells[cell].base_clay_N * (double)pow(0.5, (double)l);
-				lmcn = m->cells[cell].max_clay_N * (double)pow(0.5, (double)l);
+				lbcn = m->cells[cell].base_clay_N * (double)pow(0.5, (double)l+1);
+				lmcn = m->cells[cell].max_clay_N * (double)pow(0.5, (double)l+1);
 
 				if(m->cells[cell].soils[l].clay_nh4 > lbcn) active_clay_nh4 = m->cells[cell].soils[l].clay_nh4 - lbcn;
 				else active_clay_nh4 = 0.0;
@@ -1219,7 +1163,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				// Recover layer lables
 				m->cells[cell].soils[l].initialOrganicC = m->cells[cell].soils[l].CRB1 + m->cells[cell].soils[l].CRB2 + m->cells[cell].soils[l].crhl+ m->cells[cell].soils[l].crhr;
 				//DOC consumption in soil
-				if(l<=m->cells[cell].soils_count)//&&doc[l]>0.0)
+				if(l< m->cells[cell].soils_count)//&&doc[l]>0.0)
 				{
 					TB = m->cells[cell].soils[l].CRB1+m->cells[cell].soils[l].CRB2;
 					BAC = m->cells[cell].soils[l].soilTemp/(40.0+m->cells[cell].soils[l].soilTemp) * TB/(500.0+TB);
@@ -1249,7 +1193,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				m->cells[cell].wrcl += m->cells[cell].soils[l].rcl;
 				m->cells[cell]. wrcr +=m->cells[cell].soils[l].rcr;
 				m->cells[cell].wcrb += (m->cells[cell].soils[l].CRB1 + m->cells[cell].soils[l].CRB2);
-				m->cells[cell].wcrh += (m->cells[cell].soils[l].crhl+ m->cells[cell].soils[l].crhr);
+				//				m->cells[cell].wcrhl += m->cells[cell].soils[l].crhl;
+				//				m->cells[cell].wcrhr  = m->cells[cell].soils[l].crhr);
 				m->cells[cell].whumus +=m->cells[cell].soils[l].dphum;
 				//m->cells[cell].wFreezedoc += m->cells[cell].soils[l].FreezeDOC;
 
@@ -1312,7 +1257,8 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				m->cells[cell].runoff_N += fw * m->cells[cell].soils[l].no3;
 				m->cells[cell].soils[l].no3 *= (1.0 - fw);
 			}
-
+			//dInertC = m->cells[cell].soils[l].inert_C;
+			m->cells[cell].soils[l].inert_C = .049 * pow(m->cells[cell].soils[l].soc, 1.139);
 			//decomposition of inert organic matter assumed as 1 x1000
 			if( m->cells[cell].soils[l].inert_C>0.0)
 			{
@@ -1325,41 +1271,41 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 			//		//			P_adsorption(&m->cells[cell].soils[l].LabP, &m->cells[cell].soils[l].AdsP,&m->cells[cell].soils[l].soilMoisture, &m->cells[cell].soils[l].sts, &m->cells[cell].soils[l].mmm);//P adsorption
 			//	{
 
-			/* P adsorption */
-			//Langmuir Equation
-
-			for(ll=0; ll<m->cells[cell].soils_count; ll++)
-			{
-				TP = m->cells[cell].soils[ll].LabP + m->cells[cell].soils[ll].AdsP;//kg P/layer
-
-				if(m->cells[cell].soils[ll].LabP<=0.0&& m->cells[cell].soils[ll].AdsP>0.0)
-				{
-					m->cells[cell].soils[ll].LabP = m->cells[cell].soils[ll].AdsP * 0.001;
-					m->cells[cell].soils[ll].AdsP *= 0.999;
-				}
-				VVw = site->hydraulicConductivity* 10000.0 * m->cells[cell].soils[ll].sts * m->cells[cell].soils[ll].soilMoisture * 1000.0; //water L/ha in layer l
-				PinW = (m->cells[cell].soils[ll].LabP * 1000000.0) / VVw;//mg P/L in liquid
-
-				//Langmuir equation
-				PinS = adsPmax * (adsPK * PinW) / (1.0 + adsPK * PinW) - adsPo;//mg P/kg soil, 2->100; 50-600 mg P/kg soil
-
-				dLabP = (PinW / 1000000.0) * VVw;//kg P/layer soil pore water;
-				dAdsP = PinS / 1000000.0 * m->cells[cell].soils[ll].mmm;//kg P/layer soil
-				TTP = dLabP + dAdsP;
-
-				if(TTP<=0.0)
-				{
-					m->cells[cell].soils[ll].AdsP = 0.0;
-					m->cells[cell].soils[ll].LabP = 0.0;
-				}
-				else
-				{
-					m->cells[cell].soils[ll].AdsP = TP * (dAdsP / TTP);
-					m->cells[cell].soils[ll].LabP = TP - m->cells[cell].soils[ll].AdsP;
-				}
-//				m->cells[cell].day_co2 += co2[l];
-//							co2[l] = 0.0;
-			}
+			//			/* P adsorption */
+			//			//Langmuir Equation
+			//
+			//			for(ll=0; ll<m->cells[cell].soils_count; ll++)
+			//			{
+			//				TP = m->cells[cell].soils[ll].LabP + m->cells[cell].soils[ll].AdsP;//kg P/layer
+			//
+			//				if(m->cells[cell].soils[ll].LabP<=0.0&& m->cells[cell].soils[ll].AdsP>0.0)
+			//				{
+			//					m->cells[cell].soils[ll].LabP = m->cells[cell].soils[ll].AdsP * 0.001;
+			//					m->cells[cell].soils[ll].AdsP *= 0.999;
+			//				}
+			//				VVw = site->hydraulicConductivity* 10000.0 * m->cells[cell].soils[ll].sts * m->cells[cell].soils[ll].soilMoisture * 1000.0; //water L/ha in layer l
+			//				PinW = (m->cells[cell].soils[ll].LabP * 1000000.0) / VVw;//mg P/L in liquid
+			//
+			//				//Langmuir equation
+			//				PinS = adsPmax * (adsPK * PinW) / (1.0 + adsPK * PinW) - adsPo;//mg P/kg soil, 2->100; 50-600 mg P/kg soil
+			//
+			//				dLabP = (PinW / 1000000.0) * VVw;//kg P/layer soil pore water;
+			//				dAdsP = PinS / 1000000.0 * m->cells[cell].soils[ll].mmm;//kg P/layer soil
+			//				TTP = dLabP + dAdsP;
+			//
+			//				if(TTP<=0.0)
+			//				{
+			//					m->cells[cell].soils[ll].AdsP = 0.0;
+			//					m->cells[cell].soils[ll].LabP = 0.0;
+			//				}
+			//				else
+			//				{
+			//					m->cells[cell].soils[ll].AdsP = TP * (dAdsP / TTP);
+			//					m->cells[cell].soils[ll].LabP = TP - m->cells[cell].soils[ll].AdsP;
+			//				}
+			//				//				m->cells[cell].day_co2 += co2[l];
+			//				//							co2[l] = 0.0;
+			//			}
 
 			//}
 			m->cells[cell].day_clay_N = 0.0;
@@ -1434,5 +1380,74 @@ void soilCEC(CELL *const c)
 	c->max_clay_N = 2.0 * c->base_clay_N;
 }
 
+
+void get_av_year_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
+{
+	double tempSoilTemp;
+	c->temp_avet = 0;
+	double monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+	//get permission to include it in main line 1200, getting rid of the following double loop
+	for (month = 0; month < MONTHS; month++)
+	{
+		for (day = 0; day < monthDays[month]; day++)
+		{
+			tempSoilTemp = met[month].d[day].tsoil;
+			c->temp_avet += tempSoilTemp;
+		}
+	}
+	c->temp_avet /= 365;
+}
+
+void soil_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
+{
+	int l, n, qq;
+	double K[120], Z[120], C[120], outQ[120],outAir, Kave, dQ;
+	double Org, Min, Vwater, Vmin, Vorg, Vsoil, TM, Csoil, Ksoil, a,dQQ, tempSoilTemp, outBottom;
+	//double Mleaf;
+
+
+
+	qq =c->soils_count;//q;//(int)(0.3/h);
+	//
+	//	Mleaf = (Grain_Wt[1] + Leaf_Wt[1] + Stem_Wt[1])/.58/1000.0;//ton try matter/ha
+	//
+	//	bcv1 = Mleaf / (Mleaf + (double)exp(7.563 - .0001297 * Mleaf));
+	//	bcv2 = (snow_pack * 100.0 / (snow_pack * 100.0 + (double)exp(2.303 - .2197 * snow_pack * 100.0)));
+
+	//c->albedo = albedo(bcv1, bcv2);
+
+	if ( years == 0 &&day == 0 && month == JANUARY ) c->previousSoilT = met[month].d[day].tavg;
+
+	double adjT = (met[month].d[day].tavg+met[month].d[day].tmax)*0.5;
+	//double adjT = air_temp;
+
+	double fsl;
+
+	//adjT = adjT / (double)pow((1.0+lai),0.2); //albedo * OldT + (1.0 - albedo) * adjT;
+	//adjT = albedo * OldT + (1.0 - albedo) * adjT;
+
+	if(c->snow==0.0)//&&surface_litter<=2000.0)
+	{
+		fsl = (c->soils[0].rcvl + c->soils[0].rcvl + c->soils[0].rcvl)/1000.0;
+		//fsl = c->litter / 1000.0;//-0.1097*(double)log(surface_litter+0.0000001) + 1.3143;
+		fsl = Minimum(0.5, Maximum(0.0, fsl));
+
+		c->soilSurfaceT = c->previousSoilT * fsl + adjT * (1.0 - fsl);//min_temp * (1.0 - fsl);//
+		//Surf_Temp = min_temp;//OldT * fsl + min_temp * (1.0 - fsl);
+	}
+	else
+	{
+		double SnowDepth = c->snow*2000.0; //cm, snow pack thicknes
+		//Surf_Temp = 0.0 + adjT / (10.0 + SnowDepth);//
+		//Surf_Temp = max(0.0, Surf_Temp);
+		c->soilSurfaceT = adjT / (1.0 + SnowDepth);//
+
+	}
+
+	c->previousSoilT = c->soilSurfaceT;
+	c->soils[0].soilTemp = c->soilSurfaceT;
+
+}
 
 

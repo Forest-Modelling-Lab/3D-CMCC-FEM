@@ -28,7 +28,7 @@ SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC s
 
 
 //SITE NUTRITION
-FR "0.7" //Fertility rating (estimated)
+FR "0.5" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
@@ -52,6 +52,12 @@ KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
 PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
 LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
 SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is computed
+
+//RothC input soil carbon 
+DPM "-9999" //decomposable plant material at day 0
+RPM "-9999" //resistant plant material at day 0
+HUM "-9999" //humified pool in soil at day 0
+BIO "-9999" //microbiological pool in soil at day 0
 
 //DNDC-DECOMPOSITION
 SOIL_PH "5.0" //minimum value of N adsorbed on clay surface

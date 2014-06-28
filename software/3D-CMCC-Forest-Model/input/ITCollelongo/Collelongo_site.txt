@@ -16,7 +16,7 @@ MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
 CLAY_PERC "43.5"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "49.8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "6.7"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
-BULK_DENSITY "0.8"  //BULK DENSITY (g/cm3) 
+BULK_DENSITY "0.99"  //0.8 BULK DENSITY (g/cm3) 
 SOIL_DEPTH "80" //SOIL DEPTH (cm) 
 SOIL_COVER "50" //
 SOIL_MANURE "0" //
@@ -38,30 +38,37 @@ P0 "1.55" //NON-WATER-LIMITED SOIL RESPIRATION IN MONTHS/DAYS WITHOUT RAIN mm
 CUTTREE "100" //Cutted Trees for Pixel
 
 //ROTHC
-KDPM "-9999" //decomposition rate constant for Decomposable plant material (DPM)
-KRPM "-9999" //decomposition rate constant for Resistant plant material (RPM)
-KBIO "-9999" //decomposition rate constant for Microbial Biomass (BIO)
-KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
-PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
-LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
+KDPM "10.0" //decomposition rate constant for Decomposable plant material (DPM)
+KRPM ".3" //decomposition rate constant for Resistant plant material (RPM)
+KBIO ".66" //decomposition rate constant for Microbial Biomass (BIO)
+KHUM ".02" //decomposition rate constant for Humified Organic Matter (HUM)
+PARTITIONINGTOBIO ".46" //ratio of decayed specific compartment OM decaying into BIO pool
+LITTERTODPM ".59" //ratio of litterfall OM decaying into DPM pool
 SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is computed
+
+//RothC input soil carbon 
+DPM "3.64" //decomposable plant material at day 0 //assumed the values of DPM as the ones of Active soil *.9 (leaving Biomass (~5%) and IOM (~5%)
+RPM "46.86" //51.86 resistant plant material at day 0
+HUM "28.50" //33.5 humified pool in soil at day 0
+BIO "4.67" //microbiological pool in soil at day 0
+
 
 //DNDC-DECOMPOSITION
 SOIL_PH "5.0" //minimum value of N adsorbed on clay surface
-SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil
-SOIL_NH4 "-9999"    //0.05000 in dndc general case; initial quantity of NH4 in soil
+SOIL_NO3 "0.50"    //0.50000 in dndc general case; initial quantity of NO3 in soil
+SOIL_NH4 "0.050"    //0.05000 in dndc general case; initial quantity of NH4 in soil
 HYDRAULICCONDUCITIVITY "0.063"  // hydraulic conducitivity in soil (assumed as constant for now: better assume it different in different layers);
-INSOC "2.942"       //initial soil organic carbon (taken from Chiti 2010)
+INSOC "9.349"       //initial soil organic carbon (taken from Chiti 2010)
 LITFRAC "0.01"      // fraction of SOC affering to the litter at the first day of simulation
-HUMAFRACT "0.025"   // fraction of SOC affering to the humus pool at the first day of simulation
-HUMUFRACT "0.965"   // fraction of SOC affering to the humads pool at the first day of simulation
+HUMAFRACT "0.04"   // fraction of SOC affering to the humus pool at the first day of simulation
+HUMUFRACT "0.94"   // fraction of SOC affering to the humads pool at the first day of simulation
 BIOFRACT "0.05"     // fraction of SOC affering to the microbial pool at the first day of simulation
-RCNRVL "0.5"        // fraction of SOC affering to the litter at the first day of simulation
-RCNRL "25.0"        //C/N ratio for very labile litter pool
-RCNRR "100.0"       //C/N ratio for labile litter pool
-RCNB "10.0"         //C/N ratio for labile microbic pool
+RCNRVL "5.0"        // .5 fraction of SOC affering to the litter at the first day of simulation
+RCNRL "25"        //25 C/N ratio for very labile litter pool
+RCNRR "50.0"       //C/N ratio for labile litter pool
+RCNB "8.0"         //C/N ratio for labile microbic pool 5-8 paul and clark, 1996
 RCNH "10.0"         //C/N ratio for humads pool
-RCNM "10.0"         //C/N ratio for resistant microbic pool
+RCNM "5.0"         //C/N ratio for resistant microbic pool
 RCNH2 "500.0"       //C/N ratio for humus pool
 DCLITTER "1.0"      //litter loss fixed fraction (still sperimental)
 DCHUMADS "1.0"      //humads loss fixed fraction (still sperimental)

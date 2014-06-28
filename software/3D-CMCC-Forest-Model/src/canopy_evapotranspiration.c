@@ -31,6 +31,8 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 			{
 				s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 				Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+				//Marconi: to recompute WUE previously bugged (22/06): used only transpiration since water use efficiency is the ratio between metabolic C and transpirated water (no evaporation)
+				s->value[CANOPY_EVAPOTRANSPIRATION] += s->value[DAILY_TRANSP];
 				/*last height dominant class processed*/
 				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 				{
@@ -50,6 +52,8 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				{
 					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+					//Marconi: to recompute WUE previously bugged (22/06): used only transpiration since water use efficiency is the ratio between metabolic C and transpirated water (no evaporation)
+									s->value[CANOPY_EVAPOTRANSPIRATION] += s->value[DAILY_TRANSP];
 					/*last height dominant class processed*/
 					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 					{
@@ -66,6 +70,8 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				{
 					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+					//Marconi: to recompute WUE previously bugged (22/06): used only transpiration since water use efficiency is the ratio between metabolic C and transpirated water (no evaporation)
+									s->value[CANOPY_EVAPOTRANSPIRATION] += s->value[DAILY_TRANSP];
 					/*last height dominant class processed*/
 					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 					{

@@ -1080,8 +1080,8 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
 					"DOY", "YEAR", "MONTH", "DAY", "soilMoisture","soilTemp", "leafLittering","fineRootLittering", "woodLittering",
 					"stemLittering", "coarseRootLittering","soc", "doc", "rcvl","rcl", "rcr", "CRB1", "CRB2", "crhl",
-					"crhr", "dphum", "no3", "no2", "nh4","nh3", "co2", "day_O2", "dcbavai", "drcvl", "DRCB1", "DRCB2",
-					"clay_nh4", "inert_C", "AddC1", "AddC2", "AddC3","sts", "mmm",
+					"crhr", "dphum", "no3", "no2", "nh4","nh3", "co2", "day_O2", "dailyGPP[0]", "dailyAutResp[0]", "dailyTotGPP", "dailyTotRespAut",
+					"stemBranchBiomass", "inert_C", "AddC1", "AddC2", "AddC3","sts", "mmm",
 					"initialOrganicC", "waterContent", "litco22", "litco23", "CEC");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
@@ -1139,16 +1139,16 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 		//		{
 		//			doy = 1;
 		//		}
-		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+		soil_Log ("%d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
-				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n ",
+				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f  \t%8.6f \n ",
 				doy++, yos[years].year, month+1, day+1,
 				c->soils[0].soilMoisture,
 				c->soils[0].soilTemp,
 				c->leafLittering,
 				c->fineRootLittering,
-				c->woodLittering,
+				c->stemBrancLittering,
 				c->stemLittering,
 				c->coarseRootLittering,
 				c->soils[0].soc,
@@ -1167,11 +1167,17 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->soils[0].nh3,
 				c->soils[0].co2,
 				c->soils[0].day_O2,
-				c->soils[0].dcbavai,
-				c->soils[0].drcvl,
-				c->soils[0].DRCB1,
-				c->soils[0].DRCB2,
-				c->soils[0].clay_nh4,
+				//				c->soils[0].dcbavai,
+				//				c->soils[0].drcvl,
+				//				c->soils[0].DRCB1,
+				//				c->soils[0].DRCB2,
+				//				c->soils[0].clay_nh4,
+				c->daily_gpp[0],
+				c->daily_aut_resp[0],
+				c->daily_tot_gpp,
+				c->daily_tot_aut_resp,
+				c->stemBranchBiomass,
+
 				c->soils[0].inert_C,
 				c->AddC1,
 				c->AddC2,
@@ -1183,25 +1189,42 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->soils[0].litco22,
 				c->soils[0].litco23,
 				c->soils[0].CEC);
+		c->leafLittering = 0;
+		c->fineRootLittering = 0;
+		c->coarseRootLittering =0;
+		c->stemLittering =0;
+		c->stemBrancLittering = 0;
+		c->leaflitN = 0;
+		c->fineRootlitN = 0;
+		c->coarseRootlitN = 0;
+		c->stemlitN = 0;
+		c->stemBranclitN = 0;
+
+		c->daily_tot_gpp = 0;
+		c->daily_tot_aut_resp = 0;
+		c->daily_gpp[0] = 0;
+		c->daily_aut_resp[0] = 0;
 
 	}
 	else if (!mystricmp(settings->rothC, "on"))
 	{
-		soil_Log("RUNNING ROTHC.....\n");
-		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
+		if ((month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
-					"DOY", "YEAR", "MONTH", "DAY", "Litter","ET", "fT", "cT", "moistT", "HResp", "MicPool", "LabPool", "ResPool", "HumPool", "IOM");
+			soil_Log ("\n%s  \t%2s  \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
+					"YEAR", "MONTH",  "Litter","ET", "fT", "soilEvapo", "coverT", "moistT", "HResp", "MicPool", "LabPool", "ResPool", "HumPool", "IOM"
+					,"dailyAutResp[0]", "dailyTotGPP", "dailyTotRespAut");
 		}
-		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		if ((month == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			doy = 1;
 		}
-		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n",
-				doy++, yos[years].year, month+1, day+1,
+		soil_Log ("%d \t%5d  \t%2.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n",
+				yos[years].year, month+1,
 				c->monthly_tot_litterfall,
 				c->monthly_tot_et,
 				c->temperatureModifier,
+				c->soil_evaporation,
 				c->soilCoverModifier,
 				c->moistureModifier,
 				c->soils[soil].soil_het_resp,
@@ -1209,12 +1232,24 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->soils[soil].decomposablePlantMaterial,
 				c->soils[soil].resistantPlantMaterial,
 				c->soils[soil].humifiedOM,
-				c->soils[soil].inertOM);
+				c->soils[soil].inertOM),
+				c->daily_gpp[0],
+				c->daily_aut_resp[0],
+				c->daily_tot_gpp,
+				c->daily_tot_aut_resp;
 
 
-		previous_layer_number = c->annual_layer_number;
+
+		//previous_layer_number = c->annual_layer_number;
 
 		//reset
+		c->monthly_tot_et =0;
+		c->monthly_tot_litterfall = 0;
+		c->daily_tot_gpp = 0;
+		c->daily_tot_aut_resp = 0;
+		c->daily_gpp[0] = 0;
+		c->daily_aut_resp[0] = 0;
+
 	}
 
 }

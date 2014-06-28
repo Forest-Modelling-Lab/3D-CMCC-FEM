@@ -115,9 +115,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	if (s->counter[LEAF_FALL_COUNTER] == 1)
 	{
 		Log("First day of Leaf fall\n");
+		Log("\nday, month: %d\t%d", month+1, day+1);
 		s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
 		Log("foliage biomass to remove = %f\n", s->value[BIOMASS_FOLIAGE]);
 		Log("Daily amount of foliage biomass to remove = %f\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
+		s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] * s->value[FOLIAGE_REDUCTION_RATE];
 	}
 
 
@@ -263,7 +266,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
-				*/
+				 */
 				s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot + s->value[NPP];
 				s->value[DEL_RESERVE] = - frac_to_foliage_fineroot;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -280,7 +283,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					/*
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
-					*/
+					 */
 					s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot;
 					s->value[DEL_ROOTS_FINE_CTEM] = 0;
 					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
@@ -296,7 +299,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					/*
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
 					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
-					*/
+					 */
 					s->value[DEL_FOLIAGE] = 0;
 					s->value[DEL_ROOTS_FINE_CTEM] = 0;
 
@@ -1011,7 +1014,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_BB] = 0;
 			}
@@ -1021,7 +1024,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_BB] = 0;
 			}
@@ -1099,6 +1102,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
 
+			c->leafLittering += s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
+			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
+
+			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
+			c->fineRootlitN += s->value[BIOMASS_ROOTS_FINE] / GC_GDM * 1000 / settings->sizeCell  / s->value[CN_FINE_ROOTS];
 
 			break;
 
@@ -1607,6 +1615,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	c->annual_wbb[i]= s->value[BIOMASS_BRANCH];
 	c->annual_wfr[i]= s->value[BIOMASS_ROOTS_FINE];
 	c->annual_wcr[i]= s->value[BIOMASS_ROOTS_COARSE];
+
+	if (c->leafLittering < 0.0) c->leafLittering = 0;
 
 	Log("******************************\n");
 }

@@ -991,8 +991,8 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-//	strcat (soil_out_filename, strData);
-//	strcat (soil_out_filename, "_");
+	//	strcat (soil_out_filename, strData);
+	//	strcat (soil_out_filename, "_");
 
 	sprintf(strData, "%s", szMonth[data->tm_mon]);
 	strcat (out_filename, strData);
@@ -1007,8 +1007,8 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-//	strcat (soil_out_filename, strData);
-//	strcat (soil_out_filename, "_");
+	//	strcat (soil_out_filename, strData);
+	//	strcat (soil_out_filename, "_");
 
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (out_filename, strData);
@@ -1023,8 +1023,8 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-//	strcat (soil_out_filename, strData);
-//	strcat (soil_out_filename, "_");
+	//	strcat (soil_out_filename, strData);
+	//	strcat (soil_out_filename, "_");
 
 	strcat (out_filename, ".txt");
 	strcat (daily_out_filename, ".txt");
@@ -1193,6 +1193,9 @@ int main(int argc, char *argv[])
 				//run for all cells to check land use
 				for ( cell = 0; cell < m->cells_count; cell++)
 				{
+					//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
+					int i;
+					i =0;
 					for (month = 0; month < MONTHS; month++)
 					{
 						for (day = 0; day < DaysInMonth[month]; day++)
@@ -1217,6 +1220,9 @@ int main(int argc, char *argv[])
 							{
 								//Get vegetative days
 								Get_Veg_Days (&m->cells[cell], yos, day, month, years, DaysInMonth[month]);
+								//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
+								get_vpsat(&m->cells[cell], day, month, years, yos, i);
+								i++;
 							}
 							else if (m->cells[cell].landuse == Z)
 							{
@@ -1240,6 +1246,8 @@ int main(int argc, char *argv[])
 							{
 								if (settings->version == 'f')
 								{
+									//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
+									if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
 									//run for FEM version
 									if (!tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
@@ -1248,8 +1256,7 @@ int main(int argc, char *argv[])
 									else
 									{
 										puts(msg_ok);
-//										soil_Log("\nsoilLog prova");
-
+										//										soil_Log("\nsoilLog prova");
 										//run for SOIL functions
 										//soil_model (m, yos, years, month, day, years_of_simulation);
 
@@ -1293,10 +1300,17 @@ int main(int argc, char *argv[])
 							}
 							Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
 							Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, years, month, day);
-							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+							if (!mystricmp(settings->dndc, "on"))
+							{
+								Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+							}
 
 						}
 						Log("****************END OF MONTH (%d)*******************\n", month+1);
+						if (!mystricmp(settings->rothC, "on"))
+						{
+							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+						}
 						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
 					}
 					Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n\n\n\n\n\n", yos[years].year);

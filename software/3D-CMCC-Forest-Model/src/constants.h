@@ -64,6 +64,8 @@
 #define  STEMPOWER_B	        2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm
 #define  STEMPOWER_C	        2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
 
+//MARCONI CONSTANTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#define MAXTURNTIME 5000
 //soil constants
 #define DRF   0.04//0.03
 #define EFFRB .67

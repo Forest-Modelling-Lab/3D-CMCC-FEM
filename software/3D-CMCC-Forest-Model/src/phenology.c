@@ -104,12 +104,27 @@ extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int 
 														   && month < 6)
 							{
 								c->heights[height].ages[age].species[species].phenology_phase = 1;
+								c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 0;
 							}
 							/*normal growth*/
 							else
 							{
 								c->heights[height].ages[age].species[species].phenology_phase = 2;
+								if (c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] == 0)
+								{
+									c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 1;
+								} else if (c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] == 1)
+								{
+									c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 2;
+								}
 							}
+							if (day == 0 && month == 0 && years == 0)
+							{
+								c->heights[height].ages[age].species[species].phenology_phase = 1;
+																c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 0;
+																c->heights[height].ages[age].species[species].value[DAILY_LEAVES_BIOMASS_TO_REMOVE] = 0.0;
+							}
+
 						}
 					}
 					//fixme

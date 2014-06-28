@@ -52,6 +52,12 @@ PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying in
 LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
 SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is computed
 
+//RothC input soil carbon 
+DPM "-9999"
+RPM "-9999"
+HUM "-9999"
+BIO "-9999"
+
 //DNDC-DECOMPOSITION
 SOIL_PH "5.0" //minimum value of N adsorbed on clay surface
 SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil

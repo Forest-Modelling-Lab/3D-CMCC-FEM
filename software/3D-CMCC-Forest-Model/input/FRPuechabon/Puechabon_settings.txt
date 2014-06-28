@@ -4,16 +4,16 @@ TIME "d"        //Must be 'm' or 'd', monthly or daily
 SYMMETRIC_WATER_COMPETITION "y"	//Must be 'y' or 'n',for symmetric or asymmetric water competition
 DAYMET "off"    //Must be  'on' or 'off'
 ROTHC "off" //Must be  'on' or 'off'
-DNDC "off" //Must be  'on' or 'off'
+DNDC "on" //Must be  'on' or 'off'
 SIZECELL "100"  //Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 
 TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
 
-SOIL_LAYER "0"  //define soil layer/s to consider
+SOIL_LAYER "1"  //define soil layer/s to consider
 
 //LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
 MIN_LAYER_COVER "0.0001"
-MAX_LAYER_COVER "1.2"
+MAX_LAYER_COVER "1"
 
 //INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 AVDBH_SAPLING "0.5"

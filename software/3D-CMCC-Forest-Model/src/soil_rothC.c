@@ -89,7 +89,13 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 
 	for (cell = 0; cell < m->cells_count; cell++)
 	{
-		m->cells[cell].monthly_tot_et += m->cells[cell].daily_tot_c_evapotransp + m->cells[cell].soil_evaporation;
+		//m->cells[cell].monthly_tot_et += m->cells[cell].soil_evaporation * 100;
+		//use a similar approach to the one developed to simulate littering for dndc; check!
+		//important!!! for consistency with DNDC this is evaluated as KgC/m^2 --> consider the factor 10 to make it tC/ha
+		m->cells[cell].monthly_tot_litterfall =+ m->cells[cell].leafLittering+m->cells[cell].stemLittering + m->cells[cell].fineRootLittering +
+				m->cells[cell].coarseRootLittering + m->cells[cell].stemBrancLittering;
+
+
 	}
 
 
@@ -99,32 +105,45 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 	{
 
 
-		debug = 0;
+		int debug = 1;
 
 
 		//these should be input parameters to be included in site.txt
-		site->soilTimescale = 1 / 12.0;
-		site-> kDPM = 10.0;
-		site->kRPM = .3;
-		site->kBIO = .66;
-		site->kHUM = .02;
-		site->litterToDPM = .59;
-		site->partitioningToBio = .46;
-		m->cells[0].soils_count = 1;
+		//		site->soilTimescale = 1 / 12.0;
+		//		site-> kDPM = 10.0;
+		//		site->kRPM = .3;
+		//		site->kBIO = .66;
+		//		site->kHUM = .02;
+		//		site->litterToDPM = .59;
+		//		site->partitioningToBio = .46;
+		//m->cells[0].soils_count = 1;
 		dBIO = 0;
 		dHUM = 0.0;
 
+
 		for (cell = 0; cell < m->cells_count; cell++)
 		{
-			if  (m->cells[cell].landuse == F)
-				soil_Log("\n*******landuse forest");
-			else if  (m->cells[cell].landuse == Z)
-				soil_Log("\n*******landuse crop");
-//			else if  (m->cells[cell].landuse == B)
-//				soil_Log("\n*******landuse forest with data");
-			else
-				soil_Log("\n*******bad");
-
+			//			if  (m->cells[cell].landuse == F)
+			//				soil_Log("\n*******landuse forest");
+			//			else if  (m->cells[cell].landuse == Z)
+			//				soil_Log("\n*******landuse crop");
+			////			else if  (m->cells[cell].landuse == B)
+			////				soil_Log("\n*******landuse forest with data");
+			//			else
+			//				soil_Log("\n*******bad");
+			m->cells[cell].leafLittering = 0;
+			m->cells[cell].fineRootLittering = 0;
+			m->cells[cell].coarseRootLittering =0;
+			m->cells[cell].stemLittering =0;
+			m->cells[cell].stemBrancLittering = 0;
+			m->cells[cell].leaflitN = 0;
+			m->cells[cell].fineRootlitN = 0;
+			m->cells[cell].coarseRootlitN = 0;
+			m->cells[cell].stemlitN = 0;
+			m->cells[cell].stemBranclitN = 0;
+			m->cells[cell].monthly_tot_litterfall *= 10;	//todo my impression is that if you're going to use tC/ha the model
+			// strongly overestimate the litterfalling; that means an exceeding DPM and finally a cntinuosly increasing RPM.
+			//m->cells[cell].monthly_tot_et *= 1;
 			if (debug == 0 )
 			{
 				site->clay_perc = 20;
@@ -142,7 +161,7 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 					met->cum_monthly_rain += met[month].d[iC].rain;
 					met->avg_monthly_temp += met[month].d[iC].tavg;
 				}
-				met->avg_monthly_temp /= monthDays[month]-1;
+				met->avg_monthly_temp /= monthDays[month];
 				//m->cells[cell].monthly_tot_et /= monthDays[month]-1;
 				//[soil] represents the soil layer number
 				//0 index if for the upper layer
@@ -152,10 +171,12 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 				// assuming  the value of 0 at the beginning of each simulation for each pool; this is intended to be changed since
 				// it will host the quantity of carbon in each pool at the beginning of simulation (assumed as in equilibrium stage)
 				if( month == JANUARY && years == 0) {
-					m->cells[cell].soils[soil].decomposablePlantMaterial = 0.0;
-					m->cells[cell].soils[soil].resistantPlantMaterial  = 0.0;
-					m->cells[cell].soils[soil].microbialBiomass  = .0;
-					m->cells[cell].soils[soil].humifiedOM  = .0;
+					//this ain't good; use the input parameters instead
+
+					m->cells[cell].soils[soil].decomposablePlantMaterial = site->DPM;
+					m->cells[cell].soils[soil].resistantPlantMaterial  = site->RPM;
+					m->cells[cell].soils[soil].microbialBiomass  = site->BIO;
+					m->cells[cell].soils[soil].humifiedOM  = site->HUM;
 					m->cells[cell].soils[soil].PrevMicrobialBiomass = .0;
 					m->cells[cell].soils[soil].PrevHumifiedOM  = .0;
 				}
@@ -183,7 +204,7 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 								soilCoverModifier = .6;
 								maxSoilMoistDeficitModifier = 1.0;
 								bVeg = 1;
-								m->cells[cell].monthly_tot_litterfall = .1; //m->cells[cell].litter / (month +1);
+								//m->cells[cell].monthly_tot_litterfall = .1; //m->cells[cell].litter / (month +1);
 
 								break;
 							}else
@@ -223,6 +244,7 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 				 * 	-> todo if open panEvaporation is not known, use 1/(.75) * potential ET (from Muller, 1982)
 				 */
 				if(met->cum_monthly_rain < m->cells[cell].monthly_tot_et * 0.75 ) m->cells[cell].soils[soil].boolAccTSMD = 1;
+				else m->cells[cell].soils[soil].boolAccTSMD = 0;
 				// this value is going to be reduced in case rainfall - 0.75panET is less than 0
 				if (m->cells[cell].soils[soil].boolAccTSMD == 1) m->cells[cell].soils[soil].accumulatedSoilMoistDeficit += met->cum_monthly_rain - 0.75 * m->cells[cell].monthly_tot_et;
 				if(m->cells[cell].soils[soil].accumulatedSoilMoistDeficit < maxSoilMoistDeficit) m->cells[cell].soils[soil].accumulatedSoilMoistDeficit = maxSoilMoistDeficit;
@@ -257,7 +279,7 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 				 */
 
 				// partitioning of litterfall into the two active pools DPM and RPM as a function of the plant functional type (PFT) covering the soil
-				m->cells[cell].soils[soil].decomposablePlantMaterial += m->cells[cell].monthly_tot_litterfall * site->litterToDPM;
+				m->cells[cell].soils[soil].decomposablePlantMaterial += m->cells[cell].monthly_tot_litterfall /10 * site->litterToDPM; //factor 10 to transform kg in tons
 				// to compute the quantity of carbon decomposed for each pool we used always the same variable "decomposedCarbon.
 				// as a matter of fact it represents the total amount of C decomposed, and will be partitioned into CO2 and BIO + HUM as a function of ratioCO2
 				decomposedCarbon =m->cells[cell].soils[soil].decomposablePlantMaterial * (1- exp(-temperatureModifier * soilCoverModifier * moistureModifier * site->soilTimescale * site->kDPM));
@@ -322,38 +344,39 @@ void soil_rothC(MATRIX *const m, const YOS *const yos, const int years, const in
 				//m->cells[cell].year_microbialBiomass += m->cells[cell].soils[soil].microbialBiomass;
 
 				m->cells[cell].year_soil_het_resp += m->cells[cell].soils[soil].soil_het_resp ;
-//				soil_Log("\n\nn_day: \t %d", met[month].d[day].n_days);
-//				soil_Log("\n*********************\nRothamsted Carbon Model routine"
-//						"\nday: \t %d\nmonth: \t %d"
-//						"\nTair: \t %f"
-//						"\nrain: \t %f"
-//						"\nlitter: \t%f"
-//						"\nETO: \t%f"
-//						"\n\ntemperature modifier: \t%g"
-//						"\nsoilCover factor: \t %f"
-//						"\nmoisture Factor: \t %f"
-//						"\nsoil respiration: \t %f"
-//						"\nmicrobial biomass: \t %f"
-//						"\nhumified OM: \t %f"
-//						"\nresistant OM: \t %f"
-//						"\ndecomposable OM: \t %f"
-//						"\ninertOM:\t %f"
-//						"\nratioCO2 / BIO + HUM:\t %f", day, month, met->avg_monthly_temp, met->cum_monthly_rain, m->cells[cell].monthly_tot_litterfall , m->cells[cell].monthly_tot_et,  temperatureModifier, soilCoverModifier,moistureModifier,m->cells[cell].soils[soil].soil_het_resp ,m->cells[cell].soils[soil].microbialBiomass,
-//						m->cells[cell].soils[soil].humifiedOM,m->cells[cell].soils[soil].resistantPlantMaterial,m->cells[cell].soils[soil].decomposablePlantMaterial, m->cells[cell].soils[soil].inertOM, ratioCO2);
-//
-//
-//				soil_Log("\n****parameter to decomposition:****"
-//						"\na:\t%f"
-//						"\nb:\t%f"
-//						"\nc:\t%f"
-//						"\nt:\t%f"
-//						"\nfactor:\t%f",  temperatureModifier, moistureModifier, soilCoverModifier,site->soilTimescale,  temperatureModifier *  moistureModifier *  soilCoverModifier * site->soilTimescale);
-//
-//				soil_Log("\n");
-				m->cells[cell].monthly_tot_et =0;
+				//				soil_Log("\n\nn_day: \t %d", met[month].d[day].n_days);
+				//				soil_Log("\n*********************\nRothamsted Carbon Model routine"
+				//						"\nday: \t %d\nmonth: \t %d"
+				//						"\nTair: \t %f"
+				//						"\nrain: \t %f"
+				//						"\nlitter: \t%f"
+				//						"\nETO: \t%f"
+				//						"\n\ntemperature modifier: \t%g"
+				//						"\nsoilCover factor: \t %f"
+				//						"\nmoisture Factor: \t %f"
+				//						"\nsoil respiration: \t %f"
+				//						"\nmicrobial biomass: \t %f"
+				//						"\nhumified OM: \t %f"
+				//						"\nresistant OM: \t %f"
+				//						"\ndecomposable OM: \t %f"
+				//						"\ninertOM:\t %f"
+				//						"\nratioCO2 / BIO + HUM:\t %f", day, month, met->avg_monthly_temp, met->cum_monthly_rain, m->cells[cell].monthly_tot_litterfall , m->cells[cell].monthly_tot_et,  temperatureModifier, soilCoverModifier,moistureModifier,m->cells[cell].soils[soil].soil_het_resp ,m->cells[cell].soils[soil].microbialBiomass,
+				//						m->cells[cell].soils[soil].humifiedOM,m->cells[cell].soils[soil].resistantPlantMaterial,m->cells[cell].soils[soil].decomposablePlantMaterial, m->cells[cell].soils[soil].inertOM, ratioCO2);
+				//
+				//
+				//				soil_Log("\n****parameter to decomposition:****"
+				//						"\na:\t%f"
+				//						"\nb:\t%f"
+				//						"\nc:\t%f"
+				//						"\nt:\t%f"
+				//						"\nfactor:\t%f",  temperatureModifier, moistureModifier, soilCoverModifier,site->soilTimescale,  temperatureModifier *  moistureModifier *  soilCoverModifier * site->soilTimescale);
+				//
+				//				soil_Log("\n");
 				m->cells[cell].temperatureModifier = temperatureModifier;
 				m->cells[cell].soilCoverModifier = soilCoverModifier;
 				m->cells[cell].moistureModifier = moistureModifier;
+
+				//todo assumed that at the endo of the month monthly litterfall needs to be reset
 			}
 		}
 	}
