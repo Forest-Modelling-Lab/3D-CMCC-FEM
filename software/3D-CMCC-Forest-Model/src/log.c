@@ -291,37 +291,40 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%2s", "YEAR", "HC(0)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
 			Annual_Log ("\t%6s \t%10s" ,
 					"GPP (tot)", "AR (tot)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
+			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(tot)",
+					"Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE(tot)", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "DELTA-Wres");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%6.2f", c->annual_Nee);
 		}
-		Annual_Log("%10.2f \t%10.2f",
+		Annual_Log("\t%10.2f \t%10.2f",
 				c->annual_tot_gpp,
 				c->annual_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
 		}
 
 
-		Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
+		Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f "
+				"\t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->annual_tot_c_flux,
 				((c->annual_tot_aut_resp * 100.0)/c->annual_tot_gpp),
 				c->annual_tot_npp,
@@ -380,7 +383,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Annual_Log ("\n%s \t%4s \t%4s",
 					"YEAR", "HC(1)", "HC(0)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
@@ -388,12 +391,12 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Annual_Log ("\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)");
 
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n",
+			Annual_Log ("\t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n",
 					"Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW",
 					"Wf", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Wres(1)", "Wres(0)");
@@ -402,7 +405,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 		Annual_Log ("%d \t%4d,\t%4d", yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%6.2f", c->annual_Nee);
 		}
@@ -412,13 +415,13 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
 				c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
 		}
 
 		Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
-				" \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
+				" \t%4.2f \t%2.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
 
 				(c->annual_aut_resp[1]*100)/ c->annual_gpp[1],(c->annual_aut_resp[0]*100)/ c->annual_gpp[0],(c->annual_tot_aut_resp*100)/c->annual_tot_gpp,
 				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
@@ -488,7 +491,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Annual_Log ("\n%s \t%2s \t%2s \t%2s",
 					"YEAR", "HC(2)", "HC(1)", "HC(0)");
 
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
@@ -496,13 +499,13 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Annual_Log ("\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s",
 					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)");
 
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s "
-					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n",
+			Annual_Log ("\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s "
+					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)",
 					"CE(2)", "CE(1)", "CE(0)", 	"CE(tot)", "ASW", "Wf",  "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)",
 					"CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
@@ -511,7 +514,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		}
 
 		Annual_Log ("%d \t%2d \t%2d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter,c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%6.2f", c->annual_Nee);
 		}
@@ -520,14 +523,14 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
 				c->annual_aut_resp[2], c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
 		}
 
 		Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
 				" \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2d \t%2d \t%2d \t%2d "
-				" \t%5.2f \t%5.2f \t%5.2f \n",
+				" \t%5.2f \t%5.2f \t%5.2f \t%5.2f \t%5.2f \n",
 				c->annual_c_flux[2], c->annual_c_flux[1], c->annual_c_flux[0], c->annual_tot_c_flux,
 				(c->annual_aut_resp[2]*100.0)/c->annual_gpp[2],((c->annual_aut_resp[1]*100.0)/c->annual_gpp[1]),((c->annual_aut_resp[0]*100.0)/c->annual_gpp[0]),(c->annual_tot_aut_resp*100.0)/c->annual_tot_gpp,
 				c->annual_npp[2], c->annual_npp[1],	c->annual_npp[0], c->annual_tot_npp,
@@ -612,7 +615,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->annual_tot_w_flux = 0;
 	c->annual_tot_dead_tree = 0;
 
-	if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+	if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
 		c->annual_tot_het_resp = 0;
 		c->annual_Reco = 0;
@@ -735,33 +738,33 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (month == 0 && years == 0)
 		{
 			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s", "NEE");
 			}
 			Monthly_Log ("\t%6s \t%10s" ,
 					"GPP (tot)", "AR (tot)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s\n",
 					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
 		}
 		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%6.2f", c->monthly_Nee);
 		}
-		Monthly_Log("%10.2f \t%10.2f",
+		Monthly_Log("%\t10.2f \t%10.2f",
 				c->monthly_tot_gpp,
 				c->monthly_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_tot_het_resp, c->monthly_Reco);
 		}
-		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
+		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2d\n",
 				c->monthly_tot_c_flux,
 				c->monthly_tot_npp,
 				c->monthly_tot_npp_g_c,
@@ -785,13 +788,13 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (month == 0 && years == 0)
 		{
 			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s", "NEE");
 			}
 			Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
@@ -800,20 +803,20 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
 		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%6.2f", c->monthly_Nee);
 		}
-		Monthly_Log("%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+		Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
 		}
 		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
-				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[1], c->monthly_npp[0],c->monthly_tot_npp,
 				c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
@@ -842,37 +845,39 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
-		Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\t%3s", "NEE");
+			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Monthly_Log ("\t%3s", "NEE");
+			}
+			Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
+					"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
-				"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
-		{
-			Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
-		}
-		Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
-				"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-				"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
-				"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-
 		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%6.2f", c->monthly_Nee);
 		}
-		Monthly_Log("%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+		Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
 				c->monthly_aut_resp[2], c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
 			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
 		}
 		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
-				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->monthly_c_flux[2],c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,
 				c->monthly_c_evapotransp[2],c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
@@ -914,6 +919,13 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->monthly_tot_c_evapotransp = 0;
 	c->monthly_tot_w_flux = 0;
 	c->monthly_tot_dead_tree = 0;
+
+	if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+	{
+		c->annual_tot_het_resp = 0;
+		c->annual_Reco = 0;
+		c->annual_Nee = 0;
+	}
 }
 
 
@@ -925,6 +937,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if(day  == 0 && month == 0 && years == 0)
 	{
+
 		Daily_Log("Site name = %s\n", site->sitename);
 		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
@@ -967,20 +980,42 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s\n",
-					"DOY", "YEAR", "MONTH", "DAY", "HC","GPP(0)", "AR(0)", "ARtDM(0)", "Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)", "CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
+			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s", "NEE");
+			}
+			Daily_Log ("\t%6s \t%10s \t%10s" ,
+					"GPP(0)", "AR(0)","ARtDM(0)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
+					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)",
+					"CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			doy = 1;
 		}
-		Daily_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
-				"\t%8.6f \t%8d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.9f \t%8.9f\n",
-				doy++, yos[years].year, month+1, day+1,
-				c->height_class_in_layer_dominant_counter,
+
+		Daily_Log ("%d \t%8d \t%5d \t%5d \t%2d", doy++, yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%6.2f", c->daily_Nee);
+		}
+		Daily_Log("\t%10.2f \t%10.2f \t%10.2f",
 				c->daily_gpp[0],
 				c->daily_aut_resp[0],
-				c->daily_aut_resp_tDM[0],
+				c->daily_aut_resp_tDM[0]);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
+		}
+		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->daily_c_flux[0],
 				c->daily_c_flux_tDM[0],
 				c->daily_npp[0],
@@ -998,7 +1033,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_delta_wcr[0],
 				c->daily_delta_wres[0],
 				c->daily_wres[0]);
-
+		//}
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -1021,16 +1056,43 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s  \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
-					"YEAR", "MONTH", "DAY", "HC(1)", "HC(0)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
+			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC(1)", "HC(0)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s", "NEE");
+			}
+			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
+					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%4d \t%4d \t%4d \t%4d \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4.3f \t%4d \t%4d \t%4d\n",
-				yos[years].year, month+1, day+1,
+		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
+		{
+			doy = 1;
+		}
+
+		Daily_Log ("%d \t%8d \t%5d \t%5d  \t%5d \t%2d",doy, yos[years].year, month+1, day+1,
 				c->height_class_in_layer_dominant_counter,
-				c->height_class_in_layer_dominated_counter,
+				c->height_class_in_layer_dominated_counter);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%6.2f", c->daily_Nee);
+		}
+		Daily_Log("%\t10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
-				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp,
+				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
+		}
+		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->daily_c_flux[1], c->daily_c_flux[0], c->daily_tot_c_flux,
 				c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp,
 				c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
@@ -1038,6 +1100,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_lai[1], c->daily_lai[0],
 				c->daily_cc[1]*100, c->daily_cc[0]*100,
 				c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+
+		//}
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -1064,21 +1128,45 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->daily_cc[0] = 0;
 		c->daily_dead_tree[0] = 0;
 
+
 	}
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n\t%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
-					"YEAR", "MONTH", "DAY", "GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(tot)", "NPPgC(2)","NPPgC(1)", "NPPgC(0)", "NPPgC(tot)",
-					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW",
-					"LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
+			Daily_Log ("\n%s \t%2s\t%2s ", "YEAR", "MONTH", "DAY");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s", "NEE");
+			}
+			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			{
+				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(tot)", "NPPgC(2)","NPPgC(1)", "NPPgC(0)", "NPPgC(tot)",
+					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW", "LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("\t%d \t%2d \t%2d \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2.3f \t%2d \t%2d \t%2d \t%2d\n",
-				yos[years].year, month+1, day+1,
+		Daily_Log ("%d \t%2d \t%2d", yos[years].year, month+1, day+1);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%6.2f", c->daily_Nee);
+		}
+		Daily_Log("%\t10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp,
-				c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp,
+				c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Daily_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+		}
+		Daily_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				"\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->daily_c_flux[2],c->daily_c_flux[1],c->daily_c_flux[0],c->daily_tot_c_flux,
 				c->daily_npp[2], c->daily_npp[1],c->daily_npp[0], c->daily_tot_npp,
 				c->daily_npp_g_c[2], c->daily_npp_g_c[1],c->daily_npp_g_c[0], c->daily_tot_npp_g_c,
@@ -1142,7 +1230,12 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->daily_tot_et = 0;
 	c->daily_tot_dead_tree = 0;
 
-
+	if (!mystricmp(settings->dndc, "on"))
+	{
+		c->annual_tot_het_resp = 0;
+		c->annual_Reco = 0;
+		c->annual_Nee = 0;
+	}
 	//reset after printed at the end of the day
 	/*
 	c->daily_gpp = 0;
