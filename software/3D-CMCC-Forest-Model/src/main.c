@@ -991,8 +991,8 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-	//	strcat (soil_out_filename, strData);
-	//	strcat (soil_out_filename, "_");
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
 
 	sprintf(strData, "%s", szMonth[data->tm_mon]);
 	strcat (out_filename, strData);
@@ -1007,8 +1007,8 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-	//	strcat (soil_out_filename, strData);
-	//	strcat (soil_out_filename, "_");
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
 
 	sprintf(strData, "%d", data->tm_mday);
 	strcat (out_filename, strData);
@@ -1023,8 +1023,27 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (annual_out_filename, "_");
 
-	//	strcat (soil_out_filename, strData);
-	//	strcat (soil_out_filename, "_");
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
+
+	if (!mystricmp(settings->dndc, "on"))
+	{
+		sprintf(strData, "DNDC");
+	}
+	if (!mystricmp(settings->rothC, "on"))
+	{
+		sprintf(strData, "RothC");
+	}
+	strcat (out_filename, strData);
+
+	strcat (daily_out_filename, strData);
+
+	strcat (monthly_out_filename, strData);
+
+	strcat (annual_out_filename, strData);
+
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
 
 	strcat (out_filename, ".txt");
 	strcat (daily_out_filename, ".txt");
