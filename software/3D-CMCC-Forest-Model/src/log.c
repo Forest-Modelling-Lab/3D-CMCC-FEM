@@ -302,7 +302,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%6.2f", c->nee);
+			Annual_Log ("\t%6.2f", c->annual_Nee);
 		}
 		Annual_Log ("%10.2f \t%10.2f \t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->annual_tot_gpp,
