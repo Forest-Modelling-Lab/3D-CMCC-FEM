@@ -291,7 +291,6 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%2s", "YEAR", "HC(0)");
-
 			if (!mystricmp(settings->dndc, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
