@@ -31,6 +31,7 @@ C_SRCS += \
 ../src/initialization_site_data.c \
 ../src/io.c \
 ../src/lai.c \
+../src/leafFall_marconi.c \
 ../src/light.c \
 ../src/litterfall.c \
 ../src/log.c \
@@ -40,6 +41,7 @@ C_SRCS += \
 ../src/met_data.c \
 ../src/modifiers.c \
 ../src/mortality.c \
+../src/mpfit.c \
 ../src/parameters.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
@@ -55,6 +57,7 @@ C_SRCS += \
 ../src/treemodel.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
+../src/turnover_Marconi.c \
 ../src/utility.c \
 ../src/wue.c 
 
@@ -86,6 +89,7 @@ OBJS += \
 ./src/initialization_site_data.o \
 ./src/io.o \
 ./src/lai.o \
+./src/leafFall_marconi.o \
 ./src/light.o \
 ./src/litterfall.o \
 ./src/log.o \
@@ -95,6 +99,7 @@ OBJS += \
 ./src/met_data.o \
 ./src/modifiers.o \
 ./src/mortality.o \
+./src/mpfit.o \
 ./src/parameters.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
@@ -110,6 +115,7 @@ OBJS += \
 ./src/treemodel.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
+./src/turnover_Marconi.o \
 ./src/utility.o \
 ./src/wue.o 
 
@@ -141,6 +147,7 @@ C_DEPS += \
 ./src/initialization_site_data.d \
 ./src/io.d \
 ./src/lai.d \
+./src/leafFall_marconi.d \
 ./src/light.d \
 ./src/litterfall.d \
 ./src/log.d \
@@ -150,6 +157,7 @@ C_DEPS += \
 ./src/met_data.d \
 ./src/modifiers.d \
 ./src/mortality.d \
+./src/mpfit.d \
 ./src/parameters.d \
 ./src/peak_lai.d \
 ./src/phenology.d \
@@ -165,6 +173,7 @@ C_DEPS += \
 ./src/treemodel.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
+./src/turnover_Marconi.d \
 ./src/utility.d \
 ./src/wue.d 
 
