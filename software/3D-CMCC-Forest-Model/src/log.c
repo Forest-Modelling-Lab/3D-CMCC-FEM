@@ -621,7 +621,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_Reco = 0;
 		c->annual_Nee = 0;
 	}
-
+//aaa
 	//compute average values
 	if (years == years_of_simulation -1 && years_of_simulation > 1)
 	{
