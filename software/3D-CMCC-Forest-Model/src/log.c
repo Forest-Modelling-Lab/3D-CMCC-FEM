@@ -291,22 +291,37 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
 			Annual_Log ("\n%s \t%2s", "YEAR", "HC(0)");
-			if (!mystricmp(settings->dndc, "on"))
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
-			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"GPP (tot)", "AR (tot)", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
+			Annual_Log ("\t%6s \t%10s" ,
+					"GPP (tot)", "AR (tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+
+			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%8s \t%8s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n", "Cf(tot)", "Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE(tot)", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "DELTA-Wres");
+
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
-		if (!mystricmp(settings->dndc, "on"))
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
 		{
 			Annual_Log ("\t%6.2f", c->annual_Nee);
 		}
-		Annual_Log ("%10.2f \t%10.2f \t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
+		Annual_Log("%10.2f \t%10.2f",
 				c->annual_tot_gpp,
-				c->annual_tot_aut_resp,
+				c->annual_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+		}
+
+
+		Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f \t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->annual_tot_c_flux,
 				((c->annual_tot_aut_resp * 100.0)/c->annual_tot_gpp),
 				c->annual_tot_npp,
@@ -357,22 +372,54 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_wbb[0]= 0;
 		c->annual_wfr[0]= 0;
 		c->annual_wcr[0]= 0;
+
 	}
 	if (c->annual_layer_number == 2)
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n\n",
-					"YEAR", "HC(1)", "HC(0)", "GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)", "Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW",
+			Annual_Log ("\n%s \t%4s \t%4s",
+					"YEAR", "HC(1)", "HC(0)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Annual_Log ("\t%3s", "NEE");
+			}
+
+			Annual_Log ("\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)");
+
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+
+			Annual_Log ("\t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s\n",
+					"Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW",
 					"Wf", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Wres(1)", "Wres(0)");
+
 		}
-		Annual_Log ("%d \t%4d \t%4d \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f  \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
-				" \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
-				yos[years].year,
-				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter,
+
+		Annual_Log ("%d \t%4d,\t%4d", yos[years].year,
+				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Annual_Log ("\t%6.2f", c->annual_Nee);
+		}
+
+		Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f  \t%4.2f",
+
 				c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
-				c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp,
+				c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+		}
+
+		Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
+				" \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
+
 				(c->annual_aut_resp[1]*100)/ c->annual_gpp[1],(c->annual_aut_resp[0]*100)/ c->annual_gpp[0],(c->annual_tot_aut_resp*100)/c->annual_tot_gpp,
 				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
 				c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
@@ -429,27 +476,58 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_wres[0] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
+
 	}
+
+
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s "
-					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
-					"YEAR", "HC(2)", "HC(1)", "HC(0)", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)",
+			Annual_Log ("\n%s \t%2s \t%2s \t%2s",
+					"YEAR", "HC(2)", "HC(1)", "HC(0)");
+
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Annual_Log ("\t%3s", "NEE");
+			}
+
+			Annual_Log ("\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s",
+					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)");
+
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+
+			Annual_Log ("\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s "
+					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)",
 					"CE(2)", "CE(1)", "CE(0)", 	"CE(tot)", "ASW", "Wf",  "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)",
 					"CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
 					"DEAD TREE(0)", "DEAD TREE(tot)", "Wres(2)", "Wres(1)", "Wres(0)");
+
 		}
-		Annual_Log ("%d \t%2d \t%2d \t%2d \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
+
+		Annual_Log ("%d \t%2d \t%2d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter,c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Annual_Log ("\t%6.2f", c->annual_Nee);
+		}
+
+		Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f ",
+				c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
+				c->annual_aut_resp[2], c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+		}
+
+		Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
 				" \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2d \t%2d \t%2d \t%2d "
 				" \t%5.2f \t%5.2f \t%5.2f \n",
-				yos[years].year,
-				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter,
-				c->annual_gpp[2], c->annual_gpp[1],c->annual_gpp[0], c->annual_tot_gpp,
-				c->annual_aut_resp[2], c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp,
 				c->annual_c_flux[2], c->annual_c_flux[1], c->annual_c_flux[0], c->annual_tot_c_flux,
 				(c->annual_aut_resp[2]*100.0)/c->annual_gpp[2],((c->annual_aut_resp[1]*100.0)/c->annual_gpp[1]),((c->annual_aut_resp[0]*100.0)/c->annual_gpp[0]),(c->annual_tot_aut_resp*100.0)/c->annual_tot_gpp,
 				c->annual_npp[2], c->annual_npp[1],	c->annual_npp[0], c->annual_tot_npp,
@@ -533,6 +611,13 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->annual_tot_c_evapotransp = 0;
 	c->annual_tot_w_flux = 0;
 	c->annual_tot_dead_tree = 0;
+
+	if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+	{
+		c->annual_tot_het_resp = 0;
+		c->annual_Reco = 0;
+		c->annual_Nee = 0;
+	}
 
 	//compute average values
 	if (years == years_of_simulation -1 && years_of_simulation > 1)
@@ -1246,10 +1331,10 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->soils[soil].resistantPlantMaterial,
 				c->soils[soil].humifiedOM,
 				c->soils[soil].inertOM),
-				c->daily_gpp[0],
-				c->daily_aut_resp[0],
-				c->daily_tot_gpp,
-				c->daily_tot_aut_resp;
+						c->daily_gpp[0],
+						c->daily_aut_resp[0],
+						c->daily_tot_gpp,
+						c->daily_tot_aut_resp;
 
 
 
