@@ -1266,7 +1266,7 @@ int main(int argc, char *argv[])
 								if (settings->version == 'f')
 								{
 									//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
-									if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
+									//if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
 									//run for FEM version
 									if (!tree_model_daily (m, yos, years, month, day, years_of_simulation) )
 									{
@@ -1296,6 +1296,7 @@ int main(int argc, char *argv[])
 										{
 											Log("No soil simulation!!!\n");
 										}
+										get_net_ecosystem_exchange(&m->cells[cell]);
 									}
 								}
 								else
