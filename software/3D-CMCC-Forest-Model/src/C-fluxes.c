@@ -37,4 +37,22 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 
 }
 
+void get_net_ecosystem_exchange(CELL *const c)
+{
+	int i;
+	for(i = 0; i< c->soils_count; i++)
+	{
+		c->daily_tot_het_resp += c->soils[i].co2;
+		c->monthly_tot_het_resp += c->soils[i].co2;
+		c->annual_tot_het_resp += c->soils[i].co2;
+	}
+	c->daily_Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
+	c->daily_Nee = c->daily_tot_gpp - c->daily_Reco;
+
+	c->monthly_Reco +=  c->daily_Reco;
+	c->monthly_Nee +=  c->daily_Nee;
+
+	c->annual_Reco +=  c->daily_Reco;
+	c->annual_Nee +=  c->daily_Nee;
+}
 
