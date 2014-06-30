@@ -249,8 +249,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				//frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
 				parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-				frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]) /
-						(s->value[STEM_LEAF] +1.0);
+				frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
 
 				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_stem);
 			}
