@@ -734,13 +734,34 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\n%s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n\n",
-					"YEAR", "MONTH", "GPP (tot)", "AR(tot)", "Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
+			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Monthly_Log ("\t%3s", "NEE");
+			}
+			Monthly_Log ("\t%6s \t%10s" ,
+					"GPP (tot)", "AR (tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%10d \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10d \n",
-				yos[years].year, month+1,
+		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%6.2f", c->monthly_Nee);
+		}
+		Monthly_Log("%10.2f \t%10.2f",
 				c->monthly_tot_gpp,
-				c->monthly_tot_aut_resp,
+				c->monthly_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_tot_het_resp, c->monthly_Reco);
+		}
+		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
 				c->monthly_tot_c_flux,
 				c->monthly_tot_npp,
 				c->monthly_tot_npp_g_c,
@@ -763,14 +784,36 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\n%s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s \t%5s\n\n",
-					"YEAR", "MONTH", "GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
+			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Monthly_Log ("\t%3s", "NEE");
+			}
+			Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)");
+			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+			{
+				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
 					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%5d \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5f \t%5d \t%5d \t%5d\n",
-				yos[years].year, month+1,
+		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%6.2f", c->monthly_Nee);
+		}
+		Monthly_Log("%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
-				c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp,
+				c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+		}
+		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
 				c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[1], c->monthly_npp[0],c->monthly_tot_npp,
 				c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
@@ -799,18 +842,37 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{
-		if (month == 0 && years == 0)
+		Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
 		{
-			Monthly_Log ("\n%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n\n",
-					"YEAR", "MONTH", "GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)", "Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)",
-					"NPP(2)","NPP(1)", "NPP(0)","NPP (tot)",
-					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)",
-					"DEAD TREE(0)", "DEAD TREE(tot)");
+			Monthly_Log ("\t%3s", "NEE");
 		}
-		Monthly_Log ("%d \t%2d \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2f \t%2d \t%2d \t%2d \t%2d\n",
-				yos[years].year, month+1,
+		Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+				"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+		}
+		Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+				"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+				"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
+				"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+
+		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%6.2f", c->monthly_Nee);
+		}
+		Monthly_Log("%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->monthly_gpp[2], c->monthly_gpp[1],c->monthly_gpp[0], c->monthly_tot_gpp,
-				c->monthly_aut_resp[2], c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp,
+				c->monthly_aut_resp[2], c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
+
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->dndc, "off"))
+		{
+			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+		}
+		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d\n",
 				c->monthly_c_flux[2],c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
 				c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,
 				c->monthly_c_evapotransp[2],c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
