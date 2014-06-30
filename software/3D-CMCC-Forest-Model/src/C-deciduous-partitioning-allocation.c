@@ -18,6 +18,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 	//int phenology_phase;
 	//allocation parameter. their sum must be = 1
+
 	double  s0Ctem = s->value[S0CTEM];
 	double  r0Ctem = s->value[R0CTEM];
 	//double  f0Ctem = s->value[F0CTEM];
@@ -38,6 +39,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//double Perc_leaves;              //percentage of leaves in first growing season
 
 	static double frac_to_foliage_fineroot;
+	//Marconi
+	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
 
 	i = c->heights[height].z;
 
@@ -244,7 +247,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 			else
 			{
-				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
+				//frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
+				parameter = 2.0 / pow(s->value[BUD_BURST],2);
+				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE])  * parameter * (s->value[BUD_BURST]+1 - s->counter[BUD_BURST_COUNTER]) /
+						(s->value[STEM_LEAF] +1);
+
 				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			}
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
@@ -268,11 +275,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
 				 */
 				s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot + s->value[NPP];
-				s->value[DEL_RESERVE] = - frac_to_foliage_fineroot;
+				s->value[DEL_RESERVE] = - frac_to_foliage_fineroot - frac_to_foliage_fineroot * s->value[STEM_LEAF];
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
-				s->value[DEL_TOT_STEM] = 0;
-				s->value[DEL_STEMS] = 0;
+				s->value[DEL_TOT_STEM] = frac_to_foliage_fineroot * s->value[STEM_LEAF];
+				s->value[DEL_STEMS]= frac_to_foliage_fineroot * s->value[STEM_LEAF];
 				s->value[DEL_BB] = 0;
 			}
 			else
@@ -286,11 +294,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					 */
 					s->value[DEL_FOLIAGE] = frac_to_foliage_fineroot;
 					s->value[DEL_ROOTS_FINE_CTEM] = 0;
-					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
+					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)-
+							frac_to_foliage_fineroot - frac_to_foliage_fineroot * s->value[STEM_LEAF];
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
-					s->value[DEL_TOT_STEM] = 0;
-					s->value[DEL_STEMS]= 0;
+					s->value[DEL_TOT_STEM] = frac_to_foliage_fineroot * s->value[STEM_LEAF] ;
+					s->value[DEL_STEMS]= frac_to_foliage_fineroot * s->value[STEM_LEAF];
 					s->value[DEL_BB]= 0;
 				}
 				else
@@ -1399,8 +1408,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 			}
 
-
-
 			//allocation to roots
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
@@ -1622,3 +1629,4 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 }
 
 /**/
+
