@@ -403,7 +403,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 		}
 
-		Annual_Log ("%d \t%4d,\t%4d", yos[years].year,
+		Annual_Log ("%d \t%4d \t%4d", yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter);
 		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
