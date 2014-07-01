@@ -209,8 +209,17 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Annual_Log("years of simulation = %d\n", years_of_simulation);
 		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
 		Annual_Log("HC(n) = height class counter for n layer\n");
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Annual_Log("Annual NEE = annual total net ecosystem exchange (gC/m2/year)\n");
+		}
 		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Annual_Log("Annual HR = annual total heterotrophic respiration (gC/m2/year)\n");
+			Annual_Log("Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
+		}
 		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
 		Annual_Log("Annual Y = NPP/GPP ratio (%)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
@@ -621,7 +630,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		c->annual_Reco = 0;
 		c->annual_Nee = 0;
 	}
-//aaa
+	//aaa
 	//compute average values
 	if (years == years_of_simulation -1 && years_of_simulation > 1)
 	{
@@ -710,8 +719,17 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Monthly_Log("Site name = %s\n", site->sitename);
 		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 		Monthly_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Monthly_Log("Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
+		}
 		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
 		Monthly_Log("Monthly AR = monthly total autotrophic respiration (gC/m2/month)\n");
+		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		{
+			Monthly_Log("Annual HR = Monthly total heterotrophic respiration (gC/m2/month)\n");
+			Monthly_Log("Annual Reco = Monthly total ecosystem respiration (gC/m2/month)\n");
+		}
 		Monthly_Log("Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
 		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
 		Monthly_Log("Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
@@ -944,10 +962,18 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 
 		Daily_Log ("HC\n");
-
+		if (!mystricmp(settings->dndc, "on"))
+				{
+					Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
+				}
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
 		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
+		if (!mystricmp(settings->dndc, "on"))
+		{
+			Daily_Log("Daily HR = daily total heterotrophic respiration (gC/m2/day)\n");
+			Daily_Log("Daily Reco = daily total ecosystem respiration (gC/m2/day)\n");
+		}
 		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
 		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
@@ -987,7 +1013,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			}
 			Daily_Log ("\t%6s \t%10s \t%10s" ,
 					"GPP(0)", "AR(0)","ARtDM(0)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
@@ -1002,7 +1028,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		}
 
 		Daily_Log ("%d \t%8d \t%5d \t%5d \t%2d", doy++, yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
@@ -1011,7 +1037,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_aut_resp[0],
 				c->daily_aut_resp_tDM[0]);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
 		}
@@ -1057,13 +1083,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC(1)", "HC(0)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s", "NEE");
 			}
 			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
@@ -1080,7 +1106,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log ("%d \t%8d \t%5d \t%5d  \t%5d \t%2d",doy, yos[years].year, month+1, day+1,
 				c->height_class_in_layer_dominant_counter,
 				c->height_class_in_layer_dominated_counter);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
@@ -1088,7 +1114,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
 		}
@@ -1136,13 +1162,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			Daily_Log ("\n%s \t%2s\t%2s ", "YEAR", "MONTH", "DAY");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s", "NEE");
 			}
 			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
-			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
@@ -1152,7 +1178,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW", "LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
 		Daily_Log ("%d \t%2d \t%2d", yos[years].year, month+1, day+1);
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
@@ -1160,7 +1186,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 				c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp);
 
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
 		}
