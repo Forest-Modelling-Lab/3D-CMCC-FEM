@@ -922,9 +922,9 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-		c->annual_tot_het_resp = 0;
-		c->annual_Reco = 0;
-		c->annual_Nee = 0;
+		c->monthly_tot_het_resp = 0;
+		c->monthly_Reco = 0;
+		c->monthly_Nee = 0;
 	}
 }
 
@@ -1232,9 +1232,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 	if (!mystricmp(settings->dndc, "on"))
 	{
-		c->annual_tot_het_resp = 0;
-		c->annual_Reco = 0;
-		c->annual_Nee = 0;
+		c->daily_tot_het_resp = 0;
+		c->daily_Reco = 0;
+		c->daily_Nee = 0;
 	}
 	//reset after printed at the end of the day
 	/*
