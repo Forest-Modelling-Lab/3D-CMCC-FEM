@@ -42,9 +42,9 @@ void get_net_ecosystem_exchange(CELL *const c)
 	int i;
 	for(i = 0; i< c->soils_count; i++)
 	{
-		c->daily_tot_het_resp += c->soils[i].co2;
-		c->monthly_tot_het_resp += c->soils[i].co2;
-		c->annual_tot_het_resp += c->soils[i].co2;
+		c->daily_tot_het_resp += c->soils[i].co2 * 1000.0;
+		c->monthly_tot_het_resp += c->soils[i].co2 * 1000.0;
+		c->annual_tot_het_resp += c->soils[i].co2 * 1000.0;
 	}
 	c->daily_Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
 	c->daily_Nee = c->daily_tot_gpp - c->daily_Reco;
