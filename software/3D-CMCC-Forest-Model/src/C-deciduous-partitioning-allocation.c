@@ -273,7 +273,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
 				 */
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/s->value[STEM_LEAF])) + s->value[NPP];
+				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/ (s->value[STEM_LEAF] +1.0))) + s->value[NPP];
 				s->value[DEL_STEMS] = (frac_to_foliage_stem - s->value[DEL_FOLIAGE]);
 				s->value[DEL_RESERVE] = - frac_to_foliage_stem;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -291,7 +291,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]);
 					 */
-					s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/s->value[STEM_LEAF]));
+					s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/ (s->value[STEM_LEAF] + 1.0)));
 					s->value[DEL_STEMS] = (frac_to_foliage_stem - s->value[DEL_FOLIAGE]);
 					s->value[DEL_RESERVE] = -(((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_stem);
 					s->value[DEL_ROOTS_FINE_CTEM] = 0;

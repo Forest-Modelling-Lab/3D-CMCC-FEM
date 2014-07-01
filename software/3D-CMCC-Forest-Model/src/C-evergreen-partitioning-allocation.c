@@ -58,7 +58,10 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	double s0Ctem_increment;
 	double old_s0Ctem = s0Ctem;
 
-	static double frac_to_foliage_stem;
+	//Marconi here the allocation of biomass reserve is divided in fineroot and leaves following the allocation ratio parameter between them. That because
+	//in ev ergreen we don't have bud burst phenology phase, and indeed there are two phenology phases; the former in which carbon is allocated in fineroot and foliage, the latter in
+	// every pool except foliage
+	static double frac_to_foliage_fineroot;
 
 
 
@@ -192,15 +195,15 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE] * (e^-s->value[BUD_BURST])
 			//fixme try to allocate just a part of total reserve not all
 			//fixme model gets 10%
-			frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) * 0.05;
-			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_stem);
+			frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) * 0.05;
+			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 
 			/*partitioning*/
 			if (s->value[NPP] > 0.0)
 			{
 				Log("Using ONLY npp...\n");
 
-				s->value[DEL_FOLIAGE] = (s->value[NPP] * (1.0 / s->value[FINE_ROOT_LEAF_FRAC]));
+				s->value[DEL_FOLIAGE] = (s->value[NPP] * (1.0 / (s->value[FINE_ROOT_LEAF_FRAC]+1.0)));
 				s->value[DEL_ROOTS_FINE_CTEM] = (s->value[NPP] - s->value[DEL_FOLIAGE]);
 				s->value[DEL_RESERVE] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -213,9 +216,9 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				Log("Using ONLY reserve...\n");
 
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0 / s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem - s->value[DEL_FOLIAGE]);
-				s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) - frac_to_foliage_stem;
+				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 / (s->value[FINE_ROOT_LEAF_FRAC]+1.0)));
+				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
+				s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) - frac_to_foliage_fineroot;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
