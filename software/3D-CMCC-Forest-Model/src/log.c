@@ -756,7 +756,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Monthly_Log ("\t%6.2f", c->monthly_Nee);
 		}
-		Monthly_Log("%\t10.2f \t%10.2f",
+		Monthly_Log("\t%10.2f \t%10.2f",
 				c->monthly_tot_gpp,
 				c->monthly_tot_aut_resp);
 
