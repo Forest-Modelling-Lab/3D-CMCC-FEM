@@ -473,6 +473,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 						break;
 					}
 
+					//check if DBHDCeffective exceeds maximum or minimum values
 					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
@@ -491,7 +492,6 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 					if(day == 0 && month == JANUARY && years == 0)
 					{
 						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
-						Log("day %d previous = %g\n eff = %g\n", day, c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
 					}
 					else
 					{
@@ -506,6 +506,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 							c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
 						}
 					}
+					Log("DBHDC effective applied = %f\n", DBHDCeffective);
 
 					//Crown Diameter using DBH-DC
 

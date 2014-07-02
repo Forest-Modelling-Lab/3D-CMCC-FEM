@@ -75,8 +75,8 @@ CONES_LIFE_SPAN 0 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
 FINE_ROOT_LEAF	0.545	//allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
-STEM_LEAF	1	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
-COARSE_ROOT_STEM	0.36	//allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
+STEM_LEAF	3.8	//allocation new stem C:new leaf (ratio) - 1 see Mollicone et al 2002
+COARSE_ROOT_STEM	0.115	//allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
 LIVE_TOTAL_WOOD	0.15	//new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%)
 						//20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
 
@@ -112,7 +112,7 @@ MF	0               //Fraction mean single tree foliage biomass lost per dead tre
 MR	0.2             //Fraction mean single tree root biomass lost per dead tree
 MS	0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX	0.24    //Low Density
+DBHDCMAX	0.20    //Low Density
 DBHDCMIN	0.16    //High Density 
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP

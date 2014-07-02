@@ -524,7 +524,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								m->cells[cell].monthly_tot_litterfall = 0;
 
-								if (met[month].d[day].n_days == 1 && month == 'JANUARY')
+								if (met[month].d[day].n_days == 1 && month == JANUARY)
 								{
 									m->cells[cell].annual_tot_litterfall = 0;
 								}
