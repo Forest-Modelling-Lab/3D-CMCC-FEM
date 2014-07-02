@@ -91,7 +91,8 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 		{
 			//annual forest structure
 			Get_annual_numbers_of_layers (&m->cells[cell]);
-			Get_forest_structure (&m->cells[cell]);
+			//fixme
+			//Get_forest_structure (&m->cells[cell], month, years);
 			Get_tree_BB (&m->cells[cell],  years);
 		}
 

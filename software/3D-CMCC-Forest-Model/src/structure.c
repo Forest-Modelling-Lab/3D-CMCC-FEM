@@ -166,7 +166,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Get_forest_structure (CELL *const c)
+void Get_forest_structure (CELL *const c,int day,int month,int years)
 {
 	int height;
 	int age;
@@ -184,8 +184,6 @@ void Get_forest_structure (CELL *const c)
 
 	double potential_maximum_density,
 	potential_minimum_density;
-
-
 
 
 	c->height_class_in_layer_dominant_counter = 0;
@@ -383,6 +381,8 @@ void Get_forest_structure (CELL *const c)
 						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
+
+
 						Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
 						break;
 						/*two layer*/
@@ -486,6 +486,26 @@ void Get_forest_structure (CELL *const c)
 						Log("DBHDC effective applied is DBHDCMIN = %f\n", DBHDCeffective);
 					}
 
+					//assuming no reduction in DBHDCeff
+					//to prevent reduction in DBHDCeff
+					if(day == 0 && month == JANUARY && years == 0)
+					{
+						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
+						Log("day %d previous = %g\n eff = %g\n", day, c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
+					}
+					else
+					{
+						if (c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] > DBHDCeffective)
+						{
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
+							DBHDCeffective = c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF];
+						}
+						else
+						{
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
+							c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
+						}
+					}
 
 					//Crown Diameter using DBH-DC
 

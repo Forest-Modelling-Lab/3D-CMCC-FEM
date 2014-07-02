@@ -452,6 +452,9 @@ enum {
 	MCA,                            //Maximum Crown Area in m^2
 	MCD,                            //Maximum Crown Diameter in m^2
 	DBHDC_EFF,                      //Crown Diameter from DBH in function of density
+
+	PREVIOUS_DBHDC_EFF,				//previous dbhdc value
+
 	CROWN_DIAMETER_DBHDC_FUNC,      //Crown Diameter in m from DBHDC function
 	CROWN_AREA_DBHDC_FUNC,          //Crown Area in m^2 from DBHDC function
 	CANOPY_COVER_DBHDC_FUNC,        //Canopy Cover % of pixel covered from DBHDC function
@@ -1279,7 +1282,7 @@ extern void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
 extern void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 extern void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 extern void Get_stool_mortality (SPECIES *, int);
-extern void Get_forest_structure (CELL *);
+extern void Get_forest_structure (CELL *, const int,const int,const int);
 extern void Print_met_daily_data (const YOS *const , int , int , int );
 void Print_met_data (const MET_DATA *const, double, int, int);
 extern void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);

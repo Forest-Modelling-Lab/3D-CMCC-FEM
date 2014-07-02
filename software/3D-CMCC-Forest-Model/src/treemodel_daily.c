@@ -86,7 +86,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			}
 		}
 
-		Get_forest_structure (&m->cells[cell]);
+		Get_forest_structure (&m->cells[cell], day, month, years);
 
 		//daily forest structure
 		Get_daily_vegetative_period (&m->cells[cell], met, month, day);
