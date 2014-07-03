@@ -62,7 +62,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				else
 				{
 					Log("computing LAI for dominated trees\n");
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 				}
 
 				Log("++Lai from reserves = %f\n", s->value[LAI]);
@@ -159,7 +159,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				else
 				{
 					Log("computing LAI for dominated trees\n");
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 				}
 
 				/*check if re-transfer foliage biomass to reserve*/
@@ -175,7 +175,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					/*for dominated shaded foliage*/
 					else
 					{
-						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[LAI_RATIO])* GC_GDM)) / 1000;
+						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
 					}
 					/*re-transfer mass to reserve*/
 					s->value[BIOMASS_RESERVE] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE]);
@@ -190,7 +190,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					/*for dominated shaded foliage*/
 					else
 					{
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 					}
 				}
 
@@ -229,7 +229,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					/*for dominated shaded foliage*/
 					else
 					{
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
+						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 					}
 					Log("++Lai from foliage-reserve = %f\n", s->value[LAI]);
 				}
@@ -259,7 +259,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
 				}
 				Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 			}
