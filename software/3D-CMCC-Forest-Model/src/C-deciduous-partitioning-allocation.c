@@ -317,7 +317,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[DEL_BB]= 0;
 				}
 			}
-
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
 			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
