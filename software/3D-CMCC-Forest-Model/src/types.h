@@ -507,6 +507,8 @@ enum {
 
 	//LAI
 	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
+	LAI_SUN,
+	LAI_SHADE,
 	OLD_LAI,
 	SLAmkg,
 
