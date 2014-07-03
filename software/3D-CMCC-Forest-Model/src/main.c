@@ -1034,16 +1034,7 @@ int main(int argc, char *argv[])
 	{
 		sprintf(strData, "RothC");
 	}
-	strcat (out_filename, strData);
 
-	strcat (daily_out_filename, strData);
-
-	strcat (monthly_out_filename, strData);
-
-	strcat (annual_out_filename, strData);
-
-	strcat (soil_out_filename, strData);
-	strcat (soil_out_filename, "_");
 
 	strcat (out_filename, ".txt");
 	strcat (daily_out_filename, ".txt");

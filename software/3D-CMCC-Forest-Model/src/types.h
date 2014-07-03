@@ -263,7 +263,7 @@ enum {
 
 	//SPECIFIC LEAF AREA 3DVTModel
 	SLA,                         //Specific Leaf Area cm^2/g for sunlit leaves
-	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
+	LAI_RATIO,                   //(DIM) ratio of SUN to SHADED LAI
 
 	//FRACTION BRANCH-BARK
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)
