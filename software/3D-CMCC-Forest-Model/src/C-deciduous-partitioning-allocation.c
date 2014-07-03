@@ -38,7 +38,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	double Perc_coarse;
 	//double Perc_leaves;              //percentage of leaves in first growing season
 
-	static double frac_to_foliage_stem;
+	static double frac_to_foliage_root;
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
 
@@ -242,16 +242,16 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			if (s->value[BIOMASS_RESERVE] < 0.0)
 			{
 				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
-				frac_to_foliage_stem = 0;
-				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_stem);
+				frac_to_foliage_root = 0;
+				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_root);
 			}
 			else
 			{
-				//frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
+				//frac_to_foliage_root = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
 				parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-				frac_to_foliage_stem = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
+				frac_to_foliage_root = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
 
-				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_stem);
+				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_root);
 			}
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
@@ -270,16 +270,16 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				Log("Using reserve and npp\n");
 				/*
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
+				s->value[DEL_FOLIAGE] = (frac_to_foliage_root * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_root * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
 				 */
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/ (s->value[STEM_LEAF] +1.0))) + s->value[NPP];
-				s->value[DEL_STEMS] = (frac_to_foliage_stem - s->value[DEL_FOLIAGE]);
-				s->value[DEL_RESERVE] = - frac_to_foliage_stem;
+				s->value[DEL_FOLIAGE] = (frac_to_foliage_root * (1.0/ (s->value[FINE_ROOT_LEAF] +1.0))) + s->value[NPP];
+				s->value[DEL_STEMS] = 0.0;
+				s->value[DEL_RESERVE] = - frac_to_foliage_root;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_root - s->value[DEL_FOLIAGE]);
 				s->value[DEL_ROOTS_TOT] = 0;
-				s->value[DEL_TOT_STEM] = s->value[DEL_STEMS];				
+				s->value[DEL_TOT_STEM] = 0.0;
 				s->value[DEL_BB] = 0;
 			}
 			else
@@ -288,24 +288,24 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				{
 					Log("Using ONLY reserve\n");
 					/*
-					s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]);
+					s->value[DEL_FOLIAGE] = (frac_to_foliage_root * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_root * s->value[FINE_ROOT_LEAF_FRAC]);
 					 */
-					s->value[DEL_FOLIAGE] = (frac_to_foliage_stem * (1.0/ (s->value[STEM_LEAF] + 1.0)));
-					s->value[DEL_STEMS] = (frac_to_foliage_stem - s->value[DEL_FOLIAGE]);
-					s->value[DEL_RESERVE] = -(((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_stem);
-					s->value[DEL_ROOTS_FINE_CTEM] = 0;
+					s->value[DEL_FOLIAGE] = (frac_to_foliage_root * (1.0/ (s->value[STEM_LEAF] + 1.0)));
+					s->value[DEL_STEMS] = 0.0;
+					s->value[DEL_RESERVE] = -(((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_root);
+					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_root - s->value[DEL_FOLIAGE]);
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
-					s->value[DEL_TOT_STEM] = frac_to_foliage_stem * s->value[STEM_LEAF];
+					s->value[DEL_TOT_STEM] = 0.0;
 					s->value[DEL_BB]= 0;
 				}
 				else
 				{
 					Log("No reserve no NPP\n");
 					/*
-					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_stem * s->value[FINE_ROOT_LEAF_FRAC]);
-					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_stem;
+					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_root * s->value[FINE_ROOT_LEAF_FRAC]);
+					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_root;
 					 */
 					s->value[DEL_FOLIAGE] = 0;
 					s->value[DEL_ROOTS_FINE_CTEM] = 0;
@@ -362,7 +362,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			else
 			{
 				Log("computing LAI for dominated trees\n");
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] *
+						settings->sizeCell) * ((s->value[SLAmkg] / (s->value[SLA_RATIO] +1)) * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
 			}
 
@@ -373,12 +374,14 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000.0;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] *
+							settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000.0;
 				}
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000.0;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] *
+							settings->sizeCell))/ ((s->value[SLAmkg] / (s->value[SLA_RATIO] +1))* GC_GDM)) / 1000.0;
 				}
 
 				/*partitioning*/
@@ -434,7 +437,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) *
+							((s->value[SLAmkg] / (s->value[SLA_RATIO] +1)) * GC_GDM);
 					Log("recomputed LAI = %f\n", s->value[LAI]);
 				}
 			}
@@ -552,7 +556,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+						(s->value[SLA_RATIO] +1)) * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
 			}
 
@@ -571,7 +576,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] /
+							(s->value[SLA_RATIO] +1))* GC_GDM)) / 1000;
 				}
 
 
@@ -634,7 +640,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+							(s->value[SLA_RATIO] +1)) * GC_GDM);
 					Log("LAI = %f\n", s->value[LAI]);
 				}
 			}
@@ -773,7 +780,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+						(s->value[SLA_RATIO] +1)) * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
 			}
 
@@ -792,7 +800,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] /
+							(s->value[SLA_RATIO] +1))* GC_GDM)) / 1000;
 				}
 
 
@@ -1078,7 +1087,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+						(s->value[SLA_RATIO] +1)) * GC_GDM);
 				Log("Lai = %f\n", s->value[LAI]);
 			}
 
@@ -1304,7 +1314,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+						(s->value[SLA_RATIO] +1)) * GC_GDM);
 			}
 			Log("++Lai = %f\n", s->value[LAI]);
 
@@ -1403,7 +1414,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
+						(s->value[SLA_RATIO] +1)) * GC_GDM);
 			}
 
 			//allocation to roots
