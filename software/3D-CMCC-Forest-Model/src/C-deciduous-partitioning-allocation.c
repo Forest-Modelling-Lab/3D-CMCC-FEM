@@ -357,7 +357,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("computing LAI for dominant trees\n");
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
-				//s->value[LAI_SUN] = (s->value[BIOMASS_FOLIAGE] * 1000.0)*(s->value[LAI_RATIO]/(s->value[LAI_RATIO]+1.0));
+				//following biome
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+				Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -434,6 +438,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					Log("recomputed LAI = %f\n", s->value[LAI]);
+					//following biome
+					s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+					Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+					Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 				}
 				/*for dominated shaded foliage*/
 				else
@@ -553,6 +562,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
+				//following biome
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+				Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -637,6 +651,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					Log("LAI = %f\n", s->value[LAI]);
+					//following biome
+					s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+					Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+					Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 				}
 				/*for dominated shaded foliage*/
 				else
@@ -777,6 +796,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
+				//following biome
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+				Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -989,6 +1013,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
+			Log("LAI = %f\n", s->value[LAI]);
+			//following biome
+			s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+			s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+			Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+			Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
+
 			c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
 			c->daily_delta_ws[i] = s->value[DEL_STEMS];
 			c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
@@ -1084,6 +1115,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("Lai = %f\n", s->value[LAI]);
+				//following biome
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				Log("LAI_SUN = %f\n", s->value[LAI_SUN]);
+				Log("LAI_SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
