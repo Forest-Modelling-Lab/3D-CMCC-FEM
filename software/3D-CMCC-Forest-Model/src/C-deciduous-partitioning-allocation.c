@@ -350,7 +350,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			/*for dominant layer with sunlit foliage*/
+			/*for dominant layer */
+			//fixme using an average SLA value model computes an averaged LAI value between sun and shaded foliage
 			if (c->top_layer == c->heights[height].z)
 			{
 				Log("computing LAI for dominant trees\n");
@@ -359,7 +360,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				//s->value[LAI_SUN] = (s->value[BIOMASS_FOLIAGE] * 1000.0)*(s->value[LAI_RATIO]/(s->value[LAI_RATIO]+1.0));
 			}
 			/*for dominated shaded foliage*/
-			//fixme model wrongs multipling SLA_RATIO
+			//fixme model wrongs multiplying SLA_RATIO
 			else
 			{
 				Log("computing LAI for dominated trees\n");
