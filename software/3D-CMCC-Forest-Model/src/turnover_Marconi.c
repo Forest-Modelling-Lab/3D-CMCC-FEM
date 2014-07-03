@@ -56,7 +56,7 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
 				}
 				Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 				//marconi: 21/6 --> removed the 365 factor; using the dBiomass it the turnover factors may not be divided by 365 days of the year
@@ -102,7 +102,7 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[LAI_RATIO]) * GC_GDM);
 				}
 				Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 			}
