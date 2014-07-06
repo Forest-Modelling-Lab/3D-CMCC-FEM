@@ -4,7 +4,7 @@ LAT "48.40" //Site Latitude negative for south hemisphere
 LONG "7.05" //Site Longitude 
 ELEV "305" //Elevation in meters
 
-Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
+Y   "0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
 CO2CONC "380.0" //CO2 concentration
 
@@ -17,9 +17,9 @@ MIN_FRAC_MAXASW "0.08" //Minimum fraction of asw based on maxasw (wilting point)
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
 
-CLAY_PERC "22"	//PERCENTAGE OF CLAY (< 0,002 mm) see Epron et al., 2004
-SILT_PERC "70"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) see Epron et al., 2004
-SAND_PERC "8"	//PERCENTAGE OF SAND (0,05 - 2 mm) see Epron et al., 2004
+CLAY_PERC "22"  //PERCENTAGE OF CLAY (< 0,002 mm) see Epron et al., 2004
+SILT_PERC "70"  //PERCENTAGE OF SILT (0,002 - 0,05 mm) see Epron et al., 2004
+SAND_PERC "8"   //PERCENTAGE OF SAND (0,05 - 2 mm) see Epron et al., 2004
 
 BULK_DENSITY "1.36"  //BULK DENSITY (g/cm3) from SoilCalculator
 
@@ -33,7 +33,7 @@ FR "0.7" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
-SN "1.76"	//Soil Mineral Nitrogen Content gN/m^2 NOT EDITED
+SN "1.76"   //Soil Mineral Nitrogen Content gN/m^2 NOT EDITED
 
 //SOIL RESPIRATION
 RLAI "0.48" //SOIL RESPIRATION AL LAI = 0 gC m^2 day^-1
@@ -62,13 +62,13 @@ BIO "-9999" //microbiological pool in soil at day 0
 
 //DNDC-DECOMPOSITION
 SOIL_PH "5.0" //minimum value of N adsorbed on clay surface
-SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil
-SOIL_NH4 "-9999"    //0.05000 in dndc general case; initial quantity of NH4 in soil
+SOIL_NO3 "0.5"    //0.50000 in dndc general case; initial quantity of NO3 in soil
+SOIL_NH4 "0.05"    //0.05000 in dndc general case; initial quantity of NH4 in soil
 HYDRAULICCONDUCITIVITY "0.063"  // hydraulic conducitivity in soil (assumed as constant for now: better assume it different in different layers);
-INSOC "2.942"       //initial soil organic carbon (taken from Chiti 2010)
-LITFRAC "0.01"      // fraction of SOC affering to the litter at the first day of simulation
-HUMAFRACT "0.025"   // fraction of SOC affering to the humus pool at the first day of simulation
-HUMUFRACT "0.965"   // fraction of SOC affering to the humads pool at the first day of simulation
+INSOC "9.119"       //initial soil organic carbon (taken from Chiti 2010)
+LITFRAC "0.132"      // fraction of SOC affering to the litter at the first day of simulation
+HUMAFRACT "0.464"   // fraction of SOC affering to the humus pool at the first day of simulation
+HUMUFRACT "0.354"   // fraction of SOC affering to the humads pool at the first day of simulation
 BIOFRACT "0.05"     // fraction of SOC affering to the microbial pool at the first day of simulation
 RCNRVL "0.5"        // fraction of SOC affering to the litter at the first day of simulation
 RCNRL "25.0"        //C/N ratio for very labile litter pool
