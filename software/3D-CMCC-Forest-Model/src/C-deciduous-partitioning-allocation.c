@@ -293,7 +293,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					 */
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
 					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_RESERVE] = -(((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+					s->value[DEL_RESERVE] = -(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
@@ -515,7 +515,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[DEL_FOLIAGE] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-				s->value[DEL_RESERVE] = -((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
@@ -746,7 +746,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[DEL_FOLIAGE] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-				s->value[DEL_RESERVE] = -((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
@@ -956,7 +956,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[DEL_FOLIAGE] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-				s->value[DEL_RESERVE] = -((abs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;

@@ -1,2 +1,2 @@
 x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,35,FagussylvaticaHesse,T,3348,0,8.19,13,0,0,0,0,0,0,0
+0,0,F,35,FagussylvaticaColl,T,3348,0,8.19,13,0,0,0,0,0,0,0
