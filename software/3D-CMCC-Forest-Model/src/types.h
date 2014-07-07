@@ -507,7 +507,7 @@ enum {
 
 	//LAI
 	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
-	OLD_LAI,
+	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
 	SLAmkg,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
@@ -738,6 +738,7 @@ enum {
 	OLD_BIOMASS_STEM_LIVE_WOOD,
 	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
 	OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD,
+	FIRST_DAY_LAI,
 
 
 	VALUES
@@ -769,6 +770,8 @@ enum {
 	LEAF_FALL_COUNTER,
 	//included by Marconi
 	//FROM_SEN_TO_EOY,
+	//SENESCENCE_PERIOD,
+	SENESCENCE_DAYONE,
 
 	COUNTERS
 };
@@ -1138,7 +1141,7 @@ typedef struct {
 
 	//todo to be remopved used just to evaluate total biomass flutctations in the several different compartments
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
-	double vpSat[365];
+	double vpSat[365], maxVpSat;
 
 } CELL;
 
@@ -1349,10 +1352,13 @@ extern void soil_rothC (MATRIX *const, const YOS *const, const int, const int, c
 void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
-int leaffalMarconi(CELL *);
+void leaffalMarconi(SPECIES *, const MET_DATA *const, int*, int*, int );
 void get_vpsat(CELL * ,  int , int , int , YOS *, int);
 extern void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
+int endOfYellowing(const MET_DATA *const, SPECIES *);
+void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+
 
 
 

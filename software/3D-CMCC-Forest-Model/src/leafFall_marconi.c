@@ -12,7 +12,60 @@ struct vars_struct {
 	double *ey;
 };
 
+int endOfYellowing(const MET_DATA *const met,  SPECIES *const s)
+{
+	int endOfYellowing;
+	int month, day;
+	int actualMonth, actualDay = 0;
+	double monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+	double dailyColouring, senescence;
+	double  senTexp = 1.0;
+	double senPexp = 2.0;
+	double  senTmax = 28.5;
+	double  photoCrit = 800.0;
+	double photoStart = s->value[MINDAYLENGTH];
+	endOfYellowing = s->counter[SENESCENCE_DAYONE];
+	//start from the first day of senescence
+	for(day = 0; day <= endOfYellowing; day++)
+	{
+		actualDay ++;
+		if(actualDay == monthDays[actualMonth])
+		{
+			actualDay = 0;
+			actualMonth ++;
+		}
+	}
 
+
+	for ( month = actualMonth; month < 12; month++)
+	{
+		for (day = actualDay; day < monthDays[month]; day++)
+		{
+			if(met[month].d[day].daylength <= photoStart)
+			{
+				if(met[month].d[day].tavg <= senTmax)
+				{
+					dailyColouring =  pow(senTmax - met[month].d[day].tavg, senTexp) *
+							pow(met[month].d[day].daylength / photoStart, senPexp);
+				}
+				else
+				{
+					dailyColouring = 0;
+				}
+				senescence += dailyColouring;
+			}
+			endOfYellowing ++;
+			if(senescence >= photoCrit)
+			{
+				return endOfYellowing;
+			}
+
+		}
+	}
+	soil_Log("Attention!! senescenceNoOccurred!!!");
+	endOfYellowing = 310;
+	return endOfYellowing;
+}
 // Gaussian fitting of VpdSat data on the function of the type : y = p1 * exp(-(x-p2)/p3)^2 (Gaussian Function
 // we are interested in fitting the VPD sat data to find out the value of the p2 parameter value, used to asses the first day of senescence on the
 // basis of the VPDsat peak value assumption
@@ -25,13 +78,13 @@ struct vars_struct {
 // see http://cow.physics.wisc.edu/~craigm/idl/idl.html)
 // Copyright (C) 2003, 2004, 2006, 2007, 2009, 2010 Craig B. Markwardt
 
-void get_vpsat(CELL * c,  int day, int month, int years, YOS *yos, int i)
+void get_vpsat(CELL *const c,  int day, int month, int years, YOS *yos, int i)
 {
 	MET_DATA *met;
 	// check parameters
 	met = (MET_DATA*) yos[years].m;
 
-	c->vpSat[i] = 0.35*(0.6107*exp(17.38*(met[month].d[day].tavg)/(239+(met[month].d[day].tavg))))+0.154;
+	c->vpSat[i] = 0.35*(0.6107*exp(17.38*(met[month].d[day].tavg)/(239.0 +(met[month].d[day].tavg))))+0.154;
 	//soil_Log("\nvpSat: %g", c->vpSat[i]);
 }
 
@@ -59,7 +112,7 @@ int gaussian_x_y(int m, int n, double *p, double *dy,
 	return 0;
 }
 
-int leaffalMarconi(CELL * c)
+void senescenceDayOne(SPECIES *const s, const MET_DATA *const met, CELL *const c)
 {
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */
@@ -85,8 +138,11 @@ int leaffalMarconi(CELL * c)
 	int i;
 	struct vars_struct v;  /* Private data structure */
 	int status;
+
 	mp_result result;
 
+	//Marconi: this part of the function now doesn't get executed; that is ok because Collalti wants it to run with
+	//middaylenght photoperiod reasoning
 
 	//filling the x array with DOY values
 	for(i=0; i<365; i++)
@@ -117,14 +173,49 @@ int leaffalMarconi(CELL * c)
 
 	/* Call fitting function for 10 data points and 2 parameters */
 	status = mpfit(gaussian_x_y, 365, 4, p, pars, 0, (void *) &v, &result);
-
+	s->counter[SENESCENCE_DAYONE] = p[1]; //check if 2 is the correct parameter
+	//todo the 1.6 cap
+	//soil_Log("\nfirstDayOfSenescence senescence:\t%g", s->value[SENESCENCE_DAYONE]);
 	//soil_Log("\n*** testlinfit status = %d\n", status);
 	/* ... print or use the results of the fitted parametres p[] here! ... */
 	//Marconi: turn on the following function to print the parameters
 	//printresult(p, pactual, &result);
 
-	return 0;
 
+}
+
+void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplayer, int z)
+{
+	/* Test harness routine, which contains test data, invokes mpfit() */
+	/* X - independent variable */
+	double previousLai, previousBiomass;	//lai of the day before, used to calculate previous biomass and evaluate delata_foliage biomass
+	//s->counter[DAY_FRAC_FOLIAGE_REMOVE] = 130;
+
+	if(*doy == s->counter[SENESCENCE_DAYONE])
+	{
+		s->value[MAX_LAI] = s->value[LAI];
+	}
+	previousLai = s->value[LAI];
+	if (*toplayer == z)
+	{
+		s->value[LAI] = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
+				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
+						log(.11111111111))))));
+		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0);
+		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0));
+		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+	}
+	/*for dominated shaded foliage*/
+	else
+	{
+		s->value[LAI] = Maximum(0, s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
+				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
+						log(.11111111111))))));
+		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg]* s->value[SLA_RATIO] * GC_GDM * 1000.0);
+		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] *
+				settings->sizeCell) / (s->value[SLAmkg] * s->value[SLA_RATIO] * GC_GDM * 1000.0));
+		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+	}
 }
 
 /* Simple routine to print the fit results */
@@ -154,5 +245,4 @@ void printresult(double *x, double *xact, mp_result *result)
 	}
 
 }
-
 

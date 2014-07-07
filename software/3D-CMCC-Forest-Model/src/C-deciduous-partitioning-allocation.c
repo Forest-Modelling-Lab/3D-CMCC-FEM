@@ -115,15 +115,20 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		s->counter[BUD_BURST_COUNTER] = 0;
 	}
 
-	if (s->counter[LEAF_FALL_COUNTER] == 1)
+	//if (s->counter[LEAF_FALL_COUNTER] == 1)
+	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
+		//s->counter[LEAF_FALL_COUNTER] = 1;
 		Log("First day of Leaf fall\n");
 		Log("\nday, month: %d\t%d", month+1, day+1);
-		s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
+		//s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
+		s->counter[SENESCENCE_DAYONE] = c->doy;
+		s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) -
+				c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
 		Log("foliage biomass to remove = %f\n", s->value[BIOMASS_FOLIAGE]);
 		Log("Daily amount of foliage biomass to remove = %f\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
-		s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] * s->value[FOLIAGE_REDUCTION_RATE];
+		s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 	}
 
 
@@ -1008,46 +1013,106 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("++Lai before Leaf fall= %f\n", s->value[LAI]);
 			Log("Biomass foliage = %f \n", s->value[BIOMASS_FOLIAGE]);
 			Log("foliage reduction rate %f \n", s->value[FOLIAGE_REDUCTION_RATE]);
-			Log("biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+			//Log("biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 
-			if (s->value[NPP] > 0.0)
+			if( met[month].d[day].daylength >= s->value[MINDAYLENGTH])
 			{
+				Log("(decreasingLai)\n");
+				Log("allocating into the three pools Ws+Wr+Wreserve\n");
+				/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
-				//REPRODUCTION ONLY FOR NEEDLE LEAF
-				if (s->value[PHENOLOGY] == 0.2)
+				s->value[DAILY_DEL_LITTER] = 0;
+
+
+				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+				Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
+				pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+				Log("Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+				pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+				Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+
+				/*partitioning*/
+				if (s->value[NPP] > 0.0)
 				{
-					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
+					//fixme do it also for 0.1
+					//REPRODUCTION ONLY FOR NEEDLE LEAF
+					if (s->value[PHENOLOGY] == 0.2)
+					{
+						//NPP for reproduction
+						s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+						s->value[NPP] -= s->value[BIOMASS_FRUIT];
+						Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
-					//reproductive life span
-					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
+						//reproductive life span
+						s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
+					}
+					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+							&c->doy, &c->top_layer, i);
+					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
+					s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
+//					s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
+					s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
+					s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+					s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];
 				}
-				s->value[DEL_FOLIAGE] =  -s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
-				s->value[DAILY_DEL_LITTER] = s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
-				s->value[DEL_RESERVE] = s->value[NPP];
-				s->value[DEL_TOT_STEM] = 0;
-				s->value[DEL_STEMS] = 0;
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
-				s->value[DEL_ROOTS_TOT] = 0;
-				s->value[DEL_BB] = 0;
+				else
+				{
+					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+					s->value[DEL_ROOTS_TOT] = 0;
+					s->value[DEL_TOT_STEM] = 0;
+					s->value[DEL_STEMS]= 0;
+					s->value[DEL_BB]= 0;
+					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+							&c->doy, &c->top_layer, i);
+					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+				}
 			}
 			else
 			{
-				s->value[DEL_FOLIAGE] = - s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE];
-				s->value[DEL_TOT_STEM] = 0;
-				s->value[DEL_STEMS] = 0;
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
-				s->value[DEL_ROOTS_TOT] = 0;
-				s->value[DEL_BB] = 0;
-			}
+				if (s->value[NPP] > 0.0)
+				{
 
+					//REPRODUCTION ONLY FOR NEEDLE LEAF
+					if (s->value[PHENOLOGY] == 0.2)
+					{
+						//NPP for reproduction
+						s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
+						s->value[NPP] -= s->value[BIOMASS_FRUIT];
+						Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
+
+						//reproductive life span
+						s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
+					}
+					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+							&c->doy, &c->top_layer, i);
+					s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
+					s->value[DEL_RESERVE] = s->value[NPP];
+					s->value[DEL_TOT_STEM] = 0;
+					s->value[DEL_STEMS] = 0;
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					s->value[DEL_ROOTS_TOT] = 0;
+					s->value[DEL_BB] = 0;
+				}
+				else
+				{
+					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+							&c->doy, &c->top_layer, i);
+					s->value[DEL_TOT_STEM] = 0;
+					s->value[DEL_STEMS] = 0;
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					s->value[DEL_ROOTS_TOT] = 0;
+					s->value[DEL_BB] = 0;
+					s->value[DEL_RESERVE] = 0;
+				}
+			}
 			/*allocation*/
-			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
-			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+			//			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
+			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 			s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
 			Log("Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
 			s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
@@ -1079,18 +1144,18 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			//recompute LAI
 			/*for dominant layer with sunlit foliage*/
-			if (c->top_layer == c->heights[height].z)
-			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-				Log("Lai = %f\n", s->value[LAI]);
-			}
-			/*for dominated shaded foliage*/
-			else
-			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] /
-						(s->value[SLA_RATIO] +1)) * GC_GDM);
-				Log("Lai = %f\n", s->value[LAI]);
-			}
+			//Marconi turned off because the sigmoid automatically does it
+			//			if (c->top_layer == c->heights[height].z)
+			//			{
+			//				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+			//				Log("Lai = %f\n", s->value[LAI]);
+			//			}
+			//			/*for dominated shaded foliage*/
+			//			else
+			//			{
+			//				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+			//				Log("Lai = %f\n", s->value[LAI]);
+			//			}
 
 			s->value[DEL_Y_WTS] += s->value[DEL_TOT_STEM];
 			s->value[DEL_Y_WS] += s->value[DEL_STEMS];
@@ -1119,7 +1184,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
 
-			c->leafLittering += s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
+			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
 			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
 
 			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
@@ -1135,7 +1200,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			/*partitioning*/
 			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			s->value[DEL_FOLIAGE] = 0;
+			//using the sigmoid it is necessary to leave the remainder at the very begining of the phase 0; that
+			//because sigmoid decreases asymptotically to 0
+			if (s->value[BIOMASS_FOLIAGE] > 0)s->value[DEL_FOLIAGE] = -s->value[BIOMASS_FOLIAGE];
+			else s->value[DEL_FOLIAGE] = 0;
+			if (s->value[BIOMASS_ROOTS_FINE] > 0) s->value[BIOMASS_ROOTS_FINE] = -s->value[BIOMASS_ROOTS_FINE];
 			s->value[DEL_ROOTS_FINE_CTEM] = 0;
 			s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 			s->value[DEL_ROOTS_TOT] = 0;
@@ -1143,11 +1212,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[DEL_STEMS]= 0;
 			s->value[DEL_BB]= 0;
 
+			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
+			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
 
 
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
-			Log("Foliage Biomass = %f tDM/area\n", s->value[BIOMASS_STEM]);
+			Log("Foliage Biomass = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 			s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
 			Log("Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
 			s->value[BIOMASS_STEM] +=  s->value[DEL_STEMS];
@@ -1639,4 +1710,5 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 }
 
 /**/
+
 
