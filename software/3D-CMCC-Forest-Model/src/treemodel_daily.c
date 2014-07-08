@@ -363,7 +363,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 										D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
 
-										Get_turnover_Marconi  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+										Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 										Log("--------------------------------------------------------------------------\n\n\n");
 
@@ -438,7 +438,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_C_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 										Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 										D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-										Get_turnover_Marconi (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+										Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 
 										Log("Available Soil Water at day %d month %d year of simulation %d = %f mm\n",day, month+1, years, m->cells[cell].available_soil_water);
@@ -521,7 +521,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									//Get_litterfall_evergreen_CTEM (&m->cells[cell].heights[height].ages[age].species[species]);
 									E_Get_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-									Get_turnover_Marconi (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 
 									Log("--------------------------------------------------------------------------\n\n\n");
