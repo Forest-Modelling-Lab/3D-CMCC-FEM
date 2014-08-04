@@ -48,13 +48,22 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 	//double n_area_sun, n_area_shade, dlmr_area_sun, dlmr_area_shade;
 
 	//double n_area/*, dlmr_area*/;
-	//fixsergio trying to introduce a maintenance factor modification as a function of steady state or exp growing phase as suggested in
-	//thornley
 
-	mrpern *= s->value[F_SW];
 
 	Log("\nGET_MAINTENANCE_RESPIRATION\n");
-
+	/*
+	//computing Nitrogen content from tons DM/ha to gC/m^2 and then as in BIOME to KgC
+	leaf_nitrogen = (((s->value[BIOMASS_FOLIAGE] / GC_GDM) * 1000.0) /settings->sizeCell) / s->value[CN_LEAVES];
+	Log("Foliage nitrogen content = %f kgN/m^2\n", leaf_nitrogen);
+	fine_root_nitrogen = (((s->value[BIOMASS_ROOTS_FINE] / GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_FINE_ROOTS];
+	Log("Fine root nitrogen content = %f kgN/m^2\n", fine_root_nitrogen);
+	stem_nitrogen = ((((s->value[BIOMASS_STEM_LIVE_WOOD])/GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	Log("Live stem nitrogen content = %f kgN/m^2\n", stem_nitrogen);
+	coarse_root_nitrogen = ((((s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD])/GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	Log("Live coarse root nitrogen content = %f kgN/cell\n", coarse_root_nitrogen);
+	branch_nitrogen = ((((s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD])/GC_GDM)*1000.0)/settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	Log("Live branch nitrogen content = %f kgN/cell\n", branch_nitrogen);
+	 */
 	// leaf day and night maintenance respiration when leaves on
 	if (s->counter[VEG_UNVEG] == 1)
 	{
@@ -64,7 +73,7 @@ void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *con
 
 		t1 = pow(q10, exponent_tday);
 
-		s->value[DAILY_LEAF_MAINT_RESP] = (s->value[LEAF_NITROGEN]  * mrpern * t1 * (met[month].d[day].daylength/24.0))*1000.0;
+		s->value[DAILY_LEAF_MAINT_RESP] = (s->value[LEAF_NITROGEN] * mrpern * t1 * (met[month].d[day].daylength/24.0))*1000.0;
 		//Log("daily leaf maintenance respiration = %f gC/day m^2\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 
@@ -252,72 +261,6 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 }
 
-//SERGIO NEW RESPIRATION
-void Get_new_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
-{
-	int i;
 
-	//growth respiration is a function of daily gross C stock; that is it should be computed on the basis of daily GPP rather
-	// than on dC of the previously day
-		Log("\nGET_GROWTH_RESPIRATION\n");
-
-		//to prevent negative values in the first years first month first day of the simulation
-		if (day == 0 && month == 0)
-		{
-			Log("No growth resp\n");
-
-			s->value[LEAF_GROWTH_RESP] = 0.0;
-			Log("daily leaf growth respiration = %f gC/day m^2\n", s->value[LEAF_GROWTH_RESP]);
-
-			s->value[FINE_ROOT_GROWTH_RESP] = 0.0;
-			Log("daily fine root growth respiration = %f gC/day m^2\n", s->value[FINE_ROOT_GROWTH_RESP]);
-
-			s->value[COARSE_ROOT_GROWTH_RESP] = 0.0;
-			Log("daily coarse root growth respiration = %f gC/day m^2\n", s->value[COARSE_ROOT_GROWTH_RESP]);
-
-			s->value[STEM_GROWTH_RESP] = 0.0;
-			Log("daily stem growth respiration = %f gC/day m^2\n", s->value[STEM_GROWTH_RESP]);
-
-			s->value[BRANCH_GROWTH_RESP] = 0.0;
-			Log("daily branch respiration = %f gC/day m^2\n", s->value[BRANCH_GROWTH_RESP]);
-
-			s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
-					s->value[FINE_ROOT_GROWTH_RESP] +
-					s->value[STEM_GROWTH_RESP] +
-					s->value[COARSE_ROOT_GROWTH_RESP] +
-					s->value[BRANCH_GROWTH_RESP];
-			Log("TOTAL growth respiration = %f gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
-
-		}
-		else
-		{
-			if (s->value[GPP_g_C] > 0.0)
-			{
-				//converting to gC
-				s->value[TOTAL_GROWTH_RESP] = (((s->value[GPP_g_C]/GC_GDM)*1000000)/(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell))* GRPERC;
-				Log("daily branch respiration = %f gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
-
-			}
-			else
-			{
-				Log("No growth resp\n");
-				s->value[TOTAL_GROWTH_RESP] = 0.0;
-			}
-			Log("daily total growth respiration = %f gC/day m^2\n", s->value[TOTAL_GROWTH_RESP]);
-		}
-
-		i = c->heights[height].z;
-
-		c->daily_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-		c->monthly_gowth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-		c->annual_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-
-		c->daily_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
-		c->monthly_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
-		c->annual_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
-
-
-
-}
 
 
