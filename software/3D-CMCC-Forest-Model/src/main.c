@@ -900,8 +900,8 @@ int main(int argc, char *argv[])
 	char strSitename[20] = "";
 	sprintf(strSitename, "%s", site->sitename);
 
-	strcat (out_filename, "_");
-	strcat (out_filename, strSitename);
+//	strcat (out_filename, "_");
+//	strcat (out_filename, strSitename);
 
 	strcat (daily_out_filename, "_");
 	strcat (daily_out_filename, strSitename);
@@ -917,108 +917,108 @@ int main(int argc, char *argv[])
 
 
 
-	//define output file name in function of model settings
-	char strTmp[3], strTmp2[4], strTmp3[3];
-	strTmp[0] = '_';
-	strTmp[1] = settings->version;
-	strTmp[2] = '\0';
+//	//define output file name in function of model settings
+//	char strTmp[3], strTmp2[4], strTmp3[3];
+//	strTmp[0] = '_';
+//	strTmp[1] = settings->version;
+//	strTmp[2] = '\0';
+//
+//	strTmp2[0] = '_';
+//	strTmp2[1] = settings->spatial;
+//	strTmp2[2] = '_';
+//	strTmp2[3] = '\0';
+//
+//	strTmp3[0] = settings->time;
+//	strTmp3[1] = '_';
+//	strTmp3[2] = '\0';
+//
+//
+//
+//	strcat (out_filename, strTmp);
+//	strcat (out_filename, strTmp2);
+//	strcat (out_filename, strTmp3);
+//
+//	strcat (daily_out_filename, strTmp);
+//	strcat (daily_out_filename, strTmp2);
+//	strcat (daily_out_filename, strTmp3);
+//
+//	strcat (monthly_out_filename, strTmp);
+//	strcat (monthly_out_filename, strTmp2);
+//	strcat (monthly_out_filename, strTmp3);
+//
+//	strcat (annual_out_filename, strTmp);
+//	strcat (annual_out_filename, strTmp2);
+//	strcat (annual_out_filename, strTmp3);
+//
+//	strcat (soil_out_filename, strTmp);
+//	strcat (soil_out_filename, strTmp2);
+//	strcat (soil_out_filename, strTmp3);
 
-	strTmp2[0] = '_';
-	strTmp2[1] = settings->spatial;
-	strTmp2[2] = '_';
-	strTmp2[3] = '\0';
-
-	strTmp3[0] = settings->time;
-	strTmp3[1] = '_';
-	strTmp3[2] = '\0';
-
-
-
-	strcat (out_filename, strTmp);
-	strcat (out_filename, strTmp2);
-	strcat (out_filename, strTmp3);
-
-	strcat (daily_out_filename, strTmp);
-	strcat (daily_out_filename, strTmp2);
-	strcat (daily_out_filename, strTmp3);
-
-	strcat (monthly_out_filename, strTmp);
-	strcat (monthly_out_filename, strTmp2);
-	strcat (monthly_out_filename, strTmp3);
-
-	strcat (annual_out_filename, strTmp);
-	strcat (annual_out_filename, strTmp2);
-	strcat (annual_out_filename, strTmp3);
-
-	strcat (soil_out_filename, strTmp);
-	strcat (soil_out_filename, strTmp2);
-	strcat (soil_out_filename, strTmp3);
-
-	char strSizeCell[10] = "";
-	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
-
-	strcat (out_filename, strSizeCell);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strSizeCell);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strSizeCell);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strSizeCell);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strSizeCell);
-	strcat (soil_out_filename, "_");
-
-	//add data to output.txt
-	time_t rawtime;
-	time (&rawtime);
-	data = gmtime(&rawtime);
-
+//	char strSizeCell[10] = "";
+//	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
+//
+//	strcat (out_filename, strSizeCell);
+//	strcat (out_filename, "_");
+//
+//	strcat (daily_out_filename, strSizeCell);
+//	strcat (daily_out_filename, "_");
+//
+//	strcat (monthly_out_filename, strSizeCell);
+//	strcat (monthly_out_filename, "_");
+//
+//	strcat (annual_out_filename, strSizeCell);
+//	strcat (annual_out_filename, "_");
+//
+//	strcat (soil_out_filename, strSizeCell);
+//	strcat (soil_out_filename, "_");
+//
+//	//add data to output.txt
+//	time_t rawtime;
+//	time (&rawtime);
+//	data = gmtime(&rawtime);
+//
 	char strData[30] = "";
-	sprintf(strData, "%d", data->tm_year+1900);
-	strcat (out_filename, strData);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strData);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strData);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strData);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strData);
-	strcat (soil_out_filename, "_");
-
-	sprintf(strData, "%s", szMonth[data->tm_mon]);
-	strcat (out_filename, strData);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strData);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strData);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strData);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strData);
-	strcat (soil_out_filename, "_");
-
-	sprintf(strData, "%d", data->tm_mday);
-
-	strcat (out_filename, strData);
-
-	strcat (daily_out_filename, strData);
-	strcat (monthly_out_filename, strData);
-	strcat (annual_out_filename, strData);
-	strcat (soil_out_filename, strData);
-
+//	sprintf(strData, "%d", data->tm_year+1900);
+//	strcat (out_filename, strData);
+//	strcat (out_filename, "_");
+//
+//	strcat (daily_out_filename, strData);
+//	strcat (daily_out_filename, "_");
+//
+//	strcat (monthly_out_filename, strData);
+//	strcat (monthly_out_filename, "_");
+//
+//	strcat (annual_out_filename, strData);
+//	strcat (annual_out_filename, "_");
+//
+//	strcat (soil_out_filename, strData);
+//	strcat (soil_out_filename, "_");
+//
+//	sprintf(strData, "%s", szMonth[data->tm_mon]);
+//	strcat (out_filename, strData);
+//	strcat (out_filename, "_");
+//
+//	strcat (daily_out_filename, strData);
+//	strcat (daily_out_filename, "_");
+//
+//	strcat (monthly_out_filename, strData);
+//	strcat (monthly_out_filename, "_");
+//
+//	strcat (annual_out_filename, strData);
+//	strcat (annual_out_filename, "_");
+//
+//	strcat (soil_out_filename, strData);
+//	strcat (soil_out_filename, "_");
+//
+//	sprintf(strData, "%d", data->tm_mday);
+//
+//	strcat (out_filename, strData);
+//
+//	strcat (daily_out_filename, strData);
+//	strcat (monthly_out_filename, strData);
+//	strcat (annual_out_filename, strData);
+//	strcat (soil_out_filename, strData);
+//
 	if (!mystricmp(settings->dndc, "on"))
 	{
 		strcat (out_filename, "_");

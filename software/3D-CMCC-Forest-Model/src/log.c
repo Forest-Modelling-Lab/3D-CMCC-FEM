@@ -963,9 +963,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 
 		Daily_Log ("HC\n");
 		if (!mystricmp(settings->dndc, "on"))
-				{
-					Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
-				}
+		{
+			Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
+		}
 		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
 		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
@@ -1360,7 +1360,7 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 					"DOY", "YEAR", "MONTH", "DAY", "soilMoisture","soilTemp", "leafLittering","fineRootLittering", "woodLittering",
 					"stemLittering", "coarseRootLittering","soc", "doc", "rcvl","rcl", "rcr", "CRB1", "CRB2", "crhl",
 					"crhr", "dphum", "no3", "no2", "nh4","nh3", "co2", "day_O2", "dailyGPP[0]", "dailyAutResp[0]", "dailyTotGPP", "dailyTotRespAut",
-					"stemBranchBiomass", "inert_C", "AddC1", "AddC2", "AddC3","sts", "mmm",
+					"stemBranchBiomass", "inert_C", "AddC1", "AddC2", "AddC3","totMaintenance", "totGrowth",
 					"initialOrganicC", "waterContent", "litco22", "litco23", "CEC");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
@@ -1461,8 +1461,8 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->AddC1,
 				c->AddC2,
 				c->AddC3,
-				c->soils[0].sts,
-				c->soils[0].mmm,
+				c->daily_tot_maint_resp,
+				c->daily_tot_growth_resp,
 				c->soils[0].initialOrganicC,
 				c->soils[0].waterContent,
 				c->soils[0].litco22,
@@ -1483,6 +1483,8 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 		c->daily_tot_aut_resp = 0;
 		c->daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
+		c->daily_tot_maint_resp = 0;
+		c->daily_tot_growth_resp = 0;
 
 	}
 	else if (!mystricmp(settings->rothC, "on"))

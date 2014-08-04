@@ -1358,6 +1358,7 @@ extern void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+void Get_new_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
 
 
 
