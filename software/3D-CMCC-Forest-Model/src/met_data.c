@@ -446,7 +446,7 @@ double Get_vpd (const MET_DATA *const met, int month)
 
 
 	//compute vpd
-	//see triplex model Peng et al., 2002
+	//see triplex model Zhang et al., 2008, Zhou et al., 2004
 	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tavg + 237.3));
 	//Log("svp = %f\n", svp);
 	vp = met[month].rh * (svp /100);
