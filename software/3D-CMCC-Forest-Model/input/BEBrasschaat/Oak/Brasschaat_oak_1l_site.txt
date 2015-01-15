@@ -1,4 +1,4 @@
-SITENAME "Castelporziano - Italy" //Site Name
+SITENAME "Brasschaat-Oak_1l" //Site Name
 
 LAT "41.7052493" //Site Latitude negative for south hemisphere
 LONG "12.3761058" //Site Longitude 
