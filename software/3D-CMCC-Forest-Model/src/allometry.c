@@ -18,8 +18,6 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	   Log("-Chapman-Richards allometry function-\n");
 
 	//tree height from champan-richards function
-
-
 	if (!years)
 	{
 	s->value[INITIAL_TREE_HEIGHT_CR] = 1.3 + s->value[CRA] * pow (1 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
