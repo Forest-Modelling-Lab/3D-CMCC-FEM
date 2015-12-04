@@ -21,13 +21,7 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 {
 	//CTEM VERSION
 
-	Log("GET_ALLOCATION_ROUTINE\n\n");
-
-	Log("Carbon allocation routine for evergreen\n");
-
-
 	int i;
-
 
 	//allocation parameter. their sum must be = 1
 	double  s0Ctem = s->value[S0CTEM];
@@ -62,6 +56,10 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//in ev ergreen we don't have bud burst phenology phase, and indeed there are two phenology phases; the former in which carbon is allocated in fineroot and foliage, the latter in
 	// every pool except foliage
 	static double frac_to_foliage_fineroot;
+
+		Log("GET_ALLOCATION_ROUTINE\n\n");
+
+	Log("Carbon allocation routine for evergreen\n");
 
 
 

@@ -398,7 +398,7 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 	MET_DATA *met;
 	double  clayc, krh, hrh, DDRF;
 	double drcvl,DRCB,lit_co2, DRCB1, DRCB2, sumn, fb_nh4, fb_co2, fh_nh4, fh_co2;
-	int    cell, l,ll, vv;
+	int    cell, l = 0,ll, vv;
 	double  RFM, RFMM, RFMT;
 	double Fl;
 	double Fhc, ActSOC, CRB, Thc,new_ActSOC,dActSOC;
@@ -1384,9 +1384,9 @@ void soilCEC(CELL *const c)
 void get_av_year_temperature(CELL *const c, int years, int month, int day, const MET_DATA *const met )
 {
 	double tempSoilTemp;
-	c->temp_avet = 0;
 	double monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
+	c->temp_avet = 0;
 	//get permission to include it in main line 1200, getting rid of the following double loop
 	for (month = 0; month < MONTHS; month++)
 	{
@@ -1404,6 +1404,8 @@ void soil_temperature(CELL *const c, int years, int month, int day, const MET_DA
 	int l, n, qq;
 	double K[120], Z[120], C[120], outQ[120],outAir, Kave, dQ;
 	double Org, Min, Vwater, Vmin, Vorg, Vsoil, TM, Csoil, Ksoil, a,dQQ, tempSoilTemp, outBottom;
+		double fsl;
+		double adjT;
 	//double Mleaf;
 
 
@@ -1419,10 +1421,10 @@ void soil_temperature(CELL *const c, int years, int month, int day, const MET_DA
 
 	if ( years == 0 &&day == 0 && month == JANUARY ) c->previousSoilT = met[month].d[day].tavg;
 
-	double adjT = (met[month].d[day].tavg+met[month].d[day].tmax)*0.5;
+	adjT = (met[month].d[day].tavg+met[month].d[day].tmax)*0.5;
 	//double adjT = air_temp;
 
-	double fsl;
+
 
 	//adjT = adjT / (double)pow((1.0+lai),0.2); //albedo * OldT + (1.0 - albedo) * adjT;
 	//adjT = albedo * OldT + (1.0 - albedo) * adjT;

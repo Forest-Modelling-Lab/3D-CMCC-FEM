@@ -66,7 +66,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	//**************************************************************************************************
 
 	int   julianDate;							// count_month; last valid day for each month;
-	int   actualDate;
+	int   actualDate = 0;
 	double albedo;								// field albedo
 	double Sfactor;
 	double Cfactor;
@@ -147,7 +147,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 	double prevDaySoilLayerTemperature[1];
 	double depthTempFactor;						// epic factor to consider soil layer distance from surface in computing soil layer temperature
-	double canopyHeight;							// rop height: used to compute displacement height
+	double canopyHeight = 0.0;							// rop height: used to compute displacement height
 
 	//---------------------------------- PARTON -------------------------------
 
@@ -234,7 +234,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	double vernTemperature;
 	double maxVernTemperature;
 	double vernOptimumTemperature;
-	double dailyVernalizationEffectiveness;
+	double dailyVernalizationEffectiveness = 0.0;
 	double vernalizationDays;
 
 
@@ -352,9 +352,9 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 	double proportionalityConstant;
 	double plantAssimilatesTopFraction;
-	double leafWeight;
+	double leafWeight = 0.0;
 	double grainWeight;
-	double leafFallWeight;
+	double leafFallWeight = 0.0;
 
 	double waterStressFactor;					// water stress factor (from 0 to 1: formula to be found)
 	double nitrogenStressFactor;					// nitrogen stress factor (nitrogenStressFactor to be evaluated with a formula; to be found)

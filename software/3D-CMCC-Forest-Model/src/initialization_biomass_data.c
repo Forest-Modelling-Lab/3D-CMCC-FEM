@@ -148,7 +148,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
 	Log("   HEART_WOOD_AREA = %f cm^2\n", s->value[HEARTWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
-	Log("   sapwood perc = %f%\n", s->value[SAPWOOD_PERC]*100);
+	Log("   sapwood perc = %f%%\n", s->value[SAPWOOD_PERC]*100);
 	Log("   Stem_biomass = %f class cell \n", s->value[BIOMASS_STEM]);
 	s->value[WS_sap] = (s->value[BIOMASS_STEM] * s->value[SAPWOOD_PERC]);
 	Log("   Sapwood stem biomass = %f tDM class cell \n", s->value[WS_sap]);

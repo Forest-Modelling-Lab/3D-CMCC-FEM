@@ -14,6 +14,8 @@
 
 void Get_initialization_site_data (CELL *c)
 {
+	double vwc_fc; //Soil Field Capacity Volumetric Water Content in m3/m3
+
 	Log("\n****GET SITE-SOIL CHARACTERISTICS for cell  (%d, %d)****\n", c->x, c->y);
 	/*soil matric potential*/
 
@@ -64,7 +66,7 @@ void Get_initialization_site_data (CELL *c)
 
 
 
-	double vwc_fc; //Soil Field Capacity Volumetric Water Content in m3/m3
+	
 	//double soilw_fc; //maximum volume soil water content in m3/m3
 
 	// (DIM) Clapp-Hornberger "b" parameter

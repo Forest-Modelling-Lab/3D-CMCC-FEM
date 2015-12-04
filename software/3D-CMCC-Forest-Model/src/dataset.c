@@ -416,11 +416,12 @@ int importSiteFile(char *fileName)
 	}
 	else //Read the file
 	{
+		double *tmpPointer;
 		char *getRet = NULL,
 				*buffer = malloc(sizeof(*buffer)*1024);
 
 		site = malloc(sizeof(site_t));
-		double *tmpPointer = &(site->lat);
+		tmpPointer = &(site->lat);
 
 		if(!buffer)
 		{
@@ -498,11 +499,12 @@ int importSettingsFile(char *fileName)
 	}
 	else //Read the file
 	{
+		double *tmpPointer;
 		char	*getRet = NULL,
 				*buffer = malloc(sizeof(*buffer)*1024);
 
 		settings = malloc(sizeof(settings_t));
-		double *tmpPointer = &(settings->sizeCell);
+		tmpPointer = &(settings->sizeCell);
 
 		if(!buffer)
 		{
@@ -562,7 +564,8 @@ int importSettingsFile(char *fileName)
 		}
 		free(buffer);
 	}
-	if( fclose(settings_fd) != 0 ) //Close the file
+
+	if( settings_fd && fclose(settings_fd) != 0 ) //Close the file
 	{
 		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);
 		ret = 3;

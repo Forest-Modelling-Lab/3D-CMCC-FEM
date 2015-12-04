@@ -15,7 +15,7 @@
 
 //FOLLOWING BIOME-BGC
 
-void Get_maintenance_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
+void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 
 	int i;

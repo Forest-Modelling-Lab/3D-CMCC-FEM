@@ -942,7 +942,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 						//it should be a negative sigmoid function
 						//todo: create a sigmoid function
 						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-						Log("foliage reduction rate = %f,  = %f%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+						Log("foliage reduction rate = %f,  = %f%%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
 
 
 						//todo decidere se utlizzare growthend o mindaylenght

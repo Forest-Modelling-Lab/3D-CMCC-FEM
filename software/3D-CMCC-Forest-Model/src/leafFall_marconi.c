@@ -16,9 +16,9 @@ int endOfYellowing(const MET_DATA *const met,  SPECIES *const s)
 {
 	int endOfYellowing;
 	int month, day;
-	int actualMonth, actualDay = 0;
+	int actualMonth = 0, actualDay = 0;
 	double monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
-	double dailyColouring, senescence;
+	double dailyColouring, senescence = 0;
 	double  senTexp = 1.0;
 	double senPexp = 2.0;
 	double  senTmax = 28.5;

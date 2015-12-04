@@ -21,6 +21,9 @@
 #define IS_FLAG_SET(v, m)	(((v) & (m)) == (m))
 #if defined (_WIN32)
 #define FOLDER_DELIMITER '\\'
+#ifndef bzero
+#define bzero(d,n) memset((d),0,(n))
+#endif
 #else
 #define FOLDER_DELIMITER '/'
 #endif

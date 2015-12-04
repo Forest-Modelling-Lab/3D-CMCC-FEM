@@ -221,7 +221,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			Annual_Log("Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
 		}
 		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
-		Annual_Log("Annual Y = NPP/GPP ratio (%)\n");
+		Annual_Log("Annual Y = NPP/GPP ratio (%%)\n");
 		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
 		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
 		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
@@ -782,15 +782,14 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_tot_het_resp, c->monthly_Reco);
 		}
-		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2d\n",
+		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f\n",
 				c->monthly_tot_c_flux,
 				c->monthly_tot_npp,
 				c->monthly_tot_npp_g_c,
 				c->monthly_tot_c_evapotransp,
 				c->available_soil_water,
 				c->monthly_tot_w_flux,
-				c->monthly_cc[0],
-				c->monthly_tot_dead_tree);
+				c->monthly_cc[0]);
 
 		//reset
 		c->monthly_gpp[0] = 0;

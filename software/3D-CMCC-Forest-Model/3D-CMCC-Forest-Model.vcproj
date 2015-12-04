@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -176,7 +176,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\aut_respiration.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\biomass.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\C-assimilation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\C-deciduous-partitioning-allocation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\C-evergreen-partitioning-allocation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\C-fluxes.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\C-partitioning-allocation.c"
 				>
 			</File>
 			<File
@@ -188,11 +212,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_transpiration.c"
+				RelativePath=".\src\canopy_interception.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\clearcut.c"
+				RelativePath=".\src\canopy_transpiration.c"
 				>
 			</File>
 			<File
@@ -201,6 +225,10 @@
 			</File>
 			<File
 				RelativePath=".\src\cropmodel.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cropmodel_daily.c"
 				>
 			</File>
 			<File
@@ -220,6 +248,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\evapotranspiration.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\G-Function.c"
 				>
 			</File>
@@ -236,11 +268,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\io.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\lai.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\layer_cover.c"
+				RelativePath=".\src\leafFall_marconi.c"
 				>
 			</File>
 			<File
@@ -276,11 +312,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\monthly_partitioning-allocation.c"
+				RelativePath=".\src\mortality.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\mortality.c"
+				RelativePath=".\src\mpfit.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\N-stock.c"
 				>
 			</File>
 			<File
@@ -288,11 +328,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\partitioning-allocation.c"
+				RelativePath=".\src\peak_lai.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\peak_lai.c"
+				RelativePath=".\src\phenology.c"
 				>
 			</File>
 			<File
@@ -304,7 +344,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\soil_dndc.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\soil_evaporation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_respiration.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_rothC.c"
 				>
 			</File>
 			<File
@@ -316,10 +368,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\sort.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\structure.c"
 				>
 			</File>
@@ -328,15 +376,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\treemodel_daily.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\turnover.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\utility.c"
+				RelativePath=".\src\turnover_Marconi.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\vpd.c"
+				RelativePath=".\src\utility.c"
 				>
 			</File>
 			<File
@@ -362,7 +414,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\netcdf.h"
+				RelativePath=".\src\mpfit.h"
 				>
 			</File>
 			<File

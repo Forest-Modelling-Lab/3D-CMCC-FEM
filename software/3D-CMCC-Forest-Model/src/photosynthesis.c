@@ -17,7 +17,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	double Optimum_GPP_gC;
 	double GPPmolC;
 	double DailyGPPgC;
-	double StandGPPtC;
+	double StandGPPtC = 0.0;
 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
 	if (settings->time == 'm')
@@ -125,7 +125,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("Un-vegetative period !! \n");
 		s->value[GPP_g_C] = 0;
 		s->value[POINT_GPP_g_C] = 0;
-		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 	}
 
 	i = c->heights[height].z;

@@ -19,8 +19,6 @@
 extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, double vpd, int height, int age, int species)
 {
 
-	int i;
-
 	static double CanCond;
 	static double CanopyTranspiration;
 	//double rhoAir = 1.2;       // density of air, kg/m3

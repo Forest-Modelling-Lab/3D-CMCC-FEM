@@ -62,7 +62,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	//**************************************************************************************************
 
 	int   julianDate;							// count_month; last valid day for each month;
-	int   actualDate;
+	int   actualDate = 0;
 	double albedo;								// field albedo
 	double Sfactor;
 	double Cfactor;
@@ -142,7 +142,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 	double prevDaySoilLayerTemperature[1];
 	double depthTempFactor;						// epic factor to consider soil layer distance from surface in computing soil layer temperature
-	double canopyHeight;							// rop height: used to compute displacement height
+	double canopyHeight = 0.0;							// rop height: used to compute displacement height
 
 	//---------------------------------- PARTON -------------------------------
 
@@ -616,10 +616,6 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		 * 											CROPMODEL_M
 		 * 									---------------------------
 		 ****************************************************************************************************/
-		double aaa = 10000000;
-		Log("\n\n\naaa=%f", aaa);
-
-
 		Log("\n\nMONTH SIMULATED = %s\n", szMonth[month]);
 
 

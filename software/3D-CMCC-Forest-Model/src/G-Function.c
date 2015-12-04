@@ -51,6 +51,7 @@ void Get_Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 		*/
 
 	MET_DATA *met;
+	double ampl;  //seasonal variation in Day Length from 12 h
 	met = (MET_DATA*) yos[years].m;
 
 	//compute yearday for GeDdayLength function
@@ -60,7 +61,6 @@ void Get_Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 	}
 	c->yearday +=1;
 
-	double ampl;  //seasonal variation in Day Length from 12 h
 	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
 
 	if (settings->time == 'm')
@@ -377,18 +377,18 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 
 	if (settings->spatial == 's')
 	{
-		Log("- Monthly LAI from NDVI = %f \n",c->heights[height].z, met[month].ndvi_lai);
+		Log("- Monthly LAI from NDVI = %f \n", met[month].ndvi_lai);
 	}
 	else
 	{
 		if(settings->time == 'm')
 		{
-			Log("- Monthly LAI from Model= %f \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
+			Log("- Monthly LAI from Model= %f \n",c->heights[height].ages[age].species[species].value[LAI]);
 		}
 		else
 		{
-			Log("- Daily LAI from Model= %f \n",c->heights[height].z, c->heights[height].ages[age].species[species].value[LAI]);
-			Log("- Crown Diameter = %f \n", c->heights[height].z, c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
+			Log("- Daily LAI from Model= %f \n", c->heights[height].ages[age].species[species].value[LAI]);
+			Log("- Crown Diameter = %f \n",  c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 			Log("- Canopy Cover = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 		}
 	}

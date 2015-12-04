@@ -218,23 +218,10 @@ static int alloc_struct(void **t, int *count, unsigned int size)
 	return 1;
 }
 
-static int fill_cell_for_turnover(SPECIES *const s, const ROW *const row, int turnover_counts)
-{
-	if ( !alloc_struct((void **)&s->turnover, &turnover_counts, sizeof(TURNOVER)))
-		{
-			return 0;
-		}
-	/* check memory */
-
-	// ok
-	return 1;
-}
-
 /* */
 static int fill_cell_from_species(AGE *const a, const ROW *const row)
 {
-	int i;
-	int turnover_counts;
+	static SPECIES species = { 0 };
 
 	// check parameter
 	assert(a && row);
@@ -243,18 +230,10 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	{
 		return 0;
 	}
-	//  reset
-	for ( i = 0; i < VALUES; i++ )
-	{
-		a->species[a->species_count-1].value[i] = INVALID_VALUE;
-	}
 
-	for ( i = 0; i < COUNTERS; i++ )
-	{
-		a->species[a->species_count-1].counter[i] = INVALID_VALUE;
-	}
+	a->species[a->species_count-1] = species;
+
 	// set values
-
 	//a->species[a->species_count-1].phenology = row->phenology;
 	a->species[a->species_count-1].management = row->management;
 	a->species[a->species_count-1].name = mystrdup(row->species);
@@ -270,19 +249,23 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].value[LAI] = row->lai;
 
 	/* check memory */
-	if ( !a->species[a->species_count-1].name )
+	if ( ! a->species[a->species_count-1].name )
 	{
 		return 0;
 	}
 
-	turnover_counts = &a->species_count;
-	// ok
-	return fill_cell_for_turnover(&a->species[a->species_count-1], row, turnover_counts);
+	a->species[a->species_count-1].turnover = malloc(a->species_count*sizeof*a->species[a->species_count-1].turnover);
+	if ( ! a->species[a->species_count-1].turnover ) {
+		return 0;
+	}
+
+	return 1;
 }
 
 /* */
 static int fill_cell_from_ages(HEIGHT *const h, const ROW *const row)
 {
+	static AGE age = { 0 };
 	//check parameter
 	assert ( h && row);
 
@@ -293,10 +276,9 @@ static int fill_cell_from_ages(HEIGHT *const h, const ROW *const row)
 	}
 
 	//set values
+	h->ages[h->ages_count-1] = age;
 	h->ages[h->ages_count-1].value = row->age;
-	h->ages[h->ages_count-1].species = NULL;
-	h->ages[h->ages_count-1].species_count = 0;
-
+	
 	//add species
 	return fill_cell_from_species(&h->ages[h->ages_count-1], row);
 }
@@ -304,6 +286,9 @@ static int fill_cell_from_ages(HEIGHT *const h, const ROW *const row)
 /* */
 int fill_cell_from_heights_and_soils(CELL *const c, const ROW *const row)
 {
+	static HEIGHT height = { 0 };
+	static SOIL soil = { 0 };
+
 	//check parameter
 	assert(c && row);
 
@@ -312,16 +297,17 @@ int fill_cell_from_heights_and_soils(CELL *const c, const ROW *const row)
 	{
 		return 0;
 	}
+	c->heights[c->heights_count-1] = height;
+
 	//alloc memory for soils
 	if (!alloc_struct((void **)&c->soils, &c->soils_count, sizeof(SOIL)) )
 	{
 		return 0;
 	}
+	c->soils[c->soils_count-1] = soil;
 
 	// set values
 	c->heights[c->heights_count-1].value = row->height;
-	c->heights[c->heights_count-1].ages = NULL;
-	c->heights[c->heights_count-1].ages_count = 0;
 
 	// add age
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
@@ -331,6 +317,8 @@ int fill_cell_from_heights_and_soils(CELL *const c, const ROW *const row)
 /* */
 static int fill_cell(MATRIX *const m, const ROW *const row)
 {
+	static CELL cell = { 0 };
+
 	/* check parameter */
 	assert(m && row);
 
@@ -338,13 +326,12 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 	{
 		return 0;
 	}
+	m->cells[m->cells_count-1] = cell;
 
 	/* set values */
 	m->cells[m->cells_count-1].landuse = row->landuse;
 	m->cells[m->cells_count-1].x = row->x;
 	m->cells[m->cells_count-1].y = row->y;
-	m->cells[m->cells_count-1].heights = NULL;
-	m->cells[m->cells_count-1].heights_count = 0;
 	//fixme without -1 the model gets 1 more!!
 	m->cells[m->cells_count-1].soils_count = (int)settings->soil_layer -1;
 
@@ -779,6 +766,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 /*free matrix */
 void matrix_free(MATRIX *m)
 {
+	int i;
 	int cell;
 	int age;
 	int height;
@@ -800,6 +788,15 @@ void matrix_free(MATRIX *m)
 							{
 								if ( m->cells[cell].heights[height].ages[age].species )
 								{
+									for ( i = 0; i < m->cells[cell].heights[height].ages[age].species_count; ++i ) {
+										if ( m->cells[cell].heights[height].ages[age].species[i].name ) {
+											free(m->cells[cell].heights[height].ages[age].species[i].name);
+										}
+										if ( m->cells[cell].heights[height].ages[age].species[i].turnover ) {
+											free(m->cells[cell].heights[height].ages[age].species[i].turnover);
+										}
+									}
+
 									free ( m->cells[cell].heights[height].ages[age].species);
 								}
 							}
@@ -807,9 +804,10 @@ void matrix_free(MATRIX *m)
 						}
 					}
 					free ( m->cells[cell].heights);
+					free ( m->cells[cell].soils);
 				}
 			}
-			free ( m->cells);
+			free (m->cells);
 		}
 		free (m);
 		m = NULL;

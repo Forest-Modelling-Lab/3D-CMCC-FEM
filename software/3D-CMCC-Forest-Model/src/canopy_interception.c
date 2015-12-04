@@ -13,7 +13,7 @@
 #include "constants.h"
 
 
-extern void Get_canopy_interception  (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
+extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 
 	Log("\nGET_CANOPY_INTERCEPTION_ROUTINE\n");

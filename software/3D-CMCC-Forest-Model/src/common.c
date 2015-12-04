@@ -215,7 +215,7 @@ FILES *get_files(const char *const program_path, char *string, int *const count,
 	//	token_by_comma = malloc(sizeof(char)*1024);
 	//	token_by_plus = malloc(sizeof(char)*1024);
 
-	Log("Importing input file...\n");
+	//Log("Importing input file...\n");
 
 
 	FILE *f;

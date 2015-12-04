@@ -14,9 +14,9 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 {
 	int i;
 	//int oldNtree;
-	int deadtree;
+	int deadtree = 0;
 	int oldNstump;
-	int deadstump;
+	int deadstump = 0;
 
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
@@ -337,12 +337,13 @@ void Get_Age_Mortality (SPECIES *const s, AGE *const a)
 //from LPJ Growth efficiency mortality
 void Get_Greff_Mortality (SPECIES *const s)
 {
-	Log("**MORTALITY based on Growth Efficiency (LPJ)**\n");
 	static double greff;
 	static double kmort1 = 0.02; //modified from original version
 	static double kmort2 = 0.3;
 	static double mortgreff;
 	static int GreffDeadTrees;
+
+	Log("**MORTALITY based on Growth Efficiency (LPJ)**\n");
 
 	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE] * s->value[SLA]));
 	//Log("greff from LPJ = %f\n", greff);

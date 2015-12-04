@@ -160,10 +160,11 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 
 extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
 {
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
 	static int counter;
 	static double temp_avg_monthly_temp;
+
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
 
 	//averaged monthly temp for RothC
 
@@ -210,10 +211,10 @@ extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int D
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 {
 
+	static double previous_thermic_sum;
+
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
-
-	static double previous_thermic_sum;
 
 	if (day == 0 && month == 0)
 	{
@@ -479,7 +480,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				"-vpd = %f mbar\n"
 				"-ts_f = %f °C\n"
 				"-rain = %f mm\n"
-				"-swc = %f %vol\n"
+				"-swc = %f %%vol\n"
 				"-daylength = %f hrs\n",
 				met[month].solar_rad,
 				met[month].tavg,
@@ -519,7 +520,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				"-vpd = %.2f mbar\n"
 				"-ts_f = %.2f °C\n"
 				"-rain = %.2f mm\n"
-				"-swc = %.2f %vol\n"
+				"-swc = %.2f %%vol\n"
 				"-thermic_sum = %.2f °C\n"
 				"-daylength = %.2f hrs\n"
 				"-DOY = %d\n"

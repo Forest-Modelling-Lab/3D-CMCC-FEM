@@ -1257,7 +1257,7 @@ extern void E_Get_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DAT
 
 void Get_nitrogen (SPECIES *);
 
-extern void Get_maintenance_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
+extern void Get_maintenance_respiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 extern void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
 extern void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 extern void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
@@ -1320,7 +1320,7 @@ extern void Get_initialization_biomass_data (SPECIES *, HEIGHT *, const int);
 extern void Get_initialization_site_data (CELL *);
 extern void Choose_management (CELL *, SPECIES *, int , int );
 
-extern void Get_tree_BB (CELL *, int);
+extern void Get_tree_BB (CELL *const, int);
 
 
 
@@ -1336,7 +1336,7 @@ extern void Get_biome_fraction (SPECIES *);
 
 /*evapotranspiration block*/
 extern void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
-extern void Get_canopy_interception (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
+extern void Get_canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 extern void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
 

@@ -340,8 +340,13 @@ int tree_model(MATRIX *const m, const YOS *const yos, const int years, const int
 
 							Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
-							E_Get_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
-									DaysInMonth[month], years, height, age);
+							// ALESSIOR:
+							//
+							// ask ALESSIOC
+							//
+							//
+							/*E_Get_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell], met, month, day,
+									DaysInMonth[month], years, height, age);*/
 
 							//Get_litterfall_evergreen ( m->cells[cell].heights,  oldWf, m->cells[cell].heights[height].ages_count -1, m->cells[cell].heights[height].ages[age].species_count -1, years);
 

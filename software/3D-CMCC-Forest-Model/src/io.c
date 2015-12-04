@@ -116,6 +116,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 	//
 	for (token = mystrtok(file, comma_delimiter, &p); token; token = mystrtok(NULL, comma_delimiter, &p) )
 	{
+				char *pch,
+		*tmp_filename;
+
 		// get token length
 		i = strlen(token);
 
@@ -145,15 +148,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// assign memory
 		yos = yos_no_leak;
 
-
-		filename = malloc(sizeof(*filename)*BUFFER_SIZE);
-
-		if( !filename )
-		{
-			fprintf(stderr, "Cannot allocate memory for %s\n", file);
-			return NULL;
-		}
-		bzero(filename, BUFFER_SIZE-1);
 		// Get only filename.txt from /this/is/the/complete/path/of/filename.txt
 		filename = (strrchr(token, '/'))+1;
 		// Get year from filename: file name is like 123_4567_2007.txt where
@@ -162,10 +156,9 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		// 2007 is the year
 		Log("opening met file '%s' \n", filename);
 
-		char *pch,
-		*tmp_filename;
 
-		tmp_filename = (char*)malloc(sizeof(char)*BUFFER_SIZE);
+		i = strlen(filename) + 1;
+		tmp_filename = (char*)malloc(sizeof(char)*i);
 		if( !tmp_filename )
 		{
 			fprintf(stderr, "Cannot allocate memory for tmp_filename.\n");
@@ -175,13 +168,15 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 		// Copy of filename because strtok cut it
 		strcpy(tmp_filename, filename);
-
 		pch = strtok (tmp_filename, "_");
 		pch = strtok (NULL, "_");
 		pch = strtok (NULL, "_.");
 
 		strcpy(year, pch);
 		year[4] = '\0';
+
+		free(tmp_filename);
+		tmp_filename = NULL;
 
 
 

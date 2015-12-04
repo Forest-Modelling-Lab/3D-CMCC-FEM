@@ -12,10 +12,9 @@
 void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 {
 
-	Log("****DAILY TURNOVER following Marconi flowChart****\n");
-
-
 	double dStemBiomass, dCoarseBiomass, dBranchBiomass;
+
+		Log("****DAILY TURNOVER following Marconi flowChart****\n");
 
 	//The first cycle of turnover for the simulation the module follows a modification of Biome's routine. That is, being the first year,
 	//the model can't calculate the dBiomass for the previous year, and uses the current increments to define the quantity of tissues death (expected a

@@ -13,6 +13,14 @@
 
 
 /* includes */
+#ifdef _WIN32
+#ifdef _DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+#endif
+
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -24,11 +32,6 @@
 #include <math.h>
 #include <string.h>
 #include <time.h>
-#include "dislin.h"
-
-//#include <netcdf.h>
-
-
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
@@ -108,6 +111,7 @@ int log_enabled		=	1,	// default is on
 
 /* static global variables */
 static FILES *files_founded;
+static int files_founded_count;
 
 /* strings */
 static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n\n"
@@ -194,32 +198,45 @@ static const char err_unable_convert_value_arg[] = "unable to convert value \"%s
 
 static void clean_up(void)
 {
+	if ( site )
+		free(site);
+
+	if( settings )
+		free(settings);
+
 	if (program_path)
 		free(program_path);
 
-	if (files_founded)
-		free(files_founded);
+	if ( files_founded ) {
+		free_files(files_founded, files_founded_count);
+	}
+	
+#ifdef _WIN32
+#ifdef _DEBUG
+	_CrtDumpMemoryLeaks();
+#endif
+#endif
 }
 
-int get_input_path(char *arg, char *param, void *p) {
-	if ( !param )
-	{
-		printf(err_arg_needs_param, arg);
-		return 0;
-	}
-
-	if ( input_path )
-	{
-		printf(err_dataset_already_specified, input_path, param);
-	}
-	else
-	{
-		input_path = param;
-	}
-
-	/* ok */
-	return 1;
-}
+//int get_input_path(char *arg, char *param, void *p) {
+//	if ( !param )
+//	{
+//		printf(err_arg_needs_param, arg);
+//		return 0;
+//	}
+//
+//	if ( input_path )
+//	{
+//		printf(err_dataset_already_specified, input_path, param);
+//	}
+//	else
+//	{
+//		input_path = param;
+//	}
+//
+//	/* ok */
+//	return 1;
+//}
 
 int get_site_path(char *arg, char *param, void *p) {
 	if ( !param )
@@ -307,28 +324,28 @@ int get_output_path(char *arg, char *param, void *p)
 	return 1;
 }
 
-int get_output_filename(char *arg, char *param, void *p)
-{
-	if ( !param )
-	{
-		printf(err_arg_needs_param, arg);
-		return 0;
-	}
-
-	if ( out_filename )
-		printf(err_outname_already_specified, out_filename, param);
-	else
-	{
-		out_filename = param;
-
-		if( output_path )
-			strcat(output_file, out_filename);
-		else
-			printf("With -outname flag set -outpath not set: using default output file (prog_path/output.txt)");
-	}
-	Log("output file name = %s\n", out_filename);
-	return 1;
-}
+//int get_output_filename(char *arg, char *param, void *p)
+//{
+//	if ( !param )
+//	{
+//		printf(err_arg_needs_param, arg);
+//		return 0;
+//	}
+//
+//	if ( out_filename )
+//		printf(err_outname_already_specified, out_filename, param);
+//	else
+//	{
+//		out_filename = param;
+//
+//		if( output_path )
+//			strcat(output_file, out_filename);
+//		else
+//			printf("With -outname flag set -outpath not set: using default output file (prog_path/output.txt)");
+//	}
+//	Log("output file name = %s\n", out_filename);
+//	return 1;
+//}
 
 int get_daily_output_filename(char *arg, char *param, void *p)
 {
@@ -398,28 +415,28 @@ int get_annual_output_filename(char *arg, char *param, void *p)
 	Log("annual_output file name = %s\n", annual_out_filename);
 	return 1;
 }
-int get_soil_output_filename(char *arg, char *param, void *p)
-{
-	if ( !param )
-	{
-		printf(err_arg_needs_param, arg);
-		return 0;
-	}
-
-	if ( soil_out_filename )
-		printf(err_outname_already_specified, soil_out_filename, param);
-	else
-	{
-		soil_out_filename = param;
-
-		if( output_path )
-			strcat(soil_output_file, soil_out_filename);
-		else
-			printf("With -soil_outname flag set -soil_outpath not set: using default output file (prog_path/soil_output.txt)");
-	}
-	Log("soil_output file name = %s\n", soil_out_filename);
-	return 1;
-}
+//int get_soil_output_filename(char *arg, char *param, void *p)
+//{
+//	if ( !param )
+//	{
+//		printf(err_arg_needs_param, arg);
+//		return 0;
+//	}
+//
+//	if ( soil_out_filename )
+//		printf(err_outname_already_specified, soil_out_filename, param);
+//	else
+//	{
+//		soil_out_filename = param;
+//
+//		if( output_path )
+//			strcat(soil_output_file, soil_out_filename);
+//		else
+//			printf("With -soil_outname flag set -soil_outpath not set: using default output file (prog_path/soil_output.txt)");
+//	}
+//	Log("soil_output file name = %s\n", soil_out_filename);
+//	return 1;
+//}
 
 /* */
 int set_prec_value(char *arg, char *param, void *p)
@@ -518,6 +535,17 @@ void usage(void)
 	exit(1);
 }
 
+void rows_free(ROW *rows, int rows_count ) {
+	int i;
+
+	if ( rows_count  ) {
+		for ( i = 0; i < rows_count; ++i ) {
+			free(rows[i].species);
+		}
+		free(rows);
+	}
+}
+
 
 
 
@@ -533,7 +561,6 @@ int main(int argc, char *argv[])
 	int i,
 	error,
 	rows_count,
-	files_founded_count,
 	files_processed_count,
 	files_not_processed_count,
 	total_files_count;
@@ -546,19 +573,24 @@ int main(int argc, char *argv[])
 
 	int cell;
 
-	//MET_DATA *met;
 
-	/*
-    disini ();
-    messag ("This is a test", 100, 100);
-    disfin ();
-	 */
+	char strSitename[20] = "";
+	char strTmp[3], strTmp2[4], strTmp3[3];
+	char strSizeCell[10] = "";
+	char strData[30] = "";
 
 
 
 	YOS *yos;
 	ROW *rows;
 	MATRIX *m;
+	time_t rawtime;
+
+	// ALESSIOR
+	// this vars are declared in types.h
+	// so we need to initialized here
+	site = NULL;
+	settings = NULL;
 
 	/* register atexit */
 	if ( -1 == atexit(clean_up) )
@@ -781,8 +813,8 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(input_path, BUFFER_SIZE-1);
-
 		strcat(input_path, dataset_filename);
+		free(dataset_filename); dataset_filename = NULL;
 	}
 
 	if( input_met_path == NULL )
@@ -897,7 +929,7 @@ int main(int argc, char *argv[])
 	}
 
 	//add site name to output files
-	char strSitename[20] = "";
+	
 	sprintf(strSitename, "%s", site->sitename);
 
 	strcat (out_filename, "_");
@@ -918,7 +950,7 @@ int main(int argc, char *argv[])
 
 
 	//define output file name in function of model settings
-	char strTmp[3], strTmp2[4], strTmp3[3];
+	
 	strTmp[0] = '_';
 	strTmp[1] = settings->version;
 	strTmp[2] = '\0';
@@ -954,7 +986,7 @@ int main(int argc, char *argv[])
 	strcat (soil_out_filename, strTmp2);
 	strcat (soil_out_filename, strTmp3);
 
-	char strSizeCell[10] = "";
+	
 	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
 
 	strcat (out_filename, strSizeCell);
@@ -973,11 +1005,11 @@ int main(int argc, char *argv[])
 	strcat (soil_out_filename, "_");
 
 	//add data to output.txt
-	time_t rawtime;
+
 	time (&rawtime);
 	data = gmtime(&rawtime);
 
-	char strData[30] = "";
+	
 	sprintf(strData, "%d", data->tm_year+1900);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
@@ -1064,16 +1096,22 @@ int main(int argc, char *argv[])
 		log_enabled = 0;
 		puts("Unable to log to file: check logfile path!");
 	}
+	free(out_filename); out_filename = NULL;
 	daily_logInit (daily_out_filename);
 	Daily_Log ("daily output file at cell level\n\n");
+	free(daily_out_filename); daily_out_filename = NULL;
 
 	monthly_logInit (monthly_out_filename);
 	Monthly_Log ("monthly output file at cell level\n\n");
+	free(monthly_out_filename); monthly_out_filename = NULL;
 
 	annual_logInit (annual_out_filename);
 	Annual_Log ("annual output file at cell level\n\n");
+	free(annual_out_filename); annual_out_filename = NULL;
 
 	soil_logInit (soil_out_filename);
+	free(soil_out_filename);
+	soil_out_filename = NULL;
 	soil_Log ("soil output file at cell level\n\n");
 	/* show copyright*/
 	Log(copyright);
@@ -1092,19 +1130,21 @@ int main(int argc, char *argv[])
 	printf(msg_annual_output_file, annual_output_file);
 	printf(msg_soil_output_file, soil_output_file);
 
+	free(site_path); site_path = NULL;
+	free(settings_path); settings_path = NULL;
+
 	/* get files */
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
 	if ( error )
 	{
 		Log("Error reading input files!\n\n");
-
+		free(input_path);
 		return 1;
 	}
-	else
-	{
-		Log("input path = %s\n", input_path);
-		Log("...input file imported\n\n");
-	}
+	Log("input path = %s\n", input_path);
+	Log("...input file imported\n\n");
+	free(input_path);
+	input_path = NULL;
 
 
 	/* reset */
@@ -1145,9 +1185,10 @@ int main(int argc, char *argv[])
 
 		/* build matrix */
 		m = matrix_create(rows, rows_count, input_dir);
+		free(input_dir); input_dir = NULL;
 
 		/* free rows */
-		free(rows);
+		rows_free(rows, rows_count);
 
 		/* check matrix */
 		if ( !m )
@@ -1478,12 +1519,16 @@ int main(int argc, char *argv[])
 	monthly_logClose();
 	annual_logClose();
 	soil_logClose();
+
+
 	// Free memory
+	free(input_met_path);
 	free(output_file);
 	free(daily_output_file);
 	free(monthly_output_file);
 	free(annual_output_file);
 	free(soil_output_file);
+
 	/* free memory at exit */
 	return 0;
 }
