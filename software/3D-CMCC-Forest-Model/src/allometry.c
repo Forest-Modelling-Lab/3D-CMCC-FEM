@@ -16,7 +16,6 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	Log("\n*********ALLOMETRY FUNCTION *********\n");
 	/*
 	   Log("-Chapman-Richards allometry function-\n");
-
 	//tree height from champan-richards function
 	if (!years)
 	{
