@@ -266,6 +266,10 @@ FOR SUBVERSION YOU NEED TO INSTALL SUBCLIPSE v. 1.8.16 FROM: http://subclipse.ti
 
 FOR COLOR THEMES HERE http://eclipse-color-theme.github.com/update
 
+FOR NETCDF FILE YOU NEED TO ADD LIBRARIES THROUGH:
+Project->Properties->C/C++ Build->Settings->Cross G++ Linker->Libraries-> in Libraries (-l) add "netcdf"->OK
+
+
 to prevent error from netcdf.h, open terminal: 
 $ sudo apt-get install netcdf-bin
 $ sudo apt-get install libnetcdf-dev
