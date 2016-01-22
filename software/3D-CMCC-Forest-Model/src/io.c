@@ -20,8 +20,7 @@ static const char met_delimiter[] = " ,\t\r\n";
 
 
 /* */
-enum {	YEAR = 0,
-	MONTH,
+enum {	MONTH = 0,
 	N_DAYS,
 	RG_F,
 	TA_F,
@@ -39,7 +38,6 @@ enum {	YEAR = 0,
 	MET_COLUMNS };
 
 static const char *met_columns[MET_COLUMNS] = {
-		"Year",
 		"Month",
 		"n_days",
 		"Rg_f",
