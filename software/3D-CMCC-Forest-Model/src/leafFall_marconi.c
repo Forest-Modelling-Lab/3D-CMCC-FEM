@@ -12,7 +12,7 @@ struct vars_struct {
 	double *ey;
 };
 
-int endOfYellowing(const MET_DATA *const met,  SPECIES *const s)
+int endOfYellowing(const MET_DATA *const met, SPECIES *const s)
 {
 	int endOfYellowing;
 	int month, day;

@@ -44,31 +44,9 @@
 /* constants */
 #define PROGRAM_VERSION	"5.1"
 
-/*netcdf*/
-#define FILE_NAME_NETCDF "prova.nc"
-
 /* Handle errors by printing an error message and exiting with a
  * non-zero status. */
 #define ERR(e) {printf("Error: %s\n", nc_strerror(e)); return 2;}
-
-/* */
-enum {	YEAR = 0,
-	MONTH,
-	N_DAYS,
-	RG_F,
-	TA_F,
-	TMAX,
-	TMIN,
-	VPD_F,
-	TS_F,
-	PRECIP,
-	SWC,
-	Ndvi_Lai,
-	ET,
-	Littfall,
-
-
-	MET_COLUMNS };
 
 //Last cumulative days in months
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
