@@ -35,6 +35,7 @@
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
+#include "netcdf_stuff.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
@@ -49,8 +50,6 @@
 /* Handle errors by printing an error message and exiting with a
  * non-zero status. */
 #define ERR(e) {printf("Error: %s\n", nc_strerror(e)); return 2;}
-
-
 
 /* */
 enum {	MONTH = 0,
@@ -116,6 +115,7 @@ static int files_founded_count;
 /* strings */
 static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n\n"
 		"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
+		"using NetCDF %s\n"
 		"compiled using "COMPILER" on "__DATE__" at "__TIME__"\n"
 		"(use -h parameter for more information)\n\n\n";
 
@@ -1117,7 +1117,7 @@ int main(int argc, char *argv[])
 	Log(copyright);
 
 	/* show banner */
-	Log(banner);
+	Log(banner, netcdf_get_version());
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
