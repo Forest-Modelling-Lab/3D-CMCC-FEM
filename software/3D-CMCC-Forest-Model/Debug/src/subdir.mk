@@ -42,6 +42,7 @@ C_SRCS += \
 ../src/modifiers.c \
 ../src/mortality.c \
 ../src/mpfit.c \
+../src/netcdf_stuff.c \
 ../src/parameters.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
@@ -100,6 +101,7 @@ OBJS += \
 ./src/modifiers.o \
 ./src/mortality.o \
 ./src/mpfit.o \
+./src/netcdf_stuff.o \
 ./src/parameters.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
@@ -158,6 +160,7 @@ C_DEPS += \
 ./src/modifiers.d \
 ./src/mortality.d \
 ./src/mpfit.d \
+./src/netcdf_stuff.d \
 ./src/parameters.d \
 ./src/peak_lai.d \
 ./src/phenology.d \

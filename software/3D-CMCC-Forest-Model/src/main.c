@@ -52,7 +52,8 @@
 #define ERR(e) {printf("Error: %s\n", nc_strerror(e)); return 2;}
 
 /* */
-enum {	MONTH = 0,
+enum {	YEAR = 0,
+	MONTH,
 	N_DAYS,
 	RG_F,
 	TA_F,
