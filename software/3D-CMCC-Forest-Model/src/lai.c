@@ -98,7 +98,8 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
 			if (s->counter[VEG_DAYS] <= s->value[BUD_BURST] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE] > 0)
 			{
-				Log("VEG_DAYS < %d LAI < PEAK_LAI, RESERVE > 0\n", s->counter[BIOMASS_RESERVE]);
+				// ALESSIOR s->counter was using BIOMASS_RESERVE
+				Log("VEG_DAYS < %d LAI < PEAK_LAI, RESERVE > 0\n", s->counter[VEG_DAYS]);
 				/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 				 * and Barbaroux et al., 2002,
 				the ratio is driven by the BIOME_BGC newStem:newLeaf ratio

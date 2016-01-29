@@ -122,9 +122,11 @@ extern void Choose_management (CELL *c, SPECIES *s, int years, int height)
 
 void Get_Management (SPECIES *const s, AGE * const a, int years)
 {
-	if ( a->value >= s->counter[MINAGEMANAG] /* && MINDBHMANAG*/)
+	// ALESSIOR s->counter used instead of s->value
+	if ( a->value >= s->value[MINAGEMANAG] /* && MINDBHMANAG*/)
 	{
-		if ( years && !(years % s->counter[ROTATION]))
+		// ALESSIOR s->counter used instead of s->value (int cast added)
+		if ( years && !(years % (int)s->value[ROTATION]))
 		{
 			double IndWf,
 			IndWs,
@@ -132,7 +134,8 @@ void Get_Management (SPECIES *const s, AGE * const a, int years)
 			BiomRem;
 
 			Log("**MANAGEMENT **\n");
-			Log("ROTATION = %d years\n",s->counter[ROTATION]);
+			// ALESSIOR s->counter used instead of s->value
+			Log("ROTATION = %d years\n",s->value[ROTATION]);
 			//Only for Dominant Layer
 			//Individual Biomass
 

@@ -192,6 +192,12 @@ static void clean_up(void)
 	
 #ifdef _WIN32
 #ifdef _DEBUG
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
 #endif
 #endif
@@ -1125,7 +1131,6 @@ int main(int argc, char *argv[])
 	free(input_path);
 	input_path = NULL;
 
-
 	/* reset */
 	files_processed_count = 0;
 	files_not_processed_count = 0;
@@ -1499,14 +1504,13 @@ int main(int argc, char *argv[])
 	annual_logClose();
 	soil_logClose();
 
-
 	// Free memory
-	free(input_met_path);
-	free(output_file);
-	free(daily_output_file);
-	free(monthly_output_file);
-	free(annual_output_file);
-	free(soil_output_file);
+	free(input_met_path); input_met_path = NULL;
+	free(output_file); output_file = NULL;
+	free(daily_output_file); daily_output_file = NULL;
+	free(monthly_output_file); monthly_output_file = NULL;
+	free(annual_output_file); annual_output_file = NULL;
+	free(soil_output_file); soil_output_file = NULL;
 
 	/* free memory at exit */
 	return 0;

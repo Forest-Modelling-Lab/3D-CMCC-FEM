@@ -42,7 +42,8 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_NPP]  = 0;
 				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION]  = 0;
-				c->heights[height].ages[age].species[species].counter[DEL_STEMS] = 0;
+				// ALESSIOR DEL_STEMS used instead of DEAD_STEMS
+				c->heights[height].ages[age].species[species].counter[DEAD_STEMS] = 0;
 				c->heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 
 				//INITIALIZE AVERAGE YEARLY MODIFIERS

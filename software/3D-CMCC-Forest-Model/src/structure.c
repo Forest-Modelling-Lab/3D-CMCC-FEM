@@ -1388,7 +1388,8 @@ void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DAT
 
 int Get_number_of_layers (CELL *c)
 {
-	int number_of_layers;
+	// ALESSIOR number_of_layers can be uninitialized
+	int number_of_layers = 0;
 	//compute number of layers
 	if (c->dominant_veg_counter > 0 && c->dominated_veg_counter > 0 && c->subdominated_veg_counter > 0)
 	{

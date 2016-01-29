@@ -113,7 +113,9 @@ void tree_leaves_fall(MATRIX *const m, int const cell)	//, int years, int month,
 	int l;
 	double abovegroundCN = 50;
 	double belovegroundCN = 50.0; //debugging
-	float AddC1, AddC2, AddC3, OutN;
+	// ALESSIOR this vars are used uninitialized
+	float AddC1 = 0.f, AddC2 = 0.f, AddC3 = 0.f;
+	float OutN;
 
 	//if(m->cells[cell].fineRootLittering >.0005)m->cells[cell].fineRootLittering = 0.0005;
 	if(m->cells[cell].leafLittering+m->cells[cell].stemLittering + m->cells[cell].fineRootLittering +

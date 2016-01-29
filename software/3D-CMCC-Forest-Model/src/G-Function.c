@@ -454,7 +454,9 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 			c->heights[height].ages[age].species[species].value[BIOMASS_STEM]+
 			c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH]+
 			c->heights[height].ages[age].species[species].value[BIOMASS_RESERVE]);
-	Log("[%d] layer %d > Dead Trees = %d\n",yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].counter[DEL_STEMS]);
+	// ALESSIOR
+	// DEL_STEMS was used instead of DEAD_STEMS
+	Log("[%d] layer %d > Dead Trees = %d\n",yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].counter[DEAD_STEMS]);
 	Log("> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 	Log("*****************************\n");
 }

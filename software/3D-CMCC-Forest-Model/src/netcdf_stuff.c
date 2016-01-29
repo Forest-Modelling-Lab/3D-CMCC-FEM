@@ -8,51 +8,41 @@
 #include "netcdf.h"
 #include "common.h"
 
-///* */
-//#define INVALID_VALUE		-9999
-//
-///* */
-//#define IS_LEAP_YEAR(x)		(((x) % 4 == 0 && (x) % 100 != 0) || (x) % 400 == 0)
-//
-///* */
-//#ifdef _WIN32
-//#pragma comment(lib, "lib/netcdf")
-//#endif /* _WIN32 */
-//
-//enum {
-//	YEAR,
-//	MONTH,
-//	DAY,
-//
-//	DATE_SIZE
-//};
-//
-///* */
-//static const char *sz_date[DATE_SIZE] = { "year", "month", "day" };
-//
-///* */
-//static char g_netcdf_err[256];
-//
-///* */
-//static char netcdf_err_no_error[] = "no error";
-//static char netcdf_err_out_of_memory[] = "out of memory";
-//static char netcdf_err_no_year_found[] = "no year found in filename";
-//static char netcdf_err_unable_open_file[] = "unable to open file";
-//static char netcdf_err_no_header_found[] = "no header found";
-//
-///* private */
-//static unsigned int get_date(int year, int month, int day) {
-//	return year*10000+month*100+day;
-//}
-//
-///* private */
-//static void netcdf_err_set(const char *const err, ...) {
-//	va_list args;
-//
-//	va_start(args, err); 
-//    vsprintf(g_netcdf_err, err, args);
-//}
-//
+#ifdef _WIN32
+#pragma comment(lib, "lib/netcdf")
+#endif /* _WIN32 */
+
+/* */
+static char g_netcdf_err[256];
+
+/* */
+static char netcdf_err_no_error[] = "no error";
+static char netcdf_err_out_of_memory[] = "out of memory";
+static char netcdf_err_no_year_found[] = "no year found in filename";
+static char netcdf_err_unable_open_file[] = "unable to open file";
+static char netcdf_err_no_header_found[] = "no header found";
+
+/* private */
+static unsigned int get_date(int year, int month, int day) {
+	return year*10000+month*100+day;
+}
+
+/* private */
+static void netcdf_err_set(const char *const err, ...) {
+	va_list args;
+
+	va_start(args, err); 
+    vsprintf(g_netcdf_err, err, args);
+}
+
+/* */
+int netcdf_create_from_yos(const YOS *const yos, const int yos_count) {
+	assert(yos);
+
+
+	return 0;
+}
+
 ///* private */
 //static void free_columns(char **columns, int columns_count) {
 //	int i;
@@ -461,12 +451,13 @@
 //	nc_close(file_id);
 //	return func_ret;
 //}
-//
-///* */
-//const char *netcdf_err(void) {
-//	return g_netcdf_err;
-//}
 
-const char * netcdf_get_version(void) {
+/* */
+const char *netcdf_err(void) {
+	return g_netcdf_err;
+}
+
+/* */
+const char *netcdf_get_version(void) {
 	return nc_inq_libvers();
 }

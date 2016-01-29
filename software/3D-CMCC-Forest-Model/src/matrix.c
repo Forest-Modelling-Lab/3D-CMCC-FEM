@@ -516,6 +516,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 						if ( !token ) {
 							Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
 							matrix_free(m);
+							fclose(f);
 							return NULL;
 						}
 
@@ -527,6 +528,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 								if ( !token2 ) {
 									Log("unable to get value for \"%s\" in \"%s\".\n", token, filename);
 									matrix_free(m);
+									fclose(f);
 									return NULL;
 								}
 
@@ -535,6 +537,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 								if ( result ) {
 									Log("unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
 									matrix_free(m);
+									fclose(f);
 									return NULL;
 								}
 
@@ -556,8 +559,10 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 					if ( y != SIZE_OF_ARRAY(species_values) ) {
 						Log("error: assigned %d species value instead of %d\n", y, SIZE_OF_ARRAY(species_values));
 						matrix_free(m);
+						fclose(f);
 						return NULL;
 					}
+					fclose(f);
 				}
 
 				/* convert SLA in m^2/Kg */
@@ -810,7 +815,6 @@ void matrix_free(MATRIX *m)
 			free (m->cells);
 		}
 		free (m);
-		m = NULL;
 	}
 }
 
