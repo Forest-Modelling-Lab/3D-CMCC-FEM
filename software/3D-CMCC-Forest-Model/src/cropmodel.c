@@ -84,7 +84,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 	double dailySolarRadiation;					// daily solar radiation (J/m^2/s) it would be in type.h:	m->cells[cell].net_radiation
 	double bareGroundAlbedo;						// bare ground albedo
 	double snow;									// snow (cm water) it should be m->met[month].snow
-	double LAI;									// in m->cells[cell].heights[height].species[species].value[LAI]
+	// ALESSIOR LAI was already used in types.h...renamed to _LAI
+	double _LAI;									// in m->cells[cell].heights[height].species[species].value[LAI]
 
 	//double maxPhotoperiodismDaylength;			// max daylength for photoperiodism; is useful only for those lpaces in which daylength exceeds 20h
 
@@ -495,8 +496,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 
 			if (species == 0)			//and day is 1st
 			{
-				LAI 						= 4.0;
-				totalCumulativeLeafArea 	= LAI;
+				_LAI 						= 4.0;
+				totalCumulativeLeafArea 	= _LAI;
 				plants 						= 300.0;
 				tillNumber 					= 1.0;
 
@@ -739,12 +740,12 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			}
 			else if (stage == 4 || stage == 5)
 			{
-				albedo = 0.23 + pow((LAI - 4), 2) / 160;
+				albedo = 0.23 + pow((_LAI - 4), 2) / 160;
 				Log("albedo: %f\n", albedo);
 			}
 			else
 			{
-				albedo = 0.23 - (0.23 - bareGroundAlbedo) * - 0.75 * LAI;
+				albedo = 0.23 - (0.23 - bareGroundAlbedo) * - 0.75 * _LAI;
 				Log("albedo: %f\n", albedo);
 			}
 		}
@@ -867,7 +868,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 		dailyMaximumSnowMelt = 0.07 * meanCanopyTemperature;
 
 		//daily maximum crop interception (cm of water)
-		dailyMaximumPlantInterception = 0.02 * LAI;
+		dailyMaximumPlantInterception = 0.02 * _LAI;
 		Log("\nDaily maximum snow melt: %f \nDaily maximum plant interception: %f", dailyMaximumSnowMelt, dailyMaximumPlantInterception);
 
 
@@ -1537,18 +1538,18 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			//version of Ritchie, 88, from whom taken the other ones
 			potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
 			//version read in zhang 2002
-			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
+			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * _LAI);
 		}
 
 
 		// potential evaporation
-		if (LAI < 1)
+		if (_LAI < 1)
 		{
-			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
+			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * _LAI);
 		}
 		else
 		{
-			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
+			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * _LAI);
 		}
 
 
@@ -1643,9 +1644,9 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 				//SW[l] += Diffusion
 				Log("\nlayerMoisture: \n\t layer %d, %f \n\t layer %d, %f",l,layerMoisture[l],l-1,layerMoisture[l-1]);
 			}
-			if (LAI < 3)
+			if (_LAI < 3)
 			{
-				potentialTranspiration = potentialEvapotranspiration * LAI /3
+				potentialTranspiration = potentialEvapotranspiration * _LAI /3
 			}
 			else
 			{
@@ -1785,18 +1786,18 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 			//version of Ritchie, 88, from whom taken the other ones
 			potentialEvapotranspiration = equilibriumEvapotranspiration * ((canopyMaxTemperature - 24.0) * 0.05 +1.1);
 			//version read in zhang 2002
-			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * LAI);
+			//potentialEvapotranspiration = equilibriumEvapotranspiration * (1-0.43 * _LAI);
 		}
 
 
 		// potential evaporation
-		if (LAI < 1)
+		if (_LAI < 1)
 		{
-			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * LAI);
+			potentialEvaporation = potentialEvapotranspiration * (1 - 0.43 * _LAI);
 		}
 		else
 		{
-			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * LAI);
+			potentialEvaporation = potentialEvapotranspiration / 1.1 * exp (-0.4 * _LAI);
 		}
 
 		// potential transpiration
@@ -2017,11 +2018,14 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 						//dailyThermalTime2 += Minimum (maxDevelopmentTemperature - basalTemperature, Maximum(0, meanCanopyTemperature - basalTemperature)) * met[month].n_days;
 						//Log("\n\ndailyThermalTime2: %f", dailyThermalTime2);
 					}
+					// ALESSIOR ... WTF ??
+					/*
 					else if (meanCanopyTemperature - basalTemperature > 0 )	//&& stage == 3
 					{
 						//	dailyThermalTime += ((meanCanopyTemperature - basalTemperature)* met[month].n_days) * Minimum(VF,DF);
 						//	dailyThermalTime2 += (Minimum (maxDevelopmentTemperature - basalTemperature, Maximum(0, meanCanopyTemperature - basalTemperature)) * met[month].n_days) * Minimum(VF,DF);
 					}
+					*/
 
 
 					developmentRate = dailyThermalTime / stageLimit[stage];
@@ -2136,7 +2140,7 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 						for (l = 0; l < 3; l++)
 						{
 							//Canopy layer for gaussian integration
-							canopyHeightLAI[l] = LAI * gaussianParameter1[l];
+							canopyHeightLAI[l] = _LAI * gaussianParameter1[l];
 							Log("\nLAI above layer %d: %f",l, canopyHeightLAI[l]);
 
 							//Fraction of sunlit area
@@ -2227,15 +2231,15 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 							switch (l)
 							{
 							case 0:
-								gaussIntegrPhoto = layerGrossPhotoRate * LAI;
+								gaussIntegrPhoto = layerGrossPhotoRate * _LAI;
 								Log("\n partial denominator in the photosynthesis module: %f",gaussIntegrPhoto);
 								break;
 							case 1:
-								gaussIntegrPhoto += 1.6 * layerGrossPhotoRate * LAI;
+								gaussIntegrPhoto += 1.6 * layerGrossPhotoRate * _LAI;
 								Log("\n partial denominator in the photosynthesis module: %f",gaussIntegrPhoto);
 								break;
 							case 2:
-								gaussIntegrPhoto += layerGrossPhotoRate * LAI;
+								gaussIntegrPhoto += layerGrossPhotoRate * _LAI;
 								Log("\n partial denominator in the photosynthesis module: %f",gaussIntegrPhoto);
 								break;
 							}
@@ -2385,8 +2389,8 @@ int crop_model_M(MATRIX *const m, const YOS *const yos, const int years, const i
 					}
 
 					//green leaf LAI calculation, m2
-					LAI += (totalCumulativeLeafArea - senescenceLeafArea) * plants * 0.0001;
-					totalCumulativeLeafArea = LAI;
+					_LAI += (totalCumulativeLeafArea - senescenceLeafArea) * plants * 0.0001;
+					totalCumulativeLeafArea = _LAI;
 
 					if (developmentRate >= 1.0)
 					{

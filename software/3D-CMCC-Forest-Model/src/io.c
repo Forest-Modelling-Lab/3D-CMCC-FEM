@@ -64,6 +64,8 @@ static const char *met_columns[MET_COLUMNS] = {
 		, "LITTERFALL"
 };
 
+// ALESSIOR please note that leaf years are handled correctly
+// so do not change 28 for february to 29!
 static int days_per_month [] = {
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
