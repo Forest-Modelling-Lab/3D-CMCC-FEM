@@ -1,20 +1,18 @@
-Nov 2012
-User’s Guide for 3D-CMCC-FEM, Version 4 for 64 bit 
+Jan 2016
+User’s Guide for 3D-CMCC-FEM, Version 5.1.1 for 64 bit 
 Source:
 
 Alessio Collalti
 Riccardo Valentini
 Monia Santini
 Alessio Ribeca
-Lucia Perugini
-Angelo Nolè
 Sergio Marconi 
 
 euroMediterranean Center for Climate Changes (CMCC)
 http://www.cmcc.it/ 
 Via Augusto Imperatore 16 - 73100 Lecce (Italy)
 Division Impact on Agriculture, Forest and Natural Ecosystems (IAFENT)
-Via Pacinotti 5 - 01100 Viterbo (Italy)
+Viale Trieste 121 - 01100 Viterbo (Italy)
 email: alessio.collalti@cmcc.it
 _________________________________________________________
 Forest Ecology Lab.
@@ -24,14 +22,14 @@ University of Tuscia Viterbo, ITALY
 Mobile +393299841220
 Skype alessio.collalti 
 
-General notes on 3D-CMCC-FEM, Version 4
+General notes on 3D-CMCC-FEM, Version 5
 3D-CMCC Forest Evolution Model (FEM) is a software model that simulates the storage and fluxes of water, carbon, within the
 vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
 versions have been developed for particular purposes. The CMCC and the University of Tuscia (Viterbo) maintain benchmark code versions for
 public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
 The code and executables accompanying this file represent the most recent benchmark version.
 IMPORTANT NOTE: COPYING
-The 3D-CMCC-FEM, Version 4 code is copyrighted. You may not make copies of any part of the code for distribution to
+The 3D-CMCC-FEM, Version 5 code is copyrighted. You may not make copies of any part of the code for distribution to
 any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
 The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
 we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
@@ -137,30 +135,30 @@ The text file must be created following this logic architecture
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
-The second required input file is the meteorological data file named using the year of simulation, 
+The second required input file is the meteorological data file named using the year of simulation (optionally), 
 (e.g. "2007.txt") containing the daily or monthly meteorological data information for that year.
-Years of simulation depends on the number of the met data file passed as argument.
-Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days per month at the simulation site.
+Years of simulation depends on the number of the met data file passed as argument. But it can be used also a multi-year file in which have to be included as a first
+column the value of the year. Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days of the month at the simulation site.
 Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
 If the model runs in "spatial version" daily or monthly LAI values are mandatory otherwise they are not considered in processes.
 
 Each variable must be separated by one tab character.
 
 example for year 2007 in monthly/spatial version (add Tmax and Tmin)
-Month	n_days		Rg_f        Ta_f        Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
-1		31			6.1			6.51536		13.1    7.1     0.2     7.8     1       -9999   0
-2		28			9.1			5.49226		10.4    5.8     0.2     6.3     0.2     0.27    0
-3		31			13.15		9.9         3.1     0.2     3.3     0       0.39    0       0
+Year    Month	n_days		Rg_f        Ta_f        Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
+2007    1		31			6.1			6.51536		13.1    7.1     0.2     7.8     1       -9999   0
+2007    2		28			9.1			5.49226		10.4    5.8     0.2     6.3     0.2     0.27    0
+2007    3		31			13.15		9.9         3.1     0.2     3.3     0       0.39    0       0
 ...
 
 
 example for year 2007 in daily/unspatial version
 
-Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
-1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
-1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
-1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
-1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
+Year    Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
+2007    1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
+2007    1       2       6.1     -9999   10.4    5.8     0.2     6.3     0.2     0.27    0
+2007    1       3       6.1     -9999   9.9     3.1     0.2     3.3     0       0.39    0
+2007    1       4       6.1     -9999   10      1.9     0.2     0.5     0       0.2     0
 ...
 
 if you don't have optional data set value as -9999
@@ -266,7 +264,7 @@ FOR SUBVERSION YOU NEED TO INSTALL SUBCLIPSE v. 1.8.16 FROM: http://subclipse.ti
 
 FOR COLOR THEMES HERE http://eclipse-color-theme.github.com/update
 
-FOR NETCDF FILE YOU NEED TO ADD LIBRARIES THROUGH:
+FOR NETCDF FILE YOU NEED TO ADD LIBRARIES within eclipse THROUGH:
 Project->Properties->C/C++ Build->Settings->Cross G++ Linker->Libraries-> in Libraries (-l) add "netcdf"->OK
 
 
