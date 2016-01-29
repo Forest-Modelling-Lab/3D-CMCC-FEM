@@ -1245,12 +1245,13 @@ int main(int argc, char *argv[])
 				{
 					//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
 					int i;
+					// ALESSIOR for handling leap years
+					int days_per_month;
 					i =0;
 					for (month = 0; month < MONTHS; month++)
 					{
-						// ALESSIOR handling leap year
-						int days_per_month = DaysInMonth[month];
-						if ( (1 == month) && IS_LEAP_YEAR(yos[years].year) )
+						days_per_month = DaysInMonth[month];
+						if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[years].year) )
 						{
 							++days_per_month;
 						}
@@ -1263,8 +1264,8 @@ int main(int argc, char *argv[])
 							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
 							Get_soil_temperature (&m->cells[cell], day, month, years, yos);
 							//for RothC
-							Get_avg_monthly_temp (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
-							Get_cum_monthly_rain (&m->cells[cell], day, month, years, DaysInMonth[month], yos);
+							Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
+							Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
 
 							//
 							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
@@ -1276,7 +1277,7 @@ int main(int argc, char *argv[])
 							if(m->cells[cell].landuse == F)
 							{
 								//Get vegetative days
-								Get_Veg_Days (&m->cells[cell], yos, day, month, years, DaysInMonth[month]);
+								Get_Veg_Days (&m->cells[cell], yos, day, month, years, days_per_month);
 								//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 								get_vpsat(&m->cells[cell], day, month, years, yos, i);
 								i++;
@@ -1288,16 +1289,20 @@ int main(int argc, char *argv[])
 
 						}
 						/*
-						for (day = 0; day < DaysInMonth[month]; day++)
+						for (day = 0; day < days_per_month; day++)
 						{
 							Print_met_daily_data (yos, day, month, years);
 						}
 						 */
-
 					}
 					for (month = 0; month < MONTHS; month++)
 					{
-						for (day = 0; day < DaysInMonth[month]; day++ )
+						days_per_month = DaysInMonth[month];
+						if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[years].year) )
+						{
+							++days_per_month;
+						}
+						for (day = 0; day < days_per_month; day++ )
 						{
 							if(m->cells[cell].landuse == F)
 							{
