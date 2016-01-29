@@ -35,7 +35,7 @@
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
-#include "netcdf_stuff.h"
+#include "netcdf.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
@@ -1102,7 +1102,7 @@ int main(int argc, char *argv[])
 	Log(copyright);
 
 	/* show banner */
-	Log(banner, netcdf_get_version());
+	Log(banner, nc_inq_libvers());
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
