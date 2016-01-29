@@ -35,7 +35,7 @@
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
-#include "netcdf.h"
+#include "netcdf/netcdf.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
