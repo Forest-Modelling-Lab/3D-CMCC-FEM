@@ -460,13 +460,42 @@ int ImportStandardFile(const char *const filename, YOS **pyos, int *const yos_co
 				}
 
 				/* check */
-				if ( (DAY == column) && (('m' == settings->time) || ! strncmp (settings->daymet, "off", 3)) )
+				if ( (DAY == column) )
 				{
-					yos[*yos_count-1].m[month].n_days = day+1;
-					if (yos[*yos_count-1].m[month].n_days > (int)settings->maxdays)
+					// monthly version
+					if ( 'm' == settings->time ) {
+						yos[*yos_count-1].m[month].n_days = day+1;
+						if (yos[*yos_count-1].m[month].n_days > (int)settings->maxdays)
+						{
+							puts("ERROR IN N_DAYS DATA!!\n");
+							Log("ERROR IN N_DAYS DATA!!\n");
+							free(yos);
+							fclose(f);
+							return 0;
+						}
+					// daily
+					} else if ( ! strncmp (settings->daymet, "off", 3) ) {
+						yos[*yos_count-1].m[month].d[day].n_days = day+1;
+						if (yos[*yos_count-1].m[month].d[day].n_days > (int)settings->maxdays)
+						{
+							puts("ERROR IN N_DAYS DATA!!\n");
+							Log("ERROR IN N_DAYS DATA!!\n");
+							free(yos);
+							fclose(f);
+							return 0;
+						}
+					}
+					else if (strncmp (settings->daymet, "on", 3)== 0)
 					{
-						puts("ERROR IN N_DAYS DATA!!\n");
-						Log("ERROR IN N_DAYS DATA!!\n");
+						//todo insert daymet functions
+						Log("DAYMET\n");
+						free(yos);
+						fclose(f);
+						return 0;
+					}
+					else
+					{
+						Log("ERROR NO CORRECT CHOICE\n");
 						free(yos);
 						fclose(f);
 						return 0;
@@ -1045,7 +1074,7 @@ int ImportStandardFile(const char *const filename, YOS **pyos, int *const yos_co
 										//Log("Getting previous day values.. !!\n");
 										yos[*yos_count-1].m[month].d[day].rain = previous_rain;
 										Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);
-										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].rain))
+										if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
 										{
 											Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 

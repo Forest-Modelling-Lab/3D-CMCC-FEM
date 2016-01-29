@@ -398,11 +398,11 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	//control if all soil data are available
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		if ((site->sand_perc == -999.0) ||
-				(site->clay_perc == -999.0) ||
-				(site->silt_perc == -999.0) ||
-				(site->bulk_dens == -999.0) ||
-				(site->soil_depth == -999.0) )
+		if (	IS_INVALID_VALUE(site->sand_perc)
+				|| IS_INVALID_VALUE(site->clay_perc)
+				|| IS_INVALID_VALUE(site->silt_perc)
+				|| IS_INVALID_VALUE(site->bulk_dens)
+				|| IS_INVALID_VALUE(site->soil_depth) )
 		{
 			Log("NO SOIL DATA AVAILABLE\n");
 			return 0;
