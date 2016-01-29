@@ -1248,7 +1248,14 @@ int main(int argc, char *argv[])
 					i =0;
 					for (month = 0; month < MONTHS; month++)
 					{
-						for (day = 0; day < DaysInMonth[month]; day++)
+						// ALESSIOR handling leap year
+						int days_per_month = DaysInMonth[month];
+						if ( (1 == month) && IS_LEAP_YEAR(yos[years].year) )
+						{
+							++days_per_month;
+						}
+
+						for (day = 0; day < days_per_month; day++)
 						{
 							//Check for daily temperatures
 							Get_avg_temperature (&m->cells[cell], day, month, years, yos);
