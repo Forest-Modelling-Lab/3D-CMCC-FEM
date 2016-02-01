@@ -53,12 +53,14 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 
 
 				/*for dominant layer with sunlit foliage*/
+				//todo model has to consider also for dominant layer sun and shaded LAI
 				if (c->top_layer == c->heights[height].z)
 				{
 					Log("computing LAI for dominant trees\n");
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
 				/*for dominated shaded foliage*/
+				//todo model has to consider also for dominated layer sun and shaded LAI
 				else
 				{
 					Log("computing LAI for dominated trees\n");
@@ -151,12 +153,14 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				Log("++Reserves pools less foliage + fine root = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
 
 				/*for dominant layer with sunlit foliage*/
+				//todo model has to consider also for dominant layer sun and shaded LAI
 				if (c->top_layer == c->heights[height].z)
 				{
 					Log("computing LAI for dominant trees\n");
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
 				/*for dominated shaded foliage*/
+				//todo model has to consider also for dominated layer sun and shaded LAI
 				else
 				{
 					Log("computing LAI for dominated trees\n");
@@ -169,11 +173,13 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 					Log("LAI exceeds Peak Lai\n");
 
 					/*for dominant layer with sunlit foliage*/
+					//todo model has to consider also for dominant layer sun and shaded LAI
 					if (c->top_layer == c->heights[height].z)
 					{
 						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLAmkg]* GC_GDM)) / 1000;
 					}
 					/*for dominated shaded foliage*/
+					//todo model has to consider also for dominated layer sun and shaded LAI
 					else
 					{
 						biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLAmkg] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
@@ -223,11 +229,13 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 				if(s->value[LAI] == 0)
 				{
 					/*for dominant layer with sunlit foliage*/
+					//todo model has to consider also for dominant/dominated layer sun and shaded LAI
 					if (c->top_layer == c->heights[height].z)
 					{
 						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					}
 					/*for dominated shaded foliage*/
+					//todo model has to consider also for dominant/dominated layer sun and shaded LAI
 					else
 					{
 						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
@@ -253,11 +261,13 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			if(s->value[LAI] == 0)
 			{
 				/*for dominant layer with sunlit foliage*/
+				//todo model has to consider also for dominant/dominated layer sun and shaded LAI
 				if (c->top_layer == c->heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				}
 				/*for dominated shaded foliage*/
+				//todo model has to consider also for dominant/dominated layer sun and shaded LAI
 				else
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
