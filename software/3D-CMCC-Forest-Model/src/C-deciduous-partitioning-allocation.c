@@ -1450,16 +1450,16 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			s->value[DEL_STEMS] = s->value[NPP] *  pS_CTEM;
-			Log("BiomassStem increment CTEM = %f tDM/area\n", s->value[DEL_STEMS]);
+			Log("Biomass Stem increment CTEM = %f tDM/area\n", s->value[DEL_STEMS]);
 
 
 			s->value[DEL_FOLIAGE] = s->value[NPP] * pF_CTEM;
-			Log("BiomassFoliage increment CTEM = %f tDM/area\n", s->value[DEL_FOLIAGE] );
+			Log("Biomass Foliage increment CTEM = %f tDM/area\n", s->value[DEL_FOLIAGE] );
 
 			//Total Stem Biomass
 			//remove the part allocated to the branch and bark
 			s->value[DEL_BB] = s->value[DEL_STEMS] * s->value[FRACBB];
-			Log("BiomassStemBB increment CTEM = %f tDM/area\n", s->value[DEL_BB]);
+			Log("Biomass StemBB increment CTEM = %f tDM/area\n", s->value[DEL_BB]);
 			//Log("Branch and bark fraction = %f %%\n", s->value[FRACBB] * 100);
 			//Log("Branch and bark Biomass (del_BB)= %f tDM/area\n", s->value[DEL_BB]);
 
