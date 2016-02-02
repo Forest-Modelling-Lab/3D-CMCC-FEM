@@ -188,11 +188,15 @@ void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* 
 {
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */
-	double previousLai, previousBiomass;	//lai of the day before, used to calculate previous biomass and evaluate delata_foliage biomass
+	double previousLai, previousBiomass;	//lai of the day before, used to calculate previous biomass and evaluate delta_foliage biomass
 	//s->counter[DAY_FRAC_FOLIAGE_REMOVE] = 130;
+
+	Log("\n**LEAFFALL_MARCONI FUNCTION**\n");
 
 	if(*doy == s->counter[SENESCENCE_DAYONE])
 	{
+		Log("Senescence day one\n");
+		//ALESSIOC che è sto MAX_LAI??
 		s->value[MAX_LAI] = s->value[LAI];
 	}
 	previousLai = s->value[LAI];
@@ -201,9 +205,25 @@ void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* 
 		s->value[LAI] = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 						log(.11111111111))))));
+		Log("LAI = %f\n", s->value[LAI]);
 		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0);
+
 		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0));
-		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+
+
+		//ALESSIOC
+		if(s->value[BIOMASS_FOLIAGE] > 0)
+		{
+			Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+			Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+		}
+		else
+		{
+			Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[DEL_FOLIAGE]  = 0;
+			Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+		}
 	}
 	/*for dominated shaded foliage*/
 	else
@@ -211,11 +231,25 @@ void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* 
 		s->value[LAI] = Maximum(0, s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 						log(.11111111111))))));
+		Log("LAI = %f\n", s->value[LAI]);
 		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg]* s->value[SLA_RATIO] * GC_GDM * 1000.0);
 		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] *
 				settings->sizeCell) / (s->value[SLAmkg] * s->value[SLA_RATIO] * GC_GDM * 1000.0));
-		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+		//ALESSIOC
+		if(s->value[BIOMASS_FOLIAGE] > 0)
+		{
+			Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[DEL_FOLIAGE]  = -fabs(previousBiomass - s->value[BIOMASS_FOLIAGE]);
+			Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+		}
+		else
+		{
+			Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[DEL_FOLIAGE]  = 0;
+			Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+		}
 	}
+	Log("****************************\n\n");
 }
 
 /* Simple routine to print the fit results */

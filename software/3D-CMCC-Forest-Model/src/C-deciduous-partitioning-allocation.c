@@ -1048,10 +1048,15 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					}
 					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
-					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					//s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					//ALESSIOC added these two to avoid negative results in delta computation
+					//s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+					//s->value[DEL_FOLIAGE] = 0.0;
+
+
 					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
 					s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
-//					s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					//s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
 					s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
 					s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
@@ -1068,6 +1073,9 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					//ALESSIOC added these two to avoid negative results in delta computation
+					//s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+					//s->value[DEL_FOLIAGE] = 0.0;
 				}
 			}
 			else
@@ -1200,6 +1208,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			/*partitioning*/
 			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+
+			//SERGIOM
 			//using the sigmoid it is necessary to leave the remainder at the very begining of the phase 0; that
 			//because sigmoid decreases asymptotically to 0
 			if (s->value[BIOMASS_FOLIAGE] > 0)s->value[DEL_FOLIAGE] = -s->value[BIOMASS_FOLIAGE];
