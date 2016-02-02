@@ -552,7 +552,7 @@ enum {
 	MAX_BIOMASS_FOLIAGE,
 
 	//CTEM CARBON
-	//carbon biomass increments depending on time step used
+	//carbon biomass monthly increment
 	DEL_ROOTS_TOT,
 	DEL_STEMS,
 	DEL_FOLIAGE,

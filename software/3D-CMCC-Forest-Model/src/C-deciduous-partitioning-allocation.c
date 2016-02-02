@@ -230,9 +230,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		Log("PEAK LAI = %f \n", s->value[PEAK_Y_LAI]);
 
 
-		//todo model has to consider also for dominant/dominated layer sun and shaded LAI (see Fisher et al., 2015, gmd)
-
-
 		switch (s->phenology_phase)
 		{
 		/************************************************************/
@@ -1453,16 +1450,16 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			s->value[DEL_STEMS] = s->value[NPP] *  pS_CTEM;
-			Log("Biomass Stem increment CTEM = %f tDM/area\n", s->value[DEL_STEMS]);
+			Log("BiomassStem increment CTEM = %f tDM/area\n", s->value[DEL_STEMS]);
 
 
 			s->value[DEL_FOLIAGE] = s->value[NPP] * pF_CTEM;
-			Log("Biomass Foliage increment CTEM = %f tDM/area\n", s->value[DEL_FOLIAGE] );
+			Log("BiomassFoliage increment CTEM = %f tDM/area\n", s->value[DEL_FOLIAGE] );
 
 			//Total Stem Biomass
 			//remove the part allocated to the branch and bark
 			s->value[DEL_BB] = s->value[DEL_STEMS] * s->value[FRACBB];
-			Log("Biomass StemBB increment CTEM = %f tDM/area\n", s->value[DEL_BB]);
+			Log("BiomassStemBB increment CTEM = %f tDM/area\n", s->value[DEL_BB]);
 			//Log("Branch and bark fraction = %f %%\n", s->value[FRACBB] * 100);
 			//Log("Branch and bark Biomass (del_BB)= %f tDM/area\n", s->value[DEL_BB]);
 

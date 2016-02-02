@@ -442,16 +442,16 @@ void Get_Mortality (SPECIES *const s, int years)
 				break;
 		}
 
-		s->counter[DEL_STEMS] = s->counter[N_TREE] - 1000 * n;
-		Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEL_STEMS]);
+		s->counter[DEAD_STEMS] = s->counter[N_TREE] - 1000 * n;
+		Log("Dead Tree In Mortality Function = %d trees \n", s->counter[DEAD_STEMS]);
 
 		//SERGIO CONTROL: if DEAD_STEMS < 0 set it to its minimum plausible value; that is 0
-		if (s->counter[DEL_STEMS] < 0)
+		if (s->counter[DEAD_STEMS] < 0)
 		{
-			s->counter[DEL_STEMS]	 = 0;
+			s->counter[DEAD_STEMS]	 = 0;
 		}
 		//control
-		if (s->counter[DEL_STEMS] > s->counter[N_TREE])
+		if (s->counter[DEAD_STEMS] > s->counter[N_TREE])
 		{
 			Log("ERROR Number of Dead Trees > N Trees\n");
 			Log("Dead Trees = %d\n", s->counter[DEAD_STEMS]);
@@ -459,11 +459,11 @@ void Get_Mortality (SPECIES *const s, int years)
 		}
 		else
 		{
-			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEL_STEMS];
+			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEAD_STEMS];
 			Log("Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
-			s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
-			s->value[BIOMASS_ROOTS_TOT] = s->value[BIOMASS_ROOTS_TOT] - s->value[MR] * s->counter[DEL_STEMS] * (s->value[BIOMASS_ROOTS_TOT] / s->counter[N_TREE]);
-			s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * s->counter[DEL_STEMS] * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
+			s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
+			s->value[BIOMASS_ROOTS_TOT] = s->value[BIOMASS_ROOTS_TOT] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT] / s->counter[N_TREE]);
+			s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
 			Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
 			Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
 			Log("Ws after dead = %f tDM/ha\n", s->value[BIOMASS_STEM] );
