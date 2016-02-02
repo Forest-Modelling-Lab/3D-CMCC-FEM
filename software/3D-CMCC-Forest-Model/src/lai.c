@@ -53,7 +53,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 
 
 				/*for dominant layer with sunlit foliage*/
-				//todo model has to consider also for dominant layer sun and shaded LAI
+				//todo model has to consider also for dominant layer sun and shaded LAI (see Fisher et al., 2015, gmd)
 				if (c->top_layer == c->heights[height].z)
 				{
 					Log("computing LAI for dominant trees\n");

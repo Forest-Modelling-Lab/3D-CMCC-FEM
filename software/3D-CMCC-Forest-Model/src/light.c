@@ -129,6 +129,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("ppfd = %g molPPFD\n", c->ppfd);
 
 			}
+			/*for daily computation*/
 			else
 			{
 				Log("Global Solar Radiation = %f MJ/m^2/day\n", met[month].d[day].solar_rad);
