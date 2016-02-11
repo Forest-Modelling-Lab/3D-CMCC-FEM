@@ -63,6 +63,8 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 
 
+	//todo add canopy depth to functions!!
+
 
 	/*Canopy Cover using DBH-DC*/
 
