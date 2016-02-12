@@ -17,12 +17,20 @@ please ASK before modify it!
 #include <time.h>
 #include "types.h"
 #include "common.h"
+//#include "timestamp.h"
 #include "netcdf/netcdf.h"
 
 
 #ifdef _WIN32
 #pragma comment(lib, "lib/netcdf")
 #endif
+
+
+/* */
+extern char *program_path;
+
+/* */
+#define NC_CONV_FILENAME		"nc_conv.txt"
 
 /* do not change this order */
 enum {
@@ -44,10 +52,42 @@ enum {
 	MET_COLUMNS
 };
 
+///* */
+//typedef struct {
+//	TIMESTAMP t;
+//	double value[MET_COLUMNS-3]; /* remove year, month and day */
+//} METEO_ROW;
+//
+//typedef struct {
+//	METEO_ROW *rows;
+//	int rows_count;
+//} METEO_DATASET;
+//
+///* */
+//static METEO_DATASET *meteo_dataset_new(void) {
+//	METEO_DATASET *m;
+//	m = malloc(sizeof*m);
+//	if ( m ) {
+//		m->rows = NULL;
+//		m->rows_count = 0;
+//	}
+//	return m;
+//}
+//
+///* */
+//static void meteo_dataset_free(METEO_DATASET *d) {
+//	assert(d);
+//	free(d->rows);
+//	free(d);
+//}
+
 /* */
 static const char comma_delimiter[] = ",\r\n";
 static const char met_delimiter[] = " ,\t\r\n";
-static const char *met_columns[MET_COLUMNS] = {
+static const char sz_err_out_of_memory[] = "out of memory.";
+
+/* do not change this order */
+static const char *met_columns[MET_COLUMNS+2] = {
 		"Year"
 		, "Month"
 		, "n_days"
@@ -62,10 +102,14 @@ static const char *met_columns[MET_COLUMNS] = {
 		, "LAI"
 		, "ET"
 		, "LITTERFALL"
+
+		/* hack */
+		, "LAT"
+		, "LON"
 };
 
-// ALESSIOR please note that leaf years are handled correctly
-// so do not change 28 for february to 29!
+// ALESSIOR please note that leap years are handled correctly
+// so do not change 28 (february) to 29!
 static int days_per_month [] = {
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 };
@@ -74,9 +118,6 @@ static const char *MonthName[MONTHS] = {
 	"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY"
 	, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 };
-
-static const char err_out_of_memory[] = "out of memory.";
-
 
 static void ResetYos(YOS *const yos)
 {
@@ -170,20 +211,42 @@ void atts_free(ATT *att, const int atts_count) {
 //
 int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 	int i;
+	int y;
+	int z;
 	int id_file;
 	int ret;
+	int row;
+
 	int dims_count;	/* dimensions */
 	int vars_count;
 	int atts_count;	/* attributes */
 	int unl_count;	/* unlimited dimensions */
 	char name[NC_MAX_NAME+1];
-	char *p;
 	nc_type type;
 	size_t size;
+	int *i_values = NULL; /* required */
+	double *values = NULL; /* required */
 
-	DIM *dims = NULL; /* mandatory */
-	ATT *atts = NULL; /* mandatory */
+	/* DO NOT CHANGE THIS ORDER */
+	enum {
+		ROWS_DIM,
+		X_DIM,
+		Y_DIM,
 
+		DIMS_COUNT
+	};
+
+	int dims_size[DIMS_COUNT];
+	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; /* DO NOT CHANGE THIS ORDER...please see top */
+
+	/* some poiter math */
+	/*
+#define COLUMN_AT(x,y,c)	(((c)*dims_size[ROWS_DIM])+((x)*dims_size[ROWS_DIM]*(MET_COLUMNS+2))+((y)*dims_size[ROWS_DIM]*(MET_COLUMNS+2)*dims_size[X_DIM]))
+#define VALUE_AT(x,y,r,c)	((r)+((c)*dims_size[ROWS_DIM])+((x)*dims_size[ROWS_DIM]*(MET_COLUMNS+2))+((y)*dims_size[ROWS_DIM]*(MET_COLUMNS+2)*dims_size[X_DIM]))
+	*/
+#define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
+#define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
+	
 	ret = nc_open(filename, NC_NOWRITE, &id_file);
     if ( ret != NC_NOERR ) goto quit;
 
@@ -196,46 +259,189 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		return 0;
 	}
 
-	/* dimensions */
-	dims = malloc(dims_count*sizeof*dims);
-	if ( ! dims ) {
-		puts("out of memory!");
+	/* check if vars count are at least MET_COLUMNS+2 */
+	if ( vars_count < MET_COLUMNS+2 ) {
+		printf("bad nc file! Vars count should be %d at least.\n\n", vars_count);
 		nc_close(id_file);
 		return 0;
 	}
+
+	/* reset */
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		dims_size[i] = -1;
+	}
+
+	/* get dimensions */
 	for ( i = 0; i < dims_count; ++i ) {
-		ret = nc_inq_dim(id_file, i, name, &dims[i].size);
+		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
-		dims[i].name = strdup(name);
-		if  ( ! dims[i].name ) {
-			puts("out of memory!");
+		for ( y = 0; y < DIMS_COUNT; ++y ) {
+			if ( ! strcmpi(sz_dims[y], name) ) {
+				if ( dims_size[y] != -1 ) {
+					printf("dimension %s already found!\n", sz_dims[y]);
+					nc_close(id_file);
+					return 0;
+				}
+				dims_size[y] = size;
+				break;
+			}
+		}
+	}
+
+	/* check if we have all dimensions */
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		if ( -1 == dims_size[i] ) {
+			printf("dimension %s not found!\n", sz_dims[i]);
 			nc_close(id_file);
-			dims_free(dims, dims_count);
 			return 0;
 		}
 	}
 
+	/* check x and y */
+	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
+		puts("x and y must be 1!");
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for int values */
+	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
+	if ( ! i_values ) {
+		puts(sz_err_out_of_memory);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for double values */
+	/* please note that we alloc double for year,month,day too and we add 2 columns for lat and lon ;) */
+	/*values = malloc(dims_size[ROWS_DIM]*dims_size[X_DIM]*dims_size[Y_DIM]*(MET_COLUMNS+2)*sizeof*values);*/
+	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS*sizeof*values);
+	if ( ! values ) {
+		puts(sz_err_out_of_memory);
+		free(i_values);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* set all double values to -9999 */
+	//for ( i = 0; i < dims_size[ROWS_DIM]*dims_size[X_DIM]*dims_size[Y_DIM]*(MET_COLUMNS+2); ++i ) {
+	for ( i = 0; i < dims_size[ROWS_DIM]*MET_COLUMNS; ++i ) {
+		values[i] = INVALID_VALUE;
+	}
+
+	/* get vars */
+	for ( i = 0; i < vars_count; ++i ) {
+		ret = nc_inq_var(id_file, i, name, &type, NULL, NULL, NULL);
+		if ( ret != NC_NOERR ) goto quit;
+		/* check if we need that var */
+		for ( y = 0; y  < MET_COLUMNS /*+2*/; ++y ) {
+			if ( ! stricmp(name, met_columns[y]) ) {
+					/* get values */
+				if ( NC_DOUBLE == type ) {
+					//ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(0, 0, y)]);
+					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
+					if ( ret != NC_NOERR ) goto quit;
+				} else if ( NC_INT == type ) {
+					ret = nc_get_var_int(id_file, i, i_values);
+					if ( ret != NC_NOERR ) goto quit;
+					for ( z = 0; z < dims_size[ROWS_DIM]; ++z ) {
+						values[VALUE_AT(z, y)] = (double)i_values[z]; 
+					}
+				} else {
+					/* type format not supported! */
+					printf("type format for %s column not supported\n\n", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				}
+				
+				break;
+			}
+		}
+	}
+
 	/* attributes */
-	//atts = malloc(atts_count*sizeof*atts);
-	//if ( ! atts ) {
-	//	puts("out of memory!");
-	//	nc_close(id_file);
-	//	return 0;
-	//}
-	//for ( i = 0; i < atts_count; ++i ) {
-	//	 ret = nc_inq_att(id_file, atts[i].name, &atts[i].type, &atts[i].size);
-	//	 if ( ret != NC_NOERR ) goto quit;
-	//}
+	/*
+	atts = malloc(atts_count*sizeof*atts);
+	if ( ! atts ) {
+		puts("out of memory!");
+		nc_close(id_file);
+		return 0;
+	}
+	for ( i = 0; i < atts_count; ++i ) {
+		 ret = nc_inq_att(id_file, atts[i].name, &atts[i].type, &atts[i].size);
+		 if ( ret != NC_NOERR ) goto quit;
+	}
+	*/
+
+	/* save file */
+	{
+		FILE *f;
+
+		f = fopen(NC_CONV_FILENAME, "w");
+		if ( ! f ) {
+			puts("unable to create output file!");
+			nc_close(id_file);
+			free(values);
+			free(i_values);
+			return 0;
+		}
+		/* write header */
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tLitterfall\n", f);
+		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
+				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+						/*
+						(int)values[VALUE_AT(0,0,row,YEAR)]
+						, (int)values[VALUE_AT(0,0,row,MONTH)]
+						, (int)values[VALUE_AT(0,0,row,DAY)]
+						, values[VALUE_AT(0,0,row,RG_F)]
+						, values[VALUE_AT(0,0,row,TA_F)]
+						, values[VALUE_AT(0,0,row,TMAX)]
+						, values[VALUE_AT(0,0,row,TMIN)]
+						, values[VALUE_AT(0,0,row,VPD_F)]
+						, values[VALUE_AT(0,0,row,TS_F)]
+						, values[VALUE_AT(0,0,row,PRECIP)]
+						, values[VALUE_AT(0,0,row,NDVI_LAI)]
+						, values[VALUE_AT(0,0,row,ET)]
+						, values[VALUE_AT(0,0,row,LITTFALL)]
+						*/
+						(int)values[VALUE_AT(row,YEAR)]
+						, (int)values[VALUE_AT(row,MONTH)]
+						, (int)values[VALUE_AT(row,DAY)]
+						, values[VALUE_AT(row,RG_F)]
+						, values[VALUE_AT(row,TA_F)]
+						, values[VALUE_AT(row,TMAX)]
+						, values[VALUE_AT(row,TMIN)]
+						, values[VALUE_AT(row,VPD_F)]
+						, values[VALUE_AT(row,TS_F)]
+						, values[VALUE_AT(row,PRECIP)]
+						, values[VALUE_AT(row,SWC)]
+						, values[VALUE_AT(row,NDVI_LAI)]
+						, values[VALUE_AT(row,ET)]
+						, values[VALUE_AT(row,LITTFALL)]
+
+				);
+		}
+		fclose(f);
+
+		/* hack ;) */
+		ret = 0;
+	}
+
 
 quit:
 	nc_close(id_file);
-	dims_free(dims, dims_count);
-	atts_free(atts, atts_count);
+	free(values);
+	free(i_values);
 	if ( ret ) {
 		puts(nc_strerror(ret));
 		ret = 1;
 	}
 	return ! ret;
+
+#undef COLUMN_AT
+#undef VALUE_AT
 }
 
 //
@@ -447,7 +653,7 @@ int ImportStandardFile(const char *const filename, YOS **pyos, int *const yos_co
 					yos_no_leak = realloc(yos, (*yos_count+1)*sizeof*yos_no_leak);
 					if ( ! yos_no_leak )
 					{
-						puts(err_out_of_memory);
+						puts(sz_err_out_of_memory);
 						free(yos);
 						fclose(f);
 						return 0;
@@ -1347,7 +1553,10 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		}
 		else
 		{
-			i = ImportNCFile(token, &yos, yos_count);
+			char sz_path[256];
+			if ( ! ImportNCFile(token, &yos, yos_count) ) return NULL;
+			sprintf(sz_path, "%s"NC_CONV_FILENAME, program_path);
+			i = ImportStandardFile(sz_path, &yos, yos_count);
 		}
 		if ( ! i )
 		{

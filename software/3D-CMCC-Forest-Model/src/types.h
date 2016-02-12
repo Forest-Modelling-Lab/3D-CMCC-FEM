@@ -1152,7 +1152,6 @@ typedef struct {
 } MATRIX;
 
 
-
 /* constants */
 #define MET_FILENAME_LEN                1024
 
@@ -1362,4 +1361,4 @@ void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
 
 
-#endif /* COMMON_H */
+#endif /* TYPES_H */
