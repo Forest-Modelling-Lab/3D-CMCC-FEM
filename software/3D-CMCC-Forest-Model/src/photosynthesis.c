@@ -20,11 +20,11 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	double StandGPPtC = 0.0;
 
 	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
-	if (settings->time == 'm')
+	/*if (settings->time == 'm')
 	{
 		Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month+1);
 	}
-	else
+	else*/
 	{
 		Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
 	}
@@ -90,16 +90,16 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		//Yearly_GPP +=  GPPgC;
 		//Log("Yearly Cumulated GPP  = %f gC/m^2\n",  Yearly_GPP);
-		if (settings->time == 'm')
-		{
-			//Monthy layer GPP in grams of C/m^2
-			//Convert molC into grams
-			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-			Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
-			DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
-			//Log("Averaged Daily GPP in grams of C for this layer = %f molC/m^2 day\n", DailyGPPgC);
-		}
-		else
+		//if (settings->time == 'm')
+		//{
+		//	//Monthy layer GPP in grams of C/m^2
+		//	//Convert molC into grams
+		//	s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
+		//	Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
+		//	DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
+		//	//Log("Averaged Daily GPP in grams of C for this layer = %f molC/m^2 day\n", DailyGPPgC);
+		//}
+		//else
 		{
 			//Daily layer GPP in grams of C/m^2
 			//Convert molC into grams

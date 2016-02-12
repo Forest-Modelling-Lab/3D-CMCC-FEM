@@ -618,11 +618,11 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 		Log ("Model spatial = un-spatial \n");
 	}
 
-	if (settings->time == 'm')
+	/*if (settings->time == 'm')
 	{
 		Log ("Temporal scale = monthly \n");
 	}
-	else
+	else*/
 	{
 		Log ("Temporal scale = daily \n");
 	}

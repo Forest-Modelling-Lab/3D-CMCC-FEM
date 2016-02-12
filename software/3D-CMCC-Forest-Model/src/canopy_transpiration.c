@@ -64,10 +64,10 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	{
 		rhoAir = met[month].d[day].rho_air;
 	}
-	else
-	{
-		rhoAir = met[month].rho_air;
-	}
+	//else
+	//{
+	//	rhoAir = met[month].rho_air;
+	//}
 
 
 	//Veg period
@@ -76,24 +76,24 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		/*Canopy Conductance*/
 		//todo get maximum stomatal conductance from biome data instead canopy max conductance
 
-		if (settings->time == 'm')
-		{
-			if (settings->spatial == 's')
-			{
-				CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].ndvi_lai / s->value[LAIGCX]);
-				//Log("MAXCOND da biome = %f\n", 0.006 * met[month].ndvi_lai);
-				//Log("Cancond biome = %f\n", (0.006 * met[month].ndvi_lai * c->gcorr));
-				//Log("CanCond 3PG = %f\n", CanCond);
-			}
-			else
-			{
-				CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI]  / s->value[LAIGCX]);
-				//Log("MAXCOND da biome = %f\n", 0.006 * s->value[LAI]);
-				//Log("Cancond biome = %f\n", (0.006 * s->value[LAI] * c->gcorr));
-				//Log("CanCond 3PG = %f\n", CanCond);
-			}
-		}
-		else
+		//if (settings->time == 'm')
+		//{
+		//	if (settings->spatial == 's')
+		//	{
+		//		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].ndvi_lai / s->value[LAIGCX]);
+		//		//Log("MAXCOND da biome = %f\n", 0.006 * met[month].ndvi_lai);
+		//		//Log("Cancond biome = %f\n", (0.006 * met[month].ndvi_lai * c->gcorr));
+		//		//Log("CanCond 3PG = %f\n", CanCond);
+		//	}
+		//	else
+		//	{
+		//		CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI]  / s->value[LAIGCX]);
+		//		//Log("MAXCOND da biome = %f\n", 0.006 * s->value[LAI]);
+		//		//Log("Cancond biome = %f\n", (0.006 * s->value[LAI] * c->gcorr));
+		//		//Log("CanCond 3PG = %f\n", CanCond);
+		//	}
+		//}
+		//else
 		{
 			if (settings->spatial == 's')
 			{
@@ -126,58 +126,58 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		//Log("duv = %f\n", duv);
 
 
-		if(settings->time == 'm')
-		{
-			switch (c->monthly_layer_number)
-			{
-			case 1:
-				//convert radiation from hours to seconds
-				Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
-				Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
-				Log("Net radiation = %f W/m^2/hour\n", c->net_radiation);
-				break;
-			case 2:
-				if ( c->heights[height].z == c->top_layer )
-				{
-					//convert radiation from hours to seconds
-					Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %f \n", c->net_radiation);
-				}
-				else
-				{
-					Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %f \n", c->net_radiation);
-				}
-				break;
-			case 3:
-				if ( c->heights[height].z == c->top_layer )
-				{
-					//convert radiation from hours to seconds
-					Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %f \n", c->net_radiation);
-				}
-				if ( c->heights[height].z == c->top_layer - 1 )
-				{
-					Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %f \n", c->net_radiation);
-				}
-				else
-				{
-					Etransp = (E20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
-					Log("Etransp for subdominant layer = %f J/m^2/sec\n", Etransp);
-					Log("NET RADIATION = %f \n", c->net_radiation);
-				}
+		//if(settings->time == 'm')
+		//{
+		//	switch (c->monthly_layer_number)
+		//	{
+		//	case 1:
+		//		//convert radiation from hours to seconds
+		//		Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+		//		Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
+		//		Log("Net radiation = %f W/m^2/hour\n", c->net_radiation);
+		//		break;
+		//	case 2:
+		//		if ( c->heights[height].z == c->top_layer )
+		//		{
+		//			//convert radiation from hours to seconds
+		//			Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+		//			Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
+		//			Log("NET RADIATION = %f \n", c->net_radiation);
+		//		}
+		//		else
+		//		{
+		//			Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
+		//			Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
+		//			Log("NET RADIATION = %f \n", c->net_radiation);
+		//		}
+		//		break;
+		//	case 3:
+		//		if ( c->heights[height].z == c->top_layer )
+		//		{
+		//			//convert radiation from hours to seconds
+		//			Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+		//			Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
+		//			Log("NET RADIATION = %f \n", c->net_radiation);
+		//		}
+		//		if ( c->heights[height].z == c->top_layer - 1 )
+		//		{
+		//			Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
+		//			Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
+		//			Log("NET RADIATION = %f \n", c->net_radiation);
+		//		}
+		//		else
+		//		{
+		//			Etransp = (E20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
+		//			Log("Etransp for subdominant layer = %f J/m^2/sec\n", Etransp);
+		//			Log("NET RADIATION = %f \n", c->net_radiation);
+		//		}
 
-				break;
-			}
-			CanopyTranspiration = Etransp / LAMBDA * (met[month].daylength * 3600.0);         // converted to kg-mm H2o/m2/day
+		//		break;
+		//	}
+		//	CanopyTranspiration = Etransp / LAMBDA * (met[month].daylength * 3600.0);         // converted to kg-mm H2o/m2/day
 
-		}
-		else
+		//}
+		//else
 		{
 			switch (c->daily_layer_number)
 			{
@@ -420,7 +420,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		//Log("gl_sh = %f\n", gl_sh);
 
 
-		if (settings->time == 'm')
+		/*if (settings->time == 'm')
 		{
 			if (settings->spatial == 'u')
 			{
@@ -431,7 +431,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				lai = met[month].ndvi_lai;
 			}
 		}
-		else
+		else*/
 		{
 			if (settings->spatial == 'u')
 			{
@@ -471,45 +471,45 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 		//todo per finire la parte di BIOME devo inserire anche la parte di VPD
 		/* assign tavg (Celsius) and tav_k (Kelvins) */
-		if (settings->time == 'm')
+		//if (settings->time == 'm')
+		//{
+		//	if (met[month].tday == NO_DATA)
+		//	{
+		//		tav_k = met[month].tavg + 273.15;
+		//		/* calculate density of air (rho) as a function of air temperature */
+		//		rhoAir = 1.292 - (0.00428 * met[month].tavg);
+		//		/* calculate latent heat of vaporization as a function of ta */
+		//		lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
+		//		/* calculate temperature offsets for slope estimate */
+		//		t1 = met[month].tavg+dt;
+		//		t2 = met[month].tavg-dt;
+		//	}
+		//	else
+		//	{
+		//		tav_k = met[month].tday + 273.15;
+		//		/* calculate density of air (rho) as a function of air temperature */
+		//		rhoAir = 1.292 - (0.00428 * met[month].tday);
+		//		/* calculate latent heat of vaporization as a function of ta */
+		//		lhvap = 2.5023e6 - 2430.54 * met[month].tday;
+		//		/* calculate temperature offsets for slope estimate */
+		//		t1 = met[month].tday+dt;
+		//		t2 = met[month].tday-dt;
+		//	}
+		//}
+		//else
 		{
-			if (met[month].tday == NO_DATA)
-			{
-				tav_k = met[month].tavg + 273.15;
-				/* calculate density of air (rho) as a function of air temperature */
-				rhoAir = 1.292 - (0.00428 * met[month].tavg);
-				/* calculate latent heat of vaporization as a function of ta */
-				lhvap = 2.5023e6 - 2430.54 * met[month].tavg;
-				/* calculate temperature offsets for slope estimate */
-				t1 = met[month].tavg+dt;
-				t2 = met[month].tavg-dt;
-			}
-			else
-			{
-				tav_k = met[month].tday + 273.15;
-				/* calculate density of air (rho) as a function of air temperature */
-				rhoAir = 1.292 - (0.00428 * met[month].tday);
-				/* calculate latent heat of vaporization as a function of ta */
-				lhvap = 2.5023e6 - 2430.54 * met[month].tday;
-				/* calculate temperature offsets for slope estimate */
-				t1 = met[month].tday+dt;
-				t2 = met[month].tday-dt;
-			}
-		}
-		else
-		{
-			if (met[month].tday == NO_DATA)
-			{
-				tav_k = met[month].d[day].tavg + 273.15;
-				/* calculate density of air (rho) as a function of air temperature */
-				rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
-				/* calculate latent heat of vaporization as a function of ta */
-				lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
-				/* calculate temperature offsets for slope estimate */
-				t1 = met[month].d[day].tavg+dt;
-				t2 = met[month].d[day].tavg-dt;
-			}
-			else
+			//if (met[month].tday == NO_DATA)
+			//{
+			//	tav_k = met[month].d[day].tavg + 273.15;
+			//	/* calculate density of air (rho) as a function of air temperature */
+			//	rhoAir = 1.292 - (0.00428 * met[month].d[day].tavg);
+			//	/* calculate latent heat of vaporization as a function of ta */
+			//	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
+			//	/* calculate temperature offsets for slope estimate */
+			//	t1 = met[month].d[day].tavg+dt;
+			//	t2 = met[month].d[day].tavg-dt;
+			//}
+			//else
 			{
 				tav_k = met[month].d[day].tday + 273.15;
 				/* calculate density of air (rho) as a function of air temperature */
@@ -549,13 +549,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		evap *= 84600;
 		//Log("Daily transpiration from biome = %f\n", evap);
 
-		if (settings->time == 'm')
-		{
-			/* convert evaporation into kg/m^2/month */
-			evap = evap * DaysInMonth;
-			//Log("Montlhy transpiration from biome = %f\n", evap);
-		}
-		else
+		//if (settings->time == 'm')
+		//{
+		//	/* convert evaporation into kg/m^2/month */
+		//	evap = evap * DaysInMonth;
+		//	//Log("Montlhy transpiration from biome = %f\n", evap);
+		//}
+		//else
 		{
 			/* convert evaporation into kg/m^2/month */
 			//Log("Daily transpiration from biome = %f\n", evap);

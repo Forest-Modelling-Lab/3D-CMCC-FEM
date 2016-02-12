@@ -18,64 +18,64 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
-		if (settings->time == 'm')
-		{
-			Log("\n--GET_INITIAL_MONTH_LAI--\n");
+		//if (settings->time == 'm')
+		//{
+		//	Log("\n--GET_INITIAL_MONTH_LAI--\n");
 
-			if (s->counter[VEG_MONTHS]  == 1)
-			{
-				Log("++Reserves pools = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
-				Log("++Reserve biomass for each tree in g = %f \n", (s->value[BIOMASS_RESERVE] * 1000000) / s->counter[N_TREE]);
+		//	if (s->counter[VEG_MONTHS]  == 1)
+		//	{
+		//		Log("++Reserves pools = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
+		//		Log("++Reserve biomass for each tree in g = %f \n", (s->value[BIOMASS_RESERVE] * 1000000) / s->counter[N_TREE]);
 
-				//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
-				//but Scartazza et al 2013 says only in foliages
-				//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
-				s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_RESERVE] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+		//		//just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+		//		//but Scartazza et al 2013 says only in foliages
+		//		//the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+		//		s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_RESERVE] * (1.0 - s->value[STEM_LEAF_FRAC]);
+		//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
 
-				Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[STEM_LEAF_FRAC] * 100));
+		//		Log("ratio of reserve for foliage = %f% \n", (1.0 - s->value[STEM_LEAF_FRAC] * 100));
 
-				s->value[BIOMASS_RESERVE] -= s->value[BIOMASS_FOLIAGE];
-				Log("++Reserves pools less foliage = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
-
-
-				//not sure if allocate the remaining reserves for stem
-				s->value[BIOMASS_STEM] += (s->value[BIOMASS_RESERVE] * s->value[STEM_LEAF_FRAC]);
-				Log("Biomass stem = %f\n", s->value[BIOMASS_STEM]);
-
-				Log("ratio of reserve for stem = %f% \n", s->value[STEM_LEAF_FRAC] * 100);
-
-				s->value[BIOMASS_RESERVE] = 0;
-				Log("++Reserves pools less foliage + stem = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
+		//		s->value[BIOMASS_RESERVE] -= s->value[BIOMASS_FOLIAGE];
+		//		Log("++Reserves pools less foliage = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
 
 
-				Log ("++Biomass foliage from reserves for initial LAI = %f \n", s->value[BIOMASS_FOLIAGE]);
+		//		//not sure if allocate the remaining reserves for stem
+		//		s->value[BIOMASS_STEM] += (s->value[BIOMASS_RESERVE] * s->value[STEM_LEAF_FRAC]);
+		//		Log("Biomass stem = %f\n", s->value[BIOMASS_STEM]);
+
+		//		Log("ratio of reserve for stem = %f% \n", s->value[STEM_LEAF_FRAC] * 100);
+
+		//		s->value[BIOMASS_RESERVE] = 0;
+		//		Log("++Reserves pools less foliage + stem = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
 
 
-				/*for dominant layer with sunlit foliage*/
-				if (c->top_layer == c->heights[height].z)
-				{
-					Log("computing LAI for dominant trees\n");
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-				}
-				/*for dominated shaded foliage*/
-				else
-				{
-					Log("computing LAI for dominated trees\n");
-					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
-				}
+		//		Log ("++Biomass foliage from reserves for initial LAI = %f \n", s->value[BIOMASS_FOLIAGE]);
 
-				Log("++Lai from reserves = %f\n", s->value[LAI]);
-				//Log("++Canopy Cover = %f\n", s->value[CANOPY_COVER_DBHDC]);
-				//Log("++Size Cell = %f\n", settings->sizeCell);
-				//Log("++Sla = %f\n", s->value[SLAmkg]);
-			}
-			else
-			{
-				Log("++Lai = %f\n", s->value[LAI]);
-			}
-		}
-		else
+
+		//		/*for dominant layer with sunlit foliage*/
+		//		if (c->top_layer == c->heights[height].z)
+		//		{
+		//			Log("computing LAI for dominant trees\n");
+		//			s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+		//		}
+		//		/*for dominated shaded foliage*/
+		//		else
+		//		{
+		//			Log("computing LAI for dominated trees\n");
+		//			s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+		//		}
+
+		//		Log("++Lai from reserves = %f\n", s->value[LAI]);
+		//		//Log("++Canopy Cover = %f\n", s->value[CANOPY_COVER_DBHDC]);
+		//		//Log("++Size Cell = %f\n", settings->sizeCell);
+		//		//Log("++Sla = %f\n", s->value[SLAmkg]);
+		//	}
+		//	else
+		//	{
+		//		Log("++Lai = %f\n", s->value[LAI]);
+		//	}
+		//}
+		//else
 		{
 			Log("\n--GET_DAILY_LAI--\n");
 			Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS]);
@@ -214,33 +214,33 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 	else
 	{
 		//Get biomass from reserves
-		if (settings->time == 'm')
-		{
-			Log("\n--GET_MONTH_LAI--\n");
+		//if (settings->time == 'm')
+		//{
+		//	Log("\n--GET_MONTH_LAI--\n");
 
-			if (s->counter[VEG_MONTHS]  == 1)
-			{
-				if(s->value[LAI] == 0)
-				{
-					/*for dominant layer with sunlit foliage*/
-					if (c->top_layer == c->heights[height].z)
-					{
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-					}
-					/*for dominated shaded foliage*/
-					else
-					{
-						s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
-					}
-					Log("++Lai from foliage-reserve = %f\n", s->value[LAI]);
-				}
-			}
-			else
-			{
-				Log("++Lai = %f\n", s->value[LAI]);
-			}
-		}
-		else
+		//	if (s->counter[VEG_MONTHS]  == 1)
+		//	{
+		//		if(s->value[LAI] == 0)
+		//		{
+		//			/*for dominant layer with sunlit foliage*/
+		//			if (c->top_layer == c->heights[height].z)
+		//			{
+		//				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+		//			}
+		//			/*for dominated shaded foliage*/
+		//			else
+		//			{
+		//				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+		//			}
+		//			Log("++Lai from foliage-reserve = %f\n", s->value[LAI]);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		Log("++Lai = %f\n", s->value[LAI]);
+		//	}
+		//}
+		//else
 		{
 			Log("\n--GET_DAILY_LAI--\n");
 

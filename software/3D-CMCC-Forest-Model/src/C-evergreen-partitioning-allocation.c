@@ -74,13 +74,13 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 //		}
 //	}
 
-	if (settings->time == 'm')
+	/*if (settings->time == 'm')
 	{
 		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
 		Par_over = c->par - s->value[APAR];
 		Light_trasm = Par_over / Monthly_solar_radiation;
 	}
-	else
+	else*/
 	{
 		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
 		Par_over = c->par - s->value[APAR];

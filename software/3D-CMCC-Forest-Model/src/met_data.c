@@ -65,19 +65,19 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, YOS *
 			}
 		}
 	}
-	else
-	{
-		if ( met[month].tavg == NO_DATA)
-		{
-			if (met[month].tmax == NO_DATA && met[month].tmin == NO_DATA)
-			{
-				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
-			}
-			{
-				met[month].tavg = (0.606 * met[month].tmax) + (0.394 * met[month].tmin);
-			}
-		}
-	}
+	//else
+	//{
+	//	if ( met[month].tavg == NO_DATA)
+	//	{
+	//		if (met[month].tmax == NO_DATA && met[month].tmin == NO_DATA)
+	//		{
+	//			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+	//		}
+	//		{
+	//			met[month].tavg = (0.606 * met[month].tmax) + (0.394 * met[month].tmin);
+	//		}
+	//	}
+	//}
 
 
 }
@@ -106,7 +106,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
 		}
 	}
-	else
+	/*else
 	{
 		if (met[month].tmax != NO_DATA && met[month].tmin != NO_DATA)
 		{
@@ -117,7 +117,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 			met[month].tday = NO_DATA;
 			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
 		}
-	}
+	}*/
 }
 
 //following BIOME-BGC 4.2 src
@@ -144,7 +144,7 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
 		}
 	}
-	else
+	/*else
 	{
 		if (met[month].tday != NO_DATA )
 		{
@@ -155,7 +155,7 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 			met[month].tnight = NO_DATA;
 			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
 		}
-	}
+	}*/
 }
 
 extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
@@ -168,7 +168,7 @@ extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int D
 
 	//averaged monthly temp for RothC
 
-	if (settings->time == 'd')
+	/*if (settings->time == 'd')
 	{
 		if (met[month].d[day].n_days == 1)
 		{
@@ -185,7 +185,7 @@ extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int D
 		{
 			met[month].avg_monthly_temp = (temp_avg_monthly_temp / counter);
 		}
-	}
+	}*/
 }
 
 extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
@@ -195,17 +195,17 @@ extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int D
 
 	//cumulated monthly rain for RothC
 
-	if (settings->time == 'd')
-	{
-		if (met[month].d[day].n_days == 1)
-		{
-			met[month].cum_monthly_rain = 0;
-		}
-		if (met[month].d[day].rain != NO_DATA)
-		{
-			met[month].cum_monthly_rain += met[month].d[day].rain;
-		}
-	}
+	//if (settings->time == 'd')
+	//{
+	//	if (met[month].d[day].n_days == 1)
+	//	{
+	//		met[month].cum_monthly_rain = 0;
+	//	}
+	//	if (met[month].d[day].rain != NO_DATA)
+	//	{
+	//		met[month].cum_monthly_rain += met[month].d[day].rain;
+	//	}
+	//}
 }
 
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
@@ -281,23 +281,23 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
 	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
 
 
-	if (settings->time == 'm')
-	{
-		if(met[month].tday == NO_DATA)
-		{
-			met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
-			c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %f\n", c->gcorr);
-		}
-		else
-		{
-			met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
-			c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %f\n", c->gcorr);
-		}
-		Log("RhoAir = %f\n", met[month].rho_air);
-	}
-	else
+	//if (settings->time == 'm')
+	//{
+	//	if(met[month].tday == NO_DATA)
+	//	{
+	//		met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
+	//		c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+	//		//Log("gcorr = %f\n", c->gcorr);
+	//	}
+	//	else
+	//	{
+	//		met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
+	//		c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+	//		//Log("gcorr = %f\n", c->gcorr);
+	//	}
+	//	Log("RhoAir = %f\n", met[month].rho_air);
+	//}
+	//else
 	{
 		if(met[month].d[day].tday == NO_DATA)
 		{
@@ -334,11 +334,11 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 
 
 	t_melt = r_melt = r_sub = 0;
-	if(settings->time == 'm')
+	/*if(settings->time == 'm')
 	{
 		t_melt = t_coeff * met[month].tavg;
 	}
-	else
+	else*/
 	{
 		t_melt = t_coeff * met[month].d[day].tavg;
 	}
@@ -466,41 +466,41 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 	static int doy;
 
 
-	if (settings->time == 'm')
-	{
-		Log("***************\n");
-		Log("**Monthly MET DATA**\n");
-		Log("-average solar_rad = %f MJ/m^2/day\n"
-				"-tavg = %f °C\n"
-				"-tmax = %f °C\n"
-				"-tmin = %f °C\n"
-				"-tday = %f °C\n"
-				"-tnight = %f °C\n"
-				//"-rh = %f %%\n"
-				"-vpd = %f mbar\n"
-				"-ts_f = %f °C\n"
-				"-rain = %f mm\n"
-				"-swc = %f %%vol\n"
-				"-daylength = %f hrs\n",
-				met[month].solar_rad,
-				met[month].tavg,
-				met[month].tmax,
-				met[month].tmin,
-				met[month].tday,
-				met[month].tnight,
-				//met[month].rh,
-				vpd,
-				met[month].ts_f,
-				met[month].rain,
-				met[month].swc,
-				met[month].daylength);
+	//if (settings->time == 'm')
+	//{
+	//	Log("***************\n");
+	//	Log("**Monthly MET DATA**\n");
+	//	Log("-average solar_rad = %f MJ/m^2/day\n"
+	//			"-tavg = %f °C\n"
+	//			"-tmax = %f °C\n"
+	//			"-tmin = %f °C\n"
+	//			"-tday = %f °C\n"
+	//			"-tnight = %f °C\n"
+	//			//"-rh = %f %%\n"
+	//			"-vpd = %f mbar\n"
+	//			"-ts_f = %f °C\n"
+	//			"-rain = %f mm\n"
+	//			"-swc = %f %%vol\n"
+	//			"-daylength = %f hrs\n",
+	//			met[month].solar_rad,
+	//			met[month].tavg,
+	//			met[month].tmax,
+	//			met[month].tmin,
+	//			met[month].tday,
+	//			met[month].tnight,
+	//			//met[month].rh,
+	//			vpd,
+	//			met[month].ts_f,
+	//			met[month].rain,
+	//			met[month].swc,
+	//			met[month].daylength);
 
-		if (settings->spatial == 's')
-		{
-			Log("-lai from NDVI = %f \n", met[month].ndvi_lai);
-		}
-	}
-	else
+	//	if (settings->spatial == 's')
+	//	{
+	//		Log("-lai from NDVI = %f \n", met[month].ndvi_lai);
+	//	}
+	//}
+	//else
 	{
 		if (day == 0 && month == 0)
 		{
@@ -525,9 +525,9 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				"-daylength = %.2f hrs\n"
 				"-DOY = %d\n"
 				"-tsoil = %.2f °C\n"
-				"-month avg temp = %.2f °C\n"
-				"-month cum rain = %.2f mm\n",
-				met[month].d[day].solar_rad,
+				//"-month avg temp = %.2f °C\n"
+				//"-month cum rain = %.2f mm\n"
+				,met[month].d[day].solar_rad,
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
 				met[month].d[day].tmin,
@@ -541,9 +541,10 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				met[month].d[day].thermic_sum,
 				met[month].d[day].daylength,
 				doy,
-				met[month].d[day].tsoil,
-				met[month].avg_monthly_temp,
-				met[month].cum_monthly_rain);
+				met[month].d[day].tsoil
+				//,met[month].avg_monthly_temp
+				//,met[month].cum_monthly_rain
+				);
 
 		if (settings->spatial == 's')
 		{

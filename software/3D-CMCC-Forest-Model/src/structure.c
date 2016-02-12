@@ -761,117 +761,117 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 }
 
 
-void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int month)
-{
-
-	static int height;
-	static int age;
-	static int species;
-	static int counter;
-
-	static int leaf_fall_counter;
-
-	if (month == 0)
-		leaf_fall_counter = 0;
-
-	counter = 0;
-
-	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%f, %f)****\n", c->x, c->y);
-
-	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
-
-	for ( height = c->heights_count - 1; height >= 0; height-- )
-	{
-		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
-		{
-			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
-			{
-				Log("--GET VEGETATIVE PERIOD for height = %f, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
-
-				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
-				{
-					if (settings->version == 's')
-					{
-						//Log("Spatial version \n");
-
-						//veg period
-						if (met[month].ndvi_lai > 0.1)
-						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-							counter += 1;
-						}
-						//unveg period
-						else
-						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-						}
-					}
-					else
-					{
-
-						//compute months of leaf fall taking an integer value
-						c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] =  (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-						                                                                                                                                       * c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
-						Log("Months of leaf fall for deciduous = %f \n", c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE]);
-						//monthly rate of foliage reduction
-
-						//currently the model considers a linear reduction in leaf fall
-						//it should be a negative sigmoid function
-						//todo: create a sigmoid function
-						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
-						Log("foliage reduction rate = %f \n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] );
-
-
-
-
-						//todo decidere su usare tavg o tday
-						if(((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
-								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6)) && c->north == 0)
-						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-							counter += 1;
-							Log("counter = %d\n\n", counter);
-						}
-						else
-						{
-							if (met[month].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0)
-							{
-
-								leaf_fall_counter += 1;
-
-								//check
-								if(leaf_fall_counter <= (int)c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE])
-								{
-									/*days of leaf fall*/
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-								}
-								else
-								{
-									/*outside days of leaf fall*/
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-								}
-
-							}
-							else
-							{
-								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-							}
-							Log("counter = %d\n\n", counter);
-						}
-					}
-				}
-				else
-				{
-					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
-					counter += 1;
-					Log("counter = %d\n\n", counter);
-				}
-			}
-		}
-	}
-	Log("species in veg period = %d\n", counter);
-}
+//void Get_monthly_vegetative_period (CELL *c, const MET_DATA *const met, int month)
+//{
+//
+//	static int height;
+//	static int age;
+//	static int species;
+//	static int counter;
+//
+//	static int leaf_fall_counter;
+//
+//	if (month == 0)
+//		leaf_fall_counter = 0;
+//
+//	counter = 0;
+//
+//	Log("\n\n\n****GET_MONTHLY_FOREST_STRUCTURE_ROUTINE for cell (%f, %f)****\n", c->x, c->y);
+//
+//	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
+//
+//	for ( height = c->heights_count - 1; height >= 0; height-- )
+//	{
+//		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+//		{
+//			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+//			{
+//				Log("--GET VEGETATIVE PERIOD for height = %f, age = %d, species %s --\n", c->heights[height].value, c->heights[height].ages[age].value, c->heights[height].ages[age].species[species].name);
+//
+//				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+//				{
+//					if (settings->version == 's')
+//					{
+//						//Log("Spatial version \n");
+//
+//						//veg period
+//						if (met[month].ndvi_lai > 0.1)
+//						{
+//							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+//							counter += 1;
+//						}
+//						//unveg period
+//						else
+//						{
+//							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+//						}
+//					}
+//					else
+//					{
+//
+//						//compute months of leaf fall taking an integer value
+//						c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] =  (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+//						                                                                                                                                       * c->heights[height].ages[age].species[species].counter[MONTH_VEG_FOR_LITTERFALL_RATE]);
+//						Log("Months of leaf fall for deciduous = %f \n", c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE]);
+//						//monthly rate of foliage reduction
+//
+//						//currently the model considers a linear reduction in leaf fall
+//						//it should be a negative sigmoid function
+//						//todo: create a sigmoid function
+//						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE] + 1);
+//						Log("foliage reduction rate = %f \n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] );
+//
+//
+//
+//
+//						//todo decidere su usare tavg o tday
+//						if(((met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month < 6)
+//								|| (met[month].tavg >= c->heights[height].ages[age].species[species].value[GROWTHEND] && month >= 6)) && c->north == 0)
+//						{
+//							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+//							counter += 1;
+//							Log("counter = %d\n\n", counter);
+//						}
+//						else
+//						{
+//							if (met[month].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0)
+//							{
+//
+//								leaf_fall_counter += 1;
+//
+//								//check
+//								if(leaf_fall_counter <= (int)c->heights[height].ages[age].species[species].value[MONTH_FRAC_FOLIAGE_REMOVE])
+//								{
+//									/*days of leaf fall*/
+//									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+//								}
+//								else
+//								{
+//									/*outside days of leaf fall*/
+//									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+//								}
+//
+//							}
+//							else
+//							{
+//								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+//							}
+//							Log("counter = %d\n\n", counter);
+//						}
+//					}
+//				}
+//				else
+//				{
+//					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+//					Log("Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+//					counter += 1;
+//					Log("counter = %d\n\n", counter);
+//				}
+//			}
+//		}
+//	}
+//	Log("species in veg period = %d\n", counter);
+//}
 
 
 //define VEG_UNVEG for deciduous species

@@ -1264,8 +1264,8 @@ int main(int argc, char *argv[])
 							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
 							Get_soil_temperature (&m->cells[cell], day, month, years, yos);
 							//for RothC
-							Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
-							Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
+							//Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
+							//Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
 
 							//
 							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
@@ -1329,12 +1329,12 @@ int main(int argc, char *argv[])
 											soil_dndc_sgm (m, yos, years, month, day, years_of_simulation);
 											//soil_dndc......................................
 										}
-										else if (!mystricmp(settings->rothC, "on"))
-										{
-											Log("RUNNING ROTHC.....\n");
-											//TODO SERGIO
-											soil_rothC (m, yos, years, month, day, years_of_simulation);
-										}
+										//else if (!mystricmp(settings->rothC, "on"))
+										//{
+										//	Log("RUNNING ROTHC.....\n");
+										//	//TODO SERGIO
+										//	soil_rothC (m, yos, years, month, day, years_of_simulation);
+										//}
 										else
 										{
 											Log("No soil simulation!!!\n");
@@ -1381,110 +1381,110 @@ int main(int argc, char *argv[])
 
 				}
 			}
-			else if (settings->time == 'm')
-			{
-				for ( cell = 0; cell < m->cells_count; cell++)
-				{
-					//Get air pressure
-					Get_air_pressure (&m->cells[cell]);
+			//else if (settings->time == 'm')
+			//{
+			//	for ( cell = 0; cell < m->cells_count; cell++)
+			//	{
+			//		//Get air pressure
+			//		Get_air_pressure (&m->cells[cell]);
 
-					if (	IS_INVALID_VALUE(site->sand_perc)
-							|| IS_INVALID_VALUE(site->clay_perc)
-							|| IS_INVALID_VALUE(site->silt_perc)
-							|| IS_INVALID_VALUE(site->bulk_dens)
-							|| IS_INVALID_VALUE(site->soil_depth) )
-					{
-						Log("NO SOIL DATA AVAILABLE\n");
-						return 0;
-					}
-					//check hemisphere
-					if (site->lat > 0)
-					{
-						m->cells[cell].north = 0;
-					}
-					else
-					{
-						m->cells[cell].north = 1;
-					}
+			//		if (	IS_INVALID_VALUE(site->sand_perc)
+			//				|| IS_INVALID_VALUE(site->clay_perc)
+			//				|| IS_INVALID_VALUE(site->silt_perc)
+			//				|| IS_INVALID_VALUE(site->bulk_dens)
+			//				|| IS_INVALID_VALUE(site->soil_depth) )
+			//		{
+			//			Log("NO SOIL DATA AVAILABLE\n");
+			//			return 0;
+			//		}
+			//		//check hemisphere
+			//		if (site->lat > 0)
+			//		{
+			//			m->cells[cell].north = 0;
+			//		}
+			//		else
+			//		{
+			//			m->cells[cell].north = 1;
+			//		}
 
-					//run for all cells to check land use
-					for ( cell = 0; cell < m->cells_count; cell++)
-					{
-						//Get air pressure
-						Get_air_pressure (&m->cells[cell]);
+			//		//run for all cells to check land use
+			//		for ( cell = 0; cell < m->cells_count; cell++)
+			//		{
+			//			//Get air pressure
+			//			Get_air_pressure (&m->cells[cell]);
 
-						//run for forests
-						if (m->cells[cell].landuse == F)
-						{
-							Log("RUN FOR FORESTS\n");
+			//			//run for forests
+			//			if (m->cells[cell].landuse == F)
+			//			{
+			//				Log("RUN FOR FORESTS\n");
 
-							//control version 's' or 'u' and change if asked
-							if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
-							{
-								settings->version = 'u';
-								Log("--Years to switch from s to u = %f\n\n\n\n\n", settings->switchtounspatial);
-								Log("\n\n\n************CHANGING VERSION..........***************\n");
-								Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
-								Log("Model version = %c\n\n\n\n", settings->version);
-								Log("Model spatial = %c\n\n\n\n", settings->spatial);
-								Log("************************************************************\n");
-							}
+			//				//control version 's' or 'u' and change if asked
+			//				if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
+			//				{
+			//					settings->version = 'u';
+			//					Log("--Years to switch from s to u = %f\n\n\n\n\n", settings->switchtounspatial);
+			//					Log("\n\n\n************CHANGING VERSION..........***************\n");
+			//					Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
+			//					Log("Model version = %c\n\n\n\n", settings->version);
+			//					Log("Model spatial = %c\n\n\n\n", settings->spatial);
+			//					Log("************************************************************\n");
+			//				}
 
-							//compute number of vegetative months
-							for (month = 0; month < MONTHS; month++)
-							{
-								//Check for temperatures
-								Get_avg_temperature (&m->cells[cell], day, month, years, yos);
-								Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
-								Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
+			//				//compute number of vegetative months
+			//				for (month = 0; month < MONTHS; month++)
+			//				{
+			//					//Check for temperatures
+			//					Get_avg_temperature (&m->cells[cell], day, month, years, yos);
+			//					Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
+			//					Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
 
-								//todo add Get_thermic_sum if used
+			//					//todo add Get_thermic_sum if used
 
-								//Get vegetative months
-								Get_Veg_Months (&m->cells[cell], yos, month, years);
-							}
-							//run tree_model_M
-							for (month = 0; month < MONTHS; month++)
-							{
-								if ( !tree_model (m, yos, years, month, years_of_simulation) )
-								{
-									Log("tree model failed.");
-								}
-								else
-								{
-									puts(msg_ok);
-									//look if put it here or move before tree_model  at the beginning of each month simulation
-									//currently soil_model uses equals values for all cells
-									//a struct is anyway defined in types.h for soil data
-									//soil_model (m, yos, years, month, years_of_simulation);
-								}
-							}
-						}
-						//run for crops
-						if  (m->cells[cell].landuse == Z)
-						{
-							Log("RUN FOR CROPS\n");
-							//run tree_model
-							for (month = 0; month < MONTHS; month++)
-							{
-								if (!crop_model_M (m, yos, years, month, years_of_simulation) )
-								{
-									Log("crop model failed.");
-								}
-								else
-								{
-									puts(msg_ok);
-									//look if put it here or move before tree_model  at the beginning of each month simulation
-									//currently soil_model uses equals values for all cells
-									//a struct is anyway defined in types.h for soil data
-									//soil_model (m, yos, years, month, years_of_simulation);
-								}
-							}
-						}
-					}
-					Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
-				}
-			}
+			//					//Get vegetative months
+			//					Get_Veg_Months (&m->cells[cell], yos, month, years);
+			//				}
+			//				//run tree_model_M
+			//				for (month = 0; month < MONTHS; month++)
+			//				{
+			//					if ( !tree_model (m, yos, years, month, years_of_simulation) )
+			//					{
+			//						Log("tree model failed.");
+			//					}
+			//					else
+			//					{
+			//						puts(msg_ok);
+			//						//look if put it here or move before tree_model  at the beginning of each month simulation
+			//						//currently soil_model uses equals values for all cells
+			//						//a struct is anyway defined in types.h for soil data
+			//						//soil_model (m, yos, years, month, years_of_simulation);
+			//					}
+			//				}
+			//			}
+			//			//run for crops
+			//			if  (m->cells[cell].landuse == Z)
+			//			{
+			//				Log("RUN FOR CROPS\n");
+			//				//run tree_model
+			//				for (month = 0; month < MONTHS; month++)
+			//				{
+			//					if (!crop_model_M (m, yos, years, month, years_of_simulation) )
+			//					{
+			//						Log("crop model failed.");
+			//					}
+			//					else
+			//					{
+			//						puts(msg_ok);
+			//						//look if put it here or move before tree_model  at the beginning of each month simulation
+			//						//currently soil_model uses equals values for all cells
+			//						//a struct is anyway defined in types.h for soil data
+			//						//soil_model (m, yos, years, month, years_of_simulation);
+			//					}
+			//				}
+			//			}
+			//		}
+			//		Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
+			//	}
+			//}
 			else
 			{
 				Log("UNCORRECT TIME STEP CHOICED!!!\n");

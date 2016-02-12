@@ -82,27 +82,26 @@ typedef struct{
 
 /* */
 typedef struct {
-
-	int n_days;
-	int month;
-	PREC solar_rad;
-	PREC tavg;	/* (deg C) daily average air temperature */
-	PREC tmax;	/* (deg C) daily maximum air temperature */
-	PREC tmin;	/* (deg C) daily minimum air temperature */
-	PREC tday;	/* (deg C) daylight average air temperature */
-	PREC tnight;	/* (deg C) nightime average air temperature */
-	PREC vpd;
-	PREC ts_f;
-	PREC rain;
-	PREC swc;
-	PREC ndvi_lai;
-	PREC daylength;
-	PREC thermic_sum; //monthly thermic sum NOT USED IN MONTHLY SIMUALATION
-	PREC avg_monthly_temp;
-	PREC cum_monthly_rain;
-	PREC rho_air;
-	PREC et;
-	PREC littfall;
+	//int n_days;
+	//int month;
+	//PREC solar_rad;
+	//PREC tavg;	/* (deg C) daily average air temperature */
+	//PREC tmax;	/* (deg C) daily maximum air temperature */
+	//PREC tmin;	/* (deg C) daily minimum air temperature */
+	//PREC tday;	/* (deg C) daylight average air temperature */
+	//PREC tnight;	/* (deg C) nightime average air temperature */
+	//PREC vpd;
+	//PREC ts_f;
+	//PREC rain;
+	//PREC swc;
+	//PREC ndvi_lai;
+	//PREC daylength;
+	//PREC thermic_sum; //monthly thermic sum NOT USED IN MONTHLY SIMULATION
+	//PREC avg_monthly_temp;
+	//PREC cum_monthly_rain;
+	//PREC rho_air;
+	//PREC et;
+	//PREC littfall;
 
 	MET_DAILY_DATA d[31];
 
@@ -823,7 +822,15 @@ typedef struct {
 	//ePhenology phenology;
 	eManagement management;
 	int period;            // period = 0 for adult tree ; 1 for very young tree
+
+
 	PREC value[VALUES];
+
+
+
+
+
+
 	int counter[COUNTERS];
 	int phenology_phase;
 	TURNOVER *turnover;

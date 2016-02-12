@@ -19,44 +19,44 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 
 	//todo: a better function that also take into account gaps
 	//model uses Net radiation of last height class in last layer * its percentage of light transmitted
-	if (settings->time == 'm')
-	{
-		if (c->monthly_layer_number != 0)
-		{
-			switch (c->monthly_layer_number)
-			{
-			case 3:
-				if (settings->spatial == 's')
-				{
-					Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
-				}
-				else
-				{
-					Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * s->value[LAI]));
-				}
-				break;
-			case 2:
-				if (settings->spatial == 's')
-				{
-					Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
-				}
-				else
-				{
-					Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * s->value[LAI]));
-				}
-				break;
-			case 1:
-				Log("Net radiation from dominant layer = %f W/m^2/hours\n", Net_Radiation_for_dominated);
-				Net_Radiation = Net_Radiation_for_dominated;
-				break;
-			}
-		}
-		else
-		{
-			Net_Radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6))) / met[month].daylength;
-		}
-	}
-	else
+	//if (settings->time == 'm')
+	//{
+	//	if (c->monthly_layer_number != 0)
+	//	{
+	//		switch (c->monthly_layer_number)
+	//		{
+	//		case 3:
+	//			if (settings->spatial == 's')
+	//			{
+	//				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
+	//			}
+	//			else
+	//			{
+	//				Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * s->value[LAI]));
+	//			}
+	//			break;
+	//		case 2:
+	//			if (settings->spatial == 's')
+	//			{
+	//				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].ndvi_lai));
+	//			}
+	//			else
+	//			{
+	//				Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * s->value[LAI]));
+	//			}
+	//			break;
+	//		case 1:
+	//			Log("Net radiation from dominant layer = %f W/m^2/hours\n", Net_Radiation_for_dominated);
+	//			Net_Radiation = Net_Radiation_for_dominated;
+	//			break;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		Net_Radiation = (QA + QB * (met[month].solar_rad * pow (10.0,  6))) / met[month].daylength;
+	//	}
+	//}
+	//else
 	{
 		if (c->daily_layer_number != 0)
 		{
@@ -108,12 +108,12 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 
 	c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 
-	if (settings->time == 'm')
+	/*if (settings->time == 'm')
 	{
 		c->soil_evaporation = PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].daylength * 3600.0) * DaysInMonth;
 		Log("Monthly Soil Evaporation = %f \n", c->soil_evaporation );
 	}
-	else
+	else*/
 	{
 		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc) * met[month].d[day].daylength * 3600.0) + c->snow_subl;
 

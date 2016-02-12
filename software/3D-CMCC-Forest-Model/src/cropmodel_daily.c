@@ -803,11 +803,13 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								}
 							}
 					 */
-
 					//if it is intended as the mean monthly value
-					if (met[month].d[day].tavg != -9999)
+					if (met[month].d[day].tavg != INVALID_VALUE)
 					{
-						for(i = 0 ; i < 12; i++)
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 809\n");
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 809\n");
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 809\n");
+						/*for(i = 0 ; i < 12; i++)
 						{
 							for (l = 0; l < met[i].n_days; l++)
 							{
@@ -823,11 +825,14 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							{
 								min = monthlyAverageTemperature;
 							}
-						}
+						}*/
 					}
 					else
 					{
-						for(i = 0 ; i < 12; i++)
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 832\n");
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 832\n");
+						Log("ERRORE IN CROPMODEL_DAILY.C!!! RIGA 832\n");
+						/*for(i = 0 ; i < 12; i++)
 						{
 							for (l = 0; l < met[i].n_days; l++)
 							{
@@ -843,7 +848,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							{
 								min = monthlyAverageTemperature;
 							}
-						}
+						}*/
 					}
 					annualTemperatureAmplitude = max - min;
 					meanAnnualTemperature = max * 0.5 + min * 0.5;
@@ -1505,7 +1510,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						Runoff = 0;
 					}
 					Log("\nfor a retention factor: %f", maxInfiltration);
-					Log("\nand for a monthly rainfall of %f mm", met[month].rain);
+					//Log("\nand for a monthly rainfall of %f mm", met[month].rain);
 					Log("\nestimated runoff: %f\n", Runoff);
 
 

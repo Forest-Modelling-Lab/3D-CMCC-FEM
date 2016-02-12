@@ -29,11 +29,11 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		{
 			if (settings->spatial == 's')
 			{
-				if(settings->time == 'm')
+				/*if(settings->time == 'm')
 				{
 					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , met[month].ndvi_lai / s->value[LAIMAXINTCPTN]);
 				}
-				else
+				else*/
 				{
 					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
 				}
@@ -152,41 +152,41 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 
 	//fixme do it as in daily version!!!
 	/*monthly*/
-	if (settings->time == 'm' )
-	{
-		if (met[month].tavg > 0.0 && met[month].rain > 0.0)
-		{
-			if (s->counter[VEG_UNVEG] == 1)
-			{
-				if (c->heights[height].z == c->top_layer)
-				{
-					s->value[RAIN_INTERCEPTED] = (met[month].rain * s->value[FRAC_RAIN_INTERC]) * s->value[CANOPY_COVER_DBHDC];
-					Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
-					c->daily_c_int[c->top_layer] += s->value[RAIN_INTERCEPTED];
-					//fixme do the same thing for canopy transpiration!!!!
-					/*last height dominant class processed*/
-					if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
-					{
-						/*compute effective amount of water intercepted*/
-						c->daily_c_int[c->top_layer] *= met[month].rain * c->gapcover[c->top_layer];
-						Log("intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
-					}
-				}
-			}
-			else
-			{
-				s->value[RAIN_INTERCEPTED] = 0.0;
-				Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
-				c->daily_c_int[c->top_layer] = 0.0;
-				Log("Intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
-			}
-		}
-		else
-		{
-			s->value[RAIN_INTERCEPTED] = 0.0;
-			Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
-			c->daily_c_int[c->top_layer] = 0.0;
-			Log("intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
-		}
-	}
+	//if (settings->time == 'm' )
+	//{
+	//	if (met[month].tavg > 0.0 && met[month].rain > 0.0)
+	//	{
+	//		if (s->counter[VEG_UNVEG] == 1)
+	//		{
+	//			if (c->heights[height].z == c->top_layer)
+	//			{
+	//				s->value[RAIN_INTERCEPTED] = (met[month].rain * s->value[FRAC_RAIN_INTERC]) * s->value[CANOPY_COVER_DBHDC];
+	//				Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
+	//				c->daily_c_int[c->top_layer] += s->value[RAIN_INTERCEPTED];
+	//				//fixme do the same thing for canopy transpiration!!!!
+	//				/*last height dominant class processed*/
+	//				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
+	//				{
+	//					/*compute effective amount of water intercepted*/
+	//					c->daily_c_int[c->top_layer] *= met[month].rain * c->gapcover[c->top_layer];
+	//					Log("intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
+	//				}
+	//			}
+	//		}
+	//		else
+	//		{
+	//			s->value[RAIN_INTERCEPTED] = 0.0;
+	//			Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
+	//			c->daily_c_int[c->top_layer] = 0.0;
+	//			Log("Intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		s->value[RAIN_INTERCEPTED] = 0.0;
+	//		Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
+	//		c->daily_c_int[c->top_layer] = 0.0;
+	//		Log("intercepted water from top layer = %f mm \n", c->daily_c_int[c->top_layer]);
+	//	}
+	//}
 }

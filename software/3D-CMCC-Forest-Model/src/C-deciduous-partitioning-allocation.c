@@ -58,16 +58,16 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//Log ("KAPPA_CTEM  = %f \n", kappa);
 
 
-	if (settings->time == 'm')
-	{
-		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-		Par_over = c->par - s->value[APAR];
-		Light_trasm = Par_over / Monthly_solar_radiation;
+	//if (settings->time == 'm')
+	//{
+	//	Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
+	//	Par_over = c->par - s->value[APAR];
+	//	Light_trasm = Par_over / Monthly_solar_radiation;
 
-		//if (month == 0)
-		//leaf_fall_counter = 0;
-	}
-	else
+	//	//if (month == 0)
+	//	//leaf_fall_counter = 0;
+	//}
+	//else
 	{
 
 		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
@@ -1359,22 +1359,22 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		switch (s->phenology_phase)
 		{
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-		if (settings->time == 'm')
-		{
-			Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
-		}
-		else
+		//if (settings->time == 'm')
+		//{
+		//	Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
+		//}
+		//else
 		{
 			Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
 		}
 		/************************************************************/
 		case 1:
 			Log("(NDVI-LAI < PEAK_Y_LAI * 0.5)\n");
-			if (settings->time == 'm')
-			{
-				Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
-			}
-			else
+			//if (settings->time == 'm')
+			//{
+			//	//Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
+			//}
+			//else
 			{
 				Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
 			}
