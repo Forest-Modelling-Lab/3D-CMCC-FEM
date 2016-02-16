@@ -192,9 +192,9 @@ typedef struct
 	char version,
 	spatial, // must be 's' or 'u' (spatial or unspatial)
 	time,  // must be 'm' or 'd' (monthly or daily)
-	symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition, n
+	symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition)
 
-	char daymet[4];
+	char spin_up[4];
 	char rothC[4];
 	char dndc[4];
 

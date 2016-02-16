@@ -19,7 +19,6 @@ C_SRCS += \
 ../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
 ../src/common.c \
-../src/cropmodel.c \
 ../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
 ../src/dataset.c \
@@ -50,11 +49,9 @@ C_SRCS += \
 ../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
-../src/soil_rothC.c \
 ../src/soil_water_balance.c \
 ../src/soilmodel.c \
 ../src/structure.c \
-../src/treemodel.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
@@ -77,7 +74,6 @@ OBJS += \
 ./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
 ./src/common.o \
-./src/cropmodel.o \
 ./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
 ./src/dataset.o \
@@ -108,11 +104,9 @@ OBJS += \
 ./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
-./src/soil_rothC.o \
 ./src/soil_water_balance.o \
 ./src/soilmodel.o \
 ./src/structure.o \
-./src/treemodel.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
@@ -135,7 +129,6 @@ C_DEPS += \
 ./src/canopy_interception.d \
 ./src/canopy_transpiration.d \
 ./src/common.d \
-./src/cropmodel.d \
 ./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
 ./src/dataset.d \
@@ -166,11 +159,9 @@ C_DEPS += \
 ./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
-./src/soil_rothC.d \
 ./src/soil_water_balance.d \
 ./src/soilmodel.d \
 ./src/structure.d \
-./src/treemodel.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \

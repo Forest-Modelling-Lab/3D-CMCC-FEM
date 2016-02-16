@@ -739,13 +739,6 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						Log("\n\ndailySolarRadiation in J/(m^2 s) %f", dailySolarRadiation);
 
 					}
-					else
-					{
-						//fixsergio add solarRadiation calculation, from sunshineEquation and from Daymet
-						//daily solar radiation formulation
-
-						//dailySolarRadiation = extraTerrestrialInsolation * (empiric_param_a + empiric_param_b * sunshine / daylength) / 1000000.0;
-					}
 
 
 					//albedo

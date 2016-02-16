@@ -541,7 +541,7 @@ int importSettingsFile(char *fileName)
 						settings->symmetric_water_competition = *pch;
 						break;
 					case 4:
-						strncpy (settings->daymet, (const char*)pch, 3);
+						strncpy (settings->spin_up, (const char*)pch, 3);
 						break;
 					case 5:
 						strncpy (settings->rothC, (const char*)pch, 3);
