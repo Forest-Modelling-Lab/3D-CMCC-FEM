@@ -487,6 +487,7 @@ enum {
 	F_SW,                           //SOIL WATER modifier
 	F_DROUGHT,                      //SOIL DROUGHT modifier (see Duursma et al., 2008)
 	F_PSI,							//SOIL WATER modifier using PSI, see Biome
+	F_CO2,							//CO2 fert effect
 	ASW,                            //available soil water per mm/ha
 	PHYS_MOD,                       //Physmod
 	YEARLY_PHYS_MOD,

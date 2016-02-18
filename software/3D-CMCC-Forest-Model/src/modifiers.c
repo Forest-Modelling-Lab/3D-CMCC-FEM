@@ -15,9 +15,41 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	double vwc; //soil volumetric water content
 	double psi;  //soil matric potential
 
+	/*variables for CO2 modifier computation*/
+	double Km;	//affinity coefficients  temperature dependent according to Arrhenius relationship
+	double Ea1 = 59.4; //KJ mol^-1
+	double A1 = 2.419 * pow(10,13);
+	double Ea2 = 109.6;	//KJ mol^-1
+	double A2 = 1.976 * pow(10,22);
+	double KO;	//inibition constant for 02
+	double Ea0 = 13913.5;	//KJ mol^-1
+	double A0 = 8240;
+	double tao;	// CO2/O2  specifity ratio
+	double Eatao = -42869.9;
+	double Atao = 7.87 * pow(10,-5);
 
 
 	Log("\nGET_DAILY_MODIFIERS\n\n");
+
+	/*CO2 MODIFIER FROM C-FIX*/
+
+	if (met[month].d[day].tavg >= 15)
+	{
+		Km = A1 * exp (-Ea1/(R*TempAbs));
+	}
+	else
+	{
+		Km = A2 * exp (-Ea2/(R*TempAbs));
+	}
+	KO = A0 * exp (-Ea0/(R*TempAbs));
+
+	tao = Atao * exp (-Eatao/(R*TempAbs));
+
+	s->value[F_CO2] = ((site->co2Conc/(O2CONC/(2*tao))) /
+			((refCO2CONC/(O2CONC/(2*tao)))) * ((Km*(1+(O2CONC/KO))+refCO2CONC)/(Km*(1+(O2CONC/KO))+refCO2CONC)));
+	Log("F_CO2 modifier (NOT_USED= %g\n", s->value[F_CO2]);
+
+
 
 	//LIGHT MODIFIER (Following Makela et al , 2008, Peltioniemi_etal_2012)
 	//FIXME chose which type of light use and differentiate for different layers
@@ -38,6 +70,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 		 }
 		Log("FLight (NOT USED)= %g\n", s->value[F_LIGHT]);
 	}
+
 
 	/*TEMPERATURE MODIFIER*/
 
@@ -335,12 +368,6 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 	s->value[F_DROUGHT] = (leaf_res * (bulk_pot - min_leaf_pot)) / (- min_leaf_pot * ((leaf_res + soil_res) * bulk_pot));
 	Log("F_DROUGHT = %f\n", s->value[F_DROUGHT]);
 	 */
-
-
-
-
-
-	/*CO2 MODIFIER FROM C-FIX*/
 
 	Log("-------------------\n");
 }

@@ -46,6 +46,8 @@
 #define PSYCCONST				 65       //psychrometer costant
 #define EVAPOCOEFF			   1.32       //Priestley Taylor Coefficient
 
+#define TempAbs				273.15        //absolute temperature in Kelvin
+
 
 //COSTANTS
 #define Pi               3.141592654     //Pi greco
@@ -54,6 +56,9 @@
 #define e				  2.71828183     //nepero/eulero number
 
 #define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ
+
+#define refCO2CONC				 218     //ppmv reference co2 concentration see Verstraeten 1994, 2002
+#define O2CONC				    20.9     //% of O2 concentration see Verstraeten 1994, 2002
 
 
 
