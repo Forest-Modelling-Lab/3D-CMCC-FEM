@@ -47,7 +47,7 @@ void Get_daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const 
 
 	s->value[F_CO2] = ((site->co2Conc/(O2CONC/(2*tao))) /
 			((refCO2CONC/(O2CONC/(2*tao)))) * ((Km*(1+(O2CONC/KO))+refCO2CONC)/(Km*(1+(O2CONC/KO))+refCO2CONC)));
-	Log("F_CO2 modifier (NOT_USED= %g\n", s->value[F_CO2]);
+	Log("F_CO2 modifier (NOT_USED)= %g\n", s->value[F_CO2]);
 
 
 
