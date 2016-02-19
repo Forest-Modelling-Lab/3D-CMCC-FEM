@@ -558,7 +558,6 @@ int main(int argc, char *argv[])
 
 	int cell;
 
-
 	char strSitename[20] = "";
 	char strTmp[3], strTmp2[4], strTmp3[3];
 	char strSizeCell[10] = "";
@@ -1067,6 +1066,32 @@ int main(int argc, char *argv[])
 
 	}
 
+	/* add suffix for type files */
+	{
+		char *p;
+		char *ext;
+		p = strrchr(input_met_path, '.');
+		if ( ! p ) {
+			puts("bad met file!\n");
+			return -1;
+		}
+		++p;
+		if ( ! mystricmp(p, "nc") ) {
+			ext = "_nc";
+		} else if ( ! mystricmp(p, "lst") ) {
+			ext = "_lst";
+		} else if ( ! mystricmp(p, "txt") ) {
+			ext = "_txt";
+		} else {
+			puts("bad met file!\n");
+			return -1;
+		}
+		strcat(out_filename, ext);
+		strcat(daily_out_filename, ext);
+		strcat(monthly_out_filename, ext);
+		strcat(annual_out_filename, ext);
+		strcat(soil_out_filename, ext);
+	}
 
 	strcat (out_filename, ".txt");
 	strcat (daily_out_filename, ".txt");
