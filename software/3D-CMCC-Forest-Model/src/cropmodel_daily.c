@@ -103,9 +103,6 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	double canopyDaytimeMeanTemperature;			// canopy daytime (mean) temperature
 	double meanCanopyTemperature;				// mean canopy temperature
 
-	// ALESSIOR this var was used without being initialized!
-	double monthlyAverageTemperature = 0.;
-
 	double annualTemperatureAmplitude;			// amplitude of annual temperatures (°C)
 	double meanAnnualTemperature;				// mean of annual temperatures (°C)
 	double soilSurfaceTemperature;				// soil surface temperature in day k

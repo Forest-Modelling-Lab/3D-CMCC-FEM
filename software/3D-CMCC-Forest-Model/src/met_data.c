@@ -161,7 +161,7 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
 {
 	static int counter;
-	static double temp_avg_monthly_temp;
+	//static double temp_avg_monthly_temp;
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -511,20 +511,20 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
 		Log("-average solar_rad = %.2f MJ/m^2/day\n"
-				"-tavg = %.2f °C\n"
-				"-tmax = %.2f °C\n"
-				"-tmin = %.2f °C\n"
-				"-tday = %.2f °C\n"
-				"-tnight = %.2f °C\n"
+				"-tavg = %f °C\n"
+				"-tmax = %f °C\n"
+				"-tmin = %f °C\n"
+				"-tday = %f °C\n"
+				"-tnight = %f °C\n"
 				//"-rh = %f %%\n"
-				"-vpd = %.2f mbar\n"
-				"-ts_f = %.2f °C\n"
-				"-rain = %.2f mm\n"
-				"-swc = %.2f %%vol\n"
-				"-thermic_sum = %.2f °C\n"
-				"-daylength = %.2f hrs\n"
+				"-vpd = %f mbar\n"
+				"-ts_f = %f °C\n"
+				"-rain = %f mm\n"
+				"-swc = %f %%vol\n"
+				"-thermic_sum = %f °C\n"
+				"-daylength = %f hrs\n"
 				"-DOY = %d\n"
-				"-tsoil = %.2f °C\n"
+				"-tsoil = %f °C\n"
 				//"-month avg temp = %.2f °C\n"
 				//"-month cum rain = %.2f mm\n"
 				,met[month].d[day].solar_rad,

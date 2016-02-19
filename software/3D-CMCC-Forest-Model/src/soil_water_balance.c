@@ -19,11 +19,11 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 	Log("*********GET %c SOIL WATER BALACE************\n", settings->time);
 	/*compute water to atmosphere*/
 	c->water_to_atmosphere = c->daily_tot_et;
-	Log("Water lost to atmosphere = %f \n", c->water_to_atmosphere);
+	Log("Water to atmosphere = %f \n", c->water_to_atmosphere);
 
 
 
-	/*compute water remaining into the soil pool*/
+	/*compute water that goes into the soil pool*/
 	c->water_to_soil = met[month].d[day].rain - c->daily_tot_et;
 	Log("Water to soil = %f \n", c->water_to_soil);
 
@@ -49,4 +49,8 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 		c->available_soil_water = c->max_asw;
 		Log("Available soil water = %f\n", c->available_soil_water);
 	}
+	c->swc= (c->available_soil_water * 100)/c->max_asw;
+	Log("SWC = %g(%vol)\n", c->swc);
+
+
 }

@@ -35,7 +35,7 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double Daily_solar_radiation;
-	double Monthly_solar_radiation;
+	//double Monthly_solar_radiation;
 	double Light_trasm;
 	double Par_over;
 

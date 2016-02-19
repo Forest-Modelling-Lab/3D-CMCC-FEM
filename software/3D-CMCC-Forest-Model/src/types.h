@@ -1020,6 +1020,7 @@ typedef struct {
 	double soil_moist_ratio;
 	double av_soil_moist_ratio;
 	double max_asw;
+	double swc;//volumetric soil water content (%vol)
 	double psi_sat;//soil saturated matric potential
 	double vwc_sat;//soil saturated Volumetric water content
 	double soil_b; //soil moisture parameter

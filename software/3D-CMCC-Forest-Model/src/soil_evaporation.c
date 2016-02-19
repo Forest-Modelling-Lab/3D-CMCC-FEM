@@ -118,7 +118,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc) * met[month].d[day].daylength * 3600.0) + c->snow_subl;
 
 		//c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (met[month].d[day].daylength * 3600.0)) + c->snow_subl;
-		Log("Daily Soil Evaporation = %f \n", c->soil_evaporation );
+		Log("Daily Soil Evaporation = %fmm \n", c->soil_evaporation );
 	}
 
 	c->total_yearly_soil_evaporation += c->soil_evaporation;

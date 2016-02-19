@@ -31,7 +31,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 	double oldW;
 	double Daily_solar_radiation;
-	double Monthly_solar_radiation;
+	//double Monthly_solar_radiation;
 	double Light_trasm;
 	double Par_over;
 	double Perc_fine;

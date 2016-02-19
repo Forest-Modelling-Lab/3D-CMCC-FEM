@@ -249,14 +249,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						c->par_for_dominated = (c->par - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
 								c->par_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
 					}
-					//FIXME OLD VERSION
-					//Net Radiation for lower layer
-					//c->net_radiation_for_dominated = (((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
-					//		+ (c->net_radiation * (Gap_Cover * settings->sizeCell))) / settings->sizeCell;
-					//Par for lower layer
-					//c->par_for_dominated += (c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					//c->par_for_dominated += c->par * (Gap_Cover * settings->sizeCell);
-					//c->par_for_dominated /= settings->sizeCell;
 					Log("Hourly Net Radiation for lower layer = %f  W/m^2/hour\n", c->net_radiation_for_dominated);
 					Log("Average Par for lower layer = %f molPAR/m^2 month\n", c->par_for_dominated);
 				}
