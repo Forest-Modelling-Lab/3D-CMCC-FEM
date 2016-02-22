@@ -41,7 +41,6 @@
 #define SLAMKG				     0.1	  //Convert SLA IN cm ^2/gC in m^2/KgC
 
 #define E20						2.2       //rate of change of saturated VPD with T at 20C
-#define LAMBDA				2460000       //latent heat of vapourisation of H2O (J/kg)
 #define VPDCONV			   0.000622       //convert VPD to saturation deficit = 18/29/1000
 #define PSYCCONST				 65       //psychrometer costant
 #define EVAPOCOEFF			   1.32       //Priestley Taylor Coefficient
