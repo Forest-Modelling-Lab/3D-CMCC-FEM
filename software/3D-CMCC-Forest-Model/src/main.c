@@ -1108,7 +1108,7 @@ int main(int argc, char *argv[])
 	}
 	free(out_filename); out_filename = NULL;
 	daily_logInit (daily_out_filename);
-	Daily_Log ("daily output file at cell level\n\n");
+	//Daily_Log ("daily output file at cell level\n\n");
 	free(daily_out_filename); daily_out_filename = NULL;
 
 	monthly_logInit (monthly_out_filename);
@@ -1295,7 +1295,6 @@ int main(int argc, char *argv[])
 							//
 							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
 							Get_rho_air (&m->cells[cell], day, month, years, yos);
-							//Get day length
 							Get_Day_Length (&m->cells[cell], day, month, years, yos);
 							//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
 

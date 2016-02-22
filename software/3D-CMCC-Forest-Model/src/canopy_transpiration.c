@@ -235,6 +235,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("Daily total canopy transpiration = %f \n", c->daily_tot_c_transp);
 
 
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/*BIOME VERSION*/

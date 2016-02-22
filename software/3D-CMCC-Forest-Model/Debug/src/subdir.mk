@@ -30,6 +30,7 @@ C_SRCS += \
 ../src/initialization_site_data.c \
 ../src/io.c \
 ../src/lai.c \
+../src/latent_heat_flux.c \
 ../src/leafFall_marconi.c \
 ../src/light.c \
 ../src/litterfall.c \
@@ -85,6 +86,7 @@ OBJS += \
 ./src/initialization_site_data.o \
 ./src/io.o \
 ./src/lai.o \
+./src/latent_heat_flux.o \
 ./src/leafFall_marconi.o \
 ./src/light.o \
 ./src/litterfall.o \
@@ -140,6 +142,7 @@ C_DEPS += \
 ./src/initialization_site_data.d \
 ./src/io.d \
 ./src/lai.d \
+./src/latent_heat_flux.d \
 ./src/leafFall_marconi.d \
 ./src/light.d \
 ./src/litterfall.d \

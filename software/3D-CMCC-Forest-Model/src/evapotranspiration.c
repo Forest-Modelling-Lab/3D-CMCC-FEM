@@ -20,6 +20,7 @@
 
 extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
 {
+
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");
 
 	c->daily_tot_et = c->daily_tot_c_evapotransp + c->soil_evaporation;
@@ -31,7 +32,6 @@ extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *c
 	c->monthly_tot_et += c->daily_tot_et;
 	Log("Monthly total EVAPOTRANSPIRATION = %f \n", c->monthly_tot_et);
 	//fixme add annual_tot_et
-
 
 }
 

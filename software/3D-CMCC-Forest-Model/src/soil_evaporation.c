@@ -17,7 +17,7 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
 
 	/*computing latent heat following BIOME approach*/
-	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
+	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
 
 	/*following Gerten et al., 2004*/
 

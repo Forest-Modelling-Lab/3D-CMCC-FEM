@@ -955,28 +955,30 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	if(day  == 0 && month == 0 && years == 0)
 	{
 
-		Daily_Log("Site name = %s\n", site->sitename);
-		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+		//Daily_Log("Site name = %s\n", site->sitename);
+		//Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		//Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
 
 
-		Daily_Log ("HC\n");
+		//Daily_Log ("HC\n");
 		if (!mystricmp(settings->dndc, "on"))
 				{
-					Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
+					//Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
 				}
-		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
-		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
-		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
+		//Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
+		//Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+		//Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log("Daily HR = daily total heterotrophic respiration (gC/m2/day)\n");
-			Daily_Log("Daily Reco = daily total ecosystem respiration (gC/m2/day)\n");
+			//Daily_Log("Daily HR = daily total heterotrophic respiration (gC/m2/day)\n");
+			//Daily_Log("Daily Reco = daily total ecosystem respiration (gC/m2/day)\n");
 		}
+		/*
 		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
 		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
 		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
 		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
+		Daily_Log("Daily LE = daily latent heat (W/m^2)\n");
 		Daily_Log("Daily ASW = daily Available Soil Water(mm/day)\n");
 		Daily_Log("Daily Wfl = daily water fluxes (mm/day)\n");
 		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
@@ -986,6 +988,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		Daily_Log("Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
 		Daily_Log("Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
 		Daily_Log("Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
+		*/
 
 	}
 
@@ -1005,7 +1008,7 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC");
+			Daily_Log ("%s \t%s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Daily_Log ("\t%3s", "NEE");
@@ -1016,9 +1019,9 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
+			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
 					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)", "ASW", "Wfl", "LAI(0)",
+					"Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)","LE(0)", "ASW", "Wfl", "LAI(0)",
 					"CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
@@ -1040,12 +1043,13 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
 		}
-		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
+		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->daily_c_flux[0],
 				c->daily_c_flux_tDM[0],
 				c->daily_npp[0],
 				c->daily_npp_g_c[0],
 				c->daily_c_evapotransp[0],
+				c->daily_tot_latent_heat_flux,
 				c->available_soil_water,
 				c->daily_tot_w_flux,
 				c->daily_lai[0],
@@ -1254,6 +1258,8 @@ extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	c->daily_tot_c_evapotransp = 0;
 	c->daily_tot_et = 0;
 	c->daily_tot_dead_tree = 0;
+
+	c->daily_tot_latent_heat_flux = 0;
 
 	if (!mystricmp(settings->dndc, "on"))
 	{

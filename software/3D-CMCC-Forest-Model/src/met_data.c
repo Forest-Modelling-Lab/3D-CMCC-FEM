@@ -276,43 +276,27 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
+	/*compute density of air (in Kgm-3)*/
+
 	//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
 	/* temperature and pressure correction factor for conductances */
 	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
 
 
-	//if (settings->time == 'm')
-	//{
-	//	if(met[month].tday == NO_DATA)
-	//	{
-	//		met[month].rho_air = 1.292 - (0.00428 * met[month].tavg);
-	//		c->gcorr = pow((met[month].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-	//		//Log("gcorr = %f\n", c->gcorr);
-	//	}
-	//	else
-	//	{
-	//		met[month].rho_air = 1.292 - (0.00428 * met[month].tday);
-	//		c->gcorr = pow((met[month].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-	//		//Log("gcorr = %f\n", c->gcorr);
-	//	}
-	//	Log("RhoAir = %f\n", met[month].rho_air);
-	//}
-	//else
+	if(met[month].d[day].tday == NO_DATA)
 	{
-		if(met[month].d[day].tday == NO_DATA)
-		{
-			met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
-			c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %f\n", c->gcorr);
-		}
-		else
-		{
-			met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
-			c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
-			//Log("gcorr = %f\n", c->gcorr);
-		}
-		//Log("RhoAir = %f\n", met[month].d[day].rho_air);
+		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
+		c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+		//Log("gcorr = %f\n", c->gcorr);
 	}
+	else
+	{
+		met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
+		c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+		//Log("gcorr = %f\n", c->gcorr);
+	}
+	//Log("RhoAir = %f\n", met[month].d[day].rho_air);
+
 }
 
 

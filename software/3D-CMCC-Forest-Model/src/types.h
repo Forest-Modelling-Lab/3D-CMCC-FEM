@@ -1057,6 +1057,9 @@ typedef struct {
 	double daily_Nee, daily_Reco, monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
 
 
+	double daily_tot_latent_heat_flux;
+
+
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	double daily_aut_resp[3], daily_tot_aut_resp,daily_tot_het_resp, monthly_aut_resp[3], monthly_tot_aut_resp,monthly_tot_het_resp, annual_aut_resp[3], annual_tot_aut_resp, annual_tot_het_resp;
@@ -1347,6 +1350,7 @@ extern void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, 
 extern void Get_canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 extern void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 extern void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
+extern void Get_latent_heat_flux (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
 
 
 //sergio's functions
