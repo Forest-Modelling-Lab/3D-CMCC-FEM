@@ -1031,7 +1031,8 @@ typedef struct {
 	int daily_layer_number;
 	int top_layer;
 	int saplings_counter;
-	double snow;  //amount of snow in Kg H2O
+	double daily_snow;
+	double snow_pack;  //amount of snow in Kg H2O
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
 	double gcorr;

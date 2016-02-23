@@ -262,25 +262,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								if (day == 0 && month == JANUARY)
 								{
-//									int dd, mm, senescenceDay = 0;
-//									for (mm = 0; mm < 12; mm++)
-//									{
-//										for (dd = 0; dd < DaysInMonth[mm]; dd++ )
-//										{
-//											senescenceDay ++;
-//											if(met[mm].d[dd].daylength < m->cells[cell].heights[height].ages[age].species[species].value[MINDAYLENGTH] && mm > 6)
-//											{
-//												m->cells[cell].heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE] = senescenceDay;
-//												break;
-//											}
-//										}
-//									}
 
-										//m->cells[cell].heights[height].ages[age].species[species].value[FIRST_DAY_LAI] = Maximum(0,
-//												(m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE] * 1000) /
-//												(m->cells[cell].heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] *
-//														settings->sizeCell) * (m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] * GC_GDM));
-										Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
+									Get_peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 									}
 									if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0.0)
 									{
@@ -294,23 +277,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 										m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 										Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-										/*
-								if (settings->spatial == 'u')
-								{
-									Get_lai (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 
-									if (m->cells[cell].heights[height].ages[age].species[species].value[LAI] <= 0 )
-									{
-										Log("ATTENTION LAI <= 0 !!!!!!!!!!\n");
-									}
-								}
-										 *
-								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG]==1
-										&& m->cells[cell].heights[height].ages[age].species[species].value[LAI] == 0)
-								{
-									Log("ERROR VEG_UNVEG = 1 BUT LAI = 0!!!!!\n");
-								}
-										 */
 										Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 										/*modifiers*/
@@ -395,6 +362,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 										}
 
+										Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
+
 										/*canopy evapo-transpiration block*/
 										Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -410,6 +379,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 														m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_soil_water_balance (&m->cells[cell], met, month, day);
 											}
 										}
@@ -482,6 +452,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 									Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+									Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									/*check for symmetric water competition*/
 									/*if symmetric competition for water*/
 									Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
@@ -492,8 +463,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
 											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
 													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
-											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 										}
 									}

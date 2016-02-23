@@ -1431,7 +1431,7 @@ void soil_temperature(CELL *const c, int years, int month, int day, const MET_DA
 	//adjT = adjT / (double)pow((1.0+lai),0.2); //albedo * OldT + (1.0 - albedo) * adjT;
 	//adjT = albedo * OldT + (1.0 - albedo) * adjT;
 
-	if(c->snow==0.0)//&&surface_litter<=2000.0)
+	if(c->snow_pack==0.0)//&&surface_litter<=2000.0)
 	{
 		fsl = (c->soils[0].rcvl + c->soils[0].rcvl + c->soils[0].rcvl)/1000.0;
 		//fsl = c->litter / 1000.0;//-0.1097*(double)log(surface_litter+0.0000001) + 1.3143;
@@ -1442,7 +1442,7 @@ void soil_temperature(CELL *const c, int years, int month, int day, const MET_DA
 	}
 	else
 	{
-		double SnowDepth = c->snow*2000.0; //cm, snow pack thicknes
+		double SnowDepth = c->snow_pack*2000.0; //cm, snow pack thicknes
 		//Surf_Temp = 0.0 + adjT / (10.0 + SnowDepth);//
 		//Surf_Temp = max(0.0, Surf_Temp);
 		c->soilSurfaceT = adjT / (1.0 + SnowDepth);//

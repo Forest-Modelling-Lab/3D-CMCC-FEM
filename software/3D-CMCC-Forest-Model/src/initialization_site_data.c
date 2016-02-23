@@ -104,7 +104,7 @@ void Get_initialization_site_data (CELL *c)
 	Log("Initialization ASW = %f (mm-kgH2O/m2)\n\n\n", c->available_soil_water);
 
 	//snow initialization
-	c->snow = 0;
+	c->snow_pack = 0;
 	//c->snow_subl = 0;
 
 }

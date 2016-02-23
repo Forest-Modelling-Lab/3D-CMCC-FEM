@@ -318,105 +318,90 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 
 
 	t_melt = r_melt = r_sub = 0;
-	/*if(settings->time == 'm')
-	{
-		t_melt = t_coeff * met[month].tavg;
-	}
-	else*/
-	{
-		t_melt = t_coeff * met[month].d[day].tavg;
-	}
+	t_melt = t_coeff * met[month].d[day].tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	if (settings->time == 'd')
+
+	incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
+
+
+
+	/* temperature and radiation melt from snowpack */
+	if (met[month].d[day].tavg > 0.0)
 	{
-		incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
-	}
-	else
-	{
-		/*no snow calculations in monthly time step*/
-	}
-	//Log("net_radiation for soil = %f\n", c->net_radiation_for_soil);
-	//Log("incident radiation for soil = %f\n", incident_rad);
-
-	if (settings->time == 'd')
-	{
-		/* temperature and radiation melt from snowpack */
-		if (met[month].d[day].tavg > 0.0)
-		{
-			if (c->snow > 0.0)
-			{
-				Log("tavg = %f\n", met[month].d[day].tavg);
-				Log("snow = %f\n", c->snow);
-				Log("Snow melt!!\n");
-				r_melt = incident_rad / LATENT_HEAT_FUSION;
-				melt = t_melt + r_melt;
-
-
-				if (melt > c->snow)
-				{
-					melt = c->snow;
-					/*reset snow*/
-					c->snow = 0;
-				}
-				//add snow to soil water
-				/*check for balance*/
-				c->snow_to_soil = melt;
-				if (c->snow_to_soil < c->snow)
-				{
-					c->available_soil_water += c->snow_to_soil;
-					c->snow -= c->snow_to_soil;
-				}
-				else
-				{
-					c->available_soil_water += c->snow;
-					c->snow = 0.0;
-				}
-				Log("snow to soil = %f\n", c->snow_to_soil);
-			}
-
-		}
-		/* sublimation from snowpack */
-		else
+		if (c->snow_pack > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
-			Log("snow = %f\n", c->snow);
-			Log("rain becomes snow\n");
-			c->snow += met[month].d[day].rain;
-			Log("Day %d month %d snow = %f (mm-kgH2O/m2)\n", day+1, month+1 , c->snow);
-			met[month].d[day].rain = 0;
-			r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-			//Log("r_sub = %f\n", r_sub);
-			if (c->snow > 0.0)
+			Log("snow = %f\n", c->snow_pack);
+			Log("Snow melt!!\n");
+			r_melt = incident_rad / LATENT_HEAT_FUSION;
+			melt = t_melt + r_melt;
+
+
+			if (melt > c->snow_pack)
 			{
-				/*snow sublimation*/
-				if (r_sub > c->snow)
-				{
-					Log("Snow sublimation!!\n");
-					r_sub = c->snow;
-					c->snow_subl = r_sub;
-					/*check for balance*/
-					if (c->snow_subl < c->snow)
-					{
-						c->snow -= c->snow_subl;
-					}
-					else
-					{
-						c->snow_subl = c->snow;
-						c->snow = 0.0;
-					}
-				}
-				else
-				{
-					c->snow_subl = 0.0;
-				}
+				melt = c->snow_pack;
+				/*reset snow*/
+				c->snow_pack = 0;
 			}
+			//add snow to soil water
+			/*check for balance*/
+			c->snow_to_soil = melt;
+			if (c->snow_to_soil < c->snow_pack)
+			{
+				c->available_soil_water += c->snow_to_soil;
+				c->snow_pack -= c->snow_to_soil;
+			}
+			else
+			{
+				c->available_soil_water += c->snow_pack;
+				c->snow_pack = 0.0;
+			}
+			Log("snow to soil = %f\n", c->snow_to_soil);
+			Log("Snow thickness = %f (cm)\n", c->snow_pack);
+			Log("ASW + snow melted = %f mm\n", c->available_soil_water);
 		}
 	}
 	else
 	{
-		/*no snow calculations in monthly time step*/
+		Log("tavg = %f\n", met[month].d[day].tavg);
+		Log("snow = %f\n", c->snow_pack);
+		Log("rain becomes snow\n");
+
+		c->snow_pack += met[month].d[day].rain;
+		Log("Day %d month %d snow = %f (mm-kgH2O/m2)\n", day+1, month+1 , c->snow_pack);
+		Log("Snow thickness = %f (cm)\n", c->snow_pack);
+
+		c->daily_snow = met[month].d[day].rain;
+		met[month].d[day].rain = 0;
+		r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+		//adding snow to snowpack
+		if (c->snow_pack > 0.0)
+		{
+			/*snow sublimation*/
+			if (r_sub > c->snow_pack)
+			{
+				Log("Snow sublimation!!\n");
+				r_sub = c->snow_pack;
+				c->snow_subl = r_sub;
+				/*check for balance*/
+				if (c->snow_subl < c->snow_pack)
+				{
+					c->snow_pack -= c->snow_subl;
+				}
+				else
+				{
+					c->snow_subl = c->snow_pack;
+					c->snow_pack = 0.0;
+				}
+			}
+			else
+			{
+				c->snow_subl = 0.0;
+			}
+		}
 	}
+
 	Log("*****************************************\n");
 }
 
@@ -528,7 +513,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				met[month].d[day].tsoil
 				//,met[month].avg_monthly_temp
 				//,met[month].cum_monthly_rain
-				);
+		);
 
 		if (settings->spatial == 's')
 		{

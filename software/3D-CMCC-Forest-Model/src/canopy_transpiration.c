@@ -64,7 +64,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	rhoAir = met[month].d[day].rho_air;
 	/*computing latent heat following BIOME approach*/
 	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
-	Log("Latent Heat from computation= %f\n", lhvap);
 
 	//Veg period
 	if (s->counter[VEG_UNVEG] == 1)
