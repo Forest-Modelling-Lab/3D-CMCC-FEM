@@ -276,7 +276,7 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	/*compute density of air (in Kgm-3)*/
+	/*compute density of air (in kg/m3)*/
 
 	//TODO CHECK DIFFERENCES IN A FIXED rhoair or in a computed rhoair
 	/* temperature and pressure correction factor for conductances */
@@ -295,8 +295,6 @@ extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
 		c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
 		//Log("gcorr = %f\n", c->gcorr);
 	}
-	//Log("RhoAir = %f\n", met[month].d[day].rho_air);
-
 }
 
 
@@ -321,9 +319,10 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	t_melt = t_coeff * met[month].d[day].tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
+	//incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
 
-	incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
-
+	/* canopy transmitted radiation: convert from MJ/m2/d  --> KJ/m2/d */
+	incident_rad = met[month].d[day].solar_rad * snow_abs * 1000;
 
 
 	/* temperature and radiation melt from snowpack */
@@ -332,7 +331,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 		if (c->snow_pack > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
-			Log("snow = %f\n", c->snow_pack);
+			Log("snow pack = %f cm\n", c->snow_pack);
 			Log("Snow melt!!\n");
 			r_melt = incident_rad / LATENT_HEAT_FUSION;
 			melt = t_melt + r_melt;
@@ -357,25 +356,40 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				c->available_soil_water += c->snow_pack;
 				c->snow_pack = 0.0;
 			}
-			Log("snow to soil = %f\n", c->snow_to_soil);
+			Log("snow to soil = %f mm\n", c->snow_to_soil);
 			Log("Snow thickness = %f (cm)\n", c->snow_pack);
 			Log("ASW + snow melted = %f mm\n", c->available_soil_water);
+		}
+		else
+		{
+			Log("tavg = %f\n", met[month].d[day].tavg);
+			Log("snow pack = %f cm\n", c->snow_pack);
+			Log("No Snow to melt!!\n");
 		}
 	}
 	else
 	{
-		Log("tavg = %f\n", met[month].d[day].tavg);
-		Log("snow = %f\n", c->snow_pack);
-		Log("rain becomes snow\n");
+		if(met[month].d[day].rain > 0)
+		{
+			Log("tavg = %f\n", met[month].d[day].tavg);
+			Log("rain becomes snow\n");
 
-		c->snow_pack += met[month].d[day].rain;
-		Log("Day %d month %d snow = %f (mm-kgH2O/m2)\n", day+1, month+1 , c->snow_pack);
-		Log("Snow thickness = %f (cm)\n", c->snow_pack);
+			c->daily_snow = met[month].d[day].rain;
+			Log("Daily snow = %f cm\n", c->daily_snow);
 
-		c->daily_snow = met[month].d[day].rain;
-		met[month].d[day].rain = 0;
+			c->snow_pack += c->daily_snow;
+			Log("snow pack = %f cm\n", c->snow_pack);
+
+			met[month].d[day].rain = 0;
+		}
+		else
+		{
+			Log("NO rain NO snow\n");
+			Log("snow pack = %f cm\n", c->snow_pack);
+		}
+
 		r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
-		//adding snow to snowpack
+
 		if (c->snow_pack > 0.0)
 		{
 			/*snow sublimation*/
@@ -384,6 +398,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				Log("Snow sublimation!!\n");
 				r_sub = c->snow_pack;
 				c->snow_subl = r_sub;
+				Log("Snow sublimated = %f mm\n", c->snow_subl);
 				/*check for balance*/
 				if (c->snow_subl < c->snow_pack)
 				{
@@ -399,6 +414,10 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			{
 				c->snow_subl = 0.0;
 			}
+		}
+		else
+		{
+			Log("NO snow pack to sublimate\n");
 		}
 	}
 

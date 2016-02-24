@@ -26,8 +26,8 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 	double LightTrasmitted;
 	double LightAbsorb;
-	double Month_Radiation;
-	double Daily_Radiation;
+
+
 	//double DailyPar;
 	//double Gap_Cover = 0;
 
@@ -80,13 +80,11 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
 			//ALBEDO/2
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) * (1 - (s->value[ALBEDO]/2.0)) / met[month].d[day].daylength);
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) * (1 - (s->value[ALBEDO]/2.0)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
 
-			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0,  6)) / met[month].d[day].daylength);
+			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation NO ALBEDO = %f W/m^2/hour\n", c->net_radiation_no_albedo);
-
-			Daily_Radiation = met[month].d[day].solar_rad;
 
 			//Par
 			//DailyPar = met[month].solar_rad * MOLPAR_MJ;
@@ -99,10 +97,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//albedo is not considered for lower layers as BIOME doesn't considers albedo for shaded leaves
 			//CONSIDERING THAT ALBEDO SHOULD BE CONSIDERED ONLY FOR SUN LEAVES AND THAT SUN LEAVES REPRESENT 50%
 			//ALBEDO IS 1/6
-			c->par = (Daily_Radiation * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
+			c->par = (met[month].d[day].solar_rad * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
 			Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
 
-			c->par_no_albedo = (Daily_Radiation * MOLPAR_MJ);
+			c->par_no_albedo = (met[month].d[day].solar_rad * MOLPAR_MJ);
 			Log("Par for layer '%d' NO ALBEDO= %f molPAR/m^2 day\n", c->heights[height].z, c->par_no_albedo);
 
 
@@ -540,32 +538,18 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	}
 	else
 	{
-		/*if (settings->time == 'm')
-		{
-			Log("Daily solar rad = %f MJ/m^2/day\n", met[month].solar_rad);
 
-			c->net_radiation = (QA + QB * (met[month].solar_rad * pow (10.0, 6.0))) / met[month].daylength;
-			Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
+		Log("Daily solar rad = %f MJ/m^2/day\n", met[month].d[day].solar_rad);
 
-			Month_Radiation = met[month].solar_rad * DaysInMonth;
+		c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6))) / met[month].d[day].daylength;
+		Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
 
-			c->par = Month_Radiation * MOLPAR_MJ;
-			Log("Par for layer '%d' = %f molPAR/m^2 month\n", c->heights[height].z, c->par);
-		}
-		else*/
-		{
-			Log("Daily solar rad = %f MJ/m^2/day\n", met[month].d[day].solar_rad);
 
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6))) / met[month].d[day].daylength;
-			Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
+		c->par = met[month].d[day].solar_rad * MOLPAR_MJ;
+		Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
 
-			Daily_Radiation = met[month].d[day].solar_rad;
+		c->net_radiation_for_soil = c->net_radiation;
 
-			c->par = Daily_Radiation * MOLPAR_MJ;
-			Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
-
-			c->net_radiation_for_soil = c->net_radiation;
-		}
 	}
 
 

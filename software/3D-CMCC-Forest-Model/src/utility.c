@@ -15,6 +15,9 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 	int age;
 	int species;
 
+	/*reset cell related variables*/
+	c->total_yearly_soil_evaporation = 0;
+
 	for ( height = count - 1; height >= 0; height-- )
 	{
 		for (age = c->heights[height].ages_count - 1; age >= 0; age --)

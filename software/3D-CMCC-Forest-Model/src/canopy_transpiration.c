@@ -21,8 +21,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	static double CanCond;
 	static double CanopyTranspiration;
-	//double rhoAir = 1.2;       // density of air, kg/m3
-	double rhoAir;
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
 	static double Etransp;
@@ -61,7 +59,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
 
 
-	rhoAir = met[month].d[day].rho_air;
 	/*computing latent heat following BIOME approach*/
 	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
 
@@ -98,7 +95,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 
-		defTerm = rhoAir * lhvap * (vpd * VPDCONV) * s->value[BLCOND];
+		defTerm = met[month].d[day].rho_air * lhvap * (vpd * VPDCONV) * s->value[BLCOND];
 		//Log("defTerm = %f\n", defTerm);
 		duv = (1.0 + E20 + s->value[BLCOND] / CanCond);
 		//Log("duv = %f\n", duv);
@@ -333,8 +330,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	tav_k = met[month].d[day].tday + 273.15;
-	/* calculate density of air (rho) as a function of air temperature */
-	rhoAir = 1.292 - (0.00428 * met[month].d[day].tday);
+
 	/* calculate latent heat of vaporization as a function of ta */
 	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
 	/* calculate temperature offsets for slope estimate */
@@ -345,7 +341,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = rhoAir * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
+	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (tav_k*tav_k*tav_k));
 
 	/* calculate combined resistance to convective and radiative heat transfer,
 	    parallel resistances : rhr = (rh * rr) / (rh + rr) */
@@ -359,7 +355,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	esse = (pvs1-pvs2) / (t1-t2);
 
 	/* calculate evaporation, in W/m^2  */
-	evap = ( ( esse * swabs ) + ( rhoAir * CP * vpd / rhr ) ) /
+	evap = ( ( esse * swabs ) + ( met[month].d[day].rho_air * CP * vpd / rhr ) ) /
 			( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
 
 	/* covert evaporation into kg/m^2/s */
