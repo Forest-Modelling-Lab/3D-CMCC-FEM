@@ -308,12 +308,14 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	static double snow_abs = 0.6; // absorptivity of snow
 	static double t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
 	double incident_rad;  //incident radiation (kJ/m2/d) incident radiation
-	double melt, t_melt, r_melt, r_sub;
+	double t_melt, r_melt, r_sub;
 
 
 	Log("-GET SNOW MET DATA-\n");
 
-
+	c->snow_subl = 0;
+	c->snow_melt = 0;
+	c->daily_snow = 0;
 
 	t_melt = r_melt = r_sub = 0;
 	t_melt = t_coeff * met[month].d[day].tavg;
@@ -328,24 +330,26 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	/* temperature and radiation melt from snowpack */
 	if (met[month].d[day].tavg > 0.0)
 	{
+		c->snow_subl = 0;
+
 		if (c->snow_pack > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
 			Log("snow pack = %f cm\n", c->snow_pack);
 			Log("Snow melt!!\n");
 			r_melt = incident_rad / LATENT_HEAT_FUSION;
-			melt = t_melt + r_melt;
+			c->snow_melt = t_melt + r_melt;
 
 
-			if (melt > c->snow_pack)
+			if (c->snow_melt > c->snow_pack)
 			{
-				melt = c->snow_pack;
+				c->snow_melt = c->snow_pack;
 				/*reset snow*/
 				c->snow_pack = 0;
 			}
 			//add snow to soil water
 			/*check for balance*/
-			c->snow_to_soil = melt;
+			c->snow_to_soil = c->snow_melt;
 			if (c->snow_to_soil < c->snow_pack)
 			{
 				c->available_soil_water += c->snow_to_soil;
@@ -369,6 +373,8 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	}
 	else
 	{
+		c->snow_melt = 0;
+
 		if(met[month].d[day].rain > 0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);

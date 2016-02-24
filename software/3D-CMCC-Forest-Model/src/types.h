@@ -1033,6 +1033,7 @@ typedef struct {
 	int saplings_counter;
 	double daily_snow;
 	double snow_pack;  //amount of snow in Kg H2O
+	double snow_melt; //melted snow
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
 	double gcorr;
