@@ -22,7 +22,7 @@ University of Tuscia Viterbo, ITALY
 Mobile +393299841220
 Skype alessio.collalti 
 
-General notes on 3D-CMCC-FEM, Version 5
+General notes on 3D-CMCC-FEM, Version 5.x
 3D-CMCC Forest Evolution Model (FEM) is a software model that simulates the storage and fluxes of water, carbon, within the
 vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
 versions have been developed for particular purposes. The CMCC and the University of Tuscia (Viterbo) maintain benchmark code versions for
@@ -65,7 +65,7 @@ Usage
 3D-CMCC-FEM is a command line program, and its behaviour is controlled by
 several command line options, specified in unix style.  
 
-3D-CMCC-FEM reads input parameters from five text files:
+3D-CMCC-FEM reads input parameters from five text or netcdf files:
 
 -settings.txt
 -input.txt
@@ -145,7 +145,7 @@ If the model runs in "spatial version" daily or monthly LAI values are mandatory
 Each variable must be separated by one tab character.
 
 example for year 2007 in monthly/spatial version (add Tmax and Tmin)
-Year    Month	n_days		Rg_f        Ta_f        Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
+Year    Month	n_days		Rg_f        Ta_f        Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI  xxx, xxx, WS_f
 2007    1		31			6.1			6.51536		13.1    7.1     0.2     7.8     1       -9999   0
 2007    2		28			9.1			5.49226		10.4    5.8     0.2     6.3     0.2     0.27    0
 2007    3		31			13.15		9.9         3.1     0.2     3.3     0       0.39    0       0
@@ -174,6 +174,7 @@ if you don't have optional data set value as -9999
 -Precip = Cumulated daily/monthly precipitation (mm day/month^-1)
 -SWC = Soil water content (mm day/month^-1)
 -LAI = Leaf area Index (m^2 m^-2) (Only in spatial version)
+-WS_f = Windspeed (m/sec)
 
 
 model gets the value of the previous if a mandatory variable is a -9999 starting from the 2 January of the first year of simulation
