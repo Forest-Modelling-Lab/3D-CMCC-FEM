@@ -339,6 +339,7 @@ int penmon(const pmet_struct* in, int out_flag,	double* et)
     s = (pvs1-pvs2) / (t1-t2);
     
     /* calculate evaporation, in W/m^2  */
+    //VPD IS IN Pa!!!!!!!!!!!!!!!!!!!!!
     e = ( ( s * in->irad ) + ( rho * CP * in->vpd / rhr ) ) /
     	( ( ( in->pa * CP * rv ) / ( lhvap * EPS * rhr ) ) + s );
     

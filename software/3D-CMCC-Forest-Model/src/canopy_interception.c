@@ -147,6 +147,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 
 
 	//fixme it unreasonable that all rainfall intercepted evporates simoultaneously
+	//decide if use gerten or Biome approach
 	/*compute a energy balance evaporation for rain intercepted from canopy and then evaporated*/
 	c->daily_tot_c_int_watt = c->daily_tot_c_int * c->lh_vap / 86400;
 	Log("Latent heat canopy interception/evaporation = %f W/m^2\n", c->daily_tot_c_int_watt);
