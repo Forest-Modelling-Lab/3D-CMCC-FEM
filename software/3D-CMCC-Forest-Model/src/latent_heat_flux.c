@@ -21,6 +21,7 @@ extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *con
 	Log("\nGET_LATENT_HEAT_ROUTINE\n");
 
 	//for consistency with eddy data use tday
+	/*upward energy fluxes*/
 	if(met[month].d[day].tday > 0.0) /*positive values of latent heat flux*/
 	{
 		if (met[month].d[day].tday <= 5)
@@ -55,6 +56,7 @@ extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *con
 	}
 	else /*negative values of latent heat flux*/
 	{
+		/*downward energy fluxes*/
 		/*in case of snow formation*/
 		if(c->daily_snow != 0.0)
 		{
