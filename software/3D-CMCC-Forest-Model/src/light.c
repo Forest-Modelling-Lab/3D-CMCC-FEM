@@ -8,16 +8,6 @@
 
 
 
-/**/
-void Get_Light_Recruitment (SPECIES *const s, double Av_Yearly_Par_Soil,  double av_yearly_daylength)
-{
-
-
-
-}
-
-
-
 void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height)
 {
 
@@ -75,7 +65,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//Net Radiation
 
 			Log("Global Solar Radiation = %f MJ/m^2/day\n", met[month].d[day].solar_rad);
-			//s->value[NET_RAD] = Get_Net_Radiation (met, years, month, daylength);
 			//4 Dec 2012 add Albedo
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
@@ -83,12 +72,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) * (1 - (s->value[ALBEDO]/2.0)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
 
+			/*the no albedo computation is used for gap*/
 			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) / met[month].d[day].daylength);
 			Log("Hourly Net Radiation NO ALBEDO = %f W/m^2/hour\n", c->net_radiation_no_albedo);
 
-			//Par
-			//DailyPar = met[month].solar_rad * MOLPAR_MJ;
-			//Log("Daily Average Par = %f molPAR/m^2 day\n", DailyPar);
 
 			//4 Dec 2012 add Albedo
 			//following BIOME albedo for PAR is 1/3 of albedo
@@ -100,6 +87,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			c->par = (met[month].d[day].solar_rad * MOLPAR_MJ) * (1 - (s->value[ALBEDO]/6));
 			Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
 
+			/*the no albedo computation is used for gap*/
 			c->par_no_albedo = (met[month].d[day].solar_rad * MOLPAR_MJ);
 			Log("Par for layer '%d' NO ALBEDO= %f molPAR/m^2 day\n", c->heights[height].z, c->par_no_albedo);
 
@@ -551,6 +539,14 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		c->net_radiation_for_soil = c->net_radiation;
 
 	}
+
+
+}
+
+/**/
+void Get_Light_Recruitment (SPECIES *const s, double Av_Yearly_Par_Soil,  double av_yearly_daylength)
+{
+
 
 
 }

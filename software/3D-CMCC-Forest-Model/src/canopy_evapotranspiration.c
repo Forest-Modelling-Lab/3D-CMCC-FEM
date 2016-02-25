@@ -104,6 +104,10 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 	c->annual_tot_c_evapotransp += s->value[CANOPY_EVAPOTRANSPIRATION];
 
 
+	/*compute energy balance evapotranspiration from canopy*/
+	c->daily_tot_c_evapotransp_watt = c->daily_tot_c_transp_watt + c->daily_tot_c_int_watt;
+	Log("Energy for canopy evapotranspiration = %f W/m^2\n", c->daily_tot_c_evapotransp_watt);
+
 }
 
 

@@ -22,8 +22,6 @@
 #define GDM_MOL                   24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
 #define GC_MOL                    12      //Convert molC to grams of C
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
-#define LATENT_HEAT_FUSION     335.0	  //Latent heat of fusion (kJ/kg)
-#define LATENT_HEAT_SUBLIMATION 2845.0    //Latent heat of sublimation (kJ/kg)
 #define SBC                  5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
 #define CP                    1010.0      //(J/kg K) specific heat of air
 #define G_STD    			 9.80665      //(m/s2) standard gravitational accel. */

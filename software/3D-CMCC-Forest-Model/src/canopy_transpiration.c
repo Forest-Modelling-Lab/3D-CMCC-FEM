@@ -226,9 +226,14 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		Log("Traspirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_transp[c->heights[height].z]);
 	}
 
+
 	/*compute total daily transpiration*/
 	c->daily_tot_c_transp += c->daily_c_transp[c->heights[height].z];
 	Log("Daily total canopy transpiration = %f \n", c->daily_tot_c_transp);
+
+	/*compute energy balance transpiration from canopy*/
+	c->daily_tot_c_transp_watt = c->daily_tot_c_transp * c->lh_vap / 86400;
+	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_tot_c_transp_watt);
 
 
 

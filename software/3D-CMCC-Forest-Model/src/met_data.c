@@ -337,7 +337,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			Log("tavg = %f\n", met[month].d[day].tavg);
 			Log("snow pack = %f cm\n", c->snow_pack);
 			Log("Snow melt!!\n");
-			r_melt = incident_rad / LATENT_HEAT_FUSION;
+			r_melt = incident_rad / c->lh_fus;
 			c->snow_melt = t_melt + r_melt;
 
 
@@ -394,7 +394,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			Log("snow pack = %f cm\n", c->snow_pack);
 		}
 
-		r_sub = incident_rad / LATENT_HEAT_SUBLIMATION;
+		r_sub = incident_rad / c->lh_sub;
 
 		if (c->snow_pack > 0.0)
 		{
@@ -428,6 +428,27 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	}
 
 	Log("*****************************************\n");
+}
+
+void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
+{
+	/*BIOME-BGC APPROACH*/
+	/*compute latent heat of vaporization (J/Kg)*/
+	c->lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
+	c->lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
+	/*latent heat of fusion (KJ/Kg)*/
+	c->lh_fus = 335.0;
+	/*latent heat of sublimation (KJ/Kg)*/
+	c->lh_sub = 2845.0;
+
+	Log("lh_vap = %f J/Kg\n "
+		"lh_vap_soil = %f J/Kg\n "
+		"lh_fus = %f KJ/Kg\n "
+		"lh_sub = %f KJ/Kg\n",
+		c->lh_vap,
+		c->lh_vap_soil,
+		c->lh_fus,
+		c->lh_sub);
 }
 
 /*

@@ -76,39 +76,19 @@ typedef struct{
 	PREC rho_air;
 	PREC tsoil;
 	PREC et;
-	PREC littfall;
+	PREC windspeed;
 
 }MET_DAILY_DATA;
 
 /* */
-typedef struct {
-	//int n_days;
-	//int month;
-	//PREC solar_rad;
-	//PREC tavg;	/* (deg C) daily average air temperature */
-	//PREC tmax;	/* (deg C) daily maximum air temperature */
-	//PREC tmin;	/* (deg C) daily minimum air temperature */
-	//PREC tday;	/* (deg C) daylight average air temperature */
-	//PREC tnight;	/* (deg C) nightime average air temperature */
-	//PREC vpd;
-	//PREC ts_f;
-	//PREC rain;
-	//PREC swc;
-	//PREC ndvi_lai;
-	//PREC daylength;
-	//PREC thermic_sum; //monthly thermic sum NOT USED IN MONTHLY SIMULATION
-	//PREC avg_monthly_temp;
-	//PREC cum_monthly_rain;
-	//PREC rho_air;
-	//PREC et;
-	//PREC littfall;
-
+typedef struct
+{
 	MET_DAILY_DATA d[31];
-
 } MET_DATA;
 
 /* */
-typedef struct {
+typedef struct
+{
 	MET_DATA m[MONTHS];
 	int year;
 } YOS; // YEARS OF SIMULATION
@@ -824,13 +804,7 @@ typedef struct {
 	eManagement management;
 	int period;            // period = 0 for adult tree ; 1 for very young tree
 
-
 	PREC value[VALUES];
-
-
-
-
-
 
 	int counter[COUNTERS];
 	int phenology_phase;
@@ -966,18 +940,18 @@ typedef struct {
 
 
 	double net_radiation;
-	double net_radiation_no_albedo;
+	double net_radiation_no_albedo; /*the no albedo computation is used for gap*/
 	double net_radiation_for_dominated;
 	double net_radiation_for_dominated_no_albedo; //not need to be used
 	double net_radiation_for_subdominated;
 	double net_radiation_for_subdominated_no_albedo; //not need to be used
 	double net_radiation_for_soil;
 	double par;
-	double par_no_albedo;
+	double par_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_dominated;
-	double par_for_dominated_no_albedo; //not need to be used
+	double par_for_dominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_subdominated;
-	double par_for_subdominated_no_albedo; //not need to be used
+	double par_for_subdominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_soil;
 	double par_over_dominant_canopy;
 	double ppfd;
@@ -1038,6 +1012,7 @@ typedef struct {
 	double snow_to_soil;
 	double gcorr;
 	double air_pressure;
+	double lh_vap, lh_vap_soil, lh_sub, lh_fus; //latent heat in KJ/kg
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
 	double gapcover[3];
@@ -1052,6 +1027,8 @@ typedef struct {
 	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double daily_c_int[3], daily_tot_c_int;
+	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
+	double daily_soil_evaporation_watt;
 	double daily_c_transp[3], daily_tot_c_transp;
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
@@ -1342,7 +1319,8 @@ extern void Get_a_Power_Function (AGE *, SPECIES *);
 
 extern void Get_air_pressure (CELL *c);
 
-extern void Get_snow_met_data (CELL *c,  MET_DATA *, int, int);
+extern void Get_snow_met_data (CELL *c, MET_DATA *, int, int);
+extern void Get_latent_heat (CELL *c, MET_DATA *, int, int);
 
 
 extern void Get_biome_fraction (SPECIES *);

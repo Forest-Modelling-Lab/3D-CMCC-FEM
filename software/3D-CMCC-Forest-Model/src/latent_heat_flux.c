@@ -20,8 +20,8 @@ extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *con
 
 	Log("\nGET_LATENT_HEAT_ROUTINE\n");
 
-	//for consistency with eddy data use tday
 	/*upward energy fluxes*/
+	//for consistency with eddy data use tday
 	if(met[month].d[day].tday > 0.0) /*positive values of latent heat flux*/
 	{
 		if (met[month].d[day].tday <= 5)
@@ -51,7 +51,9 @@ extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *con
 
 		//fixme
 		/*just an attempt to compute latent heat flux*/
+		//fixme ERROR MODEL GETS daily_tot_C_TRANSP!! not all evaporated fluxes
 		c->daily_tot_latent_heat_flux = conversion_factor * c->daily_tot_c_transp;
+		Log("Daily total evapotransp = %f W/m^2\n", c->daily_tot_c_transp);
 		Log("Daily total latent heat flux = %f W/m^2\n", c->daily_tot_latent_heat_flux);
 	}
 	else /*negative values of latent heat flux*/
@@ -80,4 +82,6 @@ extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *con
 		c->daily_tot_latent_heat_flux += 28.94 * c->snow_subl;
 		Log("Daily total latent heat flux with sublimation = %f W/m^2\n", c->daily_tot_latent_heat_flux);
 	}
+
+	Log("PROVA LATENT HEAT = %f\n", c->daily_tot_c_evapotransp_watt + c->daily_soil_evaporation_watt);
 }

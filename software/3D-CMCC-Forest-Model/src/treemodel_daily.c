@@ -151,6 +151,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		/*check for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
+		Get_latent_heat (&m->cells[cell], met, month, day);
 
 		/*check soil water balance*/
 		Log("check soil water balance\n");

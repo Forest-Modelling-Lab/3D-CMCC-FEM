@@ -47,7 +47,7 @@ enum {
 	SWC,
 	NDVI_LAI,
 	ET,
-	LITTFALL,
+	WS_F,
 
 	MET_COLUMNS
 };
@@ -101,7 +101,7 @@ static const char *met_columns[MET_COLUMNS+2] = {
 		, "SWC"
 		, "LAI"
 		, "ET"
-		, "LITTERFALL"
+		, "WS_f"
 
 		/* hack */
 		, "LAT"
@@ -129,26 +129,6 @@ static void ResetYos(YOS *const yos)
 		yos->year = 0;
 		for ( i = 0; i < MONTHS; ++i )
 		{
-			/*yos->m[i].n_days = INVALID_VALUE;
-			yos->m[i].month = INVALID_VALUE;
-			yos->m[i].solar_rad = INVALID_VALUE;
-			yos->m[i].tavg = INVALID_VALUE;
-			yos->m[i].tmax = INVALID_VALUE;
-			yos->m[i].tmin = INVALID_VALUE;
-			yos->m[i].tday = INVALID_VALUE;
-			yos->m[i].tnight = INVALID_VALUE;
-			yos->m[i].vpd = INVALID_VALUE;
-			yos->m[i].ts_f = INVALID_VALUE;
-			yos->m[i].rain = INVALID_VALUE;
-			yos->m[i].swc = INVALID_VALUE;
-			yos->m[i].ndvi_lai = INVALID_VALUE;
-			yos->m[i].daylength = INVALID_VALUE;
-			yos->m[i].thermic_sum = INVALID_VALUE;
-			yos->m[i].avg_monthly_temp = INVALID_VALUE;
-			yos->m[i].cum_monthly_rain = INVALID_VALUE;
-			yos->m[i].rho_air = INVALID_VALUE;
-			yos->m[i].et = INVALID_VALUE;
-			yos->m[i].littfall = INVALID_VALUE;*/
 			for ( y = 0; y < 31; ++y )
 			{
 				yos->m[i].d[y].n_days = INVALID_VALUE;
@@ -168,7 +148,7 @@ static void ResetYos(YOS *const yos)
 				yos->m[i].d[y].rho_air = INVALID_VALUE;
 				yos->m[i].d[y].tsoil = INVALID_VALUE;
 				yos->m[i].d[y].et = INVALID_VALUE;
-				yos->m[i].d[y].littfall = INVALID_VALUE;
+				yos->m[i].d[y].windspeed = INVALID_VALUE;
 
 			}
 		}
@@ -593,12 +573,12 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 		//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 		
-	//case LITTFALL: //Littfall for stand alone RothC
-		yos[*yos_count-1].m[month].d[day].littfall = values[VALUE_AT(row,LITTFALL)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].littfall) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+	//case WS_F: //windspeed
+		yos[*yos_count-1].m[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
+		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].windspeed) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
-			//Log ("* litterfall -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* windspeed -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 		}
 		//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 	}
@@ -788,7 +768,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 			return 0;
 		}
 		/* write header */
-		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tLitterfall\n", f);
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\WS_F\n", f);
 		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
 				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
 						/*
@@ -804,7 +784,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 						, values[VALUE_AT(0,0,row,PRECIP)]
 						, values[VALUE_AT(0,0,row,NDVI_LAI)]
 						, values[VALUE_AT(0,0,row,ET)]
-						, values[VALUE_AT(0,0,row,LITTFALL)]
+						, values[VALUE_AT(0,0,row,WS)]
 						*/
 						(int)values[VALUE_AT(row,YEAR)]
 						, (int)values[VALUE_AT(row,MONTH)]
@@ -819,7 +799,8 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 						, values[VALUE_AT(row,SWC)]
 						, values[VALUE_AT(row,NDVI_LAI)]
 						, values[VALUE_AT(row,ET)]
-						, values[VALUE_AT(row,LITTFALL)]
+						//ALESSIOC
+						, values[VALUE_AT(row,WS_F)]
 
 				);
 		}
@@ -954,7 +935,8 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 								, "SWC"
 								, "LAI"
 								, "ET"
-								, "LFALL"
+								//ALESSIOC
+								, "WS_F"
 	};
 
 	int y;
@@ -1589,7 +1571,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			}
 			fputs("year,month,n_days,month,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
 					",rain,swc,ndvi_lai,daylength,thermic_sum,avg_monthly_temp"
-					",cum_monthly_rain,rho_air,et,littfall\n", f);
+					",cum_monthly_rain,rho_air,et,windspeed\n", f);
 			for ( month = 0; month < 12; ++month ) {
 				fprintf(f, "%d,%d,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
 							, yos[i].year
@@ -1613,7 +1595,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							, yos[i].m[month].cum_monthly_rain
 							, yos[i].m[month].rho_air
 							, yos[i].m[month].et
-							, yos[i].m[month].littfall);
+							//ALESSIOC
+							, yos[i].m[month].windspeed);
 			}		
 			fclose(f);
 
@@ -1626,7 +1609,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 			}
 			fputs("year,month,day,n_days,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
 					",rain,swc,ndvi_lai,daylength,thermic_sum"
-					",rho_air,tsoil,et,littfall\n", f);
+					",rho_air,tsoil,et,windspeed\n", f);
 
 			for ( month = 0; month < 12; ++month ) {
 				for ( z = 0; z < 31; ++z ) {
@@ -1655,7 +1638,8 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 							, yos[i].m[month].d[z].rho_air
 							, yos[i].m[month].d[z].tsoil
 							, yos[i].m[month].d[z].et
-							, yos[i].m[month].d[z].littfall);
+							//ALESSIOC
+							, yos[i].m[month].d[z].windspeed);
 				}
 			}		
 			fclose(f);
