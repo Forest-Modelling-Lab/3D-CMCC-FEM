@@ -149,9 +149,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Log("Day %d month %d ASW = %f (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
 		}
 
+
+		Get_latent_heat (&m->cells[cell], met, month, day);
+
 		/*check for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
-		Get_latent_heat (&m->cells[cell], met, month, day);
 
 		/*check soil water balance*/
 		Log("check soil water balance\n");

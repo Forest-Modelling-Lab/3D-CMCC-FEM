@@ -440,15 +440,16 @@ void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
 	c->lh_fus = 335.0;
 	/*latent heat of sublimation (KJ/Kg)*/
 	c->lh_sub = 2845.0;
-
-	Log("lh_vap = %f J/Kg\n "
-		"lh_vap_soil = %f J/Kg\n "
-		"lh_fus = %f KJ/Kg\n "
+	/*
+	Log("lh_vap = %f J/Kg\n"
+		"lh_vap_soil = %f J/Kg\n"
+		"lh_fus = %f KJ/Kg\n"
 		"lh_sub = %f KJ/Kg\n",
 		c->lh_vap,
 		c->lh_vap_soil,
 		c->lh_fus,
 		c->lh_sub);
+		*/
 }
 
 /*
