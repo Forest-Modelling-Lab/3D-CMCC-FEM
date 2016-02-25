@@ -60,6 +60,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 	/*computing latent heat following BIOME approach*/
+	//fixme remove it from here
 	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
 
 	//Veg period
