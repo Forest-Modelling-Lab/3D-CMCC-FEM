@@ -434,7 +434,7 @@ void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
 {
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
-	c->lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
+	c->lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	c->lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
 	/*latent heat of fusion (KJ/Kg)*/
 	c->lh_fus = 335.0;
