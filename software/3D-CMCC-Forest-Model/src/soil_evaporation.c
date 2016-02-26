@@ -16,6 +16,8 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 	//Log("T_soil = %f\n", met[month].d[day].tsoil);
 	if (met[month].d[day].tsoil > 0)
 	{
+
+		//fixme HOW COMPUTE A CUMULATIVE CANOPY COVER AMONG ALLO CLASSES!!
 		/*following Gerten et al., 2004*/
 		if (c->daily_layer_number != 0)
 		{
@@ -28,7 +30,6 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 				}
 				else
 				{
-					//Net_Radiation = Net_Radiation_for_subdominated * (exp(- s->value[K] * s->value[LAI]));
 					cc = c->canopy_cover_subdominated;
 				}
 				break;
@@ -39,9 +40,7 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 				}
 				else
 				{
-					//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * s->value[LAI]));
 					cc = c->canopy_cover_dominated;
-
 				}
 				break;
 			case 1:
@@ -53,14 +52,13 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 		else
 		{
 			//Log("ONLY ONE LAYER\n");
-			//Net_Radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6))) / met[month].d[day].daylength;
 			cc = c->canopy_cover_dominant;
 
 		}
 
-		//converting MJ in Joule/m^2/day
-		PotEvap = (E20 / (E20 + PSYCCONST )) * c->net_radiation / c->lh_vap_soil;
-		Log("Soil Potential Evaporation = %f mm/day\n", PotEvap);
+		//converting W/m^2 in Joule/m^2/day
+		PotEvap = (E20 / (E20 + PSYCCONST )) * (c->net_radiation * 86400) / c->lh_vap_soil;
+		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 
 		c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );
