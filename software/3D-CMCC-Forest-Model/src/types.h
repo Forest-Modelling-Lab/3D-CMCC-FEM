@@ -1176,7 +1176,7 @@ void soil_model (MATRIX *const, const YOS *const, const int, const int, const in
 void Get_phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
 void met_summary(MET_DATA *);
 int is_valid_met(const char *const);
-void Get_avg_temperature (CELL *, int, int, int, YOS *);
+void Get_avg_temperature (CELL *, int, int, int);
 void Get_daylight_avg_temperature (CELL *, int, int, int, YOS *);
 void Get_nightime_avg_temperature (CELL *, int, int, int, YOS *);
 void Get_soil_temperature (CELL *, int, int, int, YOS *);

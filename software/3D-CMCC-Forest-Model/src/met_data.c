@@ -38,7 +38,7 @@ extern void Print_met_daily_data (const YOS *const yos, int day, int month, int 
 
 
 //following Running et al., 1987
-extern void Get_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
+extern void Get_avg_temperature (CELL * c,  int day, int month, int years)
 {
 	/*
 	if (!day )
@@ -47,7 +47,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years, YOS *
 
 	MET_DATA *met;
 	// check parameters
-	met = (MET_DATA*) yos[years].m;
+	met = (MET_DATA*) c->years[years].m;
 
 
 	if (settings->time == 'd')

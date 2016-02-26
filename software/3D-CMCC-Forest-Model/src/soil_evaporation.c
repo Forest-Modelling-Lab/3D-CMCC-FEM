@@ -56,6 +56,7 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 
 		}
 
+		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
 		PotEvap = (E20 / (E20 + PSYCCONST )) * (c->net_radiation * 86400) / c->lh_vap_soil;
 		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);

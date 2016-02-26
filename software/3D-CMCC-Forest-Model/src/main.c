@@ -161,7 +161,6 @@ const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
-static const char err_dataset_already_specified[] = "dataset already specified (%s)! \"%s\" skipped.\n";
 static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
 static const char err_settings_already_specified[] = "settings already specified (%s)! \"%s\" skipped.\n";
 static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
@@ -1269,15 +1268,10 @@ int main(int argc, char *argv[])
 					for (day = 0; day < days_per_month; day++)
 					{
 						//Check for daily temperatures
-						Get_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Get_avg_temperature (&m->cells[cell], day, month, year);
 						Get_daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
 						Get_nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
 						Get_soil_temperature (&m->cells[cell], day, month, year, yos);
-						//for RothC
-						//Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
-						//Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
-
-						//
 						Get_thermic_sum (&m->cells[cell], day, month, year, yos);
 						Get_rho_air (&m->cells[cell], day, month, year, yos);
 						Get_Day_Length (&m->cells[cell], day, month, year, yos);
