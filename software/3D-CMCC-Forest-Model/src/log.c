@@ -18,7 +18,6 @@ int logInit(char * logFileName)
 void Log(const char *szText, ...)
 {
 	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	//va_list pArgList = { 0 };
 	va_list pArgList;
 
 	va_start(pArgList, szText);

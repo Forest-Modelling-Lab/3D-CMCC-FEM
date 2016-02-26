@@ -344,6 +344,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\latent_heat_flux.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\leafFall_marconi.c"
 				>
 			</File>

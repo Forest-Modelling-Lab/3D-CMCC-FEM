@@ -13,11 +13,8 @@
 #include "types.h"
 #include "constants.h"
 
-extern void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
+void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
 {
-
-	double conversion_factor; //factor to convert mm/day of ET to W/m^2
-
 	Log("\nGET_LATENT_HEAT_ROUTINE\n");
 
 

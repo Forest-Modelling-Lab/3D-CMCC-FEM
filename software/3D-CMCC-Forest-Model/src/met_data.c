@@ -452,28 +452,7 @@ void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
 		*/
 }
 
-/*
-double Get_vpd (const MET_DATA *const met, int month)
-{
-	double svp;
-	double vp;
-	double vpd;
 
-	//Log("\n GET_VPD_ROUTINE \n");
-
-
-	//compute vpd
-	//see triplex model Zhang et al., 2008, Zhou et al., 2004
-	svp = 6.1076 * exp ((17.269 * met[month].tavg) / (met[month].tavg + 237.3));
-	//Log("svp = %f\n", svp);
-	vp = met[month].rh * (svp /100);
-	//Log("vp = %f\n", vp);
-	vpd = svp -vp;
-	//Log("vpd = %f \n", vpd);
-
-	return vpd;
-}
- */
 
 
 void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)

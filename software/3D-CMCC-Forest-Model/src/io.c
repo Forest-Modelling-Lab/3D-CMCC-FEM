@@ -31,25 +31,28 @@ extern char *program_path;
 
 /* */
 //#define NC_CONV_FILENAME		"nc_conv.txt"
+#define VPD_RANGE_MIN					-5
+#define VPD_RANGE_MAX					120
 
 /* do not change this order */
 enum {
-	YEAR = 0,
-	MONTH,
-	DAY,
-	RG_F,
-	TA_F,
-	TMAX,
-	TMIN,
-	VPD_F,
-	TS_F,
-	PRECIP,
-	SWC,
-	NDVI_LAI,
-	ET,
-	WS_F,
+	YEAR = 0
+	, MONTH
+	, DAY
+	, RG_F
+	, TA_F
+	, TMAX
+	, TMIN
+	, VPD_F
+	, TS_F
+	, PRECIP
+	, SWC
+	, NDVI_LAI
+	, ET
+	, WS_F
+	, RH_F
 
-	MET_COLUMNS
+	, MET_COLUMNS
 };
 
 ///* */
@@ -102,6 +105,7 @@ static const char *met_columns[MET_COLUMNS+2] = {
 		, "LAI"
 		, "ET"
 		, "WS_f"
+		, "RH_f"
 
 		/* hack */
 		, "LAT"
@@ -149,7 +153,7 @@ static void ResetYos(YOS *const yos)
 				yos->m[i].d[y].tsoil = INVALID_VALUE;
 				yos->m[i].d[y].et = INVALID_VALUE;
 				yos->m[i].d[y].windspeed = INVALID_VALUE;
-
+				yos->m[i].d[y].rh_f = INVALID_VALUE;
 			}
 		}
 	}
@@ -187,6 +191,40 @@ void atts_free(ATT *att, const int atts_count) {
 		free(att);
 	}
 }
+
+/* private */
+void compute_vpd(double *const values, const int rows_count, const int columns_count) {
+#define VALUE_AT(r,c)	((r)+((c)*rows_count))
+	int i;
+	double value;
+
+	for ( i = 0; i < rows_count; i++ ) {
+		double ta = values[VALUE_AT(i, TA_F)];
+		double rh = values[VALUE_AT(i, RH_F)];
+		value = INVALID_VALUE;
+
+		if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TA_F)]) && ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
+			/* 6.11 is for hPa */
+			value = 6.1076 * exp(17.26938818 * values[VALUE_AT(i, TA_F)] / (237.3 + values[VALUE_AT(i, TA_F)]));
+			value *= (1 - values[VALUE_AT(i, RH_F)] / 100.0);
+			/* convert NaN to invalid value */
+			if ( value != value ) {
+				value = INVALID_VALUE;
+			}
+
+			/* check range */
+			if ( ! IS_INVALID_VALUE(value) ) {
+				if ( value < VPD_RANGE_MIN || value > VPD_RANGE_MAX ) {
+					value = INVALID_VALUE;
+				}
+			}
+		}
+		values[VALUE_AT(i, VPD_F)] = value;
+	}
+#undef VALUE_AT
+}
+
+
 
 /* */
 int yos_from_arr(const double *const values, const int rows_count, const int columns_count, YOS **p_yos, int *const yos_count) {
@@ -581,6 +619,14 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			//Log ("* windspeed -NO DATA in year %s month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 		}
 		//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
+
+		// RH_f
+		yos[*yos_count-1].m[month].d[day].rh_f = values[VALUE_AT(row,RH_F)];
+		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rh_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+		{
+			// ALESSIOR
+			// TODO: ask ALESSIOC
+		}
 	}
 	*p_yos = yos;
 	return 1;
@@ -610,6 +656,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 	size_t size;
 	int *i_values = NULL; /* required */
 	double *values = NULL; /* required */
+	int columns[MET_COLUMNS];
 
 	/* DO NOT CHANGE THIS ORDER */
 	enum {
@@ -644,6 +691,9 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 	}
 
 	/* reset */
+	for ( i = 0; i < MET_COLUMNS; ++i ) {
+		columns[i] = 0;
+	}
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		dims_size[i] = -1;
 	}
@@ -713,7 +763,17 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		/* check if we need that var */
 		for ( y = 0; y  < MET_COLUMNS /*+2*/; ++y ) {
 			if ( ! mystricmp(name, met_columns[y]) ) {
-					/* get values */
+				/* check if we've already get that var */
+				if ( columns[y] ) {
+					Log("column %s already imported!", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				} else {
+					columns[y] = 1;
+				}
+				/* get values */
 				if ( NC_DOUBLE == type ) {
 					//ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(0, 0, y)]);
 					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
@@ -726,7 +786,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 					}
 				} else {
 					/* type format not supported! */
-					printf("type format for %s column not supported\n\n", name);
+					Log("type format for %s column not supported", name);
 					free(values);
 					free(i_values);
 					nc_close(id_file);
@@ -739,6 +799,28 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 	}
 	free(i_values);
 	i_values = NULL;
+
+	/* check if we've all needed vars */
+	for ( i = 0; i < MET_COLUMNS; ++i ) {
+		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
+			Log("met columns %s and %s are missing!\n\n", met_columns[VPD_F], met_columns[RH_F]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		} else if ( -1 == columns[i] ) {
+			Log("met column %s not found.\n\n", met_columns[i]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		}
+	}
+
+	/* compute vpd ?*/
+	if ( -1 == columns[VPD_F] ) {
+		compute_vpd(values, dims_size[ROWS_DIM], MET_COLUMNS);
+	}
 
 	/* attributes */
 	/*
@@ -1273,7 +1355,6 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	// get rows count
 	rows_count = file_get_rows_count(filename);
 	if ( rows_count <= 0 ) {
-		puts("unable to open met data file !");
 		Log("unable to open met data file !\n");
 		return 0;
 	}
@@ -1284,7 +1365,6 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	// alloc memory for values
 	values = malloc(rows_count*MET_COLUMNS*sizeof*values);
 	if ( ! values ) {
-		puts(sz_err_out_of_memory);
 		Log(sz_err_out_of_memory);
 		return 0;
 	}
@@ -1298,7 +1378,6 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	f = fopen(filename, "r");
 	if ( !f )
 	{
-		puts("unable to open met data file !");
 		Log("unable to open met data file !\n");
 		free(values);
 		return 0;
@@ -1307,7 +1386,6 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	// get header
 	if ( ! fgets(buffer, BUFFER_SIZE, f) )
 	{
-		puts("empty met data file ?");
 		Log ("empty met data file ?\n");
 		free(values);
 		fclose(f);
@@ -1373,6 +1451,9 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 					}
 				}
 			}
+			else if ( ((VPD_F == i) && (-1 != columns[RH_F])) || ((RH_F == i) && (-1 != columns[VPD_F])) ) {
+				continue;
+			}
 			printf("met column %s not found.\n\n", met_columns[i]);
 			free(values);
 			fclose(f);
@@ -1425,11 +1506,15 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 				return 0;
 			}
 
-			values[VALUE_AT(current_row-1, column)] = convert_string_to_prec(token2, &error_flag);
+			for ( i = 0; i < MET_COLUMNS; ++i ) {
+				if ( column == columns[i] ) break;
+			}
+
+			values[VALUE_AT(current_row-1, i)] = convert_string_to_prec(token2, &error_flag);
 			if ( error_flag )
 			{
-				printf("unable to convert value \"%s\" for %s column\n", token2, met_columns[column+no_year_column]);
-				Log("unable to convert value \"%s\" for %s column\n", token2, met_columns[column+no_year_column]);
+				printf("unable to convert value \"%s\" for %s column\n", token2, met_columns[i+no_year_column]);
+				Log("unable to convert value \"%s\" for %s column\n", token2, met_columns[i+no_year_column]);
 				free(values);
 				fclose(f);
 				return 0;
@@ -1453,6 +1538,11 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 		for ( i = 0; i < rows_count; ++i ) {
 			values[VALUE_AT(i, YEAR)] = year;
 		}
+	}
+
+	/* compute vpd ?*/
+	if ( -1 == columns[VPD_F] ) {
+		compute_vpd(values, rows_count, MET_COLUMNS);
 	}
 
 	if ( ! yos_from_arr(values, rows_count, MET_COLUMNS, p_yos, yos_count) ) {
