@@ -31,12 +31,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
-
-
-	//Log("X = %f \n", c->x);
-	//Log("Y = %f \n", c->y);
-
-
 	//Veg period
 	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
@@ -83,36 +77,17 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
 		//Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 
-
-
-
-		//Yearly_GPP +=  GPPgC;
-		//Log("Yearly Cumulated GPP  = %f gC/m^2\n",  Yearly_GPP);
-		//if (settings->time == 'm')
-		//{
-		//	//Monthy layer GPP in grams of C/m^2
-		//	//Convert molC into grams
-		//	s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		//	Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[POINT_GPP_g_C] );
-		//	DailyGPPgC = s->value[POINT_GPP_g_C] / DaysInMonth;
-		//	//Log("Averaged Daily GPP in grams of C for this layer = %f molC/m^2 day\n", DailyGPPgC);
-		//}
-		//else
+		//Daily layer GPP in grams of C/m^2
+		//Convert molC into grams
+		//reset at the beginning of each month
+		if (day == 0)
 		{
-			//Daily layer GPP in grams of C/m^2
-			//Convert molC into grams
-			//reset at the beginning of each month
-			if (day == 0)
-			{
-				s->value[MONTHLY_GPP_g_C] = 0.0;
-			}
-			s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-			Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
-			s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
-			//Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
+			s->value[MONTHLY_GPP_g_C] = 0.0;
 		}
-
-
+		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
+		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+		s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
+		//Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
 
 
 		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * s->value[CANOPY_COVER_DBHDC];

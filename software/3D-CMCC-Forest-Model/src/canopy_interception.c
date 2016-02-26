@@ -15,9 +15,7 @@
 
 extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
-
-
-
+	double PotEvap;
 
 	Log("\nGET_CANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
 
@@ -146,6 +144,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 
 	/*following Gerten et al., 2004*/
 	/*compute potential evaporation for each layer*/
+
+	//fixme check if use different net_radiations for different layers
+	PotEvap = (E20 / (E20 + PSYCCONST )) * c->net_radiation / c->lh_vap;
+
+
+
 
 
 	//fixme it unreasonable that all rainfall intercepted evporates simoultaneously

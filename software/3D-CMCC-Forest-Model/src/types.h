@@ -445,12 +445,12 @@ enum {
 	F_VPD,                          //VPD modifier
 	//ALTER_VPD,                    //Alternative VPD
 	//ALTER_F_VPD,                  //Alternative VPD Modifier
+	CANOPY_CONDUCTANCE,
 	MONTH_TRANSP,
 	DAILY_TRANSP,
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	RAIN_INTERCEPTED,
 	CANOPY_EVAPOTRANSPIRATION,
-	CANOPY_CONDUCTANCE,
 	EVAPOTRANSPIRATION,             //Evapotranspiration (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
 	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
@@ -1255,7 +1255,7 @@ void Get_litterfall_deciduous (SPECIES *const);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 void Get_litterfall_evergreen_CTEM (SPECIES *const);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
-void Get_soil_evaporation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, double, int, int, double, double, int);
+void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
 void Get_peak_lai (SPECIES *const , int, int );
 void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );

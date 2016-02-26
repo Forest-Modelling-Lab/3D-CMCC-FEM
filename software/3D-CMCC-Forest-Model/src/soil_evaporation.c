@@ -8,8 +8,7 @@
 #include "constants.h"
 
 
-extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *const met, int month, int day, int DaysInMonth, double Net_Radiation, int top_layer, int z,
-		double Net_Radiation_for_dominated, double Net_Radiation_for_subdominated, int Veg_counter)
+extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month, int day)
 {
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
@@ -60,12 +59,8 @@ extern void Get_soil_evaporation (SPECIES *const s,  CELL * c, const MET_DATA *c
 		}
 
 		//converting MJ in Joule/m^2/day
-		Net_Radiation = (met[month].d[day].solar_rad * pow (10.0, 6));
-		//Log("Net radiation for soil evaporation = %f J/m^2/day\n", Net_Radiation);
-
-		PotEvap = (E20 / (E20 + PSYCCONST )) * Net_Radiation / c->lh_vap_soil;
-		//Log("Potential Evaporation = %f mm/day\n", PotEvap);
-		//Log("fraction of cell not covered by vegetation = %f\n", 1-cc);
+		PotEvap = (E20 / (E20 + PSYCCONST )) * c->net_radiation / c->lh_vap_soil;
+		Log("Soil Potential Evaporation = %f mm/day\n", PotEvap);
 
 		c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );

@@ -29,10 +29,8 @@
 #define T_STD                 288.15      //(K) standard temp at 0.0 m elevation  */
 #define MA                28.9644e-3      //(kg/mol) molecular weight of air */
 #define MW                18.0148e-3      //(kg/mol) molecular weight of water */
-#define CP                    1010.0      //(J/kg K) specific heat of air */
 #define LR_STD                0.0065      //(-K/m) standard temperature lapse rate */
 #define R                     8.3143      //(m3 Pa/ mol K) gas law constant */
-#define SBC                  5.67e-8      //(W/(m2 K4)) Stefan-Boltzmann constant */
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 #define PPFD50      			75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
 #define EPAR        			4.55      //(umol/J) PAR photon energy ratio */

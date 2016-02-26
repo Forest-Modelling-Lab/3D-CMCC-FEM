@@ -18,8 +18,6 @@
 
 extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, double vpd, int height, int age, int species)
 {
-
-	static double CanCond;
 	static double CanopyTranspiration;
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
@@ -49,7 +47,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	double rh;  //resistance to convective heat transfer
 	double swabs; //absorbed shortwave radiation in W/m^2
 	double rhr;
-	double lhvap;
 	double dt = 0.2; //set the temperature offset for slope calculation
 	double pvs1, pvs2;
 	double esse;
@@ -58,10 +55,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
 
-
-	/*computing latent heat following BIOME approach*/
-	//fixme remove it from here
-	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
 
 	//Veg period
 	if (s->counter[VEG_UNVEG] == 1)
@@ -73,21 +66,12 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 		if (settings->spatial == 's')
 		{
-			CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].d[day].ndvi_lai / s->value[LAIGCX]);
-			//Log("MAXCOND da biome = %f\n", 0.006 * met[month].ndvi_lai);
-			//Log("Cancond biome = %f\n", (0.006 * met[month].ndvi_lai * c->gcorr));
-			//Log("CanCond 3PG = %f\n", CanCond);
+			s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].d[day].ndvi_lai / s->value[LAIGCX]);
 		}
 		else
 		{
-			CanCond = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI]  / s->value[LAIGCX]);
-			//Log("MAXCOND da biome = %f\n", 0.006 * s->value[LAI]);
-			//Log("Cancond biome = %f\n", (0.006 * s->value[LAI] * c->gcorr));
-			//Log("CanCond 3PG = %f\n", CanCond);
+			s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
 		}
-
-
-		//Log("Canopy Conductance  = %f\n", CanCond);
 
 		/*Canopy Transpiration*/
 		//todo change all functions with BIOME's
@@ -96,16 +80,16 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 
-		defTerm = met[month].d[day].rho_air * lhvap * (vpd * VPDCONV) * s->value[BLCOND];
+		defTerm = met[month].d[day].rho_air * c->lh_vap * (vpd * VPDCONV) * s->value[BLCOND];
 		//Log("defTerm = %f\n", defTerm);
-		duv = (1.0 + E20 + s->value[BLCOND] / CanCond);
+		duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
 		//Log("duv = %f\n", duv);
 
 		switch (c->daily_layer_number)
 		{
 		case 1:
 			//convert radiation from hours to seconds
-			Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+			Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
 			Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
 			Log("NET RADIATION = %f \n", c->net_radiation);
 			break;
@@ -113,13 +97,13 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			if ( c->heights[height].z == c->top_layer )
 			{
 				//convert radiation from hours to seconds
-				Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
 				Log("NET RADIATION = %f \n", c->net_radiation);
 			}
 			else
 			{
-				Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominated layer = %f J/m^2/sec\n", Etransp);
 				Log("NET RADIATION = %f \n", c->net_radiation_for_dominated);
 			}
@@ -128,19 +112,19 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			if ( c->heights[height].z == c->top_layer )
 			{
 				//convert radiation from hours to seconds
-				Etransp = (E20 * (c->net_radiation/3600.0) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominant layer = %f J/m^2/sec\n", Etransp);
 				Log("NET RADIATION = %f \n", c->net_radiation);
 			}
 			if ( c->heights[height].z == c->top_layer - 1 )
 			{
-				Etransp = (E20 * (c->net_radiation_for_dominated/3600.0) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for dominated layer = %f J/m^2/sec\n", Etransp);
 				Log("Net radiation = %f \n", c->net_radiation);
 			}
 			else
 			{
-				Etransp = (E20 * (c->net_radiation_for_subdominated/3600.0) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
 				Log("Etransp for subdominant layer = %f J/m^2/sec\n", Etransp);
 				Log("Net radiation = %f \n", c->net_radiation_for_subdominated);
 			}
@@ -150,7 +134,9 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 
 		//canopy transpiration is computed in seconds needs to be converted in hours of sun then day
-		CanopyTranspiration = Etransp / lhvap * (met[month].d[day].daylength * 3600.0);   // converted to kg-mm H2o/m2/day
+
+		//fixme check if you daylenght *3600  or 86400
+		CanopyTranspiration = Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0); // converted to kg-mm H2o/m2/day
 		Log("Daily Canopy Transpiration = %f mm-Kg H2o/m^2/day\n", CanopyTranspiration);
 
 		DailyTransp = CanopyTranspiration;
@@ -337,8 +323,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	tav_k = met[month].d[day].tday + 273.15;
 
-	/* calculate latent heat of vaporization as a function of ta */
-	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tday;
 	/* calculate temperature offsets for slope estimate */
 	t1 = met[month].d[day].tday+dt;
 	t2 = met[month].d[day].tday-dt;
@@ -362,10 +346,10 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	/* calculate evaporation, in W/m^2  */
 	evap = ( ( esse * swabs ) + ( met[month].d[day].rho_air * CP * vpd / rhr ) ) /
-			( ( ( c->air_pressure * CP * rv ) / ( lhvap * EPS * rhr ) ) + esse );
+			( ( ( c->air_pressure * CP * rv ) / ( c->lh_vap * EPS * rhr ) ) + esse );
 
 	/* covert evaporation into kg/m^2/s */
-	evap /= lhvap;
+	evap /= c->lh_vap;
 
 	/* convert evaporation into kg/m^2/day */
 	evap *= 84600;

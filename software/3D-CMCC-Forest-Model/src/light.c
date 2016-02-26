@@ -56,9 +56,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		//LIGHT DOMINANT
 		if ( c->heights[height].z == c->top_layer )
 		{
-
-
-
 			Log("**LIGHT DOMINANT**\n");
 			Log("Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
 
@@ -69,12 +66,12 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT 50% OF LEAVES THAT'S WHY MULTPLY FOR
 			//ALBEDO/2
-			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) * (1 - (s->value[ALBEDO]/2.0)) / met[month].d[day].daylength);
-			Log("Hourly Net Radiation = %f W/m^2/hour\n", c->net_radiation);
+			c->net_radiation = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) * (1 - (s->value[ALBEDO]/2.0)) / 86400);
+			Log("Hourly Net Radiation = %f W/m^2\n", c->net_radiation);
 
 			/*the no albedo computation is used for gap*/
-			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) / met[month].d[day].daylength);
-			Log("Hourly Net Radiation NO ALBEDO = %f W/m^2/hour\n", c->net_radiation_no_albedo);
+			c->net_radiation_no_albedo = (QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)) / 86400);
+			Log("Hourly Net Radiation NO ALBEDO = %f W/m^2\n", c->net_radiation_no_albedo);
 
 
 			//4 Dec 2012 add Albedo
@@ -90,8 +87,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			/*the no albedo computation is used for gap*/
 			c->par_no_albedo = (met[month].d[day].solar_rad * MOLPAR_MJ);
 			Log("Par for layer '%d' NO ALBEDO= %f molPAR/m^2 day\n", c->heights[height].z, c->par_no_albedo);
-
-
 
 			c->par_over_dominant_canopy = c->par;
 

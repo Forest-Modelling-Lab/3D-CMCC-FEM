@@ -301,8 +301,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											if( height == 0)
 											{
 												/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-												Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-														m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+												Get_soil_evaporation (&m->cells[cell], met, month, day);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_soil_water_balance (&m->cells[cell], met, month, day);
@@ -315,8 +314,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											if( height == 0)
 											{
 												/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-												Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-														m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+												Get_soil_evaporation (&m->cells[cell], met, month, day);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											}
@@ -380,8 +378,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											if( height == 0)
 											{
 												/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-												Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-														m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+												Get_soil_evaporation (&m->cells[cell], met, month, day);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_soil_water_balance (&m->cells[cell], met, month, day);
@@ -394,8 +391,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											if( height == 0)
 											{
 												/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-												Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-														m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+												Get_soil_evaporation (&m->cells[cell], met, month, day);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											}
@@ -465,8 +461,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										if( height == 0)
 										{
 											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
@@ -479,8 +474,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										if( height == 0)
 										{
 											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-											Get_soil_evaporation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], m->cells[cell].net_radiation, m->cells[cell].top_layer, m->cells[cell].heights[height].z,
-													m->cells[cell].net_radiation_for_dominated, m->cells[cell].net_radiation_for_subdominated, m->cells[cell].Veg_Counter);
+											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 										}
