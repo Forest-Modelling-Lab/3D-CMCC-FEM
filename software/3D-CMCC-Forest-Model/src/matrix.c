@@ -580,7 +580,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 
 
 /* */
-void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
+void matrix_summary(const MATRIX *const m)
 {
 	int cell;
 	int species;
@@ -597,7 +597,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 	Log ("RUN COMPSET\n");
 
 	//cell MUST be squares
-	resol = sqrt (settings->sizeCell);
+	resol = (int)sqrt(settings->sizeCell);
 
 	Log ("Cell resolution = %d x %d = %f m^2\n", resol, resol, settings->sizeCell);
 	if (settings->version == 'f')
@@ -694,7 +694,7 @@ void matrix_summary(const MATRIX *const m, int years, const YOS *const yos )
 						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
 						//HEIGHT VALUES ARE MANDATORY
 
-						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], years);
+						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
 
 						Log(
@@ -811,6 +811,7 @@ void matrix_free(MATRIX *m)
 					free ( m->cells[cell].heights);
 					free ( m->cells[cell].soils);
 				}
+				free (m->cells[cell].years);
 			}
 			free (m->cells);
 		}

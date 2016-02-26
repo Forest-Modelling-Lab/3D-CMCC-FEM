@@ -1131,6 +1131,9 @@ typedef struct {
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
 
+	/* ALESSIOR */
+	int years_count;
+	YOS *years;
 } CELL;
 
 /* */
@@ -1164,7 +1167,7 @@ settings_t *settings;
 
 
 // External functions
-YOS *ImportYosFiles(char *, int *const );
+YOS *ImportYosFiles(char *, int *const, const int, const int);
 int tree_model (MATRIX *const, const YOS *const, const int, const int, const int);
 int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
@@ -1224,7 +1227,7 @@ void Clearcut_Timber (SPECIES *const, int, int, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
 MATRIX *matrix_create(ROW *const, const int, char *);
 void matrix_free(MATRIX *);
-void matrix_summary(const MATRIX *const, int, const YOS *const);
+void matrix_summary(const MATRIX *const);
 void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
 //yearly allocation
 void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
@@ -1301,9 +1304,9 @@ void Get_monthly_veg_counter (CELL *, SPECIES * , int);
 void Get_daily_veg_counter (CELL *, SPECIES * , int);
 
 
-void Reset_annual_cumulative_variables (CELL *, const int);
+void Reset_annual_cumulative_variables (CELL *const, const int);
 
-void Get_initialization_biomass_data (SPECIES *, HEIGHT *, const int);
+void Get_initialization_biomass_data (SPECIES *, HEIGHT *);
 void Get_initialization_site_data (CELL *);
 void Choose_management (CELL *, SPECIES *, int , int );
 

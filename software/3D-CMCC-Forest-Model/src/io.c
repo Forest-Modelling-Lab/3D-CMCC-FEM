@@ -978,6 +978,8 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 
 /* private */
 static int ImportListFile(const char *const filename, YOS **p_yos, int *const yos_count) {
+#define VARS_COUNT		((MET_COLUMNS)-3)	/* we remove first 3 columns: year, month and day */
+
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
 
@@ -991,7 +993,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	int z;
 	FILE *f;
 	int rows_count;
-	int *vars;
+	int vars[VARS_COUNT] = { 0 }; /* required */
 	float *f_values;
 	double *values;
 		enum {
@@ -1007,18 +1009,18 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	const char *sz_lon = "lon";
 	const char *sz_time = "time";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time" }; /* DO NOT CHANGE THIS ORDER...please see top */
-	const char *sz_vars[] = { "RADS"
-								, "T_2M"
-								, "TMAX_2M"
-								, "TMIN_2M"
-								, "VPD"
-								, "TSOIL"
-								, "TOT_PREC"
-								, "SWC"
-								, "LAI"
-								, "ET"
-								//ALESSIOC
-								, "WS_F"
+	const char *sz_vars[VARS_COUNT] = { "RADS"
+										, "T_2M"
+										, "TMAX_2M"
+										, "TMIN_2M"
+										, "VPD"
+										, "TSOIL"
+										, "TOT_PREC"
+										, "SWC"
+										, "LAI"
+										, "ET"
+										, "WS_F"
+										, "RH"
 	};
 
 	int y;
@@ -1035,35 +1037,15 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	int ids[NC_MAX_VAR_DIMS];
 	int flag;
 
-	/* DO NOT CHANGE THIS ORDER */
-	const int VARS_COUNT = SIZE_OF_ARRAY(sz_vars);
-
-	/* very important stuff */
-	assert(MET_COLUMNS-3 == VARS_COUNT);
-
 	/* init */
 	rows_count = 0;
 	values = NULL;
 	f_values = NULL;
 
-	/* alloc memory */
-	vars = malloc(VARS_COUNT*sizeof*vars);
-	if ( ! vars ) {
-		puts(sz_err_out_of_memory);
-		Log(sz_err_out_of_memory);
-		return 0;
-	}
-	for ( i = 0; i < VARS_COUNT; ++i ) {
-		vars[i] = 0;
-	}
-
 	/* open lst file */
 	f = fopen(filename, "r");
-	if ( ! f )
-	{
-		puts("unable to open met data file !");
+	if ( ! f ) {
 		Log("unable to open met data file !\n");
-		free(vars);
 		return 0;
 	}
 
@@ -1078,10 +1060,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	if ( p ) ++p;
 	p2 = (strrchr(sz_path, '/'));
 	if ( p2 ) ++p2;
-	if  ( p2 > p )
-	{
-		p = p2;
-	}
+	if  ( p2 > p ) p = p2;
 	*p = '\0';
 
 	/* parse lst file */
@@ -1110,7 +1089,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		if ( ! dims_count || ! vars_count ) {
 			printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 			nc_close(id_file);
-			free(vars);
+			fclose(f);
 			free(f_values);
 			free(values);
 			return 0;
@@ -1130,7 +1109,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 					if ( dims_size[y] != -1 ) {
 						printf("dimension %s already found!\n", sz_dims[y]);
 						nc_close(id_file);
-						free(vars);
+						fclose(f);
 						free(f_values);
 						free(values);
 						return 0;
@@ -1146,7 +1125,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( -1 == dims_size[i] ) {
 				printf("dimension %s not found!\n", sz_dims[i]);
 				nc_close(id_file);
-				free(vars);
+				fclose(f);
 				free(f_values);
 				free(values);
 				return 0;
@@ -1161,7 +1140,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( ! values ) {
 				puts(sz_err_out_of_memory);
 				nc_close(id_file);
-				free(vars);
+				fclose(f);
 				return 0;
 			}
 			/* set all double values to -9999 */
@@ -1173,8 +1152,8 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( ! f_values ) {
 				puts(sz_err_out_of_memory);
 				nc_close(id_file);
+				fclose(f);
 				free(values);
-				free(vars);
 				return 0;
 			}
 			/* set all float values to -9999..not really needed */
@@ -1185,7 +1164,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( rows_count != dims_size[TIME_DIM] ) {
 				printf("rows count inside %s should be %d not %d\n\n", buffer, rows_count, dims_size[TIME_DIM]);
 				nc_close(id_file);
-				free(vars);
+				fclose(f);
 				free(f_values);
 				free(values);
 				return 0;
@@ -1196,7 +1175,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
 			printf("x and y inside %s, must be 1!", buffer);
 			nc_close(id_file);
-			free(vars);
+			fclose(f);
 			free(f_values);
 			free(values);
 			return 0;
@@ -1213,9 +1192,9 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 				if ( (n_dims < 2) || (ids[0] != 1) ) {
 					printf("sorry, only one lat is supported in %s\n\n", buffer);
 					nc_close(id_file);
+					fclose(f);
 					free(values);
 					free(f_values);
-					free(vars);
 					return 0;
 				}
 			} else if ( ! mystricmp(name, sz_lon) ) {
@@ -1223,18 +1202,18 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 				if ( (n_dims < 2) || (ids[0] != 1) ) {
 					printf("sorry, only one lon is supported in %s\n\n", buffer);
 					nc_close(id_file);
+					fclose(f);
 					free(values);
 					free(f_values);
-					free(vars);
 					return 0;
 				}
 			} else if ( ! mystricmp(name, sz_time) ) {
 				if ( type != NC_DOUBLE ) {
 					printf("type format in %s for time column not supported\n\n", buffer);
 					nc_close(id_file);
+					fclose(f);
 					free(values);
 					free(f_values);
-					free(vars);
 					return 0;
 				}
 				ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
@@ -1253,6 +1232,16 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			} else {
 				for ( y = 0; y  < VARS_COUNT; ++y ) {
 					if ( ! mystricmp(name, sz_vars[y]) ) {
+						/* check if we already have imported that var */
+						if ( vars[y] ) {
+							Log("var %s already imported\n", sz_vars[y]);
+							nc_close(id_file);
+							fclose(f);
+							free(values);
+							free(f_values);
+							return 0;
+						}
+
 						/* get values */
 						if ( NC_FLOAT == type ) {
 							ret = nc_get_var_float(id_file, i, f_values);
@@ -1265,11 +1254,11 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 							if ( ret != NC_NOERR ) goto quit;
 						} else {
 							/* type format not supported! */
-							printf("type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+							Log("type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 							nc_close(id_file);
+							fclose(f);
 							free(values);
 							free(f_values);
-							free(vars);
 							return 0;
 						}
 						vars[y] = 1;
@@ -1282,9 +1271,9 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		if ( ! flag ) {
 			printf("var not found inside %s\n\n", buffer);
 			nc_close(id_file);
+			fclose(f);
 			free(values);
 			free(f_values);
-			free(vars);
 			return 0;
 		}
 		nc_close(id_file);
@@ -1292,12 +1281,17 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 
 	/* check for missing vars */
 	for ( i = 0; i < VARS_COUNT; ++i ) {
-		if ( ! vars[i] ) {
-			printf("var %s not found\n", sz_vars[i]);
-			Log("var %s not found\n", sz_vars[i]);
+		if ( ((VPD_F-3 == i) && (-1 == vars[RH_F-3])) || ((RH_F-3 == i) && (-1 == vars[VPD_F-3])) ) {
+			Log("met columns %s and %s are missing!\n\n", sz_vars[VPD_F-3], sz_vars[RH_F-3]);
+			fclose(f);
 			free(values);
 			free(f_values);
-			free(vars);
+			return 0;
+		} else if ( -1 == vars[i] ) {
+			Log("var %s not found\n", sz_vars[i]);
+			fclose(f);
+			free(values);
+			free(f_values);
 			return 0;
 		}
 	}
@@ -1307,8 +1301,12 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 
 	/* free memory */
 	free(f_values);
-	free(vars);
 
+	/* compute vpd ?*/
+	if ( -1 == vars[VPD_F-3] ) {
+		compute_vpd(values, rows_count, MET_COLUMNS);
+	}
+	
 	i = yos_from_arr(values, rows_count, MET_COLUMNS, p_yos, yos_count);
 	free(values);
 	return i;
@@ -1316,13 +1314,13 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 quit:
 	puts(nc_strerror(ret));
 	nc_close(id_file);
-	free(vars);
 	free(f_values);
 	free(values);
 	return 0;
 
-#undef COLUMN_AT
 #undef VALUE_AT
+#undef COLUMN_AT
+#undef COLUMNS_COUNT
 }
 
 //
@@ -1560,7 +1558,7 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 //------------------------------------------------------------------------------
 // *file is the comma separated files list!!! not a single file
 // initially yos_count is equal to 0
-YOS *ImportYosFiles(char *file, int *const yos_count)
+YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 {
 	int i;
 	char *token;
@@ -1652,44 +1650,6 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 		FILE *f;
 
 		for ( i = 0; i < *yos_count; ++i ) {
-			sprintf(buffer, "debug_met_monthly_%d.csv", yos[i].year);
-			f = fopen(buffer, "w");
-			if ( ! f ) {
-				printf("unable to create %s\n", buffer);
-				free(yos);
-				return NULL;
-			}
-			fputs("year,month,n_days,month,solar_rad,tavg,tmax,tmin,tday,tnight,vpd,ts_f"
-					",rain,swc,ndvi_lai,daylength,thermic_sum,avg_monthly_temp"
-					",cum_monthly_rain,rho_air,et,windspeed\n", f);
-			for ( month = 0; month < 12; ++month ) {
-				fprintf(f, "%d,%d,%d,%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-							, yos[i].year
-							, month+1
-							, yos[i].m[month].n_days
-							, yos[i].m[month].month
-							, yos[i].m[month].solar_rad
-							, yos[i].m[month].tavg
-							, yos[i].m[month].tmax
-							, yos[i].m[month].tmin
-							, yos[i].m[month].tday
-							, yos[i].m[month].tnight
-							, yos[i].m[month].vpd
-							, yos[i].m[month].ts_f
-							, yos[i].m[month].rain
-							, yos[i].m[month].swc
-							, yos[i].m[month].ndvi_lai
-							, yos[i].m[month].daylength
-							, yos[i].m[month].thermic_sum
-							, yos[i].m[month].avg_monthly_temp
-							, yos[i].m[month].cum_monthly_rain
-							, yos[i].m[month].rho_air
-							, yos[i].m[month].et
-							//ALESSIOC
-							, yos[i].m[month].windspeed);
-			}		
-			fclose(f);
-
 			sprintf(buffer, "debug_met_daily_%d.csv", yos[i].year);
 			f = fopen(buffer, "w");
 			if ( ! f ) {
@@ -1703,7 +1663,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count)
 
 			for ( month = 0; month < 12; ++month ) {
 				for ( z = 0; z < 31; ++z ) {
-					if ( z == yos[i].m[month].n_days )
+					if ( z == yos[i].m[month].d[z].n_days )
 					{
 						break;
 					}

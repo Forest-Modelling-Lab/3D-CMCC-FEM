@@ -12,7 +12,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h, const int years)
+void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 {
 	//double sapwood_perc;
 

@@ -552,7 +552,7 @@ int main(int argc, char *argv[])
 
 	struct tm* data;
 
-	int years,
+	int year,
 	month,
 	day;
 
@@ -562,8 +562,6 @@ int main(int argc, char *argv[])
 	char strTmp[3], strTmp2[4], strTmp3[3];
 	char strSizeCell[10] = "";
 	char strData[30] = "";
-
-
 
 	YOS *yos;
 	ROW *rows;
@@ -899,6 +897,11 @@ int main(int argc, char *argv[])
 		printf ("...Settings file imported!!\n");
 	}
 
+	if ( settings->time != 'd' ) {
+		Log("UNCORRECT TIME STEP CHOICED!!!\n");
+		return -1;
+	}
+
 	// Import site.txt file
 	error = importSiteFile(site_path);
 	if ( error )
@@ -1200,327 +1203,199 @@ int main(int argc, char *argv[])
 		rows_free(rows, rows_count);
 
 		/* check matrix */
-		if ( !m )
-		{
-			Log("Matrix not created!!\n\n");
-			return 1;
-		}
-		else
-		{
-			Log("....Matrix created!!\n\n");
-		}
+		Log("Matrix %screated!!\n\n", m ? "" : "not ");
+		if ( ! m ) return 1;
 
-		// import Years Of Simulation (years met files)
-		Log("Processing met data files...\n");
-		Log("input_met_path = %s\n", input_met_path);
-		yos = ImportYosFiles(input_met_path, &years_of_simulation);
-
-		if ( !yos )
-		{
-			Log("Met File %s not imported !!\n", input_met_path);
-			matrix_free(m);
-			return -1;
-		}
-		else
-		{
-			Log("....Met files imported!\n\n");
+		for ( cell = 0; cell < m->cells_count; ++cell ) {
+			if (	IS_INVALID_VALUE(site->sand_perc)
+					|| IS_INVALID_VALUE(site->clay_perc)
+					|| IS_INVALID_VALUE(site->silt_perc)
+					|| IS_INVALID_VALUE(site->bulk_dens)
+					|| IS_INVALID_VALUE(site->soil_depth) ) {
+				Log("NO SOIL DATA AVAILABLE\n");
+				matrix_free(m);
+				return 1;
+			}
 		}
 
 		Log("\n3D-CMCC MODEL START....\n\n\n\n");
-		Log("Total years_of_simulation = %d\n", years_of_simulation);
-		Log("***************************************************\n");
+		for ( cell = 0; cell < m->cells_count; ++cell ) {
+			Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
+			Log("input_met_path = %s\n", input_met_path);
 
-		for (years = 0; years < years_of_simulation; years++)
-		{
-			Log("\n-Year simulated = %d\n", yos[years].year);
+			//Get air pressure
+			Get_air_pressure (&m->cells[cell]);
 
-			if (!years)
-				matrix_summary (m, years, yos);
+			//check hemisphere
+			if (site->lat > 0) {
+				m->cells[cell].north = 0;
+			} else {
+				m->cells[cell].north = 1;
+			}
 
+			m->cells[cell].years = ImportYosFiles(input_met_path, &years_of_simulation, m->cells[cell].x, m->cells[cell].y);
+			Log("Met file %simported!!\n\n", m->cells[cell].years ? "": "not ");
+			if ( ! m->cells[cell].years ) {
+				matrix_free(m);
+				return 1;
+			}
 
-			if (settings->time == 'd')
-			{
-				for ( cell = 0; cell < m->cells_count; cell++)
+			// very ugly hack :(
+			yos = m->cells[cell].years;
+			
+			Log("Total years_of_simulation = %d\n", years_of_simulation);
+			Log("***************************************************\n");
+
+			for ( year = 0; year < years_of_simulation; ++year ) {
+				//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
+				int i;
+				// ALESSIOR for handling leap years
+				int days_per_month;
+
+				Log("\n-Year simulated = %d\n", m->cells[cell].years[year].year);
+
+				/* only for first year */
+				if ( ! year ) matrix_summary (m);
+
+				i =0;
+				for (month = 0; month < MONTHS; month++)
 				{
-					if (	IS_INVALID_VALUE(site->sand_perc)
-							|| IS_INVALID_VALUE(site->clay_perc)
-							|| IS_INVALID_VALUE(site->silt_perc)
-							|| IS_INVALID_VALUE(site->bulk_dens)
-							|| IS_INVALID_VALUE(site->soil_depth) )
+					days_per_month = DaysInMonth[month];
+					if ( (FEBRUARY == month) && IS_LEAP_YEAR(m->cells[cell].years[year].year) )
 					{
-						Log("NO SOIL DATA AVAILABLE\n");
-						//exit
-						return 0;
+						++days_per_month;
 					}
 
-					//Get air pressure
-					Get_air_pressure (&m->cells[cell]);
-					//check hemisphere
-					if (site->lat > 0)
+					for (day = 0; day < days_per_month; day++)
 					{
-						m->cells[cell].north = 0;
+						//Check for daily temperatures
+						Get_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Get_daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Get_nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Get_soil_temperature (&m->cells[cell], day, month, year, yos);
+						//for RothC
+						//Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
+						//Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
+
+						//
+						Get_thermic_sum (&m->cells[cell], day, month, year, yos);
+						Get_rho_air (&m->cells[cell], day, month, year, yos);
+						Get_Day_Length (&m->cells[cell], day, month, year, yos);
+						//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
+
+						if(m->cells[cell].landuse == F)
+						{
+							//Get vegetative days
+							Get_Veg_Days (&m->cells[cell], yos, day, month, year, days_per_month);
+							//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
+							get_vpsat(&m->cells[cell], day, month, year, yos, i);
+							i++;
+						}
+						else if (m->cells[cell].landuse == Z)
+						{
+							//sergio
+						}
+
 					}
-					else
+					/*
+					for (day = 0; day < days_per_month; day++)
 					{
-						m->cells[cell].north = 1;
+						Print_met_daily_data (yos, day, month, years);
 					}
+					 */
 				}
-				//run for all cells to check land use
-				for ( cell = 0; cell < m->cells_count; cell++)
+				for (month = 0; month < MONTHS; month++)
 				{
-					//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
-					int i;
-					// ALESSIOR for handling leap years
-					int days_per_month;
-					i =0;
-					for (month = 0; month < MONTHS; month++)
+					days_per_month = DaysInMonth[month];
+					if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[year].year) )
 					{
-						days_per_month = DaysInMonth[month];
-						if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[years].year) )
-						{
-							++days_per_month;
-						}
-
-						for (day = 0; day < days_per_month; day++)
-						{
-							//Check for daily temperatures
-							Get_avg_temperature (&m->cells[cell], day, month, years, yos);
-							Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
-							Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
-							Get_soil_temperature (&m->cells[cell], day, month, years, yos);
-							//for RothC
-							//Get_avg_monthly_temp (&m->cells[cell], day, month, years, days_per_month, yos);
-							//Get_cum_monthly_rain (&m->cells[cell], day, month, years, days_per_month, yos);
-
-							//
-							Get_thermic_sum (&m->cells[cell], day, month, years, yos);
-							Get_rho_air (&m->cells[cell], day, month, years, yos);
-							Get_Day_Length (&m->cells[cell], day, month, years, yos);
-							//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
-
-							if(m->cells[cell].landuse == F)
-							{
-								//Get vegetative days
-								Get_Veg_Days (&m->cells[cell], yos, day, month, years, days_per_month);
-								//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
-								get_vpsat(&m->cells[cell], day, month, years, yos, i);
-								i++;
-							}
-							else if (m->cells[cell].landuse == Z)
-							{
-								//sergio
-							}
-
-						}
-						/*
-						for (day = 0; day < days_per_month; day++)
-						{
-							Print_met_daily_data (yos, day, month, years);
-						}
-						 */
+						++days_per_month;
 					}
-					for (month = 0; month < MONTHS; month++)
+					for (day = 0; day < days_per_month; day++ )
 					{
-						days_per_month = DaysInMonth[month];
-						if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[years].year) )
+						if(m->cells[cell].landuse == F)
 						{
-							++days_per_month;
-						}
-						for (day = 0; day < days_per_month; day++ )
-						{
-							if(m->cells[cell].landuse == F)
+							if (settings->version == 'f')
 							{
-								if (settings->version == 'f')
+								//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
+								//if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
+								//run for FEM version
+								if (!tree_model_daily (m, yos, year, month, day, years_of_simulation) )
 								{
-									//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
-									//if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
-									//run for FEM version
-									if (!tree_model_daily (m, yos, years, month, day, years_of_simulation) )
-									{
-										Log("tree model daily failed.");
-									}
-									else
-									{
-										puts(msg_ok);
-										//										soil_Log("\nsoilLog prova");
-										//run for SOIL functions
-										//soil_model (m, yos, years, month, day, years_of_simulation);
-
-										if (!mystricmp(settings->dndc, "on"))
-										{
-											Log("RUNNING DNDC.....\n");
-											//TODO SERGIO
-											soil_dndc_sgm (m, yos, years, month, day, years_of_simulation);
-											//soil_dndc......................................
-										}
-										//else if (!mystricmp(settings->rothC, "on"))
-										//{
-										//	Log("RUNNING ROTHC.....\n");
-										//	//TODO SERGIO
-										//	soil_rothC (m, yos, years, month, day, years_of_simulation);
-										//}
-										else
-										{
-											Log("No soil simulation!!!\n");
-										}
-										get_net_ecosystem_exchange(&m->cells[cell]);
-									}
-								}
-								else
-								{
-									//run for BGC version
-								}
-							}
-							if(m->cells[cell].landuse == Z)
-							{
-								if ( !crop_model_D (m, yos, years, month, day, years_of_simulation) )
-								{
-									Log("crop model failed.");
+									Log("tree model daily failed.");
 								}
 								else
 								{
 									puts(msg_ok);
-									soil_Log("\nsoilLog prova");
-									//look if put it here or move before tree_model  at the beginning of each month simulation
-									//	soil_model (m, yos, years, month, years_of_simulation);
+									//										soil_Log("\nsoilLog prova");
+									//run for SOIL functions
+									//soil_model (m, yos, years, month, day, years_of_simulation);
+
+									if (!mystricmp(settings->dndc, "on"))
+									{
+										Log("RUNNING DNDC.....\n");
+										//TODO SERGIO
+										soil_dndc_sgm (m, yos, year, month, day, years_of_simulation);
+										//soil_dndc......................................
+									}
+									//else if (!mystricmp(settings->rothC, "on"))
+									//{
+									//	Log("RUNNING ROTHC.....\n");
+									//	//TODO SERGIO
+									//	soil_rothC (m, yos, years, month, day, years_of_simulation);
+									//}
+									else
+									{
+										Log("No soil simulation!!!\n");
+									}
+									get_net_ecosystem_exchange(&m->cells[cell]);
 								}
 							}
-							Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
-							Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, years, month, day);
-							if (!mystricmp(settings->dndc, "on"))
+							else
 							{
-								Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+								//run for BGC version
 							}
-
 						}
-						Log("****************END OF MONTH (%d)*******************\n", month+1);
-						if (!mystricmp(settings->rothC, "on"))
+						if(m->cells[cell].landuse == Z)
 						{
-							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, years, month, day);
+							if ( !crop_model_D (m, yos, year, month, day, years_of_simulation) )
+							{
+								Log("crop model failed.");
+							}
+							else
+							{
+								puts(msg_ok);
+								soil_Log("\nsoilLog prova");
+								//look if put it here or move before tree_model  at the beginning of each month simulation
+								//	soil_model (m, yos, years, month, years_of_simulation);
+							}
 						}
-						Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, years, month);
+						Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
+						Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day);
+						if (!mystricmp(settings->dndc, "on"))
+						{
+							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
+						}
+
 					}
-					Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n\n\n\n\n\n", yos[years].year);
-					Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, years, years_of_simulation);
-
+					Log("****************END OF MONTH (%d)*******************\n", month+1);
+					if (!mystricmp(settings->rothC, "on"))
+					{
+						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
+					}
+					Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month);
 				}
+				Log("****************END OF YEAR (%d)*******************\n\n\n\n\n\n\n\n\n\n\n", yos[year].year);
+				Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation);
+
+				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 			}
-			//else if (settings->time == 'm')
-			//{
-			//	for ( cell = 0; cell < m->cells_count; cell++)
-			//	{
-			//		//Get air pressure
-			//		Get_air_pressure (&m->cells[cell]);
-
-			//		if (	IS_INVALID_VALUE(site->sand_perc)
-			//				|| IS_INVALID_VALUE(site->clay_perc)
-			//				|| IS_INVALID_VALUE(site->silt_perc)
-			//				|| IS_INVALID_VALUE(site->bulk_dens)
-			//				|| IS_INVALID_VALUE(site->soil_depth) )
-			//		{
-			//			Log("NO SOIL DATA AVAILABLE\n");
-			//			return 0;
-			//		}
-			//		//check hemisphere
-			//		if (site->lat > 0)
-			//		{
-			//			m->cells[cell].north = 0;
-			//		}
-			//		else
-			//		{
-			//			m->cells[cell].north = 1;
-			//		}
-
-			//		//run for all cells to check land use
-			//		for ( cell = 0; cell < m->cells_count; cell++)
-			//		{
-			//			//Get air pressure
-			//			Get_air_pressure (&m->cells[cell]);
-
-			//			//run for forests
-			//			if (m->cells[cell].landuse == F)
-			//			{
-			//				Log("RUN FOR FORESTS\n");
-
-			//				//control version 's' or 'u' and change if asked
-			//				if (settings->spatial == 's' && yos[years].year >= (int)(settings->switchtounspatial))
-			//				{
-			//					settings->version = 'u';
-			//					Log("--Years to switch from s to u = %f\n\n\n\n\n", settings->switchtounspatial);
-			//					Log("\n\n\n************CHANGING VERSION..........***************\n");
-			//					Log("year %d...changing version from spatial to unspatial\n", yos[years].year);
-			//					Log("Model version = %c\n\n\n\n", settings->version);
-			//					Log("Model spatial = %c\n\n\n\n", settings->spatial);
-			//					Log("************************************************************\n");
-			//				}
-
-			//				//compute number of vegetative months
-			//				for (month = 0; month < MONTHS; month++)
-			//				{
-			//					//Check for temperatures
-			//					Get_avg_temperature (&m->cells[cell], day, month, years, yos);
-			//					Get_daylight_avg_temperature (&m->cells[cell], day, month, years, yos);
-			//					Get_nightime_avg_temperature (&m->cells[cell], day, month, years, yos);
-
-			//					//todo add Get_thermic_sum if used
-
-			//					//Get vegetative months
-			//					Get_Veg_Months (&m->cells[cell], yos, month, years);
-			//				}
-			//				//run tree_model_M
-			//				for (month = 0; month < MONTHS; month++)
-			//				{
-			//					if ( !tree_model (m, yos, years, month, years_of_simulation) )
-			//					{
-			//						Log("tree model failed.");
-			//					}
-			//					else
-			//					{
-			//						puts(msg_ok);
-			//						//look if put it here or move before tree_model  at the beginning of each month simulation
-			//						//currently soil_model uses equals values for all cells
-			//						//a struct is anyway defined in types.h for soil data
-			//						//soil_model (m, yos, years, month, years_of_simulation);
-			//					}
-			//				}
-			//			}
-			//			//run for crops
-			//			if  (m->cells[cell].landuse == Z)
-			//			{
-			//				Log("RUN FOR CROPS\n");
-			//				//run tree_model
-			//				for (month = 0; month < MONTHS; month++)
-			//				{
-			//					if (!crop_model_M (m, yos, years, month, years_of_simulation) )
-			//					{
-			//						Log("crop model failed.");
-			//					}
-			//					else
-			//					{
-			//						puts(msg_ok);
-			//						//look if put it here or move before tree_model  at the beginning of each month simulation
-			//						//currently soil_model uses equals values for all cells
-			//						//a struct is anyway defined in types.h for soil data
-			//						//soil_model (m, yos, years, month, years_of_simulation);
-			//					}
-			//				}
-			//			}
-			//		}
-			//		Log("****************END OF MONTH*******************\n\n\n\n\n\n\n\n\n\n\n\n\n");
-			//	}
-			//}
-			else
-			{
-				Log("UNCORRECT TIME STEP CHOICED!!!\n");
-				return 0;
-			}
-
-
-			Log("...%d finished to simulate\n\n\n\n\n\n", yos[years].year);
+			free(yos);
+			yos = NULL;
+			m->cells[cell].years = NULL; /* required */
 		}
 
 		/* free memory */
-		free(yos);
 		matrix_free(m);
 
 		/* increment processed files count */
