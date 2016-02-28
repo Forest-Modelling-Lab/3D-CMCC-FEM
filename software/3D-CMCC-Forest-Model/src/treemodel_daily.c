@@ -289,8 +289,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
 												m->cells[cell].heights[height].ages[age].species[species].management, height);
 										/*canopy evapo-transpiration block*/
-										Get_canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										Get_canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
 										/*check for symmetric water competition*/
@@ -367,8 +367,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 										/*canopy evapo-transpiration block*/
-										Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+										Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 										/*check for symmetric water competition*/
 										/*if symmetric competition for water*/
@@ -449,8 +449,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 									/*canopy evapo-transpiration block*/
-									Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 									Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+									Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 									Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 									Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									/*check for symmetric water competition*/
