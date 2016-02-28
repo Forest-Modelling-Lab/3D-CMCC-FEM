@@ -124,7 +124,8 @@ static char copyright[] =
 		"of relying on this software. Use of this software assumes agreement to this condition of use.\n"
 		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
 		"was released by CMCC-UNITUS. \n"
-		"for more information see Collalti et al., 2014 Ecological Modelling \n"
+		"for more information see Collalti et al., 2014 Ecological Modelling, \n"
+		"Collalti et al., 2016 Geoscientific Model Development \n"
 		"\n";
 
 

@@ -23,7 +23,7 @@ void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met,
 	/*in case of snow formation*/
 	if(c->daily_snow != 0.0)
 	{
-		//fixme it doesn't seems to have sense this conversion factor
+		Log("implement negative heat fluxes!\n");
 	}
 	/*in case of snow sublimation*/
 	if(c->snow_subl != 0.0)

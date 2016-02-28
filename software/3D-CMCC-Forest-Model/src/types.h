@@ -452,7 +452,7 @@ enum {
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	RAIN_INTERCEPTED,
 	CANOPY_EVAPOTRANSPIRATION,
-	EVAPOTRANSPIRATION,             //Evapotranspiration (mm)
+	CANOPY_EVAPORATION,             //Evaporation (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
 	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
 	DENSITY,                        //Numbers of Tree per m^2
