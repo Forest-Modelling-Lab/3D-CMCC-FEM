@@ -39,7 +39,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		}
 
 		/*Canopy Transpiration*/
-		//todo change all functions with BIOME's
+		//todo change all functions with BIOME's or Gerten
 
 		// Penman-Monteith equation for computing canopy transpiration
 		// in kg/m2/day, which is converted to mm/day.
@@ -50,16 +50,15 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
 		//Log("duv = %f\n", duv);
 
+
 		switch (c->daily_layer_number)
 		{
 		case 1:
-			//convert radiation from hours to seconds
 			Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			break;
 		case 2:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				//convert radiation from hours to seconds
 				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			else
@@ -70,7 +69,6 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		case 3:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				//convert radiation from hours to seconds
 				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			if ( c->heights[height].z == c->top_layer - 1 )
@@ -88,7 +86,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
-			s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
+			s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0))
+					* s->value[CANOPY_COVER_DBHDC];
 			Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
 			Log("Canopy transpiration from dominant layer = %f mm \n", c->daily_c_transp[c->top_layer]);
