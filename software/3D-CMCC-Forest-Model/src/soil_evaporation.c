@@ -16,8 +16,8 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
-	sat = 2.503e6*pow (exp(17.269*met[month].d[day].tday/(237.3+ met[month].d[day].tday))/
-			(237.3+met[month].d[day].tday),2) ;
+	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
+			pow((237.3+met[month].d[day].tday),2);
 
 	//Log("T_soil = %f\n", met[month].d[day].tsoil);
 	if (met[month].d[day].tsoil > 0)
@@ -64,7 +64,7 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
-		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / c->lh_vap_soil;
+		PotEvap = (sat / (sat + gamma )) * (c->net_radiation *  (met[month].d[day].daylength * 3600)) / c->lh_vap_soil;
 		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 
 		c->soil_moist_ratio = c->available_soil_water / c->max_asw;

@@ -15,11 +15,15 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 
 	double LightTrasmitted;
-	double LightAbsorb;
+	//double LightAbsorb;
+	double a = 107.0;//(W/m)  empirical constants for long wave radiation computation
+	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
+	double ni; //proportion of daylength
 
 
-	//double DailyPar;
-	//double Gap_Cover = 0;
+	/*proportion of daylength*/
+	ni = met[month].d[day].daylength/24.0;
+	Log("frac daylength %f\n", ni);
 
 	Log("\nGET LIGHT ROUTINE\n");
 	/*if at least one class is in veg period*/
@@ -41,9 +45,9 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		Log("Light Transmitted = %f\n", LightTrasmitted);
 		Log("Vertical Percentage of Light Transmitted through this layer = %f %%\n", LightTrasmitted * 100);
 
-		LightAbsorb = 1 - LightTrasmitted;
-		Log("Vertical Fraction of Light Absorbed by this layer = %f \n", LightAbsorb);
-		Log("Vertical Percentage of Light Absorbed by this layer = %f %%\n", LightAbsorb * 100);
+		s->value[LIGHT_ABS] = 1 - LightTrasmitted;
+		Log("Vertical Fraction of Light Absorbed by this layer = %f \n", s->value[LIGHT_ABS]);
+		Log("Vertical Percentage of Light Absorbed by this layer = %f %%\n", s->value[LIGHT_ABS] * 100);
 
 
 
@@ -68,12 +72,16 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//ALBEDO/2
 			Log("albedo = %f\n", s->value[ALBEDO]);
 			//fixme for very low values of solar rad QB causes negative values for Net rad
-			c->net_radiation = (/*QA + QB * */ (met[month].d[day].solar_rad * pow (10.0, 6)/ 86400) * (1 - (s->value[ALBEDO]/2.0)));
+			c->net_radiation = (/*QA + QB * */ (met[month].d[day].solar_rad * pow (10.0, 6)/ (met[month].d[day].daylength * 3600)) * (1 - (s->value[ALBEDO]/2.0)));
 			Log("Net Radiation = %f W/m^2\n", c->net_radiation);
 
 			/*the no albedo computation is used for gap*/
-			c->net_radiation_no_albedo = (/*QA + QB * */(met[month].d[day].solar_rad * pow (10.0, 6)) / 86400);
+			c->net_radiation_no_albedo = (/*QA + QB * */(met[month].d[day].solar_rad * pow (10.0, 6)) / (met[month].d[day].daylength * 3600));
 			Log("Net Radiation NO ALBEDO = %f W/m^2\n", c->net_radiation_no_albedo);
+
+			/*following LPJ approach*/
+			c->long_wave_radiation = (b+(1.0-b)*ni)*(a - met[month].d[day].tday);
+			Log("Long wave radiation (upward) = %f (W/m)\n", c->long_wave_radiation);
 
 
 			//4 Dec 2012 add Albedo
@@ -93,7 +101,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			c->par_over_dominant_canopy = c->par;
 
 			//Apar
-			s->value[APAR] = c->par * LightAbsorb;
+			s->value[APAR] = c->par * s->value[LIGHT_ABS];
 			Log("Apar for layer '%d' = %f molPAR/m^2 day/month\n", c->heights[height].z, s->value[APAR]);
 
 
@@ -111,7 +119,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
 				c->net_radiation_for_dominated = ((c->net_radiation * LightTrasmitted) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)+(c->net_radiation_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
-				Log("Hourly Net Radiation for lower layer = %f  W/m^2/hour\n", c->net_radiation_for_dominated);
+				Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
 				//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
 				c->par_for_dominated = ((c->par - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + (c->par_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
@@ -175,7 +183,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						c->par_for_dominated = (c->par - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
 								c->par_no_albedo * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
 					}
-					Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_dominated);
+					Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 					Log("Average Par for lower layer = %f molPAR/m^2 month\n", c->par_for_dominated);
 				}
 			}
@@ -204,7 +212,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Available Par for dominated NO ALBEDO = %f molPAR/m^2 day/month\n", c->par_no_albedo);
 
 				//Apar
-				s->value[APAR] = c->par * LightAbsorb;;
+				s->value[APAR] = c->par * s->value[LIGHT_ABS];;
 				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
 				if ( c->dominated_veg_counter >= 3 )
@@ -386,7 +394,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Available Par from upper layer for subdominated = %f molPAR/m^2 day/month\n", c->par);
 
 				//Apar
-				s->value[APAR] = c->par * LightAbsorb;
+				s->value[APAR] = c->par * s->value[LIGHT_ABS];
 				Log("Apar = %f molPAR/m^2 month\n", s->value[APAR]);
 
 				if ( c->heights_count >= 3 )
@@ -405,7 +413,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICiE COPERTA
 						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 								+ (c->par_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
-						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 								+(c->net_radiation_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
 						Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 						Log("Par for soil = %f molPAR/m^2 month\n", c->par_for_soil);
@@ -448,7 +456,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
-							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2])
+							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * ((1.0- c->gapcover[c->top_layer-2])
 									* settings->sizeCell))/settings->sizeCell;
 							Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 							Log("Par for soil = %f molPAR/m^2 day/month\n", c->par_for_soil);
@@ -512,7 +520,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
-							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
+							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
 							Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 							Log("Par for soil = %f molPAR/m^2 day/month\n", c->par_for_soil);
 						}
@@ -526,14 +534,18 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 		Log("Daily solar rad = %f MJ/m^2/day\n", met[month].d[day].solar_rad);
 
-		c->net_radiation = (/*QA + QB * */ (met[month].d[day].solar_rad * pow (10.0, 6))) / met[month].d[day].daylength;
-		Log("Net Radiation = %f W/m^2n", c->net_radiation);
+		c->net_radiation = (/*QA + QB * */ (met[month].d[day].solar_rad * pow (10.0, 6))) / (met[month].d[day].daylength * 3600);
+		Log("Net Radiation = %f W/m^2\n", c->net_radiation);
 
 
 		c->par = met[month].d[day].solar_rad * MOLPAR_MJ;
 		Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
 
 		c->net_radiation_for_soil = c->net_radiation;
+
+		/*following LPJ approach*/
+		c->long_wave_radiation = (b+(1.0-b)*ni)*(a - met[month].d[day].tday);
+		Log("Long wave radiation (upward) = %f (W/m)\n", c->long_wave_radiation);
 
 	}
 

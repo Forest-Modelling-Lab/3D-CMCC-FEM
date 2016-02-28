@@ -54,32 +54,32 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		{
 		case 1:
 			//convert radiation from hours to seconds
-			Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+			Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			break;
 		case 2:
 			if ( c->heights[height].z == c->top_layer )
 			{
 				//convert radiation from hours to seconds
-				Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * (c->net_radiation_for_dominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		case 3:
 			if ( c->heights[height].z == c->top_layer )
 			{
 				//convert radiation from hours to seconds
-				Etransp = (E20 * c->net_radiation + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			if ( c->heights[height].z == c->top_layer - 1 )
 			{
-				Etransp = (E20 * c->net_radiation_for_dominated + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * (c->net_radiation_for_dominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * c->net_radiation_for_subdominated + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * (c->net_radiation_for_subdominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		}
@@ -158,7 +158,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	Log("Daily total canopy transpiration = %f \n", c->daily_tot_c_transp);
 
 	/*compute energy balance transpiration from canopy*/
-	c->daily_tot_c_transp_watt = c->daily_tot_c_transp * c->lh_vap / 86400;
+	c->daily_tot_c_transp_watt = c->daily_tot_c_transp * c->lh_vap /  (met[month].d[day].daylength * 3600);
 	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_tot_c_transp_watt);
 
 }

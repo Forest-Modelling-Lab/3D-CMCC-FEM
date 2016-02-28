@@ -409,6 +409,7 @@ enum {
 	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
 	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
 	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
+	LIGHT_ABS,                      //Vertical Fraction of Light Absorbed
 
 
 
@@ -935,7 +936,7 @@ typedef struct {
 	int cum_dayOfyear;
 	double abscission_daylength;
 
-
+	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
 	double net_radiation_no_albedo; /*the no albedo computation is used for gap*/
 	double net_radiation_for_dominated;

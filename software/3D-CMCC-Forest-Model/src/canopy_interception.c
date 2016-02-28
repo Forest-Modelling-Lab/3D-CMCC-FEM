@@ -25,8 +25,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	Log("\nGET_CANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
-	sat = 2.503e6*pow (exp(17.269*met[month].d[day].tday/(237.3+ met[month].d[day].tday))/
-			(237.3+met[month].d[day].tday),2) ;
+	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
+			pow((237.3+met[month].d[day].tday),2);
 
 	/*compute fraction of rain intercepted if in growing season*/
 	if (s->counter[VEG_UNVEG] == 1)
@@ -134,11 +134,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				{
 				case 1:
 					// mpet(m)=2.0*(s/(s+gamma)/lambda)*(uu*hn+vv*sin(hn))*k  !Eqn 25 lpj
-					//fixme ccompute correct net rad
-					PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (c->net_radiation * 86000);  // in J/m2/day
-					Log("gamma = %f\n", gamma);
-					Log("sat = %f\n", sat);
+					//fixme compute correct net rad
+					PotEvap = (sat / (sat + gamma)/ c->lh_vap) * ((c->net_radiation-c->long_wave_radiation) * (met[month].d[day].daylength * 3600));  // in J/m2/day
+					//Log("gamma = %f\n", gamma);
+					//Log("sat = %f\n", sat);
 					Log("c->net_radiation = %f\n", c->net_radiation);
+					Log("c->long_wave_radiation = %f\n", c->long_wave_radiation);
 					Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
 					w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 					Log("w = %f\n", w);
@@ -148,7 +149,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				case 2:
 					if ( c->heights[height].z == c->top_layer )
 					{
-						PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (c->net_radiation * 86000);  // in J/m2/dayPotEvap = (E20 / (E20 + PSYCCONST )) * (c->net_radiation * 86000) / c->lh_vap;  // in J/m2/day
+						//fixme check if use as above!!!!!!!!!!!!!!!!!!!!
+						PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (c->net_radiation * 86000);  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
