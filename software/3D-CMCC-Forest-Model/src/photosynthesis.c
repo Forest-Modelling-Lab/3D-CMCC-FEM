@@ -32,6 +32,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
 	//Veg period
+	//theorically no photosinthesis should occurs if DAILY TRANSP is equal to zero
 	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
 		if (s->value[ALPHA] > 0.0)
@@ -39,10 +40,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 			Alpha_C = s->value[ALPHA] * /* s->value[F_LIGHT] */ /*s->value[F_CO2] **/ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST];
 			Log("Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 
-
 			//convert epsilon from gCMJ^-1 to molCmolPAR^-1
 			Epsilon = Alpha_C * MOLPAR_MJ * GC_MOL;
-			//Log("Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 		}
 		else
 		{

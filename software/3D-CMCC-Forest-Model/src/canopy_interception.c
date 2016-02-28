@@ -127,7 +127,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				switch (c->daily_layer_number)
 				{
 				case 1:
-					PotEvap = (E20 / (E20 + PSYCCONST )) * (c->net_radiation * 86000) / c->lh_vap;  // in J/m2/day
+					// mpet(m)=2.0*(s/(s+gamma)/lambda)*(uu*hn+vv*sin(hn))*k  !Eqn 25 lpj
+					PotEvap = (E20 / (E20 + PSYCCONST)/ c->lh_vap) * (c->net_radiation * 86000);  // in J/m2/day
 					Log("E20 = %f\n", E20);
 					Log("PSYCCONST = %f\n", PSYCCONST);
 					Log("c->net_radiation = %f\n", c->net_radiation);
