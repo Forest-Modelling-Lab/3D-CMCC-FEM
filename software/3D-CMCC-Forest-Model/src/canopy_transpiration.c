@@ -26,7 +26,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 && s->value[RAIN_INTERCEPTED]<= 0 )
+	if (s->counter[VEG_UNVEG] == 1 && s->value[RAIN_INTERCEPTED] == 0.0 )
 	{
 		/*Canopy Conductance*/
 		if (settings->spatial == 's')
