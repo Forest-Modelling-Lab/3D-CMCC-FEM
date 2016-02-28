@@ -135,7 +135,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				case 1:
 					// mpet(m)=2.0*(s/(s+gamma)/lambda)*(uu*hn+vv*sin(hn))*k  !Eqn 25 lpj
 					//fixme compute correct net rad
-					PotEvap = (sat / (sat + gamma)/ c->lh_vap) * ((c->net_radiation-c->long_wave_radiation) * (met[month].d[day].daylength * 3600));  // in J/m2/day
+					PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (((c->net_radiation*s->value[LIGHT_ABS])-c->long_wave_radiation)
+							* (met[month].d[day].daylength * 3600));  // in J/m2/day
 					//Log("gamma = %f\n", gamma);
 					//Log("sat = %f\n", sat);
 					Log("c->net_radiation = %f\n", c->net_radiation);
@@ -150,7 +151,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 					if ( c->heights[height].z == c->top_layer )
 					{
 						//fixme check if use as above!!!!!!!!!!!!!!!!!!!!
-						PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (c->net_radiation * 86000);  // in J/m2/day
+						PotEvap = (sat / (sat + gamma)/ c->lh_vap) * (((c->net_radiation*s->value[LIGHT_ABS])-c->long_wave_radiation)
+								* (met[month].d[day].daylength * 3600));  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
@@ -158,7 +160,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 					}
 					else
 					{
-						PotEvap = (sat / (sat + gamma )) * (c->net_radiation_for_dominated * 86000) / c->lh_vap; // in J/m2/day
+						PotEvap = (sat / (sat + gamma)/c->lh_vap) * (((c->net_radiation_for_dominated *s->value[LIGHT_ABS])-c->long_wave_radiation)
+							* (met[month].d[day].daylength * 3600));  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
@@ -168,7 +171,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				case 3:
 					if ( c->heights[height].z == c->top_layer )
 					{
-						PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86000) / c->lh_vap;  // in J/m2/day
+						PotEvap = (sat / (sat + gamma )/c->lh_vap) * (((c->net_radiation *s->value[LIGHT_ABS])-c->long_wave_radiation)
+									* (met[month].d[day].daylength * 3600));  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF * w;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
@@ -176,7 +180,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 					}
 					else if ( c->heights[height].z == c->top_layer - 1 )
 					{
-						PotEvap = (sat / (sat + gamma )) * (c->net_radiation_for_dominated * 86000) / c->lh_vap; // in J/m2/day
+						PotEvap = (sat / (sat + gamma )/c->lh_vap) * (((c->net_radiation_for_dominated *s->value[LIGHT_ABS])-c->long_wave_radiation)
+								* (met[month].d[day].daylength * 3600));  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
@@ -184,7 +189,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 					}
 					else
 					{
-						PotEvap = (sat / (sat + gamma )) * (c->net_radiation_for_subdominated * 86000) / c->lh_vap; // in J/m2/day
+						PotEvap = (sat / (sat + gamma )/c->lh_vap) * (((c->net_radiation_for_subdominated*s->value[LIGHT_ABS])-c->long_wave_radiation)
+								* (met[month].d[day].daylength * 3600));  // in J/m2/day
 						w = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 						Canopy_evaporation = PotEvap * EVAPOCOEFF * w;
 						Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
@@ -198,6 +204,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		{
 			s->value[RAIN_INTERCEPTED] = 0.0;
 			Log("NO RAIN TO INTERCEPT\n");
+			Canopy_evaporation = 0;
+			Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
 			c->daily_c_int[c->heights[height].z] = 0.0;
 		}
 
@@ -220,6 +228,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	{
 		s->value[RAIN_INTERCEPTED] = 0.0;
 		Log("NO RAIN TO INTERCEPT\n");
+		Canopy_evaporation = 0;
+		Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", Canopy_evaporation);
 		c->water_to_soil = met[month].d[day].rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
