@@ -26,7 +26,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
 			pow((237.3+met[month].d[day].tday),2);
 
-	Log("pioggia intercettata del giorno prima = %f\n", s->value[RAIN_INTERCEPTED]);
+	Log("intercepted rainfall of the day(s) before = %f\n", s->value[RAIN_INTERCEPTED]);
 
 	/*compute fraction of rain intercepted if in growing season*/
 	if (s->counter[VEG_UNVEG] == 1)
