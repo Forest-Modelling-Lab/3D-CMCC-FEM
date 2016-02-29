@@ -31,7 +31,7 @@ TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 //VPD
 COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris from Landsberg et al., 2005
 BLCOND  0.2            //Canopy Boundary Layer conductance 0.2 for P. sylvestris from Landsberg et al., 2005, 0.09 Mollicone et al.,
-MAXCOND 0.012            //Maximum Canopy Conductance in m/sec for Larix cajanderi from Matsumoto et al., 
+MAXCOND 0.006            //Maximum Stomatal Conductance in m/sec for Larix spec Breuer
 //AGE for timber
 MAXAGE  120             //Determines rate of "physiological decline" of forest 100 for P. sylvestris from Zahele et al., 120 for P. sylvestris, from Xenakis et al., 2008, 2005 ,500 from Landsberg et al., 2005, 80 from Kurten et al., 
 RAGE    0.75            //Relative Age to give fAGE = 0.5 0.95 for P. sylvestris from Landsberg et al., 2005 for P. sylvestris, 0.75 from Xenakis et al., 2008

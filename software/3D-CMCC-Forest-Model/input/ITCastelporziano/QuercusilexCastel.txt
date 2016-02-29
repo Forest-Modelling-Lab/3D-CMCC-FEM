@@ -33,7 +33,7 @@ TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 //VPD
 COEFFCOND   0.06    //0.05 castel Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005, Mollicone et al
-MAXCOND 0.0025            //0.021 Maximum Canopy Conductance in m/sec (0.0025 (Hoff et al., 2002)) 0.021 Korner et al. 1979
+MAXCOND 0.0025            //0.021 Maximum Stomatal Conductance in m/sec (0.0025 (Hoff et al., 2002)) 0.021 Korner et al. 1979
 
 //AGE for timber
 MAXAGE  120             //Determines rate of "physiological decline" of forest //modified

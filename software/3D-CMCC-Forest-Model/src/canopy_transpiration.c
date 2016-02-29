@@ -25,6 +25,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
 
+
+	/*upscale leaf maximum stomatal conductance to maximum canopy conductance*/
 	s->value[MAXCOND] *= s->value[LAI];
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/

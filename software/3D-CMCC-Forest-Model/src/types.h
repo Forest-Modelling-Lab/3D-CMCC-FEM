@@ -254,7 +254,7 @@ enum {
 	//VPD
 	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec
 	BLCOND,                     //Canopy Boundary Layer conductance
-	MAXCOND,                    //Maximum Canopy Conductance in m/sec
+	MAXCOND,                    //Maximum leaf Conductance in m/sec
 
 	//AGE
 	MAXAGE,                         //Determines rate of "physiological decline" of forest
