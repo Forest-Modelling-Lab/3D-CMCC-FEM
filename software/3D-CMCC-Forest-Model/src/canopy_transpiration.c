@@ -54,30 +54,30 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		switch (c->daily_layer_number)
 		{
 		case 1:
-			Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+			Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			break;
 		case 2:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * (c->net_radiation_for_dominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		case 3:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				Etransp = (E20 * (c->net_radiation*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			if ( c->heights[height].z == c->top_layer - 1 )
 			{
-				Etransp = (E20 * (c->net_radiation_for_dominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * (c->net_radiation_for_subdominated*s->value[LIGHT_ABS]) + defTerm) / duv;  // in J/m2/s
+				Etransp = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		}
@@ -86,8 +86,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
-			s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0))
-					* s->value[CANOPY_COVER_DBHDC];
+			s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0))	* s->value[CANOPY_COVER_DBHDC];
 			Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
 			Log("Canopy transpiration from dominant layer = %f mm \n", c->daily_c_transp[c->top_layer]);

@@ -21,7 +21,7 @@ void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met,
 	c->daily_tot_latent_heat_flux = c->daily_tot_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 
 	/*in case of snow formation*/
-	if(c->daily_snow != 0.0)
+	if(c->daily_snow != 0.0 && c->snow_subl != 0.0)
 	{
 		Log("implement negative heat fluxes!\n");
 	}
@@ -29,10 +29,10 @@ void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met,
 	if(c->snow_subl != 0.0)
 	{
 		c->daily_tot_latent_heat_flux += c->snow_subl * (c->lh_sub * 1000) / 86400;
-		Log("Daily total latent heat flux with sublimation = %f W/m^2\n", c->daily_tot_latent_heat_flux);
+		Log("Daily total latent heat flux with sublimation = %f W/m\n", c->daily_tot_latent_heat_flux);
 	}
 	else
 	{
-		Log("PROVA LATENT HEAT = %f\n", c->daily_tot_latent_heat_flux);
+		Log("Daily total latent heat flux = %f W/m\n", c->daily_tot_latent_heat_flux);
 	}
 }

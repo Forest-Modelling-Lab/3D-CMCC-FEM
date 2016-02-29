@@ -324,7 +324,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	//incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
 
 	/* canopy transmitted radiation: convert from MJ/m2/d  --> KJ/m2/d */
-	incident_rad = met[month].d[day].solar_rad * snow_abs * 1000;
+	incident_rad = met[month].d[day].solar_rad * (met[month].d[day].solar_rad / 24.0) * snow_abs * 1000;
 
 
 	/* temperature and radiation melt from snowpack */

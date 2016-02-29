@@ -24,8 +24,16 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 
 
 	/*compute water that goes into the soil pool*/
-	c->water_to_soil = met[month].d[day].rain - c->daily_tot_et;
-	Log("Water to soil = %f \n", c->water_to_soil);
+	if(c->daily_snow !=0)
+	{
+		c->water_to_soil = met[month].d[day].rain - c->daily_tot_et;
+		Log("Water to soil = %f \n", c->water_to_soil);
+	}
+	else
+	{
+		c->water_to_soil -=  c->daily_tot_et;
+		Log("Water to soil = %f \n", c->water_to_soil);
+	}
 
 	c->daily_tot_w_flux = c->water_to_soil - (c->water_to_atmosphere - c->runoff);
 	Log("Daily_w_flux = %f \n", c->daily_tot_w_flux);

@@ -405,7 +405,7 @@ enum {
 
 	//LIGHT
 	SOLAR_RAD,                      //Solar Radiation in (MJ/m^2 day)
-	NET_RAD,                        //Daily Net Solar Radiation  Q in ('MJ/m2/day') --> 'W/m2'
+	NET_RAD_ABS,                        //Daily Net Solar Radiation  Q in ('MJ/m2/day') --> 'W/m2'
 	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
 	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
 	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
@@ -450,6 +450,7 @@ enum {
 	MONTH_TRANSP,
 	DAILY_TRANSP,
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
+	FRAC_DAYTIME_WET_CANOPY, //fraction of daytime that the canopy is wet
 	RAIN_INTERCEPTED,
 	CANOPY_EVAPOTRANSPIRATION,
 	CANOPY_EVAPORATION,             //Evaporation (mm)
@@ -937,6 +938,7 @@ typedef struct {
 	double abscission_daylength;
 
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
+	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
 	double net_radiation_no_albedo; /*the no albedo computation is used for gap*/
 	double net_radiation_for_dominated;
