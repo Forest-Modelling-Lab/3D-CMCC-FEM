@@ -14,7 +14,7 @@ ALBEDO	0.2
 GAMMA_LIGHT 0.01   //Light parameter for light modifier
 
 
-LAIGCX	8              //LAI for maximum canopy conductance
+LAIGCX	5              //LAI for maximum canopy conductance
 LAIMAXINTCPTN	8       //LAI for maximum rainfall interception
 MAXINTCPTN	0.33    //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
 

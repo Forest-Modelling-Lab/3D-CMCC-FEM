@@ -20,9 +20,12 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 {
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
-	static double Etransp;
+	static double PotEvap;
+	//double g_corr; //corrector factor from biome
 
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
+
+	s->value[MAXCOND] *= s->value[LAI];
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/
 	//Veg period
@@ -37,6 +40,8 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		{
 			s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
 		}
+		Log("Potential Canopy Conductance = %f m^2/sec\n", s->value[CANOPY_CONDUCTANCE]);
+		Log("Potential Canopy Conductance = %f m^2/day\n", s->value[CANOPY_CONDUCTANCE]*met[month].d[day].daylength * 3600.0);
 
 		/*Canopy Transpiration*/
 		//todo change all functions with BIOME's or Gerten
@@ -45,8 +50,14 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 
+		/* temperature and pressure correction factor for conductances */
+		/*
+		g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+		Log("BIOME = %f\n", g_corr);
+		*/
+
 		defTerm = met[month].d[day].rho_air * c->lh_vap * (vpd * VPDCONV) * s->value[BLCOND];
-		//Log("defTerm = %f\n", defTerm);
+		Log("defTerm = %f\n", defTerm);
 		duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
 		//Log("duv = %f\n", duv);
 
@@ -54,40 +65,41 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		switch (c->daily_layer_number)
 		{
 		case 1:
-			Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
+			PotEvap = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			break;
 		case 2:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
+				PotEvap = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
+				PotEvap = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		case 3:
 			if ( c->heights[height].z == c->top_layer )
 			{
-				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
+				PotEvap = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			if ( c->heights[height].z == c->top_layer - 1 )
 			{
-				Etransp = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
+				PotEvap = (E20 * s->value[NET_RAD_ABS] + defTerm) / duv;  // in J/m2/s
 			}
 			else
 			{
-				Etransp = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv;  // in J/m2/s
+				PotEvap = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv;  // in J/m2/s
 			}
 			break;
 		}
+		Log("PotEvap = %f\n", PotEvap);
 
 		/*compute transpiration*/
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
-			s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0))	* s->value[CANOPY_COVER_DBHDC];
-			Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
+			s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0))	* s->value[CANOPY_COVER_DBHDC];
+			Log("Canopy trasnpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
 			Log("Canopy transpiration from dominant layer = %f mm \n", c->daily_c_transp[c->top_layer]);
 			/*last height dominant class processed*/
@@ -107,7 +119,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			/*dominated layer*/
 			if (c->heights[height].z == c->top_layer-1)
 			{
-				s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
+				s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
 				Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 				c->daily_c_transp[c->top_layer-1] += s->value[DAILY_TRANSP];
 				Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-1]);
@@ -125,7 +137,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			/*subdominated layer*/
 			else
 			{
-				s->value[DAILY_TRANSP] = (Etransp / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
+				s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
 				Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 				c->daily_c_transp[c->top_layer-2] += s->value[DAILY_TRANSP];
 				Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-2]);
@@ -144,10 +156,19 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	}
 	else
 	{
-		s->value[DAILY_TRANSP] = 0.0;
-		Log("Canopy transpiration = %f mm\n", s->value[DAILY_TRANSP]);
-		c->daily_c_transp[c->heights[height].z] = 0.0;
-		Log("Transpirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_transp[c->heights[height].z]);
+		if(s->counter[VEG_UNVEG] == 1 && (s->value[FRAC_DAYTIME_WET_CANOPY] < 1.0 || s->value[FRAC_DAYTIME_WET_CANOPY] != 0.0))
+		{
+			s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC] * (1.0 - s->value[FRAC_DAYTIME_WET_CANOPY]);
+			Log("Partial Canopy transpiration = %f mm\n", s->value[DAILY_TRANSP]);
+			//fixme compute for all other layers
+		}
+		else
+		{
+			s->value[DAILY_TRANSP] = 0.0;
+			Log("No Canopy transpiration = %f mm\n", s->value[DAILY_TRANSP]);
+			c->daily_c_transp[c->heights[height].z] = 0.0;
+			Log("Transpirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_transp[c->heights[height].z]);
+		}
 	}
 
 
