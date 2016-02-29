@@ -34,7 +34,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 			/*dominant layer*/
 			if (c->heights[height].z == c->top_layer)
 			{
-				/*rainfall intercepted of the day(s) before not evporated*/
+				/*rainfall intercepted of the day(s) not evaporated before*/
 				if(s->value[RAIN_INTERCEPTED] != 0.0)
 				{
 					Log("intercepted rainfall of the day(s) before = %f\n", s->value[RAIN_INTERCEPTED]);
@@ -178,13 +178,11 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				s->value[RAIN_INTERCEPTED]= 0;
 				Log("remaining rainfall on canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 			}
-
 		}
 		else if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain > 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
 		{
 			/*compute potential  and actual evaporation for each layer for wet canopy*/
 			PotEvap = (sat / (sat + gamma)/ c->lh_vap)* s->value[NET_RAD_ABS] * 86400;
-			Log("NET_RAD_ABS = %f w/m\n", s->value[NET_RAD_ABS] );
 			Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
 			if(PotEvap < 0)
 			{
@@ -194,7 +192,30 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 			{
 				s->value[FRAC_DAYTIME_WET_CANOPY] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
 			}
-			Log("w = %f\n", s->value[FRAC_DAYTIME_WET_CANOPY]);
+			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_WET_CANOPY]);
+			s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_WET_CANOPY];
+			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+
+			s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
+			Log("Remaining water over the canopy = %f\n", s->value[RAIN_INTERCEPTED]);
+			c->water_to_soil = met[month].d[day].rain ;
+			Log("water to soil = %f mm\n", c->water_to_soil);
+		}
+		/*if there's till a canopy wet from the day(s) before bit without daily rainfall*/
+		else if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain == 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
+		{
+			/*compute potential  and actual evaporation for each layer for wet canopy*/
+			PotEvap = (sat / (sat + gamma)/ c->lh_vap)* s->value[NET_RAD_ABS] * 86400;
+			Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
+			if(PotEvap < 0)
+			{
+				s->value[FRAC_DAYTIME_WET_CANOPY] = 0.0;
+			}
+			else
+			{
+				s->value[FRAC_DAYTIME_WET_CANOPY] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1);
+			}
+			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_WET_CANOPY]);
 			s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_WET_CANOPY];
 			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 

@@ -66,6 +66,10 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 		//converting W/m^2 in Joule/m^2/day
 		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / c->lh_vap_soil;
 		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
+		if(PotEvap <0)
+		{
+			PotEvap = 0;
+		}
 
 		c->soil_moist_ratio = c->available_soil_water / c->max_asw;
 		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );

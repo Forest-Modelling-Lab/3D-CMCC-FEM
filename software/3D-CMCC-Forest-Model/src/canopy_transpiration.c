@@ -21,13 +21,16 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
 	static double PotEvap;
-	//double g_corr; //corrector factor from biome
+	double g_corr; //corrector factor from biome
 
 	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
 
+	/* temperature and pressure correction factor for conductances */
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
 
-	/*upscale leaf maximum stomatal conductance to maximum canopy conductance*/
-	s->value[MAXCOND] *= s->value[LAI];
+	/*upscale stomatal maximum stomatal conductance to maximum canopy conductance*/
+	s->value[MAXCOND] *= s->value[LAI] * g_corr;
+	Log("Maximum Canopy Conductance =%f m/sec\n", s->value[MAXCOND]);
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/
 	//Veg period
@@ -52,11 +55,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 		// in kg/m2/day, which is converted to mm/day.
 		// The following are constants in the PM formula (Landsberg & Gower, 1997)
 
-		/* temperature and pressure correction factor for conductances */
-		/*
-		g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
-		Log("BIOME = %f\n", g_corr);
-		*/
+		s->value[BLCOND] *= g_corr;
 
 		defTerm = met[month].d[day].rho_air * c->lh_vap * (vpd * VPDCONV) * s->value[BLCOND];
 		Log("defTerm = %f\n", defTerm);
