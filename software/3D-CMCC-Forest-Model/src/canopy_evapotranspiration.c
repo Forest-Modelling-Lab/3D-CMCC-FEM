@@ -22,8 +22,6 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 
 	/*it computes canopy evaporation + canopy transpiration*/
 
-	if (s->counter[VEG_UNVEG] == 1)
-	{
 		if (settings->time == 'd')
 		{
 			/*dominant layer*/
@@ -84,14 +82,6 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 		{
 
 		}
-	}
-	else
-	{
-		s->value[CANOPY_EVAPOTRANSPIRATION] = 0.0;
-		Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-		c->daily_c_evapotransp[c->heights[height].z] = 0.0;
-		Log("Evapotraspirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_evapotransp[c->heights[height].z]);
-	}
 
 	i = c->heights[height].z;
 

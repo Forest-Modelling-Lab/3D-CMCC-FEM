@@ -34,7 +34,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/
 	//Veg period
-	if (s->counter[VEG_UNVEG] == 1 && s->value[RAIN_INTERCEPTED] == 0.0 )
+	if (s->value[RAIN_INTERCEPTED] == 0.0 )
 	{
 		/*Canopy Conductance*/
 		if (settings->spatial == 's')
@@ -157,7 +157,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 	}
 	else
 	{
-		if(s->counter[VEG_UNVEG] == 1 && (s->value[FRAC_DAYTIME_WET_CANOPY] < 1.0 || s->value[FRAC_DAYTIME_WET_CANOPY] != 0.0))
+		if(s->value[FRAC_DAYTIME_WET_CANOPY] < 1.0 || s->value[FRAC_DAYTIME_WET_CANOPY] != 0.0)
 		{
 			s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC] * (1.0 - s->value[FRAC_DAYTIME_WET_CANOPY]);
 			Log("Partial Canopy transpiration = %f mm\n", s->value[DAILY_TRANSP]);
