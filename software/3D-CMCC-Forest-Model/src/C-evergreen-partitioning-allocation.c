@@ -57,7 +57,9 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	// every pool except foliage
 	static double frac_to_foliage_fineroot;
 
-		Log("GET_ALLOCATION_ROUTINE\n\n");
+	double all_lai, proj_lai;
+
+	Log("GET_ALLOCATION_ROUTINE\n\n");
 
 	Log("Carbon allocation routine for evergreen\n");
 
@@ -65,27 +67,20 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 	i = c->heights[height].z;
 
-//	if(day == 0 && month == 0)
-//	{
-//		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
-//		{
-//			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
-//			Log("Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
-//		}
-//	}
+	//	if(day == 0 && month == 0)
+	//	{
+	//		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
+	//		{
+	//			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
+	//			Log("Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
+	//		}
+	//	}
 
-	/*if (settings->time == 'm')
-	{
-		Monthly_solar_radiation = met[month].solar_rad * MOLPAR_MJ * DaysInMonth;
-		Par_over = c->par - s->value[APAR];
-		Light_trasm = Par_over / Monthly_solar_radiation;
-	}
-	else*/
-	{
-		Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
-		Par_over = c->par - s->value[APAR];
-		Light_trasm = Par_over /Daily_solar_radiation;
-	}
+
+	Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
+	Par_over = c->par - s->value[APAR];
+	Light_trasm = Par_over /Daily_solar_radiation;
+
 
 	s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0] - s->value[FRACBB1]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TBB]));
 
@@ -264,6 +259,15 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
 				Log("LAI_RATIO = %f\n", s->value[LAI_RATIO]);
+
+				//test see all_lai biome for other functions
+				//todo change with biomes function
+				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG] /
+						(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				Log("SLA_AVG BIOME = %f\n", s->value[SLA_AVG]);
+				Log("LAI BIOME = %f\n", proj_lai);
+				all_lai = proj_lai * s->value[LAI_RATIO];
+				Log("ALL LAI BIOME = %f\n", all_lai);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -338,6 +342,14 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					Log("recomputed LAI = %f\n", s->value[LAI]);
+					//test see all_lai biome for other functions
+					//todo change with biomes function
+					proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG] /
+							(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+					Log("SLA_AVG BIOME = %f\n", s->value[SLA_AVG]);
+					Log("LAI BIOME = %f\n", proj_lai);
+					all_lai = proj_lai * s->value[LAI_RATIO];
+					Log("ALL LAI BIOME = %f\n", all_lai);
 				}
 				/*for dominated shaded foliage*/
 				else
