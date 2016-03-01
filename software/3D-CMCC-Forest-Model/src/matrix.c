@@ -571,6 +571,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
 				{
 					m->cells[cell].heights[height].ages[age].species[species].value[SLAmkg] = m->cells[cell].heights[height].ages[age].species[species].value[SLA] * SLAMKG;
+					m->cells[cell].heights[height].ages[age].species[species].value[SLA_AVG] *= SLAMKG;
 				}
 			}
 		}

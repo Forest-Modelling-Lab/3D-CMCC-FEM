@@ -39,7 +39,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
 			//use generic stemconst stempower values
-			Log("..computing stem biomass from generic stempower and stemconst\n");
+			Log("..computing stem biomass from generic stempower and stemconst DBH = %f cm\n", s->value[AVDBH]);
 			if (s->value[AVDBH] < 9)
 			{
 				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
@@ -59,40 +59,24 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		else
 		{
 			//use site specific stemconst stempower values
-			Log("..computing stem biomass using site related stemconst and stempower\n");
-			Log("STEM POWER = %f\n", s->value[STEMPOWER_P]);
-			Log("STEM CONST = %f\n", s->value[STEMCONST_P]);
+			Log("..computing stem biomass from generic stempower and stemconst DBH = %f cm\n", s->value[AVDBH]);
+			//Log("STEM POWER = %f\n", s->value[STEMPOWER_P]);
+			//Log("STEM CONST = %f\n", s->value[STEMCONST_P]);
 			s->value[AV_STEM_MASS]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
 			//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
 
+		//test is it in KgC or KgDM?
+		Log("-Individual stem biomass = %f Kg\n", s->value[AV_STEM_MASS]);
 		//1000 to convert Kg into tons
-		//Log("-Individual stem biomass in Kg = %f\n", s->value[AV_STEM_MASS]);
 		s->value[BIOMASS_STEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE] / 1000;
-		Log("-Stem Biomass initialization data from DBH = %f \n", s->value[BIOMASS_STEM]);
+		Log("-Class stem Biomass initialization data from DBH = %f tonnes\n", s->value[BIOMASS_STEM]);
 	}
 	else
 	{
 		Log("Ok stem biomass..\n");
 		Log("---Stem Biomass from init file = %f\n", s->value[BIOMASS_STEM]);
 	}
-
-
-	/*
-	double heart_wood_diameter, heart_wood_stem_mass;
-
-	heart_wood_diameter = 2.0 * sqrt( s->value[HEARTWOOD_AREA]/Pi);
-	Log("HEART_WOOD_diameter = %f cm\n", heart_wood_diameter);
-	heart_wood_stem_mass = s->value[STEMCONST_P] * pow ((2.0 * sqrt( s->value[HEARTWOOD_AREA]/Pi)), s->value[STEMPOWER_P]);
-	Log("HEART_WOOD_STEM MASS = %f Kg\n",  heart_wood_stem_mass);
-
-	Log("HEART_WOOD_STEM PERC = %f \n", (heart_wood_stem_mass*100.0)/s->value[AV_STEM_MASS]);
-
-	Log("SAP_WOOD_STEM PERC = %f \n",  100.0 - (heart_wood_stem_mass*100.0)/s->value[AV_STEM_MASS]);
-
-	 */
-
-
 
 	if (s->value[BIOMASS_BRANCH]== 0 )
 	{
@@ -120,7 +104,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*computing total stem biomass*/
 	s->value[BIOMASS_TOT_STEM] = s->value[BIOMASS_STEM] + s->value[BIOMASS_BRANCH];
-	Log("--Total stem biomass (Ws + Wbb) = %f\n", s->value[BIOMASS_TOT_STEM]);
+	Log("--Class Total stem biomass (Ws + Wbb) = %f\n", s->value[BIOMASS_TOT_STEM]);
 
 
 
