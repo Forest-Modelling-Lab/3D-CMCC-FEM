@@ -65,17 +65,16 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			s->value[AV_STEM_MASS]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
 			//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
-
-		//test is it in KgC or KgDM?
-		Log("-Individual stem biomass = %f Kg\n", s->value[AV_STEM_MASS]);
+		//presumibly dry matter
+		Log("-Individual stem biomass = %f KgDM\n", s->value[AV_STEM_MASS]);
 		//1000 to convert Kg into tons
 		s->value[BIOMASS_STEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE] / 1000;
-		Log("-Class stem Biomass initialization data from DBH = %f tonnes\n", s->value[BIOMASS_STEM]);
+		Log("-Class stem Biomass initialization data from DBH = %f tDM cell\n", s->value[BIOMASS_STEM]);
 	}
 	else
 	{
 		Log("Ok stem biomass..\n");
-		Log("---Stem Biomass from init file = %f\n", s->value[BIOMASS_STEM]);
+		Log("---Stem Biomass from init file = %f tDM/cell\n", s->value[BIOMASS_STEM]);
 	}
 
 	if (s->value[BIOMASS_BRANCH]== 0 )
@@ -92,19 +91,19 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		{
 			s->value[FRACBB] = s->value[FRACBB1]+ (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (h->value / s->value[TBB]));
 			s->value[BIOMASS_BRANCH] = s->value[BIOMASS_STEM] * s->value[FRACBB];
-			Log("-Stem Branch Biomass initialization data from DBH = %f \n", s->value[BIOMASS_BRANCH]);
+			Log("-Stem Branch Biomass initialization data from DBH = %f tDM/cell\n", s->value[BIOMASS_BRANCH]);
 		}
 
 	}
 	else
 	{
 		Log("Ok stem branch biomass..\n");
-		Log("---Stem Branch Biomass from init file = %f\n", s->value[BIOMASS_BRANCH]);
+		Log("---Stem Branch Biomass from init file = %f tDM/cell\n", s->value[BIOMASS_BRANCH]);
 	}
 
 	/*computing total stem biomass*/
 	s->value[BIOMASS_TOT_STEM] = s->value[BIOMASS_STEM] + s->value[BIOMASS_BRANCH];
-	Log("--Class Total stem biomass (Ws + Wbb) = %f\n", s->value[BIOMASS_TOT_STEM]);
+	Log("--Class Total stem biomass (Ws + Wbb) = %f tDM/cell\n", s->value[BIOMASS_TOT_STEM]);
 
 
 
@@ -114,12 +113,12 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		Log("...Generating input Coarse root Biomass biomass data from DBH data...\n");
 		//compute coarse root biomass using root to shoot ratio
 		s->value[BIOMASS_ROOTS_COARSE] = s->value[BIOMASS_STEM] * s->value[COARSE_ROOT_STEM];
-		Log("--Coarse Root Biomass initialization data from Stem Biomass = %f \n", s->value[BIOMASS_ROOTS_COARSE]);
+		Log("--Coarse Root Biomass initialization data from Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_ROOTS_COARSE]);
 	}
 	else
 	{
 		Log("Ok coarse root biomass..\n");
-		Log("---Coarse Root Biomass from init file = %f \n", s->value[BIOMASS_ROOTS_COARSE]);
+		Log("---Coarse Root Biomass from init file = %ftDM/cell \n", s->value[BIOMASS_ROOTS_COARSE]);
 	}
 
 	/*sapwood calculation*/
@@ -153,7 +152,6 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		Log("...Generating input Reserve Biomass biomass data\n");
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002
-
 		s->value[BIOMASS_RESERVE] = s->value[WTOT_sap] * s->value[SAP_WRES];
 		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[BIOMASS_RESERVE]);
 		Log("-----Reserve Biomass initialization data  = %f KgC/cell \n", s->value[BIOMASS_RESERVE]/GC_GDM * 1000);
