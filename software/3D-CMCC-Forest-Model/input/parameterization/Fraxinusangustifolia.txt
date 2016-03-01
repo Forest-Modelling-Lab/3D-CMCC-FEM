@@ -19,6 +19,7 @@ MAXINTCPTN  ?    //Maximum proportion of rainfall interception evaporated from c
 
 //SPECIFIC LEAF AREA 
 SLA ?             //Specific Leaf Area cm^2/gC for sunlit leaves
+SLA_AVG ?                 //Average Specific Leaf Area cm^2/gC sunlit leaves
 SLA_RATIO   ?       //(DIM) ratio of shaded to sunlit projected SLA                
 
 //FRACTION BRANCH-BARK

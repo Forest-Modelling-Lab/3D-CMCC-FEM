@@ -20,6 +20,7 @@ MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from
 
 //SPECIFIC LEAF AREA 
 SLA	240             //Specific Leaf Area cm^2/gC 
+SLA_AVG 300                 //Average Specific Leaf Area cm^2/gC sunlit leaves from Mollicone  
 SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. cerris from Mollicone et al., 2002 					
 
 //FRACTION BRANCH-BARK

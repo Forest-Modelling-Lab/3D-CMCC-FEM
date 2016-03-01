@@ -18,7 +18,8 @@ LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
 MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 
 //SPECIFIC LEAF AREA 
-SLA	240             //Specific Leaf Area cm^2/gC for sunlit leaves 
+SLA	240             //Specific Leaf Area cm^2/gC for sunlit leaves
+SLA_AVG 300                 //Average Specific Leaf Area cm^2/gC sunlit leaves from Mollicone  
 SLA_RATIO	2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. cerris from Mollicone et al., 2002 						
 
 //FRACTION BRANCH-BARK

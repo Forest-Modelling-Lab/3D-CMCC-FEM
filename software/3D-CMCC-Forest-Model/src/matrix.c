@@ -38,6 +38,7 @@ static const char *species_values[] = {
 
 		//SPECIFIC LEAF AREA
 		"SLA",                        //Specific Leaf Area cm^2/g for sunlit leaves
+		"SLA_AVG",                    //AVERAGE Specific Leaf Area cm^2/g for sunlit/shaded leaves
 		"SLA_RATIO",                  //(DIM) ratio of shaded to sunlit projected SLA
 
 		//FRACTION BRANCH-BARK

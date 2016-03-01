@@ -17,6 +17,7 @@ MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated fro
 
 //SPECIFIC LEAF AREA 
 SLA 20             //Specific Leaf Area cm^2/gC for sunlit leaves for Larix d. see Piestch etal 2005
+SLA_AVG 220                 //Average Specific Leaf Area cm^2/gC sunlit leaves from Mollicone  
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA for Larix d. see Piestch etal 2005
 
 //FRACTION BRANCH-BARK

@@ -39,12 +39,6 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].counter[VEG_MONTHS] = 0;
 				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
-				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0;
-				c->heights[height].ages[age].species[species].value[FRAC_DAYTIME_WET_CANOPY] = 0;
-				c->heights[height].ages[age].species[species].value[CANOPY_EVAPORATION] = 0;
-				c->heights[height].ages[age].species[species].value[DAILY_TRANSP] = 0;
-				c->heights[height].ages[age].species[species].value[CANOPY_CONDUCTANCE] = 0;
-				c->heights[height].ages[age].species[species].value[BLCOND] = 0;
 				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C]  = 0;
 				c->heights[height].ages[age].species[species].value[NPP]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_GPP_G_C]  = 0;
