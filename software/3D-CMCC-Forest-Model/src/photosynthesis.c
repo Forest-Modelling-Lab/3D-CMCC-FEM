@@ -32,6 +32,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
 	//Veg period
+	//test
 	//theorically no photosinthesis should occurs if DAILY TRANSP is equal to zero
 	if (s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
@@ -74,7 +75,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		//Daily/Monthly layer GPP in grams of C/m^2
 		//Convert molC into grams
 		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		//Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
 
 		//Daily layer GPP in grams of C/m^2
 		//Convert molC into grams
@@ -83,8 +84,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		{
 			s->value[MONTHLY_GPP_g_C] = 0.0;
 		}
-		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+
 		s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
 		//Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
 

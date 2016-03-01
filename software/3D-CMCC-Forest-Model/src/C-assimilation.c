@@ -79,25 +79,12 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		{
 			Log("ATTENTION biomass reserve < 0!!!!!!\n");
 		}
+		Log("Daily NPP = %f gC/m^2\n", s->value[NPP_g_C]);
+		Log("Daily NPP = %f gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+		Log("Daily NPP = %f tDM/area\n",  s->value[NPP]);
+		//MonthlyNPP += s->value[NPP];
+		//Log("Monthly NPP (per area covered) for layer %d = %f tDM/area\n", c->heights[height].z, MonthlyNPP);
 
-		//if (settings->time == 'm')
-		//{
-		//	//Monthly layer GPP in grams of C/m^2
-		//	//Convert molC into grams
-		//	Log("Monthly NPP = %f gC/m^2\n",  s->value[NPP_g_C]);
-		//	Log("Monthly NPP = %f tDM/area\n", s->value[NPP]);
-
-		//	//DailyNPP = s->value[NPP] / DaysInMonth;
-		//	//Log("Daily GPP in grams of C for this layer = %f molC/m^2 day\n", DailyGPPgC);
-		//}
-		//else
-		{
-			Log("Daily NPP = %f gC/m^2\n", s->value[NPP_g_C]);
-			Log("Daily NPP = %f gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
-			Log("Daily NPP = %f tDM/area\n",  s->value[NPP]);
-			//MonthlyNPP += s->value[NPP];
-			//Log("Monthly NPP (per area covered) for layer %d = %f tDM/area\n", c->heights[height].z, MonthlyNPP);
-		}
 	}
 	else
 	{
