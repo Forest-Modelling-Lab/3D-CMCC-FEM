@@ -25,6 +25,17 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
 			pow((237.3+met[month].d[day].tday),2);
 
+	Log("Rainfall = %f mm\n", met[month].d[day].rain);
+
+	/*compute interception rate */
+	if (settings->spatial == 's')
+	{
+		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
+	}
+	else
+	{
+		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
+	}
 
 
 	if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain > 0.0)
@@ -40,21 +51,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 			/*if canopy is dry recompute*/
 			else
 			{
-				if (s->value[LAIMAXINTCPTN] <= 0)
-				{
-					s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN];
-				}
-				else
-				{
-					if (settings->spatial == 's')
-					{
-						s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , met[month].d[day].ndvi_lai / s->value[LAIMAXINTCPTN]);
-					}
-					else
-					{
-						s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
-					}
-				}
 				Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
 				s->value[RAIN_INTERCEPTED] = ((met[month].d[day].rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 				Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
@@ -234,13 +230,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	}
 
 	c->daily_tot_c_int += s->value[CANOPY_EVAPORATION];
-
-
-
-	//fixme it unreasonable that all rainfall intercepted evaporates simultaneously
-	/* calculate the time required to evaporate all the canopy water */
-	//evap_dayl = met[month].d[day].rain/e;
-	//Log("evap_dayl = %f\n", evap_dayl);
 
 
 	//fixme it still uses bad data

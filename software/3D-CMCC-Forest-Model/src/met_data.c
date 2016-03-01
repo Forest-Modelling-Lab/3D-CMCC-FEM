@@ -339,36 +339,26 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			Log("Snow melt!!\n");
 			r_melt = incident_rad / c->lh_fus;
 			c->snow_melt = t_melt + r_melt;
+			Log("snow_melt %f\n", c->snow_melt);
 
 
 			if (c->snow_melt > c->snow_pack)
 			{
+				/*all snow pack melts*/
 				c->snow_melt = c->snow_pack;
 				/*reset snow*/
-				c->snow_pack = 0;
+				c->snow_pack = 0.0;
+			}
+			else
+			{
+				/*snow pack melts partially*/
+				c->snow_pack -= c->snow_melt;
 			}
 			//add snow to soil water
 			/*check for balance*/
 			c->snow_to_soil = c->snow_melt;
-			if (c->snow_to_soil < c->snow_pack)
-			{
-				c->available_soil_water += c->snow_to_soil;
-				c->snow_pack -= c->snow_to_soil;
-			}
-			else
-			{
-				c->available_soil_water += c->snow_pack;
-				c->snow_pack = 0.0;
-			}
 			Log("snow to soil = %f mm\n", c->snow_to_soil);
 			Log("Snow thickness = %f (cm)\n", c->snow_pack);
-			Log("ASW + snow melted = %f mm\n", c->available_soil_water);
-		}
-		else
-		{
-			Log("tavg = %f\n", met[month].d[day].tavg);
-			Log("snow pack = %f cm\n", c->snow_pack);
-			Log("No Snow to melt!!\n");
 		}
 	}
 	else

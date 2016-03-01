@@ -141,42 +141,18 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].rain;
 
 		Print_met_data (met, vpd, month, day);
-
-		/*add rain to soil pool*/
-		if (met[month].d[day].tavg > 0.0)
-		{
-			m->cells[cell].available_soil_water += met[month].d[day].rain;
-			Log("Day %d month %d ASW = %f (mm-kgH2O/m2)\n", day+1, month+1 , m->cells[cell].available_soil_water);
-		}
-
-
+		/*compute latent heat values*/
 		Get_latent_heat (&m->cells[cell], met, month, day);
-
 		/*check for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
 
-		/*check soil water balance*/
-		Log("check soil water balance\n");
-		if (m->cells[cell].available_soil_water > m->cells[cell].max_asw)
-		{
-			m->cells[cell].runoff = m->cells[cell].available_soil_water - m->cells[cell].max_asw;
-			Log("Runoff = %f\n", m->cells[cell].runoff);
-			Log("ASW > MAXASW !!!\n");
-			//if the asw exceeds maxasw the plus is considered lost for turn off
-			m->cells[cell].available_soil_water = m->cells[cell].max_asw;
-			Log("ASW day %d month %d = %f mm\n", day+1, month+1, m->cells[cell].available_soil_water);
-		}
-		else
-		{
-			m->cells[cell].runoff = 0;
-			Log("Runoff = %f\n", m->cells[cell].runoff);
-		}
-
 		/*compute moist ratio*/
+		/*
 		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
 		Log("Moist ratio = %f\n", m->cells[cell].soil_moist_ratio);
 
 		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
+		*/
 
 
 

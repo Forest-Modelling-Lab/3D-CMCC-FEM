@@ -27,7 +27,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 			/*dominant layer*/
 			if (c->heights[height].z == c->top_layer)
 			{
-				s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
+				s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
 				Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
 				/*last height dominant class processed*/
 				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
@@ -46,7 +46,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				/*dominated layer*/
 				if (c->heights[height].z == c->top_layer-1)
 				{
-					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
+					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
 					/*last height dominant class processed*/
 					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
@@ -62,7 +62,7 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 				/*subdominated layer*/
 				else
 				{
-					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[RAIN_INTERCEPTED];
+					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
 					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
 					/*last height dominant class processed*/
 					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
