@@ -27,7 +27,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	double pR_CTEM = 0;
 	double pF_CTEM = 0;
 	//double max_DM_foliage;
-	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
+	//double reductor;           //instead soil water the routine take isnto account the minimum between F_VPD and F_SW and F_NUTR
 
 	double oldW;
 	double Daily_solar_radiation;
@@ -104,10 +104,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		s->counter[BUD_BURST_COUNTER] = 0;
 	}
 
-	//if (s->counter[LEAF_FALL_COUNTER] == 1)
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
-		//s->counter[LEAF_FALL_COUNTER] = 1;
 		Log("First day of Leaf fall\n");
 		Log("\nday, month: %d\t%d", month+1, day+1);
 		//s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
@@ -168,7 +166,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			//recompute allocation parameter for coppice
 
-			//TO DO: PUT INTO INPUT.TXT
+			//TODO: PUT INTO INPUT.TXT
 			//OR CONSIDER YEARS_FROM_COPPICING AS THE AGE SETTED INTO INPUT.TXT
 			//double years_from_coppicing = 25;
 
@@ -239,6 +237,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 			else
 			{
+				//test check it it seem that doesn't work!!
 				//frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
 				parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
 				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
@@ -253,9 +252,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			 */
 			/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
-			//Angelo try to change with a exponential function as frac_to_foliage = s->value[BIOMASS_RESERVE] * (e^-s->value[BUD_BURST])
-			//fixme try to allocate just a part of total reserve not all
-
 
 			/*partitioning*/
 			if (s->value[NPP] > 0.0)
@@ -267,7 +263,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				 */
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0/ (s->value[FINE_ROOT_LEAF] +1.0))) + s->value[NPP];
 				s->value[DEL_STEMS] = 0.0;
-				s->value[DEL_RESERVE] = - frac_to_foliage_fineroot;
+				s->value[DEL_RESERVE] -= frac_to_foliage_fineroot;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 				s->value[DEL_ROOTS_TOT] = 0;
@@ -285,7 +281,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					 */
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
 					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_RESERVE] = -(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+					s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
@@ -348,11 +344,14 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				Log("computing LAI for dominant trees\n");
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
-				Log("SLA  %f LAI = %f\n",s->value[SLAmkg] , s->value[LAI]);
+				Log("LAI = %f\n",s->value[LAI]);
 
-				//test
-				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
-				Log("SLA_AVG = %f LAI BIOME = %f\n", s->value[SLA_AVG], proj_lai);
+				//test see all_lai biome for other functions
+				//todo change with biomes function
+				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG] /
+						(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+				Log("SLA_AVG BIOME = %f\n", s->value[SLA_AVG]);
+				Log("LAI BIOME = %f\n", proj_lai);
 				all_lai = proj_lai * s->value[LAI_RATIO];
 				Log("ALL LAI BIOME = %f\n", all_lai);
 			}
@@ -432,9 +431,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					Log("recomputed LAI = %f\n", s->value[LAI]);
 					Log("SLA  %f LAI = %f\n",s->value[SLAmkg] , s->value[LAI]);
-					//test
-					proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
-					Log("SLA_AVG = %f LAI BIOME = %f\n", s->value[SLA_AVG], proj_lai);
+
+					//test see all_lai biome for other functions
+					proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLA_AVG];
+					Log("LAI BIOME = %f\n", proj_lai);
 					all_lai = proj_lai * s->value[LAI_RATIO];
 					Log("ALL LAI BIOME = %f\n", all_lai);
 				}
@@ -557,9 +557,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("LAI = %f\n", s->value[LAI]);
 				Log("SLA  %f LAI = %f\n",s->value[SLAmkg] , s->value[LAI]);
-				//test
-				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
-				Log("SLA_AVG = %f LAI BIOME = %f\n", s->value[SLA_AVG], proj_lai);
+
+				//test see all_lai biome for other functions
+				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLA_AVG];
+				Log("LAI BIOME = %f\n", proj_lai);
 				all_lai = proj_lai * s->value[LAI_RATIO];
 				Log("ALL LAI BIOME = %f\n", all_lai);
 			}
@@ -646,9 +647,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 					Log("SLA  %f LAI = %f\n",s->value[SLAmkg] , s->value[LAI]);
-					//test
-					proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
-					Log("SLA_AVG = %f LAI BIOME = %f\n", s->value[SLA_AVG], proj_lai);
+
+					//test see all_lai biome for other functions
+					proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLA_AVG];
+					Log("LAI BIOME = %f\n", proj_lai);
 					all_lai = proj_lai * s->value[LAI_RATIO];
 					Log("ALL LAI BIOME = %f\n", all_lai);
 				}
@@ -791,9 +793,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
 				Log("SLA  %f LAI = %f\n",s->value[SLAmkg] , s->value[LAI]);
-				//test
-				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
-				Log("SLA_AVG = %f LAI BIOME = %f\n", s->value[SLA_AVG], proj_lai);
+
+				//test see all_lai biome for other functions
+				proj_lai = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * s->value[SLA_AVG];
+				Log("LAI BIOME = %f\n", proj_lai);
 				all_lai = proj_lai * s->value[LAI_RATIO];
 				Log("ALL LAI BIOME = %f\n", all_lai);
 			}
