@@ -20,7 +20,8 @@ MAXINTCPTN  0.25    //Maximum proportion of rainfall interception evaporated fro
 //SPECIFIC LEAF AREA 
 SLA 66.2             //Specific Leaf Area cm^2/gC for sunlit leaves
 SLA_AVG 104.7                 //Average Specific Leaf Area cm^2/gC sunlit/shaded leaves from Mollicone
-SLA_RATIO   2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007                
+SLA_RATIO   2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007 
+LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio               
 
 //FRACTION BRANCH-BARK
 FRACBB0 0.30            //Branch and Bark fraction at age 0

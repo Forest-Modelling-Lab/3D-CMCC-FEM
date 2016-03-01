@@ -21,7 +21,8 @@ SLA 39.0             //Specific Leaf Area cm^2/gC for sunlit leaves AVG VALUE FR
                     //68.0 for P. sylvestris from White et al., 2000, 13.0 from Pietsch et al., 2005, 43 from Xiao 2006 for 30.9 dbh class from Xiao2006
                     //38.6 Simpson et al., 2001
 SLA_AVG 94.7                 //Average Specific Leaf Area cm^2/gC sunlit/shaded leaves from Mollicone
-SLA_RATIO   2.52    //(DIM) ratio of shaded to sunlit projected SLA  for P. sylvestris from Mollicone et al., 2002  
+SLA_RATIO   2.52    //(DIM) ratio of shaded to sunlit projected SLA  for P. sylvestris from Mollicone et al., 2002 
+LAI_RATIO   2.6     //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002 
 
 //FRACTION BRANCH-BARK
 FRACBB0 0.30            //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans

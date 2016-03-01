@@ -22,6 +22,7 @@ MAXINTCPTN	0.33    //Maximum proportion of rainfall interception evaporated from
 SLA	109.8             //Specific Leaf Area cm^2/gC sunlit leaves for Fagus s.	480 from Pietsch 2005,  78.18  Bartelink, 1998	109.8	from ettore	
 SLA_AVG 333                 //Average Specific Leaf Area cm^2/gC sunlit leaves for Fagus s. 480 from Pietsch 2005	
 SLA_RATIO	2.3     //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
+LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 
 //FRACTION BRANCH-BARK
 FRACBB0	0.40            //Branch and Bark fraction at age 0

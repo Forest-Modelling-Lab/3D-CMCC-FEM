@@ -241,6 +241,7 @@ enum {
 	SLA,                         //Specific Leaf Area cm^2/g for sunlit leaves
 	SLA_AVG,                    //AVERAGE Specific Leaf Area cm^2/g for sunlit/shaded leaves
 	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
+	LAI_RATIO,					//(DIM) all-sided to projected leaf area ratio
 
 	//FRACTION BRANCH-BARK
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)
@@ -487,6 +488,8 @@ enum {
 
 	//LAI
 	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
+	LAI_SUN,
+	LAI_SHADE,
 	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
 	SLAmkg,
 

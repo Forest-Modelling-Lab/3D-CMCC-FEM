@@ -19,6 +19,7 @@ MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated fro
 SLA 20             //Specific Leaf Area cm^2/gC for sunlit leaves for Larix d. see Piestch etal 2005
 SLA_AVG 220                 //Average Specific Leaf Area cm^2/gC sunlit leaves from Mollicone  
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA for Larix d. see Piestch etal 2005
+LAI_RATIO   2.6     //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002 
 
 //FRACTION BRANCH-BARK
 FRACBB0 0.18            //Branch and Bark fraction at age 0 for Larix decidua deducted from Gower et al., 1993
