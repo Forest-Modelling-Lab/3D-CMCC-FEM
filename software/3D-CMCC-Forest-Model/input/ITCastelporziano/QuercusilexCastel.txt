@@ -18,8 +18,8 @@ LAIMAXINTCPTN   5.8       //LAI for maximum rainfall interception (R.R.R. Oerlem
 MAXINTCPTN  0.25    //Maximum proportion of rainfall interception evaporated from canopy(0.25 Xenakis et al 2008, Mateos & Scnabel 2001) (0.17, R.R.R. Oerlemans & R.P. Vink 2010)
 
 //SPECIFIC LEAF AREA 
-SLA 66.2             //Specific Leaf Area cm^2/gC for sunlit leaves
-SLA_AVG 104.7                 //Average Specific Leaf Area cm^2/gC sunlit/shaded leaves from Mollicone
+SLA 6.62             //Specific Leaf Area m^2/KgC for sunlit leaves
+SLA_AVG 10.47                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone
 SLA_RATIO   2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007 
 LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio               
 

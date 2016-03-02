@@ -17,8 +17,8 @@ LAIMAXINTCPTN   5       //LAI for maximum rainfall interception for P. sylvestri
 MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
-SLA 42.5             //Specific Leaf Area cm^2/gC for sunlit leaves for Picea abies 94.0 from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
-SLA_AVG 220                 //Average Specific Leaf Area cm^2/gC sunlit leaves from Mollicone  
+SLA 4.25             //Specific Leaf Area m^2/KgC for sunlit leaves for Picea abies 94.0 from Pietsch et al., 2005, varying from 64.0 to 94.0 see White et al., 1999, 42.5 for Picea abies Seidl et al., 2012
+SLA_AVG 22                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
 SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA  for Picea abies from Mollicone et al., 2002, 1.8  from Pietsch et al., 2005  
 LAI_RATIO   2.6     //(DIM) (DIM) all-sided to projected leaf area ratio
 
