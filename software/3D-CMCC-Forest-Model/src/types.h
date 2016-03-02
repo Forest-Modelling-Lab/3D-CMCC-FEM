@@ -491,7 +491,7 @@ enum {
 	LAI_SUN,
 	LAI_SHADE,
 	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
-	SLAmkg,
+//	SLAmkg,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day

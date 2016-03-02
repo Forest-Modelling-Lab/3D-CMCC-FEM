@@ -32,12 +32,12 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 			/*for dominant layer with sunlit foliage*/
 			if (c->top_layer == c->heights[height].z)
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
 			}
 			/*for dominated shaded foliage*/
 			else
 			{
-				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM);
+				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLA_AVG] * s->value[SLA_RATIO]) * GC_GDM);
 			}
 			Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 

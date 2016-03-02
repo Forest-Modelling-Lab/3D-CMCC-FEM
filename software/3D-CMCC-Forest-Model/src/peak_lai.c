@@ -31,13 +31,13 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 		//test if use SLA_AVG instead classic SLA
 //		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 //		Log("Maximum foliage biomass for sunlit/shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLAmkg]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 		Log("Maximum foliage biomass for sunlit leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 	/*for dominated shaded foliage*/
 	else
 	{
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / ((s->value[SLAmkg] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / ((s->value[SLA_AVG] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 

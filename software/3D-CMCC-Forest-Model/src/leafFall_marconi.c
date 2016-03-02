@@ -206,9 +206,9 @@ void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* 
 				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 						log(.11111111111))))));
 		Log("LAI = %f\n", s->value[LAI]);
-		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0);
+		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0);
 
-		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg] * GC_GDM * 1000.0));
+		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
 
 
 		//ALESSIOC
@@ -232,9 +232,9 @@ void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* 
 				*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 						log(.11111111111))))));
 		Log("LAI = %f\n", s->value[LAI]);
-		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLAmkg]* s->value[SLA_RATIO] * GC_GDM * 1000.0);
+		previousBiomass = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG]* s->value[SLA_RATIO] * GC_GDM * 1000.0);
 		s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] *
-				settings->sizeCell) / (s->value[SLAmkg] * s->value[SLA_RATIO] * GC_GDM * 1000.0));
+				settings->sizeCell) / (s->value[SLA_AVG] * s->value[SLA_RATIO] * GC_GDM * 1000.0));
 		//ALESSIOC
 		if(s->value[BIOMASS_FOLIAGE] > 0)
 		{

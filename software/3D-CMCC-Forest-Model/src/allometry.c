@@ -130,10 +130,10 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 
 	WFkgm2 = s->value[BIOMASS_FOLIAGE]* (1000 / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 	Log("Foliage Biomass to LAI function = %f Kg/m^2\n", WFkgm2);
-	Log("SLA-3D-CMCC Model = %f cm^2/g\n", s->value[SLA]);
-	//Log("SLA-3D-CMCC Model = %f m^2/Kg\n", SLAmkg);
+	Log("SLA-3D-CMCC Model = %f m^2/KgC\n", s->value[SLA]);
 
-	s->value[LAI] = WFkgm2  * SLAMKG ;
+
+	s->value[LAI] = WFkgm2  * s->value[SLA] * GC_GDM ;
 	Log("LAI-3D-CMCC Forest Model = %f\n" , s->value[LAI]);
 
 

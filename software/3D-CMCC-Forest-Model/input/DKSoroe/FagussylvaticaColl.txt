@@ -19,8 +19,8 @@ LAIMAXINTCPTN	8       //LAI for maximum rainfall interception
 MAXINTCPTN	0.33    //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
 
 //SPECIFIC LEAF AREA 
-SLA	109.8             //Specific Leaf Area cm^2/gC sunlit leaves for Fagus s.	480 from Pietsch 2005,  78.18  Bartelink, 1998	109.8	from ettore	
-SLA_AVG 333                 //Average Specific Leaf Area cm^2/gC sunlit leaves for Fagus s. 480 from Pietsch 2005
+SLA	10.98             //Specific Leaf Area m^2/KgC sunlit leaves for Fagus s.	480 from Pietsch 2005,  78.18  Bartelink, 1998	109.8	from ettore	
+SLA_AVG 33.3                 //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 480 from Pietsch 2005
 SLA_RATIO	2.3     //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 
