@@ -14,8 +14,8 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	//todo control par for soil and net rad for soil
 
 
-	double LightTrasmitted;
-	//double LightAbsorb;
+	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade;
+	double LightTrasmitted, LightTrasmitted_sun, LightTrasmitted_shade;
 	double a = 107.0;//(W/m)  empirical constants for long wave radiation computation
 	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
 	double ni; //proportion of daylength
@@ -50,12 +50,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("day %d month %d MODEL_LAI = %f \n", day+1, month+1, s->value[LAI] );
 		}
 
-		Log("Light Transmitted = %f\n", LightTrasmitted);
-		Log("Vertical Percentage of Light Transmitted through this layer = %f %%\n", LightTrasmitted * 100);
+		Log("Vertical Fraction of Light Transmitted = %f (%f %)\n", LightTrasmitted, LightTrasmitted * 100);
 
-		s->value[LIGHT_ABS] = 1 - LightTrasmitted;
-		Log("Vertical Fraction of Light Absorbed by this layer = %f \n", s->value[LIGHT_ABS]);
-		Log("Vertical Percentage of Light Absorbed by this layer = %f %%\n", s->value[LIGHT_ABS] * 100);
+		LightAbsorb = 1 - LightTrasmitted;
+		Log("Vertical Fraction of Light Absorbed by this layer = %f (%f %)\n", LightAbsorb, LightAbsorb * 100);
 
 		Log("dominant counter %d \n", c->dominant_veg_counter);
 		Log("Top_layer = %d\n", c->top_layer);
@@ -78,7 +76,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//c->net_radiation = (/*QA + QB * */ (met[month].d[day].solar_rad * pow (10.0, 6)/ (met[month].d[day].daylength * 3600)) * (1 - (s->value[ALBEDO]/2.0)));
 			//Log("Net Radiation = %f W/m^2\n", c->net_radiation);
 
-			s->value[NET_RAD_ABS] = c->net_radiation * (1.0 - (s->value[ALBEDO]/2.0))*s->value[LIGHT_ABS];
+			s->value[NET_RAD_ABS] = c->net_radiation * (1.0 - (s->value[ALBEDO]/2.0))*LightAbsorb;
 			Log("Absorbed Net Radiation = %f W/m^2\n", c->net_radiation);
 
 			/*the no albedo computation is used for gap*/
@@ -90,6 +88,8 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//following BIOME albedo for PAR is 1/3 of albedo
 			//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
 			//PAR is reflected than net_radiation (Jones 1992)
+
+			//test is that real?
 			//albedo is not considered for lower layers as BIOME doesn't considers albedo for shaded leaves
 			//CONSIDERING THAT ALBEDO SHOULD BE CONSIDERED ONLY FOR SUN LEAVES AND THAT SUN LEAVES REPRESENT 50%
 			//ALBEDO IS 1/6
@@ -103,7 +103,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			c->par_over_dominant_canopy = c->par;
 
 			//Apar
-			s->value[APAR] = c->par * s->value[LIGHT_ABS];
+			s->value[APAR] = c->par * LightAbsorb;
 			Log("Apar for layer '%d' = %f molPAR/m^2 day/month\n", c->heights[height].z, s->value[APAR]);
 
 
@@ -216,7 +216,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Available Par for dominated NO ALBEDO = %f molPAR/m^2 day/month\n", c->par_no_albedo);
 
 				//Apar
-				s->value[APAR] = c->par * s->value[LIGHT_ABS];;
+				s->value[APAR] = c->par * LightAbsorb;
 				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
 				if ( c->dominated_veg_counter >= 3 )
@@ -398,7 +398,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Available Par from upper layer for subdominated = %f molPAR/m^2 day/month\n", c->par);
 
 				//Apar
-				s->value[APAR] = c->par * s->value[LIGHT_ABS];
+				s->value[APAR] = c->par * LightAbsorb;
 				Log("Apar = %f molPAR/m^2 month\n", s->value[APAR]);
 
 				if ( c->heights_count >= 3 )
@@ -417,7 +417,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICiE COPERTA
 						c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 								+ (c->par_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
-						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+						c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 								+(c->net_radiation_for_dominated * (c->gapcover[c->top_layer-2] * settings->sizeCell)))/settings->sizeCell;
 						Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 						Log("Par for soil = %f molPAR/m^2 month\n", c->par_for_soil);
@@ -460,7 +460,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
-							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * ((1.0- c->gapcover[c->top_layer-2])
+							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2])
 									* settings->sizeCell))/settings->sizeCell;
 							Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 							Log("Par for soil = %f molPAR/m^2 day/month\n", c->par_for_soil);
@@ -524,7 +524,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							}
 
 							c->par_for_soil = ((c->par_for_subdominated - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
-							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - s->value[LIGHT_ABS]) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
+							c->net_radiation_for_soil = ((c->net_radiation_for_subdominated * (1 - LightAbsorb) ) * ((1.0- c->gapcover[c->top_layer-2]) * settings->sizeCell))/settings->sizeCell;
 							Log("Net radiation for soil = %fW/m^2\n", c->net_radiation_for_soil);
 							Log("Par for soil = %f molPAR/m^2 day/month\n", c->par_for_soil);
 						}

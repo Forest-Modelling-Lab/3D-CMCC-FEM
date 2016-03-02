@@ -410,7 +410,7 @@ enum {
 	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
 	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
 	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
-	LIGHT_ABS,                      //Vertical Fraction of Light Absorbed
+	//LIGHT_ABS,                      //Vertical Fraction of Light Absorbed
 
 
 
