@@ -261,12 +261,17 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 //				Log("LAI_RATIO = %f\n", s->value[LAI_RATIO]);
 
 				//test see all_lai biome for other functions
-				//todo change with biomes function
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG]/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-				Log("SLA_AVG BIOME = %f m^2/KgC\n", s->value[SLA_AVG]);
-				Log("LAI BIOME = %f\n", s->value[LAI]);
+				Log("LAI = %f\n", s->value[LAI]);
 				all_lai = s->value[LAI] * s->value[LAI_RATIO];
 				Log("ALL LAI BIOME = %f\n", all_lai);
+
+				//test
+				/* Calculate projected LAI for sunlit and shaded canopy portions */
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				Log("LAI SUN= %f\n", s->value[LAI_SUN]);
+				Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -343,12 +348,17 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 //					Log("recomputed LAI = %f\n", s->value[LAI]);
 
 					//test see all_lai biome for other functions
-					//todo change with biomes function
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG]/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-					Log("SLA_AVG BIOME = %f m^2/KgC\n", s->value[SLA_AVG]);
-					Log("LAI BIOME = %f\n", s->value[LAI]);
+					Log("LAI = %f\n", s->value[LAI]);
 					all_lai = s->value[LAI] * s->value[LAI_RATIO];
 					Log("ALL LAI BIOME = %f\n", all_lai);
+
+					//test
+					/* Calculate projected LAI for sunlit and shaded canopy portions */
+					s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+					Log("LAI SUN= %f\n", s->value[LAI_SUN]);
+					Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
 				}
 				/*for dominated shaded foliage*/
 				else
