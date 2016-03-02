@@ -25,7 +25,6 @@ C_SRCS += \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
-../src/garbage.c \
 ../src/initialization_biomass_data.c \
 ../src/initialization_site_data.c \
 ../src/io.c \
@@ -81,7 +80,6 @@ OBJS += \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
-./src/garbage.o \
 ./src/initialization_biomass_data.o \
 ./src/initialization_site_data.o \
 ./src/io.o \
@@ -137,7 +135,6 @@ C_DEPS += \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
-./src/garbage.d \
 ./src/initialization_biomass_data.d \
 ./src/initialization_site_data.d \
 ./src/io.d \

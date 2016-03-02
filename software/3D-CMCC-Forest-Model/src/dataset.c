@@ -68,7 +68,6 @@ static const char *header[COLUMNS] = {
 		"LANDUSE",//land use type (F=Forest, C=crop)
 		"AGE",
 		"SPECIES",
-		//"PHENOLOGY",
 		"MANAGEMENT",
 		"N",
 		"STOOL",
@@ -237,33 +236,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 						strcpy(rows[*rows_count-1].species, token);
 						/* todo: add check for strcpy */
 					}
-					/*
-					else if ( PHENOLOGY_COLUMN == i )
-					{
-						// check phenology length
-						if ( 1 != strlen(token) )
-						{
-							printf(err_bad_phenology_length, *rows_count);
-							free(columns);
-							free(rows);
-							fclose(f);
-							return NULL;
-						}
-
-						// check phenology char
-						if ( ('D' == token[0]) || ('d' == token[0]) ) {
-							rows[*rows_count-1].phenology = D;
-						} else if ( ('E' == token[0]) || ('e' == token[0]) ) {
-							rows[*rows_count-1].phenology = E;
-						} else {
-							printf(err_bad_phenology, token[0], *rows_count);
-							free(columns);
-							free(rows);
-							fclose(f);
-							return NULL;
-						}
-					}
-					 */
 					else if ( MANAGEMENT_COLUMN == i )
 					{
 						/* check management length */

@@ -102,10 +102,6 @@ void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		s->value[TREE_HEIGHT_SORTIE] = 0.1 + 30 *( 1.0 - exp ( - 0.03 * s->value[AVDBH] ));
 		L
 */
-
-
-
-
 	/*control*/
 	if ( oldTreeHeight > h->value)
 	{
