@@ -59,7 +59,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//Log ("KAPPA_CTEM  = %f \n", kappa);
 
 	//test
-	//Get_daily_lai (&s);
+	//Get_daily_lai (&s->value[LAI]);
 
 
 	Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
@@ -75,8 +75,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	{
 		s->value[BIOMASS_FRUIT] = 0;
 	}
-
-
 
 	//7 May 2012
 	//compute static ratio of allocation between fine and coarse root
@@ -213,7 +211,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 		Log("LAI = %f \n", s->value[LAI]);
-		Log("PEAK LAI = %f \n", s->value[PEAK_Y_LAI]);
+		Log("PEAK LAI = %f \n", s->value[PEAK_LAI]);
 
 
 		switch (s->phenology_phase)
@@ -370,18 +368,18 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 
 			/*check if re-transfer foliage biomass to reserve*/
-			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("LAI exceeds Peak Lai\n");
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
 				}
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] *
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] *
 							settings->sizeCell))/ ((s->value[SLA_AVG] / (s->value[SLA_RATIO] +1))* GC_GDM)) / 1000.0;
 				}
 
@@ -593,7 +591,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 
 			//control if new Lai exceeds Peak Lai
-			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("PHENOLOGICAL PHASE = 2.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
 				Log("LAI = %f \n", s->value[LAI]);
@@ -602,12 +600,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
 				}
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] /
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] /
 							(s->value[SLA_RATIO] +1))* GC_GDM)) / 1000;
 				}
 
@@ -845,7 +843,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 
 			//control if new Lai exceeds Peak Lai
-			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("PHENOLOGICAL PHASE = 2.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
 				Log("LAI = %f \n", s->value[LAI]);
@@ -854,12 +852,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
 				}
 				/*for dominated shaded foliage*/
 				else
 				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] /
+					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] /
 							(s->value[SLA_RATIO] +1))* GC_GDM)) / 1000;
 				}
 
@@ -1357,7 +1355,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
 		Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d --\n", c->heights[height].z);
-		Log("PEAK_LAI = %f \n", s->value[PEAK_Y_LAI]);
+		Log("PEAK_LAI = %f \n", s->value[PEAK_LAI]);
 
 		if (s->management == 0)
 		{

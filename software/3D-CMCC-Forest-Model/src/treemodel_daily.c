@@ -146,16 +146,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*check for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
 
-		/*compute moist ratio*/
-		/*
-		m->cells[cell].soil_moist_ratio = m->cells[cell].available_soil_water / m->cells[cell].max_asw;
-		Log("Moist ratio = %f\n", m->cells[cell].soil_moist_ratio);
-
-		m->cells[cell].av_soil_moist_ratio += m->cells[cell].soil_moist_ratio;
-		*/
-
-
-
 		/*sort by heights*/
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
@@ -195,7 +185,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						}
 						Set_tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 
-						Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species],  height);
+						Get_daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
 
 						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
 						/*Loop for adult trees*/

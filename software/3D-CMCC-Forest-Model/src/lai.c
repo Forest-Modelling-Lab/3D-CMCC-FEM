@@ -27,7 +27,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 		Log("\n--GET_DAILY_LAI--\n");
 		Log("VEG_DAYS = %d\n", s->counter[VEG_DAYS]);
 		Log("BIOMASS_RESERVE = %f\n", s->value[BIOMASS_RESERVE]);
-		Log("PEAK_Y_LAI = %f\n", s->value[PEAK_Y_LAI]);
+		Log("PEAK LAI = %f\n", s->value[PEAK_LAI]);
 		Log("LAI = %f\n", s->value[LAI]);
 
 
@@ -43,7 +43,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 		}
 
 		/* to prevent deficit in NSC model allocates into foliage only if this amount isn't negative */
-		if (s->counter[VEG_DAYS] <= s->value[BUD_BURST] && s->value[LAI] < s->value[PEAK_Y_LAI] && s->value[BIOMASS_RESERVE] > 0)
+		if (s->counter[VEG_DAYS] <= s->value[BUD_BURST] && s->value[LAI] < s->value[PEAK_LAI] && s->value[BIOMASS_RESERVE] > 0)
 		{
 			// ALESSIOR s->counter was using BIOMASS_RESERVE
 			Log("VEG_DAYS < %d LAI < PEAK_LAI, RESERVE > 0\n", s->counter[VEG_DAYS]);
@@ -64,7 +64,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 			Log("++Lai before reserve allocation = %f\n", s->value[LAI]);
-			Log("++Peak Lai = %f\n", s->value[PEAK_Y_LAI]);
+			Log("++Peak Lai = %f\n", s->value[PEAK_LAI]);
 
 			Log("Reserves pools = %f tDM/area\n", s->value [BIOMASS_RESERVE]);
 
@@ -111,19 +111,19 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 			}
 
 			/*check if re-transfer foliage biomass to reserve*/
-			if (s->value[LAI] > s->value[PEAK_Y_LAI])
+			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("LAI exceeds Peak Lai\n");
 
 				/*for dominant layer with sunlit foliage*/
 				if (c->top_layer == c->heights[height].z)
 				{
-					biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
+					biomass_for_peak_lai = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
 				}
 				/*for dominated shaded foliage*/
 				else
 				{
-					biomass_for_peak_lai = ((s->value[PEAK_Y_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
+					biomass_for_peak_lai = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ ((s->value[SLA_AVG] * s->value[SLA_RATIO])* GC_GDM)) / 1000;
 				}
 				/*re-transfer mass to reserve*/
 				s->value[BIOMASS_RESERVE] += (biomass_for_peak_lai - s->value[BIOMASS_FOLIAGE]);
@@ -144,7 +144,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 
 			Log("++Lai from reserves = %f\n", s->value[LAI]);
 		}
-		if(s->value[LAI] > s->value[PEAK_Y_LAI])
+		if(s->value[LAI] > s->value[PEAK_LAI])
 		{
 			Log("LAI > PEAK_Y_LAI\n");
 			Log("Unused reserve = %f tDM/cell \n", s->value [BIOMASS_RESERVE]);
@@ -187,7 +187,7 @@ void Get_lai (SPECIES *const s, CELL *const c, const int years, const int month,
 		{
 			Log("++Lai from previous day allocation = %f\n", s->value[LAI]);
 		}
-		if (s->value[LAI] > s->value[PEAK_Y_LAI])
+		if (s->value[LAI] > s->value[PEAK_LAI])
 		{
 			Log("ATTENTION LAI > PEAK_Y_LAI!!! reallocate exceeding biomass \n");
 		}

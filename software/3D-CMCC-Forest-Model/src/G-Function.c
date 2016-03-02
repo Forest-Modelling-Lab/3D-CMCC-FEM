@@ -317,7 +317,6 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("> species = %s\n", c->heights[height].ages[age].species[species].name);
 	Log("> phenology = %f\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 	Log("> management = %d\n", c->heights[height].ages[age].species[species].management);
-	//Log("[%d] PEAK Y LAI IN THIS YEAR LAYER %d = %f\n",yos[years].year, m->cells[cell].heights[height].z,  m->cells[cell].heights[height].ages[age].species[species].value[PEAK_Y_LAI]);
 	Log("[%d] layer %d n tree = %d\n", yos[years].year,  c->heights[height].z, c->heights[height].ages[age].species[species].counter[N_TREE]);
 	Log("[%d] layer %d > avdbh = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH]);
 	Log("[%d] layer %d > wf = %f\n",yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE]);

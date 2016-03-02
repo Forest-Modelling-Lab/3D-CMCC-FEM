@@ -486,11 +486,14 @@ enum {
 	AVERAGE_F_SW,
 
 	//LAI
-	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
+	LAI,                            //LAI (m^2/m2)
 	LAI_SUN,
 	LAI_SHADE,
 	ALL_LAI,
 	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
+	PEAK_LAI,                      //PEAK LAI
+
+	MAX_BIOMASS_FOLIAGE,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
@@ -527,11 +530,6 @@ enum {
 	DEL_Y_WCR,
 	DEL_Y_WRES,                      //Yearly cumulated reserve biomass increment
 	DEL_Y_BB,
-
-	//monthly partitioning-allocation
-	PEAK_LAI,                      //PEAK LAI DETERMINED BUY THE PREVIOUS YEAR BIOMASS ALLOCATED INTO FOLIAGE
-	PEAK_Y_LAI,                    //PEAK LAI FOR NEXT YEAR
-	MAX_BIOMASS_FOLIAGE,
 
 	//CTEM CARBON
 	//carbon biomass monthly increment

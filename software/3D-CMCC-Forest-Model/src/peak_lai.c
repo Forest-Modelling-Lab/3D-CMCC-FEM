@@ -21,8 +21,8 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	Log("Crown diameter = %f m^2\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
 	Log("Crown Area for Kostner = %f m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
-	s->value[PEAK_Y_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
-	Log("year %d PEAK LAI from Kostner = %f m^2 m^-2\n",years, s->value[PEAK_Y_LAI]);
+	s->value[PEAK_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
+	Log("year %d PEAK LAI from Kostner = %f m^2 m^-2\n",years, s->value[PEAK_LAI]);
 
 
 	/*for dominant layer with sunlit foliage*/
@@ -31,13 +31,13 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 		//test if use SLA_AVG instead classic SLA
 //		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 //		Log("Maximum foliage biomass for sunlit/shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 		Log("Maximum foliage biomass for sunlit leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 	/*for dominated shaded foliage*/
 	else
 	{
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / ((s->value[SLA_AVG] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / ((s->value[SLA_AVG] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 
@@ -45,9 +45,9 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
 	{
 		Log("azz\n");
-		if ((s->value[LAI] > s->value[PEAK_Y_LAI]) || (s->value[BIOMASS_FOLIAGE] > s->value[MAX_BIOMASS_FOLIAGE]))
+		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[BIOMASS_FOLIAGE] > s->value[MAX_BIOMASS_FOLIAGE]))
 		{
-			s->value[LAI] = s->value[PEAK_Y_LAI];
+			s->value[LAI] = s->value[PEAK_LAI];
 			Log("Initial LAI > PEAK LAI, recompute it\n");
 			Log("recomputed LAI = %f\n", s->value[LAI]);
 			/*then recompute foliage biomass*/
@@ -70,7 +70,7 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 
 	i = c->heights[height].z;
 
-	c->annual_peak_lai[i] = s->value[PEAK_Y_LAI];
+	c->annual_peak_lai[i] = s->value[PEAK_LAI];
 
 
 
