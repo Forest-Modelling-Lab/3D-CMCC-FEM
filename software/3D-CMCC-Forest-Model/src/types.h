@@ -492,6 +492,8 @@ enum {
 	ALL_LAI,
 	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
 	PEAK_LAI,                      //PEAK LAI
+	SLA_SUN,
+	SLA_SHADE,
 
 	MAX_BIOMASS_FOLIAGE,
 

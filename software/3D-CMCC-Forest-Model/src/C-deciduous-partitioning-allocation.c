@@ -59,7 +59,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	//Log ("KAPPA_CTEM  = %f \n", kappa);
 
 	//test
-	//Get_daily_lai (&s->value[LAI]);
+	Get_daily_lai (&c->heights[height].ages[age].species[species]);
 
 
 	Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
@@ -205,10 +205,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 
 		}
-
-
-
-
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 		Log("LAI = %f \n", s->value[LAI]);
 		Log("PEAK LAI = %f \n", s->value[PEAK_LAI]);
@@ -226,8 +222,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[DAILY_DEL_LITTER] = 0;
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
-
-
 			if (s->value[BIOMASS_RESERVE] < 0.0)
 			{
 				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
@@ -357,6 +351,14 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 				Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 				Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+
+				/*compute SLA for SUN and SHADED*/
+				s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+				Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+				s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+				Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
+
+
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -446,6 +448,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 					Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 					Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+					/*compute SLA for SUN and SHADED*/
+					s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+					Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+					s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+					Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 				}
 				/*for dominated shaded foliage*/
 				else
@@ -580,6 +587,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 				Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 				Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+				/*compute SLA for SUN and SHADED*/
+				s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+				//TEST DOESN'T WORK!!!
+				Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+				s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+				Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else
@@ -678,6 +691,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 					Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 					Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+					/*compute SLA for SUN and SHADED*/
+					s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+					Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+					s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+					Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 				}
 				/*for dominated shaded foliage*/
 				else
@@ -832,6 +850,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
 				Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 				Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+				/*compute SLA for SUN and SHADED*/
+				s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+				Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+				s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+				Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 			}
 			/*for dominated shaded foliage*/
 			else

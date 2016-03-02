@@ -9,7 +9,7 @@
 
 void Get_daily_lai (SPECIES *const s)
 {
-
+	Log("GET_DAILY_LAI\n");
 }
 
 // CUURENTLY NOT USED
