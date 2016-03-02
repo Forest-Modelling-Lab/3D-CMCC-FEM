@@ -7,9 +7,48 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_daily_lai (SPECIES *const s)
+void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
 {
 	Log("GET_DAILY_LAI\n");
+	/*for dominant layer with sunlit foliage*/
+	if (*top_layer == *z)
+	{
+
+		Log("computing LAI for dominant trees\n");
+		//				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * (s->value[SLAmkg] * GC_GDM);
+		//				Log("LAI = %f\n",s->value[LAI]);
+
+		//test see all_lai biome for other functions
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG]/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+		Log("LAI = %f\n", s->value[LAI]);
+		s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
+		//Log("ALL LAI BIOME = %f\n", s->value[ALL_LAI]);
+
+		//test
+		/* Calculate projected LAI for sunlit and shaded canopy portions */
+		s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+		s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+		Log("LAI SUN = %f\n", s->value[LAI_SUN]);
+		Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
+
+		/*compute SLA for SUN and SHADED*/
+		s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO])) / ((s->value[BIOMASS_FOLIAGE] * 1000) / GC_GDM);
+		Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+		s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
+		Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
+
+
+	}
+	/*for dominated shaded foliage*/
+	else
+	{
+		//test see if also for dominated layers need to have sun and shade leaves
+		Log("computing LAI for dominated trees\n");
+		s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0) / (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) * ((s->value[SLA_AVG] / (s->value[SLA_RATIO] +1)) * GC_GDM);
+		Log("LAI = %f\n", s->value[LAI]);
+	}
+
+
 }
 
 // CUURENTLY NOT USED
