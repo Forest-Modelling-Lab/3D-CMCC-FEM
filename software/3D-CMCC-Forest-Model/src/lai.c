@@ -68,7 +68,7 @@ void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
 				/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 		Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
 		s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
-		Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE])
+		Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 
 		/*ASSIGN LAI VALUES FROM SHADED LAI*/
 		s->value[LAI] = s->value[LAI_SHADE];
