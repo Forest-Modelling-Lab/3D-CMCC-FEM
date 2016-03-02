@@ -495,21 +495,22 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 
 		Log("***************\n");
 		Log("**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
-		Log("-average solar_rad = %.2f MJ/m^2/day\n"
-				"-tavg = %f °C\n"
-				"-tmax = %f °C\n"
-				"-tmin = %f °C\n"
-				"-tday = %f °C\n"
-				"-tnight = %f °C\n"
-				//"-rh = %f %%\n"
-				"-vpd = %f mbar\n"
-				"-ts_f = %f °C\n"
-				"-rain = %f mm\n"
-				"-swc = %f %%vol\n"
-				"-thermic_sum = %f °C\n"
-				"-daylength = %f hrs\n"
+		Log("-solar_rad = %.2f MJ/m^2/day\n"
+				"-tavg = %.2f °C\n"
+				"-tmax = %.2f °C\n"
+				"-tmin = %.2f °C\n"
+				"-tday (computed)= %.2f °C\n"
+				"-tnight (computed)= %.2f °C\n"
+				"-tsoil (computed)= %.2f °C\n"
+				"-rh = %.2f %%\n"
+				"-vpd = %.2f mbar\n"
+				"-ts_f = %.2f °C\n"
+				"-rain = %.2f mm\n"
+				"-swc = %.2f %%vol\n"
+				"-thermic_sum = %.2f °C\n"
+				"-daylength = %.2f hrs\n"
 				"-DOY = %d\n"
-				"-tsoil = %f °C\n"
+
 				//"-month avg temp = %.2f °C\n"
 				//"-month cum rain = %.2f mm\n"
 				,met[month].d[day].solar_rad,
@@ -518,15 +519,15 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 				met[month].d[day].tmin,
 				met[month].d[day].tday,
 				met[month].d[day].tnight,
-				//met[month].rh,
-				vpd,
+				met[month].d[day].tsoil,
+				met[month].d[day].rh_f,
+				met[month].d[day].vpd,
 				met[month].d[day].ts_f,
 				met[month].d[day].rain,
 				met[month].d[day].swc,
 				met[month].d[day].thermic_sum,
 				met[month].d[day].daylength,
-				doy,
-				met[month].d[day].tsoil
+				doy
 				//,met[month].avg_monthly_temp
 				//,met[month].cum_monthly_rain
 		);

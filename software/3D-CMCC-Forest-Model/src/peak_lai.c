@@ -14,7 +14,7 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	//static double oldBasalArea;
 	//static double sapwood_perc;
 
-	Log ("\nPEAK LAI FUNCTION\n\n");
+	Log ("\nPEAK LAI FUNCTION\n");
 	Log("sap leaf = %f\n", s->value[SAP_LEAF]);
 	Log("sap area = %f\n", s->value[SAPWOOD_AREA]);
 	Log("Leaf Area from Kostner-LPJ = %f m^2\n", (s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]);
@@ -32,7 +32,7 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 //		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 //		Log("Maximum foliage biomass for sunlit/shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for sunlit leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
+		Log("Maximum foliage biomass (sun and shaded)= %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}
 	/*for dominated shaded foliage*/
 	else

@@ -121,17 +121,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//compute vpd
 		//TODO remove if used VPD
+		//VPD USED MUST BE IN mbar or hPa
 		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
 		//VPD USED MUST BE IN mbar
 		//used if vpd is in kPa to convert it into mbar
-		/*
-		vpd =  met[month].d[day].vpd * 10.0; //Get_vpd (met, month);
-		 */
+		//met[month].d[day].vpd *= 10.0;
 
-		//if the VPD input data are in hPa to convert in mbar
-		//VPD USED MUST BE IN mbar
-		//used if vpd met data is in hPa to convert it into mbar
-		Log("converting hPa vpd met data into mbar vpd....\n");
 		vpd =  met[month].d[day].vpd ; //Get_vpd (met, month);
 
 		//average yearly met data
@@ -143,7 +138,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Print_met_data (met, vpd, month, day);
 		/*compute latent heat values*/
 		Get_latent_heat (&m->cells[cell], met, month, day);
-		/*check for snow*/
+		/*check and compute for snow*/
 		Get_snow_met_data (&m->cells[cell], met, month, day);
 
 		/*sort by heights*/

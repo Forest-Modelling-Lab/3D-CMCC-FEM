@@ -34,6 +34,7 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 		c->available_soil_water = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %f\n", c->available_soil_water);
 	}
+
 	if ( c->available_soil_water > c->max_asw)
 	{
 		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
