@@ -57,7 +57,6 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	// every pool except foliage
 	static double frac_to_foliage_fineroot;
 
-	double all_lai, proj_lai;
 
 	Log("GET_ALLOCATION_ROUTINE\n\n");
 
@@ -263,14 +262,14 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				//test see all_lai biome for other functions
 				s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG]/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 				Log("LAI = %f\n", s->value[LAI]);
-				all_lai = s->value[LAI] * s->value[LAI_RATIO];
-				//Log("ALL LAI BIOME = %f\n", all_lai);
+				s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
+				//Log("ALL LAI BIOME = %f\n", s->value[ALL_LAI]);
 
 				//test
 				/* Calculate projected LAI for sunlit and shaded canopy portions */
 				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
 				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
-				Log("LAI SUN= %f\n", s->value[LAI_SUN]);
+				Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 				Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
 			}
 			/*for dominated shaded foliage*/
@@ -351,14 +350,14 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					//test see all_lai biome for other functions
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM)) * s->value[SLA_AVG]/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 					Log("LAI = %f\n", s->value[LAI]);
-					all_lai = s->value[LAI] * s->value[LAI_RATIO];
-					//Log("ALL LAI BIOME = %f\n", all_lai);
+					s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
+					//Log("ALL LAI BIOME = %f\n", s->value[ALL_LAI]);
 
 					//test
 					/* Calculate projected LAI for sunlit and shaded canopy portions */
 					s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
 					s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
-					Log("LAI SUN= %f\n", s->value[LAI_SUN]);
+					Log("LAI SUN = %f\n", s->value[LAI_SUN]);
 					Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
 				}
 				/*for dominated shaded foliage*/

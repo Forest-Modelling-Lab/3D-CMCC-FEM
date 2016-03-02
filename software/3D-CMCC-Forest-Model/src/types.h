@@ -489,8 +489,8 @@ enum {
 	LAI,                            //LAI (m^2/m2) 3D-CMCC Model version
 	LAI_SUN,
 	LAI_SHADE,
+	ALL_LAI,
 	MAX_LAI,						//lai at the very first day of senescence: parameter of the sigmoid function
-//	SLAmkg,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
@@ -1265,6 +1265,7 @@ void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 void Get_litterfall_evergreen_CTEM (SPECIES *const);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
+void Get_daily_lai (SPECIES *const);
 void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
 void Get_peak_lai (SPECIES *const , int, int );
 void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
