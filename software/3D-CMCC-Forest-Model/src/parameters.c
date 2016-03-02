@@ -55,7 +55,6 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 					s->value[LAIGCX],
 					s->value[LAIMAXINTCPTN],
 					s->value[MAXINTCPTN],
-					s->value[SLA],
 					s->value[FRACBB0],
 					s->value[FRACBB1],
 					s->value[TBB],

@@ -345,7 +345,7 @@ void Get_Greff_Mortality (SPECIES *const s)
 
 	Log("**MORTALITY based on Growth Efficiency (LPJ)**\n");
 
-	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE] * s->value[SLA]));
+	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE] * s->value[SLA_AVG]));
 	//Log("greff from LPJ = %f\n", greff);
 	//Log("DEL_TOTAL_W = %f\n", s->value[DEL_TOTAL_W]);
 	//Log("WF= %f\n", s->value[BIOMASS_FOLIAGE]);
