@@ -13,11 +13,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	int i;
 	double Alpha_C;
 	double Epsilon;
-	double Optimum_GPP;
-	double Optimum_GPP_gC;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
-	double DailyGPPgC;
-	double StandGPPtC = 0.0;
 
 	Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
 
@@ -52,9 +48,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 
 		/*GPP*/
 		Log("Apar for GPP = %f\n", s->value[APAR]);
-		Optimum_GPP = s->value[ALPHA] * s->value[APAR];
-
-		Optimum_GPP_gC = Optimum_GPP * GC_MOL;
 
 		//DailyGPP in mol of Carbon
 		GPPmolC = s->value[APAR] * Alpha_C;

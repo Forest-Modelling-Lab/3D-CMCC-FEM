@@ -955,7 +955,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 						//reproductive life span
 						s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 					}
-					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					//s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					//ALESSIOC added these two to avoid negative results in delta computation
@@ -979,7 +979,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					s->value[DEL_TOT_STEM] = 0;
 					s->value[DEL_STEMS]= 0;
 					s->value[DEL_BB]= 0;
-					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					//ALESSIOC added these two to avoid negative results in delta computation
@@ -1003,7 +1003,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 						//reproductive life span
 						s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 					}
-					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
 					s->value[DEL_RESERVE] = s->value[NPP];
@@ -1016,7 +1016,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				}
 				else
 				{
-					leaffalMarconi(&c->heights[height].ages[age].species[species], met,
+					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_TOT_STEM] = 0;
 					s->value[DEL_STEMS] = 0;

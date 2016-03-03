@@ -252,13 +252,6 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	c->daily_tot_aut_resp += s->value[TOTAL_AUT_RESP];
 	c->monthly_tot_aut_resp += s->value[TOTAL_AUT_RESP];
 	c->annual_tot_aut_resp += s->value[TOTAL_AUT_RESP];
-
-	//TODO
-	//recompute biomass pools after respiration
-
-
-
-
 }
 
 

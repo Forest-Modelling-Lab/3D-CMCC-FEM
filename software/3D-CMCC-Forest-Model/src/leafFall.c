@@ -184,7 +184,7 @@ void senescenceDayOne(SPECIES *const s, const MET_DATA *const met, CELL *const c
 
 }
 
-void leaffalMarconi(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplayer, int z)
+void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplayer, int z)
 {
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */

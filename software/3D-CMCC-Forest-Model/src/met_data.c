@@ -158,56 +158,6 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 	}*/
 }
 
-extern void Get_avg_monthly_temp (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
-{
-	static int counter;
-	//static double temp_avg_monthly_temp;
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
-	//averaged monthly temp for RothC
-
-	/*if (settings->time == 'd')
-	{
-		if (met[month].d[day].n_days == 1)
-		{
-			counter = 0;
-			temp_avg_monthly_temp = 0;
-			met[month].avg_monthly_temp = 0;
-		}
-		if (met[month].d[day].tavg != NO_DATA)
-		{
-			counter ++;
-			temp_avg_monthly_temp += met[month].d[day].tavg;
-		}
-		if (met[month].d[day].n_days == DaysInMonth)
-		{
-			met[month].avg_monthly_temp = (temp_avg_monthly_temp / counter);
-		}
-	}*/
-}
-
-extern void Get_cum_monthly_rain (CELL * c, int day, int month, int years, int DaysInMonth, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
-	//cumulated monthly rain for RothC
-
-	//if (settings->time == 'd')
-	//{
-	//	if (met[month].d[day].n_days == 1)
-	//	{
-	//		met[month].cum_monthly_rain = 0;
-	//	}
-	//	if (met[month].d[day].rain != NO_DATA)
-	//	{
-	//		met[month].cum_monthly_rain += met[month].d[day].rain;
-	//	}
-	//}
-}
-
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 {
 

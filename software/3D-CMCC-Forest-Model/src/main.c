@@ -1312,7 +1312,7 @@ int main(int argc, char *argv[])
 							if (settings->version == 'f')
 							{
 								//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
-								//if(day == 0 && month == 0) leaffalMarconi(&m->cells[cell]);
+								//if(day == 0 && month == 0) leaffall(&m->cells[cell]);
 								//run for FEM version
 								if (!tree_model_daily (m, yos, year, month, day, years_of_simulation) )
 								{

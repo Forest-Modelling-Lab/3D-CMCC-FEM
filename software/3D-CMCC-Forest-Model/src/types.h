@@ -1190,8 +1190,6 @@ void Get_daylight_avg_temperature (CELL *, int, int, int, YOS *);
 void Get_nightime_avg_temperature (CELL *, int, int, int, YOS *);
 void Get_soil_temperature (CELL *, int, int, int, YOS *);
 void Get_rho_air (CELL *, int, int, int, YOS *);
-void Get_avg_monthly_temp (CELL *, int, int, int, int, YOS *);
-void Get_cum_monthly_rain (CELL *, int, int, int, int, YOS *);
 void Get_thermic_sum (CELL *, int, int, int, YOS *);
 void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
 void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
@@ -1262,15 +1260,10 @@ void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
 void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
-
-void Get_litterfall_deciduous (SPECIES *const);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
-void Get_litterfall_evergreen_CTEM (SPECIES *const);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Get_daily_lai (SPECIES *const, int*, int*, int);
-void Get_lai (SPECIES *const, CELL *const, const int, const int, const int, const int);
-void Get_peak_lai (SPECIES *const , int, int );
 void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
 void Get_turnover (SPECIES *, CELL *, int, int);
 void Get_Light_Recruitment (SPECIES *const, double, double);
@@ -1282,7 +1275,6 @@ void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 double Get_vpd (const MET_DATA *const, int);
 void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
-void Get_monthly_layer_cover (CELL *, const MET_DATA *const, int);
 void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 void Get_stool_mortality (SPECIES *, int);
 void Get_forest_structure (CELL *, const int,const int,const int);
@@ -1291,11 +1283,9 @@ void Print_met_data (const MET_DATA *const, double, int, int);
 void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
-void Get_monthly_vegetative_period (CELL *, const MET_DATA *const, int);
 void Get_daily_vegetative_period (CELL *, const MET_DATA *const, int, int);
 int Get_number_of_layers (CELL *);
 void Get_annual_numbers_of_layers (CELL *);
-void Get_monthly_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
 void Get_layer_cover_mortality (CELL *, int, int, int, double, int);
 void Get_soil_water_balance (CELL *const, const MET_DATA *const, int, int);
@@ -1310,7 +1300,6 @@ void Get_total_class_level_biomass (SPECIES *);
 void Get_renovation (CELL *, HEIGHT *, SPECIES *);
 void Get_WUE (SPECIES *);
 void Set_tree_period (SPECIES *, AGE *a, CELL *);
-void Get_monthly_veg_counter (CELL *, SPECIES * , int);
 void Get_daily_veg_counter (CELL *, SPECIES * , int);
 
 
@@ -1321,10 +1310,6 @@ void Get_initialization_site_data (CELL *);
 void Choose_management (CELL *, SPECIES *, int , int );
 
 void Get_tree_BB (CELL *const, int);
-
-
-
-
 void Get_a_Power_Function (AGE *, SPECIES *);
 
 void Get_air_pressure (CELL *c);
@@ -1353,7 +1338,7 @@ void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const in
 void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
-void leaffalMarconi(SPECIES *, const MET_DATA *const, int*, int*, int );
+void leaffall(SPECIES *, const MET_DATA *const, int*, int*, int );
 void get_vpsat(CELL * ,  int , int , int , YOS *, int);
 void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
