@@ -301,8 +301,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 										if (height == 0)
 										{
-											Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
-											Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
+											Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par);
+											Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par);
 											Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
 											Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
 										}
@@ -464,8 +464,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 									if (m->cells[cell].heights[height].z == 0)
 									{
-										Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par_over_dominant_canopy);
-										Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par_over_dominant_canopy);
+										Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par);
+										Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par);
 										Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
 										Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
 									}

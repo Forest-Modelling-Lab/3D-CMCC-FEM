@@ -410,6 +410,8 @@ enum {
 	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
 	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
 	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
+	APAR_SUN,
+	APAR_SHADE,
 	//LIGHT_ABS,                      //Vertical Fraction of Light Absorbed
 
 
@@ -950,13 +952,11 @@ typedef struct {
 	double net_radiation_for_subdominated_no_albedo; //not need to be used
 	double net_radiation_for_soil;
 	double par;
-	double par_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_dominated;
 	double par_for_dominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_subdominated;
 	double par_for_subdominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_soil;
-	double par_over_dominant_canopy;
 	double ppfd;
 	double gpp;     //in g of C m^2
 	double npp;     //in tonnes of DM per hectare

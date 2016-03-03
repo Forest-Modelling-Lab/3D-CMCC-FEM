@@ -13,9 +13,10 @@ void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
 
 	Log("GET_DAILY_LAI\n");
 
+	/*CONVERT tDM/cell to KgC/m^2*/
 	leaf_c = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM));
 
-	/*for dominant layer with sunlit foliage*/
+	/*for dominant layer with sunlit shaded foliage*/
 	if (*top_layer == *z)
 	{
 		Log("computing LAI for dominant trees\n");
