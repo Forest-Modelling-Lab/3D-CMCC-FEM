@@ -405,14 +405,14 @@ enum {
 
 
 	//LIGHT
-	SOLAR_RAD,                      //Solar Radiation in (MJ/m^2 day)
-	NET_RAD_ABS,                        //Daily Net Solar Radiation  Q in ('MJ/m2/day') --> 'W/m2'
-	RAD,                            //Monthly Solar Radiation 'MJ/m^2'
-	PAR,                            //Monthly Physiological Active Radiation 'molPAR/m^2 month
-	APAR,                           //Available Physiological Active Radiation 'molPAR/m^2'  for DOMINANT LAYER
+	PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
+	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
 	APAR_SUN,
 	APAR_SHADE,
-	//LIGHT_ABS,                      //Vertical Fraction of Light Absorbed
+	NET_RAD,                        //Daily Net Solar Radiation in W/m2
+	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
+	NET_RAD_ABS_SUN,
+	NET_RAD_ABS_SHADE,
 
 
 
