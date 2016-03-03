@@ -82,9 +82,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			/*compute APAR for sun and shaded leaves*/
 			//amount of total par that is reflected but leaves*/
 			s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
-			s->value[APAR] = c->par * LightAbsorb;
+			s->value[APAR] = s->value[PAR] * LightAbsorb;
 			s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
 			s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
+			Log("Par = %f molPAR/m^2 day/month\n", s->value[PAR]);
 			Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 			Log("Apar sun = %f molPAR/m^2 day/month\n", s->value[APAR_SUN]);
 			Log("Apar shade = %f molPAR/m^2 day/month\n", s->value[APAR_SHADE]);
@@ -92,9 +93,10 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			/*compute NetRad for sun and shaded leaves*/
 			//amount of Net Rad that is reflected but leaves*/
 			s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
-			s->value[NET_RAD_ABS] = c->net_radiation * LightAbsorb;
+			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
 			s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
+			Log("NetRad = %f W/m^2\n", s->value[NET_RAD]);
 			Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
 			Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
 			Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
@@ -113,7 +115,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				}
 
 				//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
-				c->net_radiation_for_dominated = (s->value[NET_RAD_ABS] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+				c->net_radiation_for_dominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
 						+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
 				Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
@@ -174,7 +176,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					}
 					else
 					{
-						c->net_radiation_for_dominated = ((s->value[NET_RAD_ABS] * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell))
+						c->net_radiation_for_dominated = (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell))
 								+ (c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
 						c->par_for_dominated = (s->value[PAR]- s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
 								c->par * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
@@ -209,27 +211,28 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 //				s->value[APAR] = c->par * LightAbsorb;
 //				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
-				/*compute APAR considering all leaves as shaded leaves*/
-				Log("**BIOME APPROACH for dominated**\n");
+				Log("**BIOME APPROACH for dominant**\n");
+				/*compute APAR for sun and shaded leaves*/
 				//amount of total par that is reflected but leaves*/
-				//fixme take into account albedo??
 				s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
-				s->value[APAR] = c->par * LightAbsorb;
-				s->value[APAR_SUN] = 0.0;
-				s->value[APAR_SHADE] = s->value[APAR];
-				Log("Apar = %f molPAR/m^2 day/month\n",  s->value[APAR]);
-				//Log("Apar sun = %f molPAR/m^2 day/month\n",  s->value[APAR_SUN]);
-				//Log("Apar shade = %f molPAR/m^2 day/month\n",  s->value[APAR_SHADE]);
+				s->value[APAR] = s->value[PAR] * LightAbsorb;
+				s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
+				s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
+				Log("Par = %f molPAR/m^2 day/month\n", s->value[PAR]);
+				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
+				Log("Apar sun = %f molPAR/m^2 day/month\n", s->value[APAR_SUN]);
+				Log("Apar shade = %f molPAR/m^2 day/month\n", s->value[APAR_SHADE]);
 
 				/*compute NetRad for sun and shaded leaves*/
 				//amount of Net Rad that is reflected but leaves*/
 				s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
-				s->value[NET_RAD_ABS] = c->net_radiation * LightAbsorb;
-				s->value[NET_RAD_ABS_SUN] = 0.0;
-				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS];
+				s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
+				s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
+				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
+				Log("NetRad = %f W/m^2\n", s->value[NET_RAD]);
 				Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
-				//Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
-				//Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+				Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
+				Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
 
 				if ( c->dominated_veg_counter >= 3 )
 				{
@@ -247,8 +250,8 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						if (c->gapcover[c->top_layer] <= 0.5)
 						{
 							//Net Radiation for lower layer with no consideration of reflectance from dominated
-							c->net_radiation_for_subdominated = (s->value[NET_RAD_ABS] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ c->net_radiation * (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
+							c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS])* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell)) / settings->sizeCell;
 							Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
 
 							c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
@@ -259,8 +262,8 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						else
 						{
 							//Net Radiation for lower layer
-							c->net_radiation_for_subdominated = (s->value[NET_RAD_ABS] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ c->net_radiation * (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
+							c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS])* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell)) / settings->sizeCell;
 							Log("Net Radiation for lower layer with albedo = %f  W/m^2\n", c->net_radiation_for_subdominated);
 
 							c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
@@ -311,7 +314,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							//FIXME NEW VERSION
 							else
 							{
-								c->net_radiation_for_subdominated = ((s->value[NET_RAD_ABS] * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell))
+								c->net_radiation_for_subdominated = (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell))
 										+ (c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell))) / settings->sizeCell;
 								c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell)
 										+ c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell))/settings->sizeCell;
@@ -331,7 +334,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 						Log("GapCover = %f\n", c->gapcover[c->top_layer-1]);
 
 						//Net Radiation for lower layer
-						c->net_radiation_for_subdominated = (s->value[NET_RAD_ABS] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + c->net_radiation
+						c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + c->net_radiation
 								* (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
 						Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
 
@@ -376,7 +379,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							}
 
 							//Net Radiation for lower layer
-							c->net_radiation_for_subdominated += ((s->value[NET_RAD_ABS] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
+							c->net_radiation_for_subdominated += (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
 									+ c->net_radiation * (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
 							Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
 
@@ -405,28 +408,28 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 //				s->value[APAR] = c->par * LightAbsorb;
 //				Log("Apar = %f molPAR/m^2 month\n", s->value[APAR]);
 
-
-				/*compute APAR considering all leaves as shaded leaves*/
-				Log("**BIOME APPROACH for dominated**\n");
+				Log("**BIOME APPROACH for dominant**\n");
+				/*compute APAR for sun and shaded leaves*/
 				//amount of total par that is reflected but leaves*/
-				//fixme take into account albedo??
 				s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
-				s->value[APAR] = c->par * LightAbsorb;
-				s->value[APAR_SUN] = 0.0;
-				s->value[APAR_SHADE] = s->value[APAR];
-				Log("Apar = %f molPAR/m^2 day/month\n",  s->value[APAR]);
-				//Log("Apar sun = %f molPAR/m^2 day/month\n",  s->value[APAR_SUN]);
-				//Log("Apar shade = %f molPAR/m^2 day/month\n",  s->value[APAR_SHADE]);
+				s->value[APAR] = s->value[PAR] * LightAbsorb;
+				s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
+				s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
+				Log("Par = %f molPAR/m^2 day/month\n", s->value[PAR]);
+				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
+				Log("Apar sun = %f molPAR/m^2 day/month\n", s->value[APAR_SUN]);
+				Log("Apar shade = %f molPAR/m^2 day/month\n", s->value[APAR_SHADE]);
 
 				/*compute NetRad for sun and shaded leaves*/
 				//amount of Net Rad that is reflected but leaves*/
 				s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
-				s->value[NET_RAD_ABS] = c->net_radiation * LightAbsorb;
-				s->value[NET_RAD_ABS_SUN] = 0.0;
-				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS];
+				s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
+				s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
+				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
+				Log("NetRad = %f W/m^2\n", s->value[NET_RAD]);
 				Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
-				//Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
-				//Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+				Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
+				Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
 
 				if ( c->heights_count >= 3 )
 				{
@@ -562,9 +565,6 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	}
 	else
 	{
-		c->par = met[month].d[day].solar_rad * MOLPAR_MJ;
-		//Log("Par for layer '%d' = %f molPAR/m^2 day\n", c->heights[height].z, c->par);
-
 		c->net_radiation_for_soil = c->net_radiation;
 	}
 }

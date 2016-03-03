@@ -405,10 +405,13 @@ enum {
 
 
 	//LIGHT
+	/*par*/
 	PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
 	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
 	APAR_SUN,
 	APAR_SHADE,
+
+	/*net rad*/
 	NET_RAD,                        //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS_SUN,
