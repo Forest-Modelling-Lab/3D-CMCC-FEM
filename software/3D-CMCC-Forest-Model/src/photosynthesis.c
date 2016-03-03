@@ -19,15 +19,8 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	double DailyGPPgC;
 	double StandGPPtC = 0.0;
 
-	Log ("\nGET_PHOTOSYNTHESIS_ROUTINE\n\n");
-	/*if (settings->time == 'm')
-	{
-		Log("************** at Month %d CARBON FLUX-PRODUCTIVITY ******************\n", month+1);
-	}
-	else*/
-	{
-		Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
-	}
+	Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
+
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);

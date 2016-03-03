@@ -331,7 +331,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			//test
 			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
 
 			/*check if re-transfer foliage biomass to reserve*/
@@ -394,7 +393,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 				/*recompute correct LAI*/
-				//test
 				Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
 			}
 
@@ -502,7 +500,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			//recompute LAI
-			//test
 			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
 
 			//control if new Lai exceeds Peak Lai
@@ -575,7 +572,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 				//recompute LAI
-				//test
 				Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
 			}
 
@@ -701,7 +697,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 			//recompute LAI
-			//test
 			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
 
 			//control if new Lai exceeds Peak Lai
@@ -1273,25 +1268,15 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		switch (s->phenology_phase)
 		{
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-		//if (settings->time == 'm')
-		//{
-		//	Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
-		//}
-		//else
-		{
-			Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
-		}
+
+		Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
+
 		/************************************************************/
 		case 1:
 			Log("(NDVI-LAI < PEAK_Y_LAI * 0.5)\n");
-			//if (settings->time == 'm')
-			//{
-			//	//Log("NDVI-LAI = %f \n", met[month].ndvi_lai);
-			//}
-			//else
-			{
-				Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
-			}
+
+			Log("NDVI-LAI = %f \n", met[month].d[day].ndvi_lai);
+
 			Log("**Maximum Growth**\n");
 			Log("allocating only into foliage pools\n");
 

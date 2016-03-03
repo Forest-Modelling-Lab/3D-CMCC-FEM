@@ -28,9 +28,6 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	/*for dominant layer with sunlit foliage*/
 	if (c->top_layer == c->heights[height].z)
 	{
-		//test if use SLA_AVG instead classic SLA
-//		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_Y_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-//		Log("Maximum foliage biomass for sunlit/shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
 		Log("Maximum foliage biomass (sun and shaded)= %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 	}

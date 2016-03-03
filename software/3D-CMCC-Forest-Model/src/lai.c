@@ -18,13 +18,11 @@ void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
 
 	Log("computing LAI for dominant trees\n");
 
-	//test see all_lai biome for other functions
 	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("LAI = %f\n", s->value[LAI]);
 	s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
 	//Log("ALL LAI BIOME = %f\n", s->value[ALL_LAI]);
 
-	//test
 	/* Calculate projected LAI for sunlit and shaded canopy portions */
 	s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
 	s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];

@@ -439,7 +439,7 @@ void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
 		c->lh_vap_soil,
 		c->lh_fus,
 		c->lh_sub);
-		*/
+	 */
 }
 
 
@@ -450,93 +450,56 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 	//here is valid only into function
 	static int doy;
 
-
-	//if (settings->time == 'm')
-	//{
-	//	Log("***************\n");
-	//	Log("**Monthly MET DATA**\n");
-	//	Log("-average solar_rad = %f MJ/m^2/day\n"
-	//			"-tavg = %f °C\n"
-	//			"-tmax = %f °C\n"
-	//			"-tmin = %f °C\n"
-	//			"-tday = %f °C\n"
-	//			"-tnight = %f °C\n"
-	//			//"-rh = %f %%\n"
-	//			"-vpd = %f mbar\n"
-	//			"-ts_f = %f °C\n"
-	//			"-rain = %f mm\n"
-	//			"-swc = %f %%vol\n"
-	//			"-daylength = %f hrs\n",
-	//			met[month].solar_rad,
-	//			met[month].tavg,
-	//			met[month].tmax,
-	//			met[month].tmin,
-	//			met[month].tday,
-	//			met[month].tnight,
-	//			//met[month].rh,
-	//			vpd,
-	//			met[month].ts_f,
-	//			met[month].rain,
-	//			met[month].swc,
-	//			met[month].daylength);
-
-	//	if (settings->spatial == 's')
-	//	{
-	//		Log("-lai from NDVI = %f \n", met[month].ndvi_lai);
-	//	}
-	//}
-	//else
+	if (day == 0 && month == 0)
 	{
-		if (day == 0 && month == 0)
-		{
-			doy = 0;
-		}
-		doy += 1;
-
-		Log("***************\n");
-		Log("**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
-		Log("-solar_rad = %.2f MJ/m^2/day\n"
-				"-tavg = %.2f °C\n"
-				"-tmax = %.2f °C\n"
-				"-tmin = %.2f °C\n"
-				"-tday (computed)= %.2f °C\n"
-				"-tnight (computed)= %.2f °C\n"
-				"-tsoil (computed)= %.2f °C\n"
-				"-rh = %.2f %%\n"
-				"-vpd = %.2f mbar\n"
-				"-ts_f = %.2f °C\n"
-				"-rain = %.2f mm\n"
-				"-swc = %.2f %%vol\n"
-				"-thermic_sum = %.2f °C\n"
-				"-daylength = %.2f hrs\n"
-				"-DOY = %d\n"
-
-				//"-month avg temp = %.2f °C\n"
-				//"-month cum rain = %.2f mm\n"
-				,met[month].d[day].solar_rad,
-				met[month].d[day].tavg,
-				met[month].d[day].tmax,
-				met[month].d[day].tmin,
-				met[month].d[day].tday,
-				met[month].d[day].tnight,
-				met[month].d[day].tsoil,
-				met[month].d[day].rh_f,
-				met[month].d[day].vpd,
-				met[month].d[day].ts_f,
-				met[month].d[day].rain,
-				met[month].d[day].swc,
-				met[month].d[day].thermic_sum,
-				met[month].d[day].daylength,
-				doy
-				//,met[month].avg_monthly_temp
-				//,met[month].cum_monthly_rain
-		);
-
-		if (settings->spatial == 's')
-		{
-			Log("-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
-		}
+		doy = 0;
 	}
+	doy += 1;
+
+	Log("***************\n");
+	Log("**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
+	Log("-solar_rad = %.2f MJ/m^2/day\n"
+			"-tavg = %.2f °C\n"
+			"-tmax = %.2f °C\n"
+			"-tmin = %.2f °C\n"
+			"-tday (computed)= %.2f °C\n"
+			"-tnight (computed)= %.2f °C\n"
+			"-tsoil (computed)= %.2f °C\n"
+			"-rh = %.2f %%\n"
+			"-vpd = %.2f mbar\n"
+			"-ts_f = %.2f °C\n"
+			"-rain = %.2f mm\n"
+			"-swc = %.2f %%vol\n"
+			"-thermic_sum = %.2f °C\n"
+			"-daylength = %.2f hrs\n"
+			"-DOY = %d\n"
+
+			//"-month avg temp = %.2f °C\n"
+			//"-month cum rain = %.2f mm\n"
+			,met[month].d[day].solar_rad,
+			met[month].d[day].tavg,
+			met[month].d[day].tmax,
+			met[month].d[day].tmin,
+			met[month].d[day].tday,
+			met[month].d[day].tnight,
+			met[month].d[day].tsoil,
+			met[month].d[day].rh_f,
+			met[month].d[day].vpd,
+			met[month].d[day].ts_f,
+			met[month].d[day].rain,
+			met[month].d[day].swc,
+			met[month].d[day].thermic_sum,
+			met[month].d[day].daylength,
+			doy
+			//,met[month].avg_monthly_temp
+			//,met[month].cum_monthly_rain
+	);
+
+	if (settings->spatial == 's')
+	{
+		Log("-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
+	}
+
 
 	Log("***************\n");
 
