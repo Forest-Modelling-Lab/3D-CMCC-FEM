@@ -72,6 +72,7 @@ void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
 		Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 
 		/*ASSIGN LAI VALUES FROM SHADED LAI*/
+		//test a part of biomass is considered lost?? (the one used for LAI_SUN?)
 		s->value[LAI] = s->value[LAI_SHADE];
 		Log("LAI (Shade) = %f\n", s->value[LAI]);
 	}

@@ -15,7 +15,7 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	double Epsilon;
 	double Optimum_GPP;
 	double Optimum_GPP_gC;
-	double GPPmolC;
+	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
 	double DailyGPPgC;
 	double StandGPPtC = 0.0;
 
@@ -60,17 +60,26 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		/*GPP*/
 		Log("Apar for GPP = %f\n", s->value[APAR]);
 		Optimum_GPP = s->value[ALPHA] * s->value[APAR];
-		Log("Optimum GPP (alpha max * apar) = %f molC/m^2 day/month\n", Optimum_GPP);
 
 		Optimum_GPP_gC = Optimum_GPP * GC_MOL;
-		//Log("Daily/Monthly Optimum GPP in grams of C for this layer = %f gC/m^2 day/month\n", Optimum_GPP_gC );
 
-
-		//Daily/Monthly GPP in mol of Carbon
+		//DailyGPP in mol of Carbon
 		GPPmolC = s->value[APAR] * Alpha_C;
-		//Log("Daily/Monthly GPP in mols of C for this layer = %f molC/m^2 day/month\n",  GPPmolC);
-		//Log("Efficiency in GPP = %f %\n", (GPPmolC * 100) / Optimum_GPP);
+		GPPmolC_sun = s->value[APAR_SUN]* Alpha_C;
+		GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
+		GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
+		Log("GPPmolC = %f molC/m^2 day/month\n", GPPmolC);
+		Log("GPPmolC_sun = %f molC/m^2 day/month\n", GPPmolC_sun);
+		Log("GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
 
+		if(GPPmolC == GPPmolC_tot)
+		{
+			GPPmolC = GPPmolC_tot;
+		}
+		else
+		{
+			Log("ERROR IN GPP_molC!!!\n");
+		}
 
 		//Daily/Monthly layer GPP in grams of C/m^2
 		//Convert molC into grams
@@ -86,8 +95,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		}
 
 		s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
-		//Log("Monthly GPP in grams of C for layer %d = %f \n", c->heights[height].z , s->value[MONTHLY_GPP_g_C]);
-
 
 		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * s->value[CANOPY_COVER_DBHDC];
 		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[GPP_g_C] );

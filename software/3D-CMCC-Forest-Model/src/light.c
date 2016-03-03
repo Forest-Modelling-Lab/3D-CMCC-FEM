@@ -52,22 +52,18 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
 
 		}
-		LightAbsorb = 1 - LightTrasm;
-		LightAbsorb_sun = 1 - LightTrasm_sun;
-		LightAbsorb_shade = 1 - LightTrasm_shade;
+		LightAbsorb = 1.0 - LightTrasm;
+		LightAbsorb_sun = 1.0 - LightTrasm_sun;
+		LightAbsorb_shade = 1.0 - LightTrasm_shade;
 
-		Log("Vertical Fraction of Light Absorbed = %f (%f %)\n", LightAbsorb, LightAbsorb * 100);
-		Log("Vertical Fraction of Light Transmitted = %f (%f %)\n", LightTrasm, LightTrasm * 100);
+/*		Log("Vertical Fraction of Light Absorbed = %f (%f %)\n", LightAbsorb, LightAbsorb * 100.0);
+		Log("Vertical Fraction of Light Transmitted = %f (%f %)\n", LightTrasm, LightTrasm * 100.0);
 
-		Log("Vertical Fraction of Light Absorbed sun = %f (%f %)\n", LightAbsorb_sun, LightAbsorb_sun * 100);
-		Log("Vertical Fraction of Light Transmitted sun = %f (%f %)\n", LightTrasm_sun, LightTrasm_sun * 100);
+		Log("Vertical Fraction of Light Absorbed sun = %f (%f %)\n", LightAbsorb_sun, LightAbsorb_sun * 100.0);
+		Log("Vertical Fraction of Light Transmitted sun = %f (%f %)\n", LightTrasm_sun, LightTrasm_sun * 100.0);
 
-		Log("Vertical Fraction of Light Absorbed shade = %f (%f %)\n", LightAbsorb_shade, LightAbsorb_shade * 100);
-		Log("Vertical Fraction of Light Transmitted shade = %f (%f %)\n", LightTrasm_shade, LightTrasm_shade * 100);
-
-
-		Log("dominant counter %d \n", c->dominant_veg_counter);
-		Log("Top_layer = %d\n", c->top_layer);
+		Log("Vertical Fraction of Light Absorbed shade = %f (%f %)\n", LightAbsorb_shade, LightAbsorb_shade * 100.0);
+		Log("Vertical Fraction of Light Transmitted shade = %f (%f %)\n", LightTrasm_shade, LightTrasm_shade * 100.0);*/
 
 		//LIGHT DOMINANT
 		if ( c->heights[height].z == c->top_layer )
@@ -77,22 +73,21 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT LAI_RATIO
-			Log("albedo = %f\n", s->value[ALBEDO]);
-
 			//following BIOME albedo for PAR is 1/3 of albedo
 			//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
 			//PAR is reflected than net_radiation (Jones 1992)
 
 			/*compute APAR for sun and shaded leaves*/
-			Log("**BIOME APPROACH**\n");
+			Log("**BIOME APPROACH for dominant**\n");
 			c->par *= 1.0 - (s->value[ALBEDO]/(3.0));
 			s->value[APAR] = c->par * LightAbsorb;
 			s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
 			s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
-			Log("Apar = %f molPAR/m^2 day/month\n",  s->value[APAR]);
-			Log("Apar sun = %f molPAR/m^2 day/month\n",  s->value[APAR_SUN]);
-			Log("Apar shade = %f molPAR/m^2 day/month\n",  s->value[APAR_SHADE]);
+			Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
+			Log("Apar sun = %f molPAR/m^2 day/month\n", s->value[APAR_SUN]);
+			Log("Apar shade = %f molPAR/m^2 day/month\n", s->value[APAR_SHADE]);
 
+			//tocontinue
 			s->value[NET_RAD_ABS] = c->net_radiation * (1.0 - s->value[ALBEDO]) * LightAbsorb;
 			Log("Absorbed Net Radiation = %f W/m^2\n", c->net_radiation);
 
@@ -190,20 +185,31 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("**LIGHT DOMINATED**\n");
 				Log("Height Classes in Dominated Layer = %d\n", c->height_class_in_layer_dominated_counter);
 
+				//Par
+				c->par = c->par_for_dominated;
+				Log("Par = %f molPAR/m^2 day/month\n", c->par);
+
 				//Net Radiation
 				c->net_radiation = c->net_radiation_for_dominated;
 				Log("Net Radiation = %f W/m^2n", c->net_radiation);
 
-				//c->net_radiation_no_albedo = c->net_radiation * (1.0 - s->value[ALBEDO]/2.0);
-				//Log("Net Radiation NO ALBEDO = %f W/m^2\n", c->net_radiation_no_albedo);
+//				//Par
+//				c->par = c->par_for_dominated;
+//				Log("Available Par for dominated = %f molPAR/m^2 day/month\n", c->par);
+//
+//				//Apar
+//				s->value[APAR] = c->par * LightAbsorb;
+//				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
-				//Par
-				c->par = c->par_for_dominated;
-				Log("Available Par for dominated = %f molPAR/m^2 day/month\n", c->par);
-
-				//Apar
+				/*compute APAR considering all leaves as shaded leaves*/
+				//fixme
+				Log("**BIOME APPROACH for dominated**\n");
 				s->value[APAR] = c->par * LightAbsorb;
-				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
+				s->value[APAR_SUN] = 0.0;
+				s->value[APAR_SHADE] = s->value[APAR];
+				Log("Apar = %f molPAR/m^2 day/month\n",  s->value[APAR]);
+				//Log("Apar sun = %f molPAR/m^2 day/month\n",  s->value[APAR_SUN]);
+				//Log("Apar shade = %f molPAR/m^2 day/month\n",  s->value[APAR_SHADE]);
 
 				if ( c->dominated_veg_counter >= 3 )
 				{
