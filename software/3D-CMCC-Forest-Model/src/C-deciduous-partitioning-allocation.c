@@ -144,13 +144,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	{
 		oldW = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_BRANCH];
 
-		//Log("Percentage of coarse root against total root= %f %%\n", Perc_coarse * 100 );
-
-		//23 May 2012
-		//percentage of leaves against fine roots
-		//Perc_leaves =  1 - (s->value[FINE_ROOT_LEAF]  / (s->value[FINE_ROOT_LEAF] + 1));
-		//Log("Percentage of leaves against fine roots = %f %%\n", Perc_leaves * 100);
-		//Log("Percentage of fine roots against leaves = %f %%\n", (1 - Perc_leaves) * 100);
 
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
@@ -245,15 +238,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 
+
+
 			/*partitioning*/
 			if (s->value[NPP] > 0.0)
 			{
 				Log("Using reserve and npp\n");
-				/*
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]))	+ (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]) + (s->value[NPP] * s->value[FINE_ROOT_LEAF_FRAC]);
-				 */
-				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0/ (s->value[FINE_ROOT_LEAF] +1.0))) + s->value[NPP];
+				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC])) + s->value[NPP];
 				s->value[DEL_STEMS] = 0.0;
 				s->value[DEL_RESERVE] -= frac_to_foliage_fineroot;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -267,34 +258,26 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				if (s->value[BIOMASS_RESERVE] > 0)
 				{
 					Log("Using ONLY reserve\n");
-					/*
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
-					 */
-					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
 					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+					s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-					s->value[DEL_ROOTS_TOT] = 0;
+					s->value[DEL_ROOTS_TOT] = 0.0;
 					s->value[DEL_TOT_STEM] = 0.0;
 					s->value[DEL_BB]= 0;
 				}
 				else
 				{
 					Log("No reserve no NPP\n");
-					/*
-					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot * s->value[FINE_ROOT_LEAF_FRAC]);
-					s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)- frac_to_foliage_fineroot;
-					 */
-					s->value[DEL_FOLIAGE] = 0;
-					s->value[DEL_ROOTS_FINE_CTEM] = 0;
-
-					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-					s->value[DEL_ROOTS_TOT] = 0;
-					s->value[DEL_TOT_STEM] = 0;
-					s->value[DEL_STEMS]= 0;
-					s->value[DEL_BB]= 0;
+					s->value[DEL_FOLIAGE] = 0.0;
+					s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+					s->value[DEL_RESERVE] = 0.0;
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+					s->value[DEL_ROOTS_TOT] = 0.0;
+					s->value[DEL_TOT_STEM] = 0.0;
+					s->value[DEL_STEMS]= 0.0;
+					s->value[DEL_BB]= 0.0;
 				}
 			}
 
@@ -333,12 +316,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			//test
 
-			s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
-			Log("MAX_BIOMASS_FOLIAGE = %f tDM/area\n", s->value[MAX_BIOMASS_FOLIAGE]);
-			s->value[MAX_BIOMASS_FINE_ROOTS] = (s->value[MAX_BIOMASS_FOLIAGE] * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
-			Log("FINE_ROOT_LEAF = %f tDM/area\n", s->value[FINE_ROOT_LEAF]);
-			Log("MAX_BIOMASS_FINE_ROOTS = %f tDM/area\n", s->value[MAX_BIOMASS_FINE_ROOTS]);
-
 
 			Get_daily_lai (&c->heights[height].ages[age].species[species]);
 
@@ -346,8 +323,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("LAI exceeds Peak Lai\n");
+				//test
 				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
-				//s->value[MAX_BIOMASS_FINE_ROOTS] = (s->value[MAX_BIOMASS_FOLIAGE] * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
+				s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / s->value[FINE_ROOT_LEAF_FRAC];
+				s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
 
 				/*partitioning*/
 				/*re-transfer mass to reserve*/
@@ -960,11 +939,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					}
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
-					//s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
-					//ALESSIOC added these two to avoid negative results in delta computation
-					//s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
-					//s->value[DEL_FOLIAGE] = 0.0;
-
 
 					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
 					s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
@@ -985,16 +959,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
-					//ALESSIOC added these two to avoid negative results in delta computation
-					//s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
-					//s->value[DEL_FOLIAGE] = 0.0;
 				}
 			}
 			else
 			{
 				if (s->value[NPP] > 0.0)
 				{
-
 					//REPRODUCTION ONLY FOR NEEDLE LEAF
 					if (s->value[PHENOLOGY] == 0.2)
 					{

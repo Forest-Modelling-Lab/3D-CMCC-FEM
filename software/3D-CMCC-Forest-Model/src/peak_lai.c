@@ -25,18 +25,9 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	Log("year %d PEAK LAI from Kostner = %f m^2 m^-2\n",years, s->value[PEAK_LAI]);
 
 
-	/*for dominant layer with sunlit foliage*/
-	if (c->top_layer == c->heights[height].z)
-	{
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass (sun and shaded)= %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
-	}
-	/*for dominated shaded foliage*/
-	else
-	{
-		s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / ((s->value[SLA_AVG] * s->value[SLA_RATIO]) * GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
-		Log("Maximum foliage biomass for shaded leaves = %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
-	}
+	s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+	Log("Maximum foliage biomass (sun and shaded)= %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
+
 
 	/*check compatibility of LAI and Biomass with init data for evergreen*/
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
@@ -53,23 +44,28 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 		}
 	}
 
-	//DAILY GPP/NPP
-	//cell level
-	/*
-	if (c->heights_count -1  == 0 && c->heights[height].ages_count -1 == 0 && c->heights[height].ages[age].species_count -1 == 0)
-	{
-		c->annual_peak_lai = s->value[PEAK_Y_LAI];
-	}
-	*/
+	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
 
+	s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
+	s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+	s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
+	Log("MAX_BIOMASS_FOLIAGE = %f tDM/area\n", s->value[MAX_BIOMASS_FOLIAGE]);
+	Log("MAX_BIOMASS_BUDBURST = %f tDM/area\n", s->value[MAX_BIOMASS_BUDBURST]);
+	Log("MAX_BIOMASS_FINE_ROOTS = %f tDM/area\n", s->value[MAX_BIOMASS_FINE_ROOTS]);
+
+	/*check for reserve need for budburst*/
+	if(s->value[BIOMASS_RESERVE] >= (s->value[MAX_BIOMASS_BUDBURST]/2.0))
+	{
+		Log("There are enough reserve to reach 0.5 Peak Lai\n");
+	}
+	else
+	{
+		Log("There areNT enough reserve to reach 0.5 Peak Lai\n");
+	}
 
 	//fixme useful only for one class per layer
 
 	i = c->heights[height].z;
 
 	c->annual_peak_lai[i] = s->value[PEAK_LAI];
-
-
-
-
 }
