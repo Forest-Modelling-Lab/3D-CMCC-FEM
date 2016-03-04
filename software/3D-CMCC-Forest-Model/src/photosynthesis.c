@@ -57,8 +57,9 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 		Log("GPPmolC = %f molC/m^2 day/month\n", GPPmolC);
 		Log("GPPmolC_sun = %f molC/m^2 day/month\n", GPPmolC_sun);
 		Log("GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
+		Log("GPPmolC_tot = %f molC/m^2 day/month\n", GPPmolC_tot);
 
-		if(GPPmolC == GPPmolC_tot)
+		if(GPPmolC - GPPmolC_tot < 0.00001)
 		{
 			GPPmolC = GPPmolC_tot;
 		}

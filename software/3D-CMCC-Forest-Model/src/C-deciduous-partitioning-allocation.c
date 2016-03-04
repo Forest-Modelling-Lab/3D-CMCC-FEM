@@ -126,7 +126,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		}
 	 */
 
-	Log("(CTEM) BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d , --\n", c->heights[height].z);
+	Log("BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
 
 
 
@@ -314,7 +314,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				Log("LAI exceeds Peak Lai\n");
 				//test
-				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
 				s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / s->value[FINE_ROOT_LEAF_FRAC];
 				s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
 
@@ -364,10 +363,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				/*recompute correct LAI*/
 				Get_daily_lai (&c->heights[height].ages[age].species[species]);
 			}
-
-			//tocontinue
-			/*check if MAX_BIOMASS_FOLIAGE and MAX_BIOMASS_FINE_ROOTS exceeds the amount of BIOMASS_RESERVE*/
-
 
 			// Total Biomass
 			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
@@ -428,6 +423,12 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 			else
 			{
+				Log("NPP < 0, nothing to allocate\n");
+				//TEST
+//				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+//				s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+//				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
+
 				s->value[DEL_FOLIAGE] = 0;
 				s->value[DEL_ROOTS_FINE_CTEM] = 0;
 				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
@@ -481,21 +482,18 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("LAI = %f \n", s->value[LAI]);
 
 				Log("LAI exceeds Peak Lai\n");
-
-				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
-
-				Log("Re-allocating %f foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n", (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]));
+				Log("Re-allocating %f leaves exceeding biomass into the three pools Ws+Wr+Wreserve\n", (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]));
 
 				/*partitioning*/
 				/*re-transfer mass to other pools*/
-				s->value[DEL_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
+				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
 				s->value[DEL_ROOTS_TOT] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pR_CTEM;
 				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[DEL_ROOTS_TOT] * Perc_fine);
 				s->value[DEL_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_TOT] * Perc_coarse;
-				s->value[DEL_TOT_STEM] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) *  pS_CTEM;
 				s->value[DEL_STEMS] += ((s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) *  pS_CTEM) * ( 1.0 - s->value[FRACBB]);
-				s->value[DEL_BB] += ((s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pS_CTEM) * s->value[FRACBB];
+				s->value[DEL_BB] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * (pS_CTEM * s->value[FRACBB]);
 				s->value[DEL_RESERVE] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pF_CTEM;
+				s->value[DEL_TOT_STEM] = s->value[DEL_STEMS] + s->value[DEL_BB];
 
 				Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
 
@@ -574,7 +572,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		case 3:
 			Log("**Normal Growth**\n");
 			Log("Day length > %f \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
-			Log("(LAI MAX * 0.5 < LAI < LAI MAX)\n");
 			Log("allocating into the three pools Ws+Wr+Wf\n");
 
 			s->value[DAILY_DEL_LITTER] = 0;
@@ -667,21 +664,18 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("LAI = %f \n", s->value[LAI]);
 
 				Log("LAI exceeds Peak Lai\n");
-
-				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
-
 				Log("Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
 
 				/*partitioning*/
 				/*re-transfer mass to other pools*/
-				s->value[DEL_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
+				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
 				s->value[DEL_ROOTS_TOT] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pR_CTEM;
 				s->value[DEL_ROOTS_FINE_CTEM] += (s->value[DEL_ROOTS_TOT] * Perc_fine);
 				s->value[DEL_ROOTS_COARSE_CTEM] += s->value[DEL_ROOTS_TOT] * Perc_coarse;
-				s->value[DEL_TOT_STEM] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) *  pS_CTEM;
-				s->value[DEL_STEMS] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * (1.0 - s->value[FRACBB]);
-				s->value[DEL_BB] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * s->value[FRACBB];
+				s->value[DEL_STEMS] += ((s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) *  pS_CTEM) * ( 1.0 - s->value[FRACBB]);
+				s->value[DEL_BB] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * (pS_CTEM * s->value[FRACBB]);
 				s->value[DEL_RESERVE] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pF_CTEM;
+				s->value[DEL_TOT_STEM] = s->value[DEL_STEMS] + s->value[DEL_BB];
 
 				/*allocation*/
 				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];

@@ -248,12 +248,10 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			{
 				Log("LAI exceeds Peak Lai\n");
 
-				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
-
 				/*partitioning*/
 				/*re-transfer mass to reserve*/
 				Log("retranslocating = %f\n", s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
-				s->value[DEL_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
+				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
 				//s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_FINE_CTEM];
 				s->value[DEL_RESERVE] += s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE];
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;

@@ -140,6 +140,14 @@ void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DAT
 	c->daily_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->monthly_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
+
+	//TEST
+	s->value[TOTAL_MAINT_RESP] = -10;
+	if(s->value[TOTAL_MAINT_RESP] < 0.0)
+	{
+		Log("ERROR TOTAL MAINT respiration IS NEGATIVE!\n");
+		CHECK_VALUE(s->value[TOTAL_MAINT_RESP],"TOTAL_MAINT_RESP")
+	}
 }
 
 //FOLLOWING BIOME-BGC
@@ -226,6 +234,10 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 	c->daily_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	c->monthly_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	c->annual_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	if(s->value[TOTAL_GROWTH_RESP] < 0.0)
+	{
+		Log("ERROR TOTAL GROWTH respiration IS NEGATIVE!\n");
+	}
 }
 
 void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
@@ -238,6 +250,11 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 	Log("TOTAL autotrophic respiration = %f gC/day m^2\n", s->value[TOTAL_AUT_RESP]);
 	Log("TOTAL autotrophic respiration = %f tDM/cell \n", (s->value[TOTAL_AUT_RESP] * GC_GDM /1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
+
+	if(s->value[TOTAL_AUT_RESP] < 0.0)
+	{
+		Log("ERROR TOTAL autotrophic respiration IS NEGATIVE!\n");
+	}
 
 
 	//compute autotrophic respiration for each layer

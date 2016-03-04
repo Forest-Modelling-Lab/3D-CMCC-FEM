@@ -11,6 +11,7 @@
 extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int day, int height, int age)
 {
 	int i;
+	double max_leafc;
 	//static double oldBasalArea;
 	//static double sapwood_perc;
 
@@ -25,7 +26,10 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	Log("year %d PEAK LAI from Kostner = %f m^2 m^-2\n",years, s->value[PEAK_LAI]);
 
 
-	s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] / (s->value[SLA_AVG]* GC_GDM))*(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)/1000);
+	max_leafc = s->value[PEAK_LAI] / s->value[SLA_AVG];
+	Log("Maximum foliage biomass (sun and shaded)= %f KgC/m^2 \n", max_leafc);
+
+	s->value[MAX_BIOMASS_FOLIAGE] = ((max_leafc / 1000.0) * GC_GDM) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("Maximum foliage biomass (sun and shaded)= %f tDM/area \n", s->value[MAX_BIOMASS_FOLIAGE]);
 
 
@@ -46,7 +50,6 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 
 	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[RESERVE]);
 
-	s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
 	s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 	s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
 	Log("MAX_BIOMASS_FOLIAGE = %f tDM/area\n", s->value[MAX_BIOMASS_FOLIAGE]);

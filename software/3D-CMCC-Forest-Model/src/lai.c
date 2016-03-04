@@ -16,8 +16,6 @@ void Get_daily_lai (SPECIES *const s)
 	/*CONVERT tDM/cell to KgC/m^2*/
 	leaf_c = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM));
 
-	Log("computing LAI for dominant trees\n");
-
 	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("LAI = %f\n", s->value[LAI]);
 	s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
