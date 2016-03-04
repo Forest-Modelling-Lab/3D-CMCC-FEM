@@ -51,16 +51,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	Log("Carbon allocation routine for deciduous\n");
 
 
-	//Log ("S0CTEM  = %f \n", s0Ctem);
-	//Log ("R0CTEM  = %f \n", r0Ctem);
-	//Log ("F0CTEM  = %f \n", f0Ctem );
-	//Log ("OMEGA_CTEM  = %f \n", omegaCtem);
-	//Log ("EPSILON_CTEM  = %f \n", epsilon);
-	//Log ("KAPPA_CTEM  = %f \n", kappa);
-
-
-
-
 	Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
 
 	Par_over = c->par - s->value[APAR];
@@ -495,7 +485,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000;
 
 				Log("Re-allocating %f foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n", (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]));
-
 
 				/*partitioning*/
 				/*re-transfer mass to other pools*/
