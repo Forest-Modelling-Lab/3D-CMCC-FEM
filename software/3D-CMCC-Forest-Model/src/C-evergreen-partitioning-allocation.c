@@ -200,7 +200,7 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 -s->value[FINE_ROOT_LEAF_FRAC]));
 				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
-				s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) - frac_to_foliage_fineroot;
+				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
