@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_daily_lai (SPECIES *const s, int*z, int*top_layer, int height)
+void Get_daily_lai (SPECIES *const s)
 {
 	double leaf_c; //leaf carbon KgC/m^2
 

@@ -501,6 +501,7 @@ enum {
 	SLA_SHADE,
 
 	MAX_BIOMASS_FOLIAGE,
+	MAX_BIOMASS_FINE_ROOTS,
 
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
@@ -1263,7 +1264,7 @@ void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
-void Get_daily_lai (SPECIES *const, int*, int*, int);
+void Get_daily_lai (SPECIES *const);
 void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
 void Get_turnover (SPECIES *, CELL *, int, int);
 void Get_Light_Recruitment (SPECIES *const, double, double);

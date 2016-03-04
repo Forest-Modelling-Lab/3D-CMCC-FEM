@@ -8,7 +8,7 @@ C_SRCS += \
 ../src/C-deciduous-partitioning-allocation.c \
 ../src/C-evergreen-partitioning-allocation.c \
 ../src/C-fluxes.c \
-../src/C-partitioning-allocation.c \
+../src/C-fruit-partitioning-allocation.c \
 ../src/G-Function.c \
 ../src/N-stock.c \
 ../src/allometry.c \
@@ -62,7 +62,7 @@ OBJS += \
 ./src/C-deciduous-partitioning-allocation.o \
 ./src/C-evergreen-partitioning-allocation.o \
 ./src/C-fluxes.o \
-./src/C-partitioning-allocation.o \
+./src/C-fruit-partitioning-allocation.o \
 ./src/G-Function.o \
 ./src/N-stock.o \
 ./src/allometry.o \
@@ -116,7 +116,7 @@ C_DEPS += \
 ./src/C-deciduous-partitioning-allocation.d \
 ./src/C-evergreen-partitioning-allocation.d \
 ./src/C-fluxes.d \
-./src/C-partitioning-allocation.d \
+./src/C-fruit-partitioning-allocation.d \
 ./src/G-Function.d \
 ./src/N-stock.d \
 ./src/allometry.d \

@@ -331,23 +331,23 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
+			//test
+
+			s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
+			Log("MAX_BIOMASS_FOLIAGE = %f tDM/area\n", s->value[MAX_BIOMASS_FOLIAGE]);
+			s->value[MAX_BIOMASS_FINE_ROOTS] = (s->value[MAX_BIOMASS_FOLIAGE] * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
+			Log("FINE_ROOT_LEAF = %f tDM/area\n", s->value[FINE_ROOT_LEAF]);
+			Log("MAX_BIOMASS_FINE_ROOTS = %f tDM/area\n", s->value[MAX_BIOMASS_FINE_ROOTS]);
+
+
+			Get_daily_lai (&c->heights[height].ages[age].species[species]);
 
 			/*check if re-transfer foliage biomass to reserve*/
 			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("LAI exceeds Peak Lai\n");
-				/*for dominant layer with sunlit foliage*/
-				if (c->top_layer == c->heights[height].z)
-				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
-				}
-				/*for dominated shaded foliage*/
-				else
-				{
-					s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] *
-							settings->sizeCell))/ ((s->value[SLA_AVG] / (s->value[SLA_RATIO] +1))* GC_GDM)) / 1000.0;
-				}
+				s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
+				//s->value[MAX_BIOMASS_FINE_ROOTS] = (s->value[MAX_BIOMASS_FOLIAGE] * (1.0/ (s->value[FINE_ROOT_LEAF] + 1.0)));
 
 				/*partitioning*/
 				/*re-transfer mass to reserve*/
@@ -393,8 +393,11 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 				/*recompute correct LAI*/
-				Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
+				Get_daily_lai (&c->heights[height].ages[age].species[species]);
 			}
+
+			//tocontinue
+			/*check if MAX_BIOMASS_FOLIAGE and MAX_BIOMASS_FINE_ROOTS exceeds the amount of BIOMASS_RESERVE*/
 
 
 			// Total Biomass
@@ -500,7 +503,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			//recompute LAI
-			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
+			Get_daily_lai (&c->heights[height].ages[age].species[species]);
 
 			//control if new Lai exceeds Peak Lai
 			if (s->value[LAI] > s->value[PEAK_LAI])
@@ -572,7 +575,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 				//recompute LAI
-				Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
+				Get_daily_lai (&c->heights[height].ages[age].species[species]);
 			}
 
 
@@ -697,7 +700,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 			//recompute LAI
-			Get_daily_lai (&c->heights[height].ages[age].species[species], &c->heights[height].z, &c->top_layer, height);
+			Get_daily_lai (&c->heights[height].ages[age].species[species]);
 
 			//control if new Lai exceeds Peak Lai
 			if (s->value[LAI] > s->value[PEAK_LAI])
