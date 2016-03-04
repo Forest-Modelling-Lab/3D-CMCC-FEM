@@ -426,7 +426,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("NPP < 0, nothing to allocate\n");
 				//TEST
 //				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-//				s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+//				s->value[DEL_RESERVE] =-(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 //				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 
 				s->value[DEL_FOLIAGE] = 0;
@@ -437,6 +437,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
+				if(s->value[RESERVE] < 0.0)
+				{
+					ERROR(s->value[RESERVE], "s->value[RESERVE]");
+				}
 			}
 
 			/*allocation*/
@@ -1522,11 +1526,6 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			break;
 			/**********************************************************************/
 		}
-	}
-
-	if(s->value[RESERVE] < 0.0)
-	{
-		ERROR(s->value[RESERVE], "s->value[RESERVE]");
 	}
 
 
