@@ -557,7 +557,7 @@ enum {
 	BIOMASS_BRANCH,
 	BIOMASS_TOT_STEM, //STEM + BRANCH AND BARK
 	BIOMASS_FOLIAGE,
-	BIOMASS_RESERVE,
+	RESERVE,
 	BIOMASS_FRUIT,   //only for coniferous
 
 	BIOMASS_LIVE_WOOD,
@@ -1153,6 +1153,10 @@ typedef struct {
 	int cells_count;
 } MATRIX;
 
+typedef struct {
+	char **vars;
+	int vars_count;
+} OUTPUT_VARS;
 
 /* constants */
 #define MET_FILENAME_LEN                1024
@@ -1347,6 +1351,8 @@ void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
+OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
+void FreeOutputVars(OUTPUT_VARS *ov);
 
 
 

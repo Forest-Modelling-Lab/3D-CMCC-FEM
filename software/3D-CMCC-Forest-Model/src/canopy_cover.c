@@ -94,7 +94,7 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 		Av_bb_mass = s->value[BIOMASS_BRANCH] / (double)s->counter[N_TREE];
 
-		Av_res_mass = s->value[BIOMASS_RESERVE] / (double)s->counter[N_TREE];
+		Av_res_mass = s->value[RESERVE] / (double)s->counter[N_TREE];
 
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
@@ -119,7 +119,7 @@ double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		s->value[BIOMASS_ROOTS_COARSE] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_STEM] -= (Av_root_mass * deadtree);
 		s->value[BIOMASS_BRANCH] -= (Av_bb_mass * deadtree);
-		s->value[BIOMASS_RESERVE] -= (Av_res_mass * deadtree);
+		s->value[RESERVE] -= (Av_res_mass * deadtree);
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
 			s->value[BIOMASS_FOLIAGE] -= (Av_foliage_mass * deadtree);

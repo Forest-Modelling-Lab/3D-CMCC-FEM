@@ -44,7 +44,7 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 		}
 	}
 
-	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[RESERVE]);
 
 	s->value[MAX_BIOMASS_FOLIAGE] = ((s->value[PEAK_LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))/ (s->value[SLA_AVG]* GC_GDM)) / 1000.0;
 	s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
@@ -54,7 +54,7 @@ extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int y
 	Log("MAX_BIOMASS_FINE_ROOTS = %f tDM/area\n", s->value[MAX_BIOMASS_FINE_ROOTS]);
 
 	/*check for reserve need for budburst*/
-	if(s->value[BIOMASS_RESERVE] >= (s->value[MAX_BIOMASS_BUDBURST]/2.0))
+	if(s->value[RESERVE] >= (s->value[MAX_BIOMASS_BUDBURST]/2.0))
 	{
 		Log("There are enough reserve to reach 0.5 Peak Lai\n");
 	}
