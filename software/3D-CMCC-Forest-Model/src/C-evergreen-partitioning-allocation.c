@@ -4,8 +4,6 @@
  *  Created on: 20/nov/2013
  *      Author: alessio
  */
-
-
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
