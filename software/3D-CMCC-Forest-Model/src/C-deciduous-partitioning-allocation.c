@@ -206,7 +206,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 			if (s->value[RESERVE] < 0.0)
 			{
-				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
+				ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				frac_to_foliage_fineroot = 0;
 				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			}
@@ -250,7 +250,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					Log("Using ONLY reserve\n");
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_RESERVE] -=(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
 					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0.0;
@@ -624,7 +624,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
-			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 			s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
 			Log("Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
 			s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
@@ -1523,6 +1523,13 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			/**********************************************************************/
 		}
 	}
+
+	if(s->value[RESERVE] < 0.0)
+	{
+		ERROR(s->value[RESERVE], "s->value[RESERVE]");
+	}
+
+
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_ws[i] += s->value[DEL_STEMS];
 	c->annual_ws[i] = s->value[BIOMASS_STEM];

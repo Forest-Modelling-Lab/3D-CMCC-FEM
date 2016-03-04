@@ -441,6 +441,11 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 		}
 	}
 
+	if(s->value[RESERVE] < 0.0)
+	{
+		ERROR(s->value[RESERVE], "s->value[RESERVE]");
+	}
+
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
 	c->annual_wres[i] = s->value[RESERVE];

@@ -20,7 +20,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		Log("GPP = %f\n", s->value[GPP_g_C]);
+		Log("GPP = %f gC m^2 day\n", s->value[GPP_g_C]);
 		Log("Reserve biomass = %f\n", s->value[RESERVE]);
 		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
 
@@ -44,7 +44,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					if (s->value[RESERVE] < 0.0)
 					{
 						s->value[RESERVE] = 0;
-						Log("All reserve has been consumed for respiration!!!\n");
+						ERROR(s->value[RESERVE],"s->value[RESERVE]");
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -55,8 +55,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 					if (s->value[RESERVE] < 0.0)
 					{
 						s->value[RESERVE] = 0;
-						Log("All reserve has been consumed for respiration!!!\n");
-						Log("Reserve biomass after respiration costs = %f\n", s->value[RESERVE]);
+						ERROR(s->value[RESERVE],"s->value[RESERVE]");
 					}
 
 					s->value[NPP_g_C] = 0;
@@ -77,10 +76,9 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 		}
 		else
 		{
-			Log("ATTENTION biomass reserve < 0!!!!!!\n");
+			ERROR(s->value[RESERVE],"s->value[RESERVE]");
 		}
 		Log("Daily NPP = %f gC/m^2\n", s->value[NPP_g_C]);
-		Log("Daily NPP = %f gC/area\n", s->value[NPP_g_C]* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 		Log("Daily NPP = %f tDM/area\n",  s->value[NPP]);
 		//MonthlyNPP += s->value[NPP];
 		//Log("Monthly NPP (per area covered) for layer %d = %f tDM/area\n", c->heights[height].z, MonthlyNPP);
@@ -91,7 +89,7 @@ void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int mo
 
 		if (s->value[RESERVE] < 0.0)
 		{
-			Log("ATTENTION biomass reserve < 0!!!!!!\n");
+			ERROR(s->value[RESERVE],"s->value[RESERVE]");
 		}
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;

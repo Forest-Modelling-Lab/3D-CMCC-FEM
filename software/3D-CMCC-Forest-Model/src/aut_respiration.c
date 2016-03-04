@@ -141,12 +141,9 @@ void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DAT
 	c->monthly_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
 
-	//TEST
-	s->value[TOTAL_MAINT_RESP] = -10;
 	if(s->value[TOTAL_MAINT_RESP] < 0.0)
 	{
-		Log("ERROR TOTAL MAINT respiration IS NEGATIVE!\n");
-		CHECK_VALUE(s->value[TOTAL_MAINT_RESP],"TOTAL_MAINT_RESP")
+		ERROR(s->value[TOTAL_MAINT_RESP],"TOTAL_MAINT_RESP")
 	}
 }
 
@@ -236,7 +233,7 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 	c->annual_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	if(s->value[TOTAL_GROWTH_RESP] < 0.0)
 	{
-		Log("ERROR TOTAL GROWTH respiration IS NEGATIVE!\n");
+		ERROR(s->value[TOTAL_GROWTH_RESP],"TOTAL_GROWTH_RESP")
 	}
 }
 
@@ -253,7 +250,7 @@ void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 	if(s->value[TOTAL_AUT_RESP] < 0.0)
 	{
-		Log("ERROR TOTAL autotrophic respiration IS NEGATIVE!\n");
+		ERROR(s->value[TOTAL_AUT_RESP],"TOTAL_AUT_RESP")
 	}
 
 
