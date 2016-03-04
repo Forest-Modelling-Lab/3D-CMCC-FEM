@@ -214,7 +214,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			s->value[DAILY_DEL_LITTER] = 0;
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
-			if (s->value[BIOMASS_RESERVE] < 0.0)
+			if (s->value[RESERVE] < 0.0)
 			{
 				Log("ATTENTION BIOMASS RESERVE < 0.0\n");
 				frac_to_foliage_fineroot = 0;
@@ -223,10 +223,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			else
 			{
 				//test check it it seem that doesn't work!!
-				//frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) / s->counter[BUD_BURST_COUNTER];
+				//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
 				parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-				frac_to_foliage_fineroot = (s->value[BIOMASS_RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-				Log("Tot biomass reserve = %f\n", s->value[BIOMASS_RESERVE]);
+				frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
+				Log("Tot biomass reserve = %f\n", s->value[RESERVE]);
 				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			}
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
@@ -255,7 +255,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 			else
 			{
-				if (s->value[BIOMASS_RESERVE] > 0)
+				if (s->value[RESERVE] > 0)
 				{
 					Log("Using ONLY reserve\n");
 					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
@@ -290,8 +290,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -348,8 +348,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Stem Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 				Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-				s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+				s->value[RESERVE] +=  s->value[DEL_RESERVE];
+				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -380,7 +380,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			// Total Biomass
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[BIOMASS_RESERVE] + s->value[BIOMASS_BRANCH];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
 			Log("Previous Total W = %f tDM/area\n", oldW);
 			Log("Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 
@@ -409,7 +409,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 			break;
 
 		case 2:
@@ -457,8 +457,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -520,8 +520,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 				Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-				s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+				s->value[RESERVE] +=  s->value[DEL_RESERVE];
+				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -549,7 +549,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 
 
 			// Total Biomass
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[BIOMASS_RESERVE] + s->value[BIOMASS_BRANCH];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
 			Log("Previous Total W = %f tDM/area\n", oldW);
 			Log("Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 
@@ -578,7 +578,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 
 			break;
 			/************************************************************/
@@ -645,8 +645,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Stem Biomass = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -703,8 +703,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 				Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-				s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+				s->value[RESERVE] +=  s->value[DEL_RESERVE];
+				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -729,7 +729,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			}
 
 			// Total Biomass
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[BIOMASS_RESERVE] + s->value[BIOMASS_BRANCH];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
 			Log("Previous Total W = %f tDM/area\n", oldW);
 			Log("Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 
@@ -759,7 +759,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 
 			break;
 			/************************************************************************/
@@ -824,8 +824,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -872,7 +872,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 
 
 			break;
@@ -989,8 +989,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -1052,7 +1052,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 
 			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
 			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
@@ -1097,8 +1097,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Stem Biomass = %f tDM/area\n", s->value[BIOMASS_STEM]);
 			s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
 			Log("Branch and Bark Biomass = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
-			s->value[BIOMASS_RESERVE] += s->value[DEL_RESERVE];
-			Log("Reserve Biomass = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] += s->value[DEL_RESERVE];
+			Log("Reserve Biomass = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
@@ -1132,7 +1132,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[BIOMASS_RESERVE];
+			c->daily_wres[i] = s->value[RESERVE];
 
 			break;
 		}
@@ -1453,8 +1453,8 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
 
 			//allocation to non structural reserve pool
-			s->value[BIOMASS_RESERVE] +=  s->value[DEL_RESERVE];
-			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			s->value[RESERVE] +=  s->value[DEL_RESERVE];
+			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 
 			//allocation to roots
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
@@ -1531,7 +1531,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			Log("delta_Res %d = 0 \n", c->heights[height].z);
 
 			Log("-Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM]);
-			Log("-Reserve Biomass (Wres) = %f tDM/area\n", s->value[BIOMASS_RESERVE]);
+			Log("-Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			Log("-Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			Log("-Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 			Log("-Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
@@ -1544,7 +1544,7 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 	c->annual_delta_ws[i] += s->value[DEL_STEMS];
 	c->annual_ws[i] = s->value[BIOMASS_STEM];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
-	c->annual_wres[i] = s->value[BIOMASS_RESERVE];
+	c->annual_wres[i] = s->value[RESERVE];
 	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE];
 	c->annual_wbb[i]= s->value[BIOMASS_BRANCH];
 	c->annual_wfr[i]= s->value[BIOMASS_ROOTS_FINE];

@@ -246,7 +246,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1].value[BIOMASS_ROOTS_FINE] = row->wrf;
 	a->species[a->species_count-1].value[BIOMASS_STEM] = row->ws;
 	a->species[a->species_count-1].value[BIOMASS_BRANCH] = row->wbb;
-	a->species[a->species_count-1].value[BIOMASS_RESERVE] = row->wres;
+	a->species[a->species_count-1].value[RESERVE] = row->wres;
 	a->species[a->species_count-1].value[LAI] = row->lai;
 
 	/* check memory */
@@ -718,7 +718,7 @@ void matrix_summary(const MATRIX *const m)
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_RESERVE],
+								m->cells[cell].heights[height].ages[age].species[species].value[RESERVE],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD],

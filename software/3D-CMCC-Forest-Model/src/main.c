@@ -80,7 +80,8 @@ char 	*program_path		=	NULL,	// mandatory
 		*soil_output_path		= NULL, 	//mandatory
 		*soil_out_filename		=	NULL,	// mandatory
 		*soil_output_file		= 	NULL,	// mandatory
-		*settings_path		=	NULL;	// mandatory
+		*settings_path		=	NULL,	// mandatory
+		*output_vars_path = NULL;
 //*resolution		= 	NULL,	// mandatory
 //*vers_arg			= 	NULL;	// mandatory
 
@@ -512,6 +513,7 @@ void usage(void)
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
 	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
 	fprintf(stderr, "\t-c\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
+	fprintf(stderr, "\t-r\toutput vars list\t(i.e.: -r vars_output_list.txt)\n");
 	fprintf(stderr, "\nOptional options:\n");
 	fprintf(stderr, "\t-h\tprint this help\n");
 	fprintf(stderr, "\nLaunch example:\n");
@@ -566,6 +568,7 @@ int main(int argc, char *argv[])
 	ROW *rows;
 	MATRIX *m;
 	time_t rawtime;
+	OUTPUT_VARS *output_vars = NULL; /* required */
 
 	// ALESSIOR
 	// this vars are declared in types.h
@@ -686,6 +689,16 @@ int main(int argc, char *argv[])
 			bzero(settings_path, BUFFER_SIZE-1);
 			strcpy(settings_path, argv[i+1]);
 			break;
+
+		case 'r': // outputfilename
+			output_vars_path = mystrdup(argv[i+1]);
+			if( ! output_vars_path )
+			{
+				fprintf(stderr, "Cannot allocate memory for output_vars_path.\n");
+				return 1;
+			}
+			break;
+
 		case 'h': // Print help
 			usage();
 			break;
@@ -874,6 +887,14 @@ int main(int argc, char *argv[])
 		free(tmp);
 	}
 
+	if ( output_vars_path ) {
+		output_vars = ImportOutputVarsFile(output_vars_path);
+		if ( ! output_vars ) {
+			exit(1);
+		}
+		free(output_vars_path);
+		output_vars_path = NULL;
+	}
 
 	/* get program path */
 	program_path = get_current_directory();
@@ -1410,13 +1431,14 @@ int main(int argc, char *argv[])
 	soil_logClose();
 
 	// Free memory
+	if ( output_vars ) FreeOutputVars(output_vars);
 	free(input_met_path); input_met_path = NULL;
 	free(output_file); output_file = NULL;
 	free(daily_output_file); daily_output_file = NULL;
 	free(monthly_output_file); monthly_output_file = NULL;
 	free(annual_output_file); annual_output_file = NULL;
 	free(soil_output_file); soil_output_file = NULL;
-
+	
 	/* free memory at exit */
 	return 0;
 }

@@ -146,22 +146,22 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*reserve*/
 
-	if (s->value[BIOMASS_RESERVE] == 0)
+	if (s->value[RESERVE] == 0)
 	{
 		Log("\nNo Reserve Biomass Data are available for model initialization \n");
 		Log("...Generating input Reserve Biomass biomass data\n");
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002
-		s->value[BIOMASS_RESERVE] = s->value[WTOT_sap] * s->value[SAP_WRES];
-		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[BIOMASS_RESERVE]);
-		Log("-----Reserve Biomass initialization data  = %f KgC/cell \n", s->value[BIOMASS_RESERVE]/GC_GDM * 1000);
-		Log("-----Reserve Biomass initialization data  = %f gC/tree \n", (s->value[BIOMASS_RESERVE]/GC_GDM * 1000)/s->value[N_TREE]);
+		s->value[RESERVE] = s->value[WTOT_sap] * s->value[SAP_WRES];
+		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[RESERVE]);
+		Log("-----Reserve Biomass initialization data  = %f KgC/cell \n", s->value[RESERVE]/GC_GDM * 1000);
+		Log("-----Reserve Biomass initialization data  = %f gC/tree \n", (s->value[RESERVE]/GC_GDM * 1000)/s->value[N_TREE]);
 
 	}
 	else
 	{
 		Log("Ok reserve biomass..\n");
-		Log("---Reserve from init file = %f \n", s->value[BIOMASS_RESERVE]);
+		Log("---Reserve from init file = %f \n", s->value[RESERVE]);
 	}
 	if (s->value[BIOMASS_FOLIAGE] == 0)
 	{
@@ -173,7 +173,7 @@ void Get_initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		{
 			Log("\nNo Foliage Biomass Data are available for model initialization \n");
 			Log("...Generating input Foliage Biomass biomass data\n");
-			s->value[BIOMASS_FOLIAGE] =  s->value[BIOMASS_RESERVE] * (1.0 - s->value[STEM_LEAF_FRAC]);
+			s->value[BIOMASS_FOLIAGE] =  s->value[RESERVE] * (1.0 - s->value[STEM_LEAF_FRAC]);
 			Log("----Foliage Biomass initialization data  = %f \n", s->value[BIOMASS_FOLIAGE]);
 		}
 	}

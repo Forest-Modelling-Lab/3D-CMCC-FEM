@@ -272,10 +272,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\C-partitioning-allocation.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\canopy_cover.c"
 				>
 			</File>
@@ -324,10 +320,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\garbage.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\initialization_biomass_data.c"
 				>
 			</File>
@@ -348,15 +340,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\leafFall_marconi.c"
+				RelativePath=".\src\leafFall.c"
 				>
 			</File>
 			<File
 				RelativePath=".\src\light.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\litterfall.c"
 				>
 			</File>
 			<File

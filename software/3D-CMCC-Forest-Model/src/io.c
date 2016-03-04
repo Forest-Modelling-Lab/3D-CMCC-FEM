@@ -20,11 +20,9 @@ please ASK before modify it!
 //#include "timestamp.h"
 #include "netcdf/netcdf.h"
 
-
 #ifdef _WIN32
 #pragma comment(lib, "lib/netcdf")
 #endif
-
 
 /* */
 extern char *program_path;
@@ -122,6 +120,100 @@ static const char *MonthName[MONTHS] = {
 	"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY"
 	, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 };
+
+//
+static int loadFileToMemory(const char *filename, char **result) {
+	size_t size;
+	FILE *f;
+
+	size = 0;
+	f = fopen(filename, "rb");
+	if ( !f )  {
+		*result = NULL;
+		return 0;
+	}
+	fseek(f, 0, SEEK_END);
+	size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	*result = (char *)malloc((size+1)*sizeof**result);
+	if ( !*result ) {
+		fclose(f);
+		return 0;
+	}
+	if ( size != fread(*result, sizeof(char), size, f) )  {
+		free(*result);
+		fclose(f);
+		return 0;
+	}
+	fclose(f);
+	(*result)[size] = '\0';
+
+	return size;
+}
+
+void FreeOutputVars(OUTPUT_VARS *ov) {
+	int i;
+
+	assert(ov);
+
+	for ( i = 0; i < ov->vars_count; ++i ) {
+		free(ov->vars[i]);
+	}
+	free(ov);
+}
+
+OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
+{
+	char *token;
+	char *p;
+	char **pp_no_leak;
+	char *buffer;
+	OUTPUT_VARS *ov;
+
+	const char delimiter[] = " ,\r\n";
+	
+	assert(filename);
+
+	if ( ! loadFileToMemory(filename, &buffer) )
+	{
+		Log("unable to import output filename: %s\n", filename);
+		return NULL;
+	}
+
+	ov = malloc(sizeof*ov);
+	if ( ! ov ) {
+		Log(sz_err_out_of_memory);
+		free(buffer);
+		return NULL;
+	}
+
+	for ( token = mystrtok(buffer, delimiter, &p); token; token = mystrtok(buffer, delimiter, &p) ) {
+		if ( token[0] ) {
+			pp_no_leak = realloc(ov->vars, (ov->vars_count+1)+sizeof*pp_no_leak);
+			if ( ! pp_no_leak )
+			{
+				Log(sz_err_out_of_memory);
+				FreeOutputVars(ov);
+				free(buffer);
+				return NULL;
+			}
+			ov->vars = pp_no_leak;
+			ov->vars[ov->vars_count] = mystrdup(token);
+			if ( ! ov->vars[ov->vars_count] )
+			{
+				Log(sz_err_out_of_memory);
+				FreeOutputVars(ov);
+				free(buffer);
+				return NULL;
+			}
+			++ov->vars_count;
+		}
+	}
+
+	free(buffer);
+
+	return ov;
+}
 
 static void ResetYos(YOS *const yos)
 {
