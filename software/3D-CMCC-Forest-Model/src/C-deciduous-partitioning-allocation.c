@@ -624,6 +624,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
+				if(s->value[RESERVE] < 0.0)
+				{
+					ERROR(s->value[RESERVE], "s->value[RESERVE]");
+				}
 			}
 
 			/*allocation*/
@@ -800,6 +804,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
+				if(s->value[RESERVE] < 0.0)
+				{
+					ERROR(s->value[RESERVE], "s->value[RESERVE]");
+				}
 			}
 
 			/*allocation*/
@@ -926,6 +934,10 @@ void D_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					if(s->value[RESERVE] < 0.0)
+					{
+						ERROR(s->value[RESERVE], "s->value[RESERVE]");
+					}
 				}
 			}
 			else
