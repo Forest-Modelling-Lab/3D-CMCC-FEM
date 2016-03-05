@@ -23,7 +23,7 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 	Log("\n*********GET SOIL WATER BALACE************\n");
 
 	/* DAILY CHECK ON WATER BALANCE */
-
+//fixme move in check_balance file creating a water_balance function
 	/*sum of sources*/
 	water_in = met[month].d[day].rain;
 	Log("water in = %f\n", water_in);
@@ -41,7 +41,7 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 	water_balance = water_in - water_out - water_stored;
 	Log("water balance = %f\n", water_balance);
 
-
+//fixme move to a specific file for balance
 //	if(month != 0 && day != 0)
 //	{
 //		if (fabs(old_water_balance - water_balance) > 1e-4 )
