@@ -797,6 +797,11 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			}
 			Log("****************END OF HEIGHT CLASS***************\n");
 
+			/*CHECK FOR BALANCE CLOSURE*/
+			check_water_balance (&m->cells[cell], met, month, day);
+
+
+
 			m->cells[cell].daily_tot_litterfall = 0;
 			m->cells[cell].dominant_veg_counter = 0;
 			m->cells[cell].dominated_veg_counter = 0;

@@ -976,6 +976,7 @@ typedef struct {
 	int Veg_Counter;
 	double soil_evaporation;
 	double available_soil_water;
+	double water_balance, old_water_balance;
 	int tree_number_dominant;
 	int tree_number_dominated;
 	int tree_number_subdominated;
@@ -1345,11 +1346,13 @@ void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
 void leaffall(SPECIES *, const MET_DATA *const, int*, int*, int );
-void get_vpsat(CELL * ,  int , int , int , YOS *, int);
+void get_vpsat(CELL *, int , int , int , YOS *, int);
 void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+
+void check_water_balance (CELL *, const MET_DATA *const, int, int);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
