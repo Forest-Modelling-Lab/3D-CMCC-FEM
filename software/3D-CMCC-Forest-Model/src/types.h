@@ -976,6 +976,7 @@ typedef struct {
 	int subdominated_veg_counter;
 	int Veg_Counter;
 	double soil_evaporation;
+	double previous_available_soil_water;
 	double available_soil_water;
 	double water_balance, old_water_balance;
 	int tree_number_dominant;
@@ -1019,7 +1020,6 @@ typedef struct {
 	double snow_pack;  //amount of snow in Kg H2O
 	double snow_melt; //melted snow
 	double snow_subl; //sublimated snow
-	double snow_to_soil;
 	double gcorr;
 	double air_pressure;
 	double lh_vap, lh_vap_soil, lh_sub, lh_fus; //latent heat in KJ/kg
@@ -1355,7 +1355,7 @@ void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
-void check_water_balance (CELL *, const MET_DATA *const, int, int);
+void Check_water_balance (CELL *, const MET_DATA *const, int, int);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

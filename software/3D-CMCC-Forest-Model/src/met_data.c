@@ -49,36 +49,18 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years)
 	// check parameters
 	met = (MET_DATA*) c->years[years].m;
 
-
-	if (settings->time == 'd')
+	if ( met[month].d[day].tavg == NO_DATA)
 	{
-		if ( met[month].d[day].tavg == NO_DATA)
+		if (met[month].d[day].tmax == NO_DATA && met[month].d[day].tmin == NO_DATA)
 		{
-			if (met[month].d[day].tmax == NO_DATA && met[month].d[day].tmin == NO_DATA)
-			{
-				Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
-			}
-			else
-			{
-				met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
-				//Log("tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
-			}
+			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+		}
+		else
+		{
+			met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
+			//Log("tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 		}
 	}
-	//else
-	//{
-	//	if ( met[month].tavg == NO_DATA)
-	//	{
-	//		if (met[month].tmax == NO_DATA && met[month].tmin == NO_DATA)
-	//		{
-	//			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
-	//		}
-	//		{
-	//			met[month].tavg = (0.606 * met[month].tmax) + (0.394 * met[month].tmin);
-	//		}
-	//	}
-	//}
-
 
 }
 
@@ -94,30 +76,15 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	if (settings->time == 'd')
+	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
 	{
-		if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
-		{
-			met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
-		}
-		else
-		{
-			met[month].d[day].tday = NO_DATA;
-			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
-		}
+		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
 	}
-	/*else
+	else
 	{
-		if (met[month].tmax != NO_DATA && met[month].tmin != NO_DATA)
-		{
-			met[month].tday = 0.45 * (met[month].tmax - met[month].tavg) + met[month].tavg;
-		}
-		else
-		{
-			met[month].tday = NO_DATA;
-			Log("NO TMAX and TMIN can't compute TDAY!!! \n");
-		}
-	}*/
+		met[month].d[day].tday = NO_DATA;
+		Log("NO TMAX and TMIN can't compute TDAY!!! \n");
+	}
 }
 
 //following BIOME-BGC 4.2 src
@@ -132,30 +99,15 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
-	if (settings->time == 'd')
+	if (met[month].d[day].tday != NO_DATA )
 	{
-		if (met[month].d[day].tday != NO_DATA )
-		{
-			met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
-		}
-		else
-		{
-			met[month].d[day].tnight = NO_DATA;
-			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
-		}
+		met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
 	}
-	/*else
+	else
 	{
-		if (met[month].tday != NO_DATA )
-		{
-			met[month].tnight = (met[month].tday + met[month].tmin)/2 ;
-		}
-		else
-		{
-			met[month].tnight = NO_DATA;
-			Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
-		}
-	}*/
+		met[month].d[day].tnight = NO_DATA;
+		Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
+	}
 }
 
 extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
@@ -289,7 +241,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			Log("Snow melt!!\n");
 			r_melt = incident_rad / c->lh_fus;
 			c->snow_melt = t_melt + r_melt;
-			Log("snow_melt %f\n", c->snow_melt);
+			//Log("snow_melt %f\n", c->snow_melt);
 
 
 			if (c->snow_melt > c->snow_pack)
@@ -298,24 +250,31 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				c->snow_melt = c->snow_pack;
 				/*reset snow*/
 				c->snow_pack = 0.0;
+				Log("ALL Snow melt!!\n");
+				Log("snow_melt %f\n", c->snow_melt);
+				c->available_soil_water += c->snow_melt;
+				Log("adding all of snow melt to available soil water = %f\n",
+						c->available_soil_water);
 			}
 			else
 			{
 				/*snow pack melts partially*/
 				c->snow_pack -= c->snow_melt;
+				Log("snow_pack %f\n", c->snow_pack);
+				Log("A FRACTION OF Snow melt!!\n");
+				Log("adding a fraction of snow melt to available soil water = %f\n",
+						c->available_soil_water);
 			}
 			//add snow to soil water
 			/*check for balance*/
-			c->snow_to_soil = c->snow_melt;
-			Log("snow to soil = %f mm\n", c->snow_to_soil);
-			Log("Snow thickness = %f (cm)\n", c->snow_pack);
+			Log("Snow pack = %f (cm)\n", c->snow_pack);
 		}
 	}
 	else
 	{
 		c->snow_melt = 0;
 
-		if(met[month].d[day].rain > 0)
+		if(met[month].d[day].rain > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
 			Log("rain becomes snow\n");
@@ -326,7 +285,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			c->snow_pack += c->daily_snow;
 			Log("snow pack = %f cm\n", c->snow_pack);
 
-			met[month].d[day].rain = 0;
+			met[month].d[day].rain = 0.0;
 		}
 		else
 		{

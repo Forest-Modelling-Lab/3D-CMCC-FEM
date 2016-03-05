@@ -19,7 +19,8 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 	Log("\nGET SOIL WATER BALACE\n");
 
 	/*update balance*/
-	c->available_soil_water += (met[month].d[day].rain + c->water_to_soil + c->snow_melt - c->water_to_atmosphere);
+
+	c->available_soil_water += (met[month].d[day].rain + c->water_to_soil /*+ c->snow_melt*/ - c->water_to_atmosphere);
 	Log("ASW = %f mm\n", c->available_soil_water);
 	Log("snow pack = %f mm\n", c->snow_pack);
 
