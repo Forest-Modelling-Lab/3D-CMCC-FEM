@@ -232,7 +232,8 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	/* temperature and radiation melt from snowpack */
 	if (met[month].d[day].tavg > 0.0)
 	{
-		c->snow_subl = 0;
+		c->snow_subl = 0.0;
+		c->daily_snow = 0.0;
 
 		if (c->snow_pack > 0.0)
 		{
@@ -252,9 +253,6 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				c->snow_pack = 0.0;
 				Log("ALL Snow melt!!\n");
 				Log("snow_melt %f\n", c->snow_melt);
-				c->available_soil_water += c->snow_melt;
-				Log("adding all of snow melt to available soil water = %f\n",
-						c->available_soil_water);
 			}
 			else
 			{
@@ -262,8 +260,6 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				c->snow_pack -= c->snow_melt;
 				Log("snow_pack %f\n", c->snow_pack);
 				Log("A FRACTION OF Snow melt!!\n");
-				Log("adding a fraction of snow melt to available soil water = %f\n",
-						c->available_soil_water);
 			}
 			//add snow to soil water
 			/*check for balance*/
@@ -272,7 +268,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	}
 	else
 	{
-		c->snow_melt = 0;
+		c->snow_melt = 0.0;
 
 		if(met[month].d[day].rain > 0.0)
 		{
@@ -289,6 +285,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 		}
 		else
 		{
+			c->daily_snow = 0.0;
 			Log("NO rain NO snow\n");
 			Log("snow pack = %f cm\n", c->snow_pack);
 		}

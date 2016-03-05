@@ -27,7 +27,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	/* DAILY CHECK ON WATER BALANCE */
 
 	/*sum of sources*/
-	water_in = met[month].d[day].rain;
+	water_in = met[month].d[day].rain + c->daily_snow;
 	if(met[month].d[day].rain == c->daily_snow)
 	{
 		ERROR (met[month].d[day].rain, "RAIN EXCLUDE SNOW AND VICEVERSA");
@@ -38,17 +38,18 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water + c->snow_pack ;
+	water_stored = c->available_soil_water + (c->snow_pack - c->daily_snow);
 
 
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
+	//c->water_balance = water_in - water_out - c->old_water_balance;
 
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		Log("NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
 		c->old_water_balance = c->water_balance;
-		Log("old water balance = %f\n", c->old_water_balance);;
+		Log("old water balance = %f\n", c->old_water_balance);
 	}
 	else
 	{
@@ -60,6 +61,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 			Log("water stored = %f\n", water_stored);
 			Log("water balance = %f\n", c->water_balance);
 			Log("old water balance = %f\n", c->old_water_balance);
+			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			//ERROR(c->water_balance, "water balance");
 		}
 		else
