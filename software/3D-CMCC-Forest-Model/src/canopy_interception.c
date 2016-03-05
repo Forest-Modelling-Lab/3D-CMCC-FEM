@@ -164,11 +164,13 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		if(s->value[CANOPY_EVAPORATION] < s->value[RAIN_INTERCEPTED])
 		{
 			Log("RAIN INTERCEPTED EXCEEDS CANOPY EVAPORATION\n");
+			//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 			s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 			Log("remaining rainfall on canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		}
 		else
 		{
+			//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 			s->value[RAIN_INTERCEPTED]= 0;
 			Log("remaining rainfall on canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		}
@@ -190,6 +192,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_WET_CANOPY];
 		Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 
+		//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 		s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 		Log("Remaining water over the canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		c->water_to_soil = met[month].d[day].rain ;
@@ -213,6 +216,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_WET_CANOPY];
 		Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 
+		//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 		s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 		Log("Remaining water over the canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		c->water_to_soil = met[month].d[day].rain ;

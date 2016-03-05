@@ -458,6 +458,7 @@ enum {
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	FRAC_DAYTIME_WET_CANOPY, //fraction of daytime that the canopy is wet
 	RAIN_INTERCEPTED,
+	CANOPY_WATER_STORED,            //residual of canopy water intercepted and not evaporated
 	CANOPY_EVAPOTRANSPIRATION,
 	CANOPY_EVAPORATION,             //Evaporation (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
@@ -1036,11 +1037,12 @@ typedef struct {
 	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double daily_c_int[3], daily_tot_c_int;
-	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
+	double daily_c_water_stored[3], daily_tot_c_water_stored;
 	double daily_soil_evaporation_watt;
 	double daily_c_transp[3], daily_tot_c_transp;
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
 
 	double daily_Nee, daily_Reco, monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
 
