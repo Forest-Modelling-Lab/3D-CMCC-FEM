@@ -20,11 +20,11 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	i = c->heights[height].z;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
-	Log("\nGET_C-Fluxes_ROUTINE\n");
+	Log("\nGET_C-FLUXES\n");
 
 	s->value[C_FLUX] = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
 	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
-	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
+//	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
 	c->daily_c_flux[i] = s->value[C_FLUX];
 	c->daily_tot_c_flux += s->value[C_FLUX];
@@ -32,9 +32,19 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 	c->monthly_tot_c_flux +=  s->value[C_FLUX];
 	c->annual_c_flux[i] += s->value[C_FLUX];
 	c->annual_tot_c_flux +=  s->value[C_FLUX];
-
 	c->daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);;
 
+}
+
+void Get_W_fluxes (CELL *const c)
+{
+	Log("\nGET_W-FLUXES\n");
+	//todo make it better
+	c->daily_tot_w_flux = c->water_to_soil + c->daily_snow - c->water_to_atmosphere - c->runoff;
+	c->monthly_tot_w_flux += c->daily_tot_w_flux;
+	c->annual_tot_w_flux += c->daily_tot_w_flux;
+
+	Log("Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
 void get_net_ecosystem_exchange(CELL *const c)

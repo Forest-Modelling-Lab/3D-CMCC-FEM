@@ -27,7 +27,7 @@ void check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	/* DAILY CHECK ON WATER BALANCE */
 
 	/*sum of sources*/
-	water_in = met[month].d[day].rain;
+	water_in = met[month].d[day].rain + c->daily_snow;
 	Log("water in = %f\n", water_in);
 
 	/*sum of sinks*/

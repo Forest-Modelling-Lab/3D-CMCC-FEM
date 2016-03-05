@@ -1269,6 +1269,7 @@ void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
 void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
+void Get_W_fluxes (CELL *const c);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);

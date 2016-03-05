@@ -266,6 +266,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_soil_water_balance (&m->cells[cell], met, month, day);
+												Get_W_fluxes (&m->cells[cell]);
 											}
 										}
 										/*asymmetric water competition*/
@@ -278,6 +279,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												Get_soil_evaporation (&m->cells[cell], met, month, day);
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+												Get_W_fluxes (&m->cells[cell]);
 											}
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 										}
@@ -344,6 +346,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 												Get_soil_water_balance (&m->cells[cell], met, month, day);
+												Get_W_fluxes (&m->cells[cell]);
 											}
 										}
 										/*asymmetric water competition*/
@@ -358,6 +361,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											}
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
+											Get_W_fluxes (&m->cells[cell]);
 										}
 
 										if (height == 0)
@@ -374,10 +378,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 										D_Get_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 										Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-
-
-										Log("Available Soil Water at day %d month %d year of simulation %d = %f mm\n",day, month+1, years, m->cells[cell].available_soil_water);
-
 										Log("*****************************************************************************\n");
 										Log("*****************************************************************************\n");
 									}
@@ -422,6 +422,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
+											Get_W_fluxes (&m->cells[cell]);
 										}
 									}
 									/*asymmetric water competition*/
@@ -434,6 +435,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
+											Get_W_fluxes (&m->cells[cell]);
 										}
 										Get_soil_water_balance (&m->cells[cell], met, month, day);
 									}
