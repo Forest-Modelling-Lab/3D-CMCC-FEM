@@ -26,19 +26,16 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 
 	/* DAILY CHECK ON WATER BALANCE */
 
-	/*sum of sources*/
-	water_in = met[month].d[day].prcp + c->daily_snow;
-	if(met[month].d[day].prcp == c->daily_snow)
-	{
-		ERROR (met[month].d[day].prcp, "RAIN EXCLUDE SNOW AND VICEVERSA");
-	}
+	/*sum of sources (rain + snow)*/
+	water_in = met[month].d[day].prcp;
+
 
 	/*sum of sinks*/
 	//fixme probably canopy_int = canopy_evapo will coauses problem fix it!!
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water + c->snow_to_soil;;
+	water_stored = c->available_soil_water;
 
 
 	/* check balance */
@@ -67,7 +64,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 			Log("water balance = %f\n", c->water_balance);
 			Log("old water balance = %f\n", c->old_water_balance);
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
-			//ERROR(c->water_balance, "water balance");
+			ERROR(c->water_balance, "water balance");
 		}
 		else
 		{
