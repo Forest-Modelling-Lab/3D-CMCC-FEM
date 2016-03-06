@@ -24,11 +24,14 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	double t_melt, r_melt, r_sub;
 
 
-	Log("-GET SNOW MET DATA-\n");
+	Log("-CHECK PRECIPITATION-\n");
 
-	c->snow_subl = 0;
-	c->snow_melt = 0;
-	c->daily_snow = 0;
+	c->snow_subl = 0.0;
+	c->snow_melt = 0.0;
+	c->daily_snow = 0.0;
+	c->daily_rain = 0.0;
+
+
 
 	t_melt = r_melt = r_sub = 0;
 	t_melt = t_coeff * met[month].d[day].tavg;
@@ -43,8 +46,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	/* temperature and radiation melt from snowpack */
 	if (met[month].d[day].tavg > 0.0)
 	{
-		c->snow_subl = 0.0;
-		c->daily_snow = 0.0;
 		c->daily_rain = met[month].d[day].prcp;
 
 		if (c->snow_pack > 0.0)
@@ -84,9 +85,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	}
 	else
 	{
-		c->snow_melt = 0.0;
-		c->daily_rain = 0.0;
-
 		if(met[month].d[day].prcp > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
@@ -96,7 +94,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			Log("Daily snow = %f cm\n", c->daily_snow);
 
 			c->snow_pack += c->daily_snow;
-			c->daily_snow = 0.0;
 			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
 		}
 		else
