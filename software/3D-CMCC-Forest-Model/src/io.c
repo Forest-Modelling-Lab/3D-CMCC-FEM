@@ -236,7 +236,7 @@ static void ResetYos(YOS *const yos)
 				yos->m[i].d[y].tnight = INVALID_VALUE;
 				yos->m[i].d[y].vpd = INVALID_VALUE;
 				yos->m[i].d[y].ts_f = INVALID_VALUE;
-				yos->m[i].d[y].rain = INVALID_VALUE;
+				yos->m[i].d[y].prcp = INVALID_VALUE;
 				yos->m[i].d[y].swc = INVALID_VALUE;
 				yos->m[i].d[y].ndvi_lai = INVALID_VALUE;
 				yos->m[i].d[y].daylength = INVALID_VALUE;
@@ -336,7 +336,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		previous_tmin,
 		previous_vpd,
 		previous_ts_f,
-		previous_rain,
+		previous_prcp,
 		previous_swc,
 		previous_ndvi_lai;
 	
@@ -568,25 +568,25 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 		
 	//case PRECIP:  //Precip - rain
-		yos[*yos_count-1].m[month].d[day].rain = values[VALUE_AT(row,PRECIP)];
-		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
+		yos[*yos_count-1].m[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
+		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
 			Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
 			//Log("Getting previous day values.. !!\n");
-			yos[*yos_count-1].m[month].d[day].rain = previous_rain;
-			Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].rain);
-			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
+			yos[*yos_count-1].m[month].d[day].prcp = previous_prcp;
+			Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
+			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
 			{
 				Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
 
 				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].rain = yos[*yos_count-2].m[month].d[day].rain;
+				yos[*yos_count-1].m[month].d[day].prcp = yos[*yos_count-2].m[month].d[day].prcp;
 
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].rain))
+				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
 				{
 					Log ("********* RAIN -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].rain = NO_DATA;
+					yos[*yos_count-1].m[month].d[day].prcp = NO_DATA;
 				}
 
 			}
@@ -594,11 +594,11 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 		else
 		{
-			previous_rain = yos[*yos_count-1].m[month].d[day].rain;
+			previous_prcp = yos[*yos_count-1].m[month].d[day].prcp;
 		}
 
 		//CONTROL
-		if (yos[*yos_count-1].m[month].d[day].rain > settings->maxprecip)
+		if (yos[*yos_count-1].m[month].d[day].prcp > settings->maxprecip)
 		{
 			Log("ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
 		}

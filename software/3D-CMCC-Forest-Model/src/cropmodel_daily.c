@@ -1459,11 +1459,11 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					if (stage >= 3 && stage < 8)
 					{
-						if(met[month].d[day-4].rain + met[month].d[day-3].rain + met[month].d[day-2].rain + met[month].d[day-1].rain + met[month].d[day].rain < 13)
+						if(met[month].d[day-4].prcp + met[month].d[day-3].prcp + met[month].d[day-2].prcp + met[month].d[day-1].prcp + met[month].d[day].prcp < 13)
 						{
 							CN = 4.2 * CN / (10.0 - 0.058 * CN);
 						}
-						else if (met[month].d[day-4].rain + met[month].d[day-3].rain + met[month].d[day-2].rain + met[month].d[day-1].rain + met[month].d[day].rain > 28)
+						else if (met[month].d[day-4].prcp + met[month].d[day-3].prcp + met[month].d[day-2].prcp + met[month].d[day-1].prcp + met[month].d[day].prcp > 28)
 						{
 							CN = 23.0 * CN / (10.0 - 0.058 * CN);
 						}
@@ -1472,11 +1472,11 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					{
 						if (day > 4)
 						{
-							if(met[month].d[day-4].rain + met[month].d[day-3].rain + met[month].d[day-2].rain + met[month].d[day-1].rain + met[month].d[day].rain < 36)
+							if(met[month].d[day-4].prcp + met[month].d[day-3].prcp + met[month].d[day-2].prcp + met[month].d[day-1].prcp + met[month].d[day].prcp < 36)
 							{
 								CN = 4.2 * CN / (10.0 - 0.058 * CN);
 							}
-							else if (met[month].d[day-4].rain + met[month].d[day-3].rain + met[month].d[day-2].rain + met[month].d[day-1].rain + met[month].d[day].rain > 54)
+							else if (met[month].d[day-4].prcp + met[month].d[day-3].prcp + met[month].d[day-2].prcp + met[month].d[day-1].prcp + met[month].d[day].prcp > 54)
 							{
 								CN = 23.0 * CN / (10.0 - 0.058 * CN);
 							}
@@ -1490,10 +1490,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					//retention factor
 					maxInfiltration = 254.0 * (100 - CN) / CN;
-					if(met[month].d[day].rain >= 0.2 * maxInfiltration)
+					if(met[month].d[day].prcp >= 0.2 * maxInfiltration)
 					{
 						//Runoff
-						Runoff = 0.1 * pow((met[month].d[day].rain - 0.2 * maxInfiltration),2) / (met[month].d[day].rain + 0.8 * maxInfiltration);
+						Runoff = 0.1 * pow((met[month].d[day].prcp - 0.2 * maxInfiltration),2) / (met[month].d[day].prcp + 0.8 * maxInfiltration);
 					}else
 					{
 						//Runoff
@@ -1527,7 +1527,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							"****************************************\n");
 
 					//assumed as infiltrated water, the net amount of (precipitation + melt) - (runoff and interception)
-					infiltration = (met[month].d[day].rain + dailyMaximumSnowMelt - Runoff - dailyMaximumPlantInterception) / 10.0;	//watch out if the variables are set in mm; here in cm
+					infiltration = (met[month].d[day].prcp + dailyMaximumSnowMelt - Runoff - dailyMaximumPlantInterception) / 10.0;	//watch out if the variables are set in mm; here in cm
 					Log("\ninfiltration %f", infiltration);
 
 					for (l = 0; l < soilLayer; l++)

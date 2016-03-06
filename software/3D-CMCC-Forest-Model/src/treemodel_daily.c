@@ -133,7 +133,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Solar_Rad += met[month].d[day].solar_rad;
 		Yearly_Vpd += vpd;
 		Yearly_Temp += met[month].d[day].tavg;
-		Yearly_Rain += met[month].d[day].rain;
+		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, vpd, month, day);
 		/*compute latent heat values*/

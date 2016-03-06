@@ -36,6 +36,7 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 
 }
 
+//too remove after made water_balance function
 void Get_W_fluxes (CELL *const c)
 {
 	Log("\nGET_W-FLUXES\n");

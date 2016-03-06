@@ -68,7 +68,7 @@ typedef struct {
 	PREC vpd;
 	PREC rh_f;
 	PREC ts_f;
-	PREC rain;
+	PREC prcp;
 	PREC swc;
 	PREC ndvi_lai;
 	PREC daylength;
@@ -991,9 +991,6 @@ typedef struct {
 	double layer_cover_dominant;
 	double layer_cover_dominated;
 	double layer_cover_subdominated;
-	double rain_intercepted;
-	double water_to_soil;
-	double water_to_atmosphere;
 	double stand_agb;
 	double stand_bgb;
 
@@ -1016,10 +1013,19 @@ typedef struct {
 	int daily_layer_number;
 	int top_layer;
 	int saplings_counter;
+
+	/*water block*/
+	double rain_intercepted;;
+	double water_to_soil;
+	double water_to_atmosphere;
+	double precip_sources;
+	double precip_canopy;
+	double precip_soil;
 	double daily_snow;
 	double snow_pack;  //amount of snow in Kg H2O
 	double snow_melt; //melted snow
 	double snow_subl; //sublimated snow
+	double snow_to_soil;
 	double gcorr;
 	double air_pressure;
 	double lh_vap, lh_vap_soil, lh_sub, lh_fus; //latent heat in KJ/kg
@@ -1298,6 +1304,8 @@ int Get_number_of_layers (CELL *);
 void Get_annual_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
 void Get_layer_cover_mortality (CELL *, int, int, int, double, int);
+void water_downward_balance (CELL *, const MET_DATA *const, int, int);
+void water_upward_balance (CELL *, const MET_DATA *const, int, int);
 void Get_soil_water_balance (CELL *const, const MET_DATA *const, int, int);
 void Get_annual_average_values_modifiers (SPECIES *);
 void Get_annual_average_values_met_data (CELL *, double, double, double, double);

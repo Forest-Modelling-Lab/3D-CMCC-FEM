@@ -29,7 +29,7 @@ extern void Print_met_daily_data (const YOS *const yos, int day, int month, int 
 				met[month].d[day].tavg,
 				met[month].d[day].tmax,
 				met[month].d[day].tmin,
-				met[month].d[day].rain,
+				met[month].d[day].prcp,
 				met[month].d[day].tday,
 				met[month].d[day].tnight);
 	}
@@ -249,10 +249,11 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 			{
 				/*all snow pack melts*/
 				c->snow_melt = c->snow_pack;
+
 				/*reset snow*/
 				c->snow_pack = 0.0;
 				Log("ALL Snow melt!!\n");
-				Log("snow_melt %f\n", c->snow_melt);
+				Log("snow melt %f\n", c->snow_melt);
 			}
 			else
 			{
@@ -261,7 +262,9 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				Log("snow_pack %f\n", c->snow_pack);
 				Log("A FRACTION OF Snow melt!!\n");
 			}
-			//add snow to soil water
+			c->snow_to_soil=c->snow_melt;
+			Log("snow to soil %f\n", c->snow_to_soil);
+
 			/*check for balance*/
 			Log("Snow pack = %f (cm)\n", c->snow_pack);
 		}
@@ -270,18 +273,18 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 	{
 		c->snow_melt = 0.0;
 
-		if(met[month].d[day].rain > 0.0)
+		if(met[month].d[day].prcp > 0.0)
 		{
 			Log("tavg = %f\n", met[month].d[day].tavg);
 			Log("rain becomes snow\n");
 
-			c->daily_snow = met[month].d[day].rain;
+			c->daily_snow = met[month].d[day].prcp;
 			Log("Daily snow = %f cm\n", c->daily_snow);
 
 			c->snow_pack += c->daily_snow;
-			Log("snow pack = %f cm\n", c->snow_pack);
-
-			met[month].d[day].rain = 0.0;
+			c->daily_snow = 0.0;
+			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
+			met[month].d[day].prcp = 0.0;
 		}
 		else
 		{
@@ -302,6 +305,7 @@ void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
 				c->snow_subl = r_sub;
 				Log("Snow sublimated = %f mm\n", c->snow_subl);
 				/*check for balance*/
+
 				if (c->snow_subl < c->snow_pack)
 				{
 					c->snow_pack -= c->snow_subl;
@@ -392,7 +396,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 			met[month].d[day].rh_f,
 			met[month].d[day].vpd,
 			met[month].d[day].ts_f,
-			met[month].d[day].rain,
+			met[month].d[day].prcp,
 			met[month].d[day].swc,
 			met[month].d[day].thermic_sum,
 			met[month].d[day].daylength,

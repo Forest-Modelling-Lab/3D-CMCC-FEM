@@ -25,7 +25,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
 			pow((237.3+met[month].d[day].tday),2);
 
-	Log("Rainfall = %f mm\n", met[month].d[day].rain);
+	Log("Rainfall = %f mm\n", met[month].d[day].prcp);
 
 	/*compute interception rate */
 	if (settings->spatial == 's')
@@ -38,7 +38,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	}
 
 
-	if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain > 0.0)
+	if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp > 0.0)
 	{
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
@@ -52,7 +52,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 			else
 			{
 				Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
-				s->value[RAIN_INTERCEPTED] = ((met[month].d[day].rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+				s->value[RAIN_INTERCEPTED] = ((met[month].d[day].prcp * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 				Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
 				//Log("intercepted water from dominant layer = %f mm \n", c->daily_c_int[c->top_layer]);
 				//fixme do the same thing for canopy transpiration!!!!
@@ -63,9 +63,9 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 
 					//fixme remove form here and use in soil water balance routine
 					/*control*/
-					if (met[month].d[day].rain > c->daily_c_int[c->top_layer])
+					if (met[month].d[day].prcp > c->daily_c_int[c->top_layer])
 					{
-						c->water_to_soil = (met[month].d[day].rain - c->daily_c_int[c->top_layer]);
+						c->water_to_soil = (met[month].d[day].prcp - c->daily_c_int[c->top_layer]);
 					}
 					else
 					{
@@ -175,7 +175,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 			Log("remaining rainfall on canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		}
 	}
-	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain > 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
+	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp > 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
 	{
 		/*compute potential  and actual evaporation for each layer for wet canopy*/
 		PotEvap = (sat / (sat + gamma)/ c->lh_vap)* s->value[NET_RAD_ABS] * 86400;
@@ -195,11 +195,11 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 		s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 		Log("Remaining water over the canopy = %f\n", s->value[RAIN_INTERCEPTED]);
-		c->water_to_soil = met[month].d[day].rain ;
+		c->water_to_soil = met[month].d[day].prcp ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 	/*if there's till a canopy wet from the day(s) before bit without daily rainfall*/
-	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].rain == 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
+	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp == 0.0 && s->value[RAIN_INTERCEPTED] > 0.0)
 	{
 		/*compute potential  and actual evaporation for each layer for wet canopy*/
 		PotEvap = (sat / (sat + gamma)/ c->lh_vap)* s->value[NET_RAD_ABS] * 86400;
@@ -219,7 +219,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		//test put CANOPY_WATER_STORED variable instead RAIN_INTERCEPTED
 		s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 		Log("Remaining water over the canopy = %f\n", s->value[RAIN_INTERCEPTED]);
-		c->water_to_soil = met[month].d[day].rain ;
+		c->water_to_soil = met[month].d[day].prcp ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 	else
@@ -229,7 +229,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPORATION] = 0;
 		Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 		c->daily_c_int[c->heights[height].z] = 0.0;
-		c->water_to_soil = met[month].d[day].rain ;
+		c->water_to_soil = met[month].d[day].prcp ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 
