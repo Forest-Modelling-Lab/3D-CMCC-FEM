@@ -35,7 +35,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 
 
-	Log("prova %f\n", met[month].d[day].prcp -
+	Log("prova %f\n", (c->daily_rain + c->daily_snow) -
 			(c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff)
 			- (c->daily_snow + c->daily_tot_c_water_stored + c->snow_melt) );
 
@@ -43,7 +43,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 
 
 	/*sum of sources (rain + snow)*/
-	water_in = met[month].d[day].prcp;
+	water_in = c->daily_rain + c->daily_snow;
 
 	/*sum of sinks*/
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
@@ -76,7 +76,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 			Log("old water balance = %f\n", c->old_water_balance);
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("DOY = %d\n", c->doy);
-			ERROR(c->water_balance, "water balance");
+			//ERROR(c->water_balance, "water balance");
 		}
 		else
 		{

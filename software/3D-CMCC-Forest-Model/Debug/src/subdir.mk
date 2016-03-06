@@ -20,6 +20,7 @@ C_SRCS += \
 ../src/canopy_transpiration.c \
 ../src/carbon_balance.c \
 ../src/check_balance.c \
+../src/check_prcp.c \
 ../src/common.c \
 ../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
@@ -47,7 +48,6 @@ C_SRCS += \
 ../src/phenology.c \
 ../src/photosynthesis.c \
 ../src/renovation.c \
-../src/snow.c \
 ../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
@@ -78,6 +78,7 @@ OBJS += \
 ./src/canopy_transpiration.o \
 ./src/carbon_balance.o \
 ./src/check_balance.o \
+./src/check_prcp.o \
 ./src/common.o \
 ./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
@@ -105,7 +106,6 @@ OBJS += \
 ./src/phenology.o \
 ./src/photosynthesis.o \
 ./src/renovation.o \
-./src/snow.o \
 ./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
@@ -136,6 +136,7 @@ C_DEPS += \
 ./src/canopy_transpiration.d \
 ./src/carbon_balance.d \
 ./src/check_balance.d \
+./src/check_prcp.d \
 ./src/common.d \
 ./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
@@ -163,7 +164,6 @@ C_DEPS += \
 ./src/phenology.d \
 ./src/photosynthesis.d \
 ./src/renovation.d \
-./src/snow.d \
 ./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \

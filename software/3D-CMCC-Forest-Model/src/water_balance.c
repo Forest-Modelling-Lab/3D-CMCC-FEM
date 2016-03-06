@@ -21,9 +21,9 @@ void water_downward_balance (CELL *c, const MET_DATA *const met, int month, int 
 	/* rain vs. snow, and canopy interception */
 	if (met[month].d[day].tavg > 0.0)             /* rain */
 	{
-		if (c->daily_tot_c_int < met[month].d[day].prcp)
+		if (c->daily_tot_c_int < c->daily_rain)
 		{
-			c->precip_soil = met[month].d[day].prcp - c->daily_tot_c_int;
+			c->precip_soil = c->daily_rain - c->daily_tot_c_int;
 		}
 		else                          /* canopy limits interception */
 		{
@@ -32,6 +32,6 @@ void water_downward_balance (CELL *c, const MET_DATA *const met, int month, int 
 	}
 	else                              /* snow */
 	{
-		c->precip_soil = met[month].d[day].prcp;     /* no interception */
+		c->precip_soil = c->daily_rain;     /* no interception */
 	}
 }

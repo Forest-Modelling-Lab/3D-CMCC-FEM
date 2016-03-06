@@ -139,7 +139,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*compute latent heat values*/
 		Get_latent_heat (&m->cells[cell], met, month, day);
 		/*check and compute for snow*/
-		Get_snow_met_data (&m->cells[cell], met, month, day);
+		Check_prcp (&m->cells[cell], met, month, day);
 
 		/*sort by heights*/
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);

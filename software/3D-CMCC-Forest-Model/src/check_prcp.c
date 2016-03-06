@@ -11,7 +11,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_snow_met_data (CELL *c, MET_DATA *met, int month, int day)
+void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 {
 
 	//FOLLOWING BIOME APPROACH

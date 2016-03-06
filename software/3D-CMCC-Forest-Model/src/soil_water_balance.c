@@ -20,7 +20,7 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 
 	/*update balance*/
 	if(met[month].d[day].tavg>0.0)
-	c->available_soil_water += met[month].d[day].prcp -
+	c->available_soil_water += c->daily_rain -
 			(c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff
 					+ c->snow_melt);
 	else

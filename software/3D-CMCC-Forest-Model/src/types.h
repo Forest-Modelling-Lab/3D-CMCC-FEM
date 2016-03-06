@@ -1333,7 +1333,7 @@ void Get_a_Power_Function (AGE *, SPECIES *);
 
 void Get_air_pressure (CELL *c);
 
-void Get_snow_met_data (CELL *c, MET_DATA *, int, int);
+void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Get_latent_heat (CELL *c, MET_DATA *, int, int);
 
 

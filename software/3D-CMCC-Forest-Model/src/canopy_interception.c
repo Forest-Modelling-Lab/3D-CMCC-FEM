@@ -44,12 +44,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
 
 	/*no snow but rain and canopy dry*/
-	if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp > 0.0 && s->value[CANOPY_WATER_STORED] == 0.0)
+	if (met[month].d[day].tavg > 0.0 && c->daily_rain > 0.0 && s->value[CANOPY_WATER_STORED] == 0.0)
 	{
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
-			s->value[RAIN_INTERCEPTED] = ((met[month].d[day].prcp * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+			s->value[RAIN_INTERCEPTED] = ((c->daily_rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 			Log("Canopy interception = %f mm/m^2\n", s->value[RAIN_INTERCEPTED]);
 			//fixme do the same thing for canopy transpiration!!!!
 			/*last height dominant class processed*/
@@ -59,9 +59,9 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 
 				//fixme remove form here and use in soil water balance routine
 				/*control*/
-				if (met[month].d[day].prcp > c->daily_c_int[c->top_layer])
+				if (c->daily_rain > c->daily_c_int[c->top_layer])
 				{
-					c->water_to_soil = (met[month].d[day].prcp - c->daily_c_int[c->top_layer]);
+					c->water_to_soil = (c->daily_rain - c->daily_c_int[c->top_layer]);
 				}
 				else
 				{
@@ -169,10 +169,10 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		}
 	}
 	/*no snow but rain but no interception occurs cause canopy still wet since the day(s) before*/
-	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp > 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
+	else if (met[month].d[day].tavg > 0.0 && c->daily_rain > 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
 	{
 		/*check if canopy is not completely wet*/
-		s->value[RAIN_INTERCEPTED] = ((met[month].d[day].prcp * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+		s->value[RAIN_INTERCEPTED] = ((c->daily_rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 
 		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
 		if(PotEvap < 0)
@@ -190,11 +190,11 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 		Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 
-		c->water_to_soil = met[month].d[day].prcp ;
+		c->water_to_soil = c->daily_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 	/*no snow no rain but canopy wet from the day(s) before*/
-	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp == 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
+	else if (met[month].d[day].tavg > 0.0 && c->daily_rain == 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
 	{
 
 		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
@@ -213,7 +213,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 		Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 
-		c->water_to_soil = met[month].d[day].prcp ;
+		c->water_to_soil = c->daily_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 	else
@@ -223,7 +223,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPORATION] = 0;
 		Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 		c->daily_c_int[c->heights[height].z] = 0.0;
-		c->water_to_soil = met[month].d[day].prcp ;
+		c->water_to_soil = c->daily_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
 
