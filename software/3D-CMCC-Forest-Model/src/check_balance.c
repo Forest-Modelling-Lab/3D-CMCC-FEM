@@ -21,7 +21,6 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 
 	Log("\n*********CHECK WATER BALANCE************\n");
 
-
 	//FIXME OVERALL FUNCTION DOESN'T WORK!!
 
 	/* DAILY CHECK ON WATER BALANCE */
@@ -36,6 +35,13 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 
 
+	Log("prova %f\n", met[month].d[day].prcp -
+			(c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff)
+			- (c->daily_snow + c->daily_tot_c_water_stored + c->snow_melt) );
+
+
+
+
 	/*sum of sources (rain + snow)*/
 	water_in = met[month].d[day].prcp;
 
@@ -43,7 +49,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water + c->snow_pack + c->daily_tot_c_water_stored;
+	water_stored = c->available_soil_water + c->daily_snow + c->daily_tot_c_water_stored;
 
 
 	/* check balance */
@@ -52,8 +58,6 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		Log("NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
-		c->old_water_balance = c->water_balance;
-
 		Log("water in = %f\n", water_in);
 		Log("water out = %f\n", water_out);
 		Log("water stored = %f\n", water_stored);
@@ -72,8 +76,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 			Log("old water balance = %f\n", c->old_water_balance);
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("DOY = %d\n", c->doy);
-			c->old_water_balance = c->water_balance;
-			//ERROR(c->water_balance, "water balance");
+			ERROR(c->water_balance, "water balance");
 		}
 		else
 		{
@@ -85,7 +88,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 			Log("old water balance = %f\n", c->old_water_balance);
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("asw = %f\n", c->available_soil_water);
-			c->old_water_balance = c->water_balance;
 		}
 	}
+	c->old_water_balance = c->water_balance;
 }

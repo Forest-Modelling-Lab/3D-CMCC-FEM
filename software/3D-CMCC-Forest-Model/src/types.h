@@ -1015,6 +1015,7 @@ typedef struct {
 	int saplings_counter;
 
 	/*water block*/
+	double daily_rain;
 	double rain_intercepted;;
 	double water_to_soil;
 	double water_to_atmosphere;
