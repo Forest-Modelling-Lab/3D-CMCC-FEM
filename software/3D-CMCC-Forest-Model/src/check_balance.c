@@ -35,7 +35,7 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water;
+	water_stored = c->available_soil_water + c->snow_pack + c->daily_tot_c_water_stored;
 
 
 	/* check balance */

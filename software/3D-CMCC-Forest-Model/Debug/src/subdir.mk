@@ -47,6 +47,7 @@ C_SRCS += \
 ../src/phenology.c \
 ../src/photosynthesis.c \
 ../src/renovation.c \
+../src/snow.c \
 ../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
@@ -104,6 +105,7 @@ OBJS += \
 ./src/phenology.o \
 ./src/photosynthesis.o \
 ./src/renovation.o \
+./src/snow.o \
 ./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
@@ -161,6 +163,7 @@ C_DEPS += \
 ./src/phenology.d \
 ./src/photosynthesis.d \
 ./src/renovation.d \
+./src/snow.d \
 ./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
