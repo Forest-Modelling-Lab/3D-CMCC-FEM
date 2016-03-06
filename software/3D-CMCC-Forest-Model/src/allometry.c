@@ -116,3 +116,28 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 
 
 }
+
+void Get_a_Power_Function (AGE *a, SPECIES *s)
+{
+	//todo ask to Laura references
+	//this function computes the STEMCONST values using the values reported from ...... ask to Laura
+
+	double MassDensity;
+
+	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+	Log("-Mass Density = %f\n", MassDensity);
+
+	if (s->value[AVDBH] < 9)
+	{
+		s->value[STEMCONST] = pow (e, -1.6381);
+	}
+	else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
+	{
+		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+	}
+	else
+	{
+		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+	}
+	Log("-Stem const = %f\n", s->value[STEMCONST]);
+}

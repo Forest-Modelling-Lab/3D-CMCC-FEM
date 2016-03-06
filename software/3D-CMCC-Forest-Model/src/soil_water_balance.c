@@ -20,13 +20,14 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 
 	/*update balance*/
 
-	c->available_soil_water += (met[month].d[day].prcp + c->water_to_soil /*+ c->snow_melt*/ - c->water_to_atmosphere);
+	c->available_soil_water += met[month].d[day].prcp -
+	(c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff);
 	Log("ASW = %f mm\n", c->available_soil_water);
 	Log("snow pack = %f mm\n", c->snow_pack);
 
 	/*check*/
 	//fixme
-	if (fabs(c->available_soil_water - (c->max_asw * site->min_frac_maxasw)) < 1e-4)
+	if (fabs(c->available_soil_water < (c->max_asw * site->min_frac_maxasw)))
 	{
 		//FIXME THE AMOUNT ADDED TO THE SOIL SHOULD BE INLCUDED IN THE BALANCE
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");

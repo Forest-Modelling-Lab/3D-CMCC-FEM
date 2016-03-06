@@ -265,7 +265,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Check_water_balance (&m->cells[cell], met, month, day);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 											Get_W_fluxes (&m->cells[cell]);
 										}
@@ -281,7 +280,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_soil_evaporation (&m->cells[cell], met, month, day);
-											Check_water_balance (&m->cells[cell], met, month, day);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 											Get_W_fluxes (&m->cells[cell]);
 										}
@@ -348,7 +346,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Check_water_balance (&m->cells[cell], met, month, day);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 											Get_W_fluxes (&m->cells[cell]);
 										}
@@ -363,7 +360,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_soil_evaporation (&m->cells[cell], met, month, day);
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Check_water_balance (&m->cells[cell], met, month, day);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
 											Get_W_fluxes (&m->cells[cell]);
 										}
@@ -425,7 +421,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_soil_evaporation (&m->cells[cell], met, month, day);
 										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 										Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Check_water_balance (&m->cells[cell], met, month, day);
 										Get_soil_water_balance (&m->cells[cell], met, month, day);
 										Get_W_fluxes (&m->cells[cell]);
 									}
@@ -441,7 +436,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Get_soil_evaporation (&m->cells[cell], met, month, day);
 										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 										Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Check_water_balance (&m->cells[cell], met, month, day);
 										Get_soil_water_balance (&m->cells[cell], met, month, day);
 										Get_W_fluxes (&m->cells[cell]);
 									}
@@ -807,7 +801,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("****************END OF HEIGHT CLASS***************\n");
 
 		/*CHECK FOR BALANCE CLOSURE*/
-		//Check_water_balance (&m->cells[cell], met, month, day);
+		Check_water_balance (&m->cells[cell], met, month, day);
 
 
 

@@ -171,7 +171,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	/*no snow but rain but no interception occurs cause canopy still wet since the day(s) before*/
 	else if (met[month].d[day].tavg > 0.0 && met[month].d[day].prcp > 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
 	{
-		s->value[RAIN_INTERCEPTED] = 0.0;
+		/*check if canopy is not completely wet*/
+		s->value[RAIN_INTERCEPTED] = ((met[month].d[day].prcp * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 
 		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
 		if(PotEvap < 0)
