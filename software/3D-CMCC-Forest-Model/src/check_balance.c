@@ -13,7 +13,7 @@
 #include "constants.h"
 
 
-void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
+void Check_water_balance (CELL *c)
 {
 	double water_in;
 	double water_out;
@@ -39,13 +39,13 @@ void Check_water_balance (CELL *c, const MET_DATA *const met, int month, int day
 
 	//test have a look of state update
 	/*sum of sources (rain + snow)*/
-	water_in = c->daily_rain + c->daily_snow + c->snow_pack;
+	water_in = c->daily_rain + c->snow_melt;
 
 	/*sum of sinks*/
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water + c->daily_tot_c_water_stored;
+	water_stored = c->available_soil_water + c->daily_tot_c_water_stored + c->snow_pack;
 
 
 	/* check balance */

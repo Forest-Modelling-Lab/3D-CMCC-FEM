@@ -13,7 +13,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_latent_heat_flux (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
+void Get_latent_heat_flux (CELL *c)
 {
 	Log("\nGET_LATENT_HEAT_ROUTINE\n");
 

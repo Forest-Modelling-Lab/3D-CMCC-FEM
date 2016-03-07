@@ -249,46 +249,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 											met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
 											m->cells[cell].heights[height].ages[age].species[species].management, height);
-									/*canopy evapo-transpiration block*/
+
+									/*canopy water fluxes block*/
 									Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Get_canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 									Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 
-									/*check for symmetric water competition*/
-									/*if symmetric competition for water*/
-									Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
-									if (settings->symmetric_water_competition == 'y')
-									{
-										if( height == 0)
-										{
-											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-											Get_soil_evaporation (&m->cells[cell], met, month, day);
-											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_soil_water_balance (&m->cells[cell], met, month, day);
-											Get_W_fluxes (&m->cells[cell]);
-										}
-									}
-									/*asymmetric water competition*/
-									else
-									{
-										/*removing at each loop an amount of water transpired by each class*/
-										if( height == 0)
-										{
-											/*compute canopy evapotranspiration water balance in the last loop of height*/
-											//fixme in this case non water competition is simulated
-											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_soil_evaporation (&m->cells[cell], met, month, day);
-											Get_soil_water_balance (&m->cells[cell], met, month, day);
-											Get_W_fluxes (&m->cells[cell]);
-										}
-									}
-									if (height == 0)
-									{
-										Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
-									}
-
+									/*canopy carbon fluxes block*/
 									Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
 									Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -330,46 +297,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 									Get_light (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
-									/*canopy evapo-transpiration block*/
-									//Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									//Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-									//Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-
-									/*check for symmetric water competition*/
-									/*if symmetric competition for water*/
-									Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
-									if (settings->symmetric_water_competition == 'y')
-									{
-										if( height == 0)
-										{
-											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-											Get_soil_evaporation (&m->cells[cell], met, month, day);
-											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_soil_water_balance (&m->cells[cell], met, month, day);
-											Get_W_fluxes (&m->cells[cell]);
-										}
-									}
-									/*asymmetric water competition*/
-									else
-									{
-										/*removing at each loop an amount of water transpired by each class*/
-										if( height == 0)
-										{
-											/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-											Get_soil_evaporation (&m->cells[cell], met, month, day);
-											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-											Get_soil_water_balance (&m->cells[cell], met, month, day);
-											Get_W_fluxes (&m->cells[cell]);
-										}
-;
-									}
-
-									if (height == 0)
-									{
-										Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
-									}
 
 									Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -405,47 +332,12 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
 										m->cells[cell].heights[height].ages[age].species[species].management, height);
 
-								/*canopy evapo-transpiration block*/
+								/*canopy water fluxes block*/
 								Get_canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Get_canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
 								Get_canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
-								Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								/*check for symmetric water competition*/
-								/*if symmetric competition for water*/
-								Log("Symmetric water competition ? = %c\n", settings->symmetric_water_competition);
-								if (settings->symmetric_water_competition == 'y')
-								{
-									if( height == 0)
-									{
-										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-										Get_soil_evaporation (&m->cells[cell], met, month, day);
-										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Get_soil_water_balance (&m->cells[cell], met, month, day);
-										Get_W_fluxes (&m->cells[cell]);
-									}
-								}
-								/*asymmetric water competition*/
-								else
-								{
-									/*removing at each loop an amount of water transpired by each class*/
-									if( height == 0)
-									{
-										/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-										//fixme in this case non water competition is simulated
-										Get_soil_evaporation (&m->cells[cell], met, month, day);
-										Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-										Get_soil_water_balance (&m->cells[cell], met, month, day);
-										Get_W_fluxes (&m->cells[cell]);
-									}
-								}
 
-								if (height == 0)
-								{
-									Get_soil_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day);
-								}
-
+								/*canopy carbon fluxes block*/
 								Get_phosynthesis_monteith (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Get_nitrogen (&m->cells[cell].heights[height].ages[age].species[species]);
 								Get_maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -509,29 +401,29 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//Log("Dominant Canopy Cover = %f\n", m->cells[cell].canopy_cover_dominant);
 
 								/*
-                           if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
-                           {
-						   Get_Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
-						   Seeds_Number_LE = Get_Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-						   Log("Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
+							   if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
+							   {
+							   Get_Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
+							   Seeds_Number_LE = Get_Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+							   Log("Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
 
-                            //Seeds_Number_T = Get_Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-                            //Log("Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
+								//Seeds_Number_T = Get_Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+								//Log("Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
 
-                            //FRUIT ESTABLISHMENT
-                            if (Yearly_Rain > m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN])
-                            {
-                            //decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-                            m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Get_Establishment_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], Light_Absorb_for_establishment);
-                            Log("Saplings Number from LPJ = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP]);
-                            }
-                            else
-                            {
-                            Log("Yearly Rain = %f\n", Yearly_Rain);
-                            Log("Minimum Rain for Establishment = %f\n", m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN]);
-                            Log("NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
-                            }
-                            }
+								//FRUIT ESTABLISHMENT
+								if (Yearly_Rain > m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN])
+								{
+								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
+								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Get_Establishment_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], Light_Absorb_for_establishment);
+								Log("Saplings Number from LPJ = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP]);
+								}
+								else
+								{
+								Log("Yearly Rain = %f\n", Yearly_Rain);
+								Log("Minimum Rain for Establishment = %f\n", m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN]);
+								Log("NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
+								}
+								}
 								 */
 
 
@@ -800,11 +692,20 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
 
+		/*compute soil respiration*/
+		Get_soil_respiration (&m->cells[cell]);
+		/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
+		Get_soil_evaporation (&m->cells[cell], met, month, day);
+		/*compute evapotranspiration*/
+		Get_evapotranspiration (&m->cells[cell]);
+		/*compute latent heat flux*/
+		Get_latent_heat_flux (&m->cells[cell]);
+		/*compute soil water balance*/
+		Get_soil_water_balance (&m->cells[cell], met, month, day);
+		/*compute water fluxes*/
+		Get_W_fluxes (&m->cells[cell]);
 		/*CHECK FOR BALANCE CLOSURE*/
-		Check_water_balance (&m->cells[cell], met, month, day);
-
-
-
+		Check_water_balance (&m->cells[cell]);
 
 		m->cells[cell].daily_tot_litterfall = 0;
 		m->cells[cell].dominant_veg_counter = 0;

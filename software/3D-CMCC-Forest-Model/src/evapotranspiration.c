@@ -18,7 +18,7 @@
 
 
 
-extern void Get_evapotranspiration (SPECIES *const s, CELL *c, const MET_DATA *const met, int month, int day, int height)
+extern void Get_evapotranspiration (CELL *c)
 {
 
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");

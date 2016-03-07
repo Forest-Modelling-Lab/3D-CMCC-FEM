@@ -402,24 +402,6 @@ enum {
 
 
 	//VEG_PERIOD,
-
-
-	//LIGHT
-	/*par*/
-	PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
-	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
-	APAR_SUN,
-	APAR_SHADE,
-
-	/*net rad*/
-	NET_RAD,                        //Daily Net Solar Radiation in W/m2
-	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
-	NET_RAD_ABS_SUN,
-	NET_RAD_ABS_SHADE,
-
-
-
-
 	//STRUCTURE
 	AVDBH,                          //Average DBH in cm
 	CROWN_DIAMETER,                 //Crown Diameter in m
@@ -435,9 +417,7 @@ enum {
 	MCA,                            //Maximum Crown Area in m^2
 	MCD,                            //Maximum Crown Diameter in m^2
 	DBHDC_EFF,                      //Crown Diameter from DBH in function of density
-
 	PREVIOUS_DBHDC_EFF,				//previous dbhdc value
-
 	CROWN_DIAMETER_DBHDC_FUNC,      //Crown Diameter in m from DBHDC function
 	CROWN_AREA_DBHDC_FUNC,          //Crown Area in m^2 from DBHDC function
 	CANOPY_COVER_DBHDC_FUNC,        //Canopy Cover % of pixel covered from DBHDC function
@@ -449,9 +429,60 @@ enum {
 	HD_EFF,                         //Effective HD ratio to give to Crowding Competition Function
 	CC_TREE_HEIGHT,                 //Tree Height in m from Crowding Competition Function in m
 	CC_AVDBH,                       //Average DBH from Crowding Competition Function in cm
+	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
+	DENSITY,                        //Numbers of Tree per m^2
+	TREE_AREA,                      //Average Available Area per Tree in m^2
+	SAPWOOD_AREA,
+	SAPWOOD_PERC,
+	HEARTWOOD_AREA,
+	HEARTWOOD_PERC,
+	BASAL_AREA,                     //Basal Area (m^2/area tree)
+	STAND_BASAL_AREA,
+	CROWN_HEIGHT,                   //Crown Height (m)
+	PREVIOUS_VOLUME,				//previous year volume for CAI
+	VOLUME,                   //Stem Volume
+	TOTAL_VOLUME,
+	TREE_VOLUME,                    //Single Tree Volume (m^3/area)
+	IND_STEM_VOLUME,                //Individual Stem Volume for Crowding Competition Function
+	CAI,                            //Current Annual Increment
+	IND_CAI,                        //Individual Current Annual Increment
+	MAI,                            //Mean Annual Volume Increment (m^3/area year)
+	STEMCONST,
+
+	/*radiation*/
+	PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
+	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
+	APAR_SUN,
+	APAR_SHADE,
+	APARU,                          //"Utilisable PAR" 'mol/m^2'
+	NET_RAD,                        //Daily Net Solar Radiation in W/m2
+	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
+	NET_RAD_ABS_SUN,
+	NET_RAD_ABS_SHADE,
+
+	/*modifiers variables*/
 	F_VPD,                          //VPD modifier
 	//ALTER_VPD,                    //Alternative VPD
 	//ALTER_F_VPD,                  //Alternative VPD Modifier
+	F_LIGHT,                        //LIGHT modifier
+	F_AGE,                          //AGE modifier
+	F_NUTR,                         //SOIL NUTRIENT Modifer
+	F_T,                            //TEMPERATURE modifier
+	F_FROST,                        //FROST modifer
+	F_SW,                           //SOIL WATER modifier
+	F_DROUGHT,                      //SOIL DROUGHT modifier (see Duursma et al., 2008)
+	F_PSI,							//SOIL WATER modifier using PSI, see Biome
+	F_CO2,							//CO2 fert effect
+	F_EVAPO,                        //Evapotranspiration modifier 5 oct 2012
+	PHYS_MOD,                       //Physmod
+	YEARLY_PHYS_MOD,
+	AVERAGE_PHYS_MOD,
+	AVERAGE_F_VPD,
+	AVERAGE_F_NUTR,
+	AVERAGE_F_T,
+	AVERAGE_F_SW,
+
+	/*water variables*/
 	CANOPY_CONDUCTANCE,
 	MONTH_TRANSP,
 	DAILY_TRANSP,
@@ -462,36 +493,10 @@ enum {
 	CANOPY_EVAPOTRANSPIRATION,
 	CANOPY_EVAPORATION,             //Evaporation (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
-	NUMBER_DENSITY,                 //Numbers of Tree per SIZECELL
-	DENSITY,                        //Numbers of Tree per m^2
-	TREE_AREA,                      //Average Available Area per Tree in m^2
-	F_LIGHT,                        //LIGHT modifier
-	F_AGE,                          //AGE modifier
-	F_NUTR,                         //SOIL NUTRIENT Modifer
-	F_T,                            //TEMPERATURE modifier
-	F_FROST,                        //FROST modifer
-	F_SW,                           //SOIL WATER modifier
-	F_DROUGHT,                      //SOIL DROUGHT modifier (see Duursma et al., 2008)
-	F_PSI,							//SOIL WATER modifier using PSI, see Biome
-	F_CO2,							//CO2 fert effect
 	ASW,                            //available soil water per mm/ha
-	PHYS_MOD,                       //Physmod
-	YEARLY_PHYS_MOD,
-	AVERAGE_PHYS_MOD,
-	APARU,                          //"Utilisable PAR" 'mol/m^2'
+	WUE,                            //Water use efficiency (gDM/mm)
 
-
-	F_EVAPO,                        //Evapotranspiration modifier 5 oct 2012
-
-
-
-	//average yearly modifiers
-	AVERAGE_F_VPD,
-	AVERAGE_F_NUTR,
-	AVERAGE_F_T,
-	AVERAGE_F_SW,
-
-	//LAI
+	/*LAI*/
 	LAI,                            //LAI (m^2/m2)
 	LAI_SUN,
 	LAI_SHADE,
@@ -501,10 +506,7 @@ enum {
 	SLA_SUN,
 	SLA_SHADE,
 
-	MAX_BIOMASS_BUDBURST,
-	MAX_BIOMASS_FOLIAGE,
-	MAX_BIOMASS_FINE_ROOTS,
-
+	/*carbon variables*/
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
 	GPP_t_DM,                       //Gross Primary Production  tDM/ha
@@ -515,12 +517,31 @@ enum {
 	STAND_GPP_t_C,                  //Monthly Stand GPP in tonnes of C
 	STAND_YEARLY_GPP_g_C,           //Yearly Stand GPP in grams of C
 	POINT_GPP_g_C,
-
 	NPP,                            //Net Primary Production  tDM/area
 	NPP_g_C, 						//Net Primary Production in grams of C
+	C_FLUX,
+	//MONTHLY CUMULATIVE VARIABLES
+	MONTHLY_NPP,                     //Yearly NPP
+	MONTHLY_NPP_UDC,
+	MONTHLY_NPP_FL,
+	IND_MONTHLY_NPP,                 //Individual NPP
+	CUM_MONTHLY_NPP,                 //Sum of all years NPP (included simulation years)
+	MONTHLY_GPP_G_C,                 //Yearly GPP
+	MONTHLY_POINT_GPP_G_C,
+	//YEARLY CUMULATIVE VARIABLES
+	YEARLY_NPP,                     //Yearly NPP
+	YEARLY_NPP_UDC,
+	YEARLY_NPP_FL,
+	IND_YEARLY_NPP,                 //Individual NPP
+	CUM_YEARLY_NPP,                 //Sum of all years NPP (included simulation years)
+	YEARLY_GPP_G_C,                 //Yearly GPP
+	YEARLY_POINT_GPP_G_C,
+	YEARLY_RAIN,                    //Yearly Rain
 
-	WUE,                            //Water use efficiency (gDM/mm)
-
+	/*biomass variables*/
+	MAX_BIOMASS_BUDBURST,
+	MAX_BIOMASS_FOLIAGE,
+	MAX_BIOMASS_FINE_ROOTS,
 	WS_sap,
 	WS_heart,
 	WRC_sap,
@@ -540,7 +561,6 @@ enum {
 	DEL_Y_WCR,
 	DEL_Y_WRES,                      //Yearly cumulated reserve biomass increment
 	DEL_Y_BB,
-
 	//CTEM CARBON
 	//carbon biomass monthly increment
 	DEL_ROOTS_TOT,
@@ -560,7 +580,6 @@ enum {
 	BIOMASS_FOLIAGE,
 	RESERVE,
 	BIOMASS_FRUIT,   //only for coniferous
-
 	BIOMASS_LIVE_WOOD,
 	BIOMASS_DEAD_WOOD,
 	BIOMASS_STEM_LIVE_WOOD,
@@ -569,16 +588,50 @@ enum {
 	BIOMASS_COARSE_ROOT_DEAD_WOOD,
 	BIOMASS_STEM_BRANCH_LIVE_WOOD,
 	BIOMASS_STEM_BRANCH_DEAD_WOOD,
-
-
 	//converted biome fraction
 	FINE_ROOT_LEAF_FRAC,
 	STEM_LEAF_FRAC,
 	COARSE_ROOT_STEM_FRAC,
 	LIVE_TOTAL_WOOD_FRAC,
+	CLASS_AGB,
+	CLASS_BGB,
+	//FINE/COARSE RATIO
+	FR_CR,                       //FINE-COARSE ROOT RATIO
+	DEL_ROOTS_FINE_CTEM,
+	DEL_ROOTS_COARSE_CTEM,
+	DAILY_DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
+	MONTHLY_DEL_LITTER,
+	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
+	FRACBB,
+	AV_STEM_MASS,                   //Average Stem Mass           Kg/tree
+	AV_ROOT_MASS,                   //Average Root Mass           Kg/tree
+	AV_FINE_ROOT_MASS,
+	AV_COARSE_ROOT_MASS,
+	AV_RESERVE_BIOMASS,
+	AV_BB_BIOMASS,
+	//MONTHLY PHENOLOGY
+	FRAC_MONTH_FOLIAGE_REMOVE,
+	MONTH_FRAC_FOLIAGE_REMOVE,
+	//DAILY PHENOLOGY
+	FRAC_DAY_FOLIAGE_REMOVE,	//number of leaf fall days/tot number of veg days
+	FOLIAGE_REDUCTION_RATE,
+	DAILY_FOLIAGE_BIOMASS_TO_REMOVE,
+	//Marconi
+	DAILY_FINEROOT_BIOMASS_TO_REMOVE,
+	DAILY_LEAVES_BIOMASS_TO_REMOVE,
+	OLD_BIOMASS_ROOTS_COARSE,
+	OLD_BIOMASS_ROOTS_FINE,
+	OLD_BIOMASS_STEM,
+	OLD_BIOMASS_BRANCH,
+	OLD_BIOMASS_LEAVES,
+
+	OLD_BIOMASS_STEM_LIVE_WOOD,
+	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
+	OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD,
+	FIRST_DAY_LAI,
 
 
-	//Maintenance respiration
+	/*Maintenance respiration*/
 	DAILY_LEAF_MAINT_RESP,
 	NIGHTLY_LEAF_MAINT_RESP,
 	TOT_DAY_LEAF_MAINT_RESP,
@@ -590,7 +643,7 @@ enum {
 	LIVE_COARSE_ROOT_MAINT_RESP,
 	TOTAL_MAINT_RESP,
 
-	//Growth respiration
+	/*Growth respiration*/
 	LEAF_GROWTH_RESP,
 	FINE_ROOT_GROWTH_RESP,
 	STEM_GROWTH_RESP,
@@ -606,9 +659,6 @@ enum {
 	BRANCH_AUT_RESP,
 	TOTAL_AUT_RESP,
 
-
-	C_FLUX,
-
 	//NITROGEN
 	LEAF_NITROGEN,
 	FINE_ROOT_NITROGEN,
@@ -616,94 +666,12 @@ enum {
 	STEM_NITROGEN,
 	BRANCH_NITROGEN,
 
-
-	CLASS_AGB,
-	CLASS_BGB,
-
-
-	SAPWOOD_AREA,
-	SAPWOOD_PERC,
-	HEARTWOOD_AREA,
-	HEARTWOOD_PERC,
-
-	//FINE/COARSE RATIO
-	FR_CR,                       //FINE-COARSE ROOT RATIO
-	DEL_ROOTS_FINE_CTEM,
-	DEL_ROOTS_COARSE_CTEM,
-
-
 	//3PG MORTALITY FUNCTION
 	WS_MAX,                         //Maximum stem mass per tree at 1000 trees/ha
-
-
 	//LPJ MORTALITY FUNCTION
 	AGEMORT,                        //Age probability mortality function
 
-
-	DAILY_DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
-	MONTHLY_DEL_LITTER,
-	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
-
-	FRACBB,
-
-	AV_STEM_MASS,                   //Average Stem Mass           Kg/tree
-	AV_ROOT_MASS,                   //Average Root Mass           Kg/tree
-	AV_FINE_ROOT_MASS,
-	AV_COARSE_ROOT_MASS,
-	AV_RESERVE_BIOMASS,
-	AV_BB_BIOMASS,
-
-	BASAL_AREA,                     //Basal Area (m^2/area tree)
-	STAND_BASAL_AREA,
-	CROWN_HEIGHT,                   //Crown Height (m)
-	PREVIOUS_VOLUME,				//previous year volume for CAI
-	VOLUME,                   //Stem Volume
-	TOTAL_VOLUME,
-	TREE_VOLUME,                    //Single Tree Volume (m^3/area)
-	IND_STEM_VOLUME,                //Individual Stem Volume for Crowding Competition Function
-	CAI,                            //Current Annual Increment
-	IND_CAI,                        //Individual Current Annual Increment
-	MAI,                            //Mean Annual Volume Increment (m^3/area year)
-
-	STEMCONST,
-
-	//MONTHLY CUMULATIVE VARIABLES
-	MONTHLY_NPP,                     //Yearly NPP
-	MONTHLY_NPP_UDC,
-	MONTHLY_NPP_FL,
-	IND_MONTHLY_NPP,                 //Individual NPP
-	CUM_MONTHLY_NPP,                 //Sum of all years NPP (included simulation years)
-	MONTHLY_GPP_G_C,                 //Yearly GPP
-	MONTHLY_POINT_GPP_G_C,
-
-	//YEARLY CUMULATIVE VARIABLES
-	YEARLY_NPP,                     //Yearly NPP
-	YEARLY_NPP_UDC,
-	YEARLY_NPP_FL,
-	IND_YEARLY_NPP,                 //Individual NPP
-	CUM_YEARLY_NPP,                 //Sum of all years NPP (included simulation years)
-	YEARLY_GPP_G_C,                 //Yearly GPP
-	YEARLY_POINT_GPP_G_C,
-	YEARLY_RAIN,                    //Yearly Rain
-
-	//MONTHLY PHENOLOGY
-	FRAC_MONTH_FOLIAGE_REMOVE,
-	MONTH_FRAC_FOLIAGE_REMOVE,
-
-	//DAILY PHENOLOGY
-	FRAC_DAY_FOLIAGE_REMOVE,	//number of leaf fall days/tot number of veg days
-
-
 	THERMIC_SUM_FOR_END_VEG, //thermic sum at the end of leaf fall period
-
-
-	FOLIAGE_REDUCTION_RATE,
-
-	DAILY_FOLIAGE_BIOMASS_TO_REMOVE,
-
-
-
-
 
 	//SAPLINGS
 
@@ -713,23 +681,7 @@ enum {
 	WF_SAPLING,
 	WR_SAPLING,
 	WS_SAPLING,
-
-
 	PERC,
-	//Marconi
-	DAILY_FINEROOT_BIOMASS_TO_REMOVE,
-	DAILY_LEAVES_BIOMASS_TO_REMOVE,
-	OLD_BIOMASS_ROOTS_COARSE,
-	OLD_BIOMASS_ROOTS_FINE,
-	OLD_BIOMASS_STEM,
-	OLD_BIOMASS_BRANCH,
-	OLD_BIOMASS_LEAVES,
-
-	OLD_BIOMASS_STEM_LIVE_WOOD,
-	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
-	OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD,
-	FIRST_DAY_LAI,
-
 
 	VALUES
 };
@@ -943,11 +895,47 @@ typedef struct {
 	int heights_count; //number of heights
 	int soils_count;
 
+	/*general variables*/
 	int yearday;
 	double daylength_3PG;
 	int cum_dayOfyear;
 	double abscission_daylength;
+	double av_yearly_daylength;
+	double gcorr;
+	double air_pressure;
+	double lh_vap, lh_vap_soil, lh_sub, lh_fus;
+	int north; //northern hemisphere north = 0, south hemisphere south = 1
+	double thermic_sum;
 
+	/*forest structure variables*/
+	int height_class_in_layer_dominant_counter;
+	int height_class_in_layer_dominated_counter;
+	int height_class_in_layer_subdominated_counter;
+	int dominant_veg_counter;
+	int dominated_veg_counter;
+	int subdominated_veg_counter;
+	int Veg_Counter;
+	int tree_number_dominant;
+	int tree_number_dominated;
+	int tree_number_subdominated;
+	double density_dominant;
+	double density_dominated;
+	double density_subdominated;
+	double canopy_cover_dominant;
+	double canopy_cover_dominated;
+	double canopy_cover_subdominated;
+	double layer_cover_dominant;
+	double layer_cover_dominated;
+	double layer_cover_subdominated;
+	int annual_layer_number;
+	int monthly_layer_number;
+	int daily_layer_number;
+	int top_layer;
+	int saplings_counter;
+	double gapcover[3];
+
+
+	/*radiation variable*/
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
 	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
@@ -964,39 +952,26 @@ typedef struct {
 	double par_for_subdominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_soil;
 	double ppfd;
+	double av_yearly_par_soil;
+
+	/*carbon variables*/
 	double gpp;     //in g of C m^2
 	double npp;     //in tonnes of DM per hectare
 	double av_gpp;
 	double av_npp;
-	int height_class_in_layer_dominant_counter;
-	int height_class_in_layer_dominated_counter;
-	int height_class_in_layer_subdominated_counter;
-	int dominant_veg_counter;
-	int dominated_veg_counter;
-	int subdominated_veg_counter;
-	int Veg_Counter;
+	double stand_agb;
+	double stand_bgb;
+	double litter;
+	double soil_respiration;
+	double aut_respiration; //autotrophic respiration
+	double het_respiration; //heterotrophic respiration
+	double ter;  //total ecosystem respiration
+
+	/*water variables*/
 	double soil_evaporation;
 	double previous_available_soil_water;
 	double available_soil_water;
 	double water_balance, old_water_balance;
-	int tree_number_dominant;
-	int tree_number_dominated;
-	int tree_number_subdominated;
-	double density_dominant;
-	double density_dominated;
-	double density_subdominated;
-	double canopy_cover_dominant;
-	double canopy_cover_dominated;
-	double canopy_cover_subdominated;
-	double layer_cover_dominant;
-	double layer_cover_dominated;
-	double layer_cover_subdominated;
-	double stand_agb;
-	double stand_bgb;
-
-	double litter;
-	double av_yearly_daylength;
-	double av_yearly_par_soil;
 	double total_yearly_evapotransipration;
 	double total_yearly_soil_evaporation;
 	double soil_moist_ratio;
@@ -1008,13 +983,6 @@ typedef struct {
 	double soil_b; //soil moisture parameter
 	double soilw_sat; //(kgH2O/m2) soilwater at saturation
 	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
-	int annual_layer_number;
-	int monthly_layer_number;
-	int daily_layer_number;
-	int top_layer;
-	int saplings_counter;
-
-	/*water block*/
 	double daily_rain;
 	double rain_intercepted;;
 	double water_to_soil;
@@ -1027,17 +995,7 @@ typedef struct {
 	double snow_melt; //melted snow
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
-	double gcorr;
-	double air_pressure;
-	double lh_vap, lh_vap_soil, lh_sub, lh_fus; //latent heat in KJ/kg
-	int north; //northern hemisphere north = 0, south hemisphere south = 1
-
-	double gapcover[3];
-
-	double soil_respiration;
-
-
-
+	double runoff;
 
 	//cumulative variables layer related used in annual-monthly-daily Log
 	double daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
@@ -1050,32 +1008,20 @@ typedef struct {
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
-
 	double daily_Nee, daily_Reco, monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
-
-
 	double daily_tot_latent_heat_flux;
-
-
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	double daily_aut_resp[3], daily_tot_aut_resp,daily_tot_het_resp, monthly_aut_resp[3], monthly_tot_aut_resp,monthly_tot_het_resp, annual_aut_resp[3], annual_tot_aut_resp, annual_tot_het_resp;
 	double daily_aut_resp_tDM[3];
 	double daily_c_flux[3], daily_tot_c_flux, monthly_c_flux[3], monthly_tot_c_flux, annual_c_flux[3], annual_tot_c_flux;
 	double daily_c_flux_tDM[3];
-
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
-
 	double daily_cc[3], monthly_cc[3], annual_cc[3];
-
-
 	double daily_lai[3];
 	double annual_peak_lai[10];
-
 	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
-
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
-
 	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
 	double daily_delta_wts[3], daily_wts[3], monthly_delta_wts[3], monthly_wts[3], annual_delta_wts[3], annual_wts[3];
 	double daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
@@ -1083,28 +1029,11 @@ typedef struct {
 	double daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
 	double daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
 	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
-
-
 	double daily_tot_litterfall, monthly_tot_litterfall, annual_tot_litterfall;
-
-
 	double annual_dbh[3];
 
 
 	//int dead_tree;
-
-	double thermic_sum;
-
-	double aut_respiration; //autotrophic respiration
-	double het_respiration; //heterotrophic respiration
-	double ter;  //total ecosystem respiration
-
-	double runoff;
-
-
-
-
-	double daily_w_res;
 
 	//RothC related cell level variables
 	double year_soil_het_resp;
@@ -1124,7 +1053,6 @@ typedef struct {
 	//dC
 	double leafLittering, fineRootLittering,stemBrancLittering,stemLittering, coarseRootLittering;
 	double leaflitN, fineRootlitN,stemBranclitN,stemlitN, coarseRootlitN;
-
 	double day_C_mine;
 	double day_N_mine;
 	double day_N_assim;
@@ -1137,7 +1065,6 @@ typedef struct {
 	//double wFreezedoc;
 	double End_SON;
 	double runoff_N;
-
 	double previousSoilT;
 	double soilSurfaceT;
 	double temp_avet;
@@ -1274,7 +1201,7 @@ void Get_maintenance_respiration (SPECIES *const, CELL *const, const MET_DATA *c
 void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
 void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
-void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
+void Get_soil_respiration (CELL *);
 void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
 void Get_W_fluxes (CELL *const c);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
@@ -1343,8 +1270,8 @@ void Get_biome_fraction (SPECIES *);
 void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 void Get_canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
-void Get_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int);
-void Get_latent_heat_flux (SPECIES *const, CELL *, const MET_DATA *const, int, int, int);
+void Get_evapotranspiration (CELL *);
+void Get_latent_heat_flux (CELL *);
 
 //sergio's functions
 int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
@@ -1364,7 +1291,7 @@ void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
-void Check_water_balance (CELL *, const MET_DATA *const, int, int);
+void Check_water_balance (CELL *);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

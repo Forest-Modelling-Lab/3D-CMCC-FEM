@@ -12,7 +12,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_soil_respiration (SPECIES *s, CELL *const c, const MET_DATA *const met, int month, int day)
+void Get_soil_respiration (CELL *const c)
 {
 	//c->soil_respiration
 
