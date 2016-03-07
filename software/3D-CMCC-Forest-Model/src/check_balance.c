@@ -72,7 +72,7 @@ void Check_water_balance (CELL *c)
 			Log("old water balance = %f\n", c->old_water_balance);
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("DOY = %d\n", c->doy);
-			//ERROR(c->water_balance, "water balance");
+			ERROR(c->water_balance, "water balance");
 		}
 		else
 		{
