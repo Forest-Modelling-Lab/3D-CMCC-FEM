@@ -1431,10 +1431,13 @@ void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
-
 void Check_water_balance (CELL *, const MET_DATA *const, int, int);
 void Daily_water_state_update (CELL *const);
 void Daily_carbon_state_update (CELL *const);
+void Make_zero_flux_struct (CELL *const);
+void Snow (CELL *, const MET_DATA *const);
+
+
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

@@ -136,10 +136,13 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, vpd, month, day);
+		/*make zero flux*/
+		Make_zero_flux_struct (&m->cells[cell]);
 		/*compute latent heat values*/
 		Get_latent_heat (&m->cells[cell], met, month, day);
 		/*check and compute for snow*/
 		Check_prcp (&m->cells[cell], met, month, day);
+		//Snow_melt_sublimation (&m->cells[cell], met, month, day);
 
 		/*sort by heights*/
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
