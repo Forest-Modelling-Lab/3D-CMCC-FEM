@@ -8,7 +8,6 @@ C_SRCS += \
 ../src/C-deciduous-partitioning-allocation.c \
 ../src/C-evergreen-partitioning-allocation.c \
 ../src/C-fruit-partitioning-allocation.c \
-../src/Fluxes.c \
 ../src/G-Function.c \
 ../src/N-stock.c \
 ../src/allometry.c \
@@ -28,6 +27,7 @@ C_SRCS += \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
+../src/fluxes.c \
 ../src/initialization_biomass_data.c \
 ../src/initialization_site_data.c \
 ../src/io.c \
@@ -53,6 +53,7 @@ C_SRCS += \
 ../src/soil_respiration.c \
 ../src/soil_water_balance.c \
 ../src/soilmodel.c \
+../src/state_var_update.c \
 ../src/structure.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
@@ -66,7 +67,6 @@ OBJS += \
 ./src/C-deciduous-partitioning-allocation.o \
 ./src/C-evergreen-partitioning-allocation.o \
 ./src/C-fruit-partitioning-allocation.o \
-./src/Fluxes.o \
 ./src/G-Function.o \
 ./src/N-stock.o \
 ./src/allometry.o \
@@ -86,6 +86,7 @@ OBJS += \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
+./src/fluxes.o \
 ./src/initialization_biomass_data.o \
 ./src/initialization_site_data.o \
 ./src/io.o \
@@ -111,6 +112,7 @@ OBJS += \
 ./src/soil_respiration.o \
 ./src/soil_water_balance.o \
 ./src/soilmodel.o \
+./src/state_var_update.o \
 ./src/structure.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
@@ -124,7 +126,6 @@ C_DEPS += \
 ./src/C-deciduous-partitioning-allocation.d \
 ./src/C-evergreen-partitioning-allocation.d \
 ./src/C-fruit-partitioning-allocation.d \
-./src/Fluxes.d \
 ./src/G-Function.d \
 ./src/N-stock.d \
 ./src/allometry.d \
@@ -144,6 +145,7 @@ C_DEPS += \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
+./src/fluxes.d \
 ./src/initialization_biomass_data.d \
 ./src/initialization_site_data.d \
 ./src/io.d \
@@ -169,6 +171,7 @@ C_DEPS += \
 ./src/soil_respiration.d \
 ./src/soil_water_balance.d \
 ./src/soilmodel.d \
+./src/state_var_update.d \
 ./src/structure.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \

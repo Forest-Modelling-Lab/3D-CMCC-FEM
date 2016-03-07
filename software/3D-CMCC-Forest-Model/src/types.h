@@ -907,7 +907,7 @@ typedef struct {
 	double CEC;
 } SOIL;
 
-
+/*
 //fixme
 typedef struct {
 	int class;
@@ -928,15 +928,37 @@ typedef struct {
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
 } CLASS;
-
-typedef struct {
-
+*/
 //test
-} WATER_FLUX;
-//test
-typedef struct {
-
-} CARBON_FLUXES;
+//typedef struct {
+//	double prcp_to_canopy;   /* (mmkgH2O/m2/d) interception on canopy */
+//	double prcp_to_soil;     /* (mmkgH2O/m2/d) precip entering soilwater pool */
+//	double prcp_to_snow;     /* (mmkgH2O/m2/d) snowpack accumulation */
+//	double canopy_evap;      /* (mmkgH2O/m2/d) evaporation from canopy */
+//	double canopy_to_soil;   /* (mmkgH2O/m2/d) canopy drip and stemflow */
+//	double snow_subl;        /* (mmkgH2O/m2/d) sublimation from snowpack */
+//	double snow_to_soil;     /* (mmkgH2O/m2/d) melt from snowpack */
+//	double soil_evap;        /* (mmkgH2O/m2/d) evaporation from soil */
+//	double soil_trans;       /* (mmkgH2O/m2/d) transpiration */
+//	double soil_runoff;      /* (mmkgH2O/m2/d) outflow */
+//	double evapotransp;      /* (mmkgH20/m2/d) evapotranspiration */
+//} WATER_FLUX;
+////test
+//typedef struct {
+//    double asw;              /* (mmkgH2O/m2) available water stored in soil */
+//    double snowpack;         /* (mmkgH2O/m2) water stored in snowpack */
+//    double canopy_water;     /* (mmkgH2O/m2) water stored on canopy */
+//    double prcp_sum_src;     /* (mmkgH2O/m2) SUM of precipitation */
+//    double runoff_snk;       /* (mmkgH2O/m2) SUM of outflow */
+//    double soilevap_snk;     /* (mmkgH2O/m2) SUM of soil water evaporation */
+//    double snowsubl_snk;     /* (mmkgH2O/m2) SUM of snow water sublimation */
+//    double canopyevap_snk;   /* (mmkgH2O/m2) SUM of canopy water evaporation */
+//    double trans_snk;        /* (mmkgH2O/m2) SUM of transpiration */
+//} WATER_STATE;
+////test
+//typedef struct {
+//
+//} CARBON_FLUXES;
 
 /* */
 //all variables related to the cell (stand) are here defined
@@ -948,17 +970,18 @@ typedef struct {
 
 	HEIGHT *heights;
 	SOIL *soils;
-	CLASS *class;
-	WATER_FLUX *wflux;
-	CARBON_FLUXES *cflux;
+	//CLASS *class;
+	//WATER_STATE *wstate;
+	//WATER_FLUX *wflux;
+	//CARBON_FLUXES *cflux;
 	int heights_count; //number of heights
 	int soils_count;
 
 	int yearday;
-	double daylength_3PG;
 	int cum_dayOfyear;
 	double abscission_daylength;
 
+	double daylength_3PG;
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
 	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
@@ -1036,19 +1059,51 @@ typedef struct {
 	double daily_snow;
 	double snow_pack;  //amount of snow in Kg H2O
 	double snow_melt; //melted snow
-	double snow_subl; //sublimated snow
-	double snow_to_soil;
+	//double snow_subl; //sublimated snow
+	//double snow_to_soil;
 	double gcorr;
 	double air_pressure;
 	double lh_vap, lh_vap_soil, lh_sub, lh_fus; //latent heat in KJ/kg
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
 
+
+	//test
+	/*water fulxes variables*/
+	double prcp_to_canopy;   /* (mmkgH2O/m2/d) interception on canopy */
+	double prcp_to_soil;     /* (mmkgH2O/m2/d) precip entering soilwater pool */
+	double prcp_to_snow;     /* (mmkgH2O/m2/d) snowpack accumulation */
+	double canopy_evap;      /* (mmkgH2O/m2/d) evaporation from canopy */
+	double canopy_to_soil;   /* (mmkgH2O/m2/d) canopy drip and stemflow */
+	double snow_subl;        /* (mmkgH2O/m2/d) sublimation from snowpack */
+	double snow_to_soil;     /* (mmkgH2O/m2/d) melt from snowpack */
+	double soil_evap;        /* (mmkgH2O/m2/d) evaporation from soil */
+	double soil_trans;       /* (mmkgH2O/m2/d) transpiration */
+	double soil_runoff;      /* (mmkgH2O/m2/d) outflow */
+	double evapotransp;      /* (mmkgH20/m2/d) evapotranspiration */
+
+	/*water storage variables*/
+    double asw;          /* (kgH2O/m2) water stored in soil */
+    double snowpack;          /* (kgH2O/m2) water stored in snowpack */
+    double canopy_water;        /* (kgH2O/m2) water stored on canopy */
+    double prcp_sum_src;       /* (kgH2O/m2) SUM of precipitation */
+    double runoff_snk;    /* (kgH2O/m2) SUM of outflow */
+    double soilevap_snk;   /* (kgH2O/m2) SUM of soil water evaporation */
+    double snowsubl_snk;   /* (kgH2O/m2) SUM of snow water sublimation */
+    double canopyevap_snk; /* (kgH2O/m2) SUM of canopy water evaporation */
+    double trans_snk;      /* (kgH2O/m2) SUM of transpiration */
+
+
+
+
+
+
+
+
+
+
 	double gapcover[3];
 
 	double soil_respiration;
-
-
-
 
 	//cumulative variables layer related used in annual-monthly-daily Log
 	double daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
@@ -1376,6 +1431,8 @@ int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
 void Check_water_balance (CELL *, const MET_DATA *const, int, int);
+void Daily_water_state_update (CELL *const);
+void Daily_carbon_state_update (CELL *const);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
