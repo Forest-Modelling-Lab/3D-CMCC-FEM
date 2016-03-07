@@ -7,23 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Make_zero_flux_struct (CELL *const c)
-{
-	Log("\nMAKE_ZERO_FLUX_STRUCT\n\n");
-	c->prcp_to_canopy= 0.0;
-	c->prcp_to_soil= 0.0;
-	c->prcp_to_snow= 0.0;
-	c->canopy_evap= 0.0;
-	c->canopy_trans= 0.0;
-	c->canopy_to_canopy= 0.0;
-	c->canopy_to_soil= 0.0;
-	c->snow_subl= 0.0;
-	c->snow_to_soil= 0.0;
-	c->soil_evap= 0.0;
-	c->soil_trans= 0.0;
-	c->soil_runoff= 0.0;
-	c->evapotransp= 0.0;
-}
+
 
 void Reset_annual_cumulative_variables (CELL *const c, const int count)
 {

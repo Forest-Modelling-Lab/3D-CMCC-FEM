@@ -46,7 +46,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	/*no snow but rain and canopy dry*/
 	if (met[month].d[day].tavg > 0.0 && c->daily_rain > 0.0 && s->value[CANOPY_WATER_STORED] == 0.0)
 	{
-		//cae of two layers
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
@@ -63,15 +62,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				if (c->daily_rain > c->daily_c_int[c->top_layer])
 				{
 					c->water_to_soil = (c->daily_rain - c->daily_c_int[c->top_layer]);
-					c->canopy_to_canopy = (c->daily_rain - c->daily_c_int[c->top_layer]);
 				}
 				else
 				{
-					c->water_to_soil = 0.0;
-					c->canopy_to_canopy = 0.0;
+					c->water_to_soil = 0;
 				}
-				Log("water flux to canopy or soil = %f mm\n", c->water_to_soil);
-				Log("water flux to canopy or soil = %f mm\n", c->canopy_to_canopy);
+				Log("water to soil = %f mm\n", c->water_to_soil);
 			}
 
 		}
@@ -89,20 +85,17 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				/*dominated layer*/
 				if (c->heights[height].z == c->top_layer-1)
 				{
-					//fixme see if use water to soil or canopy to canopy vars
 					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
-					s->value[RAIN_INTERCEPTED] = ((c->canopy_to_canopy * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 					Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
 
 					c->daily_c_int[c->top_layer-1] += s->value[RAIN_INTERCEPTED];
 					//Log("intercepted water from dominated layer = %f mm \n", c->daily_c_int[c->top_layer-1]);
 
+
 					/*last height dominated class processed*/
 					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 					{
 						/*control*/
-						//fixme see which use
-						//old
 						if (c->water_to_soil > c->daily_c_int[c->top_layer-1])
 						{
 							c->water_to_soil -= c->daily_c_int[c->top_layer-1];
@@ -111,15 +104,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 						{
 							c->water_to_soil = 0;
 						}
-						//new
-						if (c->canopy_to_canopy > c->daily_c_int[c->top_layer-1])
-						{
-							c->canopy_to_soil -= c->daily_c_int[c->top_layer-1];
-						}
-						else
-						{
-							c->canopy_to_soil = 0;
-						}
 						Log("water to soil = %f mm\n", c->water_to_soil);
 					}
 				}
@@ -127,7 +111,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 				else
 				{
 					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
-					s->value[RAIN_INTERCEPTED] = ((c->canopy_to_canopy * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 					Log("Canopy interception = %f mm\n", s->value[RAIN_INTERCEPTED]);
 
 					c->daily_c_int[c->top_layer-2] += s->value[RAIN_INTERCEPTED];
@@ -136,8 +119,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 					{
 						/*control*/
-						//fixme see which use
-						//old
 						if (c->water_to_soil > c->daily_c_int[c->top_layer-2])
 						{
 							c->water_to_soil -= c->daily_c_int[c->top_layer-2];
@@ -145,15 +126,6 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 						else
 						{
 							c->water_to_soil = 0;
-						}
-						//new
-						if (c->canopy_to_canopy > c->daily_c_int[c->top_layer-2])
-						{
-							c->canopy_to_soil -= c->daily_c_int[c->top_layer-2];
-						}
-						else
-						{
-							c->canopy_to_soil = 0;
 						}
 						Log("water to soil = %f mm\n", c->water_to_soil);
 					}
@@ -183,9 +155,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		{
 			Log("RAIN INTERCEPTED EXCEEDS CANOPY EVAPORATION\n");
 			s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
-			c->canopy_water += s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 			Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-			Log("canopy_water = %f\n", c->canopy_water);
 			//s->value[RAIN_INTERCEPTED] -= s->value[CANOPY_EVAPORATION];
 			//Log("remaining rainfall on canopy = %f\n", s->value[RAIN_INTERCEPTED]);
 		}
@@ -218,14 +188,10 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 
 		s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
-		c->canopy_water += s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 		Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-		Log("canopy_water = %f\n", c->canopy_water);
 
-		c->water_to_soil = c->daily_rain;
-		c->prcp_to_soil = c->daily_rain;
+		c->water_to_soil = c->daily_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
-		Log("water prcp_to_soil soil = %f mm\n", c->prcp_to_soil);
 	}
 	/*no snow no rain but canopy wet from the day(s) before*/
 	else if (met[month].d[day].tavg > 0.0 && c->daily_rain == 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
@@ -245,14 +211,10 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 
 		s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
-		c->canopy_water += s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 		Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-		Log("canopy_water = %f\n", c->canopy_water);
 
 		c->water_to_soil = c->daily_rain ;
-		c->prcp_to_soil = c->daily_rain;
 		Log("water to soil = %f mm\n", c->water_to_soil);
-		Log("water prcp_to_soil soil = %f mm\n", c->prcp_to_soil);
 	}
 	else
 	{
@@ -261,9 +223,8 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPORATION] = 0;
 		Log("Canopy_evaporation for dominant layer = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
 		c->daily_c_int[c->heights[height].z] = 0.0;
-		c->prcp_to_soil = c->daily_rain;
+		c->water_to_soil = c->daily_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
-		Log("water prcp_to_soil soil = %f mm\n", c->prcp_to_soil);
 	}
 
 	c->daily_tot_c_water_stored+= s->value[CANOPY_WATER_STORED];
@@ -274,4 +235,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	/*compute a energy balance evaporation for rain intercepted from canopy and then evaporated*/
 	c->daily_tot_c_int_watt = c->daily_tot_c_int * c->lh_vap / 86400;
 	Log("Latent heat canopy interception/evaporation = %f W/m^2\n", c->daily_tot_c_int_watt);
+
+
+
 }

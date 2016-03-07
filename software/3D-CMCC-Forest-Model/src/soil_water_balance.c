@@ -31,7 +31,6 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 
 	/*check*/
 	//fixme
-	//old
 	if (fabs(c->available_soil_water < (c->max_asw * site->min_frac_maxasw)))
 	{
 		//FIXME THE AMOUNT ADDED TO THE SOIL SHOULD BE INLCUDED IN THE BALANCE
@@ -54,31 +53,6 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 		c->runoff = 0.0;
 		Log("Runoff = %f\n", c->runoff);
 	}
-	//new
-	if (fabs(c->asw < (c->max_asw * site->min_frac_maxasw)))
-	{
-		//FIXME THE AMOUNT ADDED TO THE SOIL SHOULD BE INLCUDED IN THE BALANCE
-		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		c->asw = c->max_asw * site->min_frac_maxasw;
-		Log("ASW = %f\n", c->asw);
-		c->soil_runoff = 0.0;
-	}
-
-	if ( c->asw > c->max_asw)
-	{
-		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-		c->asw = c->max_asw;
-		Log("Available soil water = %f\n", c->asw);
-		c->soil_runoff = c->asw -c->max_asw;
-		Log("soil_runoff = %f\n", c->runoff);
-	}
-	else
-	{
-		c->soil_runoff = 0.0;
-		Log("soil_runoff = %f\n", c->soil_runoff);
-	}
 	c->swc= (c->available_soil_water * 100)/c->max_asw;
 	Log("SWC = %g(%vol)\n", c->swc);
-
-
 }
