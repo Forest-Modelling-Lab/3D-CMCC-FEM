@@ -907,7 +907,7 @@ typedef struct {
 	double CEC;
 } SOIL;
 
-/*
+
 //fixme
 typedef struct {
 	int class;
@@ -928,7 +928,7 @@ typedef struct {
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 
 } CLASS;
-*/
+
 //test
 //typedef struct {
 //	double prcp_to_canopy;   /* (mmkgH2O/m2/d) interception on canopy */
@@ -970,7 +970,7 @@ typedef struct {
 
 	HEIGHT *heights;
 	SOIL *soils;
-	//CLASS *class;
+	CLASS *class;
 	//WATER_STATE *wstate;
 	//WATER_FLUX *wflux;
 	//CARBON_FLUXES *cflux;
@@ -1069,11 +1069,13 @@ typedef struct {
 
 	//test
 	/*water fulxes variables*/
-	double prcp_to_canopy;   /* (mmkgH2O/m2/d) interception on canopy */
-	double prcp_to_soil;     /* (mmkgH2O/m2/d) precip entering soilwater pool */
-	double prcp_to_snow;     /* (mmkgH2O/m2/d) snowpack accumulation */
+	double prcp_to_canopy;   /* (mmkgH2O/m2/d) rain to canopy */
+	double prcp_to_soil;     /* (mmkgH2O/m2/d) rain to soil */
+	double prcp_to_snow;     /* (mmkgH2O/m2/d) snow to soil*/
 	double canopy_evap;      /* (mmkgH2O/m2/d) evaporation from canopy */
-	double canopy_to_soil;   /* (mmkgH2O/m2/d) canopy drip and stemflow */
+	double canopy_trans;     /* (mmkgH2O/m2/d) transpiration from canopy */
+	double canopy_to_canopy; /* (mmkgH2O/m2/d) evaporation from canopy */
+	double canopy_to_soil;   /* (mmkgH2O/m2/d) canopy drip and stemflow from overstorey*/
 	double snow_subl;        /* (mmkgH2O/m2/d) sublimation from snowpack */
 	double snow_to_soil;     /* (mmkgH2O/m2/d) melt from snowpack */
 	double soil_evap;        /* (mmkgH2O/m2/d) evaporation from soil */

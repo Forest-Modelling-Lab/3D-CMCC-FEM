@@ -361,8 +361,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 											Get_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_latent_heat_flux (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 											Get_soil_water_balance (&m->cells[cell], met, month, day);
-											//test
-											Daily_water_state_update (&m->cells[cell]);
 											Get_W_fluxes (&m->cells[cell]);
 										}
 ;
@@ -802,6 +800,9 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
 
+		//test
+		/*water state updates*/
+		Daily_water_state_update (&m->cells[cell]);
 		/*CHECK FOR BALANCE CLOSURE*/
 		Check_water_balance (&m->cells[cell], met, month, day);
 

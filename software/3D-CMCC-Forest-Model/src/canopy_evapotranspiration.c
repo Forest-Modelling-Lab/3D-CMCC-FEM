@@ -22,66 +22,89 @@ extern void Get_canopy_evapotranspiration (SPECIES *const s,  CELL *const c, con
 
 	/*it computes canopy evaporation + canopy transpiration*/
 
-		if (settings->time == 'd')
+
+	/*dominant layer*/
+	if (c->heights[height].z == c->top_layer)
+	{
+		s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+		c->canopy_evap += s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+		Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+		Log("Canopy canopy_evap = %f mm\n", c->canopy_evap);
+		/*last height dominant class processed*/
+		if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 		{
-			/*dominant layer*/
-			if (c->heights[height].z == c->top_layer)
+			/*control*/
+			//fixme
+			//old
+			if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer])
 			{
-				s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
-				Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-				/*last height dominant class processed*/
-				if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
-				{
-					/*control*/
-					if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer])
-					{
-						Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-						c->daily_c_evapotransp[c->top_layer] = c->available_soil_water;
-					}
-				}
+				Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+				c->daily_c_evapotransp[c->top_layer] = c->available_soil_water;
 			}
-			/*dominated*/
-			else
+			//new
+			if (c->asw < c->canopy_evap)
 			{
-				/*dominated layer*/
-				if (c->heights[height].z == c->top_layer-1)
+				Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+				c->canopy_evap = c->asw;
+			}
+		}
+	}
+	/*dominated*/
+	else
+	{
+		/*dominated layer*/
+		if (c->heights[height].z == c->top_layer-1)
+		{
+			s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+			c->canopy_evap += s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+			Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+			Log("Canopy canopy_evap = %f mm\n", c->canopy_evap);
+			/*last height dominant class processed*/
+			if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
+			{
+				/*control*/
+				//fixme
+				//old
+				if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-1])
 				{
-					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
-					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-					/*last height dominant class processed*/
-					if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
-					{
-						/*control*/
-						if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-1])
-						{
-							Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-							c->daily_c_evapotransp[c->top_layer-1] = c->available_soil_water;
-						}
-					}
+					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+					c->daily_c_evapotransp[c->top_layer-1] = c->available_soil_water;
 				}
-				/*subdominated layer*/
-				else
+				//new
+				if (c->asw < c->canopy_evap)
 				{
-					s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
-					Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
-					/*last height dominant class processed*/
-					if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
-					{
-						/*control*/
-						if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-2])
-						{
-							Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-							c->daily_c_evapotransp[c->top_layer-2] = c->available_soil_water;
-						}
-					}
+					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+					c->canopy_evap = c->asw;
 				}
 			}
 		}
-		/*monthly*/
+		/*subdominated layer*/
 		else
 		{
-
+			s->value[CANOPY_EVAPOTRANSPIRATION] = s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+			c->canopy_evap += s->value[DAILY_TRANSP] + s->value[CANOPY_EVAPORATION];
+			Log("Canopy evapotranspiration = %f mm\n", s->value[CANOPY_EVAPOTRANSPIRATION]);
+			Log("Canopy canopy_evap = %f mm\n", c->canopy_evap);
+			/*last height dominant class processed*/
+			if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
+			{
+				/*control*/
+				//fixme
+				//old
+				if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-2])
+				{
+					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+					c->daily_c_evapotransp[c->top_layer-2] = c->available_soil_water;
+				}
+				//new
+				if (c->asw < c->canopy_evap)
+				{
+					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+					c->canopy_evap = c->asw;
+				}
+			}
 		}
+	}
 
 	i = c->heights[height].z;
 

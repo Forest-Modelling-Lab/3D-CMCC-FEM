@@ -51,7 +51,7 @@ void Daily_water_state_update (CELL *const c)
 
 	/* the following special case prevents evaporation under very
 	dry conditions from causing a negative soilwater content */
-	if (c->available_soil_water < 0.0)        /* negative soilwater */
+	if (c->asw < 0.0)        /* negative soilwater */
 	{
 		/* add back the evaporation and transpiration fluxes, and
 		set these fluxes to 0.0 */
@@ -63,9 +63,9 @@ void Daily_water_state_update (CELL *const c)
 		c->soil_trans = 0.0;
 
 		/* test again for negative soilwater...should never be true */
-		if (c->available_soil_water < 0.0)
+		if (c->asw < 0.0)
 		{
-			ERROR(c->available_soil_water, "AVAILABLE SOIL WATER");
+			ERROR(c->asw, "AVAILABLE SOIL WATER");
 		}
 	}
 }

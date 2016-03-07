@@ -72,6 +72,7 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 		}
 
 		c->soil_moist_ratio = c->available_soil_water / c->max_asw;
+		c->soil_moist_ratio = c->asw / c->max_asw;
 		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
@@ -80,12 +81,15 @@ extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month
 			cc = 1;
 		}
 		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
+		c->soil_evap = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
 		Log("Daily Soil Evaporation = %fmm/day \n", c->soil_evaporation );
+		Log("soil_evap = %f mm\n", c->soil_evap);
 	}
 	else
 	{
 		Log("\n");
-		c->soil_evaporation = 0;
+		c->soil_evaporation = 0.0;
+		c->soil_evap = 0.0;
 	}
 
 	c->total_yearly_soil_evaporation += c->soil_evaporation;

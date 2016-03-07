@@ -102,15 +102,25 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0))	* s->value[CANOPY_COVER_DBHDC];
 			Log("Canopy trasnpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
+			c->canopy_trans += s->value[DAILY_TRANSP];
 			Log("Canopy transpiration from dominant layer = %f mm \n", c->daily_c_transp[c->top_layer]);
+			Log("canopy_trans = %f mm \n", c->canopy_trans);
 			/*last height dominant class processed*/
 			if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 			{
 				/*control*/
+				//fixme
+				//old
 				if (c->available_soil_water < c->daily_c_transp[c->top_layer])
 				{
 					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 					c->daily_c_transp[c->top_layer] = c->available_soil_water;
+				}
+				//new
+				if (c->asw < c->canopy_trans)
+				{
+					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+					c->canopy_trans = c->asw;
 				}
 			}
 		}
@@ -123,15 +133,25 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
 				Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 				c->daily_c_transp[c->top_layer-1] += s->value[DAILY_TRANSP];
+				c->canopy_trans += s->value[DAILY_TRANSP];
 				Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-1]);
+				Log("canopy_trans = %f mm \n", c->canopy_trans);
 				/*last height dominated class processed*/
 				if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 				{
 					/*control*/
+					//fixme
+					//old
 					if (c->available_soil_water < c->daily_c_transp[c->top_layer-1])
 					{
 						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 						c->daily_c_transp[c->top_layer-1] = c->available_soil_water;
+					}
+					//new
+					if (c->asw < c->canopy_trans)
+					{
+						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+						c->canopy_trans = c->asw;
 					}
 				}
 			}
@@ -141,15 +161,25 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 				s->value[DAILY_TRANSP] = (PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC];
 				Log("Canopy trasnpiration = %f mm\n", s->value[DAILY_TRANSP]);
 				c->daily_c_transp[c->top_layer-2] += s->value[DAILY_TRANSP];
+				c->canopy_trans += s->value[DAILY_TRANSP];
 				Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-2]);
+				Log("canopy_trans = %f mm \n", c->canopy_trans);
 				/*last height subdominated class processed*/
 				if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 				{
 					/*control*/
+					//fixme
+					//old
 					if (c->available_soil_water < c->daily_c_transp[c->top_layer-2])
 					{
 						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 						c->daily_c_transp[c->top_layer-2] = c->available_soil_water;
+					}
+					//new
+					if (c->asw < c->canopy_trans)
+					{
+						Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
+						c->canopy_trans = c->asw;
 					}
 				}
 			}
@@ -168,6 +198,7 @@ extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const ME
 			s->value[DAILY_TRANSP] = 0.0;
 			Log("No Canopy transpiration = %f mm\n", s->value[DAILY_TRANSP]);
 			c->daily_c_transp[c->heights[height].z] = 0.0;
+			c->canopy_trans = 0.0;
 			Log("Transpirated water from layer %d = %f mm \n", c->heights[height].z, c->daily_c_transp[c->heights[height].z]);
 		}
 	}
