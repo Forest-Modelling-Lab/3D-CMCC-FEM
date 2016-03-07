@@ -929,6 +929,15 @@ typedef struct {
 
 } CLASS;
 
+typedef struct {
+
+//test
+} WATER_FLUX;
+//test
+typedef struct {
+
+} CARBON_FLUXES;
+
 /* */
 //all variables related to the cell (stand) are here defined
 typedef struct {
@@ -940,6 +949,8 @@ typedef struct {
 	HEIGHT *heights;
 	SOIL *soils;
 	CLASS *class;
+	WATER_FLUX *wflux;
+	CARBON_FLUXES *cflux;
 	int heights_count; //number of heights
 	int soils_count;
 
@@ -1157,11 +1168,11 @@ typedef struct {
 	YOS *years;
 } CELL;
 
-/* */
 typedef struct {
 	CELL *cells;
 	int cells_count;
 } MATRIX;
+
 
 typedef struct {
 	char **vars;
