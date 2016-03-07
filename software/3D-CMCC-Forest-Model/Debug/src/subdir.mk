@@ -7,8 +7,8 @@ C_SRCS += \
 ../src/C-assimilation.c \
 ../src/C-deciduous-partitioning-allocation.c \
 ../src/C-evergreen-partitioning-allocation.c \
-../src/C-fluxes.c \
 ../src/C-fruit-partitioning-allocation.c \
+../src/Fluxes.c \
 ../src/G-Function.c \
 ../src/N-stock.c \
 ../src/allometry.c \
@@ -18,6 +18,9 @@ C_SRCS += \
 ../src/canopy_evapotranspiration.c \
 ../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
+../src/carbon_balance.c \
+../src/check_balance.c \
+../src/check_prcp.c \
 ../src/common.c \
 ../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
@@ -55,14 +58,15 @@ C_SRCS += \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
 ../src/utility.c \
+../src/water_balance.c \
 ../src/wue.c 
 
 OBJS += \
 ./src/C-assimilation.o \
 ./src/C-deciduous-partitioning-allocation.o \
 ./src/C-evergreen-partitioning-allocation.o \
-./src/C-fluxes.o \
 ./src/C-fruit-partitioning-allocation.o \
+./src/Fluxes.o \
 ./src/G-Function.o \
 ./src/N-stock.o \
 ./src/allometry.o \
@@ -72,6 +76,9 @@ OBJS += \
 ./src/canopy_evapotranspiration.o \
 ./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
+./src/carbon_balance.o \
+./src/check_balance.o \
+./src/check_prcp.o \
 ./src/common.o \
 ./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
@@ -109,14 +116,15 @@ OBJS += \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
 ./src/utility.o \
+./src/water_balance.o \
 ./src/wue.o 
 
 C_DEPS += \
 ./src/C-assimilation.d \
 ./src/C-deciduous-partitioning-allocation.d \
 ./src/C-evergreen-partitioning-allocation.d \
-./src/C-fluxes.d \
 ./src/C-fruit-partitioning-allocation.d \
+./src/Fluxes.d \
 ./src/G-Function.d \
 ./src/N-stock.d \
 ./src/allometry.d \
@@ -126,6 +134,9 @@ C_DEPS += \
 ./src/canopy_evapotranspiration.d \
 ./src/canopy_interception.d \
 ./src/canopy_transpiration.d \
+./src/carbon_balance.d \
+./src/check_balance.d \
+./src/check_prcp.d \
 ./src/common.d \
 ./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
@@ -163,6 +174,7 @@ C_DEPS += \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \
 ./src/utility.d \
+./src/water_balance.d \
 ./src/wue.d 
 
 

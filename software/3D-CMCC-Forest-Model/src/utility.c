@@ -42,6 +42,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C] = 0;
 				c->heights[height].ages[age].species[species].value[NPP] = 0;
 				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0;
+				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_GPP_G_C]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_NPP]  = 0;
@@ -118,27 +119,4 @@ extern void Get_annual_average_values_met_data (CELL *c, double Yearly_Solar_Rad
 	//Log ("average Yearly Rain = %f MJ m^2 month\n",  );
 }
 
-void Get_a_Power_Function (AGE *a, SPECIES *s)
-{
-	//todo ask to Laura references
-	//this function computes the STEMCONST values using the values reported from ...... ask to Laura
 
-	double MassDensity;
-
-	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	Log("-Mass Density = %f\n", MassDensity);
-
-	if (s->value[AVDBH] < 9)
-	{
-		s->value[STEMCONST] = pow (e, -1.6381);
-	}
-	else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
-	{
-		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
-	}
-	else
-	{
-		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
-	}
-	Log("-Stem const = %f\n", s->value[STEMCONST]);
-}

@@ -68,7 +68,7 @@ typedef struct {
 	PREC vpd;
 	PREC rh_f;
 	PREC ts_f;
-	PREC rain;
+	PREC prcp;
 	PREC swc;
 	PREC ndvi_lai;
 	PREC daylength;
@@ -458,6 +458,7 @@ enum {
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	FRAC_DAYTIME_WET_CANOPY, //fraction of daytime that the canopy is wet
 	RAIN_INTERCEPTED,
+	CANOPY_WATER_STORED,            //residual of canopy water intercepted and not evaporated
 	CANOPY_EVAPOTRANSPIRATION,
 	CANOPY_EVAPORATION,             //Evaporation (mm)
 	MONTHLY_EVAPOTRANSPIRATION,     //for WUE
@@ -975,7 +976,9 @@ typedef struct {
 	int subdominated_veg_counter;
 	int Veg_Counter;
 	double soil_evaporation;
+	double previous_available_soil_water;
 	double available_soil_water;
+	double water_balance, old_water_balance;
 	int tree_number_dominant;
 	int tree_number_dominated;
 	int tree_number_subdominated;
@@ -988,9 +991,6 @@ typedef struct {
 	double layer_cover_dominant;
 	double layer_cover_dominated;
 	double layer_cover_subdominated;
-	double rain_intercepted;
-	double water_to_soil;
-	double water_to_atmosphere;
 	double stand_agb;
 	double stand_bgb;
 
@@ -1013,6 +1013,15 @@ typedef struct {
 	int daily_layer_number;
 	int top_layer;
 	int saplings_counter;
+
+	/*water block*/
+	double daily_rain;
+	double rain_intercepted;;
+	double water_to_soil;
+	double water_to_atmosphere;
+	double precip_sources;
+	double precip_canopy;
+	double precip_soil;
 	double daily_snow;
 	double snow_pack;  //amount of snow in Kg H2O
 	double snow_melt; //melted snow
@@ -1035,11 +1044,12 @@ typedef struct {
 	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double daily_c_int[3], daily_tot_c_int;
-	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
+	double daily_c_water_stored[3], daily_tot_c_water_stored;
 	double daily_soil_evaporation_watt;
 	double daily_c_transp[3], daily_tot_c_transp;
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
+	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
 
 	double daily_Nee, daily_Reco, monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
 
@@ -1266,6 +1276,7 @@ void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
 void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 void Get_soil_respiration (SPECIES *const, CELL *, const MET_DATA *const, int, int);
 void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
+void Get_W_fluxes (CELL *const c);
 void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
 void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
 void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
@@ -1294,6 +1305,8 @@ int Get_number_of_layers (CELL *);
 void Get_annual_numbers_of_layers (CELL *);
 void Get_daily_numbers_of_layers (CELL *);
 void Get_layer_cover_mortality (CELL *, int, int, int, double, int);
+void water_downward_balance (CELL *, const MET_DATA *const, int, int);
+void water_upward_balance (CELL *, const MET_DATA *const, int, int);
 void Get_soil_water_balance (CELL *const, const MET_DATA *const, int, int);
 void Get_annual_average_values_modifiers (SPECIES *);
 void Get_annual_average_values_met_data (CELL *, double, double, double, double);
@@ -1320,7 +1333,7 @@ void Get_a_Power_Function (AGE *, SPECIES *);
 
 void Get_air_pressure (CELL *c);
 
-void Get_snow_met_data (CELL *c, MET_DATA *, int, int);
+void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Get_latent_heat (CELL *c, MET_DATA *, int, int);
 
 
@@ -1345,11 +1358,13 @@ void soil_initialization(CELL *c);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
 void leaffall(SPECIES *, const MET_DATA *const, int*, int*, int );
-void get_vpsat(CELL * ,  int , int , int , YOS *, int);
+void get_vpsat(CELL *, int , int , int , YOS *, int);
 void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+
+void Check_water_balance (CELL *, const MET_DATA *const, int, int);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

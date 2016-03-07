@@ -13,26 +13,31 @@
 #include "constants.h"
 
 //fixme  maybe it can be moved to soil_model.c
-extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
+void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 {
-	Log("\n*********GET SOIL WATER BALACE************\n");
-	Log("ASW before computation = %f mm\n", c->available_soil_water);
-	Log("Rainfall = %f mm/m^2/day\n", met[month].d[day].rain);
-	Log("water to soil from rainfall less interception = %f mm/m^2/day\n", c->water_to_soil);
-	Log("snow_melt = %f mm/m^2/day\n", c->snow_melt);
-	Log("Water to atmosphere due to ET = %f mm/m^2/day\n", c->water_to_atmosphere);
 
+	Log("\nGET SOIL WATER BALACE\n");
 
-	/*compute balance*/
-	c->available_soil_water += (met[month].d[day].rain + c->water_to_soil + c->snow_melt - c->water_to_atmosphere);
-	Log("ASW after computation = %f\n", c->available_soil_water);
+	/*update balance*/
+	if(met[month].d[day].tavg>0.0)
+	c->available_soil_water += c->daily_rain -
+			(c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff
+					+ c->snow_melt);
+	else
+		c->available_soil_water -= (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff );
+
+	Log("ASW = %f mm\n", c->available_soil_water);
+	Log("snow pack = %f mm\n", c->snow_pack);
 
 	/*check*/
-	if ( c->available_soil_water < c->max_asw * site->min_frac_maxasw)
+	//fixme
+	if (fabs(c->available_soil_water < (c->max_asw * site->min_frac_maxasw)))
 	{
+		//FIXME THE AMOUNT ADDED TO THE SOIL SHOULD BE INLCUDED IN THE BALANCE
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
 		c->available_soil_water = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %f\n", c->available_soil_water);
+		c->runoff = 0.0;
 	}
 
 	if ( c->available_soil_water > c->max_asw)
@@ -48,21 +53,6 @@ extern void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int mont
 		c->runoff = 0.0;
 		Log("Runoff = %f\n", c->runoff);
 	}
-
-
-
-
-
-
-	c->daily_tot_w_flux = c->water_to_soil - (c->water_to_atmosphere - c->runoff);
-	Log("Daily_w_flux = %f \n", c->daily_tot_w_flux);
-
-	c->monthly_tot_w_flux += c->daily_tot_w_flux;
-	c->annual_tot_w_flux += c->daily_tot_w_flux;
-
-
 	c->swc= (c->available_soil_water * 100)/c->max_asw;
 	Log("SWC = %g(%vol)\n", c->swc);
-
-
 }
