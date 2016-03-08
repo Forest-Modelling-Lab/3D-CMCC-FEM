@@ -17,6 +17,8 @@ void Daily_water_state_update (CELL *const c)
 	/* daily update of the water state variables */
 	//Log("\nDAILY WATER UPDATE\n");
 
+
+
 	/* precipitation fluxes */
 	/*
 	c->canopy_water        += c->prcp_to_canopy;

@@ -102,10 +102,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("***************************************************\n");
 
 		//*************SITE CHARACTERISTIC******************
-
-		/*CUURENTLY NOT USED*/
-		Get_Abscission_DayLength (&m->cells[cell]);
-
 	}
 
 	for ( cell = 0; cell < m->cells_count; cell++)
@@ -136,6 +132,8 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, vpd, month, day);
+		/*reset daily variables*/
+		Reset_daily_variables(&m->cells[cell]);
 		/*compute latent heat values*/
 		Get_latent_heat (&m->cells[cell], met, month, day);
 		/*check and compute for snow*/

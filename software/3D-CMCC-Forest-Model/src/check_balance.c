@@ -37,9 +37,9 @@ void Check_water_balance (CELL *c)
 	Log("c->snow_pack = %f\n", c->snow_pack);
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 
-	//test have a look of state update
+	//test
 	/*sum of sources (rain + snow)*/
-	water_in = c->daily_rain + c->snow_melt;
+	water_in = c->daily_rain + c->snow_melt + c->daily_snow;
 
 	/*sum of sinks*/
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;

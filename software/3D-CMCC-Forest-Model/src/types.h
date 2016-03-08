@@ -1248,7 +1248,7 @@ void Get_WUE (SPECIES *);
 void Set_tree_period (SPECIES *, AGE *a, CELL *);
 void Get_daily_veg_counter (CELL *, SPECIES * , int);
 
-
+void Reset_daily_variables (CELL *const);
 void Reset_annual_cumulative_variables (CELL *const, const int);
 
 void Get_initialization_biomass_data (SPECIES *, HEIGHT *);

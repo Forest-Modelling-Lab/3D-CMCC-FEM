@@ -7,6 +7,17 @@
 #include "types.h"
 #include "constants.h"
 
+void Reset_daily_variables (CELL *const c)
+{
+	c->daily_rain = 0.0;
+	c->daily_snow = 0.0;
+	c->snow_melt = 0.0;
+	c->snow_subl = 0.0;
+	c->daily_tot_c_transp = 0.0;
+	c->daily_tot_c_int = 0.0;
+	c->soil_evaporation = 0.0;
+
+}
 
 
 void Reset_annual_cumulative_variables (CELL *const c, const int count)
