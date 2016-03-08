@@ -15,7 +15,7 @@
 
 
 
-extern void Get_renovation (CELL *c, HEIGHT *h, SPECIES *s)
+extern void Renovation (CELL *c, HEIGHT *h, SPECIES *s)
 {
 
 	//compute light availability for seeds of dominant layer

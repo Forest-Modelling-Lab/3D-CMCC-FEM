@@ -20,7 +20,7 @@ extern int sort_by_years(const void *a, const void *b)
 }
 
 
-extern void Get_biome_fraction (SPECIES * s)
+extern void Pool_fraction (SPECIES * s)
 {
 	/*using biome parameter recompute values to have fraction*/
 	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
@@ -122,7 +122,7 @@ void Abscission_DayLength ( CELL * c)
 	//Log("Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
-extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
+extern void Tree_period (SPECIES *s, AGE *a, CELL *c)
 {
 	/*Set Tree period*/
 	// 0 = adult tree

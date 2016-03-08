@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-extern void Get_peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int day, int height, int age)
+extern void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int month, int day, int height, int age)
 {
 	int i;
 	double max_leafc;

@@ -117,7 +117,7 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 
 }
 
-void Get_a_Power_Function (AGE *a, SPECIES *s)
+void Allometry_Power_Function (AGE *a, SPECIES *s)
 {
 	//todo ask to Laura references
 	//this function computes the STEMCONST values using the values reported from ...... ask to Laura

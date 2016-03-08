@@ -12,7 +12,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_initialization_site_data (CELL *c)
+void Initialization_site_data (CELL *c)
 {
 	double vwc_fc; //Soil Field Capacity Volumetric Water Content in m3/m3
 

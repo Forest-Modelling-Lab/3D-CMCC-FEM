@@ -18,7 +18,7 @@
 
 
 
-extern void Get_evapotranspiration (CELL *c)
+extern void Evapotranspiration (CELL *c)
 {
 
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");

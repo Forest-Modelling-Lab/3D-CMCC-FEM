@@ -166,7 +166,7 @@ void soil_logClose(void)
 	if ( soil_file_log )	fclose(soil_file_log);
 }
 
-extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
+extern void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 {
 
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
@@ -191,7 +191,7 @@ extern void Get_EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 }
 
 
-extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
+extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
 {
 	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
 	static double avg_ar[3], avg_ar_tot;
@@ -709,7 +709,7 @@ extern void Get_EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 	}
 }
 
-extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
+extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
 {
 	static int previous_layer_number;
 
@@ -945,7 +945,7 @@ extern void Get_EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos
 }
 
 
-extern void Get_EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
+extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
 {
 
 	static int previous_layer_number;

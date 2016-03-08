@@ -10,7 +10,7 @@
 #include "constants.h"
 
 
-extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species, double layer_cover, int tree_number)
+extern void Layer_cover_mortality (CELL *c, int height, int age, int species, double layer_cover, int tree_number)
 {
 	int i;
 	//int oldNtree;
@@ -21,7 +21,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
-	Log("\n\n*****GET_LAYER_COVER_MORTALITY*****\n");
+	Log("\n\n*****LAYER_COVER_MORTALITY*****\n");
 
 
 	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d, species %s height %f dbh %f !!!\n", c->heights[height].z, c->heights[height].ages[age].species[species].name,
@@ -501,7 +501,7 @@ void Mortality (SPECIES *const s, int years)
 }
 
 
-void Get_stool_mortality (SPECIES *const s, int years)
+void Stool_mortality (SPECIES *const s, int years)
 {
 	//to compute stools mortality in function on age only for coppices
 	Log("***STOOLS MORTALITY*** \n");

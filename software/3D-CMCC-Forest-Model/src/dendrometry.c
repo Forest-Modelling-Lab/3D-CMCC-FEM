@@ -5,7 +5,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_dendrometry (SPECIES *const s, HEIGHT *const h, int count)
+void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 {
 	double oldavDBH;
 	double oldTreeHeight;

@@ -13,9 +13,9 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_latent_heat_flux (CELL *c)
+void Latent_heat_flux (CELL *c)
 {
-	Log("\nGET_LATENT_HEAT_ROUTINE\n");
+	Log("\nLATENT_HEAT_ROUTINE\n");
 
 	c->daily_tot_latent_heat_flux = c->daily_tot_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 

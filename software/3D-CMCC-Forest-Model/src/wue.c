@@ -13,7 +13,7 @@
 #include "constants.h"
 
 
-extern void Get_WUE (SPECIES *s)
+extern void Water_Use_Efficiency (SPECIES *s)
 {
 	/*WATER USE EFFICIENCY*/
 	s->value[WUE] = 100 * ( s->value[YEARLY_NPP] / s->counter[VEG_DAYS]) / (s->value[MONTHLY_EVAPOTRANSPIRATION] / s->counter[VEG_DAYS]);

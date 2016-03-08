@@ -669,20 +669,13 @@ void matrix_summary(const MATRIX *const m)
 					// loop on each species
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 					{
-
-						Get_biome_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
-
-
+						Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
 						//*************FOREST INITIALIZATION DATA***********
-
-						Get_a_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
+						Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
 
 						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
 						//HEIGHT VALUES ARE MANDATORY
-
-						Get_initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
-
-
+						Initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 						Log(
 								"\n\n----- CLASS DATASET-----\n"
 								"----- height = %f\n"
@@ -736,7 +729,7 @@ void matrix_summary(const MATRIX *const m)
 			Log("Number of soil layers = %.0f\n", settings->soil_layer);
 			Log("***************************************************\n");
 
-			Get_initialization_site_data (&m->cells[cell]);
+			Initialization_site_data (&m->cells[cell]);
 
 		}
 		else if (m->cells[cell].landuse == Z)
@@ -746,10 +739,6 @@ void matrix_summary(const MATRIX *const m)
 			Log("*(%d)\n", cell + 1);
 
 		}
-
-
-
-
 	}
 
 }

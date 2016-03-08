@@ -13,13 +13,13 @@
 #include "constants.h"
 
 
-extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
+extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 	double PotEvap;
 	double gamma;
 	double sat;
 
-	Log("\nGET_CANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
+	Log("\nCANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/

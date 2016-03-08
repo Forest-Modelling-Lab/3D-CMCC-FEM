@@ -16,14 +16,14 @@
 #include "constants.h"
 
 
-extern void Get_canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, double vpd, int height, int age, int species)
+extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, double vpd, int height, int age, int species)
 {
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
 	static double PotEvap;
 	double g_corr; //corrector factor from biome
 
-	Log("\nGET_CANOPY_TRANSPIRATION_ROUTINE\n");
+	Log("\nCANOPY_TRANSPIRATION_ROUTINE\n");
 
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;

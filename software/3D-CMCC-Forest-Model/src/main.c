@@ -1244,7 +1244,7 @@ int main(int argc, char *argv[])
 			Log("input_met_path = %s\n", input_met_path);
 
 			//Get air pressure
-			Get_air_pressure (&m->cells[cell]);
+			Air_pressure (&m->cells[cell]);
 
 			//check hemisphere
 			if (site->lat > 0) {
@@ -1294,7 +1294,7 @@ int main(int argc, char *argv[])
 						Nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
 						Soil_temperature (&m->cells[cell], day, month, year, yos);
 						Thermic_sum (&m->cells[cell], day, month, year, yos);
-						Rho_air (&m->cells[cell], day, month, year, yos);
+						Air_density (&m->cells[cell], day, month, year, yos);
 						Day_Length (&m->cells[cell], day, month, year, yos);
 
 						if(m->cells[cell].landuse == F)
@@ -1334,7 +1334,7 @@ int main(int argc, char *argv[])
 								//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
 								//if(day == 0 && month == 0) leaffall(&m->cells[cell]);
 								//run for FEM version
-								if (!tree_model_daily (m, yos, year, month, day, years_of_simulation) )
+								if (!Tree_model_daily (m, yos, year, month, day, years_of_simulation) )
 								{
 									Log("tree model daily failed.");
 								}
@@ -1385,7 +1385,7 @@ int main(int argc, char *argv[])
 							}
 						}
 						Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
-						Get_EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day);
+						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day);
 						if (!mystricmp(settings->dndc, "on"))
 						{
 							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
@@ -1397,10 +1397,10 @@ int main(int argc, char *argv[])
 					{
 						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
 					}
-					Get_EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month);
+					EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month);
 				}
 				Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
-				Get_EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation);
+				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation);
 
 				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 			}

@@ -81,7 +81,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	//7 May 2012
 	//compute static ratio of allocation between fine
-	//fixme see if chage with new parameters checked in "Get_biome_fraction"
+	//fixme see if chage with new parameters checked in "Pool_fraction"
 	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 	//Log("Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
 	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);

@@ -1123,8 +1123,7 @@ settings_t *settings;
 
 // External functions
 YOS *ImportYosFiles(char *, int *const, const int, const int);
-int tree_model (MATRIX *const, const YOS *const, const int, const int, const int);
-int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
+int Tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 //if putted into main.c
 //int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
@@ -1135,7 +1134,7 @@ void Avg_temperature (CELL *, int, int, int);
 void Daylight_avg_temperature (CELL *, int, int, int, YOS *);
 void Nightime_avg_temperature (CELL *, int, int, int, YOS *);
 void Soil_temperature (CELL *, int, int, int, YOS *);
-void Rho_air (CELL *, int, int, int, YOS *);
+void Air_density (CELL *, int, int, int, YOS *);
 void Thermic_sum (CELL *, int, int, int, YOS *);
 void Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
 int sort_by_years(const void *, const void *);
@@ -1171,7 +1170,6 @@ void soilDebug_logClose(void);
 void Age_Mortality (SPECIES *const, AGE *const);
 void Greff_Mortality (SPECIES *const);
 void Mortality (SPECIES *const, int);
-//void Get_stool_mortality (SPECIES *const, int);
 void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int, int);
 void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber (SPECIES *const, int, int, int);
@@ -1207,7 +1205,7 @@ void Carbon_fluxes (SPECIES *const, CELL *const, int, int, int);
 void Water_fluxes (CELL *const c);
 void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
-void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
+void Peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
 void Get_turnover (SPECIES *, CELL *, int, int);
 void Light_Recruitment (SPECIES *const, double, double);
 void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
@@ -1219,63 +1217,55 @@ void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
 
 
 
-void Get_AGB_BGB_biomass (CELL *const , int, int, int);
-void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
-double Get_vpd (const MET_DATA *const, int);
-void Get_numbers_of_height_class_in_layers (HEIGHT *, CELL *, int);
-void Get_daily_layer_cover (CELL *, const MET_DATA *const, int, int);
-void Get_stool_mortality (SPECIES *, int);
-void Get_forest_structure (CELL *, const int,const int,const int);
+void AGB_BGB_biomass (CELL *const , int, int, int);
+void Dendrometry (SPECIES *const, HEIGHT *, const int);
+void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
+void Stool_mortality (SPECIES *, int);
+void Forest_structure (CELL *, const int,const int,const int);
 void Print_met_daily_data (const YOS *const , int , int , int );
 void Print_met_data (const MET_DATA *const, double, int, int);
 void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
-void Get_daily_vegetative_period (CELL *, const MET_DATA *const, int, int);
-int Get_number_of_layers (CELL *);
-void Get_annual_numbers_of_layers (CELL *);
-void Get_daily_numbers_of_layers (CELL *);
-void Get_layer_cover_mortality (CELL *, int, int, int, double, int);
+void Daily_vegetative_period (CELL *, const MET_DATA *const, int, int);
+int  Number_of_layers (CELL *);
+void Annual_numbers_of_layers (CELL *);
+void Daily_numbers_of_layers (CELL *);
+void Layer_cover_mortality (CELL *, int, int, int, double, int);
 void water_downward_balance (CELL *, const MET_DATA *const, int, int);
 void water_upward_balance (CELL *, const MET_DATA *const, int, int);
-void Get_soil_water_balance (CELL *const, const MET_DATA *const, int, int);
-void Get_annual_average_values_modifiers (SPECIES *);
-void Get_annual_average_values_met_data (CELL *, double, double, double, double);
-void Get_EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
-void Get_EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int);
-void Get_EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
-void Get_EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
-void Get_average_biomass (SPECIES *);
-void Get_total_class_level_biomass (SPECIES *);
-void Get_renovation (CELL *, HEIGHT *, SPECIES *);
-void Get_WUE (SPECIES *);
-void Set_tree_period (SPECIES *, AGE *a, CELL *);
-void Get_daily_veg_counter (CELL *, SPECIES * , int);
-
+void Soil_water_balance (CELL *const, const MET_DATA *const, int, int);
+void Annual_average_values_modifiers (SPECIES *);
+void Annual_average_values_met_data (CELL *, double, double, double, double);
+void EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
+void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int);
+void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
+void EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
+void Average_tree_biomass (SPECIES *);
+void Total_class_level_biomass (SPECIES *);
+void Renovation (CELL *, HEIGHT *, SPECIES *);
+void Water_Use_Efficiency (SPECIES *);
+void Tree_period (SPECIES *, AGE *a, CELL *);
+void Daily_veg_counter (CELL *, SPECIES * , int);
 void Reset_daily_variables (CELL *const);
 void Reset_annual_cumulative_variables (CELL *const, const int);
-
-void Get_initialization_biomass_data (SPECIES *, HEIGHT *);
-void Get_initialization_site_data (CELL *);
+void Initialization_biomass_data (SPECIES *, HEIGHT *);
+void Initialization_site_data (CELL *);
 void Choose_management (CELL *, SPECIES *, int , int );
-
-void Get_tree_BB (CELL *const, int);
-void Get_a_Power_Function (AGE *, SPECIES *);
-
-void Get_air_pressure (CELL *c);
-
+void Tree_Branch_Bark (CELL *const, int);
+void Allometry_Power_Function (AGE *, SPECIES *);
+void Air_pressure (CELL *c);
 void Check_prcp (CELL *c, MET_DATA *, int, int);
-void Get_latent_heat (CELL *c, MET_DATA *, int, int);
-
-
-void Get_biome_fraction (SPECIES *);
-
+void Latent_heat (CELL *c, MET_DATA *, int, int);
+void Pool_fraction (SPECIES *);
 /*evapotranspiration block*/
-void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
-void Get_canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
-void Get_canopy_evapotranspiration (SPECIES *, CELL *, int);
-void Get_evapotranspiration (CELL *);
-void Get_latent_heat_flux (CELL *);
+void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
+void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
+void Canopy_evapotranspiration (SPECIES *, CELL *, int);
+void Evapotranspiration (CELL *);
+void Latent_heat_flux (CELL *);
+void Check_carbon_balance (CELL *);
+void Check_water_balance (CELL *);
 
 //sergio's functions
 int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
@@ -1295,8 +1285,7 @@ void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
-void Check_carbon_balance (CELL *);
-void Check_water_balance (CELL *);
+
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

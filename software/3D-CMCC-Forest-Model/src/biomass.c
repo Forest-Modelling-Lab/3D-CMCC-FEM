@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_tree_BB (CELL *const c,  int years)
+void Tree_Branch_Bark (CELL *const c,  int years)
 {
 	int height;
 	int age;
@@ -246,7 +246,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 	}
 }
 
-void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
+void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 {
 
 	Log("**AGB & BGB**\n");
@@ -269,7 +269,7 @@ void Get_AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 
 }
 
-extern void Get_average_biomass (SPECIES *s)
+extern void Average_tree_biomass (SPECIES *s)
 {
 
 	s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM] * 	1000 / s->counter[N_TREE];
@@ -278,7 +278,7 @@ extern void Get_average_biomass (SPECIES *s)
 	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS]);
 }
 
-extern void Get_total_class_level_biomass (SPECIES *s)
+extern void Total_class_level_biomass (SPECIES *s)
 {
 	// Total Biomass less Litterfall and Root turnover
 	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_ROOTS_COARSE] +s->value[BIOMASS_STEM] + s->value[BIOMASS_BRANCH];

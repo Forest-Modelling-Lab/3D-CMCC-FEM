@@ -14,11 +14,11 @@
 #include "constants.h"
 
 
-extern void Get_canopy_evapotranspiration (SPECIES *const s, CELL *const c, int height)
+extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int height)
 {
 
 	static int i;
-	Log("\nGET_CANOPY_EVAPOTRANSPIRATION_ROUTINE\n");
+	Log("\nCANOPY_EVAPOTRANSPIRATION_ROUTINE\n");
 	/*it computes canopy evaporation + canopy transpiration*/
 
 	/*dominant layer*/

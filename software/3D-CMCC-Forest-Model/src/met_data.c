@@ -154,7 +154,7 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 }
 
 
-extern void Get_air_pressure (CELL *c)
+extern void Air_pressure (CELL *c)
 {
 	double t1, t2;
 
@@ -173,7 +173,7 @@ extern void Get_air_pressure (CELL *c)
 }
 
 
-extern void Rho_air (CELL * c, int day, int month, int years, YOS *yos)
+extern void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -199,7 +199,7 @@ extern void Rho_air (CELL * c, int day, int month, int years, YOS *yos)
 	}
 }
 
-void Get_latent_heat (CELL *c, MET_DATA *met, int month, int day)
+void Latent_heat (CELL *c, MET_DATA *met, int month, int day)
 {
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/

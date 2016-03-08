@@ -46,7 +46,7 @@ int sort_by_heights_desc(const void * a, const void * b)
 
 
 
-void Get_annual_numbers_of_layers (CELL *const c)
+void Annual_numbers_of_layers (CELL *const c)
 {
 	//determines number of layer in function of:
 	//-differences between tree height classes
@@ -166,7 +166,7 @@ void Get_annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Get_forest_structure (CELL *const c,int day,int month,int years)
+void Forest_structure (CELL *const c,int day,int month,int years)
 {
 	int height;
 	int age;
@@ -620,7 +620,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 							//mortality
 							layer_cover = c->layer_cover_dominant;
 							tree_number = c->tree_number_dominant;
-							Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+							Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 							Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 						}
 						break;
@@ -632,7 +632,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 								Log("Recomputed Layer cover in layer 1 = %f %% \n", c->layer_cover_dominant * 100);
 							}
 						}
@@ -643,7 +643,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 								Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_dominated * 100);
 							}
 						}
@@ -657,7 +657,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 								//mortality
 								layer_cover = c->layer_cover_dominant;
 								tree_number = c->tree_number_dominant;
-								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 								Log("Recomputed Layer cover in layer 2 = %f %% \n", c->layer_cover_dominant * 100);
 							}
 						}
@@ -668,7 +668,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 								//mortality
 								layer_cover = c->layer_cover_dominated;
 								tree_number = c->tree_number_dominated;
-								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 								Log("Recomputed Layer cover in layer 1 = %f %% \n", c->layer_cover_dominated * 100);
 							}
 						}
@@ -679,7 +679,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 								//mortality
 								layer_cover = c->layer_cover_subdominated;
 								tree_number = c->tree_number_subdominated;
-								Get_layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
+								Layer_cover_mortality (c, height, age, species, layer_cover, tree_number);
 								Log("Recomputed Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 							}
 						}
@@ -761,7 +761,7 @@ void Get_forest_structure (CELL *const c,int day,int month,int years)
 }
 
 //define VEG_UNVEG for deciduous species
-void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
+void Daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
 {
 
 	static int height;
@@ -894,7 +894,7 @@ void Get_daily_vegetative_period (CELL *c, const MET_DATA *const met, int month,
 	Log("classes in veg period = %d\n", c->Veg_Counter);
 }
 
-extern void Get_daily_numbers_of_layers (CELL *const c)
+extern void Daily_numbers_of_layers (CELL *const c)
 {
 	//determines number of vegetative layer in function of:
 	//-differences between tree height classes
@@ -946,7 +946,7 @@ extern void Get_daily_numbers_of_layers (CELL *const c)
 	//Log("height count = %d \n", c->heights_count);
 }
 
-void Get_daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
+void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 {
 
 	//compute if is in veg period
@@ -1118,7 +1118,7 @@ void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *c
 }
 
 
-int Get_number_of_layers (CELL *c)
+int Number_of_layers (CELL *c)
 {
 	// ALESSIOR number_of_layers can be uninitialized
 	int number_of_layers = 0;
@@ -1142,7 +1142,7 @@ int Get_number_of_layers (CELL *c)
 
 }
 
-extern void Get_daily_veg_counter (CELL *c, SPECIES *s, int height)
+extern void Daily_veg_counter (CELL *c, SPECIES *s, int height)
 {
 	switch (c->daily_layer_number)
 	{
