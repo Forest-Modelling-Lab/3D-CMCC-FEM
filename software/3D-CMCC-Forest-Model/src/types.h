@@ -487,7 +487,8 @@ enum {
 	MONTH_TRANSP,
 	DAILY_TRANSP,
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
-	FRAC_DAYTIME_WET_CANOPY, //fraction of daytime that the canopy is wet
+	FRAC_DAYTIME_EVAPO,             //fraction of daytime for evaporation
+	FRAC_DAYTIME_TRANSP,            //fraction of daytime for transpiration (and photosynthesis)
 	RAIN_INTERCEPTED,
 	CANOPY_WATER_STORED,            //residual of canopy water intercepted and not evaporated
 	CANOPY_EVAPOTRANSPIRATION,

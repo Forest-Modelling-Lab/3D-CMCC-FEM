@@ -34,9 +34,9 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 	/*check*/
 	if (c->available_soil_water < (c->max_asw * site->min_frac_maxasw))
 	{
-		//FIXME THE AMOUNT ADDED TO THE SOIL SHOULD BE INLCUDED IN THE BALANCE
+		//TEST REMOVED ANY REFILL OF WATER SOIL
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		c->available_soil_water = c->max_asw * site->min_frac_maxasw;
+		//c->available_soil_water = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %f\n", c->available_soil_water);
 	}
 	if ( c->available_soil_water > c->max_asw)

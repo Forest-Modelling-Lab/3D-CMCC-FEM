@@ -38,7 +38,6 @@ void Check_water_balance (CELL *c)
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 	Log("c->available_soil_water = %f\n", c->available_soil_water);
 
-	//test
 	/*sum of sources (rain + snow)*/
 	water_in = c->daily_rain + c->daily_snow + c->snow_melt;
 
@@ -52,10 +51,10 @@ void Check_water_balance (CELL *c)
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
 
-	Log("water in (daily_rain + daily_snow + snow_melt) = %f\n", water_in);
-	Log("water out (daily_tot_c_transp + daily_tot_c_int + soil_evaporation + snow_subl + runoff) = %f\n", water_out);
-	Log("water stored (delta available_soil_water + daily_tot_c_water_stored + daily_snow) = %f\n", water_stored);
-	Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
+	Log("water in = %f\n", water_in);
+	Log("water out = %f\n", water_out);
+	Log("water stored = %f\n", water_stored);
+	Log("water balance = %f\n", c->water_balance);
 	Log("old water balance = %f\n", c->old_water_balance);
 	Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 
