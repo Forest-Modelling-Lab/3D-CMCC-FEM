@@ -711,9 +711,6 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		m->cells[cell].subdominated_veg_counter = 0;
 
 		m->cells[cell].dos  += 1;
-
-
-
 		//todo: soilmodel could stay here or in main.c
 		//here is called at the end of all tree height age and species classes loops
 		//todo: move all soil algorithms into soil_model function
@@ -722,20 +719,7 @@ int tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
 		//Log("Nitrogen available = %f g m^-2\n", N_avl);
-
-
-		//    Log("************************************ \n");
-		//    Log("\n\n");
-		//}
-
-
-
-
-
 	}
-
-
-
 	Log("****************END OF CELL***************\n");
 	/* ok */
 	return 1;

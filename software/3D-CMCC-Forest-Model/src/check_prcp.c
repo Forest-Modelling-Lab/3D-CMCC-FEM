@@ -26,13 +26,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 
 	Log("-CHECK PRECIPITATION-\n");
 
-	c->snow_subl = 0.0;
-	c->snow_melt = 0.0;
-	c->daily_snow = 0.0;
-	c->daily_rain = 0.0;
-
-
-
 	t_melt = r_melt = r_sub = 0;
 	t_melt = t_coeff * met[month].d[day].tavg;
 
@@ -47,6 +40,7 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	if (met[month].d[day].tavg > 0.0)
 	{
 		c->daily_rain = met[month].d[day].prcp;
+		Log("prcp = rain = %f mm\n", c->daily_rain);
 
 		if (c->snow_pack > 0.0)
 		{
@@ -56,7 +50,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			r_melt = incident_rad / c->lh_fus;
 			c->snow_melt = t_melt + r_melt;
 			//Log("snow_melt %f\n", c->snow_melt);
-
 
 			if (c->snow_melt > c->snow_pack)
 			{
@@ -78,7 +71,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			c->snow_to_soil=c->snow_melt;
 			Log("snow to soil %f\n", c->snow_to_soil);
 
-
 			/*check for balance*/
 			Log("Snow pack = %f (cm)\n", c->snow_pack);
 		}
@@ -87,11 +79,8 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	{
 		if(met[month].d[day].prcp > 0.0)
 		{
-			Log("tavg = %f\n", met[month].d[day].tavg);
-			Log("rain becomes snow\n");
-
 			c->daily_snow = met[month].d[day].prcp;
-			Log("Daily snow = %f cm\n", c->daily_snow);
+			Log("prcp = snow = %f cm\n", c->daily_snow);
 
 			c->snow_pack += c->daily_snow;
 			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
@@ -113,9 +102,7 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 				Log("Snow sublimation!!\n");
 				r_sub = c->snow_pack;
 				c->snow_subl = r_sub;
-				Log("Snow sublimated = %f mm\n", c->snow_subl);
-				/*check for balance*/
-
+				Log("Snow sublimated = %f mm\n", c->snow_subl);				/*check for balance*/
 				if (c->snow_subl < c->snow_pack)
 				{
 					c->snow_pack -= c->snow_subl;

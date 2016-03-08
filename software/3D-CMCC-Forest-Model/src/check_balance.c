@@ -36,10 +36,11 @@ void Check_water_balance (CELL *c)
 	Log("c->available_soil_water = %f\n", c->available_soil_water);
 	Log("c->snow_pack = %f\n", c->snow_pack);
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
+	Log("asw = %f\n", c->available_soil_water);
 
 	//test
 	/*sum of sources (rain + snow)*/
-	water_in = c->daily_rain + c->snow_melt + c->daily_snow;
+	water_in = c->daily_rain + c->daily_snow + c->snow_melt;
 
 	/*sum of sinks*/
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
@@ -47,43 +48,33 @@ void Check_water_balance (CELL *c)
 	/* sum of current storage */
 	water_stored = c->available_soil_water + c->daily_tot_c_water_stored + c->snow_pack;
 
-
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
+
+	Log("water in (c->daily_rain + c->daily_snow + c->snow_melt) = %f\n", water_in);
+	Log("water out (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff) = %f\n", water_out);
+	Log("water stored (c->available_soil_water + c->daily_tot_c_water_stored + c->snow_pack) = %f\n", water_stored);
+	Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
+	Log("old water balance = %f\n", c->old_water_balance);
+	Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
+
 
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		Log("NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
-		Log("water in (c->daily_rain + c->daily_snow) = %f\n", water_in);
-		Log("water out (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff) = %f\n", water_out);
-		Log("water stored (c->available_soil_water + c->daily_tot_c_water_stored) = %f\n", water_stored);
 		Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
-		Log("old water balance = %f\n", c->old_water_balance);
 	}
 	else
 	{
 		if (fabs(c->old_water_balance - c->water_balance) > 1e-4 )
 		{
 			Log("...FATAL ERROR IN water balance\n");
-			Log("water in (c->daily_rain + c->daily_snow) = %f\n", water_in);
-			Log("water out (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff) = %f\n", water_out);
-			Log("water stored (c->available_soil_water + c->daily_tot_c_water_stored) = %f\n", water_stored);
-			Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
-			Log("old water balance = %f\n", c->old_water_balance);
-			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("DOY = %d\n", c->doy);
 			ERROR(c->water_balance, "water balance");
 		}
 		else
 		{
 			Log("...ok water balance\n");
-			Log("water in = %f\n", water_in);
-			Log("water out = %f\n", water_out);
-			Log("water stored = %f\n", water_stored);
-			Log("water balance = %f\n", c->water_balance);
-			Log("old water balance = %f\n", c->old_water_balance);
-			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
-			Log("asw = %f\n", c->available_soil_water);
 		}
 	}
 	c->old_water_balance = c->water_balance;

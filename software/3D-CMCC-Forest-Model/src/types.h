@@ -1298,6 +1298,6 @@ void FreeOutputVars(OUTPUT_VARS *ov);
 
 
 
-#define ERROR(x,var)	{if(((x))<0) { printf("%s: ERROR value in %s, line: %d", var, __FILE__, __LINE__); exit(1); }}
+#define ERROR(x,var)	{if(((x))<0) {Log("%s: ERROR value in %s, line: %d", var, __FILE__, __LINE__); exit(1); }}
 
 #endif /* TYPES_H */
