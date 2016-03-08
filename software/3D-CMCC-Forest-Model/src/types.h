@@ -957,6 +957,7 @@ typedef struct {
 
 	/*carbon variables*/
 	double gpp;     //in g of C m^2
+	double npp_gC;
 	double npp;     //in tonnes of DM per hectare
 	double av_gpp;
 	double av_npp;
@@ -967,6 +968,7 @@ typedef struct {
 	double aut_respiration; //autotrophic respiration
 	double het_respiration; //heterotrophic respiration
 	double ter;  //total ecosystem respiration
+	double carbon_balance, old_carbon_balance;
 
 	/*water variables*/
 	double available_soil_water;

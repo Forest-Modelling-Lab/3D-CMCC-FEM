@@ -14,7 +14,41 @@
 
 void Check_carbon_balance (CELL *c)
 {
+	/*
+	double carbon_in;
+	double carbon_out;
+	double carbon_stored;
 
+	carbon_in = c->gpp;
+
+	carbon_out = c->aut_respiration;
+
+	carbon_stored = c->npp_gC;
+
+	c->carbon_balance = carbon_in - carbon_out - carbon_stored;
+
+	//test
+	//a first attempt to
+	if(c->years_count == 0 && c->doy == 1)
+	{
+		Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
+		Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
+	}
+	else
+	{
+		if (fabs(c->old_carbon_balance - c->carbon_balance) > 1e-4 )
+		{
+			Log("...FATAL ERROR IN carbon balance\n");
+			Log("DOY = %d\n", c->doy);
+			ERROR(c->carbon_balance, "carbon balance");
+		}
+		else
+		{
+			Log("...ok carbon balance\n");
+		}
+	}
+	c->old_carbon_balance = c->carbon_balance;
+*/
 }
 
 void Check_water_balance (CELL *c)

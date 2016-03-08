@@ -667,6 +667,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
 
+		/*CHECK FOR CARBON BALANCE CLOSURE*/
+		Check_carbon_balance (&m->cells[cell]);
+
 		/*compute soil respiration*/
 		Soil_respiration (&m->cells[cell]);
 		/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
@@ -679,7 +682,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Soil_water_balance (&m->cells[cell], met, month, day);
 		/*compute water fluxes*/
 		Water_fluxes (&m->cells[cell]);
-		/*CHECK FOR BALANCE CLOSURE*/
+		/*CHECK FOR WATER BALANCE CLOSURE*/
 		Check_water_balance (&m->cells[cell]);
 
 		m->cells[cell].daily_tot_litterfall = 0;
