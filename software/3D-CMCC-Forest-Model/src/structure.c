@@ -1077,7 +1077,7 @@ void Get_top_layer (CELL *const c, int heights_count, HEIGHT *heights)
  */
 
 //This function compute if there is a class age in veg period
-void Get_Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *const met, const int month, const int DaysInMonth)
+void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *const met, const int month, const int DaysInMonth)
 {
 	int height;
 	int age;

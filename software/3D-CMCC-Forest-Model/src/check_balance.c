@@ -12,6 +12,10 @@
 #include "types.h"
 #include "constants.h"
 
+void Check_carbon_balance (CELL *c)
+{
+
+}
 
 void Check_water_balance (CELL *c)
 {

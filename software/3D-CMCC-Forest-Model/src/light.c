@@ -8,7 +8,7 @@
 
 
 
-void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height)
+void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height)
 {
 
 	//todo control par for soil and net rad for soil
@@ -20,7 +20,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
 	double ni; //proportion of daylength
 
-	Log("\nGET LIGHT ROUTINE\n");
+	Log("\nRADIATION ROUTINE\n");
 
 	/*proportion of daylength*/
 	ni = met[month].d[day].daylength/24.0;
@@ -570,7 +570,7 @@ void Get_light ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 }
 
 /**/
-void Get_Light_Recruitment (SPECIES *const s, double Av_Yearly_Par_Soil,  double av_yearly_daylength)
+void Light_Recruitment (SPECIES *const s, double Av_Yearly_Par_Soil,  double av_yearly_daylength)
 {
 
 

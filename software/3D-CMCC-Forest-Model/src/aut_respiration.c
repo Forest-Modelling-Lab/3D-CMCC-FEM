@@ -15,7 +15,7 @@
 
 //FOLLOWING BIOME-BGC
 
-void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
+void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 
 	int i;
@@ -50,7 +50,7 @@ void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DAT
 	//double n_area/*, dlmr_area*/;
 
 
-	Log("\nGET_MAINTENANCE_RESPIRATION\n");
+	Log("\nMAINTENANCE_RESPIRATION\n");
 	/*
 	//computing Nitrogen content from tons DM/ha to gC/m^2 and then as in BIOME to KgC
 	leaf_nitrogen = (((s->value[BIOMASS_FOLIAGE] / GC_GDM) * 1000.0) /settings->sizeCell) / s->value[CN_LEAVES];
@@ -148,13 +148,13 @@ void Get_maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DAT
 }
 
 //FOLLOWING BIOME-BGC
-void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int month, int years)
+void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int month, int years)
 {
 
 	int i;
 
 
-	Log("\nGET_GROWTH_RESPIRATION\n");
+	Log("\nGROWTH_RESPIRATION\n");
 
 	//to prevent negative values in the first years first month first day of the simulation
 	if (day == 0 && month == 0)
@@ -237,11 +237,11 @@ void Get_growth_respiration (SPECIES *s, CELL *const c, int height, int day, int
 	}
 }
 
-void Get_autotrophic_respiration (SPECIES *s, CELL *const c, int height)
+void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
 	int i;
 
-	Log("\nGET_AUTOTROPHIC_RESPIRATION\n");
+	Log("\nAUTOTROPHIC_RESPIRATION\n");
 
 	//compute autotrophic respiration for each classes
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];

@@ -8,7 +8,7 @@
 #include "constants.h"
 
 
-void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
+void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
 {
 	int i;
 	double Alpha_C;
@@ -21,7 +21,6 @@ void Get_phosynthesis_monteith (SPECIES *const s, CELL *const c, int month, int 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
 	//Veg period
-	//theorically no photosinthesis should occurs if DAILY TRANSP is equal to zero
 	if ((s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)) && s->value[DAILY_TRANSP] != 0.0)
 	{
 		if (s->value[ALPHA] > 0.0)

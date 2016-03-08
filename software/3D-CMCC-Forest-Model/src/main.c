@@ -1289,19 +1289,18 @@ int main(int argc, char *argv[])
 					for (day = 0; day < days_per_month; day++)
 					{
 						//Check for daily temperatures
-						Get_avg_temperature (&m->cells[cell], day, month, year);
-						Get_daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
-						Get_nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
-						Get_soil_temperature (&m->cells[cell], day, month, year, yos);
-						Get_thermic_sum (&m->cells[cell], day, month, year, yos);
-						Get_rho_air (&m->cells[cell], day, month, year, yos);
-						Get_Day_Length (&m->cells[cell], day, month, year, yos);
-						//GetDayLength_3PG (&m->cells[cell], day, month, years, MonthLength[month], yos);
+						Avg_temperature (&m->cells[cell], day, month, year);
+						Daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
+						Soil_temperature (&m->cells[cell], day, month, year, yos);
+						Thermic_sum (&m->cells[cell], day, month, year, yos);
+						Rho_air (&m->cells[cell], day, month, year, yos);
+						Day_Length (&m->cells[cell], day, month, year, yos);
 
 						if(m->cells[cell].landuse == F)
 						{
 							//Get vegetative days
-							Get_Veg_Days (&m->cells[cell], yos, day, month, year, days_per_month);
+							Veg_Days (&m->cells[cell], yos, day, month, year, days_per_month);
 							//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 							get_vpsat(&m->cells[cell], day, month, year, yos, i);
 							i++;

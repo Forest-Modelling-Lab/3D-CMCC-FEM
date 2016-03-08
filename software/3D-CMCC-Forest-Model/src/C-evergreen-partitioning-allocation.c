@@ -13,7 +13,7 @@
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
 	//CTEM VERSION
 
@@ -237,7 +237,7 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 			//s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
-			Get_daily_lai (&c->heights[height].ages[age].species[species]);
+			Daily_lai (&c->heights[height].ages[age].species[species]);
 
 			/*check if re-transfer foliage biomass to reserve*/
 			if (s->value[LAI] > s->value[PEAK_LAI])
@@ -289,7 +289,7 @@ void E_Get_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_D
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 
 				/*recompute correct LAI*/
-				Get_daily_lai (&c->heights[height].ages[age].species[species]);
+				Daily_lai (&c->heights[height].ages[age].species[species]);
 			}
 
 

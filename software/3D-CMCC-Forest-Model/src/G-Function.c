@@ -43,7 +43,7 @@ extern void Get_biome_fraction (SPECIES * s)
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Get_Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
+void Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 {
 	/*
 	if (!day)
@@ -71,7 +71,7 @@ void Get_Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 
 
 //3PG version
-void GetDayLength_3PG (CELL * c, int day, int month, int years, int MonthLength ,  YOS  *yos)
+void DayLength_3PG (CELL * c, int day, int month, int years, int MonthLength ,  YOS  *yos)
 {
 	// gets fraction of day when sun is "up"
 	double sLat, cLat, sinDec, cosH0;
@@ -116,7 +116,7 @@ void GetDayLength_3PG (CELL * c, int day, int month, int years, int MonthLength 
 /*to compute dayleght for stopping growth*/
 //from Schwalm and Ek, 2004
 //but it considers a value independently from species
-void Get_Abscission_DayLength ( CELL * c)
+void Abscission_DayLength ( CELL * c)
 {
 	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
 	//Log("Abscission day length = %f hrs\n", c->abscission_daylength);
@@ -146,7 +146,7 @@ extern void Set_tree_period (SPECIES *s, AGE *a, CELL *c)
 
 
 //compute annual number of vegetative days
-extern void Get_Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int DaysInMonth)
+extern void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years, int DaysInMonth)
 {
 
 	static int height;

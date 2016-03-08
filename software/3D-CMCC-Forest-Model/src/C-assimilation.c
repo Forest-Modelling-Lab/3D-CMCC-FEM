@@ -12,7 +12,7 @@
 #include "constants.h"
 
 
-void Get_carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
+void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
 {
 	int i;
 

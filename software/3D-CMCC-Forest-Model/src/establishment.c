@@ -6,7 +6,7 @@
 #include "constants.h"
 
 /**/
-int Get_Establishment_LPJ (SPECIES *const s, double Light_Absorb_for_establishment, double  canopy_cover_dominant)
+int Establishment_LPJ (SPECIES *const s, double Light_Absorb_for_establishment, double  canopy_cover_dominant)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment

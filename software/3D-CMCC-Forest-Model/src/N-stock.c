@@ -16,7 +16,7 @@
 
 //FOLLOWING BIOME-BGC
 
-void Get_nitrogen (SPECIES *s)
+void Nitrogen_stock (SPECIES *s)
 {
         Log("\nGET NITROGEN STOCK\n");
 	/*computing Nitrogen content from tons DM/ha to KgC/m^2 and then as in BIOME to KgN*/

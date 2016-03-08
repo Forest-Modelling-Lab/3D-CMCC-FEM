@@ -1128,29 +1128,28 @@ int tree_model_daily (MATRIX *const, const YOS *const, const int, const int, con
 //if putted into main.c
 //int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void Get_phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
+void Phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
 void met_summary(MET_DATA *);
 int is_valid_met(const char *const);
-void Get_avg_temperature (CELL *, int, int, int);
-void Get_daylight_avg_temperature (CELL *, int, int, int, YOS *);
-void Get_nightime_avg_temperature (CELL *, int, int, int, YOS *);
-void Get_soil_temperature (CELL *, int, int, int, YOS *);
-void Get_rho_air (CELL *, int, int, int, YOS *);
-void Get_thermic_sum (CELL *, int, int, int, YOS *);
-void Get_Veg_Months (CELL *const, const YOS *const,  const int, const int);
-void Get_Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
+void Avg_temperature (CELL *, int, int, int);
+void Daylight_avg_temperature (CELL *, int, int, int, YOS *);
+void Nightime_avg_temperature (CELL *, int, int, int, YOS *);
+void Soil_temperature (CELL *, int, int, int, YOS *);
+void Rho_air (CELL *, int, int, int, YOS *);
+void Thermic_sum (CELL *, int, int, int, YOS *);
+void Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
 int sort_by_years(const void *, const void *);
 int sort_by_heights_asc(const void * , const void * );
 int sort_by_heights_desc(const void * , const void * );
-double Get_canopy_cover (SPECIES *const, int, int, int);
-void Get_crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
+double Canopy_cover (SPECIES *const, int, int, int);
+void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 ROW *import_dataset(const char *const, int *const);
 int importSiteFile(char *);
 int importSettingsFile(char *);
-void Get_Day_Length (CELL *, int, int, int, YOS *);
-void GetDayLength_3PG (CELL *, int, int, int, int, YOS *);
-void Get_Abscission_DayLength (CELL *);
-int Get_Establishment_LPJ (SPECIES *const, double, double);
+void Day_Length (CELL *, int, int, int, YOS *);
+void DayLength_3PG (CELL *, int, int, int, int, YOS *);
+void Abscission_DayLength (CELL *);
+int Establishment_LPJ (SPECIES *const, double, double);
 int logInit(char*);
 void Log(const char *, ...);
 void logClose(void);
@@ -1169,55 +1168,57 @@ void soil_logClose(void);
 int soilDebug_logInit(char*);
 void soilDebug_Log(const char *, ...);
 void soilDebug_logClose(void);
-void Get_Age_Mortality (SPECIES *const, AGE *const);
-void Get_Greff_Mortality (SPECIES *const);
-void Get_Mortality (SPECIES *const, int);
+void Age_Mortality (SPECIES *const, AGE *const);
+void Greff_Mortality (SPECIES *const);
+void Mortality (SPECIES *const, int);
 //void Get_stool_mortality (SPECIES *const, int);
-void Get_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, double, double, int, int, int);
-void Get_daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int, int);
-void Get_Management (SPECIES *const, AGE *const, int);
+void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int, int);
+void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber (SPECIES *const, int, int, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
 MATRIX *matrix_create(ROW *const, const int, char *);
 void matrix_free(MATRIX *);
 void matrix_summary(const MATRIX *const);
-void Get_Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
+void Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
 //yearly allocation
-void Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
-int Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
-int Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
-void Get_Partitioning_Allocation_CTEM (SPECIES *const, int);
+void Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
+int Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
+int Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
+
 //monthly allocation
-void M_Get_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
-int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
-int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
+void M_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
+int M_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
+int M_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 
 
 //deciduous routine for carbon allocation
-void D_Get_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
-void E_Get_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
-void Get_nitrogen (SPECIES *);
+void Nitrogen_stock (SPECIES *);
 
-void Get_maintenance_respiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
-void Get_growth_respiration (SPECIES *const, CELL *, int, int, int, int);
-void Get_autotrophic_respiration (SPECIES *const, CELL *, int);
-void Get_carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
-void Get_soil_respiration (CELL *);
-void Get_C_fluxes (SPECIES *const, CELL *const, int, int, int);
-void Get_W_fluxes (CELL *const c);
-void Get_litterfall_evergreen (HEIGHT *, double, const int, const int, int);
-void Get_frac_canopy_interception (SPECIES *const, const MET_DATA *const, int);
-void Get_soil_evaporation (CELL *, const MET_DATA *const, int, int);
-void Get_daily_lai (SPECIES *const);
+void Maintenance_respiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
+void Growth_respiration (SPECIES *const, CELL *, int, int, int, int);
+void Autotrophic_respiration (SPECIES *const, CELL *, int);
+void Carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
+void Soil_respiration (CELL *);
+void Carbon_fluxes (SPECIES *const, CELL *const, int, int, int);
+void Water_fluxes (CELL *const c);
+void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
+void Daily_lai (SPECIES *const);
 void Get_peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
 void Get_turnover (SPECIES *, CELL *, int, int);
-void Get_Light_Recruitment (SPECIES *const, double, double);
-void Get_light (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
-void Get_phosynthesis_monteith (SPECIES *const , CELL *, int , int, int, int, int, int);
-void Get_biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
-void Get_biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
+void Light_Recruitment (SPECIES *const, double, double);
+void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
+void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
+void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
+void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
+
+
+
+
+
 void Get_AGB_BGB_biomass (CELL *const , int, int, int);
 void Get_dendrometry (SPECIES *const, HEIGHT *, const int);
 double Get_vpd (const MET_DATA *const, int);
@@ -1294,6 +1295,7 @@ void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
+void Check_carbon_balance (CELL *);
 void Check_water_balance (CELL *);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);

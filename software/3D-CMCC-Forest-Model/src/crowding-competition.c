@@ -21,7 +21,7 @@
 // in the first year avdbh and height are from input data
 
 
-void Get_crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int top_layer)
+void Crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int top_layer)
 {
 
 	static double delHeight;    //height increment

@@ -11,7 +11,7 @@ F * phenology.c
 #include "types.h"
 #include "constants.h"
 
-extern void Get_phenology_phase (CELL * c, const MET_DATA *const met, const int years, const int month, const int day, const int years_of_simulation)
+extern void Phenology_phase (CELL * c, const MET_DATA *const met, const int years, const int month, const int day, const int years_of_simulation)
 {
 	int height;
 	int age;

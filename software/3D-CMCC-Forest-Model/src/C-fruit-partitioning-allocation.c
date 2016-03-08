@@ -9,7 +9,7 @@
 
 /**/
 
-void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Yearly_Rain, double canopy_cover_dominant )
+void M_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Yearly_Rain, double canopy_cover_dominant )
 {
 	//static double WseedTree;    //fruit biomass per Tree
 	static int NseedTree;      //Number of fruits per Tree
@@ -99,7 +99,7 @@ void M_Get_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Year
 
 
 /**/
-int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
+int M_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 {
 	/*USING A LOGISTIC EQUATION*/
 	static int NumberSeed;                  //Number of Seeds per tree
@@ -128,7 +128,7 @@ int M_Get_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 }
 /**/
 
-int M_Get_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
+int M_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
 {
 	static int NumberSeed;
 	static double heigthdependence;

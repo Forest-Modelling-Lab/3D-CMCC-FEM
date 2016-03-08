@@ -8,12 +8,12 @@
 #include "constants.h"
 
 
-extern void Get_soil_evaporation (CELL * c, const MET_DATA *const met, int month, int day)
+extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, int day)
 {
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
 	double sat, gamma;
-	Log ("\nGET_SOIL_EVAPORATION_ROUTINE\n");
+	Log ("\nSOIL_EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/

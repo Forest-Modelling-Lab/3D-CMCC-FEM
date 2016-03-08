@@ -38,7 +38,7 @@ extern void Print_met_daily_data (const YOS *const yos, int day, int month, int 
 
 
 //following Running et al., 1987
-extern void Get_avg_temperature (CELL * c,  int day, int month, int years)
+extern void Avg_temperature (CELL * c,  int day, int month, int years)
 {
 	/*
 	if (!day )
@@ -66,7 +66,7 @@ extern void Get_avg_temperature (CELL * c,  int day, int month, int years)
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
-extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
+extern void Daylight_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day)
@@ -89,7 +89,7 @@ extern void Get_daylight_avg_temperature (CELL * c,  int day, int month, int yea
 
 //following BIOME-BGC 4.2 src
 //compute nightime average air temperature
-extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
+extern void Nightime_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day)
@@ -110,7 +110,7 @@ extern void Get_nightime_avg_temperature (CELL * c,  int day, int month, int yea
 	}
 }
 
-extern void Get_thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
+extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 {
 
 	static double previous_thermic_sum;
@@ -173,7 +173,7 @@ extern void Get_air_pressure (CELL *c)
 }
 
 
-extern void Get_rho_air (CELL * c, int day, int month, int years, YOS *yos)
+extern void Rho_air (CELL * c, int day, int month, int years, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -284,7 +284,7 @@ void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
 
 }
 
-void Get_soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
+void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
 	double avg = 0;
 	int i;

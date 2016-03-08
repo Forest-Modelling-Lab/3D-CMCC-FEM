@@ -7,11 +7,11 @@
 #include "types.h"
 #include "constants.h"
 
-void Get_daily_lai (SPECIES *const s)
+void Daily_lai (SPECIES *const s)
 {
 	double leaf_c; //leaf carbon KgC/m^2
 
-	Log("GET_DAILY_LAI\n");
+	Log("DAILY_LAI\n");
 
 	/*CONVERT tDM/cell to KgC/m^2*/
 	leaf_c = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM));

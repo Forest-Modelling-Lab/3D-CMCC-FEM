@@ -13,14 +13,14 @@
 #include "constants.h"
 
 
-void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
+void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
 {
 	int i;
 
 	i = c->heights[height].z;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
-	Log("\nGET_C-FLUXES\n");
+	Log("\nC-FLUXES\n");
 
 	s->value[C_FLUX] = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
 	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
@@ -37,7 +37,7 @@ void Get_C_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mon
 }
 
 //too remove after made water_balance function
-void Get_W_fluxes (CELL *const c)
+void Water_fluxes (CELL *const c)
 {
 	Log("\nGET_W-FLUXES\n");
 	//todo make it better

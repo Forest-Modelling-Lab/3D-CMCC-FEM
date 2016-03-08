@@ -120,7 +120,7 @@ extern void Choose_management (CELL *c, SPECIES *s, int years, int height)
 
 
 
-void Get_Management (SPECIES *const s, AGE * const a, int years)
+void Management (SPECIES *const s, AGE * const a, int years)
 {
 	// ALESSIOR s->counter used instead of s->value
 	if ( a->value >= s->value[MINAGEMANAG] /* && MINDBHMANAG*/)

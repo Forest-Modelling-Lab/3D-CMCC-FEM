@@ -286,7 +286,7 @@ extern void Get_layer_cover_mortality (CELL *c, int height, int age, int species
 
 /*Age mortality function from LPJ*/
 //todo add to log results this function
-void Get_Age_Mortality (SPECIES *const s, AGE *const a)
+void Age_Mortality (SPECIES *const s, AGE *const a)
 {
 
 	static int Dead_trees;
@@ -335,7 +335,7 @@ void Get_Age_Mortality (SPECIES *const s, AGE *const a)
 
 
 //from LPJ Growth efficiency mortality
-void Get_Greff_Mortality (SPECIES *const s)
+void Greff_Mortality (SPECIES *const s)
 {
 	static double greff;
 	static double kmort1 = 0.02; //modified from original version
@@ -384,7 +384,7 @@ void Get_Greff_Mortality (SPECIES *const s)
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-void Get_Mortality (SPECIES *const s, int years)
+void Mortality (SPECIES *const s, int years)
 // TreeNumber = m->lpCell[index].InitialNTree, Ws = Ws
 // TreeNumber = m->lpCell[index].NTree, Ws = Ws
 {

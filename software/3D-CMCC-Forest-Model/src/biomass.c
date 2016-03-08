@@ -41,11 +41,11 @@ void Get_tree_BB (CELL *const c,  int years)
 		}
 	}
 }
-void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
+void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
 {
 	double oldBasalArea;
 
-	Log("GET_BIOMASS_INCREMENT_BOY\n");
+	Log("BIOMASS_INCREMENT_Beginning of Year\n");
 
 	//compute Basal Area
 		if (years == 0)
@@ -110,7 +110,7 @@ void Get_biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int
 
 }
 
-void Get_biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
+void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
 	double MassDensity;

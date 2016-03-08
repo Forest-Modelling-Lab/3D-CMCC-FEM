@@ -10,7 +10,7 @@
 
 
 
-double Get_canopy_cover (SPECIES *const s, int z, int years, int top_layer)
+double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 {
 	//DBH-CrownDiameter Function
 	//Effective ratio dbh-crown diameter in function of Density (Ntree/10000 m^2)
