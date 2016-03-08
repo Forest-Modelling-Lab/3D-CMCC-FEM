@@ -968,9 +968,10 @@ typedef struct {
 	double ter;  //total ecosystem respiration
 
 	/*water variables*/
+	double available_soil_water;
+	double old_available_soil_water;
 	double soil_evaporation;
 	double previous_available_soil_water;
-	double available_soil_water;
 	double water_balance, old_water_balance;
 	double total_yearly_evapotransipration;
 	double total_yearly_soil_evaporation;

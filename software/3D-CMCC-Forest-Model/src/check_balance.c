@@ -24,19 +24,18 @@ void Check_water_balance (CELL *c)
 	//FIXME OVERALL FUNCTION DOESN'T WORK!!
 
 	/* DAILY CHECK ON WATER BALANCE */
-//	Log("prcp = %f\n", met[month].d[day].prcp);
 	Log("c->daily_rain = %f\n", c->daily_rain);
 	Log("c->daily_snow = %f\n", c->daily_snow);
-//	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
-//	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
-//	Log("c->soil_evaporation = %f\n", c->soil_evaporation);
+	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
+	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
+	Log("c->soil_evaporation = %f\n", c->soil_evaporation);
 	Log("c->snow_subl = %f\n", c->snow_subl);
 	Log("c->snow_melt = %f\n", c->snow_melt);
-//	Log("c->runoff = %f\n", c->runoff);
-	Log("c->available_soil_water = %f\n", c->available_soil_water);
+	Log("c->runoff = %f\n", c->runoff);
+	Log("delta c->available_soil_water = %f\n", (c->available_soil_water - c->old_available_soil_water));
 	Log("c->snow_pack = %f\n", c->snow_pack);
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
-	Log("asw = %f\n", c->available_soil_water);
+	Log("c->available_soil_water = %f\n", c->available_soil_water);
 
 	//test
 	/*sum of sources (rain + snow)*/
@@ -46,7 +45,7 @@ void Check_water_balance (CELL *c)
 	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
-	water_stored = c->available_soil_water + c->daily_tot_c_water_stored + c->snow_pack;
+	water_stored = (c->available_soil_water - c->old_available_soil_water) + c->daily_tot_c_water_stored + c->daily_snow;
 
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;

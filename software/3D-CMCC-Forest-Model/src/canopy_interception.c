@@ -41,11 +41,12 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	{
 		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
 	}
-	Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
+	Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 
 	/*no snow but rain and canopy dry*/
 	if (met[month].d[day].tavg > 0.0 && c->daily_rain > 0.0 && s->value[CANOPY_WATER_STORED] == 0.0)
 	{
+		Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
@@ -171,6 +172,7 @@ extern void Get_canopy_interception  (SPECIES *const s, CELL *const c, const MET
 	/*no snow but rain but no interception occurs cause canopy still wet since the day(s) before*/
 	else if (met[month].d[day].tavg > 0.0 && c->daily_rain > 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
 	{
+		Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
 		/*check if canopy is not completely wet*/
 		s->value[RAIN_INTERCEPTED] = ((c->daily_rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
 
