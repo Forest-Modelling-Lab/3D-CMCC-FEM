@@ -15,7 +15,6 @@
 //fixme  maybe it can be moved to soil_model.c
 void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 {
-
 	Log("\nGET SOIL WATER BALACE\n");
 	c->old_available_soil_water = c->available_soil_water;
 
@@ -23,13 +22,12 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 	if(met[month].d[day].tavg>0.0)
 	{
 		c->available_soil_water = (c->available_soil_water + c->daily_rain + c->snow_melt)
-				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->daily_tot_c_water_stored + c->soil_evaporation + c->snow_subl + c->runoff);
+				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff);
 	}
 	else
 	{
 		c->available_soil_water = c->available_soil_water - c->soil_evaporation;
 	}
-
 	Log("ASW = %f mm\n", c->available_soil_water);
 	Log("snow pack = %f mm\n", c->snow_pack);
 

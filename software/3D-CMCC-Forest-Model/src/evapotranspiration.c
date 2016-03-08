@@ -23,7 +23,6 @@ extern void Get_evapotranspiration (CELL *c)
 
 	Log("\nGET_EVAPOTRANSPIRATION_ROUTINE\n");
 
-
 	c->daily_tot_et = c->daily_tot_c_evapotransp + c->soil_evaporation;
 	Log("Daily total EVAPOTRANSPIRATION = %f \n", c->daily_tot_et);
 

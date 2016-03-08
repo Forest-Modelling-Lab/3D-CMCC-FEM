@@ -16,6 +16,7 @@ void Reset_daily_variables (CELL *const c)
 	c->runoff = 0.0;
 	c->daily_tot_c_transp = 0.0;
 	c->daily_tot_c_int = 0.0;
+	c->daily_tot_c_evapo = 0.0;
 	c->soil_evaporation = 0.0;
 
 }

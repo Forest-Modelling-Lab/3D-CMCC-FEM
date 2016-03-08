@@ -1003,6 +1003,7 @@ typedef struct {
 	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double daily_c_int[3], daily_tot_c_int;
+	double daily_c_evapo[3], daily_tot_c_evapo;
 	double daily_c_water_stored[3], daily_tot_c_water_stored;
 	double daily_soil_evaporation_watt;
 	double daily_c_transp[3], daily_tot_c_transp;
@@ -1270,7 +1271,7 @@ void Get_biome_fraction (SPECIES *);
 /*evapotranspiration block*/
 void Get_canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
 void Get_canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
-void Get_canopy_evapotranspiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
+void Get_canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Get_evapotranspiration (CELL *);
 void Get_latent_heat_flux (CELL *);
 

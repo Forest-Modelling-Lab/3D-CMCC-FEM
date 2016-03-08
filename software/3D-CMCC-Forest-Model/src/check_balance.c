@@ -42,7 +42,7 @@ void Check_water_balance (CELL *c)
 	water_in = c->daily_rain + c->daily_snow + c->snow_melt;
 
 	/*sum of sinks*/
-	water_out = c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff;
+	water_out = c->daily_tot_c_transp + c->daily_tot_c_evapo + c->soil_evaporation + c->snow_subl + c->runoff;
 
 	/* sum of current storage */
 	water_stored = (c->available_soil_water - c->old_available_soil_water) + c->daily_tot_c_water_stored + c->daily_snow;
