@@ -28,6 +28,7 @@ void Check_water_balance (CELL *c)
 	Log("c->daily_snow = %f\n", c->daily_snow);
 	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
 	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
+	Log("c->daily_tot_c_evapo = %f\n", c->daily_tot_c_evapo);
 	Log("c->soil_evaporation = %f\n", c->soil_evaporation);
 	Log("c->snow_subl = %f\n", c->snow_subl);
 	Log("c->snow_melt = %f\n", c->snow_melt);
@@ -42,7 +43,8 @@ void Check_water_balance (CELL *c)
 	water_in = c->daily_rain + c->daily_snow + c->snow_melt;
 
 	/*sum of sinks*/
-	water_out = c->daily_tot_c_transp + c->daily_tot_c_evapo + c->soil_evaporation + c->snow_subl + c->runoff;
+	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
+	water_out = c->daily_tot_c_transp + c->daily_tot_c_evapo + c->daily_tot_c_int + c->soil_evaporation /*+ c->snow_subl*/ + c->runoff;
 
 	/* sum of current storage */
 	water_stored = (c->available_soil_water - c->old_available_soil_water) + c->daily_tot_c_water_stored + c->daily_snow;
@@ -50,9 +52,9 @@ void Check_water_balance (CELL *c)
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
 
-	Log("water in (c->daily_rain + c->daily_snow + c->snow_melt) = %f\n", water_in);
-	Log("water out (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff) = %f\n", water_out);
-	Log("water stored (c->available_soil_water + c->daily_tot_c_water_stored + c->snow_pack) = %f\n", water_stored);
+	Log("water in (daily_rain + daily_snow + snow_melt) = %f\n", water_in);
+	Log("water out (daily_tot_c_transp + daily_tot_c_int + soil_evaporation + snow_subl + runoff) = %f\n", water_out);
+	Log("water stored (delta available_soil_water + daily_tot_c_water_stored + daily_snow) = %f\n", water_stored);
 	Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
 	Log("old water balance = %f\n", c->old_water_balance);
 	Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);

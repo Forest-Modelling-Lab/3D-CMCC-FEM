@@ -85,13 +85,6 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			c->snow_pack += c->daily_snow;
 			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
 		}
-		else
-		{
-			c->daily_snow = 0.0;
-			Log("NO rain NO snow\n");
-			Log("snow pack = %f cm\n", c->snow_pack);
-		}
-
 		r_sub = incident_rad / c->lh_sub;
 
 		if (c->snow_pack > 0.0)
@@ -102,7 +95,8 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 				Log("Snow sublimation!!\n");
 				r_sub = c->snow_pack;
 				c->snow_subl = r_sub;
-				Log("Snow sublimated = %f mm\n", c->snow_subl);				/*check for balance*/
+				Log("Snow sublimated = %f mm\n", c->snow_subl);
+				/*check for balance*/
 				if (c->snow_subl < c->snow_pack)
 				{
 					c->snow_pack -= c->snow_subl;

@@ -22,7 +22,7 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 	if(met[month].d[day].tavg>0.0)
 	{
 		c->available_soil_water = (c->available_soil_water + c->daily_rain + c->snow_melt)
-				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->snow_subl + c->runoff);
+				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->runoff);
 	}
 	else
 	{
@@ -41,11 +41,11 @@ void Get_soil_water_balance (CELL *c, const MET_DATA *const met, int month, int 
 	}
 	if ( c->available_soil_water > c->max_asw)
 	{
+		c->runoff = c->available_soil_water -c->max_asw;
+		Log("Runoff = %f\n", c->runoff);
 		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
 		c->available_soil_water = c->max_asw;
 		Log("Available soil water = %f\n", c->available_soil_water);
-		c->runoff = c->available_soil_water -c->max_asw;
-		Log("Runoff = %f\n", c->runoff);
 	}
 	c->swc= (c->available_soil_water * 100)/c->max_asw;
 	Log("SWC = %g(%vol)\n", c->swc);
