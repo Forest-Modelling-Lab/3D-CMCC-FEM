@@ -1034,7 +1034,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f",
-				c->daily_gpp[0],
+				c->layer_daily_gpp[0],
 				c->daily_aut_resp[0],
 				c->daily_aut_resp_tDM[0]);
 
@@ -1066,7 +1066,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		previous_layer_number = c->annual_layer_number;
 
 		//reset
-		c->daily_gpp[0] = 0;
+		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_aut_resp_tDM[0] = 0;
 		c->daily_c_flux_tDM[0] = 0;
@@ -1113,7 +1113,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
-				c->daily_gpp[1], c->daily_gpp[0], c->daily_tot_gpp,
+				c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->layer_daily_gpp,
 				c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp);
 
 		if (!mystricmp(settings->dndc, "on"))
@@ -1134,7 +1134,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		previous_layer_number = c->annual_layer_number;
 
 		//reset
-		c->daily_gpp[1] = 0;
+		c->layer_daily_gpp[1] = 0;
 		c->daily_aut_resp[1] = 0;
 		c->daily_c_flux[1] = 0;
 		c->daily_npp[1] = 0;
@@ -1145,7 +1145,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
 
-		c->daily_gpp[0] = 0;
+		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_c_flux[0] = 0;
 		c->daily_npp[0] = 0;
@@ -1185,7 +1185,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 			Daily_Log ("\t%6.2f", c->daily_Nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
-				c->daily_gpp[2], c->daily_gpp[1],c->daily_gpp[0], c->daily_tot_gpp,
+				c->layer_daily_gpp[2], c->layer_daily_gpp[1],c->layer_daily_gpp[0], c->daily_tot_gpp,
 				c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp);
 
 		if (!mystricmp(settings->dndc, "on"))
@@ -1207,7 +1207,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		previous_layer_number = c->annual_layer_number;
 
 		//reset
-		c->daily_gpp[2] = 0;
+		c->layer_daily_gpp[2] = 0;
 		c->daily_aut_resp[2] = 0;
 		c->daily_c_flux[2] = 0;
 		c->daily_npp[2] = 0;
@@ -1219,7 +1219,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->daily_cc[2] = 0;
 		c->daily_dead_tree[2] = 0;
 
-		c->daily_gpp[1] = 0;
+		c->layer_daily_gpp[1] = 0;
 		c->daily_aut_resp[1] = 0;
 		c->daily_c_flux[1] = 0;
 		c->daily_npp[1] = 0;
@@ -1231,7 +1231,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->daily_cc[1] = 0;
 		c->daily_dead_tree[1] = 0;
 
-		c->daily_gpp[0] = 0;
+		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_c_flux[0] = 0;
 		c->daily_npp[0] = 0;
@@ -1268,7 +1268,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 	}
 	//reset after printed at the end of the day
 	/*
-	c->daily_gpp = 0;
+	c->class_daily_gpp = 0;
 	c->daily_npp = 0;
 	c->daily_et = 0;
 	c->daily_lai = 0;
@@ -1455,7 +1455,7 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				//				c->soils[0].DRCB1,
 				//				c->soils[0].DRCB2,
 				//				c->soils[0].clay_nh4,
-				c->daily_gpp[0],
+				c->layer_daily_gpp[0],
 				c->daily_aut_resp[0],
 				c->daily_tot_gpp,
 				c->daily_tot_aut_resp,
@@ -1485,7 +1485,7 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 
 		c->daily_tot_gpp = 0;
 		c->daily_tot_aut_resp = 0;
-		c->daily_gpp[0] = 0;
+		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 
 	}
@@ -1516,7 +1516,7 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 				c->soils[soil].resistantPlantMaterial,
 				c->soils[soil].humifiedOM,
 				c->soils[soil].inertOM),
-						c->daily_gpp[0],
+						c->layer_daily_gpp[0],
 						c->daily_aut_resp[0],
 						c->daily_tot_gpp,
 						c->daily_tot_aut_resp;
@@ -1530,7 +1530,7 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 		c->monthly_tot_litterfall = 0;
 		c->daily_tot_gpp = 0;
 		c->daily_tot_aut_resp = 0;
-		c->daily_gpp[0] = 0;
+		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 
 	}

@@ -97,7 +97,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 	i = c->heights[height].z;
 
-	c->daily_gpp[i] += s->value[GPP_g_C];
+	c->layer_daily_gpp[i] += s->value[GPP_g_C];
 	c->monthly_gpp[i] += s->value[GPP_g_C];
 	c->annual_gpp[i] += s->value[GPP_g_C];
 
