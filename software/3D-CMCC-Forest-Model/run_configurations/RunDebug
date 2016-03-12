@@ -1,9 +1,10 @@
--i input/parameterization
+-i input/DKSoroe
 -o output/debug_output/debug_output
 -b output/daily_output/daily_output
 -f output/monthly_output/monthly_output
 -e output/annual_output/annual_output
--d input/initialization_data/smm_input.txt
--m input/met_data/123_456_2001.txt
--s input/site_data/Run_debug.txt
--c input/model_settings/Brasschaat_settings.txt
+-d input/DKSoroe/Soroe_input_1ha_2001.txt
+-m input/DKSoroe/climate_txt/111_111_2001_new_rh.txt
+-s input/DKSoroe/Soroe_site.txt
+-c input/DKSoroe/Soroe_settings.txt
+-r output/output_var_list
