@@ -31,7 +31,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	static double Yearly_Temp;
 	static double Yearly_Vpd;
 	static double Yearly_Rain;
-	static double vpd;
+	//static double vpd;
 
 
 	//SOIL NITROGEN CONTENT see Peng et al., 2002
@@ -107,15 +107,13 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//used if vpd is in kPa to convert it into mbar
 		//met[month].d[day].vpd *= 10.0;
 
-		vpd =  met[month].d[day].vpd ; //Get_vpd (met, month);
-
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].d[day].solar_rad;
-		Yearly_Vpd += vpd;
+		Yearly_Vpd += met[month].d[day].vpd;
 		Yearly_Temp += met[month].d[day].tavg;
 		Yearly_Rain += met[month].d[day].prcp;
 
-		Print_met_data (met, vpd, month, day);
+		Print_met_data (met, month, day);
 		/*reset daily variables*/
 		Reset_daily_variables(&m->cells[cell]);
 		/*compute latent heat values*/
@@ -228,12 +226,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 									/*modifiers*/
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-											met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
+											met, years, month, day, DaysInMonth[month], m->cells[cell].heights[height].z,
 											m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 									/*canopy water fluxes block*/
 									Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height, age, species);
 									Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 									/*canopy carbon fluxes block*/
@@ -308,12 +306,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 								/*modifiers*/
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-										met, years, month, day, DaysInMonth[month], m->cells[cell].available_soil_water, vpd, m->cells[cell].heights[height].z,
+										met, years, month, day, DaysInMonth[month], m->cells[cell].heights[height].z,
 										m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 								/*canopy water fluxes block*/
 								Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], vpd, height, age, species);
+								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height, age, species);
 								Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/*canopy carbon fluxes block*/

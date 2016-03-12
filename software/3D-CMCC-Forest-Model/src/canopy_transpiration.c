@@ -16,7 +16,7 @@
 #include "constants.h"
 
 
-extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, double vpd, int height, int age, int species)
+extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height, int age, int species)
 {
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg
@@ -57,7 +57,7 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 
 	s->value[BLCOND] *= g_corr;
 
-	defTerm = met[month].d[day].rho_air * c->lh_vap * (vpd * VPDCONV) * s->value[BLCOND];
+	defTerm = met[month].d[day].rho_air * c->lh_vap * (met[month].d[day].vpd * VPDCONV) * s->value[BLCOND];
 	Log("defTerm = %f\n", defTerm);
 	duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
 	//Log("duv = %f\n", duv);
@@ -86,10 +86,10 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 		if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 		{
 			/*control*/
-			if (c->available_soil_water < c->daily_c_transp[c->top_layer])
+			if (c->asw < c->daily_c_transp[c->top_layer])
 			{
 				Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-				c->daily_c_transp[c->top_layer] = c->available_soil_water;
+				c->daily_c_transp[c->top_layer] = c->asw;
 			}
 		}
 	}
@@ -104,10 +104,10 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 			if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 			{
 				/*control*/
-				if (c->available_soil_water < c->daily_c_transp[c->top_layer-1])
+				if (c->asw < c->daily_c_transp[c->top_layer-1])
 				{
 					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_transp[c->top_layer-1] = c->available_soil_water;
+					c->daily_c_transp[c->top_layer-1] = c->asw;
 				}
 			}
 		}
@@ -120,10 +120,10 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 			if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 			{
 				/*control*/
-				if (c->available_soil_water < c->daily_c_transp[c->top_layer-2])
+				if (c->asw < c->daily_c_transp[c->top_layer-2])
 				{
 					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_transp[c->top_layer-2] = c->available_soil_water;
+					c->daily_c_transp[c->top_layer-2] = c->asw;
 				}
 			}
 		}

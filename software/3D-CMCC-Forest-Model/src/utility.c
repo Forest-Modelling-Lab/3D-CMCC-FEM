@@ -9,7 +9,7 @@
 
 void Reset_daily_variables (CELL *const c)
 {
-	c->daily_rain = 0.0;
+	c->daily_prcp = 0.0;
 	c->daily_snow = 0.0;
 	c->snow_melt = 0.0;
 	c->snow_subl = 0.0;

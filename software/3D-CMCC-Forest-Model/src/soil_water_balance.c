@@ -16,37 +16,37 @@
 void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 {
 	Log("\nGET SOIL WATER BALACE\n");
-	c->old_available_soil_water = c->available_soil_water;
+	c->old_available_soil_water = c->asw;
 
 	/*update balance*/
 	if(met[month].d[day].tavg>0.0)
 	{
-		c->available_soil_water = (c->available_soil_water + c->daily_rain + c->snow_melt)
+		c->asw = (c->asw + c->daily_prcp + c->snow_melt)
 				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->runoff);
 	}
 	else
 	{
-		c->available_soil_water = c->available_soil_water - c->soil_evaporation;
+		c->asw = c->asw - c->soil_evaporation;
 	}
-	Log("ASW = %f mm\n", c->available_soil_water);
+	Log("ASW = %f mm\n", c->asw);
 	Log("snow pack = %f mm\n", c->snow_pack);
 
 	/*check*/
-	if (c->available_soil_water < (c->max_asw * site->min_frac_maxasw))
+	if (c->asw < (c->max_asw * site->min_frac_maxasw))
 	{
 		//TEST REMOVED ANY REFILL OF WATER SOIL
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		//c->available_soil_water = c->max_asw * site->min_frac_maxasw;
-		Log("ASW = %f\n", c->available_soil_water);
+		//c->asw = c->max_asw * site->min_frac_maxasw;
+		Log("ASW = %f\n", c->asw);
 	}
-	if ( c->available_soil_water > c->max_asw)
+	if ( c->asw > c->max_asw)
 	{
-		c->runoff = c->available_soil_water -c->max_asw;
+		c->runoff = c->asw -c->max_asw;
 		Log("Runoff = %f\n", c->runoff);
 		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-		c->available_soil_water = c->max_asw;
-		Log("Available soil water = %f\n", c->available_soil_water);
+		c->asw = c->max_asw;
+		Log("Available soil water = %f\n", c->asw);
 	}
-	c->swc= (c->available_soil_water * 100)/c->max_asw;
+	c->swc= (c->asw * 100)/c->max_asw;
 	Log("SWC = %g(%vol)\n", c->swc);
 }

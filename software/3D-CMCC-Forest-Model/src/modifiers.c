@@ -9,7 +9,7 @@
 
 
 
-void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DATA *const met, int year,  int month, int day, int daysinmonth, double available_soil_water, double vpd,  int z, int management, int height )
+void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DATA *const met, int year,  int month, int day, int daysinmonth,  int z, int management, int height )
 {
 	double RelAge;
 	double vwc; //soil volumetric water content
@@ -148,7 +148,7 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 	//1 hPa = 1 mbar
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
-	s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd);
+	s->value[F_VPD] = exp (- s->value[COEFFCOND] * met[month].d[day].vpd);
 	c->daily_f_vpd = s->value[F_VPD];
 	Log("fVPD = %f\n", s->value[F_VPD]);
 
@@ -167,7 +167,7 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 			//for TIMBER
 			//AGE FOR TIMBER IS THE EFFECTIVE AGE
 			RelAge = (double)a->value / s->value[MAXAGE];
-			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE] )));
+			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE])));
 			//Log("--Rel Age = %f years\n", RelAge);
 			//Log("--Age = %d years\n", a->value);
 			Log("fAge = %f\n", s->value[F_AGE]);
@@ -177,7 +177,7 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 			//for SHOOTS
 			//AGE FOR COPPICE IS THE AGE FROM THE COPPICING
 			RelAge = (double)a->value / s->value[MAXAGE_S];
-			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S] )));
+			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S])));
 			//Log("--Rel Age = %f years\n", RelAge);
 			//Log("--Age = %d years\n", a->value);
 			Log("fAge = %f\n", s->value[F_AGE]);
@@ -200,7 +200,7 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 
 	/*SOIL WATER MODIFIER*/
 	//FIXME CHECK IT
-	Log("ASW = %f\n", c->available_soil_water);
+	Log("ASW = %f\n", c->asw);
 	Log("MIN ASW = %f\n", c->max_asw * site->min_frac_maxasw);
 	Log("moist ratio = %f\n", c->soil_moist_ratio);
 
@@ -227,10 +227,10 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 
 	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
 	//100 mm H20 m^-2 = 100 kg H20 m^-2
-	Log("available soil water %f mm\n", c->available_soil_water);
+	Log("available soil water %f mm\n", c->asw);
 
 	/* (DIM) volumetric water content */
-	vwc = c->available_soil_water / (1000.0 * (site->soil_depth/100));
+	vwc = c->asw / (1000.0 * (site->soil_depth/100));
 	Log("volumetric available soil water  = %f (DIM)\n", vwc);
 	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
 	Log ("vwc/vwc_sat = %f \n", vwc / c->vwc_sat);

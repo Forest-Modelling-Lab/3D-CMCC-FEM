@@ -972,7 +972,7 @@ typedef struct {
 	double carbon_balance, old_carbon_balance;
 
 	/*water variables*/
-	double available_soil_water;
+	double asw;
 	double old_available_soil_water;
 	double soil_evaporation;
 	double previous_available_soil_water;
@@ -988,7 +988,7 @@ typedef struct {
 	double soil_b; //soil moisture parameter
 	double soilw_sat; //(kgH2O/m2) soilwater at saturation
 	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
-	double daily_rain;
+	double daily_prcp;
 	double rain_intercepted;;
 	double water_to_soil;
 	double water_to_atmosphere;
@@ -1173,7 +1173,7 @@ void soilDebug_logClose(void);
 void Age_Mortality (SPECIES *const, AGE *const);
 void Greff_Mortality (SPECIES *const);
 void Mortality (SPECIES *const, int);
-void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, double, double, int, int, int);
+void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, int, int, int);
 void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber (SPECIES *const, int, int, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
@@ -1226,7 +1226,7 @@ void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 void Stool_mortality (SPECIES *, int);
 void Forest_structure (CELL *, const int,const int,const int);
 void Print_met_daily_data (const YOS *const , int , int , int );
-void Print_met_data (const MET_DATA *const, double, int, int);
+void Print_met_data (const MET_DATA *const, int, int);
 void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
 void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
 void Print_parameters (SPECIES *const, int, int, int);
@@ -1262,7 +1262,7 @@ void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Latent_heat (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
 /*evapotranspiration block*/
-void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, double, int, int, int);
+void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
 void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);

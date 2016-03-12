@@ -281,7 +281,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	Log("- Crown Diameter = %f \n",  c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 	Log("- Canopy Cover = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 
-	Log("- ASW layer %d month %d  = %f mm\n",  c->heights[height].z, month + 1, c->available_soil_water);
+	Log("- ASW layer %d month %d  = %f mm\n",  c->heights[height].z, month + 1, c->asw);
 
 	if (!month)
 	{

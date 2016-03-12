@@ -30,10 +30,10 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 		if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 		{
 			/*control*/
-			if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer])
+			if (c->asw < c->daily_c_evapotransp[c->top_layer])
 			{
 				Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-				c->daily_c_evapotransp[c->top_layer] = c->available_soil_water;
+				c->daily_c_evapotransp[c->top_layer] = c->asw;
 			}
 		}
 	}
@@ -49,10 +49,10 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 			if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 			{
 				/*control*/
-				if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-1])
+				if (c->asw < c->daily_c_evapotransp[c->top_layer-1])
 				{
 					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_evapotransp[c->top_layer-1] = c->available_soil_water;
+					c->daily_c_evapotransp[c->top_layer-1] = c->asw;
 				}
 			}
 		}
@@ -65,10 +65,10 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 			if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 			{
 				/*control*/
-				if (c->available_soil_water < c->daily_c_evapotransp[c->top_layer-2])
+				if (c->asw < c->daily_c_evapotransp[c->top_layer-2])
 				{
 					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_evapotransp[c->top_layer-2] = c->available_soil_water;
+					c->daily_c_evapotransp[c->top_layer-2] = c->asw;
 				}
 			}
 		}

@@ -224,7 +224,7 @@ void Latent_heat (CELL *c, MET_DATA *met, int month, int day)
 
 
 
-void Print_met_data (const MET_DATA *const met, double vpd, int month, int day)
+void Print_met_data (const MET_DATA *const met, int month, int day)
 {
 	//here is valid only into function
 	static int doy;
