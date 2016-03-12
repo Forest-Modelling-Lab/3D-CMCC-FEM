@@ -953,17 +953,17 @@ typedef struct {
 	double av_yearly_par_soil;
 
 	/*carbon variables*/
-	double gpp;     //in g of C m^2
-	double npp_gC;
+	double daily_gpp, monthly_gpp, annual_gpp;     //in g of C m^2
+	double npp_gC;	//in g of C m^2
 	double npp_tDM;     //in tonnes of DM per hectare
 	double av_gpp;
 	double av_npp;
 	double stand_agb;
 	double stand_bgb;
 	double litter;
-	double soil_respiration;
 	double aut_respiration; //autotrophic respiration
 	double het_respiration; //heterotrophic respiration
+	double soil_respiration;
 	double ter;  //total ecosystem respiration
 	double carbon_balance, old_carbon_balance;
 	double nee;
@@ -972,6 +972,7 @@ typedef struct {
 	/*water variables*/
 	double asw;
 	double old_asw;
+	double max_asw;
 	double soil_evaporation;
 	double previous_available_soil_water;
 	double water_balance, old_water_balance;
@@ -979,7 +980,6 @@ typedef struct {
 	double total_yearly_soil_evaporation;
 	double soil_moist_ratio;
 	double av_soil_moist_ratio;
-	double max_asw;
 	double swc;//volumetric soil water content (%vol)
 	double psi_sat;//soil saturated matric potential
 	double vwc_sat;//soil saturated Volumetric water content
@@ -999,33 +999,34 @@ typedef struct {
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
 	double out_flow;
+	double daily_tot_c_int;
+	double daily_tot_c_transp;
+	double daily_tot_c_evapo;
+	double daily_tot_c_water_stored;
+	double daily_tot_c_evapotransp;
+	double daily_tot_et;
+	/*energy balance*/
+	double daily_tot_c_int_watt;
+	double daily_tot_c_transp_watt;
+	double daily_tot_c_evapotransp_watt;
+	double daily_soil_evaporation_watt;
+	double daily_tot_latent_heat_flux;
+	/*cumulate variables*/
+	double monthly_tot_c_evapotransp, annual_tot_c_evapotransp;
+	double monthly_tot_et, annual_tot_et;
 
 	//todo move variables in the right place
 	//cumulative variables layer related used in annual-monthly-daily Log
-	double layer_daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	double layer_daily_gpp[3], layer_monthly_gpp[3], layer_annual_gpp[3];
 	double layer_daily_npp_tDM[3], daily_tot_npp, layer_monthly_npp_tDM[3], monthly_tot_npp, layer_annual_npp_tDM[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
-	double daily_c_int[3], daily_tot_c_int;
-	double daily_c_evapo[3], daily_tot_c_evapo;
-	double daily_c_water_stored[3], daily_tot_c_water_stored;
-	double daily_soil_evaporation_watt;
-	double daily_c_transp[3], daily_tot_c_transp;
-	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
-	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
-	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
 	double monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
-	double daily_tot_latent_heat_flux;
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
 	double daily_aut_resp[3], daily_tot_aut_resp,daily_tot_het_resp, monthly_aut_resp[3], monthly_tot_aut_resp,monthly_tot_het_resp, annual_aut_resp[3], annual_tot_aut_resp, annual_tot_het_resp;
 	double daily_aut_resp_tDM[3];
 	double daily_c_flux[3], daily_tot_c_flux, monthly_c_flux[3], monthly_tot_c_flux, annual_c_flux[3], annual_tot_c_flux;
 	double daily_c_flux_tDM[3];
-	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
-	double daily_cc[3], monthly_cc[3], annual_cc[3];
-	double daily_lai[3];
-	double annual_peak_lai[10];
-	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
 	double daily_delta_wts[3], daily_wts[3], monthly_delta_wts[3], monthly_wts[3], annual_delta_wts[3], annual_wts[3];
@@ -1035,6 +1036,20 @@ typedef struct {
 	double daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
 	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
 	double daily_tot_litterfall, monthly_tot_litterfall, annual_tot_litterfall;
+
+	double daily_c_int[3], monthly_c_int[3], annual_c_int[3];
+	double daily_c_evapo[3], monthly_c_evapo[3], annual_c_evapo[3];
+	double daily_c_water_stored[3], monthly_c_water_stored[3], annual_c_water_stored[3];
+	double daily_c_transp[3], monthly_c_transp[3], annual_c_transp[3];
+	double daily_c_evapotransp[3], monthly_c_evapotransp[3], annual_c_evapotransp[3];
+	double daily_et[3], monthly_et[3], annual_et[3];
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
+
+	double daily_cc[3], monthly_cc[3], annual_cc[3];
+	double daily_lai[3];
+	double annual_peak_lai[10];
+	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
+
 	double annual_dbh[3];
 
 

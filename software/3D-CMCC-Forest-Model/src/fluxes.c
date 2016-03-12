@@ -58,7 +58,7 @@ void get_net_ecosystem_exchange(CELL *const c)
 		c->annual_tot_het_resp += c->soils[i].co2 * 1000.0;
 	}
 	c->Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
-	c->nee = c->daily_tot_gpp - c->Reco;
+	c->nee = c->daily_gpp - c->Reco;
 
 	c->monthly_Reco +=  c->Reco;
 	c->monthly_Nee +=  c->nee;

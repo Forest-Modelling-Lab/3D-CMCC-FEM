@@ -62,7 +62,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->canopy_cover_subdominated = 0;
 
 
-				c->gpp = 0;
+				c->daily_gpp = 0;
 				c->npp_tDM = 0;
 				c->stand_agb = 0;
 				c->stand_bgb = 0;

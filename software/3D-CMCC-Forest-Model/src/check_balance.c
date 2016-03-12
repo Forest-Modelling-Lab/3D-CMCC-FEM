@@ -23,7 +23,7 @@ void Check_carbon_balance (CELL *c)
 
 	carbon_out = c->aut_respiration;
 
-	carbon_stored = c->npp_gC;
+	carbon_stored = c->daily_npp_gC;
 
 	c->carbon_balance = carbon_in - carbon_out - carbon_stored;
 
