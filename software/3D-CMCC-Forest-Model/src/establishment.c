@@ -6,7 +6,7 @@
 #include "constants.h"
 
 /**/
-int Establishment_LPJ (SPECIES *const s, double Light_Absorb_for_establishment, double  canopy_cover_dominant)
+int Establishment_LPJ (CELL *const c, SPECIES *const s)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -39,8 +39,8 @@ int Establishment_LPJ (SPECIES *const s, double Light_Absorb_for_establishment, 
 	   Log("Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
 	 */
 
-	EstabRate = (s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - Light_Absorb_for_establishment))) * (1 - Light_Absorb_for_establishment)) / s->counter[N_TREE];
-	Log("Light absorb for establishment = %f \n", Light_Absorb_for_establishment);
+	EstabRate = (s->value[GERMCAPACITY] * (1 - exp((-5) * (1 - c->par_for_establishment))) * (1 - c->par_for_establishment)) / s->counter[N_TREE];
+	Log("Light absorb for establishment = %f \n", c->par_for_establishment);
 	Log("Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
 
 

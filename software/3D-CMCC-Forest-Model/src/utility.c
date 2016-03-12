@@ -9,15 +9,33 @@
 
 void Reset_daily_variables (CELL *const c)
 {
-	c->daily_prcp = 0.0;
-	c->daily_snow = 0.0;
+	c->prcp_rain = 0.0;
+	c->prcp_snow = 0.0;
 	c->snow_melt = 0.0;
 	c->snow_subl = 0.0;
-	c->runoff = 0.0;
+	c->out_flow = 0.0;
 	c->daily_tot_c_transp = 0.0;
 	c->daily_tot_c_int = 0.0;
 	c->daily_tot_c_evapo = 0.0;
 	c->soil_evaporation = 0.0;
+
+	c->daily_tot_litterfall = 0;
+	c->dominant_veg_counter = 0;
+	c->dominated_veg_counter = 0;
+	c->subdominated_veg_counter = 0;
+
+	c->daily_dead_tree[0] = 0;
+	c->daily_dead_tree[1] = 0;
+	c->daily_dead_tree[2] = 0;
+	c->daily_tot_dead_tree = 0;
+	c->monthly_dead_tree[0] = 0;
+	c->monthly_dead_tree[1] = 0;
+	c->monthly_dead_tree[2] = 0;
+	c->monthly_tot_dead_tree = 0;
+	c->annual_dead_tree[0] = 0;
+	c->annual_dead_tree[1] = 0;
+	c->annual_dead_tree[2] = 0;
+	c->annual_tot_dead_tree = 0;
 
 }
 
@@ -45,7 +63,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 
 
 				c->gpp = 0;
-				c->npp = 0;
+				c->npp_tDM = 0;
 				c->stand_agb = 0;
 				c->stand_bgb = 0;
 				//c->dead_tree = 0;

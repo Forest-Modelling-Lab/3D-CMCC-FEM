@@ -62,29 +62,29 @@ void Check_water_balance (CELL *c)
 	//FIXME OVERALL FUNCTION DOESN'T WORK!!
 
 	/* DAILY CHECK ON WATER BALANCE */
-	Log("c->daily_prcp = %f\n", c->daily_prcp);
-	Log("c->daily_snow = %f\n", c->daily_snow);
+	Log("c->prcp_rain = %f\n", c->prcp_rain);
+	Log("c->prcp_snow = %f\n", c->prcp_snow);
 	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
 	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
 	Log("c->daily_tot_c_evapo = %f\n", c->daily_tot_c_evapo);
 	Log("c->soil_evaporation = %f\n", c->soil_evaporation);
 	Log("c->snow_subl = %f\n", c->snow_subl);
 	Log("c->snow_melt = %f\n", c->snow_melt);
-	Log("c->runoff = %f\n", c->runoff);
-	Log("delta c->asw = %f\n", (c->asw - c->old_available_soil_water));
+	Log("c->out_flow = %f\n", c->out_flow);
+	Log("delta c->asw = %f\n", (c->asw - c->old_asw));
 	Log("c->snow_pack = %f\n", c->snow_pack);
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 	Log("c->asw = %f\n", c->asw);
 
 	/*sum of sources (rain + snow)*/
-	water_in = c->daily_prcp + c->daily_snow + c->snow_melt;
+	water_in = c->prcp_rain + c->prcp_snow + c->snow_melt;
 
 	/*sum of sinks*/
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
-	water_out = c->daily_tot_c_transp + c->daily_tot_c_evapo + c->daily_tot_c_int + c->soil_evaporation /*+ c->snow_subl*/ + c->runoff;
+	water_out = c->daily_tot_c_transp + c->daily_tot_c_evapo + c->daily_tot_c_int + c->soil_evaporation /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage */
-	water_stored = (c->asw - c->old_available_soil_water) + c->daily_tot_c_water_stored + c->daily_snow;
+	water_stored = (c->asw - c->old_asw) + c->daily_tot_c_water_stored + c->prcp_snow;
 
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;

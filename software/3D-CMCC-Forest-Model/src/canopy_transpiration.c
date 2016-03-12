@@ -16,7 +16,7 @@
 #include "constants.h"
 
 
-extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height, int age, int species)
+extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
 {
 	static double defTerm;
 	static double duv;                      // 'div' in 3pg

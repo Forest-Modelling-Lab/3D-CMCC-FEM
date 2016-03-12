@@ -99,11 +99,11 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 
 	i = c->heights[height].z;
 
-	c->daily_npp[i] += s->value[NPP];
+	c->layer_daily_npp_tDM[i] += s->value[NPP];
 	c->daily_npp_g_c[i] += s->value[NPP_g_C];
-	c->monthly_npp[i] += s->value[NPP];
+	c->layer_monthly_npp_tDM[i] += s->value[NPP];
 	c->monthly_npp_g_c[i] += s->value[NPP_g_C];
-	c->annual_npp[i] += s->value[NPP];
+	c->layer_annual_npp_tDM[i] += s->value[NPP];
 	c->annual_npp_g_c[i] += s->value[NPP_g_C];
 
 	c->daily_tot_npp += s->value[NPP];
@@ -124,9 +124,9 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	Log("*********************** STAND LEVEL ANNUAL NPP ********************** \n");
 
 	//cell level
-	c->npp += s->value[NPP];
+	c->npp_tDM += s->value[NPP];
 	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->npp);
+	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->npp_tDM);
 
 }
 

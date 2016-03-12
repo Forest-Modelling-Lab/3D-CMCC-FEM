@@ -39,8 +39,8 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	/* temperature and radiation melt from snowpack */
 	if (met[month].d[day].tavg > 0.0)
 	{
-		c->daily_prcp = met[month].d[day].prcp;
-		Log("daily_prcp = rain = %f mm\n", c->daily_prcp);
+		c->prcp_rain = met[month].d[day].prcp;
+		Log("prcp_rain = rain = %f mm\n", c->prcp_rain);
 
 		if (c->snow_pack > 0.0)
 		{
@@ -79,10 +79,10 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	{
 		if(met[month].d[day].prcp > 0.0)
 		{
-			c->daily_snow = met[month].d[day].prcp;
-			Log("prcp = snow = %f cm\n", c->daily_snow);
+			c->prcp_snow = met[month].d[day].prcp;
+			Log("prcp = snow = %f cm\n", c->prcp_snow);
 
-			c->snow_pack += c->daily_snow;
+			c->snow_pack += c->prcp_snow;
 			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
 		}
 		r_sub = incident_rad / c->lh_sub;

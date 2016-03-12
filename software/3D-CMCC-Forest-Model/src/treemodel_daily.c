@@ -23,16 +23,11 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	static int age;
 	static int species;
 
-	static double Light_Absorb_for_establishment;
-	static double Light_for_establishment;
-
 	//Yearly average met data
 	static double Yearly_Solar_Rad;
 	static double Yearly_Temp;
 	static double Yearly_Vpd;
 	static double Yearly_Rain;
-	//static double vpd;
-
 
 	//SOIL NITROGEN CONTENT see Peng et al., 2002
 	//static double N_avl;  //Total nitrogen available for tree growth see Peng et al., 2002
@@ -53,22 +48,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			//annual forest structure
 			Annual_numbers_of_layers (&m->cells[cell]);
 			Tree_Branch_Bark (&m->cells[cell], years);
-			//fixme sergio: i've inserted here the variables which need to be set to 0 at the beginning of each year of simulation
-			if (years == 0)
-			{
-				m->cells->daily_dead_tree[0] = 0;
-				m->cells->daily_dead_tree[1] = 0;
-				m->cells->daily_dead_tree[2] = 0;
-				m->cells->daily_tot_dead_tree = 0;
-				m->cells->monthly_dead_tree[0] = 0;
-				m->cells->monthly_dead_tree[1] = 0;
-				m->cells->monthly_dead_tree[2] = 0;
-				m->cells->monthly_tot_dead_tree = 0;
-				m->cells->annual_dead_tree[0] = 0;
-				m->cells->annual_dead_tree[1] = 0;
-				m->cells->annual_dead_tree[2] = 0;
-				m->cells->annual_tot_dead_tree = 0;
-			}
 		}
 
 		Forest_structure (&m->cells[cell], day, month, years);
@@ -113,7 +92,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Temp += met[month].d[day].tavg;
 		Yearly_Rain += met[month].d[day].prcp;
 
-		Print_met_data (met, month, day);
+		//Print_met_data (met, month, day);
 		/*reset daily variables*/
 		Reset_daily_variables(&m->cells[cell]);
 		/*compute latent heat values*/
@@ -209,10 +188,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								{
 									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
-								if ( m->cells[cell].heights[height].ages[age].species[species].value[LAI] < 0.0)
-								{
-									Log("ERROR!!!!! LAI < 0!!!!!\n");
-								}
 								//vegetative period for deciduous
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 								{
@@ -226,12 +201,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 									/*modifiers*/
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-											met, years, month, day, DaysInMonth[month], m->cells[cell].heights[height].z,
+											met, month, day, m->cells[cell].heights[height].z,
 											m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 									/*canopy water fluxes block*/
 									Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height, age, species);
+									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 									/*canopy carbon fluxes block*/
@@ -247,14 +222,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 									Log("--------------------------------------------------------------------------\n\n\n");
-
-									if (height == 0)
-									{
-										Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par);
-										Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par);
-										Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
-										Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
-									}
 									if (settings->spatial == 'u')
 									{
 										Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
@@ -275,8 +242,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									}
 
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
-
-
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -306,12 +271,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 								/*modifiers*/
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-										met, years, month, day, DaysInMonth[month], m->cells[cell].heights[height].z,
+										met, month, day, m->cells[cell].heights[height].z,
 										m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 								/*canopy water fluxes block*/
 								Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height, age, species);
+								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 								Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/*canopy carbon fluxes block*/
@@ -327,13 +292,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Log("--------------------------------------------------------------------------\n\n\n");
 
-								if (m->cells[cell].heights[height].z == 0)
-								{
-									Light_Absorb_for_establishment = (m->cells[cell].par_for_soil / m->cells[cell].par);
-									Log("PAR OVER CANOPY = %f \n",  m->cells[cell].par);
-									Log("PAR FOR SOIL = %f \n", m->cells[cell].par_for_soil);
-									Log("Average Light Absorbed for establishment = %f \n", Light_Absorb_for_establishment);
-								}
 							}
 							/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
 							/*LITTERFALL COMPUTATION AT CELL LEVEL*/
@@ -386,7 +344,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								if (Yearly_Rain > m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN])
 								{
 								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Establishment_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], Light_Absorb_for_establishment);
+								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Establishment_LPJ ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
 								Log("Saplings Number from LPJ = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 								}
 								else
@@ -587,26 +545,20 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						/*FUNCTIONS FOR SAPLINGS*/
 						else
 						{
-
 							if(day == 30 && month == DECEMBER)
 							{
 								Log("\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 								Log("SAPLINGS\n");
 								/*
-	                           Saplings_counter += 1;
-	                           Log("-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
+								 Saplings_counter += 1;
+								 Log("-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
 								 */
 								Log("Age %d\n", m->cells[cell].heights[height].ages[age].value);
 								//Log("Species %s\n", m->cells[cell].heights[height].ages[age].species[species].name);
 
-								/*Saplings mortality based on light availability*/
-								Light_for_establishment = m->cells[cell].par_for_soil / MOLPAR_MJ;
-								Log("Radiation for soil =  %f W/m^2\n", Light_for_establishment);
-
-
 								if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 1)
 								{
-									if ( Light_for_establishment < settings->light_estab_very_tolerant)
+									if (m->cells[cell].par_for_establishment < settings->light_estab_very_tolerant)
 									{
 										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 										Log("NO Light for Establishment\n");
@@ -614,7 +566,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 2)
 								{
-									if ( Light_for_establishment < settings->light_estab_tolerant)
+									if (m->cells[cell].par_for_establishment < settings->light_estab_tolerant)
 									{
 										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 										Log("NO Light for Establishment\n");
@@ -622,7 +574,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								else if ( m->cells[cell].heights[height].ages[age].species[species].value[LIGHT_TOL] == 3)
 								{
-									if ( Light_for_establishment < settings->light_estab_intermediate)
+									if (m->cells[cell].par_for_establishment < settings->light_estab_intermediate)
 									{
 										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 										Log("NO Light for Establishment\n");
@@ -630,21 +582,20 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								else
 								{
-									if ( Light_for_establishment < settings->light_estab_intolerant)
+									if (m->cells[cell].par_for_establishment < settings->light_estab_intolerant)
 									{
 										m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 										Log("NO Light for Establishment\n");
 									}
 								}
-								/*
-	                        if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
-	                        {
-	                        Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
+												/*
+								if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
+								{
+								Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
-	                        Saplings_counter -= 1;
-	                        }
+								Saplings_counter -= 1;
+								}
 								 */
-
 								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							}
 						}
@@ -664,9 +615,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		}
 		Log("****************END OF HEIGHT CLASS***************\n");
 
-		/*CHECK FOR CARBON BALANCE CLOSURE*/
-		Check_carbon_balance (&m->cells[cell]);
-
 		/*compute soil respiration*/
 		Soil_respiration (&m->cells[cell]);
 		/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
@@ -679,13 +627,10 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Soil_water_balance (&m->cells[cell], met, month, day);
 		/*compute water fluxes*/
 		Water_fluxes (&m->cells[cell]);
+		/*CHECK FOR CARBON BALANCE CLOSURE*/
+		Check_carbon_balance (&m->cells[cell]);
 		/*CHECK FOR WATER BALANCE CLOSURE*/
 		Check_water_balance (&m->cells[cell]);
-
-		m->cells[cell].daily_tot_litterfall = 0;
-		m->cells[cell].dominant_veg_counter = 0;
-		m->cells[cell].dominated_veg_counter = 0;
-		m->cells[cell].subdominated_veg_counter = 0;
 
 		m->cells[cell].dos  += 1;
 		//todo: soilmodel could stay here or in main.c

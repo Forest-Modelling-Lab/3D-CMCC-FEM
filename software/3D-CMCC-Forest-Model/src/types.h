@@ -866,10 +866,10 @@ typedef struct {
 	int class;
 
 	//cumulative variables class related used in annual-monthly-daily Log
-
+/*
 	//test set as layer level result e.g. layer_daily_gpp[]
-	double daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	double class_daily_gpp[3], class_daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
+	double class_daily_npp[3], class_daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
@@ -880,7 +880,7 @@ typedef struct {
 	double annual_peak_lai[10];
 	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
-
+*/
 } CLASS;
 
 /* */
@@ -929,9 +929,9 @@ typedef struct {
 	double layer_cover_dominant;
 	double layer_cover_dominated;
 	double layer_cover_subdominated;
-	int annual_layer_number;
-	int monthly_layer_number;
 	int daily_layer_number;
+	int monthly_layer_number;
+	int annual_layer_number;
 	int top_layer;
 	int saplings_counter;
 	double gapcover[3];
@@ -941,25 +941,21 @@ typedef struct {
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
 	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
-	double net_radiation_no_albedo; /*the no albedo computation is used for gap*/
 	double net_radiation_for_dominated;
-	double net_radiation_for_dominated_no_albedo; //not need to be used
 	double net_radiation_for_subdominated;
-	double net_radiation_for_subdominated_no_albedo; //not need to be used
 	double net_radiation_for_soil;
 	double par;
 	double par_for_dominated;
-	double par_for_dominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_subdominated;
-	double par_for_subdominated_no_albedo; /*the no albedo computation is used for gap*/
 	double par_for_soil;
+	double par_for_establishment;
 	double ppfd;
 	double av_yearly_par_soil;
 
 	/*carbon variables*/
 	double gpp;     //in g of C m^2
 	double npp_gC;
-	double npp;     //in tonnes of DM per hectare
+	double npp_tDM;     //in tonnes of DM per hectare
 	double av_gpp;
 	double av_npp;
 	double stand_agb;
@@ -970,10 +966,12 @@ typedef struct {
 	double het_respiration; //heterotrophic respiration
 	double ter;  //total ecosystem respiration
 	double carbon_balance, old_carbon_balance;
+	double nee;
+	double Reco;
 
 	/*water variables*/
 	double asw;
-	double old_available_soil_water;
+	double old_asw;
 	double soil_evaporation;
 	double previous_available_soil_water;
 	double water_balance, old_water_balance;
@@ -988,23 +986,24 @@ typedef struct {
 	double soil_b; //soil moisture parameter
 	double soilw_sat; //(kgH2O/m2) soilwater at saturation
 	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
-	double daily_prcp;
+	double prcp_rain;
+	double prcp_snow;
 	double rain_intercepted;;
 	double water_to_soil;
 	double water_to_atmosphere;
 	double precip_sources;
 	double precip_canopy;
 	double precip_soil;
-	double daily_snow;
 	double snow_pack;  //amount of snow in Kg H2O
 	double snow_melt; //melted snow
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
-	double runoff;
+	double out_flow;
 
+	//todo move variables in the right place
 	//cumulative variables layer related used in annual-monthly-daily Log
 	double layer_daily_gpp[3], daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	double daily_npp[3], daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
+	double layer_daily_npp_tDM[3], daily_tot_npp, layer_monthly_npp_tDM[3], monthly_tot_npp, layer_annual_npp_tDM[3], annual_tot_npp;
 	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double daily_c_int[3], daily_tot_c_int;
 	double daily_c_evapo[3], daily_tot_c_evapo;
@@ -1014,7 +1013,7 @@ typedef struct {
 	double daily_c_evapotransp[3], daily_tot_c_evapotransp, monthly_c_evapotransp[3], monthly_tot_c_evapotransp, annual_c_evapotransp[3], annual_tot_c_evapotransp;
 	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
 	double daily_tot_c_transp_watt, daily_tot_c_int_watt, daily_tot_c_evapotransp_watt;
-	double daily_Nee, daily_Reco, monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
+	double monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
 	double daily_tot_latent_heat_flux;
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
@@ -1151,7 +1150,7 @@ int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
 void Abscission_DayLength (CELL *);
-int Establishment_LPJ (SPECIES *const, double, double);
+int Establishment_LPJ (CELL *const, SPECIES *const);
 int logInit(char*);
 void Log(const char *, ...);
 void logClose(void);
@@ -1173,7 +1172,7 @@ void soilDebug_logClose(void);
 void Age_Mortality (SPECIES *const, AGE *const);
 void Greff_Mortality (SPECIES *const);
 void Mortality (SPECIES *const, int);
-void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, int, int, int);
+void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber (SPECIES *const, int, int, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
@@ -1262,7 +1261,7 @@ void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Latent_heat (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
 /*evapotranspiration block*/
-void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int, int);
+void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);

@@ -36,6 +36,19 @@ void Daily_lai (SPECIES *const s)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
 	Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 
+	if(s->value[LAI] < 0.0)
+	{
+		ERROR(s->value[LAI], "LAI < 0.0");
+	}
+	if(s->value[LAI_SUN] < 0.0)
+	{
+		ERROR(s->value[LAI_SUN], "LAI_SUN < 0.0");
+	}
+	if(s->value[LAI_SHADE] < 0.0)
+	{
+		ERROR(s->value[LAI_SHADE], "LAI_SHADE < 0.0");
+	}
+
 
 }
 

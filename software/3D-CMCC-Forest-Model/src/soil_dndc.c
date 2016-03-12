@@ -1252,9 +1252,9 @@ void soil_dndc_sgm(MATRIX *const m, const YOS *const yos, const int years, const
 				}
 			}
 
-			if(m->cells[cell].runoff>0.0)
+			if(m->cells[cell].out_flow>0.0)
 			{
-				fw=m->cells[cell].runoff * 1.0;//0.01
+				fw=m->cells[cell].out_flow * 1.0;//0.01
 				fw = Minimum(0.9, Maximum(0.0, fw));
 				m->cells[cell].runoff_N += fw * m->cells[cell].soils[l].no3;
 				m->cells[cell].soils[l].no3 *= (1.0 - fw);

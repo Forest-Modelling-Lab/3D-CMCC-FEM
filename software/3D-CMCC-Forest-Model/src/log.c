@@ -357,12 +357,12 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_cf[0] += c->annual_c_flux[0];
-		avg_npp[0] += c->annual_npp[0];
+		avg_npp[0] += c->layer_annual_npp_tDM[0];
 		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[0];
 		avg_cf_tot += c->annual_c_flux[0];
-		avg_npp_tot += c->annual_npp[0];
+		avg_npp_tot += c->layer_annual_npp_tDM[0];
 		avg_ce_tot += c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
@@ -370,7 +370,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_c_flux[0] = 0;
-		c->annual_npp[0] = 0;
+		c->layer_annual_npp_tDM[0] = 0;
 		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
@@ -432,7 +432,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 				" \t%4.2f \t%2.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
 
 				(c->annual_aut_resp[1]*100)/ c->annual_gpp[1],(c->annual_aut_resp[0]*100)/ c->annual_gpp[0],(c->annual_tot_aut_resp*100)/c->annual_tot_gpp,
-				c->annual_npp[1], c->annual_npp[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
+				c->layer_annual_npp_tDM[1], c->layer_annual_npp_tDM[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
 				c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
 				c->asw,
 				c->annual_tot_w_flux,
@@ -447,17 +447,17 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		avg_gpp[1] += c->annual_gpp[1];
 		avg_ar[1] += c->annual_aut_resp[1];
 		avg_cf[1] += c->annual_c_flux[1];
-		avg_npp[1] += c->annual_npp[1];
+		avg_npp[1] += c->layer_annual_npp_tDM[1];
 		avg_npp_tot_gC += c->annual_tot_npp_g_c;
 		avg_ce[1] += c->annual_c_evapotransp[1];
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_cf[0] += c->annual_c_flux[0];
-		avg_npp[0] += c->annual_npp[0];
+		avg_npp[0] += c->layer_annual_npp_tDM[0];
 		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[1] + c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[1] + c->annual_aut_resp[0];
-		avg_npp_tot += c->annual_npp[1] + c->annual_npp[0];
+		avg_npp_tot += c->layer_annual_npp_tDM[1] + c->layer_annual_npp_tDM[0];
 
 		avg_ce_tot += c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
@@ -467,7 +467,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[1] = 0;
 		c->annual_aut_resp[1] = 0;
 		c->annual_c_flux[1] = 0;
-		c->annual_npp[1] = 0;
+		c->layer_annual_npp_tDM[1] = 0;
 		c->annual_c_evapotransp[1] = 0;
 		c->annual_cc[1] = 0;
 		c->annual_dead_tree[1] = 0;
@@ -478,7 +478,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_c_flux[0] = 0;
-		c->annual_npp[0] = 0;
+		c->layer_annual_npp_tDM[0] = 0;
 		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
@@ -541,7 +541,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 				" \t%5.2f \t%5.2f \t%5.2f \t%5.2f \t%5.2f \n",
 				c->annual_c_flux[2], c->annual_c_flux[1], c->annual_c_flux[0], c->annual_tot_c_flux,
 				(c->annual_aut_resp[2]*100.0)/c->annual_gpp[2],((c->annual_aut_resp[1]*100.0)/c->annual_gpp[1]),((c->annual_aut_resp[0]*100.0)/c->annual_gpp[0]),(c->annual_tot_aut_resp*100.0)/c->annual_tot_gpp,
-				c->annual_npp[2], c->annual_npp[1],	c->annual_npp[0], c->annual_tot_npp,
+				c->layer_annual_npp_tDM[2], c->layer_annual_npp_tDM[1],	c->layer_annual_npp_tDM[0], c->annual_tot_npp,
 				c->annual_c_evapotransp[2],c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
 				c->asw, c->annual_tot_w_flux,
 				c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0],
@@ -555,22 +555,22 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		avg_gpp[2] += c->annual_gpp[2];
 		avg_ar[2] += c->annual_aut_resp[2];
 		avg_cf[2] += c->annual_c_flux[2];
-		avg_npp[2] += c->annual_npp[2];
+		avg_npp[2] += c->layer_annual_npp_tDM[2];
 		avg_ce[2] += c->annual_c_evapotransp[2];
 		avg_gpp[1] += c->annual_gpp[1];
 		avg_ar[1] += c->annual_aut_resp[1];
 		avg_cf[1] += c->annual_c_flux[1];
-		avg_npp[1] += c->annual_npp[1];
+		avg_npp[1] += c->layer_annual_npp_tDM[1];
 		avg_ce[1] += c->annual_c_evapotransp[1];
 		avg_gpp[0] += c->annual_gpp[0];
 		avg_ar[0] += c->annual_aut_resp[0];
 		avg_cf[0] += c->annual_c_flux[0];
-		avg_npp[0] += c->annual_npp[0];
+		avg_npp[0] += c->layer_annual_npp_tDM[0];
 		avg_ce[0] += c->annual_c_evapotransp[0];
 		avg_gpp_tot += c->annual_gpp[2] +c->annual_gpp[1] + c->annual_gpp[0];
 		avg_ar_tot += c->annual_aut_resp[2] +c->annual_aut_resp[1] + c->annual_aut_resp[0];
 		avg_cf_tot += c->annual_c_flux[2] +c->annual_c_flux[1] + c->annual_c_flux[0];
-		avg_npp_tot += c->annual_npp[2] +c->annual_npp[1] + c->annual_npp[0];
+		avg_npp_tot += c->layer_annual_npp_tDM[2] +c->layer_annual_npp_tDM[1] + c->layer_annual_npp_tDM[0];
 		avg_ce_tot += c->annual_c_evapotransp[2] + c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
 		tot_dead_tree_tot += c->annual_tot_dead_tree;
 
@@ -580,7 +580,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[2] = 0;
 		c->annual_aut_resp[2] = 0;
 		c->annual_c_flux[2] = 0;
-		c->annual_npp[2] = 0;
+		c->layer_annual_npp_tDM[2] = 0;
 		c->annual_c_evapotransp[2] = 0;
 		c->annual_cc[2] = 0;
 		c->annual_dead_tree[2] = 0;
@@ -591,7 +591,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[1] = 0;
 		c->annual_aut_resp[1] = 0;
 		c->annual_c_flux[1] = 0;
-		c->annual_npp[1] = 0;
+		c->layer_annual_npp_tDM[1] = 0;
 		c->annual_c_evapotransp[1] = 0;
 		c->annual_cc[1] = 0;
 		c->annual_dead_tree[1] = 0;
@@ -602,7 +602,7 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->annual_gpp[0] = 0;
 		c->annual_aut_resp[0] = 0;
 		c->annual_c_flux[0] = 0;
-		c->annual_npp[0] = 0;
+		c->layer_annual_npp_tDM[0] = 0;
 		c->annual_c_evapotransp[0] = 0;
 		c->annual_cc[0] = 0;
 		c->annual_dead_tree[0] = 0;
@@ -793,7 +793,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		//reset
 		c->monthly_gpp[0] = 0;
 		c->monthly_aut_resp[0] = 0;
-		c->monthly_npp[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
 		c->monthly_c_evapotransp[0] = 0;
 		c->monthly_cc[0] = 0;
 		c->monthly_dead_tree[0] = 0;
@@ -834,7 +834,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
-				c->monthly_npp[1], c->monthly_npp[0],c->monthly_tot_npp,
+				c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_tot_npp,
 				c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
 				c->asw,
 				c->monthly_tot_w_flux,
@@ -845,7 +845,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->monthly_gpp[1] = 0;
 		c->monthly_aut_resp[1] = 0;
 		c->monthly_c_flux[1] = 0;
-		c->monthly_npp[1] = 0;
+		c->layer_monthly_npp_tDM[1] = 0;
 		c->monthly_c_evapotransp[1] = 0;
 		c->monthly_cc[1] = 0;
 		c->monthly_dead_tree[1] = 0;
@@ -853,7 +853,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->monthly_gpp[0] = 0;
 		c->monthly_aut_resp[0] = 0;
 		c->monthly_c_flux[0] = 0;
-		c->monthly_npp[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
 		c->monthly_c_evapotransp[0] = 0;
 		c->monthly_cc[0] = 0;
 		c->monthly_dead_tree[0] = 0;
@@ -895,7 +895,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->monthly_c_flux[2],c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
-				c->monthly_npp[2], c->monthly_npp[1], c->monthly_npp[0], c->monthly_tot_npp,
+				c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_tot_npp,
 				c->monthly_c_evapotransp[2],c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
 				c->asw,
 				c->monthly_tot_w_flux,
@@ -906,7 +906,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->monthly_gpp[2] = 0;
 		c->monthly_aut_resp[2] = 0;
 		c->monthly_c_flux[2] = 0;
-		c->monthly_npp[2] = 0;
+		c->layer_monthly_npp_tDM[2] = 0;
 		c->monthly_c_evapotransp[2] = 0;
 		c->monthly_cc[2] = 0;
 		c->monthly_dead_tree[2] = 0;
@@ -914,7 +914,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->monthly_gpp[1] = 0;
 		c->monthly_aut_resp[1] = 0;
 		c->monthly_c_flux[1] = 0;
-		c->monthly_npp[1] = 0;
+		c->layer_monthly_npp_tDM[1] = 0;
 		c->monthly_c_evapotransp[1] = 0;
 		c->monthly_cc[1] = 0;
 		c->monthly_dead_tree[1] = 0;
@@ -922,7 +922,7 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->monthly_gpp[0] = 0;
 		c->monthly_aut_resp[0] = 0;
 		c->monthly_c_flux[0] = 0;
-		c->monthly_npp[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
 		c->monthly_c_evapotransp[0] = 0;
 		c->monthly_cc[0] = 0;
 		c->monthly_dead_tree[0] = 0;
@@ -1031,7 +1031,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		Daily_Log ("%d \t%8d \t%5d \t%5d \t%2d", doy++, yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_Nee);
+			Daily_Log ("\t%6.2f", c->nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f",
 				c->layer_daily_gpp[0],
@@ -1040,12 +1040,12 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
+			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->Reco);
 		}
 		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->daily_c_flux[0],
 				c->daily_c_flux_tDM[0],
-				c->daily_npp[0],
+				c->layer_daily_npp_tDM[0],
 				c->daily_npp_g_c[0],
 				c->daily_c_evapotransp[0],
 				c->daily_tot_latent_heat_flux,
@@ -1070,7 +1070,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->daily_aut_resp[0] = 0;
 		c->daily_aut_resp_tDM[0] = 0;
 		c->daily_c_flux_tDM[0] = 0;
-		c->daily_npp[0] = 0;
+		c->layer_daily_npp_tDM[0] = 0;
 		c->daily_npp_g_c[0]= 0;
 		c->daily_c_int[0] = 0;
 		c->daily_c_transp[0] = 0;
@@ -1110,7 +1110,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 				c->height_class_in_layer_dominated_counter);
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_Nee);
+			Daily_Log ("\t%6.2f", c->nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
 				c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->layer_daily_gpp,
@@ -1118,11 +1118,11 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->daily_Reco);
+			Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->Reco);
 		}
 		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->daily_c_flux[1], c->daily_c_flux[0], c->daily_tot_c_flux,
-				c->daily_npp[1], c->daily_npp[0], c->daily_tot_npp,
+				c->layer_daily_npp_tDM[1], c->layer_daily_npp_tDM[0], c->daily_tot_npp,
 				c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
 				c->asw,
 				c->daily_lai[1], c->daily_lai[0],
@@ -1137,7 +1137,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->layer_daily_gpp[1] = 0;
 		c->daily_aut_resp[1] = 0;
 		c->daily_c_flux[1] = 0;
-		c->daily_npp[1] = 0;
+		c->layer_daily_npp_tDM[1] = 0;
 		c->daily_c_int[1] = 0;
 		c->daily_c_transp[1] = 0;
 		c->daily_c_evapotransp[1] = 0;
@@ -1148,7 +1148,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_c_flux[0] = 0;
-		c->daily_npp[0] = 0;
+		c->layer_daily_npp_tDM[0] = 0;
 		c->daily_c_int[0] = 0;
 		c->daily_c_transp[0] = 0;
 		c->daily_c_evapotransp[0] = 0;
@@ -1182,7 +1182,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		Daily_Log ("%d \t%2d \t%2d", yos[years].year, month+1, day+1);
 		if (!mystricmp(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_Nee);
+			Daily_Log ("\t%6.2f", c->nee);
 		}
 		Daily_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->layer_daily_gpp[2], c->layer_daily_gpp[1],c->layer_daily_gpp[0], c->daily_tot_gpp,
@@ -1196,7 +1196,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				"\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->daily_c_flux[2],c->daily_c_flux[1],c->daily_c_flux[0],c->daily_tot_c_flux,
-				c->daily_npp[2], c->daily_npp[1],c->daily_npp[0], c->daily_tot_npp,
+				c->layer_daily_npp_tDM[2], c->layer_daily_npp_tDM[1],c->layer_daily_npp_tDM[0], c->daily_tot_npp,
 				c->daily_npp_g_c[2], c->daily_npp_g_c[1],c->daily_npp_g_c[0], c->daily_tot_npp_g_c,
 				c->daily_c_evapotransp[2],c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
 				c->asw,
@@ -1210,7 +1210,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->layer_daily_gpp[2] = 0;
 		c->daily_aut_resp[2] = 0;
 		c->daily_c_flux[2] = 0;
-		c->daily_npp[2] = 0;
+		c->layer_daily_npp_tDM[2] = 0;
 		c->daily_npp_g_c[2] = 0;
 		c->daily_c_int[2] = 0;
 		c->daily_c_transp[2] = 0;
@@ -1222,7 +1222,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->layer_daily_gpp[1] = 0;
 		c->daily_aut_resp[1] = 0;
 		c->daily_c_flux[1] = 0;
-		c->daily_npp[1] = 0;
+		c->layer_daily_npp_tDM[1] = 0;
 		c->daily_npp_g_c[1] = 0;
 		c->daily_c_int[1] = 0;
 		c->daily_c_transp[1] = 0;
@@ -1234,7 +1234,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->layer_daily_gpp[0] = 0;
 		c->daily_aut_resp[0] = 0;
 		c->daily_c_flux[0] = 0;
-		c->daily_npp[0] = 0;
+		c->layer_daily_npp_tDM[0] = 0;
 		c->daily_npp_g_c[0] = 0;
 		c->daily_c_int[0] = 0;
 		c->daily_c_transp[0] = 0;
@@ -1262,9 +1262,9 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
 	if (!mystricmp(settings->dndc, "on"))
 	{
-		c->daily_tot_het_resp = 0;
-		c->daily_Reco = 0;
-		c->daily_Nee = 0;
+		c->daily_tot_het_resp = 0.0;
+		c->Reco = 0.0;
+		c->nee = 0.0;
 	}
 	//reset after printed at the end of the day
 	/*
@@ -1273,10 +1273,10 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 	c->daily_et = 0;
 	c->daily_lai = 0;
 	 */
-	c->daily_f_sw = 0;
-	c->daily_f_psi = 0;
-	c->daily_f_t = 0;
-	c->daily_f_vpd = 0;
+	c->daily_f_sw = 0.0;
+	c->daily_f_psi = 0.0;
+	c->daily_f_t = 0.0;
+	c->daily_f_vpd = 0.0;
 
 }
 

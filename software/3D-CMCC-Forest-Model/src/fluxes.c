@@ -41,7 +41,7 @@ void Water_fluxes (CELL *const c)
 {
 	Log("\nGET_W-FLUXES\n");
 	//todo make it better
-	c->daily_tot_w_flux = c->water_to_soil + c->daily_snow - c->water_to_atmosphere - c->runoff;
+	c->daily_tot_w_flux = c->water_to_soil + c->prcp_snow - c->water_to_atmosphere - c->out_flow;
 	c->monthly_tot_w_flux += c->daily_tot_w_flux;
 	c->annual_tot_w_flux += c->daily_tot_w_flux;
 
@@ -57,13 +57,13 @@ void get_net_ecosystem_exchange(CELL *const c)
 		c->monthly_tot_het_resp += c->soils[i].co2 * 1000.0;
 		c->annual_tot_het_resp += c->soils[i].co2 * 1000.0;
 	}
-	c->daily_Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
-	c->daily_Nee = c->daily_tot_gpp - c->daily_Reco;
+	c->Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
+	c->nee = c->daily_tot_gpp - c->Reco;
 
-	c->monthly_Reco +=  c->daily_Reco;
-	c->monthly_Nee +=  c->daily_Nee;
+	c->monthly_Reco +=  c->Reco;
+	c->monthly_Nee +=  c->nee;
 
-	c->annual_Reco +=  c->daily_Reco;
-	c->annual_Nee +=  c->daily_Nee;
+	c->annual_Reco +=  c->Reco;
+	c->annual_Nee +=  c->nee;
 }
 
