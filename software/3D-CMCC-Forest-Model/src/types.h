@@ -970,7 +970,7 @@ typedef struct {
 	double Reco;
 	double daily_leaf_carbon;
 	double daily_stem_carbon;
-	double daily_root_carbon;
+	double daily_fine_root_carbon;
 	double daily_coarse_root_carbon;
 	double daily_branch_carbon;
 	double daily_reserve_carbon;

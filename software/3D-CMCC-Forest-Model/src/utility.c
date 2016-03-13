@@ -23,6 +23,12 @@ void Reset_daily_variables (CELL *const c)
   c->daily_fine_root_growth_resp = 0.0;
   c->daily_branch_growth_resp = 0.0;
   c->daily_coarse_root_growth_resp = 0.0;
+  c->daily_leaf_carbon = 0.0;
+  c->daily_stem_carbon = 0.0;
+  c->daily_fine_root_carbon = 0.0;
+  c->daily_coarse_root_carbon = 0.0;
+  c->daily_branch_carbon = 0.0;
+  c->daily_reserve_carbon = 0.0;
   c->daily_litter = 0.0;
 
   /*reset daily water variables*/
