@@ -954,8 +954,8 @@ typedef struct {
 
 	/*carbon variables*/
 	double daily_gpp, monthly_gpp, annual_gpp;     //in g of C m^2
-	double npp_gC;	//in g of C m^2
-	double npp_tDM;     //in tonnes of DM per hectare
+	double daily_npp_gC;	//in g of C m^2
+	double daily_npp_tDM;     //in tonnes of DM per hectare
 	double av_gpp;
 	double av_npp;
 	double stand_agb;
@@ -968,6 +968,25 @@ typedef struct {
 	double carbon_balance, old_carbon_balance;
 	double nee;
 	double Reco;
+	double daily_leaf_carbon;
+	double daily_stem_carbon;
+	double daily_root_carbon;
+	double daily_coarse_root_carbon;
+	double daily_branch_carbon;
+	double daily_reserve_carbon;
+	double daily_leaf_maint_resp;
+	double daily_stem_maint_resp;
+	double daily_fine_root_maint_resp;
+	double daily_branch_maint_resp;
+	double daily_coarse_root_maint_resp;
+	double daily_leaf_growth_resp;
+	double daily_stem_growth_resp;
+	double daily_fine_root_growth_resp;
+	double daily_branch_growth_resp;
+	double daily_coarse_root_growth_resp;
+
+	double daily_litter;
+
 
 	/*water variables*/
 	double asw;
@@ -1019,7 +1038,7 @@ typedef struct {
 	//cumulative variables layer related used in annual-monthly-daily Log
 	double layer_daily_gpp[3], layer_monthly_gpp[3], layer_annual_gpp[3];
 	double layer_daily_npp_tDM[3], daily_tot_npp, layer_monthly_npp_tDM[3], monthly_tot_npp, layer_annual_npp_tDM[3], annual_tot_npp;
-	double daily_npp_g_c[3], daily_tot_npp_g_c, monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
+	double layer_daily_npp_gC[3],monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
 	double monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
 	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
 	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;

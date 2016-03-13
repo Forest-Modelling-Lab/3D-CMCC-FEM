@@ -1046,7 +1046,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		c->daily_c_flux[0],
 		c->daily_c_flux_tDM[0],
 		c->layer_daily_npp_tDM[0],
-		c->daily_npp_g_c[0],
+		c->layer_daily_npp_gC[0],
 		c->daily_c_evapotransp[0],
 		c->daily_tot_latent_heat_flux,
 		c->asw,
@@ -1071,7 +1071,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       c->daily_aut_resp_tDM[0] = 0;
       c->daily_c_flux_tDM[0] = 0;
       c->layer_daily_npp_tDM[0] = 0;
-      c->daily_npp_g_c[0]= 0;
+      c->layer_daily_npp_gC[0]= 0;
       c->daily_c_int[0] = 0;
       c->daily_c_transp[0] = 0;
       c->daily_c_evapotransp[0] = 0;
@@ -1197,7 +1197,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 	  "\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 	  c->daily_c_flux[2],c->daily_c_flux[1],c->daily_c_flux[0],c->daily_tot_c_flux,
 	  c->layer_daily_npp_tDM[2], c->layer_daily_npp_tDM[1],c->layer_daily_npp_tDM[0], c->daily_tot_npp,
-	  c->daily_npp_g_c[2], c->daily_npp_g_c[1],c->daily_npp_g_c[0], c->daily_tot_npp_g_c,
+	  c->layer_daily_npp_gC[2], c->layer_daily_npp_gC[1],c->layer_daily_npp_gC[0], c->daily_npp_gC,
 	  c->daily_c_evapotransp[2],c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
 	  c->asw,
 	  c->daily_lai[2], c->daily_lai[1], c->daily_lai[0],
@@ -1211,7 +1211,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       c->daily_aut_resp[2] = 0;
       c->daily_c_flux[2] = 0;
       c->layer_daily_npp_tDM[2] = 0;
-      c->daily_npp_g_c[2] = 0;
+      c->layer_daily_npp_gC[2] = 0;
       c->daily_c_int[2] = 0;
       c->daily_c_transp[2] = 0;
       c->daily_c_evapotransp[2] = 0;
@@ -1223,7 +1223,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       c->daily_aut_resp[1] = 0;
       c->daily_c_flux[1] = 0;
       c->layer_daily_npp_tDM[1] = 0;
-      c->daily_npp_g_c[1] = 0;
+      c->layer_daily_npp_gC[1] = 0;
       c->daily_c_int[1] = 0;
       c->daily_c_transp[1] = 0;
       c->daily_c_evapotransp[1] = 0;
@@ -1235,7 +1235,7 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       c->daily_aut_resp[0] = 0;
       c->daily_c_flux[0] = 0;
       c->layer_daily_npp_tDM[0] = 0;
-      c->daily_npp_g_c[0] = 0;
+      c->layer_daily_npp_gC[0] = 0;
       c->daily_c_int[0] = 0;
       c->daily_c_transp[0] = 0;
       c->daily_c_evapotransp[0] = 0;
@@ -1247,18 +1247,18 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
     }
 
-  c->daily_gpp = 0;
-  c->daily_tot_aut_resp = 0;
-  c->daily_tot_c_flux = 0;
-  c->daily_tot_npp = 0;
-  c->daily_tot_npp_g_c = 0;
-  c->daily_tot_c_int = 0;
-  c->daily_tot_c_transp = 0;
-  c->daily_tot_c_evapotransp = 0;
-  c->daily_tot_et = 0;
-  c->daily_tot_dead_tree = 0;
+  c->daily_gpp = 0.0;
+  c->daily_tot_aut_resp = 0.0;
+  c->daily_tot_c_flux = 0.0;
+  c->daily_tot_npp = 0.0;
+  c->daily_npp_gC = 0.0;
+  c->daily_tot_c_int = 0.0;
+  c->daily_tot_c_transp = 0.0;
+  c->daily_tot_c_evapotransp = 0.0;
+  c->daily_tot_et = 0.0;
+  c->daily_tot_dead_tree = 0.0;
 
-  c->daily_tot_latent_heat_flux = 0;
+  c->daily_tot_latent_heat_flux = 0.0;
 
   if (!mystricmp(settings->dndc, "on"))
     {

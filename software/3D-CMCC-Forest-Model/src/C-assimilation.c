@@ -27,18 +27,12 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 
 		if (s->value[RESERVE] > 0.0)
 		{
-
 			/*for principle of conservation of mass*/
-			/*used if previous day NPP is negative to conserve mass assuming the loss
-		of reserve*/
+			/*used if previous day NPP is negative to conserve mass assuming the loss of reserve*/
 			if (s->value[C_FLUX] < 0.0 )
 			{
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
-					//todo
-					//todo
-					//Angelo only for broadleaved decidous and evergreen set a minimum value for BIOMASS_RESERVE after which it cannot goes on
-					//and stop VEG_PERIOD
 					/*following Barbaroux et al., 2003*/
 
 					if (s->value[RESERVE] < 0.0)
@@ -86,7 +80,6 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	}
 	else
 	{
-
 		if (s->value[RESERVE] < 0.0)
 		{
 			ERROR(s->value[RESERVE],"s->value[RESERVE]");
@@ -94,20 +87,20 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;
 		Log("Daily/Monthly NPP = %f gC/m^2\n", s->value[NPP_g_C]);
-		Log("Daily/Monthly NPP (per area covered) = %f  tDM/sizecell yr\n", s->value[NPP]);
+		Log("Daily/Monthly NPP (per area covered) = %f  tDM/day\n", s->value[NPP]);
 	}
 
 	i = c->heights[height].z;
-
+	c->daily_npp_gC += s->value[NPP_g_C];
 	c->layer_daily_npp_tDM[i] += s->value[NPP];
-	c->daily_npp_g_c[i] += s->value[NPP_g_C];
+	c->layer_daily_npp_gC[i] += s->value[NPP_g_C];
 	c->layer_monthly_npp_tDM[i] += s->value[NPP];
 	c->monthly_npp_g_c[i] += s->value[NPP_g_C];
 	c->layer_annual_npp_tDM[i] += s->value[NPP];
 	c->annual_npp_g_c[i] += s->value[NPP_g_C];
 
 	c->daily_tot_npp += s->value[NPP];
-	c->daily_tot_npp_g_c += s->value[NPP_g_C];
+	c->daily_npp_gC += s->value[NPP_g_C];
 	c->monthly_tot_npp += s->value[NPP];
 	c->monthly_tot_npp_g_c += s->value[NPP_g_C];
 	c->annual_tot_npp += s->value[NPP];
@@ -124,9 +117,9 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	Log("*********************** STAND LEVEL ANNUAL NPP ********************** \n");
 
 	//cell level
-	c->npp_tDM += s->value[NPP];
+	c->daily_npp_tDM += s->value[NPP];
 	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->npp_tDM);
+	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->daily_npp_tDM);
 
 }
 

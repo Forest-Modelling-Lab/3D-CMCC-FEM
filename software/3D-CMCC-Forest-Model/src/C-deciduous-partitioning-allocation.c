@@ -126,9 +126,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	 */
 
 	Log("BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
-
-
-
 	if (settings->spatial == 'u')
 	{
 		oldW = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_BRANCH];
