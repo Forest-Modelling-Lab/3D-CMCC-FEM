@@ -315,6 +315,13 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
+			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+
 			c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
 			c->daily_delta_ws[i] = s->value[DEL_STEMS];
 			c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
@@ -422,12 +429,12 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
-			c->daily_leaf_carbon += s->value[DEL_FOLIAGE];
-			c->daily_stem_carbon += s->value[DEL_STEMS];
-			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM];
-			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM];
-			c->daily_branch_carbon += s->value[DEL_BB];
-			c->daily_reserve_carbon += s->value[DEL_RESERVE];
+			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 
 			c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
 			c->daily_delta_ws[i] = s->value[DEL_STEMS];
