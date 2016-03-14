@@ -101,6 +101,8 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	c->layer_monthly_gpp[i] += s->value[GPP_g_C];
 	c->layer_annual_gpp[i] += s->value[GPP_g_C];
 
+	Log("-CELL LEVEL\n");
+	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", c->daily_gpp);
 	c->daily_gpp += s->value[GPP_g_C];
 	c->monthly_gpp += s->value[GPP_g_C];
 	c->annual_gpp += s->value[GPP_g_C];
@@ -114,12 +116,4 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	Log("-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_G_C]);
 
 	Log("*********************** STAND LEVEL ANNUAL GPP ********************** \n");
-
-	//cell level
-	c->daily_gpp += s->value[GPP_g_C];
-	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", c->daily_gpp);
-
-
-
 }

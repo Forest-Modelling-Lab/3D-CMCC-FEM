@@ -201,7 +201,9 @@ extern void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, i
 					if (day == 30 && month == DECEMBER)
 					{
 						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-						                                                                                                                                             * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+																											 * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
+																											 * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						Log("Day frac foliage remove = %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] );
 						//add leaf fall days
 						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)

@@ -91,19 +91,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		s->counter[BUD_BURST_COUNTER] = 0;
 	}
 
-	if(s->counter[LEAF_FALL_COUNTER] == 1)
-	{
-		Log("First day of Leaf fall\n");
-		Log("\nday, month: %d\t%d", month+1, day+1);
-		//s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
-		s->counter[SENESCENCE_DAYONE] = c->doy;
-		s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) -
-				c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
-		Log("foliage biomass to remove = %f\n", s->value[BIOMASS_FOLIAGE]);
-		Log("Daily amount of foliage biomass to remove = %f\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
-		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
-		s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-	}
+
 
 
 
@@ -250,6 +238,10 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					s->value[DEL_ROOTS_TOT] = 0.0;
 					s->value[DEL_TOT_STEM] = 0.0;
 					s->value[DEL_BB]= 0;
+					if (s->value[RESERVE] < 0.0)
+					{
+						ERROR(s->value[RESERVE],"s->value[RESERVE]");
+					}
 				}
 				else
 				{
@@ -898,14 +890,28 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("foliage reduction rate %f \n", s->value[FOLIAGE_REDUCTION_RATE]);
 			//Log("biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 
+			if(s->counter[LEAF_FALL_COUNTER] == 1)
+			{
+				Log("First day of Leaf fall\n");
+				//s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE] = s->value[BIOMASS_FOLIAGE] * s->value[FOLIAGE_REDUCTION_RATE];
+				s->counter[SENESCENCE_DAYONE] = c->doy;
+				s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) -
+						c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
+				Log("foliage biomass to remove = %f\n", s->value[BIOMASS_FOLIAGE]);
+				Log("fine root biomass to remove = %f\n", s->value[BIOMASS_ROOTS_FINE]);
+				Log("Daily amount of foliage biomass to remove = %f\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+				//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
+				s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / s->counter[DAY_FRAC_FINE_ROOT_REMOVE];
+				Log("Daily amount of fine root biomass to remove = %f\n", s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE]);
+			}
+
 			if( met[month].d[day].daylength >= s->value[MINDAYLENGTH])
 			{
 				Log("(decreasingLai)\n");
 				Log("allocating into the three pools Ws+Wr+Wreserve\n");
 				/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
-				s->value[DAILY_DEL_LITTER] = 0;
-
+				s->value[DAILY_DEL_LITTER] = 0.0;
 
 				pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 				Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
@@ -934,7 +940,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
 					s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
-					//s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
 					s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
 					s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
@@ -993,9 +999,10 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					s->value[DEL_ROOTS_TOT] = 0;
 					s->value[DEL_BB] = 0;
-					s->value[DEL_RESERVE] = 0;
+					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);;
 				}
 			}
+
 			/*allocation*/
 			//			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
 			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
@@ -1010,6 +1017,13 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
+			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
+			//fixme
+			if(s->value[BIOMASS_ROOTS_FINE] <= 0.0)
+			{
+				s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+				s->value[BIOMASS_ROOTS_FINE] = 0.0;
+			}
 			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
 			Log("Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
@@ -1045,9 +1059,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
-			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_leaf_carbon += 0.0/* s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
 			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += 0.0/*s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
 			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
@@ -1141,9 +1155,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
-			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_leaf_carbon += 0.0;
 			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += 0.0;
 			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);

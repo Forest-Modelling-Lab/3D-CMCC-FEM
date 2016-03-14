@@ -707,6 +707,7 @@ enum {
 	VEG_DAYS,
 	BUD_BURST_COUNTER,
 	DAY_FRAC_FOLIAGE_REMOVE, 	//number of leaf fall days
+	DAY_FRAC_FINE_ROOT_REMOVE, 	//number of leaf fall days
 
 	DAY_VEG_FOR_LITTERFALL_RATE,
 	MONTH_VEG_FOR_LITTERFALL_RATE,

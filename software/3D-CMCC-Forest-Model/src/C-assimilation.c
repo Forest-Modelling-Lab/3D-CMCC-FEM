@@ -59,7 +59,7 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 			}
 			else
 			{
-				s->value[NPP_g_C] = s->value[C_FLUX];
+				s->value[NPP_g_C] = s->value[GPP_g_C] - s->value[TOTAL_AUT_RESP];
 				Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[GPP_g_C]);
 				Log("NPP_g_C = %f\n", s->value[NPP_g_C]);
 				//upscale class NPP to class cell level
