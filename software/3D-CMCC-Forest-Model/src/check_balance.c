@@ -21,7 +21,7 @@ void Check_carbon_balance (CELL *c)
 	Log("\n*********CHECK CARBON BALANCE************\n");
 
 	/* DAILY CHECK ON CARBON BALANCE */
-	Log("\nin\n");
+	/*Log("\nin\n");
 	Log("c->daily_gpp = %f\n", c->daily_gpp);
 	Log("\nout\n");
 	Log("c->daily_leaf_maint_resp = %f\n", c->daily_leaf_maint_resp);
@@ -43,9 +43,7 @@ void Check_carbon_balance (CELL *c)
 	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
 	Log("c->daily_coarse_root_carbon = %f\n", c->daily_coarse_root_carbon);
 	Log("c->daily_branch_carbon = %f\n", c->daily_branch_carbon);
-	Log("c->daily_reserve_carbon = %f\n", c->daily_reserve_carbon);
-
-
+	Log("c->daily_reserve_carbon = %f\n", c->daily_reserve_carbon);*/
 
 	/* sum of sources */
 	carbon_in = c->daily_gpp;

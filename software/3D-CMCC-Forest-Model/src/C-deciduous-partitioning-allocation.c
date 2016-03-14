@@ -91,10 +91,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		s->counter[BUD_BURST_COUNTER] = 0;
 	}
 
-
-
-
-
 	//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
 	//I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
@@ -117,7 +113,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	if (settings->spatial == 'u')
 	{
 		oldW = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_BRANCH];
-
 
 		//(Arora V. K., Boer G. J., GCB, 2005)
 
@@ -156,8 +151,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			{
 				Log("ERROR IN r0Ctem !!! \n");
 			}
-
-
 			//considering a LINEAR decrement
 			//allocation ratio to stem + bb
 			s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
@@ -169,7 +162,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			{
 				Log("ERROR IN s0Ctem !!! \n");
 			}
-
 		}
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 		Log("LAI = %f \n", s->value[LAI]);
@@ -489,9 +481,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_RESERVE] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]) * pF_CTEM;
 				s->value[DEL_TOT_STEM] = s->value[DEL_STEMS] + s->value[DEL_BB];
 
-				Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
-
-
 				/*allocation*/
 				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
 				Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
@@ -711,14 +700,12 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 				Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
-
 			}
 
 			// Total Biomass
 			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
 			Log("Previous Total W = %f tDM/area\n", oldW);
 			Log("Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
-
 
 			s->value[DEL_Y_WTS] += s->value[DEL_TOT_STEM];
 			s->value[DEL_Y_WS] += s->value[DEL_STEMS];
@@ -762,7 +749,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
 			s->value[DAILY_DEL_LITTER] = 0;
-
 
 			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 			Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
@@ -811,7 +797,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					ERROR(s->value[RESERVE], "s->value[RESERVE]");
 				}
 			}
-
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
 			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
@@ -878,7 +863,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 			c->daily_wres[i] = s->value[RESERVE];
 
-
 			break;
 			/**********************************************************************/
 		case 5:
@@ -904,7 +888,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / s->counter[DAY_FRAC_FINE_ROOT_REMOVE];
 				Log("Daily amount of fine root biomass to remove = %f\n", s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE]);
 			}
-
 			if( met[month].d[day].daylength >= s->value[MINDAYLENGTH])
 			{
 				Log("(decreasingLai)\n");

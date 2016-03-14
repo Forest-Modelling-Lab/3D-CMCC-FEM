@@ -141,8 +141,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 
 		}
-
-
 		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 		Log("LAI = %f \n", s->value[LAI]);
 		Log("PEAK LAI = %f \n", s->value[PEAK_LAI]);
@@ -379,7 +377,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
 			}
-
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
 			Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
@@ -455,15 +452,11 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	{
 		ERROR(s->value[RESERVE], "s->value[RESERVE]");
 	}
-
-
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
 	c->annual_wres[i] = s->value[RESERVE];
 
 	Log("******************************\n");
-
-
 }
 
 /**/
