@@ -31,7 +31,7 @@
 #define MA                28.9644e-3      //(kg/mol) molecular weight of air */
 #define MW                18.0148e-3      //(kg/mol) molecular weight of water */
 #define LR_STD                0.0065      //(-K/m) standard temperature lapse rate */
-#define R                     8.3143      //(m3 Pa/ mol K) gas law constant */
+#define Rgas                     8.3144      //(m3 Pa/ mol K) gas law constant */
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 #define PPFD50      			75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
 #define EPAR        			4.55      //(umol/J) PAR photon energy ratio */
@@ -42,7 +42,7 @@
 #define PSYCCONST				 65.0       //psychrometer costant in Pa/Gerten et al., 2004)
 #define EVAPOCOEFF			   1.32       //Priestley Taylor Coefficient (Hobbins et al., 2001)
 
-#define TempAbs				273.15        //absolute temperature in Kelvin
+#define TempAbs				273.13        //absolute temperature in Kelvin
 
 
 //COSTANTS
@@ -52,14 +52,9 @@
 #define e				  2.71828183     //nepero/eulero number
 
 #define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ
-//test using current co2 concentration as a reference
-#define refCO2CONC				 380//281 ppmv reference co2 concentration see Veroustraete 1994, 2002
+
+#define refCO2CONC				 281 //ppmv reference co2 concentration see Veroustraete 1994, 2002
 #define O2CONC				    20.9     //% of O2 concentration see Verstraeten 1994, 2002
-
-
-
-
-
 
 #define  STEMPOWER_A	        2.08    //Power in the Stem Mass v. diameter relationship for DBH < 9 cm
 #define  STEMPOWER_B	        2.64    //Power in the Stem Mass v. diameter relationship for 9 < DBH < 15 cm

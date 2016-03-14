@@ -599,7 +599,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							}
 						}
-						/*
+
 						/* simulate management */
 						/*
 						 //toconclude set function for mulple of rotation

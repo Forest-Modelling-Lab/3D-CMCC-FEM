@@ -16,42 +16,46 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 	double psi;  //soil matric potential
 
 	/*variables for CO2 modifier computation*/
-	double Km;	//affinity coefficients  temperature dependent according to Arrhenius relationship
-	double Ea1 = 59.4; //KJ mol^-1
+	double KmCO2;	//affinity coefficients  temperature dependent according to Arrhenius relationship
+	double Ea1 = 59400.0; //KJ mol^-1
 	double A1 = 2.419 * pow(10,13);
-	double Ea2 = 109.6;	//KJ mol^-1
+	double Ea2 = 109600.0;	//KJ mol^-1
 	double A2 = 1.976 * pow(10,22);
-	double KO;	//inibition constant for 02
-	double Ea0 = 13913.5;	//KJ mol^-1
-	double A0 = 8240;
-	double tao;	// CO2/O2  specifity ratio
-	double Eatao = -42869.9;
-	double Atao = 7.87 * pow(10,-5);
+	double KO2;	//inibition constant for 02
+	double EaKO2 = 13913.5;	//KJ mol^-1
+	double AKO2 = 8240;
+	double tau;	// CO2/O2  specifity ratio
+	double Eatau = -42896.9;
+	double Atau = 7.87 * pow(10,-5);
+	double Temp_K;
+	double v1, v2;
+
 
 
 	Log("\nDAILY_MODIFIERS\n\n");
 
-	/*CO2 MODIFIER FROM C-FIX*/
+	/* CO2 MODIFIER FROM C-FIX */
+
+	Temp_K = met[month].d[day].tavg + TempAbs;
 
 	if (met[month].d[day].tavg >= 15)
 	{
-		Km = A1 * exp (-Ea1/(R*TempAbs));
-		Log(" km = %f\n", Km);
+		KmCO2 = A1 * exp(-Ea1/(Rgas*Temp_K));
+		Log("Km = %f\n", KmCO2);
 	}
 	else
 	{
-		Km = A2 * exp (-Ea2/(R*TempAbs));
-		Log(" km = %f\n", Km);
+		KmCO2 = A2 * exp (-Ea2/(Rgas*Temp_K));
 	}
-	KO = A0 * exp (-Ea0/(R*TempAbs));
+	KO2 = AKO2 * exp (-EaKO2/(Rgas*Temp_K));
 
-	tao = Atao * exp (-Eatao/(R*TempAbs));
+	tau = Atau * exp (-Eatau/(Rgas*(Temp_K)));
 
-	s->value[F_CO2] = ((site->co2Conc/(O2CONC/(2*tao))) /
-			((refCO2CONC/(O2CONC/(2*tao)))) * ((Km*(1+(O2CONC/KO))+refCO2CONC)/(Km*(1+(O2CONC/KO))+refCO2CONC)));
-	Log("F_CO2 modifier (used but with current co2 concentration)= %g\n", s->value[F_CO2]);
+	v1 = (site->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+site->co2Conc);
 
-
+	s->value[F_CO2] = v1*v2;
+	Log("F_CO2 modifier  = %g\n", s->value[F_CO2]);
 
 	//LIGHT MODIFIER (Following Makela et al , 2008, Peltioniemi_etal_2012)
 	//FIXME chose which type of light use and differentiate for different layers

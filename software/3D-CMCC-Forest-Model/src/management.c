@@ -245,8 +245,8 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 	IndWs,
 	IndWrf,
 	IndWrc,
-	indWbb,
-	indWres;
+	IndWbb,
+	IndWres;
 	double BiomRem;
 
 	int shoots_number;    //number of shoots produced after coppicing
@@ -255,8 +255,8 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 	IndWs = s->value[BIOMASS_STEM] / s->counter[N_TREE];
 	IndWrc = s->value[BIOMASS_ROOTS_COARSE] / s->counter[N_TREE];
 	IndWrf = s->value[BIOMASS_ROOTS_FINE] / s->counter[N_TREE];
-	indWbb = s->value[BIOMASS_BRANCH] / s->counter[N_TREE];
-	indWres = s->value[RESERVE] / s->counter[N_TREE];
+	IndWbb = s->value[BIOMASS_BRANCH] / s->counter[N_TREE];
+	IndWres = s->value[RESERVE] / s->counter[N_TREE];
 
 
 
@@ -266,8 +266,8 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 
 	Log("Layer modelled z = %d \n", z);
 
-	//printf ("Number of trees removed = ?\n");
-	//scanf ("%d", &removed_tree);
+	printf ("Number of trees removed = ?\n");
+	scanf ("%d", &removed_tree);
 
 	if (removed_tree != 0)
 	{
