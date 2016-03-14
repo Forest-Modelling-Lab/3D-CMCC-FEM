@@ -41,7 +41,6 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 	if (met[month].d[day].tavg >= 15)
 	{
 		KmCO2 = A1 * exp(-Ea1/(Rgas*Temp_K));
-		Log("Km = %f\n", KmCO2);
 	}
 	else
 	{
