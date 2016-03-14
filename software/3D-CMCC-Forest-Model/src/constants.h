@@ -52,8 +52,8 @@
 #define e				  2.71828183     //nepero/eulero number
 
 #define GRPERC                   0.3     //(DIM) percentage of growth resp per unit of C grown see BIOME, 0.25 for LPJ
-
-#define refCO2CONC				 218     //ppmv reference co2 concentration see Verstraeten 1994, 2002
+//test using current co2 concentration as a reference
+#define refCO2CONC				 380//281 ppmv reference co2 concentration see Veroustraete 1994, 2002
 #define O2CONC				    20.9     //% of O2 concentration see Verstraeten 1994, 2002
 
 

@@ -68,7 +68,7 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	if(met[month].d[day].tavg > s->value[GROWTHTMIN])
 	{
 		s->value[DAILY_TRANSP] = ((PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC]) *
-				s->value[FRAC_DAYTIME_TRANSP];
+				s->value[FRAC_DAYTIME_TRANSP] * s->value[F_CO2];
 		Log("Canopy trasnpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
 	}
 	else

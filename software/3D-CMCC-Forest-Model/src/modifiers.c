@@ -36,10 +36,12 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 	if (met[month].d[day].tavg >= 15)
 	{
 		Km = A1 * exp (-Ea1/(R*TempAbs));
+		Log(" km = %f\n", Km);
 	}
 	else
 	{
 		Km = A2 * exp (-Ea2/(R*TempAbs));
+		Log(" km = %f\n", Km);
 	}
 	KO = A0 * exp (-Ea0/(R*TempAbs));
 
@@ -47,7 +49,7 @@ void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_
 
 	s->value[F_CO2] = ((site->co2Conc/(O2CONC/(2*tao))) /
 			((refCO2CONC/(O2CONC/(2*tao)))) * ((Km*(1+(O2CONC/KO))+refCO2CONC)/(Km*(1+(O2CONC/KO))+refCO2CONC)));
-	Log("F_CO2 modifier (NOT_USED)= %g\n", s->value[F_CO2]);
+	Log("F_CO2 modifier (used but with current co2 concentration)= %g\n", s->value[F_CO2]);
 
 
 

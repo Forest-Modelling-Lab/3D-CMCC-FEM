@@ -27,7 +27,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	{
 		if (s->value[ALPHA] > 0.0)
 		{
-			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ /*s->value[F_CO2] **/ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
+			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
 					/* *s->value[FRAC_DAYTIME_TRANSP]*/ ;
 			Log("Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 

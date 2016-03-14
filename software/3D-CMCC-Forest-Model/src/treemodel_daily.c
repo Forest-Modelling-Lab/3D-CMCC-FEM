@@ -602,7 +602,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						/*
 						/* simulate management */
 						/*
-						 //fixme set function for mulple of rotation
+						 //toconclude set function for mulple of rotation
 						 //fixme include management choice
 						if(settings->management == 'on' && years == m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION])
 						{
