@@ -39,7 +39,7 @@ extern void Choose_management (CELL *c, SPECIES *s, int years, int height)
 				Log("Case CLEARCUT choiced \n");
 
 				//call function
-				Clearcut_Timber (s,  years, c->heights[height].z, c->annual_layer_number);
+				Clearcut_Timber_upon_request (s,  years, c->heights[height].z, c->annual_layer_number);
 
 				break;
 
@@ -205,7 +205,7 @@ void Clearcut_Timber_without_request (SPECIES *const s, int years, int z, int nu
 	IndWres = s->value[RESERVE] / s->counter[N_TREE];
 
 	removed_tree = s->counter[N_TREE] * site->cutTree;
-	Log("removed tree = %d\n", removed_tree)
+	Log("removed tree = %d\n", removed_tree);
 
 
 	Log("Number of trees removed = %d trees/ha \n", removed_tree);
