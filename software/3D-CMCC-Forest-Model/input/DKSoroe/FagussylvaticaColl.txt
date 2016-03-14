@@ -165,7 +165,7 @@ FRACFRUIT	0.05    //Fraction of NPP to Fruit Production
 
 
 //MANAGMENT
-ROTATION	100     //Forest Rotation for Managment (Q. cerris)
+ROTATION	20     //Forest Rotation for Managment (Q. cerris)
 MINAGEMANAG	80      //Minimum age for Managment (Q. cerris)
 MINDBHMANAG	27      //Minimum DBH for Managment
 AV_SHOOT	10      //average number of shoot after cut

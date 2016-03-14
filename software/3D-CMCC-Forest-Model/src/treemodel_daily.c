@@ -588,7 +588,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Log("NO Light for Establishment\n");
 									}
 								}
-												/*
+								/*
 								if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 								{
 								Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
@@ -599,6 +599,18 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							}
 						}
+						/*
+						/* simulate management */
+						/*
+						 //fixme set function for mulple of rotation
+						 //fixme include management choice
+						if(settings->management == 'on' && years == m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION])
+						{
+							IsDivisble
+							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], years)
+						}
+						*/
+
 					}
 					else
 					{
