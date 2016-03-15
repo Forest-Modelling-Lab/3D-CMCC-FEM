@@ -80,16 +80,16 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	/*dominant layer*/
 	if (c->heights[height].z == c->top_layer)
 	{
-		c->daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
-		Log("Canopy transpiration from dominant layer = %f mm \n", c->daily_c_transp[c->top_layer]);
+		c->layer_daily_c_transp[c->top_layer] += s->value[DAILY_TRANSP];
+		Log("Canopy transpiration from dominant layer = %f mm \n", c->layer_daily_c_transp[c->top_layer]);
 		/*last height dominant class processed*/
 		if (c->dominant_veg_counter == c->height_class_in_layer_dominant_counter)
 		{
 			/*control*/
-			if (c->asw < c->daily_c_transp[c->top_layer])
+			if (c->asw < c->layer_daily_c_transp[c->top_layer])
 			{
 				Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-				c->daily_c_transp[c->top_layer] = c->asw;
+				c->layer_daily_c_transp[c->top_layer] = c->asw;
 			}
 		}
 	}
@@ -99,42 +99,42 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 		/*dominated layer*/
 		if (c->heights[height].z == c->top_layer-1)
 		{
-			Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-1]);
+			Log("Canopy transpiration  water from dominated layer = %f mm \n", c->layer_daily_c_transp[c->top_layer-1]);
 			/*last height dominated class processed*/
 			if (c->dominated_veg_counter == c->height_class_in_layer_dominated_counter)
 			{
 				/*control*/
-				if (c->asw < c->daily_c_transp[c->top_layer-1])
+				if (c->asw < c->layer_daily_c_transp[c->top_layer-1])
 				{
 					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_transp[c->top_layer-1] = c->asw;
+					c->layer_daily_c_transp[c->top_layer-1] = c->asw;
 				}
 			}
 		}
 		/*subdominated layer*/
 		else
 		{
-			c->daily_c_transp[c->top_layer-2] += s->value[DAILY_TRANSP];
-			Log("Canopy transpiration  water from dominated layer = %f mm \n", c->daily_c_transp[c->top_layer-2]);
+			c->layer_daily_c_transp[c->top_layer-2] += s->value[DAILY_TRANSP];
+			Log("Canopy transpiration  water from dominated layer = %f mm \n", c->layer_daily_c_transp[c->top_layer-2]);
 			/*last height subdominated class processed*/
 			if (c->subdominated_veg_counter == c->height_class_in_layer_subdominated_counter)
 			{
 				/*control*/
-				if (c->asw < c->daily_c_transp[c->top_layer-2])
+				if (c->asw < c->layer_daily_c_transp[c->top_layer-2])
 				{
 					Log("ATTENTION DAILY TRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
-					c->daily_c_transp[c->top_layer-2] = c->asw;
+					c->layer_daily_c_transp[c->top_layer-2] = c->asw;
 				}
 			}
 		}
 	}
 	/*compute total daily transpiration*/
-	c->daily_tot_c_transp += c->daily_c_transp[c->heights[height].z];
-	Log("Daily total canopy transpiration = %f \n", c->daily_tot_c_transp);
+	c->daily_c_transp += c->layer_daily_c_transp[c->heights[height].z];
+	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
 
 	/*compute energy balance transpiration from canopy*/
-	c->daily_tot_c_transp_watt = c->daily_tot_c_transp * c->lh_vap /  (met[month].d[day].daylength * 3600);
-	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_tot_c_transp_watt);
+	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / (met[month].d[day].daylength * 3600);
+	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
 
 }
 

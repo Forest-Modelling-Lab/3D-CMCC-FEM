@@ -41,7 +41,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//annual daily loop on each cell before start with treemodel_daily
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-
 		//*************FOREST CHARACTERISTIC*********************
 		if (day == 0 && month == JANUARY)
 		{
@@ -49,22 +48,17 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 			Annual_numbers_of_layers (&m->cells[cell]);
 			Tree_Branch_Bark (&m->cells[cell], years);
 		}
-
+		/* daily forest structure */
 		Forest_structure (&m->cells[cell], day, month, years);
-		//daily forest structure
 		Daily_vegetative_period (&m->cells[cell], met, month, day);
 		Daily_numbers_of_layers (&m->cells[cell]);
 		Daily_layer_cover (&m->cells[cell], met, month, day);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
 		Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
-
-		//compute species-specific phenological phase
+		/* compute species-specific phenological phase */
 		Phenology_phase (&m->cells[cell], met, years, month, day, years_of_simulation);
-
 		Log("***************************************************\n");
-
-		//*************SITE CHARACTERISTIC******************
 	}
 
 	for ( cell = 0; cell < m->cells_count; cell++)
@@ -74,7 +68,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);
 		Log("---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 
-		//marconi: using a doy cell based variable to evaluate the day of the year used to assess the senescence time
 		m->cells[cell].doy += 1;
 		if(day == 0 && month == 0) m->cells[cell].doy = 1;
 
@@ -93,19 +86,18 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, month, day);
-		/*reset daily variables*/
+		/*reset daily variables at cell level */
 		Reset_daily_variables(&m->cells[cell]);
-		/*compute latent heat values*/
+		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
-		/*check and compute for snow*/
+		/* check and compute for snow */
 		Check_prcp (&m->cells[cell], met, month, day);
 
-		/*sort by heights*/
+		/* sort by heights */
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
-		/*loop on each heights starting from highest to lower*/
+		/* loop on each heights starting from highest to lower */
 		Log("******CELL x = %d, y = %d STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
-
 		for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 		{
 			/*loop on each ages*/
@@ -131,25 +123,21 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_TURNOVER];
 							m->cells[cell].heights[height].ages[age].species[species].turnover->BRANCHTOVER = 365 /
 									m->cells[cell].heights[height].ages[age].species[species].value[BRANCHTTOVER];
-							//soil_Log("\nfineroot turnover period: %d days \n", m->cells[cell].heights[height].ages[age].species[species].turnover->FINERTOVER );
 						}
 						if (day == 0 && month == JANUARY)
 						{
 							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
+							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 						}
 						Tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
-
 						Daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
-
 						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
-						/*Loop for adult trees*/
+
+						/* Loop for adult trees */
 						if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
 						{
-
 							if (day == 0 && month == JANUARY)
 							{
-								Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
-
 								if (!years)
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
@@ -171,24 +159,21 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_LEAVES] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE];
-
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM_LIVE_WOOD] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD];
-
 							}
-
-							//deciduous
+							/* loop for deciduous */
 							if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 							{
 								if (day == 0 && month == JANUARY)
 								{
 									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
-								//vegetative period for deciduous
+								/* vegetative period for deciduous */
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 								{
 									Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
@@ -198,18 +183,14 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
-
-									/*modifiers*/
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-											met, month, day, m->cells[cell].heights[height].z,
-											m->cells[cell].heights[height].ages[age].species[species].management, height);
+											met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
-									/*canopy water fluxes block*/
+									/* canopy water fluxes block */
 									Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-
-									/*canopy carbon fluxes block*/
+									/* canopy carbon fluxes block */
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -220,15 +201,10 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
 									Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 									Log("--------------------------------------------------------------------------\n\n\n");
-									if (settings->spatial == 'u')
-									{
-										Log("PHENOLOGY LAI = %f \n", m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-									}
 								}
 								/*outside growing season*/
 								else
 								{
-
 									if (settings->spatial == 'u')
 									{
 										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
@@ -251,7 +227,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("--------------------------------------------------------------------------\n\n\n");
 								}
 							}
-							//evergreen
+							/* loop for evergreen */
 							else
 							{
 								//Peak LAI is also used in spatial version to drive carbon allocation
@@ -266,17 +242,16 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
-								/*modifiers*/
+								/* modifiers */
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-										met, month, day, m->cells[cell].heights[height].z,
-										m->cells[cell].heights[height].ages[age].species[species].management, height);
+										met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
-								/*canopy water fluxes block*/
+								/* canopy water fluxes block */
 								Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 								Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
-								/*canopy carbon fluxes block*/
+								/* canopy carbon fluxes block */
 								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 								Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
@@ -286,37 +261,28 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-
 								Log("--------------------------------------------------------------------------\n\n\n");
-
 							}
-							/*SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN*/
-							/*LITTERFALL COMPUTATION AT CELL LEVEL*/
+							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
+							/* LITTERFALL COMPUTATION AT CELL LEVEL */
 							if (met[month].d[day].n_days == 1)
 							{
-								m->cells[cell].monthly_tot_litterfall = 0;
-
-								if (met[month].d[day].n_days == 1 && month == JANUARY)
-								{
-									m->cells[cell].annual_tot_litterfall = 0;
-								}
+								m->cells[cell].monthly_litterfall = 0;
 							}
-
-							m->cells[cell].daily_tot_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
-							Log("Daily Litterfall = %f\n", m->cells[cell].daily_tot_litterfall);
-							m->cells[cell].monthly_tot_litterfall += m->cells[cell].daily_tot_litterfall;
-							Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_tot_litterfall);
-							m->cells[cell].annual_tot_litterfall += m->cells[cell].daily_tot_litterfall;
-							Log("Annual Litterfall = %f\n", m->cells[cell].annual_tot_litterfall);
+							m->cells[cell].daily_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
+							Log("Daily Litterfall = %f\n", m->cells[cell].daily_litterfall);
+							m->cells[cell].monthly_litterfall += m->cells[cell].daily_litterfall;
+							Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_litterfall);
+							m->cells[cell].annual_litterfall += m->cells[cell].daily_litterfall;
+							Log("Annual Litterfall = %f\n", m->cells[cell].annual_litterfall);
 							//to prevent jumps in dendrometric values it must be computed at the beginning of each month
 							if (day == 0)
 							{
 								Average_tree_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-								//DENDROMETRY
+								/* DENDROMETRY */
 								Dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 							}
-							/*END OF YEAR*/
-
+							/* END OF YEAR */
 							if (day == 30 && month == DECEMBER)
 							{
 								Log("*****END OF YEAR******\n");
@@ -353,44 +319,32 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								 */
 
-
 								Total_class_level_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-
 								Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
-
 								//Average_tree_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-
 								Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
-
 								/*MORTALITY*/
 								//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
 								Log("Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 								//Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
-
 								//todo
 								//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
 								//RECEIVES MORE LIGHT AND THEN GROWTH BETTER SO IT IS A NEW HEIGHT CLASS
-
-
 								/*Mortality based on tree Age(LPJ)*/
 								//Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-
 								/*Mortality based on Growth efficiency(LPJ)*/
 								//Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
-
 								/*LIGHT MORTALITY & GROWTH EFFICIENCY*/
 								if(m->cells[cell].heights[height].z < m->cells[cell].top_layer)
 								{
-									Log("Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+									//Log("Greff_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 									/*Mortality based on Growth efficiency(LPJ)*/
 									//Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 								}
-
 								if ( m->cells[cell].heights[height].ages[age].species[species].management == C)
 								{
 									Stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 								}
-
 								//Renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 								/*CROWDING COMPETITION-BIOMASS RE-ALLOCATION*/
@@ -419,8 +373,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								//MANAGEMENT
 								//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
-
-
 								/*
                            if ( m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] != 0 && m->cells[cell].heights[height].z == m->cells[cell].top_layer )
                            {
@@ -458,12 +410,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 r.wf = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING];
                                 r.wr = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING];
                                 r.ws = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING];
-
-
-
 							  	  Log("....adding new row\n");
-
-
                                 //create new height class
                                 if ( !fill_cell_from_heights(m->cells, &r) )
                                 {
@@ -606,16 +553,15 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							IsDivisble
 							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], years)
 						}
-						*/
-
+						 */
 					}
 					else
 					{
 						Log("\n\n**************************************************************\n"
-								"No trees for species %s s dbh %g height %g age %d are died!!!!\n"
-								"**************************************************************\n\n",
-								m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-								m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
+						"No trees for species %s s dbh %g height %g age %d are died!!!!\n"
+						"**************************************************************\n\n",
+						m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+						m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
 					}
 				}
 				Log("****************END OF SPECIES CLASS***************\n");
@@ -646,8 +592,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//here is called at the end of all tree height age and species classes loops
 		//todo: move all soil algorithms into soil_model function
 		//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
-
-
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
 		//Log("Nitrogen available = %f g m^-2\n", N_avl);
 	}

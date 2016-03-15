@@ -26,13 +26,13 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
 //	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
-	c->daily_c_flux[i] = s->value[C_FLUX];
-	c->daily_tot_c_flux += s->value[C_FLUX];
-	c->monthly_c_flux[i] += s->value[C_FLUX];
-	c->monthly_tot_c_flux +=  s->value[C_FLUX];
-	c->annual_c_flux[i] += s->value[C_FLUX];
-	c->annual_tot_c_flux +=  s->value[C_FLUX];
-	c->daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);;
+	c->layer_daily_c_flux[i] = s->value[C_FLUX];
+	c->daily_C_flux += s->value[C_FLUX];
+	c->layer_monthly_c_flux[i] += s->value[C_FLUX];
+	c->monthly_C_flux +=  s->value[C_FLUX];
+	c->layer_annual_c_flux[i] += s->value[C_FLUX];
+	c->annual_C_flux +=  s->value[C_FLUX];
+	c->layer_daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 
 }
 
@@ -53,17 +53,17 @@ void get_net_ecosystem_exchange(CELL *const c)
 	int i;
 	for(i = 0; i< c->soils_count; i++)
 	{
-		c->daily_tot_het_resp += c->soils[i].co2 * 1000.0;
-		c->monthly_tot_het_resp += c->soils[i].co2 * 1000.0;
-		c->annual_tot_het_resp += c->soils[i].co2 * 1000.0;
+		c->daily_het_resp += c->soils[i].co2 * 1000.0;
+		c->monthly_het_resp += c->soils[i].co2 * 1000.0;
+		c->annual_het_resp += c->soils[i].co2 * 1000.0;
 	}
-	c->Reco = c->daily_tot_aut_resp + c->daily_tot_het_resp;
-	c->nee = c->daily_gpp - c->Reco;
+	c->daily_r_eco = c->daily_aut_resp + c->daily_het_resp;
+	c->daily_nee = c->daily_gpp - c->daily_r_eco;
 
-	c->monthly_Reco +=  c->Reco;
-	c->monthly_Nee +=  c->nee;
+	c->monthly_r_eco +=  c->daily_r_eco;
+	c->monthly_nee +=  c->daily_nee;
 
-	c->annual_Reco +=  c->Reco;
-	c->annual_Nee +=  c->nee;
+	c->annual_r_eco +=  c->daily_r_eco;
+	c->annual_nee +=  c->daily_nee;
 }
 

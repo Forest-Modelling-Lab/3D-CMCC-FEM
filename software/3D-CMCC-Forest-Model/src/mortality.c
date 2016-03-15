@@ -210,13 +210,13 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 
 		i = c->heights[height].z;
 
-		c->daily_dead_tree[i] += deadtree;
-		c->monthly_dead_tree[i] += deadtree;
-		c->annual_dead_tree[i] += deadtree;
+		c->layer_daily_dead_tree[i] += deadtree;
+		c->layer_monthly_dead_tree[i] += deadtree;
+		c->layer_annual_dead_tree[i] += deadtree;
 
-		c->daily_tot_dead_tree += deadtree;
-		c->monthly_tot_dead_tree += deadtree;
-		c->annual_tot_dead_tree += deadtree;
+		c->daily_dead_tree += deadtree;
+		c->monthly_dead_tree += deadtree;
+		c->annual_dead_tree += deadtree;
 
 
 		c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]

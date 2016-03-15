@@ -13,24 +13,11 @@
 
 #define NO_DATA -9999
 
-
-
 /* enums */
-
 typedef enum {
 	F = 0,      //forest
 	Z          //crop
 } eLanduse;
-
-
-
-/* enums */
-/*
-typedef enum {
-	D = 0,      //deciduous
-	E,          //evergreen
-} ePhenology;
- */
 
 /* */
 typedef enum {
@@ -206,82 +193,49 @@ typedef struct
 
 } settings_t;
 
-
-
-
 /* */
 enum {
-
 	/*valori relativi alla specie*/
 	/* !!!!! NON SPOSTARE !!!!!!*/
 	/* serve questo ordine per l'importazione, vedere species_values dentro matrix.c */
-
 	LIGHT_TOL = 0,
-
 	PHENOLOGY,                  //PHENOLOGY 0=deciduous, 1=evergreen
-
-
 	ALPHA,                      // Canopy quantum efficiency (molC/molPAR)
 	EPSILONgCMJ,               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
-	//Y,                          // Assimilate use efficiency-Respiration rate-GPP/NP
-	//EPSILONgCMJ,                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
-
-
 	K,                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
-
 	ALBEDO,
 	GAMMA_LIGHT,
-
-
-	//LEAF AREA INDEX
 	LAIGCX,                     //LAI for maximum canopy conductance
 	LAIMAXINTCPTN,              //LAI for maximum rainfall interception
 	MAXINTCPTN,                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
-
-	//SPECIFIC LEAF AREA
 	SLA_AVG,                    //AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves
 	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
 	LAI_RATIO,					//(DIM) all-sided to projected leaf area ratio
-
-	//FRACTION BRANCH-BARK
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)
 	FRACBB1,                    //Branch and Bark fraction for mature stands (m^2/kg)
 	TBB,                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
-
-	//MASS DENSITY
 	RHOMIN,                     //Minimum Basic Density for young Trees
 	RHOMAX,                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 	TRHO,                       //Age at which rho = (RHOMIN + RHOMAX )/2
-
-	//VPD
 	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec
 	BLCOND,                     //Canopy Boundary Layer conductance
 	MAXCOND,                    //Maximum leaf Conductance in m/sec
-
-	//AGE
 	MAXAGE,                         //Determines rate of "physiological decline" of forest
 	RAGE,                       //Relative Age to give fAGE = 0.5
 	NAGE,                       //Power of relative Age in function for Age
-	//AGE for SHOOTS
 	MAXAGE_S,
 	RAGE_S,                       //Relative Age to give fAGE = 0.5
 	NAGE_S,                       //Power of relative Age in function for Age
-
-	//TEMPERATURE
 	GROWTHTMIN,                 //Minimum temperature for growth
 	GROWTHTMAX,                 //Maximum temperature for growth
 	GROWTHTOPT,                 //Optimum temperature fro growth
 	GROWTHSTART,                //Thermic sum  value for starting growth in °C
 	GROWTHEND,                  //Thermic sum  value for ending growth in °C
 	MINDAYLENGTH,               //minimum day length for phenology
-
-	//SOIL WATER
 	SWPOPEN,
 	SWPCLOSE,
 	SWCONST,                    //Costant in Soil Water modifier vs Moist Ratio
 	SWPOWER,                    //Power in Soil Water modifier vs Moist Ratio
-
-	//BIOMASS PARTITIONING CTEM
 	OMEGA_CTEM,                        //ALLOCATION PARAMETER
 	S0CTEM,                           //PARAMETER CONTROLLING ALLOCATION TO STEM
 	R0CTEM,                           //PARAMETER CONTROLLING ALLOCATION TO ROOT
@@ -292,61 +246,36 @@ enum {
 	MIN_R0CTEM,                       //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
 	MAX_S0CTEM,                       //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 	YEARS_FOR_CONVERSION,        //years from coppicing to consider tree as a timber
-
 	FRUIT_PERC,
 	CONES_LIFE_SPAN,
-
-
-
-	//FINE COARSE ROOT RATIO
 	FINE_ROOT_LEAF,	//allocation new fine root C:new leaf (ratio)
 	STEM_LEAF,		//allocation new stem C:new leaf (ratio)
 	COARSE_ROOT_STEM,	//allocation new coarse root C:new stem (ratio)
 	LIVE_TOTAL_WOOD,	//new live C:new total wood (ratio)
-
-
-	//BIOME C:N RATIOS
 	CN_LEAVES,  //CN of leaves (kgC/kgN)
 	CN_LITTER,  //CN of leaf litter (kgC/kgN)
 	CN_FINE_ROOTS,  // CN of fine roots (kgC/kgN)
 	CN_LIVE_WOODS,  //CN of live woods (kgC/kgN)
 	CN_DEAD_WOODS,  //CN of dead woods (kgC/kgN)
-
-	//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
-	//LITTERFALL
-	//FOLLOWING BIOME-BGC
 	BUD_BURST,					//days of bud burst at the beginning of growing season (only for deciduous)
 	LEAF_FALL_FRAC_GROWING,		//proportions of the growing season of leaf fall
 	LEAF_LIFE_SPAN,				//Leaf life span
-
-	//ROOT TURNOVER
 	LEAVES_FINERTTOVER,                    //Average daily fine root turnover rate
 	COARSERTTOVER,                  //Average daily coarse root turnover rate
 	SAPWOODTTOVER,	                //Average daily sapwood turnover rate
 	BRANCHTTOVER,	                //Average daily branch turnover rate
 	LIVE_WOOD_TURNOVER,             //Average daily live wood turnover rate
-	//RTTOVER,                    //Average daily root turnover rate
-
-
-
-	//MORTALITY
 	WSX1000,                    //Max stem mass (kg) per tree at 1000 trees/hectare
 	THINPOWER,                  //Power in self-thinning rule
 	MF,                         //Fraction mean single tree foliage biomass lost per dead tree
 	MR,                         //Fraction mean single tree root biomass lost per dead tree
 	MS,                         //Fraction mean single tree stem biomass lost per dead tree
-
-	//ALLOMETRIC RELATIONSHIPS
-
-	//DBHDC,                      //dbh (cm)- crown diameter (m) ratio  from cm to meter cm-->m
-	//DBHDC = 20/100
 	DBHDCMAX,                   //Low Density
 	DBHDCMIN,                   //High Density
 	SAP_A,                      //a coefficient for sapwood
 	SAP_B,                      //b coefficient for sapwood
 	SAP_LEAF,                   //sapwood_max leaf area ratio in pipe model
 	SAP_WRES,					  //Sapwood-Reserve biomass ratio used if no Wres data are available
-
 	HMAX,                       //Max Height in m
 	DMAX,                       //Max Diameter in cm
 	HPOWER,                     //Slope of Asymptotic Height from Sortie
@@ -354,30 +283,17 @@ enum {
 	b_RPOWER,
 	CHPOWER,                    //Slope of Asymptotic Crown-Height from Sortie
 	b_CHPOWER,
-
 	STEMCONST_P,
 	STEMPOWER_P,
-
-
-
-	//CHAPMAN-RICHARDS relationships
 	CRA,
 	CRB,
 	CRC,
-
-	//CROWDING COMPETITION FUNCTION
 	HDMAX,                      //Height to Base diameter ratio MAX
 	HDMIN,                      //Height to Base diameter ratio MIN
-
-	//DENSITY FUNCTION
 	DENMAX,                     //Maximum density (trees/10000 m^2)
 	DENMIN,                     //Minimum density (trees/10000 m^2)
-
-	//ESTABLISHMENT
 	MINPAREST,           //Minimum Monthly PAR (W/m^2 hour) for Establishment for the Dominated Layer
 	MINRAIN,                    //Minimum annual Rain Precipitation for Establishment
-
-	//SEEDS PRODUCTION
 	ADULT_AGE,
 	MAXSEED,                    //numero massimo semi prodotti dalla pianta (da TREEMIG)
 	MASTSEED,                   //ricorrenza anni di pasciona (da TREEMIG)
@@ -386,14 +302,8 @@ enum {
 	GERMCAPACITY,               //Geminability (Lischke H. & Loffler T. J.)
 	MINTEMP,                    //Minimum temperature for germination in °C
 	ESTMAX,                     //Potential Establishment rate in the absence of competition
-
-	//SEEDS PRODUCTION FROM LPJ
 	FRACFRUIT,                  //Fraction of NPP to Fruit Production
-
 	ROTATION,
-
-	//MANAGMENT
-
 	MINAGEMANAG,                    //Minimum age for Managment
 	MINDBHMANAG,                //Minimum DBH for Managment
 	AV_SHOOT,                   //Average number of shoots produced after coppicing
@@ -676,7 +586,6 @@ enum {
 	THERMIC_SUM_FOR_END_VEG, //thermic sum at the end of leaf fall period
 
 	//SAPLINGS
-
 	LAI_SAPLING,
 	AVDBH_SAPLING,
 	TREE_HEIGHT_SAPLING,
@@ -720,8 +629,6 @@ enum {
 
 	COUNTERS
 };
-
-
 
 /* structures */
 // A row inside input.txt file
@@ -868,21 +775,21 @@ typedef struct {
 	int class;
 
 	//cumulative variables class related used in annual-monthly-daily Log
-/*
-	//test set as layer level result e.g. layer_daily_gpp[]
+	/*
+	//test set as class level result e.g. class_daily_gpp[]
 	double class_daily_gpp[3], class_daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	double class_daily_npp[3], class_daily_tot_npp, monthly_npp[3], monthly_tot_npp, annual_npp[3], annual_tot_npp;
-	double daily_et[3], daily_tot_et, monthly_et[3], monthly_tot_et, annual_et[3], annual_tot_et;
-	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
-	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
-	double daily_aut_resp[3], daily_tot_aut_resp, daily_tot_het_resp,  monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
+	double class_daily_npp[3], class_daily_tot_npp, monthly_npp[3], class_monthly_tot_npp, annual_npp[3], class_annual_tot_npp;
+	double class_daily_et[3], daily_tot_et, class_monthly_et[3], monthly_tot_et, class_annual_et[3], annual_tot_et;
+	double class_daily_maint_resp[3], class_daily_tot_maint_resp, class_monthly_maint_resp[3], class_monthly_tot_maint_resp, class_annual_maint_resp[3], class_annual_tot_maint_resp;
+	double class_daily_growth_resp[3], class_daily_tot_growth_resp, monthly_gowth_resp[3], class_monthly_tot_growth_resp, class_annual_growth_resp[3], class_annual_tot_growth_resp;
+	double class_daily_aut_resp[3], daily_tot_aut_resp, daily_tot_het_resp,  monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
 	double daily_aut_resp_tDM[3];
 	double daily_cc[3], monthly_cc[3], annual_cc[3];
 	double daily_lai[3];
 	double annual_peak_lai[10];
 	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
-*/
+	 */
 } CLASS;
 
 /* */
@@ -937,9 +844,9 @@ typedef struct {
 	int top_layer;
 	int saplings_counter;
 	double gapcover[3];
+	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 
-
-	/*radiation variable*/
+	/*radiation variables*/
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
 	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation;
@@ -956,20 +863,18 @@ typedef struct {
 
 	/*carbon variables*/
 	double daily_gpp, monthly_gpp, annual_gpp;     //in g of C m^2
-	double daily_npp_gC;	//in g of C m^2
-	double daily_npp_tDM;     //in tonnes of DM per hectare
-	double av_gpp;
-	double av_npp;
-	double stand_agb;
-	double stand_bgb;
+	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;	//in g of C m^2
+	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;     //in tonnes of DM per hectare
+	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;
+	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;
+	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;
+	double daily_r_eco, monthly_r_eco, annual_r_eco;
+	double daily_het_resp, monthly_het_resp, annual_het_resp;
+	double daily_C_flux, monthly_C_flux, annual_C_flux;
 	double litter;
-	double aut_respiration; //autotrophic respiration
-	double het_respiration; //heterotrophic respiration
-	double soil_respiration;
 	double ter;  //total ecosystem respiration
 	double carbon_balance, old_carbon_balance;
-	double nee;
-	double Reco;
+	double daily_nee, monthly_nee, annual_nee;
 	double daily_leaf_carbon;
 	double daily_stem_carbon;
 	double daily_fine_root_carbon;
@@ -986,11 +891,17 @@ typedef struct {
 	double daily_fine_root_growth_resp;
 	double daily_branch_growth_resp;
 	double daily_coarse_root_growth_resp;
-
 	double daily_litter;
+	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+	double daily_litterfall, monthly_litterfall, annual_litterfall;
+	double av_gpp;
+	double av_npp;
+	double stand_agb;
+	double stand_bgb;
 
 
 	/*water variables*/
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 	double asw;
 	double old_asw;
 	double max_asw;
@@ -1020,35 +931,33 @@ typedef struct {
 	double snow_subl; //sublimated snow
 	double snow_to_soil;
 	double out_flow;
-	double daily_tot_c_int;
-	double daily_tot_c_transp;
-	double daily_tot_c_evapo;
-	double daily_tot_c_water_stored;
-	double daily_tot_c_evapotransp;
-	double daily_tot_et;
-	/*energy balance*/
-	double daily_tot_c_int_watt;
-	double daily_tot_c_transp_watt;
-	double daily_tot_c_evapotransp_watt;
-	double daily_soil_evaporation_watt;
-	double daily_tot_latent_heat_flux;
-	/*cumulate variables*/
-	double monthly_tot_c_evapotransp, annual_tot_c_evapotransp;
-	double monthly_tot_et, annual_tot_et;
+	double daily_c_int, monthly_c_int, annual_c_int;
+	double daily_c_transp, monthly_c_transp, annual_c_transp;
+	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;
+	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored; //not used
+	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
+	double daily_et, monthly_et, annual_et;
 
-	//todo move variables in the right place
+	/*energy balance*/
+	double daily_c_int_watt;
+	double daily_c_transp_watt;
+	double daily_c_evapotransp_watt;
+	double daily_soil_evaporation_watt;
+	double daily_latent_heat_flux;
+
+
 	//cumulative variables layer related used in annual-monthly-daily Log
 	double layer_daily_gpp[3], layer_monthly_gpp[3], layer_annual_gpp[3];
-	double layer_daily_npp_tDM[3], daily_tot_npp, layer_monthly_npp_tDM[3], monthly_tot_npp, layer_annual_npp_tDM[3], annual_tot_npp;
-	double layer_daily_npp_gC[3],monthly_npp_g_c[3], monthly_tot_npp_g_c, annual_npp_g_c[3], annual_tot_npp_g_c;
-	double monthly_Nee, monthly_Reco, annual_Nee, annual_Reco;
-	double daily_maint_resp[3], daily_tot_maint_resp, monthly_maint_resp[3], monthly_tot_maint_resp, annual_maint_resp[3], annual_tot_maint_resp;
-	double daily_growth_resp[3], daily_tot_growth_resp, monthly_gowth_resp[3], monthly_tot_growth_resp, annual_growth_resp[3], annual_tot_growth_resp;
-	double daily_aut_resp[3], daily_tot_aut_resp,daily_tot_het_resp, monthly_aut_resp[3], monthly_tot_aut_resp,monthly_tot_het_resp, annual_aut_resp[3], annual_tot_aut_resp, annual_tot_het_resp;
-	double daily_aut_resp_tDM[3];
-	double daily_c_flux[3], daily_tot_c_flux, monthly_c_flux[3], monthly_tot_c_flux, annual_c_flux[3], annual_tot_c_flux;
-	double daily_c_flux_tDM[3];
-	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
+	double layer_daily_npp_tDM[3], layer_monthly_npp_tDM[3], layer_annual_npp_tDM[3];
+	double layer_daily_npp_gC[3], layer_monthly_npp_gC[3], layer_annual_npp_gC[3];
+	double layer_daily_maint_resp[3], layer_monthly_maint_resp[3], layer_annual_maint_resp[3];
+	double layer_daily_growth_resp[3], layer_monthly_gowth_resp[3], layer_annual_growth_resp[3];
+	double layer_daily_aut_resp[3], layer_monthly_aut_resp[3], layer_annual_aut_resp[3];
+	double layer_daily_c_flux[3], layer_monthly_c_flux[3], layer_annual_c_flux[3];
+	double layer_daily_aut_resp_tDM[3];
+	double layer_daily_c_flux_tDM[3];
+
+
 	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
 	double daily_delta_wts[3], daily_wts[3], monthly_delta_wts[3], monthly_wts[3], annual_delta_wts[3], annual_wts[3];
 	double daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
@@ -1056,20 +965,21 @@ typedef struct {
 	double daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
 	double daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
 	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
-	double daily_tot_litterfall, monthly_tot_litterfall, annual_tot_litterfall;
 
-	double daily_c_int[3], monthly_c_int[3], annual_c_int[3];
-	double daily_c_evapo[3], monthly_c_evapo[3], annual_c_evapo[3];
-	double daily_c_water_stored[3], monthly_c_water_stored[3], annual_c_water_stored[3];
-	double daily_c_transp[3], monthly_c_transp[3], annual_c_transp[3];
-	double daily_c_evapotransp[3], monthly_c_evapotransp[3], annual_c_evapotransp[3];
-	double daily_et[3], monthly_et[3], annual_et[3];
-	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 
-	double daily_cc[3], monthly_cc[3], annual_cc[3];
+
+	double layer_daily_c_int[3], layer_monthly_c_int[3], layer_annual_c_int[3];
+	double layer_daily_c_transp[3], layer_monthly_c_transp[3], layer_annual_c_transp[3];
+	double layer_daily_c_evapo[3], layer_monthly_c_evapo[3], layer_annual_c_evapo[3];
+	double layer_daily_c_water_stored[3], layer_monthly_c_water_stored[3], layer_annual_c_water_stored[3];
+	double layer_daily_c_evapotransp[3], layer_monthly_c_evapotransp[3], layer_annual_c_evapotransp[3];
+	double layer_daily_et[3], layer_monthly_et[3], layer_annual_et[3];
+
+
+	double layer_daily_cc[3], layer_monthly_cc[3], layer_annual_cc[3];
 	double daily_lai[3];
 	double annual_peak_lai[10];
-	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
+	int layer_daily_dead_tree[3], layer_monthly_dead_tree[3], layer_annual_dead_tree[3];
 
 	double annual_dbh[3];
 
@@ -1251,11 +1161,6 @@ void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, in
 void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
 void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
 void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
-
-
-
-
-
 void AGB_BGB_biomass (CELL *const , int, int, int);
 void Dendrometry (SPECIES *const, HEIGHT *, const int);
 void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
@@ -1297,7 +1202,6 @@ void Air_pressure (CELL *c);
 void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Latent_heat (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
-/*evapotranspiration block*/
 void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);

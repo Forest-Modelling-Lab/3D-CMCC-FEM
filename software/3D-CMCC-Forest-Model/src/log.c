@@ -319,30 +319,30 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%6.2f", c->annual_Nee);
+	  Annual_Log ("\t%6.2f", c->annual_nee);
 	}
       Annual_Log("\t%10.2f \t%10.2f",
 		 c->annual_gpp,
-		 c->annual_tot_aut_resp);
+		 c->annual_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 	}
 
 
       Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f "
 	  "\t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
-	  c->annual_tot_c_flux,
-	  ((c->annual_tot_aut_resp * 100.0)/c->annual_gpp),
-	  c->annual_tot_npp,
-	  c->annual_tot_npp_g_c,
-	  c->annual_tot_c_evapotransp ,
+	  c->annual_C_flux,
+	  ((c->annual_aut_resp * 100.0)/c->annual_gpp),
+	  c->annual_npp_tDM,
+	  c->annual_npp_gC,
+	  c->annual_c_evapotransp ,
 	  c->asw,
 	  c->annual_tot_w_flux,
 	  c->annual_peak_lai[0],
-	  c->annual_cc[0],
-	  c->annual_tot_dead_tree,
+	  c->layer_annual_cc[0],
+	  c->annual_dead_tree,
 	  c->annual_wf[0],
 	  c->annual_ws[0],
 	  c->annual_wbb[0],
@@ -355,25 +355,25 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
       //compute average or total
       avg_gpp[0] += c->layer_annual_gpp[0];
-      avg_ar[0] += c->annual_aut_resp[0];
-      avg_cf[0] += c->annual_c_flux[0];
+      avg_ar[0] += c->layer_annual_aut_resp[0];
+      avg_cf[0] += c->layer_annual_c_flux[0];
       avg_npp[0] += c->layer_annual_npp_tDM[0];
-      avg_ce[0] += c->annual_c_evapotransp[0];
+      avg_ce[0] += c->layer_annual_c_evapotransp[0];
       avg_gpp_tot += c->layer_annual_gpp[0];
-      avg_ar_tot += c->annual_aut_resp[0];
-      avg_cf_tot += c->annual_c_flux[0];
+      avg_ar_tot += c->layer_annual_aut_resp[0];
+      avg_cf_tot += c->layer_annual_c_flux[0];
       avg_npp_tot += c->layer_annual_npp_tDM[0];
-      avg_ce_tot += c->annual_c_evapotransp[0];
-      tot_dead_tree_tot += c->annual_tot_dead_tree;
+      avg_ce_tot += c->layer_annual_c_evapotransp[0];
+      tot_dead_tree_tot += c->annual_dead_tree;
 
       //reset
       c->layer_annual_gpp[0] = 0;
-      c->annual_aut_resp[0] = 0;
-      c->annual_c_flux[0] = 0;
+      c->layer_annual_aut_resp[0] = 0;
+      c->layer_annual_c_flux[0] = 0;
       c->layer_annual_npp_tDM[0] = 0;
-      c->annual_c_evapotransp[0] = 0;
-      c->annual_cc[0] = 0;
-      c->annual_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_annual_cc[0] = 0;
+      c->layer_annual_dead_tree[0] = 0;
       c->annual_peak_lai[0] = 0;
       c->annual_wres[0] = 0;
       c->annual_delta_ws[0] = 0;
@@ -415,73 +415,73 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		  c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%6.2f", c->annual_Nee);
+	  Annual_Log ("\t%6.2f", c->annual_nee);
 	}
 
       Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f  \t%4.2f",
 
 		  c->layer_annual_gpp[1],c->layer_annual_gpp[0], c->annual_gpp,
-		  c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
+		  c->layer_annual_aut_resp[1],c->layer_annual_aut_resp[0], c->annual_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 	}
 
       Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
 	  " \t%4.2f \t%2.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
 
-	  (c->annual_aut_resp[1]*100)/ c->layer_annual_gpp[1],(c->annual_aut_resp[0]*100)/ c->layer_annual_gpp[0],(c->annual_tot_aut_resp*100)/c->annual_gpp,
-	  c->layer_annual_npp_tDM[1], c->layer_annual_npp_tDM[0],	c->annual_tot_npp, c->annual_tot_npp_g_c,
-	  c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
+	  (c->layer_annual_aut_resp[1]*100)/ c->layer_annual_gpp[1],(c->layer_annual_aut_resp[0]*100)/ c->layer_annual_gpp[0],(c->annual_aut_resp*100)/c->annual_gpp,
+	  c->layer_annual_npp_tDM[1], c->layer_annual_npp_tDM[0],	c->annual_npp_tDM, c->annual_npp_gC,
+	  c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->annual_c_evapotransp,
 	  c->asw,
 	  c->annual_tot_w_flux,
 	  c->annual_peak_lai[1], c->annual_peak_lai[0],
-	  c->annual_cc[1], c->annual_cc[0],
-	  c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree,
+	  c->layer_annual_cc[1], c->layer_annual_cc[0],
+	  c->layer_annual_dead_tree[1], c->layer_annual_dead_tree[0], c->annual_dead_tree,
 	  c->annual_wres[1], c->annual_wres[0]);
 
       previous_layer_number = c->annual_layer_number;
 
       //compute average
       avg_gpp[1] += c->layer_annual_gpp[1];
-      avg_ar[1] += c->annual_aut_resp[1];
-      avg_cf[1] += c->annual_c_flux[1];
+      avg_ar[1] += c->layer_annual_aut_resp[1];
+      avg_cf[1] += c->layer_annual_c_flux[1];
       avg_npp[1] += c->layer_annual_npp_tDM[1];
-      avg_npp_tot_gC += c->annual_tot_npp_g_c;
-      avg_ce[1] += c->annual_c_evapotransp[1];
+      avg_npp_tot_gC += c->annual_npp_gC;
+      avg_ce[1] += c->layer_annual_c_evapotransp[1];
       avg_gpp[0] += c->layer_annual_gpp[0];
-      avg_ar[0] += c->annual_aut_resp[0];
-      avg_cf[0] += c->annual_c_flux[0];
+      avg_ar[0] += c->layer_annual_aut_resp[0];
+      avg_cf[0] += c->layer_annual_c_flux[0];
       avg_npp[0] += c->layer_annual_npp_tDM[0];
-      avg_ce[0] += c->annual_c_evapotransp[0];
+      avg_ce[0] += c->layer_annual_c_evapotransp[0];
       avg_gpp_tot += c->layer_annual_gpp[1] + c->layer_annual_gpp[0];
-      avg_ar_tot += c->annual_aut_resp[1] + c->annual_aut_resp[0];
+      avg_ar_tot += c->layer_annual_aut_resp[1] + c->layer_annual_aut_resp[0];
       avg_npp_tot += c->layer_annual_npp_tDM[1] + c->layer_annual_npp_tDM[0];
 
-      avg_ce_tot += c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
-      tot_dead_tree_tot += c->annual_tot_dead_tree;
+      avg_ce_tot += c->layer_annual_c_evapotransp[1] + c->layer_annual_c_evapotransp[0];
+      tot_dead_tree_tot += c->annual_dead_tree;
 
 
       //reset
       c->layer_annual_gpp[1] = 0;
-      c->annual_aut_resp[1] = 0;
-      c->annual_c_flux[1] = 0;
+      c->layer_annual_aut_resp[1] = 0;
+      c->layer_annual_c_flux[1] = 0;
       c->layer_annual_npp_tDM[1] = 0;
-      c->annual_c_evapotransp[1] = 0;
-      c->annual_cc[1] = 0;
-      c->annual_dead_tree[1] = 0;
+      c->layer_annual_c_evapotransp[1] = 0;
+      c->layer_annual_cc[1] = 0;
+      c->layer_annual_dead_tree[1] = 0;
       c->annual_delta_ws[1] = 0;
       c->annual_ws[1] = 0;
       c->annual_wres[1] = 0;
 
       c->layer_annual_gpp[0] = 0;
-      c->annual_aut_resp[0] = 0;
-      c->annual_c_flux[0] = 0;
+      c->layer_annual_aut_resp[0] = 0;
+      c->layer_annual_c_flux[0] = 0;
       c->layer_annual_npp_tDM[0] = 0;
-      c->annual_c_evapotransp[0] = 0;
-      c->annual_cc[0] = 0;
-      c->annual_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_annual_cc[0] = 0;
+      c->layer_annual_dead_tree[0] = 0;
       c->annual_delta_ws[0] = 0;
       c->annual_ws[0] = 0;
       c->annual_wres[0] = 0;
@@ -524,88 +524,86 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Annual_Log ("%d \t%2d \t%2d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter,c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%6.2f", c->annual_Nee);
+	  Annual_Log ("\t%6.2f", c->annual_nee);
 	}
 
       Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f ",
 		  c->layer_annual_gpp[2], c->layer_annual_gpp[1],c->layer_annual_gpp[0], c->layer_annual_gpp,
-		  c->annual_aut_resp[2], c->annual_aut_resp[1],c->annual_aut_resp[0], c->annual_tot_aut_resp);
+		  c->layer_annual_aut_resp[2], c->layer_annual_aut_resp[1],c->layer_annual_aut_resp[0], c->annual_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_tot_het_resp, c->annual_Reco);
+	  Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 	}
 
       Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
 	  " \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2d \t%2d \t%2d \t%2d "
 	  " \t%5.2f \t%5.2f \t%5.2f \t%5.2f \t%5.2f \n",
-	  c->annual_c_flux[2], c->annual_c_flux[1], c->annual_c_flux[0], c->annual_tot_c_flux,
-	  (c->annual_aut_resp[2]*100.0)/c->layer_annual_gpp[2],((c->annual_aut_resp[1]*100.0)/c->layer_annual_gpp[1]),((c->annual_aut_resp[0]*100.0)/c->layer_annual_gpp[0]),(c->annual_tot_aut_resp*100.0)/c->annual_gpp,
-	  c->layer_annual_npp_tDM[2], c->layer_annual_npp_tDM[1],	c->layer_annual_npp_tDM[0], c->annual_tot_npp,
-	  c->annual_c_evapotransp[2],c->annual_c_evapotransp[1], c->annual_c_evapotransp[0], c->annual_tot_c_evapotransp,
+	  c->layer_annual_c_flux[2], c->layer_annual_c_flux[1], c->layer_annual_c_flux[0], c->annual_C_flux,
+	  (c->layer_annual_aut_resp[2]*100.0)/c->layer_annual_gpp[2],((c->layer_annual_aut_resp[1]*100.0)/c->layer_annual_gpp[1]),((c->layer_annual_aut_resp[0]*100.0)/c->layer_annual_gpp[0]),(c->annual_aut_resp*100.0)/c->annual_gpp,
+	  c->layer_annual_npp_tDM[2], c->layer_annual_npp_tDM[1],	c->layer_annual_npp_tDM[0], c->annual_npp_tDM,
+	  c->layer_annual_c_evapotransp[2],c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->annual_c_evapotransp,
 	  c->asw, c->annual_tot_w_flux,
 	  c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0],
-	  c->annual_cc[2],c->annual_cc[1], c->annual_cc[0],
-	  c->annual_dead_tree[2], c->annual_dead_tree[1], c->annual_dead_tree[0], c->annual_tot_dead_tree,
+	  c->layer_annual_cc[2],c->layer_annual_cc[1], c->layer_annual_cc[0],
+	  c->layer_annual_dead_tree[2], c->layer_annual_dead_tree[1], c->layer_annual_dead_tree[0], c->annual_dead_tree,
 	  c->annual_wres[2], c->annual_wres[1], c->annual_wres[0]);
 
       previous_layer_number = c->annual_layer_number;
 
       //compute average
       avg_gpp[2] += c->layer_annual_gpp[2];
-      avg_ar[2] += c->annual_aut_resp[2];
-      avg_cf[2] += c->annual_c_flux[2];
+      avg_ar[2] += c->layer_annual_aut_resp[2];
+      avg_cf[2] += c->layer_annual_c_flux[2];
       avg_npp[2] += c->layer_annual_npp_tDM[2];
-      avg_ce[2] += c->annual_c_evapotransp[2];
+      avg_ce[2] += c->layer_annual_c_evapotransp[2];
       avg_gpp[1] += c->layer_annual_gpp[1];
-      avg_ar[1] += c->annual_aut_resp[1];
-      avg_cf[1] += c->annual_c_flux[1];
+      avg_ar[1] += c->layer_annual_aut_resp[1];
+      avg_cf[1] += c->layer_annual_c_flux[1];
       avg_npp[1] += c->layer_annual_npp_tDM[1];
-      avg_ce[1] += c->annual_c_evapotransp[1];
+      avg_ce[1] += c->layer_annual_c_evapotransp[1];
       avg_gpp[0] += c->layer_annual_gpp[0];
-      avg_ar[0] += c->annual_aut_resp[0];
-      avg_cf[0] += c->annual_c_flux[0];
+      avg_ar[0] += c->layer_annual_aut_resp[0];
+      avg_cf[0] += c->layer_annual_c_flux[0];
       avg_npp[0] += c->layer_annual_npp_tDM[0];
-      avg_ce[0] += c->annual_c_evapotransp[0];
+      avg_ce[0] += c->layer_annual_c_evapotransp[0];
       avg_gpp_tot += c->layer_annual_gpp[2] +c->layer_annual_gpp[1] + c->layer_annual_gpp[0];
-      avg_ar_tot += c->annual_aut_resp[2] +c->annual_aut_resp[1] + c->annual_aut_resp[0];
-      avg_cf_tot += c->annual_c_flux[2] +c->annual_c_flux[1] + c->annual_c_flux[0];
+      avg_ar_tot += c->layer_annual_aut_resp[2] +c->layer_annual_aut_resp[1] + c->layer_annual_aut_resp[0];
+      avg_cf_tot += c->layer_annual_c_flux[2] +c->layer_annual_c_flux[1] + c->layer_annual_c_flux[0];
       avg_npp_tot += c->layer_annual_npp_tDM[2] +c->layer_annual_npp_tDM[1] + c->layer_annual_npp_tDM[0];
-      avg_ce_tot += c->annual_c_evapotransp[2] + c->annual_c_evapotransp[1] + c->annual_c_evapotransp[0];
-      tot_dead_tree_tot += c->annual_tot_dead_tree;
-
-
+      avg_ce_tot += c->layer_annual_c_evapotransp[2] + c->layer_annual_c_evapotransp[1] + c->layer_annual_c_evapotransp[0];
+      tot_dead_tree_tot += c->annual_dead_tree;
 
       //reset
       c->layer_annual_gpp[2] = 0;
-      c->annual_aut_resp[2] = 0;
-      c->annual_c_flux[2] = 0;
+      c->layer_annual_aut_resp[2] = 0;
+      c->layer_annual_c_flux[2] = 0;
       c->layer_annual_npp_tDM[2] = 0;
-      c->annual_c_evapotransp[2] = 0;
-      c->annual_cc[2] = 0;
-      c->annual_dead_tree[2] = 0;
+      c->layer_annual_c_evapotransp[2] = 0;
+      c->layer_annual_cc[2] = 0;
+      c->layer_annual_dead_tree[2] = 0;
       c->annual_delta_ws[2] = 0;
       c->annual_ws[2] = 0;
       c->annual_wres[2] = 0;
 
       c->layer_annual_gpp[1] = 0;
-      c->annual_aut_resp[1] = 0;
-      c->annual_c_flux[1] = 0;
+      c->layer_annual_aut_resp[1] = 0;
+      c->layer_annual_c_flux[1] = 0;
       c->layer_annual_npp_tDM[1] = 0;
-      c->annual_c_evapotransp[1] = 0;
-      c->annual_cc[1] = 0;
-      c->annual_dead_tree[1] = 0;
+      c->layer_annual_c_evapotransp[1] = 0;
+      c->layer_annual_cc[1] = 0;
+      c->layer_annual_dead_tree[1] = 0;
       c->annual_delta_ws[1] = 0;
       c->annual_ws[1] = 0;
       c->annual_wres[1] = 0;
 
       c->layer_annual_gpp[0] = 0;
-      c->annual_aut_resp[0] = 0;
-      c->annual_c_flux[0] = 0;
+      c->layer_annual_aut_resp[0] = 0;
+      c->layer_annual_c_flux[0] = 0;
       c->layer_annual_npp_tDM[0] = 0;
-      c->annual_c_evapotransp[0] = 0;
-      c->annual_cc[0] = 0;
-      c->annual_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_annual_cc[0] = 0;
+      c->layer_annual_dead_tree[0] = 0;
       c->annual_delta_ws[0] = 0;
       c->annual_ws[0] = 0;
       c->annual_wres[0] = 0;
@@ -615,19 +613,19 @@ extern void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
     }
   c->annual_gpp = 0;
-  c->annual_tot_aut_resp = 0;
-  c->annual_tot_c_flux = 0;
-  c->annual_tot_npp = 0;
-  c->annual_tot_npp_g_c = 0;
-  c->annual_tot_c_evapotransp = 0;
+  c->annual_aut_resp = 0;
+  c->annual_C_flux = 0;
+  c->annual_npp_tDM = 0;
+  c->annual_npp_gC = 0;
+  c->annual_c_evapotransp = 0;
   c->annual_tot_w_flux = 0;
-  c->annual_tot_dead_tree = 0;
+  c->annual_dead_tree = 0;
 
   if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
     {
-      c->annual_tot_het_resp = 0;
-      c->annual_Reco = 0;
-      c->annual_Nee = 0;
+      c->annual_het_resp = 0;
+      c->annual_r_eco = 0;
+      c->annual_nee = 0;
     }
   //aaa
   //compute average values
@@ -771,32 +769,32 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Monthly_Log ("%d \t%2d", yos[years].year, month+1);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%6.2f", c->monthly_Nee);
+	  Monthly_Log ("\t%6.2f", c->monthly_nee);
 	}
       Monthly_Log("\t%10.2f \t%10.2f",
 		  c->monthly_gpp,
-		  c->monthly_tot_aut_resp);
+		  c->monthly_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_tot_het_resp, c->monthly_Reco);
+	  Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
 	}
       Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f\n",
-		  c->monthly_tot_c_flux,
-		  c->monthly_tot_npp,
-		  c->monthly_tot_npp_g_c,
-		  c->monthly_tot_c_evapotransp,
+		  c->monthly_C_flux,
+		  c->monthly_npp_tDM,
+		  c->monthly_npp_gC,
+		  c->monthly_c_evapotransp,
 		  c->asw,
 		  c->monthly_tot_w_flux,
-		  c->monthly_cc[0]);
+		  c->layer_monthly_cc[0]);
 
       //reset
       c->layer_monthly_gpp[0] = 0;
-      c->monthly_aut_resp[0] = 0;
+      c->layer_monthly_aut_resp[0] = 0;
       c->layer_monthly_npp_tDM[0] = 0;
-      c->monthly_c_evapotransp[0] = 0;
-      c->monthly_cc[0] = 0;
-      c->monthly_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_monthly_cc[0] = 0;
+      c->layer_monthly_dead_tree[0] = 0;
     }
   //fixme model doesn't log correct value for more then one class within a layer
   if (c->annual_layer_number == 2)
@@ -821,42 +819,42 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Monthly_Log ("%d \t%2d", yos[years].year, month+1);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%6.2f", c->monthly_Nee);
+	  Monthly_Log ("\t%6.2f", c->monthly_nee);
 	}
       Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 		  c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
-		  c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
+		  c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+	  Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 	}
       Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 	  " \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
-	  c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
-	  c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_tot_npp,
-	  c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
+	  c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
+	  c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_npp_tDM,
+	  c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
 	  c->asw,
 	  c->monthly_tot_w_flux,
-	  c->monthly_cc[1], c->monthly_cc[0],
-	  c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+	  c->layer_monthly_cc[1], c->layer_monthly_cc[0],
+	  c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
 
       //reset
       c->layer_monthly_gpp[1] = 0;
-      c->monthly_aut_resp[1] = 0;
-      c->monthly_c_flux[1] = 0;
+      c->layer_monthly_aut_resp[1] = 0;
+      c->layer_monthly_c_flux[1] = 0;
       c->layer_monthly_npp_tDM[1] = 0;
-      c->monthly_c_evapotransp[1] = 0;
-      c->monthly_cc[1] = 0;
-      c->monthly_dead_tree[1] = 0;
+      c->layer_annual_c_evapotransp[1] = 0;
+      c->layer_monthly_cc[1] = 0;
+      c->layer_monthly_dead_tree[1] = 0;
 
       c->layer_monthly_gpp[0] = 0;
-      c->monthly_aut_resp[0] = 0;
-      c->monthly_c_flux[0] = 0;
+      c->layer_monthly_aut_resp[0] = 0;
+      c->layer_monthly_c_flux[0] = 0;
       c->layer_monthly_npp_tDM[0] = 0;
-      c->monthly_c_evapotransp[0] = 0;
-      c->monthly_cc[0] = 0;
-      c->monthly_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_monthly_cc[0] = 0;
+      c->layer_monthly_dead_tree[0] = 0;
     }
   //fixme model doesn't log correct value for more then one class within a layer
   if (c->annual_layer_number == 3)
@@ -882,65 +880,65 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Monthly_Log ("%d \t%2d", yos[years].year, month+1);
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%6.2f", c->monthly_Nee);
+	  Monthly_Log ("\t%6.2f", c->monthly_nee);
 	}
       Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 		  c->layer_monthly_gpp[2], c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
-		  c->monthly_aut_resp[2], c->monthly_aut_resp[1],c->monthly_aut_resp[0], c->monthly_tot_aut_resp);
+		  c->layer_monthly_aut_resp[2], c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
 
       if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 	{
-	  Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+	  Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 	}
       Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 	  " \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
-	  c->monthly_c_flux[2],c->monthly_c_flux[1], c->monthly_c_flux[0], c->monthly_tot_c_flux,
-	  c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_tot_npp,
-	  c->monthly_c_evapotransp[2],c->monthly_c_evapotransp[1], c->monthly_c_evapotransp[0], c->monthly_tot_c_evapotransp,
+	  c->layer_monthly_c_flux[2],c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
+	  c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_npp_tDM,
+	  c->layer_annual_c_evapotransp[2],c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
 	  c->asw,
 	  c->monthly_tot_w_flux,
-	  c->monthly_cc[2], c->monthly_cc[1], c->monthly_cc[0],
-	  c->monthly_dead_tree[2], c->monthly_dead_tree[1], c->monthly_dead_tree[0], c->monthly_tot_dead_tree);
+	  c->layer_monthly_cc[2], c->layer_monthly_cc[1], c->layer_monthly_cc[0],
+	  c->layer_monthly_dead_tree[2], c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
 
       //reset
       c->layer_monthly_gpp[2] = 0;
-      c->monthly_aut_resp[2] = 0;
-      c->monthly_c_flux[2] = 0;
+      c->layer_monthly_aut_resp[2] = 0;
+      c->layer_monthly_c_flux[2] = 0;
       c->layer_monthly_npp_tDM[2] = 0;
-      c->monthly_c_evapotransp[2] = 0;
-      c->monthly_cc[2] = 0;
-      c->monthly_dead_tree[2] = 0;
+      c->layer_annual_c_evapotransp[2] = 0;
+      c->layer_monthly_cc[2] = 0;
+      c->layer_monthly_dead_tree[2] = 0;
 
       c->layer_monthly_gpp[1] = 0;
-      c->monthly_aut_resp[1] = 0;
-      c->monthly_c_flux[1] = 0;
+      c->layer_monthly_aut_resp[1] = 0;
+      c->layer_monthly_c_flux[1] = 0;
       c->layer_monthly_npp_tDM[1] = 0;
-      c->monthly_c_evapotransp[1] = 0;
-      c->monthly_cc[1] = 0;
-      c->monthly_dead_tree[1] = 0;
+      c->layer_annual_c_evapotransp[1] = 0;
+      c->layer_monthly_cc[1] = 0;
+      c->layer_monthly_dead_tree[1] = 0;
 
       c->layer_monthly_gpp[0] = 0;
-      c->monthly_aut_resp[0] = 0;
-      c->monthly_c_flux[0] = 0;
+      c->layer_monthly_aut_resp[0] = 0;
+      c->layer_monthly_c_flux[0] = 0;
       c->layer_monthly_npp_tDM[0] = 0;
-      c->monthly_c_evapotransp[0] = 0;
-      c->monthly_cc[0] = 0;
-      c->monthly_dead_tree[0] = 0;
+      c->layer_annual_c_evapotransp[0] = 0;
+      c->layer_monthly_cc[0] = 0;
+      c->layer_monthly_dead_tree[0] = 0;
     }
   c->monthly_gpp = 0;
-  c->monthly_tot_aut_resp = 0;
-  c->monthly_tot_c_flux = 0;
-  c->monthly_tot_npp = 0;
-  c->monthly_tot_npp_g_c = 0;
-  c->monthly_tot_c_evapotransp = 0;
+  c->monthly_aut_resp = 0;
+  c->monthly_C_flux = 0;
+  c->monthly_npp_tDM = 0;
+  c->monthly_npp_gC = 0;
+  c->monthly_c_evapotransp = 0;
   c->monthly_tot_w_flux = 0;
-  c->monthly_tot_dead_tree = 0;
+  c->monthly_dead_tree = 0;
 
   if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
     {
-      c->monthly_tot_het_resp = 0;
-      c->monthly_Reco = 0;
-      c->monthly_Nee = 0;
+      c->monthly_het_resp = 0;
+      c->monthly_r_eco = 0;
+      c->monthly_nee = 0;
     }
 }
 
@@ -1031,29 +1029,29 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Daily_Log ("%d \t%8d \t%5d \t%5d \t%2d", doy++, yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%6.2f", c->nee);
+	  Daily_Log ("\t%6.2f", c->daily_nee);
 	}
       Daily_Log("\t%10.2f \t%10.2f \t%10.2f",
 		c->layer_daily_gpp[0],
-		c->daily_aut_resp[0],
-		c->daily_aut_resp_tDM[0]);
+		c->layer_daily_aut_resp[0],
+		c->layer_daily_aut_resp_tDM[0]);
 
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->Reco);
+	  Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 	}
       Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
-		c->daily_c_flux[0],
-		c->daily_c_flux_tDM[0],
+		c->layer_daily_c_flux[0],
+		c->layer_daily_c_flux_tDM[0],
 		c->layer_daily_npp_tDM[0],
 		c->layer_daily_npp_gC[0],
-		c->daily_c_evapotransp[0],
-		c->daily_tot_latent_heat_flux,
+		c->layer_daily_c_evapotransp[0],
+		c->daily_latent_heat_flux,
 		c->asw,
 		c->daily_tot_w_flux,
 		c->daily_lai[0],
-		c->daily_cc[0]*100,
-		c->daily_dead_tree[0],
+		c->layer_daily_cc[0]*100,
+		c->layer_daily_dead_tree[0],
 		c->daily_delta_wf[0],
 		c->daily_delta_ws[0],
 		c->daily_delta_wbb[0],
@@ -1067,17 +1065,17 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
       //reset
       c->layer_daily_gpp[0] = 0;
-      c->daily_aut_resp[0] = 0;
-      c->daily_aut_resp_tDM[0] = 0;
-      c->daily_c_flux_tDM[0] = 0;
+      c->layer_daily_aut_resp[0] = 0;
+      c->layer_daily_aut_resp_tDM[0] = 0;
+      c->layer_daily_c_flux_tDM[0] = 0;
       c->layer_daily_npp_tDM[0] = 0;
       c->layer_daily_npp_gC[0]= 0;
-      c->daily_c_int[0] = 0;
-      c->daily_c_transp[0] = 0;
-      c->daily_c_evapotransp[0] = 0;
-      c->daily_et[0] = 0;
-      c->daily_cc[0] = 0;
-      c->daily_dead_tree[0] = 0;
+      c->layer_daily_c_int[0] = 0;
+      c->layer_daily_c_transp[0] = 0;
+      c->layer_daily_c_evapotransp[0] = 0;
+      c->layer_daily_et[0] = 0;
+      c->layer_daily_cc[0] = 0;
+      c->layer_daily_dead_tree[0] = 0;
     }
   //fixme model doesn't log correct value for more then one class within a layer
   if (c->annual_layer_number == 2)
@@ -1110,24 +1108,24 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 		 c->height_class_in_layer_dominated_counter);
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%6.2f", c->nee);
+	  Daily_Log ("\t%6.2f", c->daily_nee);
 	}
       Daily_Log("\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
 		c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->layer_daily_gpp,
-		c->daily_aut_resp[1], c->daily_aut_resp[0], c->daily_tot_aut_resp);
+		c->layer_daily_aut_resp[1], c->layer_daily_aut_resp[0], c->daily_aut_resp);
 
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%10.2f \t%10.2f", c->daily_tot_het_resp, c->Reco);
+	  Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 	}
       Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
-		c->daily_c_flux[1], c->daily_c_flux[0], c->daily_tot_c_flux,
-		c->layer_daily_npp_tDM[1], c->layer_daily_npp_tDM[0], c->daily_tot_npp,
-		c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
+		c->layer_daily_c_flux[1], c->layer_daily_c_flux[0], c->daily_C_flux,
+		c->layer_daily_npp_tDM[1], c->layer_daily_npp_tDM[0], c->daily_npp_tDM,
+		c->layer_daily_c_evapotransp[1], c->layer_daily_c_evapotransp[0], c->daily_c_evapotransp,
 		c->asw,
 		c->daily_lai[1], c->daily_lai[0],
-		c->daily_cc[1]*100, c->daily_cc[0]*100,
-		c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+		c->layer_daily_cc[1]*100, c->layer_daily_cc[0]*100,
+		c->layer_daily_dead_tree[1], c->layer_daily_dead_tree[0], c->daily_dead_tree);
 
       //}
 
@@ -1135,26 +1133,26 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
 
       //reset
       c->layer_daily_gpp[1] = 0;
-      c->daily_aut_resp[1] = 0;
-      c->daily_c_flux[1] = 0;
+      c->layer_daily_aut_resp[1] = 0;
+      c->layer_daily_c_flux[1] = 0;
       c->layer_daily_npp_tDM[1] = 0;
-      c->daily_c_int[1] = 0;
-      c->daily_c_transp[1] = 0;
-      c->daily_c_evapotransp[1] = 0;
-      c->daily_et[1] = 0;
-      c->daily_cc[1] = 0;
-      c->daily_dead_tree[1] = 0;
+      c->layer_daily_c_int[1] = 0;
+      c->layer_daily_c_transp[1] = 0;
+      c->layer_daily_c_evapotransp[1] = 0;
+      c->layer_daily_et[1] = 0;
+      c->layer_daily_cc[1] = 0;
+      c->layer_daily_dead_tree[1] = 0;
 
       c->layer_daily_gpp[0] = 0;
-      c->daily_aut_resp[0] = 0;
-      c->daily_c_flux[0] = 0;
+      c->layer_daily_aut_resp[0] = 0;
+      c->layer_daily_c_flux[0] = 0;
       c->layer_daily_npp_tDM[0] = 0;
-      c->daily_c_int[0] = 0;
-      c->daily_c_transp[0] = 0;
-      c->daily_c_evapotransp[0] = 0;
-      c->daily_et[0] = 0;
-      c->daily_cc[0] = 0;
-      c->daily_dead_tree[0] = 0;
+      c->layer_daily_c_int[0] = 0;
+      c->layer_daily_c_transp[0] = 0;
+      c->layer_daily_c_evapotransp[0] = 0;
+      c->layer_daily_et[0] = 0;
+      c->layer_daily_cc[0] = 0;
+      c->layer_daily_dead_tree[0] = 0;
 
 
     }
@@ -1182,89 +1180,89 @@ extern void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
       Daily_Log ("%d \t%2d \t%2d", yos[years].year, month+1, day+1);
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%6.2f", c->nee);
+	  Daily_Log ("\t%6.2f", c->daily_nee);
 	}
       Daily_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 		c->layer_daily_gpp[2], c->layer_daily_gpp[1],c->layer_daily_gpp[0], c->daily_gpp,
-		c->daily_aut_resp[2], c->daily_aut_resp[1],c->daily_aut_resp[0], c->daily_tot_aut_resp);
+		c->layer_daily_aut_resp[2], c->layer_daily_aut_resp[1],c->layer_daily_aut_resp[0], c->daily_aut_resp);
 
       if (!mystricmp(settings->dndc, "on"))
 	{
-	  Daily_Log ("\t%10.2f \t%10.2f ", c->monthly_tot_het_resp, c->monthly_Reco);
+	  Daily_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 	}
       Daily_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 	  " \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 	  "\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
-	  c->daily_c_flux[2],c->daily_c_flux[1],c->daily_c_flux[0],c->daily_tot_c_flux,
-	  c->layer_daily_npp_tDM[2], c->layer_daily_npp_tDM[1],c->layer_daily_npp_tDM[0], c->daily_tot_npp,
+	  c->layer_daily_c_flux[2],c->layer_daily_c_flux[1],c->layer_daily_c_flux[0],c->daily_C_flux,
+	  c->layer_daily_npp_tDM[2], c->layer_daily_npp_tDM[1],c->layer_daily_npp_tDM[0], c->daily_npp_tDM,
 	  c->layer_daily_npp_gC[2], c->layer_daily_npp_gC[1],c->layer_daily_npp_gC[0], c->daily_npp_gC,
-	  c->daily_c_evapotransp[2],c->daily_c_evapotransp[1], c->daily_c_evapotransp[0], c->daily_tot_c_evapotransp,
+	  c->layer_daily_c_evapotransp[2],c->layer_daily_c_evapotransp[1], c->layer_daily_c_evapotransp[0], c->daily_c_evapotransp,
 	  c->asw,
 	  c->daily_lai[2], c->daily_lai[1], c->daily_lai[0],
-	  c->daily_cc[2]*100, c->daily_cc[1]*100,c->daily_cc[0]*100,
-	  c->daily_dead_tree[2], c->daily_dead_tree[1], c->daily_dead_tree[0], c->daily_tot_dead_tree);
+	  c->layer_daily_cc[2]*100, c->layer_daily_cc[1]*100,c->layer_daily_cc[0]*100,
+	  c->layer_daily_dead_tree[2], c->layer_daily_dead_tree[1], c->layer_daily_dead_tree[0], c->daily_dead_tree);
 
       previous_layer_number = c->annual_layer_number;
 
       //reset
       c->layer_daily_gpp[2] = 0;
-      c->daily_aut_resp[2] = 0;
-      c->daily_c_flux[2] = 0;
+      c->layer_daily_aut_resp[2] = 0;
+      c->layer_daily_c_flux[2] = 0;
       c->layer_daily_npp_tDM[2] = 0;
       c->layer_daily_npp_gC[2] = 0;
-      c->daily_c_int[2] = 0;
-      c->daily_c_transp[2] = 0;
-      c->daily_c_evapotransp[2] = 0;
-      c->daily_et[2] = 0;
-      c->daily_cc[2] = 0;
-      c->daily_dead_tree[2] = 0;
+      c->layer_daily_c_int[2] = 0;
+      c->layer_daily_c_transp[2] = 0;
+      c->layer_daily_c_evapotransp[2] = 0;
+      c->layer_daily_et[2] = 0;
+      c->layer_daily_cc[2] = 0;
+      c->layer_daily_dead_tree[2] = 0;
 
       c->layer_daily_gpp[1] = 0;
-      c->daily_aut_resp[1] = 0;
-      c->daily_c_flux[1] = 0;
+      c->layer_daily_aut_resp[1] = 0;
+      c->layer_daily_c_flux[1] = 0;
       c->layer_daily_npp_tDM[1] = 0;
       c->layer_daily_npp_gC[1] = 0;
-      c->daily_c_int[1] = 0;
-      c->daily_c_transp[1] = 0;
-      c->daily_c_evapotransp[1] = 0;
-      c->daily_et[1] = 0;
-      c->daily_cc[1] = 0;
-      c->daily_dead_tree[1] = 0;
+      c->layer_daily_c_int[1] = 0;
+      c->layer_daily_c_transp[1] = 0;
+      c->layer_daily_c_evapotransp[1] = 0;
+      c->layer_daily_et[1] = 0;
+      c->layer_daily_cc[1] = 0;
+      c->layer_daily_dead_tree[1] = 0;
 
       c->layer_daily_gpp[0] = 0;
-      c->daily_aut_resp[0] = 0;
-      c->daily_c_flux[0] = 0;
+      c->layer_daily_aut_resp[0] = 0;
+      c->layer_daily_c_flux[0] = 0;
       c->layer_daily_npp_tDM[0] = 0;
       c->layer_daily_npp_gC[0] = 0;
-      c->daily_c_int[0] = 0;
-      c->daily_c_transp[0] = 0;
-      c->daily_c_evapotransp[0] = 0;
-      c->daily_et[0] = 0;
-      c->daily_cc[0] = 0;
-      c->daily_dead_tree[0] = 0;
+      c->layer_daily_c_int[0] = 0;
+      c->layer_daily_c_transp[0] = 0;
+      c->layer_daily_c_evapotransp[0] = 0;
+      c->layer_daily_et[0] = 0;
+      c->layer_daily_cc[0] = 0;
+      c->layer_daily_dead_tree[0] = 0;
 
 
 
     }
 
   c->daily_gpp = 0.0;
-  c->daily_tot_aut_resp = 0.0;
-  c->daily_tot_c_flux = 0.0;
-  c->daily_tot_npp = 0.0;
+  c->daily_aut_resp = 0.0;
+  c->daily_C_flux = 0.0;
+  c->daily_npp_tDM = 0.0;
   c->daily_npp_gC = 0.0;
-  c->daily_tot_c_int = 0.0;
-  c->daily_tot_c_transp = 0.0;
-  c->daily_tot_c_evapotransp = 0.0;
-  c->daily_tot_et = 0.0;
-  c->daily_tot_dead_tree = 0.0;
+  c->daily_c_int = 0.0;
+  c->daily_c_transp = 0.0;
+  c->daily_c_evapotransp = 0.0;
+  c->daily_et = 0.0;
+  c->daily_dead_tree = 0.0;
 
-  c->daily_tot_latent_heat_flux = 0.0;
+  c->daily_latent_heat_flux = 0.0;
 
   if (!mystricmp(settings->dndc, "on"))
     {
-      c->daily_tot_het_resp = 0.0;
-      c->Reco = 0.0;
-      c->nee = 0.0;
+      c->daily_het_resp = 0.0;
+      c->daily_r_eco = 0.0;
+      c->daily_nee = 0.0;
     }
   //reset after printed at the end of the day
   /*
@@ -1456,9 +1454,9 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 	  //				c->soils[0].DRCB2,
 	  //				c->soils[0].clay_nh4,
 	  c->layer_daily_gpp[0],
-	  c->daily_aut_resp[0],
+	  c->layer_daily_aut_resp[0],
 	  c->daily_gpp,
-	  c->daily_tot_aut_resp,
+	  c->daily_aut_resp,
 	  c->stemBranchBiomass,
 
 	  c->soils[0].inert_C,
@@ -1484,9 +1482,9 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
       c->stemBranclitN = 0;
 
       c->daily_gpp = 0;
-      c->daily_tot_aut_resp = 0;
+      c->daily_aut_resp = 0;
       c->layer_daily_gpp[0] = 0;
-      c->daily_aut_resp[0] = 0;
+      c->layer_daily_aut_resp[0] = 0;
 
     }
   else if (!mystricmp(settings->rothC, "on"))
@@ -1504,8 +1502,8 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
       soil_Log ("%d \t%5d  \t%2.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 	  "\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \n",
 	  yos[years].year, month+1,
-	  c->monthly_tot_litterfall,
-	  c->monthly_tot_et,
+	  c->monthly_litterfall,
+	  c->monthly_et,
 	  c->temperatureModifier,
 	  c->soil_evaporation,
 	  c->soilCoverModifier,
@@ -1517,21 +1515,21 @@ extern void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int 
 	  c->soils[soil].humifiedOM,
 	  c->soils[soil].inertOM),
 	  c->layer_daily_gpp[0],
-	  c->daily_aut_resp[0],
+	  c->layer_daily_aut_resp[0],
 	  c->daily_gpp,
-	  c->daily_tot_aut_resp;
+	  c->daily_aut_resp;
 
 
 
       //previous_layer_number = c->annual_layer_number;
 
       //reset
-      c->monthly_tot_et =0;
-      c->monthly_tot_litterfall = 0;
+      c->monthly_et =0;
+      c->monthly_litterfall = 0;
       c->daily_gpp = 0;
-      c->daily_tot_aut_resp = 0;
+      c->daily_aut_resp = 0;
       c->layer_daily_gpp[0] = 0;
-      c->daily_aut_resp[0] = 0;
+      c->layer_daily_aut_resp[0] = 0;
 
     }
 

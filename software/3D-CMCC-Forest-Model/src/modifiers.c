@@ -9,7 +9,7 @@
 
 
 
-void Daily_modifiers (SPECIES *const s,  AGE *const a, CELL *const c, const MET_DATA *const met, int month, int day,  int z, int management, int height )
+void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_DATA *const met, int month, int day, int z, int management, int height)
 {
 	double RelAge;
 	double vwc; //soil volumetric water content

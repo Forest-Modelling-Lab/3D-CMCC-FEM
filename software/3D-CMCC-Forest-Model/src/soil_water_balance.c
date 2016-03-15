@@ -22,7 +22,7 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	if(met[month].d[day].tavg>0.0)
 	{
 		c->asw = (c->asw + c->prcp_rain + c->snow_melt)
-				- (c->daily_tot_c_transp + c->daily_tot_c_int + c->soil_evaporation + c->out_flow);
+				- (c->daily_c_transp + c->daily_c_int + c->soil_evaporation + c->out_flow);
 	}
 	else
 	{

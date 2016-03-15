@@ -95,16 +95,16 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	c->layer_daily_npp_tDM[i] += s->value[NPP];
 	c->layer_daily_npp_gC[i] += s->value[NPP_g_C];
 	c->layer_monthly_npp_tDM[i] += s->value[NPP];
-	c->monthly_npp_g_c[i] += s->value[NPP_g_C];
+	c->layer_monthly_npp_gC[i] += s->value[NPP_g_C];
 	c->layer_annual_npp_tDM[i] += s->value[NPP];
-	c->annual_npp_g_c[i] += s->value[NPP_g_C];
+	c->layer_annual_npp_gC[i] += s->value[NPP_g_C];
 
-	c->daily_tot_npp += s->value[NPP];
+	c->daily_npp_tDM += s->value[NPP];
 	c->daily_npp_gC += s->value[NPP_g_C];
-	c->monthly_tot_npp += s->value[NPP];
-	c->monthly_tot_npp_g_c += s->value[NPP_g_C];
-	c->annual_tot_npp += s->value[NPP];
-	c->annual_tot_npp_g_c += s->value[NPP_g_C];
+	c->monthly_npp_tDM += s->value[NPP];
+	c->monthly_npp_gC += s->value[NPP_g_C];
+	c->annual_npp_tDM += s->value[NPP];
+	c->annual_npp_gC += s->value[NPP_g_C];
 
 	Log("***************************** ANNUAL NPP *************************** \n");
 

@@ -140,13 +140,13 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 
 
 	i = c->heights[height].z;
-	c->daily_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
-	c->monthly_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
-	c->annual_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
+	c->layer_daily_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
+	c->layer_monthly_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
+	c->layer_annual_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
 
-	c->daily_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
-	c->monthly_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
-	c->annual_tot_maint_resp += s->value[TOTAL_MAINT_RESP];
+	c->daily_maint_resp += s->value[TOTAL_MAINT_RESP];
+	c->monthly_maint_resp += s->value[TOTAL_MAINT_RESP];
+	c->annual_maint_resp += s->value[TOTAL_MAINT_RESP];
 
 	if(s->value[TOTAL_MAINT_RESP] < 0.0)
 	{
@@ -253,13 +253,13 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 
 	i = c->heights[height].z;
 
-	c->daily_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-	c->monthly_gowth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-	c->annual_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
+	c->layer_daily_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
+	c->layer_monthly_gowth_resp[i] += s->value[TOTAL_GROWTH_RESP];
+	c->layer_annual_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
 
-	c->daily_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
-	c->monthly_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
-	c->annual_tot_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	c->daily_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	c->monthly_growth_resp += s->value[TOTAL_GROWTH_RESP];
+	c->annual_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	if(s->value[TOTAL_GROWTH_RESP] < 0.0)
 	{
 		ERROR(s->value[TOTAL_GROWTH_RESP],"TOTAL_GROWTH_RESP")
@@ -287,14 +287,14 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 	i = c->heights[height].z;
 
-	c->daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
-	c->daily_aut_resp_tDM[i] += ((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-	c->monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
-	c->annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+	c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
+	c->layer_daily_aut_resp_tDM[i] += ((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+	c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+	c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 
-	c->daily_tot_aut_resp += s->value[TOTAL_AUT_RESP];
-	c->monthly_tot_aut_resp += s->value[TOTAL_AUT_RESP];
-	c->annual_tot_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
 }
 
 
