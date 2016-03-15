@@ -7,9 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-
-
-void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
+void Turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 {
 	Log("\nGET_DAILY_TURNOVER\n\n");
 
@@ -50,7 +48,7 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		//turnover of fine root
 		if (s->value[BIOMASS_ROOTS_FINE] > 0.0)
 		{
-			s->value[BIOMASS_ROOTS_FINE] -= (s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
+			s->value[BIOMASS_ROOTS_FINE] -= (s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 			Log("Daily fine root turnover = %f tDM/cell\n", s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
 			Log("Fine root Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
 		}
@@ -58,28 +56,28 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		/*daily stem turnover*/
 		//Log("****Stem turnover****\n");
 		//turnover of live stem wood to dead stem wood
-		s->value[BIOMASS_STEM_LIVE_WOOD] -= (s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
-		Log("Daily live stem wood passing to dead stem wood = %f tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_STEM_LIVE_WOOD] -= (s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+		Log("Daily live stem wood passing to dead stem wood = %f tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Live Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
-		s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[BIOMASS_STEM_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Dead Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 
 		/*daily coarse root turnover*/
 		//Log("****Coarse root turnover****\n");
 		//turnover of live coarse root wood to coarse root dead wood
-		s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] -= (s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
-		Log("Daily live coarse root wood passing to dead wood = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] -= (s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+		Log("Daily live coarse root wood passing to dead wood = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Live Coarse root Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
-		s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Dead Coarse root Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 
 		/*daily stem branch turnover*/
 		//Log("****Stem branch turnover****\n");
 		//turnover of live stem branch wood to dead stem branch wood
-		s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] -= (s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
-		Log("Daily live stem branch wood passing to dead stem branch wood = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] -= (s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+		Log("Daily live stem branch wood passing to dead stem branch wood = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Live Stem branch Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
-		s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
+		s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Dead Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 	}
 }
