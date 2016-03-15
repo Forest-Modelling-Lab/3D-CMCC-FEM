@@ -38,12 +38,12 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 				Log("****leaf turnover for evergreen****\n");
 				s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
 				Log("Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
-				s->value[BIOMASS_FOLIAGE] -= (s->value[OLD_BIOMASS_LEAVES] * s->value[LITTERFALL_RATE]);
+				s->value[BIOMASS_FOLIAGE] -= (s->value[OLD_BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]);
 				/*recompute LAI after turnover*/
 				/*for dominant layer with sunlit foliage*/
 				Log("Foliage Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
-				c->leafLittering += (s->value[OLD_BIOMASS_LEAVES] * s->value[LITTERFALL_RATE]) / GC_GDM * 1000 / settings->sizeCell;
-				c->leaflitN += (s->value[OLD_BIOMASS_LEAVES] * s->value[LITTERFALL_RATE]) / GC_GDM * 1000 / settings->sizeCell /s->value[CN_LEAVES];
+				c->leafLittering += (s->value[OLD_BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]) / GC_GDM * 1000 / settings->sizeCell;
+				c->leaflitN += (s->value[OLD_BIOMASS_FOLIAGE] * s->value[LITTERFALL_RATE]) / GC_GDM * 1000 / settings->sizeCell /s->value[CN_LEAVES];
 				c->leafBiomass += s->value[BIOMASS_FOLIAGE];
 
 				/*recompute LAI after turnover*/
