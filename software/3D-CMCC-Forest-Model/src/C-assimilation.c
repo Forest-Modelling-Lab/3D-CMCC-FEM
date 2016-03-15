@@ -23,8 +23,6 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 		Log("GPP = %f gC m^2 day\n", s->value[GPP_g_C]);
 		Log("Reserve biomass = %f\n", s->value[RESERVE]);
 		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
-
-
 		if (s->value[RESERVE] > 0.0)
 		{
 			/*for principle of conservation of mass*/
@@ -34,7 +32,6 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
 					/*following Barbaroux et al., 2003*/
-
 					if (s->value[RESERVE] < 0.0)
 					{
 						s->value[RESERVE] = 0;
@@ -91,7 +88,6 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	}
 
 	i = c->heights[height].z;
-	c->daily_npp_gC += s->value[NPP_g_C];
 	c->layer_daily_npp_tDM[i] += s->value[NPP];
 	c->layer_daily_npp_gC[i] += s->value[NPP_g_C];
 	c->layer_monthly_npp_tDM[i] += s->value[NPP];

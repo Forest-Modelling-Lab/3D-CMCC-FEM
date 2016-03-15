@@ -899,6 +899,9 @@ typedef struct {
 	double stand_agb;
 	double stand_bgb;
 
+	/* flux balance */
+	double flux_C_balance, old_flux_C_balance;
+
 	/*water variables*/
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 	double asw;
@@ -1208,6 +1211,7 @@ void Evapotranspiration (CELL *);
 void Latent_heat_flux (CELL *);
 void Check_carbon_balance (CELL *);
 void Check_water_balance (CELL *);
+void Check_C_flux_balance (CELL *);
 
 //sergio's functions
 int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);

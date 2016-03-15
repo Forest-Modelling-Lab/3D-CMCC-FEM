@@ -12,12 +12,66 @@
 #include "types.h"
 #include "constants.h"
 
+void Check_C_flux_balance (CELL *c)
+{
+	double flux_in;
+	double flux_out;
+	double flux_stored;
+
+	Log("\n*********CHECK FLUX CARBON BALANCE************\n");
+
+	flux_in = c->daily_gpp;
+
+	flux_out = c->daily_aut_resp;
+
+	flux_stored = c->daily_npp_gC;
+
+	c->flux_C_balance = flux_in - flux_out - flux_stored;
+
+	if(c->years_count == 0 && c->doy == 1 )
+	{
+		Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
+		Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
+	}
+	else
+	{
+		if(c->daily_npp_gC > 0.0)
+		{
+			if(c->years_count == 0 && c->doy == 1 )
+			{
+				Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
+				Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
+			}
+			else
+			{
+			if (fabs(c->old_flux_C_balance - c->flux_C_balance) > 1e-4 )
+			{
+				Log("c->daily_gpp = %f\n", c->daily_gpp);
+				Log("c->daily_aut_resp = %f\n", c->daily_aut_resp);
+				Log("c->daily_npp_gC = %f\n", c->daily_npp_gC);
+				Log("...FATAL ERROR IN flux C balance\n");
+				Log("DOY CB = %d\n", c->doy);
+				Log("differences in balance (old - current)= %f\n", c->old_flux_C_balance - c->flux_C_balance);
+				ERROR(c->flux_C_balance, "flux C balance");
+			}
+			else
+			{
+				Log("...ok flux carbon balance\n");
+			}
+			}
+		}
+	}
+	c->old_flux_C_balance = c->flux_C_balance;
+}
+
 void Check_carbon_balance (CELL *c)
 {
 
 	double carbon_in;
 	double carbon_out;
 	double carbon_stored;
+
+
 	Log("\n*********CHECK CARBON BALANCE************\n");
 
 	/* DAILY CHECK ON CARBON BALANCE */
@@ -63,15 +117,6 @@ void Check_carbon_balance (CELL *c)
 
 	c->carbon_balance = carbon_in - carbon_out - carbon_stored;
 
-	Log("carbon in = %f\n", carbon_in);
-	Log("carbon out = %f\n", carbon_out);
-	Log("carbon stored = %f\n", carbon_stored);
-	Log("carbon balance = %f\n", c->carbon_balance);
-	Log("old carbon balance = %f\n", c->old_carbon_balance);
-	Log("differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
-
-	//test
-	//a first attempt to
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
@@ -81,8 +126,13 @@ void Check_carbon_balance (CELL *c)
 	{
 		if (fabs(c->old_carbon_balance - c->carbon_balance) > 1e-4 )
 		{
+			Log("carbon in = %f\n", carbon_in);
+			Log("carbon out = %f\n", carbon_out);
+			Log("carbon stored = %f\n", carbon_stored);
+			Log("carbon balance = %f\n", c->carbon_balance);
 			Log("...FATAL ERROR IN carbon balance\n");
 			Log("DOY CB = %d\n", c->doy);
+			Log("differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
 			ERROR(c->carbon_balance, "carbon balance");
 		}
 		else
@@ -104,7 +154,7 @@ void Check_water_balance (CELL *c)
 	//FIXME OVERALL FUNCTION DOESN'T WORK!!
 
 	/* DAILY CHECK ON WATER BALANCE */
-/*	Log("c->prcp_rain = %f\n", c->prcp_rain);
+	/*	Log("c->prcp_rain = %f\n", c->prcp_rain);
 	Log("c->prcp_snow = %f\n", c->prcp_snow);
 	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
 	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
@@ -131,14 +181,6 @@ void Check_water_balance (CELL *c)
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
 
-	Log("water in = %f\n", water_in);
-	Log("water out = %f\n", water_out);
-	Log("water stored = %f\n", water_stored);
-	Log("water balance = %f\n", c->water_balance);
-	Log("old water balance = %f\n", c->old_water_balance);
-	Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
-
-
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		Log("NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
@@ -148,6 +190,12 @@ void Check_water_balance (CELL *c)
 	{
 		if (fabs(c->old_water_balance - c->water_balance) > 1e-4 )
 		{
+			Log("water in = %f\n", water_in);
+			Log("water out = %f\n", water_out);
+			Log("water stored = %f\n", water_stored);
+			Log("water balance = %f\n", c->water_balance);
+			Log("old water balance = %f\n", c->old_water_balance);
+			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("...FATAL ERROR IN water balance\n");
 			Log("DOY = %d\n", c->doy);
 			ERROR(c->water_balance, "water balance");
