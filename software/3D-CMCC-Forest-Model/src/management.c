@@ -182,6 +182,7 @@ void Management (SPECIES *const s, AGE * const a, int years)
 	Log("NO MANAGEMENT in Dominant layer\n");
 	s->counter[CUT_TREES] = 0;
 }
+
 void Clearcut_Timber_without_request (SPECIES *const s, int years)
 {
 	int removed_tree;

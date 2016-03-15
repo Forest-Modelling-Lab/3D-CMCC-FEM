@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-extern  const char *szMonth[MONTHS];
+extern const char *szMonth[MONTHS];
 //extern int MonthLength[];
 extern int DaysInMonth[];
 //extern int fill_cell_from_heights(CELL *const c, const ROW *const row);
@@ -218,9 +218,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-
 									Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-
 									Log("--------------------------------------------------------------------------\n\n\n");
 									if (settings->spatial == 'u')
 									{
@@ -240,7 +238,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									{
 										Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
 									}
-
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -251,6 +248,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+									Log("--------------------------------------------------------------------------\n\n\n");
 								}
 							}
 							//evergreen
@@ -262,7 +260,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
-
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;

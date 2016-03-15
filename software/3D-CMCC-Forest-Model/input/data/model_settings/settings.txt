@@ -3,6 +3,7 @@ SPATIAL "u"		//Must be 's' or 'u', spatial or unspatial
 TIME "d"		//Must be 'm' or 'd', monthly or daily
 SYMMETRIC_WATER_COMPETITION "y"	//Must be 'y' or 'n',for symmetric or asymmetric water competition
 spin_up "off"	//Must be  'on' or 'off'
+CO2_fixed "on"   //Must be 'on' or 'off'
 ROTHC "off" //Must be  'on' or 'off'
 DNDC "off" //Must be  'on' or 'off'
 SIZECELL "30"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 

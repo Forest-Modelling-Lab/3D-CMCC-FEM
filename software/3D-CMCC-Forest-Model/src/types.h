@@ -172,6 +172,7 @@ typedef struct
 	symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition)
 
 	char spin_up[4];
+	char CO2_fixed[4];
 	char rothC[4];
 	char dndc[4];
 
