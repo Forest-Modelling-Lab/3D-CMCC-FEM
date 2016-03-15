@@ -667,7 +667,6 @@ typedef struct {
 	int STEMTOVER;
 	int BRANCHTOVER;
 } TURNOVER;
-
 /* */
 //all variables related to the species class
 typedef struct {
@@ -829,6 +828,11 @@ typedef struct {
 	int tree_number_dominant;
 	int tree_number_dominated;
 	int tree_number_subdominated;
+	int daily_layer_number;
+	int monthly_layer_number;
+	int annual_layer_number;
+	int top_layer;
+	int saplings_counter;
 	double density_dominant;
 	double density_dominated;
 	double density_subdominated;
@@ -838,11 +842,7 @@ typedef struct {
 	double layer_cover_dominant;
 	double layer_cover_dominated;
 	double layer_cover_subdominated;
-	int daily_layer_number;
-	int monthly_layer_number;
-	int annual_layer_number;
-	int top_layer;
-	int saplings_counter;
+
 	double gapcover[3];
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 
@@ -898,7 +898,6 @@ typedef struct {
 	double av_npp;
 	double stand_agb;
 	double stand_bgb;
-
 
 	/*water variables*/
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
