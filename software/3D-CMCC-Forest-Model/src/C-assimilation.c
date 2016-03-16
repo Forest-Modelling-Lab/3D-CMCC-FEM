@@ -29,29 +29,11 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 			/*used if previous day NPP is negative to conserve mass assuming the loss of reserve*/
 			if (s->value[C_FLUX] < 0.0 )
 			{
-				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+				if (s->value[RESERVE] < 0.0)
 				{
-					/*following Barbaroux et al., 2003*/
-					if (s->value[RESERVE] < 0.0)
-					{
-						s->value[RESERVE] = 0;
-						ERROR(s->value[RESERVE],"s->value[RESERVE]");
-					}
-
-					s->value[NPP_g_C] = 0;
+					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
-				//fixme see for correct use of reserve for evergreen
-				if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
-				{
-					if (s->value[RESERVE] < 0.0)
-					{
-						s->value[RESERVE] = 0;
-						ERROR(s->value[RESERVE],"s->value[RESERVE]");
-					}
-
-					s->value[NPP_g_C] = 0;
-				}
-
+				s->value[NPP_g_C] = 0;
 				s->value[NPP] = 0;
 			}
 			else

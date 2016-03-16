@@ -221,16 +221,23 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			/*
 			if (s->value[NPP] > 0.0)
 			{
-				Log("Using reserve and npp\n");
-				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+				if(s->value[NPP] > biomass_tot_budburst)
+				{
+					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+					s->value[DEL_RESERVE] = -(s->value[NPP] - biomass_tot_budburst);
+					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+				}
+				else
+				{
+					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+					s->value[DEL_RESERVE] = -(biomass_tot_budburst - s->value[NPP]);
+					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+				}
 				s->value[DEL_STEMS] = 0.0;
-				//the npp shouldn't go here but to foliage and fine roots
-				s->value[DEL_RESERVE] = - biomass_tot_budburst + s->value[NPP];
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
-				s->value[DEL_ROOTS_TOT] = 0;
+				s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+				s->value[DEL_ROOTS_TOT] = 0.0;
 				s->value[DEL_TOT_STEM] = 0.0;
-				s->value[DEL_BB] = 0;
+				s->value[DEL_BB] = 0.0;
 			}
 			else
 			{
@@ -238,9 +245,11 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				{
 					Log("Using ONLY reserve\n");
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + biomass_tot_budburst);
 					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) *
+							(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
+							biomass_tot_budburst);
+					s->value[DEL_STEMS] = 0.0;
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
 					s->value[DEL_ROOTS_TOT] = 0.0;
 					s->value[DEL_TOT_STEM] = 0.0;
@@ -249,18 +258,10 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				else
 				{
 					Log("No reserve no NPP\n");
-					s->value[DEL_FOLIAGE] = 0.0;
-					s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
-					s->value[DEL_RESERVE] = 0.0;
-					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
-					s->value[DEL_ROOTS_TOT] = 0.0;
-					s->value[DEL_TOT_STEM] = 0.0;
-					s->value[DEL_STEMS]= 0.0;
-					s->value[DEL_BB]= 0.0;
 					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
-			}
-			 */
+			}*/
+
 			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			 * and Barbaroux et al., 2002,
 								the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
