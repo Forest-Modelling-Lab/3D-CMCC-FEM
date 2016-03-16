@@ -58,6 +58,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		/* compute species-specific phenological phase */
 		Phenology_phase (&m->cells[cell], met, years, month, day, years_of_simulation);
+		//Test_phenology_phase (&m->cells[cell], met, years, month, day);
 		Log("***************************************************\n");
 	}
 

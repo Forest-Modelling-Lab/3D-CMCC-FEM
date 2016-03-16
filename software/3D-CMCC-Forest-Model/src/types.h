@@ -1221,7 +1221,7 @@ void get_av_year_temperature(CELL * const, int, int, int, const MET_DATA *const)
 void soil_temperature(CELL * const, int, int, int, const MET_DATA *const);
 void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int, const int, const int);
 void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void soil_initialization(CELL *c);
+void soil_initialization(CELL *);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);
 void leaffall(SPECIES *, const MET_DATA *const, int*, int*, int );
@@ -1230,6 +1230,9 @@ void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+
+//test
+void Test_phenology_phase (CELL *, const MET_DATA *const, const int, const int, const int);
 
 
 
