@@ -208,7 +208,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 			else
 			{
-				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST];
+				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST] / s->value[BUD_BURST];
 				Log("daily amount of biomass for total budburst %f\n", biomass_tot_budburst);
 				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / s->value[BUD_BURST];
 				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
@@ -218,11 +218,12 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 
 			//test this part have to be the new one
-			/*
+/*
 			if (s->value[NPP] > 0.0)
 			{
 				if(s->value[NPP] > biomass_tot_budburst)
 				{
+					//fixme where the exceeding NPP goes?
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
 					s->value[DEL_RESERVE] = -(s->value[NPP] - biomass_tot_budburst);
 					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
@@ -260,8 +261,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					Log("No reserve no NPP\n");
 					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
-			}*/
-
+			}
+*/
 			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			 * and Barbaroux et al., 2002,
 								the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -311,6 +312,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
 			}
+
+			Log("del RESERVE= %f\n", s->value[RESERVE]);
 
 
 			/*allocation*/
@@ -952,6 +955,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / s->counter[DAY_FRAC_FINE_ROOT_REMOVE];
 				Log("Daily amount of fine root biomass to remove = %f\n", s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE]);
 			}
+			//FROM PHENOLOGY.C IT SHOULD BE REMOVED
 			if( met[month].d[day].daylength >= s->value[MINDAYLENGTH])
 			{
 				Log("(decreasingLai)\n");

@@ -1232,7 +1232,7 @@ int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
 //test
-void Test_phenology_phase (CELL *, const MET_DATA *const, const int, const int, const int);
+void Test_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 
 
 

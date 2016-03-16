@@ -138,77 +138,61 @@ void Phenology_phase (CELL * c, const MET_DATA *const met, const int years, cons
 	}
 }
 
-void Test_phenology_phase (CELL * c, const MET_DATA *const met, const int years, const int month, const int day)
+void Test_phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
 {
 
-	int height;
-	int age;
-	int species;
+	Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 
-	for ( height = c->heights_count -1 ; height >= 0; height-- )
+	/*for deciduous*/
+	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
-		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+		if (s->counter[VEG_UNVEG] == 1 )
 		{
-			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+			//Beginning of growing season
+			//BUDBURST
+			if (s->counter[VEG_DAYS] <= s->value[BUD_BURST])
 			{
-				Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[PHENOLOGY]);
-
-
-				/*for deciduous*/
-				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+				if (s->value[LAI] < (s->value[PEAK_LAI]))
 				{
-					if (c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1 )
+					s->phenology_phase = 1;
+				}
+				//Normal Growth
+				else
+				{
+					s->phenology_phase = 4;
+				}
+			}
+			else
+			{
+				if (month+1 <= 6)
+				{
+					s->phenology_phase = 4;
+				}
+				else
+				{
+					if (met[month].d[day].daylength > s->value[MINDAYLENGTH])
 					{
-						//Beginning of growing season
-						//BUDBURST
-						if (c->heights[height].ages[age].species[species].counter[VEG_DAYS] <= c->heights[height].ages[age].species[species].value[BUD_BURST])
-						{
-							if (c->heights[height].ages[age].species[species].value[LAI] < (c->heights[height].ages[age].species[species].value[PEAK_LAI]))
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 1;
-							}
-							//Normal Growth
-							else
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 3;
-							}
-						}
-						else
-						{
-							//it never should happen
-							if (c->heights[height].ages[age].species[species].value[LAI] <= c->heights[height].ages[age].species[species].value[PEAK_LAI])
-							{
-								c->heights[height].ages[age].species[species].phenology_phase = 2;
-							}
-							//Normal Growth
-							else if (fabs(c->heights[height].ages[age].species[species].value[LAI] - c->heights[height].ages[age].species[species].value[PEAK_LAI]) > 1e-4)
-							{
-
-								if (met[month].d[day].daylength > c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
-								{
-									c->heights[height].ages[age].species[species].phenology_phase = 3;
-								}
-								else
-								{
-									//leaf fall
-									c->heights[height].ages[age].species[species].phenology_phase = 5;
-								}
-							}
-						}
+						s->phenology_phase = 4;
 					}
 					else
 					{
-						//Unvegetative period
-						c->heights[height].ages[age].species[species].phenology_phase = 0;
+						//leaf fall
+						s->phenology_phase = 5;
 					}
 				}
-				/*for evergreen*/
-				else
-				{
-					//fixme
-				}
-				Log("phenology phase = %d\n", c->heights[height].ages[age].species[species].phenology_phase);
 			}
 		}
+		else
+		{
+			//Unvegetative period
+			s->phenology_phase = 0;
+		}
 	}
+	/*for evergreen*/
+	else
+	{
+		//fixme
+	}
+	Log("phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
+
 }

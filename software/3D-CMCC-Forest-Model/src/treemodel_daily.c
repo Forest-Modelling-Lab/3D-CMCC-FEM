@@ -58,7 +58,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		/* compute species-specific phenological phase */
 		Phenology_phase (&m->cells[cell], met, years, month, day, years_of_simulation);
-		//Test_phenology_phase (&m->cells[cell], met, years, month, day);
 		Log("***************************************************\n");
 	}
 
@@ -130,6 +129,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
 						}
+						//test new function
+						//Test_phenology_phase (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, day);
 						Tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
 						Daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
 						Print_init_month_stand_data (&m->cells[cell], met, month, years, height, age, species);
