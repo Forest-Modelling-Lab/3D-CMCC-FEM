@@ -87,7 +87,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 		Print_met_data (met, month, day);
 		/*reset daily variables at cell level */
-		Reset_cell_daily_variables(&m->cells[cell]);
+		Reset_daily_variables(&m->cells[cell]);
 		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
 		/* check and compute for snow */
