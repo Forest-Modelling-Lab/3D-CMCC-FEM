@@ -39,7 +39,11 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//double Perc_leaves;              //percentage of leaves in first growing season
 
 	static double frac_to_foliage_fineroot;
-	static double biomass_for_budburst;
+
+	static double biomass_tot_budburst;
+	static double biomass_foliage_budburst;
+	static double biomass_fine_root_budburst;
+
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
 
@@ -198,9 +202,65 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
+			if (s->value[MAX_BIOMASS_BUDBURST] > s->value[RESERVE])
+			{
+				ERROR(s->value[MAX_BIOMASS_BUDBURST],"s->value[MAX_BIOMASS_BUDBURST]");
+			}
+			else
+			{
+				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST];
+				Log("daily amount of biomass for total budburst %f\n", biomass_tot_budburst);
+				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / s->value[BUD_BURST];
+				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
+				biomass_fine_root_budburst = s->value[MAX_BIOMASS_FINE_ROOTS] / s->value[BUD_BURST];
+				Log("daily amount of biomass for fine root budburst %f\n", biomass_fine_root_budburst);
 
-			//biomass_for_budburst =
+			}
 
+			//test this part have to be the new one
+			/*
+			if (s->value[NPP] > 0.0)
+			{
+				Log("Using reserve and npp\n");
+				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+				s->value[DEL_STEMS] = 0.0;
+				//the npp shouldn't go here but to foliage and fine roots
+				s->value[DEL_RESERVE] = - biomass_tot_budburst + s->value[NPP];
+				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+				s->value[DEL_ROOTS_TOT] = 0;
+				s->value[DEL_TOT_STEM] = 0.0;
+				s->value[DEL_BB] = 0;
+			}
+			else
+			{
+				if (s->value[RESERVE] > 0.0)
+				{
+					Log("Using ONLY reserve\n");
+					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+					s->value[DEL_STEMS] = 0.0;
+					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + biomass_tot_budburst);
+					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+					s->value[DEL_ROOTS_TOT] = 0.0;
+					s->value[DEL_TOT_STEM] = 0.0;
+					s->value[DEL_BB]= 0.0;
+				}
+				else
+				{
+					Log("No reserve no NPP\n");
+					s->value[DEL_FOLIAGE] = 0.0;
+					s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+					s->value[DEL_RESERVE] = 0.0;
+					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+					s->value[DEL_ROOTS_TOT] = 0.0;
+					s->value[DEL_TOT_STEM] = 0.0;
+					s->value[DEL_STEMS]= 0.0;
+					s->value[DEL_BB]= 0.0;
+					ERROR(s->value[RESERVE],"s->value[RESERVE]");
+				}
+			}
+			 */
 			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			 * and Barbaroux et al., 2002,
 								the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -209,6 +269,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 
 			/*partitioning*/
+
 			if (s->value[NPP] > 0.0)
 			{
 				Log("Using reserve and npp\n");
@@ -234,10 +295,6 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					s->value[DEL_ROOTS_TOT] = 0.0;
 					s->value[DEL_TOT_STEM] = 0.0;
 					s->value[DEL_BB]= 0;
-					if (s->value[RESERVE] < 0.0)
-					{
-						ERROR(s->value[RESERVE],"s->value[RESERVE]");
-					}
 				}
 				else
 				{
@@ -250,8 +307,10 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					s->value[DEL_TOT_STEM] = 0.0;
 					s->value[DEL_STEMS]= 0.0;
 					s->value[DEL_BB]= 0.0;
+					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
 			}
+
 
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];

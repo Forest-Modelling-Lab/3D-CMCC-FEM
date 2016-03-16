@@ -86,7 +86,7 @@ LIVE_TOTAL_WOOD	0.154	//new live C:new total wood (ratio) 0.15 for deciduous P. 
 CN_LEAVES   18.6  //CN of leaves (kgC/kgN) 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli
 CN_LITTER   38  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   45  // CN of fine roots (kgC/kgN) 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
-CN_LIVE_WOODS   375.375  //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002 , 375 from Campioli et al., 2013
+CN_LIVE_WOODS   90 //375.375  //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002 , 375 from Campioli et al., 2013
 CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 
 
