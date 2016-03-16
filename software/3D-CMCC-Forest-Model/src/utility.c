@@ -7,7 +7,20 @@
 #include "types.h"
 #include "constants.h"
 
-void Reset_daily_variables (CELL *const c)
+void Reset_species_daily_variables (SPECIES *const s)
+{
+	/*reset species level daily carbon variables*/
+	s->value[DEL_FOLIAGE] = 0.0;
+	s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+	s->value[DEL_RESERVE] = 0.0;
+	s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+	s->value[DEL_ROOTS_TOT] = 0.0;
+	s->value[DEL_TOT_STEM] = 0.0;
+	s->value[DEL_STEMS]= 0.0;
+	s->value[DEL_BB]= 0.0;
+}
+
+void Reset_cell_daily_variables (CELL *const c)
 {
 	/*reset daily carbon variables*/
 	c->daily_gpp = 0.0;
