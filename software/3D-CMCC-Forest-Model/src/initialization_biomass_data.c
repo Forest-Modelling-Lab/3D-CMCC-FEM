@@ -150,11 +150,13 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	{
 		Log("\nNo Reserve Biomass Data are available for model initialization \n");
 		Log("...Generating input Reserve Biomass biomass data\n");
-		//these values are taken from: Schwalm and Ek, 2004 Ecological Modelling
+		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002
 		s->value[RESERVE] = s->value[WTOT_sap] * s->value[SAP_WRES];
 		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[RESERVE]);
-		Log("-----Reserve Biomass initialization data  = %f KgC/tree \n", s->value[RESERVE]/GC_GDM * 1000 /s->counter[N_TREE]);
+		Log("-----Reserve Biomass initialization data  = %f KgC/cell \n", s->value[RESERVE]/GC_GDM * 1000);
+		Log("-----Reserve Biomass initialization data  = %f gC/tree \n", (s->value[RESERVE]/GC_GDM * 1000)/s->value[N_TREE]);
+
 	}
 	else
 	{
@@ -232,8 +234,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]+
 			s->value[BIOMASS_ROOTS_FINE]+
 			s->value[BIOMASS_FOLIAGE];
-	Log("---Live TOTAL biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
-	Log("---Live TOTAL biomass following BIOME = %f %% \n", (s->value[BIOMASS_LIVE_WOOD]*100.0)/ (s->value[BIOMASS_STEM]+
+	Log("---Live biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD]);
+	Log("---Live biomass following BIOME = %f %% \n", (s->value[BIOMASS_LIVE_WOOD]*100.0)/ (s->value[BIOMASS_STEM]+
 			s->value[BIOMASS_ROOTS_COARSE]+
 			s->value[BIOMASS_BRANCH]+
 			s->value[BIOMASS_ROOTS_FINE]+
@@ -241,10 +243,10 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	s->value[BIOMASS_DEAD_WOOD] = s->value[BIOMASS_STEM_DEAD_WOOD]+
 			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]+
 			s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD];
-	Log("---Dead TOTAL biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
+	Log("---Dead biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_DEAD_WOOD]);
 
-	Log("***reserves following live tissues  BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES]);
-	Log("***reserves following live tissues  BIOME = %f KgC/tree\n", (s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES]) /GC_GDM * 1000 /s->counter[N_TREE]);
+
+	Log("***reserves following live tissues  BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD] * s->value[SAP_WRES] );
 
 
 }
