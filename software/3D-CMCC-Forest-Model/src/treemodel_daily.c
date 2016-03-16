@@ -148,7 +148,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								m->cells[cell].coarseRootBiomass =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD];
 								m->cells[cell].stemBranchBiomass =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD];
 								m->cells[cell].stemBiomass =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD];
-								/* assign current values as old values */
+
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_ROOTS_COARSE] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_ROOTS_FINE] =
@@ -157,7 +157,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_BRANCH] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH];
-								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_FOLIAGE] =
+								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_LEAVES] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE];
 								m->cells[cell].heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM_LIVE_WOOD] =
 										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD];
@@ -199,7 +199,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+									Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 									Log("--------------------------------------------------------------------------\n\n\n");
 								}
 								/*outside growing season*/
@@ -223,6 +223,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
+									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 									Log("--------------------------------------------------------------------------\n\n\n");
 								}
 							}
@@ -259,7 +260,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
@@ -359,7 +360,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								//TURNOVER
 								//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
-								//turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 								//ANNUAL BIOMASS INCREMENT
 								Biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);

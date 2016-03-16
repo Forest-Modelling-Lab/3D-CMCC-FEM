@@ -535,7 +535,7 @@ enum {
 	OLD_BIOMASS_ROOTS_FINE,
 	OLD_BIOMASS_STEM,
 	OLD_BIOMASS_BRANCH,
-	OLD_BIOMASS_FOLIAGE,
+	OLD_BIOMASS_LEAVES,
 
 	OLD_BIOMASS_STEM_LIVE_WOOD,
 	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
@@ -1157,7 +1157,7 @@ void Water_fluxes (CELL *const c);
 void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
 void Peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
-void Turnover (SPECIES *, CELL *, int, int);
+void Get_turnover (SPECIES *, CELL *, int, int);
 void Light_Recruitment (SPECIES *const, double, double);
 void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
 void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
