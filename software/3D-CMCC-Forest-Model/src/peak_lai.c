@@ -50,11 +50,11 @@ extern void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years
 
 	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[RESERVE]);
 
-	s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-	s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
+	s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_FOLIAGE] * s->value[FINE_ROOT_LEAF_FRAC];
+	s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] + s->value[MAX_BIOMASS_FINE_ROOTS];
 	Log("MAX_BIOMASS_FOLIAGE = %f tDM/area\n", s->value[MAX_BIOMASS_FOLIAGE]);
-	Log("MAX_BIOMASS_BUDBURST = %f tDM/area\n", s->value[MAX_BIOMASS_BUDBURST]);
 	Log("MAX_BIOMASS_FINE_ROOTS = %f tDM/area\n", s->value[MAX_BIOMASS_FINE_ROOTS]);
+	Log("MAX_BIOMASS_BUDBURST = %f tDM/area\n", s->value[MAX_BIOMASS_BUDBURST]);
 
 	/*check for reserve need for budburst*/
 	if(s->value[RESERVE] >= (s->value[MAX_BIOMASS_BUDBURST]/2.0))
