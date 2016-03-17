@@ -67,7 +67,7 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 					{
 						s->phenology_phase = 4;
 					}
-					if (met[month].d[day].daylength < s->value[MINDAYLENGTH] && month > 6/*c->abscission_daylength*/)
+					if (met[month].d[day].daylength < s->value[MINDAYLENGTH] && month+1 > 6 /*c->abscission_daylength*/)
 					{
 						//Leaf fall
 						s->phenology_phase = 5;

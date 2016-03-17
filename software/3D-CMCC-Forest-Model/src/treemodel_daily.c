@@ -55,9 +55,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Daily_layer_cover (&m->cells[cell], met, month, day);
 		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
 		Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
-
-		/* compute species-specific phenological phase */
-		//Phenology_phase (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, day);
 		Log("***************************************************\n");
 	}
 
@@ -71,14 +68,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		m->cells[cell].doy += 1;
 		if(day == 0 && month == 0) m->cells[cell].doy = 1;
 
-		//compute vpd
-		//TODO remove if used VPD
-		//VPD USED MUST BE IN mbar or hPa
-		//if the VPD input data are in KPa then multiply for 10 to convert in mbar
-		//VPD USED MUST BE IN mbar
-		//used if vpd is in kPa to convert it into mbar
-		//met[month].d[day].vpd *= 10.0;
-
 		//average yearly met data
 		Yearly_Solar_Rad += met[month].d[day].solar_rad;
 		Yearly_Vpd += met[month].d[day].vpd;
@@ -86,7 +75,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, month, day);
-		/*reset daily variables at cell level */
+		/* reset daily variables at cell level */
 		Reset_daily_variables(&m->cells[cell]);
 		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
@@ -182,10 +171,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								{
 									Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 									Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
-
 									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 									Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
-
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 											met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
@@ -203,8 +190,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									Get_turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-									Log("--------------------------------------------------------------------------\n\n\n");
+									Turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 								/*outside growing season*/
 								else
@@ -227,8 +213,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-									Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
-									Log("--------------------------------------------------------------------------\n\n\n");
+									Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 							}
 							/* loop for evergreen */
@@ -264,21 +249,10 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								Get_turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
-							/* LITTERFALL COMPUTATION AT CELL LEVEL */
-							if (met[month].d[day].n_days == 1)
-							{
-								m->cells[cell].monthly_litterfall = 0;
-							}
-							m->cells[cell].daily_litterfall += m->cells[cell].heights[height].ages[age].species[species].value[DAILY_DEL_LITTER];
-							Log("Daily Litterfall = %f\n", m->cells[cell].daily_litterfall);
-							m->cells[cell].monthly_litterfall += m->cells[cell].daily_litterfall;
-							Log("Monthly Litterfall = %f\n", m->cells[cell].monthly_litterfall);
-							m->cells[cell].annual_litterfall += m->cells[cell].daily_litterfall;
-							Log("Annual Litterfall = %f\n", m->cells[cell].annual_litterfall);
 							//to prevent jumps in dendrometric values it must be computed at the beginning of each month
 							if (day == 0)
 							{
@@ -290,8 +264,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							if (day == 30 && month == DECEMBER)
 							{
 								Log("*****END OF YEAR******\n");
-
-
 								/*FRUIT ALLOCATION*/
 								//Only for dominant layer
 
@@ -364,7 +336,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								//TURNOVER
 								//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH
-								//Get_turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								//Turnover ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 
 								//ANNUAL BIOMASS INCREMENT
 								Biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);

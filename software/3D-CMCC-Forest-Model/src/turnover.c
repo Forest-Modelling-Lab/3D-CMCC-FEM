@@ -9,7 +9,7 @@
 
 
 
-void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
+void Turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 {
 	Log("\nGET_DAILY_TURNOVER\n\n");
 
@@ -81,5 +81,13 @@ void Get_turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		Log("Live Stem branch Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 		s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] * (s->value[LIVE_WOOD_TURNOVER]/365.0));
 		Log("Dead Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+
+		/* LITTERFALL COMPUTATION AT CELL LEVEL */
+		c->daily_litterfall += s->value[DAILY_DEL_LITTER];
+		Log("Daily Litterfall = %f\n", c->daily_litterfall);
+		c->monthly_litterfall += c->daily_litterfall;
+		Log("Monthly Litterfall = %f\n", c->monthly_litterfall);
+		c->annual_litterfall += c->daily_litterfall;
+		Log("Annual Litterfall = %f\n", c->annual_litterfall);
 	}
 }

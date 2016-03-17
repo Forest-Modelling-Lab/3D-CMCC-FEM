@@ -30,6 +30,7 @@ void Reset_daily_variables (CELL *const c)
 	c->daily_branch_carbon = 0.0;
 	c->daily_reserve_carbon = 0.0;
 	c->daily_litter = 0.0;
+	c->daily_litterfall = 0.0;
 
 	/*reset daily water variables*/
 	c->prcp_rain = 0.0;
