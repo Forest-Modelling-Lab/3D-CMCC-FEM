@@ -1,0 +1,10 @@
+-i input/DKSoroe
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-e output/annual_output/annual_output
+-f output/monthly_output/monthly_output
+-d input/DKSoroe/Soroe_input_1ha_2001.txt
+-m input/DKSoroe/climate_txt/111_111_2001_new_rh.txt
+-s input/DKSoroe/Soroe_site.txt
+-c input/DKSoroe/Soroe_settings.txt
+-n output/soil_output/

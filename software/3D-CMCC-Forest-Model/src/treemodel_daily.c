@@ -135,7 +135,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								{
 									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
 								}
-
 								m->cells[cell].fineRootBiomass = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
 								if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2) m->cells[cell].fineRootBiomass = .0;
 								m->cells[cell].coarseRootBiomass =  m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD];
