@@ -1077,7 +1077,7 @@ int Tree_model_daily (MATRIX *const, const YOS *const, const int, const int, con
 //if putted into main.c
 //int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void Phenology_phase (CELL *, const MET_DATA *const, const int , const int , const int , const int );
+void Phenology_phase (SPECIES *, const MET_DATA *const, const int , const int , const int);
 void met_summary(MET_DATA *);
 int is_valid_met(const char *const);
 void Avg_temperature (CELL *, int, int, int);
