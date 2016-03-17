@@ -23,11 +23,11 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	double  r0Ctem = s->value[R0CTEM];
 	//double  f0Ctem = s->value[F0CTEM];
 	double const omegaCtem = s->value[OMEGA_CTEM];
-	double pS_CTEM = 0;
-	double pR_CTEM = 0;
-	double pF_CTEM = 0;
+	double pS_CTEM = 0.0;
+	double pR_CTEM = 0.0;
+	double pF_CTEM = 0.0;
 	//double max_DM_foliage;
-	//double reductor;           //instead soil water the routine take isnto account the minimum between F_VPD and F_SW and F_NUTR
+	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double oldW;
 	double Daily_solar_radiation;
@@ -218,7 +218,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 
 			//test this part have to be the new one
-/*
+
 			if (s->value[NPP] > 0.0)
 			{
 				if(s->value[NPP] > biomass_tot_budburst)
@@ -262,7 +262,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
 			}
-*/
+
 			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 			 * and Barbaroux et al., 2002,
 								the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -271,7 +271,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 
 			/*partitioning*/
-
+/*
 			if (s->value[NPP] > 0.0)
 			{
 				Log("Using reserve and npp\n");
@@ -312,7 +312,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					ERROR(s->value[RESERVE],"s->value[RESERVE]");
 				}
 			}
-
+*/
 			Log("del RESERVE= %f\n", s->value[RESERVE]);
 
 
