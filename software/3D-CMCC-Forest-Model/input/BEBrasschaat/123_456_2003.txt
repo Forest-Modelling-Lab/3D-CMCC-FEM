@@ -1,4 +1,4 @@
-Month	n_days	Rg_f	Ta_f	Tmax	Tmin	VPD_f	Ts_f	Precip	SWC	LAI	ET	LITTERFALL
+Month	n_days	Rg_f	Ta_f	Tmax	Tmin	VPD_f	Ts_f	Precip	SWC	LAI	ET	WS_f
 1	1	0.43	-9999	11.8	1.25	0.99	-9999	8.9	-9999	0	-9999	-9999
 1	2	1.2	-9999	12.44	8.57	1.31	-9999	12.5	-9999	0	-9999	-9999
 1	3	0.9	-9999	9.53	3.41	1.02	-9999	11.3	-9999	0	-9999	-9999
