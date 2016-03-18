@@ -52,23 +52,6 @@ enum {
 	, MET_COLUMNS
 };
 
-/* DO NOT CHANGE THIS ORDER */
-enum {
-	AR_DAILY_OUT
-	, AR_MONTHLY_OUT
-	, AR_YEARLY_OUT
-
-	, GPP_DAILY_OUT
-	, GPP_MONTHLY_OUT
-	, GPP_YEARLY_OUT
-
-	, NPP_DAILY_OUT
-	, NPP_MONTHLY_OUT
-	, NPP_YEARLY_OUT
-
-	, OUTPUT_VARS_COUNT
-};
-
 /* */
 static const char comma_delimiter[] = ",\r\n";
 static const char met_delimiter[] = " ,\t\r\n";

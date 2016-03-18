@@ -195,7 +195,7 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 }
 
 
-void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation)
+void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation, const int cell_index)
 {
   static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
   static double avg_ar[3], avg_ar_tot;
@@ -203,6 +203,20 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
   static int tot_dead_tree_tot;
 
   static int previous_layer_number;
+
+    // save values for put in output netcdf
+  if ( output_vars )
+  {
+#define VALUE_AT(v,c,y)	((v)*(c)*(y))
+	  int i;
+	  for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+	  {
+		  if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) yearly_output_vars[VALUE_AT(i,cell_index,years)] = c->annual_aut_resp;
+		  if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) yearly_output_vars[VALUE_AT(i,cell_index,years)] = c->annual_gpp;
+		  if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) yearly_output_vars[VALUE_AT(i,cell_index,years)] = c->annual_npp_gC;
+	  }
+#undef VALUE_AT
+  }
 
 
   if (years == 0)
@@ -711,9 +725,23 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
     }
 }
 
-extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month)
+void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, const int cell_index)
 {
   static int previous_layer_number;
+
+    // save values for put in output netcdf
+  if ( output_vars )
+  {
+#define VALUE_AT(v,c,y,m)	((v)*(c)*(((y)*366)+(m)))
+	  int i;
+	  for ( i = 0; i < output_vars->monthly_vars_count; ++i )
+	  {
+		  if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) monthly_output_vars[VALUE_AT(i,cell_index,years,month)] = c->monthly_aut_resp;
+		  if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) monthly_output_vars[VALUE_AT(i,cell_index,years,month)] = c->monthly_gpp;
+		  if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) monthly_output_vars[VALUE_AT(i,cell_index,years,month)] = c->monthly_npp_gC;
+	  }
+#undef VALUE_AT
+  }
 
   if(month == 0 && years == 0)
     {
@@ -946,11 +974,24 @@ extern void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, in
     }
 }
 
-
-void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
+void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day, const int cell_index )
 {
   static int previous_layer_number;
   static int doy;
+
+  // save values for put in output netcdf
+  if ( output_vars )
+  {
+#define VALUE_AT(v,c,y,m,d)	((v)*(c)*(((y)*366)+((m)*31)+(d)))
+	  int i;
+	  for ( i = 0; i < output_vars->daily_vars_count; ++i )
+	  {
+		  if ( AR_DAILY_OUT == output_vars->daily_vars[i] ) daily_output_vars[VALUE_AT(i,cell_index,years,month,day)] = c->daily_aut_resp;
+		  if ( GPP_DAILY_OUT == output_vars->daily_vars[i] ) daily_output_vars[VALUE_AT(i,cell_index,years,month,day)] = c->daily_gpp;
+		  if ( NPP_DAILY_OUT == output_vars->daily_vars[i] ) daily_output_vars[VALUE_AT(i,cell_index,years,month,day)] = c->daily_npp_gC;
+	  }
+#undef VALUE_AT
+  }
   
   if(day  == 0 && month == 0 && years == 0)
     {
@@ -1114,7 +1155,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	  Daily_Log ("\t%6.2f", c->daily_nee);
 	}
       Daily_Log("\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
-		c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->layer_daily_gpp,
+		c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->daily_gpp,
 		c->layer_daily_aut_resp[1], c->layer_daily_aut_resp[0], c->daily_aut_resp);
 
       if (!mystricmp(settings->dndc, "on"))
@@ -1257,7 +1298,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
   c->daily_c_transp = 0.0;
   c->daily_c_evapotransp = 0.0;
   c->daily_et = 0.0;
-  c->daily_dead_tree = 0.0;
+  c->daily_dead_tree = 0;
 
   c->daily_latent_heat_flux = 0.0;
 
@@ -1282,7 +1323,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 }
 
 
-void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day )
+void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, int day)
 {
 
   static int previous_layer_number;

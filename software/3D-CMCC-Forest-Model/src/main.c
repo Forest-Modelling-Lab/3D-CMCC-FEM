@@ -1265,17 +1265,24 @@ int main(int argc, char *argv[])
 
 			// alloc memory for daily output netcdf vars (if any)
 			if ( output_vars && output_vars->daily_vars_count && ! daily_output_vars ) {
-				daily_output_vars = malloc( m->cells_count*years_of_simulation*366*output_vars->daily_vars_count);
+				int ii;
+				int rows_count = m->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
+				daily_output_vars = malloc(rows_count);
 				if ( ! daily_output_vars ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
 					return 1;
 				}
+				for ( ii = 0; ii < rows_count; ++ii ) {
+					daily_output_vars[i] = INVALID_VALUE;
+				}
 			}
 
 			// alloc memory for monthly output netcdf vars (if any)
 			if ( output_vars && output_vars->monthly_vars_count && ! monthly_output_vars ) {
-				monthly_output_vars = malloc( m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count);
+				int ii;
+				int rows_count = m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
+				monthly_output_vars = malloc(rows_count);
 				if ( ! monthly_output_vars ) {
 					Log(err_out_of_memory);
 					free(daily_output_vars);
@@ -1283,16 +1290,24 @@ int main(int argc, char *argv[])
 					matrix_free(m);
 					return 1;
 				}
+				for ( ii = 0; ii < rows_count; ++ii ) {
+					monthly_output_vars[i] = INVALID_VALUE;
+				}
 			}
 
 			// alloc memory for yearly output netcdf vars (if any)
 			if ( output_vars && output_vars->yearly_vars_count && ! yearly_output_vars ) {
-				yearly_output_vars = malloc( m->cells_count*years_of_simulation*output_vars->monthly_vars_count);
+				int ii;
+				int rows_count = m->cells_count*years_of_simulation*output_vars->yearly_vars_count;
+				yearly_output_vars = malloc(rows_count);
 				if ( ! yearly_output_vars ) {
 					Log(err_out_of_memory);
 					FreeOutputVars(output_vars);
 					matrix_free(m);
 					return 1;
+				}
+				for ( ii = 0; ii < rows_count; ++ii ) {
+					yearly_output_vars[i] = INVALID_VALUE;
 				}
 			}
 
@@ -1302,7 +1317,8 @@ int main(int argc, char *argv[])
 			Log("Total years_of_simulation = %d\n", years_of_simulation);
 			Log("***************************************************\n");
 
-			for ( year = 0; year < years_of_simulation; ++year ) {
+			for ( year = 0; year < years_of_simulation; ++year )
+			{
 				//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
 				int i;
 				// ALESSIOR for handling leap years
@@ -1421,7 +1437,7 @@ int main(int argc, char *argv[])
 							}
 						}
 						Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
-						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day);
+						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
 						if (!mystricmp(settings->dndc, "on"))
 						{
 							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
@@ -1433,10 +1449,10 @@ int main(int argc, char *argv[])
 					{
 						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
 					}
-					EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month);
+					EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, cell);
 				}
 				Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
-				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation);
+				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation, cell);
 
 				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 			}
