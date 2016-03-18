@@ -501,6 +501,8 @@ enum {
 	BIOMASS_COARSE_ROOT_DEAD_WOOD,
 	BIOMASS_STEM_BRANCH_LIVE_WOOD,
 	BIOMASS_STEM_BRANCH_DEAD_WOOD,
+	RESERVE_FOLIAGE_TO_RETRANSL,
+	RESERVE_FINEROOT_TO_RETRANSL,
 	//converted biome fraction
 	FINE_ROOT_LEAF_FRAC,
 	STEM_LEAF_FRAC,
@@ -1189,9 +1191,9 @@ void Soil_water_balance (CELL *const, const MET_DATA *const, int, int);
 void Annual_average_values_modifiers (SPECIES *);
 void Annual_average_values_met_data (CELL *, double, double, double, double);
 void EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
-void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int);
-void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
-void EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int, int);
+void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int, const int cell_index);
+void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
+void EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
 void Average_tree_biomass (SPECIES *);
 void Total_class_level_biomass (SPECIES *);
 void Renovation (CELL *, HEIGHT *, SPECIES *);
@@ -1251,5 +1253,22 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const 
 			exit(1);																																		\
 		}																																					\
 	}
+
+/* DO NOT CHANGE THIS ORDER */
+enum {
+	AR_DAILY_OUT
+	, AR_MONTHLY_OUT
+	, AR_YEARLY_OUT
+
+	, GPP_DAILY_OUT
+	, GPP_MONTHLY_OUT
+	, GPP_YEARLY_OUT
+
+	, NPP_DAILY_OUT
+	, NPP_MONTHLY_OUT
+	, NPP_YEARLY_OUT
+
+	, OUTPUT_VARS_COUNT
+};
 
 #endif /* TYPES_H */

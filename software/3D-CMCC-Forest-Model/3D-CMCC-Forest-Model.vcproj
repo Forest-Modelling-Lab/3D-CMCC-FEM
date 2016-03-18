@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug (single year)|Win32"
-			OutputDirectory="bin"
+			OutputDirectory="$(SolutionDir)input"
 			IntermediateDirectory="tmp\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -90,7 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="bin"
+			OutputDirectory="$(SolutionDir)input"
 			IntermediateDirectory="tmp\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -164,7 +164,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug (multi year)|Win32"
-			OutputDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)input"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
