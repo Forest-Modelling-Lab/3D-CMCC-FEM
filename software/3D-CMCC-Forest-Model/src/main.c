@@ -158,7 +158,7 @@ static const char msg_usage[]					=	"usage: 3D-CMCC parameters\n\n"
 		"    -log -> enable log to file\n";
 
 /* error messages */
-//extern const char err_out_of_memory[];
+extern const char err_out_of_memory[];
 const char err_unable_open_file[] = "unable to open file.";
 const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
@@ -1261,6 +1261,39 @@ int main(int argc, char *argv[])
 			if ( ! m->cells[cell].years ) {
 				matrix_free(m);
 				return 1;
+			}
+
+			// alloc memory for daily output netcdf vars (if any)
+			if ( output_vars && output_vars->daily_vars_count && ! daily_output_vars ) {
+				daily_output_vars = malloc( m->cells_count*years_of_simulation*366*output_vars->daily_vars_count);
+				if ( ! daily_output_vars ) {
+					Log(err_out_of_memory);
+					matrix_free(m);
+					return 1;
+				}
+			}
+
+			// alloc memory for monthly output netcdf vars (if any)
+			if ( output_vars && output_vars->monthly_vars_count && ! monthly_output_vars ) {
+				monthly_output_vars = malloc( m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count);
+				if ( ! monthly_output_vars ) {
+					Log(err_out_of_memory);
+					free(daily_output_vars);
+					FreeOutputVars(output_vars);
+					matrix_free(m);
+					return 1;
+				}
+			}
+
+			// alloc memory for yearly output netcdf vars (if any)
+			if ( output_vars && output_vars->yearly_vars_count && ! yearly_output_vars ) {
+				yearly_output_vars = malloc( m->cells_count*years_of_simulation*output_vars->monthly_vars_count);
+				if ( ! yearly_output_vars ) {
+					Log(err_out_of_memory);
+					FreeOutputVars(output_vars);
+					matrix_free(m);
+					return 1;
+				}
 			}
 
 			// very ugly hack :(
