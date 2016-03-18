@@ -989,7 +989,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 
-					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
+					/* following Campioli et al., 2013 and Bossel 1996 a 10% of Carbon from foliage is retranslocated during leaffall to the reserve pool */
+					s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM + (fabs(s->value[BIOMASS_FOLIAGE])*0.1);
 					s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
@@ -999,7 +1000,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				}
 				else
 				{
-					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + (fabs(s->value[BIOMASS_FOLIAGE]*0.1));
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 					s->value[DEL_ROOTS_TOT] = 0;
 					s->value[DEL_TOT_STEM] = 0;
@@ -1032,7 +1033,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
-					s->value[DEL_RESERVE] = s->value[NPP];
+					s->value[DEL_RESERVE] = s->value[NPP] + (fabs(s->value[BIOMASS_FOLIAGE]*0.1));
 					s->value[DEL_TOT_STEM] = 0;
 					s->value[DEL_STEMS] = 0;
 					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
@@ -1050,7 +1051,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 					s->value[DEL_ROOTS_TOT] = 0;
 					s->value[DEL_BB] = 0;
-					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);;
+					s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + (fabs(s->value[BIOMASS_FOLIAGE]*0.1));
 				}
 			}
 
