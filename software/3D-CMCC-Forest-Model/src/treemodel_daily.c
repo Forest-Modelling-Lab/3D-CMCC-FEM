@@ -523,8 +523,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						 //toconclude set function for mulple of rotation
 						 //fixme include management choice
 						if( ! mystricmp(settings->management, "on")
-							&& ( (years == m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION])
-								|| ! (m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION] % years)) )
+							&& ( (years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
+								|| ! ((int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] % years)) )
 						{
 							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], years);
 						}

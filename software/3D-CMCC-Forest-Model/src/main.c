@@ -88,6 +88,12 @@ int log_enabled		=	1,	// default is on
 static FILES *files_founded;
 static int files_founded_count;
 
+/* global variables */
+OUTPUT_VARS *output_vars = NULL;	/* required */
+double *daily_output_vars = NULL;	/* required */
+double *monthly_output_vars = NULL;	/* required */
+double *yearly_output_vars = NULL;	/* required */
+
 /* strings */
 static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n\n"
 		"by Alessio Collalti - for contacts: a dot collalti at unitus dot it; alessio dot collalti at cmcc dot it\n"
@@ -564,7 +570,6 @@ int main(int argc, char *argv[])
 	ROW *rows;
 	MATRIX *m;
 	time_t rawtime;
-	OUTPUT_VARS *output_vars = NULL; /* required */
 
 	// ALESSIOR
 	// this vars are declared in types.h
@@ -1222,6 +1227,8 @@ int main(int argc, char *argv[])
 		Log("Matrix %screated!!\n\n", m ? "" : "not ");
 		if ( ! m ) return 1;
 
+		// TODO
+		// EACH CELLS MUST HAVE THIS SETTINGS
 		for ( cell = 0; cell < m->cells_count; ++cell ) {
 			if (	IS_INVALID_VALUE(site->sand_perc)
 					|| IS_INVALID_VALUE(site->clay_perc)
@@ -1403,12 +1410,6 @@ int main(int argc, char *argv[])
 			free(yos);
 			yos = NULL;
 			m->cells[cell].years = NULL; /* required */
-
-			/* write netcdf output */
-			/*if ( ! WriteNetCDFOutput(output_vars, m, cell) ) {
-				return 1;
-			}*/
-
 		}
 
 		/* free memory */
@@ -1433,6 +1434,9 @@ int main(int argc, char *argv[])
 
 	// Free memory
 	if ( output_vars ) FreeOutputVars(output_vars);
+	if ( yearly_output_vars ) free(yearly_output_vars);
+	if ( monthly_output_vars ) free(monthly_output_vars);
+	if ( daily_output_vars ) free(daily_output_vars);
 	free(input_met_path); input_met_path = NULL;
 	free(output_file); output_file = NULL;
 	free(daily_output_file); daily_output_file = NULL;

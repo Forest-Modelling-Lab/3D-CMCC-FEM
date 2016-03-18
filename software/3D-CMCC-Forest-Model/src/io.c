@@ -17,7 +17,6 @@ please ASK before modify it!
 #include <time.h>
 #include "types.h"
 #include "common.h"
-//#include "timestamp.h"
 #include "netcdf/netcdf.h"
 
 #ifdef _WIN32
@@ -53,39 +52,42 @@ enum {
 	, MET_COLUMNS
 };
 
-///* */
-//typedef struct {
-//	TIMESTAMP t;
-//	double value[MET_COLUMNS-3]; /* remove year, month and day */
-//} METEO_ROW;
-//
-//typedef struct {
-//	METEO_ROW *rows;
-//	int rows_count;
-//} METEO_DATASET;
-//
-///* */
-//static METEO_DATASET *meteo_dataset_new(void) {
-//	METEO_DATASET *m;
-//	m = malloc(sizeof*m);
-//	if ( m ) {
-//		m->rows = NULL;
-//		m->rows_count = 0;
-//	}
-//	return m;
-//}
-//
-///* */
-//static void meteo_dataset_free(METEO_DATASET *d) {
-//	assert(d);
-//	free(d->rows);
-//	free(d);
-//}
+/* DO NOT CHANGE THIS ORDER */
+enum {
+	AR_DAILY_OUT
+	, AR_MONTHLY_OUT
+	, AR_YEARLY_OUT
+
+	, GPP_DAILY_OUT
+	, GPP_MONTHLY_OUT
+	, GPP_YEARLY_OUT
+
+	, NPP_DAILY_OUT
+	, NPP_MONTHLY_OUT
+	, NPP_YEARLY_OUT
+
+	, OUTPUT_VARS_COUNT
+};
 
 /* */
 static const char comma_delimiter[] = ",\r\n";
 static const char met_delimiter[] = " ,\t\r\n";
 static const char sz_err_out_of_memory[] = "out of memory.";
+
+/* DO NOT CHANGE THIS ORDER */
+static const char *sz_output_vars[OUTPUT_VARS_COUNT] = {
+	"daily_ar"
+	, "monthly_ar"
+	, "annual_ar"
+
+	, "daily_gpp"
+	, "monthly_gpp"
+	, "annual_gpp"
+
+	, "daily_npp"
+	, "monthly_npp"
+	, "annual_npp"
+};
 
 /* do not change this order */
 static const char *met_columns[MET_COLUMNS+2] = {
@@ -152,13 +154,10 @@ static int loadFileToMemory(const char *filename, char **result) {
 }
 
 void FreeOutputVars(OUTPUT_VARS *ov) {
-	int i;
-
 	assert(ov);
-
-	for ( i = 0; i < ov->vars_count; ++i ) {
-		free(ov->vars[i]);
-	}
+	if ( ov->yearly_vars_count ) free(ov->yearly_vars);
+	if ( ov->monthly_vars_count ) free(ov->monthly_vars);
+	if ( ov->daily_vars_count ) free(ov->daily_vars);
 	free(ov);
 }
 
@@ -166,9 +165,11 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 {
 	char *token;
 	char *p;
-	char **pp_no_leak;
 	char *buffer;
+	int i;
 	OUTPUT_VARS *ov;
+	int *int_no_leak;
+	int flag;
 
 	const char delimiter[] = " ,\r\n";
 	
@@ -186,29 +187,68 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 		free(buffer);
 		return NULL;
 	}
-	ov->vars = NULL;
-	ov->vars_count = 0;
+	ov->daily_vars = NULL;
+	ov->daily_vars_count = 0;
+	ov->monthly_vars = NULL;
+	ov->monthly_vars_count = 0;
+	ov->yearly_vars = NULL;
+	ov->yearly_vars_count = 0;
 
 	for ( token = mystrtok(buffer, delimiter, &p); token; token = mystrtok(NULL, delimiter, &p) ) {
 		if ( token[0] ) {
-			pp_no_leak = realloc(ov->vars, (ov->vars_count+1)*sizeof*pp_no_leak);
-			if ( ! pp_no_leak )
-			{
-				Log(sz_err_out_of_memory);
-				FreeOutputVars(ov);
-				free(buffer);
-				return NULL;
+			flag = 0;
+			for ( i = 0; i < OUTPUT_VARS_COUNT; ++i ) {
+				if ( ! mystricmp(token, sz_output_vars[i]) ) {
+					/* daily */
+					if ( ('d' == token[0]) || ('D' == token[0]) ) {
+						int_no_leak = realloc(ov->daily_vars, (ov->daily_vars_count+1)*sizeof*int_no_leak);
+						if ( ! int_no_leak )
+						{
+							Log(sz_err_out_of_memory);
+							FreeOutputVars(ov);
+							free(buffer);
+							return NULL;
+						}
+						ov->daily_vars = int_no_leak;
+						ov->daily_vars[ov->daily_vars_count++] = i;
+						flag = 1;
+						break;
+					}
+					else /* monthly */
+					if ( ('m' == token[0]) || ('M' == token[0]) ) {
+						int_no_leak = realloc(ov->monthly_vars, (ov->monthly_vars_count+1)*sizeof*int_no_leak);
+						if ( ! int_no_leak )
+						{
+							Log(sz_err_out_of_memory);
+							FreeOutputVars(ov);
+							free(buffer);
+							return NULL;
+						}
+						ov->monthly_vars = int_no_leak;
+						ov->monthly_vars[ov->monthly_vars_count++] = i;
+						flag = 1;
+						break;
+					}
+					else /* yearly */
+					if ( ('a' == token[0]) || ('A' == token[0]) ) { /* a/A means annual */
+						int_no_leak = realloc(ov->yearly_vars, (ov->yearly_vars_count+1)*sizeof*int_no_leak);
+						if ( ! int_no_leak )
+						{
+							Log(sz_err_out_of_memory);
+							FreeOutputVars(ov);
+							free(buffer);
+							return NULL;
+						}
+						ov->yearly_vars = int_no_leak;
+						ov->yearly_vars[ov->yearly_vars_count++] = i;
+						flag = 1;
+						break;
+					}
+				}
 			}
-			ov->vars = pp_no_leak;
-			ov->vars[ov->vars_count] = mystrdup(token);
-			if ( ! ov->vars[ov->vars_count] )
-			{
-				Log(sz_err_out_of_memory);
-				FreeOutputVars(ov);
-				free(buffer);
-				return NULL;
+			if ( ! flag ) {
+				Log("%s is an unknown output var. skipped\n", token);
 			}
-			++ov->vars_count;
 		}
 	}
 
@@ -1795,98 +1835,89 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 }
 
 int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const m, const int cell) {
-	int i;
-	int ret;
-	int index;
-	char sz_buffer[256];
-
-	int id_file;
-	int id_x;
-	int id_y;
-	int id_lat;
-	int id_lon;
-	int id_time;
-	int id_var;
-	int id_dims[3];
-
-	const char sz_x[] = "x";
-	const char sz_y[] = "y";
-	const char sz_lat[] = "lat";
-	const char sz_lon[] = "lon";
-	const char sz_time[] = "time";
-
-	assert(m);
-
-	/* if output_vars is null, we do not need netcdf outputs,
-		so we return 1 ( ok ) 'cause this is not an error */
-	if ( ! output_vars ) return 1;
-
-	for ( i = 0; i < output_vars->vars_count; ++i ) {
-		/* check if is a valid var name */
-		index = -1;
-		/* 3 'cause we skip year, month and day */
-		for ( ret = 3; ret < MET_COLUMNS; ++ret ) {
-			if ( ! mystricmp(output_vars->vars[i], met_columns[ret]) ) {
-				index = ret;
-				break;
-			}
-		}
-		if ( -1 == index ) {
-			Log("output var %s has not a valid name! skipped!\n", output_vars->vars[i]);
-			continue;
-		}
-
-		/* create output filename */
-		sprintf(sz_buffer, "%s_%d_%d.nc", output_vars->vars[i], m->cells[cell].x+1, m->cells[cell].y+1);
-
-		/* create file */
-		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
-		if ( ret != NC_NOERR ) goto quit;
-
-		/* define dimensions */
-		ret = nc_def_dim(id_file, sz_x, 1, &id_x);
-		if ( ret != NC_NOERR ) goto quit;
-
-		ret = nc_def_dim(id_file, sz_y, 1, &id_y);
-		if ( ret != NC_NOERR ) goto quit;
-				
-		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
-		if ( ret != NC_NOERR ) goto quit;
-
-		/* NC_UNLIMITED must be first dimension (or  the left-most dimension) */
-		id_dims[0] = id_time;
-		id_dims[1] = id_x;
-		id_dims[2] = id_y;
-				
-		/* define variables */
-		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
-		if ( ret != NC_NOERR ) goto quit;
-
-		ret = nc_def_var(id_file, sz_lon, NC_FLOAT, 2, id_dims+1, &id_lon);
-		if ( ret != NC_NOERR ) goto quit;
-
-		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
-		if ( ret != NC_NOERR ) goto quit;
-
-		ret = nc_def_var(id_file, output_vars->vars[i], NC_DOUBLE, 3, id_dims, &id_var);
-		if ( ret != NC_NOERR ) goto quit;
-
-		/* close definition */
-		ret = nc_enddef(id_file);
-		if ( ret != NC_NOERR ) goto quit;
-
-		/* puts values */
-		//ret = nc_put_var_double(id_file, id_var, values);
-		//if ( ret != NC_NOERR ) goto quit;
-		
-		nc_close(id_file);		
-	}
-
-	return 1;
-
-quit:
-	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
-	nc_close(id_file);
+//	int i;
+//	int ret;
+//	char *p;
+//	char sz_buffer[256];
+//
+//	int id_file;
+//	int id_x;
+//	int id_y;
+//	int id_lat;
+//	int id_lon;
+//	int id_time;
+//	int id_var;
+//	int id_dims[3];
+//
+//	const char sz_x[] = "x";
+//	const char sz_y[] = "y";
+//	const char sz_lat[] = "lat";
+//	const char sz_lon[] = "lon";
+//	const char sz_time[] = "time";
+//
+//	assert(m);
+//
+//	/* if output_vars is null, we do not need netcdf outputs,
+//		so we return 1 ( ok ) 'cause this is not an error */
+//	if ( ! output_vars ) return 1;
+//
+//	for ( i = 0; i < output_vars->vars_count; ++i ) {
+//		/* create output filename */
+//		sprintf(sz_buffer, "%s_%d_%d.nc", output_vars->vars[i], m->cells[cell].x+1, m->cells[cell].y+1);
+//
+//		/* create file */
+//		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		/* define dimensions */
+//		ret = nc_def_dim(id_file, sz_x, 1, &id_x);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		ret = nc_def_dim(id_file, sz_y, 1, &id_y);
+//		if ( ret != NC_NOERR ) goto quit;
+//				
+//		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		/* NC_UNLIMITED must be first dimension (or the left-most dimension) */
+//		id_dims[0] = id_time;
+//		id_dims[1] = id_x;
+//		id_dims[2] = id_y;
+//				
+//		/* define variables */
+//		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		ret = nc_def_var(id_file, sz_lon, NC_FLOAT, 2, id_dims+1, &id_lon);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		/* remove suffix from var name(daily, month or annual) */
+//		p = strchr(sz_output_vars[output_vars->vars[i]], '_');
+//		assert(p);
+//		++p;
+//
+//		ret = nc_def_var(id_file, p, NC_DOUBLE, 3, id_dims, &id_var);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		/* close definition */
+//		ret = nc_enddef(id_file);
+//		if ( ret != NC_NOERR ) goto quit;
+//
+//		/* puts values */
+//		//ret = nc_put_var_double(id_file, id_var, values);
+//		//if ( ret != NC_NOERR ) goto quit;
+//		
+//		nc_close(id_file);		
+//	}
+//
+//	return 1;
+//
+//quit:
+//	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
+//	nc_close(id_file);
 	return 0;
 }
 
