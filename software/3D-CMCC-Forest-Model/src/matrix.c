@@ -380,81 +380,82 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 	/* loop on each rows */
 	for ( row = 0; row < rows_count; row++ )
 	{
-		/* reset */
-		equal_flag = 0;
-		age = 0;
-		species = 0;
-		cell = 0;
+		///* reset */
+		//equal_flag = 0;
+		//age = 0;
+		//species = 0;
+		//cell = 0;
 
-		/* loop on each cell */
-		for ( cell = 0; cell < m->cells_count; cell++ )
-		{
+		///* loop on each cell */
+		//for ( cell = 0; cell < m->cells_count; cell++ )
+		//{
 
-			/* check cell */
-			if ( ARE_DOUBLES_EQUAL(rows[row].x, m->cells[cell].x) && ARE_DOUBLES_EQUAL(rows[row].y, m->cells[cell].y) )
-			{
-				/* update flag */
-				equal_flag |= EQUAL_CELL;
+		//	/* check cell */
+		//	if ( ARE_DOUBLES_EQUAL(rows[row].x, m->cells[cell].x) && ARE_DOUBLES_EQUAL(rows[row].y, m->cells[cell].y) )
+		//	{
+		//		/* update flag */
+		//		equal_flag |= EQUAL_CELL;
 
-				for (height = 0; height < m->cells[cell].heights_count; ++height)
-				{
-					//equal heights?
-					if ( ARE_DOUBLES_EQUAL(rows[row].height, m->cells[cell].heights[height].value) )
-					{
-						//update flag
-						equal_flag |= EQUAL_HEIGHT;
+		//		for (height = 0; height < m->cells[cell].heights_count; ++height)
+		//		{
+		//			//equal heights?
+		//			if ( ARE_DOUBLES_EQUAL(rows[row].height, m->cells[cell].heights[height].value) )
+		//			{
+		//				//update flag
+		//				equal_flag |= EQUAL_HEIGHT;
 
-						// loop on each heights (check for ages)
-						for (age = 0;  age < m->cells[cell].heights[height].ages_count; ++age )
-						{
-							// equal age ?
-							if ( rows[row].age == m->cells[cell].heights[height].ages[age].value )
-							{
-								// update flag
-								equal_flag |= EQUAL_AGE;
+		//				// loop on each heights (check for ages)
+		//				for (age = 0;  age < m->cells[cell].heights[height].ages_count; ++age )
+		//				{
+		//					// equal age ?
+		//					if ( rows[row].age == m->cells[cell].heights[height].ages[age].value )
+		//					{
+		//						// update flag
+		//						equal_flag |= EQUAL_AGE;
 
-								// loop on each species
-								for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
-								{
-									// equal species?
-									if ( !mystricmp(rows[row].species, m->cells[cell].heights[height].ages[age].species[species].name) )
-									{
-										/* */
-										Log((char *)err_equal_rows, row + 1);
-										matrix_free(m);
-										return NULL;
-									}
-								}
-								//exit loop
-								break;
-							}
-						}
-						//exit loop
-						break;
-					}
-				}
-				// exit loop
-				break;
-			}
-		}
+		//						// loop on each species
+		//						for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
+		//						{
+		//							// equal species?
+		//							if ( !mystricmp(rows[row].species, m->cells[cell].heights[height].ages[age].species[species].name) )
+		//							{
+		//								/* */
+		//								Log((char *)err_equal_rows, row + 1);
+		//								matrix_free(m);
+		//								return NULL;
+		//							}
+		//						}
+		//						//exit loop
+		//						break;
+		//					}
+		//				}
+		//				//exit loop
+		//				break;
+		//			}
+		//		}
+		//		// exit loop
+		//		break;
+		//	}
+		//}
 
-		/* fill by flag */
-		if ( IS_FLAG_SET(equal_flag, EQUAL_AGE) )
-		{
-			result = fill_cell_from_species(&m->cells[cell].heights[height].ages[age], &rows[row]);
-		}
-		else if ( IS_FLAG_SET(equal_flag, EQUAL_HEIGHT) )
-		{
-			result = fill_cell_from_ages(&m->cells[cell].heights[height], &rows[row]);
-		}
-		else if ( IS_FLAG_SET(equal_flag, EQUAL_CELL) )
-		{
-			result = fill_cell_from_heights_and_soils(&m->cells[cell], &rows[row]);
-		}
-		else
-		{
-			result = fill_cell(m, &rows[row]);
-		}
+		///* fill by flag */
+		//if ( IS_FLAG_SET(equal_flag, EQUAL_AGE) )
+		//{
+		//	result = fill_cell_from_species(&m->cells[cell].heights[height].ages[age], &rows[row]);
+		//}
+		//else if ( IS_FLAG_SET(equal_flag, EQUAL_HEIGHT) )
+		//{
+		//	result = fill_cell_from_ages(&m->cells[cell].heights[height], &rows[row]);
+		//}
+		//else if ( IS_FLAG_SET(equal_flag, EQUAL_CELL) )
+		//{
+		//	result = fill_cell_from_heights_and_soils(&m->cells[cell], &rows[row]);
+		//}
+		//else
+		//{
+		//	result = fill_cell(m, &rows[row]);
+		//}
+		result = fill_cell(m, &rows[row]);
 
 		/* check result */
 		if ( !result )

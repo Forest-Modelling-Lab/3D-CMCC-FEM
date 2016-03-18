@@ -186,10 +186,12 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 		free(buffer);
 		return NULL;
 	}
+	ov->vars = NULL;
+	ov->vars_count = 0;
 
-	for ( token = mystrtok(buffer, delimiter, &p); token; token = mystrtok(buffer, delimiter, &p) ) {
+	for ( token = mystrtok(buffer, delimiter, &p); token; token = mystrtok(NULL, delimiter, &p) ) {
 		if ( token[0] ) {
-			pp_no_leak = realloc(ov->vars, (ov->vars_count+1)+sizeof*pp_no_leak);
+			pp_no_leak = realloc(ov->vars, (ov->vars_count+1)*sizeof*pp_no_leak);
 			if ( ! pp_no_leak )
 			{
 				Log(sz_err_out_of_memory);
@@ -1790,5 +1792,101 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 #endif
 
 	return yos;
+}
+
+int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const m, const int cell) {
+	int i;
+	int ret;
+	int index;
+	char sz_buffer[256];
+
+	int id_file;
+	int id_x;
+	int id_y;
+	int id_lat;
+	int id_lon;
+	int id_time;
+	int id_var;
+	int id_dims[3];
+
+	const char sz_x[] = "x";
+	const char sz_y[] = "y";
+	const char sz_lat[] = "lat";
+	const char sz_lon[] = "lon";
+	const char sz_time[] = "time";
+
+	assert(m);
+
+	/* if output_vars is null, we do not need netcdf outputs,
+		so we return 1 ( ok ) 'cause this is not an error */
+	if ( ! output_vars ) return 1;
+
+	for ( i = 0; i < output_vars->vars_count; ++i ) {
+		/* check if is a valid var name */
+		index = -1;
+		/* 3 'cause we skip year, month and day */
+		for ( ret = 3; ret < MET_COLUMNS; ++ret ) {
+			if ( ! mystricmp(output_vars->vars[i], met_columns[ret]) ) {
+				index = ret;
+				break;
+			}
+		}
+		if ( -1 == index ) {
+			Log("output var %s has not a valid name! skipped!\n", output_vars->vars[i]);
+			continue;
+		}
+
+		/* create output filename */
+		sprintf(sz_buffer, "%s_%d_%d.nc", output_vars->vars[i], m->cells[cell].x+1, m->cells[cell].y+1);
+
+		/* create file */
+		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* define dimensions */
+		ret = nc_def_dim(id_file, sz_x, 1, &id_x);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_dim(id_file, sz_y, 1, &id_y);
+		if ( ret != NC_NOERR ) goto quit;
+				
+		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* NC_UNLIMITED must be first dimension (or  the left-most dimension) */
+		id_dims[0] = id_time;
+		id_dims[1] = id_x;
+		id_dims[2] = id_y;
+				
+		/* define variables */
+		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_var(id_file, sz_lon, NC_FLOAT, 2, id_dims+1, &id_lon);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_var(id_file, output_vars->vars[i], NC_DOUBLE, 3, id_dims, &id_var);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* close definition */
+		ret = nc_enddef(id_file);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* puts values */
+		//ret = nc_put_var_double(id_file, id_var, values);
+		//if ( ret != NC_NOERR ) goto quit;
+		
+		nc_close(id_file);		
+	}
+
+	return 1;
+
+quit:
+	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
+	nc_close(id_file);
+	return 0;
 }
 

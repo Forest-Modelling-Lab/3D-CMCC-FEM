@@ -185,26 +185,20 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			s->value[DAILY_DEL_LITTER] = 0;
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
-			if (s->value[RESERVE] < 0.0)
-			{
-				ERROR(s->value[RESERVE],"s->value[RESERVE]");
-				frac_to_foliage_fineroot = 0;
-				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
-			}
-			else
-			{
-				//test check it it seem that doesn't work!!
-				//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
-				parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-				frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-				Log("Tot biomass reserve = %f\n", s->value[RESERVE]);
-				Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
-			}
+			CHECK_CONDITION(s->value[RESERVE], < 0)
+
+			//test check it it seem that doesn't work!!
+			//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
+			parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
+			frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
+			Log("Tot biomass reserve = %f\n", s->value[RESERVE]);
+			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 			if (s->value[MAX_BIOMASS_BUDBURST] > s->value[RESERVE])
 			{
-				ERROR(s->value[MAX_BIOMASS_BUDBURST],"s->value[MAX_BIOMASS_BUDBURST]");
+				s->value[MAX_BIOMASS_BUDBURST] = s->value[RESERVE];
+				s->value[RESERVE] = 0.0;
 			}
 			else
 			{
@@ -242,25 +236,19 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 			else
 			{
-				if (s->value[RESERVE] > 0.0)
-				{
-					Log("Using ONLY reserve\n");
-					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
-					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) *
-							(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
-							biomass_tot_budburst);
-					s->value[DEL_STEMS] = 0.0;
-					s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
-					s->value[DEL_ROOTS_TOT] = 0.0;
-					s->value[DEL_TOT_STEM] = 0.0;
-					s->value[DEL_BB]= 0.0;
-				}
-				else
-				{
-					Log("No reserve no NPP\n");
-					ERROR(s->value[RESERVE],"s->value[RESERVE]");
-				}
+				CHECK_CONDITION(s->value[RESERVE], < 0);
+				
+				Log("Using ONLY reserve\n");
+				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
+				s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
+				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) *
+						(s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
+						biomass_tot_budburst);
+				s->value[DEL_STEMS] = 0.0;
+				s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
+				s->value[DEL_ROOTS_TOT] = 0.0;
+				s->value[DEL_TOT_STEM] = 0.0;
+				s->value[DEL_BB]= 0.0;
 			}
 
 			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
@@ -486,10 +474,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
-				if(s->value[RESERVE] < 0.0)
-				{
-					ERROR(s->value[RESERVE], "s->value[RESERVE]");
-				}
+
+				CHECK_CONDITION(s->value[RESERVE], < 0)
 			}
 
 			/*allocation*/
@@ -675,10 +661,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
-				if(s->value[RESERVE] < 0.0)
-				{
-					ERROR(s->value[RESERVE], "s->value[RESERVE]");
-				}
+
+				CHECK_CONDITION(s->value[RESERVE], < 0);
 			}
 
 			/*allocation*/
@@ -859,10 +843,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
 				s->value[DEL_BB]= 0;
-				if(s->value[RESERVE] < 0.0)
-				{
-					ERROR(s->value[RESERVE], "s->value[RESERVE]");
-				}
+				CHECK_CONDITION(s->value[RESERVE], < 0);
 			}
 			/*allocation*/
 			s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
@@ -1009,10 +990,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					leaffall(&c->heights[height].ages[age].species[species], met,
 							&c->doy, &c->top_layer, i);
 					s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
-					if(s->value[RESERVE] < 0.0)
-					{
-						ERROR(s->value[RESERVE], "s->value[RESERVE]");
-					}
+
+					CHECK_CONDITION(s->value[RESERVE], < 0);
 				}
 			}
 			else

@@ -350,27 +350,3 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 	Log("*****************************\n");
 }
-
-int gaussian_x_y(int m, int n, double *p, double *dy,
-		double **dvec, void *vars)
-{
-	int i;
-	struct vars_struct *v = (struct vars_struct *) vars;
-	double *x, *y, *ey;
-	double xc;
-	/* Retrieve values of x, y and y_error from private structure */
-
-	x = v->x;
-	y = v->y;
-	ey = v->ey;
-
-
-	for (i=0; i<m; i++) {
-		xc = x[i]-p[1];
-		dy[i] = (y[i] - p[0] * exp(-pow((xc/p[2]),2)))/ey[i];
-		//dy[i] = (y[i] - p[1]*exp(-0.5*xc*xc/sig2) - p[0])/ey[i];
-	}
-
-
-	return 0;
-}

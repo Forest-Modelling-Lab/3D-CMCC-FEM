@@ -160,6 +160,7 @@ typedef struct
 
 	char spin_up[4];
 	char CO2_fixed[4];
+	char management[4];
 	char rothC[4];
 	char dndc[4];
 
@@ -922,7 +923,7 @@ typedef struct {
 	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
 	double prcp_rain;
 	double prcp_snow;
-	double rain_intercepted;;
+	double rain_intercepted;
 	double water_to_soil;
 	double water_to_atmosphere;
 	double precip_sources;
@@ -1234,13 +1235,17 @@ void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 //test
 void Test_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 
-
-
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
+int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const m, const int cell);
 
-
-
-#define ERROR(x,var)	{if(((x))<0) {Log("%s: ERROR value in %s, line: %d", var, __FILE__, __LINE__); exit(1); }}
+#define XSTR(a)		STR(a)
+#define STR(a)		#a
+#define CHECK_CONDITION(x,c) {																																\
+		if ( (x)c )		{																																	\
+			printf("\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
+			exit(1);																																		\
+		}																																					\
+	}
 
 #endif /* TYPES_H */

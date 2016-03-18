@@ -29,10 +29,8 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 			/*used if previous day NPP is negative to conserve mass assuming the loss of reserve*/
 			if (s->value[C_FLUX] < 0.0 )
 			{
-				if (s->value[RESERVE] < 0.0)
-				{
-					ERROR(s->value[RESERVE],"s->value[RESERVE]");
-				}
+				CHECK_CONDITION(s->value[RESERVE], < 0)
+				
 				s->value[NPP_g_C] = 0;
 				s->value[NPP] = 0;
 			}
@@ -49,7 +47,7 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 		}
 		else
 		{
-			ERROR(s->value[RESERVE],"s->value[RESERVE]");
+			CHECK_CONDITION(s->value[RESERVE], < 0)
 		}
 		Log("Daily NPP = %f gC/m^2\n", s->value[NPP_g_C]);
 		Log("Daily NPP = %f tDM/area\n",  s->value[NPP]);
@@ -59,10 +57,8 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	}
 	else
 	{
-		if (s->value[RESERVE] < 0.0)
-		{
-			ERROR(s->value[RESERVE],"s->value[RESERVE]");
-		}
+		CHECK_CONDITION(s->value[RESERVE], < 0)
+
 		s->value[NPP_g_C] = 0.0;
 		s->value[NPP] = 0.0;
 		Log("Daily/Monthly NPP = %f gC/m^2\n", s->value[NPP_g_C]);

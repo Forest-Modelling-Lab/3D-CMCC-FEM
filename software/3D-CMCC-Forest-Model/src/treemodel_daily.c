@@ -520,15 +520,14 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						}
 
 						/* simulate management */
-						/*
 						 //toconclude set function for mulple of rotation
 						 //fixme include management choice
-						if(settings->management == 'on' && years == m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION])
+						if( ! mystricmp(settings->management, "on")
+							&& ( (years == m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION])
+								|| ! (m->cells[cell].heights[height].ages[age].species[species].counter[ROTATION] % years)) )
 						{
-							IsDivisble
-							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], years)
+							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], years);
 						}
-						 */
 					}
 					else
 					{

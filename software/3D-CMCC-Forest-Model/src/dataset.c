@@ -519,12 +519,15 @@ int importSettingsFile(char *fileName)
 						strncpy (settings->CO2_fixed, (const char*)pch, 3);
 						break;
 					case 6:
-						strncpy (settings->rothC, (const char*)pch, 3);
+						strncpy (settings->management, (const char*)pch, 3);
 						break;
 					case 7:
-						strncpy (settings->dndc, (const char*)pch, 3);
+						strncpy (settings->rothC, (const char*)pch, 3);
 						break;
 					case 8:
+						strncpy (settings->dndc, (const char*)pch, 3);
+						break;
+					case 9:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;

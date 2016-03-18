@@ -268,10 +268,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\C-fluxes.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\canopy_cover.c"
 				>
 			</File>
@@ -285,6 +281,14 @@
 			</File>
 			<File
 				RelativePath=".\src\canopy_transpiration.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\check_balance.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\check_prcp.c"
 				>
 			</File>
 			<File
@@ -313,6 +317,10 @@
 			</File>
 			<File
 				RelativePath=".\src\evapotranspiration.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\fluxes.c"
 				>
 			</File>
 			<File
@@ -428,10 +436,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\timestamp.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\treemodel_daily.c"
 				>
 			</File>
@@ -471,10 +475,6 @@
 			</File>
 			<File
 				RelativePath=".\src\mpfit.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\timestamp.h"
 				>
 			</File>
 			<File

@@ -52,7 +52,7 @@ void Check_C_flux_balance (CELL *c)
 				Log("...FATAL ERROR IN flux C balance\n");
 				Log("DOY CB = %d\n", c->doy);
 				Log("differences in balance (old - current)= %f\n", c->old_flux_C_balance - c->flux_C_balance);
-				ERROR(c->flux_C_balance, "flux C balance");
+				exit(1);
 			}
 			else
 			{
@@ -133,7 +133,7 @@ void Check_carbon_balance (CELL *c)
 			Log("...FATAL ERROR IN carbon balance\n");
 			Log("DOY CB = %d\n", c->doy);
 			Log("differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
-			ERROR(c->carbon_balance, "carbon balance");
+			exit(1);
 		}
 		else
 		{
@@ -198,7 +198,7 @@ void Check_water_balance (CELL *c)
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("...FATAL ERROR IN water balance\n");
 			Log("DOY = %d\n", c->doy);
-			ERROR(c->water_balance, "water balance");
+			exit(1);
 		}
 		else
 		{

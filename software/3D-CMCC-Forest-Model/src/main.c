@@ -44,10 +44,6 @@
 /* constants */
 #define PROGRAM_VERSION	"5.1"
 
-/* Handle errors by printing an error message and exiting with a
- * non-zero status. */
-#define ERR(e) {printf("Error: %s\n", nc_strerror(e)); return 2;}
-
 //Last cumulative days in months
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
 
@@ -513,7 +509,7 @@ void usage(void)
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
 	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
 	fprintf(stderr, "\t-c\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
-	fprintf(stderr, "\t-r\toutput vars list\t(i.e.: -r vars_output_list.txt)\n");
+	fprintf(stderr, "\t-r\toutput vars list\t(i.e.: -r output_vars.lst)\n");
 	fprintf(stderr, "\nOptional options:\n");
 	fprintf(stderr, "\t-h\tprint this help\n");
 	fprintf(stderr, "\nLaunch example:\n");
@@ -1407,6 +1403,12 @@ int main(int argc, char *argv[])
 			free(yos);
 			yos = NULL;
 			m->cells[cell].years = NULL; /* required */
+
+			/* write netcdf output */
+			/*if ( ! WriteNetCDFOutput(output_vars, m, cell) ) {
+				return 1;
+			}*/
+
 		}
 
 		/* free memory */
