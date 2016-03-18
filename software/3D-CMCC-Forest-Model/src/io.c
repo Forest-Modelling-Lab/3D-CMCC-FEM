@@ -138,9 +138,18 @@ static int loadFileToMemory(const char *filename, char **result) {
 
 void FreeOutputVars(OUTPUT_VARS *ov) {
 	assert(ov);
-	if ( ov->yearly_vars_count ) free(ov->yearly_vars);
-	if ( ov->monthly_vars_count ) free(ov->monthly_vars);
-	if ( ov->daily_vars_count ) free(ov->daily_vars);
+	if ( ov->yearly_vars_count ) {
+		free(ov->yearly_vars_value);
+		free(ov->yearly_vars);
+	}
+	if ( ov->monthly_vars_count ) {
+		free(ov->monthly_vars_value);
+		free(ov->monthly_vars);
+	}
+	if ( ov->daily_vars_count ) {
+		free(ov->daily_vars_value);
+		free(ov->daily_vars);
+	}
 	free(ov);
 }
 
@@ -171,10 +180,13 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 		return NULL;
 	}
 	ov->daily_vars = NULL;
+	ov->daily_vars_value = NULL;
 	ov->daily_vars_count = 0;
 	ov->monthly_vars = NULL;
+	ov->monthly_vars_value = NULL;
 	ov->monthly_vars_count = 0;
 	ov->yearly_vars = NULL;
+	ov->yearly_vars_value = NULL;
 	ov->yearly_vars_count = 0;
 
 	for ( token = mystrtok(buffer, delimiter, &p); token; token = mystrtok(NULL, delimiter, &p) ) {
@@ -1817,90 +1829,118 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 	return yos;
 }
 
-int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const m, const int cell) {
-//	int i;
-//	int ret;
-//	char *p;
-//	char sz_buffer[256];
 //
-//	int id_file;
-//	int id_x;
-//	int id_y;
-//	int id_lat;
-//	int id_lon;
-//	int id_time;
-//	int id_var;
-//	int id_dims[3];
+// if type is 0, write daily
+// if type is 1, write monthly
+// if type is 2, write yearly
 //
-//	const char sz_x[] = "x";
-//	const char sz_y[] = "y";
-//	const char sz_lat[] = "lat";
-//	const char sz_lon[] = "lon";
-//	const char sz_time[] = "time";
 //
-//	assert(m);
-//
-//	/* if output_vars is null, we do not need netcdf outputs,
-//		so we return 1 ( ok ) 'cause this is not an error */
-//	if ( ! output_vars ) return 1;
-//
-//	for ( i = 0; i < output_vars->vars_count; ++i ) {
-//		/* create output filename */
-//		sprintf(sz_buffer, "%s_%d_%d.nc", output_vars->vars[i], m->cells[cell].x+1, m->cells[cell].y+1);
-//
-//		/* create file */
-//		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		/* define dimensions */
-//		ret = nc_def_dim(id_file, sz_x, 1, &id_x);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		ret = nc_def_dim(id_file, sz_y, 1, &id_y);
-//		if ( ret != NC_NOERR ) goto quit;
-//				
-//		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		/* NC_UNLIMITED must be first dimension (or the left-most dimension) */
-//		id_dims[0] = id_time;
-//		id_dims[1] = id_x;
-//		id_dims[2] = id_y;
-//				
-//		/* define variables */
-//		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		ret = nc_def_var(id_file, sz_lon, NC_FLOAT, 2, id_dims+1, &id_lon);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		/* remove suffix from var name(daily, month or annual) */
-//		p = strchr(sz_output_vars[output_vars->vars[i]], '_');
-//		assert(p);
-//		++p;
-//
-//		ret = nc_def_var(id_file, p, NC_DOUBLE, 3, id_dims, &id_var);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		/* close definition */
-//		ret = nc_enddef(id_file);
-//		if ( ret != NC_NOERR ) goto quit;
-//
-//		/* puts values */
-//		//ret = nc_put_var_double(id_file, id_var, values);
-//		//if ( ret != NC_NOERR ) goto quit;
-//		
-//		nc_close(id_file);		
-//	}
-//
-//	return 1;
-//
-//quit:
-//	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
-//	nc_close(id_file);
+int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+	int i;
+	int ret;
+	char *p;
+	char sz_buffer[256];
+	int n;
+
+	int id_file;
+	int id_x;
+	int id_y;
+	int id_lat;
+	int id_lon;
+	int id_time;
+	int id_var;
+	int id_dims[3];
+
+	double *values;
+	
+	const char sz_x[] = "x";
+	const char sz_y[] = "y";
+	const char sz_lat[] = "lat";
+	const char sz_lon[] = "lon";
+	const char sz_time[] = "time";
+
+	assert(vars && years_count && x_cells_count && y_cells_count && ((type >=0) && (type<=3)));
+
+	if ( 0 == type ) n = vars->daily_vars_count;
+	if ( 1 == type ) n = vars->monthly_vars_count;
+	if ( 2 == type ) n = vars->yearly_vars_count;
+
+	for ( i = 0; i < n; ++i ) {
+		/* create output filename */
+		if ( 0 == type )
+			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->daily_vars[i]]);
+
+		if ( 1 == type )
+			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->monthly_vars[i]]);
+
+		if ( 2 == type )
+			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->yearly_vars[i]]);
+
+		/* create file */
+		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* define dimensions */
+		ret = nc_def_dim(id_file, sz_x, x_cells_count, &id_x);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_dim(id_file, sz_y, y_cells_count, &id_y);
+		if ( ret != NC_NOERR ) goto quit;
+				
+		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* NC_UNLIMITED must be first dimension (or the left-most dimension) */
+		id_dims[0] = id_time;
+		id_dims[1] = id_x;
+		id_dims[2] = id_y;
+				
+		/* define variables */
+		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_var(id_file, sz_lon, NC_FLOAT, 2, id_dims+1, &id_lon);
+		if ( ret != NC_NOERR ) goto quit;
+
+		ret = nc_def_var(id_file, sz_time, NC_DOUBLE, 1, id_dims, &id_time);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* remove suffix from var name(daily, month or annual) */
+		if ( 0 == type)
+			p = strchr(sz_output_vars[vars->daily_vars[i]], '_');
+		if ( 1 == type)
+			p = strchr(sz_output_vars[vars->monthly_vars[i]], '_');
+		if ( 2 == type)
+			p = strchr(sz_output_vars[vars->yearly_vars[i]], '_');
+		assert(p);
+		++p;
+
+		ret = nc_def_var(id_file, p, NC_DOUBLE, 3, id_dims, &id_var);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* close definition */
+		ret = nc_enddef(id_file);
+		if ( ret != NC_NOERR ) goto quit;
+
+		/* puts values */
+		if ( 0 == type)
+			values = vars->daily_vars_value;
+		if ( 1 == type)
+			values = vars->monthly_vars_value;
+		if ( 2 == type)
+			values = vars->yearly_vars_value;
+		
+		ret = nc_put_var_double(id_file, id_var, values);
+		if ( ret != NC_NOERR ) goto quit;
+		
+		nc_close(id_file);		
+	}
+
+	return 1;
+
+quit:
+	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
+	nc_close(id_file);
+
 	return 0;
 }
-

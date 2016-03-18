@@ -1053,6 +1053,9 @@ typedef struct {
 	int monthly_vars_count;
 	int *yearly_vars;
 	int yearly_vars_count;
+	double *daily_vars_value;
+	double *monthly_vars_value;
+	double *yearly_vars_value;
 } OUTPUT_VARS;
 
 /* constants */
@@ -1243,7 +1246,8 @@ void Test_phenology_phase (SPECIES *, const MET_DATA *const, const int, const in
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
-int WriteNetCDFOutput(const OUTPUT_VARS *const output_vars, const MATRIX *const m, const int cell);
+int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
+
 
 #define XSTR(a)		STR(a)
 #define STR(a)		#a
@@ -1271,4 +1275,5 @@ enum {
 	, OUTPUT_VARS_COUNT
 };
 
+/* */
 #endif /* TYPES_H */

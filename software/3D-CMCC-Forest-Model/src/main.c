@@ -90,9 +90,6 @@ static int files_founded_count;
 
 /* global variables */
 OUTPUT_VARS *output_vars = NULL;	/* required */
-double *daily_output_vars = NULL;	/* required */
-double *monthly_output_vars = NULL;	/* required */
-double *yearly_output_vars = NULL;	/* required */
 
 /* strings */
 static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n\n"
@@ -1201,6 +1198,9 @@ int main(int argc, char *argv[])
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
+		int x_cell_count;
+		int y_cell_count;
+
 		/* inc */
 		++total_files_count;
 
@@ -1215,6 +1215,10 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		puts(msg_ok);
+
+		// ALESSIOR: FIXME !!!
+		x_cell_count = 1; //rows->x;
+		y_cell_count = 1; //rows->y;
 
 		/* build matrix */
 		m = matrix_create(rows, rows_count, input_dir);
@@ -1264,50 +1268,49 @@ int main(int argc, char *argv[])
 			}
 
 			// alloc memory for daily output netcdf vars (if any)
-			if ( output_vars && output_vars->daily_vars_count && ! daily_output_vars ) {
+			if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
-				daily_output_vars = malloc(rows_count);
-				if ( ! daily_output_vars ) {
+				output_vars->daily_vars_value = malloc(rows_count);
+				if ( ! output_vars->daily_vars_value ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
 					return 1;
 				}
 				for ( ii = 0; ii < rows_count; ++ii ) {
-					daily_output_vars[i] = INVALID_VALUE;
+					output_vars->daily_vars_value[i] = INVALID_VALUE;
 				}
 			}
 
 			// alloc memory for monthly output netcdf vars (if any)
-			if ( output_vars && output_vars->monthly_vars_count && ! monthly_output_vars ) {
+			if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
-				monthly_output_vars = malloc(rows_count);
-				if ( ! monthly_output_vars ) {
+				output_vars->monthly_vars_value = malloc(rows_count);
+				if ( ! output_vars->monthly_vars_value ) {
 					Log(err_out_of_memory);
-					free(daily_output_vars);
 					FreeOutputVars(output_vars);
 					matrix_free(m);
 					return 1;
 				}
 				for ( ii = 0; ii < rows_count; ++ii ) {
-					monthly_output_vars[i] = INVALID_VALUE;
+					output_vars->monthly_vars_value[i] = INVALID_VALUE;
 				}
 			}
 
 			// alloc memory for yearly output netcdf vars (if any)
-			if ( output_vars && output_vars->yearly_vars_count && ! yearly_output_vars ) {
+			if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*output_vars->yearly_vars_count;
-				yearly_output_vars = malloc(rows_count);
-				if ( ! yearly_output_vars ) {
+				output_vars->yearly_vars_value = malloc(rows_count);
+				if ( ! output_vars->yearly_vars_value ) {
 					Log(err_out_of_memory);
 					FreeOutputVars(output_vars);
 					matrix_free(m);
 					return 1;
 				}
 				for ( ii = 0; ii < rows_count; ++ii ) {
-					yearly_output_vars[i] = INVALID_VALUE;
+					output_vars->yearly_vars_value[i] = INVALID_VALUE;
 				}
 			}
 
@@ -1459,6 +1462,43 @@ int main(int argc, char *argv[])
 			free(yos);
 			yos = NULL;
 			m->cells[cell].years = NULL; /* required */
+
+			//
+			// NetCDF outputs
+			//
+
+			if ( output_vars->daily_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 0) ) {
+					Log(err_out_of_memory);
+					matrix_free(m);
+					return 1;
+				}
+				// REQUIRED !!!
+				free(output_vars->daily_vars_value);
+				output_vars->daily_vars_value = NULL;
+			}
+
+			if ( output_vars->monthly_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 1) ) {
+					Log(err_out_of_memory);
+					matrix_free(m);
+					return 1;
+				}
+				// REQUIRED !!!
+				free(output_vars->monthly_vars_value);
+				output_vars->monthly_vars_value = NULL;
+			}
+
+			if ( output_vars->yearly_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 2) ) {
+					Log(err_out_of_memory);
+					matrix_free(m);
+					return 1;
+				}
+				// REQUIRED !!!
+				free(output_vars->yearly_vars_value);
+				output_vars->yearly_vars_value = NULL;
+			}
 		}
 
 		/* free memory */
@@ -1483,9 +1523,6 @@ int main(int argc, char *argv[])
 
 	// Free memory
 	if ( output_vars ) FreeOutputVars(output_vars);
-	if ( yearly_output_vars ) free(yearly_output_vars);
-	if ( monthly_output_vars ) free(monthly_output_vars);
-	if ( daily_output_vars ) free(daily_output_vars);
 	free(input_met_path); input_met_path = NULL;
 	free(output_file); output_file = NULL;
 	free(daily_output_file); daily_output_file = NULL;
