@@ -1045,8 +1045,12 @@ typedef struct {
 } MATRIX;
 
 typedef struct {
-	char **vars;
-	int vars_count;
+	int *daily_vars;
+	int daily_vars_count;
+	int *monthly_vars;
+	int monthly_vars_count;
+	int *yearly_vars;
+	int yearly_vars_count;
 } OUTPUT_VARS;
 
 /* constants */

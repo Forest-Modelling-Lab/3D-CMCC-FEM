@@ -116,7 +116,7 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 }
 
 
-extern void Annual_average_values_modifiers (SPECIES *s)
+void Annual_average_values_modifiers (SPECIES *s)
 {
 
 	//compute to control annual average values for modifiers
@@ -140,7 +140,7 @@ extern void Annual_average_values_modifiers (SPECIES *s)
 
 }
 
-extern void Annual_average_values_met_data (CELL *c, double Yearly_Solar_Rad, double Yearly_Vpd, double Yearly_Temp, double Yearly_Rain )
+void Annual_average_values_met_data (CELL *c, double Yearly_Solar_Rad, double Yearly_Vpd, double Yearly_Temp, double Yearly_Rain )
 {
 	//Log("--AVERAGE YEARLY MET DATA--\n");
 	//SOLAR RAD
