@@ -13,11 +13,6 @@ F * phenology.c
 
 void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
 {
-	int height;
-	int age;
-	int species;
-
-
 	Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 
 	//defining phenology phase
@@ -136,9 +131,9 @@ void Test_phenology_phase (SPECIES * s, const MET_DATA *const met, const int yea
 		{
 			//Beginning of growing season
 			//BUDBURST
-			if (s->counter[VEG_DAYS] <= s->value[BUD_BURST])
+			if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]-1))
 			{
-				if (s->value[LAI] < (s->value[PEAK_LAI]))
+				if (s->value[LAI] < s->value[PEAK_LAI])
 				{
 					s->phenology_phase = 1;
 				}

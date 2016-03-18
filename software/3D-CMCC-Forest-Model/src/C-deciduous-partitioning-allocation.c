@@ -44,6 +44,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	static double biomass_foliage_budburst;
 	static double biomass_fine_root_budburst;
 
+	double exceeding_foliage_biomass;
+	double exceeding_fineroot_biomass;
+
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
 
@@ -139,6 +142,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			double old_r0Ctem = r0Ctem;
 			double s0Ctem_increment;
 			double old_s0Ctem = s0Ctem;
+
+
 
 			Log("min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
 			Log("max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
@@ -301,7 +306,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				}
 			}
 */
-			Log("del RESERVE= %f\n", s->value[RESERVE]);
+			Log("del RESERVE= %f\n", s->value[DEL_RESERVE]);
+			Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+			Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE_CTEM]);
 
 
 			/*allocation*/
@@ -343,15 +350,12 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			if (s->value[LAI] > s->value[PEAK_LAI])
 			{
 				Log("LAI exceeds Peak Lai\n");
-				//test
-				s->value[MAX_BIOMASS_BUDBURST] = s->value[MAX_BIOMASS_FOLIAGE] / s->value[FINE_ROOT_LEAF_FRAC];
-				s->value[MAX_BIOMASS_FINE_ROOTS] = s->value[MAX_BIOMASS_BUDBURST] - s->value[MAX_BIOMASS_FOLIAGE];
 
 				/*partitioning*/
-				/*re-transfer mass to reserve*/
-				s->value[DEL_FOLIAGE] -= (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
-				//s->value[DEL_ROOTS_FINE_CTEM] = 0;
-				s->value[DEL_RESERVE] += s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE];
+				/* no need to re-transfer mass to reserve diving for BUDBURST at the end of BUDBURST period all the c is perfectly allocated */
+				s->value[DEL_FOLIAGE] = 0.0 ;
+				s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+				//s->value[DEL_RESERVE] += (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE])+(s->value[MAX_BIOMASS_FINE_ROOTS] - s->value[MAX_BIOMASS_FINE_ROOTS]);
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
@@ -801,9 +805,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 			s->value[DAILY_DEL_LITTER] = 0;
 
-			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 			Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
-			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 			Log("Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
 			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 			Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
@@ -826,8 +830,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
 				s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
-				s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine;
-				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
+				s->value[DEL_ROOTS_FINE_CTEM] = 0.0;
+				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT];
 				s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
 				s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 				s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];

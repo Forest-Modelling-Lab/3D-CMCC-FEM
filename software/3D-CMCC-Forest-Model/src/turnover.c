@@ -48,12 +48,12 @@ void Turnover (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		/*daily fine root turnover*/
 		//Log("****Fine root turnover****\n");
 		//turnover of fine root
-		if (s->value[BIOMASS_ROOTS_FINE] > 0.0)
-		{
-			s->value[BIOMASS_ROOTS_FINE] -= (s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
-			Log("Daily fine root turnover = %f tDM/cell\n", s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
-			Log("Fine root Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
-		}
+//		if (s->value[BIOMASS_ROOTS_FINE] > 0.0)
+//		{
+//			s->value[BIOMASS_ROOTS_FINE] -= (s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
+//			Log("Daily fine root turnover = %f tDM/cell\n", s->value[BIOMASS_ROOTS_FINE] * (s->value[LEAVES_FINERTTOVER]/365.0));
+//			Log("Fine root Biomass after turnover = %f\n", s->value[BIOMASS_FOLIAGE]);
+//		}
 
 		/*daily stem turnover*/
 		//Log("****Stem turnover****\n");
