@@ -815,18 +815,51 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	Log("Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
 
 	//check for live and dead tissues
-	s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
+//	s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
+//	Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+//	//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+//	Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+//	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
+//	Log("Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+//	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+//	Log("Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+//	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
+//	Log("Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+//	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+//	Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+
+	s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
-	//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+	s->value[BIOMASS_STEM_DEAD_WOOD] += s->value[DEL_STEMS]*(1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
-	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
+	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
-	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += s->value[DEL_ROOTS_COARSE_CTEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
-	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
+	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
-	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
+	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 	Log("Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+
+	if (fabs((s->value[BIOMASS_STEM_LIVE_WOOD] + s->value[BIOMASS_STEM_DEAD_WOOD]) - s->value[BIOMASS_STEM])>1e-4)
+	{
+		Log("Live stem + dead stem = %f\n", s->value[BIOMASS_STEM_LIVE_WOOD] + s->value[BIOMASS_STEM_DEAD_WOOD]);
+		Log("Total stem = %f\n", s->value[BIOMASS_STEM]);
+		exit(1);
+	}
+	if (fabs((s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]) - s->value[BIOMASS_ROOTS_COARSE])>1e-4)
+	{
+		Log("Live coarse + dead coarse = %f\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+		Log("Total coarse = %f\n", s->value[BIOMASS_ROOTS_COARSE]);
+		exit(1);
+	}
+	if (fabs((s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]) - s->value[BIOMASS_BRANCH])>1e-4)
+	{
+		Log("Live branch + dead branch = %f\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+		Log("Total branch = %f\n", s->value[BIOMASS_BRANCH]);
+		exit(1);
+	}
+
 
 	//fixme compute from unspatial
 	s->value[DEL_Y_WTS] += s->value[DEL_TOT_STEM];
