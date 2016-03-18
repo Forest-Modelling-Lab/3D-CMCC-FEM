@@ -160,7 +160,7 @@ extern void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, i
 	//Log("compute vegetative days for version '%c'\n", settings->spatial);
 
 	if (!day && !month)
-		Log("GET_VEG_DAYS_for year %d\n", years);
+		Log("VEG_DAYS_for year %d\n", years);
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )

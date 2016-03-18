@@ -131,7 +131,7 @@ void Test_phenology_phase (SPECIES * s, const MET_DATA *const met, const int yea
 		{
 			//Beginning of growing season
 			//BUDBURST
-			if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]-1))
+			if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]))
 			{
 				if (s->value[LAI] < s->value[PEAK_LAI])
 				{

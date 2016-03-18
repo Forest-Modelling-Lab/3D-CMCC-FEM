@@ -237,8 +237,8 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 		Log("Biomass fine root = %f\n", s->value[BIOMASS_ROOTS_FINE]);
 		s->value[DEL_FOLIAGE]  = 0.0;
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE_CTEM]);
-		CHECK_CONDITION(s->value[BIOMASS_FOLIAGE], < 0);
-		CHECK_CONDITION(s->value[BIOMASS_ROOTS_FINE], < 0);
+		CHECK_CONDITION(s->value[BIOMASS_FOLIAGE], < 0.0);
+		CHECK_CONDITION(s->value[BIOMASS_ROOTS_FINE], < 0.0);
 	}
 	Log("****************************\n\n");
 }
