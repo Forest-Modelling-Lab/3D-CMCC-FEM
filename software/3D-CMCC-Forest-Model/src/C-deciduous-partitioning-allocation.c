@@ -684,17 +684,27 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			{
 				Log("First day of Leaf fall\n");
 				s->counter[SENESCENCE_DAYONE] = c->doy;
-				s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) -
-						c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
+				s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) - c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
 				Log("DAY_FRAC_FOLIAGE_REMOVE = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 				Log("foliage biomass to remove = %f\n", s->value[BIOMASS_FOLIAGE]);
 				Log("fine root biomass to remove = %f\n", s->value[BIOMASS_ROOTS_FINE]);
 				Log("Daily amount of foliage biomass to remove = %f\n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 				//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
-				s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / ((int)s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
+				//FIXME IT NOT FOLLOWS SAME SIGMOID TREND SO IT TENDS TO EMPTY BEFORE THE FOLIAGE POOLS AND TENDS TO BECAME NEGATIVE
+				//s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[BIOMASS_ROOTS_FINE] / ((int)s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+
+				/* following campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is retranslocated as reserve in the reserve pool */
+				/* compute amount of fine root biomass to retranslocate as reserve */
+				s->value[RESERVE_FOLIAGE_TO_RETRANSL] = (s->value[BIOMASS_FOLIAGE] *0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+				s->value[RESERVE_FINEROOT_TO_RETRANSL] = (s->value[BIOMASS_ROOTS_FINE] *0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 				Log("Daily amount of fine root biomass to remove = %f\n", s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE]);
 			}
+
+			/* leaffall */
+			leaffall(&c->heights[height].ages[age].species[species], met,
+					&c->doy, &c->top_layer, i);
+
 			if (s->value[NPP] > 0.0)
 			{
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
@@ -708,32 +718,18 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					//reproductive life span
 					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
-
-
-				leaffall(&c->heights[height].ages[age].species[species], met,
-						&c->doy, &c->top_layer, i);
-
-				//fixme
-				if(s->value[BIOMASS_ROOTS_FINE] <= 0.0)
-				{
-					s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = 0.0;
-				}
-
 				s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
 				//fixme do it with the total amount of foliage biomass
-				s->value[DEL_RESERVE] = s->value[NPP] + (fabs(s->value[BIOMASS_FOLIAGE]*0.1));
+				s->value[DEL_RESERVE] = s->value[NPP] + s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL];
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0.0;
-				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+				//s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_BB] = 0;
 			}
 			else
 			{
-				leaffall(&c->heights[height].ages[age].species[species], met,
-						&c->doy, &c->top_layer, i);
-
 				//fixme
 				if(s->value[BIOMASS_ROOTS_FINE] <= 0.0)
 				{
@@ -743,10 +739,11 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
+				//s->value[DEL_ROOTS_FINE_CTEM] = -s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE];
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_BB] = 0;
-				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + (fabs(s->value[BIOMASS_FOLIAGE]*0.1));
+				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
+						(s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL]);
 			}
 
 
