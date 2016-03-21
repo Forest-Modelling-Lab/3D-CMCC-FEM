@@ -41,7 +41,7 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 	{
 		s->value[FRAC_RAIN_INTERC] = s->value[MAXINTCPTN] * Minimum ( 1.0 , s->value[LAI] / s->value[LAIMAXINTCPTN]);
 	}
-	Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+	Log("remaining rainfall on canopy from the day(s) before = %f\n", s->value[CANOPY_WATER_STORED]);
 
 	/*no snow but rain and canopy dry*/
 	if (met[month].d[day].tavg > 0.0 && c->prcp_rain > 0.0 && s->value[CANOPY_WATER_STORED] == 0.0)
@@ -134,7 +134,7 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 			}
 		}
 		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
-		if(PotEvap < 0)
+		if(PotEvap <= 0)
 		{
 			PotEvap = 0.0;
 			Log("Negative Potential Evaporation\n");
@@ -143,25 +143,38 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 		}
 		else
 		{
-			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1.0);
-			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-			/*all rain evaporates*/
-			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+			//test it seems doesn't owrk
+//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1.0);
+//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+//			/* just a part of rain evaporates */
+//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+//			{
+//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
+//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+//				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
+//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+//
+//			}
+//			/* all rain evaporates */
+//			else
+//			{
+//				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
+//				s->value[RAIN_INTERCEPTED] = 0.0;
+//				s->value[CANOPY_WATER_STORED] = 0.0;
+//			}
+			/* all rain evaporates */
+			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{
 				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
-				s->value[RAIN_INTERCEPTED] = 0.0;
 				s->value[CANOPY_WATER_STORED] = 0.0;
 			}
-			/*just a part of rain evaporates*/
 			else
 			{
-				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
-				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-
+				s->value[CANOPY_EVAPORATION] = PotEvap;
 				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
-				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 			}
 			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 		}
 	}
 	/*no snow but rain but no interception occurs cause canopy still wet since the day(s) before*/
@@ -170,32 +183,45 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 		Log("Fraction of rain intercepted = %f %\n", s->value[FRAC_RAIN_INTERC]*100);
 		/*check if canopy is not completely wet*/
 		s->value[RAIN_INTERCEPTED] = 0.0;
-
-		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
-		if(PotEvap < 0)
+		if(PotEvap <= 0)
 		{
+			PotEvap = 0.0;
+			Log("Negative Potential Evaporation\n");
 			s->value[FRAC_DAYTIME_EVAPO] = 0.0;
 		}
 		else
 		{
-			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
-			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-			/*all rain evaporates*/
-			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
+//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+//			/*all rain evaporates*/
+//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+//			{
+//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
+//				s->value[RAIN_INTERCEPTED] = 0.0;
+//				s->value[CANOPY_WATER_STORED] = 0.0;
+//			}
+//			/*just a part of rain evaporates*/
+//			else
+//			{
+//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
+//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+//
+//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
+//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+//			}
+			/* all rain evaporates */
+			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{
-				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
-				s->value[RAIN_INTERCEPTED] = 0.0;
+				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
 				s->value[CANOPY_WATER_STORED] = 0.0;
 			}
-			/*just a part of rain evaporates*/
 			else
 			{
-				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
-				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-
-				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
-				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED] - PotEvap;
+				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 			}
+			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 		}
 		c->water_to_soil = c->prcp_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
@@ -203,32 +229,43 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 	/*no snow no rain but canopy wet from the day(s) before*/
 	else if (met[month].d[day].tavg > 0.0 && c->prcp_rain == 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)
 	{
-
-		Log("PotEvap = %f mmkg/m2/day\n", PotEvap );
-		if(PotEvap < 0)
+		if(PotEvap <= 0)
 		{
 			s->value[FRAC_DAYTIME_EVAPO] = 0.0;
 		}
 		else
 		{
-			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
-			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-			/*all rain evaporates*/
-			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
+//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+//			/*all rain evaporates*/
+//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+//			{
+//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
+//				s->value[RAIN_INTERCEPTED] = 0.0;
+//				s->value[CANOPY_WATER_STORED] = 0.0;
+//			}
+//			/*just a part of rain evaporates*/
+//			else
+//			{
+//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_EVAPO];
+//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+//
+//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
+//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+//			}
+			/* all rain evaporates */
+			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{
-				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
-				s->value[RAIN_INTERCEPTED] = 0.0;
+				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
 				s->value[CANOPY_WATER_STORED] = 0.0;
 			}
-			/*just a part of rain evaporates*/
 			else
 			{
-				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_EVAPO];
-				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-
-				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
-				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED] - PotEvap;
+				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 			}
+			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 		}
 		c->water_to_soil = c->prcp_rain ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
@@ -267,11 +304,12 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 	//fixme it may be a problem in multispecies multilayered runs
 	//c->daily_tot_c_water_stored += s->value[CANOPY_WATER_STORED];
 	c->daily_c_int += s->value[RAIN_INTERCEPTED];
-	//c->daily_tot_c_evapo += s->value[CANOPY_EVAPORATION];
+	c->daily_c_evapo += s->value[CANOPY_EVAPORATION];
+	Log("Canopy evaporation = %f mm/m2 day\n", c->daily_c_evapo);
 
 	//fixme it still uses bad data
 	/*compute a energy balance evaporation for rain intercepted from canopy and then evaporated*/
-	c->daily_c_int_watt = c->daily_c_int * c->lh_vap / 86400;
+	c->daily_c_int_watt = c->daily_c_evapo * c->lh_vap / 86400.0;
 	Log("Latent heat canopy interception/evaporation = %f W/m^2\n", c->daily_c_int_watt);
 
 

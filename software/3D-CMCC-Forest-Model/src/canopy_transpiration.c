@@ -23,7 +23,7 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	static double PotEvap;
 	double g_corr; //corrector factor from biome
 
-	Log("\nCANOPY_TRANSPIRATION_ROUTINE\n");
+	Log("\n**CANOPY_TRANSPIRATION_ROUTINE**\n");
 
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
@@ -61,15 +61,15 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	Log("defTerm = %f\n", defTerm);
 	duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
 	//Log("duv = %f\n", duv);
-	PotEvap = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv;  // in J/m2/s
+	PotEvap = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv; // in J/m2/s
 	Log("PotEvap = %f\n", PotEvap);
 
 	/*compute transpiration*/
-	if(met[month].d[day].tavg > s->value[GROWTHTMIN])
+	if(met[month].d[day].tavg > s->value[GROWTHTMIN] && PotEvap > 0.0)
 	{
 		s->value[DAILY_TRANSP] = ((PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC]) *
 				s->value[FRAC_DAYTIME_TRANSP] * s->value[F_CO2];
-		Log("Canopy trasnpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
+		Log("Canopy transpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
 	}
 	else
 	{
@@ -133,7 +133,7 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
 
 	/*compute energy balance transpiration from canopy*/
-	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / (met[month].d[day].daylength * 3600);
+	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
 	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
 
 }

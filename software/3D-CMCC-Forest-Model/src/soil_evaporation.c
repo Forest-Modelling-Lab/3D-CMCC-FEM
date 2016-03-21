@@ -92,7 +92,7 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 	Log("Total Yearly Soil Evaporation = %f mm\n", c->total_yearly_soil_evaporation);
 
 	/*compute a energy balance evaporation from soil*/
-	c->daily_soil_evaporation_watt = c->soil_evaporation * c->lh_vap_soil / 86400;
+	c->daily_soil_evaporation_watt = c->soil_evaporation * c->lh_vap_soil / 86400.0;
 	Log("Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 }

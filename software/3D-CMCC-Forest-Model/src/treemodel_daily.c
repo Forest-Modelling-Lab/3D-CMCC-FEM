@@ -560,12 +560,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Water_fluxes (&m->cells[cell]);
 		/*CHECK FOR CARBON BALANCE CLOSURE*/
 		//fixme
-		//Check_carbon_balance (&m->cells[cell]);
+		Check_carbon_balance (&m->cells[cell]);
 		/*CHECK FOR WATER BALANCE CLOSURE*/
 		Check_water_balance (&m->cells[cell]);
 		/*CHECK FOR CARBON FLUX BALANCE CLOSURE*/
 		//fixme
-		//Check_C_flux_balance (&m->cells[cell]);
+		Check_C_flux_balance (&m->cells[cell]);
 
 		m->cells[cell].dos  += 1;
 		//todo: soilmodel could stay here or in main.c

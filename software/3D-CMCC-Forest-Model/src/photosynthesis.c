@@ -21,9 +21,9 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
 	//Veg period
-	//test
+	//fixme
 	//photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
-	if (s->counter[VEG_UNVEG] == 1 && s->value[DAILY_TRANSP] != 0.0)
+	if (s->counter[VEG_UNVEG] == 1 /* && s->value[DAILY_TRANSP] != 0.0*/)
 	{
 		if (s->value[ALPHA] > 0.0)
 		{
