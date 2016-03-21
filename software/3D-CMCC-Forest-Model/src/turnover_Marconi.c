@@ -106,7 +106,7 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 				Log("++Lai from foliage or reserve = %f\n", s->value[LAI]);
 			}
 
-			s->turnover->fineroot[c->dos % s->turnover->FINERTOVER] = Maximum(0, s->value[DEL_ROOTS_FINE_CTEM]);
+			s->turnover->fineroot[c->dos % s->turnover->FINERTOVER] = Maximum(0, s->value[DEL_ROOTS_FINE]);
 			s->turnover->leaves[c->dos % s->turnover->FINERTOVER] = Maximum(0, s->value[DEL_FOLIAGE]);
 			//	soil_Log("\narray cell:\t %d \nfineroot:\t %g\nleaves:\t %g",c->dos % s->turnover->FINERTOVER,
 			//			s->turnover->fineroot[c->dos % s->turnover->FINERTOVER], s->turnover->leaves[c->dos % s->turnover->FINERTOVER]);

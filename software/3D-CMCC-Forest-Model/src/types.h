@@ -515,8 +515,8 @@ enum {
 	CLASS_BGB,
 	//FINE/COARSE RATIO
 	FR_CR,                       //FINE-COARSE ROOT RATIO
-	DEL_ROOTS_FINE_CTEM,
-	DEL_ROOTS_COARSE_CTEM,
+	DEL_ROOTS_FINE,
+	DEL_ROOTS_COARSE,
 	DAILY_DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
 	MONTHLY_DEL_LITTER,
 	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM

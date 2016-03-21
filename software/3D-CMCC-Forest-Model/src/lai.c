@@ -11,10 +11,12 @@ void Daily_lai (SPECIES *const s)
 {
 	double leaf_c; //leaf carbon KgC/m^2
 
-	Log("DAILY_LAI\n");
+	Log("\n**DAILY_LAI**\n\n");
 
 	/*CONVERT tDM/cell to KgC/m^2*/
 	leaf_c = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM));
+
+	Log("Foliage Biomass = %f\n", s->value[BIOMASS_FOLIAGE]);
 
 	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("LAI = %f\n", s->value[LAI]);
@@ -35,9 +37,10 @@ void Daily_lai (SPECIES *const s)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
 	Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 
-	CHECK_CONDITION(s->value[LAI], < 0);
-	CHECK_CONDITION(s->value[LAI_SUN], < 0);
-	CHECK_CONDITION(s->value[LAI_SHADE], < 0);
+	CHECK_CONDITION(fabs(s->value[LAI]), < 0);
+	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0);
+	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0);
+	//CHECK_CONDITION(s->value[LAI], > s->value[PEAK_LAI])
 }
 
 

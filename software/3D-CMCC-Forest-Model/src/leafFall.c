@@ -225,8 +225,8 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE]);
 		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE]);
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-		s->value[DEL_ROOTS_FINE_CTEM]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_ROOTS_FINE]);
-		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE_CTEM]);
+		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_ROOTS_FINE]);
+		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
 
 	}
 	else
@@ -236,7 +236,7 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
 		Log("Biomass fine root = %f\n", s->value[BIOMASS_ROOTS_FINE]);
 		s->value[DEL_FOLIAGE]  = 0.0;
-		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE_CTEM]);
+		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
 		CHECK_CONDITION(s->value[BIOMASS_FOLIAGE], < 0.0);
 		CHECK_CONDITION(s->value[BIOMASS_ROOTS_FINE], < 0.0);
 	}

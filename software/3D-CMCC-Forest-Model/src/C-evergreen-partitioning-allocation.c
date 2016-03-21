@@ -180,9 +180,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Using ONLY npp...\n");
 
 				s->value[DEL_FOLIAGE] = (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (s->value[NPP] - s->value[DEL_FOLIAGE]);
+				s->value[DEL_ROOTS_FINE] = (s->value[NPP] - s->value[DEL_FOLIAGE]);
 				s->value[DEL_RESERVE] = 0;
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
@@ -193,9 +193,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Using ONLY reserve...\n");
 
 				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 -s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
+				s->value[DEL_ROOTS_FINE] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
@@ -216,9 +216,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
-			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
+			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
-			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
+			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];
 			Log("Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 
 			//check for live and dead tissues
@@ -226,7 +226,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 			//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
-			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
+			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE] /** s->value[LIVE_TOTAL_WOOD]*/);
 			Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 			//s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
@@ -248,7 +248,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
 				//s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_FINE_CTEM];
 				s->value[DEL_RESERVE] += s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE];
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
@@ -267,9 +267,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
-				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
+				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 				Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
-				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
+				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];
 				Log("Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 
 				//check for live and dead tissues
@@ -277,7 +277,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 				//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 				Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
-				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
+				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE] /** s->value[LIVE_TOTAL_WOOD]*/);
 				Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 				//s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 				Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
@@ -299,24 +299,24 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			s->value[DEL_Y_WTS] += s->value[DEL_TOT_STEM];
 			s->value[DEL_Y_WS] += s->value[DEL_STEMS];
 			s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE];
-			s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
-			s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE_CTEM];
+			s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE];
+			s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE];
 			s->value[DEL_Y_WRES] += s->value[DEL_RESERVE];
 			s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT];
 			s->value[DEL_Y_BB] += s->value[DEL_BB];
 
 			Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM] );
 			Log("delta_F %d = %f \n", c->heights[height].z, s->value[DEL_FOLIAGE] );
-			Log("delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
-			Log("delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+			Log("delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
+			Log("delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
 			Log("delta_S %d = %f \n", c->heights[height].z, s->value[DEL_STEMS]);
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
 			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 
@@ -324,8 +324,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			c->daily_delta_ws[i] = s->value[DEL_STEMS];
 			c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
 			c->daily_delta_wbb[i] = s->value[DEL_BB];
-			c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
-			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+			c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE];
+			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
 			c->daily_wres[i] = s->value[RESERVE];
@@ -359,8 +359,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
 				s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
-				s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_TOT] * Perc_fine;
-				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
+				s->value[DEL_ROOTS_FINE] = s->value[DEL_ROOTS_TOT] * Perc_fine;
+				s->value[DEL_ROOTS_COARSE] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE];
 				s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
 				s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 				s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];
@@ -369,9 +369,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			else
 			{
 				s->value[DEL_FOLIAGE] = 0;
-				s->value[DEL_ROOTS_FINE_CTEM] = 0;
+				s->value[DEL_ROOTS_FINE] = 0;
 				s->value[DEL_RESERVE] = ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
+				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS]= 0;
@@ -390,9 +390,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
 			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
-			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
+			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
-			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
+			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];
 			Log("Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 
 			//check for live and dead tissues
@@ -400,7 +400,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 			//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
-			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
+			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE] /** s->value[LIVE_TOTAL_WOOD]*/);
 			Log("Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 			//s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
 			Log("Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
@@ -412,24 +412,24 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			s->value[DEL_Y_WTS] += s->value[DEL_TOT_STEM];
 			s->value[DEL_Y_WS] += s->value[DEL_STEMS];
 			s->value[DEL_Y_WF] += s->value[DEL_FOLIAGE];
-			s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE_CTEM];
-			s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE_CTEM];
+			s->value[DEL_Y_WFR] += s->value[DEL_ROOTS_FINE];
+			s->value[DEL_Y_WCR] += s->value[DEL_ROOTS_COARSE];
 			s->value[DEL_Y_WRES] += s->value[DEL_RESERVE];
 			s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT];
 			s->value[DEL_Y_BB] += s->value[DEL_BB];
 
 			Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM] );
 			Log("delta_F %d = %f \n", c->heights[height].z, s->value[DEL_FOLIAGE] );
-			Log("delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE_CTEM]);
-			Log("delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE_CTEM]);
+			Log("delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
+			Log("delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
 			Log("delta_S %d = %f \n", c->heights[height].z, s->value[DEL_STEMS]);
 			Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 			Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
 
 			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
 
@@ -437,8 +437,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			c->daily_delta_ws[i] = s->value[DEL_STEMS];
 			c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
 			c->daily_delta_wbb[i] = s->value[DEL_BB];
-			c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE_CTEM];
-			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE_CTEM];
+			c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE];
+			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
 			c->daily_wres[i] = s->value[RESERVE];
