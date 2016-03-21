@@ -181,13 +181,13 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		case 1:
 			Log("BUDBURST\n");
 			Log("Bud burst phase using both reserve pools and npp\n");
-			Log("Allocating only into foliage and fine root pools\n");
+			Log("Allocating only into foliage\n");
 			Log("LAI = %f \n", s->value[LAI]);
 
 			s->value[DAILY_DEL_LITTER] = 0;
 
 			/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
-			CHECK_CONDITION(s->value[RESERVE], < 0)
+			CHECK_CONDITION(s->value[RESERVE], < 0.0)
 
 			//test check it it seem that doesn't work!!
 			//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];

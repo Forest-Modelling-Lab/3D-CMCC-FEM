@@ -1466,7 +1466,8 @@ int main(int argc, char *argv[])
 			//
 			// NetCDF outputs
 			//
-
+			//ALESSIOC COMMENTED FOR BUGS
+/*
 			if ( output_vars->daily_vars_value ) {
 				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 0) ) {
 					Log(err_out_of_memory);
@@ -1499,6 +1500,7 @@ int main(int argc, char *argv[])
 				free(output_vars->yearly_vars_value);
 				output_vars->yearly_vars_value = NULL;
 			}
+*/
 		}
 
 		/* free memory */

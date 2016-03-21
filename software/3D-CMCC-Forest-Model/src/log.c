@@ -219,33 +219,33 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	}
 
 
-	if (years == 0)
-	{
-		Annual_Log("Site name = %s\n", site->sitename);
-		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Annual_Log("years of simulation = %d\n", years_of_simulation);
-		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
-		Annual_Log("HC(n) = height class counter for n layer\n");
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
-		{
-			Annual_Log("Annual NEE = annual total net ecosystem exchange (gC/m2/year)\n");
-		}
-		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
-		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
-		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
-		{
-			Annual_Log("Annual HR = annual total heterotrophic respiration (gC/m2/year)\n");
-			Annual_Log("Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
-		}
-		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
-		Annual_Log("Annual Y = NPP/GPP ratio (%%)\n");
-		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
-		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
-		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
-		Annual_Log("Annual Wf = annual water-fluxes (mm/year)\n");
-		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
-		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
-	}
+//	if (years == 0)
+//	{
+//		Annual_Log("Site name = %s\n", site->sitename);
+//		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+//		Annual_Log("years of simulation = %d\n", years_of_simulation);
+//		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+//		Annual_Log("HC(n) = height class counter for n layer\n");
+//		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+//		{
+//			Annual_Log("Annual NEE = annual total net ecosystem exchange (gC/m2/year)\n");
+//		}
+//		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
+//		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
+//		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
+//		{
+//			Annual_Log("Annual HR = annual total heterotrophic respiration (gC/m2/year)\n");
+//			Annual_Log("Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
+//		}
+//		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
+//		Annual_Log("Annual Y = NPP/GPP ratio (%%)\n");
+//		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
+//		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
+//		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
+//		Annual_Log("Annual Wf = annual water-fluxes (mm/year)\n");
+//		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
+//		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
+//	}
 
 	//reset
 	if (years == 0)
@@ -328,10 +328,10 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%8s \t%8s \t%12s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
 					"Cf(tot)",
 					"Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
-					"CC(tot)", "DEAD TREE(tot)", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "DELTA-Wres");
+					"CC(tot)", "DEAD TREE(tot)", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
@@ -350,7 +350,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 
 		Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f "
-				"\t%12.2f \t%14.2d \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
+				"\t%12.2f \t%14.2d \t%7.2f \t%7.2f \t%5.2f \t%7.2f \t%7.2f \t%9.2f \t%7.2f\n",
 				c->annual_C_flux,
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_tDM,
@@ -1075,7 +1075,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Daily_Log ("\t%6.2f", c->daily_nee);
 		}
-		Daily_Log("\t%10.2f \t%10.2f \t%10.2f",
+		Daily_Log("\t%10.4f \t%10.4f \t%10.4f",
 				c->layer_daily_gpp[0],
 				c->layer_daily_aut_resp[0],
 				c->layer_daily_aut_resp_tDM[0]);
@@ -1084,7 +1084,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
-		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2d \t%11.4f \t%11.2f \t%11.2f \t%11.4f \t%11.2f \t%11.2f \t%11.2f\n",
+		Daily_Log("\t%14.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%14.2d \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
 				c->layer_daily_c_flux[0],
 				c->layer_daily_c_flux_tDM[0],
 				c->layer_daily_npp_tDM[0],
