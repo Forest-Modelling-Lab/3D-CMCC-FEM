@@ -34,6 +34,7 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 			{
 				Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 				c->layer_daily_c_evapotransp[c->top_layer] = c->asw;
+				exit(1);
 			}
 		}
 	}
@@ -53,6 +54,7 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 				{
 					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 					c->layer_daily_c_evapotransp[c->top_layer-1] = c->asw;
+					exit(1);
 				}
 			}
 		}
@@ -69,6 +71,7 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 				{
 					Log("ATTENTION DAILY EVAPOTRANSPIRATION EXCEEDS AVAILABLE SOIL WATER!!!\n");
 					c->layer_daily_c_evapotransp[c->top_layer-2] = c->asw;
+					exit(1);
 				}
 			}
 		}

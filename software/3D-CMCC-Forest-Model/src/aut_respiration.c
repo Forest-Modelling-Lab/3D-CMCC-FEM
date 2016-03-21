@@ -282,8 +282,11 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 
 	c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->daily_aut_resp_tDM +=  ((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->monthly_aut_resp_tDM +=  ((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
+	c->annual_aut_resp_tDM +=  ((s->value[TOTAL_AUT_RESP] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 }
 
 

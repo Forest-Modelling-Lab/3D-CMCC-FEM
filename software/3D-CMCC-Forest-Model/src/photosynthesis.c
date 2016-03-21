@@ -15,7 +15,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
 
-	Log("************** at Day %d Month %d CARBON FLUX-PRODUCTIVITY ******************\n",day+1, month+1);
+	Log("**PHOTOSYNTHESIS**\n");
 
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
@@ -23,7 +23,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	//Veg period
 	//test
 	//photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
-	if ((s->counter[VEG_UNVEG] == 1 || (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)) && s->value[DAILY_TRANSP] != 0.0)
+	if (s->counter[VEG_UNVEG] == 1 && s->value[DAILY_TRANSP] != 0.0)
 	{
 		if (s->value[ALPHA] > 0.0)
 		{
@@ -87,7 +87,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * s->value[CANOPY_COVER_DBHDC];
 		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[GPP_g_C] );
 	}
-	else if (s->counter[VEG_UNVEG] == 0)//Un Veg period
+	else //Un Veg period
 	{
 		Log("Un-vegetative period !! \n");
 		s->value[GPP_g_C] = 0;

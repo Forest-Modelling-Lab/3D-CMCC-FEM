@@ -50,7 +50,7 @@ GROWTHTOPT	20      //Optimum temperature for growth 19.4 Rasse et al 2001, 20 fr
 GROWTHSTART	120       //(5 °C)average temperature or (GDD) thermic sum for starting growth in °C ettore with t base = 5°C
 						//1400 through satellite images (1500 from Hickler et al 2012)
 GROWTHEND	5       //average temperature for ending growth in °C
-MINDAYLENGTH	11.30      //minimum day length for fagus from ettore, 12 through satellite images
+MINDAYLENGTH	12      //minimum day length for fagus from ettore, 12 through satellite images
 
 //SOIL WATER
 //define the soil water modifier response in function of needless of the species to the soil water content
@@ -86,7 +86,7 @@ LIVE_TOTAL_WOOD	0.154	//new live C:new total wood (ratio) 0.15 for deciduous P. 
 CN_LEAVES   26.9 //CN of leaves (kgC/kgN) 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli
 CN_LITTER   44 //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   47.6 //CN of fine roots (kgC/kgN) 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
-CN_LIVE_WOODS   70 //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002 , 375 from Campioli et al., 2013
+CN_LIVE_WOODS   80 //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002
 CN_DEAD_WOODS   550 //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 
 

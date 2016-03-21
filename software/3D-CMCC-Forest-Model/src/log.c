@@ -316,22 +316,22 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%2s", "YEAR", "HC(0)");
+			Annual_Log ("\n%s \t%s", "YEAR", "HC(0)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
-			Annual_Log ("\t%6s \t%10s" ,
-					"GPP (tot)", "AR (tot)");
+			Annual_Log ("\t%s \t%s \t%s" ,
+					"GPP(gC/m2y)", "AR(gC/m2y)", "AR(tDM/hay)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%6s \t%10s \t%10s \t%10s \t%8s \t%8s \t%12s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
-					"Cf(tot)",
-					"Y(%tot)", "NPP(tot)", "NPP(gC/m2yr)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
-					"CC(tot)", "DEAD TREE(tot)", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
+			Annual_Log ("\t%6s \t%s \t%10s \t%10s \t%8s \t%8s \t%10s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
+					"Cf(gC/m2y)",
+					"Y(%)", "NPP(tDM/hay)", "NPP(gC/m2y)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
+					"CC(tot)", "DEAD TREE", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
@@ -339,9 +339,11 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Annual_Log ("\t%6.2f", c->annual_nee);
 		}
-		Annual_Log("\t%10.2f \t%10.2f",
+		Annual_Log("\t%10.2f \t%10.2f \t%10.2f",
 				c->annual_gpp,
-				c->annual_aut_resp);
+				c->annual_aut_resp,
+				c->annual_aut_resp_tDM);
+
 
 		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 		{
@@ -349,8 +351,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		}
 
 
-		Annual_Log("\t%10.2f \t%10.2f\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f "
-				"\t%12.2f \t%14.2d \t%7.2f \t%7.2f \t%5.2f \t%7.2f \t%7.2f \t%9.2f \t%7.2f\n",
+		Annual_Log("\t%10.2f \t%8.2f \t%8.2f \t%12.2f \t%10.2f \t%10.2f \t%10.2f \t%12.2f "
+				"\t%12.2f \t%9.2d \t%7.2f \t%7.2f \t%5.2f \t%7.2f \t%7.2f \t%9.2f \t%7.2f\n",
 				c->annual_C_flux,
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_tDM,
@@ -632,6 +634,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	}
 	c->annual_gpp = 0;
 	c->annual_aut_resp = 0;
+	c->annual_aut_resp_tDM = 0.0;
 	c->annual_C_flux = 0;
 	c->annual_npp_tDM = 0;
 	c->annual_npp_gC = 0;
@@ -1060,9 +1063,9 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
+			Daily_Log ("\t%10s \t%10s  \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
 					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf", "CftDM", "NPP(0)", "NPPgC", "CE(0)","LE(0)", "ASW", "Wfl", "LAI(0)",
+					"Cf", "NPP(0)", "NPPgC", "CE(0)","LE(0)", "ASW", "Wfl", "LAI(0)",
 					"CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
@@ -1084,9 +1087,9 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
-		Daily_Log("\t%14.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%14.2d \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
+		Daily_Log("\t%14.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%14.2d \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
 				c->layer_daily_c_flux[0],
-				c->layer_daily_c_flux_tDM[0],
+				/*c->layer_daily_c_flux_tDM[0],*/
 				c->layer_daily_npp_tDM[0],
 				c->layer_daily_npp_gC[0],
 				c->layer_daily_c_evapotransp[0],

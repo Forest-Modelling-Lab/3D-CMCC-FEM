@@ -885,6 +885,7 @@ typedef struct {
 	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;	//in g of C m^2
 	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;     //in tonnes of DM per hectare
 	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;
+	double daily_aut_resp_tDM, monthly_aut_resp_tDM, annual_aut_resp_tDM;
 	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;
 	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;
 	double daily_r_eco, monthly_r_eco, annual_r_eco;
@@ -1168,6 +1169,7 @@ int M_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 
 //deciduous routine for carbon allocation
 void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
 void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
@@ -1258,7 +1260,7 @@ int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
 //test
-void Test_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
+void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

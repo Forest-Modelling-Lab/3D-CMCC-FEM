@@ -119,7 +119,7 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 	Log("phenology phase = %d\n", s->phenology_phase);
 }
 
-void Test_phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
+void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
 {
 
 	Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
@@ -140,25 +140,25 @@ void Test_phenology_phase (SPECIES * s, const MET_DATA *const met, const int yea
 				//Normal Growth
 				else
 				{
-					s->phenology_phase = 4;
+					s->phenology_phase = 2;
 				}
 			}
 			else
 			{
 				if (month+1 <= 6)
 				{
-					s->phenology_phase = 4;
+					s->phenology_phase = 2;
 				}
 				else
 				{
 					if (met[month].d[day].daylength > s->value[MINDAYLENGTH])
 					{
-						s->phenology_phase = 4;
+						s->phenology_phase = 2;
 					}
 					else
 					{
 						//leaf fall
-						s->phenology_phase = 5;
+						s->phenology_phase = 3;
 					}
 				}
 			}
