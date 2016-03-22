@@ -174,12 +174,6 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	double rr, rh, rhr, rv;
 	double dt = 0.2;
 
-
-
-
-	//TO INCLUDE IN SPECIES.TXT
-	static double CUTICULAR_CONDUCTANCE = 0.00006; //m sec-1
-
 	Log("\n**BIOME CANOPY_TRANSPIRATION_ROUTINE**\n");
 
 	/* temperature and pressure correction factor for conductances */
@@ -194,7 +188,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	Log("BLCOND BIOME = %f\n", gl_bl);
 
 	/* leaf cuticular conductance */
-	gl_c = CUTICULAR_CONDUCTANCE * g_corr;
+	gl_c = s->value[CUTCOND] * g_corr;
 	Log("CUTCOND BIOME = %f\n", gl_c);
 
 	/* leaf stomatal conductance: first generate multipliers, then apply them
