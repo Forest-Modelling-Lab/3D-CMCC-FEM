@@ -22,7 +22,7 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 	//recompute GPP
 	Log("\nC-FLUXES\n");
 
-	s->value[C_FLUX] = s->value[GPP_g_C] - fabs(s->value[TOTAL_AUT_RESP]);
+	s->value[C_FLUX] = s->value[DAILY_GPP_gC] - fabs(s->value[TOTAL_AUT_RESP]);
 	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
 //	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 

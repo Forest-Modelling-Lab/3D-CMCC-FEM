@@ -213,7 +213,7 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 	s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
 
 
-	s->value[BIOMASS_ROOTS_FINE] = Maximum(0,s->value[MAX_BIOMASS_FINE_ROOTS] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
+	s->value[BIOMASS_ROOTS_FINE] = Maximum(0,s->value[MAX_BIOMASS_FINE_ROOTS_tDM] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 			*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 					log(.11111111111))))));
 

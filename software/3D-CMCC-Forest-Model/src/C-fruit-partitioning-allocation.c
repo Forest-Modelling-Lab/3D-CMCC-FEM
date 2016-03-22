@@ -31,7 +31,7 @@ void M_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Yearly_R
 	//il 10% lo do ai frutti
 	//fraction of total NPP to Fruit compart
 	//biomass to seeds
-	s->value[W_SEED] = s->value[YEARLY_NPP] * s->value[FRACFRUIT];
+	s->value[W_SEED] = s->value[YEARLY_NPP_tDM] * s->value[FRACFRUIT];
 	Log("Costant Fraction Rate of Annual NPP for Fruit Production using LPJ = %f %%\n", s->value[FRACFRUIT] * 100);
 	Log("Annual NPP to Seeds Biomass Compart = %f tDM/area/year\n", s->value[W_SEED]);
 
@@ -122,7 +122,7 @@ int M_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 	WseedLE = ((double)PopNumberSeeds * s->value[WEIGHTSEED]) / 1000000 /* to convert in tonnes*/;
 	Log("Biomass for Seed from Logistic Equation = %f tDM/area\n", WseedLE);
 	Log("Fraction of Biomass allocated for Seed from Logistic Equation = %f tDM/area\n", WseedLE);
-	Log("Fraction of NPP allocated for Seed from Logistic Equation = %.4g %%\n", (WseedLE * 100) /s->value[YEARLY_NPP] );
+	Log("Fraction of NPP allocated for Seed from Logistic Equation = %.4g %%\n", (WseedLE * 100) /s->value[YEARLY_NPP_tDM] );
 
 	return NumberSeed;
 }
@@ -147,7 +147,7 @@ int M_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
 	//Biomassa allocata nei semi in tDM/area
 	WseedT = (double)NumberSeed * s->value[WEIGHTSEED] / 1000000;  //per convertire in tonnellate biomassa allocata per i semi
 	Log("Seeds Biomass per cell at the End of the This Year = %f tonnes of seeds/area \n", WseedT);
-	Log("Fraction of NPP allocated for Seed from TREEMIG = %.4f %%\n", (WseedT * 100) /s->value[YEARLY_NPP] );
+	Log("Fraction of NPP allocated for Seed from TREEMIG = %.4f %%\n", (WseedT * 100) /s->value[YEARLY_NPP_tDM] );
 
 	return NumberSeed;
 

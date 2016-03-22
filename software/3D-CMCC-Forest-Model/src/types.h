@@ -422,37 +422,22 @@ enum {
 	DAILY_DEL_LITTER,
 
 	/*carbon variables*/
-	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
-	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
-	GPP_t_DM,                       //Gross Primary Production  tDM/ha
-	GPP_g_C,                        //Gross Primary Production  gC/m^2
-	DAILY_GPP_g_C,                  //Class Daily Gross Primary Production gC/m^2 day
-	MONTHLY_GPP_g_C,				//Class Monthly Gross Primary Production gC/m^2 month
-	STAND_GPP_g_C,                  //Monthly Stand GPP in grams of C
-	STAND_GPP_t_C,                  //Monthly Stand GPP in tonnes of C
-	STAND_YEARLY_GPP_g_C,           //Yearly Stand GPP in grams of C
-	POINT_GPP_g_C,
-	NPP,                            //Net Primary Production  tDM/area
-	NPP_g_C, 						//Net Primary Production in grams of C
+	DAILY_GPP_gC,                  //Daily Gross Primary Production gC/m^2 day
+	DAILY_POINT_GPP_gC,
+	MONTHLY_GPP_gC,				//Class Monthly Gross Primary Production gC/m^2 month
+	NPP_tDM,                            //Net Primary Production  tDM/area
+	NPP_gC, 						//Net Primary Production in grams of C
 	C_FLUX,
-	//MONTHLY CUMULATIVE VARIABLES
-	MONTHLY_NPP,                     //Yearly NPP
-	IND_MONTHLY_NPP,                 //Individual NPP
-	MONTHLY_GPP_G_C,                 //Yearly GPP
-	//YEARLY CUMULATIVE VARIABLES
-	YEARLY_NPP,                     //Yearly NPP
-	YEARLY_NPP_UDC,
-	YEARLY_NPP_FL,
-	IND_YEARLY_NPP,                 //Individual NPP
-	CUM_YEARLY_NPP,                 //Sum of all years NPP (included simulation years)
-	YEARLY_GPP_G_C,                 //Yearly GPP
-	YEARLY_POINT_GPP_G_C,
+	YEARLY_POINT_GPP_gC,
+	YEARLY_GPP_gC,                 //Yearly GPP
+	YEARLY_NPP_tDM,                     //Yearly NPP
+
 	YEARLY_RAIN,                    //Yearly Rain
 
 	/*biomass variables*/
-	MAX_BIOMASS_BUDBURST,
-	MAX_BIOMASS_FOLIAGE,
-	MAX_BIOMASS_FINE_ROOTS,
+	MAX_BIOMASS_BUDBURST_tDM,
+	MAX_BIOMASS_FOLIAGE_tDM,
+	MAX_BIOMASS_FINE_ROOTS_tDM,
 	WS_sap,
 	WS_heart,
 	WRC_sap,
@@ -531,10 +516,6 @@ enum {
 	AV_DEAD_COARSE_BIOMASS,
 	AV_LIVE_BB_BIOMASS,
 	AV_DEAD_BB_BIOMASS,
-
-
-
-
 
 	//MONTHLY PHENOLOGY
 	FRAC_MONTH_FOLIAGE_REMOVE,

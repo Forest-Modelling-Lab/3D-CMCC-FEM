@@ -71,46 +71,46 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 		//Daily/Monthly layer GPP in grams of C/m^2
 		//Convert molC into grams
-		s->value[POINT_GPP_g_C] = GPPmolC * GC_MOL;
-		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+		s->value[DAILY_POINT_GPP_gC] = GPPmolC * GC_MOL;
+		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_POINT_GPP_gC] );
 
 		//Daily layer GPP in grams of C/m^2
 		//Convert molC into grams
 
 
 
-		s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
+		s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
-		s->value[GPP_g_C] =  s->value[POINT_GPP_g_C] * s->value[CANOPY_COVER_DBHDC];
-		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[GPP_g_C] );
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * s->value[CANOPY_COVER_DBHDC];
+		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
 	{
 		Log("Un-vegetative period !! \n");
-		s->value[GPP_g_C] = 0;
-		s->value[POINT_GPP_g_C] = 0;
-		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[POINT_GPP_g_C] );
+		s->value[DAILY_GPP_gC] = 0;
+		s->value[DAILY_POINT_GPP_gC] = 0;
+		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_POINT_GPP_gC] );
 	}
 
 	i = c->heights[height].z;
 
-	c->layer_daily_gpp[i] += s->value[GPP_g_C];
-	c->layer_monthly_gpp[i] += s->value[GPP_g_C];
-	c->layer_annual_gpp[i] += s->value[GPP_g_C];
+	c->layer_daily_gpp[i] += s->value[DAILY_GPP_gC];
+	c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
+	c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
 
 	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", c->daily_gpp);
-	c->daily_gpp += s->value[GPP_g_C];
-	c->monthly_gpp += s->value[GPP_g_C];
-	c->annual_gpp += s->value[GPP_g_C];
+	c->daily_gpp += s->value[DAILY_GPP_gC];
+	c->monthly_gpp += s->value[DAILY_GPP_gC];
+	c->annual_gpp += s->value[DAILY_GPP_gC];
 
 	Log("***************************** ANNUAL GPP *************************** \n");
 
 	Log("*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
 	//class level
-	s->value[YEARLY_POINT_GPP_G_C] += s->value[GPP_g_C];
+	s->value[YEARLY_POINT_GPP_gC] += s->value[DAILY_GPP_gC];
 	Log("-CLASS LEVEL\n");
-	Log("-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_G_C]);
+	Log("-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_gC]);
 
 	Log("*********************** STAND LEVEL ANNUAL GPP ********************** \n");
 }

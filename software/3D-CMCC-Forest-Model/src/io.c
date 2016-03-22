@@ -445,7 +445,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		{
 
 			//the model gets the value of the day before
-			Log ("* SOLAR RAD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* SOLAR RAD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 			//Log("Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].solar_rad = previous_solar_rad;
 			//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].solar_rad);
@@ -473,7 +473,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
 		{
 			//the model gets the value of the day before
-			Log ("* TAVG -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* TAVG -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 
 			yos[*yos_count-1].m[month].d[day].tavg = previous_tavg;
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg))
@@ -498,10 +498,10 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
-			Log ("* TMAX -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* TMAX -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 			//Log("Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].tmax = yos[*yos_count-1].m[month].d[day].tavg;
-			Log("..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+			//Log("..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax))
 			{
 				//the model gets the value of the year before
@@ -524,10 +524,10 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
-			Log ("* TMIN -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* TMIN -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 			//Log("Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].tmin = yos[*yos_count-1].m[month].d[day].tavg;
-			Log("..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
+			//Log("..using tavg = %f\n", yos[*yos_count-1].m[month].d[day].tavg);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin))
 			{
 				//the model gets the value of the year before
@@ -551,7 +551,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
-			Log ("* VPD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
+			//Log ("* VPD -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day);
 			//Log("Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].vpd = previous_vpd;
 			//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].vpd);
@@ -609,10 +609,10 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
 			//the model gets the value of the day before
-			Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
+			//Log ("* PRECIPITATION -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1);
 			//Log("Getting previous day values.. !!\n");
 			yos[*yos_count-1].m[month].d[day].prcp = previous_prcp;
-			Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
+			//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].prcp);
 			if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp))
 			{
 				Log ("********* PRECIPITATION -NO DATA- in previous year!!!!\n" );
@@ -637,7 +637,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		//CONTROL
 		if (yos[*yos_count-1].m[month].d[day].prcp > settings->maxprecip)
 		{
-			Log("ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
+			//Log("ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
 		}
 		//Log("%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
 	
@@ -693,12 +693,12 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai) && (!((day == 0) && (month == 0))))
 				{
 					//the model gets the value of the day before
-					Log ("********* LAI -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1 );
+					//Log ("********* LAI -NO DATA in year %d month %s, day %d!!!!\n", yos[*yos_count-1].year, MonthName[month], day+1 );
 					//Log("Getting previous years values !!\n");
 					yos[*yos_count-1].m[month].d[day].ndvi_lai = previous_ndvi_lai;
 					if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ndvi_lai))
 					{
-						Log ("* LAI -NO DATA- in previous year!!!!\n" );
+						//Log ("* LAI -NO DATA- in previous year!!!!\n" );
 						yos[*yos_count-1].m[month].d[day].ndvi_lai = NO_DATA;
 					}
 				}
@@ -709,10 +709,10 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				//control lai data in spatial version if value is higher than MAXLAI
 				if(yos[*yos_count-1].m[month].d[day].ndvi_lai > settings->maxlai)
 				{
-					Log("********* INVALID DATA LAI > MAXLAI in year %d month %s!!!!\n", yos[*yos_count-1].year, MonthName[month] );
-					Log("Getting previous day values.. !!\n");
+					//Log("********* INVALID DATA LAI > MAXLAI in year %d month %s!!!!\n", yos[*yos_count-1].year, MonthName[month] );
+					//Log("Getting previous day values.. !!\n");
 					yos[*yos_count-1].m[month].d[day].ndvi_lai = yos[*yos_count-2].m[month].d[day].ndvi_lai;
-					Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].ndvi_lai);
+					//Log("..value of the previous day = %f\n", yos[*yos_count-1].m[month].d[day].ndvi_lai);
 				}
 			}
 			//for the first year if LAI is an invalid value set LAI to a default value DEFAULTLAI
@@ -724,9 +724,9 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 					//
 					//
 					//
-					Log("**********First Year without a valid LAI value set to default value LAI\n");
+					//Log("**********First Year without a valid LAI value set to default value LAI\n");
 					yos[*yos_count-1].m[month].d[day].ndvi_lai = settings->defaultlai;
-					Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
+					//Log("**DEFAULT LAI VALUE SET TO %d\n", settings->defaultlai);
 				}
 			}
 		}

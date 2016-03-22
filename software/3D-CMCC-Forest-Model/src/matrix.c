@@ -616,11 +616,11 @@ void matrix_summary(const MATRIX *const m)
 	Log ("Temporal scale = daily \n");
 	if (settings->symmetric_water_competition == 'y')
 	{
-		Log ("Symmetric water competition\n");
+		//Log ("Symmetric water competition\n");
 	}
 	else
 	{
-		Log ("Asymmetric water competition\n");
+		//Log ("Asymmetric water competition\n");
 	}
 
 	/*Site definition*/

@@ -175,12 +175,12 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 
 			/*partitioning*/
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				Log("Using ONLY npp...\n");
 
-				s->value[DEL_FOLIAGE] = (s->value[NPP] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-				s->value[DEL_ROOTS_FINE] = (s->value[NPP] - s->value[DEL_FOLIAGE]);
+				s->value[DEL_FOLIAGE] = (s->value[NPP_tDM] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
+				s->value[DEL_ROOTS_FINE] = (s->value[NPP_tDM] - s->value[DEL_FOLIAGE]);
 				s->value[DEL_RESERVE] = 0;
 				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
@@ -244,10 +244,10 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 				/*partitioning*/
 				/*re-transfer mass to reserve*/
-				Log("retranslocating = %f\n", s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
-				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]);
+				Log("retranslocating = %f\n", s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE_tDM]);
+				s->value[DEL_FOLIAGE] = (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE_tDM]);
 				//s->value[DEL_ROOTS_FINE_CTEM] = s->value[DEL_ROOTS_FINE_CTEM];
-				s->value[DEL_RESERVE] += s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE];
+				s->value[DEL_RESERVE] += s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE_tDM];
 				s->value[DEL_ROOTS_COARSE] = 0;
 				s->value[DEL_ROOTS_TOT] = 0;
 				s->value[DEL_TOT_STEM] = 0;
@@ -255,7 +255,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				s->value[DEL_BB] = 0;
 
 				/*allocation*/
-				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
+				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE_tDM];
 				Log("Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
 				s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
 				Log("Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
@@ -343,27 +343,27 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 
 			/*partitioning*/
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 1.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					s->value[BIOMASS_FRUIT] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
+					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT];
 					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
 					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
-				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
-				s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
+				s->value[DEL_RESERVE] = s->value[NPP_tDM] * pF_CTEM;
+				s->value[DEL_ROOTS_TOT] = s->value[NPP_tDM] * pR_CTEM;
 				s->value[DEL_ROOTS_FINE] = s->value[DEL_ROOTS_TOT] * Perc_fine;
 				s->value[DEL_ROOTS_COARSE] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE];
-				s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
-				s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-				s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];
+				s->value[DEL_TOT_STEM] = s->value[NPP_tDM] * pS_CTEM;
+				s->value[DEL_STEMS] = (s->value[NPP_tDM] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+				s->value[DEL_BB] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
 				s->value[DEL_FOLIAGE] = 0;
 			}
 			else

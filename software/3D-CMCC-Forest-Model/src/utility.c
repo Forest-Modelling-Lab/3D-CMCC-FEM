@@ -65,8 +65,8 @@ void Reset_daily_variables (CELL *const c, const int count)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C] = 0.0;
-				c->heights[height].ages[age].species[species].value[NPP] = 0.0;
+				c->heights[height].ages[age].species[species].value[DAILY_POINT_GPP_gC] = 0.0;
+				c->heights[height].ages[age].species[species].value[NPP_tDM] = 0.0;
 				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0.0;
 				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0.0;
 			}
@@ -116,11 +116,6 @@ void Reset_monthly_variables (CELL *const c, const int count)
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
 				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
-				c->heights[height].ages[age].species[species].value[MONTHLY_NPP] = 0.0;
-				c->heights[height].ages[age].species[species].value[MONTHLY_GPP_G_C] = 0.0;
-				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
-				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
-
 			}
 		}
 	}
@@ -176,9 +171,9 @@ void Reset_annual_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
 
-				c->heights[height].ages[age].species[species].value[YEARLY_GPP_G_C]  = 0;
-				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]  = 0;
-				c->heights[height].ages[age].species[species].value[YEARLY_NPP]  = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_GPP_gC]  = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_gC]  = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_NPP_tDM]  = 0;
 
 				// ALESSIOR DEL_STEMS used instead of DEAD_STEMS
 				c->heights[height].ages[age].species[species].counter[DEAD_STEMS] = 0;

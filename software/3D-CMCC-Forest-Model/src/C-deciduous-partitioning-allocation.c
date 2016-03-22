@@ -186,31 +186,31 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 			//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-			if (s->value[MAX_BIOMASS_BUDBURST] > s->value[RESERVE])
+			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE])
 			{
-				s->value[MAX_BIOMASS_BUDBURST] = s->value[RESERVE];
+				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE];
 				s->value[RESERVE] = 0.0;
 			}
 			else
 			{
 				/* +2 is to avoid excees in biomass for foliage */
-				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / (s->value[BUD_BURST]+2.0);
+				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / (s->value[BUD_BURST]+2.0);
 				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
 			}
 
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//if(s->value[NPP] > biomass_tot_budburst)
-				if(s->value[NPP] > biomass_foliage_budburst)
+				if(s->value[NPP_tDM] > biomass_foliage_budburst)
 				{
 					//fixme where the exceeding NPP goes?
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_RESERVE] = -(s->value[NPP] - biomass_foliage_budburst);
+					s->value[DEL_RESERVE] = -(s->value[NPP_tDM] - biomass_foliage_budburst);
 				}
 				else
 				{
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_RESERVE] = -(biomass_foliage_budburst - s->value[NPP]);
+					s->value[DEL_RESERVE] = -(biomass_foliage_budburst - s->value[NPP_tDM]);
 				}
 				s->value[DEL_ROOTS_FINE] = 0.0;
 				s->value[DEL_STEMS] = 0.0;
@@ -262,28 +262,28 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 			Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 
 			/*partitioning*/
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//fixme do it also for 0.1
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					s->value[BIOMASS_FRUIT] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
+					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT];
 					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
 					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
-				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
-				s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
+				s->value[DEL_RESERVE] = s->value[NPP_tDM] * pF_CTEM;
+				s->value[DEL_ROOTS_TOT] = s->value[NPP_tDM] * pR_CTEM;
 				s->value[DEL_ROOTS_FINE] = s->value[DEL_ROOTS_TOT] * Perc_fine;
 				s->value[DEL_ROOTS_COARSE] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE];
-				s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
-				s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-				s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];
+				s->value[DEL_TOT_STEM] = s->value[NPP_tDM] * pS_CTEM;
+				s->value[DEL_STEMS] = (s->value[NPP_tDM] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+				s->value[DEL_BB] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
 				s->value[DEL_FOLIAGE] = 0;
 			}
 			else
@@ -341,14 +341,14 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 
 			}
 
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					s->value[BIOMASS_FRUIT] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
+					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT];
 					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
@@ -356,7 +356,7 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 				}
 				s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
 				//fixme do it with the total amount of foliage biomass
-				s->value[DEL_RESERVE] = s->value[NPP] + s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL];
+				s->value[DEL_RESERVE] = s->value[NPP_tDM] + s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL];
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE] = 0.0;
@@ -719,16 +719,16 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-			if (s->value[MAX_BIOMASS_BUDBURST] > s->value[RESERVE])
+			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE])
 			{
-				s->value[MAX_BIOMASS_BUDBURST] = s->value[RESERVE];
+				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE];
 				s->value[RESERVE] = 0.0;
 			}
 			else
 			{
 //				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST] / s->value[BUD_BURST];
 //				Log("daily amount of biomass for total budburst %f\n", biomass_tot_budburst);
-				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / s->value[BUD_BURST];
+				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / s->value[BUD_BURST];
 				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
 //				biomass_fine_root_budburst = s->value[MAX_BIOMASS_FINE_ROOTS] / s->value[BUD_BURST];
 //				Log("daily amount of biomass for fine root budburst %f\n", biomass_fine_root_budburst);
@@ -737,20 +737,20 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 			//test this part have to be the new one
 
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//if(s->value[NPP] > biomass_tot_budburst)
-				if(s->value[NPP] > biomass_foliage_budburst)
+				if(s->value[NPP_tDM] > biomass_foliage_budburst)
 				{
 					//fixme where the exceeding NPP goes?
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_RESERVE] = -(s->value[NPP] - biomass_foliage_budburst);
+					s->value[DEL_RESERVE] = -(s->value[NPP_tDM] - biomass_foliage_budburst);
 					//s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
 				}
 				else
 				{
 					s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
-					s->value[DEL_RESERVE] = -(biomass_foliage_budburst - s->value[NPP]);
+					s->value[DEL_RESERVE] = -(biomass_foliage_budburst - s->value[NPP_tDM]);
 					//s->value[DEL_ROOTS_FINE_CTEM] = biomass_fine_root_budburst;
 				}
 				s->value[DEL_ROOTS_FINE] = 0.0;
@@ -1147,28 +1147,28 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 
 			/*partitioning*/
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//fixme do it also for 0.1
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					s->value[BIOMASS_FRUIT] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
+					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT];
 					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
 					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 				}
 
-				s->value[DEL_RESERVE] = s->value[NPP] * pF_CTEM;
-				s->value[DEL_ROOTS_TOT] = s->value[NPP] * pR_CTEM;
+				s->value[DEL_RESERVE] = s->value[NPP_tDM] * pF_CTEM;
+				s->value[DEL_ROOTS_TOT] = s->value[NPP_tDM] * pR_CTEM;
 				s->value[DEL_ROOTS_FINE] = s->value[DEL_ROOTS_TOT] * Perc_fine;
 				s->value[DEL_ROOTS_COARSE] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE];
-				s->value[DEL_TOT_STEM] = s->value[NPP] * pS_CTEM;
-				s->value[DEL_STEMS] = (s->value[NPP] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-				s->value[DEL_BB] = (s->value[NPP] * pS_CTEM) * s->value[FRACBB];
+				s->value[DEL_TOT_STEM] = s->value[NPP_tDM] * pS_CTEM;
+				s->value[DEL_STEMS] = (s->value[NPP_tDM] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+				s->value[DEL_BB] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
 				s->value[DEL_FOLIAGE] = 0;
 			}
 			else
@@ -1232,14 +1232,14 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 //			Daily_lai (&c->heights[height].ages[age].species[species]);
 
-			if (s->value[NPP] > 0.0)
+			if (s->value[NPP_tDM] > 0.0)
 			{
 				//REPRODUCTION ONLY FOR NEEDLE LEAF
 				if (s->value[PHENOLOGY] == 0.2)
 				{
 					//NPP for reproduction
-					s->value[BIOMASS_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
-					s->value[NPP] -= s->value[BIOMASS_FRUIT];
+					s->value[BIOMASS_FRUIT] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
+					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT];
 					Log("Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT]);
 
 					//reproductive life span
@@ -1247,7 +1247,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				}
 				s->value[DAILY_DEL_LITTER] = - s->value[DEL_FOLIAGE];
 				//fixme do it with the total amount of foliage biomass
-				s->value[DEL_RESERVE] = s->value[NPP] + s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL];
+				s->value[DEL_RESERVE] = s->value[NPP_tDM] + s->value[RESERVE_FOLIAGE_TO_RETRANSL] + s->value[RESERVE_FINEROOT_TO_RETRANSL];
 				s->value[DEL_TOT_STEM] = 0;
 				s->value[DEL_STEMS] = 0;
 				s->value[DEL_ROOTS_COARSE] = 0.0;

@@ -24,13 +24,13 @@ extern void Pool_fraction (SPECIES * s)
 {
 	/*using biome parameter for allocation recomputed values to have fraction*/
 	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
-	Log("biome fine root leaf frac (fraction to fine root = %f; fraction to leaf = %f)\n", s->value[FINE_ROOT_LEAF_FRAC], 1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+	//Log("biome fine root leaf frac (fraction to fine root = %f; fraction to leaf = %f)\n", s->value[FINE_ROOT_LEAF_FRAC], 1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 	s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
-	Log("biome stem leaf frac (fraction to stem = %f; fraction to leaf = %f\n", s->value[STEM_LEAF_FRAC], 1.0 - s->value[STEM_LEAF_FRAC]);
+	//Log("biome stem leaf frac (fraction to stem = %f; fraction to leaf = %f\n", s->value[STEM_LEAF_FRAC], 1.0 - s->value[STEM_LEAF_FRAC]);
 	s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
-	Log("biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
+	//Log("biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
 	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
-	Log("biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
+	//Log("biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
 
 
 }

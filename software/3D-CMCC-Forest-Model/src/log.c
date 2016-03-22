@@ -175,9 +175,9 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
 	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
-	Log("END of Year Yearly Cumulated GPP for layer %d  = %f gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_G_C]);
-	Log("END of Year Yearly Cumulated NPP for layer %d  = %f tDM/area year\n", h->z, s->value[YEARLY_NPP]);
-	Log("END of Year Yearly Cumulated NPP/ha_area_covered for layer %d  = %f tDM/ha_area_covered year\n", h->z, (s->value[YEARLY_NPP]/settings->sizeCell) * (10000 * s->value[CANOPY_COVER_DBHDC]));
+	Log("END of Year Yearly Cumulated GPP for layer %d  = %f gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_gC]);
+	Log("END of Year Yearly Cumulated NPP for layer %d  = %f tDM/area year\n", h->z, s->value[YEARLY_NPP_tDM]);
+	Log("END of Year Yearly Cumulated NPP/ha_area_covered for layer %d  = %f tDM/ha_area_covered year\n", h->z, (s->value[YEARLY_NPP_tDM]/settings->sizeCell) * (10000 * s->value[CANOPY_COVER_DBHDC]));
 	Log("END of Year Yearly Cumulated DEL STEM layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WS]);
 	Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WF]);
 	Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WFR]);
@@ -187,7 +187,7 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 	Log("END of Year Yearly Cumulated DEL BB layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_BB]);
 	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WR]);
 
-	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP])
+	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP_tDM])
 	{
 		Log("ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
 		Log("DEL SUM = %f \n", s->value[DEL_Y_WS] + s->value[DEL_Y_WCR] + s->value[DEL_Y_WFR] + s->value[DEL_Y_BB] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES]);
