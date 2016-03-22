@@ -54,7 +54,8 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	{
 		//TEST TO REMOVE ANY REFILL OF WATER SOIL
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		CHECK_CONDITION(c->asw, < 0.0)
+		exit(1);
+		//CHECK_CONDITION(c->asw, < 0.0)
 		c->asw = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %f\n", c->asw);
 	}

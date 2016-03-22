@@ -309,9 +309,10 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 //    s->value[DAILY_TRANSP] = evap;
 //    Log("Daily Canopy Transpiration (one lai)= %f\n", s->value[DAILY_TRANSP]);
+    //FIXME ALSO FOR LATENT HEAT USE CANOPY_COVER_DBHDC??
     s->value[DAILY_TRANSP_W] = evap_sun_watt + evap_shade_watt;
     Log("Daily latent canopy heat (sun + shade)= %f W/m^2\n", s->value[DAILY_TRANSP_W]);
-    s->value[DAILY_TRANSP] = evap_sun + evap_shade;
+    s->value[DAILY_TRANSP] = (evap_sun + evap_shade) * s->value[CANOPY_COVER_DBHDC];
     Log("Daily Canopy Transpiration (sun + shade)= %f mm/m^2/day\n", s->value[DAILY_TRANSP]);
 
 	/* compute energy balance transpiration from canopy */
