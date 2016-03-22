@@ -173,7 +173,7 @@ void Check_water_balance (CELL *c)
 
 	/*sum of sinks*/
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
-	water_out = c->daily_c_transp + c->daily_c_evapo + c->daily_c_int + c->soil_evaporation /*+ c->snow_subl*/ + c->out_flow;
+	water_out = c->daily_c_transp + c->daily_c_evapo + c->daily_c_int + c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage */
 	water_stored = (c->asw - c->old_asw) /* + c->daily_c_water_stored */ + c->prcp_snow;

@@ -76,11 +76,8 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 		//Daily layer GPP in grams of C/m^2
 		//Convert molC into grams
-		//reset at the beginning of each month
-		if (day == 0)
-		{
-			s->value[MONTHLY_GPP_g_C] = 0.0;
-		}
+
+
 
 		s->value[MONTHLY_GPP_g_C] += s->value[POINT_GPP_g_C];
 

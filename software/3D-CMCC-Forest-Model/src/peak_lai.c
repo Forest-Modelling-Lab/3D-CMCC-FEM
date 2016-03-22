@@ -35,7 +35,6 @@ void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int m
 	/*check compatibility of LAI and Biomass with init data for evergreen*/
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
 	{
-		Log("azz\n");
 		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[BIOMASS_FOLIAGE] > s->value[MAX_BIOMASS_FOLIAGE]))
 		{
 			s->value[LAI] = s->value[PEAK_LAI];
@@ -56,6 +55,7 @@ void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int m
 	Log("MAX_BIOMASS_BUDBURST = %f tDM/area\n", s->value[MAX_BIOMASS_BUDBURST]);
 
 	/*check for reserve need for budburst*/
+	/*
 	if(s->value[RESERVE] >= (s->value[MAX_BIOMASS_BUDBURST]/2.0))
 	{
 		Log("There are enough reserve to reach 0.5 Peak Lai\n");
@@ -64,6 +64,7 @@ void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int m
 	{
 		Log("There areNT enough reserve to reach 0.5 Peak Lai\n");
 	}
+	*/
 
 	//fixme useful only for one class per layer
 

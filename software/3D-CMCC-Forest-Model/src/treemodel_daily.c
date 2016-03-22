@@ -75,8 +75,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, month, day);
-		/* reset daily variables at cell level */
-		Reset_daily_variables(&m->cells[cell]);
 		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
 		/* check and compute for snow */
@@ -102,22 +100,25 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 				{
 					if(m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE] > 0)
 					{
+						/* beginning of simulation */
 						if(day == 0 && month == JANUARY && years == 0)
 						{
-							m->cells[cell].heights[height].ages[age].species[species].turnover->FINERTOVER = 365 /
-									m->cells[cell].heights[height].ages[age].species[species].value[LEAVES_FINERTTOVER];
-							m->cells[cell].heights[height].ages[age].species[species].turnover->COARSERTOVER = 365 /
-									m->cells[cell].heights[height].ages[age].species[species].value[COARSERTTOVER];
-							m->cells[cell].heights[height].ages[age].species[species].turnover->STEMTOVER = 365 /
-									m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_TURNOVER];
-							m->cells[cell].heights[height].ages[age].species[species].turnover->BRANCHTOVER = 365 /
-									m->cells[cell].heights[height].ages[age].species[species].value[BRANCHTTOVER];
+							First_day (&m->cells[cell], m->cells[cell].heights_count);
 						}
+						/* reset annual variables */
 						if (day == 0 && month == JANUARY)
 						{
 							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
-							Reset_annual_cumulative_variables (&m->cells[cell], m->cells[cell].heights_count);
+							Reset_annual_variables (&m->cells[cell], m->cells[cell].heights_count);
 						}
+						/* reset monthly variables */
+						if (day == 0)
+						{
+							Reset_monthly_variables (&m->cells[cell], m->cells[cell].heights_count);
+						}
+						/* reset daily variables */
+						Reset_daily_variables(&m->cells[cell], m->cells[cell].heights_count);
+
 						//test new function
 						simple_phenology_phase (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, day);
 						/* compute species-specific phenological phase */

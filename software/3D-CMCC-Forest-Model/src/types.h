@@ -419,6 +419,8 @@ enum {
 	SLA_SUN,
 	SLA_SHADE,
 
+	DAILY_DEL_LITTER,
+
 	/*carbon variables*/
 	GPP_mol_C,                      //Gross Primary Production  molC/m^2 month
 	DAILY_GPP_mol_C,                //Daily GPP on molC/m^2 day
@@ -435,12 +437,8 @@ enum {
 	C_FLUX,
 	//MONTHLY CUMULATIVE VARIABLES
 	MONTHLY_NPP,                     //Yearly NPP
-	MONTHLY_NPP_UDC,
-	MONTHLY_NPP_FL,
 	IND_MONTHLY_NPP,                 //Individual NPP
-	CUM_MONTHLY_NPP,                 //Sum of all years NPP (included simulation years)
 	MONTHLY_GPP_G_C,                 //Yearly GPP
-	MONTHLY_POINT_GPP_G_C,
 	//YEARLY CUMULATIVE VARIABLES
 	YEARLY_NPP,                     //Yearly NPP
 	YEARLY_NPP_UDC,
@@ -517,8 +515,6 @@ enum {
 	FR_CR,                       //FINE-COARSE ROOT RATIO
 	DEL_ROOTS_FINE,
 	DEL_ROOTS_COARSE,
-	DAILY_DEL_LITTER,                     //perdita di foglie che vanno nella lettiera
-	MONTHLY_DEL_LITTER,
 	LITTERFALL_RATE,				//daily/monthly litterfall rate from CTEM
 	FRACBB,
 
@@ -927,11 +923,9 @@ typedef struct {
 	double asw;
 	double old_asw;
 	double max_asw;
-	double soil_evaporation;
+
 	double previous_available_soil_water;
 	double water_balance, old_water_balance;
-	double total_yearly_evapotransipration;
-	double total_yearly_soil_evaporation;
 	double soil_moist_ratio;
 	double av_soil_moist_ratio;
 	double swc;//volumetric soil water content (%vol)
@@ -958,7 +952,9 @@ typedef struct {
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;
 	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored; //not used
 	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
+	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
 	double daily_et, monthly_et, annual_et;
+
 
 	/*energy balance*/
 	double daily_c_int_watt;
@@ -1221,8 +1217,10 @@ void Renovation (CELL *, HEIGHT *, SPECIES *);
 void Water_Use_Efficiency (SPECIES *);
 void Tree_period (SPECIES *, AGE *a, CELL *);
 void Daily_veg_counter (CELL *, SPECIES * , int);
-void Reset_daily_variables (CELL *const);
-void Reset_annual_cumulative_variables (CELL *const, const int);
+void First_day (CELL *const, const int);
+void Reset_daily_variables (CELL *const, const int);
+void Reset_monthly_variables (CELL *const, const int);
+void Reset_annual_variables (CELL *const, const int);
 void Initialization_biomass_data (SPECIES *, HEIGHT *);
 void Initialization_site_data (CELL *);
 void Choose_management (CELL *, SPECIES *, int , int );

@@ -7,8 +7,14 @@
 #include "types.h"
 #include "constants.h"
 
-void Reset_daily_variables (CELL *const c)
+void Reset_daily_variables (CELL *const c, const int count)
 {
+	int height;
+	int age;
+	int species;
+
+	Log("...resetting daily variables...\n");
+
 	/*reset daily carbon variables*/
 	c->daily_gpp = 0.0;
 	c->daily_npp_tDM = 0.0;
@@ -41,7 +47,7 @@ void Reset_daily_variables (CELL *const c)
 	c->daily_c_transp = 0.0;
 	c->daily_c_int = 0.0;
 	c->daily_c_evapo = 0.0;
-	c->soil_evaporation = 0.0;
+	c->daily_soil_evapo = 0.0;
 
 	c->daily_litterfall = 0.0;
 	c->dominant_veg_counter = 0.0;
@@ -53,26 +59,111 @@ void Reset_daily_variables (CELL *const c)
 	c->layer_daily_dead_tree[2] = 0.0;
 	c->daily_dead_tree = 0.0;
 
+	for ( height = count - 1; height >= 0; height-- )
+	{
+		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+		{
+			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+			{
+				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C] = 0.0;
+				c->heights[height].ages[age].species[species].value[NPP] = 0.0;
+				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0.0;
+				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0.0;
+			}
+		}
+	}
+
 
 }
 
-
-void Reset_annual_cumulative_variables (CELL *const c, const int count)
+void Reset_monthly_variables (CELL *const c, const int count)
 {
 	int height;
 	int age;
 	int species;
 
+	Log("...resetting monthly variables...\n");
+
+	c->monthly_gpp = 0.0;
+	c->monthly_npp_gC = 0.0;
+	c->monthly_npp_tDM = 0.0;
+	c->monthly_aut_resp = 0.0;
+	c->monthly_aut_resp_tDM = 0.0;
+	c->monthly_maint_resp = 0.0;
+	c->monthly_growth_resp = 0.0;
+	c->monthly_r_eco = 0.0;
+	c->monthly_het_resp = 0.0;
+	c->monthly_gpp = 0.0;
+	c->monthly_C_flux = 0.0;
+	c->monthly_nee = 0.0;
+	c->monthly_litterfall = 0.0;
+	c->monthly_tot_w_flux = 0.0;
+	c->monthly_c_int = 0.0;
+	c->monthly_c_transp = 0.0;
+	c->monthly_c_evapo = 0.0;
+	c->monthly_c_water_stored = 0.0;
+	c->monthly_c_evapotransp = 0.0;
+	c->monthly_soil_evapo = 0.0;
+	c->monthly_et = 0.0;
+
+	c->layer_monthly_gpp[3] = 0.0;
+	//tocontinue...
+
+	for ( height = count - 1; height >= 0; height-- )
+	{
+		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+		{
+			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+			{
+				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
+				c->heights[height].ages[age].species[species].value[MONTHLY_NPP] = 0.0;
+				c->heights[height].ages[age].species[species].value[MONTHLY_GPP_G_C] = 0.0;
+				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
+				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION] = 0.0;
+
+			}
+		}
+	}
+
+
+
+}
+
+
+void Reset_annual_variables (CELL *const c, const int count)
+{
+	int height;
+	int age;
+	int species;
+	Log("...resetting annual variables...\n");
+
 	/*reset cell related variables*/
 	c->canopy_cover_dominant = 0.0;
 	c->canopy_cover_dominated = 0.0;
 	c->canopy_cover_subdominated = 0.0;
-	c->annual_litterfall = 0.0;
+
+	c->annual_gpp = 0.0;
+	c->annual_npp_gC = 0.0;
+	c->annual_npp_tDM = 0.0;
+	c->annual_aut_resp = 0.0;
+	c->annual_aut_resp_tDM = 0.0;
+	c->annual_maint_resp = 0.0;
+	c->annual_growth_resp = 0.0;
+	c->annual_r_eco = 0.0;
+	c->annual_het_resp = 0.0;
+	c->annual_c_int = 0.0;
+	c->annual_c_transp = 0.0;
+	c->annual_c_evapo = 0.0;
+	c->annual_c_water_stored = 0.0;
+	c->annual_c_evapotransp = 0.0;
+	c->annual_soil_evapo = 0.0;
+	c->annual_et = 0.0;
+
 
 	c->stand_agb = 0.0;
 	c->stand_bgb = 0.0;
 	//c->dead_tree = 0;
-	c->total_yearly_soil_evaporation = 0.0;
+	c->annual_soil_evapo = 0.0;
 
 	for ( height = count - 1; height >= 0; height-- )
 	{
@@ -81,17 +172,14 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
 				/*reset cumulative values*/
-				c->heights[height].ages[age].species[species].counter[VEG_MONTHS] = 0;
+
 				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
-				c->heights[height].ages[age].species[species].value[POINT_GPP_g_C] = 0;
-				c->heights[height].ages[age].species[species].value[NPP] = 0;
-				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0;
-				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0;
+
 				c->heights[height].ages[age].species[species].value[YEARLY_GPP_G_C]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_G_C]  = 0;
 				c->heights[height].ages[age].species[species].value[YEARLY_NPP]  = 0;
-				c->heights[height].ages[age].species[species].value[MONTHLY_EVAPOTRANSPIRATION]  = 0;
+
 				// ALESSIOR DEL_STEMS used instead of DEAD_STEMS
 				c->heights[height].ages[age].species[species].counter[DEAD_STEMS] = 0;
 				c->heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
@@ -110,6 +198,34 @@ void Reset_annual_cumulative_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[DEL_Y_WRES] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WR] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_BB] = 0;
+			}
+		}
+	}
+}
+
+void First_day (CELL *const c, const int count)
+{
+	int height;
+	int age;
+	int species;
+
+	Log("..first day..\n");
+
+
+	for ( height = count - 1; height >= 0; height-- )
+	{
+		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+		{
+			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+			{
+				c->heights[height].ages[age].species[species].turnover->FINERTOVER = 365 /
+						c->heights[height].ages[age].species[species].value[LEAVES_FINERTTOVER];
+				c->heights[height].ages[age].species[species].turnover->COARSERTOVER = 365 /
+						c->heights[height].ages[age].species[species].value[COARSERTTOVER];
+				c->heights[height].ages[age].species[species].turnover->STEMTOVER = 365 /
+						c->heights[height].ages[age].species[species].value[LIVE_WOOD_TURNOVER];
+				c->heights[height].ages[age].species[species].turnover->BRANCHTOVER = 365 /
+						c->heights[height].ages[age].species[species].value[BRANCHTTOVER];
 			}
 		}
 	}

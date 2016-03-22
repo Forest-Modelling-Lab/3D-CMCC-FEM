@@ -330,7 +330,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 			Annual_Log ("\t%6s \t%s \t%10s \t%10s \t%8s \t%8s \t%10s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
 					"Cf(gC/m2y)",
-					"Y(%)", "NPP(tDM/hay)", "NPP(gC/m2y)", "CE(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
+					"Y(%)", "NPP(tDM/hay)", "NPP(gC/m2y)", "ET(tot)", "ASW", "Wf(tot)", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
 
 		}
@@ -357,7 +357,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_tDM,
 				c->annual_npp_gC,
-				c->annual_c_evapotransp ,
+				c->annual_et ,
 				c->asw,
 				c->annual_tot_w_flux,
 				c->annual_peak_lai[0],
@@ -650,7 +650,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	}
 	//aaa
 	//compute average values
-	if (years == years_of_simulation -1 && years_of_simulation > 1)
+	/*if (years == years_of_simulation -1 && years_of_simulation > 1)
 	{
 		if (c->annual_layer_number == 1)
 		{
@@ -725,7 +725,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 					avg_npp[2], avg_npp[1], avg_npp[0], avg_npp_tot, avg_ce[2], avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);		//
 					//}
 		}
-	}
+	}*/
 }
 
 void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int month, const int cell_index)
@@ -1551,7 +1551,7 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 				c->monthly_litterfall,
 				c->monthly_et,
 				c->temperatureModifier,
-				c->soil_evaporation,
+				c->daily_soil_evapo,
 				c->soilCoverModifier,
 				c->moistureModifier,
 				c->soils[soil].soil_het_resp,

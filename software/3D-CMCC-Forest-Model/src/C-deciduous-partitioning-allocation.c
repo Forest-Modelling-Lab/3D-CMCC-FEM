@@ -180,10 +180,10 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 
 			//test check it it seem that doesn't work!!
 			//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
-			parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
-			frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
+			//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
+			//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
 			Log("Tot biomass reserve = %f\n", s->value[RESERVE]);
-			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
+			//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 			if (s->value[MAX_BIOMASS_BUDBURST] > s->value[RESERVE])
@@ -193,7 +193,8 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 			}
 			else
 			{
-				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / s->value[BUD_BURST];
+				/* +2 is to avoid excees in biomass for foliage */
+				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE] / (s->value[BUD_BURST]+2.0);
 				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
 			}
 

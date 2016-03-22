@@ -79,20 +79,22 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 		{
 			cc = 1;
 		}
-		c->soil_evaporation = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
-		Log("Daily Soil Evaporation = %fmm/day \n", c->soil_evaporation );
+		c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
+		Log("Daily Soil Evaporation = %fmm/day \n", c->daily_soil_evapo );
 	}
 	else
 	{
 		Log("\n");
-		c->soil_evaporation = 0;
+		c->daily_soil_evapo = 0;
 	}
 
-	c->total_yearly_soil_evaporation += c->soil_evaporation;
-	Log("Total Yearly Soil Evaporation = %f mm\n", c->total_yearly_soil_evaporation);
+	c->monthly_soil_evapo += c->daily_soil_evapo;
+	Log("Monthly Soil Evaporation = %f mm/month\n", c->monthly_soil_evapo);
+	c->annual_soil_evapo += c->daily_soil_evapo;
+	Log("Annual Soil Evaporation = %f mm/year\n", c->annual_soil_evapo);
 
 	/*compute a energy balance evaporation from soil*/
-	c->daily_soil_evaporation_watt = c->soil_evaporation * c->lh_vap_soil / 86400.0;
+	c->daily_soil_evaporation_watt = c->daily_soil_evapo * c->lh_vap_soil / 86400.0;
 	Log("Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 }

@@ -25,9 +25,6 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 
 	Log("\n**CANOPY_TRANSPIRATION_ROUTINE**\n");
 
-	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
-
 	/*upscale stomatal maximum stomatal conductance to maximum canopy conductance*/
 	Log("LAI %f\n", s->value[LAI]);
 	s->value[MAXCOND] = s->value[LAI] * g_corr;
@@ -45,7 +42,7 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	{
 		s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
 	}
-	Log("Potential Canopy Conductance = %f m^2/sec\n", s->value[CANOPY_CONDUCTANCE]);
+	//Log("Potential Canopy Conductance = %f m^2/sec\n", s->value[CANOPY_CONDUCTANCE]);
 	Log("Potential Canopy Conductance = %f m^2/day\n", s->value[CANOPY_CONDUCTANCE]*met[month].d[day].daylength * 3600.0);
 
 	/*Canopy Transpiration*/
@@ -54,8 +51,16 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	// Penman-Monteith equation for computing canopy transpiration
 	// in kg/m2/day, which is converted to mm/day.
 	// The following are constants in the PM formula (Landsberg & Gower, 1997)
+	Log("rhoair =%f\n", met[month].d[day].rho_air);
+	Log("lh_vap =%f\n", c->lh_vap);
+	Log("vpd =%f\n", met[month].d[day].vpd);
+	Log("BLCOND =%f\n", s->value[BLCOND]);
 
-	s->value[BLCOND] *= g_corr;
+	/* temperature and pressure correction factor for conductances */
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	//unexpectd high values in same cases
+	//s->value[BLCOND] *= g_corr;
+
 
 	defTerm = met[month].d[day].rho_air * c->lh_vap * (met[month].d[day].vpd * VPDCONV) * s->value[BLCOND];
 	Log("defTerm = %f\n", defTerm);

@@ -113,7 +113,7 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 			//soil_Log("\n\n prova resto: %d\n", dayOfTurnover);
 
 		}
-		else /* deciduos */
+		else /* deciduous */
 		{
 
 		}
