@@ -4,12 +4,11 @@ LIGHT_TOL   3       //4 = very shade intolerant
                 //2 = shade tolerant
             //1 = very shade tolerant
 PHENOLOGY   0.2 //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.065       //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies Seidl et al., 2005, 
-EPSILONgCMJ 1.05 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  
-K   0.51        //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
-ALBEDO  0.095 //averaged for P. sylvestris from Breuer et al., 2003
-GAMMA_LIGHT -9999   //Light parameter for light modifier
+ALPHA   0.01       //Canopy quantum efficiency (molC/molPAR) 0.01 for Larix gmelinii from Still et al., 2004
+EPSILONgCMJ -9999 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available)  
+K   0.51        //Extinction coefficient for absorption of PAR by canopy for Larix d. see Piestch etal 2005
 
+ALBEDO  0.095 //averaged for P. sylvestris from Breuer et al., 2003
 
 //LEAF AREA INDEX
 LAIGCX  3.33               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
@@ -17,35 +16,36 @@ LAIMAXINTCPTN   5       //LAI for maximum rainfall interception for P. sylvestri
 MAXINTCPTN  0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
-SLA_AVG 22                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
-SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA  for Picea abies from Mollicone et al., 2002, 1.8  from Pietsch et al., 2005  
-LAI_RATIO   2.6     //(DIM) (DIM) all-sided to projected leaf area ratio
+SLA_AVG 22.0                 //Average Specific Leaf Area m^2/KgC sunlit leaves from Mollicone  
+SLA_RATIO   2    //(DIM) ratio of shaded to sunlit projected SLA for Larix d. see Piestch etal 2005
+LAI_RATIO   2.6     //(DIM) all-sided to projected leaf area ratio from Mollicone et al., 2002 
 
 //FRACTION BRANCH-BARK
-FRACBB0 0.30            //Branch and Bark fraction at age 0 for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.71 from xiao and Ceulemans
-FRACBB1 0.1            //Branch and Bark fraction for mature stands for P. sylvestris, from Xenakis et al., 2008, 0.29 deducted for P. sylvestris from Yuste et al., 2005, 0.29 from Lehtonen et al., 2004 For Eco Manag, 0.18 from Jenssen et al 1999, 0.77 from xiao and Ceulemans
+FRACBB0 0.18            //Branch and Bark fraction at age 0 for Larix decidua deducted from Gower et al., 1993
+FRACBB1 0.38            //Branch and Bark fraction for mature stands for Larix decidua deducted from Gower et al., 1993
 TBB 10              //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2 for P. sylvestris, from Xenakis et al., 2008
 //MASS DENSITY
-RHOMIN  0.43             //Minimum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
-RHOMAX  0.43             //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
+RHOMIN  0.502             //Minimum Basic Density for young Trees t/m^3 for P. sylvestris from Janssen et al., 1999, 0.47 from Repala, 2006
+RHOMAX  0.502             //Maximum Basic Density for young Trees  for P. sylvestris from Janssen et al., 1999 ,0.41 from Repala, 2006
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
-COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies Seidl et al., 2012
-BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
-MAXCOND 0.02            //Maximum Canopy Conductance in m/sec for ??? Seidl et al., 2012
+COEFFCOND   0.05    //Define stomatal responsee to VPD in mbar for P. sylvestris from Landsberg et al., 2005
+BLCOND  0.009            //Canopy Boundary Layer conductance 0.2 for P. sylvestris from Landsberg et al., 2005, 0.09 Mollicone et al.,
+MAXCOND 0.0022            //Maximum Stomatal Conductance in m/sec for Larix spec Breuer
+CUTCOND 0.000022
 //AGE for timber
-MAXAGE  200             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
-RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012
-NAGE    4               //Power of relative Age in function for Age for Picea abies Seidl et al., 2012
+MAXAGE  120             //Determines rate of "physiological decline" of forest 100 for P. sylvestris from Zahele et al., 120 for P. sylvestris, from Xenakis et al., 2008, 2005 ,500 from Landsberg et al., 2005, 80 from Kurten et al., 
+RAGE    0.75            //Relative Age to give fAGE = 0.5 0.95 for P. sylvestris from Landsberg et al., 2005 for P. sylvestris, 0.75 from Xenakis et al., 2008
+NAGE    4               //Power of relative Age in function for Age for P. sylvestris from Landsberg et al., 2005, 
 //Age for shoots
-MAXAGE_S    -9999     //Determines rate of "physiological decline" of forest 
+MAXAGE_S    250     //Determines rate of "physiological decline" of forest Okitsu et al., 1995
 RAGE_S  0.75            //Relative Age to give fAGE = 0.5
 NAGE_S  4               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN  0       //Minimum temperature for growth 0 for Picea abies from p.c. Seidl 
-GROWTHTMAX  30      //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
-GROWTHTOPT  15      //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
+GROWTHTMIN  -3       //Minimum temperature for growth  for Larix d. see Schaber & Badeck 2003, 0 for Larix cajanderi from Matsumoto et al., 
+GROWTHTMAX  33.7      //Maximum temperature for growth for Larix d. see Schaber & Badeck 2003, 40 for Larix cajanderi from Matsumoto et al., 
+GROWTHTOPT  18      //Optimum temperature for growth for Larix d. see Schaber & Badeck 2003, 20 for Larix cajanderi from Matsumoto et al., 
 GROWTHSTART 200       //average temperature for starting growth in °C 
 GROWTHEND   0       //average temperature for ending growth in °C 
 MINDAYLENGTH    0      //minimum day length for deciduous
@@ -73,36 +73,35 @@ MAX_S0CTEM  0.55    //MAXIMUM RATE TO STEM AT THE FIRST YEAR AFTER COPPICING
 YEARS_FOR_CONVERSION    30  //years from coppicing to consider tree as a timber
 
 FRUIT_PERC  0.20 //fraction of NPP allocated for reproduction (0 for broadleaf) for P. sylvestris 0.15 from Xiao et al., 2003, 0.2 from Yuste et al., 2005
-CONES_LIFE_SPAN 3 //Life span for cones (yrs)
+CONES_LIFE_SPAN 3 //Life span for cones (yr)
 
 //FINE/COARSE ROOT RATIO data get from BIOME_BGC
-FINE_ROOT_LEAF  1.4 //allocation new fine root C:new leaf (ratio) for Picea abies from Mollicone et al. 2002
-STEM_LEAF   2.2  //allocation new stem C:new leaf (ratio) for Picea abies from Mollicone et al. 2002, varying from 1.43 to 3.42 see White et al., 1999
-COARSE_ROOT_STEM    0.29    //allocation new coarse root C:new stem (ratio) for Picea abies from Mollicone et al. 2002, varying from 0.159 to 0.230 see White et al., 1999
-LIVE_TOTAL_WOOD 0.071    //new live C:new total wood (ratio) for Picea abies from Mollicone et al. 2002
+FINE_ROOT_LEAF  1 //allocation new fine root C:new leaf (ratio) for Larix d. see Piestch etal 2005
+STEM_LEAF   2.2  //allocation new stem C:new leaf (ratio) for Larix d. see Piestch etal 2005
+COARSE_ROOT_STEM    0.23    //allocation new coarse root C:new stem (ratio)for Larix d. see Piestch etal 2005
+LIVE_TOTAL_WOOD 0.05    //new live C:new total wood (ratio) for coniferous P. Thornton pers. comm.
 
 //BIOME C:N RATIOS
-CN_LEAVES   42.73  //CN of leaves (kgC/kgN) for Picea abies from Mollicone et al. 2002, 42 from Pietsch et al., 2005, varying from 28.1 to 58.8 see White et al., 1999
-CN_LITTER   58.2  //CN of leaf litter (kgC/kgN) for Picea abies from Mollicone et al. 2002, 87.7 from Pietsch et al., 2005, varying from 50.5 to 116 see White et al., 1999
-CN_FINE_ROOTS   36.44  // CN of fine roots (kgC/kgN) for Picea abies from Mollicone et al. 2002, 42.4 Pietsch et al., 2005, varying from 27.6 to 46.7 see White et al., 1999
-CN_LIVE_WOODS   36.44  //CN of live woods (kgC/kgN) for Picea abies from Mollicone et al. 2002, 50 from Pietsch et al., 2005
-CN_DEAD_WOODS   535  //CN of dead woods (kgC/kgN) for Picea abies from Pietsch et al., 2005
+CN_LEAVES   25.8  //CN of leaves (kgC/kgN) for Larix d. see Piestch etal 2005
+CN_LITTER   111.9  //CN of leaf litter (kgC/kgN) for Larix d. see Piestch etal 2005
+CN_FINE_ROOTS   42  // CN of fine roots (kgC/kgN) for Larix d. see Piestch etal 2005
+CN_LIVE_WOODS   42  //CN of live woods (kgC/kgN) for Larix d. see Piestch etal 2005
+CN_DEAD_WOODS   442  //CN of dead woods (kgC/kgN)  for Larix d. see Piestch etal 2005
 
 
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
-BUD_BURST   0                   //days of bud burst at the beginning of growing season (only for deciduous)
+BUD_BURST   15                   //days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC, CTEM
-LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
-LEAF_LIFE_SPAN  0.26     //Leaf life span  for Picea abies from Mollicone et al , 0.345 from White et al., 2000
+LEAF_FALL_FRAC_GROWING  0.2       //proportions of the growing season of leaf fall 
+LEAF_LIFE_SPAN  1     //Leaf life span 
 
 //TURNOVER
-LEAVES_FINERTTOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
-                            //varying from 0.182 to 0.400 yr-1 (for Picea abies see White et al., 1999)
-COARSERTTOVER   0.02    //deducted from Yuste et al., 2005
+LEAVES_FINERTTOVER  1       //Average YEARLY fine root turnover rate 
+COARSERTTOVER   0.02    //deducted from Yuste et al., 2005, 0.02 Kurz et al., 1996
 SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER    0.01    //Average yearly branch turnover rate
-LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
+LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate
 
 
 
@@ -113,16 +112,16 @@ MF  0.64               //Fraction mean single tree foliage biomass lost per dead
 MR  0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS  0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.18    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
-DBHDCMIN    0.16    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
+DBHDCMAX    0.24    //Low Density from P. sylvestris from Ameztegui et al., 2012 1  //CUURENTLY NOT USED
+DBHDCMIN    0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP
-SAP_A   3.119 //a value for Picea abies 0.0851 deducted from  p.c. Kostner and Clausnitzer et al., 2011 CHECK IT!!!!!!!!!
-SAP_B   1.4544 //b value for Picea abies 1.684 deducted from p.c. Kostner and Clausnitzer et al., 2011
-SAP_LEAF    2600          //sapwood_max leaf area ratio in pipe model  for Picea abies varying from 2600 to 4800 from Kostner et al., Tree Phys 2002 CHECK IT!!!!!!!!!
+SAP_A   2.5 //a value for Larix d. deducted from Kolcun dissertation
+SAP_B   0.4943 //b value for Larix d. deducted from Kolcun dissertation
+SAP_LEAF    1500          //sapwood_max leaf area ratio in pipe model for P. sylvestris from Hickler et al 2012 (1000 see also Law et al., 2001 for P. ponderosa)
 SAP_WRES    0.05           //Sapwood-Reserve biomass ratio used if no Wres data are available 
-                            //0.11 for deciduous 0.05 for evergreen see Schwalm and Ek, 2004 Ecological Modelling
-HMAX    56              //  //Max Height in m for Picea abies Seidl et al., 2012
+                            //0.11 for deciduous 0.05 for evergreen  see Schwalm and Ek, 2004 Ecological Modelling
+HMAX    45              //  //Max Height in m  
 DMAX    155              //Max Stem Diameter in cm for P. sylvestris from Lischke et al, user_guide 
 
 //not used just for comparison
@@ -133,17 +132,17 @@ CHPOWER 1.143           //Slope of Asymptotic Crown-Height from Sortie for P. sy
 b_CHPOWER 0.796             //for P. sylvestris from Ametzegui et al., 2012
 
 //POWER FUNCTION to compute individual stem mass from DBH
-STEMCONST_P 0.292    //0.06552  E. Cienciala et al., 2006 For P. sylvestrisM; from Yuste et al 2005 0.1227, 0.084 from xiao and Ceulemans
-STEMPOWER_P 2.0087    //2.50626 E. Cienciala et al., 2006 For P. sylvestris; from Yuste et al 2005 2.3272, 1.985 from xiao and Ceulemans
+STEMCONST_P 0.248313    //for Larix decidua from Gower et al 1993
+STEMPOWER_P 2.111     //for Larix decidua from Gower et al 1993
 
 //CHAPMAN-RICHARDS relationships to compute Height from DBH
-CRA 52    //for Picea abies Seidl et al., 2012
-CRB 0.0658  //for Picea abies from Pommerening et al., 2011 ????
-CRC 5.5289  //for Picea abies from Pommerening et al., 2011 ????
+CRA 32    //for P. sylvestris from Rupsys et al., 2010
+CRB 0.04  //for P. sylvestris from Rupsys et al., 2010
+CRC 0.99  //for P. sylvestris from Rupsys et al., 2010
 
 //CROWDING COMPETITION FUNCTION
-HDMAX   0.95             //Height to Base diameter ratio MAX  for Picea abies Seidl et al., 2012
-HDMIN   0.47             //Height to Base diameter ratio MIN  for Picea abies Seidl et al., 2012
+HDMAX   1.47             //Height to Base diameter ratio MAX  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 1.56 and 1.38 see also Tahvanainem and Forss, 2008 (2.03)
+HDMIN   0.47             //Height to Base diameter ratio MIN  for P. sylvestris Vorspernik et al 2010, For Ecol Manag average value between 0.4 and 0.543 see also Tahvanainem and Forss, 2008  (4.0)
 //DENSITY FUNCTION
 DENMAX  0.4             //Maximum density (trees/10000 m^2)
 DENMIN  0.01           //Minimum density (trees/10000 m^2) //CUURENTLY NOT USED

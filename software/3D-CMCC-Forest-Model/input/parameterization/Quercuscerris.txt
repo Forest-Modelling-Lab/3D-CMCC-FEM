@@ -34,8 +34,9 @@ TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
-BLCOND	0.01            //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)
-MAXCOND	0.02            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
+BLCOND	0.005            //Canopy Boundary Layer conductance (for Q. cerris Chiesi et al 2007)
+MAXCOND	0.0024            //Maximum Canopy Conductance in m/sec (Nolè-Ferrara for Oaks Forest)
+CUTCOND 0.00006
 //AGE for timber
 MAXAGE	120             //Determines rate of "physiological decline" of forest
 RAGE	0.75            //Relative Age to give fAGE = 0.5

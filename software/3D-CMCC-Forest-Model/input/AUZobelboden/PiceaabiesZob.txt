@@ -30,10 +30,11 @@ RHOMIN  0.43             //Minimum Basic Density for young Trees t/m^3 for Picea
 RHOMAX  0.43             //Maximum Basic Density for young Trees t/m^3 for Picea abies Seidl et al., 2012
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
-//VPD
 COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar for Picea abies Seidl et al., 2012
-BLCOND  0.2            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
+BLCOND  0.009            //Canopy Boundary Layer conductance  for Picea abies Seidl et al., 2012
 MAXCOND 0.0015            //Maximum Stomatal Conductance in m/sec for Breuer et al.,
+CUTCOND 0.00006         //Cuticul conductance in m/sec for Picea abies Pietsch et al., 2005
+
 //AGE for timber
 MAXAGE  150             //Determines rate of "physiological decline" of forest for Picea abies Seidl et al., 2012 (TO CHECK !!!!!)
 RAGE    0.95            //Relative Age to give fAGE = 0.5 0.95 for Picea abies Seidl et al., 2012

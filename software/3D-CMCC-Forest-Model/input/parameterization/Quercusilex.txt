@@ -8,8 +8,8 @@ ALPHA   0.044       //  // Canopy quantum efficiency (molC/molPAR) (0.02, Penuel
 EPSILONgCMJ 0 // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available) 
 K   0.65        //Extinction coefficient for absorption of PAR by canopy  (Rambal et al., 1996, 0.72 Hoff et al., 2002), 0.69 for Q. ilex Vitale et al., 2012
             //0.65      //Extinction coefficient for absorption of PAR by canopy 
-ALBEDO  0.23    //0.12 (Hoff et al., 2002)
-GAMMA_LIGHT -9999   //Light parameter for light modifier
+ALBEDO  0.12    //0.12 (Hoff et al., 2002)
+GAMMA_LIGHT 0.039   //Light parameter for light modifier 0.039 see Bagnara et al., (0.0427 value Nolè PC)
 
 
 //LEAF AREA INDEX
@@ -19,8 +19,8 @@ MAXINTCPTN  0.25    //Maximum proportion of rainfall interception evaporated fro
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 10.47                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone
-SLA_RATIO   2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007  
-LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio              
+SLA_RATIO   2       //(DIM) ratio of shaded to sunlit projected SLA  for Q. ilex from Mollicone et al., 2002 Chiesi et al., 2007 
+LAI_RATIO   2     //(DIM) (DIM) all-sided to projected leaf area ratio               
 
 //FRACTION BRANCH-BARK
 FRACBB0 0.30            //Branch and Bark fraction at age 0
@@ -32,9 +32,11 @@ RHOMAX  0.72             //Maximum Basic Density for young Trees
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 //VPD
-COEFFCOND   0.07    //Define stomatal responsee to VPD in mbar 0.05 see Pietsch et al., 2005
-BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005
-MAXCOND 0.021            //Maximum Canopy Conductance in m/sec Korner et al., 1979, (0.0025 (Hoff et al., 2002))  Korner et al. 1979
+COEFFCOND   0.06    //0.05 castel Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
+BLCOND  0.01            //Canopy Boundary Layer conductance see Pietsch et al., 2005, Mollicone et al
+MAXCOND 0.0025            //0.021 Maximum Stomatal Conductance in m/sec (0.0025 (Hoff et al., 2002)) 0.021 Korner et al. 1979
+CUTCOND 0.00006
+
 //AGE for timber
 MAXAGE  120             //Determines rate of "physiological decline" of forest //modified
 RAGE    0.75            //Relative Age to give fAGE = 0.5
@@ -44,9 +46,9 @@ MAXAGE_S    0     //Determines rate of "physiological decline" of forest
 RAGE_S  0            //Relative Age to give fAGE = 0.5
 NAGE_S  0               //Power of relative Age in function for Age
 //TEMPERATURE
-GROWTHTMIN  0       //0 Minimum temperature for growth (Hoff et al., 2002), 1 Fares et al., 2013
-GROWTHTMAX  40      //40 Maximum temperature for growth (Hoff et al., 2002), 39 Fares et al., 2013
-GROWTHTOPT  22      //20 Optimum temperature for growth (Fernandex et al., 2008) 23 Fares et al., 2013
+GROWTHTMIN  0       //1 previous calibration Minimum temperature for growth (Hoff et al., 2002), 1 Fares et al., 2013
+GROWTHTMAX  40      //39 previous calibration Maximum temperature for growth (Hoff et al., 2002), 39 Fares et al., 2013
+GROWTHTOPT  20      //23 prevoius calibration Optimum temperature for growth (Fernandex et al., 2008) 23 Fares et al., 2013
 GROWTHSTART 0       //average temperature for starting growth in °C
 GROWTHEND   0       //average temperature for ending growth in °C
 MINDAYLENGTH  0      //minimum day length for decidu0us
@@ -56,7 +58,7 @@ MINDAYLENGTH  0      //minimum day length for decidu0us
 //define the soil water modifier response in function of needless of the species to the soil water content
 SWPOPEN -0.6 //For Q ilex Mollicone et al., 2002
 SWPCLOSE    -3.2 //For Q ilex Mollicone et al., 2002
-SWCONST 0.7           //Constant in Soil Water modifier vs Moist Ratio
+SWCONST 0.7           //1.2 Constant in Soil Water modifier vs Moist Ratio
 SWPOWER 9               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
@@ -111,7 +113,7 @@ MF  0               //Fraction mean single tree foliage biomass lost per dead tr
 MR  0.2             //Fraction mean single tree root biomass lost per dead tree
 MS  0.2             //Fraction mean single tree stem biomass lost per dead tree
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.20    //Low Density //CUURENTLY NOT USED
+DBHDCMAX    0.24    //.2  previous calibration   .24 Low Density //CUURENTLY NOT USED
 DBHDCMIN    0.18    //High Density
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP

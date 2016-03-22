@@ -55,6 +55,7 @@ static const char *species_values[] = {
 		"COEFFCOND",                  //Define stomatal responsee to VPD in m/sec
 		"BLCOND",                     //Canopy Boundary Layer conductance
 		"MAXCOND",                    //Maximum leaf Conductance in m/sec
+		"CUTCOND",                    //cuticular conductance in m/sec
 
 		//AGE for timber
 		"MAXAGE",

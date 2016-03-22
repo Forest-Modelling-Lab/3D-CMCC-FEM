@@ -218,9 +218,10 @@ enum {
 	RHOMIN,                     //Minimum Basic Density for young Trees
 	RHOMAX,                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 	TRHO,                       //Age at which rho = (RHOMIN + RHOMAX )/2
-	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec
+	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec TO REMOVE
 	BLCOND,                     //Canopy Boundary Layer conductance
 	MAXCOND,                    //Maximum leaf Conductance in m/sec
+	CUTCOND,                    //cuticular conductance in m/sec
 	MAXAGE,                         //Determines rate of "physiological decline" of forest
 	RAGE,                       //Relative Age to give fAGE = 0.5
 	NAGE,                       //Power of relative Age in function for Age

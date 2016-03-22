@@ -30,10 +30,11 @@ RHOMIN	0.49             //Minimum Basic Density for young Trees t/m^3
 RHOMAX	0.49             //Maximum Basic Density for young Trees 
 TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
-//VPD
 COEFFCOND	0.05    //Define stomatal responsee to VPD in mbar 
 BLCOND	0.01            //Canopy Boundary Layer conductance 
 MAXCOND	0.0024            //Maximum Stomatal Conductance in m/sec Breuer
+CUTCOND 0.00006
+
 //AGE for timber
 MAXAGE	60             //Determines rate of "physiological decline" of forest //modified
 RAGE	0.50            //Relative Age to give fAGE = 0.5

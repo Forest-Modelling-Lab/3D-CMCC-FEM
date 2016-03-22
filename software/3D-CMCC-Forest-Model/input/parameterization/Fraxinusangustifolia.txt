@@ -35,6 +35,7 @@ TRHO    ?               //Age at which rho = (RHOMIN + RHOMAX )/2
 COEFFCOND   ?    //Define stomatal responsee to VPD in mbar 
 BLCOND  ?            //Canopy Boundary Layer conductance
 MAXCOND 0.0025            //Maximum Stomatal Conductance in m/sec Breuer
+CUTCOND 0.00006
 //AGE for timber
 MAXAGE  ?             //Determines rate of "physiological decline" of forest //modified
 RAGE    ?            //Relative Age to give fAGE = 0.5

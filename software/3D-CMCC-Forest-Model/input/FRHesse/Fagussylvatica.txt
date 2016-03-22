@@ -33,8 +33,10 @@ RHOMAX  0.64             //Maximum Basic Density for young Trees  0.79 Bouriaud 
 TRHO    4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 COEFFCOND   0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
-BLCOND  0.01            //Canopy Boundary Layer conductance see 0.01 Pietsch et al., 2005
-MAXCOND 0.006            //Maximum leaf Conductance in m/sec Breuer et al, 2003, Kelliher et al., 1995
+BLCOND  0.01            //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
+MAXCOND 0.006            //Maximum Stomatal Conductance in m/sec 0.2 from ettore 0.02 Breuer et al, 2003, Kelliher et al., 1995
+CUTCOND 0.00006         //Cuticul conductance in m/sec for F sylvatica Pietsch et al., 2005
+
 //AGE for timber
 MAXAGE  150             //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE    0.75            //Relative Age to give fAGE = 0.5
