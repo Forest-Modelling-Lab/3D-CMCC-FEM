@@ -170,8 +170,10 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	double esse;
 	double t1, t2;
 	double pvs1, pvs2;
-	double evap;
-	double rr, rh, rhr, rv;
+	double evap, evap_sun, evap_shade;
+	double evap_watt, evap_sun_watt, evap_shade_watt;
+	double rr, rh, rhr;
+	double rv, rv_sun, rv_shade;
 	double dt = 0.2;
 
 	Log("\n**BIOME CANOPY_TRANSPIRATION_ROUTINE**\n");
@@ -237,9 +239,11 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv = gl_e_wv * s->value[LAI];
+
 	Log("Canopy conductance BIOME = %f\n", gc_e_wv);
 
-	/* Canopy conductane to sensible heat */
+	/* Canopy conductance to sensible heat */
+	/* not clear why not shared between sun and shaded */
 	gc_sh = gl_sh * s->value[LAI];
 
 	cwe = trans = 0.0;
@@ -259,6 +263,9 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 	/* resistance to latent heat transfer */
 	rv = 1.0/gl_t_wv;
+	rv_sun = 1.0/gl_t_wv_sun;
+	rv_shade = 1.0/gl_t_wv_shade;
+
 
     /* calculate combined resistance to convective and radiative heat transfer,
     parallel resistances : rhr = (rh * rr) / (rh + rr) */
@@ -275,23 +282,46 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
     /* calculate slope of pvs vs. T curve, at ta */
     esse = (pvs1-pvs2) / (t1-t2);
 
-    /* calculate evaporation, in W/m^2  */
-    evap = ( ( esse * s->value[NET_RAD_ABS]) + ( met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr ) ) /
-        	( ( (c->air_pressure * CP * rv ) / ( c->lh_vap * EPS * rhr ) ) + esse );
-    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap);
+    /* calculate evaporation, in W/m^2 */
+//    evap =_watt ((esse * s->value[NET_RAD_ABS]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+//        	(((c->air_pressure * CP * rv) / (c->lh_vap * EPS * rhr)) + esse);
+//    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap);
+//
+//    evap = (evap /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI];
+//    Log("transpiration from BIOME = %f\n", evap);
 
-    evap = (evap /c->lh_vap) * (met[month].d[day].daylength * 3600.0);
-    Log("transpiration from BIOME = %f\n", evap);
+    //TEST
+    /* for sunlit foliage */
+    evap_sun_watt = ((esse * s->value[NET_RAD_ABS_SUN]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+        	(((c->air_pressure * CP * rv_sun) / (c->lh_vap * EPS * rhr)) + esse);
+    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_sun_watt);
 
-    s->value[DAILY_TRANSP] = evap;
-    c->daily_c_transp = s->value[DAILY_TRANSP];
-	/*compute total daily transpiration*/
-	c->daily_c_transp += c->layer_daily_c_transp[c->heights[height].z];
+    evap_sun = (evap_sun_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SUN];
+    Log("transpiration for sunlit from BIOME = %f\n", evap_sun);
+
+    /* for shaded foliage */
+    evap_shade_watt = ((esse * s->value[NET_RAD_ABS_SHADE]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+        	(((c->air_pressure * CP * rv_shade) / (c->lh_vap * EPS * rhr)) + esse);
+    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_shade_watt);
+
+    evap_shade = (evap_shade_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
+    Log("transpiration for shaded from BIOME = %f\n", evap_shade);
+
+//    s->value[DAILY_TRANSP] = evap;
+//    Log("Daily Canopy Transpiration (one lai)= %f\n", s->value[DAILY_TRANSP]);
+    s->value[DAILY_TRANSP_W] = evap_sun_watt + evap_shade_watt;
+    Log("Daily Canopy Transpiration (sun + shade)= %fW/m^2\n", s->value[DAILY_TRANSP]);
+    s->value[DAILY_TRANSP] = evap_sun + evap_shade;
+    Log("Daily Canopy Transpiration (sun + shade)= %fmm/m^2/day\n", s->value[DAILY_TRANSP]);
+
+    c->daily_c_transp += s->value[DAILY_TRANSP];
 	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
-
-	/*compute energy balance transpiration from canopy*/
-	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+	/* compute energy balance transpiration from canopy */
+	c->daily_c_transp_watt = s->value[DAILY_TRANSP_W];
 	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
+
+//	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+//	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp * c->lh_vap / 86400.0);
 
 
 

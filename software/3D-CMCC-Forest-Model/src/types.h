@@ -402,6 +402,7 @@ enum {
 	CANOPY_CONDUCTANCE,
 	MONTH_TRANSP,
 	DAILY_TRANSP,
+	DAILY_TRANSP_W,
 	FRAC_RAIN_INTERC,				//FRACTION OF RAIN INTERCEPTED
 	FRAC_DAYTIME_EVAPO,             //fraction of daytime for evaporation
 	FRAC_DAYTIME_TRANSP,            //fraction of daytime for transpiration (and photosynthesis)
