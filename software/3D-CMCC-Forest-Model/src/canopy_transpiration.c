@@ -252,6 +252,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 
 	/* FROM HERE PENMON USED */
+	//fixme
 	//trying for only one layer canopy
 	/* assign ta (Celsius) and tk (Kelvins) */
 	tk = met[month].d[day].tday + 273.15;
