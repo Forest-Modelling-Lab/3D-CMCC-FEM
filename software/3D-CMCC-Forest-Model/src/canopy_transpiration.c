@@ -305,20 +305,22 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
     Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_shade_watt);
 
     evap_shade = (evap_shade_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
-    Log("transpiration for shaded from BIOME = %f\n", evap_shade);
+    Log("transpiration for shaded from BIOME = %f mm/m^2/day\n", evap_shade);
 
 //    s->value[DAILY_TRANSP] = evap;
 //    Log("Daily Canopy Transpiration (one lai)= %f\n", s->value[DAILY_TRANSP]);
     s->value[DAILY_TRANSP_W] = evap_sun_watt + evap_shade_watt;
-    Log("Daily Canopy Transpiration (sun + shade)= %fW/m^2\n", s->value[DAILY_TRANSP]);
+    Log("Daily latent canopy heat (sun + shade)= %f W/m^2\n", s->value[DAILY_TRANSP_W]);
     s->value[DAILY_TRANSP] = evap_sun + evap_shade;
-    Log("Daily Canopy Transpiration (sun + shade)= %fmm/m^2/day\n", s->value[DAILY_TRANSP]);
+    Log("Daily Canopy Transpiration (sun + shade)= %f mm/m^2/day\n", s->value[DAILY_TRANSP]);
 
-    c->daily_c_transp += s->value[DAILY_TRANSP];
-	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
 	/* compute energy balance transpiration from canopy */
 	c->daily_c_transp_watt = s->value[DAILY_TRANSP_W];
-	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
+	Log("Daily latent canopy heat = %f W/m^2\n", c->daily_c_transp_watt);
+
+    c->daily_c_transp += s->value[DAILY_TRANSP];
+	Log("Daily total canopy transpiration = %f mm/m^2/day\n", c->daily_c_transp);
+
 
 //	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
 //	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp * c->lh_vap / 86400.0);
