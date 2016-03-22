@@ -254,7 +254,7 @@ void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM]
 																	 + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE];
 	Log("Yearly Class AGB = %f tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
-	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT];
+	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM];
 	Log("Yearly Class BGB = %f tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
 
 
@@ -273,7 +273,7 @@ extern void Average_tree_biomass (SPECIES *s)
 {
 
 	s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM] * 	1000 / s->counter[N_TREE];
-	s->value[AV_ROOT_MASS] = s->value[BIOMASS_ROOTS_TOT] * 1000 / s->counter[N_TREE];
+	s->value[AV_ROOT_MASS] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000 / s->counter[N_TREE];
 
 	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS]);
 }

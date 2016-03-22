@@ -77,8 +77,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Print_met_data (met, month, day);
 		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
-		/* check and compute for snow */
-		Check_prcp (&m->cells[cell], met, month, day);
+
 
 		/* sort by heights */
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -119,6 +118,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						/* reset daily variables */
 						Reset_daily_variables(&m->cells[cell], m->cells[cell].heights_count);
 
+						/* check and compute for snow */
+						Check_prcp (&m->cells[cell], met, month, day);
+
 						//test new function
 						simple_phenology_phase (&m->cells[cell].heights[height].ages[age].species[species], met, years, month, day);
 						/* compute species-specific phenological phase */
@@ -134,7 +136,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								if (!years)
 								{
-									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
+									m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]								                                                                                                                                                          + m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
 								}
 								m->cells[cell].fineRootBiomass = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE];
 								if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2) m->cells[cell].fineRootBiomass = .0;
@@ -179,7 +181,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 									/* canopy water fluxes block */
 									Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+									//Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+									Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 									/* canopy carbon fluxes block */
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
@@ -239,7 +242,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								/* canopy water fluxes block */
 								Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+								//Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+								Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 								Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/* canopy carbon fluxes block */

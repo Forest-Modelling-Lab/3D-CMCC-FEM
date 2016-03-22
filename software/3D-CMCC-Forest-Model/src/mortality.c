@@ -321,7 +321,7 @@ void Age_Mortality (SPECIES *const s, AGE *const a)
 		Dead_trees = s->counter[N_TREE] * s->value[AGEMORT];
 		Log("DEAD TREES = %d\n", Dead_trees);
 		s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
-		s->value[BIOMASS_ROOTS_TOT] = s->value[BIOMASS_ROOTS_TOT] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT] / s->counter[N_TREE]);
+		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
 		s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
 		//Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
 		//Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
@@ -477,10 +477,10 @@ void Mortality (SPECIES *const s, int years)
 			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEAD_STEMS];
 			Log("Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
 			s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
-			s->value[BIOMASS_ROOTS_TOT] = s->value[BIOMASS_ROOTS_TOT] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT] / s->counter[N_TREE]);
+			s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
 			s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
 			Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
-			Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
+			Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 			Log("Ws after dead = %f tDM/ha\n", s->value[BIOMASS_STEM] );
 		}
 

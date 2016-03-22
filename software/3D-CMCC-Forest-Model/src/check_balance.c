@@ -154,19 +154,7 @@ void Check_water_balance (CELL *c)
 	//FIXME OVERALL FUNCTION DOESN'T WORK!!
 
 	/* DAILY CHECK ON WATER BALANCE */
-	/*	Log("c->prcp_rain = %f\n", c->prcp_rain);
-	Log("c->prcp_snow = %f\n", c->prcp_snow);
-	Log("c->daily_tot_c_transp = %f\n", c->daily_tot_c_transp);
-	Log("c->daily_tot_c_int = %f\n", c->daily_tot_c_int);
-	Log("c->daily_tot_c_evapo = %f\n", c->daily_tot_c_evapo);
-	Log("c->soil_evaporation = %f\n", c->soil_evaporation);
-	Log("c->snow_subl = %f\n", c->snow_subl);
-	Log("c->snow_melt = %f\n", c->snow_melt);
-	Log("c->out_flow = %f\n", c->out_flow);
-	Log("delta c->asw = %f\n", (c->asw - c->old_asw));
-	Log("c->snow_pack = %f\n", c->snow_pack);
-	Log("c->daily_tot_c_water_stored = %f\n", c->daily_tot_c_water_stored);
-	Log("c->asw = %f\n", c->asw);*/
+
 
 	/*sum of sources (rain + snow)*/
 	water_in = c->prcp_rain + c->prcp_snow + c->snow_melt;
@@ -176,7 +164,7 @@ void Check_water_balance (CELL *c)
 	water_out = c->daily_c_transp + c->daily_c_evapo + c->daily_c_int + c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage */
-	water_stored = (c->asw - c->old_asw) /* + c->daily_c_water_stored */ + c->prcp_snow;
+	water_stored = (c->asw - c->old_asw)  + c->daily_c_water_stored  + c->prcp_snow;
 
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
@@ -190,6 +178,23 @@ void Check_water_balance (CELL *c)
 	{
 		if (fabs(c->old_water_balance - c->water_balance) > 1e-4 )
 		{
+			Log("in\n");
+			Log("c->prcp_rain = %f\n", c->prcp_rain);
+			Log("c->prcp_snow = %f\n", c->prcp_snow);
+			Log("out\n");
+			Log("c->daily_tot_c_transp = %f\n", c->daily_c_transp);
+			Log("c->daily_tot_c_int = %f\n", c->daily_c_int);
+			Log("c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
+			Log("c->soil_evaporation = %f\n", c->daily_soil_evapo);
+			Log("c->snow_subl = %f\n", c->snow_subl);
+			Log("c->snow_melt = %f\n", c->snow_melt);
+			Log("c->out_flow = %f\n", c->out_flow);
+			Log("stored\n");
+			Log("delta c->asw = %f\n", (c->asw - c->old_asw));
+			Log("c->snow_pack = %f\n", c->snow_pack);
+			Log("c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
+			Log("c->asw = %f\n", c->asw);
+			Log("c->old_asw = %f\n", c->old_asw);
 			Log("water in = %f\n", water_in);
 			Log("water out = %f\n", water_out);
 			Log("water stored = %f\n", water_stored);
@@ -198,7 +203,7 @@ void Check_water_balance (CELL *c)
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("...FATAL ERROR IN water balance\n");
 			Log("DOY = %d\n", c->doy);
-			//exit(1);
+			exit(1);
 		}
 		else
 		{

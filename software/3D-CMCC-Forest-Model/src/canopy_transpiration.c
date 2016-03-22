@@ -22,13 +22,24 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	static double duv;                      // 'div' in 3pg
 	static double PotEvap;
 	double g_corr; //corrector factor from biome
+	double maximum_c_conductance;
+	double boundary_layer_conductance;
 
 	Log("\n**CANOPY_TRANSPIRATION_ROUTINE**\n");
 
-	/*upscale stomatal maximum stomatal conductance to maximum canopy conductance*/
+
+	/* temperature and pressure correction factor for conductances */
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+
+	/*upscale maximum stomatal conductance to maximum canopy conductance*/
 	Log("LAI %f\n", s->value[LAI]);
-	s->value[MAXCOND] = s->value[LAI] * g_corr;
-	Log("Maximum Canopy Conductance =%f m/sec\n", s->value[MAXCOND]);
+	Log("MAXCOND = %f m/sec\n", s->value[MAXCOND]);
+	maximum_c_conductance = s->value[MAXCOND] * s->value[LAI] * g_corr;
+	Log("maximum_c_conductance = %f m/sec\n", maximum_c_conductance);
+	//unexpectd high values in same cases
+	boundary_layer_conductance = s->value[BLCOND] * g_corr;
+	Log("BLCOND = %f m/sec\n", s->value[BLCOND]);
+	Log("boundary_layer_conductance = %f m/sec\n", boundary_layer_conductance);
 
 	/*Transpiration occurs only if the canopy is dry (see Lawrence et al., 2007)*/
 	//Veg period
@@ -36,14 +47,14 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	/*Canopy Conductance*/
 	if (settings->spatial == 's')
 	{
-		s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, met[month].d[day].ndvi_lai / s->value[LAIGCX]);
+		s->value[CANOPY_CONDUCTANCE] = maximum_c_conductance * s->value[PHYS_MOD] * Minimum(1.0, met[month].d[day].ndvi_lai / s->value[LAIGCX]);
 	}
 	else
 	{
-		s->value[CANOPY_CONDUCTANCE] = s->value[MAXCOND] * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
+		s->value[CANOPY_CONDUCTANCE] = maximum_c_conductance * s->value[PHYS_MOD] * Minimum(1.0, s->value[LAI] / s->value[LAIGCX]);
 	}
-	//Log("Potential Canopy Conductance = %f m^2/sec\n", s->value[CANOPY_CONDUCTANCE]);
-	Log("Potential Canopy Conductance = %f m^2/day\n", s->value[CANOPY_CONDUCTANCE]*met[month].d[day].daylength * 3600.0);
+	Log("Potential Canopy Conductance = %f m^2/sec\n", s->value[CANOPY_CONDUCTANCE]);
+	//Log("Potential Canopy Conductance = %f m^2/day\n", s->value[CANOPY_CONDUCTANCE]*met[month].d[day].daylength * 3600.0);
 
 	/*Canopy Transpiration*/
 	//todo change all functions with BIOME's or Gerten
@@ -51,20 +62,15 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 	// Penman-Monteith equation for computing canopy transpiration
 	// in kg/m2/day, which is converted to mm/day.
 	// The following are constants in the PM formula (Landsberg & Gower, 1997)
-	Log("rhoair =%f\n", met[month].d[day].rho_air);
-	Log("lh_vap =%f\n", c->lh_vap);
-	Log("vpd =%f\n", met[month].d[day].vpd);
-	Log("BLCOND =%f\n", s->value[BLCOND]);
-
-	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
-	//unexpectd high values in same cases
-	//s->value[BLCOND] *= g_corr;
-
+	Log("rhoair = %f\n", met[month].d[day].rho_air);
+	Log("lh_vap = %f\n", c->lh_vap);
+	Log("vpd = %f\n", met[month].d[day].vpd);
+	Log("BLCOND = %f\n", s->value[BLCOND]);
+	Log("air_pressure = %f\n", c->air_pressure);
 
 	defTerm = met[month].d[day].rho_air * c->lh_vap * (met[month].d[day].vpd * VPDCONV) * s->value[BLCOND];
 	Log("defTerm = %f\n", defTerm);
-	duv = (1.0 + E20 + s->value[BLCOND] / s->value[CANOPY_CONDUCTANCE]);
+	duv = (1.0 + E20 + boundary_layer_conductance / s->value[CANOPY_CONDUCTANCE]);
 	//Log("duv = %f\n", duv);
 	PotEvap = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv; // in J/m2/s
 	Log("PotEvap = %f\n", PotEvap);
@@ -143,6 +149,158 @@ extern void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DA
 
 }
 
+
+void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
+{
+	double g_corr;
+	double gl_bl;
+	double gl_s, gl_s_sun, gl_s_shade;
+	double gl_c;
+	double m_ppfd, m_ppfd_sun, m_ppfd_shade;
+	double m_final, m_final_sun, m_final_shade;
+	double gl_e_wv;
+	double gl_t_wv, gl_t_wv_sun, gl_t_wv_shade;
+	double gl_sh;
+	double gc_e_wv;
+	double gc_sh;
+	double cwe, trans;
+
+	//within penmon
+	double tk;
+	double esse;
+	double t1, t2;
+	double pvs1, pvs2;
+	double evap;
+	double rr, rh, rhr, rv;
+	double dt = 0.2;
+
+
+
+
+	//TO INCLUDE IN SPECIES.TXT
+	static double CUTICULAR_CONDUCTANCE = 0.00006; //m sec-1
+
+	Log("\n**BIOME CANOPY_TRANSPIRATION_ROUTINE**\n");
+
+	/* temperature and pressure correction factor for conductances */
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	Log("g_corr BIOME = %f\n", g_corr);
+
+	/* calculate leaf- and canopy-level conductances to water vapor and
+	sensible heat fluxes */
+
+	/* leaf boundary-layer conductance */
+	gl_bl = s->value[BLCOND] * g_corr;
+	Log("BLCOND BIOME = %f\n", gl_bl);
+
+	/* leaf cuticular conductance */
+	gl_c = CUTICULAR_CONDUCTANCE * g_corr;
+	Log("CUTCOND BIOME = %f\n", gl_c);
+
+	/* leaf stomatal conductance: first generate multipliers, then apply them
+	to maximum stomatal conductance */
+
+
+	/* photosynthetic photon flux density conductance control */
+	m_ppfd = (s->value[APAR] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR]* (met[month].d[day].daylength * 3600.0)));
+	Log("PPFD for biome = %f mol/sec\n", m_ppfd);
+	m_ppfd_sun = (s->value[APAR_SUN] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR_SUN]* (met[month].d[day].daylength * 3600.0)));
+	Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	m_ppfd_shade = (s->value[APAR_SHADE] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR_SHADE]* (met[month].d[day].daylength * 3600.0)));
+	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+
+
+	/* apply all multipliers to the maximum stomatal conductance */
+	m_final = m_ppfd * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	m_final_sun = m_ppfd_sun * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	m_final_shade = m_ppfd_shade * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+
+	if (m_final < .00000001) m_final_sun = 0.00000001;
+	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
+	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
+
+	gl_s = s->value[MAXCOND] * m_final * g_corr;
+	gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
+	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
+
+	/* calculate leaf-and canopy-level conductances to water vapor and
+	sensible heat fluxes, to be used in Penman-Monteith calculations of
+	canopy evaporation and canopy transpiration. */
+
+	/* Leaf conductance to evaporated water vapor, per unit projected LAI */
+	gl_e_wv = gl_bl;
+
+	/* Leaf conductance to transpired water vapor, per unit projected
+	LAI.  This formula is derived from stomatal and cuticular conductances
+	in parallel with each other, and both in series with leaf boundary
+	layer conductance. */
+	gl_t_wv = (gl_bl * (gl_s + gl_c)) / (gl_bl + gl_s + gl_c);
+	gl_t_wv_sun = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
+	gl_t_wv_shade = (gl_bl * (gl_s_shade + gl_c)) / (gl_bl + gl_s_shade + gl_c);
+
+	/* Leaf conductance to sensible heat, per unit all-sided LAI */
+	gl_sh = gl_bl;
+
+	/* Canopy conductance to evaporated water vapor */
+	gc_e_wv = gl_e_wv * s->value[LAI];
+	Log("Canopy conductance BIOME = %f\n", gc_e_wv);
+
+	/* Canopy conductane to sensible heat */
+	gc_sh = gl_sh * s->value[LAI];
+
+	cwe = trans = 0.0;
+
+
+	/* FROM HERE PENMON USED */
+	//trying for only one layer canopy
+	/* assign ta (Celsius) and tk (Kelvins) */
+	tk = met[month].d[day].tday + 273.15;
+
+	/* calculate resistance to radiative heat transfer through air, rr */
+	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (tk*tk*tk));
+
+	/* resistance to convective heat transfer */
+	rh = 1.0/gl_sh;
+
+	/* resistance to latent heat transfer */
+	rv = 1.0/gl_t_wv;
+
+    /* calculate combined resistance to convective and radiative heat transfer,
+    parallel resistances : rhr = (rh * rr) / (rh + rr) */
+    rhr = (rh * rr) / (rh + rr);
+
+    /* calculate temperature offsets for slope estimate */
+    t1 = met[month].d[day].tday+dt;
+    t2 = met[month].d[day].tday-dt;
+
+    /* calculate saturation vapor pressures at t1 and t2 */
+    pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+    pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+
+    /* calculate slope of pvs vs. T curve, at ta */
+    esse = (pvs1-pvs2) / (t1-t2);
+
+    /* calculate evaporation, in W/m^2  */
+    evap = ( ( esse * s->value[NET_RAD_ABS]) + ( met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr ) ) /
+        	( ( (c->air_pressure * CP * rv ) / ( c->lh_vap * EPS * rhr ) ) + esse );
+    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap);
+
+    evap = (evap /c->lh_vap) * (met[month].d[day].daylength * 3600.0);
+    Log("transpiration from BIOME = %f\n", evap);
+
+    s->value[DAILY_TRANSP] = evap;
+    c->daily_c_transp = s->value[DAILY_TRANSP];
+	/*compute total daily transpiration*/
+	c->daily_c_transp += c->layer_daily_c_transp[c->heights[height].z];
+	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
+
+	/*compute energy balance transpiration from canopy*/
+	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
+
+
+
+}
 
 
 

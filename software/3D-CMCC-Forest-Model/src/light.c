@@ -81,9 +81,11 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	    Log("**BIOME APPROACH for dominant**\n");
 	    /*compute APAR for sun and shaded leaves*/
 	    //amount of total par that is reflected but leaves*/
+	    //FIXME
 	    s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
 	    s->value[APAR] = s->value[PAR] * LightAbsorb;
-	    s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
+	    //TEST
+	    s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 	    s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
 	    Log("Par = %f molPAR/m^2 day/month\n", s->value[PAR]);
 	    Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
@@ -100,6 +102,16 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	    Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
 	    Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
 	    Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+
+	    /*compute PPFD for sun and shaded leaves*/
+	    //FIXME CHECK IF CORRECT
+	    s->value[PPFD] = s->value[APAR]/ (met[month].d[day].daylength * 3600.0);
+	    s->value[PPFD_SUN] = s->value[APAR_SUN]/ (met[month].d[day].daylength * 3600.0);
+	    s->value[PPFD_SHADE] = s->value[APAR_SHADE]/ (met[month].d[day].daylength * 3600.0);
+	    Log("Absorbed NetRad = %f molPAR/m^2 sec\n", s->value[PPFD]);
+	    Log("Absorbed NetRad sun = %f molPAR/m^2 sec\n", s->value[PPFD_SUN]);
+	    Log("Absorbed NetRad shade = %f molPAR/m^2 sec\n", s->value[PPFD_SHADE]);
+
 
 
 	    //only one height class in layer

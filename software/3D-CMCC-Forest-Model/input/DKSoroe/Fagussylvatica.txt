@@ -34,7 +34,7 @@ TRHO	4               //Age at which rho = (RHOMIN + RHOMAX )/2
 
 COEFFCOND	0.06    //Define stomatal responsee to VPD in mbar see Pietsch et al., 2005
 BLCOND	0.01            //Canopy Boundary Layer conductance see 0.01 Pietsch et al., 2005
-MAXCOND	0.02            //Maximum leaf Conductance in m/sec Breuer et al, 2003, Kelliher et al., 1995
+MAXCOND	0.006            //Maximum leaf Conductance in m/sec Breuer et al, 2003, Kelliher et al., 1995
 //AGE for timber
 MAXAGE	150             //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE	0.75            //Relative Age to give fAGE = 0.5
@@ -86,7 +86,7 @@ LIVE_TOTAL_WOOD	0.154	//new live C:new total wood (ratio) 0.15 for deciduous P. 
 CN_LEAVES   26.9 //CN of leaves (kgC/kgN) 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli
 CN_LITTER   44 //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   47.6 //CN of fine roots (kgC/kgN) 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
-CN_LIVE_WOODS   75 //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002
+CN_LIVE_WOODS   70 //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002
 CN_DEAD_WOODS   550 //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
 
 

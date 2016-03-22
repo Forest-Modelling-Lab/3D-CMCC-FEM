@@ -214,8 +214,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("BEFORE Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
 			s->value[RESERVE] +=  s->value[DEL_RESERVE];
 			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
-			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+			s->value[BIOMASS_ROOTS_TOT_tDM] +=  s->value[DEL_ROOTS_TOT];
+			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];
@@ -265,8 +265,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
 				s->value[RESERVE] +=  s->value[DEL_RESERVE];
 				Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
-				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+				s->value[BIOMASS_ROOTS_TOT_tDM] +=  s->value[DEL_ROOTS_TOT];
+				Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 				Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];
@@ -292,7 +292,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 
 			// Total Biomass
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT_tDM] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
 			Log("Previous Total W = %f tDM/area\n", oldW);
 			Log("Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 
@@ -388,8 +388,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
 			s->value[RESERVE] +=  s->value[DEL_RESERVE];
 			Log("Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
-			s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+			s->value[BIOMASS_ROOTS_TOT_tDM] +=  s->value[DEL_ROOTS_TOT];
+			Log("Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 			s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE];
 			Log("Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 			s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE];

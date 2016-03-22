@@ -300,7 +300,7 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		Log("+ Wbb = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH]);
 		Log("+ Wrc = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]);
 		Log("+ Wrf = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE]);
-		Log("+ Wr Tot = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT]);
+		Log("+ Wr Tot = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM]);
 		Log("+ Wres = %f tDM/area\n", c->heights[height].ages[age].species[species].value[RESERVE]);
 		Log("+ Ws live = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD]);
 		Log("+ Wrc live = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);

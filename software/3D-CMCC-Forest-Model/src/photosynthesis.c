@@ -15,7 +15,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
 
-	Log("**PHOTOSYNTHESIS**\n");
+	Log("\n**PHOTOSYNTHESIS**\n");
 
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);

@@ -139,6 +139,7 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 			PotEvap = 0.0;
 			Log("Negative Potential Evaporation\n");
 			s->value[FRAC_DAYTIME_EVAPO] = 0.0;
+			s->value[CANOPY_EVAPORATION] = 0.0;
 			s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED];
 		}
 		else
@@ -173,9 +174,9 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 				s->value[CANOPY_EVAPORATION] = PotEvap;
 				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
 			}
-			Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-			Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 		}
+		Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+		Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
 	}
 	/*no snow but rain but no interception occurs cause canopy still wet since the day(s) before*/
 	else if (met[month].d[day].tavg > 0.0 && c->prcp_rain > 0.0 && s->value[CANOPY_WATER_STORED] > 0.0)

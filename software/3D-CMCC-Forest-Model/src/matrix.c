@@ -709,7 +709,7 @@ void matrix_summary(const MATRIX *const m)
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT],
+								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM],
 								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH],
 								m->cells[cell].heights[height].ages[age].species[species].value[RESERVE],

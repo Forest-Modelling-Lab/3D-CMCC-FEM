@@ -200,8 +200,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		Log("---Fine Root Biomass from init file  = %f \n", s->value[BIOMASS_ROOTS_FINE]);
 	}
 
-	s->value[BIOMASS_ROOTS_TOT] = s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE];
-	Log("---Total Root Biomass = %f \n", s->value[BIOMASS_ROOTS_TOT]);
+	s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE];
+	Log("---Total Root Biomass = %f \n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
@@ -215,7 +215,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	Log("-Dead Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 
 	/*FOR COARSE ROOT*/
-	Log("Total Root Biomass = %f tDM/cell\n", s->value[BIOMASS_ROOTS_TOT]);
+	Log("Total Root Biomass = %f tDM/cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]= s->value[BIOMASS_ROOTS_COARSE] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Coarse Root Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]= s->value[BIOMASS_ROOTS_COARSE] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD];

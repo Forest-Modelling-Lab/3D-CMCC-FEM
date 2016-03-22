@@ -371,6 +371,9 @@ enum {
 	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS_SUN,
 	NET_RAD_ABS_SHADE,
+	PPFD,
+	PPFD_SUN,
+	PPFD_SHADE,
 
 	/*modifiers variables*/
 	F_VPD,                          //VPD modifier
@@ -458,7 +461,7 @@ enum {
 	DEL_Y_WRES,                      //Yearly cumulated reserve biomass increment
 	DEL_Y_BB,
 	//CTEM CARBON
-	//carbon biomass monthly increment
+	//carbon biomass increment
 	DEL_ROOTS_TOT,
 	DEL_STEMS,
 	DEL_FOLIAGE,
@@ -467,7 +470,7 @@ enum {
 	DEL_BB,
 	DEL_TOT_STEM,				//STEM + BRANCH AND BARK
 	//carbon biomass pools
-	BIOMASS_ROOTS_TOT,
+	BIOMASS_ROOTS_TOT_tDM,
 	BIOMASS_ROOTS_COARSE,
 	BIOMASS_ROOTS_FINE,
 	BIOMASS_STEM,
@@ -1212,6 +1215,7 @@ void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Latent_heat (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
 void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
+void Canopy_transpiration_biome (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);
