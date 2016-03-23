@@ -930,6 +930,7 @@ typedef struct {
 	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
 	double prcp_rain;
 	double prcp_snow;
+	double days_since_rain;
 	double rain_intercepted;
 	double water_to_soil;
 	double water_to_atmosphere;
@@ -1256,6 +1257,7 @@ void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 //test
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
 double Penman_Monteith (const MET_DATA *, int, int, int, int, double);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);

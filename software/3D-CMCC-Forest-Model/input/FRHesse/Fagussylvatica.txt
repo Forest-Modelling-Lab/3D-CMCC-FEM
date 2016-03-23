@@ -58,8 +58,8 @@ MINDAYLENGTH    12      //minimum day length for fagus from ettore, 12 through s
 //define the soil water modifier response in function of needless of the species to the soil water content
 SWPOPEN -0.6 //for Fagus sylvatica Mollicone et al., 2002
 SWPCLOSE    -2.3 //For Fagus sylvatica Mollicone et al., 2002
-SWCONST 0.7 //1           //Constant in Soil Water modifier vs Moist Ratio
-SWPOWER 9 //5               //Power in Soil Water modifier vs Moist Ratio
+SWCONST 1 //1           //Constant in Soil Water modifier vs Moist Ratio
+SWPOWER 5 //5               //Power in Soil Water modifier vs Moist Ratio
 
 //BIOMASS PARTITIONING CTEM (see Arora et al., 2005)
 OMEGA_CTEM  0.8     //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability

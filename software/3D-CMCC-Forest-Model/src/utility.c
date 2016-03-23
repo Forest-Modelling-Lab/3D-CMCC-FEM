@@ -44,6 +44,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->snow_melt = 0.0;
 	c->snow_subl = 0.0;
 	c->out_flow = 0.0;
+
 	c->daily_c_transp = 0.0;
 	c->daily_c_int = 0.0;
 	c->daily_c_evapo = 0.0;
@@ -206,6 +207,7 @@ void First_day (CELL *const c, const int count)
 
 	Log("..first day..\n");
 
+	c->days_since_rain = 0.0;
 
 	for ( height = count - 1; height >= 0; height-- )
 	{

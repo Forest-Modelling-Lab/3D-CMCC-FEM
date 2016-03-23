@@ -10,6 +10,7 @@ C_SRCS += \
 ../src/C-fruit-partitioning-allocation.c \
 ../src/G-Function.c \
 ../src/N-stock.c \
+../src/Penman_Monteith.c \
 ../src/allometry.c \
 ../src/aut_respiration.c \
 ../src/biomass.c \
@@ -50,6 +51,7 @@ C_SRCS += \
 ../src/photosynthesis.c \
 ../src/renovation.c \
 ../src/soil_dndc.c \
+../src/soil_evapo_biome.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
 ../src/soil_water_balance.c \
@@ -70,6 +72,7 @@ OBJS += \
 ./src/C-fruit-partitioning-allocation.o \
 ./src/G-Function.o \
 ./src/N-stock.o \
+./src/Penman_Monteith.o \
 ./src/allometry.o \
 ./src/aut_respiration.o \
 ./src/biomass.o \
@@ -110,6 +113,7 @@ OBJS += \
 ./src/photosynthesis.o \
 ./src/renovation.o \
 ./src/soil_dndc.o \
+./src/soil_evapo_biome.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
 ./src/soil_water_balance.o \
@@ -130,6 +134,7 @@ C_DEPS += \
 ./src/C-fruit-partitioning-allocation.d \
 ./src/G-Function.d \
 ./src/N-stock.d \
+./src/Penman_Monteith.d \
 ./src/allometry.d \
 ./src/aut_respiration.d \
 ./src/biomass.d \
@@ -170,6 +175,7 @@ C_DEPS += \
 ./src/photosynthesis.d \
 ./src/renovation.d \
 ./src/soil_dndc.d \
+./src/soil_evapo_biome.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
 ./src/soil_water_balance.d \

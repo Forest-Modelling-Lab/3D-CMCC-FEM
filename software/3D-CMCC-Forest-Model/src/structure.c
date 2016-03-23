@@ -196,7 +196,7 @@ void Forest_structure (CELL *const c,int day,int month,int years)
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
 
-	Log("\n\n***GET_FOREST_STRUCTURE***\n");
+	Log("\n\n***FOREST_STRUCTURE***\n");
 
 
 	if (settings->spatial == 'u')

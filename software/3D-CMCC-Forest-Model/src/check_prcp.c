@@ -40,6 +40,7 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	if (met[month].d[day].tavg > 0.0)
 	{
 		c->prcp_rain = met[month].d[day].prcp;
+
 		Log("prcp_rain = rain = %f mm\n", c->prcp_rain);
 
 		if (c->snow_pack > 0.0)

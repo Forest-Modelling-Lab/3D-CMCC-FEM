@@ -560,7 +560,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/*compute soil respiration*/
 		Soil_respiration (&m->cells[cell]);
 		/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-		Soil_evaporation (&m->cells[cell], met, month, day);
+		//Soil_evaporation (&m->cells[cell], met, month, day);
+		//test
+		soil_evaporation_biome (&m->cells[cell], met, month, day);
 		/*compute evapotranspiration*/
 		Evapotranspiration (&m->cells[cell]);
 		/*compute latent heat flux*/
