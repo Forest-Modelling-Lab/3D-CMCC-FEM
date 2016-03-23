@@ -414,6 +414,14 @@ enum {
 	ASW,                            //available soil water per mm/ha
 	WUE,                            //Water use efficiency (gDM/mm)
 
+	//biome's
+	CANOPY_INT,
+	CANOPY_EVAPO,
+	CANOPY_WET,
+	CANOPY_TRANSP,
+	CANOPY_EVAPO_TRANSP,
+	CANOPY_WATER,
+
 	/*LAI*/
 	LAI,                            //LAI (m^2/m2)
 	LAI_SUN,
@@ -945,6 +953,7 @@ typedef struct {
 	/*energy balance*/
 	double daily_c_int_watt;
 	double daily_c_transp_watt;
+	double daily_c_evapo_watt;
 	double daily_c_evapotransp_watt;
 	double daily_soil_evaporation_watt;
 	double daily_latent_heat_flux;
@@ -1246,6 +1255,8 @@ void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 
 //test
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
+void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+double Penman_Monteith (const MET_DATA *, int, int, int, int, double);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

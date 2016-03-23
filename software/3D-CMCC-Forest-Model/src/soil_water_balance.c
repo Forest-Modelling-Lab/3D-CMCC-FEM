@@ -39,12 +39,11 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	/*update balance*/
 	if(met[month].d[day].tavg>0.0)
 	{
-		c->asw = (c->asw + c->prcp_rain + c->snow_melt) -
-				(c->daily_c_transp + c->daily_c_int + c->daily_soil_evapo + c->daily_c_evapo + c->out_flow);
+		c->asw = (c->asw + c->prcp_rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo);
 	}
 	else
 	{
-		c->asw = c->asw - (c->daily_c_transp + c->daily_c_int + c->daily_soil_evapo + c->daily_c_evapo + c->out_flow);
+		c->asw = c->asw - (c->daily_c_transp + c->daily_soil_evapo);
 	}
 	Log("ASW = %f mm\n", c->asw);
 	Log("snow pack = %f mm\n", c->snow_pack);
@@ -54,8 +53,7 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	{
 		//TEST TO REMOVE ANY REFILL OF WATER SOIL
 		Log("ATTENTION Available Soil Water is low than MinASW!!! \n");
-		exit(1);
-		//CHECK_CONDITION(c->asw, < 0.0)
+		CHECK_CONDITION(c->asw, < 0.0)
 		c->asw = c->max_asw * site->min_frac_maxasw;
 		Log("ASW = %f\n", c->asw);
 	}

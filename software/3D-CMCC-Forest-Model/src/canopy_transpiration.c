@@ -250,8 +250,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 
 	/* FROM HERE PENMON USED */
-	//fixme
-	//trying for only one layer canopy
+
 	/* assign ta (Celsius) and tk (Kelvins) */
 	tk = met[month].d[day].tday + 273.15;
 
@@ -267,68 +266,69 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	rv_shade = 1.0/gl_t_wv_shade;
 
 
-    /* calculate combined resistance to convective and radiative heat transfer,
+	/* calculate combined resistance to convective and radiative heat transfer,
     parallel resistances : rhr = (rh * rr) / (rh + rr) */
-    rhr = (rh * rr) / (rh + rr);
+	rhr = (rh * rr) / (rh + rr);
 
-    /* calculate temperature offsets for slope estimate */
-    t1 = met[month].d[day].tday+dt;
-    t2 = met[month].d[day].tday-dt;
+	/* calculate temperature offsets for slope estimate */
+	t1 = met[month].d[day].tday+dt;
+	t2 = met[month].d[day].tday-dt;
 
-    /* calculate saturation vapor pressures at t1 and t2 */
-    pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-    pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+	/* calculate saturation vapor pressures at t1 and t2 */
+	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
-    /* calculate slope of pvs vs. T curve, at ta */
-    esse = (pvs1-pvs2) / (t1-t2);
+	/* calculate slope of pvs vs. T curve, at ta */
+	esse = (pvs1-pvs2) / (t1-t2);
 
-    /* calculate evaporation, in W/m^2 */
-//    evap =_watt ((esse * s->value[NET_RAD_ABS]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-//        	(((c->air_pressure * CP * rv) / (c->lh_vap * EPS * rhr)) + esse);
-//    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap);
-//
-//    evap = (evap /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI];
-//    Log("transpiration from BIOME = %f\n", evap);
+	/* calculate evaporation, in W/m^2 */
+	//    evap =_watt ((esse * s->value[NET_RAD_ABS]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+	//        	(((c->air_pressure * CP * rv) / (c->lh_vap * EPS * rhr)) + esse);
+	//    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap);
+	//
+	//    evap = (evap /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI];
+	//    Log("transpiration from BIOME = %f\n", evap);
 
-    //TEST
-    /* for sunlit foliage */
-    evap_sun_watt = ((esse * s->value[NET_RAD_ABS_SUN]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-        	(((c->air_pressure * CP * rv_sun) / (c->lh_vap * EPS * rhr)) + esse);
-    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_sun_watt);
+	//TEST
+	/* for sunlit foliage */
+	evap_sun_watt = ((esse * s->value[NET_RAD_ABS_SUN]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+			(((c->air_pressure * CP * rv_sun) / (c->lh_vap * EPS * rhr)) + esse);
+	Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_sun_watt);
 
-    evap_sun = (evap_sun_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SUN];
-    Log("transpiration for sunlit from BIOME = %f\n", evap_sun);
+	evap_sun = (evap_sun_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SUN];
+	Log("transpiration for sunlit from BIOME = %f\n", evap_sun);
 
-    /* for shaded foliage */
-    evap_shade_watt = ((esse * s->value[NET_RAD_ABS_SHADE]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-        	(((c->air_pressure * CP * rv_shade) / (c->lh_vap * EPS * rhr)) + esse);
-    Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_shade_watt);
+	/* for shaded foliage */
+	evap_shade_watt = ((esse * s->value[NET_RAD_ABS_SHADE]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+			(((c->air_pressure * CP * rv_shade) / (c->lh_vap * EPS * rhr)) + esse);
+	Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_shade_watt);
 
-    evap_shade = (evap_shade_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
-    Log("transpiration for shaded from BIOME = %f mm/m^2/day\n", evap_shade);
+	evap_shade = (evap_shade_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
+	Log("transpiration for shaded from BIOME = %f mm/m^2/day\n", evap_shade);
 
-//    s->value[DAILY_TRANSP] = evap;
-//    Log("Daily Canopy Transpiration (one lai)= %f\n", s->value[DAILY_TRANSP]);
-    //FIXME ALSO FOR LATENT HEAT USE CANOPY_COVER_DBHDC??
-    s->value[DAILY_TRANSP_W] = evap_sun_watt + evap_shade_watt;
-    Log("Daily latent canopy heat (sun + shade)= %f W/m^2\n", s->value[DAILY_TRANSP_W]);
-    s->value[DAILY_TRANSP] = (evap_sun + evap_shade) * s->value[CANOPY_COVER_DBHDC];
-    Log("Daily Canopy Transpiration (sun + shade)= %f mm/m^2/day\n", s->value[DAILY_TRANSP]);
+	//    s->value[DAILY_TRANSP] = evap;
+	//    Log("Daily Canopy Transpiration (one lai)= %f\n", s->value[DAILY_TRANSP]);
+	//FIXME ALSO FOR LATENT HEAT USE CANOPY_COVER_DBHDC??
+	s->value[DAILY_TRANSP_W] = evap_sun_watt + evap_shade_watt;
+	Log("Daily latent canopy heat (sun + shade)= %f W/m^2\n", s->value[DAILY_TRANSP_W]);
+	s->value[DAILY_TRANSP] = (evap_sun + evap_shade) * s->value[CANOPY_COVER_DBHDC];
+	Log("Daily Canopy Transpiration (sun + shade)= %f mm/m^2/day\n", s->value[DAILY_TRANSP]);
 
 	/* compute energy balance transpiration from canopy */
 	c->daily_c_transp_watt = s->value[DAILY_TRANSP_W];
 	Log("Daily latent canopy heat = %f W/m^2\n", c->daily_c_transp_watt);
 
-    c->daily_c_transp += s->value[DAILY_TRANSP];
+	c->daily_c_transp += s->value[DAILY_TRANSP];
 	Log("Daily total canopy transpiration = %f mm/m^2/day\n", c->daily_c_transp);
 
 
-//	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
-//	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp * c->lh_vap / 86400.0);
+	//	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+	//	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp * c->lh_vap / 86400.0);
 
 
 
 }
+
 
 
 

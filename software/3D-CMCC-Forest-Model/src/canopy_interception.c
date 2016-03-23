@@ -13,7 +13,7 @@
 #include "constants.h"
 
 
-extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
+void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
 {
 	double PotEvap;
 	double gamma;
@@ -145,24 +145,24 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 		else
 		{
 			//test it seems doesn't owrk
-//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1.0);
-//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-//			/* just a part of rain evaporates */
-//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
-//			{
-//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
-//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-//				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
-//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-//
-//			}
-//			/* all rain evaporates */
-//			else
-//			{
-//				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
-//				s->value[RAIN_INTERCEPTED] = 0.0;
-//				s->value[CANOPY_WATER_STORED] = 0.0;
-//			}
+			//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1.0);
+			//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+			//			/* just a part of rain evaporates */
+			//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
+			//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			//				s->value[CANOPY_WATER_STORED] = s->value[RAIN_INTERCEPTED] - s->value[CANOPY_EVAPORATION];
+			//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+			//
+			//			}
+			//			/* all rain evaporates */
+			//			else
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = s->value[RAIN_INTERCEPTED];
+			//				s->value[RAIN_INTERCEPTED] = 0.0;
+			//				s->value[CANOPY_WATER_STORED] = 0.0;
+			//			}
 			/* all rain evaporates */
 			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{
@@ -192,24 +192,24 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 		}
 		else
 		{
-//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
-//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-//			/*all rain evaporates*/
-//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
-//			{
-//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
-//				s->value[RAIN_INTERCEPTED] = 0.0;
-//				s->value[CANOPY_WATER_STORED] = 0.0;
-//			}
-//			/*just a part of rain evaporates*/
-//			else
-//			{
-//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
-//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-//
-//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
-//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-//			}
+			//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
+			//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+			//			/*all rain evaporates*/
+			//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
+			//				s->value[RAIN_INTERCEPTED] = 0.0;
+			//				s->value[CANOPY_WATER_STORED] = 0.0;
+			//			}
+			//			/*just a part of rain evaporates*/
+			//			else
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF/* * s->value[FRAC_DAYTIME_WET_CANOPY]*/;
+			//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			//
+			//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
+			//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+			//			}
 			/* all rain evaporates */
 			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{
@@ -236,24 +236,24 @@ extern void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DAT
 		}
 		else
 		{
-//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
-//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
-//			/*all rain evaporates*/
-//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
-//			{
-//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
-//				s->value[RAIN_INTERCEPTED] = 0.0;
-//				s->value[CANOPY_WATER_STORED] = 0.0;
-//			}
-//			/*just a part of rain evaporates*/
-//			else
-//			{
-//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_EVAPO];
-//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
-//
-//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
-//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
-//			}
+			//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[CANOPY_WATER_STORED]/(PotEvap*EVAPOCOEFF), 1.0);
+			//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
+			//			/*all rain evaporates*/
+			//			if(s->value[FRAC_DAYTIME_EVAPO] == 1.0)
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = s->value[CANOPY_WATER_STORED];
+			//				s->value[RAIN_INTERCEPTED] = 0.0;
+			//				s->value[CANOPY_WATER_STORED] = 0.0;
+			//			}
+			//			/*just a part of rain evaporates*/
+			//			else
+			//			{
+			//				s->value[CANOPY_EVAPORATION] = PotEvap * EVAPOCOEFF * s->value[FRAC_DAYTIME_EVAPO];
+			//				Log("Canopy_evaporation = %f mmkg/m2/day\n", s->value[CANOPY_EVAPORATION]);
+			//
+			//				s->value[CANOPY_WATER_STORED] -= s->value[CANOPY_EVAPORATION];
+			//				Log("remaining rainfall on canopy = %f\n", s->value[CANOPY_WATER_STORED]);
+			//			}
 			/* all rain evaporates */
 			if (PotEvap > s->value[RAIN_INTERCEPTED])
 			{

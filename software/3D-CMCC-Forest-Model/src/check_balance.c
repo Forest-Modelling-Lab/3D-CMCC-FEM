@@ -203,7 +203,7 @@ void Check_water_balance (CELL *c)
 			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
 			Log("...FATAL ERROR IN water balance\n");
 			Log("DOY = %d\n", c->doy);
-			exit(1);
+			//exit(1);
 		}
 		else
 		{

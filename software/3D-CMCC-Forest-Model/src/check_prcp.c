@@ -117,6 +117,5 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			Log("NO snow pack to sublimate\n");
 		}
 	}
-
 	Log("*****************************************\n");
 }
