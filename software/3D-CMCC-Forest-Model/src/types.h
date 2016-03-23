@@ -457,6 +457,7 @@ enum {
 	DAILY_DEL_LITTER,
 
 	//total cell carbon biomass pools in MgC
+	BIOMASS_FOLIAGE_C,
 	BIOMASS_ROOT_TOT_C,
 	BIOMASS_COARSE_ROOT_C,
 	BIOMASS_FINE_ROOT_C,
@@ -475,6 +476,13 @@ enum {
 	BIOMASS_BRANCH_DEAD_WOOD_C,
 	RESERVE_FOLIAGE_TO_RETRANSL_C,
 	RESERVE_FINEROOT_TO_RETRANSL_C,
+	WS_sap_C,
+	WS_heart_C,
+	WRC_sap_C,
+	WRC_heart_C,
+	WBB_sap_C,
+	WBB_heart_C,
+	WTOT_sap_C,
 
 	//CTEM CARBON
 	//carbon biomass increment
@@ -487,6 +495,7 @@ enum {
 	DEL_TOT_STEM,
 	DEL_ROOTS_FINE,
 	DEL_ROOTS_COARSE,
+
 	//total cell carbon biomass pools in MgDM
 	BIOMASS_ROOTS_TOT_tDM,
 	BIOMASS_ROOTS_COARSE,
