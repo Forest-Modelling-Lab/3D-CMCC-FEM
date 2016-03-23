@@ -272,10 +272,10 @@ void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 extern void Average_tree_biomass (SPECIES *s)
 {
 
-	s->value[AV_STEM_MASS] = s->value[BIOMASS_STEM] * 	1000 / s->counter[N_TREE];
-	s->value[AV_ROOT_MASS] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000 / s->counter[N_TREE];
+	s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM] * 	1000.0 / s->counter[N_TREE];
+	s->value[AV_ROOT_MASS_KgDM] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000.0 / s->counter[N_TREE];
 
-	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS]);
+	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS_KgDM]);
 }
 
 extern void Total_class_level_biomass (SPECIES *s)

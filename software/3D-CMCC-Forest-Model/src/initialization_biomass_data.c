@@ -42,17 +42,17 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			Log("..computing stem biomass from generic stempower and stemconst DBH = %f cm\n", s->value[AVDBH]);
 			if (s->value[AVDBH] < 9)
 			{
-				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_A));
 				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_A)))*s->value[STEMCONST];
 			}
 			else if (s->value[AVDBH] > 9 && s->value[AVDBH] < 15)
 			{
-				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_B));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_B));
 				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_B)))*s->value[STEMCONST];
 			}
 			else
 			{
-				s->value[AV_STEM_MASS] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
+				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
 				//(pow (s->value[AVDBH], 1.0/(1.0/STEMPOWER_C)))*s->value[STEMCONST];
 			}
 		}
@@ -62,13 +62,13 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			Log("..computing stem biomass from generic stempower and stemconst DBH = %f cm\n", s->value[AVDBH]);
 			//Log("STEM POWER = %f\n", s->value[STEMPOWER_P]);
 			//Log("STEM CONST = %f\n", s->value[STEMCONST_P]);
-			s->value[AV_STEM_MASS]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
+			s->value[AV_STEM_MASS_KgDM]  = s->value[STEMCONST_P] * pow (s->value[AVDBH], s->value[STEMPOWER_P]);
 			//pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 		}
 		//presumibly dry matter
-		Log("-Individual stem biomass = %f KgDM\n", s->value[AV_STEM_MASS]);
+		Log("-Individual stem biomass = %f KgDM\n", s->value[AV_STEM_MASS_KgDM]);
 		//1000 to convert Kg into tons
-		s->value[BIOMASS_STEM] = s->value[AV_STEM_MASS] * s->counter[N_TREE] / 1000;
+		s->value[BIOMASS_STEM] = s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1000;
 		Log("-Class stem Biomass initialization data from DBH = %f tDM cell\n", s->value[BIOMASS_STEM]);
 	}
 	else
@@ -141,6 +141,10 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	Log("   Sapwood branch and bark biomass = %f tDM class cell \n", s->value[WBB_sap]);
 	s->value[WTOT_sap] = s->value[WS_sap] + s->value[WRC_sap] + s->value[WBB_sap];
 	Log("   Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap]);
+	Log("   Total Sapwood biomass per tree = %f tDM tree \n", s->value[WTOT_sap]/s->counter[N_TREE]);
+	Log("   Total Sapwood biomass per tree = %f KgDM tree \n", (s->value[WTOT_sap]/s->counter[N_TREE])*1000.0);
+	Log("   Total Sapwood biomass per tree = %f gDM tree \n", (s->value[WTOT_sap]/s->counter[N_TREE])*1000000.0);
+	Log("   Total Sapwood biomass per tree = %f gC tree \n", ((s->value[WTOT_sap]/s->counter[N_TREE])*1000000.0)/2.0);
 
 
 
@@ -151,11 +155,11 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		Log("\nNo Reserve Biomass Data are available for model initialization \n");
 		Log("...Generating input Reserve Biomass biomass data\n");
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
-		//see if change with the ratio reported from Barbaroux et al., 2002
+		//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
 		s->value[RESERVE] = s->value[WTOT_sap] * s->value[SAP_WRES];
 		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[RESERVE]);
-		Log("-----Reserve Biomass initialization data  = %f KgC/cell \n", s->value[RESERVE]/GC_GDM * 1000);
-		Log("-----Reserve Biomass initialization data  = %f gC/tree \n", (s->value[RESERVE]/GC_GDM * 1000)/s->value[N_TREE]);
+		Log("-----Reserve Biomass initialization data  = %f Kg res/cell \n", s->value[RESERVE]/GC_GDM * 1000);
+		Log("-----Reserve Biomass initialization data  = %f g res/tree \n", (s->value[RESERVE]/GC_GDM * 1000000)/(int)s->counter[N_TREE]);
 
 	}
 	else
@@ -209,6 +213,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	/*FOR STEM*/
 	Log("\n*******************************\n");
 	Log("Total Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM]);
+	Log("Total Stem Biomass per tree = %f tDM/tree\n", s->value[BIOMASS_STEM]/ s->counter[N_TREE]);
 	s->value[BIOMASS_STEM_LIVE_WOOD]= s->value[BIOMASS_STEM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 	s->value[BIOMASS_STEM_DEAD_WOOD]= s->value[BIOMASS_STEM] -s->value[BIOMASS_STEM_LIVE_WOOD];

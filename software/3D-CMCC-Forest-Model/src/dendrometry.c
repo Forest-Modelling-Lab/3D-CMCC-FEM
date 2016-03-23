@@ -31,23 +31,23 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 		if (oldavDBH < 9)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
 		}
 		else if (oldavDBH > 9 && oldavDBH < 15)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
 		}
 		else
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
 		}
 	}
 	else
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
-		Log("Average stem mass = %f\n", s->value[AV_STEM_MASS]);
-		s->value[AVDBH] = pow(s->value[AV_STEM_MASS] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
+		Log("Average stem mass = %f\n", s->value[AV_STEM_MASS_KgDM]);
+		s->value[AVDBH] = pow(s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 	}
 	Log("-New Average DBH = %f cm\n", s->value[AVDBH]);
