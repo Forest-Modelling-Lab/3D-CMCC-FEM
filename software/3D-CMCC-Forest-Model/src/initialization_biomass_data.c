@@ -68,12 +68,14 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		s->value[BIOMASS_STEM_tDM] = s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1000;
 		s->value[STEM_C] = (s->value[AV_STEM_MASS_KgDM] * s->counter[N_TREE] / 1000)/2.0;
 		Log("-Class stem Biomass initialization data from DBH = %f tDM cell\n", s->value[BIOMASS_STEM_tDM]);
+		Log("-Class stem Biomass initialization data from DBH = %f tC/cell\n", s->value[STEM_C]);
 	}
 	else
 	{
 		Log("Ok stem biomass..\n");
 		Log("---Stem Biomass from init file = %f tDM/cell\n", s->value[BIOMASS_STEM_tDM]);
-		s->value[STEM_C] = s->value[STEM_C] /2.0;
+		s->value[STEM_C] = s->value[BIOMASS_STEM_tDM] /2.0;
+		Log("---Stem Biomass from init file = %f tC/cell\n", s->value[STEM_C]);
 	}
 
 	if (s->value[BIOMASS_BRANCH_tDM]== 0 )
@@ -92,6 +94,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			s->value[BIOMASS_BRANCH_tDM] = s->value[BIOMASS_STEM_tDM] * s->value[FRACBB];
 			s->value[BRANCH_C] = s->value[STEM_C] * s->value[FRACBB];
 			Log("-Stem Branch Biomass initialization data from DBH = %f tDM/cell\n", s->value[BIOMASS_BRANCH_tDM]);
+			Log("-Stem Branch Biomass initialization data from DBH = %f tC/cell\n", s->value[BRANCH_C]);
 		}
 
 	}
@@ -105,9 +108,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	/*computing total stem biomass*/
 	s->value[BIOMASS_TOT_STEM_tDM] = s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_BRANCH_tDM];
 	s->value[TOT_STEM_C] = s->value[STEM_C] + s->value[BRANCH_C];
-	Log("--Class Total stem biomass (Ws + Wbb) = %f tDM/cell\n", s->value[BIOMASS_TOT_STEM_tDM]);
-
-
+	Log("---Total stem biomass (Ws + Wbb) = %f tDM/cell\n", s->value[BIOMASS_TOT_STEM_tDM]);
+	Log("---Total stem biomass (Ws + Wbb) = %f tC/cell\n", s->value[TOT_STEM_C]);
 
 	if(s->value[BIOMASS_COARSE_ROOT_tDM]== 0)
 	{
@@ -117,12 +119,14 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		s->value[BIOMASS_COARSE_ROOT_tDM] = s->value[BIOMASS_STEM_tDM] * s->value[COARSE_ROOT_STEM];
 		s->value[COARSE_ROOT_C] = s->value[STEM_C] * s->value[COARSE_ROOT_STEM];
 		Log("--Coarse Root Biomass initialization data from Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
+		Log("--Coarse Root Biomass initialization data from Stem Biomass = %f tC/cell\n", s->value[COARSE_ROOT_C]);
 	}
 	else
 	{
 		Log("Ok coarse root biomass..\n");
 		Log("---Coarse Root Biomass from init file = %ftDM/cell \n", s->value[BIOMASS_COARSE_ROOT_tDM]);
 		s->value[COARSE_ROOT_C] = s->value[BIOMASS_COARSE_ROOT_tDM]/2.0;
+		Log("---Coarse Root Biomass from init file = %ftC/cell \n", s->value[COARSE_ROOT_C]);
 	}
 
 	/*sapwood calculation*/
@@ -136,16 +140,18 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	Log("   HEART_WOOD_AREA = %f cm^2\n", s->value[HEARTWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	Log("   sapwood perc = %f%%\n", s->value[SAPWOOD_PERC]*100);
-	Log("   Stem_biomass = %f class cell \n", s->value[BIOMASS_STEM_tDM]);
 	s->value[WS_sap] = (s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 	Log("   Sapwood stem biomass = %f tDM class cell \n", s->value[WS_sap]);
+	Log("   Sapwood stem biomass = %f tC class cell \n", s->value[STEM_SAPWOOD_C]);
 	s->value[WRC_sap] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
 	Log("   Sapwood coarse root biomass = %f tDM class cell \n", s->value[WRC_sap]);
+	Log("   Sapwood coarse root biomass = %f tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
 	s->value[WBB_sap] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	Log("   Sapwood branch and bark biomass = %f tDM class cell \n", s->value[WBB_sap]);
+	Log("   Sapwood branch and bark biomass = %f tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
 	s->value[WTOT_sap] = s->value[WS_sap] + s->value[WRC_sap] + s->value[WBB_sap];
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	Log("   Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap]);
@@ -174,7 +180,6 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		Log("-----Reserve Biomass initialization data  = %f t res/cell \n", s->value[RESERVE_C]);
 		Log("-----Reserve Biomass initialization data  = %f Kg res/cell \n", s->value[RESERVE_C] * 1000);
 		Log("-----Reserve Biomass initialization data  = %f g res/tree \n", (s->value[RESERVE_C] * 1000000)/(int)s->counter[N_TREE]);
-
 	}
 	else
 	{
@@ -191,20 +196,20 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		{
 			Log("\nNo Foliage Biomass Data are available for model initialization \n");
 			Log("...Generating input Foliage Biomass biomass data\n");
+			//fixme it seems to not have sense
 			s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
 			s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
-			Log("----Foliage Biomass initialization data  = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
+			Log("----Foliage Biomass initialization data  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+			Log("----Foliage Biomass initialization data  = %f tC cell\n", s->value[LEAF_C]);
 		}
 	}
 	else
 	{
 		s->value[LEAF_C] = s->value[BIOMASS_FOLIAGE_tDM]/2.0;
 		Log("Ok foliage biomass..\n");
-		Log("---Foliage Biomass from init file  = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
+		Log("---Foliage Biomass from init file  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+		Log("---Foliage Biomass from init file  = %f tC cell\n", s->value[LEAF_C]);
 	}
-
-
-
 	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
 	if (s->value[BIOMASS_FINE_ROOT_tDM] == 0 && (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
@@ -213,68 +218,69 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		//assuming FINE_ROOT_LEAF RATIO AS IN BIOME
 		s->value[BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FOLIAGE_tDM] * s->value[FINE_ROOT_LEAF];
 		s->value[FINE_ROOT_C] = s->value[LEAF_C] * s->value[FINE_ROOT_LEAF];
-		Log("---Fine Root Biomass initialization data from Stem Biomass = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
+		Log("---Fine Root Biomass initialization data from Stem Biomass = %f tDM cell\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+		Log("---Fine Root Biomass initialization data from Stem Biomass = %f tC cell\n", s->value[FINE_ROOT_C]);
 	}
 	else
 	{
 		s->value[FINE_ROOT_C] = s->value[BIOMASS_FINE_ROOT_tDM]/2.0;
 		Log("Ok fine root biomass..\n");
-		Log("---Fine Root Biomass from init file  = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
+		Log("---Fine Root Biomass from init file  = %f tDM cell\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+		Log("---Fine Root Biomass from init file  = %f tC cell\n", s->value[FINE_ROOT_C]);
 	}
 
 	s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM];
 	s->value[ROOT_C] = s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
-	Log("---Total Root Biomass = %f \n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+	Log("---Total Root Biomass = %f tDM cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+	Log("---Total Root Biomass = %f tC cell\n", s->value[ROOT_C]);
 
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
 	//assuming LIVE_DEAD WOOD RATIO AS IN BIOME
 	/*FOR STEM*/
 	Log("\n*******************************\n");
-	Log("Total Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_tDM]);
-	Log("Total Stem Biomass per tree = %f tDM/tree\n", s->value[BIOMASS_STEM_tDM]/ s->counter[N_TREE]);
+	Log("Total Stem Biomass = %f tDM cell\n", s->value[BIOMASS_STEM_tDM]);
+	Log("Total Stem Biomass per tree = %f tDM tree\n", s->value[BIOMASS_STEM_tDM]/ s->counter[N_TREE]);
 	s->value[BIOMASS_STEM_LIVE_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[STEM_LIVE_WOOD_C]= s->value[STEM_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("-Live Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
+	Log("-Live Stem Biomass = %f tDM cell\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
+	Log("-Live Stem Biomass = %f tC cell\n", s->value[STEM_LIVE_WOOD_C]);
 	s->value[BIOMASS_STEM_DEAD_WOOD_tDM]= s->value[BIOMASS_STEM_tDM] -s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
 	s->value[STEM_DEAD_WOOD_C]= s->value[STEM_C] -s->value[STEM_LIVE_WOOD_C];
-	Log("-Dead Stem Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+	Log("-Dead Stem Biomass = %f tDM cell\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+	Log("-Dead Stem Biomass = %f tC cell\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
 
 	/*FOR COARSE ROOT*/
-	Log("Total Root Biomass = %f tDM/cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+	Log("Total Root Biomass = %f tDM cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[COARSE_ROOT_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("-Live Coarse Root Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+	Log("-Live Coarse Root Biomass = %f tDM cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+	Log("-Live Coarse Root Biomass = %f tC cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] -s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
 	s->value[COARSE_ROOT_DEAD_WOOD_C]= s->value[COARSE_ROOT_C] -s->value[COARSE_ROOT_LIVE_WOOD_C];
-	Log("-Dead Coarse Root Biomass = %f tDM/cell\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+	Log("-Dead Coarse Root Biomass = %f tDM cell\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+	Log("-Dead Coarse Root Biomass = %f tC cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
 	/*FOR BRANCH*/
 	Log("Total BB Biomass = %f tDM/cell\n", s->value[BIOMASS_BRANCH_tDM]);
 	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]= s->value[BIOMASS_BRANCH_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[BRANCH_LIVE_WOOD_C]= s->value[BRANCH_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("-Live Stem Branch Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
+	Log("-Live Stem Branch Biomass = %f tDM cell\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
+	Log("-Live Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_LIVE_WOOD_C]);
 	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]= s->value[BIOMASS_BRANCH_tDM] -s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
 	s->value[BRANCH_DEAD_WOOD_C]= s->value[BRANCH_C] -s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
-	Log("-Dead Stem Branch Biomass = %f tDM/cell\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+	Log("-Dead Stem Branch Biomass = %f tDM cell\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+	Log("-Dead Stem Branch Biomass = %f tC cell\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 
 	s->value[BIOMASS_LIVE_WOOD_tDM] = s->value[BIOMASS_STEM_LIVE_WOOD_tDM]+
 			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]+
-			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]
-					 //FIXME
-					 /*+
-			s->value[BIOMASS_FINE_ROOT_tDM]+
-			s->value[BIOMASS_FOLIAGE]*/;
+			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
 	s->value[LIVE_WOOD_C] = s->value[STEM_LIVE_WOOD_C]+
 				s->value[COARSE_ROOT_LIVE_WOOD_C]+
-				s->value[BRANCH_LIVE_WOOD_C]
-					//FIXME
-					 /*+
-				s->value[BIOMASS_FINE_ROOT_tDM]+
-				s->value[BIOMASS_FOLIAGE]*/;
-	Log("---Live biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM]);
-	Log("---Live biomass following BIOME = %f tC/area\n", s->value[LIVE_WOOD_C]);
+				s->value[BRANCH_LIVE_WOOD_C];
+	Log("---Live biomass = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM]);
+	Log("---Live biomass = %f tC/area\n", s->value[LIVE_WOOD_C]);
 
 	s->value[BIOMASS_DEAD_WOOD_tDM] = s->value[BIOMASS_STEM_DEAD_WOOD_tDM]+
 			s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]+
@@ -282,8 +288,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	s->value[DEAD_WOOD_C] = s->value[STEM_DEAD_WOOD_C]+
 			s->value[COARSE_ROOT_DEAD_WOOD_C]+
 			s->value[BRANCH_DEAD_WOOD_C];
-	Log("---Dead biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_DEAD_WOOD_tDM]);
-	Log("---Dead biomass following BIOME = %f tC/area\n", s->value[DEAD_WOOD_C]);
+	Log("---Dead biomass = %f tDM/area\n", s->value[BIOMASS_DEAD_WOOD_tDM]);
+	Log("---Dead biomass = %f tC/area\n", s->value[DEAD_WOOD_C]);
 
 
 	Log("***reserves following live tissues DM (not used) BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM] * s->value[SAP_WRES]);

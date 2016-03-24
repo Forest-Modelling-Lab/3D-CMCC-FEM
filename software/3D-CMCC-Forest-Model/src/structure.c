@@ -341,7 +341,7 @@ void Forest_structure (CELL *const c,int day,int month,int years)
 						 * Lhotka and Loewenstein 2008, Can J For Res
 						 */
 						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-							 +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+						                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 						Log("-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 						c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 						Log("-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
@@ -523,7 +523,7 @@ void Forest_structure (CELL *const c,int day,int month,int years)
 					//Canopy Cover using DBH-DC
 
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-													  * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
+					                                                                                                                              * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
 					Log("Canopy cover DBH-DC class related = %f\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 				}
 			}

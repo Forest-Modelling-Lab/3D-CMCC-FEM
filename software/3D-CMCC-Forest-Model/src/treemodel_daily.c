@@ -46,7 +46,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		{
 			//annual forest structure
 			Annual_numbers_of_layers (&m->cells[cell]);
-			Tree_Branch_Bark (&m->cells[cell], years);
 		}
 		/* daily forest structure */
 		Forest_structure (&m->cells[cell], day, month, years);

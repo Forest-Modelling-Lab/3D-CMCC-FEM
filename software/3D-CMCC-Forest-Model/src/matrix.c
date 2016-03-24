@@ -778,7 +778,6 @@ void matrix_free(MATRIX *m)
 											free(m->cells[cell].heights[height].ages[age].species[i].turnover);
 										}
 									}
-
 									free ( m->cells[cell].heights[height].ages[age].species);
 								}
 							}

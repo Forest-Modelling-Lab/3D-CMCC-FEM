@@ -8,38 +8,21 @@
 #include "constants.h"
 
 
-void Tree_Branch_Bark (CELL *const c,  int years)
+void Tree_Branch_Bark (SPECIES *s, AGE *a, int heigth, int age, int species)
 {
-	int height;
-	int age;
-	int species;
 
-
-
-
-	for ( height = c->heights_count - 1; height >= 0; height-- )
+	if (s->value[FRACBB0] == 0)
 	{
-		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
-		{
-			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
-			{
-				if (!years && c->heights[height].ages[age].species[species].value[FRACBB0] == 0)
-				{
-					Log("I don't have FRACBB0 = FRACBB1 \n");
-					c->heights[height].ages[age].species[species].value[FRACBB0] = c->heights[height].ages[age].species[species].value[FRACBB1];
-					Log("FRACBB0 = %f\n", c->heights[height].ages[age].species[species].value[FRACBB0]);
-				}
-				else
-				{
-					c->heights[height].ages[age].species[species].value[FRACBB] = c->heights[height].ages[age].species[species].value[FRACBB1]
-											  + (c->heights[height].ages[age].species[species].value[FRACBB0]
-											 - c->heights[height].ages[age].species[species].value[FRACBB1])
-										 * exp(-ln2 * (c->heights[height].ages[age].value / c->heights[height].ages[age].species[species].value[TBB]));
-
-				}
-			}
-		}
+		Log("I don't have FRACBB0 = FRACBB1 \n");
+		s->value[FRACBB0] = s->value[FRACBB1];
+		Log("FRACBB0 = %f\n", s->value[FRACBB0]);
 	}
+	else
+	{
+		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (a->value / s->value[TBB]));
+
+	}
+
 }
 void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
 {
