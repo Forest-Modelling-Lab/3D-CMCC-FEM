@@ -35,18 +35,18 @@ void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int m
 	/*check compatibility of LAI and Biomass with init data for evergreen*/
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))
 	{
-		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[BIOMASS_FOLIAGE] > s->value[MAX_BIOMASS_FOLIAGE_tDM]))
+		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[BIOMASS_FOLIAGE_tDM] > s->value[MAX_BIOMASS_FOLIAGE_tDM]))
 		{
 			s->value[LAI] = s->value[PEAK_LAI];
 			Log("Initial LAI > PEAK LAI, recompute it\n");
 			Log("recomputed LAI = %f\n", s->value[LAI]);
 			/*then recompute foliage biomass*/
-			s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE_tDM];
-			Log("recomputed FOLIAGE BIOMASS = %f\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[BIOMASS_FOLIAGE_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM];
+			Log("recomputed FOLIAGE BIOMASS = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
 		}
 	}
 
-	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[RESERVE]);
+	Log("BIOMASS_RESERVE = %f tDM/area\n", s->value[RESERVE_tDM]);
 
 	s->value[MAX_BIOMASS_FINE_ROOTS_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM] * s->value[FINE_ROOT_LEAF_FRAC];
 	s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[MAX_BIOMASS_FOLIAGE_tDM] + s->value[MAX_BIOMASS_FINE_ROOTS_tDM];

@@ -21,15 +21,15 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		Log("GPP = %f gC m^2 day\n", s->value[DAILY_GPP_gC]);
-		Log("Reserve biomass = %f\n", s->value[RESERVE]);
+		Log("Reserve biomass = %f\n", s->value[RESERVE_tDM]);
 		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
-		if (s->value[RESERVE] > 0.0)
+		if (s->value[RESERVE_tDM] > 0.0)
 		{
 			/*for principle of conservation of mass*/
 			/*used if previous day NPP is negative to conserve mass assuming the loss of reserve*/
 			if (s->value[C_FLUX] < 0.0 )
 			{
-				CHECK_CONDITION(s->value[RESERVE], < 0)
+				CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 				
 				s->value[NPP_gC] = 0;
 				s->value[NPP_tDM] = 0;
@@ -47,7 +47,7 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 		}
 		else
 		{
-			CHECK_CONDITION(s->value[RESERVE], < 0)
+			CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 		}
 		Log("Daily NPP = %f gC/m^2\n", s->value[NPP_gC]);
 		Log("Daily NPP = %f tDM/area\n",  s->value[NPP_tDM]);
@@ -57,7 +57,7 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	}
 	else
 	{
-		CHECK_CONDITION(s->value[RESERVE], < 0)
+		CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 
 		s->value[NPP_gC] = 0.0;
 		s->value[NPP_tDM] = 0.0;

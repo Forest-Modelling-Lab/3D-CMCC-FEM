@@ -31,7 +31,7 @@ void Crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int to
 	Log("GET CROWDING COMPETITION FUNCTION\n");
 
 	/* WS before allocation of delWS */
-	oldWS = s->value[BIOMASS_STEM] -  s->value[DEL_STEMS];
+	oldWS = s->value[BIOMASS_STEM_tDM] - s->value[DEL_STEMS];
 
 
 	if ( !years )

@@ -38,29 +38,29 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		Log("Layer coverage mortality for timber \n");
 
 		//compute average biomass
-		c->heights[height].ages[age].species[species].value[AV_FOLIAGE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE]
+		c->heights[height].ages[age].species[species].value[AV_FOLIAGE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM]
+		c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE]
+		c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM] =(c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE]
+		c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM] =(c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[RESERVE]
+		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[RESERVE_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH]
+		c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_LIVE_STEM_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_LIVE_STEM_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_DEAD_STEM_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_DEAD_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_DEAD_STEM_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_DEAD_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_LIVE_COARSE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_LIVE_COARSE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_DEAD_COARSE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_DEAD_COARSE_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_LIVE_BB_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_LIVE_BB_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_DEAD_BB_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_DEAD_WOOD]
+		c->heights[height].ages[age].species[species].value[AV_DEAD_BB_BIOMASS_KgDM] = (c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
 
 
@@ -233,18 +233,18 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		Log("Tree Removed for Crowding Competition from height class %f species %s dbh %f = %d trees\n", c->heights[height].value, c->heights[height].ages[age].species[species].name,
 				c->heights[height].ages[age].species[species].value[AVDBH], deadtree);
 
-		c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE] -= (c->heights[height].ages[age].species[species].value[AV_FOLIAGE_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[RESERVE] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_STEM_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_DEAD_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_STEM_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_COARSE_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_COARSE_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_BB_BIOMASS_KgDM]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_DEAD_WOOD] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_BB_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM] -= (c->heights[height].ages[age].species[species].value[AV_FOLIAGE_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[RESERVE_tDM] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_STEM_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_DEAD_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_STEM_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_COARSE_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_COARSE_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_BB_BIOMASS_KgDM]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_BB_BIOMASS_KgDM]*1000.0*deadtree);
 
 
 		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
@@ -262,13 +262,13 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		Log("Layer coverage mortality for coppice \n");
 
 		//compute average biomass
-		c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM]
-		                                                                                                                        / (double)c->heights[height].ages[age].species[species].counter[N_STUMP];
+		c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]
+														/ (double)c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//Log(" Av stump mass = %f tDM/tree\n", s->value[AV_STEM_MASS] );
 
 
 		// levato
-		//s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE])/ (double)s->counter[N_TREE];
+		//s->value[AV_ROOT_MASS] = s->value[AV_ROOT_MASS] = (s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_FINE_ROOT_tDM])/ (double)s->counter[N_TREE];
 		//Log(" Av root mass = %f tDM/tree\n", s->value[AV_ROOT_MASS] );
 
 		oldNstump = c->heights[height].ages[age].species[species].counter[N_STUMP];
@@ -283,13 +283,13 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		}
 		oldNstump -= c->heights[height].ages[age].species[species].counter[N_STUMP];
 		//s->value[BIOMASS_FOLIAGE] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
-		Log("Tot Root Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE] + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE] );
-		Log("Stump Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM] );
-		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM] * 1000.0* deadstump);
-		c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM] * deadstump);
-		c->heights[height].ages[age].species[species].value[BIOMASS_STEM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] * deadstump);
-		Log("Tot Root Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_COARSE] + c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_FINE] );
-		Log("Stump Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM] );
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] + c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM] );
+		Log("Stump Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
+		c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgDM] * 1000.0* deadstump);
+		c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgDM] * deadstump);
+		c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgDM] * deadstump);
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] + c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM] );
+		Log("Stump Biomass before reduction = %f tDM/tree\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
 		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_STUMP]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadstump );
 		Log("Canopy Cover in while = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
@@ -320,9 +320,9 @@ void Age_Mortality (SPECIES *const s, AGE *const a)
 		Log("Age Mortality based on Tree Age (LPJ) = %f\n", s->value[AGEMORT]);
 		Dead_trees = s->counter[N_TREE] * s->value[AGEMORT];
 		Log("DEAD TREES = %d\n", Dead_trees);
-		s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
+		s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
 		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
-		s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
+		s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
 		//Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
 		//Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
 		//Log("Ws after dead = %f tDM/ha\n", s->value[BIOMASS_STEM] );
@@ -360,7 +360,7 @@ void Greff_Mortality (SPECIES *const s)
 
 	Log("**MORTALITY based on Growth Efficiency (LPJ)**\n");
 
-	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE] * s->value[SLA_AVG]));
+	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE_tDM] * s->value[SLA_AVG]));
 	//Log("greff from LPJ = %f\n", greff);
 	//Log("DEL_TOTAL_W = %f\n", s->value[DEL_TOTAL_W]);
 	//Log("WF= %f\n", s->value[BIOMASS_FOLIAGE]);
@@ -432,11 +432,11 @@ void Mortality (SPECIES *const s, int years)
 
 
 		Log("Tree Number before Mortality Function = %d\n", s->counter[N_TREE]);
-		Log("Tree Stem Mass before Mortality Function = %f\n", s->value[BIOMASS_STEM]);
+		Log("Tree Stem Mass before Mortality Function = %f\n", s->value[BIOMASS_STEM_tDM]);
 
 		n = (double)s->counter[N_TREE] / 1000;
 		Log("n = %f\n", n);
-		x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM] / (double)s->counter[N_TREE];
+		x1 = 1000 * s->value[MS] * s->value[BIOMASS_STEM_tDM] / (double)s->counter[N_TREE];
 		Log("x1 = %f\n", x1);
 		i = 0;
 		while ( 1 )
@@ -445,7 +445,7 @@ void Mortality (SPECIES *const s, int years)
 			Log("i = %d\n", i);
 			x2 = s->value[WSX1000] * pow (n, (1 - s->value[THINPOWER]));
 			Log("X2 = %f\n", x2);
-			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM];
+			fN = x2 - x1 * n - (1 - s->value[MS]) * s->value[BIOMASS_STEM_tDM];
 			Log("fN = %f\n", fN);
 			dfN = (1 - s->value[THINPOWER]) * x2 / n - x1;
 			Log("dfN = %f\n", dfN);
@@ -476,12 +476,12 @@ void Mortality (SPECIES *const s, int years)
 		{
 			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[DEAD_STEMS];
 			Log("Number of Trees  after mortality = %d trees\n", s->counter[N_TREE]);
-			s->value[BIOMASS_FOLIAGE] = s->value[BIOMASS_FOLIAGE] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE]);
+			s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
 			s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
-			s->value[BIOMASS_STEM] = s->value[BIOMASS_STEM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM] / s->counter[N_TREE]);
-			Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
+			s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * s->counter[DEAD_STEMS] * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
+			Log("Wf after dead = %f tDM/ha\n", s->value[BIOMASS_FOLIAGE_tDM]);
 			Log("Wr after dead = %f tDM/ha\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
-			Log("Ws after dead = %f tDM/ha\n", s->value[BIOMASS_STEM] );
+			Log("Ws after dead = %f tDM/ha\n", s->value[BIOMASS_STEM_tDM]);
 		}
 
 
@@ -500,7 +500,7 @@ void Mortality (SPECIES *const s, int years)
 		s->value[WS_MAX] = s->value[WSX1000];
 
 		Log("wSmax = %f KgDM/tree\n", s->value[WS_MAX]);
-		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM] * 1000 / (double)s->counter[N_TREE];
+		s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM] * 1000.0 / (double)s->counter[N_TREE];
 		Log("AvStemMass after dead = %f Kg/tree\n", s->value[AV_STEM_MASS_KgDM]);
 	}
 	else

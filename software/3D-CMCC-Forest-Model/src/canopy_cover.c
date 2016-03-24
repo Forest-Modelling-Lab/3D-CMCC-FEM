@@ -86,19 +86,19 @@ double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		Log ("MORTALITY BASED ON HIGH CANOPY COVER!!!\n");
 
 		//compute average biomass
-		Av_stem_mass = s->value[BIOMASS_STEM] / (double)s->counter[N_TREE];
+		Av_stem_mass = s->value[BIOMASS_STEM_tDM] / (double)s->counter[N_TREE];
 		Log(" Av stem mass = %f tDM/tree\n", Av_stem_mass );
 
-		Av_root_mass = (s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE]) / (double)s->counter[N_TREE];
+		Av_root_mass = (s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM]) / (double)s->counter[N_TREE];
 		Log(" Av root mass = %f tDM/tree\n", Av_root_mass );
 
-		Av_bb_mass = s->value[BIOMASS_BRANCH] / (double)s->counter[N_TREE];
+		Av_bb_mass = s->value[BIOMASS_BRANCH_tDM] / (double)s->counter[N_TREE];
 
-		Av_res_mass = s->value[RESERVE] / (double)s->counter[N_TREE];
+		Av_res_mass = s->value[RESERVE_tDM] / (double)s->counter[N_TREE];
 
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
-			Av_foliage_mass = s->value[BIOMASS_FOLIAGE] / (double)s->counter[N_TREE];
+			Av_foliage_mass = s->value[BIOMASS_FOLIAGE_tDM] / (double)s->counter[N_TREE];
 		}
 
 		oldNtree = s->counter[N_TREE];
@@ -111,23 +111,23 @@ double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		}
 		oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);
-		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] );
-		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM] );
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] );
+		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_tDM] );
 
 
-		s->value[BIOMASS_ROOTS_FINE] -= (Av_root_mass * deadtree);
-		s->value[BIOMASS_ROOTS_COARSE] -= (Av_root_mass * deadtree);
-		s->value[BIOMASS_STEM] -= (Av_root_mass * deadtree);
-		s->value[BIOMASS_BRANCH] -= (Av_bb_mass * deadtree);
-		s->value[RESERVE] -= (Av_res_mass * deadtree);
+		s->value[BIOMASS_FINE_ROOT_tDM] -= (Av_root_mass * deadtree);
+		s->value[BIOMASS_COARSE_ROOT_tDM] -= (Av_root_mass * deadtree);
+		s->value[BIOMASS_STEM_tDM] -= (Av_root_mass * deadtree);
+		s->value[BIOMASS_BRANCH_tDM] -= (Av_bb_mass * deadtree);
+		s->value[RESERVE_tDM] -= (Av_res_mass * deadtree);
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
-			s->value[BIOMASS_FOLIAGE] -= (Av_foliage_mass * deadtree);
+			s->value[BIOMASS_FOLIAGE_tDM] -= (Av_foliage_mass * deadtree);
 		}
 
 
-		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] );
-		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM] );
+		Log("Tot Root Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] );
+		Log("Stem Biomass before reduction = %f tDM/tree\n", s->value[BIOMASS_STEM_tDM] );
 		Log("Number of Trees = %d trees \n", s->counter[N_TREE]);
 		Log("Tree Removed for Crowding Competition = %d trees\n", deadtree );
 		Log("Canopy Cover in while = %f \n", s->value[CANOPY_COVER_DBHDC]);

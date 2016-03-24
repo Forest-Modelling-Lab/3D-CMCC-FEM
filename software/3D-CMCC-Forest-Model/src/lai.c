@@ -14,9 +14,9 @@ void Daily_lai (SPECIES *const s)
 	Log("\n**DAILY_LAI**\n\n");
 
 	/*CONVERT tDM/cell to KgC/m^2*/
-	leaf_c = (s->value[BIOMASS_FOLIAGE] * 1000.0 * (1.0/GC_GDM));
+	leaf_c = (s->value[BIOMASS_FOLIAGE_tDM] * 1000.0 * (1.0/GC_GDM));
 
-	Log("Foliage Biomass = %f\n", s->value[BIOMASS_FOLIAGE]);
+	Log("Foliage Biomass = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
 
 	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("LAI = %f\n", s->value[LAI]);

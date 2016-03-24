@@ -201,7 +201,7 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 		s->value[MAX_LAI] = s->value[LAI];
 	}
 	previousLai = s->value[LAI];
-	previous_Biomass_fineroot = s->value[BIOMASS_ROOTS_FINE];
+	previous_Biomass_fineroot = s->value[BIOMASS_FINE_ROOT_tDM];
 
 
 
@@ -210,35 +210,35 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 					log(.11111111111))))));
 	Log("LAI = %f\n", s->value[LAI]);
 	previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0);
-	s->value[BIOMASS_FOLIAGE] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
+	s->value[BIOMASS_FOLIAGE_tDM] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
 
 
-	s->value[BIOMASS_ROOTS_FINE] = Maximum(0,s->value[MAX_BIOMASS_FINE_ROOTS_tDM] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
+	s->value[BIOMASS_FINE_ROOT_tDM] = Maximum(0,s->value[MAX_BIOMASS_FINE_ROOTS_tDM] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 			*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 					log(.11111111111))))));
 
 
 	//ALESSIOC
-	if(s->value[BIOMASS_FOLIAGE] > 0.0 || s->value[BIOMASS_ROOTS_FINE] > 0.0)
+	if(s->value[BIOMASS_FOLIAGE_tDM] > 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
 	{
-		Log("Biomass foliage = %f\n", s->value[BIOMASS_ROOTS_FINE]);
-		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE]);
-		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE]);
+		Log("Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
+		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE_tDM]);
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_ROOTS_FINE]);
+		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_FINE_ROOT_tDM]);
 		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
 
 	}
 	else
 	{
-		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE]);
+		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
 		s->value[DEL_FOLIAGE]  = 0.0;
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-		Log("Biomass fine root = %f\n", s->value[BIOMASS_ROOTS_FINE]);
+		Log("Biomass fine root = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
 		s->value[DEL_FOLIAGE]  = 0.0;
 		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
-		CHECK_CONDITION(s->value[BIOMASS_FOLIAGE], < 0.0);
-		CHECK_CONDITION(s->value[BIOMASS_ROOTS_FINE], < 0.0);
+		CHECK_CONDITION(s->value[BIOMASS_FOLIAGE_tDM], < 0.0);
+		CHECK_CONDITION(s->value[BIOMASS_FINE_ROOT_tDM], < 0.0);
 	}
 	Log("****************************\n\n");
 }

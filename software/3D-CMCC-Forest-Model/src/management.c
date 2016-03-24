@@ -139,10 +139,10 @@ void Management (SPECIES *const s, AGE * const a, int years)
 			//Only for Dominant Layer
 			//Individual Biomass
 
-			IndWf = s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE];
-			IndWs = s->value[BIOMASS_STEM] / s->counter[N_TREE];
-			IndWr = s->value[BIOMASS_ROOTS_FINE] / s->counter[N_TREE];
-			IndWr = s->value[BIOMASS_ROOTS_COARSE] / s->counter[N_TREE];
+			IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
+			IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
+			IndWr = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
+			IndWr = s->value[BIOMASS_COARSE_ROOT_tDM] / s->counter[N_TREE];
 			Log("Individual Biomass:\nWf = %f\nWs = %f\nWr = %f\n", IndWf, IndWs, IndWr);
 
 			//Percentage of Cutted Trees for Managment
@@ -152,20 +152,20 @@ void Management (SPECIES *const s, AGE * const a, int years)
 			Log("Management Cutted Trees = %d trees/ha\n", s->counter[CUT_TREES]);
 			Log("Number of Trees  after Management = %d trees\n", s->counter[N_TREE]);
 			//Recompute Biomass
-			s->value[BIOMASS_FOLIAGE] = IndWf * s->counter[N_TREE];
-			s->value[BIOMASS_STEM] = IndWs * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_COARSE] = IndWr * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_FINE] = IndWr * s->counter[N_TREE];
+			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWr * s->counter[N_TREE];
+			s->value[BIOMASS_FINE_ROOT_tDM] = IndWr * s->counter[N_TREE];
 			Log("Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
-					s->value[BIOMASS_FOLIAGE],
-					s->value[BIOMASS_STEM],
-					s->value[BIOMASS_ROOTS_FINE],
-					s->value[BIOMASS_ROOTS_COARSE]);
+					s->value[BIOMASS_FOLIAGE_tDM],
+					s->value[BIOMASS_STEM_tDM],
+					s->value[BIOMASS_FINE_ROOT_tDM],
+					s->value[BIOMASS_COARSE_ROOT_tDM]);
 
-			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] /* ??? m->lpCell[index].Wr??*/);
+			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
 			Log("Total Biomass harvested from ecosystem = %f\n", BiomRem);
 			// Total Biomass at the end
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_STEM];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
 			Log("Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 		}
 		else
@@ -198,12 +198,12 @@ void Clearcut_Timber_without_request (SPECIES *const s, int years)
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");
 
-	IndWf = s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE];
-	IndWs = s->value[BIOMASS_STEM] / s->counter[N_TREE];
-	IndWrc = s->value[BIOMASS_ROOTS_COARSE] / s->counter[N_TREE];
-	IndWrf = s->value[BIOMASS_ROOTS_FINE] / s->counter[N_TREE];
-	IndWbb = s->value[BIOMASS_BRANCH] / s->counter[N_TREE];
-	IndWres = s->value[RESERVE] / s->counter[N_TREE];
+	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
+	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
+	IndWrc = s->value[BIOMASS_COARSE_ROOT_tDM] / s->counter[N_TREE];
+	IndWrf = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
+	IndWbb = s->value[BIOMASS_BRANCH_tDM] / s->counter[N_TREE];
+	IndWres = s->value[RESERVE_tDM] / s->counter[N_TREE];
 
 	removed_tree = s->counter[N_TREE] * site->cutTree;
 	Log("removed tree = %d\n", removed_tree);
@@ -215,24 +215,24 @@ void Clearcut_Timber_without_request (SPECIES *const s, int years)
 	Log("Number of trees after management = %d \n", s->counter[N_TREE] );
 
 	//Recompute Biomass
-	s->value[BIOMASS_FOLIAGE] = IndWf * s->counter[N_TREE];
-	s->value[BIOMASS_STEM] = IndWs * s->counter[N_TREE];
-	s->value[BIOMASS_ROOTS_COARSE] = IndWrc * s->counter[N_TREE];
-	s->value[BIOMASS_ROOTS_FINE] = IndWrf * s->counter[N_TREE];
-	s->value[BIOMASS_BRANCH] = IndWbb * s->counter[N_TREE];
-	s->value[RESERVE] = IndWres * s->counter[N_TREE];
+	s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+	s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+	s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+	s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
+	s->value[BIOMASS_BRANCH_tDM] = IndWbb * s->counter[N_TREE];
+	s->value[RESERVE_tDM] = IndWres * s->counter[N_TREE];
 	Log("Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\nWrBB = %f\n Wres = %f\n",
-			s->value[BIOMASS_FOLIAGE],
-			s->value[BIOMASS_STEM],
-			s->value[BIOMASS_ROOTS_FINE],
-			s->value[BIOMASS_ROOTS_COARSE],
-			s->value[BIOMASS_BRANCH],
-			s->value[RESERVE]);
+			s->value[BIOMASS_FOLIAGE_tDM],
+			s->value[BIOMASS_STEM_tDM],
+			s->value[BIOMASS_FINE_ROOT_tDM],
+			s->value[BIOMASS_COARSE_ROOT_tDM],
+			s->value[BIOMASS_BRANCH_tDM],
+			s->value[RESERVE_tDM]);
 
-	BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] /* ??? m->lpCell[index].Wr??*/);
+	BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
 	Log("Total Biomass harvested from ecosystem = %f\n", BiomRem);
 	// Total Biomass at the end
-	s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_STEM];
+	s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
 	Log("Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 
 }
@@ -252,12 +252,12 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 
 	int shoots_number;    //number of shoots produced after coppicing
 
-	IndWf = s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE];
-	IndWs = s->value[BIOMASS_STEM] / s->counter[N_TREE];
-	IndWrc = s->value[BIOMASS_ROOTS_COARSE] / s->counter[N_TREE];
-	IndWrf = s->value[BIOMASS_ROOTS_FINE] / s->counter[N_TREE];
-	IndWbb = s->value[BIOMASS_BRANCH] / s->counter[N_TREE];
-	IndWres = s->value[RESERVE] / s->counter[N_TREE];
+	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
+	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
+	IndWrc = s->value[BIOMASS_COARSE_ROOT_tDM] / s->counter[N_TREE];
+	IndWrf = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
+	IndWbb = s->value[BIOMASS_BRANCH_tDM] / s->counter[N_TREE];
+	IndWres = s->value[RESERVE_tDM] / s->counter[N_TREE];
 
 
 
@@ -330,20 +330,20 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 			Log("Number of mother trees after management = %d \n", s->counter[N_TREE] );
 
 			//Recompute Biomass
-			s->value[BIOMASS_FOLIAGE] = IndWf * s->counter[N_TREE];
-			s->value[BIOMASS_STEM] = IndWs * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_COARSE] = IndWrc * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_FINE] = IndWrf * s->counter[N_TREE];
+			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
 			Log("Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
-					s->value[BIOMASS_FOLIAGE],
-					s->value[BIOMASS_STEM],
-					s->value[BIOMASS_ROOTS_FINE],
-					s->value[BIOMASS_ROOTS_COARSE]);
+					s->value[BIOMASS_FOLIAGE_tDM],
+					s->value[BIOMASS_STEM_tDM],
+					s->value[BIOMASS_FINE_ROOT_tDM],
+					s->value[BIOMASS_COARSE_ROOT_tDM]);
 
-			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] /* ??? m->lpCell[index].Wr??*/);
+			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
 			Log("Total Biomass harvested from ecosystem = %f\n", BiomRem);
 			// Total Biomass at the end
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_STEM];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
 			Log("Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 
 
@@ -376,10 +376,10 @@ void Clearcut_Coppice (SPECIES *const s, int years, int z, int number_of_layers)
 
 
 
-	IndWf = s->value[BIOMASS_FOLIAGE] / s->counter[N_TREE];
-	IndWs = s->value[BIOMASS_STEM] / s->counter[N_TREE];
-	IndWrc = s->value[BIOMASS_ROOTS_COARSE] / s->counter[N_TREE];
-	IndWrf = s->value[BIOMASS_ROOTS_FINE] / s->counter[N_TREE];
+	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
+	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
+	IndWrc = s->value[BIOMASS_COARSE_ROOT_tDM] / s->counter[N_TREE];
+	IndWrf = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
 	//Log("Individual Biomass:\nWf = %f\nWs = %f\nWr = %f\n", IndWf, IndWs, IndWr);
 
 
@@ -451,20 +451,20 @@ void Clearcut_Coppice (SPECIES *const s, int years, int z, int number_of_layers)
 			Log("Number of stools = %d \n", s->counter[N_STUMP]);
 
 			//Recompute Biomass
-			s->value[BIOMASS_FOLIAGE] = IndWf * s->counter[N_TREE];
-			s->value[BIOMASS_STEM] = IndWs * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_COARSE] = IndWrc * s->counter[N_TREE];
-			s->value[BIOMASS_ROOTS_FINE] = IndWrf * s->counter[N_TREE];
+			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
 			Log("Biomass after management:\nWf = %f\nWs = %f\nWrc = %f\n Wrf = %f\n",
-					s->value[BIOMASS_FOLIAGE],
-					s->value[BIOMASS_STEM],
-					s->value[BIOMASS_ROOTS_COARSE],
-					s->value[BIOMASS_ROOTS_FINE]);
+					s->value[BIOMASS_FOLIAGE_tDM],
+					s->value[BIOMASS_STEM_tDM],
+					s->value[BIOMASS_COARSE_ROOT_tDM],
+					s->value[BIOMASS_FINE_ROOT_tDM]);
 
-			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] /* ??? m->lpCell[index].Wr??*/);
+			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
 			Log("Total Biomass harvested from ecosystem = %f\n", BiomRem);
 			// Total Biomass at the end
-			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_ROOTS_COARSE] + s->value[BIOMASS_ROOTS_FINE] + s->value[BIOMASS_STEM];
+			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
 			Log("Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 
 
