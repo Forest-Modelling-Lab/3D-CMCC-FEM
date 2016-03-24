@@ -194,6 +194,35 @@ void Reset_annual_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[DEL_Y_WRES] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WR] = 0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_BB] = 0;
+
+
+				//SERGIO
+				c->fineRootBiomass = c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM];
+				//fixme
+				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+				{
+					c->fineRootBiomass = 0.0;
+				}
+				c->coarseRootBiomass =  c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
+				c->stemBranchBiomass =  c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
+				c->stemBiomass =  c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_ROOTS_COARSE] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_FINE_ROOT_tDM] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_BRANCH] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_LEAVES] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM_LIVE_WOOD] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
+				c->heights[height].ages[age].species[species].value[OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD] =
+						c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
+
 			}
 		}
 	}

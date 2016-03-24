@@ -247,10 +247,7 @@ extern void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, i
 	}
 }
 
-
-
-
-extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, const int month, const int years, int height, int age, int species)
+void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, const int month, const int years, int height, int age, int species)
 {
 	Log("******************************************************\n\n");
 	Log("cell = \n");
@@ -262,28 +259,17 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 	Log("- DBH = %f\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 	Log("- Height = %f m\n", c->heights[height].value);
 	Log("- Number of trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
-	Log("- Ws = %f \n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
-
-
-
 	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 	{
-
 		Log("- Vegetative Days =  %d days\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-
 	}
 	else
 	{
-
 		Log("- Vegetative Days =  %d days\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-
 	}
-
-
 	Log("- Daily LAI from Model= %f \n", c->heights[height].ages[age].species[species].value[LAI]);
 	Log("- Crown Diameter = %f \n",  c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 	Log("- Canopy Cover = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
-
 	Log("- ASW layer %d month %d  = %f mm\n",  c->heights[height].z, month + 1, c->asw);
 
 	if (!month)
@@ -294,6 +280,20 @@ extern void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, con
 		Log("- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
 		//Log("+ Lai = %f\n", c->heights[height].ages[age].species[species].value[LAI]);
 		Log("+ AvDBH = %f cm\n",  c->heights[height].ages[age].species[species].value[AVDBH]);
+		Log("--Carbon pools in tC\n");
+		Log("+ Wf = %f tC/area\n", c->heights[height].ages[age].species[species].value[LEAF_C]);
+		Log("+ Wts = %f tC/area\n", c->heights[height].ages[age].species[species].value[TOT_STEM_C]);
+		Log("+ Ws = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_C]);
+		Log("+ Wbb = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_C]);
+		Log("+ Wrc = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_C]);
+		Log("+ Wrf = %f tC/area\n", c->heights[height].ages[age].species[species].value[FINE_ROOT_C]);
+		Log("+ Wr Tot = %f tC/area\n", c->heights[height].ages[age].species[species].value[ROOT_C]);
+		Log("+ Wres = %f tC/area\n", c->heights[height].ages[age].species[species].value[RESERVE_C]);
+		Log("+ Ws live = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C]);
+		Log("+ Wrc live = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C]);
+		Log("+ wbb live = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C]);
+
+		Log("--Carbon pools in tDM\n");
 		Log("+ Wf = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM]);
 		Log("+ Wts = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_TOT_STEM_tDM]);
 		Log("+ Ws = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
@@ -320,37 +320,38 @@ extern void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET
 	Log("> species = %s\n", c->heights[height].ages[age].species[species].name);
 	Log("> phenology = %f\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
 	Log("> management = %d\n", c->heights[height].ages[age].species[species].management);
-	Log("[%d] layer %d n tree = %d\n", yos[years].year,  c->heights[height].z, c->heights[height].ages[age].species[species].counter[N_TREE]);
-	Log("[%d] layer %d > avdbh = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH]);
-	Log("[%d] layer %d > wf = %f\n",yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM]);
-	Log("[%d] layer %d > wr coarse = %f\n",yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM]);
-	Log("[%d] layer %d > wr fine = %f\n",yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM]);
-	Log("[%d] layer %d > wr Tot = %f\n",yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM] + c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] );
-	Log("[%d] layer %d > wts = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_TOT_STEM_tDM]);
-	Log("[%d] layer %d > ws = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
-	Log("[%d] layer %d > ws_bb = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM]);
-	Log("[%d] layer %d > wres = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[RESERVE_tDM]);
-	Log("[%d] layer %d > wres tree = %f gC/trees\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[RESERVE_tDM] * 1000000 / c->heights[height].ages[age].species[species].counter[N_TREE]);
-	Log("[%d] layer %d > ws live = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM]);
-	Log("[%d] layer %d > ws dead = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_DEAD_WOOD_tDM]);
-	Log("[%d] layer %d > wrc live = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
-	Log("[%d] layer %d > wrc dead = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
-	Log("[%d] layer %d > wbb live = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
-	Log("[%d] layer %d > wbb dead = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+	Log(">n tree = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE]);
+	Log(">avdbh = %f\n", c->heights[height].ages[age].species[species].value[AVDBH]);
+	Log("\n--Carbon pools in tC\n");
+	Log("+ Wf = %f tC/area\n", c->heights[height].ages[age].species[species].value[LEAF_C]);
+	Log("+ Wts = %f tC/area\n", c->heights[height].ages[age].species[species].value[TOT_STEM_C]);
+	Log("+ Ws = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_C]);
+	Log("+ Wbb = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_C]);
+	Log("+ Wrc = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_C]);
+	Log("+ Wrf = %f tC/area\n", c->heights[height].ages[age].species[species].value[FINE_ROOT_C]);
+	Log("+ Wr Tot = %f tC/area\n", c->heights[height].ages[age].species[species].value[ROOT_C]);
+	Log("+ Wres = %f tC/area\n", c->heights[height].ages[age].species[species].value[RESERVE_C]);
+	Log("+ Ws live = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C]);
+	Log("+ Wrc live = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C]);
+	Log("+ wbb live = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C]);
+
+	Log("\n--Carbon pools in tDM\n");
+	Log("+ Wf = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM]);
+	Log("+ Wts = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_TOT_STEM_tDM]);
+	Log("+ Ws = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]);
+	Log("+ Wbb = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM]);
+	Log("+ Wrc = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM]);
+	Log("+ Wrf = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM]);
+	Log("+ Wr Tot = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM]);
+	Log("+ Wres = %f tDM/area\n", c->heights[height].ages[age].species[species].value[RESERVE_tDM]);
+	Log("+ Ws live = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM]);
+	Log("+ Wrc live = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+	Log("+ wbb live = %f tDM/area\n", c->heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
 	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.2 )
 	{
 		Log("[%d] layer %d > wcones = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_FRUIT_tDM]);
 	}
-
-	Log("[%d] layer %d > w total = %f \n", yos[years].year, c->heights[height].z,  c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM]+
-			c->heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM]+
-			c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM]+
-			c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]+
-			c->heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM]+
-			c->heights[height].ages[age].species[species].value[RESERVE_tDM]);
-	// ALESSIOR
-	// DEL_STEMS was used instead of DEAD_STEMS
-	Log("[%d] layer %d > Dead Trees = %d\n",yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].counter[DEAD_STEMS]);
+	Log("> Dead Trees = %d\n",c->heights[height].ages[age].species[species].counter[DEAD_STEMS]);
 	Log("> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 	Log("*****************************\n");
 }
