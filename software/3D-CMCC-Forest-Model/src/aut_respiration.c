@@ -216,15 +216,14 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
 	int i;
 
-	Log("\nAUTOTROPHIC_RESPIRATION\n");
+	Log("\n**AUTOTROPHIC_RESPIRATION**\n");
 
 	//compute autotrophic respiration for each classes
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-	Log("TOTAL autotrophic respiration = %f gC/day m^2\n", s->value[TOTAL_AUT_RESP]);
-
+	Log("TOTAL autotrophic respiration = %f gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
 
 	//fixme see if use CANOPY_COVER_DBHDC or just sizecell
-	Log("TOTAL autotrophic respiration = %f tC/cell \n", (s->value[TOTAL_AUT_RESP] /1000000) * settings->sizeCell);
+	Log("TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * settings->sizeCell);
 	CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
 
 	//compute autotrophic respiration for each layer
