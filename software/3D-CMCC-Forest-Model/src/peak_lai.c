@@ -14,6 +14,9 @@ void Peak_lai_from_pipe_model (SPECIES *const s, CELL *const c, int years, int m
 	//static double oldBasalArea;
 	//static double sapwood_perc;
 
+
+	//TODO
+
 	Log ("\nPEAK LAI FUNCTION\n");
 	Log("sap leaf = %f\n", s->value[SAP_LEAF]);
 	Log("sap area = %f\n", s->value[SAPWOOD_AREA]);

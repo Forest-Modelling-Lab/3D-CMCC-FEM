@@ -322,7 +322,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				Annual_Log ("\t%3s", "NEE");
 			}
 			Annual_Log ("\t%s \t%s \t%s" ,
-					"GPP(gC/m2y)", "AR(gC/m2y)", "AR(tDM/hay)");
+					"GPP(gC/m2y)", "AR(gC/m2y)", "AR(tC/hay)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
@@ -342,7 +342,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		Annual_Log("\t%10.2f \t%10.2f \t%10.2f",
 				c->annual_gpp,
 				c->annual_aut_resp,
-				c->annual_aut_resp_tDM);
+				c->annual_aut_resp_tC);
 
 
 		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
@@ -634,7 +634,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	}
 	c->annual_gpp = 0;
 	c->annual_aut_resp = 0;
-	c->annual_aut_resp_tDM = 0.0;
+	c->annual_aut_resp_tC = 0.0;
 	c->annual_C_flux = 0;
 	c->annual_npp_tDM = 0;
 	c->annual_npp_gC = 0;
@@ -1058,7 +1058,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				Daily_Log ("\t%3s", "NEE");
 			}
 			Daily_Log ("\t%6s \t%10s \t%10s" ,
-					"GPP(0)", "AR(0)","ARtDM(0)");
+					"GPP(0)", "AR(0)","ARtC(0)");
 			if (!mystricmp(settings->dndc, "on"))
 			{
 				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
@@ -1081,7 +1081,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		Daily_Log("\t%10.4f \t%10.4f \t%10.4f",
 				c->layer_daily_gpp[0],
 				c->layer_daily_aut_resp[0],
-				c->layer_daily_aut_resp_tDM[0]);
+				c->layer_daily_aut_resp_tC[0]);
 
 		if (!mystricmp(settings->dndc, "on"))
 		{
@@ -1113,7 +1113,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//reset
 		c->layer_daily_gpp[0] = 0;
 		c->layer_daily_aut_resp[0] = 0;
-		c->layer_daily_aut_resp_tDM[0] = 0;
+		c->layer_daily_aut_resp_tC[0] = 0;
 		c->layer_daily_c_flux_tDM[0] = 0;
 		c->layer_daily_npp_tDM[0] = 0;
 		c->layer_daily_npp_gC[0]= 0;
@@ -1359,7 +1359,7 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 	//
 	//		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
 	//		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
-	//		Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
+	//		Daily_Log("Daily ARtC = daily total autotrophic respiration (tC/day cell)\n");
 	//		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
 	//		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
 	//		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");

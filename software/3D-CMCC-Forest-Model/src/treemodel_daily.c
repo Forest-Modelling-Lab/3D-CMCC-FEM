@@ -77,8 +77,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		/* compute latent heat values */
 		Latent_heat (&m->cells[cell], met, month, day);
 
-
-		/* sort by heights */
+		/* sort class by heights */
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
 		/* loop on each heights starting from highest to lower */
@@ -143,6 +142,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								if (day == 0 && month == JANUARY)
 								{
+									//fixme for new version in C
 									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
 								/* vegetative period for deciduous */
@@ -161,12 +161,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									//Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									//Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									//Canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-
-
 									//test
 									canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
-
-
 									/* canopy carbon fluxes block */
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);

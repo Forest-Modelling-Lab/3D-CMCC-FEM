@@ -70,6 +70,35 @@ void Reset_daily_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[NPP_tDM] = 0.0;
 				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0.0;
 				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0.0;
+
+				/* reset daily carbon to cpools */
+				c->heights[height].ages[age].species[species].value[C_TO_LEAF] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_ROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_FINEROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_COARSEROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_TOT_STEM] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_STEM] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_BRANCH] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_RESERVE] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TOFRUIT] = 0.0;
+				c->heights[height].ages[age].species[species].value[RETRANSL_C_LEAF_TO_RESERVE] = 0.0;
+				c->heights[height].ages[age].species[species].value[RETRANSL_C_FINEROOT_TO_RESERVE] = 0.0;
+
+				/* reset daily maint and growth respiration */
+				c->heights[height].ages[age].species[species].value[DAILY_LEAF_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[NIGHTLY_LEAF_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[TOT_DAY_LEAF_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[FINE_ROOT_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[STEM_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[BRANCH_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[COARSE_ROOT_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[TOTAL_MAINT_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[LEAF_GROWTH_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[FINE_ROOT_GROWTH_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[COARSE_ROOT_GROWTH_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[STEM_GROWTH_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[BRANCH_GROWTH_RESP] = 0.0;
+				c->heights[height].ages[age].species[species].value[TOTAL_GROWTH_RESP] = 0.0;
 			}
 		}
 	}
@@ -89,7 +118,7 @@ void Reset_monthly_variables (CELL *const c, const int count)
 	c->monthly_npp_gC = 0.0;
 	c->monthly_npp_tDM = 0.0;
 	c->monthly_aut_resp = 0.0;
-	c->monthly_aut_resp_tDM = 0.0;
+	c->monthly_aut_resp_tC = 0.0;
 	c->monthly_maint_resp = 0.0;
 	c->monthly_growth_resp = 0.0;
 	c->monthly_r_eco = 0.0;
@@ -142,7 +171,7 @@ void Reset_annual_variables (CELL *const c, const int count)
 	c->annual_npp_gC = 0.0;
 	c->annual_npp_tDM = 0.0;
 	c->annual_aut_resp = 0.0;
-	c->annual_aut_resp_tDM = 0.0;
+	c->annual_aut_resp_tC = 0.0;
 	c->annual_maint_resp = 0.0;
 	c->annual_growth_resp = 0.0;
 	c->annual_r_eco = 0.0;

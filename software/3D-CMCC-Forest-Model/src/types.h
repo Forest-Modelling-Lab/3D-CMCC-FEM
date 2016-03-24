@@ -446,18 +446,22 @@ enum {
 	YEARLY_RAIN,                    //Yearly Rain
 
 	/*biomass variables*/
-	//carbon biomass increment in MgC
-	DEL_ROOTS_TOT_C,
-	DEL_STEMS_C,
-	DEL_FOLIAGE_C,
-	DEL_RESERVE_C,
-	DEL_FRUIT_C,
-	DEL_BB_C,
-	DEL_TOT_STEM_C,
-	DAILY_DEL_LITTER,
+	//carbon to carbon pools in gC/m2/day
+	C_TO_LEAF,
+	C_TO_ROOT,
+	C_TO_FINEROOT,
+	C_TO_COARSEROOT,
+	C_TO_TOT_STEM,
+	C_TO_STEM,
+	C_TO_BRANCH,
+	C_TO_RESERVE,
+	C_TOFRUIT,
+	RETRANSL_C_LEAF_TO_RESERVE,
+	RETRANSL_C_FINEROOT_TO_RESERVE,
 
-	//total cell carbon biomass pools in MgC
+	//carbon biomass pools in tons of C/area
 	LEAF_C,
+	MAX_LEAF_C,
 	ROOT_C,
 	COARSE_ROOT_C,
 	FINE_ROOT_C,
@@ -495,6 +499,7 @@ enum {
 	DEL_TOT_STEM,
 	DEL_ROOTS_FINE,
 	DEL_ROOTS_COARSE,
+	DAILY_DEL_LITTER,
 
 	//total cell carbon biomass pools in MgDM
 	BIOMASS_FOLIAGE_tDM,
@@ -915,7 +920,7 @@ typedef struct {
 	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;	//in g of C m^2
 	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;     //in tonnes of DM per hectare
 	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;
-	double daily_aut_resp_tDM, monthly_aut_resp_tDM, annual_aut_resp_tDM;
+	double daily_aut_resp_tC, monthly_aut_resp_tC, annual_aut_resp_tC;
 	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;
 	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;
 	double daily_r_eco, monthly_r_eco, annual_r_eco;
@@ -1008,7 +1013,7 @@ typedef struct {
 	double layer_daily_growth_resp[3], layer_monthly_gowth_resp[3], layer_annual_growth_resp[3];
 	double layer_daily_aut_resp[3], layer_monthly_aut_resp[3], layer_annual_aut_resp[3];
 	double layer_daily_c_flux[3], layer_monthly_c_flux[3], layer_annual_c_flux[3];
-	double layer_daily_aut_resp_tDM[3];
+	double layer_daily_aut_resp_tC[3];
 	double layer_daily_c_flux_tDM[3];
 
 

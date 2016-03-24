@@ -186,17 +186,17 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 			//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
-			{
-				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE_tDM];
-				s->value[RESERVE_tDM] = 0.0;
-			}
-			else
-			{
+//			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
+//			{
+//				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE_tDM];
+//				s->value[RESERVE_tDM] = 0.0;
+//			}
+//			else
+//			{
 				/* +2 is to avoid excees in biomass for foliage */
 				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / (s->value[BUD_BURST]+2.0);
 				Log("daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
-			}
+//			}
 
 			if (s->value[NPP_tDM] > 0.0)
 			{
@@ -719,13 +719,13 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 			Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
-			{
-				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE_tDM];
-				s->value[RESERVE_tDM] = 0.0;
-			}
-			else
-			{
+//			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
+//			{
+//				s->value[MAX_BIOMASS_BUDBURST_tDM] = s->value[RESERVE_tDM];
+//				s->value[RESERVE_tDM] = 0.0;
+//			}
+//			else
+//			{
 //				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST] / s->value[BUD_BURST];
 //				Log("daily amount of biomass for total budburst %f\n", biomass_tot_budburst);
 				biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / s->value[BUD_BURST];
@@ -733,7 +733,7 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 //				biomass_fine_root_budburst = s->value[MAX_BIOMASS_FINE_ROOTS] / s->value[BUD_BURST];
 //				Log("daily amount of biomass for fine root budburst %f\n", biomass_fine_root_budburst);
 
-			}
+//			}
 
 			//test this part have to be the new one
 
