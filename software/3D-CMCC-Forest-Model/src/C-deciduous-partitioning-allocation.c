@@ -226,6 +226,7 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 				Log("Using ONLY reserve\n");
 				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
 				s->value[DEL_ROOTS_FINE] = 0.0;
+				//fixme remove CANOPY_COVER??
 				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +	biomass_foliage_budburst);
 				s->value[DEL_STEMS] = 0.0;
 				s->value[DEL_ROOTS_COARSE] = 0.0;

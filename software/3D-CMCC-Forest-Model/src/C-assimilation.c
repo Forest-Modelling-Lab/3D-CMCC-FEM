@@ -16,40 +16,14 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 {
 	int i;
 
-	Log ("\nGET_C-ASSIMILATION_ROUTINE\n");
+	Log ("\n**C-ASSIMILATION_ROUTINE**\n");
 
-	if (s->counter[VEG_UNVEG] == 1)
-	{
-		Log("GPP = %f gC m^2 day\n", s->value[DAILY_GPP_gC]);
-		Log("Reserve biomass = %f\n", s->value[RESERVE_tDM]);
-		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
-		if (s->value[RESERVE_tDM] > 0.0)
-		{
-			s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
-			Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[DAILY_GPP_gC]);
-			Log("NPP_g_C = %f\n", s->value[NPP_gC]);
-			//upscale class NPP to class cell level
-			s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
-		}
-		else
-		{
-			CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
-		}
-		Log("Daily NPP = %f gC/m^2\n", s->value[NPP_gC]);
-		Log("Daily NPP = %f tDM/area\n",  s->value[NPP_tDM]);
-		//MonthlyNPP += s->value[NPP];
-		//Log("Monthly NPP (per area covered) for layer %d = %f tDM/area\n", c->heights[height].z, MonthlyNPP);
+	s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
+	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
 
-	}
-	else
-	{
-		CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
-		s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
-		Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[DAILY_GPP_gC]);
-		Log("NPP_g_C = %f\n", s->value[NPP_gC]);
-		//upscale class NPP to class cell level
-		s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
-	}
+	Log("Daily NPP = %f gC/m^2\n", s->value[NPP_gC]);
+	Log("Daily NPP = %f tDM/area\n",  s->value[NPP_tDM]);
+	CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 
 	i = c->heights[height].z;
 	c->layer_daily_npp_tDM[i] += s->value[NPP_tDM];
@@ -66,19 +40,14 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	c->annual_npp_tDM += s->value[NPP_tDM];
 	c->annual_npp_gC += s->value[NPP_gC];
 
-	Log("***************************** ANNUAL NPP *************************** \n");
-
 	Log("*********************** CLASS LEVEL ANNUAL NPP ********************** \n");
 	//class level
 	s->value[YEARLY_NPP_tDM] += s->value[NPP_tDM];
-	Log("-CLASS LEVEL\n");
 	Log("-CLASS LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", s->value[YEARLY_NPP_tDM]);
 
 	Log("*********************** STAND LEVEL ANNUAL NPP ********************** \n");
-
 	//cell level
 	c->daily_npp_tDM += s->value[NPP_tDM];
-	Log("-CELL LEVEL\n");
 	Log("-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->daily_npp_tDM);
 
 }
