@@ -25,25 +25,11 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 		Log("Total aut respiration = %f gC m^2 day \n", s->value[TOTAL_AUT_RESP]);
 		if (s->value[RESERVE_tDM] > 0.0)
 		{
-			/*for principle of conservation of mass*/
-			/*used if previous day NPP is negative to conserve mass assuming the loss of reserve*/
-			if (s->value[C_FLUX] < 0.0 )
-			{
-				CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
-				
-				s->value[NPP_gC] = 0;
-				s->value[NPP_tDM] = 0;
-			}
-			else
-			{
-				s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
-				Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[DAILY_GPP_gC]);
-				Log("NPP_g_C = %f\n", s->value[NPP_gC]);
-				//upscale class NPP to class cell level
-				s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-				//s->value[NPP] = (((s->value[GPP_g_C] * settings->sizeCell * GC_GDM)-(s->value[TOTAL_AUT_RESP])) / 1000000);
-
-			}
+			s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
+			Log("Fraction of respiration = %f %%\n", (s->value[TOTAL_AUT_RESP]*100.0)/s->value[DAILY_GPP_gC]);
+			Log("NPP_g_C = %f\n", s->value[NPP_gC]);
+			//upscale class NPP to class cell level
+			s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 		}
 		else
 		{
@@ -59,7 +45,7 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	{
 		CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 
-		s->value[NPP_gC] = 0.0;
+				s->value[NPP_gC] = 0.0;
 		s->value[NPP_tDM] = 0.0;
 		Log("Daily/Monthly NPP = %f gC/m^2\n", s->value[NPP_gC]);
 		Log("Daily/Monthly NPP (per area covered) = %f  tDM/day\n", s->value[NPP_tDM]);
