@@ -417,10 +417,10 @@ enum {
 	//biome's
 	CANOPY_INT,
 	CANOPY_EVAPO,
-	CANOPY_WET,
+	CANOPY_WET,//it should'nt be reset every day
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
-	CANOPY_WATER,
+	CANOPY_WATER,//it should'nt be reset every day
 
 	/*LAI*/
 	LAI,                            //LAI (m^2/m2)
