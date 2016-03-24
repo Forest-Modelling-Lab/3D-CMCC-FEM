@@ -66,7 +66,9 @@ void Reset_daily_variables (CELL *const c, const int count)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
+				c->heights[height].ages[age].species[species].value[DAILY_GPP_gC] = 0.0;
 				c->heights[height].ages[age].species[species].value[DAILY_POINT_GPP_gC] = 0.0;
+				c->heights[height].ages[age].species[species].value[NPP_gC] = 0.0;
 				c->heights[height].ages[age].species[species].value[NPP_tDM] = 0.0;
 				c->heights[height].ages[age].species[species].value[RAIN_INTERCEPTED] = 0.0;
 				c->heights[height].ages[age].species[species].value[CANOPY_WATER_STORED] = 0.0;
