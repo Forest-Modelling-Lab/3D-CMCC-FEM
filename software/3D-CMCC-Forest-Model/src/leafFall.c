@@ -10,6 +10,8 @@ void Leaf_fall(SPECIES *s)
 {
 	static double foliage_to_remove;
 	static double fineroot_to_remove;
+	static double retransl_leaf_c_to_reserve;
+	static double retransl_fineroot_c_to_reserve;
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
@@ -19,23 +21,22 @@ void Leaf_fall(SPECIES *s)
 
 		/* assuming linear leaf fall */
 		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		s->value[C_TO_LEAF] = foliage_to_remove;
-		Log("daily amount of foliage to remove = %f tC/cell/day\n", s->value[DEL_FOLIAGE]);
+		Log("daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
 		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		s->value[C_TO_FINEROOT] = fineroot_to_remove;
-		Log("daily amount of fine root to remove = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
+		Log("daily amount of fine root to remove = %f tC/cell/day\n", fineroot_to_remove);
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];;
+		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", retransl_leaf_c_to_reserve);
+		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", retransl_fineroot_c_to_reserve);
 	}
 
 	s->value[C_TO_LEAF] = foliage_to_remove;
 	s->value[C_TO_FINEROOT] = fineroot_to_remove;
-
+	s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
+	s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
 }
 
 struct vars_struct {

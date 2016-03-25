@@ -110,7 +110,6 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	c->daily_branch_maint_resp += s->value[BRANCH_MAINT_RESP];
 	c->daily_coarse_root_maint_resp += s->value[COARSE_ROOT_MAINT_RESP];
 
-
 	i = c->heights[height].z;
 	c->layer_daily_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
 	c->layer_monthly_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
@@ -129,37 +128,28 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	int i;
 	Log("\n**GROWTH_RESPIRATION**\n");
 
-	//toremove first part later
 	if (s->value[C_TO_LEAF] > 0.0
-			|| s->value[C_TO_FINEROOT] > 0.0
-			|| s->value[C_TO_STEM] > 0.0
-			|| s->value[C_TO_COARSEROOT] > 0.0
-			|| s->value[C_TO_BRANCH] > 0.0)
-		/*
-	If (s->value[C_TO_LEAF] > 0.0
 	|| s->value[C_TO_FINEROOT] > 0.0
-	|| s->value[C_TO_COARSEROOT] > 0.0
 	|| s->value[C_TO_STEM] > 0.0
+	|| s->value[C_TO_COARSEROOT] > 0.0
 	|| s->value[C_TO_BRANCH] > 0.0)
-		 */
-
 	{
 		//converting to gC
 		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
-		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF]/settings->sizeCell) * GRPERC;
-		Log("daily leaf growth respiration = %f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
+		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/settings->sizeCell) * GRPERC;
+		Log("daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
 
-		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT]/(settings->sizeCell))* GRPERC;
-		Log("daily fine root growth respiration = %f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
+		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(settings->sizeCell))* GRPERC;
+		Log("daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM]/(settings->sizeCell))* GRPERC;
-		Log("daily stem growth respiration = %f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
+		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(settings->sizeCell))* GRPERC;
+		Log("daily stem growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT]/(settings->sizeCell))* GRPERC;
-		Log("daily coarse root growth respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(settings->sizeCell))* GRPERC;
+		Log("daily coarse root growth respiration = %.10f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
 
-		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH]/(settings->sizeCell))* GRPERC;
-		Log("daily branch growth respiration = %f gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
+		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(settings->sizeCell))* GRPERC;
+		Log("daily branch growth respiration = %.10f gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 
 		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
 				s->value[FINE_ROOT_GROWTH_RESP] +
@@ -167,7 +157,7 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 				s->value[COARSE_ROOT_GROWTH_RESP] +
 				s->value[BRANCH_GROWTH_RESP];
 	}
-	Log("daily total growth respiration = %f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+	Log("daily total growth respiration = %.10f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
 	c->daily_stem_growth_resp += s->value[STEM_GROWTH_RESP];

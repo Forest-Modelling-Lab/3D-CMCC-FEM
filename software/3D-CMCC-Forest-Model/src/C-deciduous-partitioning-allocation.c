@@ -117,6 +117,15 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst;
+		s->value[C_TO_ROOT] = 0.0;
+		s->value[C_TO_FINEROOT] = 0.0;
+		s->value[C_TO_COARSEROOT] = 0.0;
+		s->value[C_TO_STEM] = 0.0;
+		s->value[C_TO_TOT_STEM] = 0.0;
+		s->value[C_TO_BRANCH] = 0.0;
+		s->value[C_TO_FRUIT] = 0.0;
+		s->value[C_TO_LITTER] = 0.0;
+
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 		break;
@@ -153,10 +162,22 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			s->value[C_TO_TOT_STEM] = s->value[NPP_tC] * pS_CTEM;
 			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 			s->value[C_TO_BRANCH] = (s->value[NPP_tC] * pS_CTEM) * s->value[FRACBB];
+			s->value[C_TO_LEAF] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
 		}
 		else
 		{
 			s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			s->value[C_TO_ROOT] = 0.0;
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_COARSEROOT] = 0.0;
+			s->value[C_TO_TOT_STEM] = 0.0;
+			s->value[C_TO_STEM] = 0.0;
+			s->value[C_TO_BRANCH] = 0.0;
+			s->value[C_TO_LEAF] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
 		}
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
@@ -179,7 +200,15 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		}
 
 		Leaf_fall(&c->heights[height].ages[age].species[species]);
-
+		/* these are in computed leaffall function */
+//		s->value[C_TO_LEAF] = foliage_to_remove;
+//		s->value[C_TO_FINEROOT] = fineroot_to_remove;
+		s->value[C_TO_ROOT] = 0.0;
+		s->value[C_TO_COARSEROOT] = 0.0;
+		s->value[C_TO_STEM] = 0.0;
+		s->value[C_TO_TOT_STEM] = 0.0;
+		s->value[C_TO_BRANCH] = 0.0;
+		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
 		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
 
@@ -187,7 +216,15 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	case 0:
 
 		Log("Unvegetative period \n");
-
+		s->value[C_TO_LEAF] = 0.0;
+		s->value[C_TO_FINEROOT] = 0.0;
+		s->value[C_TO_ROOT] = 0.0;
+		s->value[C_TO_COARSEROOT] = 0.0;
+		s->value[C_TO_STEM] = 0.0;
+		s->value[C_TO_TOT_STEM] = 0.0;
+		s->value[C_TO_BRANCH] = 0.0;
+		s->value[C_TO_FRUIT] = 0.0;
+		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
 		s->value[C_TO_RESERVE] = s->value[NPP_tC];
 		break;
 	}
