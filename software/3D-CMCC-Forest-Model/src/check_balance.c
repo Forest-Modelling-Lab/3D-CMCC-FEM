@@ -52,7 +52,7 @@ void Check_C_flux_balance (CELL *c)
 				Log("...FATAL ERROR IN flux C balance\n");
 				Log("DOY CB = %d\n", c->doy);
 				Log("differences in balance (old - current)= %f\n", c->old_flux_C_balance - c->flux_C_balance);
-				//exit(1);
+				exit(1);
 			}
 			else
 			{

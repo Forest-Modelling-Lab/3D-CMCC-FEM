@@ -112,7 +112,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 		/* +2 is to avoid excees in biomass for foliage */
-		carbon_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+2.0);
+		carbon_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
 
 		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
@@ -205,7 +205,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	Log("Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
 
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
-	Log("Branch and Bark Biomass (Ws) = %f tC/area\n", s->value[BRANCH_C]);
+	Log("Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
 
 	s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
 	Log("Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
@@ -243,6 +243,9 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
+	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
+	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
+
 	/* check for closure */
 	if (fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C])>1e-4)
 	{
@@ -265,6 +268,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
+	c->daily_lai[i] = s->value[LAI];
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
@@ -276,6 +280,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[DEL_Y_WR] += s->value[C_TO_ROOT];
 	s->value[DEL_Y_BB] += s->value[C_TO_BRANCH];
 
+	Log("\n-Daily incremnt in carbon pools-\n");
 	Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[C_TO_TOT_STEM]);
 	Log("delta_F %d = %f \n", c->heights[height].z, s->value[C_TO_LEAF]);
 	Log("delta_fR %d = %f \n", c->heights[height].z, s->value[C_TO_FINEROOT]);
@@ -1723,6 +1728,8 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	Log("delta_S %d = %f \n", c->heights[height].z, s->value[DEL_STEMS]);
 	Log("delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
 	Log("delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
+
+	c->daily_lai[i] = s->value[LAI];
 
 //	c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
 //	c->daily_delta_ws[i] = s->value[DEL_STEMS];

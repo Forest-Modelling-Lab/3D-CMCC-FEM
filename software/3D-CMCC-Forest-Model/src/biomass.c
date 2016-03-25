@@ -65,29 +65,29 @@ void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age
 		Log("Sapwood/Basal Area = %f \n", s->value[SAPWOOD_PERC] );
 		Log("Sapwood/Basal Area = %f %%\n",s->value[SAPWOOD_PERC] * 100);
 
-
-		//compute sap wood pools and heart wood pool
-		s->value[WS_sap] =  s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC];
-		Log("Stem biomass = %f tDM/area \n", s->value[BIOMASS_STEM_tDM]);
-		Log("Sapwood stem biomass = %f tDM/area \n", s->value[WS_sap]);
-		s->value[WS_heart] = s->value[BIOMASS_STEM_tDM] - s->value[WS_sap];
-		Log("Heartwood stem biomass = %f tDM/area \n", s->value[WS_heart]);
-		s->value[WRC_sap] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
-		Log("Sapwood coarse root biomass = %f tDM class cell \n", s->value[WRC_sap]);
-		s->value[WRC_heart] = s->value[BIOMASS_COARSE_ROOT_tDM] - s->value[WRC_sap];
-		Log("Heartwood coarse root biomass (NOT USED) = %f tDM/area \n", s->value[WRC_heart]);
+		//compute sap wood pools and heart wood pool in Carbon
+		s->value[STEM_SAPWOOD_C] =  s->value[STEM_C] * s->value[SAPWOOD_PERC];
+		Log("Sapwood stem biomass = %f tC/area \n", s->value[STEM_SAPWOOD_C]);
+		s->value[STEM_HEARTWOOD_C] = s->value[STEM_C] - s->value[STEM_SAPWOOD_C];
+		Log("Heartwood stem biomass = %f tC/area \n", s->value[STEM_HEARTWOOD_C]);
+		s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
+		Log("Sapwood coarse root biomass = %f tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
+		s->value[COARSE_ROOT_HEARTWOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_SAPWOOD_C];
+		Log("Heartwood coarse root biomass = %f tC/area \n", s->value[COARSE_ROOT_HEARTWOOD_C]);
+		s->value[BRANCH_SAPWOOD_C] =  (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
+		Log("Sapwood branch biomass = %f tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+		s->value[BRANCH_HEARTWOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_SAPWOOD_C];
+		Log("Heartwood branch biomass = %f tC/area \n", s->value[BRANCH_HEARTWOOD_C]);
 
 		/*COMPUTE BIOMASS LIVE WOOD*/
-		s->value[BIOMASS_LIVE_WOOD_tDM] = s->value[BIOMASS_STEM_LIVE_WOOD_tDM]+
-											s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]+
-											s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]+
-											s->value[BIOMASS_FINE_ROOT_tDM]+
-											s->value[BIOMASS_FOLIAGE_tDM];
-		Log("Live biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM]);
-		s->value[BIOMASS_DEAD_WOOD_tDM] = s->value[BIOMASS_STEM_DEAD_WOOD_tDM]+
-											s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]+
-											s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM];
-		Log("Dead biomass following BIOME = %f tDM/area\n", s->value[BIOMASS_DEAD_WOOD_tDM]);
+		s->value[LIVE_WOOD_C] = s->value[STEM_LIVE_WOOD_C]+
+											s->value[COARSE_ROOT_LIVE_WOOD_C]+
+											s->value[BRANCH_LIVE_WOOD_C];
+		Log("Live biomass = %f tC/area\n", s->value[LIVE_WOOD_C]);
+		s->value[DEAD_WOOD_C] = s->value[STEM_DEAD_WOOD_C]+
+											s->value[COARSE_ROOT_DEAD_WOOD_C]+
+											s->value[BRANCH_DEAD_WOOD_C];
+		Log("Dead biomass = %f tC/area\n", s->value[DEAD_WOOD_C]);
 
 
 
@@ -111,8 +111,9 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 
 	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TRHO]));
 	/*STAND VOLUME-(STEM VOLUME)*/
-	s->value[VOLUME] = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) / MassDensity;
-	Log("Volume for this class = %f m^3/area\n", s->value[VOLUME]);
+
+	//new volume is computed using DM biomass
+	s->value[VOLUME] = s->value[STEM_C] * GC_GDM * (1 - s->value[FRACBB]) / MassDensity;
 
 
 	if (settings->spatial == 'u')
@@ -122,7 +123,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 		case 3:
 			if (c->heights[height].z == 2)
 			{
-				dominant_prec_volume = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) /	MassDensity;
+				dominant_prec_volume = s->value[VOLUME];
 				Log("DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 				Log("DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
@@ -136,7 +137,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 			}
 			else if (c->heights[height].z == 1)
 			{
-				dominated_prec_volume = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) /	MassDensity;
+				dominated_prec_volume = s->value[VOLUME];
 				Log("DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
 				Log("DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
@@ -150,7 +151,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 			}
 			else
 			{
-				subdominated_prec_volume = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) /	MassDensity;
+				subdominated_prec_volume = s->value[VOLUME];
 				Log("SubDominatedVolume = %f m^3/cell resolution\n", subdominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - subdominated_prec_volume;
 				Log("SUBDOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
@@ -166,7 +167,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 		case 2:
 			if (c->heights[height].z == 1)
 			{
-				dominant_prec_volume = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) /	MassDensity;
+				dominant_prec_volume = s->value[VOLUME];
 				Log("DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 				Log("DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
@@ -180,7 +181,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 			}
 			else
 			{
-				dominated_prec_volume = s->value[BIOMASS_STEM_tDM] * (1 - s->value[FRACBB]) /	MassDensity;
+				dominated_prec_volume = s->value[VOLUME];
 				Log("DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
 				Log("DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
@@ -227,6 +228,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 		s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (double)c->heights[height].ages[age].value ;
 		Log("Yearly Stand MAI = %f m^3/area/yr \n", s->value[MAI] );
 	}
+	s->value[PREVIOUS_VOLUME] = s->value[VOLUME];
 }
 
 void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
@@ -254,11 +256,16 @@ void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 
 extern void Average_tree_biomass (SPECIES *s)
 {
+	s->value[AV_STEM_MASS_KgC] = s->value[STEM_C] * 1000.0 / s->counter[N_TREE];
+	s->value[AV_ROOT_MASS_KgC] = s->value[ROOT_C] * 1000.0 / s->counter[N_TREE];
+//	Log("Average Stem Mass = %f kgC stem /tree\n", s->value[AV_STEM_MASS_KgC]);
+//	Log("Average Root Mass = %f kgC root /tree\n", s->value[AV_ROOT_MASS_KgC]);
+	/* converted to dry matter for computation of DBH (that used DM) */
+	s->value[AV_STEM_MASS_KgDM] = s->value[STEM_C] * GC_GDM * 1000.0 / s->counter[N_TREE];
+	s->value[AV_ROOT_MASS_KgDM] = s->value[ROOT_C] * GC_GDM * 1000.0 / s->counter[N_TREE];
+//	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS_KgDM]);
+//	Log("Average Root Mass = %f kgDM root /tree\n", s->value[AV_ROOT_MASS_KgDM]);
 
-	s->value[AV_STEM_MASS_KgDM] = s->value[BIOMASS_STEM_tDM] * 	1000.0 / s->counter[N_TREE];
-	s->value[AV_ROOT_MASS_KgDM] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000.0 / s->counter[N_TREE];
-
-	Log("Average Stem Mass = %f kgDM stem /tree\n", s->value[AV_STEM_MASS_KgDM]);
 }
 
 extern void Total_class_level_biomass (SPECIES *s)
@@ -266,4 +273,8 @@ extern void Total_class_level_biomass (SPECIES *s)
 	// Total Biomass less Litterfall and Root turnover
 	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] +s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_BRANCH_tDM];
 	Log("Total Biomass less Litterfall and Root Turnover = %f tDM/area\n", s->value[TOTAL_W]);
+
+	// Total Biomass less Litterfall and Root turnover
+	s->value[TOTAL_C] =  s->value[LEAF_C] + s->value[FINE_ROOT_C] + s->value[COARSE_ROOT_C] +s->value[STEM_C] + s->value[BRANCH_C];
+	Log("Total Biomass less Litterfall and Root Turnover = %f tC/area\n", s->value[TOTAL_C]);
 }

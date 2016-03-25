@@ -467,6 +467,8 @@ enum {
 	ROOT_C,
 	COARSE_ROOT_C,
 	FINE_ROOT_C,
+	MAX_FINE_ROOT_C,
+	MAX_BUD_BURST_C,
 	STEM_C,
 	BRANCH_C,
 	TOT_STEM_C,//STEM + BRANCH AND BARK
@@ -474,6 +476,7 @@ enum {
 	FRUIT_C,
 	LIVE_WOOD_C,
 	DEAD_WOOD_C,
+	TOTAL_C,
 	STEM_LIVE_WOOD_C,
 	STEM_DEAD_WOOD_C,
 	COARSE_ROOT_LIVE_WOOD_C,
@@ -489,6 +492,26 @@ enum {
 	BRANCH_SAPWOOD_C,
 	BRANCH_HEARTWOOD_C,
 	TOT_SAPWOOD_C,
+
+	/* per tree  in KgC */
+	AV_LEAF_MASS_KgC,
+	AV_STEM_MASS_KgC,
+	AV_TOT_STEM_MASS_KgC,
+	AV_ROOT_MASS_KgC,
+	AV_FINE_ROOT_MASS_KgC,
+	AV_COARSE_ROOT_MASS_KgC,
+	AV_RESERVE_MASS_KgC,
+	AV_BRANCH_MASS_KgC,
+	AV_LIVE_STEM_MASS_KgC,
+	AV_DEAD_STEM_MASS_KgC,
+	AV_LIVE_COARSE_ROOT_MASS_KgC,
+	AV_DEAD_COARSE_ROOT_MASS_KgC,
+	AV_LIVE_BRANCH_MASS_KgC,
+	AV_DEAD_BRANCH_MASS_KgC,
+	AV_LIVE_WOOD_MASS_KgC,
+	AV_DEAD_WOOD_MASS_KgC,
+
+	MASS_DENSITY,
 
 	//CTEM CARBON
 	//carbon biomass increment
@@ -524,19 +547,22 @@ enum {
 	RESERVE_FOLIAGE_TO_RETRANSL_tDM,
 	RESERVE_FINEROOT_TO_RETRANSL_tDM,
 	/* per tree  in KgDM */
-	AV_FOLIAGE_BIOMASS_KgDM,
+	AV_FOLIAGE_MASS_KgDM,
+	AV_TOT_STEM_MASS_KgDM,
 	AV_STEM_MASS_KgDM,
 	AV_ROOT_MASS_KgDM,
 	AV_FINE_ROOT_MASS_KgDM,
 	AV_COARSE_ROOT_MASS_KgDM,
-	AV_RESERVE_BIOMASS_KgDM,
-	AV_BB_BIOMASS_KgDM,
-	AV_LIVE_STEM_BIOMASS_KgDM,
-	AV_DEAD_STEM_BIOMASS_KgDM,
-	AV_LIVE_COARSE_BIOMASS_KgDM,
-	AV_DEAD_COARSE_BIOMASS_KgDM,
-	AV_LIVE_BB_BIOMASS_KgDM,
-	AV_DEAD_BB_BIOMASS_KgDM,
+	AV_RESERVE_MASS_KgDM,
+	AV_BRANCH_MASS_KgDM,
+	AV_LIVE_STEM_MASS_KgDM,
+	AV_DEAD_STEM_MASS_KgDM,
+	AV_LIVE_COARSE_ROOT_MASS_KgDM,
+	AV_DEAD_COARSE_ROOT_MASS_KgDM,
+	AV_LIVE_WOOD_MASS_KgDM,
+	AV_DEAD_WOOD_MASS_KgDM,
+	AV_LIVE_BRANCH_MASS_KgDM,
+	AV_DEAD_BRANCH_MASS_KgDM,
 	CLASS_AGB,
 	CLASS_BGB,
 	//converted biome fraction for turnover
@@ -544,13 +570,13 @@ enum {
 	MAX_BIOMASS_BUDBURST_tDM,
 	MAX_BIOMASS_FOLIAGE_tDM,
 	MAX_BIOMASS_FINE_ROOTS_tDM,
-	WS_sap,
-	WS_heart,
-	WRC_sap,
-	WRC_heart,
-	WBB_sap,
-	WBB_heart,
-	WTOT_sap,
+	WS_sap_tDM,
+	WS_heart_tDM,
+	WRC_sap_tDM,
+	WRC_heart_tDM,
+	WBB_sap_tDM,
+	WBB_heart_tDM,
+	WTOT_sap_tDM,
 	//Branch and bark fraction --- currently the model doesn't accumulate it!!!!!!!
 	W_SEED,                        //Seed Biomass
 	DEL_TOTAL_W,                   //Total Biomass Increment
@@ -1225,10 +1251,9 @@ void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *
 void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
 void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-//new
+
 void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
-
 
 void Nitrogen_stock (SPECIES *);
 

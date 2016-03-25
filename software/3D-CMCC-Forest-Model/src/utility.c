@@ -306,6 +306,13 @@ void First_day (CELL *const c, const int count)
 						c->heights[height].ages[age].species[species].value[LIVE_WOOD_TURNOVER];
 				c->heights[height].ages[age].species[species].turnover->BRANCHTOVER = 365 /
 						c->heights[height].ages[age].species[species].value[BRANCHTTOVER];
+
+				/* compute value for volume for next years comparisons (CAI-MAI) */
+				c->heights[height].ages[age].species[species].value[MASS_DENSITY] = c->heights[height].ages[age].species[species].value[RHOMAX] +
+						(c->heights[height].ages[age].species[species].value[RHOMIN] - c->heights[height].ages[age].species[species].value[RHOMAX]) *
+						exp(-ln2 * (c->heights[height].ages[age].value / c->heights[height].ages[age].species[species].value[TRHO]));
+				c->heights[height].ages[age].species[species].value[PREVIOUS_VOLUME] = c->heights[height].ages[age].species[species].value[STEM_C] * GC_GDM *
+						(1 - c->heights[height].ages[age].species[species].value[FRACBB]) / c->heights[height].ages[age].species[species].value[MASS_DENSITY];
 			}
 		}
 	}

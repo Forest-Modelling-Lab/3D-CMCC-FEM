@@ -102,10 +102,13 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						{
 							First_day (&m->cells[cell], m->cells[cell].heights_count);
 						}
+						else
+						{
+							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
+						}
 						/* reset annual variables */
 						if (day == 0 && month == JANUARY)
 						{
-							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 							Reset_annual_variables (&m->cells[cell], m->cells[cell].heights_count);
 						}
 						/* reset monthly variables */
@@ -237,6 +240,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 								//fixme implement new fucntion for C evergreen
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
+								//fixme implement into allocation
 								Turnover(&m->cells[cell].heights[height].ages[age].species[species]);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
@@ -245,7 +249,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							if (day == 0)
 							{
 								Average_tree_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-								/* DENDROMETRY */
 								Dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 							}
 							/* END OF YEAR */
@@ -318,9 +321,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								//ABG and BGB
 								AGB_BGB_biomass(&m->cells[cell], height, age, species);
-
-								//DENDROMETRY
-								//Get_dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
 
 								//TURNOVER
 								//FIXME MOVE IT TO MONTHLY TIME STEP AT THE END OF EACH MONTH

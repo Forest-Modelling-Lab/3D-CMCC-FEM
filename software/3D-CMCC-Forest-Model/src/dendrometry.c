@@ -10,7 +10,7 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	double oldavDBH;
 	double oldTreeHeight;
 
-	Log("\nGET_DENDROMETRY_ROUTINE\n");
+	Log("\n**DENDROMETRY_ROUTINE**\n");
 
 	Log("\n**Average DBH**\n");
 	Log("**Tree Height from CC function**\n");
@@ -78,7 +78,7 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	//sites and stand ages, or more regionally applied
 	//CRB represents exponential decay parameter
 	//CRC represents shape parameters
-	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] *  s->value[AVDBH]) , s->value[CRC]);
+	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
 	Log("-Tree Height using Chapman-Richard function = %f m\n", h->value);
 
 	if (h->value > s->value[HMAX])
