@@ -6,6 +6,29 @@
 #include "types.h"
 #include "constants.h"
 
+void Leaf_fall(SPECIES *s)
+{
+	if(s->counter[LEAF_FALL_COUNTER] == 1)
+	{
+		Log("First day of Leaf fall\n");
+		Log("DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
+
+		/* assuming linear leaf fall */
+		s->value[C_TO_LEAF] = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		Log("daily amount of foliage to remove = %f tC/cell/day\n", s->value[DEL_FOLIAGE]);
+		s->value[C_TO_FINEROOT]= -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		Log("daily amount of fine root to remove = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
+
+		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
+		/* compute amount of fine root biomass to retranslocate as reserve */
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
+		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+	}
+}
+
 struct vars_struct {
 	double *x;
 	double *y;

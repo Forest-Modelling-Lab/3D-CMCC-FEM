@@ -118,6 +118,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst;
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+
+		Turnover(&c->heights[height].ages[age].species[species]);
 		break;
 
 	case 2:
@@ -158,34 +160,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			s->value[C_TO_RESERVE] = s->value[NPP_tC];
 		}
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+
+		Turnover(&c->heights[height].ages[age].species[species]);
 		break;
 		/**********************************************************************/
 	case 3:
 		Log("(DayLength < MINDAYLENGTH)\n");
 		Log("LEAF FALL\n");
 		Log("allocating into W reserve pool\n");
-
-		if(s->counter[LEAF_FALL_COUNTER] == 1)
-		{
-			Log("First day of Leaf fall\n");
-			//s->counter[SENESCENCE_DAYONE] = c->doy;
-			//s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  endOfYellowing(met, &c->heights[height].ages[age].species[species]) - c->heights[height].ages[age].species[species].counter[SENESCENCE_DAYONE];
-			Log("DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-			//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
-
-			/* assuming linear leaf fall */
-			s->value[C_TO_LEAF] = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-			Log("daily amount of foliage to remove = %f tC/cell/day\n", s->value[DEL_FOLIAGE]);
-			s->value[C_TO_FINEROOT]= -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-			Log("daily amount of fine root to remove = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
-
-			/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
-			/* compute amount of fine root biomass to retranslocate as reserve */
-			s->value[RETRANSL_C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-			s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-			Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-			Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
-		}
 
 		if (s->value[NPP_tC] > 0.0)
 		{
@@ -197,6 +179,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
 			}
 		}
+
+		Leaf_fall(&c->heights[height].ages[age].species[species]);
+		Turnover(&c->heights[height].ages[age].species[species]);
+
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
 		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
 
@@ -205,10 +191,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		Log("Unvegetative period \n");
 
+		Turnover(&c->heights[height].ages[age].species[species]);
+
 		s->value[C_TO_RESERVE] = s->value[NPP_tC];
 		break;
 	}
-
 
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
@@ -278,8 +265,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
-
-
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];

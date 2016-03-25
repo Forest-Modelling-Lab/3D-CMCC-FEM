@@ -160,7 +160,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									//Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									//Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									//Canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
-									//test
 									canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 									/* canopy carbon fluxes block */
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
@@ -174,7 +173,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									//simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
 									//test
 									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, height, age, species);
-									Turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+									//Turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 								/*outside growing season*/
 								else
@@ -197,8 +196,10 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									//Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-									simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+									//simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+									//test
+									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, height, age, species);
+									//Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 							}
 							/* loop for evergreen */
@@ -234,8 +235,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
+								//fixme implement new fucntion for C evergreen
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
+								Turnover(&m->cells[cell].heights[height].ages[age].species[species]);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
