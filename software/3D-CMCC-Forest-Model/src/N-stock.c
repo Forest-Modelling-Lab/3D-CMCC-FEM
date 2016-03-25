@@ -31,5 +31,4 @@ void Nitrogen_stock (SPECIES *s)
 	Log("Live coarse root nitrogen content = %f gN/cell\n", s->value[COARSE_ROOT_NITROGEN]);
 	s->value[BRANCH_NITROGEN] = (s->value[BRANCH_LIVE_WOOD_C] * 1000000.0 /settings->sizeCell) / s->value[CN_LIVE_WOODS];
 	Log("Live branch nitrogen content = %f gN/cell\n", s->value[BRANCH_NITROGEN]);
-
 }

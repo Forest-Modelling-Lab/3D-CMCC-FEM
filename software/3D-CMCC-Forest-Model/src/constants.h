@@ -18,7 +18,7 @@
 #define QB                       0.8      //Slope of Net vs Solar Radiation
 #define RAD2PAR                 0.45     // (DIM) ratio PAR / SWtotal
 
-#define GC_GDM                  2.13      //convert grams C to grams DM (Campioli et al., 2013)
+#define GC_GDM                  2      //convert grams C to grams DM (Campioli et al., 2013)
 #define MOLPAR_MJ                2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
 #define GDM_MOL                   24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
 #define GC_MOL                    12      //Convert molC to grams of C

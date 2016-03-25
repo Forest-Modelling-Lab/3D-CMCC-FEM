@@ -24,6 +24,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	double Perc_fine;
 	static double frac_to_foliage_fineroot;
 	static double carbon_for_foliage_budburst;
+	static double carbon_for_fine_root_budburst;
 
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
@@ -111,10 +112,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 		Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-		/* +2 is to avoid excees in biomass for foliage */
 		carbon_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
-
+		/*
+		carbon_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
+		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
+		*/
 		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst;
 		s->value[C_TO_ROOT] = 0.0;
