@@ -236,19 +236,19 @@ void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 
 	Log("**AGB & BGB**\n");
 	Log("-for Class\n");
-	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM]
-																	 + c->heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM];
-	Log("Yearly Class AGB = %f tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
-	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM];
-	Log("Yearly Class BGB = %f tDM/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
+	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[TOT_STEM_C]
+																	 + c->heights[height].ages[age].species[species].value[LEAF_C];
+	Log("Yearly Class AGB = %f tC/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
+	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[ROOT_C];
+	Log("Yearly Class BGB = %f tC/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
 
 
 	Log("-for Stand\n");
 
 	c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB] * c->heights[height].ages[age].species[species].value[PERC];
-	Log("Yearly Stand AGB = %f tDM/area year\n", c->stand_agb);
+	Log("Yearly Stand AGB = %f tC/area year\n", c->stand_agb);
 	c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB] * c->heights[height].ages[age].species[species].value[PERC];
-	Log("Yearly Stand BGB = %f tDM/area year\n", c->stand_bgb);
+	Log("Yearly Stand BGB = %f tC/area year\n", c->stand_bgb);
 	c->heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
 	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
 

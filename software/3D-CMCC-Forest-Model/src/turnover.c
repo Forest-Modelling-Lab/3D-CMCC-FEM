@@ -40,7 +40,8 @@ void Turnover(SPECIES *s)
 		{
 			Log("Live stem + dead stem = %f tC/cell\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
 			Log("Total stem = %f tC/cell\n", s->value[STEM_C]);
-			exit(1);
+			//ALESSIOR
+			Log("ATTENTION CHECK BALANCE!\n");
 		}
 
 		/*daily coarse root turnover*/
@@ -55,7 +56,8 @@ void Turnover(SPECIES *s)
 		{
 			Log("Live coarse + dead coarse = %f tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
 			Log("Total coarse = %f tC/cell\n", s->value[COARSE_ROOT_C]);
-			exit(1);
+			//ALESSIOR
+			Log("ATTENTION CHECK BALANCE!\n");
 		}
 
 		/*daily stem branch turnover*/
@@ -70,7 +72,8 @@ void Turnover(SPECIES *s)
 		{
 			Log("Live branch + dead branch = %f tC/cell\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
 			Log("Total branch = %f\n tC/cell", s->value[BRANCH_C]);
-			exit(1);
+			//ALESSIOR
+			Log("ATTENTION CHECK BALANCE!\n");;
 		}
 	}
 }

@@ -26,7 +26,7 @@ SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC s
 
 
 //SITE NUTRITION
-FR "1" //Fertility rating (estimated)
+FR "0.8" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0

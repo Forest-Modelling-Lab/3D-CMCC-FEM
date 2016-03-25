@@ -50,7 +50,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
-	max_int = precip_int_coeff * s->value[ALL_LAI] * s->value[CANOPY_COVER_DBHDC];
+	max_int = precip_int_coeff * s->value[ALL_LAI];
 
 	Log("ALL_LAI = %f mm/m^2/day\n", s->value[ALL_LAI]);
 

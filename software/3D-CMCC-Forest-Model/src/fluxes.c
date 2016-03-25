@@ -32,8 +32,6 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 	c->monthly_C_flux +=  s->value[C_FLUX];
 	c->layer_annual_c_flux[i] += s->value[C_FLUX];
 	c->annual_C_flux +=  s->value[C_FLUX];
-	c->layer_daily_c_flux_tDM[i] += ((s->value[C_FLUX] * GC_GDM) / 1000000) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
-
 }
 
 //too remove after made water_balance function

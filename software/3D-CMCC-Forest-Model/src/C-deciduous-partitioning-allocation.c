@@ -258,22 +258,22 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT] - (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
 	Log("Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
 
-	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[STEM_LIVE_WOOD_C] += s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC];
 	Log("Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
-	s->value[STEM_DEAD_WOOD_C] += s->value[C_TO_STEM]*(1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
+	//s->value[STEM_DEAD_WOOD_C] += s->value[C_TO_STEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
 	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_ROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
-	s->value[COARSE_ROOT_DEAD_WOOD_C] += s->value[C_TO_COARSEROOT] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
+	//s->value[COARSE_ROOT_DEAD_WOOD_C] += s->value[C_TO_COARSEROOT] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
 	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
-	s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+	//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
@@ -284,20 +284,46 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	{
 		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
 		Log("Total stem = %f\n", s->value[STEM_C]);
-		exit(1);
+		//ALESSIOR
+		Log("ATTENTION CHECK BALANCE!\n");
+	}
+	else
+	{
+		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
+		Log("Total stem = %f\n", s->value[STEM_C]);
 	}
 	if (fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C])>1e-4)
 	{
 		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
 		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
-		exit(1);
+		//ALESSIOR
+		Log("ATTENTION CHECK BALANCE!\n");
+	}
+	else
+	{
+		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
+		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
 	}
 	if (fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C])>1e-4)
 	{
 		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
 		Log("Total branch = %f\n", s->value[BRANCH_C]);
-		exit(1);
+		//ALESSIOR
+		Log("ATTENTION CHECK BALANCE!\n");
 	}
+	else
+	{
+		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
+		Log("Total branch = %f\n", s->value[BRANCH_C]);
+	}
+	Log("\n-Daily increment in carbon pools-\n");
+	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
+	Log("C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
+	Log("C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	Log("C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	Log("C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
+	Log("C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
+	Log("C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
 
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
@@ -315,15 +341,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[DEL_Y_WRES] += s->value[C_TO_RESERVE];
 	s->value[DEL_Y_WR] += s->value[C_TO_ROOT];
 	s->value[DEL_Y_BB] += s->value[C_TO_BRANCH];
-
-	Log("\n-Daily incremnt in carbon pools-\n");
-	Log("delta_WTS %d = %f \n", c->heights[height].z, s->value[C_TO_TOT_STEM]);
-	Log("delta_F %d = %f \n", c->heights[height].z, s->value[C_TO_LEAF]);
-	Log("delta_fR %d = %f \n", c->heights[height].z, s->value[C_TO_FINEROOT]);
-	Log("delta_cR %d = %f \n", c->heights[height].z, s->value[C_TO_COARSEROOT]);
-	Log("delta_S %d = %f \n", c->heights[height].z, s->value[C_TO_STEM]);
-	Log("delta_Res %d = %f \n", c->heights[height].z, s->value[C_TO_RESERVE]);
-	Log("delta_BB %d = %f \n", c->heights[height].z, s->value[C_TO_BRANCH]);
 
 	/* update layer level daily carbon biomass increment in tC/cell/day */
 	c->daily_delta_wts[i] = s->value[C_TO_TOT_STEM];

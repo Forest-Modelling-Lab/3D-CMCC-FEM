@@ -27,9 +27,6 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d, species %s height %f dbh %f !!!\n", c->heights[height].z, c->heights[height].ages[age].species[species].name,
 			c->heights[height].value, c->heights[height].ages[age].species[species].value[AVDBH]);
 
-	//Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!CONTROL ROOT BIOMASS!!!\n");
-
-
 	//Layer coverage mortality for timber
 	//mortality occurs directly for timber
 	if (c->heights[height].ages[age].species[species].management == T)

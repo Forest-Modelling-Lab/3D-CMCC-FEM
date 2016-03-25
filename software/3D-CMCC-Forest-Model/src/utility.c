@@ -240,7 +240,6 @@ void Reset_annual_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[AVERAGE_F_SW]  = 0.0;
 				c->heights[height].ages[age].species[species].value[F_AGE]  = 0.0;
 
-
 				c->heights[height].ages[age].species[species].value[DEL_Y_WS] = 0.0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WF] = 0.0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WFR] = 0.0;
@@ -248,7 +247,6 @@ void Reset_annual_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[DEL_Y_WRES] = 0.0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_WR] = 0.0;
 				c->heights[height].ages[age].species[species].value[DEL_Y_BB] = 0.0;
-
 
 				//SERGIO
 				c->fineRootBiomass = c->heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM];
