@@ -130,11 +130,11 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	Log("\n**GROWTH_RESPIRATION**\n");
 
 	//toremove first part later
-	if (s->value[DEL_FOLIAGE] > 0.0
-			|| s->value[DEL_ROOTS_FINE] > 0.0
-			|| s->value[DEL_STEMS] > 0.0
-			|| s->value[DEL_ROOTS_COARSE] > 0.0
-			|| s->value[DEL_BB] > 0.0)
+	if (s->value[C_TO_LEAF] > 0.0
+			|| s->value[C_TO_FINEROOT] > 0.0
+			|| s->value[C_TO_STEM] > 0.0
+			|| s->value[C_TO_COARSEROOT] > 0.0
+			|| s->value[C_TO_BRANCH] > 0.0)
 		/*
 	If (s->value[C_TO_LEAF] > 0.0
 	|| s->value[C_TO_FINEROOT] > 0.0

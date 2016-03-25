@@ -119,7 +119,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst;
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
-		Turnover(&c->heights[height].ages[age].species[species]);
 		break;
 
 	case 2:
@@ -128,7 +127,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
 		/* partitioning block using CTEM approach */
-		Log("*Partitioning ratios*\n");
+		Log("\n*Partitioning ratios*\n");
 		pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 		Log("Roots CTEM ratio = %f %%\n", pR_CTEM * 100);
 		pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
@@ -161,7 +160,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		}
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
-		Turnover(&c->heights[height].ages[age].species[species]);
 		break;
 		/**********************************************************************/
 	case 3:
@@ -181,7 +179,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		}
 
 		Leaf_fall(&c->heights[height].ages[age].species[species]);
-		Turnover(&c->heights[height].ages[age].species[species]);
 
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
 		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
@@ -191,12 +188,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		Log("Unvegetative period \n");
 
-		Turnover(&c->heights[height].ages[age].species[species]);
-
 		s->value[C_TO_RESERVE] = s->value[NPP_tC];
 		break;
 	}
 
+	Log("\n*Carbon allocation*\n");
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
 	Log("Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
@@ -269,6 +265,9 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
 	c->daily_lai[i] = s->value[LAI];
+
+	/* turnover */
+	Turnover(&c->heights[height].ages[age].species[species]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
