@@ -67,16 +67,17 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		else
 		{
 			Log("ERROR IN GPP_molC!!!\n");
+			exit(1);
 		}
-
 		//Daily/Monthly layer GPP in grams of C/m^2
 		//Convert molC into grams
-		s->value[DAILY_POINT_GPP_gC] = GPPmolC * GC_MOL;
+		s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;
 		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_POINT_GPP_gC] );
 
 		s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
 		//fixme see if use CANOPY_COVER_DBHDC
+		//25 MARCH 2016
 		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /** s->value[CANOPY_COVER_DBHDC]*/;
 		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_GPP_gC]);
 	}
