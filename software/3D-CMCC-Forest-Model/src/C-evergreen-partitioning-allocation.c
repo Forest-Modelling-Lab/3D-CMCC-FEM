@@ -326,7 +326,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[RESERVE_tDM];
 			break;
 		case 2:
 			Log("allocating into the three pools Ws+Wr+Wreserve\n");
@@ -439,7 +438,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
 			c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
-			c->daily_wres[i] = s->value[RESERVE_tDM];
 
 			break;
 
@@ -450,7 +448,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
-	c->annual_wres[i] = s->value[RESERVE_tDM];
 
 	Log("******************************\n");
 }

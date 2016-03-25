@@ -438,6 +438,7 @@ enum {
 	MONTHLY_GPP_gC,				//Class Monthly Gross Primary Production gC/m^2 month
 	NPP_tDM,                            //Net Primary Production  tDM/area
 	NPP_gC, 						//Net Primary Production in grams of C
+	NPP_tC,
 	C_FLUX,
 	YEARLY_POINT_GPP_gC,
 	YEARLY_GPP_gC,                 //Yearly GPP
@@ -455,7 +456,8 @@ enum {
 	C_TO_STEM,
 	C_TO_BRANCH,
 	C_TO_RESERVE,
-	C_TOFRUIT,
+	C_TO_FRUIT,
+	C_TO_LITTER,
 	RETRANSL_C_LEAF_TO_RESERVE,
 	RETRANSL_C_FINEROOT_TO_RESERVE,
 
@@ -930,12 +932,19 @@ typedef struct {
 	double ter;  //total ecosystem respiration
 	double carbon_balance, old_carbon_balance;
 	double daily_nee, monthly_nee, annual_nee;
-	double daily_leaf_carbon;
-	double daily_stem_carbon;
-	double daily_fine_root_carbon;
-	double daily_coarse_root_carbon;
-	double daily_branch_carbon;
-	double daily_reserve_carbon;
+	double daily_leaf_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_stem_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fine_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_coarse_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_branch_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_reserve_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_leaf_drymatter;
+	double daily_stem_drymatter;
+	double daily_fine_root_drymatter;
+	double daily_coarse_root_drymatter;
+	double daily_branch_drymatter;
+	double daily_reserve_drymatter;
 	double daily_leaf_maint_resp;
 	double daily_stem_maint_resp;
 	double daily_fine_root_maint_resp;
@@ -1017,14 +1026,21 @@ typedef struct {
 	double layer_daily_c_flux_tDM[3];
 
 
-	double daily_delta_wf[3], daily_wf[3], monthly_delta_wf[3], monthly_wf[3], annual_delta_wf[3], annual_wf[3];
-	double daily_delta_wts[3], daily_wts[3], monthly_delta_wts[3], monthly_wts[3], annual_delta_wts[3], annual_wts[3];
-	double daily_delta_ws[3], daily_ws[3], monthly_delta_ws[3], monthly_ws[3], annual_delta_ws[3], annual_ws[3];
-	double daily_delta_wbb[3], daily_wbb[3], monthly_delta_wbb[3], monthly_wbb[3], annual_delta_wbb[3], annual_wbb[3];
-	double daily_delta_wfr[3], daily_wfr[3], monthly_delta_wfr[3], monthly_wfr[3], annual_delta_wfr[3], annual_wfr[3];
-	double daily_delta_wcr[3], daily_wcr[3], monthly_delta_wcr[3], monthlyl_wcr[3], annual_delta_wcr[3], annual_wcr[3];
-	double daily_delta_wres[3], daily_wres[3], monthly_delta_wres[3], monthly_wres[3], annual_delta_wres[3], annual_wres[3];
+	double daily_delta_wf[3], monthly_delta_wf[3], annual_delta_wf[3];
+	double daily_delta_wts[3], monthly_delta_wts[3], annual_delta_wts[3];
+	double daily_delta_ws[3], monthly_delta_ws[3],  annual_delta_ws[3];
+	double daily_delta_wbb[3], monthly_delta_wbb[3], annual_delta_wbb[3];
+	double daily_delta_wfr[3], monthly_delta_wfr[3], annual_delta_wfr[3];
+	double daily_delta_wcr[3], monthly_delta_wcr[3], annual_delta_wcr[3];
+	double daily_delta_wres[3], monthly_delta_wres[3], annual_delta_wres[3];
 
+	double daily_layer_stem_c[3], monthly_layer_stem_c[3], annual_layer_stem_c[3];
+	double daily_layer_leaf_c[3], monthly_layer_leaf_c[3], annual_layer_leaf_c[3];
+	double daily_layer_tot_stem_c[3], monthly_layer_tot_stem_c[3], annual_layer_tot_stem_c[3];
+	double daily_layer_branch_c[3], monthly_layer_branch_c[3], annual_layer_branch_c[3];
+	double daily_layer_fineroot_c[3], monthly_layer_fineroot_c[3], annual_layer_fineroot_c[3];
+	double daily_layer_coarseroot_c[3], monthly_layer_coarseroot_c[3], annual_layer_coarseroot_c[3];
+	double daily_layer_reserve_c[3], monthly_layer_reserve_c[3], annual_layer_reserve_c[3];
 
 
 	double layer_daily_c_int[3], layer_monthly_c_int[3], layer_annual_c_int[3];
@@ -1209,6 +1225,10 @@ void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *
 void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 //evergreen routine for carbon allocation
 void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
+//new
+void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+
 
 void Nitrogen_stock (SPECIES *);
 
@@ -1221,7 +1241,7 @@ void Carbon_fluxes (SPECIES *const, CELL *const, int, int, int);
 void Water_fluxes (CELL *const c);
 void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
-void Peak_lai_from_pipe_model (SPECIES *const , CELL *const, int, int, int, int, int );
+void Peak_lai(SPECIES *const , CELL *const, int, int, int, int, int );
 void Turnover (SPECIES *, CELL *, int, int);
 void Light_Recruitment (SPECIES *const, double, double);
 void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);

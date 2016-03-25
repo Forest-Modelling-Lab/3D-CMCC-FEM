@@ -19,11 +19,11 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 	Log ("\n**C-ASSIMILATION_ROUTINE**\n");
 
 	s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
+	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * settings->sizeCell;
 	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
 
 	Log("Daily NPP = %f gC/m^2\n", s->value[NPP_gC]);
 	Log("Daily NPP = %f tDM/area\n",  s->value[NPP_tDM]);
-	CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0)
 
 	i = c->heights[height].z;
 	c->layer_daily_npp_tDM[i] += s->value[NPP_tDM];

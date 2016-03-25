@@ -173,7 +173,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	double evap, evap_sun, evap_shade;
 	double evap_watt, evap_sun_watt, evap_shade_watt;
 	double rr, rh, rhr;
-	double rv, rv_sun, rv_shade;
+	double rv_sun, rv_shade;
 	double dt = 0.2;
 
 	Log("\n**BIOME CANOPY_TRANSPIRATION_ROUTINE**\n");
@@ -261,7 +261,6 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	rh = 1.0/gl_sh;
 
 	/* resistance to latent heat transfer */
-	rv = 1.0/gl_t_wv;
 	rv_sun = 1.0/gl_t_wv_sun;
 	rv_shade = 1.0/gl_t_wv_shade;
 

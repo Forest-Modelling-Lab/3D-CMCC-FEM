@@ -363,12 +363,12 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_peak_lai[0],
 				c->layer_annual_cc[0],
 				c->annual_dead_tree,
-				c->annual_wf[0],
-				c->annual_ws[0],
-				c->annual_wbb[0],
-				c->annual_wfr[0],
-				c->annual_wcr[0],
-				c->annual_wres[0],
+				c->annual_layer_leaf_c[0],
+				c->annual_layer_stem_c[0],
+				c->annual_layer_branch_c[0],
+				c->annual_layer_fineroot_c[0],
+				c->annual_layer_coarseroot_c[0],
+				c->annual_layer_reserve_c[0],
 				c->annual_delta_wres[0]);
 
 		previous_layer_number = c->annual_layer_number;
@@ -395,14 +395,14 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[0] = 0;
 		c->layer_annual_dead_tree[0] = 0;
 		c->annual_peak_lai[0] = 0;
-		c->annual_wres[0] = 0;
+		c->annual_layer_reserve_c[0] = 0;
 		c->annual_delta_ws[0] = 0;
 		c->annual_delta_wres[0] = 0;
-		c->annual_wf[0]= 0;
-		c->annual_ws[0]= 0;
-		c->annual_wbb[0]= 0;
-		c->annual_wfr[0]= 0;
-		c->annual_wcr[0]= 0;
+		c->annual_layer_leaf_c[0]= 0;
+		c->annual_layer_stem_c[0]= 0;
+		c->annual_layer_branch_c[0]= 0;
+		c->annual_layer_fineroot_c[0]= 0;
+		c->annual_layer_coarseroot_c[0]= 0;
 
 	}
 	if (c->annual_layer_number == 2)
@@ -459,7 +459,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_peak_lai[1], c->annual_peak_lai[0],
 				c->layer_annual_cc[1], c->layer_annual_cc[0],
 				c->layer_annual_dead_tree[1], c->layer_annual_dead_tree[0], c->annual_dead_tree,
-				c->annual_wres[1], c->annual_wres[0]);
+				c->annual_layer_reserve_c[1], c->annual_layer_reserve_c[0]);
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -492,8 +492,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[1] = 0;
 		c->layer_annual_dead_tree[1] = 0;
 		c->annual_delta_ws[1] = 0;
-		c->annual_ws[1] = 0;
-		c->annual_wres[1] = 0;
+		c->annual_layer_stem_c[1] = 0;
+		c->annual_layer_reserve_c[1] = 0;
 
 		c->layer_annual_gpp[0] = 0;
 		c->layer_annual_aut_resp[0] = 0;
@@ -503,8 +503,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[0] = 0;
 		c->layer_annual_dead_tree[0] = 0;
 		c->annual_delta_ws[0] = 0;
-		c->annual_ws[0] = 0;
-		c->annual_wres[0] = 0;
+		c->annual_layer_stem_c[0] = 0;
+		c->annual_layer_reserve_c[0] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
 
@@ -567,7 +567,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_peak_lai[2], c->annual_peak_lai[1], c->annual_peak_lai[0],
 				c->layer_annual_cc[2],c->layer_annual_cc[1], c->layer_annual_cc[0],
 				c->layer_annual_dead_tree[2], c->layer_annual_dead_tree[1], c->layer_annual_dead_tree[0], c->annual_dead_tree,
-				c->annual_wres[2], c->annual_wres[1], c->annual_wres[0]);
+				c->annual_layer_reserve_c[2], c->annual_layer_reserve_c[1], c->annual_layer_reserve_c[0]);
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -603,8 +603,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[2] = 0;
 		c->layer_annual_dead_tree[2] = 0;
 		c->annual_delta_ws[2] = 0;
-		c->annual_ws[2] = 0;
-		c->annual_wres[2] = 0;
+		c->annual_layer_stem_c[2] = 0;
+		c->annual_layer_reserve_c[2] = 0;
 
 		c->layer_annual_gpp[1] = 0;
 		c->layer_annual_aut_resp[1] = 0;
@@ -614,8 +614,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[1] = 0;
 		c->layer_annual_dead_tree[1] = 0;
 		c->annual_delta_ws[1] = 0;
-		c->annual_ws[1] = 0;
-		c->annual_wres[1] = 0;
+		c->annual_layer_stem_c[1] = 0;
+		c->annual_layer_reserve_c[1] = 0;
 
 		c->layer_annual_gpp[0] = 0;
 		c->layer_annual_aut_resp[0] = 0;
@@ -625,8 +625,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_annual_cc[0] = 0;
 		c->layer_annual_dead_tree[0] = 0;
 		c->annual_delta_ws[0] = 0;
-		c->annual_ws[0] = 0;
-		c->annual_wres[0] = 0;
+		c->annual_layer_stem_c[0] = 0;
+		c->annual_layer_reserve_c[0] = 0;
 		c->annual_peak_lai[2] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
@@ -1105,7 +1105,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->daily_delta_wfr[0],
 				c->daily_delta_wcr[0],
 				c->daily_delta_wres[0],
-				c->daily_wres[0]);
+				c->daily_layer_reserve_c[0]);
 		//}
 
 		previous_layer_number = c->annual_layer_number;

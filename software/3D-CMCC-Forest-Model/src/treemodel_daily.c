@@ -142,8 +142,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							{
 								if (day == 0 && month == JANUARY)
 								{
-									//fixme for new version in C
-									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
+									Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
 								/* vegetative period for deciduous */
 								if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
@@ -172,7 +171,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									//Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+									//simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
+									//test
+									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, height, age, species);
 									Turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 								/*outside growing season*/
@@ -206,7 +207,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//Peak LAI is also used in spatial version to drive carbon allocation
 								if (day == 0 && month == JANUARY)
 								{
-									Peak_lai_from_pipe_model (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
+									Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height, age);
 								}
 								Log("*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
 								Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
