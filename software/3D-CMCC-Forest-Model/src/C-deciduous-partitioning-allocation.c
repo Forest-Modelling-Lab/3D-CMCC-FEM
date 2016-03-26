@@ -36,11 +36,17 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	Log("\n**ALLOCATION_ROUTINE**\n\n");
 	Log("Carbon allocation routine for deciduous\n");
 
+	/* following Arora and Boer 2005 */
+	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
-	Daily_solar_radiation = met[month].d[day].solar_rad * MOLPAR_MJ;
-
-	Par_over = c->par - s->value[APAR];
-	Light_trasm = Par_over /Daily_solar_radiation;
+	/* partitioning block using CTEM approach */
+	Log("\n*Partitioning ratios*\n");
+	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
+	Log("Roots CTEM ratio = %f %%\n", pR_CTEM * 100);
+	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
+	Log("Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
+	Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 
 	//fixme to check it, values are too high for fine root
 	/* fine root vs. coarse root ratio */
@@ -99,7 +105,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	case 1:
 		Log("BUDBURST\n");
 		Log("Bud burst phase using both reserve pools and npp\n");
-		Log("Allocating only into foliage\n");
+		Log("Allocating only into foliage and fine root\n");
 		Log("LAI = %f \n", s->value[LAI]);
 
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
@@ -114,14 +120,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		carbon_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
-		/*
+
 		carbon_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
 		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
-		*/
+
 		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst;
+		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst - carbon_for_fine_root_budburst;
 		s->value[C_TO_ROOT] = 0.0;
-		s->value[C_TO_FINEROOT] = 0.0;
+		s->value[C_TO_FINEROOT] = carbon_for_fine_root_budburst;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_TOT_STEM] = 0.0;
@@ -138,35 +144,20 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("allocating into the three pools Ws+Wr(Wrc+Wrf)+Wreserve\n");
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
-		/* partitioning block using CTEM approach */
-		Log("\n*Partitioning ratios*\n");
-		pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-		Log("Roots CTEM ratio = %f %%\n", pR_CTEM * 100);
-		pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-		Log("Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
-		pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-		Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
-
 		if (s->value[NPP_tC] > 0.0)
 		{
-			//fixme do it also for 0.1
-			/* reproduction only for needle leaf */
-			if (s->value[PHENOLOGY] == 0.2)
-			{
-				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
-				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
-			}
-
+			s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
+			s->value[NPP_tC] -= s->value[C_TO_FRUIT];
 			/* allocating into c pools */
 			s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
-			s->value[C_TO_ROOT] = s->value[NPP_tC] * pR_CTEM;
-			s->value[C_TO_FINEROOT] = s->value[C_TO_ROOT] * Perc_fine;
-			s->value[C_TO_COARSEROOT] = s->value[C_TO_ROOT] - s->value[DEL_ROOTS_FINE];
-			s->value[C_TO_TOT_STEM] = s->value[NPP_tC] * pS_CTEM;
+			s->value[C_TO_ROOT] = 0.0;
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
+			s->value[C_TO_TOT_STEM] = 0.0;
 			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 			s->value[C_TO_BRANCH] = (s->value[NPP_tC] * pS_CTEM) * s->value[FRACBB];
 			s->value[C_TO_LEAF] = 0.0;
-			s->value[C_TO_FRUIT] = 0.0;
+			//s->value[C_TO_FRUIT] = 0.0;
 			s->value[C_TO_LITTER] = 0.0;
 		}
 		else
