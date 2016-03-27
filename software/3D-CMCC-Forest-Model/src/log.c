@@ -321,15 +321,15 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 			{
 				Annual_Log ("\t%3s", "NEE");
 			}
-			Annual_Log ("\t%s \t%s" ,
-					"GPP(gC/m2y)", "AR(gC/m2y)");
+			Annual_Log ("\t%s \t%s \t%s \t%s" ,
+					"GPP(gC/m2y)", "AR(gC/m2y)", "MR(gC/m2y)", "GR(gC/m2y)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
 			Annual_Log ("\t%s \t%10s \t%8s \t%8s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
-					"Y(%)", "NPP(gC/m2y)", "ET(tot)", "ASW", "PEAK_LAI",
+					"Y(%)", "NPP", "ET", "ASW", "PEAK_LAI",
 					"CC(tot)", "DEAD TREE", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
 
 		}
@@ -338,9 +338,11 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Annual_Log ("\t%6.2f", c->annual_nee);
 		}
-		Annual_Log("\t%10.2f \t%12.2f",
+		Annual_Log("\t%10.2f \t%10.2f \t%12.2f \t%12.2f",
 				c->annual_gpp,
-				c->annual_aut_resp);
+				c->annual_aut_resp,
+				c->annual_maint_resp,
+				c->annual_growth_resp);
 
 
 		if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))

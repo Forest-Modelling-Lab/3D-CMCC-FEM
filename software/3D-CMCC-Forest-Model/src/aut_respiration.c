@@ -71,30 +71,30 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 		Log("nightly leaf maintenance respiration = %f gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
-		Log("BIOME Total daily leaf maintenance respiration = %f gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+		Log("Total daily leaf maintenance respiration = %f gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 		/* fine roots */
 		exponent_tsoil = (met[month].d[day].tsoil - 20.0) / 10.0;
 		t1 = pow(q10, exponent_tsoil);
 		s->value[FINE_ROOT_MAINT_RESP] = (s->value[FINE_ROOT_NITROGEN] * mrpern * t1);
-		Log("BIOME Fine root maintenance respiration = %f gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
+		Log("Fine root maintenance respiration = %f gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 	}
 
 	// live stem maintenance respiration
 	exponent_tavg = (met[month].d[day].tavg - 20.0) / 10.0;
 	t1 = pow(q10, exponent_tavg);
 	s->value[STEM_MAINT_RESP] = (s->value[STEM_NITROGEN] * mrpern * t1);
-	Log("BIOME Stem maintenance respiration = %f gC/m2/day\n", s->value[STEM_MAINT_RESP]);
+	Log("Stem maintenance respiration = %f gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
 	//live branch maintenance respiration
 	s->value[BRANCH_MAINT_RESP] = (s->value[BRANCH_NITROGEN] * mrpern * t1);
-	Log("BIOME Branch maintenance respiration = %f gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
+	Log("Branch maintenance respiration = %f gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	//live coarse root maintenance respiration
 	exponent_tsoil = (met[month].d[day].tsoil - 20.0) / 10.0;
 	t1 = pow(q10, exponent_tsoil);
 	s->value[COARSE_ROOT_MAINT_RESP] = (s->value[COARSE_ROOT_NITROGEN] * mrpern * t1);
-	Log("BIOME Coarse root maintenance respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
+	Log("Coarse root maintenance respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 	//COMPUTE TOTAL MAINTENANCE RESPIRATION
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+
@@ -143,7 +143,7 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 		Log("daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
 		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(settings->sizeCell))* GRPERC;
-		Log("daily stem growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
+		Log("daily stem growth respiration = %.10f gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
 
 		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(settings->sizeCell))* GRPERC;
 		Log("daily coarse root growth respiration = %.10f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
