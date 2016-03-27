@@ -100,7 +100,7 @@ LEAF_LIFE_SPAN  1     //Leaf life span
 
 //TURNOVER
 LEAVES_FINERTTOVER	1       //Average yearly fine root turnover rate Rasse et al 2001
-COARSERTTOVER	0.02	//Average yearly coarse root turnover rate Rasse et al 2001, 0.05 Bartelink 1998, 0.02 Kurz et al., 1996
+COARSERTTOVER	0.05	//Average yearly coarse root turnover rate Rasse et al 2001, 0.05 Bartelink 1998, 0.02 Kurz et al., 1996
 SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate , 0.01 Bartelink 1998 
 BRANCHTTOVER	0.03	//Average yearly branch turnover rate 0.05 Bartelink 1998 
 LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate 
