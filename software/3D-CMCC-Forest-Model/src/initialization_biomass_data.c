@@ -185,13 +185,13 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 		//fixme
 		s->value[RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 
-		Log("\n\n\n!!!!RESERVE ARE COMPUTED AS A COSTANT FRACTION OF SAPWOOD IN DRYMATTER!!!!\n\n\n");
-		Log("-----Reserve Biomass initialization data  = %f tDM/cell \n", s->value[RESERVE_tDM]);
-		Log("-----Reserve Biomass initialization data  = %f Kg res/cell \n", s->value[RESERVE_tDM] * 1000);
-		Log("-----Reserve Biomass initialization data  = %f g res/tree \n", (s->value[RESERVE_tDM] * 1000000)/(int)s->counter[N_TREE]);
-		Log("-----Reserve Biomass initialization data  = %f t res/cell \n", s->value[RESERVE_C]);
-		Log("-----Reserve Biomass initialization data  = %f Kg res/cell \n", s->value[RESERVE_C] * 1000);
-		Log("-----Reserve Biomass initialization data  = %f g res/tree \n", (s->value[RESERVE_C] * 1000000)/(int)s->counter[N_TREE]);
+		Log("\n!!!!RESERVE ARE COMPUTED AS A COSTANT FRACTION OF SAPWOOD IN DRYMATTER!!!!\n");
+		Log("-----Reserve initialization data  = %f tDM/cell \n", s->value[RESERVE_tDM]);
+		Log("-----Reserve initialization data  = %f Kg res/cell \n", s->value[RESERVE_tDM] * 1000);
+		Log("-----Reserve initialization data  = %f g res/tree \n", (s->value[RESERVE_tDM] * 1000000)/(int)s->counter[N_TREE]);
+		Log("-----Reserve initialization data  = %f t res/cell \n", s->value[RESERVE_C]);
+		Log("-----Reserve initialization data  = %f Kg res/cell \n", s->value[RESERVE_C] * 1000);
+		Log("-----Reserve initialization data  = %f g res/tree \n", (s->value[RESERVE_C] * 1000000)/(int)s->counter[N_TREE]);
 	}
 	else
 	{
@@ -200,11 +200,13 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	}
 	s->value[AV_RESERVE_MASS_KgDM] = s->value[RESERVE_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_RESERVE_MASS_KgC] = s->value[RESERVE_C] *1000.0 /s->counter[N_TREE];
-	Log("-Individual reserve biomass = %f KgDM\n", s->value[AV_RESERVE_MASS_KgDM]);
-	Log("-Individual reserve biomass = %f KgC\n", s->value[AV_RESERVE_MASS_KgC]);
+	Log("-Individual reserve = %f KgDM/tree\n", s->value[AV_RESERVE_MASS_KgDM]);
+	Log("-Individual reserve = %f Kg/tree\n", s->value[AV_RESERVE_MASS_KgC]);
 	/* compute minimum reserve pool */
 	s->value[MIN_RESERVE_C] = s->value[RESERVE_C];
 	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C]*1000.0 /s->counter[N_TREE];
+	Log("-Minimum reserve  = %f tres/tree\n", s->value[MIN_RESERVE_C]);
+	Log("-Individual minimum reserve = %f KgC/tree\n", s->value[AV_MIN_RESERVE_KgC]);
 
 	/* leaf */
 	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0)

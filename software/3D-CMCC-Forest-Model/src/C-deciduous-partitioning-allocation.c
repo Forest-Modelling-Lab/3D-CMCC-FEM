@@ -146,19 +146,37 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		if (s->value[NPP_tC] > 0.0)
 		{
-			s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
-			s->value[NPP_tC] -= s->value[C_TO_FRUIT];
-			/* allocating into c pools */
-			s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
-			s->value[C_TO_ROOT] = 0.0;
-			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
-			s->value[C_TO_TOT_STEM] = 0.0;
-			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-			s->value[C_TO_BRANCH] = (s->value[NPP_tC] * pS_CTEM) * s->value[FRACBB];
-			s->value[C_TO_LEAF] = 0.0;
-			//s->value[C_TO_FRUIT] = 0.0;
-			s->value[C_TO_LITTER] = 0.0;
+			/* check if minimum reserve pool needs to be refilled */
+			/* it doesn't need */
+			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
+			{
+				/* allocating into c pools */
+				s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
+				s->value[C_TO_ROOT] = 0.0;
+				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
+				s->value[C_TO_TOT_STEM] = 0.0;
+				s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_BRANCH] = (s->value[NPP_tC] * pS_CTEM) * s->value[FRACBB];
+				s->value[C_TO_LEAF] = 0.0;
+				s->value[C_TO_FRUIT] = 0.0;
+				s->value[C_TO_LITTER] = 0.0;
+			}
+			/* it needs */
+			else
+			{
+				/* allocating into c pools */
+				s->value[C_TO_RESERVE] = s->value[NPP_tC];
+				s->value[C_TO_ROOT] = 0.0;
+				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_COARSEROOT] = 0.0;
+				s->value[C_TO_TOT_STEM] = 0.0;
+				s->value[C_TO_STEM] = 0.0;
+				s->value[C_TO_BRANCH] = 0.0;
+				s->value[C_TO_LEAF] = 0.0;
+				s->value[C_TO_FRUIT] = 0.0;
+				s->value[C_TO_LITTER] = 0.0;
+			}
 		}
 		else
 		{
@@ -174,7 +192,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			s->value[C_TO_LITTER] = 0.0;
 		}
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
-
 		break;
 		/**********************************************************************/
 	case 3:

@@ -102,9 +102,13 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						{
 							First_day (&m->cells[cell], m->cells[cell].heights_count);
 						}
+						else if (day == 0 && month == JANUARY && years != 0)
+						{
+							Annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
+						}
 						else
 						{
-							Biomass_increment_BOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
+							Biomass_increment_BOY(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 						}
 						/* reset annual variables */
 						if (day == 0 && month == JANUARY)
@@ -119,7 +123,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						/* reset daily variables */
 						Reset_daily_variables(&m->cells[cell], m->cells[cell].heights_count);
 
-						/* check and compute for snow */
+						/* check precipitation and compute for snow if needs */
 						Check_prcp (&m->cells[cell], met, month, day);
 
 						//test new function

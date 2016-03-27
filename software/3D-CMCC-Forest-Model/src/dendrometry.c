@@ -46,26 +46,15 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
-		Log("Average stem mass = %f\n", s->value[AV_STEM_MASS_KgDM]);
 		s->value[AVDBH] = pow(s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 	}
+	Log("Old AVDBH = %f cm\n", oldavDBH);
+	Log("-Average stem mass = %f\n", s->value[AV_STEM_MASS_KgDM]);
 	Log("-New Average DBH = %f cm\n", s->value[AVDBH]);
 
-	/*control*/
-	if (oldavDBH > s->value[AVDBH])
-	{
-		Log("Old AVDBH = %f cm\n", oldavDBH);
-		Log("ERROR in Average DBH !!!!!!!\n");
-		s->value[AVDBH] = oldavDBH;
-	}
-	else
-	{
-		Log("-DBH increment = %f cm\n", s->value[AVDBH] - oldavDBH);
-
-	}
-
-
+	/* control */
+	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);
 
 	/*compute Tree Height*/
 	/*using Chapman_Richards Function*/
@@ -131,12 +120,15 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	s->value[WTOT_sap_tDM] = s->value[WS_sap_tDM] + s->value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	Log(" Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap_tDM]);
-
-	/* recompute annual minimum reserve pool for next year allocation */
+}
+void Annual_minimum_reserve (SPECIES *s)
+{
+	/* recompute annual minimum reserve pool for  year allocation */
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
 
 	/* IMPORTANT! reserve computation if not in init data are computed from DM */
+	Log("\n*annual minimum reserve*\n");
 	s->value[MIN_RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 	//fixme
 	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
@@ -144,6 +136,4 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	s->value[AV_MIN_RESERVE_KgDM] = s->value[MIN_RESERVE_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] *1000.0 /s->counter[N_TREE];
 	Log("--Average MINIMUM Reserve Biomass = %f Kgres/tree \n", s->value[RESERVE_C]);
-
-
 }
