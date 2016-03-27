@@ -141,7 +141,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*sapwood calculation*/
 	Log("\nSAPWOOD CALCULATION using sapwood area\n");
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2), 2)) * Pi);
+	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
 	Log("   BASAL AREA = %f cm^2\n", s->value[BASAL_AREA]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log("   SAPWOOD_AREA = %f cm^2\n", s->value[SAPWOOD_AREA]);
@@ -202,6 +202,9 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	s->value[AV_RESERVE_MASS_KgC] = s->value[RESERVE_C] *1000.0 /s->counter[N_TREE];
 	Log("-Individual reserve biomass = %f KgDM\n", s->value[AV_RESERVE_MASS_KgDM]);
 	Log("-Individual reserve biomass = %f KgC\n", s->value[AV_RESERVE_MASS_KgC]);
+	/* compute minimum reserve pool */
+	s->value[MIN_RESERVE_C] = s->value[RESERVE_C];
+	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C]*1000.0 /s->counter[N_TREE];
 
 	/* leaf */
 	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0)

@@ -109,4 +109,41 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		Log("ERROR in TREE HEIGHT!!!\n");
 	}
 
+	/* recompute sapwood-heartwood area */
+	Log("\nSAPWOOD CALCULATION using sapwood area\n");
+	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
+	Log(" BASAL AREA = %f cm^2\n", s->value[BASAL_AREA]);
+	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
+	Log(" SAPWOOD_AREA = %f cm^2\n", s->value[SAPWOOD_AREA]);
+	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
+	Log(" HEART_WOOD_AREA = %f cm^2\n", s->value[HEARTWOOD_AREA]);
+	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
+	Log(" sapwood perc = %f%%\n", s->value[SAPWOOD_PERC]*100);
+	s->value[WS_sap_tDM] = (s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC]);
+	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
+	Log(" Sapwood stem biomass = %f tC class cell \n", s->value[STEM_SAPWOOD_C]);
+	s->value[WRC_sap_tDM] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
+	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
+	Log(" Sapwood coarse root biomass = %f tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
+	s->value[WBB_sap_tDM] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
+	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
+	Log(" Sapwood branch and bark biomass = %f tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+	s->value[WTOT_sap_tDM] = s->value[WS_sap_tDM] + s->value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
+	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
+	Log(" Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap_tDM]);
+
+	/* recompute annual minimum reserve pool for next year allocation */
+	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
+	//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
+
+	/* IMPORTANT! reserve computation if not in init data are computed from DM */
+	s->value[MIN_RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
+	//fixme
+	s->value[MIN_RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
+	Log("--MINIMUM Reserve Biomass = %f t res/cell \n", s->value[RESERVE_C]);
+	s->value[AV_MIN_RESERVE_KgDM] = s->value[MIN_RESERVE_tDM] *1000.0 /s->counter[N_TREE];
+	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] *1000.0 /s->counter[N_TREE];
+	Log("--Average MINIMUM Reserve Biomass = %f Kgres/tree \n", s->value[RESERVE_C]);
+
+
 }
