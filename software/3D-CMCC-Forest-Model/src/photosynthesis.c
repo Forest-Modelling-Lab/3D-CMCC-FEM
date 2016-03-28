@@ -14,12 +14,22 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	double Alpha_C;
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
+	double cell_coverage;
 
 	Log("\n**PHOTOSYNTHESIS**\n");
 
 
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
+	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	{
+		cell_coverage = 1.0;
+	}
+	else
+	{
+		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+	}
+
 	//Veg period
 	//fixme
 	//photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
@@ -38,7 +48,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		{
 			Log("NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
-			Epsilon = s->value[EPSILONgCMJ] * /*s->value[F_LIGHT]*/ /*s->value[F_CO2] **/ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
+			Epsilon = s->value[EPSILONgCMJ] * /*s->value[F_LIGHT]*/ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
 			Log("Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
@@ -75,7 +85,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		Log("DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
 		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * s->value[CANOPY_COVER_DBHDC];
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * cell_coverage;
 		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period

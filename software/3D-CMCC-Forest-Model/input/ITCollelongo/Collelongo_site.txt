@@ -10,14 +10,14 @@ ELEV "1550" //Elevation in meters
 Y "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
 CO2CONC "387.0" //CO2 concentration (optional)
 INITIALLITTER "2.81" //Initial Litter (tDM/ha^1)
-MIN_FRAC_MAXASW "0.5" //Minimum fraction of asw based on maxasw (wilting point)
+MIN_FRAC_MAXASW "1" //Minimum fraction of asw based on maxasw (wilting point)
 //MAXASW "300" //Maximum Available soil water in mm
 //MINASW "30" //It should be the 10% of the maxasw
 CLAY_PERC "43.5"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "49.8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "6.7"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
 BULK_DENSITY "0.99"  //0.8 BULK DENSITY (g/cm3) 
-SOIL_DEPTH "80" //SOIL DEPTH (cm) 
+SOIL_DEPTH "150" //SOIL DEPTH (cm) 80 was before
 SOIL_COVER "50" //
 SOIL_MANURE "0" //
 //SITE NUTRITION

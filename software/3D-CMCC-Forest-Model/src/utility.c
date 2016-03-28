@@ -24,12 +24,16 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->daily_stem_maint_resp = 0.0;
 	c->daily_fine_root_maint_resp = 0.0;
 	c->daily_branch_maint_resp = 0.0;
+	c->daily_maint_resp = 0.0;
 	c->daily_coarse_root_maint_resp = 0.0;
 	c->daily_leaf_growth_resp = 0.0;
 	c->daily_stem_growth_resp = 0.0;
 	c->daily_fine_root_growth_resp = 0.0;
 	c->daily_branch_growth_resp = 0.0;
 	c->daily_coarse_root_growth_resp = 0.0;
+	c->daily_growth_resp = 0.0;
+	c->daily_aut_resp = 0.0;
+	c->daily_aut_resp_tC = 0.0;
 	c->daily_leaf_carbon = 0.0;
 	c->daily_stem_carbon = 0.0;
 	c->daily_fine_root_carbon = 0.0;
