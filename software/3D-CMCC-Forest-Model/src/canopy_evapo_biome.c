@@ -244,7 +244,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			/* considering effective coverage of cell and convert to daily amount */
 			s->value[CANOPY_TRANSP] *= s->value[CANOPY_COVER_DBHDC];
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
-
 		}
 	}
 	else
