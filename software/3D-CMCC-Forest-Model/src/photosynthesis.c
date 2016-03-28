@@ -78,7 +78,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 		//fixme see if use CANOPY_COVER_DBHDC
 		//25 MARCH 2016
-		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /** s->value[CANOPY_COVER_DBHDC]*/;
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * s->value[CANOPY_COVER_DBHDC];
 		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
