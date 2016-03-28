@@ -45,6 +45,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	double exponent_tnight;
 	double exponent_tavg;
 	double exponent_tsoil;
+	double Q10_temp = 20.0; //t_base temperature for respiration, 15°C for Damesin et al., 2001
 	//double n_area_sun, n_area_shade, dlmr_area_sun, dlmr_area_shade;
 
 	//double n_area/*, dlmr_area*/;
@@ -56,32 +57,34 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		/* foliage */
-		exponent_tday = (met[month].d[day].tday - 20.0) / 10.0;
+		exponent_tday = (met[month].d[day].tday - Q10_temp) / 10.0;
 
 		t1 = pow(q10, exponent_tday);
 
-		s->value[DAILY_LEAF_MAINT_RESP] = (s->value[LEAF_NITROGEN] * mrpern * t1 * (met[month].d[day].daylength/24.0));
+		/* upscaled to fraction of covered cell (Golinkoff et al.,)*/
+		s->value[DAILY_LEAF_MAINT_RESP] = (s->value[LEAF_NITROGEN] * mrpern * t1 * (met[month].d[day].daylength/24.0)) * s->value[CANOPY_COVER_DBHDC];
 		Log("daily leaf maintenance respiration = %f gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
-		exponent_tnight =  (met[month].d[day].tnight - 20.0) / 10.0;
+		exponent_tnight =  (met[month].d[day].tnight - Q10_temp) / 10.0;
 
 		t1 = pow(q10, exponent_tnight);
 
-		s->value[NIGHTLY_LEAF_MAINT_RESP]= (s->value[LEAF_NITROGEN] * mrpern * t1 * (1.0 - (met[month].d[day].daylength/24.0)));
+		/* upscaled to fraction of covered cell  (Golinkoff et al.,)*/
+		s->value[NIGHTLY_LEAF_MAINT_RESP]= (s->value[LEAF_NITROGEN] * mrpern * t1 * (1.0 - (met[month].d[day].daylength/24.0))) * s->value[CANOPY_COVER_DBHDC];
 		Log("nightly leaf maintenance respiration = %f gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 		Log("Total daily leaf maintenance respiration = %f gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 		/* fine roots */
-		exponent_tsoil = (met[month].d[day].tsoil - 20.0) / 10.0;
+		exponent_tsoil = (met[month].d[day].tsoil - Q10_temp) / 10.0;
 		t1 = pow(q10, exponent_tsoil);
 		s->value[FINE_ROOT_MAINT_RESP] = (s->value[FINE_ROOT_NITROGEN] * mrpern * t1);
 		Log("Fine root maintenance respiration = %f gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 	}
 
 	// live stem maintenance respiration
-	exponent_tavg = (met[month].d[day].tavg - 20.0) / 10.0;
+	exponent_tavg = (met[month].d[day].tavg - Q10_temp) / 10.0;
 	t1 = pow(q10, exponent_tavg);
 	s->value[STEM_MAINT_RESP] = (s->value[STEM_NITROGEN] * mrpern * t1);
 	Log("Stem maintenance respiration = %f gC/m2/day\n", s->value[STEM_MAINT_RESP]);
@@ -91,7 +94,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	Log("Branch maintenance respiration = %f gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	//live coarse root maintenance respiration
-	exponent_tsoil = (met[month].d[day].tsoil - 20.0) / 10.0;
+	exponent_tsoil = (met[month].d[day].tsoil - Q10_temp) / 10.0;
 	t1 = pow(q10, exponent_tsoil);
 	s->value[COARSE_ROOT_MAINT_RESP] = (s->value[COARSE_ROOT_NITROGEN] * mrpern * t1);
 	Log("Coarse root maintenance respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
@@ -136,8 +139,11 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	{
 		//converting to gC
 		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
-		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/settings->sizeCell) * GRPERC;
+		/* upscaled to fraction of covered cell (Golinkoff et al.,)*/
+		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/settings->sizeCell) * GRPERC * s->value[CANOPY_COVER_DBHDC];
 		Log("daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
+		//see golinkoff for upscaling to PLAI
+		exit(1);
 
 		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(settings->sizeCell))* GRPERC;
 		Log("daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
