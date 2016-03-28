@@ -104,6 +104,9 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 			s->value[COARSE_ROOT_MAINT_RESP]+
 			s->value[BRANCH_MAINT_RESP];
 	Log("TOTAL maintenance respiration = %f gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
+	/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
+	s->value[TOTAL_MAINT_RESP] *= s->value[CANOPY_COVER_DBHDC];
+	Log("TOTAL maintenance respiration = %f gC/m2 ground surface area/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	c->daily_leaf_maint_resp += s->value[TOT_DAY_LEAF_MAINT_RESP];
 	c->daily_stem_maint_resp += s->value[STEM_MAINT_RESP];
@@ -161,6 +164,9 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 				s->value[BRANCH_GROWTH_RESP];
 	}
 	Log("daily total growth respiration = %.10f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+	/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
+	s->value[TOTAL_GROWTH_RESP] *= s->value[CANOPY_COVER_DBHDC];
+	Log("TOTAL growth respiration = %f gC/m2 ground surface area/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
 	c->daily_stem_growth_resp += s->value[STEM_GROWTH_RESP];
@@ -188,14 +194,13 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 
 	//compute autotrophic respiration for each classes
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-	Log("TOTAL autotrophic respiration = %f gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
+	Log("TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
 
 	//fixme see if use CANOPY_COVER_DBHDC or just sizecell
 	Log("TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * settings->sizeCell);
 	CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
 
 	//compute autotrophic respiration for each layer
-
 	i = c->heights[height].z;
 
 	c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];

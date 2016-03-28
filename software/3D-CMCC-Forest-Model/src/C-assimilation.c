@@ -18,11 +18,12 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 
 	Log ("\n**C-ASSIMILATION_ROUTINE**\n");
 
+	/* NPP computation is based on ground surface area */
 	s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
 	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * settings->sizeCell;
 	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
 
-	Log("Daily NPP = %f gC/m^2/day\n", s->value[NPP_gC]);
+	Log("Daily NPP = %f gC/m^2 ground surface area/day\n", s->value[NPP_gC]);
 	Log("Daily NPP = %f tC/area/day\n", s->value[NPP_tC]);
 	Log("Daily NPP = %f tDM/area/day\n",  s->value[NPP_tDM]);
 

@@ -76,8 +76,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 		s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
-		//fixme see if use CANOPY_COVER_DBHDC
-		//25 MARCH 2016
+		/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
 		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * s->value[CANOPY_COVER_DBHDC];
 		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_GPP_gC]);
 	}
