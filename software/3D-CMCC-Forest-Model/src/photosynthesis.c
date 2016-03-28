@@ -47,7 +47,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
-		/*GPP*/
+		/* GPP */
 		Log("Apar for GPP = %f\n", s->value[APAR]);
 
 		//DailyGPP in mol of Carbon
@@ -69,24 +69,23 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 			Log("ERROR IN GPP_molC!!!\n");
 			exit(1);
 		}
-		//Daily/Monthly layer GPP in grams of C/m^2
-		//Convert molC into grams
+		/* Daily GPP in grams of C/m^2 */
+		/* Convert molC into grams */
 		s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;
-		Log("POINT_GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_POINT_GPP_gC] );
+		Log("DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
-		s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
-
-		/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
+		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * s->value[CANOPY_COVER_DBHDC];
-		Log("GPP_g_C day %d month %d Daily/Monthly GPP in grams of C for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_GPP_gC]);
+		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
 	{
 		Log("Un-vegetative period !! \n");
 		s->value[DAILY_GPP_gC] = 0;
 		s->value[DAILY_POINT_GPP_gC] = 0;
-		Log("day %d month %d Daily/Monthly GPP in grams of C (if CC = 100%%) for layer %d = %f \n", day+1, month+1, c->heights[height].z , s->value[DAILY_POINT_GPP_gC] );
+		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
+	s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
 	i = c->heights[height].z;
 

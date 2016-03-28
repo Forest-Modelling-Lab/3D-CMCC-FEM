@@ -39,7 +39,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	//Leaf and fine root respiration are dependent on phenology.
 
 	double t1;
-	double q10 = 2.0;
+	double q10 = 1.8; //changed from Biome (q10 = 2.0) to values from Damesin et al., 2002
 	double mrpern = 0.1584; //0.218; //linear N relationship with MR being kgC/kgN/day, 0.218 from Ryan 1991, 0.1584 Campili et al., 2013 and from Dufrene et al 2005
 	double exponent_tday;
 	double exponent_tnight;
@@ -56,7 +56,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	// leaf day and night maintenance respiration when leaves on
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		/* foliage */
+		/* leaves */
 		exponent_tday = (met[month].d[day].tday - Q10_temp) / 10.0;
 
 		t1 = pow(q10, exponent_tday);
@@ -104,9 +104,9 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 			s->value[COARSE_ROOT_MAINT_RESP]+
 			s->value[BRANCH_MAINT_RESP];
 	Log("TOTAL maintenance respiration = %f gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
-	/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
+	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	s->value[TOTAL_MAINT_RESP] *= s->value[CANOPY_COVER_DBHDC];
-	Log("TOTAL maintenance respiration = %f gC/m2 ground surface area/day\n", s->value[TOTAL_MAINT_RESP]);
+	Log("TOTAL maintenance respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	c->daily_leaf_maint_resp += s->value[TOT_DAY_LEAF_MAINT_RESP];
 	c->daily_stem_maint_resp += s->value[STEM_MAINT_RESP];
@@ -164,9 +164,9 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 				s->value[BRANCH_GROWTH_RESP];
 	}
 	Log("daily total growth respiration = %.10f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
-	/* it converts value of GPP gC/m2/day in gC/m2 ground surface area/day (see Damesin et al., 2002*/
+	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	s->value[TOTAL_GROWTH_RESP] *= s->value[CANOPY_COVER_DBHDC];
-	Log("TOTAL growth respiration = %f gC/m2 ground surface area/day\n", s->value[TOTAL_GROWTH_RESP]);
+	Log("TOTAL growth respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
 	c->daily_stem_growth_resp += s->value[STEM_GROWTH_RESP];
