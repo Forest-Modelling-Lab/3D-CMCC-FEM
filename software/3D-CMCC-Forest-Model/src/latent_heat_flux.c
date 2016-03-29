@@ -34,4 +34,7 @@ void Latent_heat_flux (CELL *c)
 	{
 		Log("Daily total latent heat flux = %f W/m\n", c->daily_latent_heat_flux);
 	}
+
+	c->monthly_latent_heat_flux += c->daily_latent_heat_flux;
+	c->annual_latent_heat_flux += c->daily_latent_heat_flux;
 }

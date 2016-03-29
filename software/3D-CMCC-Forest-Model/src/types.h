@@ -1060,7 +1060,7 @@ typedef struct {
 	double daily_c_evapo_watt;
 	double daily_c_evapotransp_watt;
 	double daily_soil_evaporation_watt;
-	double daily_latent_heat_flux;
+	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
