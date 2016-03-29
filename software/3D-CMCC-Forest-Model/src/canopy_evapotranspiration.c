@@ -77,7 +77,6 @@ extern void Canopy_evapotranspiration (SPECIES *const s, CELL *const c, int heig
 		}
 	}
 
-
 	i = c->heights[height].z;
 
 	c->layer_daily_c_evapotransp[i] += s->value[CANOPY_EVAPOTRANSPIRATION];

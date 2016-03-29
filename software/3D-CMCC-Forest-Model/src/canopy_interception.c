@@ -18,8 +18,18 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 	double PotEvap;
 	double gamma;
 	double sat;
+	double cell_coverage;
 
 	Log("\nCANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
+
+	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	{
+		cell_coverage = 1.0;
+	}
+	else
+	{
+		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+	}
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
@@ -50,7 +60,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 		/*dominant layer*/
 		if (c->heights[height].z == c->top_layer)
 		{
-			s->value[RAIN_INTERCEPTED] = ((c->prcp_rain * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+			s->value[RAIN_INTERCEPTED] = ((c->prcp_rain * cell_coverage) * s->value[FRAC_RAIN_INTERC]);
 			Log("Canopy interception = %f mm/m^2\n", s->value[RAIN_INTERCEPTED]);
 			//fixme do the same thing for canopy transpiration!!!!
 			/*last height dominant class processed*/
@@ -86,7 +96,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 				/*dominated layer*/
 				if (c->heights[height].z == c->top_layer-1)
 				{
-					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * cell_coverage) * s->value[FRAC_RAIN_INTERC]);
 					Log("Canopy interception based on coverage = %f mm\n", s->value[RAIN_INTERCEPTED]);
 
 					c->layer_daily_c_int[c->top_layer-1] += s->value[RAIN_INTERCEPTED];
@@ -111,7 +121,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 				/*subdominated layer*/
 				else
 				{
-					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * s->value[CANOPY_COVER_DBHDC]) * s->value[FRAC_RAIN_INTERC]);
+					s->value[RAIN_INTERCEPTED] = ((c->water_to_soil * cell_coverage) * s->value[FRAC_RAIN_INTERC]);
 					Log("Canopy interception based on coverage = %f mm\n", s->value[RAIN_INTERCEPTED]);
 
 					c->layer_daily_c_int[c->top_layer-2] += s->value[RAIN_INTERCEPTED];
@@ -297,6 +307,9 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 		c->water_to_soil = c->prcp_snow ;
 		Log("water to soil = %f mm\n", c->water_to_soil);
 	}
+
+	/* upscale to cell coverage level */
+	s->value[CANOPY_EVAPORATION] *= cell_coverage;
 
 	//test
 	/*compute fraction of the day in which canopy can transpire if wet*/
