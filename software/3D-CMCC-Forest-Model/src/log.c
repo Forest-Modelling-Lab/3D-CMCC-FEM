@@ -316,7 +316,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%s", "YEAR", "HC(0)");
+			Annual_Log ("%s \t%s", "YEAR", "HC(0)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Annual_Log ("\t%3s", "NEE");
@@ -325,12 +325,12 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 					"GPP(gC/m2y)", "AR(gC/m2y)", "MR(gC/m2y)", "GR(gC/m2y)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
-				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				Annual_Log ("\t%7s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%4s \t%10s \t%6s \t%8s \t%10s \t%3s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%8s \t%8s \t%9s \t%7s\n",
+			Annual_Log ("\t%10s \t%10s \t%6s \t%8s \t%10s \t%3s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%8s \t%8s \t%9s \t%7s \t%9s \t%8s \t%9s \t%7s \t%6s\n",
 					"Y(%)", "NPP(gC/m2y)", "ET", "ASW", "PEAK_LAI",
-					"CC", "DEAD TREE", "wf", "ws", "wsl", "wbb", "wbbl", "wfr", "wcr", "wcrl", "Wres", "D-Wres");
+					"CC", "DEAD TREE", "wf", "ws", "wsl", "wbb", "wbbl", "wfr", "wcr", "wcrl", "Wres", "D-Wres", "leafAR", "stemAR", "branchAR", "frAR", "crAR");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
@@ -351,8 +351,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		}
 
 
-		Annual_Log("\t%6.2f \t%8.2f \t%10.2f \t%10.2f \t%6.2f "
-				"\t%5.2f \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f\n",
+		Annual_Log("\t%12.2f \t%8.2f \t%10.2f \t%10.2f \t%6.2f "
+				"\t%5.2f \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f\n",
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_gC,
 				c->annual_et ,
@@ -369,7 +369,12 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_layer_coarseroot_c[0],
 				c->annual_layer_live_coarseroot_c[0],
 				c->annual_layer_reserve_c[0],
-				c->annual_delta_wres[0]);
+				c->annual_delta_wres[0],
+				c->layer_annual_leaf_aut_resp[0],
+				c->layer_annual_stem_aut_resp[0],
+				c->layer_annual_branch_aut_resp[0],
+				c->layer_annual_fine_root_aut_resp[0],
+				c->layer_annual_coarse_root_aut_resp[0]);
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -406,6 +411,11 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->annual_layer_fineroot_c[0]= 0;
 		c->annual_layer_coarseroot_c[0]= 0;
 		c->annual_layer_live_coarseroot_c[0]= 0;
+		c->layer_annual_leaf_aut_resp[0]= 0.0;
+		c->layer_annual_stem_aut_resp[0]= 0.0;
+		c->layer_annual_branch_aut_resp[0]= 0.0;
+		c->layer_annual_fine_root_aut_resp[0]= 0.0;
+		c->layer_annual_coarse_root_aut_resp[0]= 0.0;
 
 	}
 	if (c->annual_layer_number == 2)
@@ -1055,50 +1065,47 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("%s \t%s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC");
+			Daily_Log ("%s \t%2s \t%2s \t%2s", "YEAR", "MONTH", "DAY", "HC");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Daily_Log ("\t%3s", "NEE");
 			}
-			Daily_Log ("\t%6s \t%10s \t%10s" ,
-					"GPP(0)", "AR(0)","ARtC(0)");
+			Daily_Log ("\t%4s \t%6s \t%10s \t%8s",
+					"GPP(gC/m2d)", "AR(gC/m2d)","MR(gC/m2d)", "GR(gC/m2d)");
 			if (!mystricmp(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				Daily_Log ("\t%s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%10s \t%10s  \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
-					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf", "NPP(0)", "NPPgC", "ET(0)","LE(0)", "ASW", "Wfl", "LAI(0)",
-					"CC(0)", "DEADTREE(0)", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
+			Daily_Log ("\t%6s \t%6s \t%4s \t%8s \t%6s\t%6s \t%10s "
+					"\t%5s \t%8s \t%10s \t%11s \t%11s \t%11s \t%11s\n",
+					"NPP(gC/m2d)", "ET(mm/m2/d)","LE(W/m2)", "ASW(mm)", "LAI",
+					"CC", "DEADTREE", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			doy = 1;
 		}
 
-		Daily_Log ("%d \t%8d \t%5d \t%5d \t%2d", doy++, yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
+		Daily_Log ("%d \t%3d \t%4d \t%3d", yos[years].year, month+1, day+1,c->height_class_in_layer_dominant_counter);
 		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%6.2f", c->daily_nee);
 		}
-		Daily_Log("\t%10.4f \t%10.4f \t%10.4f",
+		Daily_Log("\t%10.4f \t%10.4f \t%10.4f \t%10.4f",
 				c->layer_daily_gpp[0],
 				c->layer_daily_aut_resp[0],
-				c->layer_daily_aut_resp_tC[0]);
+				c->layer_daily_maint_resp[0],
+				c->layer_daily_growth_resp[0]);
 
 		if (!mystricmp(settings->dndc, "on"))
 		{
 			Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
-		Daily_Log("\t%14.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%14.2d \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
-				c->layer_daily_c_flux[0],
-				/*c->layer_daily_c_flux_tDM[0],*/
-				c->layer_daily_npp_tDM[0],
+		Daily_Log("\t%11.4f \t%8.4f \t%10.4f \t%11.4f \t%7.4f \t%7.4f \t%2.2d \t%9.4f \t%8.4f \t%10.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
 				c->layer_daily_npp_gC[0],
 				c->daily_et,
 				c->daily_latent_heat_flux,
 				c->asw,
-				c->daily_tot_w_flux,
 				c->daily_lai[0],
 				c->layer_daily_cc[0]*100,
 				c->layer_daily_dead_tree[0],
@@ -1116,6 +1123,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//reset
 		c->layer_daily_gpp[0] = 0;
 		c->layer_daily_aut_resp[0] = 0;
+		c->layer_daily_maint_resp[0] = 0;
+		c->layer_daily_growth_resp[0] = 0;
 		c->layer_daily_aut_resp_tC[0] = 0;
 		c->layer_daily_c_flux_tDM[0] = 0;
 		c->layer_daily_npp_tDM[0] = 0;
@@ -1184,6 +1193,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//reset
 		c->layer_daily_gpp[1] = 0;
 		c->layer_daily_aut_resp[1] = 0;
+		c->layer_daily_maint_resp[1] = 0;
+		c->layer_daily_growth_resp[1] = 0;
 		c->layer_daily_c_flux[1] = 0;
 		c->layer_daily_npp_tDM[1] = 0;
 		c->layer_daily_c_int[1] = 0;
@@ -1195,6 +1206,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 		c->layer_daily_gpp[0] = 0;
 		c->layer_daily_aut_resp[0] = 0;
+		c->layer_daily_maint_resp[0] = 0;
+		c->layer_daily_growth_resp[0] = 0;
 		c->layer_daily_c_flux[0] = 0;
 		c->layer_daily_npp_tDM[0] = 0;
 		c->layer_daily_c_int[0] = 0;
@@ -1257,6 +1270,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//reset
 		c->layer_daily_gpp[2] = 0;
 		c->layer_daily_aut_resp[2] = 0;
+		c->layer_daily_maint_resp[2] = 0;
+		c->layer_daily_growth_resp[2] = 0;
 		c->layer_daily_c_flux[2] = 0;
 		c->layer_daily_npp_tDM[2] = 0;
 		c->layer_daily_npp_gC[2] = 0;
@@ -1269,6 +1284,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 		c->layer_daily_gpp[1] = 0;
 		c->layer_daily_aut_resp[1] = 0;
+		c->layer_daily_maint_resp[1] = 0;
+		c->layer_daily_growth_resp[1] = 0;
 		c->layer_daily_c_flux[1] = 0;
 		c->layer_daily_npp_tDM[1] = 0;
 		c->layer_daily_npp_gC[1] = 0;
@@ -1281,6 +1298,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 		c->layer_daily_gpp[0] = 0;
 		c->layer_daily_aut_resp[0] = 0;
+		c->layer_daily_maint_resp[0] = 0;
+		c->layer_daily_growth_resp[0] = 0;
 		c->layer_daily_c_flux[0] = 0;
 		c->layer_daily_npp_tDM[0] = 0;
 		c->layer_daily_npp_gC[0] = 0;
@@ -1297,6 +1316,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	c->daily_gpp = 0.0;
 	c->daily_aut_resp = 0.0;
+	c->daily_maint_resp = 0.0;
+	c->daily_growth_resp = 0.0;
 	c->daily_C_flux = 0.0;
 	c->daily_npp_tDM = 0.0;
 	c->daily_npp_gC = 0.0;

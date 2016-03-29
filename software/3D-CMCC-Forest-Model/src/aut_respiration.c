@@ -243,6 +243,22 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
 	c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
 	c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
+
+	/* among pools */
+	/* daily */
+	c->daily_leaf_aut_resp += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
+	c->daily_stem_aut_resp += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
+	c->daily_branch_aut_resp += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
+	c->daily_fine_root_aut_resp += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
+	c->daily_coarse_root_aut_resp += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+	c->layer_annual_leaf_aut_resp[i] += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
+	c->layer_annual_stem_aut_resp[i] += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
+	c->layer_annual_branch_aut_resp[i] += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
+	c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
+	c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+	/* annual */
+
+
 }
 
 

@@ -1137,7 +1137,7 @@ int main(int argc, char *argv[])
 	free(monthly_out_filename); monthly_out_filename = NULL;
 
 	annual_logInit (annual_out_filename);
-	Annual_Log ("annual output file at cell level\n\n");
+	//Annual_Log ("annual output file at cell level\n\n");
 	free(annual_out_filename); annual_out_filename = NULL;
 
 	soil_logInit (soil_out_filename);

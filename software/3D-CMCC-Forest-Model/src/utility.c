@@ -34,6 +34,11 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->daily_growth_resp = 0.0;
 	c->daily_aut_resp = 0.0;
 	c->daily_aut_resp_tC = 0.0;
+	c->daily_leaf_aut_resp = 0.0;
+	c->daily_stem_aut_resp = 0.0;
+	c->daily_branch_aut_resp = 0.0;
+	c->daily_fine_root_aut_resp = 0.0;
+	c->daily_coarse_root_aut_resp = 0.0;
 	c->daily_leaf_carbon = 0.0;
 	c->daily_stem_carbon = 0.0;
 	c->daily_fine_root_carbon = 0.0;

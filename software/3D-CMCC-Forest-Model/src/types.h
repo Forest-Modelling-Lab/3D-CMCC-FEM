@@ -1000,6 +1000,11 @@ typedef struct {
 	double daily_fine_root_growth_resp;
 	double daily_branch_growth_resp;
 	double daily_coarse_root_growth_resp;
+	double daily_leaf_aut_resp;
+	double daily_stem_aut_resp;
+	double daily_branch_aut_resp;
+	double daily_fine_root_aut_resp;
+	double daily_coarse_root_aut_resp;
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 	double daily_litterfall, monthly_litterfall, annual_litterfall;
 	double av_gpp;
@@ -1064,7 +1069,14 @@ typedef struct {
 	double layer_daily_npp_gC[3], layer_monthly_npp_gC[3], layer_annual_npp_gC[3];
 	double layer_daily_maint_resp[3], layer_monthly_maint_resp[3], layer_annual_maint_resp[3];
 	double layer_daily_growth_resp[3], layer_monthly_gowth_resp[3], layer_annual_growth_resp[3];
+	/* among pools */
 	double layer_daily_aut_resp[3], layer_monthly_aut_resp[3], layer_annual_aut_resp[3];
+	double layer_daily_leaf_aut_resp[3], layer_monthly_leaf_aut_resp[3], layer_annual_leaf_aut_resp[3];
+	double layer_daily_stem_aut_resp[3], layer_monthlyl_stem_aut_resp[3], layer_annual_stem_aut_resp[3];
+	double layer_daily_branch_aut_resp[3], layer_monthly_branch_aut_resp[3], layer_annual_branch_aut_resp[3];
+	double layer_daily_fine_root_aut_resp[3], layer_monthly_fine_root_aut_resp[3], layer_annual_fine_root_aut_resp[3];
+	double layer_daily_coarse_root_aut_resp[3], layer_monthly_coarse_root_aut_resp[3], layer_annual_coarse_root_aut_resp[3];
+
 	double layer_daily_c_flux[3], layer_monthly_c_flux[3], layer_annual_c_flux[3];
 	double layer_daily_aut_resp_tC[3];
 	double layer_daily_c_flux_tDM[3];

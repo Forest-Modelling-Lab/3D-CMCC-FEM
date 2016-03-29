@@ -337,6 +337,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
 	c->daily_lai[i] = s->value[LAI];
+	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
 
 	/* turnover */
 	Turnover(&c->heights[height].ages[age].species[species]);
