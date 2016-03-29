@@ -328,9 +328,9 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%s \t%10s \t%8s \t%8s \t%12s \t%12s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%10s\n",
-					"Y(%)", "NPP", "ET", "ASW", "PEAK_LAI",
-					"CC(tot)", "DEAD TREE", "wf", "ws", "wbb", "wfr", "wcr", "Wres", "D-Wres");
+			Annual_Log ("\t%4s \t%10s \t%6s \t%8s \t%10s \t%3s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%8s \t%8s \t%9s \t%7s\n",
+					"Y(%)", "NPP(gC/m2y)", "ET", "ASW", "PEAK_LAI",
+					"CC", "DEAD TREE", "wf", "ws", "wsl", "wbb", "wbbl", "wfr", "wcr", "wcrl", "Wres", "D-Wres");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);
@@ -338,7 +338,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		{
 			Annual_Log ("\t%6.2f", c->annual_nee);
 		}
-		Annual_Log("\t%10.2f \t%10.2f \t%12.2f \t%12.2f",
+		Annual_Log("\t%10.2f \t%10.2f \t%12.2f \t%10.2f",
 				c->annual_gpp,
 				c->annual_aut_resp,
 				c->annual_maint_resp,
@@ -351,8 +351,8 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		}
 
 
-		Annual_Log("\t%7.2f \t%8.2f \t%10.2f \t%10.2f \t%8.2f "
-				"\t%12.2f \t%8.2d \t%8.2f \t%10.2f \t%8.2f \t%7.2f \t%7.2f \t%9.2f \t%7.2f\n",
+		Annual_Log("\t%6.2f \t%8.2f \t%10.2f \t%10.2f \t%6.2f "
+				"\t%5.2f \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f\n",
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_gC,
 				c->annual_et ,
@@ -362,9 +362,12 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_dead_tree,
 				c->annual_layer_leaf_c[0],
 				c->annual_layer_stem_c[0],
+				c->annual_layer_live_stem_c[0],
 				c->annual_layer_branch_c[0],
+				c->annual_layer_live_branch_c[0],
 				c->annual_layer_fineroot_c[0],
 				c->annual_layer_coarseroot_c[0],
+				c->annual_layer_live_coarseroot_c[0],
 				c->annual_layer_reserve_c[0],
 				c->annual_delta_wres[0]);
 
@@ -397,9 +400,12 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->annual_delta_wres[0] = 0;
 		c->annual_layer_leaf_c[0]= 0;
 		c->annual_layer_stem_c[0]= 0;
+		c->annual_layer_live_stem_c[0]= 0;
 		c->annual_layer_branch_c[0]= 0;
+		c->annual_layer_live_branch_c[0]= 0;
 		c->annual_layer_fineroot_c[0]= 0;
 		c->annual_layer_coarseroot_c[0]= 0;
+		c->annual_layer_live_coarseroot_c[0]= 0;
 
 	}
 	if (c->annual_layer_number == 2)

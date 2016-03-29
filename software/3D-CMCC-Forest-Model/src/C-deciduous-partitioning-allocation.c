@@ -18,9 +18,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	double pS_CTEM = 0.0;
 	double pR_CTEM = 0.0;
 	double pF_CTEM = 0.0;
-	double Daily_solar_radiation;
 	double Light_trasm;
-	double Par_over;
 	double Perc_fine;
 	static double frac_to_foliage_fineroot;
 	static double carbon_for_foliage_budburst;
@@ -221,7 +219,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
-		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
+		s->value[C_TO_LITTER] = s->value[C_TO_LEAF] + s->value[C_TO_FINEROOT];
 
 		break;
 	case 0:
@@ -365,6 +363,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	/* update layer level annual carbon increments and pools in tC/cell/year */
 	c->annual_delta_ws[i] += s->value[C_TO_STEM];
 	c->annual_layer_stem_c[i] = s->value[STEM_C];
+	c->annual_layer_live_stem_c[i] = s->value[STEM_LIVE_WOOD_C];
 	c->annual_delta_wres[i] += s->value[C_TO_RESERVE];
 	c->annual_layer_reserve_c[i] = s->value[RESERVE_C];
 	c->annual_delta_wf[i] += s->value[C_TO_LEAF];
@@ -373,19 +372,32 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->annual_layer_tot_stem_c[i] = s->value[TOT_STEM_C];
 	c->annual_delta_wbb[i] += s->value[C_TO_BRANCH];
 	c->annual_layer_branch_c[i] = s->value[BRANCH_C];
+	c->annual_layer_live_branch_c[i] = s->value[BRANCH_LIVE_WOOD_C];
 	c->annual_delta_wfr[i] += s->value[C_TO_FINEROOT];
 	c->annual_layer_fineroot_c[i] = s->value[FINE_ROOT_C];
 	c->annual_delta_wcr[i] += s->value[C_TO_COARSEROOT];
 	c->annual_layer_coarseroot_c[i] = s->value[COARSE_ROOT_C];
+	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
+
+	/* update cell level carbon biomass in gC/m2/day*/
+	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;
+	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell ;
+	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell ;
+	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / settings->sizeCell ;
+	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / settings->sizeCell ;
+	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell ;
+	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / settings->sizeCell ;
+	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day*/
-	c->daily_leaf_carbon += s->value[C_TO_LEAF];
-	c->daily_stem_carbon += s->value[C_TO_STEM];
-	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT];
-	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT];
-	c->daily_branch_carbon += s->value[C_TO_BRANCH];
-	c->daily_reserve_carbon += s->value[C_TO_RESERVE];
-	c->daily_root_carbon += s->value[C_TO_ROOT];
+	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];
+	c->daily_stem_carbon_tC += s->value[C_TO_STEM];
+	c->daily_fine_root_carbon_tC += s->value[C_TO_FINEROOT];
+	c->daily_coarse_root_carbon_tC += s->value[C_TO_COARSEROOT];
+	c->daily_branch_carbon_tC += s->value[C_TO_BRANCH];
+	c->daily_reserve_carbon_tC += s->value[C_TO_RESERVE];
+	c->daily_root_carbon_tC += s->value[C_TO_ROOT];
+	c->daily_litter_carbon_tC += s->value[C_TO_LITTER];
 
 	Log("******************************\n");
 }

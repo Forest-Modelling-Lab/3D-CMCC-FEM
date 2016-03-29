@@ -319,6 +319,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 	//c->daily_tot_c_water_stored += s->value[CANOPY_WATER_STORED];
 	c->daily_c_int += s->value[RAIN_INTERCEPTED];
 	c->daily_c_evapo += s->value[CANOPY_EVAPORATION];
+	c->daily_c_water_stored += s->value[CANOPY_WATER_STORED];
 	Log("Canopy evaporation = %f mm/m2 day\n", c->daily_c_evapo);
 
 	//fixme it still uses bad data

@@ -968,13 +968,22 @@ typedef struct {
 	double ter;  //total ecosystem respiration
 	double carbon_balance, old_carbon_balance;
 	double daily_nee, monthly_nee, annual_nee;
-	double daily_leaf_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_stem_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fine_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_coarse_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_root_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_branch_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_reserve_carbon;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_leaf_carbon;/* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_stem_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_fine_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_coarse_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_branch_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_reserve_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_litter_carbon;/* daily carbon to litter  c pool in gC/m2/day  */
+	double daily_leaf_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_stem_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fine_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_coarse_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_branch_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_reserve_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_litter_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
 	double daily_leaf_drymatter;
 	double daily_stem_drymatter;
 	double daily_fine_root_drymatter;
@@ -991,7 +1000,6 @@ typedef struct {
 	double daily_fine_root_growth_resp;
 	double daily_branch_growth_resp;
 	double daily_coarse_root_growth_resp;
-	double daily_litter;
 	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
 	double daily_litterfall, monthly_litterfall, annual_litterfall;
 	double av_gpp;
@@ -1071,11 +1079,14 @@ typedef struct {
 	double daily_delta_wres[3], monthly_delta_wres[3], annual_delta_wres[3];
 
 	double daily_layer_stem_c[3], monthly_layer_stem_c[3], annual_layer_stem_c[3];
+	double daily_layer_live_stem_c[3], monthly_layer_live_stem_c[3], annual_layer_live_stem_c[3];
 	double daily_layer_leaf_c[3], monthly_layer_leaf_c[3], annual_layer_leaf_c[3];
 	double daily_layer_tot_stem_c[3], monthly_layer_tot_stem_c[3], annual_layer_tot_stem_c[3];
 	double daily_layer_branch_c[3], monthly_layer_branch_c[3], annual_layer_branch_c[3];
+	double daily_layer_live_branch_c[3], monthly_layer_live_branch_c[3], annual_layer_live_branch_c[3];
 	double daily_layer_fineroot_c[3], monthly_layer_fineroot_c[3], annual_layer_fineroot_c[3];
 	double daily_layer_coarseroot_c[3], monthly_layer_coarseroot_c[3], annual_layer_coarseroot_c[3];
+	double daily_layer_live_coarseroot_c[3], monthly_layer_live_coarseroot_c[3], annual_layer_live_coarseroot_c[3];
 	double daily_layer_reserve_c[3], monthly_layer_reserve_c[3], annual_layer_reserve_c[3];
 
 

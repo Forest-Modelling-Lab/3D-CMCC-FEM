@@ -41,7 +41,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->daily_root_carbon = 0.0;
 	c->daily_branch_carbon = 0.0;
 	c->daily_reserve_carbon = 0.0;
-	c->daily_litter = 0.0;
+	c->daily_litter_carbon = 0.0;
 	c->daily_litterfall = 0.0;
 
 	/*reset daily water variables*/
