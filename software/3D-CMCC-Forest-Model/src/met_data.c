@@ -122,9 +122,9 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 	{
 		met[month].d[day].thermic_sum = 0;
 
-		if(met[month].d[day].tavg > settings->gdd_basis)
+		if(met[month].d[day].tavg > GDD_BASIS)
 		{
-			met[month].d[day].thermic_sum = met[month].d[day].tavg - settings->gdd_basis;
+			met[month].d[day].thermic_sum = met[month].d[day].tavg - GDD_BASIS;
 			previous_thermic_sum = met[month].d[day].thermic_sum;
 		}
 		else
@@ -137,9 +137,9 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 	}
 	else
 	{
-		if(met[month].d[day].tavg > settings->gdd_basis)
+		if(met[month].d[day].tavg > GDD_BASIS)
 		{
-			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg -settings->gdd_basis);
+			met[month].d[day].thermic_sum = previous_thermic_sum + (met[month].d[day].tavg - GDD_BASIS);
 			previous_thermic_sum = met[month].d[day].thermic_sum;
 			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}

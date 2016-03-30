@@ -184,7 +184,6 @@ typedef struct
 	light_estab_intolerant,
 	maxlai,
 	defaultlai,
-	gdd_basis,
 	maxdays,
 	maxrg,
 	maxtavg,
@@ -195,7 +194,8 @@ typedef struct
 } settings_t;
 
 /* */
-enum {
+enum
+{
 	/*valori relativi alla specie*/
 	/* !!!!! NON SPOSTARE !!!!!!*/
 	/* serve questo ordine per l'importazione, vedere species_values dentro matrix.c */
@@ -1397,7 +1397,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, cons
 			Log("\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
 			exit(1);																																		\
 		}																																					\
-	}
+}
 
 /* DO NOT CHANGE THIS ORDER */
 enum {
