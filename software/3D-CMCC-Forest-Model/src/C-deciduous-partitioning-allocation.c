@@ -106,6 +106,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("Allocating only into foliage and fine root\n");
 		Log("LAI = %f \n", s->value[LAI]);
 
+
+
+		/* test "This has recently been confirmed by Dyckmans et al. (2000)
+		who  showed  that  only  44%  of  carbon  in  leaves  came  from
+		carbon reserves in beech trees" (Barbaroux et al., 2003) */
+
+
+
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		//test check it it seem that doesn't work!!
