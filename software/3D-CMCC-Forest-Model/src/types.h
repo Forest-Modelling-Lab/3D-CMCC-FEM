@@ -467,7 +467,7 @@ enum
 	//carbon biomass pools in tons of C/area
 	LEAF_C,
 	MAX_LEAF_C,
-	ROOT_C,
+	TOT_ROOT_C,
 	COARSE_ROOT_C,
 	FINE_ROOT_C,
 	MAX_FINE_ROOT_C,

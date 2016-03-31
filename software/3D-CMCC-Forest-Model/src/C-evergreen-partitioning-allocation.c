@@ -170,9 +170,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				/* it needs */
 				else
 				{
-					s->value[C_TO_RESERVE] = s->value[NPP_tC];
 					s->value[C_TO_LEAF] = 0.0;
 					s->value[C_TO_FINEROOT] = 0.0;
+					s->value[C_TO_RESERVE] = s->value[NPP_tC];
 				}
 
 				s->value[C_TO_COARSEROOT] = 0.0;
@@ -228,7 +228,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			else
 			{
 				s->value[C_TO_RESERVE] = s->value[NPP_tC];
-				s->value[C_TO_ROOT] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = 0.0;
 				s->value[C_TO_TOT_STEM] = 0.0;
@@ -279,9 +278,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
 	Log("Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
 
-	s->value[ROOT_C] +=  s->value[C_TO_ROOT];
-	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[ROOT_C]);
-
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
 	Log("Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
 
@@ -300,6 +296,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
 	Log("Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
+
+	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
+	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
 
 	s->value[TOT_STEM_C] += s->value[C_TO_TOT_STEM];
 	Log("Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
@@ -325,7 +324,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
-	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
+	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
 	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */

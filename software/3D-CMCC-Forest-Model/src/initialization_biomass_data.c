@@ -266,12 +266,12 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	Log("-Individual fine root biomass = %f KgDM\n", s->value[AV_FINE_ROOT_MASS_KgDM]);
 	Log("-Individual fine root biomass = %f KgC\n", s->value[AV_FINE_ROOT_MASS_KgC]);
 	s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM];
-	s->value[ROOT_C] = s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
+	s->value[TOT_ROOT_C] = s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
 	Log("---Total Root Biomass = %f tDM cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
-	Log("---Total Root Biomass = %f tC cell\n", s->value[ROOT_C]);
+	Log("---Total Root Biomass = %f tC cell\n", s->value[TOT_ROOT_C]);
 	s->value[AV_ROOT_MASS_KgDM] = s->value[BIOMASS_ROOTS_TOT_tDM] * 1000.0 /s->counter[N_TREE];
-	s->value[AV_ROOT_MASS_KgC] = s->value[ROOT_C] * 1000.0 /s->counter[N_TREE];
-	CHECK_CONDITION(fabs((s->value[ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), >1e-4);
+	s->value[AV_ROOT_MASS_KgC] = s->value[TOT_ROOT_C] * 1000.0 /s->counter[N_TREE];
+	CHECK_CONDITION(fabs((s->value[TOT_ROOT_C])-(s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C])), >1e-4);
 	CHECK_CONDITION(fabs((s->value[AV_ROOT_MASS_KgC])-(s->value[AV_COARSE_ROOT_MASS_KgC] + s->value[AV_FINE_ROOT_MASS_KgC])), >1e-4);
 
 	/*COMPUTE BIOMASS LIVE WOOD*/
@@ -301,7 +301,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*FOR COARSE ROOT*/
 	Log("Total Root Biomass = %f tDM cell\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
-	Log("Total Root Biomass = %f tC cell\n", s->value[ROOT_C]);
+	Log("Total Root Biomass = %f tC cell\n", s->value[TOT_ROOT_C]);
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]= s->value[BIOMASS_COARSE_ROOT_tDM] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	s->value[COARSE_ROOT_LIVE_WOOD_C]= s->value[COARSE_ROOT_C] * (s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("-Live Coarse Root Biomass = %f tDM cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
@@ -370,7 +370,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	Log("-Individual total dead biomass = %f KgC\n", s->value[AV_DEAD_WOOD_MASS_KgC]);
 
 	/* compute percentage of live vs total biomass */
-	s->value[TOTAL_WOOD_C] = s->value[STEM_C] + s->value[ROOT_C] + s->value[BRANCH_C];
+	s->value[TOTAL_WOOD_C] = s->value[STEM_C] + s->value[TOT_ROOT_C] + s->value[BRANCH_C];
 	s->value[AV_TOT_WOOD_MASS_KgC] = s->value[AV_STEM_MASS_KgC] + s->value[AV_ROOT_MASS_KgC] + s->value[AV_BRANCH_MASS_KgC];
 	Log("----Total wood = %f tC/cell\n",s->value[TOTAL_WOOD_C]);
 	Log("----Total wood = %f KgC/tree\n",s->value[AV_TOT_WOOD_MASS_KgC]);

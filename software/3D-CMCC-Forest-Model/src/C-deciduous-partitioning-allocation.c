@@ -135,7 +135,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
-		s->value[C_TO_ROOT] = 0.0;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_TOT_STEM] = 0.0;
@@ -160,7 +159,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			{
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
-				s->value[C_TO_ROOT] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
 				s->value[C_TO_TOT_STEM] = 0.0;
@@ -175,7 +173,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			{
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE] = s->value[NPP_tC];
-				s->value[C_TO_ROOT] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = 0.0;
 				s->value[C_TO_TOT_STEM] = 0.0;
@@ -189,7 +186,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		else
 		{
 			s->value[C_TO_RESERVE] = s->value[NPP_tC];
-			s->value[C_TO_ROOT] = 0.0;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_TOT_STEM] = 0.0;
@@ -222,7 +218,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		/* these are in computed leaffall function */
 //		s->value[C_TO_LEAF] = foliage_to_remove;
 //		s->value[C_TO_FINEROOT] = fineroot_to_remove;
-		s->value[C_TO_ROOT] = 0.0;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_TOT_STEM] = 0.0;
@@ -237,7 +232,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("Unvegetative period \n");
 		s->value[C_TO_LEAF] = 0.0;
 		s->value[C_TO_FINEROOT] = 0.0;
-		s->value[C_TO_ROOT] = 0.0;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_TOT_STEM] = 0.0;
@@ -262,14 +256,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
 	Log("Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
 
-	s->value[ROOT_C] +=  s->value[C_TO_ROOT];
-	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[ROOT_C]);
-
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
 	Log("Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
 
 	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
 	Log("Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
+
+	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
+	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
 
 	s->value[TOT_STEM_C] += s->value[C_TO_TOT_STEM];
 	Log("Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
@@ -295,7 +289,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
 	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
-	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
+	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
 	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */

@@ -39,7 +39,7 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
 		c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgC] = (c->heights[height].ages[age].species[species].value[STEM_C]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
-		c->heights[height].ages[age].species[species].value[AV_ROOT_MASS_KgC] = (c->heights[height].ages[age].species[species].value[ROOT_C]
+		c->heights[height].ages[age].species[species].value[AV_ROOT_MASS_KgC] = (c->heights[height].ages[age].species[species].value[TOT_ROOT_C]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
 		c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgC] = (c->heights[height].ages[age].species[species].value[FINE_ROOT_C]
 											 /(double)c->heights[height].ages[age].species[species].counter[N_TREE])/1000.0;
@@ -233,7 +233,7 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 				c->heights[height].ages[age].species[species].value[AVDBH], deadtree);
 
 		c->heights[height].ages[age].species[species].value[LEAF_C] -= (c->heights[height].ages[age].species[species].value[AV_LEAF_MASS_KgC]*1000.0*deadtree);
-		c->heights[height].ages[age].species[species].value[ROOT_C] -= (c->heights[height].ages[age].species[species].value[AV_ROOT_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[TOT_ROOT_C] -= (c->heights[height].ages[age].species[species].value[AV_ROOT_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[FINE_ROOT_C] -= (c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[COARSE_ROOT_C] -= (c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[STEM_C] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgC]*1000.0*deadtree);
