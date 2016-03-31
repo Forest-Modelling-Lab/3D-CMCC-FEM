@@ -159,18 +159,18 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 									Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
+
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 											met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
+									/* nitrogen block */
+									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
+
 									/* canopy water fluxes block */
-									//Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									//Canopy_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
-									//Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
-									//Canopy_evapotranspiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 									canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+
 									/* canopy carbon fluxes block */
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									//test growth resp should be called after allocation
 									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
@@ -189,15 +189,16 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									if (settings->spatial == 'u')
 									{
 										m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
-										Log("day %d month %d MODEL_LAI = %f \n", day+1, month+1, m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+
 									}
-									else
-									{
-										Log("++Lai layer %d = %f\n", m->cells[cell].heights[height].z, met[month].d[day].ndvi_lai);
-									}
+
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 									Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+
+									/* nitrogen block */
 									Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
+
+									/* canopy carbon fluxes block */
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
 									Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
@@ -225,15 +226,13 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
+
 								/* modifiers */
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 										met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 								/* canopy water fluxes block */
-								Canopy_interception (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								//Canopy_transpiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
-								Canopy_transpiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
-								Canopy_evapotranspiration ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 
 								/* canopy carbon fluxes block */
 								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
@@ -246,7 +245,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								//fixme implement new fucntion for C evergreen
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 								//fixme implement into allocation
-								Turnover(&m->cells[cell].heights[height].ages[age].species[species]);
+								//Turnover(&m->cells[cell].heights[height].ages[age].species[species]);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */

@@ -10,7 +10,6 @@
 void Peak_lai(SPECIES *const s, CELL *const c, int years, int month, int day, int height, int age)
 {
 	int i;
-	double max_leafc;
 
 	Log ("\n**PEAK LAI**\n");
 
@@ -19,6 +18,9 @@ void Peak_lai(SPECIES *const s, CELL *const c, int years, int month, int day, in
 
 	s->value[MAX_LEAF_C] = (s->value[PEAK_LAI] / s->value[SLA_AVG]) /1000.0 * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
 	Log("MAX_LEAF_C (sun and shaded)= %f tC/area \n", s->value[MAX_LEAF_C]);
+
+	s->value[MAX_FINE_ROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+	Log("MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_LEAF_C]);
 
 	/*check compatibility of LAI and Biomass with init data for evergreen*/
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && (day == 0 && month == 0 && years == 0))

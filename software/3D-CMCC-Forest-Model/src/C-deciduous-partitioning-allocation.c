@@ -21,8 +21,9 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	double Light_trasm;
 	double Perc_fine;
 	static double frac_to_foliage_fineroot;
-	static double carbon_for_foliage_budburst;
-	static double carbon_for_fine_root_budburst;
+	static double reserve_for_foliage_budburst;
+	static double reserve_for_fine_root_budburst;
+	static double reserve_for_budburst;
 
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
@@ -112,8 +113,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		who  showed  that  only  44%  of  carbon  in  leaves  came  from
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
-
-
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		//test check it it seem that doesn't work!!
@@ -124,16 +123,19 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
 		Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
-		carbon_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
-		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
+		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
+		Log("daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
 
-		carbon_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
-		Log("daily amount of biomass for foliage budburst %f = tC/cell/day\n", carbon_for_foliage_budburst);
+		reserve_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
+		Log("daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
 
-		s->value[C_TO_LEAF] = carbon_for_foliage_budburst;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] - carbon_for_foliage_budburst - carbon_for_fine_root_budburst;
+		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
+		Log("daily amount of reserve for foliage  and fine root budburst %f = tC/cell/day\n", reserve_for_budburst);
+
+		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
+		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
+		s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
 		s->value[C_TO_ROOT] = 0.0;
-		s->value[C_TO_FINEROOT] = carbon_for_fine_root_budburst;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_TOT_STEM] = 0.0;
@@ -333,6 +335,21 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
 		Log("Total branch = %f\n", s->value[BRANCH_C]);
 	}
+
+	CHECK_CONDITION(s->value[RESERVE_C], < 0);
+	CHECK_CONDITION(s->value[LEAF_C], < 0);
+	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
+	CHECK_CONDITION(s->value[STEM_C], < 0);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[BRANCH_C], < 0);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
+	CHECK_CONDITION(s->value[FRUIT_C], < 0);
+
 	Log("\n-Daily increment in carbon pools-\n");
 	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
 	Log("C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
