@@ -1885,7 +1885,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	int id_time;
 	int id_var;
 	int id_dims[3];
-	int *time_rows;
+	double *time_rows;
 	int rows_count;
 
 	double *values;
@@ -1908,16 +1908,18 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	}
 
 	if ( 0 == type ) {
+		rows_count = 0;
 		for ( n = 0; n < years_count; ++n ) {
-			for ( i = 0; i < 365 + IS_LEAP_YEAR(year_start+n); i++ ) {
+			ret = 365 + IS_LEAP_YEAR(year_start+n);
+			for ( i = 0; i < ret; i++ ) {
 				time_rows[i+n*366] = get_daily_date_from_row(i, year_start+n);
 			}
+			rows_count += ret;
 		}
-		rows_count = 366*years_count;
 	} else if ( 1 == type ) {
 		for ( n = 0; n < years_count; ++n ) {
 			for ( i = 0; i < 12; i++ ) {
-				time_rows[i+n*12] = get_daily_date_from_row(i, year_start+n);
+				time_rows[i+n*12] = get_monthly_date_from_row(i, year_start+n);
 			}
 		}
 		rows_count = 12*years_count;
@@ -1989,6 +1991,10 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 		ret = nc_enddef(id_file);
 		if ( ret != NC_NOERR ) goto quit;
 
+		/* put time row */
+		ret = nc_put_var_double(id_file, id_time, time_rows);
+		if ( ret != NC_NOERR ) goto quit;
+
 		/* puts values */
 		if ( 0 == type)
 			values = vars->daily_vars_value;
@@ -1999,7 +2005,8 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 		
 		ret = nc_put_var_double(id_file, id_var, values);
 		if ( ret != NC_NOERR ) goto quit;
-		
+
+				
 		nc_close(id_file);		
 	}
 
