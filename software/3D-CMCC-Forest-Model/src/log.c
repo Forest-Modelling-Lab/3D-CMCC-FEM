@@ -204,21 +204,6 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	static int previous_layer_number;
 
-	// save values for put in output netcdf
-	if ( output_vars )
-	{
-#define VALUE_AT(v,c,y)	((v)*(c)*(y))
-		int i;
-		for ( i = 0; i < output_vars->yearly_vars_count; ++i )
-		{
-			if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[VALUE_AT(i,cell_index,years)] = c->annual_aut_resp;
-			if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[VALUE_AT(i,cell_index,years)] = c->annual_gpp;
-			if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[VALUE_AT(i,cell_index,years)] = c->annual_npp_gC;
-		}
-#undef VALUE_AT
-	}
-
-
 //	if (years == 0)
 //	{
 //		Annual_Log("Site name = %s\n", site->sitename);
@@ -746,20 +731,6 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 {
 	static int previous_layer_number;
 
-	// save values for put in output netcdf
-	if ( output_vars )
-	{
-#define VALUE_AT(v,c,y,m)	((v)*(c)*(((y)*366)+(m)))
-		int i;
-		for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-		{
-			if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[VALUE_AT(i,cell_index,years,month)] = c->monthly_aut_resp;
-			if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[VALUE_AT(i,cell_index,years,month)] = c->monthly_gpp;
-			if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[VALUE_AT(i,cell_index,years,month)] = c->monthly_npp_gC;
-		}
-#undef VALUE_AT
-	}
-
 	if(month == 0 && years == 0)
 	{
 		Monthly_Log("Site name = %s\n", site->sitename);
@@ -995,20 +966,6 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 {
 	static int previous_layer_number;
 	static int doy;
-
-	// save values for put in output netcdf
-	if ( output_vars )
-	{
-#define VALUE_AT(v,c,y,m,d)	((v)*(c)*(((y)*366)+((m)*31)+(d)))
-		int i;
-		for ( i = 0; i < output_vars->daily_vars_count; ++i )
-		{
-			if ( AR_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[VALUE_AT(i,cell_index,years,month,day)] = c->daily_aut_resp;
-			if ( GPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[VALUE_AT(i,cell_index,years,month,day)] = c->daily_gpp;
-			if ( NPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[VALUE_AT(i,cell_index,years,month,day)] = c->daily_npp_gC;
-		}
-#undef VALUE_AT
-	}
 
 	if(day  == 0 && month == 0 && years == 0)
 	{

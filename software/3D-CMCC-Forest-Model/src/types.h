@@ -1385,13 +1385,12 @@ void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
-double Penman_Monteith (const MET_DATA *, int, int, int, int, double);
+double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
-int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
-
+int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
 
 #define XSTR(a)		STR(a)
 #define STR(a)		#a

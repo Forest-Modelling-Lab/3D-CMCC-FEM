@@ -1829,13 +1829,48 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 	return yos;
 }
 
+/* 
+	please note that row start from 0
+*/
+static int get_daily_date_from_row(const int row, const int yyyy) {
+	int dd;
+	int mm;
+	int days;
+	int days_per_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	if ( IS_LEAP_YEAR(yyyy) ) {
+		++days_per_month[1];
+	}
+
+	assert(row>=0 && row<365+IS_LEAP_YEAR(yyyy));
+
+	dd = 0;
+	days = 0;
+	for ( mm = 0; mm < 12; ++mm ) {
+		days += days_per_month[mm];
+		if ( row < days ) {
+			dd = row-(days-days_per_month[mm])+1;
+			break;
+		}
+	}
+	++mm;
+	
+	return yyyy*10000+mm*100+dd;
+}
+/* 
+	please note that row start from 0
+*/
+static int get_monthly_date_from_row(const int row, const int yyyy) {
+	assert(row>=0 && row<12);
+	return yyyy*100+(row+1);
+}
+
 //
 // if type is 0, write daily
 // if type is 1, write monthly
 // if type is 2, write yearly
 //
-//
-int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
 	int i;
 	int ret;
 	char *p;
@@ -1850,6 +1885,8 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, cons
 	int id_time;
 	int id_var;
 	int id_dims[3];
+	int *time_rows;
+	int rows_count;
 
 	double *values;
 	
@@ -1860,6 +1897,36 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, cons
 	const char sz_time[] = "time";
 
 	assert(vars && years_count && x_cells_count && y_cells_count && ((type >=0) && (type<=3)));
+
+	/* create time rows */
+	if ( 0 == type ) time_rows = malloc(years_count*366*sizeof*time_rows);
+	if ( 1 == type ) time_rows = malloc(years_count*12*sizeof*time_rows);
+	if ( 2 == type ) time_rows = malloc(years_count*sizeof*time_rows);
+	if ( ! time_rows ) {
+		Log(sz_err_out_of_memory);
+		return 0;
+	}
+
+	if ( 0 == type ) {
+		for ( n = 0; n < years_count; ++n ) {
+			for ( i = 0; i < 365 + IS_LEAP_YEAR(year_start+n); i++ ) {
+				time_rows[i+n*366] = get_daily_date_from_row(i, year_start+n);
+			}
+		}
+		rows_count = 366*years_count;
+	} else if ( 1 == type ) {
+		for ( n = 0; n < years_count; ++n ) {
+			for ( i = 0; i < 12; i++ ) {
+				time_rows[i+n*12] = get_daily_date_from_row(i, year_start+n);
+			}
+		}
+		rows_count = 12*years_count;
+	} else {
+		for ( i = 0; i < years_count; ++i ) {
+			time_rows[i] = year_start+i;
+		}
+		rows_count = years_count;
+	}
 
 	if ( 0 == type ) n = vars->daily_vars_count;
 	if ( 1 == type ) n = vars->monthly_vars_count;
@@ -1887,7 +1954,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, cons
 		ret = nc_def_dim(id_file, sz_y, y_cells_count, &id_y);
 		if ( ret != NC_NOERR ) goto quit;
 				
-		ret = nc_def_dim(id_file, sz_time, NC_UNLIMITED, &id_time);
+		ret = nc_def_dim(id_file, sz_time, rows_count /*NC_UNLIMITED*/, &id_time);
 		if ( ret != NC_NOERR ) goto quit;
 
 		/* NC_UNLIMITED must be first dimension (or the left-most dimension) */
@@ -1940,6 +2007,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int years_count, cons
 
 quit:
 	Log("unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
+	free(time_rows);
 	nc_close(id_file);
 
 	return 0;

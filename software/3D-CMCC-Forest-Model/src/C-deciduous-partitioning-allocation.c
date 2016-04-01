@@ -297,7 +297,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	{
 		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
 		Log("Total stem = %f\n", s->value[STEM_C]);
-		//ALESSIOR
 		Log("ATTENTION CHECK BALANCE!\n");
 	}
 	else
@@ -309,7 +308,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	{
 		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
 		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
-		//ALESSIOR
 		Log("ATTENTION CHECK BALANCE!\n");
 	}
 	else
@@ -321,7 +319,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	{
 		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
 		Log("Total branch = %f\n", s->value[BRANCH_C]);
-		//ALESSIOR
 		Log("ATTENTION CHECK BALANCE!\n");
 	}
 	else
@@ -330,19 +327,19 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("Total branch = %f\n", s->value[BRANCH_C]);
 	}
 
-	CHECK_CONDITION(s->value[RESERVE_C], < 0);
-	CHECK_CONDITION(s->value[LEAF_C], < 0);
-	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
-	CHECK_CONDITION(s->value[STEM_C], < 0);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[FRUIT_C], < 0);
+	/*CHECK_CONDITION(s->value[RESERVE_C], > 1e-4);
+	CHECK_CONDITION(s->value[LEAF_C], > 1e-4);
+	CHECK_CONDITION(s->value[FINE_ROOT_C], > 1e-4);
+	CHECK_CONDITION(s->value[STEM_C], > 1e-4);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[BRANCH_C], > 1e-4);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[COARSE_ROOT_C], > 1e-4);
+	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], > 1e-4);
+	CHECK_CONDITION(s->value[FRUIT_C], > 1e-4);*/
 
 	Log("\n-Daily increment in carbon pools-\n");
 	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);

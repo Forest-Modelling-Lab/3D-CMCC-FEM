@@ -532,7 +532,26 @@ void rows_free(ROW *rows, int rows_count ) {
 }
 
 
+/*
+	please note: mm and dd must starts from 0 not 1
+*/
+int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
+	int i;
+	int days;
+	int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
+	if ( IS_LEAP_YEAR(yyyy) )
+		++days_per_month[1];
+
+	/* check args */
+	assert(((mm >= 0) && (mm < 12)) && ((dd >= 0) && (dd < days_per_month[mm])));
+
+	days = 0;
+	for ( i = 0; i < mm; ++i ) {
+		days += days_per_month[i];
+	}
+	return (days+dd);
+}
 
 
 //----------------------------------------------------------------------------//
@@ -1271,7 +1290,7 @@ int main(int argc, char *argv[])
 			if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
-				output_vars->daily_vars_value = malloc(rows_count);
+				output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
 				if ( ! output_vars->daily_vars_value ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
@@ -1286,7 +1305,7 @@ int main(int argc, char *argv[])
 			if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
-				output_vars->monthly_vars_value = malloc(rows_count);
+				output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
 				if ( ! output_vars->monthly_vars_value ) {
 					Log(err_out_of_memory);
 					FreeOutputVars(output_vars);
@@ -1302,7 +1321,7 @@ int main(int argc, char *argv[])
 			if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
 				int ii;
 				int rows_count = m->cells_count*years_of_simulation*output_vars->yearly_vars_count;
-				output_vars->yearly_vars_value = malloc(rows_count);
+				output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
 				if ( ! output_vars->yearly_vars_value ) {
 					Log(err_out_of_memory);
 					FreeOutputVars(output_vars);
@@ -1440,6 +1459,33 @@ int main(int argc, char *argv[])
 							}
 						}
 						Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
+
+						// save values for put in output netcdf
+						if ( output_vars && output_vars->daily_vars_count )
+						{
+							/*
+								#define COLUMN_AT(x,y,c)	(((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+								#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+							*/
+							//#define VALUE_AT(v,c,y,m,d)	((v)*(c)*(((y)*366)+((m)*31))+(d))
+							#define X		(1)
+							#define ROWS	(366)
+							#define COLUMNS	(output_vars->daily_vars_count)
+							#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+							int i;
+							for ( i = 0; i < output_vars->daily_vars_count; ++i )
+							{
+								int row = get_daily_row_from_date(yos[year].year, month, day) + (year*ROWS);
+								int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
+								if ( AR_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_aut_resp;
+								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
+								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
+							}
+							#undef VALUE_AT
+							#undef COLUMNS
+							#undef ROWS
+						}
+
 						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
 						if (!mystricmp(settings->dndc, "on"))
 						{
@@ -1452,13 +1498,60 @@ int main(int argc, char *argv[])
 					{
 						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
 					}
+
+					// save values for put in output netcdf
+					if ( output_vars && output_vars->monthly_vars_count )
+					{
+					#define X		(1)
+					#define ROWS	(12)
+					#define COLUMNS	(output_vars->monthly_vars_count)
+					#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+					//#define VALUE_AT(v,c,y,m)	((v)*(c)*(((y)*366))+(m))
+						int i;
+						for ( i = 0; i < output_vars->monthly_vars_count; ++i )
+						{
+							int row = month + (year*ROWS);
+							int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
+							if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_aut_resp;
+							if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_gpp;
+							if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_npp_gC;
+						}
+					#undef VALUE_AT
+					#undef COLUMNS
+					#undef ROWS
+					}
+
 					EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, cell);
 				}
-				Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
-				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation, cell);
 
+				Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
+
+				// save values for put in output netcdf
+				if ( output_vars && output_vars->yearly_vars_count )
+				{
+					#define X		(1)
+					#define ROWS	(1)
+					#define COLUMNS	(output_vars->yearly_vars_count)
+					#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+					//#define VALUE_AT(v,c,y)	((v)+(c)*(y))
+					int i;
+					for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+					{
+						int row = (year*ROWS);
+						int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
+						if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_aut_resp;
+						if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_gpp;
+						if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_npp_gC;
+					}
+				#undef VALUE_AT
+				#undef COLUMNS
+				#undef ROWS
+				}
+
+				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation, cell);
 				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 			}
+			i = yos[0].year;
 			free(yos);
 			yos = NULL;
 			m->cells[cell].years = NULL; /* required */
@@ -1466,10 +1559,8 @@ int main(int argc, char *argv[])
 			//
 			// NetCDF outputs
 			//
-			//ALESSIOC COMMENTED FOR BUGS
-/*
-			if ( output_vars->daily_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 0) ) {
+			if ( output_vars && output_vars->daily_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 0) ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
 					return 1;
@@ -1479,8 +1570,8 @@ int main(int argc, char *argv[])
 				output_vars->daily_vars_value = NULL;
 			}
 
-			if ( output_vars->monthly_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 1) ) {
+			if ( output_vars && output_vars->monthly_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 1) ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
 					return 1;
@@ -1490,8 +1581,8 @@ int main(int argc, char *argv[])
 				output_vars->monthly_vars_value = NULL;
 			}
 
-			if ( output_vars->yearly_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, years_of_simulation, x_cell_count, y_cell_count, 2) ) {
+			if ( output_vars && output_vars->yearly_vars_value ) {
+				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 2) ) {
 					Log(err_out_of_memory);
 					matrix_free(m);
 					return 1;
@@ -1500,7 +1591,6 @@ int main(int argc, char *argv[])
 				free(output_vars->yearly_vars_value);
 				output_vars->yearly_vars_value = NULL;
 			}
-*/
 		}
 
 		/* free memory */

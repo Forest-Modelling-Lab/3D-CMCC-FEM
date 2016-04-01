@@ -272,6 +272,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\canopy_evapo_biome.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\canopy_evapotranspiration.c"
 				>
 			</File>
@@ -400,6 +404,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Penman_Monteith.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\phenology.c"
 				>
 			</File>
@@ -413,6 +421,10 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_dndc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_evapo_biome.c"
 				>
 			</File>
 			<File
