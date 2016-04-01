@@ -15,8 +15,8 @@ C_SRCS += \
 ../src/aut_respiration.c \
 ../src/biomass.c \
 ../src/canopy_cover.c \
-../src/canopy_evapo_biome.c \
 ../src/canopy_evapotranspiration.c \
+../src/canopy_evapotranspiration_biome.c \
 ../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
 ../src/carbon_balance.c \
@@ -45,7 +45,6 @@ C_SRCS += \
 ../src/modifiers.c \
 ../src/mortality.c \
 ../src/mpfit.c \
-../src/parameters.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
 ../src/photosynthesis.c \
@@ -77,8 +76,8 @@ OBJS += \
 ./src/aut_respiration.o \
 ./src/biomass.o \
 ./src/canopy_cover.o \
-./src/canopy_evapo_biome.o \
 ./src/canopy_evapotranspiration.o \
+./src/canopy_evapotranspiration_biome.o \
 ./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
 ./src/carbon_balance.o \
@@ -107,7 +106,6 @@ OBJS += \
 ./src/modifiers.o \
 ./src/mortality.o \
 ./src/mpfit.o \
-./src/parameters.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
 ./src/photosynthesis.o \
@@ -139,8 +137,8 @@ C_DEPS += \
 ./src/aut_respiration.d \
 ./src/biomass.d \
 ./src/canopy_cover.d \
-./src/canopy_evapo_biome.d \
 ./src/canopy_evapotranspiration.d \
+./src/canopy_evapotranspiration_biome.d \
 ./src/canopy_interception.d \
 ./src/canopy_transpiration.d \
 ./src/carbon_balance.d \
@@ -169,7 +167,6 @@ C_DEPS += \
 ./src/modifiers.d \
 ./src/mortality.d \
 ./src/mpfit.d \
-./src/parameters.d \
 ./src/peak_lai.d \
 ./src/phenology.d \
 ./src/photosynthesis.d \
