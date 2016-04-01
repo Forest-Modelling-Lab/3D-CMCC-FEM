@@ -21,7 +21,7 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
-	Log("\n\n*****LAYER_COVER_MORTALITY*****\n");
+	Log("\n\n*****LAYER_COVER_MORTALITY (CROWDING COMPETITION FUNCTION)*****\n");
 
 
 	Log ("MORTALITY BASED ON HIGH CANOPY COVER layer %d, species %s height %f dbh %f !!!\n", c->heights[height].z, c->heights[height].ages[age].species[species].name,
@@ -239,8 +239,12 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		c->heights[height].ages[age].species[species].value[STEM_C] -= (c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[RESERVE_C] -= (c->heights[height].ages[age].species[species].value[AV_RESERVE_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[BRANCH_C] -= (c->heights[height].ages[age].species[species].value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
-
-
+		c->heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[STEM_DEAD_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[COARSE_ROOT_DEAD_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree);
+		c->heights[height].ages[age].species[species].value[BRANCH_DEAD_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree);
 
 		Log("Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 

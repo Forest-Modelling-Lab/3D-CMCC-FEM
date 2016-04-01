@@ -56,8 +56,8 @@ MINDAYLENGTH    12      //minimum day length for fagus from ettore, 12 through s
 
 //SOIL WATER
 //define the soil water modifier response in function of needless of the species to the soil water content
-SWPOPEN -0.6 //for Fagus sylvatica Mollicone et al., 2002
-SWPCLOSE    -2.3 //For Fagus sylvatica Mollicone et al., 2002
+SWPOPEN -0.34 //for Fagus sylvatica -0.6 Mollicone et al., 2002
+SWPCLOSE    -1.7 //For Fagus sylvatica -2.3 Mollicone et al., 2002
 SWCONST 1 //1           //Constant in Soil Water modifier vs Moist Ratio
 SWPOWER 5 //5               //Power in Soil Water modifier vs Moist Ratio
 

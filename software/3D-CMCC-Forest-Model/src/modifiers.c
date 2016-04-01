@@ -179,22 +179,13 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
-	//FIXME CHECK IT
+	c->soil_moist_ratio = c->asw/c->max_asw;
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	Log("ASW = %f\n", c->asw);
 	Log("MIN ASW = %f\n", c->max_asw * site->min_frac_maxasw);
 	Log("moist ratio = %f\n", c->soil_moist_ratio);
-
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	if ( s->value[F_SW] > 1  )
-	{
-		Log("PROBLEM IN fSW !!!!!!!!!!\n");
-		s->value[F_SW] = 1;
-		Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
-	}
-	else
-	{
-		Log("fSW - Soil Water modifier layer %d = %f\n", z,  s->value[F_SW]);
-	}
+	Log("fSW = %f\n", s->value[F_SW]);
 
 	//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e
 		//vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
@@ -206,11 +197,11 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 		if (c->psi > s->value[SWPOPEN]) /*no water stress*/
 		{
-			s->value[F_PSI] = 1;
+			s->value[F_PSI] = 1.0;
 		}
 		else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
 		{
-			s->value[F_PSI] = 0;
+			s->value[F_PSI] = 0.0;
 		}
 		else /* partial water stress */
 		{
@@ -218,6 +209,9 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		}
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 		c->daily_f_psi = s->value[F_PSI];
+
+		//test using f_psi as f_sw
+		s->value[F_SW] = s->value[F_PSI];
 
 
 		//average yearly f_sw modifiers
