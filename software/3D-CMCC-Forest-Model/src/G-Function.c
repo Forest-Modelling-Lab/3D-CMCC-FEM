@@ -18,6 +18,39 @@ extern int sort_by_years(const void *a, const void *b)
 		return 0;
 	}
 }
+/* todo : implement a better comparison for equality */
+int sort_by_heights_asc(const void * a, const void * b)
+{
+	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
+	{
+		return -1;
+	}
+	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/* todo : implement a better comparison for equality */
+int sort_by_heights_desc(const void * a, const void * b)
+{
+	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
+	{
+		return 1;
+	}
+	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
+	{
+		return -1;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 
 extern void Pool_fraction (SPECIES * s)

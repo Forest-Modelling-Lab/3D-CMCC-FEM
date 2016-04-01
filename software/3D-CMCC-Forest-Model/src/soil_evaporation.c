@@ -23,7 +23,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	{
 		/* correct conductances for temperature and pressure based on Jones (1992)
 	with standard conditions assumed to be 20 deg C, 101300 Pa */
-		rcorr = 1.0/(pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure);
+		rcorr = 1.0/(pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
 
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
@@ -103,7 +103,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	Log("Annual Soil Evaporation = %f mm/m2/year\n", c->annual_soil_evapo);
 
 	/*compute a energy balance evaporation from soil*/
-	c->daily_soil_evaporation_watt = c->daily_soil_evapo * c->lh_vap_soil / 86400.0;
+	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
 	Log("Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 }
 
@@ -164,7 +164,7 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
-		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / c->lh_vap_soil;
+		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / met[month].d[day].lh_vap_soil;
 		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
 		{
@@ -194,7 +194,7 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 	Log("Annual Soil Evaporation = %f mm/year\n", c->annual_soil_evapo);
 
 	/*compute a energy balance evaporation from soil*/
-	c->daily_soil_evaporation_watt = c->daily_soil_evapo * c->lh_vap_soil / 86400.0;
+	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
 	Log("Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 }

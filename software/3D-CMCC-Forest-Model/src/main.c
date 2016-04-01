@@ -1269,9 +1269,6 @@ int main(int argc, char *argv[])
 			Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
 			Log("input_met_path = %s\n", input_met_path);
 
-			//Get air pressure
-			Air_pressure (&m->cells[cell]);
-
 			//check hemisphere
 			if (site->lat > 0) {
 				m->cells[cell].north = 0;
@@ -1371,6 +1368,7 @@ int main(int argc, char *argv[])
 						Air_density (&m->cells[cell], day, month, year, yos);
 						Day_Length (&m->cells[cell], day, month, year, yos);
 						Latent_heat (&m->cells[cell], day, month, year, yos);
+						Air_pressure (&m->cells[cell], day, month, year, yos);
 
 						if(m->cells[cell].landuse == F)
 						{

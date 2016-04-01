@@ -10,48 +10,13 @@
 
 
 
-/* todo : implement a better comparison for equality */
-int sort_by_heights_asc(const void * a, const void * b)
-{
-	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
-	{
-		return -1;
-	}
-	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-/* todo : implement a better comparison for equality */
-int sort_by_heights_desc(const void * a, const void * b)
-{
-	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
-	{
-		return 1;
-	}
-	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
-	{
-		return -1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-
-
 void Annual_numbers_of_layers (CELL *const c)
 {
-	//determines number of layer in function of:
-	//-differences between tree height classes
-	//-vegetative or un-vegetative period
-	//to determine crowding competition
+	/*determines number of layer in function of:
+	-differences between tree height classes
+	-vegetative or un-vegetative period
+	to determine crowding competition */
+
 	int height;
 	int age;
 	int species;
@@ -61,7 +26,6 @@ void Annual_numbers_of_layers (CELL *const c)
 	//height differences in meter to consider trees in two different layers
 
 	Log("****ANNUAL_FOREST_STRUCTURE_ROUTINE****\n");
-
 	Log("--NUMBER OF ANNUAL LAYERS--\n");
 
 	if (settings->spatial == 'u')
@@ -166,7 +130,7 @@ void Annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Forest_structure (CELL *const c,int day,int month,int years)
+void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 {
 	int height;
 	int age;

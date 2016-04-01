@@ -38,51 +38,6 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 
 }
 
-
-
-//3PG version
-void DayLength_3PG (CELL * c, int day, int month, int years, int MonthLength ,  YOS  *yos)
-{
-	// gets fraction of day when sun is "up"
-	double sLat, cLat, sinDec, cosH0;
-	//int dayOfYear;
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
-	Log("GET DAY LENGTH 3-PG\n");
-
-	if (day == 0 && month == 0)
-	{
-		c->cum_dayOfyear = 0;
-	}
-
-	c->cum_dayOfyear += met[month].d[day].n_days;
-
-	Log("dayOfYear = %d \n", met[month].d[day].n_days);
-	Log("cumulative dayOfYear = %d \n", c->cum_dayOfyear);
-
-
-	sLat = sin(Pi * site->lat / 180);
-	cLat = cos(Pi * site->lat / 180);
-
-	sinDec = 0.4 * sin(0.0172 * (c->cum_dayOfyear - 80));
-	cosH0 = sinDec * sLat / (cLat * sqrt(1 - pow(sinDec,2)));
-	if (cosH0 > 1)
-	{
-		Log("problem in 3PG daylength\n");
-	}
-	else if (cosH0 < -1)
-	{
-		Log("problem in 3PG daylength\n");
-	}
-	else
-	{
-		c->daylength_3PG = ((acos(cosH0) / Pi) * 86400);
-		Log("daylength 3PG = %f hours\n", c->daylength_3PG);
-	}
-}
-
 //following Running et al., 1987
 extern void Avg_temperature (CELL * c,  int day, int month, int years)
 {
@@ -112,7 +67,7 @@ extern void Avg_temperature (CELL * c,  int day, int month, int years)
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
-extern void Daylight_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
+extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
 	/*
 	if (!day)
@@ -200,9 +155,11 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 }
 
 
-extern void Air_pressure (CELL *c)
+void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
 {
 	double t1, t2;
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
 
 	/*compute air pressure*/
 	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
@@ -213,13 +170,13 @@ extern void Air_pressure (CELL *c)
 
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	t2 = G_STD / (LR_STD * (Rgas / MA));
-	c->air_pressure = P_STD * pow (t1, t2);
+	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
 	//Log("Air pressure = %f Pa\n", c->air_pressure);
 
 }
 
 
-extern void Air_density (CELL * c, int day, int month, int years, YOS *yos)
+void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 {
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -234,13 +191,13 @@ extern void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 	if(met[month].d[day].tday == NO_DATA)
 	{
 		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
-		c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+		c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
 		//Log("gcorr = %f\n", c->gcorr);
 	}
 	else
 	{
 		met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
-		c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/c->air_pressure;
+		c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
 		//Log("gcorr = %f\n", c->gcorr);
 	}
 }
@@ -252,76 +209,18 @@ void Latent_heat (CELL *c, int day, int month, int years, YOS *yos)
 
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
-	c->lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
-	c->lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
+	met[month].d[day].lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
+	met[month].d[day].lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
 	/*latent heat of fusion (KJ/Kg)*/
-	c->lh_fus = 335.0;
+	met[month].d[day].lh_fus = 335.0;
 	/*latent heat of sublimation (KJ/Kg)*/
-	c->lh_sub = 2845.0;
+	met[month].d[day].lh_sub = 2845.0;
 }
 
 
 
 
-void Print_met_data (const MET_DATA *const met, int month, int day)
-{
-	//here is valid only into function
-	static int doy;
 
-	if (day == 0 && month == 0)
-	{
-		doy = 0;
-	}
-	doy += 1;
-
-	Log("***************\n");
-	Log("**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
-	Log("-solar_rad = %.2f MJ/m^2/day\n"
-			"-tavg = %.2f °C\n"
-			"-tmax = %.2f °C\n"
-			"-tmin = %.2f °C\n"
-			"-tday (computed)= %.2f °C\n"
-			"-tnight (computed)= %.2f °C\n"
-			"-tsoil (computed)= %.2f °C\n"
-			"-rh = %.2f %%\n"
-			"-vpd = %.2f mbar\n"
-			"-ts_f = %.2f °C\n"
-			"-rain = %.2f mm\n"
-			"-swc = %.2f %%vol\n"
-			"-thermic_sum = %.2f °C\n"
-			"-daylength = %.2f hrs\n"
-			"-DOY = %d\n"
-
-			//"-month avg temp = %.2f °C\n"
-			//"-month cum rain = %.2f mm\n"
-			,met[month].d[day].solar_rad,
-			met[month].d[day].tavg,
-			met[month].d[day].tmax,
-			met[month].d[day].tmin,
-			met[month].d[day].tday,
-			met[month].d[day].tnight,
-			met[month].d[day].tsoil,
-			met[month].d[day].rh_f,
-			met[month].d[day].vpd,
-			met[month].d[day].ts_f,
-			met[month].d[day].prcp,
-			met[month].d[day].swc,
-			met[month].d[day].thermic_sum,
-			met[month].d[day].daylength,
-			doy
-			//,met[month].avg_monthly_temp
-			//,met[month].cum_monthly_rain
-	);
-
-	if (settings->spatial == 's')
-	{
-		Log("-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
-	}
-
-
-	Log("***************\n");
-
-}
 
 void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {

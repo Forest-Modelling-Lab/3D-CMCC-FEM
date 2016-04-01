@@ -13,7 +13,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Latent_heat_flux (CELL *c)
+void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 {
 	Log("\nLATENT_HEAT_ROUTINE\n");
 
@@ -27,7 +27,7 @@ void Latent_heat_flux (CELL *c)
 	/*in case of snow sublimation*/
 	if(c->snow_subl != 0.0)
 	{
-		c->daily_latent_heat_flux += c->snow_subl * (c->lh_sub * 1000.0) / 86400.0;
+		c->daily_latent_heat_flux += c->snow_subl * (met[month].d[day].lh_sub * 1000.0) / 86400.0;
 		Log("Daily total latent heat flux with sublimation = %f W/m\n", c->daily_latent_heat_flux);
 	}
 	else

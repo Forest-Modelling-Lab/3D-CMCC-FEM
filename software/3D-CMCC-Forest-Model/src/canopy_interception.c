@@ -39,7 +39,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 
 	/*following Gerten et al., 2004*/
 	/*compute potential  and actual evaporation for each layer*/
-	PotEvap = (sat / (sat + gamma)/ c->lh_vap)* s->value[NET_RAD_ABS] * 86400;
+	PotEvap = (sat / (sat + gamma)/ met[month].d[day].lh_vap)* s->value[NET_RAD_ABS] * 86400;
 	Log("Potential evaporation = %f mm/m^2 day\n",PotEvap);
 
 	/*compute interception rate */
@@ -324,7 +324,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 
 	//fixme it still uses bad data
 	/*compute a energy balance evaporation for rain intercepted from canopy and then evaporated*/
-	c->daily_c_int_watt = c->daily_c_evapo * c->lh_vap / 86400.0;
+	c->daily_c_int_watt = c->daily_c_evapo * met[month].d[day].lh_vap / 86400.0;
 	Log("Latent heat canopy interception/evaporation = %f W/m^2\n", c->daily_c_int_watt);
 
 

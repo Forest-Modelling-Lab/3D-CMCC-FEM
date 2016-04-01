@@ -283,6 +283,12 @@ static void ResetYos(YOS *const yos)
 				yos->m[i].d[y].et = INVALID_VALUE;
 				yos->m[i].d[y].windspeed = INVALID_VALUE;
 				yos->m[i].d[y].rh_f = INVALID_VALUE;
+				yos->m[i].d[y].lh_vap = INVALID_VALUE;
+				yos->m[i].d[y].lh_vap_soil = INVALID_VALUE;
+				yos->m[i].d[y].lh_fus = INVALID_VALUE;
+				yos->m[i].d[y].lh_sub = INVALID_VALUE;
+				yos->m[i].d[y].air_pressure = INVALID_VALUE;
+
 			}
 		}
 	}

@@ -64,6 +64,12 @@ typedef struct {
 	PREC tsoil;
 	PREC et;
 	PREC windspeed;
+	PREC lh_vap;
+	PREC lh_vap_soil;
+	PREC lh_fus;
+	PREC lh_sub;
+	PREC air_pressure;
+
 } MET_DAILY_DATA;
 
 /* */
@@ -899,15 +905,11 @@ typedef struct {
 
 	/*general variables*/
 	int yearday;
-	double daylength_3PG;
 	int cum_dayOfyear;
 	double abscission_daylength;
 	double av_yearly_daylength;
 	double gcorr;
-	double air_pressure;
-	double lh_vap, lh_vap_soil, lh_sub, lh_fus;
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
-	double thermic_sum;
 
 	/*forest structure variables*/
 	int height_class_in_layer_dominant_counter;
@@ -1230,6 +1232,7 @@ void Soil_temperature (CELL *, int, int, int, YOS *);
 void Air_density (CELL *, int, int, int, YOS *);
 void Latent_heat (CELL *, int, int, int, YOS *);
 void Thermic_sum (CELL *, int, int, int, YOS *);
+void Air_pressure (CELL *c, int, int, int, YOS *);
 void Veg_Days (CELL *const, const YOS *const, const int, const int, const int);
 int sort_by_years(const void *, const void *);
 int sort_by_heights_asc(const void * , const void * );
@@ -1315,8 +1318,7 @@ void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
 void AGB_BGB_biomass (CELL *const , int, int, int);
 void Dendrometry (SPECIES *const, HEIGHT *, const int);
 void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
-void Stool_mortality (SPECIES *, int);
-void Forest_structure (CELL *, const int,const int,const int);
+void Daily_Forest_structure (CELL *, const int,const int,const int);
 void Print_met_daily_data (const YOS *const , int , int , int );
 void Print_met_data (const MET_DATA *const, int, int);
 void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
@@ -1351,7 +1353,6 @@ void Initialization_site_data (CELL *);
 void Choose_management (CELL *, SPECIES *, int , int );
 void Tree_Branch_Bark (SPECIES *, AGE *, int, int, int);
 void Allometry_Power_Function (AGE *, SPECIES *);
-void Air_pressure (CELL *c);
 void Check_prcp (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
 void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
@@ -1359,7 +1360,7 @@ void Canopy_transpiration_biome (SPECIES *, CELL *, const MET_DATA *const, int, 
 void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);
-void Latent_heat_flux (CELL *);
+void Latent_heat_flux (CELL *, const MET_DATA *const, int, int);
 void Check_carbon_balance (CELL *);
 void Check_water_balance (CELL *);
 void Check_C_flux_balance (CELL *);
@@ -1381,6 +1382,7 @@ void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
 void get_net_ecosystem_exchange(CELL *);
 int endOfYellowing(const MET_DATA *const, SPECIES *);
 void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
+void Stool_mortality (SPECIES *const, int);
 
 //test
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);

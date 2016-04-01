@@ -54,7 +54,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	}
 
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 	Log("g_corr BIOME = %f\n", g_corr);
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
@@ -166,18 +166,18 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	//TEST
 	/* for sunlit foliage */
 	evap_sun_watt = ((esse * s->value[NET_RAD_ABS_SUN]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-			(((c->air_pressure * CP * rv_sun) / (c->lh_vap * EPS * rhr)) + esse);
+			(((met[month].d[day].air_pressure * CP * rv_sun) / (met[month].d[day].lh_vap * EPS * rhr)) + esse);
 	Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_sun_watt);
 
-	evap_sun = (evap_sun_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SUN];
+	evap_sun = (evap_sun_watt /met[month].d[day].lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SUN];
 	Log("transpiration for sunlit from BIOME = %f\n", evap_sun);
 
 	/* for shaded foliage */
 	evap_shade_watt = ((esse * s->value[NET_RAD_ABS_SHADE]) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-			(((c->air_pressure * CP * rv_shade) / (c->lh_vap * EPS * rhr)) + esse);
+			(((met[month].d[day].air_pressure * CP * rv_shade) / (met[month].d[day].lh_vap * EPS * rhr)) + esse);
 	Log("latent heat of transpiration from BIOME = %f W/m^2\n", evap_shade_watt);
 
-	evap_shade = (evap_shade_watt /c->lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
+	evap_shade = (evap_shade_watt /met[month].d[day].lh_vap) * (met[month].d[day].daylength * 3600.0) * s->value[LAI_SHADE];
 	Log("transpiration for shaded from BIOME = %f mm/m^2/day\n", evap_shade);
 
 	/* upscale to cell coverage level */
@@ -216,7 +216,7 @@ void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *con
 
 
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 
 	/*upscale maximum stomatal conductance to maximum canopy conductance*/
 	Log("LAI %f\n", s->value[LAI]);
@@ -250,12 +250,12 @@ void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *con
 	// in kg/m2/day, which is converted to mm/day.
 	// The following are constants in the PM formula (Landsberg & Gower, 1997)
 	Log("rhoair = %f\n", met[month].d[day].rho_air);
-	Log("lh_vap = %f\n", c->lh_vap);
+	Log("lh_vap = %f\n", met[month].d[day].lh_vap);
 	Log("vpd = %f\n", met[month].d[day].vpd);
 	Log("BLCOND = %f\n", s->value[BLCOND]);
-	Log("air_pressure = %f\n", c->air_pressure);
+	Log("air_pressure = %f\n", met[month].d[day].air_pressure);
 
-	defTerm = met[month].d[day].rho_air * c->lh_vap * (met[month].d[day].vpd * VPDCONV) * s->value[BLCOND];
+	defTerm = met[month].d[day].rho_air * met[month].d[day].lh_vap * (met[month].d[day].vpd * VPDCONV) * s->value[BLCOND];
 	Log("defTerm = %f\n", defTerm);
 	duv = (1.0 + E20 + boundary_layer_conductance / s->value[CANOPY_CONDUCTANCE]);
 	//Log("duv = %f\n", duv);
@@ -265,7 +265,7 @@ void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *con
 	/*compute transpiration*/
 	if(met[month].d[day].tavg > s->value[GROWTHTMIN] && PotEvap > 0.0)
 	{
-		s->value[DAILY_TRANSP] = ((PotEvap / c->lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC]) *
+		s->value[DAILY_TRANSP] = ((PotEvap / met[month].d[day].lh_vap * (met[month].d[day].daylength * 3600.0)) * s->value[CANOPY_COVER_DBHDC]) *
 				s->value[FRAC_DAYTIME_TRANSP] * s->value[F_CO2];
 		Log("Canopy transpiration = %f mm/m2\n", s->value[DAILY_TRANSP]);
 	}
@@ -331,7 +331,7 @@ void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *con
 	Log("Daily total canopy transpiration = %f \n", c->daily_c_transp);
 
 	/*compute energy balance transpiration from canopy*/
-	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+	c->daily_c_transp_watt = c->daily_c_transp * met[month].d[day].lh_vap / 86400.0;
 	Log("Latent heat canopy transpiration = %f W/m^2\n", c->daily_c_transp_watt);
 
 }

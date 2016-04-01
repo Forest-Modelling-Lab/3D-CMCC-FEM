@@ -84,7 +84,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
+	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
@@ -266,8 +266,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	c->daily_c_evapotransp += s->value[CANOPY_EVAPO_TRANSP];
 
 	/*compute energy balance transpiration from canopy*/
-	c->daily_c_evapo_watt = c->daily_c_evapo * c->lh_vap / 86400.0;
-	c->daily_c_transp_watt = c->daily_c_transp * c->lh_vap / 86400.0;
+	c->daily_c_evapo_watt = c->daily_c_evapo * met[month].d[day].lh_vap / 86400.0;
+	c->daily_c_transp_watt = c->daily_c_transp * met[month].d[day].lh_vap / 86400.0;
 	c->daily_c_evapotransp_watt = c->daily_c_evapo_watt + c->daily_c_transp_watt;
 	Log("Latent heat canopy evapotranspiration = %f W/m^2\n", c->daily_c_evapotransp_watt);
 }
