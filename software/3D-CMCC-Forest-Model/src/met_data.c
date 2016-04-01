@@ -8,34 +8,80 @@
 #include "constants.h"
 
 
-extern void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
+
+
+//BIOME-BGC version
+//Running-Coughlan 1988, Ecological Modelling
+
+void Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
 {
+	/*
+	if (!day)
+		Log("computing Get_Day_Length...\n");
+	 */
+
 	MET_DATA *met;
-	assert(yos);
+	double ampl;  //seasonal variation in Day Length from 12 h
 	met = (MET_DATA*) yos[years].m;
 
-	if (settings->time == 'd')
+	//compute yearday for GeDdayLength function
+	if (day == 0 && month == JANUARY)
 	{
-		Log("n_days %10d "
-				"Rg_f %10g "
-				"Tavg %10g "
-				"Tmax %10g "
-				"Tmin %10g "
-				"Precip %10g "
-				"Tday %10g "
-				"Tnight %10g \n",
-				met[month].d[day].n_days,
-				met[month].d[day].solar_rad,
-				met[month].d[day].tavg,
-				met[month].d[day].tmax,
-				met[month].d[day].tmin,
-				met[month].d[day].prcp,
-				met[month].d[day].tday,
-				met[month].d[day].tnight);
+		c->yearday = 0;
 	}
+	c->yearday +=1;
+
+	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+
+
+	met[month].d[day].daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
 
 }
 
+
+
+//3PG version
+void DayLength_3PG (CELL * c, int day, int month, int years, int MonthLength ,  YOS  *yos)
+{
+	// gets fraction of day when sun is "up"
+	double sLat, cLat, sinDec, cosH0;
+	//int dayOfYear;
+
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	Log("GET DAY LENGTH 3-PG\n");
+
+	if (day == 0 && month == 0)
+	{
+		c->cum_dayOfyear = 0;
+	}
+
+	c->cum_dayOfyear += met[month].d[day].n_days;
+
+	Log("dayOfYear = %d \n", met[month].d[day].n_days);
+	Log("cumulative dayOfYear = %d \n", c->cum_dayOfyear);
+
+
+	sLat = sin(Pi * site->lat / 180);
+	cLat = cos(Pi * site->lat / 180);
+
+	sinDec = 0.4 * sin(0.0172 * (c->cum_dayOfyear - 80));
+	cosH0 = sinDec * sLat / (cLat * sqrt(1 - pow(sinDec,2)));
+	if (cosH0 > 1)
+	{
+		Log("problem in 3PG daylength\n");
+	}
+	else if (cosH0 < -1)
+	{
+		Log("problem in 3PG daylength\n");
+	}
+	else
+	{
+		c->daylength_3PG = ((acos(cosH0) / Pi) * 86400);
+		Log("daylength 3PG = %f hours\n", c->daylength_3PG);
+	}
+}
 
 //following Running et al., 1987
 extern void Avg_temperature (CELL * c,  int day, int month, int years)
@@ -199,8 +245,11 @@ extern void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 	}
 }
 
-void Latent_heat (CELL *c, MET_DATA *met, int month, int day)
+void Latent_heat (CELL *c, int day, int month, int years, YOS *yos)
 {
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
 	c->lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
@@ -209,16 +258,6 @@ void Latent_heat (CELL *c, MET_DATA *met, int month, int day)
 	c->lh_fus = 335.0;
 	/*latent heat of sublimation (KJ/Kg)*/
 	c->lh_sub = 2845.0;
-
-	Log("lh_vap = %f J/Kg\n"
-		"lh_vap_soil = %f J/Kg\n"
-		"lh_fus = %f KJ/Kg\n"
-		"lh_sub = %f KJ/Kg\n",
-		c->lh_vap,
-		c->lh_vap_soil,
-		c->lh_fus,
-		c->lh_sub);
-
 }
 
 

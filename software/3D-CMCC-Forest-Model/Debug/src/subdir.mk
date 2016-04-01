@@ -49,9 +49,9 @@ C_SRCS += \
 ../src/peak_lai.c \
 ../src/phenology.c \
 ../src/photosynthesis.c \
+../src/print.c \
 ../src/renovation.c \
 ../src/soil_dndc.c \
-../src/soil_evapo_biome.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
 ../src/soil_water_balance.c \
@@ -111,9 +111,9 @@ OBJS += \
 ./src/peak_lai.o \
 ./src/phenology.o \
 ./src/photosynthesis.o \
+./src/print.o \
 ./src/renovation.o \
 ./src/soil_dndc.o \
-./src/soil_evapo_biome.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
 ./src/soil_water_balance.o \
@@ -173,9 +173,9 @@ C_DEPS += \
 ./src/peak_lai.d \
 ./src/phenology.d \
 ./src/photosynthesis.d \
+./src/print.d \
 ./src/renovation.d \
 ./src/soil_dndc.d \
-./src/soil_evapo_biome.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
 ./src/soil_water_balance.d \

@@ -1370,11 +1370,12 @@ int main(int argc, char *argv[])
 						Thermic_sum (&m->cells[cell], day, month, year, yos);
 						Air_density (&m->cells[cell], day, month, year, yos);
 						Day_Length (&m->cells[cell], day, month, year, yos);
+						Latent_heat (&m->cells[cell], day, month, year, yos);
 
 						if(m->cells[cell].landuse == F)
 						{
-							//Get vegetative days
-							Veg_Days (&m->cells[cell], yos, day, month, year, days_per_month);
+							/* compute before any other processes annually the days for the growing season */
+							Veg_Days (&m->cells[cell], yos, day, month, year);
 							//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 							get_vpsat(&m->cells[cell], day, month, year, yos, i);
 							i++;

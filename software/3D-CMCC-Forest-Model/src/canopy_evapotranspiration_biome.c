@@ -83,8 +83,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	Log("CANOPY_WATER = %f mm/m^2/day\n", s->value[CANOPY_WATER]);
 
 
-
-
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/c->air_pressure;
 

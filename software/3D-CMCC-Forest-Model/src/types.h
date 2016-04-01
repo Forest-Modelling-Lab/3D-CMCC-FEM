@@ -937,6 +937,7 @@ typedef struct {
 	double layer_cover_subdominated;
 
 	double gapcover[3];
+	int daily_live_tree, monthly_live_tree, annual_live_tree;
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 
 	/*radiation variables*/
@@ -1227,8 +1228,9 @@ void Daylight_avg_temperature (CELL *, int, int, int, YOS *);
 void Nightime_avg_temperature (CELL *, int, int, int, YOS *);
 void Soil_temperature (CELL *, int, int, int, YOS *);
 void Air_density (CELL *, int, int, int, YOS *);
+void Latent_heat (CELL *, int, int, int, YOS *);
 void Thermic_sum (CELL *, int, int, int, YOS *);
-void Veg_Days (CELL *const, const YOS *const, const int, const int, const int, int);
+void Veg_Days (CELL *const, const YOS *const, const int, const int, const int);
 int sort_by_years(const void *, const void *);
 int sort_by_heights_asc(const void * , const void * );
 int sort_by_heights_desc(const void * , const void * );
@@ -1351,7 +1353,6 @@ void Tree_Branch_Bark (SPECIES *, AGE *, int, int, int);
 void Allometry_Power_Function (AGE *, SPECIES *);
 void Air_pressure (CELL *c);
 void Check_prcp (CELL *c, MET_DATA *, int, int);
-void Latent_heat (CELL *c, MET_DATA *, int, int);
 void Pool_fraction (SPECIES *);
 void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Canopy_transpiration_biome (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);

@@ -38,13 +38,13 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
-	//annual daily loop on each cell before start with treemodel_daily
+	/* daily loop on each cell before start with treemodel_daily */
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		//*************FOREST CHARACTERISTIC*********************
+		/* FOREST STRUCTURE */
 		if (day == 0 && month == JANUARY)
 		{
-			//annual forest structure
+			/* compute annual number of different layers */
 			Annual_numbers_of_layers (&m->cells[cell]);
 		}
 		/* daily forest structure */
@@ -52,11 +52,10 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Daily_vegetative_period (&m->cells[cell], met, month, day);
 		Daily_numbers_of_layers (&m->cells[cell]);
 		Daily_layer_cover (&m->cells[cell], met, month, day);
-		//Print_parameters (&m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].ages[age].species_count, month, years);
-		Dominant_Light (m->cells[cell].heights, &m->cells[cell],  m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+		Dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+
 		Log("***************************************************\n");
 	}
-
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		Log("%d-%d-%d\n", met[month].d[day].n_days, month+1, yos[years].year);
@@ -74,8 +73,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Yearly_Rain += met[month].d[day].prcp;
 
 		Print_met_data (met, month, day);
-		/* compute latent heat values */
-		Latent_heat (&m->cells[cell], met, month, day);
 
 		/* sort class by heights */
 		qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (HEIGHT), sort_by_heights_asc);
@@ -157,7 +154,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Log("\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", m->cells[cell].heights[height].ages[age].species[species].name );
 									Log("--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 									m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
-									Log("VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 									Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, DaysInMonth[month], height);
 
 									Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
@@ -242,10 +238,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
-								//fixme implement new fucntion for C evergreen
 								Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
-								//fixme implement into allocation
-								//Turnover(&m->cells[cell].heights[height].ages[age].species[species]);
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */

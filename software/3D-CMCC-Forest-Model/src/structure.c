@@ -60,9 +60,9 @@ void Annual_numbers_of_layers (CELL *const c)
 
 	//height differences in meter to consider trees in two different layers
 
-	Log("****GET_ANNUAL_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
+	Log("****ANNUAL_FOREST_STRUCTURE_ROUTINE****\n");
 
-	Log("--GET NUMBER OF ANNUAL LAYERS--\n");
+	Log("--NUMBER OF ANNUAL LAYERS--\n");
 
 	if (settings->spatial == 'u')
 	{
@@ -197,8 +197,6 @@ void Forest_structure (CELL *const c,int day,int month,int years)
 	c->layer_cover_subdominated = 0;
 
 	Log("\n\n***FOREST_STRUCTURE***\n");
-
-
 	if (settings->spatial == 'u')
 	{
 		for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -962,13 +960,13 @@ void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 	static int age;
 	static int species;
 
-
+	c->daily_live_tree = 0;
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
 
 
-	Log("\nGET_DAILY_FOREST_STRUCTURE_ROUTINE\n");
+	Log("\nDAILY_FOREST_STRUCTURE_ROUTINE\n");
 
 	Log("Determine Effective Layer Cover \n");
 
@@ -978,6 +976,9 @@ void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
+				c->daily_live_tree += c->heights[height].ages[age].species[species].counter[N_TREE];
+				Log("daily live tree = %d tree/cell\n", c->daily_live_tree);
+
 				if ( c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					if (c->daily_layer_number == 3)
