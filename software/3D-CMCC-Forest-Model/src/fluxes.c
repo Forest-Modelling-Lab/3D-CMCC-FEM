@@ -37,7 +37,7 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 //too remove after made water_balance function
 void Water_fluxes (CELL *const c)
 {
-	Log("\nGET_W-FLUXES\n");
+	Log("\nW-FLUXES\n");
 	//todo make it better
 	c->daily_tot_w_flux = c->water_to_soil + c->prcp_snow - c->water_to_atmosphere - c->out_flow;
 	c->monthly_tot_w_flux += c->daily_tot_w_flux;

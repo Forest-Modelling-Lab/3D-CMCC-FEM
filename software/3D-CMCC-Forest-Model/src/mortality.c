@@ -84,24 +84,6 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 			if(c->layer_cover_subdominated >= settings->max_layer_cover)
 				Log("Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_subdominated * 100);
 		}
-
-
-		/*
-		while (layer_cover >= settings->max_layer_cover )
-		{
-			Log("layer cover prima while = %f\n", layer_cover);
-			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-			deadtree += 1;
-
-			layer_cover = layer_cover - ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / settings->sizeCell)/100.0;
-			Log("layer cover dopo while = %f\n", layer_cover);
-			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-		 * c->heights[height].ages[age].species[species].counter[N_TREE]) / settings->sizeCell;
-		}
-		 */
-
-
-
 		switch (c->annual_layer_number)
 		{
 		case 1:
@@ -222,9 +204,8 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 		c->layer_monthly_dead_tree[i] += deadtree;
 		c->layer_annual_dead_tree[i] += deadtree;
 
-		c->daily_live_tree -= deadtree;
-		c->monthly_live_tree -= deadtree;
-		c->annual_live_tree -= deadtree;
+		c->n_tree -= deadtree;
+
 		c->daily_dead_tree += deadtree;
 		c->monthly_dead_tree += deadtree;
 		c->annual_dead_tree += deadtree;

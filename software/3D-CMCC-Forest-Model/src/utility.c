@@ -184,9 +184,6 @@ void Reset_monthly_variables (CELL *const c, const int count)
 			}
 		}
 	}
-
-
-
 }
 
 
@@ -309,6 +306,9 @@ void First_day (CELL *const c, const int count)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
+				/* compute cell level number of trees */
+				c->n_tree += c->heights[height].ages[age].species[species].counter[N_TREE];
+
 				c->heights[height].ages[age].species[species].turnover->FINERTOVER = 365 /
 						c->heights[height].ages[age].species[species].value[LEAVES_FINERTTOVER];
 				c->heights[height].ages[age].species[species].turnover->COARSERTOVER = 365 /

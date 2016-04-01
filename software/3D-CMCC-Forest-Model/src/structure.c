@@ -924,7 +924,6 @@ void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 	static int age;
 	static int species;
 
-	c->daily_live_tree = 0;
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
@@ -940,9 +939,6 @@ void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
-				c->daily_live_tree += c->heights[height].ages[age].species[species].counter[N_TREE];
-				Log("daily live tree = %d tree/cell\n", c->daily_live_tree);
-
 				if ( c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 				{
 					if (c->daily_layer_number == 3)
@@ -1147,7 +1143,6 @@ extern void Daily_veg_counter (CELL *c, SPECIES *s, int height)
 		c->dominant_veg_counter += 1;
 		break;
 	}
-
 }
 
 

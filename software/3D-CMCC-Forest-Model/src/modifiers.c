@@ -57,17 +57,17 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//following Peltioniemi should be used par
 
 	if ( c->heights[height].z == c->top_layer )
-		{
+	{
 
 
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{
 			s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
 		}
-		 else
-		 {
-			 s->value[F_LIGHT]= 1.0;
-		 }
+		else
+		{
+			s->value[F_LIGHT]= 1.0;
+		}
 		Log("FLight (NOT USED)= %g\n", s->value[F_LIGHT]);
 	}
 
@@ -179,6 +179,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
+
 	c->soil_moist_ratio = c->asw/c->max_asw;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
@@ -187,55 +188,65 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	Log("moist ratio = %f\n", c->soil_moist_ratio);
 	Log("fSW = %f\n", s->value[F_SW]);
 
-	//todo controllare vwc è l'unica variabile che può far variare psi fare delle prove su excel e
-		//vedere a quanto dovrebbe essere per avere un valore compreso tra OPEN e CLOSE
-		/* (MPa) water potential of soil and leaves */
-		c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
-		Log ("PSI BIOME = %f (MPa)\n", c->psi);
-		Log ("PSI_SAT BIOME = %f (MPa)\n", c->psi_sat);
+
+	/* (MPa) water potential of soil and leaves */
+	/*SOIL MATRIC POTENTIAL*/
+
+	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	/* calculate the soil pressure-volume coefficients from texture data */
+	/* Uses the multivariate regressions from Cosby et al., 1984 */
+	/* (DIM) volumetric water content */
+	c->vwc = c->asw / (1000.0 * (site->soil_depth/100));
+	Log("volumetric available soil water  = %f (DIM)\n", c->vwc);
+	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
+	Log ("vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
+	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+	Log ("PSI BIOME = %f (MPa)\n", c->psi);
+	Log ("PSI_SAT BIOME = %f (MPa)\n", c->psi_sat);
 
 
-		if (c->psi > s->value[SWPOPEN]) /*no water stress*/
-		{
-			s->value[F_PSI] = 1.0;
-		}
-		else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
-		{
-			s->value[F_PSI] = 0.0;
-		}
-		else /* partial water stress */
-		{
-			s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
-		}
-		Log("F_PSI = %f\n", s->value[F_PSI]);
-		c->daily_f_psi = s->value[F_PSI];
+	if (c->psi > s->value[SWPOPEN]) /*no water stress*/
+	{
+		s->value[F_PSI] = 1.0;
+	}
+	else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
+	{
+		s->value[F_PSI] = 0.0;
+	}
+	else /* partial water stress */
+	{
+		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
+	}
+	Log("F_PSI = %f\n", s->value[F_PSI]);
+	c->daily_f_psi = s->value[F_PSI];
 
-		//test using f_psi as f_sw
-		s->value[F_SW] = s->value[F_PSI];
-
-
-		//average yearly f_sw modifiers
-		s->value[AVERAGE_F_SW] += s->value[F_SW];
-
-		/*PHYSIOLOGICAL MODIFIER*/
-		s->value[PHYS_MOD]= Minimum(s->value[F_VPD], s->value[F_SW]) * s->value[F_AGE];
-		Log("PhysMod = %f\n", s->value[PHYS_MOD]);
-		if (s->value[F_VPD] < s->value[F_SW])
-		{
-			Log("PHYSMOD uses F_VPD * F_AGE\n");
-		}
-		else
-		{
-			Log("PHYSMOD uses F_SW * F_AGE\n");
-		}
-
-		s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
-		//Log("Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
+	//test using f_psi as f_sw
+	//s->value[F_SW] = s->value[F_PSI];
 
 
-		/*SOIL DROUGHT MODIFIER*/
-		//(see Duursma et al., 2008)rev_Angelo
-		/*
+	//average yearly f_sw modifiers
+	s->value[AVERAGE_F_SW] += s->value[F_SW];
+
+	/*PHYSIOLOGICAL MODIFIER*/
+	s->value[PHYS_MOD]= Minimum(s->value[F_VPD], s->value[F_SW]) * s->value[F_AGE];
+	Log("PhysMod = %f\n", s->value[PHYS_MOD]);
+	if (s->value[F_VPD] < s->value[F_SW])
+	{
+		Log("PHYSMOD uses F_VPD * F_AGE\n");
+	}
+	else
+	{
+		Log("PHYSMOD uses F_SW * F_AGE\n");
+	}
+
+	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
+	//Log("Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
+
+
+	/*SOIL DROUGHT MODIFIER*/
+	//(see Duursma et al., 2008)rev_Angelo
+	/*
 
 		//to put in species.txt
 		//numbers are not real just used for compile!!!!!!!!
@@ -321,7 +332,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 		s->value[F_DROUGHT] = (leaf_res * (bulk_pot - min_leaf_pot)) / (- min_leaf_pot * ((leaf_res + soil_res) * bulk_pot));
 		Log("F_DROUGHT = %f\n", s->value[F_DROUGHT]);
-		 */
+	 */
 
-		Log("-------------------\n");
-	}
+	Log("-------------------\n");
+}

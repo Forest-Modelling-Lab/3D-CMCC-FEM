@@ -939,7 +939,7 @@ typedef struct {
 	double layer_cover_subdominated;
 
 	double gapcover[3];
-	int daily_live_tree, monthly_live_tree, annual_live_tree;
+	int n_tree;
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 
 	/*radiation variables*/
@@ -1025,7 +1025,7 @@ typedef struct {
 	double old_asw;
 	double max_asw;
 	double psi;
-	double vwc;
+
 
 	double previous_available_soil_water;
 	double water_balance, old_water_balance;
@@ -1033,6 +1033,8 @@ typedef struct {
 	double av_soil_moist_ratio;
 	double swc;//volumetric soil water content (%vol)
 	double psi_sat;//soil saturated matric potential
+	double vwc;
+	double vwc_fc;
 	double vwc_sat;//soil saturated Volumetric water content
 	double soil_b; //soil moisture parameter
 	double soilw_sat; //(kgH2O/m2) soilwater at saturation

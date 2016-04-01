@@ -337,7 +337,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 
 		Annual_Log("\t%12.2f \t%8.2f \t%10.2f \t%10.2f  \t%10.2f \t%6.2f "
-				"\t%5.2f \t%8.2d \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f\n",
+				"\t%5.2f \t%8.2d \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.4f \t%6.2f \t%10.2f \t%8.2f \t%8.2f \t%9.2f \t%6.2f\n",
 				((c->annual_aut_resp * 100.0)/c->annual_gpp),
 				c->annual_npp_gC,
 				c->annual_et ,
@@ -345,7 +345,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->asw,
 				c->annual_peak_lai[0],
 				c->layer_annual_cc[0],
-				c->annual_live_tree,
+				c->n_tree,
 				c->annual_dead_tree,
 				c->annual_layer_leaf_c[0],
 				c->annual_layer_stem_c[0],
@@ -355,7 +355,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->annual_layer_fineroot_c[0],
 				c->annual_layer_coarseroot_c[0],
 				c->annual_layer_live_coarseroot_c[0],
-				c->annual_layer_reserve_c[0],
+				c->annual_layer_reserve_c[0]/c->n_tree*1000.0,
 				c->annual_delta_wres[0],
 				c->layer_annual_leaf_aut_resp[0],
 				c->layer_annual_stem_aut_resp[0],
