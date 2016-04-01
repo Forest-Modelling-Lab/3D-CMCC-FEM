@@ -925,6 +925,7 @@ typedef struct {
 	int annual_layer_number;
 	int top_layer;
 	int saplings_counter;
+	double cell_cover;
 	double density_dominant;
 	double density_dominated;
 	double density_subdominated;
@@ -1020,6 +1021,8 @@ typedef struct {
 	double asw;
 	double old_asw;
 	double max_asw;
+	double psi;
+	double vwc;
 
 	double previous_available_soil_water;
 	double water_balance, old_water_balance;

@@ -66,8 +66,8 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 			/* reset days-since-rain parameter */
 			c->days_since_rain = 0.0;
 
-			/* soil evaporation proceeds at potential rate */
-			c->daily_soil_evapo = 0.6 * pot_soil_evap;
+			/* soil evaporation proceeds at potential rate  and scaled to cell uncovered*/
+			c->daily_soil_evapo = 0.6 * pot_soil_evap * (1.0 - c->cell_cover);
 		}
 		else
 		{
@@ -80,9 +80,8 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 			ratio = 0.3/pow(c->days_since_rain,2.0);
 			Log("ratio = %f \n", ratio);
 
-			/* calculate evaporation for dry days */
-			c->daily_soil_evapo = ratio * pot_soil_evap;
-			Log("daily_soil_evapo = %f \n", c->daily_soil_evapo);
+			/* calculate evaporation for dry days and scaled to cell uncovered*/
+			c->daily_soil_evapo = ratio * pot_soil_evap * (1.0 - c->cell_cover);
 		}
 		/* for rain events that are smaller than required to reset dsr
 	counter, but larger than dry-day evaporation, all rain is evaporated.
@@ -92,7 +91,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	rainfall.  In this case the drying curve counter is advanced. */
 		if (c->prcp_rain >c->daily_soil_evapo && c->days_since_rain >= 1.0)
 		{
-			c->daily_soil_evapo = c->prcp_rain;
+			c->daily_soil_evapo = c->prcp_rain * (1.0 - c->cell_cover);
 			c->days_since_rain -= 1.0;
 
 		}

@@ -839,7 +839,15 @@ void Daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int
 						{
 							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
 							c->Veg_Counter += 1;
+							//FIXME check if it works (daily)
+							/* we consider that plants tend to occupy the part of the cell not covered by the others */
+							c->cell_cover += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							if(c->cell_cover > 1.0)
+							{
+								c->cell_cover = 1.0;
+							}
 							Log("%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+							Log("cell_cover counter = %f\n", c->cell_cover);
 						}
 						else
 						{

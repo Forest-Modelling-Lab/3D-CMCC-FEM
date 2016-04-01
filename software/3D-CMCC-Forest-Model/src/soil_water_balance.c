@@ -67,4 +67,17 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	}
 	c->swc= (c->asw * 100)/c->max_asw;
 	Log("SWC = %g(%vol)\n", c->swc);
+
+
+	/*SOIL MATRIC POTENTIAL*/
+
+	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	/* calculate the soil pressure-volume coefficients from texture data */
+	/* Uses the multivariate regressions from Cosby et al., 1984 */
+	/* (DIM) volumetric water content */
+	c->vwc = c->asw / (1000.0 * (site->soil_depth/100));
+	Log("volumetric available soil water  = %f (DIM)\n", c->vwc);
+	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
+	Log ("vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
 }

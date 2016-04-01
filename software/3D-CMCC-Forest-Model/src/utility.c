@@ -63,6 +63,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->daily_latent_heat_flux = 0.0;
 
 	c->daily_litterfall = 0.0;
+	c->cell_cover = 0.0;
 	c->dominant_veg_counter = 0.0;
 	c->dominated_veg_counter = 0.0;
 	c->subdominated_veg_counter = 0.0;

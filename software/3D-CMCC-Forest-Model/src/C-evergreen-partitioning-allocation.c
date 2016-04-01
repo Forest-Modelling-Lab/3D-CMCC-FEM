@@ -40,18 +40,20 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	double s0Ctem_increment;
 	double old_s0Ctem = s0Ctem;
 
-	//Marconi here the allocation of biomass reserve is divided in fineroot and leaves following the allocation ratio parameter between them. That because
-	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases; the former in which carbon is allocated in fineroot and foliage, the latter in
+	//Marconi here the allocation of biomass reserve is divided in fineroot and leaves following the
+	//allocation ratio parameter between them. That because
+	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
+	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	// every pool except foliage
 	static double reserve_for_foliage_budburst;
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;
 
-	/* both used in case of retranslocation carbon to reserve */
+	/* both used in case of retranslocation of carbon to reserve */
 	double old_leaf_c;
 	double old_fineroot_c;
 
-	Log("GET_ALLOCATION_ROUTINE\n\n");
+	Log("ALLOCATION_ROUTINE\n\n");
 
 	Log("Carbon allocation routine for evergreen\n");
 
@@ -72,7 +74,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	//7 May 2012
 	//compute static ratio of allocation between fine
-	//fixme see if chage with new parameters checked in "Pool_fraction"
+	//fixme see if change with new parameters checked in "Pool_fraction"
 //	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
 //	Log("Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
 //	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
@@ -93,8 +95,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	{
 		old_leaf_c = s->value[LEAF_C];
 		old_fineroot_c = s->value[FINE_ROOT_C];
-
-		//(Arora V. K., Boer G. J., GCB, 2005)
 
 		if (s->management == 0)
 		{
@@ -163,7 +163,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 				{
 					Log("Using ONLY npp...\n");
-					s->value[C_TO_LEAF] = s->value[NPP_gC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+					s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 					s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
 					s->value[C_TO_RESERVE] = 0.0;
 				}
@@ -271,13 +271,6 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
 
 	}
-
-	s->value[STEM_C] += s->value[C_TO_STEM];
-	Log("Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
-
-	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
-	Log("Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
-
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
 	Log("Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
 
@@ -293,6 +286,12 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		s->value[FINE_ROOT_C] = s->value[MAX_FINE_ROOT_C] ;
 		s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
 	}
+
+	s->value[STEM_C] += s->value[C_TO_STEM];
+	Log("Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
+
+	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
+	Log("Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
 
 	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
 	Log("Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);

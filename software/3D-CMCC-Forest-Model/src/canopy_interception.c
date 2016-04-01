@@ -154,7 +154,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 		}
 		else
 		{
-			//test it seems doesn't owrk
+			//test it seems doesn't work
 			//			s->value[FRAC_DAYTIME_EVAPO] = Minimum (s->value[RAIN_INTERCEPTED]/(PotEvap*EVAPOCOEFF), 1.0);
 			//			Log("FRAC_DAYTIME_WET_CANOPY = %f\n", s->value[FRAC_DAYTIME_EVAPO]);
 			//			/* just a part of rain evaporates */
