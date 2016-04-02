@@ -214,7 +214,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			}
 		}
 
-		Leaf_fall(&c->heights[height].ages[age].species[species]);
+		Leaf_fall(&c->heights[height].ages[age].species[species], &c->doy);
 		/* these are in computed leaffall function */
 //		s->value[C_TO_LEAF] = foliage_to_remove;
 //		s->value[C_TO_FINEROOT] = fineroot_to_remove;
@@ -224,7 +224,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
-		s->value[C_TO_LITTER] = s->value[C_TO_LEAF] + s->value[C_TO_FINEROOT];
+		s->value[C_TO_LITTER] = fabs(s->value[C_TO_LEAF] + s->value[C_TO_FINEROOT]);
 
 		break;
 	case 0:
@@ -396,7 +396,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->annual_layer_coarseroot_c[i] = s->value[COARSE_ROOT_C];
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
 
-	/* update cell level carbon biomass in gC/m2/day*/
+	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;
 	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell ;
 	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell ;
@@ -406,7 +406,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / settings->sizeCell ;
 	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
 
-	/* update cell level carbon biomass in tC/cell/day*/
+	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];
 	c->daily_stem_carbon_tC += s->value[C_TO_STEM];
 	c->daily_fine_root_carbon_tC += s->value[C_TO_FINEROOT];

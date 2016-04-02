@@ -22,6 +22,7 @@ wflux_struct* wf)
 		wf->soilw_outflow = ws->soilw - sitec->soilw_sat;
 	}
 	/* slow drainage from saturation to field capacity */
+	//qui quando entra???
 	else if (ws->soilw > sitec->soilw_fc)
 	{
 		wf->soilw_outflow = 0.5 * (ws->soilw - sitec->soilw_fc);
@@ -31,7 +32,6 @@ wflux_struct* wf)
 	{
 		wf->soilw_outflow = 0.0;
 	}
-
 	return(!ok);
 }
 

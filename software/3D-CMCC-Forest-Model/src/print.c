@@ -249,3 +249,4 @@ void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET_DATA *
 	Log("> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 	Log("*****************************\n");
 }
+

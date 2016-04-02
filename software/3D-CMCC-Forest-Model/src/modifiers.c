@@ -179,7 +179,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
-
 	c->soil_moist_ratio = c->asw/c->max_asw;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
