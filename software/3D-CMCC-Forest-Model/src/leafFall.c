@@ -12,9 +12,12 @@ void Leaf_fall(SPECIES *s, int* doy)
 	static double fineroot_to_remove;
 	static double retransl_leaf_c_to_reserve;
 	static double retransl_fineroot_c_to_reserve;
+	static int senescenceDayOne;
 
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
+
+	Log("LEAF_FALL_COUNTER = %d\n", s->counter[LEAF_FALL_COUNTER]);
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
@@ -23,52 +26,63 @@ void Leaf_fall(SPECIES *s, int* doy)
 		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
 
 		s->value[MAX_LAI] = s->value[LAI];
+		senescenceDayOne = *doy;
 
-//		/* assuming linear leaf fall */
-//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//		Log("daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
-//		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//		Log("daily amount of fine root to remove = %f tC/cell/day\n", fineroot_to_remove);
+		//		/* assuming linear leaf fall */
+		//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		//		Log("daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
+		//		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		//		Log("daily amount of fine root to remove = %f tC/cell/day\n", fineroot_to_remove);
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
-//		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];;
-//		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-//		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", retransl_leaf_c_to_reserve);
-//		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", retransl_fineroot_c_to_reserve);
+		//		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];;
+		//		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		//		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", retransl_leaf_c_to_reserve);
+		//		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", retransl_fineroot_c_to_reserve);
 	}
 
-	previousLai = s->value[LAI];
+	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+	{
+		previousLai = s->value[LAI];
 
-	currentLai = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
-			* doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
-					log(.11111111111))))));
-	Log("previousLai = %f\n", previousLai);
-	Log("currentLai = %f\n", currentLai);
-	previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		currentLai = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
+				* doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
+						log(.11111111111))))));
+		Log("previousLai = %f\n", previousLai);
+		Log("currentLai = %f\n", currentLai);
+		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
-	newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
-	foliage_to_remove = previousBiomass_lai - newBiomass_lai;
-	Log("foliage_to_remove = %f\n", fineroot_to_remove);
+		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
+		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
+		Log("foliage_to_remove = %f\n", foliage_to_remove);
 
-	/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
-	/* compute amount of fine root biomass to retranslocate as reserve */
-	retransl_leaf_c_to_reserve = s->value[LEAF_C] * 0.1;
+		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
+		/* compute amount of fine root biomass to retranslocate as reserve */
+		retransl_leaf_c_to_reserve = s->value[LEAF_C] * 0.1;
 
-	/* a simple correlation from leaf carbon to remove and fine root to remove */
-	fineroot_to_remove = (s->value[FINE_ROOT_C]*s->value[C_TO_LEAF])/s->value[LEAF_C];
-	Log("fineroot_to_remove = %f\n", fineroot_to_remove);
+		/* a simple correlation from leaf carbon to remove and fine root to remove */
+		fineroot_to_remove = (s->value[FINE_ROOT_C]*foliage_to_remove)/s->value[LEAF_C];
+		Log("fineroot_to_remove = %f\n", fineroot_to_remove);
 
-	if(s->counter[LEAF_FALL_COUNTER] == 1) exit(1);
+		retransl_fineroot_c_to_reserve = s->value[FINE_ROOT_C] * 0.1;
 
-
-	retransl_fineroot_c_to_reserve = s->value[FINE_ROOT_C] * 0.1;
-
-	//test
-	s->value[C_TO_LEAF] = -(foliage_to_remove + retransl_leaf_c_to_reserve);
-	s->value[C_TO_FINEROOT] = -(fineroot_to_remove + retransl_fineroot_c_to_reserve);
-	s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
-	s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
+		//test
+		s->value[C_TO_LEAF] = -(foliage_to_remove + retransl_leaf_c_to_reserve);
+		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
+		s->value[C_TO_FINEROOT] = -(fineroot_to_remove + retransl_fineroot_c_to_reserve);
+		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
+	}
+	else
+	{
+		Log("Last day of leaffall\n");
+		s->value[C_TO_LEAF] = - s->value[LEAF_C];
+		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = 0.0;
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = 0.0;
+	}
 }
 
 void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplayer, int z)
@@ -109,27 +123,27 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0.0);
 
 
-//	//ALESSIOC
-//	if(s->value[BIOMASS_FOLIAGE_tDM] > 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
-//	{
-//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
-//		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE_tDM]);
-//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-//		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_FINE_ROOT_tDM]);
-//		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
-//
-//	}
-//	else
-//	{
-//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
-//		s->value[DEL_FOLIAGE]  = 0.0;
-//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//		s->value[DEL_FOLIAGE]  = 0.0;
-//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
-//	}
-//	Log("****************************\n\n");
+	//	//ALESSIOC
+	//	if(s->value[BIOMASS_FOLIAGE_tDM] > 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
+	//	{
+	//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+	//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
+	//		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE_tDM]);
+	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+	//		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_FINE_ROOT_tDM]);
+	//		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
+	//
+	//	}
+	//	else
+	//	{
+	//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
+	//		s->value[DEL_FOLIAGE]  = 0.0;
+	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+	//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+	//		s->value[DEL_FOLIAGE]  = 0.0;
+	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
+	//	}
+	//	Log("****************************\n\n");
 }
 
 struct vars_struct {
