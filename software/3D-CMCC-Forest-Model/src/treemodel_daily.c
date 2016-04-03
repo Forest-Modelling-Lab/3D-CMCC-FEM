@@ -105,6 +105,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						}
 						else
 						{
+							//test to remove????
 							Biomass_increment_BOY(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height, age, years);
 						}
 						/* reset annual variables */
@@ -174,7 +175,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									//Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
 									//simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, height, age, species);
+									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, height, age, species);
 									//Turnover  (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 								/*outside growing season*/
@@ -200,7 +201,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years, month, day, height);
 									//Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 									//simple_Deciduous_Partitioning_Allocation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month],  height, age, species);
-									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, height, age, species);
+									Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, height, age, species);
 									//Turnover (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], DaysInMonth[month], height);
 								}
 							}
@@ -239,12 +240,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("--------------------------------------------------------------------------\n\n\n");
 							}
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
-							//to prevent jumps in dendrometric values it must be computed at the beginning of each month
-							if (day == 0)
-							{
-								Average_tree_biomass (&m->cells[cell].heights[height].ages[age].species[species]);
-								Dendrometry (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights_count);
-							}
 							/* END OF YEAR */
 							if (day == 30 && month == DECEMBER)
 							{

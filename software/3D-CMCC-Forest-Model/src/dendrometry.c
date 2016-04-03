@@ -5,7 +5,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
+void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -18,12 +18,7 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	/*compute Tree AVDBH*/
 
 	oldavDBH = s->value[AVDBH];
-
-	//Log("OLD Average DBH from 3PG CLASSIC from previous year = %f cm\n", oldavDBH);
-
 	oldTreeHeight = h->value;
-
-	//Log("OLD Tree Height from Chapman-Richards function from previous year = %f m\n", oldTreeHeight);
 
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
@@ -31,15 +26,15 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 
 		if (oldavDBH < 9)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_A));
 		}
 		else if (oldavDBH > 9 && oldavDBH < 15)
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_B));
 		}
 		else
 		{
-			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
+			s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM / s->value[STEMCONST]), (1.0 / STEMPOWER_C));
 		}
 	}
 	else
@@ -49,9 +44,10 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		s->value[AVDBH] = pow(s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
 		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
 	}
-	Log("Old AVDBH = %f cm\n", oldavDBH);
+
 	Log("-Average stem mass = %f\n", s->value[AV_STEM_MASS_KgDM]);
-	Log("-New Average DBH = %f cm\n", s->value[AVDBH]);
+	Log("Old AVDBH = %.10f cm\n", oldavDBH);
+	Log("-New Average DBH = %.10f cm\n", s->value[AVDBH]);
 
 	/* control */
 	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);
@@ -91,11 +87,12 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 		s->value[TREE_HEIGHT_SORTIE] = 0.1 + 30 *( 1.0 - exp ( - 0.03 * s->value[AVDBH] ));
 		L
 */
-	/*control*/
-	if ( oldTreeHeight > h->value)
+
+	CHECK_CONDITION(oldavDBH, > s->value[AVDBH] + 1e-10);
+	/* to avoid that error appears due to differences between measured and computed tree height values */
+	if(years > 0)
 	{
-		h->value = oldTreeHeight;
-		Log("ERROR in TREE HEIGHT!!!\n");
+		CHECK_CONDITION(oldTreeHeight, > h->value + 1e-10);
 	}
 
 	/* recompute sapwood-heartwood area */
@@ -108,16 +105,12 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int count)
 	Log(" HEART_WOOD_AREA = %f cm^2\n", s->value[HEARTWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	Log(" sapwood perc = %f%%\n", s->value[SAPWOOD_PERC]*100);
-	s->value[WS_sap_tDM] = (s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
 	Log(" Sapwood stem biomass = %f tC class cell \n", s->value[STEM_SAPWOOD_C]);
-	s->value[WRC_sap_tDM] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
 	Log(" Sapwood coarse root biomass = %f tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
-	s->value[WBB_sap_tDM] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
 	Log(" Sapwood branch and bark biomass = %f tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
-	s->value[WTOT_sap_tDM] = s->value[WS_sap_tDM] + s->value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	Log(" Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap_tDM]);
 }

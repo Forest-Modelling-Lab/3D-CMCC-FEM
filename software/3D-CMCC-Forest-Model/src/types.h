@@ -1307,7 +1307,7 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET
 //evergreen routine for carbon allocation
 void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
-void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int, int);
 void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 
 void Nitrogen_stock (SPECIES *);
@@ -1330,7 +1330,7 @@ void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
 void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
 void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
 void AGB_BGB_biomass (CELL *const , int, int, int);
-void Dendrometry (SPECIES *const, HEIGHT *, const int);
+void Dendrometry (SPECIES *const, HEIGHT *, int);
 void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 void Daily_Forest_structure (CELL *, const int,const int,const int);
 void Print_met_daily_data (const YOS *const , int , int , int );

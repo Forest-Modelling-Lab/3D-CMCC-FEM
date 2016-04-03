@@ -364,19 +364,26 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		Log("Total branch = %f\n", s->value[BRANCH_C]);
 	}
 
-	CHECK_CONDITION(s->value[RESERVE_C], < 0);
-	CHECK_CONDITION(s->value[LEAF_C], < 0);
-	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
-	CHECK_CONDITION(s->value[STEM_C], < 0);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
-	CHECK_CONDITION(s->value[FRUIT_C], < 0);
+	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
+	/* to avoid "jumps" of dbh it has computed only one monthly */
+	if(day == 0)
+	{
+		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
+	}
+
+//	CHECK_CONDITION(s->value[RESERVE_C], < 0);
+//	CHECK_CONDITION(s->value[LEAF_C], < 0);
+//	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
+//	CHECK_CONDITION(s->value[STEM_C], < 0);
+//	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[BRANCH_C], < 0);
+//	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
+//	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
+//	CHECK_CONDITION(s->value[FRUIT_C], < 0);
 
 	Log("\n-Daily increment in carbon pools-\n");
 	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);

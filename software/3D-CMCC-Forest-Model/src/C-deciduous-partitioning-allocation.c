@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 //Deciduous carbon allocation routine
-void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int height, int age, int species)
+void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int height, int age, int species)
 {
 
 	int i;
@@ -137,7 +137,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
-		s->value[C_TO_TOT_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = 0.0;
@@ -161,7 +160,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 				s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
-				s->value[C_TO_TOT_STEM] = 0.0;
 				s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 				s->value[C_TO_BRANCH] = (s->value[NPP_tC] * pS_CTEM) * s->value[FRACBB];
 				s->value[C_TO_LEAF] = 0.0;
@@ -176,7 +174,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = 0.0;
 				s->value[C_TO_TOT_STEM] = 0.0;
-				s->value[C_TO_STEM] = 0.0;
 				s->value[C_TO_BRANCH] = 0.0;
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FRUIT] = 0.0;
@@ -188,7 +185,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 			s->value[C_TO_RESERVE] = s->value[NPP_tC];
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
-			s->value[C_TO_TOT_STEM] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_LEAF] = 0.0;
@@ -220,7 +216,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //		s->value[C_TO_FINEROOT] = fineroot_to_remove;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
-		s->value[C_TO_TOT_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
@@ -234,7 +229,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_FINEROOT] = 0.0;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
-		s->value[C_TO_TOT_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
@@ -265,7 +259,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
 	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
 
-	s->value[TOT_STEM_C] += s->value[C_TO_TOT_STEM];
+	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
 	Log("Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
 
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT] - (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
@@ -274,58 +268,39 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[STEM_LIVE_WOOD_C] += s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC];
 	Log("Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
-	//s->value[STEM_DEAD_WOOD_C] += s->value[C_TO_STEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
 	Log("Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
 	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_COARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
-	//s->value[COARSE_ROOT_DEAD_WOOD_C] += s->value[C_TO_COARSEROOT] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
 	Log("Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
 	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
-	//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
+	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
 	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
 	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */
-	if (fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C])>1e-4)
+	Log("COARSE_ROOT_C = %f\n", s->value[COARSE_ROOT_C]);
+	Log("LIVE + DEAD COARSE ROOT= %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C], != s->value[STEM_C]);
+	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C], != s->value[COARSE_ROOT_C]);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C], != s->value[BRANCH_C]);
+
+	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
+
+	/* to avoid "jumps" of dbh it has computed only one monthly */
+	if(day == 0)
 	{
-		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
-		Log("Total stem = %f\n", s->value[STEM_C]);
-		Log("ATTENTION CHECK BALANCE!\n");
+		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
-	else
-	{
-		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
-		Log("Total stem = %f\n", s->value[STEM_C]);
-	}
-	if (fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C])>1e-4)
-	{
-		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
-		Log("ATTENTION CHECK BALANCE!\n");
-	}
-	else
-	{
-		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
-	}
-	if (fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C])>1e-4)
-	{
-		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
-		Log("Total branch = %f\n", s->value[BRANCH_C]);
-		Log("ATTENTION CHECK BALANCE!\n");
-	}
-	else
-	{
-		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
-		Log("Total branch = %f\n", s->value[BRANCH_C]);
-	}
+
 
 	/*CHECK_CONDITION(s->value[RESERVE_C], > 1e-4);
 	CHECK_CONDITION(s->value[LEAF_C], > 1e-4);
