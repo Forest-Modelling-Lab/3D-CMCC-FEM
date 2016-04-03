@@ -277,7 +277,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	//s->value[STEM_DEAD_WOOD_C] += s->value[C_TO_STEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
-	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_ROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
+	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_COARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
 	//s->value[COARSE_ROOT_DEAD_WOOD_C] += s->value[C_TO_COARSEROOT] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);

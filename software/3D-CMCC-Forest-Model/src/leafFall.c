@@ -80,8 +80,8 @@ void Leaf_fall(SPECIES *s, int* doy)
 		Log("Last day of leaffall\n");
 		s->value[C_TO_LEAF] = - s->value[LEAF_C];
 		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = 0.0;
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = 0.0;
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = s->value[LEAF_C] * 0.1;
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C] * 0.1;
 	}
 }
 

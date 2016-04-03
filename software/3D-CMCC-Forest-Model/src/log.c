@@ -313,9 +313,9 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				Annual_Log ("\t%7s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%10s \t%10s \t%6s \t%6s \t%8s \t%10s \t%3s \t%10s \t%10s \t%6s \t%6s \t%8s \t%8s \t%8s \t%10s \t%8s \t%8s \t%9s \t%7s \t%9s \t%8s \t%9s \t%7s \t%6s\n",
+			Annual_Log ("\t%10s \t%10s \t%6s \t%6s \t%8s \t%10s \t%3s \t%10s \t%10s \t%6s \t%6s \t%8s \t%8s \t%5s \t%10s \t%8s \t%8s \t%9s \t%7s \t%9s \t%8s \t%9s \t%7s \t%6s\n",
 					"Y(%)", "NPP(gC/m2y)", "ET(mm/m2)", "LE(W/m2)", "ASW", "PEAK_LAI",
-					"CC", "LIVE TREE", "DEAD TREE", "wf", "ws", "wsl", "wbb", "wbbl", "wfr", "wcr", "wcrl", "Wres", "D-Wres", "leafAR", "stemAR", "branchAR", "frAR", "crAR");
+					"CC", "LIVE TREE", "DEAD TREE", "wf", "ws", "wsl", "wbb", "wbbl", "wfr", "wcr", "wcrl", "Wres(KG/t)", "D-Wres", "leafAR", "stemAR", "branchAR", "frAR", "crAR");
 
 		}
 		Annual_Log ("%d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter);

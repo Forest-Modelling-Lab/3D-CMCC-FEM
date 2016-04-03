@@ -45,7 +45,7 @@ void Turnover(SPECIES *s)
 		/* daily coarse root turnover live to dead wood */
 		Log("****Coarse root turnover****\n");
 		s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[C_TO_COARSEROOT] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
-		Log("Live Coarse root Biomass = %f tC/cell\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+		Log("Live Coarse root Biomass = %f tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 		s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
 		//s->value[COARSE_ROOT_DEAD_WOOD_C] += (s->value[C_TO_COARSEROOT] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
 		Log("Dead Coarse root Biomass = %f tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
