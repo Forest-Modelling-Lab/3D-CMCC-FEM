@@ -287,11 +287,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */
-	Log("COARSE_ROOT_C = %f\n", s->value[COARSE_ROOT_C]);
-	Log("LIVE + DEAD COARSE ROOT= %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C], != s->value[STEM_C]);
-	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C], != s->value[COARSE_ROOT_C]);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C], != s->value[BRANCH_C]);
+
+	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[COARSE_ROOT_C]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>1e-4);
 
 	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
 
