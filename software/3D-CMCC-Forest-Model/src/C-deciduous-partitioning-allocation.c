@@ -300,7 +300,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
-
 	/*CHECK_CONDITION(s->value[RESERVE_C], > 1e-4);
 	CHECK_CONDITION(s->value[LEAF_C], > 1e-4);
 	CHECK_CONDITION(s->value[FINE_ROOT_C], > 1e-4);

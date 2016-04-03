@@ -89,8 +89,11 @@ void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age
 			s->value[BRANCH_DEAD_WOOD_C];
 	Log("Dead biomass = %f tC/area\n", s->value[DEAD_WOOD_C]);
 
+	/* check for closure */
 
-
+	CHECK_CONDITION(fabs((s->value[STEM_SAPWOOD_C] + s->value[STEM_HEARTWOOD_C])-s->value[STEM_C]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_SAPWOOD_C] + s->value[COARSE_ROOT_HEARTWOOD_C])-s->value[COARSE_ROOT_C]),>1e-4);
+	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>1e-4);
 }
 
 void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
