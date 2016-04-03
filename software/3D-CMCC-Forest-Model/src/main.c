@@ -170,10 +170,6 @@ static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
 static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
 static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
 
-
-
-
-
 static void clean_up(void)
 {
 	if ( site )
@@ -1369,6 +1365,7 @@ int main(int argc, char *argv[])
 						Day_Length (&m->cells[cell], day, month, year, yos);
 						Latent_heat (&m->cells[cell], day, month, year, yos);
 						Air_pressure (&m->cells[cell], day, month, year, yos);
+						Annual_met_values (&m->cells[cell], day, month, year, yos);
 
 						if(m->cells[cell].landuse == F)
 						{

@@ -171,8 +171,7 @@ void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
 	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	t2 = G_STD / (LR_STD * (Rgas / MA));
 	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %f Pa\n", c->air_pressure);
-
+	//Log("Air pressure = %f Pa\n", met[month].d[day].air_pressure);
 }
 
 
@@ -216,11 +215,6 @@ void Latent_heat (CELL *c, int day, int month, int years, YOS *yos)
 	/*latent heat of sublimation (KJ/Kg)*/
 	met[month].d[day].lh_sub = 2845.0;
 }
-
-
-
-
-
 
 void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
@@ -307,6 +301,57 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	}
 }
 
+void Annual_met_values (CELL * c, int day, int month, int years, YOS *yos)
+{
+	MET_DATA *met;
+	// check parameters
+	met = (MET_DATA*) yos[years].m;
+
+	if(day == 0 && month == 0)
+	{
+		c->annual_tavg = 0.0;
+		c->annual_tmax = 0.0;
+		c->annual_tmin = 0.0;
+		c->annual_tday = 0.0;
+		c->annual_tnight = 0.0;
+		c->annual_tsoil = 0.0;
+		c->annual_solar_rad = 0.0;
+		c->annual_precip = 0.0;
+		c->annual_vpd = 0.0;
+	}
+	c->annual_tavg += met[month].d[day].tavg;
+	c->annual_tmax += met[month].d[day].tmax;
+	c->annual_tmin += met[month].d[day].tmin;
+	c->annual_tday += met[month].d[day].tday;
+	c->annual_tnight += met[month].d[day].tmin;
+	c->annual_tsoil += met[month].d[day].tsoil;
+	c->annual_solar_rad += met[month].d[day].solar_rad;
+	c->annual_precip += met[month].d[day].prcp;
+	c->annual_vpd += met[month].d[day].vpd;
+	if(day == 30 && month == 11)
+	{
+		c->annual_tavg /= 365;
+		c->annual_tmax /= 365;
+		c->annual_tmin /= 365;
+		c->annual_tday /= 365;
+		c->annual_tnight /= 365;
+		c->annual_tsoil /= 365;
+		c->annual_solar_rad /= 365;
+		//c->annual_precip = 365;
+		c->annual_vpd /= 365;
+		Log("**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, years+1);
+		Log("-Annual average tavg = %f C°\n", c->annual_tavg);
+		Log("-Annual average tmax = %f C°\n", c->annual_tmax);
+		Log("-Annual average tmin = %f C°\n", c->annual_tmin);
+		Log("-Annual average tday = %f C°\n", c->annual_tday);
+		Log("-Annual average tnight = %f C°\n", c->annual_tnight);
+		Log("-Annual average tsoil = %f C°\n", c->annual_tsoil);
+		Log("-Annual average solar rad = %f MJ/m2/day\n", c->annual_solar_rad);
+		Log("-Annual average prcp = %f mm/m2/day\n", c->annual_precip);
+		Log("-Annual average vpd = %f hPa/day \n", c->annual_vpd);
+	}
+
+}
 
 
 

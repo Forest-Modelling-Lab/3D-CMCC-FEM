@@ -903,13 +903,24 @@ typedef struct {
 	int heights_count; //number of heights
 	int soils_count;
 
-	/*general variables*/
+	/* general variables */
 	int yearday;
 	int cum_dayOfyear;
 	double abscission_daylength;
 	double av_yearly_daylength;
 	double gcorr;
 	int north; //northern hemisphere north = 0, south hemisphere south = 1
+
+	/* annual met values */
+	double annual_tavg;
+	double annual_tmin;
+	double annual_tmax;
+	double annual_tday;
+	double annual_tnight;
+	double annual_tsoil;
+	double annual_solar_rad;
+	double annual_precip;
+	double annual_vpd;
 
 	/*forest structure variables*/
 	int height_class_in_layer_dominant_counter;
@@ -1246,6 +1257,7 @@ int importSiteFile(char *);
 int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
+void Annual_met_values (CELL *, int, int, int, YOS *);
 void Abscission_DayLength (CELL *);
 int Establishment_LPJ (CELL *const, SPECIES *const);
 int logInit(char*);
