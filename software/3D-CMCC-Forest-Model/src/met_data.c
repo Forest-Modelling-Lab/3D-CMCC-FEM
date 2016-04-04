@@ -31,12 +31,12 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 	doy +=1;
 
 	//4/apr/2016
-	//test following Schwalm & Erik instead of only geographical latitude adjusted latitude is used
+	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
 	adjust_latitude = site->elev / 125.0;
 	ampl = (exp (7.42 + (0.045 * (site->lat+adjust_latitude)))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	Log("with altitude = %f\n", met[month].d[day].daylength);
+	//Log("with altitude = %f\n", met[month].d[day].daylength);
 
 //	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
 //	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;

@@ -20,6 +20,13 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
 	double ni; //proportion of daylength
 
+	/* for biome's ppfd */
+	double par;
+	double par_abs;
+	double par_abs_lai_sun, par_abs_lai_shade;
+	double par_abs_per_lai_sun, par_abs_per_lai_shade;
+
+
 	Log("\nRADIATION ROUTINE\n");
 
 	/*proportion of daylength*/
@@ -37,7 +44,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	Log("Net radiation = %f W/m2\n", c->net_radiation);
 	if(c->net_radiation < 0.00000001)c->net_radiation = 0.00000001;
 	Log("Net radiation = %f W/m\n", c->net_radiation);
-
 
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)
@@ -90,10 +96,10 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//TEST
 			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 			s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
-			Log("Par = %f molPAR/m^2 day/month\n", s->value[PAR]);
-			Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
-			Log("Apar sun = %f molPAR/m^2 day/month\n", s->value[APAR_SUN]);
-			Log("Apar shade = %f molPAR/m^2 day/month\n", s->value[APAR_SHADE]);
+			Log("Par = %f molPAR/m^2 day\n", s->value[PAR]);
+			Log("Apar = %f molPAR/m^2 day\n", s->value[APAR]);
+			Log("Apar sun = %f molPAR/m^2 day\n", s->value[APAR_SUN]);
+			Log("Apar shade = %f molPAR/m^2 day\n", s->value[APAR_SHADE]);
 
 			/*compute NetRad for sun and shaded leaves*/
 			//amount of Net Rad that is reflected but leaves*/
@@ -107,15 +113,33 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
 
 			/*compute PPFD for sun and shaded leaves*/
-			//FIXME CHECK IF CORRECT
-			s->value[PPFD] = s->value[APAR]/ (met[month].d[day].daylength * 3600.0);
-			s->value[PPFD_SUN] = s->value[APAR_SUN]/ (met[month].d[day].daylength * 3600.0);
-			s->value[PPFD_SHADE] = s->value[APAR_SHADE]/ (met[month].d[day].daylength * 3600.0);
-			Log("Absorbed NetRad = %f molPAR/m^2 sec\n", s->value[PPFD]);
-			Log("Absorbed NetRad sun = %f molPAR/m^2 sec\n", s->value[PPFD_SUN]);
-			Log("Absorbed NetRad shade = %f molPAR/m^2 sec\n", s->value[PPFD_SHADE]);
 
-
+			//04/05/2016
+			//TEST
+			par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+			par_abs = par * LightAbsorb;
+			par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
+			par_abs_lai_shade = par_abs - par_abs_lai_sun;
+			if(par_abs_lai_shade < 0.0)
+			{
+				par_abs_lai_sun = par_abs;
+				par_abs_lai_shade = 0.0;
+			}
+			if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
+			{
+				par_abs_per_lai_sun = par_abs_lai_sun / s->value[LAI_SUN];
+				par_abs_per_lai_shade = par_abs_lai_shade / s->value[LAI_SHADE];
+			}
+			else
+			{
+				par_abs_per_lai_sun = par_abs_per_lai_shade = 0.0;
+			}
+			s->value[PPFD_SUN] = par_abs_lai_sun * EPAR;
+			s->value[PPFD_SHADE] = par_abs_lai_shade * EPAR;
+			Log("Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
+			Log("Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
+			Log("Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
+			//if(s->value[LAI] >3.0)exit(1);
 
 			//only one height class in layer
 			if ( c->height_class_in_layer_dominant_counter == 1 )
@@ -226,7 +250,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				//				s->value[APAR] = c->par * LightAbsorb;
 				//				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
-				Log("**BIOME APPROACH for dominant**\n");
+				Log("**BIOME APPROACH for dominted**\n");
 				/*compute APAR for sun and shaded leaves*/
 				//amount of total par that is reflected but leaves*/
 				s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
@@ -248,6 +272,34 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
 				Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
 				Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+
+				/*compute PPFD for sun and shaded leaves*/
+
+				//04/05/2016
+				//TEST
+				par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+				par_abs = par * LightAbsorb;
+				par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
+				par_abs_lai_shade = par_abs - par_abs_lai_sun;
+				if(par_abs_lai_shade < 0.0)
+				{
+					par_abs_lai_sun = par_abs;
+					par_abs_lai_shade = 0.0;
+				}
+				if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
+				{
+					par_abs_per_lai_sun = par_abs_lai_sun / s->value[LAI_SUN];
+					par_abs_per_lai_shade = par_abs_lai_shade / s->value[LAI_SHADE];
+				}
+				else
+				{
+					par_abs_per_lai_sun = par_abs_per_lai_shade = 0.0;
+				}
+				s->value[PPFD_SUN] = par_abs_lai_sun * EPAR;
+				s->value[PPFD_SHADE] = par_abs_lai_shade * EPAR;
+				Log("Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
+				Log("Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
+				Log("Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
 
 				if ( c->dominated_veg_counter >= 3 )
 				{
@@ -445,6 +497,33 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("Absorbed NetRad = %f W/m^2\n", s->value[NET_RAD_ABS]);
 				Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
 				Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+				/*compute PPFD for sun and shaded leaves*/
+
+				//04/05/2016
+				//TEST
+				par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+				par_abs = par * LightAbsorb;
+				par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
+				par_abs_lai_shade = par_abs - par_abs_lai_sun;
+				if(par_abs_lai_shade < 0.0)
+				{
+					par_abs_lai_sun = par_abs;
+					par_abs_lai_shade = 0.0;
+				}
+				if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
+				{
+					par_abs_per_lai_sun = par_abs_lai_sun / s->value[LAI_SUN];
+					par_abs_per_lai_shade = par_abs_lai_shade / s->value[LAI_SHADE];
+				}
+				else
+				{
+					par_abs_per_lai_sun = par_abs_per_lai_shade = 0.0;
+				}
+				s->value[PPFD_SUN] = par_abs_lai_sun * EPAR;
+				s->value[PPFD_SHADE] = par_abs_lai_shade * EPAR;
+				Log("Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
+				Log("Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
+				Log("Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
 
 				if ( c->heights_count >= 3 )
 				{

@@ -17,6 +17,7 @@
 #define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
 #define QB                       0.8      //Slope of Net vs Solar Radiation
 #define RAD2PAR                 0.45     // (DIM) ratio PAR / SWtotal
+#define RAD2PPFD                0.45     //
 
 #define GC_GDM                     2      //convert grams C to grams DM (Campioli et al., 2013)
 #define GLUCOSE_C                0.4      //fraction of Carbon in glucose reserve (Barbaroux et al., 2002)

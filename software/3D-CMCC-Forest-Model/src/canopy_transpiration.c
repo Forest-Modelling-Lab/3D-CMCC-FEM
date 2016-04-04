@@ -73,24 +73,31 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 
 
 	/* photosynthetic photon flux density conductance control */
-	m_ppfd = (s->value[APAR] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR]* (met[month].d[day].daylength * 3600.0)));
-	Log("PPFD for biome = %f mol/sec\n", m_ppfd);
+	m_ppfd_sun = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
+	Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	m_ppfd_shade = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
+	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+
+
+	/* photosynthetic photon flux density conductance control usign APAR (not particular dieffrences has been found*/
+	/*
 	m_ppfd_sun = (s->value[APAR_SUN] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR_SUN]* (met[month].d[day].daylength * 3600.0)));
 	Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
 	m_ppfd_shade = (s->value[APAR_SHADE] * (met[month].d[day].daylength * 3600.0))/(PPFD50 + (s->value[APAR_SHADE]* (met[month].d[day].daylength * 3600.0)));
 	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+	*/
 
 
 	/* apply all multipliers to the maximum stomatal conductance */
-	m_final = m_ppfd * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	//m_final = m_ppfd * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 	m_final_sun = m_ppfd_sun * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 	m_final_shade = m_ppfd_shade * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 
-	if (m_final < .00000001) m_final_sun = 0.00000001;
+	//if (m_final < .00000001) m_final_sun = 0.00000001;
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
 
-	gl_s = s->value[MAXCOND] * m_final * g_corr;
+	//gl_s = s->value[MAXCOND] * m_final * g_corr;
 	gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
 	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
@@ -105,7 +112,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	LAI.  This formula is derived from stomatal and cuticular conductances
 	in parallel with each other, and both in series with leaf boundary
 	layer conductance. */
-	gl_t_wv = (gl_bl * (gl_s + gl_c)) / (gl_bl + gl_s + gl_c);
+	//gl_t_wv = (gl_bl * (gl_s + gl_c)) / (gl_bl + gl_s + gl_c);
 	gl_t_wv_sun = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
 	gl_t_wv_shade = (gl_bl * (gl_s_shade + gl_c)) / (gl_bl + gl_s_shade + gl_c);
 
