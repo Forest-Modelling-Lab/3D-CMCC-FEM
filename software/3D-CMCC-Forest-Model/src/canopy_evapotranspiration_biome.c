@@ -30,25 +30,31 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double gl_sh;
 	double gc_e_wv;
 	double gc_sh;
-
 	double net_rad;
-
 	double rv;
 	double rh;
-
 	double daylength_sec; //daylength in sec
 	double evap_daylength;
 	double transp_daylength;
-
 	double evapo;
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
-	double transp_ratio;
+	double cell_coverage;
+
 
 	Log("\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
 
 	Log("**CANOPY INTERCEPTION BIOME**\n");
+
+	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	{
+		cell_coverage = 1.0;
+	}
+	else
+	{
+		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+	}
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
@@ -180,7 +186,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				Log("day not long enough to evap all rain intercepted\n");
 				/* day not long enough to evap. all int. water */
 				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
-				s->value[CANOPY_EVAPO] *= daylength_sec * s->value[CANOPY_COVER_DBHDC];   /* daylength limits canopy evaporation */
+				s->value[CANOPY_EVAPO] *= daylength_sec * cell_coverage;   /* daylength limits canopy evaporation */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
@@ -217,7 +223,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				Log("transp = %.10f mm/m2/day\n", transp);
 				s->value[CANOPY_TRANSP] = transp;
 				/* considering effective coverage of cell */
-				s->value[CANOPY_TRANSP] *= s->value[CANOPY_COVER_DBHDC];
+				s->value[CANOPY_TRANSP] *= cell_coverage;
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
@@ -250,7 +256,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			Log("transp = %.10f mm/m2/day\n", transp);
 			s->value[CANOPY_TRANSP] = transp;
 			/* considering effective coverage of cell and convert to daily amount */
-			s->value[CANOPY_TRANSP] *= s->value[CANOPY_COVER_DBHDC];
+			s->value[CANOPY_TRANSP] *= cell_coverage;
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 	}
@@ -262,9 +268,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_INT] = 0.0;
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
-
-	transp_ratio = transp /s->value[MAXCOND];
-	Log("daily transp ratio = %f %%", transp_ratio);
 
 	Log("CANOPY_TRANSP = %.10f mm/m2/day\n", s->value[CANOPY_TRANSP]);
 	Log("CANOPY_WATER = %.10f mm/m2/day\n", s->value[CANOPY_WATER]);
