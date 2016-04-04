@@ -95,6 +95,17 @@ void Reset_daily_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[CANOPY_TRANSP] = 0.0;
 				c->heights[height].ages[age].species[species].value[CANOPY_EVAPO_TRANSP] = 0.0;
 
+				/* reset daily multipliers */
+				c->heights[height].ages[age].species[species].value[F_LIGHT] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_T] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_FROST] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_VPD] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_AGE] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_NUTR] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_SW] = 0.0;
+				c->heights[height].ages[age].species[species].value[F_PSI] = 0.0;
+				c->heights[height].ages[age].species[species].value[PHYS_MOD] = 0.0;
+
 				/* reset daily carbon assimilated to cpools */
 //				c->heights[height].ages[age].species[species].value[C_TO_LEAF] = 0.0;
 //				c->heights[height].ages[age].species[species].value[C_TO_ROOT] = 0.0;

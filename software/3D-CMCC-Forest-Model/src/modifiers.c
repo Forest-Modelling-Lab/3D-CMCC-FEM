@@ -27,6 +27,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	double Temp_K;
 	double v1, v2;
 
+	static int counter_water_stress;
+
 	Log("\nDAILY_MODIFIERS\n\n");
 
 	/* CO2 MODIFIER FROM C-FIX */
@@ -207,12 +209,19 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	if (c->psi > s->value[SWPOPEN]) /*no water stress*/
 	{
+		counter_water_stress = 0.0;
 		s->value[F_PSI] = 1.0;
 	}
 	else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
 	{
+		//change for multiple class
+		counter_water_stress += 1;
 		//s->value[F_PSI] = 0.0;
+		Log("Water stress\n");
+		Log("F_PSI = %f\n", s->value[F_PSI]);
 		s->value[F_PSI] = 0.33;
+		Log("F_PSI = %f\n", s->value[F_PSI]);
+		//CHECK_CONDITION(counter_water_stress, > 31);
 	}
 	else /* partial water stress */
 	{
