@@ -17,6 +17,8 @@ void Leaf_fall(SPECIES *s, int* doy)
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
 
+	Log("\n**Leaf_fall**\n");
+
 	Log("LEAF_FALL_COUNTER = %d\n", s->counter[LEAF_FALL_COUNTER]);
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
@@ -32,14 +34,11 @@ void Leaf_fall(SPECIES *s, int* doy)
 		//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 		//		Log("daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
 		//		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		//		Log("daily amount of fine root to remove = %f tC/cell/day\n", fineroot_to_remove);
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
-		//		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];;
-		//		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		//		Log("RESERVE_FOLIAGE_TO_RETRANSL = %f tC/cell/day\n", retransl_leaf_c_to_reserve);
-		//		Log("RESERVE_FINEROOT_TO_RETRANSL = %f tC/cell/day\n", retransl_fineroot_c_to_reserve);
+		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 	}
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
@@ -51,37 +50,39 @@ void Leaf_fall(SPECIES *s, int* doy)
 						log(.11111111111))))));
 		Log("previousLai = %f\n", previousLai);
 		Log("currentLai = %f\n", currentLai);
+
+		//CHECK_CONDITION(previousLai, <currentLai);
+
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
 		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
 		Log("foliage_to_remove = %f\n", foliage_to_remove);
-
-		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
-		/* compute amount of fine root biomass to retranslocate as reserve */
-		retransl_leaf_c_to_reserve = s->value[LEAF_C] * 0.1;
-
-		/* a simple correlation from leaf carbon to remove and fine root to remove */
+		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
 		fineroot_to_remove = (s->value[FINE_ROOT_C]*foliage_to_remove)/s->value[LEAF_C];
 		Log("fineroot_to_remove = %f\n", fineroot_to_remove);
 
-		retransl_fineroot_c_to_reserve = s->value[FINE_ROOT_C] * 0.1;
 
-		//test
 		s->value[C_TO_LEAF] = -(foliage_to_remove + retransl_leaf_c_to_reserve);
 		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = -(fineroot_to_remove + retransl_fineroot_c_to_reserve);
 		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
 		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
+		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
 		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
+		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 	}
 	else
 	{
 		Log("Last day of leaffall\n");
 		s->value[C_TO_LEAF] = - s->value[LEAF_C];
+		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = s->value[LEAF_C] * 0.1;
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C] * 0.1;
+		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
+		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
+		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 	}
 }
 
