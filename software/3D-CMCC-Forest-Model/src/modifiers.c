@@ -26,8 +26,10 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	double Atau = 7.87 * pow(10,-5);
 	double Temp_K;
 	double v1, v2;
-
 	static int counter_water_stress;
+
+//	 double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
+//	 double vpd_close = 30; //value from pietsch in Pa a(3000) are converted in hPa = 30
 
 	Log("\nDAILY_MODIFIERS\n\n");
 
@@ -105,8 +107,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	CHECK_CONDITION(s->value[F_T], > 1);
 	c->daily_f_t = s->value[F_T];
-
-
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
@@ -143,6 +143,19 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
+
+	//test following biome-bgc it doesn't seems to worl properly here (too many higher values for gpp and le
+//	/* vapor pressure deficit multiplier, vpd in Pa */
+//	if (met[month].d[day].vpd < vpd_open)    /* no vpd effect */
+//		s->value[F_VPD] = 1.0;
+//	else
+//	if (met[month].d[day].vpd > vpd_close)   /* full vpd effect */
+//		s->value[F_VPD] = 0.0;
+//	else                   /* partial vpd effect */
+//		s->value[F_VPD] = (vpd_close - met[month].d[day].vpd) / (vpd_close - vpd_open);
+
+
+
 
 	/*AGE MODIFIER*/
 
