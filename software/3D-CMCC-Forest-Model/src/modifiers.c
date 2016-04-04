@@ -232,7 +232,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	//test using f_psi as f_sw
 	//4/apr/2016
-	//s->value[F_SW] = s->value[F_PSI];
+	s->value[F_SW] = s->value[F_PSI];
 
 	//average yearly f_sw modifiers
 	s->value[AVERAGE_F_SW] += s->value[F_SW];

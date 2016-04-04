@@ -23,6 +23,8 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	double par_abs_lai_sun, par_abs_lai_shade;
 	double par_abs_per_lai_sun, par_abs_per_lai_shade;
 
+	double ppfd_coeff = 0.01; /* parameter that quantifies the effect of light on conductance see Scwhwal and Ek 2004 and Kimbal et al., 1997 */
+
 
 	Log("\nRADIATION ROUTINE\n");
 
@@ -113,7 +115,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 			//04/05/2016
 			//TEST
-			par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+			par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0)) * ppfd_coeff;
 			par_abs = par * LightAbsorb;
 			par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
 			par_abs_lai_shade = par_abs - par_abs_lai_sun;
