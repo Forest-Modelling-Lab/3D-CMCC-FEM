@@ -41,6 +41,7 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	double rv_sun, rv_shade;
 	double dt = 0.2;
 	double cell_coverage;
+	double transp_ratio;
 
 	Log("\n**BIOME CANOPY_TRANSPIRATION_ROUTINE**\n");
 
@@ -190,6 +191,10 @@ void Canopy_transpiration_biome (SPECIES *const s, CELL *const c, const MET_DATA
 	/* upscale to cell coverage level */
 	s->value[DAILY_TRANSP_W] = (evap_sun_watt + evap_shade_watt) * cell_coverage;
 	Log("Daily latent canopy heat (sun + shade)= %f W/m^2\n", s->value[DAILY_TRANSP_W]);
+
+	transp_ratio = (evap_sun + evap_shade)/s->value[MAXCOND];
+	Log("daily transp ratio = %f %%", transp_ratio);
+
 	/* upscale to cell coverage level */
 	s->value[DAILY_TRANSP] = (evap_sun + evap_shade) * cell_coverage;
 	Log("Daily Canopy Transpiration (sun + shade)= %f mm/m^2/day\n", s->value[DAILY_TRANSP]);

@@ -11,9 +11,6 @@
 void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height)
 {
 
-	//todo control par for soil and net rad for soil
-
-
 	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade; //fraction of light absorbed
 	double LightTrasm, LightTrasm_sun, LightTrasm_shade; //fraction of light trasmitted
 	double a = 107.0;//(W/m)  empirical constants for long wave radiation computation

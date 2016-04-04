@@ -44,6 +44,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
+	double transp_ratio;
+
 	Log("\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
 
 	Log("**CANOPY INTERCEPTION BIOME**\n");
@@ -99,10 +101,18 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		to maximum stomatal conductance */
 
 	/* photosynthetic photon flux density conductance control */
-	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
-	//Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
-	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
-	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+//	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
+//	//Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+//	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
+//	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+
+	//test
+	//04/apr/2016
+	/* photosynthetic photon flux density conductance control */
+	m_ppfd_sun = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
+	Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	m_ppfd_shade = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
+	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
 	/* apply all multipliers to the maximum stomatal conductance */
 	m_final_sun = m_ppfd_sun * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
@@ -252,6 +262,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_INT] = 0.0;
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
+
+	transp_ratio = transp /s->value[MAXCOND];
+	Log("daily transp ratio = %f %%", transp_ratio);
 
 	Log("CANOPY_TRANSP = %.10f mm/m2/day\n", s->value[CANOPY_TRANSP]);
 	Log("CANOPY_WATER = %.10f mm/m2/day\n", s->value[CANOPY_WATER]);
