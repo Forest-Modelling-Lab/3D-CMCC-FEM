@@ -211,7 +211,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	}
 	else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
 	{
-		s->value[F_PSI] = 0.0;
+		//s->value[F_PSI] = 0.0;
+		s->value[F_PSI] = 0.33;
 	}
 	else /* partial water stress */
 	{
@@ -221,7 +222,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	c->daily_f_psi = s->value[F_PSI];
 
 	//test using f_psi as f_sw
-	//s->value[F_SW] = s->value[F_PSI];
+	s->value[F_SW] = s->value[F_PSI];
 
 
 	//average yearly f_sw modifiers

@@ -13,33 +13,39 @@
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Day_Length ( CELL * c,  int day, int month, int years, YOS  *yos)
+void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 {
-	/*
-	if (!day)
-		Log("computing Get_Day_Length...\n");
-	 */
+
+	double ampl;  //seasonal variation in Day Length from 12 h
+	static int doy;
+	double adjust_latitude;
 
 	MET_DATA *met;
-	double ampl;  //seasonal variation in Day Length from 12 h
 	met = (MET_DATA*) yos[years].m;
 
 	//compute yearday for GeDdayLength function
 	if (day == 0 && month == JANUARY)
 	{
-		c->yearday = 0;
+		doy = 0;
 	}
-	c->yearday +=1;
+	doy +=1;
 
-	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+	//4/apr/2016
+	//test following Schwalm & Erik instead of only geographical latitude adjusted latitude is used
+	// for every 125m in altitude 1° in latitude is added
+	adjust_latitude = site->elev / 125.0;
+	ampl = (exp (7.42 + (0.045 * (site->lat+adjust_latitude)))) / 3600;
+	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	Log("with altitude = %f\n", met[month].d[day].daylength);
 
-
-	met[month].d[day].daylength = ampl * (sin ((c->yearday - 79) * 0.01721)) + 12;
+//	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+//	Log("without altitude = %f\n", met[month].d[day].daylength);
 
 }
 
 //following Running et al., 1987
-extern void Avg_temperature (CELL * c,  int day, int month, int years)
+extern void Avg_temperature (CELL * c, int day, int month, int years)
 {
 	/*
 	if (!day )

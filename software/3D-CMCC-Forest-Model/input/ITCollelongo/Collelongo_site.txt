@@ -1,9 +1,5 @@
 SITENAME "Collelongo" //Site Name
-
-
 //ALL VALUES COME FROM ETTORE DATA
-
-
 LAT "41.94836" //Site Latitude negative for south hemisphere 
 LONG "13.58814" //Site Longitude 
 ELEV "1550" //Elevation in meters
@@ -21,7 +17,7 @@ SOIL_DEPTH "150" //SOIL DEPTH (cm) 80 was before
 SOIL_COVER "50" //
 SOIL_MANURE "0" //
 //SITE NUTRITION
-FR "0.8" //Fertility rating
+FR "0.6" //Fertility rating
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0

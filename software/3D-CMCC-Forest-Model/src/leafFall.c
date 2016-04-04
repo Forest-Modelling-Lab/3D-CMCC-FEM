@@ -51,7 +51,7 @@ void Leaf_fall(SPECIES *s, int* doy)
 		Log("previousLai = %f\n", previousLai);
 		Log("currentLai = %f\n", currentLai);
 
-		//CHECK_CONDITION(previousLai, <currentLai);
+		CHECK_CONDITION(previousLai, <currentLai);
 
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
