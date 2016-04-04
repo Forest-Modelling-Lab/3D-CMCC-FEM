@@ -212,8 +212,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 		Leaf_fall(&c->heights[height].ages[age].species[species], &c->doy);
 		/* these are in computed leaffall function */
-//		s->value[C_TO_LEAF] = foliage_to_remove;
-//		s->value[C_TO_FINEROOT] = fineroot_to_remove;
+		//		s->value[C_TO_LEAF] = foliage_to_remove;
+		//		s->value[C_TO_FINEROOT] = fineroot_to_remove;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
@@ -300,22 +300,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
-	/*CHECK_CONDITION(s->value[RESERVE_C], > 1e-4);
-	CHECK_CONDITION(s->value[LEAF_C], > 1e-4);
-	CHECK_CONDITION(s->value[FINE_ROOT_C], > 1e-4);
-	CHECK_CONDITION(s->value[STEM_C], > 1e-4);
-	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[BRANCH_C], > 1e-4);
-	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[COARSE_ROOT_C], > 1e-4);
-	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], > 1e-4);
-	CHECK_CONDITION(s->value[FRUIT_C], > 1e-4);*/
-
 	Log("\n-Daily increment in carbon pools-\n");
-	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
 	Log("C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
 	Log("C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
 	Log("C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
@@ -350,10 +335,21 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
 	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
 
+	/* update dendrometry variables */
+	if(c->height_class_in_layer_dominant_counter>1)
+	{
+		c->annual_layer_avDBH[i] = (c->annual_layer_avDBH[i] + s->value[AVDBH]) / c->height_class_in_layer_dominant_counter;
+	}
+	else
+	{
+		c->annual_layer_avDBH[i] = s->value[AVDBH];
+	}
+
 	/* update layer level annual carbon increments and pools in tC/cell/year */
 	c->annual_delta_ws[i] += s->value[C_TO_STEM];
 	c->annual_layer_stem_c[i] = s->value[STEM_C];
 	c->annual_layer_live_stem_c[i] = s->value[STEM_LIVE_WOOD_C];
+	c->annual_layer_stem_sapwood_c[i] = s->value[STEM_SAPWOOD_C];
 	c->annual_delta_wres[i] += s->value[C_TO_RESERVE];
 	c->annual_layer_reserve_c[i] = s->value[RESERVE_C];
 	c->annual_delta_wf[i] += s->value[C_TO_LEAF];
@@ -363,11 +359,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->annual_delta_wbb[i] += s->value[C_TO_BRANCH];
 	c->annual_layer_branch_c[i] = s->value[BRANCH_C];
 	c->annual_layer_live_branch_c[i] = s->value[BRANCH_LIVE_WOOD_C];
+	c->annual_layer_branch_sapwood_c[i] = s->value[BRANCH_SAPWOOD_C];
 	c->annual_delta_wfr[i] += s->value[C_TO_FINEROOT];
 	c->annual_layer_fineroot_c[i] = s->value[FINE_ROOT_C];
 	c->annual_delta_wcr[i] += s->value[C_TO_COARSEROOT];
 	c->annual_layer_coarseroot_c[i] = s->value[COARSE_ROOT_C];
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
+	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
+	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;
@@ -900,15 +899,15 @@ void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, 
 	c->daily_delta_wres[i] = s->value[DEL_RESERVE];
 
 
-//	c->daily_lai[i] = s->value[LAI];
-//	c->annual_delta_ws[i] += s->value[DEL_STEMS];
-//	c->annual_ws[i] = s->value[BIOMASS_STEM_tDM];
-//	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
-//	c->annual_wres[i] = s->value[RESERVE_tDM];
-//	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE_tDM];
-//	c->annual_wbb[i]= s->value[BIOMASS_BRANCH_tDM];
-//	c->annual_wfr[i]= s->value[BIOMASS_FINE_ROOT_tDM];
-//	c->annual_wcr[i]= s->value[BIOMASS_COARSE_ROOT_tDM];
+	//	c->daily_lai[i] = s->value[LAI];
+	//	c->annual_delta_ws[i] += s->value[DEL_STEMS];
+	//	c->annual_ws[i] = s->value[BIOMASS_STEM_tDM];
+	//	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
+	//	c->annual_wres[i] = s->value[RESERVE_tDM];
+	//	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE_tDM];
+	//	c->annual_wbb[i]= s->value[BIOMASS_BRANCH_tDM];
+	//	c->annual_wfr[i]= s->value[BIOMASS_FINE_ROOT_tDM];
+	//	c->annual_wcr[i]= s->value[BIOMASS_COARSE_ROOT_tDM];
 
 	if (c->leafLittering < 0.0) c->leafLittering = 0;
 
@@ -1797,24 +1796,24 @@ void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	c->daily_lai[i] = s->value[LAI];
 
-//	c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
-//	c->daily_delta_ws[i] = s->value[DEL_STEMS];
-//	c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
-//	c->daily_delta_wbb[i] = s->value[DEL_BB];
-//	c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE];
-//	c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
-//	c->daily_delta_wres[i] = s->value[DEL_RESERVE];
-//	c->daily_wres[i] = s->value[RESERVE_tDM];
-//
-//	c->daily_lai[i] = s->value[LAI];
-//	c->annual_delta_ws[i] += s->value[DEL_STEMS];
-//	c->annual_ws[i] = s->value[BIOMASS_STEM_tDM];
-//	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
-//	c->annual_wres[i] = s->value[RESERVE_tDM];
-//	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE_tDM];
-//	c->annual_wbb[i]= s->value[BIOMASS_BRANCH_tDM];
-//	c->annual_wfr[i]= s->value[BIOMASS_FINE_ROOT_tDM];
-//	c->annual_wcr[i]= s->value[BIOMASS_COARSE_ROOT_tDM];
+	//	c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
+	//	c->daily_delta_ws[i] = s->value[DEL_STEMS];
+	//	c->daily_delta_wf[i] = s->value[DEL_FOLIAGE];
+	//	c->daily_delta_wbb[i] = s->value[DEL_BB];
+	//	c->daily_delta_wfr[i] = s->value[DEL_ROOTS_FINE];
+	//	c->daily_delta_wcr[i] = s->value[DEL_ROOTS_COARSE];
+	//	c->daily_delta_wres[i] = s->value[DEL_RESERVE];
+	//	c->daily_wres[i] = s->value[RESERVE_tDM];
+	//
+	//	c->daily_lai[i] = s->value[LAI];
+	//	c->annual_delta_ws[i] += s->value[DEL_STEMS];
+	//	c->annual_ws[i] = s->value[BIOMASS_STEM_tDM];
+	//	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
+	//	c->annual_wres[i] = s->value[RESERVE_tDM];
+	//	c->annual_wf[i]= s->value[BIOMASS_FOLIAGE_tDM];
+	//	c->annual_wbb[i]= s->value[BIOMASS_BRANCH_tDM];
+	//	c->annual_wfr[i]= s->value[BIOMASS_FINE_ROOT_tDM];
+	//	c->annual_wcr[i]= s->value[BIOMASS_COARSE_ROOT_tDM];
 
 	if (c->leafLittering < 0.0) c->leafLittering = 0;
 

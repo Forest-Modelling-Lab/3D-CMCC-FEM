@@ -31,7 +31,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	if (s->value[BIOMASS_STEM_tDM]== 0.0 )
 	{
 		Log("\nNo Stem Biomass Data are available for model initialization \n");
-		Log("...Generating input Stem Biomass biomass data from DBH data...\n");
+		Log("...Generating input Stem Biomass biomass data from DBH = %f cm\n", s->value[AVDBH]);
 		//compute stem biomass from DBH
 		if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 		{
@@ -47,6 +47,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 			}
 			else
 			{
+				//use site specific stemconst stempower values
+				Log("Using site related stemconst stempower\n");
 				s->value[AV_STEM_MASS_KgDM] = s->value[STEMCONST] * (pow (s->value[AVDBH], STEMPOWER_C));
 			}
 		}

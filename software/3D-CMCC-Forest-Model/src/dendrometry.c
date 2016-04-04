@@ -10,6 +10,7 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
 	double oldavDBH;
 	double oldTreeHeight;
 
+
 	Log("\n**DENDROMETRY_ROUTINE**\n");
 
 	Log("\n**Average DBH**\n");
@@ -41,13 +42,13 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
 	{
 		//use site specific stemconst stempower values
 		Log("Using site related stemconst stempower\n");
-		s->value[AVDBH] = pow(s->value[AV_STEM_MASS_KgDM] / s->value[STEMCONST_P], ( 1.0 / s->value[STEMPOWER_P]));
-		//s->value[AV_STEM_MASS]  = s->value[AV_STEM_MASS] = pow ((s->value[STEMCONST_P] * s->value[AVDBH]), s->value[STEMPOWER_P]);
+		s->value[AVDBH] = pow((s->value[AV_STEM_MASS_KgC] * GC_GDM) / s->value[STEMCONST_P], (1.0 / s->value[STEMPOWER_P]));
 	}
 
-	Log("-Average stem mass = %f\n", s->value[AV_STEM_MASS_KgDM]);
+	Log("-Average stem mass = %f kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
 	Log("Old AVDBH = %.10f cm\n", oldavDBH);
 	Log("-New Average DBH = %.10f cm\n", s->value[AVDBH]);
+
 
 	/* control */
 	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);

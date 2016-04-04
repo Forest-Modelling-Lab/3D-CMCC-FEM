@@ -419,10 +419,21 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
 	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
 
+	/* update dendrometry variables */
+	if(c->height_class_in_layer_dominant_counter>0.0)
+	{
+		c->annual_layer_avDBH[i] = (c->annual_layer_avDBH[i] + s->value[AVDBH]) / c->height_class_in_layer_dominant_counter;
+	}
+	else
+	{
+		c->annual_layer_avDBH[i] = s->value[AVDBH];
+	}
+
 	/* update layer level annual carbon increments and pools in tC/cell/year */
 	c->annual_delta_ws[i] += s->value[C_TO_STEM];
 	c->annual_layer_stem_c[i] = s->value[STEM_C];
 	c->annual_layer_live_stem_c[i] = s->value[STEM_LIVE_WOOD_C];
+	c->annual_layer_stem_sapwood_c[i] = s->value[STEM_SAPWOOD_C];
 	c->annual_delta_wres[i] += s->value[C_TO_RESERVE];
 	c->annual_layer_reserve_c[i] = s->value[RESERVE_C];
 	c->annual_delta_wf[i] += s->value[C_TO_LEAF];
@@ -432,11 +443,14 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	c->annual_delta_wbb[i] += s->value[C_TO_BRANCH];
 	c->annual_layer_branch_c[i] = s->value[BRANCH_C];
 	c->annual_layer_live_branch_c[i] = s->value[BRANCH_LIVE_WOOD_C];
+	c->annual_layer_branch_sapwood_c[i] = s->value[BRANCH_SAPWOOD_C];
 	c->annual_delta_wfr[i] += s->value[C_TO_FINEROOT];
 	c->annual_layer_fineroot_c[i] = s->value[FINE_ROOT_C];
 	c->annual_delta_wcr[i] += s->value[C_TO_COARSEROOT];
 	c->annual_layer_coarseroot_c[i] = s->value[COARSE_ROOT_C];
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
+	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
+	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
 
 	/* update cell level carbon biomass in gC/m2/day*/
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;

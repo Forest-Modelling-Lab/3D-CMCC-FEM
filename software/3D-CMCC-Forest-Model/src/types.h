@@ -1109,15 +1109,20 @@ typedef struct {
 	double daily_delta_wcr[3], monthly_delta_wcr[3], annual_delta_wcr[3];
 	double daily_delta_wres[3], monthly_delta_wres[3], annual_delta_wres[3];
 
+	double daily_layer_avDBH[3], monthly_layer_avDBH[3], annual_layer_avDBH[3];
 	double daily_layer_stem_c[3], monthly_layer_stem_c[3], annual_layer_stem_c[3];
 	double daily_layer_live_stem_c[3], monthly_layer_live_stem_c[3], annual_layer_live_stem_c[3];
+	double daily_layer_stem_sapwood_c[3], monthly_layer_stem_sapwood_c[3], annual_layer_stem_sapwood_c[3];
 	double daily_layer_leaf_c[3], monthly_layer_leaf_c[3], annual_layer_leaf_c[3];
 	double daily_layer_tot_stem_c[3], monthly_layer_tot_stem_c[3], annual_layer_tot_stem_c[3];
 	double daily_layer_branch_c[3], monthly_layer_branch_c[3], annual_layer_branch_c[3];
 	double daily_layer_live_branch_c[3], monthly_layer_live_branch_c[3], annual_layer_live_branch_c[3];
+	double daily_layer_branch_sapwood_c[3], monthly_layer_branch_sapwood_c[3], annual_layer_branch_sapwood_c[3];
 	double daily_layer_fineroot_c[3], monthly_layer_fineroot_c[3], annual_layer_fineroot_c[3];
 	double daily_layer_coarseroot_c[3], monthly_layer_coarseroot_c[3], annual_layer_coarseroot_c[3];
+	double daily_layer_coarse_root_sapwood_c[3], monthly_layer_coarse_root_sapwood_c[3], annual_layer_coarse_root_sapwood_c[3];
 	double daily_layer_live_coarseroot_c[3], monthly_layer_live_coarseroot_c[3], annual_layer_live_coarseroot_c[3];
+	double daily_layer_sapwood_c[3], monthly_layer_sapwood_c[3], annual_layer_sapwood_c[3];
 	double daily_layer_reserve_c[3], monthly_layer_reserve_c[3], annual_layer_reserve_c[3];
 
 
