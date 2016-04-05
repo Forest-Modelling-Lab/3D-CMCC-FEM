@@ -232,6 +232,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		//s->value[F_PSI] = 0.0;
 		Log("Water stress\n");
 		Log("F_PSI = %f\n", s->value[F_PSI]);
+		/* forced to 0.33 to avoid too much low values */
+		//fixme
 		s->value[F_PSI] = 0.33;
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);

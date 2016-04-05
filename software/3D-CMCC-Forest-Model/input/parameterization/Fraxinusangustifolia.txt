@@ -12,7 +12,7 @@ ALBEDO  ?    //
 GAMMA_LIGHT ?   //Light parameter for light modifier
 
 
-//LEAF AREA INDEX
+INT_COEFF ?   //precip interception coefficient
 LAIGCX  ?               //LAI for maximum canopy conductance
 LAIMAXINTCPTN   ?       //LAI for maximum rainfall interception 
 MAXINTCPTN  ?    //Maximum proportion of rainfall interception evaporated from canopy

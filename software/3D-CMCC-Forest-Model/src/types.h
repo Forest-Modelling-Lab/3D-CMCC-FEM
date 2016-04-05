@@ -208,15 +208,16 @@ enum
 	LIGHT_TOL = 0,
 	PHENOLOGY,                  //PHENOLOGY 0=deciduous, 1=evergreen
 	ALPHA,                      // Canopy quantum efficiency (molC/molPAR)
-	EPSILONgCMJ,               // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
+	EPSILONgCMJ,                // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
 	K,                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 	ALBEDO,
 	GAMMA_LIGHT,
+	INT_COEFF,                  //precip interception coefficient LAI-1day-1
 	LAIGCX,                     //LAI for maximum canopy conductance
 	LAIMAXINTCPTN,              //LAI for maximum rainfall interception
 	MAXINTCPTN,                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 	SLA_AVG,                    //AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves
-	SLA_RATIO,                   //(DIM) ratio of shaded to sunlit projected SLA
+	SLA_RATIO,                  //(DIM) ratio of shaded to sunlit projected SLA
 	LAI_RATIO,					//(DIM) all-sided to projected leaf area ratio
 	FRACBB0,                    //Branch and Bark fraction at age 0 (m^2/kg)
 	FRACBB1,                    //Branch and Bark fraction for mature stands (m^2/kg)
@@ -228,7 +229,7 @@ enum
 	BLCOND,                     //Canopy Boundary Layer conductance
 	MAXCOND,                    //Maximum leaf Conductance in m/sec
 	CUTCOND,                    //cuticular conductance in m/sec
-	MAXAGE,                         //Determines rate of "physiological decline" of forest
+	MAXAGE,                     //Determines rate of "physiological decline" of forest
 	RAGE,                       //Relative Age to give fAGE = 0.5
 	NAGE,                       //Power of relative Age in function for Age
 	MAXAGE_S,

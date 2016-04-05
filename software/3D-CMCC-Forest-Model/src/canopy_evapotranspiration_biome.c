@@ -15,8 +15,7 @@
 
 void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
 {
-	//fixme it must be include in species.txt file
-	double precip_int_coeff = 0.034; //LAI-1day-1
+
 	double max_int;
 
 	double g_corr;
@@ -58,7 +57,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
-	max_int = precip_int_coeff * s->value[ALL_LAI];
+	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
 
 	Log("ALL_LAI = %f mm/m^2/day\n", s->value[ALL_LAI]);
 

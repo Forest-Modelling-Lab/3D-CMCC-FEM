@@ -29,9 +29,7 @@ static const char *species_values[] = {
 		"ALBEDO",
 		"GAMMA_LIGHT",
 
-
-
-		//LEAF AREA INDEX
+		"INT_COEFF",                  //Precipitation interception coefficient
 		"LAIGCX",                     //LAI for maximum canopy conductance
 		"LAIMAXINTCPTN",              //LAI for maximum rainfall interception
 		"MAXINTCPTN",                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
