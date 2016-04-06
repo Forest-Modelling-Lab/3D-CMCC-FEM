@@ -166,6 +166,7 @@ typedef struct
 
 	char spin_up[4];
 	char CO2_fixed[4];
+	char Ndep_fixed[4];
 	char management[4];
 	char rothC[4];
 	char dndc[4];
