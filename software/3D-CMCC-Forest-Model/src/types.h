@@ -1330,6 +1330,7 @@ void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
 void Peak_lai(SPECIES *const , CELL *const, int, int, int, int, int );
 void Turnover(SPECIES *);
+void EOY_Turnover(SPECIES *);
 void Leaf_fall(SPECIES *, int *);
 void Light_Recruitment (SPECIES *const, double, double);
 void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);

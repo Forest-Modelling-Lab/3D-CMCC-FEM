@@ -25,6 +25,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;
 
+	/* in Biome a constant proportion (50%) (Growth:storage parameter)of NPP that goes to the cpools is allocated
+	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
+	 * and used to maintain trees when NPP is < 0 */
+
 	//Marconi
 	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
 
@@ -315,6 +319,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 	/* turnover */
 	Turnover(&c->heights[height].ages[age].species[species]);
+	/* annual version */
+	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];

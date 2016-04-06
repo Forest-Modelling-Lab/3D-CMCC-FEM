@@ -399,6 +399,8 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	/* turnover */
 	Turnover(&c->heights[height].ages[age].species[species]);
+	/* annual version */
+	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
