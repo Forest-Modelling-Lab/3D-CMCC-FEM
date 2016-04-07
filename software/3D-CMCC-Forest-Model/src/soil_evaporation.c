@@ -14,7 +14,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double ratio;            /* actual/potential evaporation for dry day */
 	double rv, rh;
 
-	double soil_albedo = 0.35;
+	double soil_albedo = 0.20; /* for deciduous Monteith 1973 */
 	double net_rad;
 	double pot_soil_evap;    /* (kg/m2/s) potential evaporation (daytime) */
 
