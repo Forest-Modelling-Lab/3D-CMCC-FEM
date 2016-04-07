@@ -17,9 +17,9 @@ void Get_turnover_Marconi (SPECIES *s, CELL *c, int DaysInMonth, int height)
 		Log("****DAILY TURNOVER following Marconi flowChart****\n");
 
 	//The first cycle of turnover for the simulation the module follows a modification of Biome's routine. That is, being the first year,
-	//the model can't calculate the dBiomass for the previous year, and uses the current increments to define the quantity of tissues death (expected a
-	// slight underestimation though).
-	// from the second cycle on, the model takes the quantity of tissue developed the antecedent cycle and expects it to be dying. Taht
+	//the model can't calculate the dBiomass for the previous year, and uses the current increments to define the quantity of tissues
+	//death (expected a slight underestimation though).
+	// from the second cycle on, the model takes the quantity of tissue developed the antecedent cycle and expects it to be dying. That
 	// assuming the average period of turnover for the specific tissue of the specific species and eventually of age a.
 	// If that's so, the model assumes from the second cycle on, that the quantity of turnover is the dot[cycle-1].dCarbonPool
 	//Marconi 17/06: at the very begining of growing season these variables are set to the value of Biomass so that dC is reliable (solves the first YOS Litter jump)

@@ -398,7 +398,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
 
 	/* turnover */
-	Turnover(&c->heights[height].ages[age].species[species]);
+	Turnover(&c->heights[height].ages[age].species[species], c);
 	/* annual version */
 	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 

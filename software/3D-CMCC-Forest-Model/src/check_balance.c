@@ -12,58 +12,6 @@
 #include "types.h"
 #include "constants.h"
 
-void Check_C_flux_balance (CELL *c)
-{
-	double flux_in;
-	double flux_out;
-	double flux_stored;
-
-	Log("\n*********CHECK FLUX CARBON BALANCE************\n");
-
-	flux_in = c->daily_gpp;
-
-	flux_out = c->daily_aut_resp;
-
-	flux_stored = c->daily_npp_gC;
-
-	c->flux_C_balance = flux_in - flux_out - flux_stored;
-
-	if(c->years_count == 0 && c->doy == 1 )
-	{
-		Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
-		Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
-	}
-	else
-	{
-		if(c->daily_npp_gC > 0.0)
-		{
-			if(c->years_count == 0 && c->doy == 1 )
-			{
-				Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
-				Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
-			}
-			else
-			{
-			if (fabs(c->old_flux_C_balance - c->flux_C_balance) > 1e-4 )
-			{
-				Log("c->daily_gpp = %f\n", c->daily_gpp);
-				Log("c->daily_aut_resp = %f\n", c->daily_aut_resp);
-				Log("c->daily_npp_gC = %f\n", c->daily_npp_gC);
-				Log("...FATAL ERROR IN flux C balance\n");
-				Log("DOY CB = %d\n", c->doy);
-				Log("differences in balance (old - current)= %f\n", c->old_flux_C_balance - c->flux_C_balance);
-				exit(1);
-			}
-			else
-			{
-				Log("...ok flux carbon balance\n");
-			}
-			}
-		}
-	}
-	c->old_flux_C_balance = c->flux_C_balance;
-}
-
 void Check_carbon_balance (CELL *c)
 {
 
@@ -80,11 +28,7 @@ void Check_carbon_balance (CELL *c)
 	carbon_in = c->daily_gpp;
 
 	/* sum of sinks */
-	carbon_out = c->daily_leaf_maint_resp + c->daily_stem_maint_resp+
-			c->daily_fine_root_maint_resp + c->daily_branch_maint_resp+
-			c->daily_coarse_root_maint_resp + c->daily_leaf_growth_resp+
-			c->daily_stem_growth_resp + c->daily_fine_root_growth_resp+
-			c->daily_branch_growth_resp + c->daily_coarse_root_growth_resp;
+	carbon_out = c->daily_aut_resp;
 
 	/* sum of current storage */
 	//test check if during leaf fall leaf_carbon becomes negative
@@ -106,16 +50,6 @@ void Check_carbon_balance (CELL *c)
 			Log("in\n");
 			Log("c->daily_gpp = %f\n", c->daily_gpp);
 			Log("out\n");
-			Log("c->daily_leaf_maint_resp = %f\n", c->daily_leaf_maint_resp);
-			Log("c->daily_stem_maint_resp = %f\n", c->daily_stem_maint_resp);
-			Log("c->daily_fine_root_maint_resp = %f\n", c->daily_fine_root_maint_resp);
-			Log("c->daily_branch_maint_resp = %f\n", c->daily_branch_maint_resp);
-			Log("c->daily_coarse_root_maint_resp = %f\n", c->daily_coarse_root_maint_resp);
-			Log("c->daily_leaf_growth_resp = %f\n", c->daily_leaf_growth_resp);
-			Log("c->daily_stem_growth_resp = %f\n", c->daily_stem_growth_resp);
-			Log("c->daily_fine_root_growth_resp = %f\n", c->daily_fine_root_growth_resp);
-			Log("c->daily_branch_growth_resp= %f\n", c->daily_branch_growth_resp);
-			Log("c->daily_coarse_root_growth_resp = %f\n", c->daily_coarse_root_growth_resp);
 			Log("c->daily_tot_aut_resp = %f\n",c->daily_aut_resp);
 			Log("stored\n");
 			Log("c->daily_leaf_carbon = %f\n", c->daily_leaf_carbon);
@@ -131,7 +65,7 @@ void Check_carbon_balance (CELL *c)
 			Log("differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
 			Log("...FATAL ERROR IN carbon balance\n");
 			Log("DOY CB = %d\n", c->doy);
-			//exit(1);
+			exit(1);
 		}
 		else
 		{

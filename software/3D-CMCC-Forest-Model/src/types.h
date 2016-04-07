@@ -1329,7 +1329,7 @@ void Water_fluxes (CELL *const);
 void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
 void Peak_lai(SPECIES *const , CELL *const, int, int, int, int, int );
-void Turnover(SPECIES *);
+void Turnover(SPECIES *, CELL *);
 void EOY_Turnover(SPECIES *);
 void Leaf_fall(SPECIES *, int *);
 void Light_Recruitment (SPECIES *const, double, double);

@@ -37,12 +37,17 @@ void Leaf_fall(SPECIES *s, int* doy)
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
-		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+//		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+//		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 	}
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
 	{
+		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
+		/* compute amount of fine root biomass to retranslocate as reserve */
+		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+
 		previousLai = s->value[LAI];
 
 		currentLai = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
@@ -63,26 +68,30 @@ void Leaf_fall(SPECIES *s, int* doy)
 		Log("fineroot_to_remove = %f\n", fineroot_to_remove);
 
 
-		s->value[C_TO_LEAF] = -(foliage_to_remove + retransl_leaf_c_to_reserve);
+		s->value[C_TO_LEAF] = -foliage_to_remove ;
 		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
-		s->value[C_TO_FINEROOT] = -(fineroot_to_remove + retransl_fineroot_c_to_reserve);
+		s->value[C_TO_FINEROOT] = -fineroot_to_remove;
 		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
 		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
 		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
 		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
 		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		s->value[C_TO_LITTER] = (foliage_to_remove - retransl_leaf_c_to_reserve) + (fineroot_to_remove - retransl_fineroot_c_to_reserve);
+		Log("C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
 	else
 	{
 		Log("Last day of leaffall\n");
-		s->value[C_TO_LEAF] = - s->value[LEAF_C];
+		s->value[C_TO_LEAF] = -s->value[LEAF_C];
 		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
-		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
+		Log("C_TO_FINEROOT = %f\n", -s->value[C_TO_FINEROOT]);
+		s->value[RETRANSL_C_LEAF_TO_RESERVE] = s->value[LEAF_C];
 		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
+		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
 		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		s->value[C_TO_LITTER] = 0.0;
+		Log("C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
 }
 

@@ -25,7 +25,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;
 
-	/* in Biome a constant proportion (50%) (Growth:storage parameter)of NPP that goes to the cpools is allocated
+	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
 
@@ -75,23 +75,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->counter[BUD_BURST_COUNTER] = 0;
 	}
 
-	//I could try to get in instead F_SW the minimum value between F_SW and F_VPD  2 apr 2012
-	//reductor = Minimum (s->value[F_SW], s->value[F_VPD]);
-	//I could try to get in instead F_SW the minimum value between F_SW and F_NUTR  18 apr 2012
-	//reductor = Minimum (s->value[F_SW], s->value[F_NUTR]);
-	//reductor = s->value[F_SW];
-
-	//todo use it if a better function of fSW is developed
-	/*
-		if (reductor == s->value[F_SW])
-		{
-			Log("reductor in CTEM is F_SW \n");
-		}
-		else
-		{
-			Log("reductor in CTEM is F_NUTR \n");
-		}
-	 */
+	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
+	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
 	Log("CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
 
@@ -110,8 +95,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("Bud burst phase using both reserve pools and npp\n");
 		Log("Allocating only into foliage and fine root\n");
 		Log("LAI = %f \n", s->value[LAI]);
-
-
+		Log("Tot biomass reserve = %f\n", s->value[RESERVE_C]);
+		Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 		/* test "This has recently been confirmed by Dyckmans et al. (2000)
 		who  showed  that  only  44%  of  carbon  in  leaves  came  from
@@ -120,12 +105,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		//test check it it seem that doesn't work!!
+		//SERGIO
 		//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
 		//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
 		//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-		Log("Tot biomass reserve = %f\n", s->value[RESERVE_C]);
 		//Log("fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
-		Log("++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
 		Log("daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
@@ -134,7 +118,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		Log("daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
 
 		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
-		Log("daily amount of reserve for foliage  and fine root budburst %f = tC/cell/day\n", reserve_for_budburst);
+		Log("daily amount of reserve for foliage  and fine roots budburst %f = tC/cell/day\n", reserve_for_budburst);
 
 		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
@@ -151,7 +135,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 	case 2:
 		Log("(LAI == PEAK LAI)\n");
-		Log("allocating into the three pools Ws+Wr(Wrc+Wrf)+Wreserve\n");
+		Log("allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
 		if (s->value[NPP_tC] > 0.0)
@@ -215,15 +199,16 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		}
 
 		Leaf_fall(&c->heights[height].ages[age].species[species], &c->doy);
-		/* these are in computed leaffall function */
-		//		s->value[C_TO_LEAF] = foliage_to_remove;
-		//		s->value[C_TO_FINEROOT] = fineroot_to_remove;
+		/* these are computed in leaffall function */
+		//		s->value[C_TO_LEAF] = ;
+		//		s->value[C_TO_FINEROOT] = ;
+		//		s->value[C_TO_LITTER] = ;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
-		s->value[C_TO_LITTER] = fabs(s->value[C_TO_LEAF] + s->value[C_TO_FINEROOT]);
+
 
 		break;
 	case 0:
@@ -235,7 +220,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
-		s->value[C_TO_LITTER] = s->value[C_TO_LEAF];
+		s->value[C_TO_LITTER] = 0.0;
 		s->value[C_TO_RESERVE] = s->value[NPP_tC];
 		break;
 	}
@@ -266,10 +251,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
 	Log("Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
 
-	s->value[FRUIT_C] += s->value[C_TO_FRUIT] - (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
+	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
 	Log("Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
 
-	s->value[STEM_LIVE_WOOD_C] += s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC];
+	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	Log("Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
 	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
@@ -311,6 +296,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	Log("C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
 	Log("C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
 	Log("C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
+	Log("C_TO_FRUIT = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
+	Log("C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);
@@ -318,7 +305,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
 
 	/* turnover */
-	Turnover(&c->heights[height].ages[age].species[species]);
+	Turnover(&c->heights[height].ages[age].species[species], c);
 	/* annual version */
 	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 
