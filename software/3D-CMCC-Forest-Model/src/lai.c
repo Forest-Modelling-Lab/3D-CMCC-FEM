@@ -30,8 +30,10 @@ void Daily_lai (SPECIES *const s)
 	Log("LAI SHADE = %f\n", s->value[LAI_SHADE]);
 
 	/*compute SLA for SUN and SHADED*/
+	if(s->value[LAI_SUN] > 0.0)
 	s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO]))/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
 	Log("SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
+	if(s->value[LAI_SHADE] > 0.0)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
 	Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 

@@ -110,8 +110,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
-
-
 	/*FROST MODIFIER*/
 	if(met[month].d[day].tday < s->value[GROWTHTMIN])
 	{
@@ -144,7 +142,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
 
-	//test following biome-bgc it doesn't seems to worl properly here (too many higher values for gpp and le
+	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 //	/* vapor pressure deficit multiplier, vpd in Pa */
 //	if (met[month].d[day].vpd < vpd_open)    /* no vpd effect */
 //		s->value[F_VPD] = 1.0;
@@ -154,10 +152,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 //	else                   /* partial vpd effect */
 //		s->value[F_VPD] = (vpd_close - met[month].d[day].vpd) / (vpd_close - vpd_open);
 
-
-
-
-	/*AGE MODIFIER*/
+	/* AGE MODIFIER */
 
 	if (a->value != 0)
 	{
@@ -271,9 +266,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	/*SOIL DROUGHT MODIFIER*/
 	//(see Duursma et al., 2008)rev_Angelo
 	/*
-
 		//to put in species.txt
-		//numbers are not real just used for compile!!!!!!!!
+		//numbers are not real just used to compile!!!!!!!!
 		double leaf_res = 1; //leaf specific plant hydraulic resistance
 		double min_leaf_pot = 1; //minimum leaf water potential
 
@@ -288,10 +282,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		double clay_dim = 0.001; //clay avg dimension of particle
 		double silt_dim =  0.026;//silt avg dimension of particle
 		double sand_dim =  1.025;//sand avg dimension of particle
-
-
-
-
 
 	    double bulk_pot; //bulk soil water potential
 	    double asw_vol; //available soil water in volume
@@ -309,7 +299,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		double specific_soil_cond; //specific soil hydraulic conductance
 		double leaf_specific_soil_cond;
 
-
 		//compute soil hydraulic characteristics from soil granulometry
 		//from model Hydrall
 		eq1 = (site->clay_perc * log(clay_dim)) + (site->silt_perc * log(silt_dim)) + (site->sand_perc * log(sand_dim));
@@ -318,7 +307,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		//soil mean particle diameter in mm
 		soil_avg_dim = exp(eq1);
 		Log("soil_avg_dim = %f\n", soil_avg_dim);
-
 
 	    eq2 = sqrt ((pow ((site->clay_perc * log(clay_dim)),2)) + (pow ((site->sand_perc * log(sand_dim)),2)) + (pow ((site->silt_perc * log(silt_dim)),2)));
 	    Log("eq2 = %f\n", eq2);
@@ -345,7 +333,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	    Log("eq = %f\n", eq);
 
 	    //compute bulk soil water potential
-	    //for psi see Magani xls
+	    //for psi see Magnani xls
 	    bulk_pot = Maximum (eq, min_leaf_pot);
 	    Log("bulk soil water potential = %f\n", bulk_pot);
 

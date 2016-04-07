@@ -14,6 +14,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double ratio;            /* actual/potential evaporation for dry day */
 	double rv, rh;
 
+	double soil_albedo = 0.35;
 	double net_rad;
 	double pot_soil_evap;    /* (kg/m2/s) potential evaporation (daytime) */
 
@@ -27,24 +28,25 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
-	for vapor transport is equal to the resistance for sensible heat
-	transport.  That is, no additional resistance for vapor transport to
-	the soil surface. This represents evaporation from a wet surface with
-	a specified aerodynamic resistance (= boundary layer resistance).
-	The aerodynamic resistance is for now set as a constant, and is
-	taken from observations over bare soil in tiger-bush in south-west
-	Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */
+		for vapor transport is equal to the resistance for sensible heat
+		transport.  That is, no additional resistance for vapor transport to
+		the soil surface. This represents evaporation from a wet surface with
+		a specified aerodynamic resistance (= boundary layer resistance).
+		The aerodynamic resistance is for now set as a constant, and is
+		taken from observations over bare soil in tiger-bush in south-west
+		Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */
+
 		rbl = 107.0 * rcorr;
 		rv = rbl;
 		rh = rbl;
 
 		if (c->Veg_Counter >= 1)
 		{
-			net_rad = c->net_radiation_for_soil;
+			net_rad = c->net_radiation_for_soil * soil_albedo;
 		}
 		else
 		{
-			net_rad = c->net_radiation;
+			net_rad = c->net_radiation * soil_albedo;
 		}
 		Log("Net Radiation for soil = %f W/m2\n", net_rad);
 
