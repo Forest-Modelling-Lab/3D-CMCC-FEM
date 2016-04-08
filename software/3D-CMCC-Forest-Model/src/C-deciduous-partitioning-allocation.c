@@ -102,6 +102,9 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		who  showed  that  only  44%  of  carbon  in  leaves  came  from
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
+		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates
+		 to leaf and fine root */
+
 		/*following Campioli et al., 2008, Maillard et al., 1994, Barbaroux et al., 2003*/
 
 		//test check it it seem that doesn't work!!
