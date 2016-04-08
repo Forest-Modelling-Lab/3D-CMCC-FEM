@@ -29,7 +29,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	static int counter_water_stress;
 
 //	 double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
-//	 double vpd_close = 30; //value from pietsch in Pa a(3000) are converted in hPa = 30
+//	 double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from pietsch in Pa (3000) are converted in hPa = 30
 
 	Log("\nDAILY_MODIFIERS\n\n");
 
@@ -62,8 +62,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	if ( c->heights[height].z == c->top_layer )
 	{
-
-
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{
 			s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
@@ -122,9 +120,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		Log("fFROST - Frost modifier = %f\n", s->value[F_FROST]);
 	}
 
-
 	/*VPD MODIFIER*/
-
 	//Log("--RH = %f %%\n", met[month].rh);
 	//Log("--vpd = %f mbar", vpd);
 
@@ -171,7 +167,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 			RelAge = (double)a->value / s->value[MAXAGE_S];
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S])));
 			Log("fAge = %f\n", s->value[F_AGE]);
-
 		}
 	}
 	else
@@ -213,7 +208,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 	Log ("PSI BIOME = %f (MPa)\n", c->psi);
 	Log ("PSI_SAT BIOME = %f (MPa)\n", c->psi_sat);
-
 
 	if (c->psi > s->value[SWPOPEN]) /*no water stress*/
 	{

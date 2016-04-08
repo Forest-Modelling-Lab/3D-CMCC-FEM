@@ -220,7 +220,6 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	int i;
 
 	Log("\n**AUTOTROPHIC_RESPIRATION**\n");
-
 	//compute autotrophic respiration for each classes
 	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 	Log("TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
@@ -258,9 +257,6 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	c->layer_annual_branch_aut_resp[i] += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
 	c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
 	c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
-
-
-
 }
 
 

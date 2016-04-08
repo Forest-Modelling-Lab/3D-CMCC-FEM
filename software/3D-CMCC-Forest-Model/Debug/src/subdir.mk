@@ -8,7 +8,6 @@ C_SRCS += \
 ../src/C-deciduous-partitioning-allocation.c \
 ../src/C-evergreen-partitioning-allocation.c \
 ../src/C-fruit-partitioning-allocation.c \
-../src/G-Function.c \
 ../src/N-stock.c \
 ../src/Penman_Monteith.c \
 ../src/allometry.c \
@@ -30,6 +29,7 @@ C_SRCS += \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
 ../src/fluxes.c \
+../src/g-function.c \
 ../src/initialization_biomass_data.c \
 ../src/initialization_site_data.c \
 ../src/io.c \
@@ -69,7 +69,6 @@ OBJS += \
 ./src/C-deciduous-partitioning-allocation.o \
 ./src/C-evergreen-partitioning-allocation.o \
 ./src/C-fruit-partitioning-allocation.o \
-./src/G-Function.o \
 ./src/N-stock.o \
 ./src/Penman_Monteith.o \
 ./src/allometry.o \
@@ -91,6 +90,7 @@ OBJS += \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
 ./src/fluxes.o \
+./src/g-function.o \
 ./src/initialization_biomass_data.o \
 ./src/initialization_site_data.o \
 ./src/io.o \
@@ -130,7 +130,6 @@ C_DEPS += \
 ./src/C-deciduous-partitioning-allocation.d \
 ./src/C-evergreen-partitioning-allocation.d \
 ./src/C-fruit-partitioning-allocation.d \
-./src/G-Function.d \
 ./src/N-stock.d \
 ./src/Penman_Monteith.d \
 ./src/allometry.d \
@@ -152,6 +151,7 @@ C_DEPS += \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
 ./src/fluxes.d \
+./src/g-function.d \
 ./src/initialization_biomass_data.d \
 ./src/initialization_site_data.d \
 ./src/io.d \

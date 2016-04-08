@@ -28,10 +28,9 @@ void Check_carbon_balance (CELL *c)
 	carbon_in = c->daily_gpp;
 
 	/* sum of sinks */
-	carbon_out = c->daily_aut_resp;
+	carbon_out = c->daily_maint_resp + c->daily_growth_resp;
 
 	/* sum of current storage */
-	//test check if during leaf fall leaf_carbon becomes negative
 	carbon_stored = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_fine_root_carbon + c->daily_coarse_root_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon + c->daily_litter_carbon;

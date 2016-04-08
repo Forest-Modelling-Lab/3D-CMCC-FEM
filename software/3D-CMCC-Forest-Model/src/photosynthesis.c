@@ -18,9 +18,8 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 
 	Log("\n**PHOTOSYNTHESIS**\n");
 
-
 	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
-	//Log("Phenology = %f\n", s->value[PHENOLOGY]);
+
 	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
 	{
 		cell_coverage = 1.0;
@@ -70,7 +69,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		Log("GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
 		Log("GPPmolC_tot = %f molC/m^2 day/month\n", GPPmolC_tot);
 
-		if(GPPmolC - GPPmolC_tot < 0.00001)
+		if(GPPmolC - GPPmolC_tot < 1e-4)
 		{
 			GPPmolC = GPPmolC_tot;
 		}
@@ -104,7 +103,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
 
 	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", c->daily_gpp);
+	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 area covered/yr\n", c->daily_gpp);
 	c->daily_gpp += s->value[DAILY_GPP_gC];
 	c->monthly_gpp += s->value[DAILY_GPP_gC];
 	c->annual_gpp += s->value[DAILY_GPP_gC];
