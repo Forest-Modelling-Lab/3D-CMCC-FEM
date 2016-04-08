@@ -226,6 +226,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	}
 
 	Log("\n*Carbon allocation*\n");
+
+	/* update live_total wood fraction based on age */
+	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
+
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
 	Log("Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);

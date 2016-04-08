@@ -506,6 +506,9 @@ enum
 	BRANCH_HEARTWOOD_C,
 	TOT_SAPWOOD_C,
 
+
+	EFF_LIVE_TOTAL_WOOD_FRAC,
+
 	/* per tree  in KgC */
 	AV_LEAF_MASS_KgC,
 	AV_STEM_MASS_KgC,
@@ -1386,6 +1389,8 @@ void Latent_heat_flux (CELL *, const MET_DATA *const, int, int);
 void Check_carbon_balance (CELL *);
 void Check_water_balance (CELL *);
 void Check_C_flux_balance (CELL *);
+
+void live_total_wood_age(AGE *, SPECIES *);
 
 //sergio's functions
 int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
