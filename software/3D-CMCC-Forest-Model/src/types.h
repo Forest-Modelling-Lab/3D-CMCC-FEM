@@ -183,9 +183,9 @@ typedef struct
 	avdbh_sapling,
 	lai_sapling,
 	height_sapling,
-	ws_sapling, /* probably not used */
-	wr_sapling, /* probably not used */
-	wf_sapling, /* probably not used */
+	ws_sapling, /* probably no need to be used */
+	wr_sapling, /* probably no need to be used */
+	wf_sapling, /* probably no need to be used */
 	light_estab_very_tolerant,
 	light_estab_tolerant,
 	light_estab_intermediate,

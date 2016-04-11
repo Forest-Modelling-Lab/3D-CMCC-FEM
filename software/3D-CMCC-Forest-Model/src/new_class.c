@@ -19,6 +19,7 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 	/* ist is used only with "human" regeneration */
 	if(!mystricmp(settings->management, "on"))
 	{
+		Log("Human management\n");
 		//fixme is it necessary?? i.e. use the row struct
 //		r->x = c->x;
 //		r->y = c->y;
@@ -29,6 +30,9 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 //		r->n = settings->replanted_tree;
 //		r->lai = settings->lai_sapling;
 
+
+		//fixme use "fill_cell..." functions in matrix.c??
+
 		//fixme or just need this??
 		/* fill the structs with new variables incrementig counters */
 		c->heights_count += 1;
@@ -37,6 +41,8 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 
 		/* assign height value */
 		c->heights[c->heights_count+1].value = settings->height_sapling;
+		Log("nuova height = %f\n", settings->height_sapling);
+		Log("nuova height = %f\n", c->heights[c->heights_count+1].value);
 		/* assign age value */
 		c->heights[c->heights_count+1].ages[h->ages_count+1].value = settings->age_sapling;
 		/* assign species name */
@@ -469,5 +475,5 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 	Log("----Dead wood vs total biomass = %f %%\n", (c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_DEAD_WOOD_MASS_KgC] /
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
-	exit(1);
+	//exit(1);
 }

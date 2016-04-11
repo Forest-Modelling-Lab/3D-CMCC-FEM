@@ -418,6 +418,23 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                                 //Saplings_counter -= 1;
                             }
 								 */
+								/* simulate management */
+								if( ! mystricmp(settings->management, "on") && years > 0)
+								{
+									Log("years = %d\n", years);
+									Log("ROTATION = %d\n", (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION]);
+									if((years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
+											|| ((int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] % years)!= 0)
+									{
+										Log("in\n");
+										Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years);
+										if(settings->replanted_tree != 0.0)
+										{
+											Create_new_class(&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age],
+													&m->cells[cell].heights[height].ages[age].species[species], height, age, species);
+										}
+									}
+								}
 							}
 						}
 						/*FUNCTIONS FOR SAPLINGS*/
@@ -477,29 +494,14 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 							}
 						}
-
-						/* simulate management */
-						 //toconclude set function for multiple of rotation
-						 //fixme include management choice
-						if( ! mystricmp(settings->management, "on")
-							&& ( (years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
-								|| ! ((int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] % years)) )
-						{
-							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years);
-							if(settings->replanted_tree != 0.0)
-							{
-								Create_new_class(&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age],
-										&m->cells[cell].heights[height].ages[age].species[species], height, age, species);
-							}
-						}
 					}
 					else
 					{
 						Log("\n\n**************************************************************\n"
-						"No trees for species %s s dbh %g height %g age %d are died!!!!\n"
-						"**************************************************************\n\n",
-						m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-						m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
+								"No trees for species %s s dbh %g height %g age %d are died!!!!\n"
+								"**************************************************************\n\n",
+								m->cells[cell].heights[height].ages[age].species[species].name, m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+								m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
 					}
 				}
 				Log("****************END OF SPECIES CLASS***************\n");

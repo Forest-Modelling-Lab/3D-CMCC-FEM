@@ -215,7 +215,7 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWbblive = s->value[BRANCH_LIVE_WOOD_C] / s->counter[N_TREE];
 	IndWbbdead = s->value[BRANCH_DEAD_WOOD_C] / s->counter[N_TREE];
 
-	removed_tree = s->counter[N_TREE] * settings->harvested_tree;
+	removed_tree = s->counter[N_TREE] * (settings->harvested_tree / 100.0 );
 	Log("removed tree = %d\n", removed_tree);
 
 

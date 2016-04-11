@@ -234,7 +234,6 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 	a->species[a->species_count-1] = species;
 
 	// set values
-	//a->species[a->species_count-1].phenology = row->phenology;
 	a->species[a->species_count-1].management = row->management;
 	a->species[a->species_count-1].name = mystrdup(row->species);
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
