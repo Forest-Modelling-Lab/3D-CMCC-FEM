@@ -147,7 +147,7 @@ void Management (SPECIES *const s, AGE * const a, int years)
 
 			//Percentage of Cutted Trees for Managment
 			//Roots should remains in ecosystem!!
-			s->counter[CUT_TREES] = settings->cutTree * s->counter[N_TREE];
+			s->counter[CUT_TREES] = settings->harvested_tree * s->counter[N_TREE];
 			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[CUT_TREES];
 			Log("Management Cutted Trees = %d trees/ha\n", s->counter[CUT_TREES]);
 			Log("Number of Trees  after Management = %d trees\n", s->counter[N_TREE]);
@@ -191,7 +191,13 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWrf,
 	IndWrc,
 	IndWbb,
-	IndWres;
+	IndWres,
+	IndWslive,
+	IndWsdead,
+	IndWrclive,
+	IndWrcdead,
+	IndWbblive,
+	IndWbbdead;
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");
@@ -202,8 +208,14 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWrf = s->value[FINE_ROOT_C] / s->counter[N_TREE];
 	IndWbb = s->value[BRANCH_C] / s->counter[N_TREE];
 	IndWres = s->value[RESERVE_C] / s->counter[N_TREE];
+	IndWslive = s->value[STEM_LIVE_WOOD_C] / s->counter[N_TREE];
+	IndWsdead = s->value[STEM_DEAD_WOOD_C] / s->counter[N_TREE];
+	IndWrclive = s->value[COARSE_ROOT_LIVE_WOOD_C] / s->counter[N_TREE];
+	IndWrcdead = s->value[COARSE_ROOT_DEAD_WOOD_C] / s->counter[N_TREE];
+	IndWbblive = s->value[BRANCH_LIVE_WOOD_C] / s->counter[N_TREE];
+	IndWbbdead = s->value[BRANCH_DEAD_WOOD_C] / s->counter[N_TREE];
 
-	removed_tree = s->counter[N_TREE] * settings->cutTree;
+	removed_tree = s->counter[N_TREE] * settings->harvested_tree;
 	Log("removed tree = %d\n", removed_tree);
 
 
@@ -235,7 +247,6 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	c->daily_litter_carbon_tC +=  (IndWrc * removed_tree) + (IndWrf * removed_tree) + (IndWf * removed_tree);
 
 }
-
 
 void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int number_of_layers)
 {

@@ -176,7 +176,9 @@ typedef struct
 	min_layer_cover,
 	max_layer_cover;
 	/* management/renovation (human or natural) input */
-	double 	cutTree,
+	double 	harvested_tree,
+	replanted_tree,
+	age_sapling,
 	avdbh_sapling,
 	lai_sapling,
 	height_sapling,

@@ -267,7 +267,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								}
 								 */
-								Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
+
 								Log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 								/*MORTALITY*/
 								//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
@@ -302,6 +302,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
+
+								Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								//MANAGEMENT
 								//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
