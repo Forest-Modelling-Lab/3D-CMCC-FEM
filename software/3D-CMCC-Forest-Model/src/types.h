@@ -113,8 +113,7 @@ typedef struct
 	slai,
 	qsoil,
 	ksoil,
-	p0,
-	cutTree;
+	p0;
 
 	// ROTHC SPECIFIC PARAMETERS
 	double kDPM,
@@ -172,13 +171,12 @@ typedef struct
 	char dndc[4];
 
 	double sizeCell,
-	//dominant,
-	//dominated,
-	//subdominated,
 	tree_layer_limit,
 	soil_layer,
 	min_layer_cover,
-	max_layer_cover,
+	max_layer_cover;
+	/* management/renovation (human or natural) input */
+	double 	cutTree,
 	avdbh_sapling,
 	lai_sapling,
 	height_sapling,
@@ -188,15 +186,17 @@ typedef struct
 	light_estab_very_tolerant,
 	light_estab_tolerant,
 	light_estab_intermediate,
-	light_estab_intolerant,
-	maxlai,
+	light_estab_intolerant;
+	/* control check */
+	double maxlai,
 	defaultlai,
 	maxdays,
 	maxrg,
 	maxtavg,
 	maxvpd,
-	maxprecip,
-	switchtounspatial;
+	maxprecip;
+	/* seetings */
+	double 	switchtounspatial;
 
 } settings_t;
 
@@ -688,13 +688,14 @@ enum
 
 	THERMIC_SUM_FOR_END_VEG, //thermic sum at the end of leaf fall period
 
-	//SAPLINGS
-	LAI_SAPLING,
+	//NATURAL REGENERATION INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 	AVDBH_SAPLING,
+	LAI_SAPLING,
 	TREE_HEIGHT_SAPLING,
-	WF_SAPLING,
-	WR_SAPLING,
-	WS_SAPLING,
+	LEAF_C_SAPLING,
+	COARSE_ROOT_C_SAPLING,
+	FINE_ROOT_C_SAPLING,
+	STEM_C_SAPLING,
 	PERC,
 
 	VALUES

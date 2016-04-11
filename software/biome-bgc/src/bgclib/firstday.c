@@ -60,8 +60,7 @@ epvar_struct* epv, phenarray_struct* phen, cstate_struct* cs, nstate_struct* ns)
 		cs->livestemc_transfer = new_stemc * epc->alloc_newlivewoodc_newwoodc;
 		cs->livestemc = cs->livestemc_transfer / epc->livewood_turnover;
 		cs->deadstemc_transfer = new_stemc - cs->livestemc_transfer;
-		cs->deadstemc = max_stemc - cs->livestemc_transfer - cs->livestemc - 
-			cs->deadstemc_transfer;
+		cs->deadstemc = max_stemc - cs->livestemc_transfer - cs->livestemc - cs->deadstemc_transfer;
 		if (cs->deadstemc < 0.0) cs->deadstemc = 0.0;
 		cs->livecrootc_transfer = cs->livestemc_transfer * epc->alloc_crootc_stemc;
 		cs->livecrootc = cs->livestemc * epc->alloc_crootc_stemc;

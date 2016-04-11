@@ -450,7 +450,7 @@ int importSiteFile(char *fileName)
 	//	fprintf(stderr, "%f\n", site->fn0);
 	//	fprintf(stderr, "%f\n", site->fnn);
 	//	fprintf(stderr, "%f\n", site->m0);
-	//	fprintf(stderr, "%f\n", site->cutTree);
+	//	fprintf(stderr, "%f\n", settings->cutTree);
 
 	return ret;
 }

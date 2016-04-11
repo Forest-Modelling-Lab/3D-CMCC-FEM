@@ -52,8 +52,7 @@ int sort_by_heights_desc(const void * a, const void * b)
 	}
 }
 
-
-extern void Pool_fraction (SPECIES * s)
+void Pool_fraction (SPECIES * s)
 {
 	/*using biome parameter for allocation recomputed values to have fraction*/
 	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
@@ -64,7 +63,6 @@ extern void Pool_fraction (SPECIES * s)
 	//Log("biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
 	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
 	//Log("biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
-
 
 }
 

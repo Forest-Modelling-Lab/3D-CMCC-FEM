@@ -37,7 +37,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		if (s->value[ALPHA] > 0.0)
 		{
 			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
-					/* *s->value[FRAC_DAYTIME_TRANSP]*/ ;
+					 /**s->value[FRAC_DAYTIME_TRANSP] */;
 			Log("Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 
 			//convert epsilon from gCMJ^-1 to molCmolPAR^-1
@@ -53,7 +53,6 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
 			Log("Alpha C = %f molC/molPAR\n", Alpha_C);
 		}
-
 		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
 		/* GPP */
@@ -69,15 +68,8 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		Log("GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
 		Log("GPPmolC_tot = %f molC/m^2 day/month\n", GPPmolC_tot);
 
-		if(GPPmolC - GPPmolC_tot < 1e-4)
-		{
-			GPPmolC = GPPmolC_tot;
-		}
-		else
-		{
-			Log("ERROR IN GPP_molC!!!\n");
-			exit(1);
-		}
+		CHECK_CONDITION(fabs(GPPmolC - GPPmolC_tot), > 1e-4);
+
 		/* Daily GPP in grams of C/m^2 */
 		/* Convert molC into grams */
 		s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;

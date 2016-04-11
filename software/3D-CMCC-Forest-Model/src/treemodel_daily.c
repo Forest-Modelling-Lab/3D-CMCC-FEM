@@ -293,8 +293,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								}
 								//Renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
-								//Crowding_competition (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], m->cells[cell].heights[height].z, years, m->cells[cell].top_layer);
-
 								AGB_BGB_biomass(&m->cells[cell], height, age, species);
 
 								Biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
