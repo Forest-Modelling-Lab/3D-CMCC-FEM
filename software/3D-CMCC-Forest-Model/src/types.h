@@ -176,8 +176,9 @@ typedef struct
 	min_layer_cover,
 	max_layer_cover;
 	/* management/renovation (human or natural) input */
-	double 	harvested_tree, /* percentage of harvested trees per sizecell */
-	replanted_tree, /* number of replanted trees per sizecell */
+	double 	harvested_tree; /* percentage of harvested trees per sizecell */
+	char replanted_species[20]; /* species name of replanted species */
+	double replanted_tree, /* number of replanted trees per sizecell */
 	age_sapling,
 	avdbh_sapling,
 	lai_sapling,
@@ -1420,6 +1421,7 @@ void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DAT
 void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
 double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);
+void Create_new_class(CELL *, HEIGHT *, AGE *, SPECIES *, int, int, int);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);

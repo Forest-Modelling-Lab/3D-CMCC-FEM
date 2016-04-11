@@ -469,9 +469,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								/*
 								if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
 								{
-								Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
+									Log("....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
 
-								Saplings_counter -= 1;
+									Saplings_counter -= 1;
 								}
 								 */
 								Log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
@@ -488,7 +488,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years);
 							if(settings->replanted_tree != 0.0)
 							{
-								Create_new_clas();
+								Create_new_class(&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age],
+										&m->cells[cell].heights[height].ages[age].species[species], height, age, species);
 							}
 						}
 					}

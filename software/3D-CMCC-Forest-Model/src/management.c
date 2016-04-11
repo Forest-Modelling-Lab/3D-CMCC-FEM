@@ -8,17 +8,6 @@
 #include "types.h"
 #include "constants.h"
 
-void Create_new_class(ROW *r, CELL *c, int height, int age, int species)
-{
-	/* fill the cell with the new variables */
-	r.species =
-	r.height = settings->height_sapling;
-	r.avdbh = settings->avdbh_sapling;
-	r.age = settings->age_sapling;
-	r.n = settings->replanted_tree;
-
-
-}
 
 void Choose_management (CELL *c, SPECIES *s, int years, int height)
 {

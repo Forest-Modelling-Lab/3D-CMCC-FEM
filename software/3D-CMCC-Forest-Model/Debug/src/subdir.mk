@@ -45,6 +45,7 @@ C_SRCS += \
 ../src/modifiers.c \
 ../src/mortality.c \
 ../src/mpfit.c \
+../src/new_class.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
 ../src/photosynthesis.c \
@@ -106,6 +107,7 @@ OBJS += \
 ./src/modifiers.o \
 ./src/mortality.o \
 ./src/mpfit.o \
+./src/new_class.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
 ./src/photosynthesis.o \
@@ -167,6 +169,7 @@ C_DEPS += \
 ./src/modifiers.d \
 ./src/mortality.d \
 ./src/mpfit.d \
+./src/new_class.d \
 ./src/peak_lai.d \
 ./src/phenology.d \
 ./src/photosynthesis.d \
