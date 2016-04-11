@@ -183,7 +183,7 @@ void Management (SPECIES *const s, AGE * const a, int years)
 	s->counter[CUT_TREES] = 0;
 }
 
-void Clearcut_Timber_without_request (SPECIES *const s, int years)
+void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 {
 	int removed_tree;
 	double IndWf,
@@ -192,8 +192,6 @@ void Clearcut_Timber_without_request (SPECIES *const s, int years)
 	IndWrc,
 	IndWbb,
 	IndWres;
-	double BiomRem;
-
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");
@@ -229,11 +227,12 @@ void Clearcut_Timber_without_request (SPECIES *const s, int years)
 			s->value[BRANCH_C],
 			s->value[RESERVE_C]);
 
-	BiomRem = s->value[TOTAL_W] - (s->value[LEAF_C] + s->value[STEM_C] /* ??? m->lpCell[index].Wr??*/);
-	Log("Total Biomass harvested from ecosystem = %f\n", BiomRem);
 	// Total Biomass at the end
 	s->value[TOTAL_W] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
 	Log("Total Biomass = %f tC/ha\n", s->value[TOTAL_W]);
+
+	/* adding coarse and fine root and leaf to litter pool */
+	c->daily_litter_carbon_tC +=  (IndWrc * removed_tree) + (IndWrf * removed_tree) + (IndWf * removed_tree);
 
 }
 

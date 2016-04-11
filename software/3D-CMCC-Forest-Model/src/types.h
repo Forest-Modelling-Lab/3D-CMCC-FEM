@@ -1295,7 +1295,7 @@ void Mortality (SPECIES *const, int);
 void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber_upon_request (SPECIES *const, int, int, int);
-void Clearcut_Timber_without_request (SPECIES *const, int);
+void Clearcut_Timber_without_request (SPECIES *, CELL*, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
 MATRIX *matrix_create(ROW *const, const int, char *);
 void matrix_free(MATRIX *);
