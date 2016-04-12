@@ -530,6 +530,9 @@ int importSettingsFile(char *fileName)
 					case 9:
 						strncpy (settings->dndc, (const char*)pch, 3);
 						break;
+//					case 10:
+//						strncpy (settings->replanted_species, (const char*)pch,53);
+//						break;
 					case 10:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;

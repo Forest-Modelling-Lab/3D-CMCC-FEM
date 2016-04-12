@@ -15,6 +15,7 @@
 void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int age, int species)
 {
 	Log("Creating new class....\n");
+	Log("Replanted trees = %f\n", settings->replanted_tree);
 	/* fill the row with the new variables */
 	/* ist is used only with "human" regeneration */
 	if(!mystricmp(settings->management, "on"))
@@ -35,22 +36,27 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 
 		//fixme or just need this??
 		/* fill the structs with new variables incrementig counters */
-		c->heights_count += 1;
-		h->ages_count += 1;
-		a->species_count += 1;
+		c->heights_count ++;
+		h->ages_count ++;
+		a->species_count ++;
+		Log("heights_count = %d \n", c->heights_count);
+		Log("ages_count = %d \n", h->ages_count);
+		Log("species_count = %d \n", a->species_count);
+
 
 		/* assign height value */
 		c->heights[c->heights_count+1].value = settings->height_sapling;
-		Log("nuova height = %f\n", settings->height_sapling);
-		Log("nuova height = %f\n", c->heights[c->heights_count+1].value);
+		Log("height_sapling = %f\n", c->heights[c->heights_count+1].value);
 		/* assign age value */
-		c->heights[c->heights_count+1].ages[h->ages_count+1].value = settings->age_sapling;
+		h->ages[h->ages_count+1].value = settings->age_sapling;
+		Log("age_sapling = %f\n", h->ages[h->ages_count+1].value);
 		/* assign species name */
-		c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].name = settings->replanted_species;
+		//a->species[a->species_count+1].name = mystrdup (settings->replanted_species);
+		//Log("replanted species = %s\n", a->species[a->species_count+1].name);
 		/* assign dbh value */
-		c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AVDBH] = settings->avdbh_sapling;
+		a->species[a->species_count+1].value[AVDBH] = settings->avdbh_sapling;
 		/* compute density */
-		c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].counter[N_TREE] = settings->replanted_tree;
+		a->species[a->species_count+1].counter[N_TREE] = settings->replanted_tree;
 	}
 	else
 	{
@@ -60,7 +66,8 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 	/* compute all other variables */
 	/* stem biomass */
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_STEM_MASS_KgDM] =
-			s->value[STEMCONST] * (pow (c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AVDBH], STEMPOWER_B));
+			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[STEMCONST] *
+			(pow (c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AVDBH], STEMPOWER_B));
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[STEM_C] =
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_STEM_MASS_KgDM] *
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].counter[N_TREE] / 1000.0;
@@ -87,23 +94,23 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 	Log("\nSAPWOOD CALCULATION using sapwood area\n");
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[BASAL_AREA] =
 			((pow((c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AVDBH] / 2.0), 2.0)) * Pi);
-	Log("   BASAL AREA = %f cm^2\n", s->value[BASAL_AREA]);
+	Log("   BASAL AREA = %f cm^2\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[BASAL_AREA]);
 
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_AREA] =
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAP_A] *
 			pow (c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AVDBH],
 					c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAP_B]);
-	Log("   SAPWOOD_AREA = %f cm^2\n", s->value[SAPWOOD_AREA]);
+	Log("   SAPWOOD_AREA = %f cm^2\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_AREA]);
 
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[HEARTWOOD_AREA] =
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[BASAL_AREA] -
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_AREA];
-	Log("   HEART_WOOD_AREA = %f cm^2\n", s->value[HEARTWOOD_AREA]);
+	Log("   HEART_WOOD_AREA = %f cm^2\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[HEARTWOOD_AREA]);
 
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_PERC] =
 			(c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_AREA]) /
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[BASAL_AREA];
-	Log("   sapwood perc = %f%%\n", s->value[SAPWOOD_PERC]*100);
+	Log("   sapwood perc = %f%%\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[SAPWOOD_PERC]*100);
 
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WS_sap_tDM] =
 			(c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[BIOMASS_STEM_tDM] *
@@ -135,7 +142,7 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WTOT_sap_tDM] =
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WS_sap_tDM] +
-			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
+			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WRC_sap_tDM] + c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[WBB_sap_tDM];
 	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[TOT_SAPWOOD_C] =
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[STEM_SAPWOOD_C] +
 			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[COARSE_ROOT_SAPWOOD_C] +
@@ -180,9 +187,10 @@ void Create_new_class(CELL *c, HEIGHT *h, AGE *a, SPECIES *s, int height, int ag
 	Log("-----Reserve initialization data  = %f g res/tree \n", (c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[RESERVE_C] * 1000000)/
 			(int)c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].counter[N_TREE]);
 
-	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_RESERVE_MASS_KgDM] = c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[RESERVE_tDM] *
+	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_RESERVE_MASS_KgDM] =
+			c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[RESERVE_tDM] *
 			1000.0 /c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].counter[N_TREE];
-	s->value[AV_RESERVE_MASS_KgC] = s->value[RESERVE_C] *1000.0 /s->counter[N_TREE];
+	c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_RESERVE_MASS_KgC] = c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[RESERVE_C] *1000.0 /c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].counter[N_TREE];
 	Log("-Individual reserve = %f KgDM/tree\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_RESERVE_MASS_KgDM]);
 	Log("-Individual reserve = %f Kg/tree\n", c->heights[c->heights_count+1].ages[h->ages_count+1].species[a->species_count+1].value[AV_RESERVE_MASS_KgC]);
 	/* compute minimum reserve pool */

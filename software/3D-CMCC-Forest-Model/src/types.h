@@ -177,10 +177,11 @@ typedef struct
 	max_layer_cover;
 	/* management/renovation (human or natural) input */
 	double 	harvested_tree; /* percentage of harvested trees per sizecell */
-	char replanted_species[20]; /* species name of replanted species */
+	//ALESSIOR
+	//char replanted_species[54]; /* species name of replanted species */
 	double replanted_tree, /* number of replanted trees per sizecell */
-	age_sapling,
-	avdbh_sapling,
+	age_sapling;
+	double avdbh_sapling,
 	lai_sapling,
 	height_sapling,
 	ws_sapling, /* probably no need to be used */
