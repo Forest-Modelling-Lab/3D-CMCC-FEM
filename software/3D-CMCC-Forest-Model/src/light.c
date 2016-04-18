@@ -23,7 +23,16 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	double par_abs_lai_sun, par_abs_lai_shade;
 	double par_abs_per_lai_sun, par_abs_per_lai_shade;
 
-	double ppfd_coeff = 0.01; /* parameter that quantifies the effect of light on conductance see Scwhwal and Ek 2004 and Kimbal et al., 1997 */
+	double ppfd_coeff = 0.01; /* parameter that quantifies the effect of light on conductance see Schwalm and Ek 2004 and Kimbal et al., 1997 */
+
+	//following Ritchie et al., 1998 and Hydi et al., (submitted)
+	double actual_albedo;
+	double soil_albedo = 0.17; //(see Wiki)
+
+	//test
+	//fixme LAI values should integrated over the cell considering different
+	actual_albedo = s->value[ALBEDO] * (s->value[ALBEDO]-soil_albedo * exp(-0.75 * s->value[LAI]));
+	Log("actual_albedo = %f\n", actual_albedo);
 
 
 	Log("\nRADIATION ROUTINE\n");
