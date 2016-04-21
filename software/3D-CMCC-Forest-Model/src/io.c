@@ -1683,6 +1683,8 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 		return 0;
 	}
 
+	free(values);
+
 	/* ok */
 	return 1;
 #undef VALUE_AT

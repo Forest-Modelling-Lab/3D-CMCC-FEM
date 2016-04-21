@@ -476,6 +476,10 @@ int importSettingsFile(char *fileName)
 				*buffer = malloc(sizeof(*buffer)*1024);
 
 		settings = malloc(sizeof(settings_t));
+		if ( ! settings ) {
+			fprintf(stderr, "Failed malloc for temporary buffer to read settings file\n");
+			return 2;
+		}
 		tmpPointer = &(settings->sizeCell);
 
 		if(!buffer)
@@ -530,12 +534,12 @@ int importSettingsFile(char *fileName)
 					case 9:
 						strncpy (settings->dndc, (const char*)pch, 3);
 						break;
-//					case 10:
-//						strncpy (settings->replanted_species, (const char*)pch,53);
-//						break;
 					case 10:
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
+						break;
+					case 16:
+						strncpy (settings->replanted_species, (const char*)pch,SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 						break;
 					default:
 						*tmpPointer = atof(pch); // Convert each token in a double

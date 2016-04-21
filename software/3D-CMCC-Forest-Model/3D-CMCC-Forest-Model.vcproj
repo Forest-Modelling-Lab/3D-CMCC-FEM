@@ -272,11 +272,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_evapo_biome.c"
+				RelativePath=".\src\canopy_evapotranspiration.c"
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_evapotranspiration.c"
+				RelativePath=".\src\canopy_evapotranspiration_biome.c"
 				>
 			</File>
 			<File
@@ -396,7 +396,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\parameters.c"
+				RelativePath=".\src\new_class.c"
 				>
 			</File>
 			<File
@@ -416,15 +416,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\print.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\renovation.c"
 				>
 			</File>
 			<File
 				RelativePath=".\src\soil_dndc.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\soil_evapo_biome.c"
 				>
 			</File>
 			<File

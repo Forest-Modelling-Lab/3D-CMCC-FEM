@@ -187,6 +187,9 @@ static void clean_up(void)
 	
 #ifdef _WIN32
 #ifdef _DEBUG
+	/*
+		_CrtSetBreakAlloc(X);
+	*/
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
 	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);

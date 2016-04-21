@@ -57,7 +57,7 @@ void Peak_lai(SPECIES *const s, CELL *const c, int years, int month, int day, in
 	}
 	else
 	{
-		Log("There areNT enough reserve to reach Peak Lai\n");
+		Log("There aren't enough reserve to reach Peak Lai\n");
 		exit(1);
 	}
 

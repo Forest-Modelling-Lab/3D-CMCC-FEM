@@ -430,8 +430,12 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 										Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years);
 										if(settings->replanted_tree != 0.0)
 										{
-											Create_new_class(&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age],
-													&m->cells[cell].heights[height].ages[age].species[species], height, age, species);
+											if ( ! Create_new_class(&m->cells[cell], height, age, species) )
+											{
+												Log("unable to add new height class!");
+												// DIE !
+												exit(1);
+											}
 										}
 									}
 								}

@@ -199,7 +199,7 @@ static const char err_equal_rows[] = "equal values at row %d\n";
 static const char err_unable_open_file[] = "unable to open file \"%s\".\n";
 
 /* */
-static int alloc_struct(void **t, int *count, unsigned int size)
+int alloc_struct(void **t, int *count, unsigned int size)
 {
 	void *no_leak;
 

@@ -156,6 +156,7 @@ typedef struct
 
 
 // Struct representing settings.txt content
+#define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
 typedef struct
 {
 	char version,
@@ -169,6 +170,9 @@ typedef struct
 	char management[4];
 	char rothC[4];
 	char dndc[4];
+	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
+
+	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
 	double sizeCell,
 	tree_layer_limit,
@@ -177,8 +181,6 @@ typedef struct
 	max_layer_cover;
 	/* management/renovation (human or natural) input */
 	double 	harvested_tree; /* percentage of harvested trees per sizecell */
-	//ALESSIOR
-	//char replanted_species[54]; /* species name of replanted species */
 	double replanted_tree, /* number of replanted trees per sizecell */
 	age_sapling;
 	double avdbh_sapling,
@@ -1422,7 +1424,8 @@ void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DAT
 void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
 double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);
-void Create_new_class(CELL *, HEIGHT *, AGE *, SPECIES *, int, int, int);
+int alloc_struct(void **t, int *count, unsigned int size);
+int Create_new_class(CELL *const c, const int height, const int age, const int species);
 
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
