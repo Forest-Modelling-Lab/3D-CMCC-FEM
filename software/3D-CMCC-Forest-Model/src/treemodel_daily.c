@@ -299,7 +299,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								Print_end_month_stand_data (&m->cells[cell], yos, met, month, years, height, age, species);
 
-								Annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
+								// ALESSIOR see utility.c... non fa nulla!
+								//Annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 

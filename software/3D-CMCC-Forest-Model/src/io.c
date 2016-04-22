@@ -1118,7 +1118,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
 
-	/* TODO: fix buffers length...it can't have same length */
+	/* TODO: fix sz_path and sz_nc_filename size...can't be same of buffer */
 	char buffer[256];
 	char sz_path[256];
 	char sz_nc_filename[256];
@@ -1211,7 +1211,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			continue;
 		}
 
-		/* check for buffer overflow */
+		/* TODO: check for buffer overflow */
 		sprintf(sz_nc_filename, "%s%s", sz_path, buffer);
 
 		/* try to open nc file */
@@ -1837,38 +1837,31 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 	return yos;
 }
 
-/* 
-	please note that row start from 0
-*/
-static int get_daily_date_from_row(const int row, const int yyyy) {
+static int get_daily_date_from_row(const int doy, int yyyy) {
+	int i;
 	int dd;
 	int mm;
-	int days;
 	int days_per_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	assert((doy >=0 ) && (doy < 365+IS_LEAP_YEAR(yyyy)));
 
 	if ( IS_LEAP_YEAR(yyyy) ) {
 		++days_per_month[1];
 	}
-
-	assert(row>=0 && row<365+IS_LEAP_YEAR(yyyy));
-
-	dd = 0;
-	days = 0;
-	for ( mm = 0; mm < 12; ++mm ) {
-		days += days_per_month[mm];
-		if ( row < days ) {
-			dd = row-(days-days_per_month[mm])+1;
+	dd = doy;
+	for ( i = 0, mm = 0; mm < 12; ++mm ) {
+		i += days_per_month[mm];
+		if ( dd <= i ) {
+			dd -= i - days_per_month[mm];
 			break;
 		}
 	}
 	++mm;
-	
-	return yyyy*10000+mm*100+dd;
+
+	return (yyyy*10000)+(mm*100)+dd;
 }
-/* 
-	please note that row start from 0
-*/
-static int get_monthly_date_from_row(const int row, const int yyyy) {
+
+int get_monthly_date_from_row(const int row, const int yyyy) {
 	assert(row>=0 && row<12);
 	return yyyy*100+(row+1);
 }
@@ -1908,8 +1901,8 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 
 	/* create time rows */
 	if ( 0 == type ) time_rows = malloc(years_count*366*sizeof*time_rows);
-	if ( 1 == type ) time_rows = malloc(years_count*12*sizeof*time_rows);
-	if ( 2 == type ) time_rows = malloc(years_count*sizeof*time_rows);
+	else if ( 1 == type ) time_rows = malloc(years_count*12*sizeof*time_rows);
+	else if ( 2 == type ) time_rows = malloc(years_count*sizeof*time_rows);
 	if ( ! time_rows ) {
 		Log(sz_err_out_of_memory);
 		return 0;
@@ -2017,7 +2010,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 				
 		nc_close(id_file);		
 	}
-
+	free(time_rows);
 	return 1;
 
 quit:

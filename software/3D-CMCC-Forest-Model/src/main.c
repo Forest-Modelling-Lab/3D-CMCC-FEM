@@ -172,6 +172,9 @@ static const char err_unable_convert_value_arg[] = "unable to convert value \"%s
 
 static void clean_up(void)
 {
+	if ( input_dir )
+		free(input_dir);
+
 	if ( site )
 		free(site);
 
@@ -1239,9 +1242,8 @@ int main(int argc, char *argv[])
 		y_cell_count = 1; //rows->y;
 
 		/* build matrix */
-		m = matrix_create(rows, rows_count, input_dir);
-		free(input_dir); input_dir = NULL;
-
+		m = matrix_create(rows, rows_count);
+		
 		/* free rows */
 		rows_free(rows, rows_count);
 

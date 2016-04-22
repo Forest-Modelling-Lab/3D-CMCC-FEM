@@ -61,6 +61,8 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//fixme
 			LightTrasm = (exp(- s->value[K] * met[month].d[day].ndvi_lai));
 			//Log("NDVI-LAI = %f \n", met[month].ndvi_lai );
+			LightTrasm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
+			LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
 		}
 		else
 		{

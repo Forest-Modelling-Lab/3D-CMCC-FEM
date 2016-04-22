@@ -478,6 +478,8 @@ int importSettingsFile(char *fileName)
 		settings = malloc(sizeof(settings_t));
 		if ( ! settings ) {
 			fprintf(stderr, "Failed malloc for temporary buffer to read settings file\n");
+			if ( buffer ) free(buffer);
+			fclose(settings_fd);
 			return 2;
 		}
 		tmpPointer = &(settings->sizeCell);

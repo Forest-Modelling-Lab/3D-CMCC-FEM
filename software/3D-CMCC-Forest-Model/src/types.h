@@ -330,6 +330,17 @@ enum
 
 	//VEG_PERIOD,
 	//STRUCTURE
+
+	/* ALESSIOR:
+	
+		AVDBH deve essere sempre il primo perchè prima di lui ci sono i
+		parametri con i valori CHE NON CAMBIANO MAI (COSTANTI!!!!!)
+
+		oltretutto l'indice AVDBH viene usato in new_class.c
+		e perdio non lo cambiate!
+	*/
+
+
 	AVDBH,                          //Average DBH in cm
 	CROWN_DIAMETER,                 //Crown Diameter in m
 	CROWN_AREA,                     //Crown Area in m^2
@@ -1303,7 +1314,7 @@ void Management (SPECIES *const, AGE *const, int);
 void Clearcut_Timber_upon_request (SPECIES *const, int, int, int);
 void Clearcut_Timber_without_request (SPECIES *, CELL*, int);
 void Clearcut_Coppice (SPECIES *const, int, int, int);
-MATRIX *matrix_create(ROW *const, const int, char *);
+MATRIX *matrix_create(ROW *const, const int);
 void matrix_free(MATRIX *);
 void matrix_summary(const MATRIX *const);
 void Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
@@ -1426,7 +1437,7 @@ double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);
 int alloc_struct(void **t, int *count, unsigned int size);
 int Create_new_class(CELL *const c, const int height, const int age, const int species);
-
+int fill_species_from_file(SPECIES *const s);
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);

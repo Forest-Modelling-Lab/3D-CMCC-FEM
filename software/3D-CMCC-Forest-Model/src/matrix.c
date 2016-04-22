@@ -5,6 +5,9 @@
 #include "types.h"
 #include "constants.h"
 
+/* externs */
+extern char *input_dir;
+
 /* constants */
 #define EQUAL_CELL                     1
 #define EQUAL_HEIGHT                   2
@@ -191,7 +194,6 @@ static const char *species_values[] = {
 		"MINDBHMANAG",                //Minimum DBH for Managment
 		"AV_SHOOT",                   //Average number of shoots produced after coppicing
 };
-static const char species_values_delimiter[] = " \t\r\n";
 
 /* error strings */
 extern const char err_out_of_memory[];
@@ -339,25 +341,116 @@ static int fill_cell(MATRIX *const m, const ROW *const row)
 }
 
 /* */
-MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
+int fill_species_from_file(SPECIES *const s)
 {
+	char *p;
+	char *token;
+	char *token2;
+	char filename[256]; /* should be enough! */
+	char buffer[BUFFER_SIZE];
 	int i;
 	int y;
+	int result;
+	FILE *f;
+	PREC value;
+	const char species_values_delimiter[] = " \t\r\n";
+
+	assert(s);
+
+	sprintf(filename, "%s/%s.txt", input_dir, s->name);
+	f = fopen(filename, "r");
+	if ( !f )
+	{
+		Log(err_unable_open_file, filename);
+		return 0;
+	}
+
+	y = 0;
+	while ( fgets(buffer, BUFFER_SIZE, f) )
+	{
+		// REMOVE \r\n
+		for ( i = 0; buffer[i]; i++ )
+		{
+			if ( '\r' == buffer[i] )
+			{
+				buffer[i] = '\0';
+			}
+
+			if ( '\n' == buffer[i] ) {
+				buffer[i] = '\0';
+			}
+		}
+
+		// SKIP EMPTY LINE
+		if ( '\0' == buffer[0] ) {
+			continue;
+		}
+
+		// SKIP COMMENTS
+		if ( ('\\' == buffer[0]) && ('\\' == buffer[1]) ) {
+			continue;
+		}
+
+		// GET VARIABLE NAME
+		token = mystrtok(buffer, species_values_delimiter, &p);
+		if ( !token ) {
+			Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
+			fclose(f);
+			return 0;
+		}
+
+		// SEARCH FOR STRING
+		for ( i = 0; i < SIZE_OF_ARRAY(species_values); ++i ) {
+			if ( !strcmp(species_values[i], token) ) {
+				// GET VALUE TOKEN
+				token2 = mystrtok(NULL, species_values_delimiter, &p);
+				if ( !token2 ) {
+					Log("unable to get value for \"%s\" in \"%s\".\n", token, filename);
+					fclose(f);
+					return 0;
+				}
+
+				// CONVERT TOKEN
+				value = convert_string_to_prec(token2, &result);
+				if ( result ) {
+					Log("unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
+					fclose(f);
+					return 0;
+				}
+
+				// ASSIGN VALUE
+				s->value[i] = value;
+
+				// KEEP TRACK OF ASSIGNED VALUES
+				++y;
+
+				break;
+			}
+		}
+	}
+
+	// CHECK ASSIGNED SPECIES VALUES
+	if ( y != SIZE_OF_ARRAY(species_values) ) {
+		Log("error: assigned %d species value instead of %d\n", y, SIZE_OF_ARRAY(species_values));
+		fclose(f);
+		return 0;
+	}
+	fclose(f);
+
+	return 1;
+}
+
+/* */
+MATRIX *matrix_create(ROW *const rows, const int rows_count)
+{
 	int row;
 	int cell;
 	int species;
 	int age;
 	int height;
 	int result;
-	unsigned char equal_flag;
+	//unsigned char equal_flag;
 	MATRIX *m;
-	FILE *f;
-	char *token;
-	char *token2;
-	char *p;
-	char filename[PATH_SIZE];
-	char buffer[BUFFER_SIZE];
-	PREC value;
 
 	/* check parameters */
 	assert(rows && rows_count);
@@ -473,96 +566,11 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count, char* in_dir)
 			{
 				for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
 				{
-					sprintf(filename, "%s/%s.txt", in_dir, m->cells[cell].heights[height].ages[age].species[species].name);
-					f = fopen(filename, "r");
-					if ( !f )
+					if ( ! fill_species_from_file(&m->cells[cell].heights[height].ages[age].species[species]) )
 					{
-						Log(err_unable_open_file, filename);
 						matrix_free(m);
 						return NULL;
 					}
-
-					//Log("importing %s...\n", filename);
-
-					// RESET
-					y = 0;
-					while ( fgets(buffer, BUFFER_SIZE, f) )
-					{
-						// REMOVE \r\n
-						for ( i = 0; buffer[i]; i++ )
-						{
-							if ( '\r' == buffer[i] )
-							{
-								buffer[i] = '\0';
-							}
-
-							if ( '\n' == buffer[i] ) {
-								buffer[i] = '\0';
-							}
-						}
-
-						// SKIP EMPTY LINE
-						if ( '\0' == buffer[0] ) {
-							continue;
-						}
-
-						// SKIP COMMENTS
-						if ( ('\\' == buffer[0]) && ('\\' == buffer[1]) ) {
-							continue;
-						}
-
-						// GET VARIABLE NAME
-						token = mystrtok(buffer, species_values_delimiter, &p);
-						if ( !token ) {
-							Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
-							matrix_free(m);
-							fclose(f);
-							return NULL;
-						}
-
-						// SEARCH FOR STRING
-						for ( i = 0; i < SIZE_OF_ARRAY(species_values); ++i ) {
-							if ( !strcmp(species_values[i], token) ) {
-								// GET VALUE TOKEN
-								token2 = mystrtok(NULL, species_values_delimiter, &p);
-								if ( !token2 ) {
-									Log("unable to get value for \"%s\" in \"%s\".\n", token, filename);
-									matrix_free(m);
-									fclose(f);
-									return NULL;
-								}
-
-								// CONVERT TOKEN
-								value = convert_string_to_prec(token2, &result);
-								if ( result ) {
-									Log("unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
-									matrix_free(m);
-									fclose(f);
-									return NULL;
-								}
-
-								// ASSIGN VALUE
-								m->cells[cell].heights[height].ages[age].species[species].value[i] = value;
-
-								// KEEP TRACK OF ASSIGNED VALUES
-								++y;
-
-								// DEBUG
-								//Log("imported %s = %f (row %d)\n", token, value, i);
-
-								break;
-							}
-						}
-					}
-
-					// CHECK ASSIGNED SPECIES VALUES
-					if ( y != SIZE_OF_ARRAY(species_values) ) {
-						Log("error: assigned %d species value instead of %d\n", y, SIZE_OF_ARRAY(species_values));
-						matrix_free(m);
-						fclose(f);
-						return NULL;
-					}
-					fclose(f);
 				}
 			}
 		}
