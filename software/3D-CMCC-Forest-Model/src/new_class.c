@@ -21,7 +21,6 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 	HEIGHT *h;
 	AGE *a;
 	SPECIES *s;
-	SPECIES *s2;
 
 	Log("Creating new class....\n");
 	Log("Replanted trees = %f\n", settings->replanted_tree);
@@ -127,6 +126,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 	Log("n tree = %d\n", s->counter[N_TREE]);
 	
 	/* compute all other variables */
+	Allometry_Power_Function(a, s);
 	/* stem biomass */
 	s->value[AV_STEM_MASS_KgDM] =
 			s->value[STEMCONST] *

@@ -354,14 +354,28 @@ int fill_species_from_file(SPECIES *const s)
 	FILE *f;
 	PREC value;
 	const char species_values_delimiter[] = " \t\r\n";
+	int species_count;
+	int *species_flags;
 
 	assert(s);
+
+	species_count = SIZE_OF_ARRAY(species_values);
+	species_flags = malloc(sizeof*species_flags*species_count);
+	if ( ! species_flags ) {
+		Log(err_out_of_memory);
+		return 0;
+	}
+
+	for ( i = 0; i < species_count; ++i ) {
+		species_flags[i] = 0;
+	}
 
 	sprintf(filename, "%s/%s.txt", input_dir, s->name);
 	f = fopen(filename, "r");
 	if ( !f )
 	{
 		Log(err_unable_open_file, filename);
+		free(species_flags);
 		return 0;
 	}
 
@@ -395,6 +409,7 @@ int fill_species_from_file(SPECIES *const s)
 		token = mystrtok(buffer, species_values_delimiter, &p);
 		if ( !token ) {
 			Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
+			free(species_flags);
 			fclose(f);
 			return 0;
 		}
@@ -406,6 +421,7 @@ int fill_species_from_file(SPECIES *const s)
 				token2 = mystrtok(NULL, species_values_delimiter, &p);
 				if ( !token2 ) {
 					Log("unable to get value for \"%s\" in \"%s\".\n", token, filename);
+					free(species_flags);
 					fclose(f);
 					return 0;
 				}
@@ -414,12 +430,14 @@ int fill_species_from_file(SPECIES *const s)
 				value = convert_string_to_prec(token2, &result);
 				if ( result ) {
 					Log("unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
+					free(species_flags);
 					fclose(f);
 					return 0;
 				}
 
 				// ASSIGN VALUE
 				s->value[i] = value;
+				species_flags[i] = 1;
 
 				// KEEP TRACK OF ASSIGNED VALUES
 				++y;
@@ -430,11 +448,19 @@ int fill_species_from_file(SPECIES *const s)
 	}
 
 	// CHECK ASSIGNED SPECIES VALUES
-	if ( y != SIZE_OF_ARRAY(species_values) ) {
-		Log("error: assigned %d species value instead of %d\n", y, SIZE_OF_ARRAY(species_values));
+	if ( y != species_count ) {
+		for ( i = 0; i < species_count; ++i ) {
+			if ( ! species_flags[i] )
+				break;
+		}
+		assert(i < species_count);
+		
+		Log("error: %s value missing in %s\n", species_values[i], filename);
+		free(species_flags);
 		fclose(f);
 		return 0;
 	}
+	free(species_flags);
 	fclose(f);
 
 	return 1;
