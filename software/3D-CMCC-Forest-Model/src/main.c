@@ -1186,6 +1186,9 @@ int main(int argc, char *argv[])
 	free(settings_path); settings_path = NULL;
 
 	/* get files */
+	// TODO ALESSIOR
+	// mi sembra di capire che input_path sarà sempre un file passato come argomento
+	// quindi la funzione non serve a nulla...
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
 	if ( error )
 	{
@@ -1251,9 +1254,9 @@ int main(int argc, char *argv[])
 		Log("Matrix %screated!!\n\n", m ? "" : "not ");
 		if ( ! m ) return 1;
 
-		// TODO
+		// ALESSIOR TODO
 		// EACH CELLS MUST HAVE THIS SETTINGS
-		for ( cell = 0; cell < m->cells_count; ++cell ) {
+		//for ( cell = 0; cell < m->cells_count; ++cell ) {
 			if (	IS_INVALID_VALUE(site->sand_perc)
 					|| IS_INVALID_VALUE(site->clay_perc)
 					|| IS_INVALID_VALUE(site->silt_perc)
@@ -1263,7 +1266,7 @@ int main(int argc, char *argv[])
 				matrix_free(m);
 				return 1;
 			}
-		}
+		//}
 
 		Log("\n3D-CMCC MODEL START....\n\n\n\n");
 		for ( cell = 0; cell < m->cells_count; ++cell ) {

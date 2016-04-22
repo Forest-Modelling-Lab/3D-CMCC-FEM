@@ -1112,7 +1112,7 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 }
 
 /* private */
-static int ImportListFile(const char *const filename, YOS **p_yos, int *const yos_count) {
+static int ImportListFile(const char *const filename, YOS **p_yos, int *const yos_count, const int x_cell, const int y_cell) {
 #define VARS_COUNT		((MET_COLUMNS)-3)	/* we remove first 3 columns: year, month and day */
 
 #define COLUMN_AT(c)	((c)*rows_count)
@@ -1135,6 +1135,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		X_DIM,
 		Y_DIM,
 		TIME_DIM,
+		HEIGHT_DIM,
 
 		DIMS_COUNT
 	};
@@ -1143,7 +1144,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	const char *sz_lat = "lat";
 	const char *sz_lon = "lon";
 	const char *sz_time = "time";
-	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time" }; /* DO NOT CHANGE THIS ORDER...please see top */
+	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see top */
 	const char *sz_vars[VARS_COUNT] = { "RADS"
 										, "T_2M"
 										, "TMAX_2M"
@@ -1257,7 +1258,8 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 
 		/* check if we have all dimensions */
 		for ( i = 0; i < DIMS_COUNT; ++i ) {
-			if ( -1 == dims_size[i] ) {
+			/* height_2m can be missing */
+			if ( (-1 == dims_size[i]) && (i != HEIGHT_DIM) ) {
 				printf("dimension %s not found!\n", sz_dims[i]);
 				nc_close(id_file);
 				fclose(f);
@@ -1265,6 +1267,37 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 				free(values);
 				return 0;
 			}
+		}
+
+		/* check if x_cell is > x_dim */
+		if ( x_cell > dims_size[X_DIM] ) {
+			printf("x_cell > x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
+			nc_close(id_file);
+			fclose(f);
+			free(f_values);
+			free(values);
+			return 0;
+		}
+
+		/* check if y_cell is > y_dim */
+		if ( y_cell > dims_size[Y_DIM] ) {
+			printf("y_cell > y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+			nc_close(id_file);
+			fclose(f);
+			free(f_values);
+			free(values);
+			return 0;
+
+		}
+
+		/* check if we have height */
+		if ( dims_size[HEIGHT_DIM] > 1 ) {
+			printf("height_2m cannot be > 1\n", sz_dims[i]);
+			nc_close(id_file);
+			fclose(f);
+			free(f_values);
+			free(values);
+			return 0;
 		}
 
 		/* check rows_count */
@@ -1306,15 +1339,15 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			}
 		}
 
-		/* check x and y */
-		if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
-			printf("x and y inside %s, must be 1!", buffer);
-			nc_close(id_file);
-			fclose(f);
-			free(f_values);
-			free(values);
-			return 0;
-		}
+		///* check x and y */
+		//if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
+		//	printf("x and y inside %s, must be 1!", buffer);
+		//	nc_close(id_file);
+		//	fclose(f);
+		//	free(f_values);
+		//	free(values);
+		//	return 0;
+		//}
 
 		/* get var */
 		flag = 0;
@@ -1756,7 +1789,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 		}
 		else if ( ! mystricmp(p2, "lst") )
 		{
-			i = ImportListFile(token, &yos, yos_count);
+			i = ImportListFile(token, &yos, yos_count, x, y);
 		}
 		else /* txt */
 		{
