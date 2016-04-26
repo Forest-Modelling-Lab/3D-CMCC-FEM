@@ -143,7 +143,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*sapwood calculation*/
 	Log("\nSAPWOOD CALCULATION using sapwood area\n");
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi) / 0.0001;
+	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
 	Log("   BASAL AREA = %f m^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
 	Log(" BASAL BASAL_AREA_m2 = %f m^2\n", s->value[BASAL_AREA_m2]);

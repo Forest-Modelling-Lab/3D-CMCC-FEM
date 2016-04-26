@@ -124,7 +124,7 @@ void Dendrometry (CELL *const c, SPECIES *const s, HEIGHT *const h, int years)
 
 	/* cell level computation */
 	/* stand basal area in m2 */
-	c->basal_area += s->value[STAND_BASAL_AREA];
+	c->basal_area += s->value[STAND_BASAL_AREA_m2];
 	Log("Cell level stand basal area = %f m^2/cell\n", c->basal_area);
 
 
