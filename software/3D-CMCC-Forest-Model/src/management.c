@@ -220,6 +220,7 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 
 
 //	stand_basal_area_to_remove = settings->basal_area_remove * s->value[STAND_BASAL_AREA];
+//	removed_tree = round(stand_basal_area_to_remove / s->value[BASAL_AREA]);
 //	(double)removed_tree = stand_basal_area_to_remove / s->value[BASAL_AREA];
 //	removed_tree = (int)floor(removed_tree+0.5);
 
