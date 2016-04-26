@@ -180,7 +180,7 @@ typedef struct
 	min_layer_cover,
 	max_layer_cover;
 	/* management/renovation (human or natural) input */
-	double 	harvested_tree; /* percentage of harvested trees per sizecell */
+	double removing_basal_area; /* percentage of basal area to remove per sizecell */
 	double replanted_tree, /* number of replanted trees per sizecell */
 	age_sapling;
 	double avdbh_sapling,

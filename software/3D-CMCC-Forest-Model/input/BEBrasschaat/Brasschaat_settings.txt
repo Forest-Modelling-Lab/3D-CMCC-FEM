@@ -20,7 +20,7 @@ MAX_LAYER_COVER "1"
 
 //INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 //MANAGMENT (optional)
-HARVESTED_TREE "0" // % Cutted Trees for Pixel
+REMOVING_BASAL_AREA "0" // % percentage of basal area to remove per sizecell
 REPLANTED_SPECIES "none"
 REPLANTED_TREE "0"
 AGE_SAPLING "0"

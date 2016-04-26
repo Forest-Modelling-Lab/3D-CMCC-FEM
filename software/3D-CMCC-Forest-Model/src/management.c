@@ -147,7 +147,8 @@ void Management (SPECIES *const s, AGE * const a, int years)
 
 			//Percentage of Cutted Trees for Managment
 			//Roots should remains in ecosystem!!
-			s->counter[CUT_TREES] = settings->harvested_tree * s->counter[N_TREE];
+			//fixme
+			//s->counter[CUT_TREES] = settings->harvested_tree * s->counter[N_TREE];
 			s->counter[N_TREE] = s->counter[N_TREE] - s->counter[CUT_TREES];
 			Log("Management Cutted Trees = %d trees/ha\n", s->counter[CUT_TREES]);
 			Log("Number of Trees  after Management = %d trees\n", s->counter[N_TREE]);
@@ -218,22 +219,15 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWbblive = s->value[BRANCH_LIVE_WOOD_C] / s->counter[N_TREE];
 	IndWbbdead = s->value[BRANCH_DEAD_WOOD_C] / s->counter[N_TREE];
 
-
-//	stand_basal_area_to_remove = settings->basal_area_remove * s->value[STAND_BASAL_AREA];
-//	removed_tree = round(stand_basal_area_to_remove / s->value[BASAL_AREA]);
+	stand_basal_area_to_remove = settings->removing_basal_area * s->value[STAND_BASAL_AREA];
+	Log("basal area to remove = %f\n", stand_basal_area_to_remove);
+	removed_tree = round(stand_basal_area_to_remove / s->value[BASAL_AREA]);
+	Log("removed trees = %d\n", removed_tree);
 //	(double)removed_tree = stand_basal_area_to_remove / s->value[BASAL_AREA];
 //	removed_tree = (int)floor(removed_tree+0.5);
 
-
-
-
-
-
-	removed_tree = s->counter[N_TREE] * (settings->harvested_tree / 100.0 );
-	Log("removed tree = %d\n", removed_tree);
-
-
-	Log("Number of trees removed = %d trees/ha \n", removed_tree);
+//	removed_tree = s->counter[N_TREE] * (settings->harvested_tree / 100.0 );
+//	Log("removed tree = %d\n", removed_tree);
 
 	s->counter[N_TREE] -= removed_tree;
 	Log("Number of trees after management = %d \n", s->counter[N_TREE]);
