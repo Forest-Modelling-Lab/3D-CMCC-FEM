@@ -29,6 +29,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	static double Yearly_Vpd;
 	static double Yearly_Rain;
 
+	static int rotation_counter;
+
 	//SOIL NITROGEN CONTENT see Peng et al., 2002
 	//static double N_avl;  //Total nitrogen available for tree growth see Peng et al., 2002
 	//const double Ka = 0.6;  //see Peng et al., 2002
@@ -420,15 +422,19 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                             }
 								 */
 								/* simulate management */
-								if( ! mystricmp(settings->management, "on") && years > 0)
+								if(! mystricmp(settings->management, "on") && years == 0)
 								{
-									Log("years = %d\n", years);
-									Log("ROTATION = %d\n", (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION]);
-									if((years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
-											|| ((int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] % years)!= 0)
+									rotation_counter = m->cells[cell].heights[height].ages[age].species[species].value[ROTATION];
+								}
+								else if( ! mystricmp(settings->management, "on") && years > 0)
+								{
+									if(years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
 									{
-										Log("in\n");
 										Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], years);
+
+										/* add multiples */
+										m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] += rotation_counter;
+										/*
 										if(settings->replanted_tree != 0.0)
 										{
 											if ( ! Create_new_class(&m->cells[cell], height, age, species) )
@@ -438,6 +444,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 												exit(1);
 											}
 										}
+										*/
 									}
 								}
 							}

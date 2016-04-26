@@ -185,7 +185,7 @@ void Management (SPECIES *const s, AGE * const a, int years)
 
 void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 {
-	int removed_tree;
+	int removed_tree = 0.0;
 	double IndWf,
 	IndWs,
 	IndWrf,
@@ -198,6 +198,9 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWrcdead,
 	IndWbblive,
 	IndWbbdead;
+
+	double stand_basal_area_to_remove;
+	//double
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");
@@ -215,6 +218,16 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWbblive = s->value[BRANCH_LIVE_WOOD_C] / s->counter[N_TREE];
 	IndWbbdead = s->value[BRANCH_DEAD_WOOD_C] / s->counter[N_TREE];
 
+
+//	stand_basal_area_to_remove = settings->basal_area_remove * s->value[STAND_BASAL_AREA];
+//	(double)removed_tree = stand_basal_area_to_remove / s->value[BASAL_AREA];
+//	removed_tree = (int)floor(removed_tree+0.5);
+
+
+
+
+
+
 	removed_tree = s->counter[N_TREE] * (settings->harvested_tree / 100.0 );
 	Log("removed tree = %d\n", removed_tree);
 
@@ -222,7 +235,7 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	Log("Number of trees removed = %d trees/ha \n", removed_tree);
 
 	s->counter[N_TREE] -= removed_tree;
-	Log("Number of trees after management = %d \n", s->counter[N_TREE] );
+	Log("Number of trees after management = %d \n", s->counter[N_TREE]);
 
 	//Recompute Biomass
 	s->value[LEAF_C] = IndWf * s->counter[N_TREE];
@@ -242,6 +255,10 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	// Total Biomass at the end
 	s->value[TOTAL_W] = s->value[LEAF_C] + s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C] + s->value[STEM_C] + s->value[BRANCH_C] + s->value[RESERVE_C];
 	Log("Total Biomass = %f tC/ha\n", s->value[TOTAL_W]);
+
+	/* update stand trees */
+	c->n_tree -= removed_tree;
+	c->annual_dead_tree += removed_tree;
 
 	/* adding coarse and fine root and leaf to litter pool */
 	c->daily_litter_carbon_tC +=  (IndWrc * removed_tree) + (IndWrf * removed_tree) + (IndWf * removed_tree);
