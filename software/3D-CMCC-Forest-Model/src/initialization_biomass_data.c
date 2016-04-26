@@ -143,8 +143,14 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 	/*sapwood calculation*/
 	Log("\nSAPWOOD CALCULATION using sapwood area\n");
-	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
-	Log("   BASAL AREA = %f cm^2\n", s->value[BASAL_AREA]);
+	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi) / 0.0001;
+	Log("   BASAL AREA = %f m^2\n", s->value[BASAL_AREA]);
+	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
+	Log(" BASAL BASAL_AREA_m2 = %f m^2\n", s->value[BASAL_AREA_m2]);
+	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log("   SAPWOOD_AREA = %f cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];

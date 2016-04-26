@@ -42,7 +42,7 @@
 #endif
 
 /* constants */
-#define PROGRAM_VERSION	"5.1"
+#define PROGRAM_VERSION	"5.1.1"
 
 //Last cumulative days in months
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
@@ -100,7 +100,7 @@ static const char banner[] =	"\n\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERS
 
 static char copyright[] =
 		"\n\n"
-		"This version of 3D-CMCC FEM (v.5.1) has been developed by:\n"
+		"This version of 3D-CMCC FEM (v.5.1.1) has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
 		"Alessio Ribeca,\n"
 		"Sergio Marconi [sergio.marconi@cmcc.it] \n"
@@ -1187,7 +1187,7 @@ int main(int argc, char *argv[])
 
 	/* get files */
 	// TODO ALESSIOR
-	// mi sembra di capire che input_path sarà sempre un file passato come argomento
+	// mi sembra di capire che input_path sarï¿½ sempre un file passato come argomento
 	// quindi la funzione non serve a nulla...
 	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
 	if ( error )

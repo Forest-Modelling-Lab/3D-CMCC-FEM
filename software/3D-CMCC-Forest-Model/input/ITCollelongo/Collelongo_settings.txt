@@ -19,7 +19,7 @@ MAX_LAYER_COVER "1.2"
 //INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 //MANAGMENT (optional)
 HARVESTED_TREE "10" // % Cutted Trees for Pixel
-//REPLANTED_SPECIES "Fagussylvatica" //be sure to use the same name as in input file
+REPLANTED_SPECIES "Fagussylvatica" //be sure to use the same name as in input file
 REPLANTED_TREE "100"
 AGE_SAPLING "5"
 AVDBH_SAPLING "5"

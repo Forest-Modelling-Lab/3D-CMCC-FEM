@@ -5,7 +5,7 @@
 #include "types.h"
 #include "constants.h"
 
-void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
+void Dendrometry (CELL *const c, SPECIES *const s, HEIGHT *const h, int years)
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -100,6 +100,8 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
 	Log("\nSAPWOOD CALCULATION using sapwood area\n");
 	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
 	Log(" BASAL AREA = %f cm^2\n", s->value[BASAL_AREA]);
+	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
+	Log(" BASAL BASAL_AREA_m2 = %f m^2\n", s->value[BASAL_AREA_m2]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	Log(" SAPWOOD_AREA = %f cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
@@ -114,6 +116,18 @@ void Dendrometry (SPECIES *const s, HEIGHT *const h, int years)
 	Log(" Sapwood branch and bark biomass = %f tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
 	Log(" Total Sapwood biomass = %f tDM class cell \n", s->value[WTOT_sap_tDM]);
+
+	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+
+	/* cell level computation */
+	/* stand basal area in m2 */
+	c->basal_area += s->value[STAND_BASAL_AREA];
+	Log("Cell level stand basal area = %f m^2/cell\n", c->basal_area);
+
+
 }
 void Annual_minimum_reserve (SPECIES *s)
 {

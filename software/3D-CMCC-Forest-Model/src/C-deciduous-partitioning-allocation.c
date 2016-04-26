@@ -293,7 +293,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if(day == 0)
 	{
-		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
+		Dendrometry (c, &c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
 	Log("\n-Daily increment in carbon pools-\n");

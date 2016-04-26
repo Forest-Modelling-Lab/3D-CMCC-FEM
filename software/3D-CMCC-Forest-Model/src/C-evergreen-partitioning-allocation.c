@@ -368,7 +368,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if(day == 0)
 	{
-		Dendrometry (&c->heights[height].ages[age].species[species], &c->heights[height], years);
+		Dendrometry (c, &c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
 //	CHECK_CONDITION(s->value[RESERVE_C], < 0);

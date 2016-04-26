@@ -374,8 +374,10 @@ enum
 	SAPWOOD_PERC,
 	HEARTWOOD_AREA,
 	HEARTWOOD_PERC,
-	BASAL_AREA,                     //Basal Area (m^2/area tree)
+	BASAL_AREA,                     //Basal Area (cm^2/area tree)
 	STAND_BASAL_AREA,
+	BASAL_AREA_m2,                     //Basal Area (cm^2/area tree)
+	STAND_BASAL_AREA_m2,
 	CROWN_HEIGHT,                   //Crown Height (m)
 	PREVIOUS_VOLUME,				//previous year volume for CAI
 	VOLUME,                   //Stem Volume
@@ -975,6 +977,7 @@ typedef struct {
 	double gapcover[3];
 	int n_tree;
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
+	double basal_area;
 
 	/*radiation variables*/
 	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
@@ -1359,7 +1362,7 @@ void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
 void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
 void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
 void AGB_BGB_biomass (CELL *const , int, int, int);
-void Dendrometry (SPECIES *const, HEIGHT *, int);
+void Dendrometry (CELL *const, SPECIES *const, HEIGHT *, int);
 void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
 void Daily_Forest_structure (CELL *, const int,const int,const int);
 void Print_met_daily_data (const YOS *const , int , int , int );

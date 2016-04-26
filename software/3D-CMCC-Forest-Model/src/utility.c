@@ -159,6 +159,8 @@ void Reset_monthly_variables (CELL *const c, const int count)
 
 	Log("...resetting monthly variables...\n");
 
+	c->basal_area = 0.0;
+
 	c->monthly_gpp = 0.0;
 	c->monthly_npp_gC = 0.0;
 	c->monthly_npp_tDM = 0.0;

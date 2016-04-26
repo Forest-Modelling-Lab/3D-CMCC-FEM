@@ -45,6 +45,8 @@ void Tree_Branch_Bark (SPECIES *s, AGE *a, int heigth, int age, int species)
 	}
 
 }
+
+//not used
 void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
 {
 	double oldBasalArea;
@@ -55,7 +57,8 @@ void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age
 	if (years == 0)
 	{
 		Log("avdbh = %f\n",s->value[AVDBH] );
-		s->value[BASAL_AREA] = (((pow((s->value[AVDBH] / 2), 2)) * Pi) / 10000);
+		/* compute basal area in cm^2 */
+		s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2), 2)) * Pi);
 		s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
 	}
 	else
@@ -68,6 +71,14 @@ void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age
 		Log(" Basal Area Increment= %f cm^2/tree \n", (s->value[BASAL_AREA] - oldBasalArea) * 10000);
 
 	}
+
+	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
+	Log(" BASAL BASAL_AREA_m2 = %f m^2\n", s->value[BASAL_AREA_m2]);
+
+	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
+	Log(" Stand level class basal area = %f cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 
 	Log("Basal Area for this layer = %f cm^2/tree\n", s->value[BASAL_AREA]*10000);
 	Log("Stand Basal Area for this layer = %f m^2/area\n", s->value[STAND_BASAL_AREA]);
