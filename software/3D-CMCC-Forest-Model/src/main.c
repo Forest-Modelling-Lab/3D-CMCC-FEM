@@ -1374,6 +1374,7 @@ int main(int argc, char *argv[])
 						Latent_heat (&m->cells[cell], day, month, year, yos);
 						Air_pressure (&m->cells[cell], day, month, year, yos);
 						Annual_met_values (&m->cells[cell], day, month, year, yos);
+						Annual_CO2_concentration (day, month);
 
 						if(m->cells[cell].landuse == F)
 						{
