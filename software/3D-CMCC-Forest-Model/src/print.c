@@ -109,6 +109,7 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			"-swc = %.2f %%vol\n"
 			"-thermic_sum = %.2f °C\n"
 			"-daylength = %.2f hrs\n"
+			"-co2 concentration = %.2f ppmv\n"
 			"-DOY = %d\n"
 
 			//"-month avg temp = %.2f °C\n"
@@ -127,11 +128,11 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			met[month].d[day].swc,
 			met[month].d[day].thermic_sum,
 			met[month].d[day].daylength,
+			site->co2Conc,
 			doy
 			//,met[month].avg_monthly_temp
 			//,met[month].cum_monthly_rain
 	);
-
 	if (settings->spatial == 's')
 	{
 		Log("-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);

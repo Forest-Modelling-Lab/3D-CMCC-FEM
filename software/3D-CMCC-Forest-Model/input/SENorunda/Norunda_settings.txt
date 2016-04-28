@@ -18,6 +18,9 @@ SOIL_LAYER "0"  //define soil layer/s to consider
 MIN_LAYER_COVER "0.0001"
 MAX_LAYER_COVER "1"
 
+//co2 annual increment
+CO2_INCR "0.01"
+
 //INIDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 //MANAGMENT (optional)
 REMOVING_BASAL_AREA "0" // % percentage of basal area to remove per sizecell

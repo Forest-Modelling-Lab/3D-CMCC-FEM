@@ -34,7 +34,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	Log("\nDAILY_MODIFIERS\n\n");
 
 	/* CO2 MODIFIER FROM C-FIX */
-
 	Temp_K = met[month].d[day].tavg + TempAbs;
 
 	if (met[month].d[day].tavg >= 15)
@@ -53,7 +52,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+site->co2Conc);
 
 	s->value[F_CO2] = v1*v2;
-	Log("F_CO2 modifier  = %g\n", s->value[F_CO2]);
+	Log("F_CO2 modifier  = %f\n", s->value[F_CO2]);
 
 	//LIGHT MODIFIER (Following Makela et al , 2008, Peltioniemi_etal_2012)
 	//FIXME chose which type of light use and differentiate for different layers
@@ -70,7 +69,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		{
 			s->value[F_LIGHT]= 1.0;
 		}
-		Log("FLight (NOT USED)= %g\n", s->value[F_LIGHT]);
+		Log("FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
 	}
 
 	/*TEMPERATURE MODIFIER*/

@@ -134,7 +134,6 @@ void Management (SPECIES *const s, AGE * const a, int years)
 			BiomRem;
 
 			Log("**MANAGEMENT **\n");
-			// ALESSIOR s->counter used instead of s->value
 			Log("ROTATION = %d years\n",s->value[ROTATION]);
 			//Only for Dominant Layer
 			//Individual Biomass
@@ -201,7 +200,6 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	IndWbbdead;
 
 	double stand_basal_area_to_remove;
-	//double
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");
@@ -223,11 +221,6 @@ void Clearcut_Timber_without_request (SPECIES *s, CELL *c, int years)
 	Log("basal area to remove = %f\n", stand_basal_area_to_remove);
 	removed_tree = round(stand_basal_area_to_remove / s->value[BASAL_AREA]);
 	Log("removed trees = %d\n", removed_tree);
-//	(double)removed_tree = stand_basal_area_to_remove / s->value[BASAL_AREA];
-//	removed_tree = (int)floor(removed_tree+0.5);
-
-//	removed_tree = s->counter[N_TREE] * (settings->harvested_tree / 100.0 );
-//	Log("removed tree = %d\n", removed_tree);
 
 	s->counter[N_TREE] -= removed_tree;
 	Log("Number of trees after management = %d \n", s->counter[N_TREE]);
@@ -280,8 +273,6 @@ void Clearcut_Timber_upon_request (SPECIES *const s, int years, int z, int numbe
 	IndWrf = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
 	IndWbb = s->value[BIOMASS_BRANCH_tDM] / s->counter[N_TREE];
 	IndWres = s->value[RESERVE_tDM] / s->counter[N_TREE];
-
-
 
 	//CLEARCUT FOR TIMBER (Taglio raso)
 	Log("CLEARCUT FOR TIMBER FUNCTION \n");

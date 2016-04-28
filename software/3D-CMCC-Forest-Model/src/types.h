@@ -179,6 +179,7 @@ typedef struct
 	soil_layer,
 	min_layer_cover,
 	max_layer_cover;
+	double co2_incr; // annual co2 increment
 	/* management/renovation (human or natural) input */
 	double removing_basal_area; /* percentage of basal area to remove per sizecell */
 	double replanted_tree, /* number of replanted trees per sizecell */
@@ -1289,6 +1290,7 @@ int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
 void Annual_met_values (CELL *, int, int, int, YOS *);
+void Annual_CO2_concentration (int, int);
 void Abscission_DayLength (CELL *);
 int Establishment_LPJ (CELL *const, SPECIES *const);
 int logInit(char*);

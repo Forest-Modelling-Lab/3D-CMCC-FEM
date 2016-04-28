@@ -247,7 +247,7 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 
 	//FIXME model doesn't get for the first 10 days of the year the averaged values
-	//TODO CHECK SOIL TEMPÈERATURE CORRECTION FROM BIOME
+	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
 	/* soil temperature correction using difference from
 				annual average tair */
 	/*file bgc.c
@@ -304,6 +304,17 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	else
 	{
 		met[month].d[day].tsoil = met[month].d[day].ts_f;
+	}
+}
+
+void Annual_CO2_concentration(int day, int month)
+{
+	/* recompute co2 concentration at the beginning of each year */
+	if( ! mystricmp(settings->CO2_fixed, "off") && day == 0 && month == 0)
+	{
+		site->co2Conc += (site->co2Conc * settings->co2_incr);
+		Log("CO2 concentration  = %f ppmv\n", site->co2Conc);
+		getchar();
 	}
 }
 
