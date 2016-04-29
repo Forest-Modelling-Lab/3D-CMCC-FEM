@@ -38,9 +38,9 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//Log("with altitude = %f\n", met[month].d[day].daylength);
 
-//	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
-//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-//	Log("without altitude = %f\n", met[month].d[day].daylength);
+	//	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	//	Log("without altitude = %f\n", met[month].d[day].daylength);
 
 }
 
@@ -309,6 +309,8 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 {
+	static double previous_co2_conc;
+
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
 
@@ -319,9 +321,16 @@ void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 		if(years == 0)
 		{
 			met[month].d[day].co2_conc = site->co2Conc;
+			previous_co2_conc = met[month].d[day].co2_conc;
 		}
-		met[month].d[day].co2_conc += (site->co2Conc * settings->co2_incr);
-		Log("CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
+		else
+		{
+			/* then for other years increment each beginning of year */
+			met[month].d[day].co2_conc = previous_co2_conc + (previous_co2_conc * settings->co2_incr);
+			previous_co2_conc = met[month].d[day].co2_conc;
+			Log("CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * settings->co2_incr);
+			Log("CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
+		}
 		getchar();
 	}
 }
