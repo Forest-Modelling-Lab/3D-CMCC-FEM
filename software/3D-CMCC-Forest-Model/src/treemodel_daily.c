@@ -14,11 +14,10 @@ extern int DaysInMonth[];
 
 
 /* */
-int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
+int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation, const int cell)
 {
 	MET_DATA *met;
 
-	static int cell;
 	static int height;
 	static int age;
 	static int species;

@@ -200,6 +200,9 @@ static void clean_up(void)
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
 	_CrtDumpMemoryLeaks();
+
+	// REMOVE THIS
+	system("PAUSE");
 #endif
 #endif
 }
@@ -1414,7 +1417,7 @@ int main(int argc, char *argv[])
 								//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
 								//if(day == 0 && month == 0) leaffall(&m->cells[cell]);
 								//run for FEM version
-								if (!Tree_model_daily (m, yos, year, month, day, years_of_simulation) )
+								if (!Tree_model_daily (m, yos, year, month, day, years_of_simulation, cell) )
 								{
 									Log("tree model daily failed.");
 								}

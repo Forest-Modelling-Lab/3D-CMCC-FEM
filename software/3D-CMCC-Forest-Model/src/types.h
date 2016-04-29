@@ -1264,7 +1264,7 @@ settings_t *settings;
 
 // External functions
 YOS *ImportYosFiles(char *, int *const, const int, const int);
-int Tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int);
+int Tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int, const int);
 //if putted into main.c
 //int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
 void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
