@@ -40,7 +40,24 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
-	/* daily loop on each cell before start with treemodel_daily */
+//	/* daily loop on each cell before start with treemodel_daily */
+//	for ( cell = 0; cell < m->cells_count; cell++)
+//	{
+//		/* FOREST STRUCTURE */
+//		if (day == 0 && month == JANUARY)
+//		{
+//			/* compute annual number of different layers */
+//			Annual_numbers_of_layers (&m->cells[cell]);
+//		}
+//		/* daily forest structure */
+//		Daily_Forest_structure (&m->cells[cell], day, month, years);
+//		Daily_vegetative_period (&m->cells[cell], met, month, day);
+//		Daily_numbers_of_layers (&m->cells[cell]);
+//		Daily_layer_cover (&m->cells[cell], met, month, day);
+//		Dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+//
+//		Log("***************************************************\n");
+//	}
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
 		/* FOREST STRUCTURE */
@@ -56,10 +73,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Daily_layer_cover (&m->cells[cell], met, month, day);
 		Dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
 
-		Log("***************************************************\n");
-	}
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
 		Log("%d-%d-%d\n", met[month].d[day].n_days, month+1, yos[years].year);
 		Log("-YEAR SIMULATION = %d (%d)\n", years+1, yos[years].year );
 		Log("--MONTH SIMULATED = %s\n", szMonth[month]);

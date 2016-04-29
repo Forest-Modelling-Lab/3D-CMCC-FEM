@@ -331,7 +331,6 @@ void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 			Log("CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * settings->co2_incr);
 			Log("CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
 		}
-		getchar();
 	}
 }
 
