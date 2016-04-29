@@ -45,7 +45,7 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 }
 
 //following Running et al., 1987
-extern void Avg_temperature (CELL * c, int day, int month, int years)
+void Avg_temperature (CELL * c, int day, int month, int years)
 {
 	/*
 	if (!day )

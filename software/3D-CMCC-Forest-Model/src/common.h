@@ -31,9 +31,15 @@
 #define STRTOD		strtod
 #define SQRT		sqrt
 #define FABS		fabs
+
+#if defined (_WIN32)
+/* round not defined in math.h for VC++ 2008 express
+	'cause is not C99 compliant */
 /* we add 0.5 so if x is > 0.5 we truncate to next integer */
-//#define ROUND     round
-//#define ROUND ( x ) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+#define ROUND(x)	((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
+#else
+#define ROUND		round
+#endif
 
 /* structures */
 typedef struct {

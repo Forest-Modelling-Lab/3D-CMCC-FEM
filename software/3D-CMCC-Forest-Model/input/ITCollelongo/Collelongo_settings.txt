@@ -5,7 +5,7 @@ SYMMETRIC_WATER_COMPETITION "y"	//Must be 'y' or 'n',for symmetric or asymmetric
 spin_up "off"	//Must be  'on' or 'off'
 CO2_fixed "off"   //Must be 'on' or 'off'
 Ndep_fixed "on"   //Must be 'on' or 'off'
-management "on"   //Must be 'on' or 'off'
+management "off"   //Must be 'on' or 'off'
 ROTHC "off" //Must be  'on' or 'off'
 DNDC "off" //Must be 'on' or 'off'
 SIZECELL "100"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 

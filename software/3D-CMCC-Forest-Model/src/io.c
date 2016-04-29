@@ -26,11 +26,6 @@ please ASK before modify it!
 /* */
 extern char *program_path;
 
-/* */
-//#define NC_CONV_FILENAME		"nc_conv.txt"
-#define VPD_RANGE_MIN					-5
-#define VPD_RANGE_MAX					120
-
 /* do not change this order */
 enum {
 	YEAR = 0
@@ -328,9 +323,11 @@ void atts_free(ATT *att, const int atts_count) {
 	}
 }
 
-/* private */
-void compute_vpd(double *const values, const int rows_count, const int columns_count) {
+static void compute_vpd(double *const values, const int rows_count, const int columns_count) {
+#define VPD_RANGE_MIN					-5
+#define VPD_RANGE_MAX					120
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
 	int i;
 	double value;
 
@@ -339,10 +336,10 @@ void compute_vpd(double *const values, const int rows_count, const int columns_c
 		double rh = values[VALUE_AT(i, RH_F)];
 		value = INVALID_VALUE;
 
-		if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TA_F)]) && ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
+		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
 			/* 6.11 is for hPa */
-			value = 6.1076 * exp(17.26938818 * values[VALUE_AT(i, TA_F)] / (237.3 + values[VALUE_AT(i, TA_F)]));
-			value *= (1 - values[VALUE_AT(i, RH_F)] / 100.0);
+			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
+			value *= (1 - rh / 100.0);
 			/* convert NaN to invalid value */
 			if ( value != value ) {
 				value = INVALID_VALUE;
@@ -357,12 +354,12 @@ void compute_vpd(double *const values, const int rows_count, const int columns_c
 		}
 		values[VALUE_AT(i, VPD_F)] = value;
 	}
+
 #undef VALUE_AT
+#undef VPD_RANGE_MAX
+#undef VPD_RANGE_MIN
 }
 
-
-
-/* */
 int yos_from_arr(const double *const values, const int rows_count, const int columns_count, YOS **p_yos, int *const yos_count) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 
@@ -461,12 +458,22 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				//Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
 
 				//the model gets the value of the year before
-				yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
-
-				if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
-				{
-					//Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
-					yos[*yos_count-1].m[month].d[day].solar_rad = NO_DATA;
+				if ( *yos_count > 1 ) {
+					yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day].solar_rad;
+					if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad))
+					{
+						//Log ("********* SOLAR RAD -NO DATA- in previous year!!!!\n" );
+						yos[*yos_count-1].m[month].d[day].solar_rad = NO_DATA;
+					}
+				} else {
+					yos[*yos_count-1].m[month].d[day].solar_rad = yos[*yos_count-2].m[month].d[day-1].solar_rad;
+					/*
+					if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day-1].solar_rad))
+					{
+						Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
+						exit(1);
+					}
+					*/
 				}
 			}
 		}
@@ -976,8 +983,8 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 #if 0
 	{
 		FILE *f;
-
-		f = fopen(NC_CONV_FILENAME, "w");
+		int row;
+		f = fopen("debug_file", "w");
 		if ( ! f ) {
 			puts("unable to create output file!");
 			nc_close(id_file);
@@ -986,7 +993,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 			return 0;
 		}
 		/* write header */
-		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\WS_F\n", f);
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
 		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
 				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
 						/*
@@ -1115,7 +1122,6 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 /* private */
 static int ImportListFile(const char *const filename, YOS **p_yos, int *const yos_count, const int x_cell, const int y_cell) {
 #define VARS_COUNT		((MET_COLUMNS)-3)	/* we remove first 3 columns: year, month and day */
-
 #define COLUMN_AT(c)	((c)*rows_count)
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT(c)))
 
@@ -1129,10 +1135,10 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	int z;
 	FILE *f;
 	int rows_count;
-	int vars[VARS_COUNT] = { 0 }; /* required */
+	int vars[VARS_COUNT];
 	float *f_values;
 	double *values;
-		enum {
+	enum {
 		X_DIM,
 		Y_DIM,
 		TIME_DIM,
@@ -1145,7 +1151,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	const char *sz_lat = "lat";
 	const char *sz_lon = "lon";
 	const char *sz_time = "time";
-	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see top */
+	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
 	const char *sz_vars[VARS_COUNT] = { "RADS"
 										, "T_2M"
 										, "TMAX_2M"
@@ -1173,11 +1179,24 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
 	int flag;
+	int date_imported;
+
+	size_t start[] = { 0, 0, 0 };
+	size_t count[] = { 0, 1, 1 };
+	size_t start_h[] = { 0, 0, 0, 0 };
+	size_t count_h[] = { 0, 1, 1, 1 };
+
+	size_t *p_start;
+	size_t *p_count;
 
 	/* init */
 	rows_count = 0;
 	values = NULL;
 	f_values = NULL;
+	date_imported = 0;
+	for ( i = 0; i < VARS_COUNT; i++ ) {
+		vars[i] = 0;
+	}
 
 	/* open lst file */
 	f = fopen(filename, "r");
@@ -1270,9 +1289,9 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			}
 		}
 
-		/* check if x_cell is > x_dim */
-		if ( x_cell > dims_size[X_DIM] ) {
-			printf("x_cell > x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
+		/* check if x_cell is >= x_dim */
+		if ( x_cell >= dims_size[X_DIM] ) {
+			printf("x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
 			nc_close(id_file);
 			fclose(f);
 			free(f_values);
@@ -1280,25 +1299,36 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			return 0;
 		}
 
-		/* check if y_cell is > y_dim */
-		if ( y_cell > dims_size[Y_DIM] ) {
-			printf("y_cell > y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+		/* check if y_cell is >= y_dim */
+		if ( y_cell >= dims_size[Y_DIM] ) {
+			printf("y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
 			nc_close(id_file);
 			fclose(f);
 			free(f_values);
 			free(values);
 			return 0;
-
 		}
 
 		/* check if we have height */
-		if ( dims_size[HEIGHT_DIM] > 1 ) {
+		if ( -1 == dims_size[HEIGHT_DIM] ) {
+			start[1] = y_cell;
+			start[2] = x_cell;
+			count[0] = dims_size[TIME_DIM];
+			p_start = start;
+			p_count = count;
+		} else if ( dims_size[HEIGHT_DIM] > 1 ) {
 			printf("height_2m cannot be > 1\n", sz_dims[i]);
 			nc_close(id_file);
 			fclose(f);
 			free(f_values);
 			free(values);
 			return 0;
+		} else {
+			start_h[2] = y_cell;
+			start_h[3] = x_cell;
+			count_h[0] = dims_size[TIME_DIM];
+			p_start = start_h;
+			p_count = count_h;
 		}
 
 		/* check rows_count */
@@ -1340,16 +1370,6 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			}
 		}
 
-		///* check x and y */
-		//if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
-		//	printf("x and y inside %s, must be 1!", buffer);
-		//	nc_close(id_file);
-		//	fclose(f);
-		//	free(f_values);
-		//	free(values);
-		//	return 0;
-		//}
-
 		/* get var */
 		flag = 0;
 		for ( i = 0; i < vars_count; ++i ) {
@@ -1357,46 +1377,51 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( ret != NC_NOERR ) goto quit;
 			/* check for lat */
 			if ( ! mystricmp(name, sz_lat) ) {
-				/* we get only one size */
-				if ( (n_dims < 2) || (ids[0] != 1) ) {
-					printf("sorry, only one lat is supported in %s\n\n", buffer);
-					nc_close(id_file);
-					fclose(f);
-					free(values);
-					free(f_values);
-					return 0;
-				}
+				///* we get only one size */
+				//if ( (n_dims < 2) || (ids[0] != 1) ) {
+				//	printf("sorry, only one lat is supported in %s\n\n", buffer);
+				//	nc_close(id_file);
+				//	fclose(f);
+				//	free(values);
+				//	free(f_values);
+				//	return 0;
+				//}
 			} else if ( ! mystricmp(name, sz_lon) ) {
-				/* we get only one size */
-				if ( (n_dims < 2) || (ids[0] != 1) ) {
-					printf("sorry, only one lon is supported in %s\n\n", buffer);
-					nc_close(id_file);
-					fclose(f);
-					free(values);
-					free(f_values);
-					return 0;
-				}
+				///* we get only one size */
+				//if ( (n_dims < 2) || (ids[0] != 1) ) {
+				//	printf("sorry, only one lon is supported in %s\n\n", buffer);
+				//	nc_close(id_file);
+				//	fclose(f);
+				//	free(values);
+				//	free(f_values);
+				//	return 0;
+				//}
 			} else if ( ! mystricmp(name, sz_time) ) {
-				if ( type != NC_DOUBLE ) {
-					printf("type format in %s for time column not supported\n\n", buffer);
-					nc_close(id_file);
-					fclose(f);
-					free(values);
-					free(f_values);
-					return 0;
-				}
-				ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
-				if ( ret != NC_NOERR ) goto quit;
+				if ( ! date_imported ) {
+					if ( type != NC_DOUBLE ) {
+						printf("type format in %s for time column not supported\n\n", buffer);
+						nc_close(id_file);
+						fclose(f);
+						free(values);
+						free(f_values);
+						return 0;
+					}
+					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(YEAR)]);
+					if ( ret != NC_NOERR ) goto quit;
 
-				/* adjust time to YYYY,MM,DD */
-				for ( z = 0; z < rows_count; ++z ) {
-					int YYYY;
-					int MM;
-					int DD;
-					timestamp_split(values[VALUE_AT(z, YEAR)], &YYYY, &MM, &DD);
-					values[VALUE_AT(z, YEAR)] = YYYY;
-					values[VALUE_AT(z, MONTH)] = MM;
-					values[VALUE_AT(z, DAY)] = DD;
+					/* adjust time to YYYY,MM,DD */
+					for ( z = 0; z < rows_count; ++z ) {
+						int YYYY;
+						int MM;
+						int DD;
+						timestamp_split(values[VALUE_AT(z, YEAR)], &YYYY, &MM, &DD);
+						values[VALUE_AT(z, YEAR)] = YYYY;
+						values[VALUE_AT(z, MONTH)] = MM;
+						values[VALUE_AT(z, DAY)] = DD;
+					}
+					date_imported = 1;
+				} else {
+					/* ALESSIOR...add a datetime compare for each variable ? */
 				}
 			} else {
 				for ( y = 0; y  < VARS_COUNT; ++y ) {
@@ -1413,13 +1438,13 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 
 						/* get values */
 						if ( NC_FLOAT == type ) {
-							ret = nc_get_var_float(id_file, i, f_values);
+							ret = nc_get_vara_float(id_file, i, p_start, p_count, f_values);
 							if ( ret != NC_NOERR ) goto quit;
 							for ( z = 0; z < rows_count; ++z ) {
 								values[VALUE_AT(z, y + 3)] = f_values[z];
 							}
 						} else if ( NC_DOUBLE == type ) {
-							ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y + 3)]);
+							ret = nc_get_vara_double(id_file, i, p_start, p_count, &values[COLUMN_AT(y + 3)]);
 							if ( ret != NC_NOERR ) goto quit;
 						} else {
 							/* type format not supported! */
@@ -1447,35 +1472,115 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		}
 		nc_close(id_file);
 	}
+	fclose(f);
+	free(f_values);
 
-	/* check for missing vars */
-	for ( i = 0; i < VARS_COUNT; ++i ) {
-		if ( ((VPD_F-3 == i) && (-1 == vars[RH_F-3])) || ((RH_F-3 == i) && (-1 == vars[VPD_F-3])) ) {
-			Log("met columns %s and %s are missing!\n\n", sz_vars[VPD_F-3], sz_vars[RH_F-3]);
-			fclose(f);
+	/* check for TA, TMIN && TMAX */
+	if ( ! vars[TA_F-3] ) {
+		if ( ! vars[VPD_F-3] && ! vars[VPD_F-3] ) {
+			Log("VPD and RH columns are missing!\n\n");
 			free(values);
-			free(f_values);
-			return 0;
-		} else if ( -1 == vars[i] ) {
-			Log("var %s not found\n", sz_vars[i]);
-			fclose(f);
-			free(values);
-			free(f_values);
 			return 0;
 		}
 	}
 
-	/* close file */
-	fclose(f);
+	/* check for missing vars */
+	for ( i = 0; i < VARS_COUNT; ++i ) {
+		switch ( i ) {
+			case VPD_F-3:
+			case RH_F-3:
+				if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+					Log("VPD and RH columns are missing!\n\n");
+					free(values);
+					return 0;
+				}
+			break;
 
-	/* free memory */
-	free(f_values);
+			case TA_F-3:
+			case TMIN-3:
+			case TMAX-3:
+				if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+					Log("VPD and RH columns are missing!\n\n");
+					free(values);
+					return 0;
+				}
+			break;
+
+			default:
+				if ( ! vars[i] ) {
+					Log("met columns %s is missing!\n\n", sz_vars[i]);
+					free(values);
+					return 0;
+				}
+		}
+	}
 
 	/* compute vpd ?*/
 	if ( -1 == vars[VPD_F-3] ) {
 		compute_vpd(values, rows_count, MET_COLUMNS);
 	}
-	
+
+	/* compute ta ? */
+	if ( vars[TA_F-3] ) {
+		int missings_count = 0;
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( IS_INVALID_VALUE(values[VALUE_AT(i, TA_F)]) ) {
+				++missings_count;
+			}
+		}
+		if ( missings_count == rows_count ) {
+			vars[TA_F-3] = 0;
+		}
+	}
+
+	/* compute ta ! */
+	if ( ! vars[TA_F-3] ) {
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TMAX)])
+				&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
+				values[VALUE_AT(i, TA_F)] = (0.606 * values[VALUE_AT(i, TMAX)]) + (0.394 * values[VALUE_AT(i, TMIN)]);
+				//met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
+			}
+		}
+	}
+
+#if 1
+	{
+		FILE *f;
+		int row;
+		char buffer[64];
+		sprintf(buffer, "debug_file_%d_%d.txt", x_cell, y_cell);
+		f = fopen(buffer, "w");
+		if ( ! f ) {
+			puts("unable to create output file!");
+			free(values);
+			return 0;
+		}
+		/* write header */
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
+		for ( row = 0; row < dims_size[TIME_DIM]; ++row ) {
+				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+						(int)values[VALUE_AT(row,YEAR)]
+						, (int)values[VALUE_AT(row,MONTH)]
+						, (int)values[VALUE_AT(row,DAY)]
+						, values[VALUE_AT(row,RG_F)]
+						, values[VALUE_AT(row,TA_F)]
+						, values[VALUE_AT(row,TMAX)]
+						, values[VALUE_AT(row,TMIN)]
+						, values[VALUE_AT(row,VPD_F)]
+						, values[VALUE_AT(row,TS_F)]
+						, values[VALUE_AT(row,PRECIP)]
+						, values[VALUE_AT(row,SWC)]
+						, values[VALUE_AT(row,NDVI_LAI)]
+						, values[VALUE_AT(row,ET)]
+						, values[VALUE_AT(row,WS_F)]
+
+				);
+		}
+		fclose(f);
+	}
+#endif
+
 	i = yos_from_arr(values, rows_count, MET_COLUMNS, p_yos, yos_count);
 	free(values);
 	return i;
@@ -1489,7 +1594,7 @@ quit:
 
 #undef VALUE_AT
 #undef COLUMN_AT
-#undef COLUMNS_COUNT
+#undef VARS_COUNT
 }
 
 //

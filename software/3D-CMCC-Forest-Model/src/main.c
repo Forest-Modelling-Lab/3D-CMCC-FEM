@@ -1458,7 +1458,6 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
-								soil_Log("\nsoilLog prova");
 								//look if put it here or move before tree_model  at the beginning of each month simulation
 								//	soil_model (m, yos, years, month, years_of_simulation);
 							}
