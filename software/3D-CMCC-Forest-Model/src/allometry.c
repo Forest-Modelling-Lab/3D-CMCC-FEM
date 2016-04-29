@@ -11,7 +11,6 @@
 //not used
 void Get_allometry (SPECIES *const s, AGE *const a, int years)
 {
-
 	Log("\n*********ALLOMETRY FUNCTION *********\n");
 	/*
 	   Log("-Chapman-Richards allometry function-\n");
@@ -105,8 +104,6 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	Log("Crown Diameter from Sortie Allometry Function = %f m\n", s->value[CROWN_DIAMETER_SORTIE]);
 	Log("-------------------------\n");
 	 */
-
-
 
 
 	//la canopy cover totale deve essere = 1
