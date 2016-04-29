@@ -1120,6 +1120,9 @@ static void timestamp_split(const double value, int *const YYYY, int *const MM, 
 }
 
 /* private */
+// ALESSIOR: PORCATA fixme
+extern int x_cells_count;
+extern int y_cells_count;
 static int ImportListFile(const char *const filename, YOS **p_yos, int *const yos_count, const int x_cell, const int y_cell) {
 #define VARS_COUNT		((MET_COLUMNS)-3)	/* we remove first 3 columns: year, month and day */
 #define COLUMN_AT(c)	((c)*rows_count)
@@ -1297,6 +1300,11 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			free(f_values);
 			free(values);
 			return 0;
+		}
+
+		if ( ! x_cells_count ) {
+			x_cells_count = dims_size[X_DIM];
+			y_cells_count = dims_size[Y_DIM];
 		}
 
 		/* check if y_cell is >= y_dim */
@@ -1497,10 +1505,17 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			break;
 
 			case TA_F-3:
+				if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+					Log("TA, TMIN and TMAX columns are missing!\n\n");
+					free(values);
+					return 0;
+				}
+			break;
+
 			case TMIN-3:
 			case TMAX-3:
-				if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-					Log("VPD and RH columns are missing!\n\n");
+				if ( ! vars[i] && ! vars[TA_F-3]) {
+					Log("%s is missing!\n\n", sz_vars[i]);
 					free(values);
 					return 0;
 				}
@@ -1544,7 +1559,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		}
 	}
 
-#if 1
+#if 0
 	{
 		FILE *f;
 		int row;
@@ -1995,6 +2010,7 @@ static int get_daily_date_from_row(const int doy, int yyyy) {
 			break;
 		}
 	}
+	++dd;
 	++mm;
 
 	return (yyyy*10000)+(mm*100)+dd;
@@ -2101,8 +2117,8 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 
 		/* NC_UNLIMITED must be first dimension (or the left-most dimension) */
 		id_dims[0] = id_time;
-		id_dims[1] = id_x;
-		id_dims[2] = id_y;
+		id_dims[1] = id_y;
+		id_dims[2] = id_x;
 				
 		/* define variables */
 		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);

@@ -88,6 +88,10 @@ int log_enabled		=	1,	// default is on
 static FILES *files_founded;
 static int files_founded_count;
 
+// ALESSIOR: PORCATA fixme
+int x_cells_count;
+int y_cells_count;
+
 /* global variables */
 OUTPUT_VARS *output_vars = NULL;	/* required */
 
@@ -1225,9 +1229,6 @@ int main(int argc, char *argv[])
 	/* loop for searching file */
 	for ( i = 0; i < files_founded_count; i++)
 	{
-		int x_cell_count;
-		int y_cell_count;
-
 		/* inc */
 		++total_files_count;
 
@@ -1242,10 +1243,6 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		puts(msg_ok);
-
-		// ALESSIOR: FIXME !!!
-		x_cell_count = 1; //rows->x;
-		y_cell_count = 1; //rows->y;
 
 		/* build matrix */
 		m = matrix_create(rows, rows_count);
@@ -1270,6 +1267,11 @@ int main(int argc, char *argv[])
 				return 1;
 			}
 		//}
+
+			/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
+		/* reset */
+		x_cells_count = 0;
+		y_cells_count = 0;
 
 		Log("\n3D-CMCC MODEL START....\n\n\n\n");
 		for ( cell = 0; cell < m->cells_count; ++cell )
@@ -1476,10 +1478,10 @@ int main(int argc, char *argv[])
 								#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
 							*/
 							//#define VALUE_AT(v,c,y,m,d)	((v)*(c)*(((y)*366)+((m)*31))+(d))
-							#define X		(1)
-							#define ROWS	(366)
-							#define COLUMNS	(output_vars->daily_vars_count)
-							#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+						#define X		(1)
+						#define ROWS	(366)
+						#define COLUMNS	(output_vars->daily_vars_count)
+						#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
 							int i;
 							for ( i = 0; i < output_vars->daily_vars_count; ++i )
 							{
@@ -1489,9 +1491,9 @@ int main(int argc, char *argv[])
 								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
 								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
 							}
-							#undef VALUE_AT
-							#undef COLUMNS
-							#undef ROWS
+						#undef VALUE_AT
+						#undef COLUMNS
+						#undef ROWS
 						}
 
 						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
@@ -1537,10 +1539,10 @@ int main(int argc, char *argv[])
 				// save values for put in output netcdf
 				if ( output_vars && output_vars->yearly_vars_count )
 				{
-					#define X		(1)
-					#define ROWS	(1)
-					#define COLUMNS	(output_vars->yearly_vars_count)
-					#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+				#define X		(1)
+				#define ROWS	(1)
+				#define COLUMNS	(output_vars->yearly_vars_count)
+				#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
 					//#define VALUE_AT(v,c,y)	((v)+(c)*(y))
 					int i;
 					for ( i = 0; i < output_vars->yearly_vars_count; ++i )
@@ -1563,46 +1565,41 @@ int main(int argc, char *argv[])
 			free(yos);
 			yos = NULL;
 			m->cells[cell].years = NULL; /* required */
-
-			//
-			// NetCDF outputs
-			//
-			if ( output_vars && output_vars->daily_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 0) ) {
-					Log(err_out_of_memory);
-					matrix_free(m);
-					return 1;
-				}
-				// REQUIRED !!!
-				free(output_vars->daily_vars_value);
-				output_vars->daily_vars_value = NULL;
-			}
-
-			if ( output_vars && output_vars->monthly_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 1) ) {
-					Log(err_out_of_memory);
-					matrix_free(m);
-					return 1;
-				}
-				// REQUIRED !!!
-				free(output_vars->monthly_vars_value);
-				output_vars->monthly_vars_value = NULL;
-			}
-
-			if ( output_vars && output_vars->yearly_vars_value ) {
-				if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cell_count, y_cell_count, 2) ) {
-					Log(err_out_of_memory);
-					matrix_free(m);
-					return 1;
-				}
-				// REQUIRED !!!
-				free(output_vars->yearly_vars_value);
-				output_vars->yearly_vars_value = NULL;
-			}
 		}
 
 		/* free memory */
 		matrix_free(m);
+
+		/* NETCDF output */
+		if ( output_vars && output_vars->daily_vars_value ) {
+			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 0) ) {
+				Log(err_out_of_memory);
+				matrix_free(m);
+				return 1;
+			}
+			free(output_vars->daily_vars_value);
+			output_vars->daily_vars_value = NULL;
+		}
+
+		if ( output_vars && output_vars->monthly_vars_value ) {
+			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 1) ) {
+				Log(err_out_of_memory);
+				matrix_free(m);
+				return 1;
+			}
+			free(output_vars->monthly_vars_value);
+			output_vars->monthly_vars_value = NULL;
+		}
+
+		if ( output_vars && output_vars->yearly_vars_value ) {
+			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 2) ) {
+				Log(err_out_of_memory);
+				matrix_free(m);
+				return 1;
+			}
+			free(output_vars->yearly_vars_value);
+			output_vars->yearly_vars_value = NULL;
+		}
 
 		/* increment processed files count */
 		++files_processed_count;

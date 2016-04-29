@@ -174,6 +174,7 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 {
 
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
+	/*
 	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
 	Log("END of Year Yearly Cumulated GPP for layer %d  = %f gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_gC]);
 	Log("END of Year Yearly Cumulated NPP for layer %d  = %f tDM/area year\n", h->z, s->value[YEARLY_NPP_tDM]);
@@ -186,6 +187,7 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %f KgC tree year\n", h->z, (s->value[DEL_Y_WRES]*2000)/s->counter[N_TREE]);
 	Log("END of Year Yearly Cumulated DEL BB layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_BB]);
 	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WR]);
+	*/
 
 	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP_tDM])
 	{
@@ -740,7 +742,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 {
 	static int previous_layer_number;
 
-	if(month == 0 && years == 0)
+	/*if(month == 0 && years == 0)
 	{
 		Monthly_Log("Site name = %s\n", site->sitename);
 		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
@@ -762,7 +764,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		Monthly_Log("Monthly ASW = monthly ASW (at the end of month) (mm)\n");
 		Monthly_Log("Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
 		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
-	}
+	}*/
 	if (years == 0)
 	{
 		previous_layer_number = c->annual_layer_number;
