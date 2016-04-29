@@ -69,6 +69,7 @@ typedef struct {
 	PREC lh_fus;
 	PREC lh_sub;
 	PREC air_pressure;
+	PREC co2_conc;
 
 } MET_DAILY_DATA;
 
@@ -1290,7 +1291,7 @@ int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
 void Annual_met_values (CELL *, int, int, int, YOS *);
-void Annual_CO2_concentration (int, int);
+void Annual_CO2_concentration (CELL *, int, int, int, YOS *);
 void Abscission_DayLength (CELL *);
 int Establishment_LPJ (CELL *const, SPECIES *const);
 int logInit(char*);

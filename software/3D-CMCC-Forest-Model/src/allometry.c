@@ -25,7 +25,6 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	Log("Initial Tree Height CR > HMAX !!  \n");
 	Log("Initial Tree Height = HMAX  = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
 	}
-
 	}
 	else
 	{

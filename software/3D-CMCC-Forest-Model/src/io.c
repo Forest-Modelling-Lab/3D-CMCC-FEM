@@ -288,6 +288,7 @@ static void ResetYos(YOS *const yos)
 				yos->m[i].d[y].lh_fus = INVALID_VALUE;
 				yos->m[i].d[y].lh_sub = INVALID_VALUE;
 				yos->m[i].d[y].air_pressure = INVALID_VALUE;
+				yos->m[i].d[y].co2_conc = INVALID_VALUE;
 
 			}
 		}

@@ -307,13 +307,21 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	}
 }
 
-void Annual_CO2_concentration(int day, int month)
+void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 {
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
 	/* recompute co2 concentration at the beginning of each year */
 	if( ! mystricmp(settings->CO2_fixed, "off") && day == 0 && month == 0)
 	{
-		site->co2Conc += (site->co2Conc * settings->co2_incr);
-		Log("CO2 concentration  = %f ppmv\n", site->co2Conc);
+		/* assign first year value from site.txt */
+		if(years == 0)
+		{
+			met[month].d[day].co2_conc = site->co2Conc;
+		}
+		met[month].d[day].co2_conc += (site->co2Conc * settings->co2_incr);
+		Log("CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
 		getchar();
 	}
 }
