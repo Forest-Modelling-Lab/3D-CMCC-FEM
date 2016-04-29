@@ -58,8 +58,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 //
 //		Log("***************************************************\n");
 //	}
-	for ( cell = 0; cell < m->cells_count; cell++)
-	{
+//	for ( cell = 0; cell < m->cells_count; cell++)
+//	{
 		/* FOREST STRUCTURE */
 		if (day == 0 && month == JANUARY)
 		{
@@ -561,7 +561,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
 		//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
 		//Log("Nitrogen available = %f g m^-2\n", N_avl);
-	}
+	//}
 	Log("****************END OF CELL***************\n");
 	/* ok */
 	return 1;

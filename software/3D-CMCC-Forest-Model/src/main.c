@@ -1269,7 +1269,8 @@ int main(int argc, char *argv[])
 		//}
 
 		Log("\n3D-CMCC MODEL START....\n\n\n\n");
-		for ( cell = 0; cell < m->cells_count; ++cell ) {
+		for ( cell = 0; cell < m->cells_count; ++cell )
+		{
 			Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
 			Log("input_met_path = %s\n", input_met_path);
 
