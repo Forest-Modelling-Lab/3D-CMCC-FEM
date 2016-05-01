@@ -7,8 +7,4 @@
 
 # ignore these directories  
 /Debug
-/output/annual_output/
-/output/daily_output/
-/output/monthly_output/
-/output/debug_output/
 /Debug
