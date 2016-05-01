@@ -8,12 +8,21 @@
 # ignore these directories  
 /Debug
 /Debug
-# ignore all .txt files in outout folders
+
+# ignore all .txt files in output folders
 /output/debug_output/*.txt
 /output/annual_output/*.txt
 /output/monthly_output/*.txt
 /output/daily_output/*.txt
+
+# ignore all .nc files in output folders
+/output/debug_output/*.nc
+/output/annual_output/*nc.txt
+/output/monthly_output/*.nc
+/output/daily_output/*.nc
 /output_6.1
+
+
 /debug_met_daily_2001.csv
 /debug_met_daily_2002.csv
 /debug_met_daily_2003.csv
