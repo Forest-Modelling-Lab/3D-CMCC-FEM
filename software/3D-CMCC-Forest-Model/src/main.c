@@ -1251,7 +1251,7 @@ int main(int argc, char *argv[])
 		rows_free(rows, rows_count);
 
 		/* check matrix */
-		Log("Matrix %screated!!\n\n", m ? "" : "not ");
+		Log("Matrix %s created!!\n\n", m ? "" : "not ");
 		if ( ! m ) return 1;
 
 		// ALESSIOR TODO
@@ -1558,7 +1558,7 @@ int main(int argc, char *argv[])
 				#undef ROWS
 				}
 
-				EOY_cumulative_balance_cell_level (&m->cells[cell], yos, year, years_of_simulation, cell);
+				EOY_cumulative_balance_cell_level (&m, &m->cells[cell], yos, year, years_of_simulation, cell);
 				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 			}
 			i = yos[0].year;

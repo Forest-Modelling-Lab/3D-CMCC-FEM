@@ -1386,7 +1386,7 @@ void Annual_average_values_met_data (CELL *, double, double, double, double);
 void EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
 void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int, const int cell_index);
 void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
-void EOY_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
+void EOY_cumulative_balance_cell_level (MATRIX *, CELL *, const YOS *const , int, int, const int cell_index);
 void Average_tree_biomass (SPECIES *);
 void Total_class_level_biomass (SPECIES *);
 void Renovation (CELL *, HEIGHT *, SPECIES *);

@@ -197,7 +197,7 @@ void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 }
 
 
-void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years, int years_of_simulation, const int cell_index)
+void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos, int years, int years_of_simulation, const int cell_index)
 {
 	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
 	static double avg_ar[3], avg_ar_tot;
@@ -301,7 +301,7 @@ void EOY_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	if (c->annual_layer_number == 1)
 	{
-		if (years == 0 || previous_layer_number != c->annual_layer_number)
+		if ((years == 0 || previous_layer_number != c->annual_layer_number)/* && m->cells_count == 1*/ )
 		{
 			Annual_Log ("%s \t%s", "YEAR", "HC(0)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
