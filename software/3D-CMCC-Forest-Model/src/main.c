@@ -1161,7 +1161,7 @@ int main(int argc, char *argv[])
 	free(daily_out_filename); daily_out_filename = NULL;
 
 	monthly_logInit (monthly_out_filename);
-	Monthly_Log ("monthly output file at cell level\n\n");
+	//Monthly_Log ("monthly output file at cell level\n\n");
 	free(monthly_out_filename); monthly_out_filename = NULL;
 
 	annual_logInit (annual_out_filename);

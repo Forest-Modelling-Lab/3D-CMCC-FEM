@@ -782,7 +782,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (month == 0 && years == 0 && cell_index == 0)
 		{
-			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			Monthly_Log ("%s \t%2s", "YEAR", "Month");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s", "NEE");
@@ -831,7 +831,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			Monthly_Log ("%s \t%2s", "YEAR", "Month");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{
 				Monthly_Log ("\t%3s", "NEE");
