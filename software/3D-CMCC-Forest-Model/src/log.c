@@ -298,10 +298,9 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 
 	//Annual_Log ("-%d %10f %10f %10f %10f %10f %10f %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
 
-
 	if (c->annual_layer_number == 1)
 	{
-		if ((years == 0 || previous_layer_number != c->annual_layer_number)/* && m->cells_count == 1*/ )
+		if ((years == 0 || previous_layer_number != c->annual_layer_number) && cell_index == 0 )
 		{
 			Annual_Log ("%s \t%s", "YEAR", "HC(0)");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
@@ -781,7 +780,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	if (c->annual_layer_number == 1)
 	{
-		if (month == 0 && years == 0)
+		if (month == 0 && years == 0 && cell_index == 0)
 		{
 			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
@@ -1032,7 +1031,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	}
 	if (c->annual_layer_number == 1)
 	{
-		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
+		if (((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number) && cell_index == 0)
 		{
 			Daily_Log ("%s \t%2s \t%2s \t%2s", "YEAR", "MONTH", "DAY", "HC");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
