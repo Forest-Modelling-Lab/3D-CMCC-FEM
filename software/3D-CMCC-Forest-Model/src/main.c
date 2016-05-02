@@ -1369,7 +1369,7 @@ int main(int argc, char *argv[])
 
 					for (day = 0; day < days_per_month; day++)
 					{
-						//Check for daily temperatures
+						/* daily climate variables */
 						Avg_temperature (&m->cells[cell], day, month, year);
 						Daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
 						Nightime_avg_temperature (&m->cells[cell], day, month, year, yos);

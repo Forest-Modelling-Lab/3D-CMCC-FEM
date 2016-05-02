@@ -218,6 +218,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				transp_shade *=  transp_daylength * s->value[LAI_SHADE];
 				Log("transp_shade = %.10f mm/m2/day\n", transp_shade);
 
+				//test include F_CO2 effect
 				transp = transp_sun + transp_shade;
 				Log("transp = %.10f mm/m2/day\n", transp);
 				s->value[CANOPY_TRANSP] = transp;
@@ -251,6 +252,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			transp_shade *= daylength_sec * s->value[LAI_SHADE];
 			Log("transp_shade = %.10f mm/m2/day\n", transp_shade);
 
+			//test include F_CO2 effect
 			transp = transp_sun + transp_shade;
 			Log("transp = %.10f mm/m2/day\n", transp);
 			s->value[CANOPY_TRANSP] = transp;
