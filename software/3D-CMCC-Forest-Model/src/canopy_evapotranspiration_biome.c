@@ -40,6 +40,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double transp, transp_sun, transp_shade;
 
 	double cell_coverage;
+	static int days_with_canopy_wet;
 
 
 	Log("\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
@@ -182,17 +183,26 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 			if(evap_daylength > daylength_sec)
 			{
-				Log("day not long enough to evap all rain intercepted\n");
 				/* day not long enough to evap. all int. water */
+				Log("day not long enough to evap all rain intercepted\n");
+
+				days_with_canopy_wet ++;
+				/* adjust daylength for transpiration */
+				//fixme this variable should be used also in photosynthesis
+				transp_daylength = 0.0;
+
 				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
 				s->value[CANOPY_EVAPO] *= daylength_sec * cell_coverage;   /* daylength limits canopy evaporation */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
+				/* check if canopy is wet for too long period */
+				//CHECK_CONDITION(days_with_canopy_wet, > 10);
 			}
 			else
 			{
-				Log("all intercepted water evaporated\n");
 				/* all intercepted water evaporated */
+				Log("all intercepted water evaporated\n");
+				days_with_canopy_wet = 0;
 				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
 				s->value[CANOPY_WATER] = 0.0;
 
