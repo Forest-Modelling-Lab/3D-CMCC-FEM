@@ -208,5 +208,4 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 		}
 	}
 	Log("phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
-
 }
