@@ -12,8 +12,9 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 	/* this function update based on current tree age the amount of live:total wood ratio
 	 * based on the assumption that the live wood decrease linearly increasing age */
 	/* e.g. for Fagus sylvatica  base on simulation for Hesse site (age 30) and Collelongo site (age 160)*/
+
 	// test values should be included in species.txt
-	double max_live_total_ratio = 0.15; /* for min_age = 30 */
+	double max_live_total_ratio; /* for min_age = 30 */
 	double min_live_total_ratio = 0.04; /* for max_age = 160 */
 
 	double max_age = 160; /* for min_live_total_wood = 0.04 */
@@ -21,6 +22,18 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 
 	double t1;
 	double t2;
+
+	//fixme it should be included in the species.txt files */
+	/* for deciduous */
+	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+	{
+		max_live_total_ratio = 0.15;
+	}
+	/* for evergreen */
+	else
+	{
+		max_live_total_ratio = 0.10;
+	}
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
 	t2 = max_age - min_age;
@@ -41,7 +54,6 @@ void Tree_Branch_Bark (SPECIES *s, AGE *a, int heigth, int age, int species)
 	else
 	{
 		s->value[FRACBB] = s->value[FRACBB1] + (s->value[FRACBB0]- s->value[FRACBB1])* exp(-ln2 * (a->value / s->value[TBB]));
-
 	}
 
 }
