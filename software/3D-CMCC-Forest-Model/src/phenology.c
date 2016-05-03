@@ -129,15 +129,16 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 	{
 		if (s->counter[VEG_UNVEG] == 1 )
 		{
-			//Beginning of growing season
-			//BUDBURST
+			/* Beginning of growing season */
+			/* BUDBURST PHASE */
 			if (s->counter[VEG_DAYS] <= ((int)s->value[BUD_BURST]))
 			{
+				/* Maximum growth */
 				if (s->value[LAI] < s->value[PEAK_LAI])
 				{
 					s->phenology_phase = 1;
 				}
-				//Normal Growth
+				/* Normal Growth */
 				else
 				{
 					s->phenology_phase = 2;
@@ -145,19 +146,21 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 			}
 			else
 			{
+				/* Normal growth */
 				if (month+1 <= 6)
 				{
 					s->phenology_phase = 2;
 				}
 				else
 				{
+					/* Normal growth */
 					if (met[month].d[day].daylength > s->value[MINDAYLENGTH])
 					{
 						s->phenology_phase = 2;
 					}
 					else
 					{
-						//leaf fall
+						/* Leaf fall */
 						s->phenology_phase = 3;
 					}
 				}
@@ -165,7 +168,7 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 		}
 		else
 		{
-			//Unvegetative period
+			/* Un-vegetative period */
 			s->phenology_phase = 0;
 		}
 	}
@@ -173,6 +176,36 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 	else
 	{
 		//fixme
+		/* a very simplistic way to define a phenological phase for evergreen*/
+		/*just two phase are considered
+		 * shoot elongation
+		 * secondary growth*/
+		/*see Ludeke et al., 1994*/
+		/* Beginning of a "growing season" */
+		if (met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] && month < 6)
+		{
+			s->phenology_phase = 1;
+			s->counter[LEAF_FALL_COUNTER] = 0;
+		}
+		/* Normal growth*/
+		else
+		{
+			s->phenology_phase = 2;
+			if (s->counter[LEAF_FALL_COUNTER] == 0)
+			{
+				s->counter[LEAF_FALL_COUNTER] = 1;
+			}
+			else if (s->counter[LEAF_FALL_COUNTER] == 1)
+			{
+				s->counter[LEAF_FALL_COUNTER] = 2;
+			}
+		}
+		if (day == 0 && month == 0 && years == 0)
+		{
+			s->phenology_phase = 1;
+			s->counter[LEAF_FALL_COUNTER] = 0;
+			s->value[DAILY_LEAVES_BIOMASS_TO_REMOVE] = 0.0;
+		}
 	}
 	Log("phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
 
