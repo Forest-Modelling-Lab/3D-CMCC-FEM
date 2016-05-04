@@ -1,6 +1,0 @@
-0003 for daily TMIN
-0004 for daily TMAX
-0056 for daily RAD
-0026 for daily PRECIP
-0033 for daily relative umidity
-

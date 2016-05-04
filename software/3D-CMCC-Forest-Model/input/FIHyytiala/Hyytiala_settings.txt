@@ -12,6 +12,7 @@ SIZECELL "100"  //Its value must be within 10 and 100 (unity measure is "meter":
 //co2 concentration and annual increment
 CO2CONC "380" //CO2 concentration
 CO2_INCR "0.01" //1% increment
+MIN_FRAC_MAXASW "0.07" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
 
 SOIL_LAYER "1"  //define soil layer/s to consider

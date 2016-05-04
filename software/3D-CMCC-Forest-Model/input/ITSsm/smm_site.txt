@@ -8,7 +8,7 @@ Y	"0.49" // Assimilate use efficiency-Respiration rate-GPP/NPP (unchanged)
 
 INITIALLITTER "3.4" //Initial Litter (estimated)
 
-MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
+//MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 //MAXASW "160" //Maximum Available soil water in mm - estimated from EU SOIL MAPS
 //MINASW "16" //It should be the 10% of the maxasw
 

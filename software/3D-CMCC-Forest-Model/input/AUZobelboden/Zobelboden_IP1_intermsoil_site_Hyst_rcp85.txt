@@ -9,7 +9,6 @@ Y "0" // Assimilate use efficiency-Respiration rate-GPP/NPP (optional)
 
 //SOIL CAHARACTERISTICS (mandatory)
 INITIALLITTER "0" //Initial Litter
-MIN_FRAC_MAXASW "0.46" //Minimum fraction of asw based on maxasw (wilting point)
 CLAY_PERC "39"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "51"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "10"   //PERCENTAGE OF SAND (0,05 - 2 mm) 

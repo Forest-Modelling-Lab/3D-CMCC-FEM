@@ -540,7 +540,7 @@ int importSettingsFile(char *fileName)
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;
-					case 18:
+					case 19:
 						strncpy (settings->replanted_species, (const char*)pch,SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 						break;
 					default:

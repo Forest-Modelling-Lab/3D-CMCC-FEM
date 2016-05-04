@@ -87,24 +87,35 @@ typedef struct {
 // Struct representing site.txt content
 typedef struct
 {
+	//todo this should be used only in txt simulations (is it still necessary due to the signature of output files ?)
 	char sitename[1024];
+
+	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
 	double lat,
 	lon,
-	elev,
-	Y,
-	//co2Conc,
-	initialLitter,
-	min_frac_maxasw,  //wilting point
+	elev;
+
+	//todo add check with on and off flag in settings, then use it if necessary
+	double Y;
+
+	double initialLitter;
+
+	//todo this should be taken from settings.txt file
+	//double 	min_frac_maxasw;
+
 	//maxAsw,
 	//minAsw,
-	clay_perc,
+	double clay_perc,
 	silt_perc,
 	sand_perc,
 	bulk_dens,
-	soil_depth,
-	soil_cover,
-	soil_manure,
-	fr,
+	soil_depth;
+
+	//todo these should be removed
+	double soil_cover,
+	soil_manure;
+
+	double fr,
 	fn0,
 	fnn,
 	m0,
@@ -156,7 +167,9 @@ typedef struct
 	DChumads,
 	DChumus;
 
-} site_t;
+}
+//todo this should be renamed as "soil" instead "site"
+site_t;
 
 
 // Struct representing settings.txt content
@@ -181,6 +194,8 @@ typedef struct
 	double sizeCell;
 
 	double co2Conc, co2_incr; // Co2 concentration and annual co2 increment
+
+	double min_frac_maxasw; //minimum fraction of available soil water at the beginning of simulation
 
 	double tree_layer_limit,
 	soil_layer,
