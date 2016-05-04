@@ -48,8 +48,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	tau = Atau * exp (-Eatau/(Rgas*(Temp_K)));
 
-	v1 = (site->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+site->co2Conc);
+	v1 = (settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+settings->co2Conc);
 
 	s->value[F_CO2] = v1*v2;
 	Log("F_CO2 modifier  = %f\n", s->value[F_CO2]);

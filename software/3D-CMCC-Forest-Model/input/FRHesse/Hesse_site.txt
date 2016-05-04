@@ -4,9 +4,8 @@ LAT "48.40" //Site Latitude negative for south hemisphere
 LONG "7.05" //Site Longitude 
 ELEV "305" //Elevation in meters
 
-Y   "0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
+Y "0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
-CO2CONC "380.0" //CO2 concentration
 INITIALLITTER "0" //Initial Litter (estimated)
 
 

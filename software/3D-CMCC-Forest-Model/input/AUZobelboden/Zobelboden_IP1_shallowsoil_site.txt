@@ -7,9 +7,6 @@ ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)
 
 Y "0" // Assimilate use efficiency-Respiration rate-GPP/NPP (optional)
 
-CO2CONC "387.0" //CO2 concentration (optional)
-
-
 //SOIL CAHARACTERISTICS (mandatory)
 INITIALLITTER "0" //Initial Litter
 MIN_FRAC_MAXASW "0.23" //Minimum fraction of asw based on maxasw (wilting point)

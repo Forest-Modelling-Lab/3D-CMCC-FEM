@@ -320,7 +320,7 @@ void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 		/* assign first year value from site.txt */
 		if(years == 0)
 		{
-			met[month].d[day].co2_conc = site->co2Conc;
+			met[month].d[day].co2_conc = settings->co2Conc;
 			previous_co2_conc = met[month].d[day].co2_conc;
 		}
 		else

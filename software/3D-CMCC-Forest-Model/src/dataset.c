@@ -440,7 +440,7 @@ int importSiteFile(char *fileName)
 	//	fprintf(stderr, "%f\n", site->lat);
 	//	fprintf(stderr, "%f\n", site->lon);
 	//	fprintf(stderr, "%f\n", site->initialAvailableSoilWater);
-	//	fprintf(stderr, "%f\n", site->co2Conc);
+	//	fprintf(stderr, "%f\n", settings->co2Conc);
 	//	fprintf(stderr, "%f\n", site->initialLitter);
 	//	fprintf(stderr, "%f\n", site->swConst);
 	//	fprintf(stderr, "%f\n", site->swPower);
@@ -540,7 +540,7 @@ int importSettingsFile(char *fileName)
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;
-					case 16:
+					case 18:
 						strncpy (settings->replanted_species, (const char*)pch,SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 						break;
 					default:

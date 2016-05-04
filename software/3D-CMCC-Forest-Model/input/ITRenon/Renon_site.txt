@@ -6,10 +6,6 @@ ELEV "1735.0" //Elevation in meters
 
 Y	"0.685" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
 
-CO2CONC "380.0" //CO2 concentration
-
-
-
 INITIALLITTER "3.4" //Initial Litter (estimated)
 
 MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)

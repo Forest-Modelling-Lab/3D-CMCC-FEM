@@ -1,10 +1,8 @@
 SITENAME "Collelongo" //Site Name
-//ALL VALUES COME FROM ETTORE DATA
 LAT "41.94836" //Site Latitude negative for south hemisphere 
 LONG "13.58814" //Site Longitude 
 ELEV "1550" //Elevation in meters
 Y "0.48" // Assimilate use efficiency-Respiration rate-GPP/NPP
-CO2CONC "387.0" //CO2 concentration (optional)
 INITIALLITTER "2.81" //Initial Litter (tDM/ha^1)
 MIN_FRAC_MAXASW "1" //Minimum fraction of asw based on maxasw (wilting point)
 //MAXASW "300" //Maximum Available soil water in mm
@@ -21,7 +19,7 @@ FR "0.6" //Fertility rating
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
-SN "1760"   //Soil Mineral Nitrogen Content gN/m^2
+SN "1760" //Soil Mineral Nitrogen Content gN/m^2
 
 //SOIL RESPIRATION (optional)
 RLAI "0.48" //SOIL RESPIRATION AL LAI = 0 gC m^2 day^-1

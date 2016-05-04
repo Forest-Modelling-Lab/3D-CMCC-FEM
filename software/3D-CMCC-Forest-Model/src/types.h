@@ -92,7 +92,7 @@ typedef struct
 	lon,
 	elev,
 	Y,
-	co2Conc,
+	//co2Conc,
 	initialLitter,
 	min_frac_maxasw,  //wilting point
 	//maxAsw,
@@ -175,12 +175,15 @@ typedef struct
 
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
-	double sizeCell,
-	tree_layer_limit,
+	double sizeCell;
+
+	double co2Conc, co2_incr; // Co2 concentration and annual co2 increment
+
+	double tree_layer_limit,
 	soil_layer,
 	min_layer_cover,
 	max_layer_cover;
-	double co2_incr; // annual co2 increment
+
 	/* management/renovation (human or natural) input */
 	double removing_basal_area; /* percentage of basal area to remove per sizecell */
 	double replanted_tree, /* number of replanted trees per sizecell */
@@ -203,7 +206,6 @@ typedef struct
 	maxtavg,
 	maxvpd,
 	maxprecip;
-	/* seetings */
 	double 	switchtounspatial;
 
 } settings_t;

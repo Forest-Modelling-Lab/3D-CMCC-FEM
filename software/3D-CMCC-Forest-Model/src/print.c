@@ -128,7 +128,7 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			met[month].d[day].swc,
 			met[month].d[day].thermic_sum,
 			met[month].d[day].daylength,
-			site->co2Conc,
+			settings->co2Conc,
 			doy
 			//,met[month].avg_monthly_temp
 			//,met[month].cum_monthly_rain

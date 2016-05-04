@@ -2399,7 +2399,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
 
 								Log("\nwaterStress %f \nnitrogenStress %f \n fco2 %f", waterStressFactor, nitrogenStressFactor, fCO2);
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
@@ -2755,7 +2755,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
 								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
@@ -3081,7 +3081,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
 								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
@@ -3373,7 +3373,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(site->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
 								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
