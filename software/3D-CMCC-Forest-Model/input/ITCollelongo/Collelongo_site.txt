@@ -3,9 +3,6 @@ LAT "41.94836" //Site Latitude negative for south hemisphere
 LONG "13.58814" //Site Longitude 
 ELEV "1550" //Elevation in meters
 INITIALLITTER "2.81" //Initial Litter (tDM/ha^1)
-//MIN_FRAC_MAXASW "1" //Minimum fraction of asw based on maxasw (wilting point)
-//MAXASW "300" //Maximum Available soil water in mm
-//MINASW "30" //It should be the 10% of the maxasw
 CLAY_PERC "43.5"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "49.8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "6.7"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
