@@ -29,28 +29,6 @@ FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0
 SN "1.76"   //Soil Mineral Nitrogen Content gN/m^2
 
-//SOIL RESPIRATION (optional)
-RLAI "0.48" //SOIL RESPIRATION AL LAI = 0 gC m^2 day^-1
-SLAI "0.31" //BASAL RATE OF SOIL RESPIRATION FOR LAI gC m^2 day^-1
-QSOIL "0.03918" //EXPONENTIAL RELATIONSHIPBETWEEN SOIL RESPIRATION AND TEMPERATURE C°^-1
-KSOIL "2.15" //HALF SATURATION CONSTANT OF THE HYPERBOLIC RELATIONSHIP OF SOIL RESPIRATION WITH MONTHLY/DAILY PRECIPITATION mm
-P0 "1.55" //NON-WATER-LIMITED SOIL RESPIRATION IN MONTHS/DAYS WITHOUT RAIN mm
-
-//ROTHC
-KDPM "-9999" //decomposition rate constant for Decomposable plant material (DPM)
-KRPM "-9999" //decomposition rate constant for Resistant plant material (RPM)
-KBIO "-9999" //decomposition rate constant for Microbial Biomass (BIO)
-KHUM "-9999" //decomposition rate constant for Humified Organic Matter (HUM)
-PARTITIONINGTOBIO "-9999" //ratio of decayed specific compartment OM decaying into BIO pool
-LITTERTODPM "-9999" //ratio of litterfall OM decaying into DPM pool
-SOILTIMESCALE "0.084" //1/12: monthly time scale at which rothC routine is computed
-
-//RothC input soil carbon 
-DPM "-9999"
-RPM "-9999"
-HUM "-9999"
-BIO "-9999"
-
 //DNDC-DECOMPOSITION
 SOIL_PH "5.0" //minimum value of N adsorbed on clay surface
 SOIL_NO3 "-9999"    //0.50000 in dndc general case; initial quantity of NO3 in soil

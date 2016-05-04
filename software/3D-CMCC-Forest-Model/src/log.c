@@ -1033,6 +1033,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number) && cell_index == 0)
 		{
+			//todo include x and y log if cells > 1
 			Daily_Log ("%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", /*"CELL",*/ "HC");
 			if (!mystricmp(settings->dndc, "on") || !mystricmp(settings->rothC, "on"))
 			{

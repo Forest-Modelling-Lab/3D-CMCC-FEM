@@ -108,9 +108,11 @@ typedef struct
 	fn0,
 	fnn,
 	m0,
-	sN,
+	sN;
+
+	/*
 	//following Nolè et al 2009
-	rlai,
+	double rlai,
 	slai,
 	qsoil,
 	ksoil,
@@ -130,6 +132,7 @@ typedef struct
 	RPM,
 	HUM,
 	BIO;
+	*/
 
 	//DNDC
 	//	double RFM;
