@@ -4,8 +4,6 @@ LAT "67.36" //Site Latitude negative for south hemisphere
 LONG "26.63" //Site Longitude 
 ELEV "180" //Elevation in meters
 
-Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
-
 INITIALLITTER "" //Initial Litter (estimated)
 
 //MIN_FRAC_MAXASW "0.03" //Minimum fraction of asw based on maxasw (wilting point) (unchanged) from soil calculator

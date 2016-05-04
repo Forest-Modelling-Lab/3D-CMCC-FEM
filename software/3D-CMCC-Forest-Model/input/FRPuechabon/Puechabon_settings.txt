@@ -9,6 +9,7 @@ management "off"   //Must be 'on' or 'off'
 Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
 DNDC "on" //Must be  'on' or 'off'
 SIZECELL "100"  //Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
+Y "0.48" // "Fixed_Aut_Resp_rate" Assimilate use efficiency-Respiration rate-GPP/NPP
 //co2 concentration and annual increment
 CO2CONC "380" //CO2 concentration
 CO2_INCR "0.01" //1% increment

@@ -95,13 +95,8 @@ typedef struct
 	lon,
 	elev;
 
-	//todo add check with on and off flag in settings, then use it if necessary
-	double Y;
-
 	double initialLitter;
 
-	//maxAsw,
-	//minAsw,
 	double clay_perc,
 	silt_perc,
 	sand_perc,
@@ -161,6 +156,8 @@ typedef struct
 	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
 
 	double sizeCell;
+
+	double Fixed_Aut_Resp_rate; //It is the "Y"values for fixed autotrophic respiration
 
 	double co2Conc, co2_incr; // Co2 concentration and annual co2 increment
 

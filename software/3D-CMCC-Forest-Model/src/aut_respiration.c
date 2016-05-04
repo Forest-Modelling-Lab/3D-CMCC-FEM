@@ -263,7 +263,7 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	//fixme if used
 	else
 	{
-		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * site->Y;
+		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * settings->Fixed_Aut_Resp_rate;
 		//compute autotrophic respiration for each layer
 		i = c->heights[height].z;
 

@@ -435,23 +435,6 @@ int importSiteFile(char *fileName)
 		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);
 		ret = 3;
 	}
-
-	//	fprintf(stderr, "%s\n", site->sitename);
-	//	fprintf(stderr, "%f\n", site->lat);
-	//	fprintf(stderr, "%f\n", site->lon);
-	//	fprintf(stderr, "%f\n", site->initialAvailableSoilWater);
-	//	fprintf(stderr, "%f\n", settings->co2Conc);
-	//	fprintf(stderr, "%f\n", site->initialLitter);
-	//	fprintf(stderr, "%f\n", site->swConst);
-	//	fprintf(stderr, "%f\n", site->swPower);
-	//	fprintf(stderr, "%f\n", c->max_asw);
-	//	fprintf(stderr, "%f\n", site->minAsw);
-	//	fprintf(stderr, "%f\n", site->fr);
-	//	fprintf(stderr, "%f\n", site->fn0);
-	//	fprintf(stderr, "%f\n", site->fnn);
-	//	fprintf(stderr, "%f\n", site->m0);
-	//	fprintf(stderr, "%f\n", settings->cutTree);
-
 	return ret;
 }
 
@@ -540,7 +523,7 @@ int importSettingsFile(char *fileName)
 						*tmpPointer = atof(pch)*atof(pch); // sizeCell
 						tmpPointer++;
 						break;
-					case 19:
+					case 20:
 						strncpy (settings->replanted_species, (const char*)pch,SETTINGS_REPLANTED_SPECIES_MAX_SIZE-1);
 						break;
 					default:

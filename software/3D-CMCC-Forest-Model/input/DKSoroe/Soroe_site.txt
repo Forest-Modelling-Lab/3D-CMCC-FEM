@@ -2,7 +2,7 @@ SITENAME "Soroe - Denmark" //Site Name
 LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 ELEV "40" //Elevation in meters
-Y	"0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
+
 INITIALLITTER "-9999" //Initial Litter (estimated)
 //MIN_FRAC_MAXASW "1" //0.1 Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 //MAXASW "160" //Maximum Available soil water in mm

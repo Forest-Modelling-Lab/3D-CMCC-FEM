@@ -5,8 +5,6 @@ LAT "47.50" //Site Latitude negative for south hemisphere (Schindlbacher et al.,
 LONG "14.26" //Site Longitude (Schindlbacher et al., 2014)
 ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)
 
-Y "0" // Assimilate use efficiency-Respiration rate-GPP/NPP (optional)
-
 //SOIL CAHARACTERISTICS (mandatory)
 INITIALLITTER "0" //Initial Litter
 CLAY_PERC "39"   //PERCENTAGE OF CLAY (< 0,002 mm) 
