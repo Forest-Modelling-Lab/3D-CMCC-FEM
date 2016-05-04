@@ -1,5 +1,4 @@
 SITENAME "Soroe - Denmark" //Site Name
-
 LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 ELEV "40" //Elevation in meters
@@ -13,8 +12,7 @@ SILT_PERC "40"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)  estimated from Wikipedia 
 SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) estimated from Wikipedia definition of Loam
 BULK_DENSITY "1.32"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
-SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
-SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
+
 //SITE NUTRITION
 FR "0.6" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0

@@ -19,9 +19,6 @@ SAND_PERC "49.4"	//PERCENTAGE OF SAND (0,05 - 2 mm) estimated from EU SOIL MAPS
 BULK_DENSITY "1.50"  //BULK DENSITY (g/cm3) NOT EDITED
 
 SOIL_DEPTH "60" //SOIL DEPTH (cm) estimated from EU SOIL MAPS
-SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
-SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
-
 
 //SITE NUTRITION
 FR "0.7" //Fertility rating (estimated)

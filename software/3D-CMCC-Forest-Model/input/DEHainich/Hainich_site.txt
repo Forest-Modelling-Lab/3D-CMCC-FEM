@@ -19,9 +19,6 @@ SAND_PERC "4"	//PERCENTAGE OF SAND (0,05 - 2 mm) Knohl et al., 2003
 BULK_DENSITY "1.13"  //BULK DENSITY (g/cm3) from soil calculator
 
 SOIL_DEPTH "60" //SOIL DEPTH (cm) Knohl et al., 2003
-SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
-SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
-
 
 //SITE NUTRITION
 FR "0.8" //Fertility rating (estimated)

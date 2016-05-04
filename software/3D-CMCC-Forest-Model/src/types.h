@@ -111,10 +111,6 @@ typedef struct
 	bulk_dens,
 	soil_depth;
 
-	//todo these should be removed
-	double soil_cover,
-	soil_manure;
-
 	double fr,
 	fn0,
 	fnn,

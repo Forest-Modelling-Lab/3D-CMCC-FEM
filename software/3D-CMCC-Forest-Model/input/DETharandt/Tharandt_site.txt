@@ -19,9 +19,6 @@ SAND_PERC "13"	//PERCENTAGE OF SAND (0,05 - 2 mm)  averaged from Schwarzel et al
 BULK_DENSITY "120"  //BULK DENSITY (g/cm3) averaged from Schwarzel et al., 2009
 
 SOIL_DEPTH "115" //SOIL DEPTH (cm) from ancillary 
-SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
-SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
-
 
 //SITE NUTRITION
 FR "0.6" //Fertility rating (estimated)

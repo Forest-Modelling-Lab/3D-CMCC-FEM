@@ -14,8 +14,6 @@ SILT_PERC "52"    //PERCENTAGE OF SILT (0,002 - 0,05 mm)
 SAND_PERC "26"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
 BULK_DENSITY "0.525"  //BULK DENSITY (g/cm3)
 SOIL_DEPTH "30" //SOIL DEPTH (cm) 
-SOIL_COVER "50" //
-SOIL_MANURE "0" //
 
 //SITE NUTRITION (mandatory)
 FR "0.6" //Fertility rating ??

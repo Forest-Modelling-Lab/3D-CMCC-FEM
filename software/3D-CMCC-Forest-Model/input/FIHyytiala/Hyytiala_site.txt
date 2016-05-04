@@ -19,9 +19,6 @@ SAND_PERC "70"	//PERCENTAGE OF SAND (0,05 - 2 mm)
 BULK_DENSITY "1.15"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
-SOIL_COVER "50" //Soil cover percentage parameter for RothC stand alone
-SOIL_MANURE "0" //Soil manure parameter (tC/sizecell monthly/annual) for RothC stand alone 
-
 
 //SITE NUTRITION
 FR "0.7" //Fertility rating (estimated)
