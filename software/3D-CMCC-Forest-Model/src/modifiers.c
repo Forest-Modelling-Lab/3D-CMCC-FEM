@@ -189,7 +189,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	Log("ASW = %f\n", c->asw);
-	Log("MIN ASW = %f\n", c->max_asw * settings->min_frac_maxasw);
+	Log("MIN ASW = %f\n", c->max_asw * settings->init_frac_maxasw);
 	Log("moist ratio = %f\n", c->soil_moist_ratio);
 	Log("fSW = %f\n", s->value[F_SW]);
 

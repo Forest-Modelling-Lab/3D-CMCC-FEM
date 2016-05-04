@@ -497,7 +497,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					lag 							= 0;			// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 
 					//soil moisture of layer l at wilting point; assumed as 10% fraction of max swc ( filed capacity) (Collalti)
-					layerWilting[0] = fieldCapacityLayerMoisture[0] * settings->min_frac_maxasw;
+					layerWilting[0] = fieldCapacityLayerMoisture[0] * settings->init_frac_maxasw;
 					driestSoilWaterContent = 0.5 * layerWilting[0];
 
 					/****************************************************

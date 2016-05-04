@@ -195,7 +195,7 @@ typedef struct
 
 	double co2Conc, co2_incr; // Co2 concentration and annual co2 increment
 
-	double min_frac_maxasw; //minimum fraction of available soil water at the beginning of simulation
+	double init_frac_maxasw; //minimum fraction of available soil water at the beginning of simulation
 
 	double tree_layer_limit,
 	soil_layer,
