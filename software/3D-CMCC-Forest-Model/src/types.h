@@ -100,9 +100,6 @@ typedef struct
 
 	double initialLitter;
 
-	//todo this should be taken from settings.txt file
-	//double 	min_frac_maxasw;
-
 	//maxAsw,
 	//minAsw,
 	double clay_perc,
@@ -116,30 +113,6 @@ typedef struct
 	fnn,
 	m0,
 	sN;
-
-	/*
-	//following Nolè et al 2009
-	double rlai,
-	slai,
-	qsoil,
-	ksoil,
-	p0;
-
-	// ROTHC SPECIFIC PARAMETERS
-	double kDPM,
-	kRPM,
-	kBIO,
-	kHUM,
-	partitioningToBio,
-	litterToDPM,
-	soilTimescale;
-
-	//to be integrated with dndc soil input values; leave them as foretold now
-	double DPM,
-	RPM,
-	HUM,
-	BIO;
-	*/
 
 	//DNDC
 	//	double RFM;
@@ -181,7 +154,7 @@ typedef struct
 	char CO2_fixed[4];
 	char Ndep_fixed[4];
 	char management[4];
-	char rothC[4];
+	char Prog_Aut_Resp[4]; //Prognostic autotrophic respiration
 	char dndc[4];
 	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
 
@@ -848,21 +821,9 @@ typedef struct {
 
 /* */
 //all variables related to the soil site
-typedef struct {
+typedef struct
+{
 	double variabile;
-	//double soil_respiration;
-	// ROTHC SPECIFIC VARIABLES
-	double decomposablePlantMaterial;
-	double resistantPlantMaterial;
-	double microbialBiomass;
-	double humifiedOM;
-	double inertOM;
-	double soilCO2;
-	double accumulatedSoilMoistDeficit;
-	double PrevMicrobialBiomass;
-	double PrevHumifiedOM;
-	double soil_het_resp;
-	double boolAccTSMD;
 
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
@@ -1186,14 +1147,6 @@ typedef struct {
 	double annual_dbh[3];
 
 
-	//int dead_tree;
-
-	//RothC related cell level variables
-	double year_soil_het_resp;
-	double temperatureModifier,
-	soilCoverModifier,
-	moistureModifier;
-
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
 	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
@@ -1439,7 +1392,6 @@ void Get_EOD_soil_balance_cell_level (CELL *, const YOS *const , int, int, int);
 void get_av_year_temperature(CELL * const, int, int, int, const MET_DATA *const);
 void soil_temperature(CELL * const, int, int, int, const MET_DATA *const);
 void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void soil_rothC (MATRIX *const, const YOS *const, const int, const int, const int, const int);
 void soil_initialization(CELL *);
 void tree_leaves_fall(MATRIX *const, int const);
 void soilCEC(CELL *const);

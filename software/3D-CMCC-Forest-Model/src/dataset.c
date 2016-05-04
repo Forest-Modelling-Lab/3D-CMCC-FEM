@@ -531,7 +531,7 @@ int importSettingsFile(char *fileName)
 						strncpy (settings->management, (const char*)pch, 3);
 						break;
 					case 8:
-						strncpy (settings->rothC, (const char*)pch, 3);
+						strncpy (settings->Prog_Aut_Resp, (const char*)pch, 3);
 						break;
 					case 9:
 						strncpy (settings->dndc, (const char*)pch, 3);

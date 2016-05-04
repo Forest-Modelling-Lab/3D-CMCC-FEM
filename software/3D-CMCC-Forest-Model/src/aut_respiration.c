@@ -162,10 +162,10 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	}
 
 	if (s->value[C_TO_LEAF] > 0.0
-	|| s->value[C_TO_FINEROOT] > 0.0
-	|| s->value[C_TO_STEM] > 0.0
-	|| s->value[C_TO_COARSEROOT] > 0.0
-	|| s->value[C_TO_BRANCH] > 0.0)
+			|| s->value[C_TO_FINEROOT] > 0.0
+			|| s->value[C_TO_STEM] > 0.0
+			|| s->value[C_TO_COARSEROOT] > 0.0
+			|| s->value[C_TO_BRANCH] > 0.0)
 	{
 		//converting to gC
 		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
@@ -219,44 +219,67 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
 	int i;
 
-	Log("\n**AUTOTROPHIC_RESPIRATION**\n");
-	//compute autotrophic respiration for each classes
-	s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-	Log("TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
+	if (!mystricmp(settings->Prog_Aut_Resp, "on"))
+	{
+		Log("\n**AUTOTROPHIC_RESPIRATION**\n");
+		//compute autotrophic respiration for each classes
+		s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
+		Log("TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
 
-	//fixme see if use CANOPY_COVER_DBHDC or just sizecell
-	Log("TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * settings->sizeCell);
-	CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
+		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
+		Log("TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * settings->sizeCell);
+		CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
 
-	//compute autotrophic respiration for each layer
-	i = c->heights[height].z;
+		//compute autotrophic respiration for each layer
+		i = c->heights[height].z;
 
-	c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
-	c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* settings->sizeCell;
-	c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
-	c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+		c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
+		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* settings->sizeCell;
+		c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+		c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 
-	c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
-	c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
-	c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
-	c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
-	c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
-	c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
+		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
 
-	/* among pools */
-	/* daily */
-	c->daily_leaf_aut_resp += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
-	c->daily_stem_aut_resp += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
-	c->daily_branch_aut_resp += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
-	c->daily_fine_root_aut_resp += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
-	c->daily_coarse_root_aut_resp += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+		/* among pools */
+		/* daily */
+		c->daily_leaf_aut_resp += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
+		c->daily_stem_aut_resp += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
+		c->daily_branch_aut_resp += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
+		c->daily_fine_root_aut_resp += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
+		c->daily_coarse_root_aut_resp += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
 
-	/* annual */
-	c->layer_annual_leaf_aut_resp[i] += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
-	c->layer_annual_stem_aut_resp[i] += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
-	c->layer_annual_branch_aut_resp[i] += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
-	c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
-	c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+		/* annual */
+		c->layer_annual_leaf_aut_resp[i] += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
+		c->layer_annual_stem_aut_resp[i] += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
+		c->layer_annual_branch_aut_resp[i] += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
+		c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
+		c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+	}
+	//fixme if used
+	else
+	{
+		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * site->Y;
+		//compute autotrophic respiration for each layer
+		i = c->heights[height].z;
+
+		c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
+		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* settings->sizeCell;
+		c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+		c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
+
+		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
+
+	}
 }
 
 

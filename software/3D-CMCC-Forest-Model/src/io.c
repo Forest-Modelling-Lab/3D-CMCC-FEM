@@ -745,7 +745,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			}
 		}
 	
-	//case ET: //ET for stand alone RothC
+	//case ET: //ET for stand alone RothC (todo remove)
 		yos[*yos_count-1].m[month].d[day].et = values[VALUE_AT(row,ET)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{

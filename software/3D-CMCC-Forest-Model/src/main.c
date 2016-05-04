@@ -1099,21 +1099,6 @@ int main(int argc, char *argv[])
 		strcat (out_filename, strData);
 
 	}
-	if (!mystricmp(settings->rothC, "on"))
-	{
-		strcat (out_filename, "_");
-		strcat (daily_out_filename, "_");
-		strcat (monthly_out_filename, "_");
-		strcat (annual_out_filename, "_");
-		strcat (soil_out_filename, "_");
-		sprintf(strData, "RothC");
-		strcat (daily_out_filename, strData);
-		strcat (monthly_out_filename, strData);
-		strcat (annual_out_filename, strData);
-		strcat (soil_out_filename, strData);
-		strcat (out_filename, strData);
-
-	}
 
 	/* add suffix for type files */
 	{
@@ -1437,12 +1422,6 @@ int main(int argc, char *argv[])
 										soil_dndc_sgm (m, yos, year, month, day, years_of_simulation);
 										//soil_dndc......................................
 									}
-									//else if (!mystricmp(settings->rothC, "on"))
-									//{
-									//	Log("RUNNING ROTHC.....\n");
-									//	//TODO SERGIO
-									//	soil_rothC (m, yos, years, month, day, years_of_simulation);
-									//}
 									else
 									{
 										Log("No soil simulation!!!\n");
@@ -1504,10 +1483,6 @@ int main(int argc, char *argv[])
 
 					}
 					Log("****************END OF MONTH (%d)*******************\n", month+1);
-					if (!mystricmp(settings->rothC, "on"))
-					{
-						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
-					}
 
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->monthly_vars_count )

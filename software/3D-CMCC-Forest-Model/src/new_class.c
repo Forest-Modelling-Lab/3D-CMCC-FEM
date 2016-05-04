@@ -115,7 +115,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 	s->value[AVDBH] = settings->avdbh_sapling;
 	Log("**avdbh sampling = %f\n", s->value[AVDBH]);
 	s->counter[N_TREE] = settings->replanted_tree;
-	Log("**n tree = %d\n", s->counter[N_TREE]);
+	Log("**n tree %d of %s\n", s->counter[N_TREE], s->name);
 
 	/* compute all other variables */
 	Allometry_Power_Function(a, s);
