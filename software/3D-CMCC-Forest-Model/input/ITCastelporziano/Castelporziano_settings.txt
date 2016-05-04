@@ -6,7 +6,7 @@ spin_up "off"	//Must be  'on' or 'off'
 CO2_fixed "on"   //Must be 'on' or 'off'
 Ndep_fixed "on"   //Must be 'on' or 'off'
 management "off"   //Must be 'on' or 'off'
-PROG_AUT_RESP "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
+Progn_Aut_Resp "on" //Prognostic autotrophic respiration, Must be 'on' or 'off', if "off" Y values are used
 DNDC "on" //Must be  'on' or 'off'
 SIZECELL "100"	//Its value must be within 10 and 100 (unity measure is "meter": 10 = 10x10 = 100m^2) 
 //co2 concentration and annual increment
