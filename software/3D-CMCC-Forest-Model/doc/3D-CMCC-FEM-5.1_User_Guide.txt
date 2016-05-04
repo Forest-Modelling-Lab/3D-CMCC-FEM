@@ -21,13 +21,13 @@ Mobile +393299841220
 Skype alessio.collalti 
 
 General notes on 3D-CMCC-FEM, Version 5.x
-3D-CMCC Forest Evolution Model (FEM) is a software model that simulates the storage and fluxes of water, carbon, within the
+3D-CMCC Forest Ecosystem Model (FEM) is a software model that simulates the storage and fluxes of water, carbon and energy, within the
 vegetation, litter, and soil components of a forest ecosystem. 3D-CMCC is primarily a research tool, and many
 versions have been developed for particular purposes. The CMCC and the University of Tuscia (Viterbo) maintain benchmark code versions for
 public release, and update these benchmark versions periodically as new knowledge is gained on the research front.
 The code and executables accompanying this file represent the most recent benchmark version.
 IMPORTANT NOTE: COPYING
-The 3D-CMCC-FEM, Version 5 code is copyrighted. You may not make copies of any part of the code for distribution to
+The 3D-CMCC-FEM, Version 5.x.x code is copyrighted. You may not make copies of any part of the code for distribution to
 any other person or group. However, anyone can get a free copy of the code from Alessio Collalti (alessio.collalti@cmcc.it).
 The purpose for this restriction is to keep track of who has a specific version of the public release benchmark code, so that
 we can let our user community know when there are updates. We will appreciate your cooperation with this policy.
@@ -36,10 +36,17 @@ If you use 3D-CMCC-FEM in your research, we request that you include the followi
 manuscripts:
 "3D-CMCC-FEM, Version 4 was provided by Alessio Collalti, euroMediterranean Center for Climate Changes (CMCC) and University of Tuscia Viterbo,"
 Please also reference the following citation as the most recent and complete description of the current model version:
+
 "A process-based model to simulate growth and dynamics in forests with complex structure: evaluation and use of 3D-CMCC Forest Ecosystem Model
 in a deciduous forest in Central Italy"
-Alessio Collalti, Lucia Perugini, Tommaso Chiti, Angelo Nolè, Giorgio Matteucci, Riccardo Valentini
+A. Collalti, L. Perugini, T. Chiti, A. Nolè, G. Matteucci, R. Valentini
 Ecological modeling 2014
+
+"Validation of 3D-CMCC Forest Ecosystem Model (v.5.1) against eddy covariance data for 10 European forest sites"
+A. Collalti, S. Marconi, A. Ibrom, C. Trotta, A. Anav, E. D’Andrea, G. Matteucci, L. Montagnani, B. Gielen, I. Mammarella, T. Grünwald, 
+A. Knohl, F. Berninger, Y. Zhao, R. Valentini and M. Santini, Geosci. Model Dev., 9, 479-504, 2016
+http://www.geosci-model-dev.net/9/479/2016, doi:10.5194/gmd-9-479-2016
+
 If you have made any significant modifications to the code, please mention them in your manuscript.
 This User’s Guide is the only documentation released with 3D-CMCC-FEM. The code itself contains extensive internal
 documentation, and users with specific questions about the algorithms used to estimate particular processes should read
@@ -49,6 +56,7 @@ pass information between the process modules, and includes both a short text des
 variable. If you have questions about the code, appropriate model applications, possible programming errors, etc.,
 please read this entire guide first, then feel free to contact:
 Alessio Collalti (alessio.collalti@cmcc.it)
+Monia Santini (monia.santini@cmcc.it)
 
 
 CODE CHARACTERISTIC

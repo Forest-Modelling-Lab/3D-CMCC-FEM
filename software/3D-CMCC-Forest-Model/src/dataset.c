@@ -60,8 +60,7 @@ extern const char err_out_of_memory[];
 extern const char err_unable_open_file[];
 
 /* */
-//new land use
-//version 3D-CMCC Forest Model "pre-spatial"
+
 static const char *header[COLUMNS] = {
 		"X",
 		"Y",
