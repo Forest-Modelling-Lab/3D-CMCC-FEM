@@ -146,6 +146,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
 	gl_sh = gl_bl;
+	Log("Leaf conductance to sensible heat = %f\n", gl_sh);
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv = gl_e_wv * s->value[LAI];
