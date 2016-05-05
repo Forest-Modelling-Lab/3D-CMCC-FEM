@@ -188,8 +188,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	c->soil_moist_ratio = c->asw/c->max_asw;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
-	Log("ASW = %f\n", c->asw);
-	Log("MIN ASW = %f\n", c->max_asw * settings->init_frac_maxasw);
+	Log("ASW = %f mm/m2\n", c->asw);
+	Log("Wilting point = %f mm/m2\n", c->wilting_point);
 	Log("moist ratio = %f\n", c->soil_moist_ratio);
 	Log("fSW = %f\n", s->value[F_SW]);
 
@@ -203,33 +203,39 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* (DIM) volumetric water content */
 	c->vwc = c->asw / (1000.0 * (site->soil_depth/100));
-	Log("volumetric available soil water  = %f (DIM)\n", c->vwc);
+	Log("volumetric available soil water  = %f %(vol)\n", c->vwc);
 	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
 	Log ("vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 	Log ("PSI BIOME = %f (MPa)\n", c->psi);
 	Log ("PSI_SAT BIOME = %f (MPa)\n", c->psi_sat);
 
-	if (c->psi > s->value[SWPOPEN]) /*no water stress*/
+	/*no water stress*/
+	if (c->psi > s->value[SWPOPEN])
 	{
 		counter_water_stress = 0.0;
 		s->value[F_PSI] = 1.0;
 	}
-	else if (c->psi <= s->value[SWPCLOSE]) /* full water stress */
+	// 5 MAY 2016 ADDED "|| (c->asw < c->wilting_point)
+	/* full water stress */
+	else if (c->psi <= s->value[SWPCLOSE] /* && (c->asw < c->wilting_point)*/)
 	{
 		//change for multiple class
 		counter_water_stress += 1;
 		//s->value[F_PSI] = 0.0;
 		Log("Water stress\n");
 		Log("F_PSI = %f\n", s->value[F_PSI]);
+
 		/* forced to 0.33 to avoid too much low values */
 		//fixme
 		s->value[F_PSI] = 0.33;
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);
 	}
-	else /* partial water stress */
+	/* partial water stress */
+	else
 	{
+		counter_water_stress = 0.0;
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 	}
 	Log("F_PSI = %f\n", s->value[F_PSI]);
