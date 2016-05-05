@@ -14,20 +14,20 @@ void soil_initialization(CELL *const c)
 	for (l =0; l < c->soils_count; l++)
 	{
 		//debug: assumed the whole soil as a single layer of 20cm
-		//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * site->soil_depth;
-		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * site->soil_depth;
-		//		litterSOC = site->inSOC * site->litFract * site->bulk_dens  * site->soil_depth;
-		//		//c->soils[l].inert_C = site->inSOC * /*site->humuFract*/ .001 * site->bulk_dens * site->soil_depth;
+		//		c->soils[l].dphum = site->inSOC * site->humuFract * c->bulk_density * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * c->bulk_density * site->soil_depth;
+		//		litterSOC = site->inSOC * site->litFract * c->bulk_density  * site->soil_depth;
+		//		//c->soils[l].inert_C = site->inSOC * /*site->humuFract*/ .001 * c->bulk_density * site->soil_depth;
 
 
 		//taken from Chiti 2010,
 		//ratios taken from DNDC default (userGuide)
 		//			Soil_porosity            0.451000
 		//actually, it should be site->inSOC * site->humuFract * site->sd * 1000 * 10000 * Maximum(0, Minimum(0.01 / site->porosity, site->soil_depth));
-		//		c->soils[l].dphum = site->inSOC * site->humuFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-		//		litterSOC = site->inSOC * site->litFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
-		//		c->soils[l].inert_C = site->inSOC * site->humaFract * site->bulk_dens * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].dphum = site->inSOC * site->humuFract * c->bulk_density * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].initialOrganicC = site->inSOC * site->humaFract * c->bulk_density * 1000 * 10000 * site->soil_depth;
+		//		litterSOC = site->inSOC * site->litFract * c->bulk_density * 1000 * 10000 * site->soil_depth;
+		//		c->soils[l].inert_C = site->inSOC * site->humaFract * c->bulk_density * 1000 * 10000 * site->soil_depth;
 
 		//gC/m-2 profile-1
 		//		c->soils[l].dphum = site->inSOC * site->humuFract * 1000; // * site->soil_depth;
@@ -56,9 +56,9 @@ void soil_initialization(CELL *const c)
 		c->soils[l].rcl= litterSOC *.20;
 		//		c->soils[l].crhl = c->soils[l].initialOrganicC;	//interpreted
 		//		c->soils[l].crhr = c->soils[l].dphum;	//interpreted
-		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * site->bulk_dens ;
-		c->soils[l].nh4 = site->soil_nh4 * 0.7 * 10*site->bulk_dens ;
-		c->soils[l].no3 = site->soil_no3 *10*site->bulk_dens ; //bulk_dens as mass
+		c->soils[l].clay_nh4 = site->soil_nh4 * 0.3 * c->bulk_density ;
+		c->soils[l].nh4 = site->soil_nh4 * 0.7 * 10* c->bulk_density;
+		c->soils[l].no3 = site->soil_no3 *10* c->bulk_density; //bulk_dens as mass
 		site->hydraulicConductivity = 0.063; // tab 5. Katie Price 2010
 		//
 		//		///////////////////////////
@@ -1375,7 +1375,7 @@ void soilCEC(CELL *const c)
 		double xx = site->clay_perc /100 * 100.0;// + (double)exp(soc[i]/m*1000.0-20.0);
 		//if(xx>100.0) xx=100.0;
 		c->soils[soil].CEC= 1.0802 * xx + 14.442;	//meq/100 g soil
-		c->soils[soil].CEC =c->soils[soil].CEC * 14.0 / 100000.0 * site->bulk_dens;	 //assumed m as bulk density//meq/100 g soil -> kg N/ha/layer
+		c->soils[soil].CEC =c->soils[soil].CEC * 14.0 / 100000.0 *  c->bulk_density;	 //assumed m as bulk density//meq/100 g soil -> kg N/ha/layer
 		//CEC[i] = CEC[i] * 0.001; //fraction used for NH4
 	}
 	c->base_clay_N = 0.01 *c->soils[0].CEC;

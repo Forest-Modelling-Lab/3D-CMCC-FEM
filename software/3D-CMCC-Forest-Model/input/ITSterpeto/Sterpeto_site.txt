@@ -13,9 +13,6 @@ INITIALLITTER "0" //Initial Litter (estimated)
 CLAY_PERC "__"    //PERCENTAGE OF CLAY (< 0,002 mm) estimated from EU SOIL MAPS
 SILT_PERC "__"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) estimated from EU SOIL MAPS
 SAND_PERC "__"    //PERCENTAGE OF SAND (0,05 - 2 mm) estimated from EU SOIL MAPS
-
-BULK_DENSITY "__"  //BULK DENSITY (g/cm3) NOT EDITED
-
 SOIL_DEPTH "__" //SOIL DEPTH (cm) estimated from EU SOIL MAPS
 
 //SITE NUTRITION

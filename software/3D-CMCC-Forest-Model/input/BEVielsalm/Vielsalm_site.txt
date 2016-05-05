@@ -13,9 +13,6 @@ INITIALLITTER "0" //Initial Litter (estimated)
 CLAY_PERC "36.2"	//PERCENTAGE OF CLAY (< 0,002 mm) from ancillary eddy data
 SILT_PERC "62.1"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) from ancillary eddy data
 SAND_PERC "1.7"	//PERCENTAGE OF SAND (0,05 - 2 mm) from ancillary eddy data
-
-BULK_DENSITY "0.86"  //BULK DENSITY (g/cm3) from ancillary eddy data, 1.14 from soilcalculator
-
 SOIL_DEPTH "60" //SOIL DEPTH (cm) from ancillary data file, 125 from Aubinet 2001
 
 //SITE NUTRITION

@@ -10,7 +10,6 @@ INITIALLITTER "-9999" //Initial Litter (estimated)
 CLAY_PERC "20"	//PERCENTAGE OF CLAY (< 0,002 mm) estimated from Wikipedia definition of Loam
 SILT_PERC "40"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)  estimated from Wikipedia definition of Loam
 SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) estimated from Wikipedia definition of Loam
-BULK_DENSITY "1.32"  //BULK DENSITY (g/cm3) averaged value from ancillary eddy data
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 
 //SITE NUTRITION

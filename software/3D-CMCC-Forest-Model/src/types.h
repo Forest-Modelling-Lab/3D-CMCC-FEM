@@ -100,7 +100,6 @@ typedef struct
 	double clay_perc,
 	silt_perc,
 	sand_perc,
-	bulk_dens,
 	soil_depth;
 
 	double fr,

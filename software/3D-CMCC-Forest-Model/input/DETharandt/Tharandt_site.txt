@@ -13,9 +13,6 @@ INITIALLITTER "" //Initial Litter (estimated)
 CLAY_PERC "15"	//PERCENTAGE OF CLAY (< 0,002 mm) averaged from Schwarzel et al., 2009
 SILT_PERC "72"	//PERCENTAGE OF SILT (0,002 - 0,05 mm)  averaged from Schwarzel et al., 2009
 SAND_PERC "13"	//PERCENTAGE OF SAND (0,05 - 2 mm)  averaged from Schwarzel et al., 2009
-
-BULK_DENSITY "120"  //BULK DENSITY (g/cm3) averaged from Schwarzel et al., 2009
-
 SOIL_DEPTH "115" //SOIL DEPTH (cm) from ancillary 
 
 //SITE NUTRITION

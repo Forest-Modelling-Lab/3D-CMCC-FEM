@@ -13,9 +13,6 @@ INITIALLITTER "" //Initial Litter (estimated)
 CLAY_PERC "3"	//PERCENTAGE OF CLAY (< 0,002 mm) from ancillary ec data
 SILT_PERC "4"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) from ancillary ec data 
 SAND_PERC "93"	//PERCENTAGE OF SAND (0,05 - 2 mm) from ancillary ec data
-
-BULK_DENSITY "1.2"  //BULK DENSITY (g/cm3) from ancillary ec data
-
 SOIL_DEPTH "150" //SOIL DEPTH (cm) from ancillary ec data
 
 //SITE NUTRITION

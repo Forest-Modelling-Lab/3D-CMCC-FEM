@@ -15,9 +15,6 @@ MIN_FRAC_MAXASW "0.1" //Minimum fraction of asw based on maxasw (wilting point)
 CLAY_PERC "7"   //PERCENTAGE OF CLAY (< 0,002 mm) (deducted from Janssens et al., 1999)
 SILT_PERC "8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) (deducted from Janssens et al., 1999)
 SAND_PERC "85"   //PERCENTAGE OF SAND (0,05 - 2 mm) (deducted from Janssens et al., 1999)
-
-BULK_DENSITY "1.5"  //BULK DENSITY (g/cm3) (deducted from Janssens et al., 1999)
-
 SOIL_DEPTH "135" //SOIL DEPTH (cm) (averaged value from 120/150 cm from Carrara et al., 2004)
 
 //SITE NUTRITION

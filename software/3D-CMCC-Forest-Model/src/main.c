@@ -1245,7 +1245,6 @@ int main(int argc, char *argv[])
 			if (	IS_INVALID_VALUE(site->sand_perc)
 					|| IS_INVALID_VALUE(site->clay_perc)
 					|| IS_INVALID_VALUE(site->silt_perc)
-					|| IS_INVALID_VALUE(site->bulk_dens)
 					|| IS_INVALID_VALUE(site->soil_depth) ) {
 				Log("NO SOIL DATA AVAILABLE\n");
 				matrix_free(m);

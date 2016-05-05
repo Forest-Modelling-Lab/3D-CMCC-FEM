@@ -3,11 +3,7 @@ SITENAME "Norunda - Sweden" //Site Name
 LAT "60.08649722" //Site Latitude negative for south hemisphere
 LONG "17.4795027" //Site Longitude 
 ELEV "45" //Elevation in meters
-
-Y "0.47" // Assimilate use efficiency-Respiration rate-NPP/GPP (unchanged)
-
 INITIALLITTER "0" //Initial Litter (estimated)
-
 //MIN_FRAC_MAXASW "0.05" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
 //MAXASW "160" //Maximum Available soil water in mm
 //MINASW "16" //It should be the 10% of the maxasw
@@ -15,9 +11,6 @@ INITIALLITTER "0" //Initial Litter (estimated)
 CLAY_PERC "4"   //PERCENTAGE OF CLAY (< 0,002 mm) from Lundin et al., 1999
 SILT_PERC "31"   //PERCENTAGE OF SILT (0,002 - 0,05 mm) from Lundin et al., 1999
 SAND_PERC "65"  //PERCENTAGE OF SAND (0,05 - 2 mm) from Lundin et al., 1999
-
-BULK_DENSITY "1.55"  //BULK DENSITY (g/cm3) from asoil calculator
-
 SOIL_DEPTH "100" //SOIL DEPTH (cm) from ????
 
 //SITE NUTRITION

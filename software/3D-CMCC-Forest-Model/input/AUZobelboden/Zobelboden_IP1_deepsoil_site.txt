@@ -5,14 +5,11 @@ LAT "47.50" //Site Latitude negative for south hemisphere (Schindlbacher et al.,
 LONG "14.26" //Site Longitude (Schindlbacher et al., 2014)
 ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)
 
-Y "0" // Assimilate use efficiency-Respiration rate-GPP/NPP (optional)
-
 //SOIL CAHARACTERISTICS (mandatory)
 INITIALLITTER "0" //Initial Litter
 CLAY_PERC "37"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "60"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "3"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
-BULK_DENSITY "0.828"  //BULK DENSITY (g/cm3)
 SOIL_DEPTH "50" //SOIL DEPTH (cm) 
 
 //SITE NUTRITION (mandatory)

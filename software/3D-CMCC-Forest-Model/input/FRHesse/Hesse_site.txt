@@ -13,9 +13,6 @@ INITIALLITTER "0" //Initial Litter (estimated)
 CLAY_PERC "22"  //PERCENTAGE OF CLAY (< 0,002 mm) see Epron et al., 2004
 SILT_PERC "70"  //PERCENTAGE OF SILT (0,002 - 0,05 mm) see Epron et al., 2004
 SAND_PERC "8"   //PERCENTAGE OF SAND (0,05 - 2 mm) see Epron et al., 2004
-
-BULK_DENSITY "1.36"  //BULK DENSITY (g/cm3) from SoilCalculator
-
 SOIL_DEPTH "160" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 
 //SITE NUTRITION

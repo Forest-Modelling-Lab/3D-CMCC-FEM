@@ -13,9 +13,6 @@ INITIALLITTER "10.6" //Initial Litter Knohl et al., 2003
 CLAY_PERC "40"	//PERCENTAGE OF CLAY (< 0,002 mm) Knohl et al., 2003
 SILT_PERC "56"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) Knohl et al., 2003
 SAND_PERC "4"	//PERCENTAGE OF SAND (0,05 - 2 mm) Knohl et al., 2003
-
-BULK_DENSITY "1.13"  //BULK DENSITY (g/cm3) from soil calculator
-
 SOIL_DEPTH "60" //SOIL DEPTH (cm) Knohl et al., 2003
 
 //SITE NUTRITION

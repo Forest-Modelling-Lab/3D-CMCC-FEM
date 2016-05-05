@@ -314,14 +314,14 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	    pentry_temp = -0.5 / sqrt(soil_avg_dim)/1000;
 	    Log("pentry_temp = %f\n", pentry_temp);
 	    //correction for bulk density effects with dens = 1.49 g/cm^3
-	    pentry = pentry_temp * pow ((site->bulk_dens / 1.3), (0.67 * bsl));
+	    pentry = pentry_temp * pow ((c->bulk_density / 1.3), (0.67 * bsl));
 	    Log("pentry = %f\n", pentry);
 
 	    bsl = -2 * (pentry * 1000) + 0.2 * sigma_g;
 	    Log("bsl = %f\n", bsl);
 
 	    //saturated soil water content
-	    sat_soil_water_cont= 1.0 - (site->bulk_dens/2.56);
+	    sat_soil_water_cont= 1.0 - (c->bulk_density/2.56);
 	    Log("soil water content at saturation = %f\n", sat_soil_water_cont);
 
 	    eq = pentry * pow ((sat_soil_water_cont / c->soil_moist_ratio), bsl);
