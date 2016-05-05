@@ -1033,6 +1033,12 @@ typedef struct {
 	double flux_C_balance, old_flux_C_balance;
 
 	/*water variables*/
+	//todo move these variables into soil struct
+	double wilting_point;
+	double field_capacity;
+	double sat_hydr_conduct;
+	double bulk_density;
+
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 	double asw;
 	double old_asw;

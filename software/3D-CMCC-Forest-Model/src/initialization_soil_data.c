@@ -14,7 +14,11 @@
 
 void Initialization_site_data (CELL *c)
 {
-	Log("\n****SITE-SOIL CHARACTERISTICS for cell  (%d, %d)****\n", c->x, c->y);
+	float acoeff;
+	float bcoeff;
+	float sat;
+
+	Log("\n****SITE-SOIL CHARACTERISTICS for cell (%d, %d)****\n", c->x, c->y);
 	/*soil matric potential*/
 
 	CHECK_CONDITION(fabs((site->sand_perc + site->clay_perc + site->silt_perc) -100.0 ), > 1e-4);
@@ -53,8 +57,42 @@ void Initialization_site_data (CELL *c)
 	Log("Initialization ASW = %f (mm-kgH2O/m2)\n\n\n", c->asw);
 
 	//snow initialization
-	c->snow_pack = 0;
+	c->snow_pack = 0.0;
 	//c->snow_subl = 0;
 
+	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
+	/* following Saxton et al 1986 */
+
+	acoeff = exp(-4.396 - 0.0715 * site->clay_perc - 4.88e-4 * pow(site->sand_perc,2) - 4.285e-5 * pow(site->sand_perc,2)*site->clay_perc);
+	bcoeff = (-3.14 - 0.00222 * pow(site->clay_perc,2) - 3.484e-5 * pow(site->sand_perc,2) * site->clay_perc);
+	sat = (0.332 - 7.251e-4 * site->sand_perc + 0.1276 * log10(site->clay_perc));
+
+	/* wilting point */
+	c->wilting_point = pow((15.0/acoeff), (1.0/bcoeff));
+	/* field capacity */
+	c->field_capacity = pow((0.333/acoeff),(1.0/bcoeff));
+	/* saturated hydraulic conductivity */
+	c->sat_hydr_conduct = exp((12.012 - 0.0755 * site->sand_perc) + (-3.895 + 0.03671 * site->sand_perc - 0.1103 * site->clay_perc + 8.7546e-4 * pow(site->clay_perc,2))/sat);
+	/* bulk density g/cm3 */
+	c->bulk_density = (1 - sat) * 2.65;
+
+	/* corrections from Steve Del Grosso */
+	/* wilting point */
+	c->wilting_point += (-0.15 * c->wilting_point);
+	Log("wilting point = %f\n", c->wilting_point);
+
+	/* field capacity */
+	c->field_capacity += (0.07 * c->field_capacity);
+	Log("field capacity = %f\n", c->field_capacity);
+
+	/* saturated hydraulic conductivity */
+	c->sat_hydr_conduct /= 1500.0;
+	Log("saturated hydraulic conductance  = %f\n", c->sat_hydr_conduct);
+
+	/* bulk density g/cm3 */
+	c->bulk_density += (-0.08 * c->bulk_density);
+	Log("bulk density = %f\n", c->bulk_density);
+
+	exit(1);
 }
 

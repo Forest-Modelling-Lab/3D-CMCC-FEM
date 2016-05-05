@@ -31,7 +31,7 @@ C_SRCS += \
 ../src/fluxes.c \
 ../src/g-function.c \
 ../src/initialization_biomass_data.c \
-../src/initialization_site_data.c \
+../src/initialization_soil_data.c \
 ../src/io.c \
 ../src/lai.c \
 ../src/latent_heat_flux.c \
@@ -93,7 +93,7 @@ OBJS += \
 ./src/fluxes.o \
 ./src/g-function.o \
 ./src/initialization_biomass_data.o \
-./src/initialization_site_data.o \
+./src/initialization_soil_data.o \
 ./src/io.o \
 ./src/lai.o \
 ./src/latent_heat_flux.o \
@@ -155,7 +155,7 @@ C_DEPS += \
 ./src/fluxes.d \
 ./src/g-function.d \
 ./src/initialization_biomass_data.d \
-./src/initialization_site_data.d \
+./src/initialization_soil_data.d \
 ./src/io.d \
 ./src/lai.d \
 ./src/latent_heat_flux.d \
