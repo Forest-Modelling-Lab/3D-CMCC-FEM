@@ -112,7 +112,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 //	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
 //	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
-	//test
 	//04/apr/2016
 	/* photosynthetic photon flux density conductance control */
 	m_ppfd_sun = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);

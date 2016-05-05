@@ -821,6 +821,9 @@ typedef struct
 {
 	double variabile;
 
+	double bulk_density,
+	field_capacity,
+	wilting_point;
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
 	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
@@ -1041,7 +1044,7 @@ typedef struct {
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 	double asw;
 	double old_asw;
-	double max_asw;
+	double max_asw_fc; /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
 
 

@@ -18,6 +18,8 @@ void Initialization_site_data (CELL *c)
 	float bcoeff;
 	float sat;
 
+	int i;
+
 	float volumetric_wilting_point;
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
@@ -28,6 +30,17 @@ void Initialization_site_data (CELL *c)
 
 	/*soil matric potential*/
 	CHECK_CONDITION(fabs((site->sand_perc + site->clay_perc + site->silt_perc) -100.0 ), > 1e-4);
+	/*
+	For further discussion see:
+	Cosby, B.J., G.M. Hornberger, R.B. Clapp, and T.R. Ginn, 1984.  A
+	   statistical exploration of the relationships of soil moisture
+	   characteristics to the physical properties of soils.  Water Res.
+	   Res. 20:682-690.
+
+	Saxton, K.E., W.J. Rawls, J.S. Romberger, and R.I. Papendick, 1986.
+		Estimating generalized soil-water characteristics from texture.
+		Soil Sci. Soc. Am. J. 50:1031-1036.
+	*/
 	
 	Log("BIOME soil characteristics\n");
 	//double soilw_fc; //maximum volume soil water content in m3/m3
@@ -55,7 +68,7 @@ void Initialization_site_data (CELL *c)
 	c->soilw_sat = (site->soil_depth / 100) * c->vwc_sat * 1000.0;
 	Log ("soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
-	c->max_asw = c->soilw_fc;
+	c->max_asw_fc = c->soilw_fc;
 
 	//compute initialization soil water content
 	c->asw = (c->soilw_sat * settings->init_frac_maxasw);
@@ -66,7 +79,7 @@ void Initialization_site_data (CELL *c)
 	//c->snow_subl = 0;
 
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
-	/* following Saxton et al 1986 */
+	/* following Saxton et al 1986, 2006, 2008 */
 	Log("CENTURY soil characteristics\n");
 	acoeff = exp(-4.396 - 0.0715 * site->clay_perc - 4.88e-4 * pow(site->sand_perc,2) - 4.285e-5 * pow(site->sand_perc,2)*site->clay_perc);
 	bcoeff = (-3.14 - 0.00222 * pow(site->clay_perc,2) - 3.484e-5 * pow(site->sand_perc,2) * site->clay_perc);
@@ -74,9 +87,9 @@ void Initialization_site_data (CELL *c)
 
 	/* volumetric percentage for wilting point */
 	volumetric_wilting_point = pow((15.0/acoeff), (1.0/bcoeff));
-	/* volumetric percentage field capacity */
+	/* volumetric percentage for field capacity */
 	volumetric_field_capacity = pow((0.333/acoeff),(1.0/bcoeff));
-	/* volumetric percentage saturated hydraulic conductivity */
+	/* volumetric percentage for saturated hydraulic conductivity */
 	volumetric_saturated_hydraulic_conductivity = exp((12.012 - 0.0755 * site->sand_perc) + (-3.895 + 0.03671 * site->sand_perc - 0.1103 * site->clay_perc + 8.7546e-4 * pow(site->clay_perc,2))/sat);
 	/* bulk density g/cm3 */
 	c->bulk_density = (1 - sat) * 2.65;
@@ -107,6 +120,15 @@ void Initialization_site_data (CELL *c)
 	/* bulk density g/cm3 */
 	c->bulk_density += (-0.08 * c->bulk_density);
 	Log("**Bulk density = %f g/cm^3\n", c->bulk_density);
+
+	//test 5 may 2016
+	for (i = 0; i < c->soils_count; i++)
+	{
+		c->soils[i].bulk_density = 0.0;
+		c->soils[i].field_capacity = 0.0;
+		c->soils[i].wilting_point = 0.0;
+		Log("i= %d and soils_count = %d\n", i, c->soils_count);
+	}
 
 }
 

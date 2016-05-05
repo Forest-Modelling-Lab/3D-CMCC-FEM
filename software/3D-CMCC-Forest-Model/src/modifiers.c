@@ -185,7 +185,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
-	c->soil_moist_ratio = c->asw/c->max_asw;
+	c->soil_moist_ratio = c->asw/c->max_asw_fc;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	Log("ASW = %f mm/m2\n", c->asw);
@@ -201,11 +201,13 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	//100 mm H20 m^-2 = 100 kg H20 m^-2
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
-	/* (DIM) volumetric water content */
+	/* volumetric water content */
 	c->vwc = c->asw / (1000.0 * (site->soil_depth/100));
 	Log("volumetric available soil water  = %f %(vol)\n", c->vwc);
+	Log ("vwc_fc = %f (DIM)\n", c->vwc_fc);
 	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
 	Log ("vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
+	Log ("vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 	Log ("PSI BIOME = %f (MPa)\n", c->psi);
 	Log ("PSI_SAT BIOME = %f (MPa)\n", c->psi_sat);

@@ -40,12 +40,12 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	CHECK_CONDITION(c->asw, < 0.0)
 
 
-	if ( c->asw > c->max_asw)
+	if ( c->asw > c->max_asw_fc)
 	{
-		c->out_flow = c->asw - c->max_asw;
+		c->out_flow = c->asw - c->max_asw_fc;
 		Log("out_flow = %f\n", c->out_flow);
 		Log("ATTENTION Available Soil Water exceeds MAXASW!! \n");
-		c->asw = c->max_asw;
+		c->asw = c->max_asw_fc;
 		Log("Available soil water = %f\n", c->asw);
 	}
 

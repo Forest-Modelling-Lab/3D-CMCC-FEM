@@ -173,7 +173,7 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 			PotEvap = 0;
 		}
 
-		c->soil_moist_ratio = c->asw / c->max_asw;
+		c->soil_moist_ratio = c->asw / c->max_asw_fc;
 		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
