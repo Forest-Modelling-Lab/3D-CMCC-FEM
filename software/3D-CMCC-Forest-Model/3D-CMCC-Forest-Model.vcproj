@@ -336,7 +336,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\initialization_site_data.c"
+				RelativePath=".\src\initialization_soil_data.c"
 				>
 			</File>
 			<File

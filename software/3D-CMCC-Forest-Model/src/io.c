@@ -1183,6 +1183,8 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	int ids[NC_MAX_VAR_DIMS];
 	int flag;
 	int date_imported;
+	float lat;
+	float lon;
 
 	size_t start[] = { 0, 0, 0 };
 	size_t count[] = { 0, 1, 1 };
@@ -1383,27 +1385,16 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		for ( i = 0; i < vars_count; ++i ) {
 			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
 			if ( ret != NC_NOERR ) goto quit;
-			/* check for lat */
 			if ( ! mystricmp(name, sz_lat) ) {
-				///* we get only one size */
-				//if ( (n_dims < 2) || (ids[0] != 1) ) {
-				//	printf("sorry, only one lat is supported in %s\n\n", buffer);
-				//	nc_close(id_file);
-				//	fclose(f);
-				//	free(values);
-				//	free(f_values);
-				//	return 0;
-				//}
+				int start_lat[] = { y_cell, x_cell };
+				const int count_lat[] = { 1, 1 };
+				ret = nc_get_vara_float(id_file, i, start_lat, count_lat, &lat);
+				if ( ret != NC_NOERR ) goto quit;
 			} else if ( ! mystricmp(name, sz_lon) ) {
-				///* we get only one size */
-				//if ( (n_dims < 2) || (ids[0] != 1) ) {
-				//	printf("sorry, only one lon is supported in %s\n\n", buffer);
-				//	nc_close(id_file);
-				//	fclose(f);
-				//	free(values);
-				//	free(f_values);
-				//	return 0;
-				//}
+				int start_lon[] = { y_cell, x_cell };
+				const int count_lon[] = { 1, 1 };
+				ret = nc_get_vara_float(id_file, i, start_lon, count_lon, &lon);
+				if ( ret != NC_NOERR ) goto quit;
 			} else if ( ! mystricmp(name, sz_time) ) {
 				if ( ! date_imported ) {
 					if ( type != NC_DOUBLE ) {
@@ -1559,12 +1550,13 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		}
 	}
 
-#if 0
+#ifdef _WIN32
+#ifdef _DEBUG
 	{
 		FILE *f;
 		int row;
 		char buffer[64];
-		sprintf(buffer, "debug_file_%d_%d.txt", x_cell, y_cell);
+		sprintf(buffer, "debug_file_%g_%g_%d_%d.txt", lat, lon, x_cell, y_cell);
 		f = fopen(buffer, "w");
 		if ( ! f ) {
 			puts("unable to create output file!");
@@ -1572,28 +1564,30 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			return 0;
 		}
 		/* write header */
-		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
+		fputs("LAT,LON,DATE,ET,LAI,RADS,SWC,TMAX,TMIN,TOT_PREC,TSOIL,VPD,WS_f\n", f);
 		for ( row = 0; row < dims_size[TIME_DIM]; ++row ) {
-				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
-						(int)values[VALUE_AT(row,YEAR)]
-						, (int)values[VALUE_AT(row,MONTH)]
-						, (int)values[VALUE_AT(row,DAY)]
-						, values[VALUE_AT(row,RG_F)]
-						, values[VALUE_AT(row,TA_F)]
-						, values[VALUE_AT(row,TMAX)]
-						, values[VALUE_AT(row,TMIN)]
-						, values[VALUE_AT(row,VPD_F)]
-						, values[VALUE_AT(row,TS_F)]
-						, values[VALUE_AT(row,PRECIP)]
-						, values[VALUE_AT(row,SWC)]
-						, values[VALUE_AT(row,NDVI_LAI)]
-						, values[VALUE_AT(row,ET)]
-						, values[VALUE_AT(row,WS_F)]
+				fprintf(f, "%g,%g,%02d/%02d/%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+							, lat
+							, lon
+							,(int)values[VALUE_AT(row,DAY)]
+							, (int)values[VALUE_AT(row,MONTH)]
+							, (int)values[VALUE_AT(row,YEAR)]
+							, values[VALUE_AT(row,ET)]
+							, values[VALUE_AT(row,NDVI_LAI)]
+							, values[VALUE_AT(row,RG_F)]
+							, values[VALUE_AT(row,SWC)]
+							, values[VALUE_AT(row,TMAX)]
+							, values[VALUE_AT(row,TMIN)]
+							, values[VALUE_AT(row,PRECIP)]
+							, values[VALUE_AT(row,TS_F)]
+							, values[VALUE_AT(row,VPD_F)]
+							, values[VALUE_AT(row,WS_F)]
 
 				);
 		}
 		fclose(f);
 	}
+#endif
 #endif
 
 	i = yos_from_arr(values, rows_count, MET_COLUMNS, p_yos, yos_count);
