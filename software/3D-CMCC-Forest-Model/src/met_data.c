@@ -196,13 +196,13 @@ void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 	if(met[month].d[day].tday == NO_DATA)
 	{
 		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
-		c->gcorr = pow((met[month].d[day].tavg + 273.15)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
+		c->gcorr = pow((met[month].d[day].tavg + TempAbs)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
 		//Log("gcorr = %f\n", c->gcorr);
 	}
 	else
 	{
 		met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
-		c->gcorr = pow((met[month].d[day].tday + 273.15)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
+		c->gcorr = pow((met[month].d[day].tday + TempAbs)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
 		//Log("gcorr = %f\n", c->gcorr);
 	}
 }

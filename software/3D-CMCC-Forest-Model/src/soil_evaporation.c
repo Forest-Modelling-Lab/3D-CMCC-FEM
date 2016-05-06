@@ -24,7 +24,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	{
 		/* correct conductances for temperature and pressure based on Jones (1992)
 	with standard conditions assumed to be 20 deg C, 101300 Pa */
-		rcorr = 1.0/(pow((met[month].d[day].tday+273.15)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
+		rcorr = 1.0/(pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
 
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance

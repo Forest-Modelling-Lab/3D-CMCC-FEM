@@ -13,7 +13,7 @@
 
 double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, int rv, double net_rad)
 {
-	double tk;
+	double tairK;
 	double esse;
 	double t1,t2,pvs1,pvs2;
 	double rr, rhr;
@@ -42,10 +42,10 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 
 	/* assign ta (Celsius) and tk (Kelvins) */
-	tk = met[month].d[day].tday + 273.15;
+	tairK = met[month].d[day].tday + TempAbs;
 
 	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (tk*tk*tk));
+	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tairK, 3)));
 
 	/* calculate combined resistance to convective and radiative heat transfer,
 	    parallel resistances : rhr = (rh * rr) / (rh + rr) */

@@ -24,7 +24,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	double tau;	// CO2/O2  specifity ratio
 	double Eatau = -42896.9;
 	double Atau = 7.87 * pow(10,-5);
-	double Temp_K;
+	double tairK;
 	double v1, v2;
 	static int counter_water_stress;
 
@@ -34,19 +34,19 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	Log("\nDAILY_MODIFIERS\n\n");
 
 	/* CO2 MODIFIER FROM C-FIX */
-	Temp_K = met[month].d[day].tavg + TempAbs;
+	tairK = met[month].d[day].tavg + TempAbs;
 
 	if (met[month].d[day].tavg >= 15)
 	{
-		KmCO2 = A1 * exp(-Ea1/(Rgas*Temp_K));
+		KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
 	}
 	else
 	{
-		KmCO2 = A2 * exp (-Ea2/(Rgas*Temp_K));
+		KmCO2 = A2 * exp (-Ea2/(Rgas*tairK));
 	}
-	KO2 = AKO2 * exp (-EaKO2/(Rgas*Temp_K));
+	KO2 = AKO2 * exp (-EaKO2/(Rgas*tairK));
 
-	tau = Atau * exp (-Eatau/(Rgas*(Temp_K)));
+	tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
 	v1 = (settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
 	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+settings->co2Conc);

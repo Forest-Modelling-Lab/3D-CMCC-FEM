@@ -414,6 +414,7 @@ enum
 
 	/*water variables*/
 	CANOPY_CONDUCTANCE,
+	CANOPY_BLCOND,                  //Canopy Boundary Layer conductance (m s-1)
 	MONTH_TRANSP,
 	DAILY_TRANSP,
 	DAILY_TRANSP_W,
@@ -1081,6 +1082,7 @@ typedef struct {
 	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
 	double daily_et, monthly_et, annual_et;
+	double daily_bl_cond, monthly_bl_cond, annual_bl_cond;
 
 
 	/*energy balance*/
@@ -1090,6 +1092,7 @@ typedef struct {
 	double daily_c_evapotransp_watt;
 	double daily_soil_evaporation_watt;
 	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;
+	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;
 
 
 	//cumulative variables layer related used in annual-monthly-daily Log
