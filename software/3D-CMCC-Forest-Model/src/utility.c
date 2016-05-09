@@ -60,7 +60,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->daily_c_int = 0.0;
 	c->daily_c_evapo = 0.0;
 	c->daily_soil_evapo = 0.0;
-	c->daily_bl_cond = 0.0;
+	c->daily_c_bl_cond = 0.0;
 	c->daily_latent_heat_flux = 0.0;
 	c->daily_sensible_heat_flux = 0.0;
 
@@ -184,7 +184,7 @@ void Reset_monthly_variables (CELL *const c, const int count)
 	c->monthly_c_evapotransp = 0.0;
 	c->monthly_soil_evapo = 0.0;
 	c->monthly_et = 0.0;
-	c->monthly_bl_cond = 0.0;
+	c->monthly_c_bl_cond = 0.0;
 	c->monthly_latent_heat_flux = 0.0;
 	c->monthly_sensible_heat_flux = 0.0;
 
@@ -232,7 +232,7 @@ void Reset_annual_variables (CELL *const c, const int count)
 	c->annual_c_evapotransp = 0.0;
 	c->annual_soil_evapo = 0.0;
 	c->annual_et = 0.0;
-	c->annual_bl_cond = 0.0;
+	c->annual_c_bl_cond = 0.0;
 	c->annual_latent_heat_flux = 0.0;
 	c->annual_sensible_heat_flux = 0.0;
 

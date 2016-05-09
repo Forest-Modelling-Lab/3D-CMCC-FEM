@@ -18,8 +18,10 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 	double tairK;
 	double tsoilK;
 
+
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
+
 
 	Log("\nLATENT_HEAT_ROUTINE\n");
 
@@ -53,13 +55,15 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 	Log("\nSENSIBLE_HEAT_ROUTINE\n");
 
 	/*following Maespa model of Duursma et al., */
-	if(c->daily_bl_cond!= 0)
+	//fixme
+	if(c->daily_c_bl_cond!= 0)
 	{
-		c->daily_sensible_heat_flux = (CP * met[month].d[day].rho_air * c->daily_bl_cond * (tairK - tsoilK)) / 86400.0;
+		c->daily_sensible_heat_flux = (CP * met[month].d[day].rho_air * (tairK - tsoilK)) * (c->daily_c_bl_cond / 86400.0);
 	}
+	//fixme should include blcond for soil when out of veg period
 	else
 	{
-		c->daily_sensible_heat_flux = (CP * met[month].d[day].rho_air * (tairK - tsoilK)) / 86400.0;
+		c->daily_sensible_heat_flux = (CP * met[month].d[day].rho_air * (tairK - tsoilK));
 	}
 	Log("Daily sensible heat flux = %f W/m\n", c->daily_sensible_heat_flux);
 

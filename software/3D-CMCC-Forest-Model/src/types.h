@@ -1080,9 +1080,11 @@ typedef struct {
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;
 	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored; //not used
 	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
+	double daily_c_bl_cond, monthly_c_bl_cond, annual_c_bl_cond;
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
+	double daily_soil_bl_cond, monthly_soil_bl_cond, annual_soil_bl_cond;
 	double daily_et, monthly_et, annual_et;
-	double daily_bl_cond, monthly_bl_cond, annual_bl_cond;
+
 
 
 	/*energy balance*/

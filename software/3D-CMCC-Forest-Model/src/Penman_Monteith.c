@@ -71,7 +71,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 	/* check */
 	if (evap_or_transp < 0.0) evap_or_transp = 0.0;
-	Log("Penomon evap_or_transp = %.10f mm/m2/sec\n", evap_or_transp);
+	Log("Penmon evap_or_transp = %.10f mm/m2/sec\n", evap_or_transp);
 
 	return(evap_or_transp);
 }

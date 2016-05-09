@@ -14,17 +14,29 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double ratio;            /* actual/potential evaporation for dry day */
 	double rv, rh;
 
+	//test check albedo for other typos
 	double soil_albedo = 0.20; /* for deciduous Monteith 1973 */
 	double net_rad;
 	double pot_soil_evap;    /* (kg/m2/s) potential evaporation (daytime) */
 
-	Log("\n**SOIL EVAPORATION BIOME**\n");
+	double soil_sensible_heat_flux;
+	double tairK, tsoilK;
 
-	if (c->snow_pack != 0.0)
+	double rbl_uncorr; /* m/s) boundary layer resistance UNCORRECTED */
+
+
+	tairK = met[month].d[day].tavg + TempAbs;
+	tsoilK = met[month].d[day].tsoil + TempAbs;
+
+	/* correct conductances for temperature and pressure based on Jones (1992)
+		with standard conditions assumed to be 20 deg C, 101300 Pa */
+	rcorr = 1.0/(pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
+
+	Log("\n**SOIL EVAPORATION BIOME**\n");
+	Log("snowpack = %f\n", c->snow_pack);
+
+	if (c->snow_pack == 0.0)
 	{
-		/* correct conductances for temperature and pressure based on Jones (1992)
-	with standard conditions assumed to be 20 deg C, 101300 Pa */
-		rcorr = 1.0/(pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
 
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
@@ -37,6 +49,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */
 
 		rbl = 107.0 * rcorr;
+		rbl_uncorr = 107.0;
 		rv = rbl;
 		rh = rbl;
 
@@ -72,7 +85,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 			Log("day(s) since rain = %f day(s)\n", c->days_since_rain);
 
 			/* calculate the realized proportion of potential evaporation
-		as a function of the days since rain */
+			as a function of the days since rain */
 			ratio = 0.3/pow(c->days_since_rain,2.0);
 			Log("ratio = %f \n", ratio);
 
@@ -107,6 +120,21 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	/*compute a energy balance evaporation from soil*/
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
 	Log("Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
+
+
+	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
+	/* soil sensible heat flux */
+
+	Log("rcorr = %f\n", rcorr);
+	Log("air_pressure = %f\n", met[month].d[day].air_pressure);
+	Log("rho_air = %f\n", met[month].d[day].rho_air);
+	Log("tairK = %f, TsoilK = %f, rbl = %f\n", tairK, tsoilK, rbl);
+	//fixme in some way if use rbl with rcorr unrealistic high values
+	//then use rbl_uncorr
+	soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rbl_uncorr);
+	Log("soil_sensible_heat flux = %f\n", soil_sensible_heat_flux);
+	getchar();
+
 }
 
 
