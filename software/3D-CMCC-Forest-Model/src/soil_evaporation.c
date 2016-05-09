@@ -22,9 +22,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double soil_sensible_heat_flux;
 	double tairK, tsoilK;
 
-	double rbl_uncorr; /* m/s) boundary layer resistance UNCORRECTED */
-
-
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
@@ -49,7 +46,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		Niger: rbl = 107 s m-1 (Wallace and Holwill, 1997). */
 
 		rbl = 107.0 * rcorr;
-		rbl_uncorr = 107.0;
 		rv = rbl;
 		rh = rbl;
 
@@ -125,15 +121,19 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
 
-	Log("rcorr = %f\n", rcorr);
-	Log("air_pressure = %f\n", met[month].d[day].air_pressure);
-	Log("rho_air = %f\n", met[month].d[day].rho_air);
-	Log("tairK = %f, TsoilK = %f, rbl = %f\n", tairK, tsoilK, rbl);
-	//fixme in some way if use rbl with rcorr unrealistic high values
-	//then use rbl_uncorr
-	soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rbl_uncorr);
+	if(c->snow_pack == 0)
+	{
+		Log("rcorr = %f\n", rcorr);
+		Log("air_pressure = %f\n", met[month].d[day].air_pressure);
+		Log("rho_air = %f\n", met[month].d[day].rho_air);
+		Log("tairK = %f, TsoilK = %f, rbl = %f\n", tairK, tsoilK, rbl);
+		soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rbl);
+	}
+	else
+	{
+		soil_sensible_heat_flux = 0.0;
+	}
 	Log("soil_sensible_heat flux = %f\n", soil_sensible_heat_flux);
-	getchar();
 
 }
 
