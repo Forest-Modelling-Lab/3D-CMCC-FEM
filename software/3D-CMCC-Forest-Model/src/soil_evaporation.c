@@ -53,7 +53,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		{
 			net_rad = c->net_radiation_for_soil * (1.0 - soil_albedo);
 			Log("Filtered Net Radiation for soil = %f W/m2\n", net_rad);
-			if(day == 30 && month == 6)exit(1);
 		}
 		else
 		{

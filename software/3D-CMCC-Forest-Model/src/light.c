@@ -78,14 +78,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		LightAbsorb_sun = 1.0 - LightTrasm_sun;
 		LightAbsorb_shade = 1.0 - LightTrasm_shade;
 
-		/*		Log("Vertical Fraction of Light Absorbed = %f (%f %)\n", LightAbsorb, LightAbsorb * 100.0);
-		Log("Vertical Fraction of Light Transmitted = %f (%f %)\n", LightTrasm, LightTrasm * 100.0);
-
-		Log("Vertical Fraction of Light Absorbed sun = %f (%f %)\n", LightAbsorb_sun, LightAbsorb_sun * 100.0);
-		Log("Vertical Fraction of Light Transmitted sun = %f (%f %)\n", LightTrasm_sun, LightTrasm_sun * 100.0);
-
-		Log("Vertical Fraction of Light Absorbed shade = %f (%f %)\n", LightAbsorb_shade, LightAbsorb_shade * 100.0);
-		Log("Vertical Fraction of Light Transmitted shade = %f (%f %)\n", LightTrasm_shade, LightTrasm_shade * 100.0);*/
 
 		//LIGHT DOMINANT
 		if ( c->heights[height].z == c->top_layer )
@@ -152,7 +144,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
 			Log("Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
 			Log("Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
-			//if(s->value[LAI] >3.0)exit(1);
 
 			//only one height class in layer
 			if ( c->height_class_in_layer_dominant_counter == 1 )
@@ -166,15 +157,30 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					Log("GapCover = %f\n", c->gapcover[c->top_layer]);
 				}
 
-				//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
-				c->net_radiation_for_dominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-						+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
-				Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
+				//test
+				//no other classes
+				if(c->height_class_in_layer_dominated_counter == 0)
+				{
+					c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+					Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+					//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+					c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+					Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+				}
+				else
+				{
+					//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+					c->net_radiation_for_dominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+					Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
-				//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
-				c->par_for_dominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-						+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
-				Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+					//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+					c->par_for_dominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+							+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+					Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+				}
 			}
 			else
 			{
@@ -228,10 +234,30 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 					}
 					else
 					{
-						c->net_radiation_for_dominated = (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell))
-								+ (c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
-						c->par_for_dominated = (s->value[PAR]- s->value[APAR]) * ((1.0- c->gapcover[c->top_layer]) * settings->sizeCell)+
-								c->par * (c->gapcover[c->top_layer] * settings->sizeCell)/ settings->sizeCell;
+						//test
+						//no other classes
+						if(c->height_class_in_layer_dominated_counter == 0)
+						{
+							c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+							Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+							//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+							Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+						}
+						else
+						{
+							//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->net_radiation_for_dominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+							Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
+
+							//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->par_for_dominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+							Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+						}
 					}
 					Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 					Log("Average Par for lower layer = %f molPAR/m^2 month\n", c->par_for_dominated);
@@ -254,14 +280,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				//Net Radiation
 				c->net_radiation = c->net_radiation_for_dominated;
 				Log("Net Radiation = %f W/m^2n", c->net_radiation);
-
-				//				//Par
-				//				c->par = c->par_for_dominated;
-				//				Log("Available Par for dominated = %f molPAR/m^2 day/month\n", c->par);
-				//
-				//				//Apar
-				//				s->value[APAR] = c->par * LightAbsorb;
-				//				Log("Apar = %f molPAR/m^2 day/month\n", s->value[APAR]);
 
 				Log("**BIOME APPROACH for dominted**\n");
 				/*compute APAR for sun and shaded leaves*/
@@ -329,26 +347,30 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 						if (c->gapcover[c->top_layer] <= 0.5)
 						{
-							//Net Radiation for lower layer with no consideration of reflectance from dominated
-							c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS])* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell)) / settings->sizeCell;
-							Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
+							//test
+							//no other classes
+							if(c->height_class_in_layer_subdominated_counter == 0)
+							{
+								c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+								Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+								//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+								Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+							}
+							else
+							{
+								//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+								Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
-							c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ (c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell)))/settings->sizeCell;
-							Log("Par for subdominated = %f molPAR/m^2 day/month\n", c->par_for_subdominated);
-
-						}
-						else
-						{
-							//Net Radiation for lower layer
-							c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS])* (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell)) / settings->sizeCell;
-							Log("Net Radiation for lower layer with albedo = %f  W/m^2\n", c->net_radiation_for_subdominated);
-
-							c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-									+ (c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell)))/settings->sizeCell;
-							Log("Par for subdominated with albedo = %f molPAR/m^2 day/month\n", c->par_for_subdominated);
+								//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+								Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+							}
 						}
 					}
 					else  //many height classes in this layer
@@ -394,10 +416,30 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 							//FIXME NEW VERSION
 							else
 							{
-								c->net_radiation_for_subdominated = (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell))
-										+ (c->net_radiation * (c->gapcover[c->top_layer-1] * settings->sizeCell))) / settings->sizeCell;
-								c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * ((1.0- c->gapcover[c->top_layer-1]) * settings->sizeCell)
-										+ c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell))/settings->sizeCell;
+								//test
+								//no other classes
+								if(c->height_class_in_layer_subdominated_counter == 0)
+								{
+									c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+											+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+									Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+									//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+									c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+											+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+									Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+								}
+								else
+								{
+									//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+									c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+											+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+									Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
+
+									//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+									c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+											+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+									Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+								}
 							}
 							Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
 							Log("Par for  lower layer = %f molPAR/m^2 day/month\n", c->par_for_subdominated);
@@ -408,19 +450,33 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				{
 					if ( c->height_class_in_layer_dominated_counter == 1) //first height  class processed
 					{
-						//percentuale coperta
-						//NON È IL VALORE IN METRO QUADRATO MA IL VALORE PER SUPERFICIE COPERTA
 						c->gapcover[c->top_layer-1] = 1.0 - s->value[CANOPY_COVER_DBHDC];
 						Log("GapCover = %f\n", c->gapcover[c->top_layer-1]);
 
-						//Net Radiation for lower layer
-						c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) + c->net_radiation
-								* (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
-						Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
+						//test
+						//no other classes
+						if(c->height_class_in_layer_subdominated_counter == 0)
+						{
+							c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+							Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+							//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+							Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+						}
+						else
+						{
+							//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+							Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
-						c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
-								+ (c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell)))/settings->sizeCell;
-						Log("Par for lower layer or soil = %f molPAR/m^2 day/month\n", c->par_for_subdominated);
+							//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+							c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+									+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+							Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+						}
 					}
 					else
 					{
@@ -458,14 +514,30 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 								Log("GapCover = %f\n", c->gapcover[c->top_layer - 1]);
 							}
 
-							//Net Radiation for lower layer
-							c->net_radiation_for_subdominated += (((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell))
-									+ c->net_radiation * (c->gapcover[c->top_layer-1] * (double)settings->sizeCell)) / settings->sizeCell;
-							Log("Net Radiation for lower layer = %f  W/m^2\n", c->net_radiation_for_subdominated);
+							//test
+							//no other classes
+							if(c->height_class_in_layer_subdominated_counter == 0)
+							{
+								c->net_radiation_for_soil = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+								Log("Net Radiation for soil = %f  W/m2\n", c->net_radiation_for_dominated);
+								//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->par_for_soil = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+								Log("Average Par for soil = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+							}
+							else
+							{
+								//Net Radiation for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->net_radiation_for_subdominated = ((s->value[NET_RAD] - s->value[NET_RAD_ABS]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+(c->net_radiation * (c->gapcover[c->top_layer] * settings->sizeCell))) / settings->sizeCell;
+								Log("Net Radiation for lower layer = %f  W/m2\n", c->net_radiation_for_dominated);
 
-							c->par_for_subdominated += ((s->value[PAR] - s->value[APAR]) * ((1.0-c->gapcover[c->top_layer-1]) * settings->sizeCell)
-									+c->par * (c->gapcover[c->top_layer-1] * settings->sizeCell))/settings->sizeCell;
-							Log("Par for  lower layer = %f molPAR/m^2 day/month\n", c->par_for_subdominated);
+								//PAR for lower layer computed as averaged value between covered and uncovered of dominant layer
+								c->par_for_subdominated = ((s->value[PAR] - s->value[APAR]) * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell)
+										+ (c->par * (c->gapcover[c->top_layer] * settings->sizeCell)))/settings->sizeCell;
+								Log("Average Par for lower layer = %f molPAR/m^2 day/month\n", c->par_for_dominated);
+							}
 						}
 					}
 				}
@@ -476,17 +548,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				Log("**LIGHT SUB-DOMINATED**\n");
 				Log("Height Classes in Sub-Dominated Layer = %d\n", c->height_class_in_layer_subdominated_counter);
 
-				//				//Net Radiation
-				//				c->net_radiation = c->net_radiation_for_subdominated;
-				//				Log("Net Radiation = % g W/m^2\n", c->net_radiation);
-				//
-				//				//Par
-				//				c->par = c->par_for_subdominated;
-				//				Log("Available Par from upper layer for subdominated = %f molPAR/m^2 day/month\n", c->par);
-				//
-				//				//Apar
-				//				s->value[APAR] = c->par * LightAbsorb;
-				//				Log("Apar = %f molPAR/m^2 month\n", s->value[APAR]);
 
 				Log("**BIOME APPROACH for dominant**\n");
 				/*compute APAR for sun and shaded leaves*/
