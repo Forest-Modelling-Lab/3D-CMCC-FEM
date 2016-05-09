@@ -80,7 +80,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		{
 			/* increment the days since rain */
 			c->days_since_rain += 1.0;
-			Log("day(s) since rain = %f day(s)\n", c->days_since_rain);
 
 			/* calculate the realized proportion of potential evaporation
 			as a function of the days since rain */
@@ -90,10 +89,10 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 			/* calculate evaporation for dry days and scaled to cell uncovered*/
 			c->daily_soil_evapo = ratio * pot_soil_evap * (1.0 - c->cell_cover);
 		}
-		/* for rain events that are smaller than required to reset dsr
+		/* for rain events that are smaller than required to reset days_since_rain
 	counter, but larger than dry-day evaporation, all rain is evaporated.
 	In this case, do not advance the drying curve counter.
-	For rain events that are too small to trigger dsr reset, and which
+	For rain events that are too small to trigger days_since_rain reset, and which
 	are smaller than dry-day evap, there will be more evaporation than
 	rainfall.  In this case the drying curve counter is advanced. */
 		if (c->prcp_rain >c->daily_soil_evapo && c->days_since_rain >= 1.0)
@@ -109,33 +108,33 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	}
 
 	Log("day(s) since rain = %f day(s)\n", c->days_since_rain);
-	Log("Daily Soil Evaporation = %.10f mm/m2/day\n", c->monthly_soil_evapo);
+	Log("Daily Soil Evaporation = %.10f mm/m2/day\n", c->daily_soil_evapo);
 	c->monthly_soil_evapo += c->daily_soil_evapo;
 	Log("Monthly Soil Evaporation = %f mm/m2/month\n", c->monthly_soil_evapo);
 	c->annual_soil_evapo += c->daily_soil_evapo;
 	Log("Annual Soil Evaporation = %f mm/m2/year\n", c->annual_soil_evapo);
 
-	/*compute a energy balance evaporation from soil*/
+	/* compute a energy balance evaporation from soil */
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
 	Log("Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
-
 	if(c->snow_pack == 0)
 	{
 		Log("rcorr = %f\n", rcorr);
 		Log("air_pressure = %f\n", met[month].d[day].air_pressure);
 		Log("rho_air = %f\n", met[month].d[day].rho_air);
 		Log("tairK = %f, TsoilK = %f, rbl = %f\n", tairK, tsoilK, rbl);
-		soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rbl);
+		soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rh);
 	}
 	else
 	{
 		soil_sensible_heat_flux = 0.0;
 	}
 	Log("soil_sensible_heat flux = %f\n", soil_sensible_heat_flux);
+
 
 }
 

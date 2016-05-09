@@ -43,6 +43,14 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	static int days_with_canopy_wet;
 
 
+	//test
+	double tairK;
+	double tsoilK;
+	double canopy_sensible_heat_flux;
+	tairK = met[month].d[day].tavg + TempAbs;
+	tsoilK = met[month].d[day].tsoil + TempAbs;
+
+
 	Log("\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
 
 	Log("**CANOPY INTERCEPTION BIOME**\n");
@@ -276,6 +284,22 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			s->value[CANOPY_TRANSP] *= cell_coverage;
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
+
+
+
+
+		//test
+		/* sensible heat flux */
+		//fixme FUNCTION SHOULD USE SURFACE CANOPY TEMPERATURE INSTEAD TSOILk!!!!!!!!!
+		canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rh);
+		Log("canopy_sensible_heat_flux flux = %f\n", canopy_sensible_heat_flux);
+		//getchar();
+
+
+
+
+
+
 	}
 	else
 	{

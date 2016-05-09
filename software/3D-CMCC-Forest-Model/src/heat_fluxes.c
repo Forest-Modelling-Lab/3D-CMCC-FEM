@@ -67,6 +67,9 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 	}
 	Log("Daily sensible heat flux = %f W/m\n", c->daily_sensible_heat_flux);
 
+
+
+
 	c->monthly_sensible_heat_flux += c->daily_latent_heat_flux;
 	c->annual_sensible_heat_flux += c->daily_latent_heat_flux;
 

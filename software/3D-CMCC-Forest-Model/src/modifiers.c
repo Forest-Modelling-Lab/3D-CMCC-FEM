@@ -18,7 +18,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	double A1 = 2.419 * pow(10,13);
 	double Ea2 = 109600.0;	//KJ mol^-1
 	double A2 = 1.976 * pow(10,22);
-	double KO2;	//inibition constant for 02
+	double KO2;	//Inhibition constant for 02
 	double EaKO2 = 13913.5;	//KJ mol^-1
 	double AKO2 = 8240;
 	double tau;	// CO2/O2  specifity ratio
@@ -28,8 +28,9 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	double v1, v2;
 	static int counter_water_stress;
 
+	//test
 	 double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
-	 double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from pietsch in Pa (3000) are converted in hPa = 30
+	 double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
 
 	Log("\nDAILY_MODIFIERS\n\n");
 

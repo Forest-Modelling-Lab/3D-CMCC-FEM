@@ -734,6 +734,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	else
 	{
 		c->net_radiation_for_soil = c->net_radiation;
+		Log("Net Radiation for soil outside growing season = %f \n", c->net_radiation_for_soil);
 	}
 	if (c->heights[height].z == 0)
 	{
