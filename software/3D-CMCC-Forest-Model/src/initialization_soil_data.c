@@ -127,7 +127,7 @@ void Initialization_site_data (CELL *c)
 		c->soils[i].bulk_density = 0.0;
 		c->soils[i].field_capacity = 0.0;
 		c->soils[i].wilting_point = 0.0;
-		Log("i= %d and soils_count = %d\n", i, c->soils_count);
+		//Log("i= %d and soils_count = %d\n", i, c->soils_count);
 	}
 
 }

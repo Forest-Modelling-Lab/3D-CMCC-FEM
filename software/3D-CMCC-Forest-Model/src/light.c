@@ -32,7 +32,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	//test
 	//fixme LAI values should integrated over the cell considering different
 	actual_albedo = s->value[ALBEDO] * (s->value[ALBEDO]-soil_albedo * exp(-0.75 * s->value[LAI]));
-	Log("actual_albedo = %f\n", actual_albedo);
+	//Log("actual_albedo = %f\n", actual_albedo);
 
 
 	Log("\nRADIATION ROUTINE\n");
@@ -50,8 +50,11 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	c->net_radiation = c->short_wave_radiation - c->long_wave_radiation;
 	//fixme is it correct to avoid negative values?
 	Log("Net radiation = %f W/m2\n", c->net_radiation);
-	if(c->net_radiation < 0.00000001)c->net_radiation = 0.00000001;
-	Log("Net radiation = %f W/m\n", c->net_radiation);
+	if(c->net_radiation < 0.00000001)
+	{
+		c->net_radiation = 0.00000001;
+		Log("Net radiation = %f W/m2\n", c->net_radiation);
+	}
 
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)

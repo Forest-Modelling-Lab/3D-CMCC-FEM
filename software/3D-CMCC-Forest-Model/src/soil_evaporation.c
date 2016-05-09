@@ -32,9 +32,9 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	Log("\n**SOIL EVAPORATION BIOME**\n");
 	Log("snowpack = %f\n", c->snow_pack);
 
+	/* soil evaporation if snowpack = 0 */
 	if (c->snow_pack == 0.0)
 	{
-
 		/* new bare-soil evaporation routine */
 		/* first calculate potential evaporation, assuming the resistance
 		for vapor transport is equal to the resistance for sensible heat
@@ -52,12 +52,15 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		if (c->Veg_Counter >= 1)
 		{
 			net_rad = c->net_radiation_for_soil * (1.0 - soil_albedo);
+			Log("Filtered Net Radiation for soil = %f W/m2\n", net_rad);
+			if(day == 30 && month == 6)exit(1);
 		}
 		else
 		{
 			net_rad = c->net_radiation * (1.0 - soil_albedo);
+			Log("UN-Filtered Net Radiation for soil = %f W/m2\n", net_rad);
 		}
-		Log("Net Radiation for soil = %f W/m2\n", net_rad);
+
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith (met, month, day, rv, rh, net_rad);
