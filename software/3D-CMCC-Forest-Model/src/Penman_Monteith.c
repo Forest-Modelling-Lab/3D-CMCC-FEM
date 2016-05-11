@@ -39,7 +39,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	t1 = met[month].d[day].tday+dt;
 	t2 = met[month].d[day].tday-dt;
 
-	/* calculate saturation vapor pressures at t1 and t2 */
+	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
 	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 

@@ -21,6 +21,8 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 
 	double tairK, tsoilK;
 
+	double tsnow = 0.0, tsnowK;
+
 	//test
 	double rr;
 	double rhr;
@@ -123,25 +125,30 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	Log("Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 
-	//test 11 May 2016 following Webber et al., 2016 as in JULES model (Best et al., GMD)
-	/* soil sensible heat flux */
-	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tsoilK, 3)));
-	rhr = (rh * rr)/ (rh + rr);
+
 
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
 	if(c->snow_pack == 0)
 	{
+		//test 11 May 2016 following Webber et al., 2016 as in JULES model (Best et al., GMD)
+		/* soil sensible heat flux */
+		/* calculate resistance to radiative heat transfer through air, rr */
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tsoilK, 3)));
+		rhr = (rh * rr)/ (rh + rr);
 		c->daily_soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rhr);
 	}
 	else
 	{
-		//todo compute sensible heat flux from snow
+		tsnowK = tsnow + TempAbs;
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tsnowK, 3)));
+		/*
+		rhr = ???;
+		c->daily_soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsnowK)/rhr);
+		*/
 		c->daily_soil_sensible_heat_flux = 0.0;
 	}
 	Log("Daily soil_sensible_heat flux = %f W/m^2\n", c->daily_soil_sensible_heat_flux);
-	if(c->daily_soil_sensible_heat_flux > 0.0)getchar();
 
 }
 

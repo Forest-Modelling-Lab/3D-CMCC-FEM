@@ -386,6 +386,8 @@ enum
 	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS_SUN,
 	NET_RAD_ABS_SHADE,
+	NET_RAD_TRASM_SUN,
+	NET_RAD_TRASM_SHADE,
 	PPFD,
 	PPFD_SUN,
 	PPFD_SHADE,
