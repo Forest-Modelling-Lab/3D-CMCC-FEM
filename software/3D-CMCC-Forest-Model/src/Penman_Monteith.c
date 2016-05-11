@@ -18,13 +18,10 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	double t1,t2,pvs1,pvs2;
 	double rr, rhr;
 	double dt = 0.2;     /* set the temperature offset for slope calculation */
-	double airpressure;
 
 	double evap_or_transp;
 
 	double a1, a2;
-
-	double lhvap;
 
 
 	Log("**Penmon**\n");
@@ -36,10 +33,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 		(p. 168)*/
 	a1 = 1.0 - (LR_STD * site->elev)/T_STD;
 	a2 = G_STD / (LR_STD * (Rgas / MA));
-	airpressure = P_STD * pow (a1, a2);
 
-	/* compute latent heat */
-	lhvap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 
 	/* assign ta (Celsius) and tk (Kelvins) */
 	tairK = met[month].d[day].tday + TempAbs;
@@ -64,10 +58,10 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 	/* latent heat fluxes of evaporation or transpiration W/m2 */
 	evap_or_transp = ((esse * net_rad) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-			(((airpressure * CP * rv) / (lhvap * EPS * rhr)) + esse);
+			(((met[month].d[day].air_pressure * CP * rv) / (met[month].d[day].lh_vap * EPS * rhr)) + esse);
 
 	/* evporation or transpiration is converted into kg-mm/m2/sec */
-	evap_or_transp /= lhvap;
+	evap_or_transp /= met[month].d[day].lh_vap;
 
 	/* check */
 	if (evap_or_transp < 0.0) evap_or_transp = 0.0;
