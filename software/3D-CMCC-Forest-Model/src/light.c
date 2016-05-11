@@ -106,6 +106,15 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			s->value[APAR] = s->value[PAR] * LightAbsorb;
 			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 			s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
+
+			//test 11 May 2016
+			/*
+			s->value[APAR] = s->value[PAR] * LightAbsorb;
+			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
+			s->value[TRASM_PAR_SUN] = s->value[PAR] - s->value[TRASM_PAR];
+			s->value[APAR_SHADE] = s->value[TRASM_PAR] * LightAbsorb_shade;
+			s->value[TRASM_PAR_SHADE] = s->value[TRASM_PAR_SUN] - s->value[APAR_SHADE];
+			 */
 			Log("Par = %f molPAR/m^2 day\n", s->value[PAR]);
 			Log("Apar = %f molPAR/m^2 day\n", s->value[APAR]);
 			Log("Apar sun = %f molPAR/m^2 day\n", s->value[APAR_SUN]);
