@@ -14,26 +14,16 @@
 double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, int rv, double net_rad)
 {
 	double tairK;
-	double esse;
+	double delta;
 	double t1,t2,pvs1,pvs2;
 	double rr, rhr;
 	double dt = 0.2;     /* set the temperature offset for slope calculation */
 
 	double evap_or_transp;
 
-	double a1, a2;
 
 
 	Log("**Penmon**\n");
-	/*compute air pressure*/
-	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
-	/* From the discussion on atmospheric statics in:
-	Iribane, J.V., and W.L. Godson, 1981. Atmospheric Thermodynamics, 2nd
-		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
-		(p. 168)*/
-	a1 = 1.0 - (LR_STD * site->elev)/T_STD;
-	a2 = G_STD / (LR_STD * (Rgas / MA));
-
 
 	/* assign ta (Celsius) and tk (Kelvins) */
 	tairK = met[month].d[day].tday + TempAbs;
@@ -54,11 +44,11 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
 	/* calculate slope of pvs vs. T curve, at ta */
-	esse = (pvs1-pvs2) / (t1-t2);
+	delta = (pvs1-pvs2) / (t1-t2);
 
 	/* latent heat fluxes of evaporation or transpiration W/m2 */
-	evap_or_transp = ((esse * net_rad) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-			(((met[month].d[day].air_pressure * CP * rv) / (met[month].d[day].lh_vap * EPS * rhr)) + esse);
+	evap_or_transp = ((delta * net_rad) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
+			(((met[month].d[day].air_pressure * CP * rv) / (met[month].d[day].lh_vap * EPS * rhr)) + delta);
 
 	/* evporation or transpiration is converted into kg-mm/m2/sec */
 	evap_or_transp /= met[month].d[day].lh_vap;

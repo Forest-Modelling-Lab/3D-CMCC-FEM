@@ -42,11 +42,19 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double cell_coverage;
 	static int days_with_canopy_wet;
 
-
-	//test
 	double tairK;
 	double tsoilK;
-	double canopy_sensible_heat_flux;
+
+	//test
+	double psych, psych_p;
+	double t1, t2;
+	double pvs1, pvs2;
+	double dt = 0.2;
+	double delta;
+	double rc, rr, rhr;
+	double rel_hum;
+	double tcanopy, tcanopyK;
+
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
@@ -121,10 +129,10 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		to maximum stomatal conductance */
 
 	/* photosynthetic photon flux density conductance control */
-//	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
-//	//Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
-//	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
-//	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+	//	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
+	//	//Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	//	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
+	//	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
 	//04/apr/2016
 	/* photosynthetic photon flux density conductance control */
@@ -285,20 +293,56 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 
+		//TEST
+		/* CANOPY SENSIBLE HEAT FLUX */
+		Log("\ncanopy sensible heat\n");
 
+		/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
+		/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
+		psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
 
+		/* calculate temperature offsets for slope estimate */
+		t1 = met[month].d[day].tday+dt;
+		t2 = met[month].d[day].tday-dt;
+
+		/* calculate saturation vapor pressures at t1 and t2 */
+		pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+		pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+
+		/* calculate slope of pvs vs. T curve, at ta */
+		//test this is the "DELTA" function as in Webber et al., 2016
+		delta = (pvs1-pvs2) / (t1-t2);
 
 		//test
-		/* sensible heat flux */
-		//fixme FUNCTION SHOULD USE SURFACE CANOPY TEMPERATURE INSTEAD TSOILk!!!!!!!!!
-		canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rh);
-		Log("canopy_sensible_heat_flux flux = %f\n", canopy_sensible_heat_flux);
-		//getchar();
+		/* canopy resistance m sec-1)*/
+		//fixme gl_sh or gc_sh?
+		//fixme this is valid for cell level not for class level
+		rc = 1.0/gc_sh;
 
+		//test this is the equivalent "ra" aerodynamic resistance as in Allen et al., 1998
+		/* calculate resistance to radiative heat transfer through air, rr */
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tairK, 3)));
+		rhr = (rh * rr) / (rh + rr);
+		/* compute product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016 */
+		psych_p = psych *(1+(rc/rhr));
 
+		rel_hum = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
+		rel_hum *= (1 - rh / 100.0);
 
+		/* canopy temperature as in Webber et al., 2016 */
+		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-rel_hum)/delta +psych_p);
+		Log("tavg = %f °C\n", met[month].d[day].tavg);
+		Log("canopy temp = %f °C\n", tcanopy);
+		Log("rh_f = %f\n", rel_hum);
 
+		tcanopyK += TempAbs;
 
+		Log("canopy_temp = %f K\n", tcanopyK);
+		Log("tairK = %f K\n", tairK);
+
+		//fixme this is valid for cell level not for class level
+		c->daily_canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tcanopyK-tairK)/rhr);
+		Log("canopy_sensible_heat_flux = %f Wm-2\n", c->daily_canopy_sensible_heat_flux);
 
 	}
 	else

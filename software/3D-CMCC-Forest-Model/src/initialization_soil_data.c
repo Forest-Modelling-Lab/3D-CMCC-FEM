@@ -121,8 +121,6 @@ void Initialization_site_data (CELL *c)
 	c->bulk_density += (-0.08 * c->bulk_density);
 	Log("**Bulk density = %f g/cm^3\n", c->bulk_density);
 
-	getchar();
-
 	//test 5 may 2016
 	for (i = 0; i < c->soils_count; i++)
 	{

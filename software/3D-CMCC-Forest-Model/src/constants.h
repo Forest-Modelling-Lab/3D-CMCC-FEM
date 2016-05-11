@@ -41,9 +41,9 @@
 
 #define E20						2.2       //rate of change of saturated VPD with T at 20C
 #define VPDCONV			   0.000622       //convert VPD to saturation deficit = 18/29/1000
-#define PSYCCONST				 65.0       //psychrometer costant in Pa/Gerten et al., 2004)
 #define EVAPOCOEFF			   1.32       //Priestley Taylor Coefficient (Hobbins et al., 2001)
 
+#define MWratio               0.622       //ratio molecular weight of water vapour air
 #define TempAbs				 273.13        //absolute temperature in Kelvin
 
 #define GDD_BASIS                 5        //temperature C° basis for thermic sum

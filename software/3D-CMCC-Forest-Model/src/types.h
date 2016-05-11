@@ -1084,6 +1084,8 @@ typedef struct {
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
 	double daily_soil_bl_cond, monthly_soil_bl_cond, annual_soil_bl_cond;
 	double daily_et, monthly_et, annual_et;
+	double daily_canopy_sensible_heat_flux;
+	double daily_soil_sensible_heat_flux;
 
 
 
