@@ -78,6 +78,11 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		LightAbsorb_sun = 1.0 - LightTrasm_sun;
 		LightAbsorb_shade = 1.0 - LightTrasm_shade;
 
+		Log("LightAbsorb_sun = %f\n", LightAbsorb_sun);
+		Log("LightTrasm_sun = %f\n", LightTrasm_sun);
+		Log("LightAbsorb_shade = %f\n", LightAbsorb_shade);
+		Log("LightTrasm_sun = %f\n", LightTrasm_shade);
+
 
 		//LIGHT DOMINANT
 		if ( c->heights[height].z == c->top_layer )
@@ -95,10 +100,10 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("**BIOME APPROACH for dominant**\n");
 			/*compute APAR for sun and shaded leaves*/
 			//amount of total par that is reflected but leaves*/
-			//FIXME
+			//FIXME FOLLOWING WHAT DONE FOR NET_RAD
+
 			s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
 			s->value[APAR] = s->value[PAR] * LightAbsorb;
-			//TEST
 			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 			s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
 			Log("Par = %f molPAR/m^2 day\n", s->value[PAR]);
@@ -109,28 +114,13 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			/*compute NetRad for sun and shaded leaves*/
 			//amount of Net Rad that is reflected but leaves*/
 
-			//fixme
-			/*
-			s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
-			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
-			s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
-			s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
-			*/
-
-			Log("LightAbsorb_sun = %f\n", LightAbsorb_sun);
-			Log("LightTrasm_sun = %f\n", LightTrasm_sun);
-			Log("LightAbsorb_shade = %f\n", LightAbsorb_shade);
-			Log("LightTrasm_sun = %f\n", LightTrasm_shade);
-
-
-			s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
-			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			//test 11 May 2016 test
+			s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
+			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			s->value[NET_RAD_ABS_SUN] = s->value[NET_RAD] * LightAbsorb_sun;
 			s->value[NET_RAD_TRASM_SUN] = s->value[NET_RAD] - s->value[NET_RAD_ABS_SUN];
 			s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_TRASM_SUN] * LightAbsorb_shade;
 			s->value[NET_RAD_TRASM_SHADE] = s->value[NET_RAD_TRASM_SUN] - s->value[NET_RAD_ABS_SHADE];
-
 			Log("INCOMING net_radiation = %f W/m^2\n", c->net_radiation);
 			Log("NetRad = %f W/m^2\n", s->value[NET_RAD]);
 			Log("Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
@@ -139,11 +129,10 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Trasmitted NetRad shade = %f W/m^2\n", s->value[NET_RAD_TRASM_SHADE]);
 
 
-
 			/*compute PPFD for sun and shaded leaves*/
-
 			//04/05/2016
 			//TEST
+			//FIXME FOLLOWING WHAT DONE FOR NET_RAD
 			par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0)) * ppfd_coeff;
 			par_abs = par * LightAbsorb;
 			par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];

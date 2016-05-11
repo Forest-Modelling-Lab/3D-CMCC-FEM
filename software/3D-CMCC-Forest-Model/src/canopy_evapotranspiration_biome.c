@@ -237,7 +237,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* calculate transpiration using adjusted daylength */
 				rv = 1.0/gl_t_wv_sun;
 				rh = 1.0/gl_sh;
-				//test 11 MAY 2016
+
+				//test 11 MAY 2016 following biome approach
 				//net_rad = s->value[NET_RAD_ABS_SUN]
 				net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 				Log("net rad = %f\n", net_rad);
@@ -249,7 +250,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* next for shaded canopy fraction */
 				rv = 1.0/gl_t_wv_shade;
 				rh = 1.0/gl_sh;
-				//test 11 May 2016
+
+				//test 11 May 2016 following biome approach
 				//net_rad = s->value[NET_RAD_ABS_SHADE];
 				net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 				Log("net rad = %f\n", net_rad);
@@ -279,7 +281,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			/* first for sunlit canopy fraction */
 			rv = 1.0/gl_t_wv_sun;
 			rh = 1.0/gl_sh;
-			//test 11 MAY 2016
+
+			//test 11 MAY 2016 following biome approach
 			//net_rad = s->value[NET_RAD_ABS_SUN]
 			net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 			Log("net rad = %f\n", net_rad);
@@ -290,7 +293,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			/* next for shaded canopy fraction */
 			rv = 1.0/gl_t_wv_shade;
 			rh = 1.0/gl_sh;
-			//test 11 May 2016
+
+			//test 11 May 2016 following biome approach
 			//net_rad = s->value[NET_RAD_ABS_SHADE];
 			net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 			Log("net rad = %f\n", net_rad);
