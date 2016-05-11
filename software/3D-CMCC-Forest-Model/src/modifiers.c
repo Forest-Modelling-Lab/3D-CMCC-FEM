@@ -219,9 +219,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		counter_water_stress = 0.0;
 		s->value[F_PSI] = 1.0;
 	}
-	// 5 MAY 2016 ADDED "|| (c->asw < c->wilting_point)
 	/* full water stress */
-	else if (c->psi <= s->value[SWPCLOSE] /* && (c->asw < c->wilting_point)*/)
+	else if (c->psi <= s->value[SWPCLOSE])
 	{
 		//change for multiple class
 		counter_water_stress += 1;
@@ -229,7 +228,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		Log("Water stress\n");
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 
-		/* forced to 0.1 (before was 0.33) to avoid too much low values */
+		/* forced to  0.33 to avoid too much low values */
 		//fixme
 		s->value[F_PSI] = 0.33;
 		Log("F_PSI = %f\n", s->value[F_PSI]);

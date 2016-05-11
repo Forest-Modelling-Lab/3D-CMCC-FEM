@@ -18,7 +18,6 @@ C_SRCS += \
 ../src/canopy_evapotranspiration_biome.c \
 ../src/canopy_interception.c \
 ../src/canopy_transpiration.c \
-../src/carbon_balance.c \
 ../src/check_balance.c \
 ../src/check_prcp.c \
 ../src/common.c \
@@ -80,7 +79,6 @@ OBJS += \
 ./src/canopy_evapotranspiration_biome.o \
 ./src/canopy_interception.o \
 ./src/canopy_transpiration.o \
-./src/carbon_balance.o \
 ./src/check_balance.o \
 ./src/check_prcp.o \
 ./src/common.o \
@@ -142,7 +140,6 @@ C_DEPS += \
 ./src/canopy_evapotranspiration_biome.d \
 ./src/canopy_interception.d \
 ./src/canopy_transpiration.d \
-./src/carbon_balance.d \
 ./src/check_balance.d \
 ./src/check_prcp.d \
 ./src/common.d \
@@ -194,7 +191,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

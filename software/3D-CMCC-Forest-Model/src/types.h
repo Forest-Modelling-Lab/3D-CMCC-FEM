@@ -381,6 +381,9 @@ enum
 	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
 	APAR_SUN,
 	APAR_SHADE,
+	TRASM_PAR,
+	TRASM_PAR_SUN,
+	TRASM_PAR_SHADE,
 	APARU,                          //"Utilisable PAR" 'mol/m^2'
 	NET_RAD,                        //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
