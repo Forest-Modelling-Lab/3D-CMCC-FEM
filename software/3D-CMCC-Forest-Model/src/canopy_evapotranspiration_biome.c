@@ -55,6 +55,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double rel_hum;
 	double tcanopy, tcanopyK;
 
+	double svp, vp;
+
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
@@ -293,6 +295,14 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 
+
+
+
+
+
+
+
+
 		//TEST
 		/* CANOPY SENSIBLE HEAT FLUX */
 		Log("\ncanopy sensible heat\n");
@@ -326,16 +336,18 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* compute product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016 */
 		psych_p = psych *(1+(rc/rhr));
 
-		rel_hum = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
-		rel_hum *= (1 - rh / 100.0);
+		svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
+		vp = svp - met[month].d[day].vpd;
+		rel_hum = vp/svp;
+		Log("RH = %f\n", rel_hum);
 
 		/* canopy temperature as in Webber et al., 2016 */
 		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-rel_hum)/delta +psych_p);
 		Log("tavg = %f °C\n", met[month].d[day].tavg);
 		Log("canopy temp = %f °C\n", tcanopy);
-		Log("rh_f = %f\n", rel_hum);
+		Log("differences = %f °C\n", tcanopy - met[month].d[day].tavg);
 
-		tcanopyK += TempAbs;
+		tcanopyK = tcanopy + TempAbs;
 
 		Log("canopy_temp = %f K\n", tcanopyK);
 		Log("tairK = %f K\n", tairK);

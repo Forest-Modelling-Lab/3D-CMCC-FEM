@@ -338,6 +338,7 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 
 		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
 			/* 6.11 is for hPa */
+			//fixme ALESSIOR this formula seems to be wrong
 			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
 			value *= (1 - rh / 100.0);
 			/* convert NaN to invalid value */
