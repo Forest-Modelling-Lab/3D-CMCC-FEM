@@ -144,6 +144,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
 	/* apply all multipliers to the maximum stomatal conductance */
+	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
 	m_final_sun = m_ppfd_sun * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 	m_final_shade = m_ppfd_shade * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 

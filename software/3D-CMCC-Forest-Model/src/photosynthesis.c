@@ -55,6 +55,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		}
 		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
+
 		/* GPP */
 		Log("Apar for GPP = %f\n", s->value[APAR]);
 
@@ -86,6 +87,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		s->value[DAILY_POINT_GPP_gC] = 0;
 		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
+
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
 	i = c->heights[height].z;

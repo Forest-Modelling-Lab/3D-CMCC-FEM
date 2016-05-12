@@ -21,6 +21,32 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 	double evap_or_transp;
 
+    /*
+	Combination equation for determining evaporation and transpiration.
+
+
+    INPUTS:
+    tday                    (deg C)       air temperature
+    air_pressure            (Pa)          air pressure
+    vpd                     (Pa)          vapor pressure deficit
+    net_rad                 (W/m2)        incident radient flux density
+    rv                      (s/m)         resistance to water vapor flux
+    rh                      (s/m)         resistance to sensible heat flux
+    air_rho                 (kg/m3)       density of air
+	CP                      (J/kg/degC)   specific heat of air
+    lh_vap                  (J/kg)        latent heat of vaporization of water
+
+    INTERNAL VARIABLES:
+    rr                      (s m-1)       resistance to radiative heat transfer through air
+    rhr                     (s m-1)       combined resistance to convective and radiative heat transfer
+    pvs1, 2                 (Pa)          saturation vapor pressures at t1 and t2
+    delta                   (Pa/degC)     slope of saturation vapor pressure vs T curve
+
+    OUTPUTs:
+    evap_or_transp          (kg/m2/s)     water vapor mass flux density  (flag=0)
+    evap_or_transp          (W/m2)        latent heat flux density       (flag=1)
+    */
+
 
 
 	Log("**Penmon**\n");
