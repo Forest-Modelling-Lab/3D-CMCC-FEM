@@ -29,8 +29,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	static int counter_water_stress;
 
 	//test
-	 double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
-	 double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
+	double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
+	double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
 
 	Log("\nDAILY_MODIFIERS\n\n");
 
@@ -238,7 +238,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		s->value[F_PSI] = 0.3;
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);
-		getchar();
+
 	}
 	/* partial water stress */
 	else
