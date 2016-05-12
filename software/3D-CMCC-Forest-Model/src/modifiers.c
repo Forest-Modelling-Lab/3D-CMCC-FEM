@@ -238,6 +238,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		s->value[F_PSI] = 0.3;
 		Log("F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);
+		getchar();
 	}
 	/* partial water stress */
 	else

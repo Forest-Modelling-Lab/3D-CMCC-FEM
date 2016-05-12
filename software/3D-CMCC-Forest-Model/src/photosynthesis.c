@@ -55,6 +55,10 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		}
 		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
 
+		//test 12 May 2016 test
+		//GPP depends on canopy wet (no photosynthesis occurs if canopy is wet)
+		//fraction depend on partial canopy wet
+		//Alpha_C *= s->value[CANOPY_FRAC_DAY_TRANSP];
 
 		/* GPP */
 		Log("Apar for GPP = %f\n", s->value[APAR]);

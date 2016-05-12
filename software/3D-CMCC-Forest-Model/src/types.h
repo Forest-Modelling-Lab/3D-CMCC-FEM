@@ -441,6 +441,7 @@ enum
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
 	CANOPY_WATER,//it should'nt be reset every day
+	CANOPY_FRAC_DAY_TRANSP, //Fraction of daily canopy transpiration (DIM)
 
 	/*LAI*/
 	LAI,                            //LAI (m^2/m2)

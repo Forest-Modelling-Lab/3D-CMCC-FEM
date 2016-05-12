@@ -215,6 +215,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* adjust daylength for transpiration */
 				//fixme this variable should be used also in photosynthesis
 				transp_daylength = 0.0;
+				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.0;
+				Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
 				s->value[CANOPY_EVAPO] *= daylength_sec * cell_coverage;   /* daylength limits canopy evaporation */
@@ -234,6 +236,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* adjust daylength for transpiration */
 				//fixme this variable should be used also in photosynthesis
 				transp_daylength = daylength_sec - evap_daylength;
+				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength / daylength_sec;
+				Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+
 
 				/* calculate transpiration using adjusted daylength */
 				rv = 1.0/gl_t_wv_sun;
@@ -287,6 +292,12 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			//net_rad = s->value[NET_RAD_ABS_SUN]
 			net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 			Log("net rad = %f\n", net_rad);
+
+			/* all day transp */
+			transp_daylength = 1.0;
+			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.0;
+			Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+
 			transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
 			transp_sun *= daylength_sec * s->value[LAI_SUN];
 			Log("transp_sun = %.10f mm/m2/day\n", transp_sun);
@@ -353,7 +364,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 		//test
 		/* canopy resistance m sec-1)*/
-		//fixme gl_sh or gc_sh?
+		//fixme gl_sh or gc_sh? Wang and Leuning 1998 use stomatal conductance
 		//fixme this is valid for cell level not for class level
 		rc = 1.0/gc_sh;
 
