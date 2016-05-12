@@ -315,7 +315,7 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 					"CC", "LIVE TREE", "DEAD TREE", "avDBH", "wf", "ws", "wsl", "ws-sap", "wbb", "wbbl", "wbb-sap", "wfr", "wcr", "wcrl", "wcr-sap", "wsap", "Wres(KG/t)", "D-Wres", "leafAR", "stemAR", "branchAR", "frAR", "crAR");
 
 		}
-		Annual_Log ("%d \t%d,\t%d \t%2d", yos[years].year, c->x, c->y, c->height_class_in_layer_dominant_counter);
+		Annual_Log ("%d \t%d,%d \t%2d", yos[years].year, c->x, c->y, c->height_class_in_layer_dominant_counter);
 		if (!mystricmp(settings->dndc, "on"))
 		{
 			Annual_Log ("\t%6.2f", c->annual_nee);

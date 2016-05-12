@@ -6,7 +6,8 @@ INITIALLITTER "2.81" //Initial Litter (tDM/ha^1)
 CLAY_PERC "43.5"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "49.8"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "6.7"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
-SOIL_DEPTH "80" //SOIL DEPTH (cm) 80 was before
+SOIL_DEPTH "100" //SOIL DEPTH (cm) 80 Ettore, 40-100 Skamarkiva et al., 2006, 30-150 from BADM
+//SOC "14.68"  //SOIL ORGANIC CARBON  (Kg/m2) from BADM
 
 //SITE NUTRITION
 FR "0.6" //Fertility rating

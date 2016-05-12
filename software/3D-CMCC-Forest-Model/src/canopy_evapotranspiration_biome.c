@@ -270,8 +270,13 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				transp = transp_sun + transp_shade;
 				Log("transp = %.10f mm/m2/day\n", transp);
 				s->value[CANOPY_TRANSP] = transp;
+
 				/* considering effective coverage of cell */
 				s->value[CANOPY_TRANSP] *= cell_coverage;
+
+				//test 12 May 2016 test
+				/* including CO2 effect */
+				s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
@@ -318,8 +323,14 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			transp = transp_sun + transp_shade;
 			Log("transp = %.10f mm/m2/day\n", transp);
 			s->value[CANOPY_TRANSP] = transp;
+
 			/* considering effective coverage of cell and convert to daily amount */
 			s->value[CANOPY_TRANSP] *= cell_coverage;
+
+			//test 12 May 2016 test
+			/* including CO2 effect */
+			s->value[CANOPY_TRANSP] *= s->value[F_CO2];
+
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 
