@@ -1433,7 +1433,7 @@ int fill_species_from_file(SPECIES *const s);
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
-
+const char *GetNetCDFVersion(void);
 #define XSTR(a)		STR(a)
 #define STR(a)		#a
 #define CHECK_CONDITION(x,c) {																																\

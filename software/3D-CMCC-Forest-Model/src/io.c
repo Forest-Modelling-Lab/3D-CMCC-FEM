@@ -1,4 +1,4 @@
-/* io.c 
+/* io.c
 
 re-written by Alessio Ribeca on January 2016
 please ASK before modify it!
@@ -17,7 +17,12 @@ please ASK before modify it!
 #include <time.h>
 #include "types.h"
 #include "common.h"
+#ifndef NEXT_3DMCC_RELEASE
 #include "netcdf/netcdf.h"
+#else
+#include "../../netcdf-4.4.0/include/netcdf.h"
+#endif
+
 
 #ifdef _WIN32
 #pragma comment(lib, "lib/netcdf")
@@ -159,7 +164,7 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 	int flag;
 
 	const char delimiter[] = " ,\r\n";
-	
+
 	assert(filename);
 
 	if ( ! loadFileToMemory(filename, &buffer) )
@@ -381,7 +386,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		previous_prcp,
 		previous_swc,
 		previous_ndvi_lai;
-	
+
 	assert(p_yos && yos_count);
 
 	year = 0;
@@ -429,7 +434,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 
 			yos[*yos_count].year = year;
 			++*yos_count;
-			
+
 			current_year = year;
 		}
 
@@ -441,9 +446,9 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			free(yos);
 			return 0;
 		}
-		
+
 		//switch ( i )
-		//{								
+		//{
 		//case RG_F: //Rg_f - solar_rad -daily average solar radiation
 		yos[*yos_count-1].m[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (1 == *yos_count) && (month == 0))))
@@ -559,7 +564,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		{
 			previous_tmin = yos[*yos_count-1].m[month].d[day].tmin;
 		}
-		
+
 
 	//case VPD_F: //RH_f - RH
 		yos[*yos_count-1].m[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
@@ -618,7 +623,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		{
 			previous_ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
 		}
-		
+
 	//case PRECIP:  //Precip - rain
 		yos[*yos_count-1].m[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
@@ -655,7 +660,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			//Log("ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
 		}
 		//Log("%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
-	
+
 
 	//case SWC: //Soil Water Content (%)
 
@@ -745,7 +750,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				}
 			}
 		}
-	
+
 	//case ET: //ET for stand alone RothC (todo remove)
 		yos[*yos_count-1].m[month].d[day].et = values[VALUE_AT(row,ET)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
@@ -754,7 +759,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			//Log ("* ET -NO DATA in year %s month %s, day %d!!!!\n", year, MonthName[month], day);
 		}
 		//Log("%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
-		
+
 	//case WS_F: //windspeed
 		yos[*yos_count-1].m[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].windspeed) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
@@ -926,7 +931,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 					ret = nc_get_var_int(id_file, i, i_values);
 					if ( ret != NC_NOERR ) goto quit;
 					for ( z = 0; z < dims_size[ROWS_DIM]; ++z ) {
-						values[VALUE_AT(z, y)] = (double)i_values[z]; 
+						values[VALUE_AT(z, y)] = (double)i_values[z];
 					}
 				} else {
 					/* type format not supported! */
@@ -936,7 +941,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 					nc_close(id_file);
 					return 0;
 				}
-				
+
 				break;
 			}
 		}
@@ -1742,7 +1747,7 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 			return 0;
 		}
 	}
-	
+
 	if ( (! no_year_column && (YEAR != columns[YEAR])) || (MONTH-no_year_column != columns[MONTH]) || (DAY-no_year_column != columns[DAY]) )
 	{
 		puts("date must be on first columns!\n\n");
@@ -1915,7 +1920,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 		{
 			free(yos);
 			return NULL;
-		}	
+		}
 	}
 
 	// sort
@@ -1977,7 +1982,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 							//ALESSIOC
 							, yos[i].m[month].d[z].windspeed);
 				}
-			}		
+			}
 			fclose(f);
 		}
 	}
@@ -2022,11 +2027,35 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 // if type is 2, write yearly
 //
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+/*
+	la memoria è stata allocata come C*R*X*Y
+	
+	C = colonne ( variabili )
+	R = righe ( anni di elaborazione * 366 )
+	X = numero x celle
+	Y = numero y celle
+
+	quindi il valore a [n1][n2][n3][n4]
+
+	è dato da
+	
+	n1+(n2*C)+(n3*C*R)+(n4*C*R*X)
+
+
+	
+	//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+	
+*/
+#define XS						(x_cells_count)
+#define DAILY_ROWS				(366*years_count)
+#define COLUMNS					(vars->daily_vars_count)
+#define DAILY_VALUE_AT(c)	(c*ROWS*X*Y)
 	int i;
 	int ret;
 	char *p;
 	char sz_buffer[256];
 	int n;
+	int index;
 
 	int id_file;
 	int id_x;
@@ -2040,7 +2069,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	int rows_count;
 
 	double *values;
-	
+
 	const char sz_x[] = "x";
 	const char sz_y[] = "y";
 	const char sz_lat[] = "lat";
@@ -2106,7 +2135,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 
 		ret = nc_def_dim(id_file, sz_y, y_cells_count, &id_y);
 		if ( ret != NC_NOERR ) goto quit;
-				
+
 		ret = nc_def_dim(id_file, sz_time, rows_count /*NC_UNLIMITED*/, &id_time);
 		if ( ret != NC_NOERR ) goto quit;
 
@@ -2114,7 +2143,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 		id_dims[0] = id_time;
 		id_dims[1] = id_y;
 		id_dims[2] = id_x;
-				
+
 		/* define variables */
 		ret = nc_def_var(id_file, sz_lat, NC_FLOAT, 2, id_dims+1, &id_lat);
 		if ( ret != NC_NOERR ) goto quit;
@@ -2153,12 +2182,11 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 			values = vars->monthly_vars_value;
 		if ( 2 == type)
 			values = vars->yearly_vars_value;
-		
-		ret = nc_put_var_double(id_file, id_var, values);
+		//index = DAILY_VALUE_AT(0,0,0,n);
+		ret = nc_put_var_double(id_file, id_var, values+index);
 		if ( ret != NC_NOERR ) goto quit;
 
-				
-		nc_close(id_file);		
+		nc_close(id_file);
 	}
 	free(time_rows);
 	return 1;
@@ -2169,4 +2197,13 @@ quit:
 	nc_close(id_file);
 
 	return 0;
+#undef XS
+#undef ROWS
+#undef COLUMNS
+#undef DAILY_VALUE_AT
+}
+
+const char *GetNetCDFVersion(void)
+{
+	return nc_inq_libvers();
 }

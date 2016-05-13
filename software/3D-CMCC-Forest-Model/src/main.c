@@ -35,7 +35,6 @@
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
-#include "netcdf/netcdf.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
@@ -83,10 +82,6 @@ char 	*program_path		=	NULL,	// mandatory
 
 int log_enabled		=	1,	// default is on
 		years_of_simulation	=	0;	// default is none
-
-/* static global variables */
-static FILES *files_founded;
-static int files_founded_count;
 
 // ALESSIOR: PORCATA fixme
 int x_cells_count;
@@ -188,10 +183,6 @@ static void clean_up(void)
 	if (program_path)
 		free(program_path);
 
-	if ( files_founded ) {
-		free_files(files_founded, files_founded_count);
-	}
-	
 #ifdef _WIN32
 #ifdef _DEBUG
 	/*
@@ -573,10 +564,7 @@ int main(int argc, char *argv[])
 {
 	int i,
 	error,
-	rows_count,
-	files_processed_count,
-	files_not_processed_count,
-	total_files_count;
+	rows_count;
 
 	struct tm* data;
 
@@ -962,7 +950,7 @@ int main(int argc, char *argv[])
 	}
 
 	//add site name to output files
-	
+
 	sprintf(strSitename, "%s", site->sitename);
 
 	strcat (out_filename, "_");
@@ -983,7 +971,7 @@ int main(int argc, char *argv[])
 
 
 	//define output file name in function of model settings
-	
+
 	strTmp[0] = '_';
 	strTmp[1] = settings->version;
 	strTmp[2] = '\0';
@@ -1019,7 +1007,7 @@ int main(int argc, char *argv[])
 	strcat (soil_out_filename, strTmp2);
 	strcat (soil_out_filename, strTmp3);
 
-	
+
 	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
 
 	strcat (out_filename, strSizeCell);
@@ -1042,7 +1030,7 @@ int main(int argc, char *argv[])
 	time (&rawtime);
 	data = gmtime(&rawtime);
 
-	
+
 	sprintf(strData, "%d", data->tm_year+1900);
 	strcat (out_filename, strData);
 	strcat (out_filename, "_");
@@ -1161,7 +1149,7 @@ int main(int argc, char *argv[])
 	Log(copyright);
 
 	/* show banner */
-	Log(banner, nc_inq_libvers());
+	Log(banner, GetNetCDFVersion());
 
 	/* show paths */
 	printf(msg_dataset_path, input_path);
@@ -1177,26 +1165,6 @@ int main(int argc, char *argv[])
 	free(site_path); site_path = NULL;
 	free(settings_path); settings_path = NULL;
 
-	/* get files */
-	// TODO ALESSIOR
-	// mi sembra di capire che input_path sar� sempre un file passato come argomento
-	// quindi la funzione non serve a nulla...
-	files_founded = get_files(program_path, input_path, &files_founded_count, &error);
-	if ( error )
-	{
-		Log("Error reading input files!\n\n");
-		free(input_path);
-		return 1;
-	}
-	Log("input path = %s\n", input_path);
-	Log("...input file imported\n\n");
-	free(input_path);
-	input_path = NULL;
-
-	/* reset */
-	files_processed_count = 0;
-	files_not_processed_count = 0;
-	total_files_count = 0;
 	/*
 	// Import site.txt file
 	error = importSiteFile(site_path);
@@ -1212,379 +1180,380 @@ int main(int argc, char *argv[])
 	}
 	 */
 	/* loop for searching file */
-	for ( i = 0; i < files_founded_count; i++)
+	/* processing */
+	printf(msg_processing, input_path);
+
+	/* import dataset */
+	rows = import_dataset(input_path, &rows_count);
+	if ( !rows )
 	{
-		/* inc */
-		++total_files_count;
+		Log("unable to get dataset files!");
+		return 1;
+	}
+	puts(msg_ok);
+	free(input_path);
+	input_path = NULL;
 
-		/* processing */
-		printf(msg_processing, files_founded[i].list[0].name);
 
-		/* import dataset */
-		rows = import_dataset(files_founded[i].list[0].fullpath, &rows_count);
-		if ( !rows )
-		{
-			++files_not_processed_count;
-			continue;
+	/* build matrix */
+	m = matrix_create(rows, rows_count);
+
+	/* free rows */
+	rows_free(rows, rows_count);
+
+	/* check matrix */
+	Log("Matrix %s created!!\n\n", m ? "" : "not ");
+	if ( ! m ) return 1;
+
+	// ALESSIOR TODO
+	// EACH CELLS MUST HAVE THIS SETTINGS
+	//for ( cell = 0; cell < m->cells_count; ++cell ) {
+		if (	IS_INVALID_VALUE(site->sand_perc)
+				|| IS_INVALID_VALUE(site->clay_perc)
+				|| IS_INVALID_VALUE(site->silt_perc)
+				|| IS_INVALID_VALUE(site->soil_depth) ) {
+			Log("NO SOIL DATA AVAILABLE\n");
+			matrix_free(m);
+			return 1;
 		}
-		puts(msg_ok);
+	//}
 
-		/* build matrix */
-		m = matrix_create(rows, rows_count);
-		
-		/* free rows */
-		rows_free(rows, rows_count);
+		/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
+	/* reset */
+	x_cells_count = 0;
+	y_cells_count = 0;
 
-		/* check matrix */
-		Log("Matrix %s created!!\n\n", m ? "" : "not ");
-		if ( ! m ) return 1;
+	Log("\n3D-CMCC MODEL START....\n\n\n\n");
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
+		Log("input_met_path = %s\n", input_met_path);
 
-		// ALESSIOR TODO
-		// EACH CELLS MUST HAVE THIS SETTINGS
-		//for ( cell = 0; cell < m->cells_count; ++cell ) {
-			if (	IS_INVALID_VALUE(site->sand_perc)
-					|| IS_INVALID_VALUE(site->clay_perc)
-					|| IS_INVALID_VALUE(site->silt_perc)
-					|| IS_INVALID_VALUE(site->soil_depth) ) {
-				Log("NO SOIL DATA AVAILABLE\n");
+		//check hemisphere
+		if (site->lat > 0) {
+			m->cells[cell].north = 0;
+		} else {
+			m->cells[cell].north = 1;
+		}
+
+		m->cells[cell].years = ImportYosFiles(input_met_path, &years_of_simulation, m->cells[cell].x, m->cells[cell].y);
+		Log("Met file %simported!!\n\n", m->cells[cell].years ? "": "not ");
+		if ( ! m->cells[cell].years ) {
+			matrix_free(m);
+			return 1;
+		}
+
+		// alloc memory for daily output netcdf vars (if any)
+		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
+			int ii;
+			int rows_count = m->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
+			output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
+			if ( ! output_vars->daily_vars_value ) {
+				Log(err_out_of_memory);
 				matrix_free(m);
 				return 1;
 			}
-		//}
+			for ( ii = 0; ii < rows_count; ++ii ) {
+				output_vars->daily_vars_value[ii] = INVALID_VALUE;
+			}
+		}
 
-			/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
-		/* reset */
-		x_cells_count = 0;
-		y_cells_count = 0;
+		// alloc memory for monthly output netcdf vars (if any)
+		if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
+			int ii;
+			int rows_count = m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
+			output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
+			if ( ! output_vars->monthly_vars_value ) {
+				Log(err_out_of_memory);
+				FreeOutputVars(output_vars);
+				matrix_free(m);
+				return 1;
+			}
+			for ( ii = 0; ii < rows_count; ++ii ) {
+				output_vars->monthly_vars_value[ii] = INVALID_VALUE;
+			}
+		}
 
-		Log("\n3D-CMCC MODEL START....\n\n\n\n");
-		for ( cell = 0; cell < m->cells_count; ++cell )
+		// alloc memory for yearly output netcdf vars (if any)
+		if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
+			int ii;
+			int rows_count = m->cells_count*years_of_simulation*output_vars->yearly_vars_count;
+			output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
+			if ( ! output_vars->yearly_vars_value ) {
+				Log(err_out_of_memory);
+				FreeOutputVars(output_vars);
+				matrix_free(m);
+				return 1;
+			}
+			for ( ii = 0; ii < rows_count; ++ii ) {
+				output_vars->yearly_vars_value[ii] = INVALID_VALUE;
+			}
+		}
+
+		// very ugly hack :(
+		yos = m->cells[cell].years;
+
+		Log("Total years_of_simulation = %d\n", years_of_simulation);
+		Log("***************************************************\n");
+
+		for ( year = 0; year < years_of_simulation; ++year )
 		{
-			Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
-			Log("input_met_path = %s\n", input_met_path);
+			//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
+			int i;
+			// ALESSIOR for handling leap years
+			int days_per_month;
 
-			//check hemisphere
-			if (site->lat > 0) {
-				m->cells[cell].north = 0;
-			} else {
-				m->cells[cell].north = 1;
-			}
+			Log("\n-Year simulated = %d\n", m->cells[cell].years[year].year);
 
-			m->cells[cell].years = ImportYosFiles(input_met_path, &years_of_simulation, m->cells[cell].x, m->cells[cell].y);
-			Log("Met file %simported!!\n\n", m->cells[cell].years ? "": "not ");
-			if ( ! m->cells[cell].years ) {
-				matrix_free(m);
-				return 1;
-			}
+			/* only for first year */
+			if ( ! year ) matrix_summary (m);
 
-			// alloc memory for daily output netcdf vars (if any)
-			if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
-				int ii;
-				int rows_count = m->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
-				output_vars->daily_vars_value = malloc(rows_count*sizeof*output_vars->daily_vars_value);
-				if ( ! output_vars->daily_vars_value ) {
-					Log(err_out_of_memory);
-					matrix_free(m);
-					return 1;
-				}
-				for ( ii = 0; ii < rows_count; ++ii ) {
-					output_vars->daily_vars_value[i] = INVALID_VALUE;
-				}
-			}
-
-			// alloc memory for monthly output netcdf vars (if any)
-			if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
-				int ii;
-				int rows_count = m->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
-				output_vars->monthly_vars_value = malloc(rows_count*sizeof*output_vars->monthly_vars_value);
-				if ( ! output_vars->monthly_vars_value ) {
-					Log(err_out_of_memory);
-					FreeOutputVars(output_vars);
-					matrix_free(m);
-					return 1;
-				}
-				for ( ii = 0; ii < rows_count; ++ii ) {
-					output_vars->monthly_vars_value[i] = INVALID_VALUE;
-				}
-			}
-
-			// alloc memory for yearly output netcdf vars (if any)
-			if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
-				int ii;
-				int rows_count = m->cells_count*years_of_simulation*output_vars->yearly_vars_count;
-				output_vars->yearly_vars_value = malloc(rows_count*sizeof*output_vars->yearly_vars_value);
-				if ( ! output_vars->yearly_vars_value ) {
-					Log(err_out_of_memory);
-					FreeOutputVars(output_vars);
-					matrix_free(m);
-					return 1;
-				}
-				for ( ii = 0; ii < rows_count; ++ii ) {
-					output_vars->yearly_vars_value[i] = INVALID_VALUE;
-				}
-			}
-
-			// very ugly hack :(
-			yos = m->cells[cell].years;
-			
-			Log("Total years_of_simulation = %d\n", years_of_simulation);
-			Log("***************************************************\n");
-
-			for ( year = 0; year < years_of_simulation; ++year )
+			i =0;
+			for (month = 0; month < MONTHS; month++)
 			{
-				//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
-				int i;
-				// ALESSIOR for handling leap years
-				int days_per_month;
-
-				Log("\n-Year simulated = %d\n", m->cells[cell].years[year].year);
-
-				/* only for first year */
-				if ( ! year ) matrix_summary (m);
-
-				i =0;
-				for (month = 0; month < MONTHS; month++)
+				days_per_month = DaysInMonth[month];
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(m->cells[cell].years[year].year) )
 				{
-					days_per_month = DaysInMonth[month];
-					if ( (FEBRUARY == month) && IS_LEAP_YEAR(m->cells[cell].years[year].year) )
-					{
-						++days_per_month;
-					}
-
-					for (day = 0; day < days_per_month; day++)
-					{
-						/* daily climate variables */
-						Avg_temperature (&m->cells[cell], day, month, year);
-						Daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
-						Nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
-						Soil_temperature (&m->cells[cell], day, month, year, yos);
-						Thermic_sum (&m->cells[cell], day, month, year, yos);
-						Air_density (&m->cells[cell], day, month, year, yos);
-						Day_Length (&m->cells[cell], day, month, year, yos);
-						Latent_heat (&m->cells[cell], day, month, year, yos);
-						Air_pressure (&m->cells[cell], day, month, year, yos);
-						Annual_met_values (&m->cells[cell], day, month, year, yos);
-						Annual_CO2_concentration (&m->cells[cell], day, month, year, yos);
-
-						if(m->cells[cell].landuse == F)
-						{
-							/* compute before any other processes annually the days for the growing season */
-							Veg_Days (&m->cells[cell], yos, day, month, year);
-							//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
-							get_vpsat(&m->cells[cell], day, month, year, yos, i);
-							i++;
-						}
-						else if (m->cells[cell].landuse == Z)
-						{
-							//sergio
-						}
-
-					}
-					/*
-					for (day = 0; day < days_per_month; day++)
-					{
-						Print_met_daily_data (yos, day, month, years);
-					}
-					 */
+					++days_per_month;
 				}
-				for (month = 0; month < MONTHS; month++)
-				{
-					days_per_month = DaysInMonth[month];
-					if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[year].year) )
-					{
-						++days_per_month;
-					}
-					for (day = 0; day < days_per_month; day++ )
-					{
-						if(m->cells[cell].landuse == F)
-						{
-							if (settings->version == 'f')
-							{
-								//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
-								//if(day == 0 && month == 0) leaffall(&m->cells[cell]);
-								//run for FEM version
-								if (!Tree_model_daily (m, yos, year, month, day, years_of_simulation, cell) )
-								{
-									Log("tree model daily failed.");
-								}
-								else
-								{
-									puts(msg_ok);
-									//										soil_Log("\nsoilLog prova");
-									//run for SOIL functions
-									//soil_model (m, yos, years, month, day, years_of_simulation);
 
-									if (!mystricmp(settings->dndc, "on"))
-									{
-										Log("RUNNING DNDC.....\n");
-										//TODO SERGIO
-										soil_dndc_sgm (m, yos, year, month, day, years_of_simulation);
-										//soil_dndc......................................
-									}
-									else
-									{
-										Log("No soil simulation!!!\n");
-									}
-									get_net_ecosystem_exchange(&m->cells[cell]);
-								}
-							}
-							else
-							{
-								//run for BGC version
-							}
-						}
-						if(m->cells[cell].landuse == Z)
+				for (day = 0; day < days_per_month; day++)
+				{
+					/* daily climate variables */
+					Avg_temperature (&m->cells[cell], day, month, year);
+					Daylight_avg_temperature (&m->cells[cell], day, month, year, yos);
+					Nightime_avg_temperature (&m->cells[cell], day, month, year, yos);
+					Soil_temperature (&m->cells[cell], day, month, year, yos);
+					Thermic_sum (&m->cells[cell], day, month, year, yos);
+					Air_density (&m->cells[cell], day, month, year, yos);
+					Day_Length (&m->cells[cell], day, month, year, yos);
+					Latent_heat (&m->cells[cell], day, month, year, yos);
+					Air_pressure (&m->cells[cell], day, month, year, yos);
+					Annual_met_values (&m->cells[cell], day, month, year, yos);
+					Annual_CO2_concentration (&m->cells[cell], day, month, year, yos);
+
+					if(m->cells[cell].landuse == F)
+					{
+						/* compute before any other processes annually the days for the growing season */
+						Veg_Days (&m->cells[cell], yos, day, month, year);
+						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
+						get_vpsat(&m->cells[cell], day, month, year, yos, i);
+						i++;
+					}
+					else if (m->cells[cell].landuse == Z)
+					{
+						//sergio
+					}
+
+				}
+				/*
+				for (day = 0; day < days_per_month; day++)
+				{
+					Print_met_daily_data (yos, day, month, years);
+				}
+				 */
+			}
+			for (month = 0; month < MONTHS; month++)
+			{
+				days_per_month = DaysInMonth[month];
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(yos[year].year) )
+				{
+					++days_per_month;
+				}
+				for (day = 0; day < days_per_month; day++ )
+				{
+					if(m->cells[cell].landuse == F)
+					{
+						if (settings->version == 'f')
 						{
-							if ( !crop_model_D (m, yos, year, month, day, years_of_simulation) )
+							//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
+							//if(day == 0 && month == 0) leaffall(&m->cells[cell]);
+							//run for FEM version
+							if (!Tree_model_daily (m, yos, year, month, day, years_of_simulation, cell) )
 							{
-								Log("crop model failed.");
+								Log("tree model daily failed.");
 							}
 							else
 							{
 								puts(msg_ok);
-								//look if put it here or move before tree_model  at the beginning of each month simulation
-								//	soil_model (m, yos, years, month, years_of_simulation);
+								//										soil_Log("\nsoilLog prova");
+								//run for SOIL functions
+								//soil_model (m, yos, years, month, day, years_of_simulation);
+
+								if (!mystricmp(settings->dndc, "on"))
+								{
+									Log("RUNNING DNDC.....\n");
+									//TODO SERGIO
+									soil_dndc_sgm (m, yos, year, month, day, years_of_simulation);
+									//soil_dndc......................................
+								}
+								else
+								{
+									Log("No soil simulation!!!\n");
+								}
+								get_net_ecosystem_exchange(&m->cells[cell]);
 							}
 						}
-						Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
-
-						// save values for put in output netcdf
-						if ( output_vars && output_vars->daily_vars_count )
+						else
 						{
-							/*
-								#define COLUMN_AT(x,y,c)	(((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-								#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-							*/
-							//#define VALUE_AT(v,c,y,m,d)	((v)*(c)*(((y)*366)+((m)*31))+(d))
-						#define X		(1)
-						#define ROWS	(366)
-						#define COLUMNS	(output_vars->daily_vars_count)
-						#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-							int i;
-							for ( i = 0; i < output_vars->daily_vars_count; ++i )
-							{
-								int row = get_daily_row_from_date(yos[year].year, month, day) + (year*ROWS);
-								int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
-								if ( AR_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_aut_resp;
-								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
-								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] ) output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
-							}
-						#undef VALUE_AT
-						#undef COLUMNS
-						#undef ROWS
+							//run for BGC version
 						}
-
-						EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
-						if (!mystricmp(settings->dndc, "on"))
-						{
-							Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
-						}
-
 					}
-					Log("****************END OF MONTH (%d)*******************\n", month+1);
+					if(m->cells[cell].landuse == Z)
+					{
+						if ( !crop_model_D (m, yos, year, month, day, years_of_simulation) )
+						{
+							Log("crop model failed.");
+						}
+						else
+						{
+							puts(msg_ok);
+							//look if put it here or move before tree_model  at the beginning of each month simulation
+							//	soil_model (m, yos, years, month, years_of_simulation);
+						}
+					}
+					Log("****************END OF DAY (%d)*******************\n\n\n", day+1);
 
 					// save values for put in output netcdf
-					if ( output_vars && output_vars->monthly_vars_count )
+					if ( output_vars && output_vars->daily_vars_count )
 					{
-					#define X		(1)
-					#define ROWS	(12)
-					#define COLUMNS	(output_vars->monthly_vars_count)
-					#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-					//#define VALUE_AT(v,c,y,m)	((v)*(c)*(((y)*366))+(m))
-						int i;
-						for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-						{
-							int row = month + (year*ROWS);
-							int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
-							if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_aut_resp;
-							if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_gpp;
-							if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_npp_gC;
-						}
-					#undef VALUE_AT
-					#undef COLUMNS
-					#undef ROWS
+						/*
+							la memoria è stata allocata come C*R*X*Y
+							
+							C = colonne ( variabili )
+							R = righe ( anni di elaborazione * 366 )
+							X = numero x celle
+							Y = numero y celle
+
+							quindi il valore a [n1][n2][n3][n4]
+
+							è dato da
+							
+							n1+(n2*C)+(n3*C*R)+(n4*C*R*X)
+						*/
+
+					//#define XS					(x_cells_count)
+					//#define ROWS				(366*years_of_simulation)
+					//#define COLUMNS				(output_vars->daily_vars_count)
+					////#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+					//#define VALUE_AT(x,y,r,c)	((c)+((r)*COLUMNS)+((x)*COLUMNS*ROWS)+((y)*COLUMNS*ROWS*XS))
+					//	int i;
+					//	for ( i = 0; i < output_vars->daily_vars_count; ++i )
+					//	{
+					//		int row = get_daily_row_from_date(yos[year].year, month, day) + (year*366);
+					//		int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i);
+					//		if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_aut_resp;
+					//		if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
+					//		if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
+					//	}
+					//#undef VALUE_AT
+					//#undef COLUMNS
+					//#undef ROWS
+					//#undef X
 					}
 
-					EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, cell);
-				}
+					EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
+					if (!mystricmp(settings->dndc, "on"))
+					{
+						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
+					}
 
-				Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
+				}
+				Log("****************END OF MONTH (%d)*******************\n", month+1);
 
 				// save values for put in output netcdf
-				if ( output_vars && output_vars->yearly_vars_count )
+				if ( output_vars && output_vars->monthly_vars_count )
 				{
-				#define X		(1)
-				#define ROWS	(1)
-				#define COLUMNS	(output_vars->yearly_vars_count)
-				#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-					//#define VALUE_AT(v,c,y)	((v)+(c)*(y))
-					int i;
-					for ( i = 0; i < output_vars->yearly_vars_count; ++i )
-					{
-						int row = (year*ROWS);
-						int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y,row,i);
-						if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_aut_resp;
-						if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_gpp;
-						if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_npp_gC;
-					}
-				#undef VALUE_AT
-				#undef COLUMNS
-				#undef ROWS
+				//#define X					(x_cells_count)
+				//#define ROWS				(12*years_of_simulation)
+				//#define COLUMNS				(output_vars->monthly_vars_count)
+				//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+				//	int i;
+				//	for ( i = 0; i < output_vars->monthly_vars_count; ++i )
+				//	{
+				//		int row = month + (year*ROWS);
+				//		int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i) + (year*12);
+				//		if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_aut_resp;
+				//		if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_gpp;
+				//		if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_npp_gC;
+				//	}
+				//#undef VALUE_AT
+				//#undef COLUMNS
+				//#undef ROWS
+				//#undef X
 				}
 
-				EOY_cumulative_balance_cell_level (m, &m->cells[cell], yos, year, years_of_simulation, cell);
-				Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
+				EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, cell);
 			}
-			i = yos[0].year;
-			free(yos);
-			yos = NULL;
-			m->cells[cell].years = NULL; /* required */
-		}
 
-		/* free memory */
-		matrix_free(m);
+			Log("****************END OF YEAR (%d)*******************\n\n", yos[year].year);
 
-		/* NETCDF output */
-		if ( output_vars && output_vars->daily_vars_value ) {
-			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 0) ) {
-				Log(err_out_of_memory);
-				matrix_free(m);
-				return 1;
+			// save values for put in output netcdf
+			if ( output_vars && output_vars->yearly_vars_count )
+			{
+			//#define X					(x_cells_count)
+			//#define ROWS				(years_of_simulation)
+			//#define COLUMNS				(output_vars->yearly_vars_count)
+			//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
+			//	int i;
+			//	for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+			//	{
+			//		int row = (year*ROWS);
+			//		int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y, row, i);
+			//		if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_aut_resp;
+			//		if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_gpp;
+			//		if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_npp_gC;
+			//	}
+			//#undef VALUE_AT
+			//#undef COLUMNS
+			//#undef ROWS
+			//#undef X
 			}
-			free(output_vars->daily_vars_value);
-			output_vars->daily_vars_value = NULL;
-		}
 
-		if ( output_vars && output_vars->monthly_vars_value ) {
-			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 1) ) {
-				Log(err_out_of_memory);
-				matrix_free(m);
-				return 1;
-			}
-			free(output_vars->monthly_vars_value);
-			output_vars->monthly_vars_value = NULL;
+			EOY_cumulative_balance_cell_level (m, &m->cells[cell], yos, year, years_of_simulation, cell);
+			Log("...%d finished to simulate\n\n\n\n\n\n", yos[year].year);
 		}
-
-		if ( output_vars && output_vars->yearly_vars_value ) {
-			if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 2) ) {
-				Log(err_out_of_memory);
-				matrix_free(m);
-				return 1;
-			}
-			free(output_vars->yearly_vars_value);
-			output_vars->yearly_vars_value = NULL;
-		}
-
-		/* increment processed files count */
-		++files_processed_count;
+		i = yos[0].year;
+		free(yos);
+		yos = NULL;
+		m->cells[cell].years = NULL; /* required */
 	}
 
-	/* summary */
-	printf(	msg_summary,
-			total_files_count,
-			total_files_count > 1 ? "s" : "",
-					files_processed_count,
-					files_not_processed_count );
+	/* free memory */
+	matrix_free(m);
+
+	/* NETCDF output 
+	if ( output_vars && output_vars->daily_vars_value ) {
+		if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 0) ) {
+			Log(err_out_of_memory);
+			matrix_free(m);
+			return 1;
+		}
+		free(output_vars->daily_vars_value);
+		output_vars->daily_vars_value = NULL;
+	}
+
+	if ( output_vars && output_vars->monthly_vars_value ) {
+		if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 1) ) {
+			Log(err_out_of_memory);
+			matrix_free(m);
+			return 1;
+		}
+		free(output_vars->monthly_vars_value);
+		output_vars->monthly_vars_value = NULL;
+	}
+
+	if ( output_vars && output_vars->yearly_vars_value ) {
+		if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 2) ) {
+			Log(err_out_of_memory);
+			matrix_free(m);
+			return 1;
+		}
+		free(output_vars->yearly_vars_value);
+		output_vars->yearly_vars_value = NULL;
+	}
+	*/
+
 
 	logClose();
 	daily_logClose();
@@ -1600,7 +1569,7 @@ int main(int argc, char *argv[])
 	free(monthly_output_file); monthly_output_file = NULL;
 	free(annual_output_file); annual_output_file = NULL;
 	free(soil_output_file); soil_output_file = NULL;
-	
+
 	/* free memory at exit */
 	return 0;
 }
