@@ -2019,14 +2019,14 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 //
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
 /*
-	la memoria è stata allocata come C*R*Y*X
+	la memoria ï¿½ stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
 	R = righe ( anni di elaborazione * 366 )
 	X = numero x celle
 	Y = numero y celle
 
-	quindi il valore a [v1][v2][v3][v4] è indicizzato a 
+	quindi il valore a [v1][v2][v3][v4] ï¿½ indicizzato a 
 
 	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
