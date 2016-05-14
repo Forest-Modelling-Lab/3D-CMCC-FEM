@@ -84,6 +84,9 @@ extern void Layer_cover_mortality (CELL *c, int height, int age, int species, do
 			if(c->layer_cover_subdominated >= settings->max_layer_cover)
 				Log("Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_subdominated * 100);
 		}
+
+		//test 13 MAY 2016 test check to reduce the DBHDC values before kill trees
+
 		switch (c->annual_layer_number)
 		{
 		case 1:

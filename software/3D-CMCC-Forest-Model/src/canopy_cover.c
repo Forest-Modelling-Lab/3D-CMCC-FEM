@@ -9,7 +9,7 @@
 
 
 
-
+// NOT USED //
 double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 {
 	//DBH-CrownDiameter Function

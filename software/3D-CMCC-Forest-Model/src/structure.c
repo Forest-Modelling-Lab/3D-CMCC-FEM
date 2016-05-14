@@ -135,7 +135,6 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 	int height;
 	int age;
 	int species;
-	double DBHDCeffective;
 	int tree_number;
 	double layer_cover;
 
@@ -340,12 +339,12 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							Log("2\n");
 						}
 
-						DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = ((c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
 
 
-						Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
+						Log("DBHDC effective to apply for dominant = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						break;
 						/*two layer*/
 					case 2:
@@ -360,10 +359,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							{
 								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
 							}
-							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominant = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						/*dominated layer*/
 						else
@@ -376,10 +375,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							{
 								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMIN];
 							}
-							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominated = %f\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominated = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						break;
 						/*three layers*/
@@ -395,10 +394,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							{
 								c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
 							}
-							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominant = %f\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominant = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						/*dominated layer*/
 						if (c->heights[height].z == 1)
@@ -411,10 +410,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							{
 								c->density_dominated = c->heights[height].ages[age].species[species].value[DENMIN];
 							}
-							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_dominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for dominated = %f\n", DBHDCeffective);
+							Log("DBHDC effective to apply for dominated = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						/*subdominant layer*/
 						else
@@ -427,54 +426,57 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							{
 								c->density_subdominated = c->heights[height].ages[age].species[species].value[DENMIN];
 							}
-							DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
 									/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 									* (c->density_subdominated - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-							Log("DBHDC effective to apply for subdominated = %f\n", DBHDCeffective);
+							Log("DBHDC effective to apply for subdominated = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						break;
 					}
 
 					//check if DBHDCeffective exceeds maximum or minimum values
-					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
+					if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
-						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-						Log("DBHDC effective applied is DBHDCMAX = %f\n", DBHDCeffective);
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMAX];
+						Log("DBHDC effective applied is DBHDCMAX = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 					}
-					if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
+					if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] < c->heights[height].ages[age].species[species].value[DBHDCMIN])
 					{
 						//Log("DBHDC effective for Dominant Layer > DBHDCMAX!!!\n");
-						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
-						Log("DBHDC effective applied is DBHDCMIN = %f\n", DBHDCeffective);
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMIN];
+						Log("DBHDC effective applied is DBHDCMIN = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 					}
 
 					//assuming no reduction in DBHDCeff
 					//to prevent reduction in DBHDCeff
 					if(day == 0 && month == JANUARY && years == 0)
 					{
-						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
+						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					}
 					else
 					{
-						if (c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] > DBHDCeffective)
+						if (c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDC_EFF])
 						{
-							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
-							DBHDCeffective = c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF];
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
+							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF];
 						}
 						else
 						{
-							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], DBHDCeffective);
-							c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = DBHDCeffective;
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
+							c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 						}
 					}
-					Log("DBHDC effective applied = %f\n", DBHDCeffective);
+
+					//test 13 MAY 2016 test check why model seems to use wrong DBDCeff values
+					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF]);
+					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 
 					//Crown Diameter using DBH-DC
 
 					Log("-AvDBH  = %f cm\n", c->heights[height].ages[age].species[species].value[AVDBH]);
 
-					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
+					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					Log("-Crown Diameter from DBHDC function  = %f m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 
 					//Crown Area using DBH-DC
@@ -666,29 +668,29 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
 					c->density_dominant = c->tree_number_dominant / settings->sizeCell;
 
-					DBHDCeffective = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
+					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
 							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 							* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-					Log("DBHDC effective to apply = %f\n", DBHDCeffective);
+					Log("DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 
 
 					//control
-					if (DBHDCeffective > c->heights[height].ages[age].species[species].value[DBHDCMAX])
+					if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
-						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-						Log("DBHDC effective to apply = %f\n", DBHDCeffective);
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMAX];
+						Log("DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 					}
-					else if (DBHDCeffective < c->heights[height].ages[age].species[species].value[DBHDCMIN])
+					else if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] < c->heights[height].ages[age].species[species].value[DBHDCMIN])
 					{
-						DBHDCeffective = c->heights[height].ages[age].species[species].value[DBHDCMIN];
-						Log("DBHDC effective to apply = %f\n", DBHDCeffective);
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMIN];
+						Log("DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 					}
 
 
 
 					//Crown Diameter using DBH-DC
 
-					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * DBHDCeffective;
+					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					Log("-Crown Diameter from DBHDC function  = %f m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 
 					//Crown Area using DBH-DC
