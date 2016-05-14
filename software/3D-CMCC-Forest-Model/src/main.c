@@ -1417,39 +1417,40 @@ int main(int argc, char *argv[])
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count )
 					{
-						/*
-							la memoria è stata allocata come C*R*X*Y
-							
-							C = colonne ( variabili )
-							R = righe ( anni di elaborazione * 366 )
-							X = numero x celle
-							Y = numero y celle
+					/*
+						la memoria è stata allocata come C*R*Y*X
+						
+						C = colonne ( variabili )
+						R = righe ( anni di elaborazione * 366 )
+						Y = numero y celle
+						X = numero x celle
+						
+						quindi il valore [v1][v2][v3][v4] è indicizzato a 
+						
+						[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
-							quindi il valore a [n1][n2][n3][n4]
+						ossia
 
-							è dato da
-							
-							n1+(n2*C)+(n3*C*R)+(n4*C*R*X)
-						*/
+						[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
+					*/
 
-					//#define XS					(x_cells_count)
-					//#define ROWS				(366*years_of_simulation)
-					//#define COLUMNS				(output_vars->daily_vars_count)
-					////#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-					//#define VALUE_AT(x,y,r,c)	((c)+((r)*COLUMNS)+((x)*COLUMNS*ROWS)+((y)*COLUMNS*ROWS*XS))
-					//	int i;
-					//	for ( i = 0; i < output_vars->daily_vars_count; ++i )
-					//	{
-					//		int row = get_daily_row_from_date(yos[year].year, month, day) + (year*366);
-					//		int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i);
-					//		if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_aut_resp;
-					//		if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
-					//		if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
-					//	}
-					//#undef VALUE_AT
-					//#undef COLUMNS
-					//#undef ROWS
-					//#undef X
+					#define YS					(y_cells_count)
+					#define XS					(x_cells_count)
+					#define ROWS				(366*years_of_simulation)
+					#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+						int i;
+						for ( i = 0; i < output_vars->daily_vars_count; ++i )
+						{
+							int row = get_daily_row_from_date(yos[year].year, month, day) + (year*366);
+							int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i);
+							if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_aut_resp;
+							if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_gpp;
+							if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = m->cells[cell].daily_npp_gC;
+						}
+					#undef VALUE_AT
+					#undef ROWS
+					#undef XS
+					#undef YS
 					}
 
 					EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
@@ -1464,23 +1465,23 @@ int main(int argc, char *argv[])
 				// save values for put in output netcdf
 				if ( output_vars && output_vars->monthly_vars_count )
 				{
-				//#define X					(x_cells_count)
-				//#define ROWS				(12*years_of_simulation)
-				//#define COLUMNS				(output_vars->monthly_vars_count)
-				//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-				//	int i;
-				//	for ( i = 0; i < output_vars->monthly_vars_count; ++i )
-				//	{
-				//		int row = month + (year*ROWS);
-				//		int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i) + (year*12);
-				//		if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_aut_resp;
-				//		if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_gpp;
-				//		if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_npp_gC;
-				//	}
-				//#undef VALUE_AT
-				//#undef COLUMNS
-				//#undef ROWS
-				//#undef X
+				#define YS					(y_cells_count)
+				#define XS					(x_cells_count)
+				#define ROWS				(12*years_of_simulation)
+				#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+					int i;
+					for ( i = 0; i < output_vars->monthly_vars_count; ++i )
+					{
+						int row = month + (year*12);
+						int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, row, i);
+						if ( AR_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_aut_resp;
+						if ( GPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_gpp;
+						if ( NPP_MONTHLY_OUT == output_vars->monthly_vars[i] ) output_vars->monthly_vars_value[index] = m->cells[cell].monthly_npp_gC;
+					}
+				#undef VALUE_AT
+				#undef ROWS
+				#undef XS
+				#undef YS
 				}
 
 				EOM_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, cell);
@@ -1491,23 +1492,22 @@ int main(int argc, char *argv[])
 			// save values for put in output netcdf
 			if ( output_vars && output_vars->yearly_vars_count )
 			{
-			//#define X					(x_cells_count)
-			//#define ROWS				(years_of_simulation)
-			//#define COLUMNS				(output_vars->yearly_vars_count)
-			//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-			//	int i;
-			//	for ( i = 0; i < output_vars->yearly_vars_count; ++i )
-			//	{
-			//		int row = (year*ROWS);
-			//		int index = VALUE_AT(m->cells[cell].x,m->cells[cell].y, row, i);
-			//		if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_aut_resp;
-			//		if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_gpp;
-			//		if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_npp_gC;
-			//	}
-			//#undef VALUE_AT
-			//#undef COLUMNS
-			//#undef ROWS
-			//#undef X
+			#define YS					(y_cells_count)
+			#define XS					(x_cells_count)
+			#define ROWS				(years_of_simulation)
+			#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+				int i;
+				for ( i = 0; i < output_vars->yearly_vars_count; ++i )
+				{
+					int index = VALUE_AT(m->cells[cell].x, m->cells[cell].y, year, i);
+					if ( AR_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_aut_resp;
+					if ( GPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_gpp;
+					if ( NPP_YEARLY_OUT == output_vars->yearly_vars[i] ) output_vars->yearly_vars_value[index] = m->cells[cell].annual_npp_gC;
+				}
+			#undef VALUE_AT
+			#undef ROWS
+			#undef XS
+			#undef YS
 			}
 
 			EOY_cumulative_balance_cell_level (m, &m->cells[cell], yos, year, years_of_simulation, cell);
@@ -1522,7 +1522,7 @@ int main(int argc, char *argv[])
 	/* free memory */
 	matrix_free(m);
 
-	/* NETCDF output 
+	/* NETCDF output */
 	if ( output_vars && output_vars->daily_vars_value ) {
 		if ( ! WriteNetCDFOutput(output_vars, i, years_of_simulation, x_cells_count, y_cells_count, 0) ) {
 			Log(err_out_of_memory);
@@ -1552,7 +1552,6 @@ int main(int argc, char *argv[])
 		free(output_vars->yearly_vars_value);
 		output_vars->yearly_vars_value = NULL;
 	}
-	*/
 
 
 	logClose();

@@ -17,16 +17,7 @@ please ASK before modify it!
 #include <time.h>
 #include "types.h"
 #include "common.h"
-#ifndef NEXT_3DMCC_RELEASE
-#include "netcdf/netcdf.h"
-#else
-#include "../../netcdf-4.4.0/include/netcdf.h"
-#endif
-
-
-#ifdef _WIN32
-#pragma comment(lib, "lib/netcdf")
-#endif
+#include "netcdf.h"
 
 /* */
 extern char *program_path;
@@ -2028,28 +2019,22 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 //
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
 /*
-	la memoria è stata allocata come C*R*X*Y
-	
+	la memoria è stata allocata come C*R*Y*X
+
 	C = colonne ( variabili )
 	R = righe ( anni di elaborazione * 366 )
 	X = numero x celle
 	Y = numero y celle
 
-	quindi il valore a [n1][n2][n3][n4]
+	quindi il valore a [v1][v2][v3][v4] è indicizzato a 
 
-	è dato da
-	
-	n1+(n2*C)+(n3*C*R)+(n4*C*R*X)
+	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
+	ossia
 
-	
-	//#define VALUE_AT(x,y,r,c)	((r)+((c)*ROWS)+((x)*ROWS*COLUMNS)+((y)*ROWS*COLUMNS*X))
-	
+	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 */
-#define XS						(x_cells_count)
-#define DAILY_ROWS				(366*years_count)
-#define COLUMNS					(vars->daily_vars_count)
-#define DAILY_VALUE_AT(c)	(c*ROWS*X*Y)
+
 	int i;
 	int ret;
 	char *p;
@@ -2176,13 +2161,22 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 		if ( ret != NC_NOERR ) goto quit;
 
 		/* puts values */
-		if ( 0 == type)
+		if ( 0 == type )
+		{
 			values = vars->daily_vars_value;
-		if ( 1 == type)
+			index = x_cells_count*y_cells_count*366*years_count*i;
+		}
+		if ( 1 == type )
+		{
 			values = vars->monthly_vars_value;
-		if ( 2 == type)
+			index = x_cells_count*y_cells_count*12*years_count*i;
+		}
+		if ( 2 == type )
+		{
 			values = vars->yearly_vars_value;
-		//index = DAILY_VALUE_AT(0,0,0,n);
+			index = x_cells_count*y_cells_count*years_count*i;
+		}
+
 		ret = nc_put_var_double(id_file, id_var, values+index);
 		if ( ret != NC_NOERR ) goto quit;
 
@@ -2197,10 +2191,6 @@ quit:
 	nc_close(id_file);
 
 	return 0;
-#undef XS
-#undef ROWS
-#undef COLUMNS
-#undef DAILY_VALUE_AT
 }
 
 const char *GetNetCDFVersion(void)
