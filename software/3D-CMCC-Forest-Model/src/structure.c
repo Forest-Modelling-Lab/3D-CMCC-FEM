@@ -138,7 +138,6 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 	int tree_number;
 	double layer_cover;
 
-
 	double potential_maximum_crown_diameter,
 	potential_minimum_crown_diameter;
 
@@ -162,7 +161,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 	Log("\n\n***FOREST_STRUCTURE***\n");
 	if (settings->spatial == 'u')
 	{
-		for ( height = c->heights_count - 1; height >= 0; height-- )
+		for (height = c->heights_count - 1; height >= 0; height-- )
 		{
 			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
 
@@ -170,7 +169,8 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					//define numbers of height classes, tree number and density for each layer
+					/* define numbers of height classes and density for each layer (if present) */
+
 					switch (c->annual_layer_number)
 					{
 					case 1:
@@ -214,7 +214,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						break;
 					}
 				}
-			}		//Log("Height class = %f is in layer %d \n", c->heights[height].value, c->heights[height].z);
+			}
 		}
 
 		if (c->annual_layer_number == 1)
@@ -261,27 +261,39 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					Log("\n\n**GET DATA FOR CANOPY HORIZONTAL STRUCTURE BASED ON EFFECTIVE STAND DBH\n\n");
 
 
-					//we assume that at the beginning of simulation forest structure is in "equilibrium"
+					/* computing maximum and minimum potential crown diameter and area */
+					/* assuming that at the beginning of simulation forest structure is at "equilibrium" */
 
 					Log("if Low density\n");
-					potential_maximum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMAX]*c->heights[height].ages[age].species[species].value[AVDBH];
+
+					potential_maximum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMAX] *
+							c->heights[height].ages[age].species[species].value[AVDBH];
 					potential_maximum_crown_area = pow(((potential_maximum_crown_diameter)/2),2)*Pi;
 					Log("potential maximum crown area with DBHDCMAX = %f m^2\n", potential_maximum_crown_area);
+
 					potential_minimum_density =settings->sizeCell /potential_maximum_crown_area;
 					Log("number of potential minimum trees with DBHDCMAX = %f\n", potential_minimum_density);
+
 					Log("if High density\n");
-					potential_minimum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMIN]*c->heights[height].ages[age].species[species].value[AVDBH];
+
+					potential_minimum_crown_diameter = c->heights[height].ages[age].species[species].value[DBHDCMIN]*
+							c->heights[height].ages[age].species[species].value[AVDBH];
 					potential_minimum_crown_area = pow(((potential_minimum_crown_diameter)/2),2)*Pi;
 					Log("potential minimum crown area with DBHDCMIN = %f m^2\n", potential_minimum_crown_area);
+
 					potential_maximum_density = settings->sizeCell /potential_minimum_crown_area;
 					Log("number of potential maximum trees with DBHDCMIN = %f\n", potential_maximum_density);
+
 					c->heights[height].ages[age].species[species].value[DENMAX] = potential_maximum_density/settings->sizeCell;
-					Log("potential density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX], c->heights[height].ages[age].species[species].value[DENMAX] * settings->sizeCell);
+					Log("potential density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX],
+							c->heights[height].ages[age].species[species].value[DENMAX] * settings->sizeCell);
 
 					c->heights[height].ages[age].species[species].value[DENMIN] = potential_minimum_density/settings->sizeCell;
-					Log("potential density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN], c->heights[height].ages[age].species[species].value[DENMIN] * settings->sizeCell);
+					Log("potential density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN],
+							c->heights[height].ages[age].species[species].value[DENMIN] * settings->sizeCell);
 
-					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
+					Log("\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z,
+							c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
 
 					if (c->heights[height].ages[age].species[species].value[DBHDCMAX] == -9999
 							&& c->heights[height].ages[age].species[species].value[DENMIN] == -9999)
@@ -335,8 +347,8 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							Log("2\n");
 						}
 
-						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = ((c->heights[height].ages[age].species[species].value[DBHDCMIN] - c->heights[height].ages[age].species[species].value[DBHDCMAX] )
-								/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
+						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = ((c->heights[height].ages[age].species[species].value[DBHDCMIN] -
+								c->heights[height].ages[age].species[species].value[DBHDCMAX] ) / (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
 
 
@@ -457,13 +469,16 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						{
 							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 							c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF];
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 						else
 						{
 							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 							c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDC_EFF];
+							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 					}
+					getchar();
 
 					//test 13 MAY 2016 test check why model seems to use wrong DBHDCeff values
 					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF]);
@@ -556,7 +571,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		}
 
 		//test 13 MAY 2016 test
-		//try to reduce step by step DBHDC up to minimum DBHDC value before call "Layer_cover_mortality" function
+		//try to reduce step by step DBHDC up to minimum DBHDC value before call "Layer_cover_mortality" function as a sort of self-thinning
 
 		//the model makes die trees of the lower height class for that layer because
 		//it passes through the function sort_by_height_desc the height classes starting from the lowest

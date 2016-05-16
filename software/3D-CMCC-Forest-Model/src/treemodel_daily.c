@@ -59,6 +59,8 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//	}
 	//	for ( cell = 0; cell < m->cells_count; cell++)
 	//	{
+
+
 	/* FOREST STRUCTURE */
 	if (day == 0 && month == JANUARY)
 	{
@@ -66,7 +68,11 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 		Annual_numbers_of_layers (&m->cells[cell]);
 	}
 	/* daily forest structure */
+	//ALESSIOR
+	//fixme it must be called in a previous "for" to compute the total number of layers, densities and other things as above
+	//otherwise model cannot run for multi-layered purposes
 	Daily_Forest_structure (&m->cells[cell], day, month, years);
+
 	Daily_vegetative_period (&m->cells[cell], met, month, day);
 	Daily_numbers_of_layers (&m->cells[cell]);
 	Daily_layer_cover (&m->cells[cell], met, month, day);
