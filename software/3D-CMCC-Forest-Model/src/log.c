@@ -1106,7 +1106,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_daily_et[0] = 0;
 		c->layer_daily_cc[0] = 0;
 		c->layer_daily_dead_tree[0] = 0;
-	}
+	} getchar();
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
@@ -1187,9 +1187,8 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		c->layer_daily_et[0] = 0;
 		c->layer_daily_cc[0] = 0;
 		c->layer_daily_dead_tree[0] = 0;
-
-
 	}
+
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 3)
 	{

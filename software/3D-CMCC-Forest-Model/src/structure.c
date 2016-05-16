@@ -339,18 +339,15 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
 						{
 							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
-							Log("1\n");
 						}
 						if (c->density_dominant < c->heights[height].ages[age].species[species].value[DENMIN])
 						{
 							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMIN];
-							Log("2\n");
 						}
 
 						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = ((c->heights[height].ages[age].species[species].value[DBHDCMIN] -
 								c->heights[height].ages[age].species[species].value[DBHDCMAX] ) / (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
 								* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMAX]);
-
 
 						Log("DBHDC effective to apply for dominant = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						break;
@@ -459,6 +456,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					//assuming no reduction in DBHDCeff
 					//to prevent reduction in DBHDCeff
 					//test 16 MAY 2016 test check removing block that assumes no reduction in DBHDCeff
+					//Answer: it causes an high increment in LAI values!!
 
 					if(day == 0 && month == JANUARY && years == 0)
 					{
@@ -468,6 +466,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					//in this way seems that dbhdceff can just increase
 					else
 					{
+						//test 13 MAY 2016 test check why model seems to use wrong DBHDCeff values
+						Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF]);
+						Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
+
 						if (c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDC_EFF])
 						{
 							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
@@ -482,10 +484,11 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						}
 					}
 
+
 					//test 13 MAY 2016 test check why model seems to use wrong DBHDCeff values
 					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF]);
 					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
-					getchar();
+
 
 					/* Crown Diameter using DBH-DC */
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
