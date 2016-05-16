@@ -458,11 +458,14 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 
 					//assuming no reduction in DBHDCeff
 					//to prevent reduction in DBHDCeff
+					//test 16 MAY 2016 test check removing block that assumes no reduction in DBHDCeff
+
 					if(day == 0 && month == JANUARY && years == 0)
 					{
 						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					}
 					//test 13 May 2016 test why it considers just first day, month and year!!!!!!!
+					//in this way seems that dbhdceff can just increase
 					else
 					{
 						if (c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDC_EFF])
@@ -478,11 +481,11 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 							Log("previous = %g\n eff = %g\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF], c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 						}
 					}
-					getchar();
 
 					//test 13 MAY 2016 test check why model seems to use wrong DBHDCeff values
 					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF]);
 					Log("DBHDC effective applied = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
+					getchar();
 
 					/* Crown Diameter using DBH-DC */
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
@@ -659,7 +662,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						break;
 					}
 				}
-			}		//Log("Height class = %f is in layer %d \n", c->heights[height].value, c->heights[height].z);
+			}
 		}
 	}
 	else
@@ -667,12 +670,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
 			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
-
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-
 					c->height_class_in_layer_dominant_counter += 1;
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
 					c->density_dominant = c->tree_number_dominant / settings->sizeCell;
@@ -683,7 +684,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					Log("DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 
 
-					//control
+					/* check */
 					if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDCMAX])
 					{
 						c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMAX];
@@ -695,9 +696,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						Log("DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
 					}
 
-
-
-					//Crown Diameter using DBH-DC
+					/* Crown Diameter using DBH-DC */
 
 					c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					Log("-Crown Diameter from DBHDC function  = %f m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
