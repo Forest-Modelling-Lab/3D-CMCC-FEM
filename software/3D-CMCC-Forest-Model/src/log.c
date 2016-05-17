@@ -3,10 +3,12 @@
 #include "types.h"
 
 extern int log_enabled;
+/*
 extern OUTPUT_VARS *output_vars;
 extern double *daily_output_vars;
 extern double *monthly_output_vars;
 extern double *yearly_output_vars;
+*/
 
 static FILE *file_log ;
 

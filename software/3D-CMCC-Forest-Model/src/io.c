@@ -1324,7 +1324,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			p_start = start;
 			p_count = count;
 		} else if ( dims_size[HEIGHT_DIM] > 1 ) {
-			printf("height_2m cannot be > 1\n", sz_dims[i]);
+			printf("height_2m cannot be > 1 : (%d)\n", dims_size[HEIGHT_DIM]);
 			nc_close(id_file);
 			fclose(f);
 			free(f_values);
@@ -1383,13 +1383,13 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
 			if ( ret != NC_NOERR ) goto quit;
 			if ( ! mystricmp(name, sz_lat) ) {
-				int start_lat[] = { y_cell, x_cell };
-				const int count_lat[] = { 1, 1 };
+				size_t start_lat[] = { y_cell, x_cell };
+				const size_t count_lat[] = { 1, 1 };
 				ret = nc_get_vara_float(id_file, i, start_lat, count_lat, &lat);
 				if ( ret != NC_NOERR ) goto quit;
 			} else if ( ! mystricmp(name, sz_lon) ) {
-				int start_lon[] = { y_cell, x_cell };
-				const int count_lon[] = { 1, 1 };
+				size_t start_lon[] = { y_cell, x_cell };
+				const size_t count_lon[] = { 1, 1 };
 				ret = nc_get_vara_float(id_file, i, start_lon, count_lon, &lon);
 				if ( ret != NC_NOERR ) goto quit;
 			} else if ( ! mystricmp(name, sz_time) ) {
