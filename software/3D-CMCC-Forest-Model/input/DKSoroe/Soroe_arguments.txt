@@ -1,4 +1,4 @@
--i input/DKSoroe
+-i input/parameterizaton
 -o output/debug_output/debug_output
 -b output/daily_output/daily_output
 -e output/annual_output/annual_output
