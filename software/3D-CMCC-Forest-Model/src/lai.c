@@ -37,9 +37,9 @@ void Daily_lai (SPECIES *const s)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
 	Log("SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
 
-//	CHECK_CONDITION(fabs(s->value[LAI]), < 0);
-//	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0);
-//	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0);
+	CHECK_CONDITION(fabs(s->value[LAI]), < 0.0);
+	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0.0);
+	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0.0);
 //	CHECK_CONDITION(s->value[LAI], > s->value[PEAK_LAI])
 }
 
