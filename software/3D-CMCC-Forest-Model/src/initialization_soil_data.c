@@ -45,18 +45,21 @@ void Initialization_site_data (CELL *c)
 	Log("BIOME soil characteristics\n");
 	//double soilw_fc; //maximum volume soil water content in m3/m3
 	// (DIM) Clapp-Hornberger "b" parameter
-	c->soil_b = -(3.10 + 0.157*site->clay_perc - 0.003*site->sand_perc);
+	c->soil_b = -(3.10 + 0.157*site->clay_perc - 0.003*site->sand_perc); /* ok for schwalm*/
 	Log ("soil_b = %f (DIM)\n", c->soil_b);
+	/* following Rawls et al., 1992 and Schwalm et al., 2004 */
+	/*texture-dependent empirical coefficinet */
+	// c->soil_b = 11.43 - (0.1034*site->sand_perc) - (0.0687*0.157*site->silt_perc);
 
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	// (DIM) Soil volumetric water content at saturation
-	c->vwc_sat = (50.5 - 0.142*site->sand_perc - 0.037*site->clay_perc)/100.0;
+	c->vwc_sat = (50.5 - 0.142*site->sand_perc - 0.037*site->clay_perc)/100.0; /* ok for schwalm*/
 	Log ("volumetric water content at saturation (BIOME) = %f %(vol)\n", c->vwc_sat);
 	// (MPa) soil matric potential at saturation
-	c->psi_sat = -(exp((1.54 - 0.0095*site->sand_perc + 0.0063*site->silt_perc)*log(10.0))*9.8e-5);
+	c->psi_sat = -(exp((1.54 - 0.0095*site->sand_perc + 0.0063*site->silt_perc)*log(10.0))*9.8e-5); /* ok for schwalm*/
 	Log ("psi_sat = %f MPa \n", c->psi_sat);
-	// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at saturation ( = -0.015 MPa)
+	// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa)
 	c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
 	Log ("volumetric water content at field capacity (BIOME) = %f %(vol) \n", c->vwc_fc);
 
@@ -123,6 +126,12 @@ void Initialization_site_data (CELL *c)
 	/* bulk density g/cm3 */
 	c->bulk_density += (-0.08 * c->bulk_density);
 	Log("**Bulk density = %f g/cm^3\n", c->bulk_density);
+
+
+
+
+
+
 
 	//test 5 may 2016
 	for (i = 0; i < c->soils_count; i++)

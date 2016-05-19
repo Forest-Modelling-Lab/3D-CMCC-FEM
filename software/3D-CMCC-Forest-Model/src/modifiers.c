@@ -181,9 +181,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	s->value[F_NUTR] = 1.0 - ( 1.0- site->fn0)  * pow ((1.0 - site->fr), site->fnn);
 	Log("fNutr = %f\n", s->value[F_NUTR]);
 
-	/*SOIL NUTRIENT MODIFIER*/
-	//rev 16 May 2012
-	//Log("Soil Nitrogen Content = %f g m^-2 \n", site->sN);
 
 	/*SOIL WATER MODIFIER*/
 	c->soil_moist_ratio = c->asw/c->max_asw_fc;

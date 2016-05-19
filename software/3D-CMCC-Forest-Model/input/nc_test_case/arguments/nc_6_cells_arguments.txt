@@ -3,9 +3,9 @@
 -b output/daily_output/daily_output
 -f output/monthly_output/monthly_output
 -e output/annual_output/annual_output
--d input/DKSoroe/6_inputs.txt
--m input/DKSoroe/climate_nc/6_climate.lst
--s input/DKSoroe/Soroe_site.txt
--c input/DKSoroe/Soroe_settings.txt
+-d input/nc_test_case/6_inputs.txt
+-m input/nc_test_case/climate_nc/6_climate.lst
+-s input/nc_test_case/site.txt
+-c input/nc_test_case/settings.txt
 -n output/soil_output/soil_output
--r input/DKSoroe/output_vars.lst
+-r input/nc_test_case/output_vars.lst
