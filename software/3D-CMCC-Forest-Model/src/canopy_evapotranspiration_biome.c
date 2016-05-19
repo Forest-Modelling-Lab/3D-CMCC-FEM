@@ -340,6 +340,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		getchar();
 		*/
 
+		//todo
+		/*following TLEAF in Campbell and Norman "Environmental Biophysics" 1998 pg 225*/
+
 		//TEST
 		/* CANOPY SENSIBLE HEAT FLUX */
 		Log("\ncanopy sensible heat\n");

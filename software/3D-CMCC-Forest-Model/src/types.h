@@ -95,8 +95,6 @@ typedef struct
 	lon,
 	elev;
 
-	double initialLitter;
-
 	double clay_perc,
 	silt_perc,
 	sand_perc,

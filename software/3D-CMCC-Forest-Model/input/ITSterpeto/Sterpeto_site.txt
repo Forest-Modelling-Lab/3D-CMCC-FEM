@@ -4,8 +4,6 @@ LAT "__" //Site Latitude negative for south hemisphere
 LONG "__" //Site Longitude 
 ELEV "__" //Elevation in meters
 
-INITIALLITTER "0" //Initial Litter (estimated)
-
 //MIN_FRAC_MAXASW "__" //Minimum fraction of asw based on maxasw (wilting point) (unchanged)
 //MAXASW "160" //Maximum Available soil water in mm - estimated from EU SOIL MAPS
 //MINASW "16" //It should be the 10% of the maxasw

@@ -6,7 +6,6 @@ LONG "14.26" //Site Longitude (Schindlbacher et al., 2014)
 ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)
 
 //SOIL CAHARACTERISTICS (mandatory)
-INITIALLITTER "0" //Initial Litter
 CLAY_PERC "21"   //PERCENTAGE OF CLAY (< 0,002 mm) 
 SILT_PERC "52"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
 SAND_PERC "26"   //PERCENTAGE OF SAND (0,05 - 2 mm) 

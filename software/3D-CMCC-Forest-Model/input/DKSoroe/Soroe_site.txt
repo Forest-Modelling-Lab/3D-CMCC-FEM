@@ -3,7 +3,6 @@ LAT "55.29" //Site Latitude negative for south hemisphere
 LONG "11.38" //Site Longitude 
 ELEV "40" //Elevation in meters
 
-INITIALLITTER "-9999" //Initial Litter (estimated)
 CLAY_PERC "20"	//PERCENTAGE OF CLAY (< 0,002 mm) according to USDA
 SILT_PERC "40"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) according to USDA
 SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) according to USDA
