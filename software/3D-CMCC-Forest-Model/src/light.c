@@ -133,7 +133,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			Log("Trasmitted NetRad sun = %f W/m^2\n", s->value[NET_RAD_TRASM_SUN]);
 			Log("Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
 			Log("Trasmitted NetRad shade = %f W/m^2\n", s->value[NET_RAD_TRASM_SHADE]);
-
+			Log("Absorbed total = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]+s->value[NET_RAD_ABS_SHADE]);
 
 			/*compute PPFD for sun and shaded leaves*/
 			//04/05/2016

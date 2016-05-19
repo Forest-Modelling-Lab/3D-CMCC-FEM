@@ -340,9 +340,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		getchar();
 		*/
 
-		//todo
-		/*following TLEAF in Campbell and Norman "Environmental Biophysics" 1998 pg 225*/
-
 		//TEST
 		/* CANOPY SENSIBLE HEAT FLUX */
 		Log("\ncanopy sensible heat\n");
@@ -413,6 +410,11 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		c->daily_canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tcanopyK-tairK)/rhr);
 		Log("canopy_sensible_heat_flux = %f Wm-2\n", c->daily_canopy_sensible_heat_flux);
 		//getchar();
+
+		//todo
+		/*following TLEAF in Campbell and Norman "Environmental Biophysics" 1998 pg 225*/
+
+
 
 	}
 	else
