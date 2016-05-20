@@ -1,0 +1,1 @@
+ELEV "68.25" //Elevation in meters from ancillary data
