@@ -1,0 +1,1 @@
+ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)

@@ -50,6 +50,7 @@ C_SRCS += \
 ../src/photosynthesis.c \
 ../src/print.c \
 ../src/renovation.c \
+../src/soil.c \
 ../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
@@ -57,6 +58,7 @@ C_SRCS += \
 ../src/soilmodel.c \
 ../src/state_var_update.c \
 ../src/structure.c \
+../src/topo.c \
 ../src/treemodel_daily.c \
 ../src/turnover.c \
 ../src/turnover_Marconi.c \
@@ -111,6 +113,7 @@ OBJS += \
 ./src/photosynthesis.o \
 ./src/print.o \
 ./src/renovation.o \
+./src/soil.o \
 ./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
@@ -118,6 +121,7 @@ OBJS += \
 ./src/soilmodel.o \
 ./src/state_var_update.o \
 ./src/structure.o \
+./src/topo.o \
 ./src/treemodel_daily.o \
 ./src/turnover.o \
 ./src/turnover_Marconi.o \
@@ -172,6 +176,7 @@ C_DEPS += \
 ./src/photosynthesis.d \
 ./src/print.d \
 ./src/renovation.d \
+./src/soil.d \
 ./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
@@ -179,6 +184,7 @@ C_DEPS += \
 ./src/soilmodel.d \
 ./src/state_var_update.d \
 ./src/structure.d \
+./src/topo.d \
 ./src/treemodel_daily.d \
 ./src/turnover.d \
 ./src/turnover_Marconi.d \

@@ -1,3 +1,4 @@
+/* using netcdf file it needs to know wich varibles to log defined in output_vars.lst */
 -i input/parameterization
 -o output/debug_output/debug_output
 -b output/daily_output/daily_output
@@ -5,7 +6,21 @@
 -e output/annual_output/annual_output
 -d input/nc_test_case/6_inputs.txt
 -m input/nc_test_case/climate_nc/6_climate.lst
--s input/nc_test_case/site.txt
+-s input/nc_test_case/soil.txt
+-t input/nc_test_case/topo.txt
 -c input/nc_test_case/settings.txt
 -n output/soil_output/soil_output
 -r input/nc_test_case/output_vars.lst
+
+/* using .txt file (without output_vars.lst) */
+-i input/parameterization
+-o output/debug_output/debug_output
+-b output/daily_output/daily_output
+-f output/monthly_output/monthly_output
+-e output/annual_output/annual_output
+-d input/nc_test_case/6_inputs.txt
+-m input/nc_test_case/climate_nc/6_climate.lst
+-s input/nc_test_case/soil.txt
+-t input/nc_test_case/topo.txt
+-c input/nc_test_case/settings.txt
+-n output/soil_output/soil_output

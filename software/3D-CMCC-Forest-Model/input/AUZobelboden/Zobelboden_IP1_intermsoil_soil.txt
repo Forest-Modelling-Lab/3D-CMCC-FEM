@@ -1,14 +1,13 @@
-SITENAME "Zobelboden-AU" //Site Name
+SITENAME "Zobelboden-AU_Mod_rcp85" //Site Name
 
 //(mandatory)
 LAT "47.50" //Site Latitude negative for south hemisphere (Schindlbacher et al., 2014)
 LONG "14.26" //Site Longitude (Schindlbacher et al., 2014)
-ELEV "950" //Elevation in meters (Schindlbacher et al., 2014)
 
 //SOIL CAHARACTERISTICS (mandatory)
-CLAY_PERC "37"   //PERCENTAGE OF CLAY (< 0,002 mm) 
-SILT_PERC "60"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
-SAND_PERC "3"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
+CLAY_PERC "39"   //PERCENTAGE OF CLAY (< 0,002 mm) 
+SILT_PERC "51"    //PERCENTAGE OF SILT (0,002 - 0,05 mm) 
+SAND_PERC "10"   //PERCENTAGE OF SAND (0,05 - 2 mm) 
 SOIL_DEPTH "50" //SOIL DEPTH (cm) 
 
 //SITE NUTRITION (mandatory)
