@@ -2,11 +2,7 @@ SITENAME "Puechabon - France" //Site Name
 
 LAT "43.74" //Site Latitude negative for south hemisphere
 LONG "3.59" //Site Longitude 
-ELEV "270" //Elevation in meters
 
-//MIN_FRAC_MAXASW "0.18" //Minimum fraction of asw based on maxasw (wilting point) (unchanged) from soil calculator
-//MAXASW "160" //Maximum Available soil water in mm
-//MINASW "16" //It should be the 10% of the maxasw
 
 CLAY_PERC "38.8"	//PERCENTAGE OF CLAY (< 0,002 mm) from ancillary ec data
 SILT_PERC "35.2"	//PERCENTAGE OF SILT (0,002 - 0,05 mm) from ancillary ec data
