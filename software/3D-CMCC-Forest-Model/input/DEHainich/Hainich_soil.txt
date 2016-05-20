@@ -2,7 +2,6 @@ SITENAME "Hainich - Germany" //Site Name
 
 LAT "51.07" //Site Latitude negative for south hemisphere
 LONG "10.45" //Site Longitude 
-ELEV "445" //Elevation in meters
 
 //MIN_FRAC_MAXASW "0.19" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
 //MAXASW "160" //Maximum Available soil water in mm
