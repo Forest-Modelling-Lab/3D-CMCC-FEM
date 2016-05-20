@@ -40,6 +40,7 @@ void Daily_lai (SPECIES *const s)
 	CHECK_CONDITION(fabs(s->value[LAI]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0.0);
+	CHECK_CONDITION(fabs(s->value[LAI]), > settings->maxlai);
 //	CHECK_CONDITION(s->value[LAI], > s->value[PEAK_LAI])
 }
 
