@@ -122,7 +122,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 	/* get columns */
 	for ( y = 0, token = mystrtok(buffer, header_delimiter, &p); token; token = mystrtok(NULL, header_delimiter, &p), ++y ) {
 		for ( i = 0; i < COLUMNS; i++ ) {
-			if ( 0 == mystricmp(token, header[i]) ) {
+			if ( 0 == string_compare_i(token, header[i]) ) {
 				/* check for duplicated columns */
 				if ( -1 != columns[i] ) {
 					printf(err_redundancy, token, columns[i]+1);

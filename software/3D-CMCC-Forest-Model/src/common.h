@@ -71,7 +71,7 @@ void free_files(FILES *files, const int count);
 void init_random_seed(void);
 int get_random_number(int max);
 int parse_arguments(int argc, char *argv[], const ARGUMENT *const args, const int arg_count);
-int mystricmp(const char *str1, const char *str2);
+int string_compare_i(const char *str1, const char *str2);
 char *mystrdup(const char *const string);
 char *mystrtok(char *string, const char *delimiters, char **p);
 char *get_current_directory(void);

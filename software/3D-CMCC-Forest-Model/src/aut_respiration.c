@@ -219,7 +219,7 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 {
 	int i;
 
-	if (!mystricmp(settings->Prog_Aut_Resp, "on"))
+	if (!string_compare_i(settings->Prog_Aut_Resp, "on"))
 	{
 		Log("\n**AUTOTROPHIC_RESPIRATION**\n");
 		//compute autotrophic respiration for each classes

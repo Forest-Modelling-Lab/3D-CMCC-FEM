@@ -6,72 +6,6 @@
 #include <assert.h>
 #include "types.h"
 #include "netcdf.h"
-/*
-int importSoilFile(char *fileName)
-{
-	int ret = 0;
-	FILE *site_fd = fopen(fileName, "r");
-
-	Log ("Importing Site file...\n");
-
-	if( !site_fd ) // error opening file
-	{
-		fprintf(stderr, "Error while open %s\n", fileName);
-		ret = 2;
-	}
-	else //Read the file
-	{
-		double *tmpPointer;
-		char *getRet = NULL,
-				*buffer = malloc(sizeof(*buffer)*1024);
-
-		g_soil = malloc(sizeof(soil_t));
-		tmpPointer = &(g_soil->lat);
-
-		if(!buffer)
-		{
-			fprintf(stderr, "Failed malloc for temporary buffer to read soil file\n");
-			ret = 2;
-		}
-		else
-		{
-			char *pch = NULL;
-			int i = 0;
-
-			while((getRet = fgets(buffer, 1024, site_fd)) != NULL)
-			{
-				if( getRet[0] == '\n' || getRet[0] == '/' ) // Skip empty and commented lines
-					continue;
-				else
-				{
-					pch = strtok(buffer, " \"");
-					pch = strtok(NULL, "\"");
-
-					switch(i)
-					{
-					case 0:
-						strcpy(g_soil->sitename, pch);
-						break;
-					default:
-						*tmpPointer = atof(pch); // Convert each token in a double
-						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
-						break;
-					}
-					i++;
-				}
-			}
-		}
-		free(buffer);
-	}
-	if ( site_fd )
-	if( fclose(site_fd) != 0 ) //Close the file
-	{
-		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);
-		ret = 3;
-	}
-	return ret;
-}
-*/
 
 static int import_txt(soil_t *const s, const char *const filename, const int x, const int y) {
 #define TOPO_BUFFER_SIZE 1024
@@ -88,7 +22,7 @@ static int import_txt(soil_t *const s, const char *const filename, const int x, 
 	}
 
 	i = 0;
-	p_float = &s->lat;	
+	p_float = s->values;	
 	while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
 		/* skip empty line */
 		if ( ('\n' == buffer[0]) || ('/' == buffer[0]) ) {
@@ -124,17 +58,17 @@ soil_t* soil_new(void) {
 
 	s = malloc(sizeof*s);
 	if ( s ) {
-		soil_clear(s);
+		soil_reset(s);
 	}
 	return s;
 }
 
-void soil_clear(soil_t* const s) {
+void soil_reset(soil_t* const s) {
 	int i;
 	assert(s);
 	s->sitename[0] = '\0';
 	for ( i = 0; i < SOIL_VALUES_COUNT; ++i ) {
-		//s->values[i] = INVALID_VALUE;
+		s->values[i] = INVALID_VALUE;
 	}
 }
 
@@ -146,7 +80,7 @@ void soil_clear(soil_t* const s) {
 int soil_import(soil_t *const s, const char *const filename, const int x, const int y) {
 	char *p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! stricmp(++p, "nc") ) {
+		if ( ! string_compare_i(++p, "nc") ) {
 			return import_nc(s, filename, x, y);
 		}
 	}

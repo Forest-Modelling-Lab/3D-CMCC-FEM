@@ -356,6 +356,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\soil.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\soil_dndc.c"
 				>
 			</File>

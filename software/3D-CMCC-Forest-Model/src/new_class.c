@@ -83,7 +83,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 		/* check for same species */
 		for ( y = 0; y < c->heights[i].ages_count; ++y ) {
 			for ( z = 0; z < c->heights[y].ages[y].species_count; ++z ) {
-				if ( ! mystricmp(c->heights[y].ages[y].species[z].name, s->name) ) {
+				if ( ! string_compare_i(c->heights[y].ages[y].species[z].name, s->name) ) {
 					for ( i = 0; i < AVDBH; ++i ) {
 						s->value[i] = c->heights[y].ages[y].species[z].value[i];
 					}

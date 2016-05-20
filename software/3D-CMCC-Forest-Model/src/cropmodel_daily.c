@@ -393,10 +393,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 	//control if all soil data are available
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		if (	IS_INVALID_VALUE(g_soil->sand_perc)
-				|| IS_INVALID_VALUE(g_soil->clay_perc)
-				|| IS_INVALID_VALUE(g_soil->silt_perc)
-				|| IS_INVALID_VALUE(g_soil->soil_depth) )
+		if (	IS_INVALID_VALUE(g_soil->values[SOIL_SAND_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_CLAY_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_SILT_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_DEPTH]) )
 		{
 			Log("NO SOIL DATA AVAILABLE\n");
 			return 0;
@@ -663,8 +663,8 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					// there are some potential dicrepancies with literature versions; watch out! c computes angle operation ALWAYS as radiants!
 
 					//and what if they're in radiants and not degrees!?!?!
-					Cfactor = cos(g_soil->lat * 2 * Pi / 360.0) * cos(solarDeclination);
-					Sfactor = sin(g_soil->lat * 2 * Pi / 360.0) * sin(solarDeclination);
+					Cfactor = cos(g_soil->values[SOIL_LAT] * 2 * Pi / 360.0) * cos(solarDeclination);
+					Sfactor = sin(g_soil->values[SOIL_LAT] * 2 * Pi / 360.0) * sin(solarDeclination);
 					Log("\nC value = %f\nS value = %f", Cfactor, Sfactor);
 
 					//------------------------------------------------------------------------------------------------------------------
@@ -1753,9 +1753,9 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					//effect of soil moisture on evaporation
 					for (l = 0; l < soilLayer; l++)
 					{
-						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / g_soil->soil_depth;
+						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / g_soil->values[SOIL_DEPTH];
 					}
-					//moistureSoilEvaporationEffect /= g_soil->soil_depth;
+					//moistureSoilEvaporationEffect /= g_soil->values[SOIL_DEPTH];
 					Log("\nSoil moisture effect on evaporation is: %f\n", moistureSoilEvaporationEffect);
 
 					//actual soil evaporation
@@ -1866,9 +1866,9 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					//effect of soil moisture on evaporation
 					for (l = 0; l < soilLayer; l++)
 					{
-						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/g_soil->soil_depth;
+						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/g_soil->values[SOIL_DEPTH];
 					}
-					//moistureSoilEvaporationEffect /= g_soil->soil_depth;
+					//moistureSoilEvaporationEffect /= g_soil->values[SOIL_DEPTH];
 					Log("\nSoil moisture effect on evaporation is: %f\n", moistureSoilEvaporationEffect);
 
 					//actual soil evaporation
@@ -2003,7 +2003,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						//assumed soil water content and bulk density as a soil constant
 
 						// SW and BD have to be layer specific not the value for the whole profile
-						mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * g_soil->soil_depth;
+						mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * g_soil->values[SOIL_DEPTH];
 						maxDampingDepth = 1.00 + 2.5 * soilBulkDensity / (soilBulkDensity + exp (6.53 - 5.63 * soilBulkDensity));
 						Log("\n***Coefficients to evaluate depth weighting factors ***\ncoeff1: %f \ncoeff2: %f", maxDampingDepth, mid2);
 
@@ -3690,7 +3690,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						Rta[l] = CPwet + (1 - CPwet) * (UL[l] - SW[l])/(UL[l] - fieldCapacityLayerMoisture[l]);
 
 						// soil strength limiting factor (layer specific)
-						Rts[l] = ((1.6 + 0.4 * g_soil->sand_perc - soilBulkDensity[l])/(0.5 - 0.1 * g_soil->sand_perc)) *
+						Rts[l] = ((1.6 + 0.4 * g_soil->values[SOIL_sand_perc - soilBulkDensity[l])/(0.5 - 0.1 * g_soil->values[SOIL_sand_perc)) *
 								sin(1.25 *((SW[l] - LL[l])* Pi)/((fieldCapacityLayerMoisture[l] - LL[l]) * 2));
 						Log("\nSoil nitrogen limiting factors (layer %d):\n\tsoil temperature limiting factor: "
 								"%f\n\tsoil areation limiting factor: %f\n\tsoil strength limiting factor: %f"

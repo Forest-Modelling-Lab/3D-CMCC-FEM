@@ -181,7 +181,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 								/* canopy carbon fluxes block */
 								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
-								if (!mystricmp(settings->Prog_Aut_Resp, "on"))
+								if (!string_compare_i(settings->Prog_Aut_Resp, "on"))
 								{
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
@@ -210,7 +210,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* canopy carbon fluxes block */
-								if (!mystricmp(settings->Prog_Aut_Resp, "on"))
+								if (!string_compare_i(settings->Prog_Aut_Resp, "on"))
 								{
 									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
@@ -250,7 +250,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							/* canopy carbon fluxes block */
 							Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 							Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
-							if (!mystricmp(settings->Prog_Aut_Resp, "on"))
+							if (!string_compare_i(settings->Prog_Aut_Resp, "on"))
 							{
 								Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
 								Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month, years);
@@ -449,11 +449,11 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
                             }
 							 */
 							/* simulate management */
-							if(! mystricmp(settings->management, "on") && years == 0)
+							if(! string_compare_i(settings->management, "on") && years == 0)
 							{
 								rotation_counter = m->cells[cell].heights[height].ages[age].species[species].value[ROTATION];
 							}
-							else if( ! mystricmp(settings->management, "on") && years > 0)
+							else if( ! string_compare_i(settings->management, "on") && years > 0)
 							{
 								if(years == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
 								{
@@ -573,7 +573,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//here is called at the end of all tree height age and species classes loops
 	//todo: move all soil algorithms into soil_model function
 	//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
-	//N_avl = (Ka * g_soil->sN) + pN + (Kb * Yearly_Eco_NPP);
+	//N_avl = (Ka * g_soil->values[SOIL_sN) + pN + (Kb * Yearly_Eco_NPP);
 	//Log("Nitrogen available = %f g m^-2\n", N_avl);
 	//}
 	Log("****************END OF CELL***************\n");

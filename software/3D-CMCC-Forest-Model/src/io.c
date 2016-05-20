@@ -184,7 +184,7 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 		if ( token[0] ) {
 			flag = 0;
 			for ( i = 0; i < OUTPUT_VARS_COUNT; ++i ) {
-				if ( ! mystricmp(token, sz_output_vars[i]) ) {
+				if ( ! string_compare_i(token, sz_output_vars[i]) ) {
 					/* daily */
 					if ( ('d' == token[0]) || ('D' == token[0]) ) {
 						int_no_leak = realloc(ov->daily_vars, (ov->daily_vars_count+1)*sizeof*int_no_leak);
@@ -885,7 +885,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
-			if ( ! mystricmp(sz_dims[y], name) ) {
+			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
 					printf("dimension %s already found!\n", sz_dims[y]);
 					nc_close(id_file);
@@ -944,7 +944,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		if ( ret != NC_NOERR ) goto quit;
 		/* check if we need that var */
 		for ( y = 0; y  < MET_COLUMNS /*+2*/; ++y ) {
-			if ( ! mystricmp(name, met_columns[y]) ) {
+			if ( ! string_compare_i(name, met_columns[y]) ) {
 				/* check if we've already get that var */
 				if ( columns[y] ) {
 					Log("column %s already imported!", name);
@@ -1305,7 +1305,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			ret = nc_inq_dim(id_file, i, name, &size);
 			if ( ret != NC_NOERR ) goto quit;
 			for ( y = 0; y < DIMS_COUNT; ++y ) {
-				if ( ! mystricmp(sz_dims[y], name) ) {
+				if ( ! string_compare_i(sz_dims[y], name) ) {
 					if ( dims_size[y] != -1 ) {
 						printf("dimension %s already found!\n", sz_dims[y]);
 						nc_close(id_file);
@@ -1424,17 +1424,17 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		for ( i = 0; i < vars_count; ++i ) {
 			ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
 			if ( ret != NC_NOERR ) goto quit;
-			if ( ! mystricmp(name, sz_lat) ) {
+			if ( ! string_compare_i(name, sz_lat) ) {
 				size_t start_lat[] = { y_cell, x_cell };
 				const size_t count_lat[] = { 1, 1 };
 				ret = nc_get_vara_float(id_file, i, start_lat, count_lat, &lat);
 				if ( ret != NC_NOERR ) goto quit;
-			} else if ( ! mystricmp(name, sz_lon) ) {
+			} else if ( ! string_compare_i(name, sz_lon) ) {
 				size_t start_lon[] = { y_cell, x_cell };
 				const size_t count_lon[] = { 1, 1 };
 				ret = nc_get_vara_float(id_file, i, start_lon, count_lon, &lon);
 				if ( ret != NC_NOERR ) goto quit;
-			} else if ( ! mystricmp(name, sz_time) ) {
+			} else if ( ! string_compare_i(name, sz_time) ) {
 				if ( ! date_imported ) {
 					if ( type != NC_DOUBLE ) {
 						printf("type format in %s for time column not supported\n\n", buffer);
@@ -1463,7 +1463,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 				}
 			} else {
 				for ( y = 0; y  < VARS_COUNT; ++y ) {
-					if ( ! mystricmp(name, sz_vars[y]) ) {
+					if ( ! string_compare_i(name, sz_vars[y]) ) {
 						/* check if we already have imported that var */
 						if ( vars[y] ) {
 							Log("var %s already imported\n", sz_vars[y]);
@@ -1727,7 +1727,7 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	{
 		for ( i = 0; i < MET_COLUMNS; ++i )
 		{
-			if ( ! mystricmp(token2, met_columns[i]) )
+			if ( ! string_compare_i(token2, met_columns[i]) )
 			{
 				if  ( -1 != columns[i] )
 				{
@@ -1967,7 +1967,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 		p2 = strrchr(filename, '.');
 		if ( p2 ) {
 			++p2;
-			if ( ! mystricmp(p2, "nc") )
+			if ( ! string_compare_i(p2, "nc") )
 			{
 				i = 1; // is a netcdf file!
 			}
@@ -1976,7 +1976,7 @@ YOS *ImportYosFiles(char *file, int *const yos_count, const int x, const int y)
 		{
 			i = ImportNCFile(token, &yos, yos_count);
 		}
-		else if ( ! mystricmp(p2, "lst") )
+		else if ( ! string_compare_i(p2, "lst") )
 		{
 			i = ImportListFile(token, &yos, yos_count, x, y);
 		}
@@ -2332,7 +2332,7 @@ static topo_import_nc(const char *const filename) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
-			if ( ! mystricmp(sz_dims[y], name) ) {
+			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
 					printf("dimension %s already found!\n", sz_dims[y]);
 					nc_close(id_file);
@@ -2391,7 +2391,7 @@ static topo_import_nc(const char *const filename) {
 		if ( ret != NC_NOERR ) goto quit;
 		/* check if we need that var */
 		for ( y = 0; y  < MET_COLUMNS /*+2*/; ++y ) {
-			if ( ! mystricmp(name, met_columns[y]) ) {
+			if ( ! string_compare_i(name, met_columns[y]) ) {
 				/* check if we've already get that var */
 				if ( columns[y] ) {
 					Log("column %s already imported!", name);

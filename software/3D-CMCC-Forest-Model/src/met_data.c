@@ -37,11 +37,11 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
 	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
-	ampl = (exp (7.42 + (0.045 * (g_soil->lat+adjust_latitude)))) / 3600;
+	ampl = (exp (7.42 + (0.045 * (g_soil->values[SOIL_LAT]+adjust_latitude)))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//Log("with altitude = %f\n", met[month].d[day].daylength);
 
-	//	ampl = (exp (7.42 + (0.045 * g_soil->lat))) / 3600;
+	//	ampl = (exp (7.42 + (0.045 * g_soil->values[SOIL_lat))) / 3600;
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//	Log("without altitude = %f\n", met[month].d[day].daylength);
 
@@ -318,7 +318,7 @@ void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 	met = (MET_DATA*) yos[years].m;
 
 	/* recompute co2 concentration at the beginning of each year */
-	if( ! mystricmp(settings->CO2_fixed, "off") && day == 0 && month == 0)
+	if( ! string_compare_i(settings->CO2_fixed, "off") && day == 0 && month == 0)
 	{
 		/* assign first year value from site.txt */
 		if(years == 0)

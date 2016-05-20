@@ -538,7 +538,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count)
 		//						for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
 		//						{
 		//							// equal species?
-		//							if ( !mystricmp(rows[row].species, m->cells[cell].heights[height].ages[age].species[species].name) )
+		//							if ( !string_compare_i(rows[row].species, m->cells[cell].heights[height].ages[age].species[species].name) )
 		//							{
 		//								/* */
 		//								Log((char *)err_equal_rows, row + 1);
@@ -663,10 +663,10 @@ void matrix_summary(const MATRIX *const m)
 	Log("***************************************************\n");
 	Log("SITE DATASET\n");
 	Log("Site Name = %s\n", g_soil->sitename);
-	Log("Latitude = %f° \n", g_soil->lat);
-	Log("Longitude = %f° \n", g_soil->lon);
+	Log("Latitude = %f° \n", g_soil->values[SOIL_LAT]);
+	Log("Longitude = %f° \n", g_soil->values[SOIL_LON]);
 	Log("Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
-	if (g_soil->lat > 0) Log("North hemisphere\n");
+	if (g_soil->values[SOIL_LAT] > 0) Log("North hemisphere\n");
 	else Log("South hemisphere\n");
 	Log("***************************************************\n");
 

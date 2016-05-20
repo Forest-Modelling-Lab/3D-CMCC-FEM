@@ -1105,7 +1105,7 @@ int main(int argc, char *argv[])
 	strcat (annual_out_filename, strData);
 	strcat (soil_out_filename, strData);
 
-	if (!mystricmp(settings->dndc, "on"))
+	if (!string_compare_i(settings->dndc, "on"))
 	{
 		strcat (out_filename, "_");
 		strcat (daily_out_filename, "_");
@@ -1131,11 +1131,11 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 		++p;
-		if ( ! mystricmp(p, "nc") ) {
+		if ( ! string_compare_i(p, "nc") ) {
 			ext = "_nc";
-		} else if ( ! mystricmp(p, "lst") ) {
+		} else if ( ! string_compare_i(p, "lst") ) {
 			ext = "_lst";
-		} else if ( ! mystricmp(p, "txt") ) {
+		} else if ( ! string_compare_i(p, "txt") ) {
 			ext = "_txt";
 		} else {
 			puts("bad met file!\n");
@@ -1245,7 +1245,7 @@ int main(int argc, char *argv[])
 		Log("input_met_path = %s\n", input_met_path);
 
 		/* reset soil values */
-		soil_clear(g_soil);
+		soil_reset(g_soil);
 
 		/* import soil values */
 		err = soil_import(g_soil, soil_path, m->cells[cell].x, m->cells[cell].y);
@@ -1256,17 +1256,17 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 
-		if (	IS_INVALID_VALUE(g_soil->sand_perc)
-				|| IS_INVALID_VALUE(g_soil->clay_perc)
-				|| IS_INVALID_VALUE(g_soil->silt_perc)
-				|| IS_INVALID_VALUE(g_soil->soil_depth) ) {
+		if (	IS_INVALID_VALUE(g_soil->values[SOIL_SAND_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_CLAY_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_SILT_PERC])
+				|| IS_INVALID_VALUE(g_soil->values[SOIL_DEPTH]) ) {
 			Log("NO SOIL DATA AVAILABLE\n");
 			matrix_free(m);
 			return 1;
 		}
 
 		/* reset topo values */
-		topo_clear(g_topo);
+		topo_reset(g_topo);
 
 		/* import topo values */
 		err = topo_import(g_topo, topo_path, m->cells[cell].x, m->cells[cell].y);
@@ -1278,7 +1278,7 @@ int main(int argc, char *argv[])
 		}
 
 		//check hemisphere
-		if ( g_soil->lat > 0 ) {
+		if ( g_soil->values[SOIL_LAT] > 0 ) {
 			m->cells[cell].north = 0;
 		} else {
 			m->cells[cell].north = 1;
@@ -1428,7 +1428,7 @@ int main(int argc, char *argv[])
 								//run for SOIL functions
 								//soil_model (m, yos, years, month, day, years_of_simulation);
 
-								if (!mystricmp(settings->dndc, "on"))
+								if (!string_compare_i(settings->dndc, "on"))
 								{
 									Log("RUNNING DNDC.....\n");
 									//TODO SERGIO
@@ -1502,7 +1502,7 @@ int main(int argc, char *argv[])
 					}
 
 					EOD_cumulative_balance_cell_level (&m->cells[cell], yos, year, month, day, cell);
-					if (!mystricmp(settings->dndc, "on"))
+					if (!string_compare_i(settings->dndc, "on"))
 					{
 						Get_EOD_soil_balance_cell_level (&m->cells[cell], yos, year, month, day);
 					}

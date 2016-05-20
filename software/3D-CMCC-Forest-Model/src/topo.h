@@ -12,7 +12,7 @@ typedef struct {
 } topo_t;
 
 topo_t* topo_new(void);
-void topo_clear(topo_t* const t);
+void topo_reset(topo_t* const t);
 int topo_import(topo_t *const t, const char *const filename, const int x, const int y);
 
 #endif

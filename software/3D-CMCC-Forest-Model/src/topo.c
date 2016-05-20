@@ -52,12 +52,12 @@ topo_t* topo_new(void) {
 
 	t = malloc(sizeof*t);
 	if ( t ) {
-		topo_clear(t);
+		topo_reset(t);
 	}
 	return t;
 }
 
-void topo_clear(topo_t* const t) {
+void topo_reset(topo_t* const t) {
 	int i;
 	assert(t);
 	for ( i = 0; i < TOPO_VALUES_COUNT; ++i ) {
@@ -75,7 +75,7 @@ int topo_import(topo_t *const t, const char *const filename, const int x, const 
 	assert(t);
 	p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! stricmp(++p, "nc") ) {
+		if ( ! string_compare_i(++p, "nc") ) {
 			return import_nc(t, filename, x, y);
 		}
 	}

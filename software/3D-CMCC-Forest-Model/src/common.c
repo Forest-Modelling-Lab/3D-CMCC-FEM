@@ -738,7 +738,7 @@ int parse_arguments(int argc, char *argv[], const ARGUMENT *const args, const in
 }
 
 /* */
-int mystricmp(const char *str1, const char *str2) {
+int string_compare_i(const char *str1, const char *str2) {
 	register signed char __res;
 
 	while ( 1 ) {

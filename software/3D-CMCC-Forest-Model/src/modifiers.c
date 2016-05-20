@@ -179,7 +179,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	}
 
 	/*SOIL NUTRIENT MODIFIER*/
-	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil->fn0)  * pow ((1.0 - g_soil->fr), g_soil->fnn);
+	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil->values[SOIL_FN0])  * pow ((1.0 - g_soil->values[SOIL_FR]), g_soil->values[SOIL_FNN]);
 	Log("fNutr = %f\n", s->value[F_NUTR]);
 
 
@@ -204,7 +204,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	Log("\nBIOME SOIL WATER MODIFIER\n");
 	Log("SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	Log("SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	c->vwc = c->asw / (1000.0 * (g_soil->soil_depth/100));
+	c->vwc = c->asw / (1000.0 * (g_soil->values[SOIL_DEPTH]/100));
 	Log("volumetric available soil water  = %f %(vol)\n", c->vwc);
 	Log ("vwc_fc = %f (DIM)\n", c->vwc_fc);
 	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
@@ -313,14 +313,14 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 		//compute soil hydraulic characteristics from soil granulometry
 		//from model Hydrall
-		eq1 = (g_soil->clay_perc * log(clay_dim)) + (g_soil->silt_perc * log(silt_dim)) + (g_soil->sand_perc * log(sand_dim));
+		eq1 = (g_soil->values[SOIL_CLAY_PERC] * log(clay_dim)) + (g_soil->values[SOIL_silt_perc * log(silt_dim)) + (g_soil->values[SOIL_sand_perc * log(sand_dim));
 		Log("eq1 = %f\n", eq1);
 
 		//soil mean particle diameter in mm
 		soil_avg_dim = exp(eq1);
 		Log("soil_avg_dim = %f\n", soil_avg_dim);
 
-	    eq2 = sqrt ((pow ((g_soil->clay_perc * log(clay_dim)),2)) + (pow ((g_soil->sand_perc * log(sand_dim)),2)) + (pow ((g_soil->silt_perc * log(silt_dim)),2)));
+	    eq2 = sqrt ((pow ((g_soil->values[SOIL_CLAY_PERC] * log(clay_dim)),2)) + (pow ((g_soil->values[SOIL_sand_perc * log(sand_dim)),2)) + (pow ((g_soil->values[SOIL_silt_perc * log(silt_dim)),2)));
 	    Log("eq2 = %f\n", eq2);
 
 	    //geometric standard deviation in particle size distribution (mm)

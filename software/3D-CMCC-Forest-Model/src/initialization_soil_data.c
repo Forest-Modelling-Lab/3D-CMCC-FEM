@@ -29,10 +29,10 @@ void Initialization_site_data (CELL *c)
 
 	Log("\n****SITE-SOIL CHARACTERISTICS for cell (%d, %d)****\n", c->x, c->y);
 	// (cm)   effective depth of rooting zone
-	Log("Soil depth = %f cm\n", g_soil->soil_depth);
+	Log("Soil depth = %f cm\n", g_soil->values[SOIL_DEPTH]);
 
 	/*soil matric potential*/
-	CHECK_CONDITION(fabs((g_soil->sand_perc + g_soil->clay_perc + g_soil->silt_perc) -100.0 ), > 1e-4);
+	CHECK_CONDITION(fabs((g_soil->values[SOIL_SAND_PERC] + g_soil->values[SOIL_CLAY_PERC] + g_soil->values[SOIL_SILT_PERC]) -100.0 ), > 1e-4);
 	/*
 	For further discussion see:
 	Cosby, B.J., G.M. Hornberger, R.B. Clapp, and T.R. Ginn, 1984.  A
@@ -48,19 +48,19 @@ void Initialization_site_data (CELL *c)
 	Log("BIOME soil characteristics\n");
 	//double soilw_fc; //maximum volume soil water content in m3/m3
 	// (DIM) Clapp-Hornberger "b" parameter
-	c->soil_b = -(3.10 + 0.157*g_soil->clay_perc - 0.003*g_soil->sand_perc); /* ok for schwalm*/
+	c->soil_b = -(3.10 + 0.157*g_soil->values[SOIL_CLAY_PERC] - 0.003*g_soil->values[SOIL_SAND_PERC]); /* ok for schwalm*/
 	Log ("soil_b = %f (DIM)\n", c->soil_b);
 	/* following Rawls et al., 1992 and Schwalm et al., 2004 */
 	/*texture-dependent empirical coefficinet */
-	// c->soil_b = 11.43 - (0.1034*g_soil->sand_perc) - (0.0687*0.157*g_soil->silt_perc);
+	// c->soil_b = 11.43 - (0.1034*g_soil->values[SOIL_SAND_PERC) - (0.0687*0.157*g_soil->values[SOIL_silt_perc);
 
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	// (DIM) Soil volumetric water content at saturation
-	c->vwc_sat = (50.5 - 0.142*g_soil->sand_perc - 0.037*g_soil->clay_perc)/100.0; /* ok for schwalm*/
+	c->vwc_sat = (50.5 - 0.142*g_soil->values[SOIL_SAND_PERC] - 0.037*g_soil->values[SOIL_CLAY_PERC])/100.0; /* ok for schwalm*/
 	Log ("volumetric water content at saturation (BIOME) = %f %(vol)\n", c->vwc_sat);
 	// (MPa) soil matric potential at saturation
-	c->psi_sat = -(exp((1.54 - 0.0095*g_soil->sand_perc + 0.0063*g_soil->silt_perc)*log(10.0))*9.8e-5); /* ok for schwalm*/
+	c->psi_sat = -(exp((1.54 - 0.0095*g_soil->values[SOIL_SAND_PERC] + 0.0063*g_soil->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
 	Log ("psi_sat = %f MPa \n", c->psi_sat);
 	// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa)
 	c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
@@ -70,11 +70,11 @@ void Initialization_site_data (CELL *c)
 	//converts volumetric water content (m3/m3) --> (kg/m2)
 
 	// (kgH2O/m2) soil water at field capacity
-	c->soilw_fc = (g_soil->soil_depth / 100) * c->vwc_fc * 1000.0;
+	c->soilw_fc = (g_soil->values[SOIL_DEPTH] / 100) * c->vwc_fc * 1000.0;
 	Log ("soilw_fc BIOME (MAXASW FC BIOME)= %f (kgH2O/m2)\n", c->soilw_fc);
 	//equal to MAXASW
 	// (kgH2O/m2) soil water at saturation
-	c->soilw_sat = (g_soil->soil_depth / 100) * c->vwc_sat * 1000.0;
+	c->soilw_sat = (g_soil->values[SOIL_DEPTH] / 100) * c->vwc_sat * 1000.0;
 	Log ("soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
 	c->max_asw_fc = c->soilw_fc;
@@ -90,16 +90,16 @@ void Initialization_site_data (CELL *c)
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
 	/* following Saxton et al 1986, 2006, 2008 */
 	Log("CENTURY soil characteristics\n");
-	acoeff = exp(-4.396 - 0.0715 * g_soil->clay_perc - 4.88e-4 * pow(g_soil->sand_perc,2) - 4.285e-5 * pow(g_soil->sand_perc,2)*g_soil->clay_perc);
-	bcoeff = (-3.14 - 0.00222 * pow(g_soil->clay_perc,2) - 3.484e-5 * pow(g_soil->sand_perc,2) * g_soil->clay_perc);
-	sat = (0.332 - 7.251e-4 * g_soil->sand_perc + 0.1276 * log10(g_soil->clay_perc));
+	acoeff = exp(-4.396 - 0.0715 * g_soil->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil->values[SOIL_SAND_PERC],2)*g_soil->values[SOIL_CLAY_PERC]);
+	bcoeff = (-3.14 - 0.00222 * pow(g_soil->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil->values[SOIL_SAND_PERC],2) * g_soil->values[SOIL_CLAY_PERC]);
+	sat = (0.332 - 7.251e-4 * g_soil->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil->values[SOIL_CLAY_PERC]));
 
 	/* volumetric percentage for wilting point */
 	volumetric_wilting_point = pow((15.0/acoeff), (1.0/bcoeff));
 	/* volumetric percentage for field capacity */
 	volumetric_field_capacity = pow((0.333/acoeff),(1.0/bcoeff));
 	/* volumetric percentage for saturated hydraulic conductivity */
-	volumetric_saturated_hydraulic_conductivity = exp((12.012 - 0.0755 * g_soil->sand_perc) + (-3.895 + 0.03671 * g_soil->sand_perc - 0.1103 * g_soil->clay_perc + 8.7546e-4 * pow(g_soil->clay_perc,2))/sat);
+	volumetric_saturated_hydraulic_conductivity = exp((12.012 - 0.0755 * g_soil->values[SOIL_SAND_PERC]) + (-3.895 + 0.03671 * g_soil->values[SOIL_SAND_PERC] - 0.1103 * g_soil->values[SOIL_CLAY_PERC] + 8.7546e-4 * pow(g_soil->values[SOIL_CLAY_PERC],2))/sat);
 	/* bulk density g/cm3 */
 	c->bulk_density = (1 - sat) * 2.65;
 
@@ -108,14 +108,14 @@ void Initialization_site_data (CELL *c)
 	volumetric_wilting_point += (-0.15 * volumetric_wilting_point);
 	Log("*volumetric water content at wilting point (CENTURY) = %f %(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
-	c->wilting_point = (g_soil->soil_depth / 100) * volumetric_wilting_point * 1000.0;
+	c->wilting_point = (g_soil->values[SOIL_DEPTH] / 100) * volumetric_wilting_point * 1000.0;
 	Log("**Wilting point (CENTURY) = %f mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
 	volumetric_field_capacity += (0.07 * volumetric_field_capacity);
 	Log("*volumetric water content at field capacity (CENTURY) = %f %(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
-	c->field_capacity = (g_soil->soil_depth / 100) * volumetric_field_capacity * 1000.0;
+	c->field_capacity = (g_soil->values[SOIL_DEPTH] / 100) * volumetric_field_capacity * 1000.0;
 	Log("**Field capacity (CENTURY) = %f mm/m2\n", c->field_capacity);
 
 	/* volumetric percentage saturated hydraulic conductivity */
@@ -123,7 +123,7 @@ void Initialization_site_data (CELL *c)
 	Log("*volumetric water content at saturated hydraulic conductance (CENTURY) = %f %(vol)\n", volumetric_saturated_hydraulic_conductivity);
 	//fixme not clear what it is
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
-	c->sat_hydr_conduct = (g_soil->soil_depth / 100) * volumetric_saturated_hydraulic_conductivity * 1000.0;
+	c->sat_hydr_conduct = (g_soil->values[SOIL_DEPTH] / 100) * volumetric_saturated_hydraulic_conductivity * 1000.0;
 	Log("**Saturated hydraulic conductivity (CENTURY) = %f mm/m2\n", c->sat_hydr_conduct);
 
 	/* bulk density g/cm3 */
