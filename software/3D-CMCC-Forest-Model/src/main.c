@@ -565,6 +565,226 @@ int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
 }
 
 
+static int log_start(const char* const sitename) {
+	char strTmp[3], strTmp2[4], strTmp3[3];
+	char strSizeCell[10] = "";
+	char strData[30] = "";
+	struct tm* data;
+	time_t rawtime;
+	//add site name to output files
+
+	if ( sitename ) {
+		strcat (out_filename, "_");
+		strcat (out_filename, sitename);
+
+		strcat (daily_out_filename, "_");
+		strcat (daily_out_filename, sitename);
+
+		strcat (monthly_out_filename, "_");
+		strcat (monthly_out_filename, sitename);
+
+		strcat (annual_out_filename, "_");
+		strcat (annual_out_filename, sitename);
+
+		strcat (soil_out_filename, "_");
+		strcat (soil_out_filename, sitename);
+	}
+
+
+
+	//define output file name in function of model settings
+
+	strTmp[0] = '_';
+	strTmp[1] = settings->version;
+	strTmp[2] = '\0';
+
+	strTmp2[0] = '_';
+	strTmp2[1] = settings->spatial;
+	strTmp2[2] = '_';
+	strTmp2[3] = '\0';
+
+	strTmp3[0] = settings->time;
+	strTmp3[1] = '_';
+	strTmp3[2] = '\0';
+
+
+
+	strcat (out_filename, strTmp);
+	strcat (out_filename, strTmp2);
+	strcat (out_filename, strTmp3);
+
+	strcat (daily_out_filename, strTmp);
+	strcat (daily_out_filename, strTmp2);
+	strcat (daily_out_filename, strTmp3);
+
+	strcat (monthly_out_filename, strTmp);
+	strcat (monthly_out_filename, strTmp2);
+	strcat (monthly_out_filename, strTmp3);
+
+	strcat (annual_out_filename, strTmp);
+	strcat (annual_out_filename, strTmp2);
+	strcat (annual_out_filename, strTmp3);
+
+	strcat (soil_out_filename, strTmp);
+	strcat (soil_out_filename, strTmp2);
+	strcat (soil_out_filename, strTmp3);
+
+
+	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
+
+	strcat (out_filename, strSizeCell);
+	strcat (out_filename, "_");
+
+	strcat (daily_out_filename, strSizeCell);
+	strcat (daily_out_filename, "_");
+
+	strcat (monthly_out_filename, strSizeCell);
+	strcat (monthly_out_filename, "_");
+
+	strcat (annual_out_filename, strSizeCell);
+	strcat (annual_out_filename, "_");
+
+	strcat (soil_out_filename, strSizeCell);
+	strcat (soil_out_filename, "_");
+
+	//add data to output.txt
+
+	time (&rawtime);
+	data = gmtime(&rawtime);
+
+
+	sprintf(strData, "%d", data->tm_year+1900);
+	strcat (out_filename, strData);
+	strcat (out_filename, "_");
+
+	strcat (daily_out_filename, strData);
+	strcat (daily_out_filename, "_");
+
+	strcat (monthly_out_filename, strData);
+	strcat (monthly_out_filename, "_");
+
+	strcat (annual_out_filename, strData);
+	strcat (annual_out_filename, "_");
+
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
+
+	sprintf(strData, "%s", szMonth[data->tm_mon]);
+	strcat (out_filename, strData);
+	strcat (out_filename, "_");
+
+	strcat (daily_out_filename, strData);
+	strcat (daily_out_filename, "_");
+
+	strcat (monthly_out_filename, strData);
+	strcat (monthly_out_filename, "_");
+
+	strcat (annual_out_filename, strData);
+	strcat (annual_out_filename, "_");
+
+	strcat (soil_out_filename, strData);
+	strcat (soil_out_filename, "_");
+
+	sprintf(strData, "%d", data->tm_mday);
+
+	strcat (out_filename, strData);
+
+	strcat (daily_out_filename, strData);
+	strcat (monthly_out_filename, strData);
+	strcat (annual_out_filename, strData);
+	strcat (soil_out_filename, strData);
+
+	if (!string_compare_i(settings->dndc, "on"))
+	{
+		strcat (out_filename, "_");
+		strcat (daily_out_filename, "_");
+		strcat (monthly_out_filename, "_");
+		strcat (annual_out_filename, "_");
+		strcat (soil_out_filename, "_");
+		sprintf(strData, "DNDC");
+		strcat (daily_out_filename, strData);
+		strcat (monthly_out_filename, strData);
+		strcat (annual_out_filename, strData);
+		strcat (soil_out_filename, strData);
+		strcat (out_filename, strData);
+
+	}
+
+	/* add suffix for type files */
+	{
+		char *p;
+		char *ext;
+		p = strrchr(input_met_path, '.');
+		if ( ! p ) {
+			puts("bad met file!\n");
+			return -1;
+		}
+		++p;
+		if ( ! string_compare_i(p, "nc") ) {
+			ext = "_nc";
+		} else if ( ! string_compare_i(p, "lst") ) {
+			ext = "_lst";
+		} else if ( ! string_compare_i(p, "txt") ) {
+			ext = "_txt";
+		} else {
+			puts("bad met file!\n");
+			return 0;
+		}
+		strcat(out_filename, ext);
+		strcat(daily_out_filename, ext);
+		strcat(monthly_out_filename, ext);
+		strcat(annual_out_filename, ext);
+		strcat(soil_out_filename, ext);
+	}
+
+	strcat (out_filename, ".txt");
+	strcat (daily_out_filename, ".txt");
+	strcat (monthly_out_filename, ".txt");
+	strcat (annual_out_filename, ".txt");
+	strcat (soil_out_filename, ".txt");
+
+	//Create output files
+	if ( !logInit(out_filename) )
+	{
+		log_enabled = 0;
+		puts("Unable to log to file: check logfile path!");
+	}
+	free(out_filename); out_filename = NULL;
+	daily_logInit (daily_out_filename);
+	//Daily_Log ("daily output file at cell level\n\n");
+	free(daily_out_filename); daily_out_filename = NULL;
+
+	monthly_logInit (monthly_out_filename);
+	//Monthly_Log ("monthly output file at cell level\n\n");
+	free(monthly_out_filename); monthly_out_filename = NULL;
+
+	annual_logInit (annual_out_filename);
+	//Annual_Log ("annual output file at cell level\n\n");
+	free(annual_out_filename); annual_out_filename = NULL;
+
+	soil_logInit (soil_out_filename);
+	free(soil_out_filename);
+	soil_out_filename = NULL;
+	soil_Log ("soil output file at cell level\n\n");
+	
+	/* show paths */
+	printf(msg_dataset_path, input_path);
+	printf(msg_soil_path, soil_path);
+	printf(msg_topo_path, topo_path);
+	printf(msg_met_path, input_met_path);
+	printf(msg_settings_path, settings_path);
+	printf(msg_output_file, output_file);
+	printf(msg_daily_output_file, annual_output_file);
+	printf(msg_monthly_output_file, annual_output_file);
+	printf(msg_annual_output_file, annual_output_file);
+	printf(msg_soil_output_file, soil_output_file);
+
+	free(settings_path); settings_path = NULL;
+
+	return 1;
+}
+
+
 //----------------------------------------------------------------------------//
 //                                                                            //
 //                                 MAIN.C                                     //
@@ -577,23 +797,14 @@ int main(int argc, char *argv[])
 	error,
 	rows_count;
 
-	struct tm* data;
-
 	int year,
 	month,
 	day;
 
 	int cell;
-
-	char strSitename[20] = "";
-	char strTmp[3], strTmp2[4], strTmp3[3];
-	char strSizeCell[10] = "";
-	char strData[30] = "";
-
 	YOS *yos;
 	ROW *rows;
 	MATRIX *m;
-	time_t rawtime;
 
 	// ALESSIOR
 	// this var are declared in types.h
@@ -982,216 +1193,6 @@ int main(int argc, char *argv[])
 		Log("UNCORRECT TIME STEP CHOICED!!!\n");
 		return -1;
 	}
-	//add site name to output files
-
-	sprintf(strSitename, "%s", g_soil->sitename);
-
-	strcat (out_filename, "_");
-	strcat (out_filename, strSitename);
-
-	strcat (daily_out_filename, "_");
-	strcat (daily_out_filename, strSitename);
-
-	strcat (monthly_out_filename, "_");
-	strcat (monthly_out_filename, strSitename);
-
-	strcat (annual_out_filename, "_");
-	strcat (annual_out_filename, strSitename);
-
-	strcat (soil_out_filename, "_");
-	strcat (soil_out_filename, strSitename);
-
-
-
-	//define output file name in function of model settings
-
-	strTmp[0] = '_';
-	strTmp[1] = settings->version;
-	strTmp[2] = '\0';
-
-	strTmp2[0] = '_';
-	strTmp2[1] = settings->spatial;
-	strTmp2[2] = '_';
-	strTmp2[3] = '\0';
-
-	strTmp3[0] = settings->time;
-	strTmp3[1] = '_';
-	strTmp3[2] = '\0';
-
-
-
-	strcat (out_filename, strTmp);
-	strcat (out_filename, strTmp2);
-	strcat (out_filename, strTmp3);
-
-	strcat (daily_out_filename, strTmp);
-	strcat (daily_out_filename, strTmp2);
-	strcat (daily_out_filename, strTmp3);
-
-	strcat (monthly_out_filename, strTmp);
-	strcat (monthly_out_filename, strTmp2);
-	strcat (monthly_out_filename, strTmp3);
-
-	strcat (annual_out_filename, strTmp);
-	strcat (annual_out_filename, strTmp2);
-	strcat (annual_out_filename, strTmp3);
-
-	strcat (soil_out_filename, strTmp);
-	strcat (soil_out_filename, strTmp2);
-	strcat (soil_out_filename, strTmp3);
-
-
-	sprintf(strSizeCell, "%d", (int)settings->sizeCell);
-
-	strcat (out_filename, strSizeCell);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strSizeCell);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strSizeCell);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strSizeCell);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strSizeCell);
-	strcat (soil_out_filename, "_");
-
-	//add data to output.txt
-
-	time (&rawtime);
-	data = gmtime(&rawtime);
-
-
-	sprintf(strData, "%d", data->tm_year+1900);
-	strcat (out_filename, strData);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strData);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strData);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strData);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strData);
-	strcat (soil_out_filename, "_");
-
-	sprintf(strData, "%s", szMonth[data->tm_mon]);
-	strcat (out_filename, strData);
-	strcat (out_filename, "_");
-
-	strcat (daily_out_filename, strData);
-	strcat (daily_out_filename, "_");
-
-	strcat (monthly_out_filename, strData);
-	strcat (monthly_out_filename, "_");
-
-	strcat (annual_out_filename, strData);
-	strcat (annual_out_filename, "_");
-
-	strcat (soil_out_filename, strData);
-	strcat (soil_out_filename, "_");
-
-	sprintf(strData, "%d", data->tm_mday);
-
-	strcat (out_filename, strData);
-
-	strcat (daily_out_filename, strData);
-	strcat (monthly_out_filename, strData);
-	strcat (annual_out_filename, strData);
-	strcat (soil_out_filename, strData);
-
-	if (!string_compare_i(settings->dndc, "on"))
-	{
-		strcat (out_filename, "_");
-		strcat (daily_out_filename, "_");
-		strcat (monthly_out_filename, "_");
-		strcat (annual_out_filename, "_");
-		strcat (soil_out_filename, "_");
-		sprintf(strData, "DNDC");
-		strcat (daily_out_filename, strData);
-		strcat (monthly_out_filename, strData);
-		strcat (annual_out_filename, strData);
-		strcat (soil_out_filename, strData);
-		strcat (out_filename, strData);
-
-	}
-
-	/* add suffix for type files */
-	{
-		char *p;
-		char *ext;
-		p = strrchr(input_met_path, '.');
-		if ( ! p ) {
-			puts("bad met file!\n");
-			return -1;
-		}
-		++p;
-		if ( ! string_compare_i(p, "nc") ) {
-			ext = "_nc";
-		} else if ( ! string_compare_i(p, "lst") ) {
-			ext = "_lst";
-		} else if ( ! string_compare_i(p, "txt") ) {
-			ext = "_txt";
-		} else {
-			puts("bad met file!\n");
-			return -1;
-		}
-		strcat(out_filename, ext);
-		strcat(daily_out_filename, ext);
-		strcat(monthly_out_filename, ext);
-		strcat(annual_out_filename, ext);
-		strcat(soil_out_filename, ext);
-	}
-
-	strcat (out_filename, ".txt");
-	strcat (daily_out_filename, ".txt");
-	strcat (monthly_out_filename, ".txt");
-	strcat (annual_out_filename, ".txt");
-	strcat (soil_out_filename, ".txt");
-
-
-	//Create output files
-	if ( !logInit(out_filename) )
-	{
-		log_enabled = 0;
-		puts("Unable to log to file: check logfile path!");
-	}
-	free(out_filename); out_filename = NULL;
-	daily_logInit (daily_out_filename);
-	//Daily_Log ("daily output file at cell level\n\n");
-	free(daily_out_filename); daily_out_filename = NULL;
-
-	monthly_logInit (monthly_out_filename);
-	//Monthly_Log ("monthly output file at cell level\n\n");
-	free(monthly_out_filename); monthly_out_filename = NULL;
-
-	annual_logInit (annual_out_filename);
-	//Annual_Log ("annual output file at cell level\n\n");
-	free(annual_out_filename); annual_out_filename = NULL;
-
-	soil_logInit (soil_out_filename);
-	free(soil_out_filename);
-	soil_out_filename = NULL;
-	soil_Log ("soil output file at cell level\n\n");
-	
-	/* show paths */
-	printf(msg_dataset_path, input_path);
-	printf(msg_soil_path, soil_path);
-	printf(msg_topo_path, topo_path);
-	printf(msg_met_path, input_met_path);
-	printf(msg_settings_path, settings_path);
-	printf(msg_output_file, output_file);
-	printf(msg_daily_output_file, annual_output_file);
-	printf(msg_monthly_output_file, annual_output_file);
-	printf(msg_annual_output_file, annual_output_file);
-	printf(msg_soil_output_file, soil_output_file);
-
-	free(settings_path); settings_path = NULL;
 
 	/* processing */
 	printf(msg_processing, input_path);
@@ -1254,6 +1255,14 @@ int main(int argc, char *argv[])
 			if ( 2 == err ) Log("file not imported\n\n");			
 			matrix_free(m);
 			return 1;
+		}
+
+		/* only for first cell */
+		if ( 0 == cell ) {
+			if ( ! log_start(g_soil->sitename) ) {
+				matrix_free(m);
+				return 1;
+			}
 		}
 
 		if (	IS_INVALID_VALUE(g_soil->values[SOIL_SAND_PERC])
