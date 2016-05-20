@@ -210,10 +210,10 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 
 //	if (years == 0)
 //	{
-//		Annual_Log("Site name = %s\n", site->sitename);
+//		Annual_Log("Site name = %s\n", g_soil->sitename);
 //		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
 //		Annual_Log("years of simulation = %d\n", years_of_simulation);
-//		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+//		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->lat, g_soil->lon );
 //		Annual_Log("HC(n) = height class counter for n layer\n");
 //		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
 //		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
@@ -741,9 +741,9 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	/*if(month == 0 && years == 0)
 	{
-		Monthly_Log("Site name = %s\n", site->sitename);
+		Monthly_Log("Site name = %s\n", g_soil->sitename);
 		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Monthly_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+		Monthly_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->lat, g_soil->lon );
 		if (!mystricmp(settings->dndc, "on"))
 		{
 			Monthly_Log("Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
@@ -978,9 +978,9 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	if(day  == 0 && month == 0 && years == 0)
 	{
 
-		//Daily_Log("Site name = %s\n", site->sitename);
+		//Daily_Log("Site name = %s\n", g_soil->sitename);
 		//Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		//Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+		//Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->lat, g_soil->lon );
 
 
 		//Daily_Log ("HC\n");
@@ -1342,9 +1342,9 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 			soil_Log("No soil simulation!!!\n");
 		}
 	}
-	//		Daily_Log("Site name = %s\n", site->sitename);
+	//		Daily_Log("Site name = %s\n", g_soil->sitename);
 	//		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-	//		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, site->lat, site->lon );
+	//		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->lat, g_soil->lon );
 	//
 	//
 	//		Daily_Log ("HC\n");

@@ -573,7 +573,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	//here is called at the end of all tree height age and species classes loops
 	//todo: move all soil algorithms into soil_model function
 	//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
-	//N_avl = (Ka * site->sN) + pN + (Kb * Yearly_Eco_NPP);
+	//N_avl = (Ka * g_soil->sN) + pN + (Kb * Yearly_Eco_NPP);
 	//Log("Nitrogen available = %f g m^-2\n", N_avl);
 	//}
 	Log("****************END OF CELL***************\n");

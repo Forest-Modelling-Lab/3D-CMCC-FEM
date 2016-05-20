@@ -92,8 +92,7 @@ typedef struct
 
 	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
 	double lat,
-	lon,
-	elev;
+	lon;
 
 	double clay_perc,
 	silt_perc,
@@ -129,9 +128,7 @@ typedef struct
 	DChumus;
 
 }
-//todo this should be renamed as "soil" instead "site"
-site_t;
-
+soil_t;
 
 // Struct representing settings.txt content
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
@@ -1243,7 +1240,6 @@ typedef struct {
 
 
 // Store site.txt and settings.txt data
-site_t *site;
 settings_t *settings;
 
 
@@ -1271,7 +1267,7 @@ int sort_by_heights_desc(const void * , const void * );
 double Canopy_cover (SPECIES *const, int, int, int);
 void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 ROW *import_dataset(const char *const, int *const);
-int importSiteFile(char *);
+int importSoilFile(char *);
 int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);

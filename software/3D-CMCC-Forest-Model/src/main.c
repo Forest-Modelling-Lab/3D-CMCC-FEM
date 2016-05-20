@@ -35,6 +35,7 @@
 #include "compiler.h"
 #include "types.h"
 #include "constants.h"
+#include "topo.h"
 
 #ifndef NULL
 #define NULL   ((void *) 0)
@@ -52,6 +53,9 @@ int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 const char *szMonth[MONTHS] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY",
 		"AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER" };
 
+/* global vars */
+soil_t *g_soil = NULL;
+topo_t *g_topo = NULL;
 
 /* global variables */
 char 	*program_path		=	NULL,	// mandatory
@@ -59,7 +63,8 @@ char 	*program_path		=	NULL,	// mandatory
 		*input_path		=	NULL,	// mandatory
 		*dataset_filename	=	NULL,	// mandatory
 		*input_met_path	=	NULL,	// mandatory
-		*site_path			=	NULL,	// mandatory
+		*soil_path			=	NULL,	// mandatory
+		*topo_path			=	NULL,	// mandatory
 		*output_path		=	NULL,	// mandatory
 		*out_filename		=	NULL,	// mandatory
 		*output_file		= 	NULL,	// mandatory
@@ -128,7 +133,8 @@ static char copyright[] =
 
 
 static const char msg_dataset_path[]			=	"dataset path = %s\n";
-static const char msg_site_path[]				=	"site path = %s\n";
+static const char msg_soil_path[]				=	"soil path = %s\n";
+static const char msg_topo_path[]				=	"topo path = %s\n";
 static const char msg_met_path[]				=	"met path = %s\n";
 static const char msg_settings_path[]			=	"settings path = %s\n";
 static const char msg_output_file[]				=	"output file path = %s\n";
@@ -174,8 +180,11 @@ static void clean_up(void)
 	if ( input_dir )
 		free(input_dir);
 
-	if ( site )
-		free(site);
+	if ( g_topo )
+		free(g_topo);
+
+	if ( g_soil )
+		free(g_soil);
 
 	if( settings )
 		free(settings);
@@ -222,20 +231,20 @@ static void clean_up(void)
 //	return 1;
 //}
 
-int get_site_path(char *arg, char *param, void *p) {
+static int get_soil_path(char *arg, char *param, void *p) {
 	if ( !param )
 	{
 		printf(err_arg_needs_param, arg);
 		return 0;
 	}
 
-	if ( site_path )
+	if ( soil_path )
 	{
-		printf(err_site_already_specified, site_path, param);
+		printf(err_site_already_specified, soil_path, param);
 	}
 	else
 	{
-		site_path = param;
+		soil_path = param;
 	}
 
 	/* ok */
@@ -510,7 +519,8 @@ void usage(void)
 	fprintf(stderr, "\t-f\tannual output filename\t\t\t\t\t(i.e.: -o /path/to/CMCC.log)\n");
 	fprintf(stderr, "\t-d\tdataset filename stored into input directory\t(i.e.: -d input.txt)\n");
 	fprintf(stderr, "\t-m\tmet filename list stored into input directory\t(i.e.: -m 1999.txt,2003.txt,2009.txt)\n");
-	fprintf(stderr, "\t-s\tsite filename stored into input directory\t(i.e.: -s site.txt)\n");
+	fprintf(stderr, "\t-s\tsoil filename stored into input directory\t(i.e.: -s soil.txt or soil.nc)\n");
+	fprintf(stderr, "\t-t\ttopo filename stored into input directory\t(i.e.: -t topo.txt or topo.nc)\n");
 	fprintf(stderr, "\t-c\tsettings filename stored into input directory\t(i.e.: -c settings.txt)\n");
 	fprintf(stderr, "\t-r\toutput vars list\t(i.e.: -r output_vars.lst)\n");
 	fprintf(stderr, "\nOptional options:\n");
@@ -585,9 +595,8 @@ int main(int argc, char *argv[])
 	time_t rawtime;
 
 	// ALESSIOR
-	// this vars are declared in types.h
-	// so we need to initialized here
-	site = NULL;
+	// this var are declared in types.h
+	// so we need to initialize here
 	settings = NULL;
 
 	/* register atexit */
@@ -596,6 +605,12 @@ int main(int argc, char *argv[])
 		puts(err_unable_to_register_atexit);
 		return 1;
 	}
+
+	/* show copyright*/
+	Log(copyright);
+
+	/* show banner */
+	Log(banner, GetNetCDFVersion());
 
 	// Parsing arguments
 	for(i=1; i<argc; i++)
@@ -683,15 +698,25 @@ int main(int argc, char *argv[])
 			bzero(input_met_path, BUFFER_SIZE-1);
 			strcpy(input_met_path, argv[i+1]);
 			break;
-		case 's': // Site filename
-			site_path = malloc(sizeof(*site_path)*BUFFER_SIZE);
-			if( !site_path )
+		case 's': // Soil filename
+			soil_path = malloc(sizeof(*soil_path)*BUFFER_SIZE);
+			if( !soil_path )
 			{
-				fprintf(stderr, "Cannot allocate memory for site_path.\n");
+				fprintf(stderr, "Cannot allocate memory for soil_path.\n");
 				return 1;
 			}
-			bzero(site_path, BUFFER_SIZE-1);
-			strcpy(site_path, argv[i+1]);
+			bzero(soil_path, BUFFER_SIZE-1);
+			strcpy(soil_path, argv[i+1]);
+			break;
+		case 't': // Topo filename
+			topo_path = malloc(sizeof(*topo_path)*BUFFER_SIZE);
+			if( !topo_path )
+			{
+				fprintf(stderr, "Cannot allocate memory for topo_path.\n");
+				return 1;
+			}
+			bzero(topo_path, BUFFER_SIZE-1);
+			strcpy(topo_path, argv[i+1]);
 			break;
 		case 'c': // Settings filename
 			settings_path = malloc(sizeof(*settings_path)*BUFFER_SIZE);
@@ -859,9 +884,9 @@ int main(int argc, char *argv[])
 		free(tmp_input_met_path);
 	}
 
-	if( site_path == NULL )
+	if( soil_path == NULL )
 	{
-		fprintf(stderr, "Error: site filename option is missing!\n");
+		fprintf(stderr, "Error: soil filename option is missing!\n");
 		usage();
 	}
 	else
@@ -874,8 +899,29 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 		bzero(tmp, BUFFER_SIZE-1);
-		strcat(tmp, site_path);
-		strcpy(site_path, tmp);
+		strcat(tmp, soil_path);
+		strcpy(soil_path, tmp);
+
+		free(tmp);
+	}
+
+	if( topo_path == NULL )
+	{
+		fprintf(stderr, "Error: topo filename option is missing!\n");
+		usage();
+	}
+	else
+	{
+		char *tmp = NULL;
+		tmp = malloc(sizeof(*tmp)*BUFFER_SIZE);
+		if( !tmp )
+		{
+			fprintf(stderr, "Cannot allocate memory for tmp.\n");
+			return 1;
+		}
+		bzero(tmp, BUFFER_SIZE-1);
+		strcat(tmp, topo_path);
+		strcpy(topo_path, tmp);
 
 		free(tmp);
 	}
@@ -936,22 +982,33 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	// Import site.txt file
-	error = importSiteFile(site_path);
+	// Import soil.txt file
+	error = importSoilFile(soil_path);
 	if ( error )
 	{
-		Log("Site file not imported!!\n\n");
+		Log("Soil file not imported!!\n\n");
 		return -1;
 	}
 	else
 	{
-		Log("site path = %s\n", site_path);
-		Log("...Site file imported!!\n\n");
+		Log("soil path = %s\n", soil_path);
+		Log("...Soil file imported!!\n\n");
 	}
 
+	/* import topo file */
+	Log("import topo file...");
+	g_topo = topo_import(topo_path, &error);
+	if ( error ) {
+		if ( 1 == error ) Log("out of memory\n\n");
+		if ( 2 == error ) Log("file not found\n\n");
+		if ( 3 == error ) Log("file not imported\n\n");			
+		return -1;
+	}
+	Log("ok\ntopo path = %s\n", topo_path);
+	
 	//add site name to output files
 
-	sprintf(strSitename, "%s", site->sitename);
+	sprintf(strSitename, "%s", g_soil->sitename);
 
 	strcat (out_filename, "_");
 	strcat (out_filename, strSitename);
@@ -1145,15 +1202,11 @@ int main(int argc, char *argv[])
 	free(soil_out_filename);
 	soil_out_filename = NULL;
 	soil_Log ("soil output file at cell level\n\n");
-	/* show copyright*/
-	Log(copyright);
-
-	/* show banner */
-	Log(banner, GetNetCDFVersion());
-
+	
 	/* show paths */
 	printf(msg_dataset_path, input_path);
-	printf(msg_site_path, site_path);
+	printf(msg_soil_path, soil_path);
+	printf(msg_topo_path, topo_path);
 	printf(msg_met_path, input_met_path);
 	printf(msg_settings_path, settings_path);
 	printf(msg_output_file, output_file);
@@ -1162,24 +1215,10 @@ int main(int argc, char *argv[])
 	printf(msg_annual_output_file, annual_output_file);
 	printf(msg_soil_output_file, soil_output_file);
 
-	free(site_path); site_path = NULL;
+	free(topo_path); topo_path = NULL;
+	free(soil_path); soil_path = NULL;
 	free(settings_path); settings_path = NULL;
 
-	/*
-	// Import site.txt file
-	error = importSiteFile(site_path);
-	if ( error )
-	{
-		Log("Site file not imported!!\n\n");
-		return -1;
-	}
-	else
-	{
-		Log("site path = %s\n", site_path);
-		Log("...Site file imported!!\n\n");
-	}
-	 */
-	/* loop for searching file */
 	/* processing */
 	printf(msg_processing, input_path);
 
@@ -1208,10 +1247,10 @@ int main(int argc, char *argv[])
 	// ALESSIOR TODO
 	// EACH CELLS MUST HAVE THIS SETTINGS
 	//for ( cell = 0; cell < m->cells_count; ++cell ) {
-		if (	IS_INVALID_VALUE(site->sand_perc)
-				|| IS_INVALID_VALUE(site->clay_perc)
-				|| IS_INVALID_VALUE(site->silt_perc)
-				|| IS_INVALID_VALUE(site->soil_depth) ) {
+		if (	IS_INVALID_VALUE(g_soil->sand_perc)
+				|| IS_INVALID_VALUE(g_soil->clay_perc)
+				|| IS_INVALID_VALUE(g_soil->silt_perc)
+				|| IS_INVALID_VALUE(g_soil->soil_depth) ) {
 			Log("NO SOIL DATA AVAILABLE\n");
 			matrix_free(m);
 			return 1;
@@ -1230,7 +1269,7 @@ int main(int argc, char *argv[])
 		Log("input_met_path = %s\n", input_met_path);
 
 		//check hemisphere
-		if (site->lat > 0) {
+		if (g_soil->lat > 0) {
 			m->cells[cell].north = 0;
 		} else {
 			m->cells[cell].north = 1;

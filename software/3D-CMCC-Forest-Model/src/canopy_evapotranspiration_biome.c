@@ -52,10 +52,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double dt = 0.2;
 	double delta;
 	double rc, rr, rhr;
-	double rel_hum;
 	double tcanopy, tcanopyK;
-
-	double svp, vp;
 
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
@@ -387,13 +384,15 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		Log("psych_p = %f\n", psych_p);
 
 		/* compute relative humidity */
+		/*
 		svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
 		vp = svp - met[month].d[day].vpd;
 		rel_hum = vp/svp;
 		Log("RH = %f\n", rel_hum);
+		*/
 
 		/* canopy temperature as in Webber et al., 2016 */
-		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-rel_hum)/delta +psych_p);
+		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
 		Log("met[month].d[day].rho_air = %f\n", met[month].d[day].rho_air);
 		Log("rc = %f\n", rc);
 		Log("rhr = %f\n", rhr);

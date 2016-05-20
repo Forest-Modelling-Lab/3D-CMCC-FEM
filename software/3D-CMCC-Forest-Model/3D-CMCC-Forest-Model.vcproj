@@ -17,80 +17,8 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug (single year)|Win32"
-			OutputDirectory="$(SolutionDir)input"
-			IntermediateDirectory="tmp\$(ConfigurationName)"
-			ConfigurationType="1"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
-				LinkIncremental="2"
-				GenerateDebugInformation="true"
-				SubSystem="1"
-				TargetMachine="1"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)input"
+			OutputDirectory="$(SolutionDir)"
 			IntermediateDirectory="tmp\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -115,6 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;C:\REPO\3D-CMCC-FEM\software\netcdf-4.4.0\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -133,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="netcdf.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -163,8 +93,8 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug (multi year)|Win32"
-			OutputDirectory="$(SolutionDir)input"
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -187,6 +117,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\REPO\3D-CMCC-FEM\software\netcdf-4.4.0\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -206,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="netcdf.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -332,6 +264,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\heat_fluxes.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\initialization_biomass_data.c"
 				>
 			</File>
@@ -345,10 +281,6 @@
 			</File>
 			<File
 				RelativePath=".\src\lai.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\latent_heat_flux.c"
 				>
 			</File>
 			<File
@@ -445,6 +377,14 @@
 			</File>
 			<File
 				RelativePath=".\src\structure.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\topo.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\topo.h"
 				>
 			</File>
 			<File

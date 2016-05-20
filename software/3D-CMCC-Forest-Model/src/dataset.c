@@ -7,9 +7,13 @@
 #include <assert.h>
 #include "types.h"
 
+/*
 #ifndef NULL
 #define NULL   ((void *) 0)
 #endif
+*/
+
+extern soil_t *g_soil;
 
 
 
@@ -373,7 +377,7 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 }
 
 // Store site.txt variables inside global struct site_t site
-int importSiteFile(char *fileName)
+int importSoilFile(char *fileName)
 {
 	int ret = 0;
 	FILE *site_fd = fopen(fileName, "r");
@@ -391,12 +395,12 @@ int importSiteFile(char *fileName)
 		char *getRet = NULL,
 				*buffer = malloc(sizeof(*buffer)*1024);
 
-		site = malloc(sizeof(site_t));
-		tmpPointer = &(site->lat);
+		g_soil = malloc(sizeof(soil_t));
+		tmpPointer = &(g_soil->lat);
 
 		if(!buffer)
 		{
-			fprintf(stderr, "Failed malloc for temporary buffer to read site file\n");
+			fprintf(stderr, "Failed malloc for temporary buffer to read soil file\n");
 			ret = 2;
 		}
 		else
@@ -416,7 +420,7 @@ int importSiteFile(char *fileName)
 					switch(i)
 					{
 					case 0:
-						strcpy(site->sitename, pch);
+						strcpy(g_soil->sitename, pch);
 						break;
 					default:
 						*tmpPointer = atof(pch); // Convert each token in a double
@@ -429,6 +433,7 @@ int importSiteFile(char *fileName)
 		}
 		free(buffer);
 	}
+	if ( site_fd )
 	if( fclose(site_fd) != 0 ) //Close the file
 	{
 		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);

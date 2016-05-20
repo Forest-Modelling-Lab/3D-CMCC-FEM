@@ -6,8 +6,10 @@
 #include "math.h"
 #include "types.h"
 #include "constants.h"
+#include "topo.h"
 
-
+extern soil_t *g_soil;
+extern topo_t *g_topo;
 
 
 //BIOME-BGC version
@@ -33,12 +35,12 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 	//4/apr/2016
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
-	adjust_latitude = site->elev / 125.0;
-	ampl = (exp (7.42 + (0.045 * (site->lat+adjust_latitude)))) / 3600;
+	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
+	ampl = (exp (7.42 + (0.045 * (g_soil->lat+adjust_latitude)))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//Log("with altitude = %f\n", met[month].d[day].daylength);
 
-	//	ampl = (exp (7.42 + (0.045 * site->lat))) / 3600;
+	//	ampl = (exp (7.42 + (0.045 * g_soil->lat))) / 3600;
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//	Log("without altitude = %f\n", met[month].d[day].daylength);
 
@@ -174,7 +176,7 @@ void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
 		Edition. D. Reidel Publishing Company, Dordrecht, The Netherlands.
 		(p. 168)*/
 
-	t1 = 1.0 - (LR_STD * site->elev)/T_STD;
+	t1 = 1.0 - (LR_STD * g_topo->values[TOPO_ELEV])/T_STD;
 	t2 = G_STD / (LR_STD * (Rgas / MA));
 	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
 	//Log("Air pressure = %f Pa\n", met[month].d[day].air_pressure);
@@ -288,7 +290,7 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 					{
 						avg += (met[month_temp].d[day_temp].tavg * weight);
 						month_temp--;
-						day_temp = days_per_month[month_temp] - 1.0;
+						day_temp = days_per_month[month_temp] - 1;
 					}
 					else
 					{

@@ -320,8 +320,8 @@ void atts_free(ATT *att, const int atts_count) {
 }
 
 static void compute_vpd(double *const values, const int rows_count, const int columns_count) {
-#define VPD_RANGE_MIN					-5
-#define VPD_RANGE_MAX					120
+#define VPD_RANGE_MIN	-5
+#define VPD_RANGE_MAX	120
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 
 	int i;
@@ -333,8 +333,7 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 		value = INVALID_VALUE;
 
 		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(rh) ) {
-			/* 6.11 is for hPa */
-			//fixme ALESSIOR this formula seems to be wrong
+			/* 6.1076 is for hPa */
 			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
 			value *= (1 - rh / 100.0);
 			/* convert NaN to invalid value */
@@ -355,6 +354,49 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 #undef VALUE_AT
 #undef VPD_RANGE_MAX
 #undef VPD_RANGE_MIN
+}
+
+static void compute_rh(double *const values, const int rows_count, const int columns_count) {
+#define RH_RANGE_MIN	0
+#define RH_RANGE_MAX	100
+#define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
+	int i;
+	double value;
+
+	for ( i = 0; i < rows_count; i++ ) {
+		double ta = values[VALUE_AT(i, TA_F)];
+		double vpd = values[VALUE_AT(i, VPD_F)];
+		value = INVALID_VALUE;
+
+		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(vpd) ) {
+			/* TODO remove this, only for reference
+			svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
+			vp = svp - met[month].d[day].vpd;
+			rel_hum = vp/svp;
+			Log("RH = %f\n", rel_hum);
+			*/
+			/* 6.1076 is for hPa */
+			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
+			value = (value-vpd) / value;
+			/* convert NaN to invalid value */
+			if ( value != value ) {
+				value = INVALID_VALUE;
+			}
+
+			/* check range */
+			if ( ! IS_INVALID_VALUE(value) ) {
+				if ( value < RH_RANGE_MIN || value > RH_RANGE_MAX ) {
+					value = INVALID_VALUE;
+				}
+			}
+		}
+		values[VALUE_AT(i, RH_F)] = value;
+	}
+
+#undef VALUE_AT
+#undef RH_RANGE_MAX
+#undef RH_RANGE_MIN
 }
 
 int yos_from_arr(const double *const values, const int rows_count, const int columns_count, YOS **p_yos, int *const yos_count) {
@@ -1818,9 +1860,44 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 		}
 	}
 
+	/* check if RH is valid ( not all -9999 ) */
+	if ( columns[RH_F] != -1 ) {
+		current_row = 0; /* used as rows count for valid RH */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			columns[RH_F] = -1;
+		}
+	}
+
+	/* check if VPD is valid ( not all -9999 ) */
+	if ( columns[VPD_F] != -1 ) {
+		current_row = 0; /* used as rows count for valid VPD */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, VPD_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			columns[VPD_F] = -1;
+		}
+	}
+
+	if ( (-1 == columns[RH_F]) 
+		&& (-1 == columns[VPD_F]) ) {
+		Log("rh and vpd not found!");
+		free(values);
+		return 0;
+	}
+
 	/* compute vpd ?*/
 	if ( -1 == columns[VPD_F] ) {
 		compute_vpd(values, rows_count, MET_COLUMNS);
+	} else if ( -1 == columns[RH_F] ) {
+		compute_rh(values, rows_count, MET_COLUMNS);
 	}
 
 	if ( ! yos_from_arr(values, rows_count, MET_COLUMNS, p_yos, yos_count) ) {
@@ -2197,3 +2274,265 @@ const char *GetNetCDFVersion(void)
 {
 	return nc_inq_libvers();
 }
+
+#if 0
+static topo_import_nc(const char *const filename) {
+	int i;
+	int y;
+	int z;
+	int id_file;
+	int ret;
+
+	int dims_count;	/* dimensions */
+	int vars_count;
+	int atts_count;	/* attributes */
+	int unl_count;	/* unlimited dimensions */
+	char name[NC_MAX_NAME+1];
+	nc_type type;
+	size_t size;
+	int *i_values = NULL; /* required */
+	double *values = NULL; /* required */
+	int columns[MET_COLUMNS];
+
+	assert(filename);
+
+	int dims_size[DIMS_COUNT];
+	const char *sz_dims[DIMS_COUNT] = { "row", "x", "y" }; /* DO NOT CHANGE THIS ORDER...please see top */
+
+	/* */
+	ret = nc_open(filename, NC_NOWRITE, &id_file);
+    if ( ret != NC_NOERR ) goto quit;
+
+	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
+	if ( ret != NC_NOERR ) goto quit;
+
+	if ( ! dims_count || ! vars_count ) {
+		printf("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* check if vars count are at least MET_COLUMNS+2 */
+	if ( vars_count < MET_COLUMNS+2 ) {
+		printf("bad nc file! Vars count should be %d at least.\n\n", vars_count);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* reset */
+	for ( i = 0; i < MET_COLUMNS; ++i ) {
+		columns[i] = 0;
+	}
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		dims_size[i] = -1;
+	}
+
+	/* get dimensions */
+	for ( i = 0; i < dims_count; ++i ) {
+		ret = nc_inq_dim(id_file, i, name, &size);
+		if ( ret != NC_NOERR ) goto quit;
+		for ( y = 0; y < DIMS_COUNT; ++y ) {
+			if ( ! mystricmp(sz_dims[y], name) ) {
+				if ( dims_size[y] != -1 ) {
+					printf("dimension %s already found!\n", sz_dims[y]);
+					nc_close(id_file);
+					return 0;
+				}
+				dims_size[y] = size;
+				break;
+			}
+		}
+	}
+
+	/* check if we have all dimensions */
+	for ( i = 0; i < DIMS_COUNT; ++i ) {
+		if ( -1 == dims_size[i] ) {
+			printf("dimension %s not found!\n", sz_dims[i]);
+			nc_close(id_file);
+			return 0;
+		}
+	}
+
+	/* check x and y */
+	if( (dims_size[X_DIM] != 1) || (dims_size[Y_DIM] != 1) ) {
+		puts("x and y must be 1!");
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for int values */
+	i_values = malloc(dims_size[ROWS_DIM]*sizeof*values);
+	if ( ! i_values ) {
+		puts(sz_err_out_of_memory);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* alloc memory for double values */
+	/* please note that we alloc double for year,month,day too and we add 2 columns for lat and lon ;) */
+	/*values = malloc(dims_size[ROWS_DIM]*dims_size[X_DIM]*dims_size[Y_DIM]*(MET_COLUMNS+2)*sizeof*values);*/
+	values = malloc(dims_size[ROWS_DIM]*MET_COLUMNS*sizeof*values);
+	if ( ! values ) {
+		puts(sz_err_out_of_memory);
+		free(i_values);
+		nc_close(id_file);
+		return 0;
+	}
+
+	/* set all double values to -9999 */
+	//for ( i = 0; i < dims_size[ROWS_DIM]*dims_size[X_DIM]*dims_size[Y_DIM]*(MET_COLUMNS+2); ++i ) {
+	for ( i = 0; i < dims_size[ROWS_DIM]*MET_COLUMNS; ++i ) {
+		values[i] = INVALID_VALUE;
+	}
+
+	/* get vars */
+	for ( i = 0; i < vars_count; ++i ) {
+		ret = nc_inq_var(id_file, i, name, &type, NULL, NULL, NULL);
+		if ( ret != NC_NOERR ) goto quit;
+		/* check if we need that var */
+		for ( y = 0; y  < MET_COLUMNS /*+2*/; ++y ) {
+			if ( ! mystricmp(name, met_columns[y]) ) {
+				/* check if we've already get that var */
+				if ( columns[y] ) {
+					Log("column %s already imported!", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				} else {
+					columns[y] = 1;
+				}
+				/* get values */
+				if ( NC_DOUBLE == type ) {
+					//ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(0, 0, y)]);
+					ret = nc_get_var_double(id_file, i, &values[COLUMN_AT(y)]);
+					if ( ret != NC_NOERR ) goto quit;
+				} else if ( NC_INT == type ) {
+					ret = nc_get_var_int(id_file, i, i_values);
+					if ( ret != NC_NOERR ) goto quit;
+					for ( z = 0; z < dims_size[ROWS_DIM]; ++z ) {
+						values[VALUE_AT(z, y)] = (double)i_values[z];
+					}
+				} else {
+					/* type format not supported! */
+					Log("type format for %s column not supported", name);
+					free(values);
+					free(i_values);
+					nc_close(id_file);
+					return 0;
+				}
+
+				break;
+			}
+		}
+	}
+	free(i_values);
+	i_values = NULL;
+
+	/* check if we've all needed vars */
+	for ( i = 0; i < MET_COLUMNS; ++i ) {
+		if ( ((VPD_F == i) && (-1 == columns[RH_F])) || ((RH_F == i) && (-1 == columns[VPD_F])) ) {
+			Log("met columns %s and %s are missing!\n\n", met_columns[VPD_F], met_columns[RH_F]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		} else if ( -1 == columns[i] ) {
+			Log("met column %s not found.\n\n", met_columns[i]);
+			free(values);
+			free(i_values);
+			nc_close(id_file);
+			return 0;
+		}
+	}
+
+	/* compute vpd ?*/
+	if ( -1 == columns[VPD_F] ) {
+		compute_vpd(values, dims_size[ROWS_DIM], MET_COLUMNS);
+	}
+
+	/* attributes */
+	/*
+	atts = malloc(atts_count*sizeof*atts);
+	if ( ! atts ) {
+		puts("out of memory!");
+		nc_close(id_file);
+		return 0;
+	}
+	for ( i = 0; i < atts_count; ++i ) {
+		 ret = nc_inq_att(id_file, atts[i].name, &atts[i].type, &atts[i].size);
+		 if ( ret != NC_NOERR ) goto quit;
+	}
+	*/
+
+	/* save file */
+#if 0
+	{
+		FILE *f;
+		int row;
+		f = fopen("debug_file", "w");
+		if ( ! f ) {
+			puts("unable to create output file!");
+			nc_close(id_file);
+			free(values);
+			free(i_values);
+			return 0;
+		}
+		/* write header */
+		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
+		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
+				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+						/*
+						(int)values[VALUE_AT(0,0,row,YEAR)]
+						, (int)values[VALUE_AT(0,0,row,MONTH)]
+						, (int)values[VALUE_AT(0,0,row,DAY)]
+						, values[VALUE_AT(0,0,row,RG_F)]
+						, values[VALUE_AT(0,0,row,TA_F)]
+						, values[VALUE_AT(0,0,row,TMAX)]
+						, values[VALUE_AT(0,0,row,TMIN)]
+						, values[VALUE_AT(0,0,row,VPD_F)]
+						, values[VALUE_AT(0,0,row,TS_F)]
+						, values[VALUE_AT(0,0,row,PRECIP)]
+						, values[VALUE_AT(0,0,row,NDVI_LAI)]
+						, values[VALUE_AT(0,0,row,ET)]
+						, values[VALUE_AT(0,0,row,WS)]
+						*/
+						(int)values[VALUE_AT(row,YEAR)]
+						, (int)values[VALUE_AT(row,MONTH)]
+						, (int)values[VALUE_AT(row,DAY)]
+						, values[VALUE_AT(row,RG_F)]
+						, values[VALUE_AT(row,TA_F)]
+						, values[VALUE_AT(row,TMAX)]
+						, values[VALUE_AT(row,TMIN)]
+						, values[VALUE_AT(row,VPD_F)]
+						, values[VALUE_AT(row,TS_F)]
+						, values[VALUE_AT(row,PRECIP)]
+						, values[VALUE_AT(row,SWC)]
+						, values[VALUE_AT(row,NDVI_LAI)]
+						, values[VALUE_AT(row,ET)]
+						//ALESSIOC
+						, values[VALUE_AT(row,WS_F)]
+
+				);
+		}
+		fclose(f);
+	}
+#endif
+	if ( ! yos_from_arr(values, dims_size[ROWS_DIM], MET_COLUMNS, pyos, yos_count) ) {
+		free(values);
+		return 0;
+	}
+	/* hack */
+	ret = 0;
+
+quit:
+	nc_close(id_file);
+	free(values);
+	free(i_values);
+	if ( ret ) {
+		puts(nc_strerror(ret));
+		ret = 1;
+	}
+	return ! ret;
+}
+#endif

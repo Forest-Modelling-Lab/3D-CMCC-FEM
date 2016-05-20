@@ -3,6 +3,8 @@
 #include "types.h"
 #include "constants.h"
 
+extern soil_t *g_soil;
+
 extern int sort_by_years(const void *a, const void *b)
 {
 	if ( ((YOS *)a)->year < ((YOS *)b)->year )
@@ -71,7 +73,7 @@ void Pool_fraction (SPECIES * s)
 //but it considers a value independently from species
 void Abscission_DayLength ( CELL * c)
 {
-	c->abscission_daylength = (39132 + (pow (1.088, (site->lat + 60.753))))/(60*60);
+	c->abscission_daylength = (39132 + (pow (1.088, (g_soil->lat + 60.753))))/(60*60);
 	//Log("Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 

@@ -3,9 +3,12 @@
 #include <string.h>
 #include <assert.h>
 #include "types.h"
+#include "topo.h"
 #include "constants.h"
 
 /* externs */
+extern soil_t *g_soil;
+extern topo_t *g_topo;
 extern char *input_dir;
 
 /* constants */
@@ -658,11 +661,11 @@ void matrix_summary(const MATRIX *const m)
 	/*Site definition*/
 	Log("***************************************************\n");
 	Log("SITE DATASET\n");
-	Log("Site Name = %s\n", site->sitename);
-	Log("Latitude = %f° \n", site->lat);
-	Log("Longitude = %f° \n", site->lon);
-	Log("Elevation = %f m\n", site->elev);
-	if (site->lat > 0) Log("North hemisphere\n");
+	Log("Site Name = %s\n", g_soil->sitename);
+	Log("Latitude = %f° \n", g_soil->lat);
+	Log("Longitude = %f° \n", g_soil->lon);
+	Log("Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
+	if (g_soil->lat > 0) Log("North hemisphere\n");
 	else Log("South hemisphere\n");
 	Log("***************************************************\n");
 

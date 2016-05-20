@@ -7,7 +7,7 @@
 #include "types.h"
 #include "constants.h"
 
-
+extern soil_t *g_soil;
 
 void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_DATA *const met, int month, int day, int z, int management, int height)
 {
@@ -178,7 +178,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	}
 
 	/*SOIL NUTRIENT MODIFIER*/
-	s->value[F_NUTR] = 1.0 - ( 1.0- site->fn0)  * pow ((1.0 - site->fr), site->fnn);
+	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil->fn0)  * pow ((1.0 - g_soil->fr), g_soil->fnn);
 	Log("fNutr = %f\n", s->value[F_NUTR]);
 
 
@@ -203,7 +203,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	Log("\nBIOME SOIL WATER MODIFIER\n");
 	Log("SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	Log("SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	c->vwc = c->asw / (1000.0 * (site->soil_depth/100));
+	c->vwc = c->asw / (1000.0 * (g_soil->soil_depth/100));
 	Log("volumetric available soil water  = %f %(vol)\n", c->vwc);
 	Log ("vwc_fc = %f (DIM)\n", c->vwc_fc);
 	Log ("vwc_sat = %f (DIM)\n", c->vwc_sat);
@@ -312,14 +312,14 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 		//compute soil hydraulic characteristics from soil granulometry
 		//from model Hydrall
-		eq1 = (site->clay_perc * log(clay_dim)) + (site->silt_perc * log(silt_dim)) + (site->sand_perc * log(sand_dim));
+		eq1 = (g_soil->clay_perc * log(clay_dim)) + (g_soil->silt_perc * log(silt_dim)) + (g_soil->sand_perc * log(sand_dim));
 		Log("eq1 = %f\n", eq1);
 
 		//soil mean particle diameter in mm
 		soil_avg_dim = exp(eq1);
 		Log("soil_avg_dim = %f\n", soil_avg_dim);
 
-	    eq2 = sqrt ((pow ((site->clay_perc * log(clay_dim)),2)) + (pow ((site->sand_perc * log(sand_dim)),2)) + (pow ((site->silt_perc * log(silt_dim)),2)));
+	    eq2 = sqrt ((pow ((g_soil->clay_perc * log(clay_dim)),2)) + (pow ((g_soil->sand_perc * log(sand_dim)),2)) + (pow ((g_soil->silt_perc * log(silt_dim)),2)));
 	    Log("eq2 = %f\n", eq2);
 
 	    //geometric standard deviation in particle size distribution (mm)
