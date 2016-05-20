@@ -7,16 +7,6 @@
 #include <assert.h>
 #include "types.h"
 
-/*
-#ifndef NULL
-#define NULL   ((void *) 0)
-#endif
-*/
-
-extern soil_t *g_soil;
-
-
-
 /* constants */
 /* please see header.h */
 enum {
@@ -375,73 +365,6 @@ ROW *import_dataset(const char *const filename, int *const rows_count) {
 	/* return pointer */
 	return rows;
 }
-
-// Store site.txt variables inside global struct site_t site
-int importSoilFile(char *fileName)
-{
-	int ret = 0;
-	FILE *site_fd = fopen(fileName, "r");
-
-	Log ("Importing Site file...\n");
-
-	if( !site_fd ) // error opening file
-	{
-		fprintf(stderr, "Error while open %s\n", fileName);
-		ret = 2;
-	}
-	else //Read the file
-	{
-		double *tmpPointer;
-		char *getRet = NULL,
-				*buffer = malloc(sizeof(*buffer)*1024);
-
-		g_soil = malloc(sizeof(soil_t));
-		tmpPointer = &(g_soil->lat);
-
-		if(!buffer)
-		{
-			fprintf(stderr, "Failed malloc for temporary buffer to read soil file\n");
-			ret = 2;
-		}
-		else
-		{
-			char *pch = NULL;
-			int i = 0;
-
-			while((getRet = fgets(buffer, 1024, site_fd)) != NULL)
-			{
-				if( getRet[0] == '\n' || getRet[0] == '/' ) // Skip empty and commented lines
-					continue;
-				else
-				{
-					pch = strtok(buffer, " \"");
-					pch = strtok(NULL, "\"");
-
-					switch(i)
-					{
-					case 0:
-						strcpy(g_soil->sitename, pch);
-						break;
-					default:
-						*tmpPointer = atof(pch); // Convert each token in a double
-						tmpPointer++;            // Shift the pointer of sizeof(int) to change field of the structure
-						break;
-					}
-					i++;
-				}
-			}
-		}
-		free(buffer);
-	}
-	if ( site_fd )
-	if( fclose(site_fd) != 0 ) //Close the file
-	{
-		fprintf(stderr, "Error while closing %s; Continue...\n", fileName);
-		ret = 3;
-	}
-	return ret;
-}
-
 
 // Store settings.txt variables inside global struct settings_t settings
 int importSettingsFile(char *fileName)

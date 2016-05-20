@@ -4,65 +4,80 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "types.h"
+#include "netcdf.h"
 
-topo_t *topo_import(const char *const filename, int *const err) {
-#define TOPO_BUFFER_SIZE	1024
-
+static int import_txt(topo_t *const t, const char *const filename, const int x, const int y) {
+#define TOPO_BUFFER_SIZE 1024
+	char buffer[TOPO_BUFFER_SIZE];
+	int i;
+	float *p_float;
 	FILE *f;
-	topo_t *t;
 
-	assert(filename && err);
-
-	*err = 0;
+	assert(t && filename);
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		*err = 2;
-		return NULL;
+		return 1;
 	}
+
+	i = 0;
+	p_float = t->values;	
+	while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
+		/* skip empty line */
+		if ( ('\n' == buffer[0]) || ('/' == buffer[0]) ) {
+			continue;
+		} else {
+			char *p = strtok(buffer, " \"");
+			p = strtok(NULL, "\"");
+
+			*p_float = (float)atof(p);
+			p_float++;
+			i++;
+		}
+	}
+
+	/* are all value imported ? */
+	/*return ( i == TOPO_VALUES_COUNT ) ? 0 : 2;*/
+	return 0;
+#undef TOPO_BUFFER_SIZE
+}
+
+static int import_nc(topo_t *const t, const char *const filename, const int x, const int y) {
+	return 0;
+}
+
+topo_t* topo_new(void) {
+	topo_t * t;
 
 	t = malloc(sizeof*t);
-	if ( ! t ) {
-		*err = 1;
-		fclose(f);
-		return NULL;
+	if ( t ) {
+		topo_clear(t);
 	}
-
-	{
-		int i = 0;
-		float *p_float = t->values;
-		char *buffer = malloc(TOPO_BUFFER_SIZE*sizeof*buffer);
-		if ( ! buffer ) {
-			*err = 1;
-			free(t);
-			fclose(f);
-			return NULL;
-		}
-
-		while ( fgets(buffer, TOPO_BUFFER_SIZE, f) ) {
-			/* skip empty line */
-			if ( ('\n' == buffer[0]) || ('/' == buffer[0]) ) {
-				continue;
-			} else {
-				char *p = strtok(buffer, " \"");
-				p = strtok(NULL, "\"");
-
-				*p_float = (float)atof(p);
-				p_float++;
-				i++;
-			}
-		}
-		free(buffer);
-
-		/* are all value imported ? */
-		if ( i != TOPO_VALUES_COUNT ) {
-			*err = 3;
-			free(t);			
-			t = NULL;
-		}
-	}
-	fclose(f);
 	return t;
+}
 
-#undef TOPO_BUFFER_SIZE
+void topo_clear(topo_t* const t) {
+	int i;
+	assert(t);
+	for ( i = 0; i < TOPO_VALUES_COUNT; ++i ) {
+		t->values[i] = INVALID_VALUE;
+	}
+}
+
+/*
+	return 0 if ok
+	return 1 if file do not exist
+	return 2 if file is not imported correctly
+*/
+int topo_import(topo_t *const t, const char *const filename, const int x, const int y) {
+	char *p;
+	assert(t);
+	p = strrchr(filename, '.');
+	if ( p ) {
+		if ( ! stricmp(++p, "nc") ) {
+			return import_nc(t, filename, x, y);
+		}
+	}
+	return import_txt(t, filename, x, y);
 }

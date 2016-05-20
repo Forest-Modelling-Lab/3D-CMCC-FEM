@@ -84,52 +84,6 @@ typedef struct {
 	MET_DATA m[MONTHS];
 } YOS; /* YEARS OF SIMULATION */
 
-// Struct representing site.txt content
-typedef struct
-{
-	//todo this should be used only in txt simulations (is it still necessary due to the signature of output files ?)
-	char sitename[1024];
-
-	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
-	double lat,
-	lon;
-
-	double clay_perc,
-	silt_perc,
-	sand_perc,
-	soil_depth;
-
-	double fr,
-	fn0,
-	fnn,
-	m0,
-	sN;
-
-	//DNDC
-	//	double RFM;
-	double soil_ph,
-	soil_no3,
-	soil_nh4,
-	hydraulicConductivity,
-	inSOC,
-	litFract,
-	humaFract,
-	humuFract,
-	bioFract,
-	rcnrvl,
-	rcnrl,
-	rcnrr,
-	rcnb,
-	rcnh,
-	rcnm,
-	rcnh2,
-	DClitter,
-	DChumads,
-	DChumus;
-
-}
-soil_t;
-
 // Struct representing settings.txt content
 #define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
 typedef struct
@@ -1267,7 +1221,6 @@ int sort_by_heights_desc(const void * , const void * );
 double Canopy_cover (SPECIES *const, int, int, int);
 void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 ROW *import_dataset(const char *const, int *const);
-int importSoilFile(char *);
 int importSettingsFile(char *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include "types.h"
+#include "soil.h"
 #include "topo.h"
 #include "constants.h"
 

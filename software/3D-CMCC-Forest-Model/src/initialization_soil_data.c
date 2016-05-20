@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "soil.h"
 #include "types.h"
 #include "constants.h"
 

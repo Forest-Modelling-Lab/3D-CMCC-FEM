@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include "soil.h"
 #include "types.h"
 #include "constants.h"
 

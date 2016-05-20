@@ -33,6 +33,7 @@
 #include <string.h>
 #include <time.h>
 #include "compiler.h"
+#include "soil.h"
 #include "types.h"
 #include "constants.h"
 #include "topo.h"
@@ -981,31 +982,6 @@ int main(int argc, char *argv[])
 		Log("UNCORRECT TIME STEP CHOICED!!!\n");
 		return -1;
 	}
-
-	// Import soil.txt file
-	error = importSoilFile(soil_path);
-	if ( error )
-	{
-		Log("Soil file not imported!!\n\n");
-		return -1;
-	}
-	else
-	{
-		Log("soil path = %s\n", soil_path);
-		Log("...Soil file imported!!\n\n");
-	}
-
-	/* import topo file */
-	Log("import topo file...");
-	g_topo = topo_import(topo_path, &error);
-	if ( error ) {
-		if ( 1 == error ) Log("out of memory\n\n");
-		if ( 2 == error ) Log("file not found\n\n");
-		if ( 3 == error ) Log("file not imported\n\n");			
-		return -1;
-	}
-	Log("ok\ntopo path = %s\n", topo_path);
-	
 	//add site name to output files
 
 	sprintf(strSitename, "%s", g_soil->sitename);
@@ -1215,8 +1191,6 @@ int main(int argc, char *argv[])
 	printf(msg_annual_output_file, annual_output_file);
 	printf(msg_soil_output_file, soil_output_file);
 
-	free(topo_path); topo_path = NULL;
-	free(soil_path); soil_path = NULL;
 	free(settings_path); settings_path = NULL;
 
 	/* processing */
@@ -1244,9 +1218,44 @@ int main(int argc, char *argv[])
 	Log("Matrix %s created!!\n\n", m ? "" : "not ");
 	if ( ! m ) return 1;
 
-	// ALESSIOR TODO
-	// EACH CELLS MUST HAVE THIS SETTINGS
-	//for ( cell = 0; cell < m->cells_count; ++cell ) {
+	/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
+	/* reset */
+	x_cells_count = 0;
+	y_cells_count = 0;
+
+	g_soil = soil_new();
+	if ( ! g_soil ) {
+		matrix_free(m);
+		return 1;
+	}
+
+	g_topo = topo_new();
+	if ( ! g_topo ) {
+		Log("unable to allocate memory for topo struct\n");
+		matrix_free(m);
+		return 1;
+	}
+
+	Log("\n3D-CMCC MODEL START....\n\n\n\n");
+	for ( cell = 0; cell < m->cells_count; ++cell )
+	{
+		int err;
+
+		Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
+		Log("input_met_path = %s\n", input_met_path);
+
+		/* reset soil values */
+		soil_clear(g_soil);
+
+		/* import soil values */
+		err = soil_import(g_soil, soil_path, m->cells[cell].x, m->cells[cell].y);
+		if ( err ) {
+			if ( 1 == err ) Log("file not found\n\n");
+			if ( 2 == err ) Log("file not imported\n\n");			
+			matrix_free(m);
+			return 1;
+		}
+
 		if (	IS_INVALID_VALUE(g_soil->sand_perc)
 				|| IS_INVALID_VALUE(g_soil->clay_perc)
 				|| IS_INVALID_VALUE(g_soil->silt_perc)
@@ -1255,21 +1264,21 @@ int main(int argc, char *argv[])
 			matrix_free(m);
 			return 1;
 		}
-	//}
 
-		/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
-	/* reset */
-	x_cells_count = 0;
-	y_cells_count = 0;
+		/* reset topo values */
+		topo_clear(g_topo);
 
-	Log("\n3D-CMCC MODEL START....\n\n\n\n");
-	for ( cell = 0; cell < m->cells_count; ++cell )
-	{
-		Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
-		Log("input_met_path = %s\n", input_met_path);
+		/* import topo values */
+		err = topo_import(g_topo, topo_path, m->cells[cell].x, m->cells[cell].y);
+		if ( err ) {
+			if ( 1 == err ) Log("file not found\n\n");
+			if ( 2 == err ) Log("file not imported\n\n");			
+			matrix_free(m);
+			return 1;
+		}
 
 		//check hemisphere
-		if (g_soil->lat > 0) {
+		if ( g_soil->lat > 0 ) {
 			m->cells[cell].north = 0;
 		} else {
 			m->cells[cell].north = 1;
@@ -1607,6 +1616,10 @@ int main(int argc, char *argv[])
 	free(monthly_output_file); monthly_output_file = NULL;
 	free(annual_output_file); annual_output_file = NULL;
 	free(soil_output_file); soil_output_file = NULL;
+
+	/* this should be freed before */
+	free(topo_path); topo_path = NULL;
+	free(soil_path); soil_path = NULL;
 
 	/* free memory at exit */
 	return 0;

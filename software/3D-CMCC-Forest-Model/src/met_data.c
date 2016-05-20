@@ -6,6 +6,7 @@
 #include "math.h"
 #include "types.h"
 #include "constants.h"
+#include "soil.h"
 #include "topo.h"
 
 extern soil_t *g_soil;

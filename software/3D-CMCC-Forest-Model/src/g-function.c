@@ -1,5 +1,6 @@
 //
 #include <math.h>
+#include "soil.h"
 #include "types.h"
 #include "constants.h"
 
