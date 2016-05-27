@@ -31,7 +31,7 @@ static int import_txt(topo_t *const t, const char *const filename, const int x, 
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		return 1;
+		return 0;
 	}
 
 	i = 0;
@@ -52,7 +52,7 @@ static int import_txt(topo_t *const t, const char *const filename, const int x, 
 
 	/* are all value imported ? */
 	/*return ( i == TOPO_VARS_COUNT ) ? 0 : 2;*/
-	return 0;
+	return 1;
 #undef TOPO_BUFFER_SIZE
 }
 

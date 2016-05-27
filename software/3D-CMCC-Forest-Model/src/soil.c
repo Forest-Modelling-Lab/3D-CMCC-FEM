@@ -65,7 +65,7 @@ static int import_txt(soil_t *const s, const char *const filename, const int x, 
 
 	f = fopen(filename, "r");
 	if ( ! f ) {
-		return 1;
+		return 0;
 	}
 
 	i = 0;
@@ -92,7 +92,7 @@ static int import_txt(soil_t *const s, const char *const filename, const int x, 
 
 	/* are all value imported ? */
 	/*return ( i == SOIL_VALUES_COUNT ) ? 0 : 2;*/
-	return 0;
+	return 1;
 #undef SOIL_BUFFER_SIZE
 }
 
