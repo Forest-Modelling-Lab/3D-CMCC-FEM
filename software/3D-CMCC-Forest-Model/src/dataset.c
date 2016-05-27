@@ -6,6 +6,9 @@
 #include <string.h>
 #include <assert.h>
 #include "types.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 /* constants */
 /* please see header.h */
@@ -372,7 +375,7 @@ int importSettingsFile(char *fileName)
 	int ret = 0;
 	FILE *settings_fd = fopen(fileName, "r");
 
-	Log("Importing setting file...\n");
+	logger(g_log, "Importing setting file...\n");
 
 	if( !settings_fd ) // error opening file
 	{

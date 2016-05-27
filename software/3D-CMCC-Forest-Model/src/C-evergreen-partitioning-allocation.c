@@ -10,6 +10,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
@@ -53,9 +56,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	double old_leaf_c;
 	double old_fineroot_c;
 
-	Log("ALLOCATION_ROUTINE\n\n");
+	logger(g_log, "ALLOCATION_ROUTINE\n\n");
 
-	Log("Carbon allocation routine for evergreen\n");
+	logger(g_log, "Carbon allocation routine for evergreen\n");
 
 	i = c->heights[height].z;
 
@@ -64,7 +67,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 	//		{
 	//			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
-	//			Log("Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
+	//			logger(g_log, "Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
 	//		}
 	//	}
 
@@ -76,19 +79,19 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//compute static ratio of allocation between fine
 	//fixme see if change with new parameters checked in "Pool_fraction"
 //	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-//	Log("Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+//	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
 //	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-//	Log("Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+//	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
 //	Perc_coarse = 1- Perc_fine;
-	//Log("Percentage of coarse root against total root= %f %%\n", Perc_coarse * 100 );
+	//logger(g_log, "Percentage of coarse root against total root= %f %%\n", Perc_coarse * 100 );
 
 	/* Partitioning ratios from Arora and Boer 2005 */
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-	Log("Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
+	logger(g_log, "Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
 	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-	Log("Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+	logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	Log("Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+	logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 	CHECK_CONDITION(pR_CTEM + pS_CTEM + pF_CTEM, != 100.0);
 
 	if (settings->spatial == 'u')
@@ -98,24 +101,24 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 		if (s->management == 0)
 		{
-			//Log("Management type = TIMBER\n");
+			//logger(g_log, "Management type = TIMBER\n");
 		}
 		else
 		{
-			Log("min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
-			Log("max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
-			Log("years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION]);
+			logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
+			logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
+			logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION]);
 
 			//considering a LINEAR increment
 			//allocation ratio to roots
 			r0Ctem -= s->value[MIN_R0CTEM];
 			r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
 			r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-			Log ("new r0_CTEM = %f \n", r0Ctem);
+			logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
 
 			if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
 			{
-				Log("ERROR IN r0Ctem !!! \n");
+				logger(g_log, "ERROR IN r0Ctem !!! \n");
 			}
 
 			//considering a LINEAR decrement
@@ -123,25 +126,25 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
 			s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
 			s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-			Log ("new s0_CTEM = %f \n", s0Ctem);
+			logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
 
 			if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
 			{
-				Log("ERROR IN s0Ctem !!! \n");
+				logger(g_log, "ERROR IN s0Ctem !!! \n");
 			}
 
 		}
-		Log("PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-		Log("LAI = %f \n", s->value[LAI]);
-		Log("PEAK LAI = %f \n", s->value[PEAK_LAI]);
+		logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+		logger(g_log, "LAI = %f \n", s->value[LAI]);
+		logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
 
 
 		switch (s->phenology_phase)
 		{
 		/************************************************************/
 		case 1:
-			Log("Allocating only into foliage and fine root pools\n");
-			Log("LAI = %f \n", s->value[LAI]);
+			logger(g_log, "Allocating only into foliage and fine root pools\n");
+			logger(g_log, "LAI = %f \n", s->value[LAI]);
 
 			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
@@ -153,7 +156,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 			//fixme model gets 10%
 			reserve_for_budburst = (s->value[RESERVE_C]) * 0.05;
-			Log("fraction of reserve for foliage and fine root = %f\n", reserve_for_budburst);
+			logger(g_log, "fraction of reserve for foliage and fine root = %f\n", reserve_for_budburst);
 
 			/*partitioning*/
 			if (s->value[NPP_tC] > 0.0)
@@ -162,7 +165,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 				/* it doesn't need */
 				if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 				{
-					Log("Using ONLY npp...\n");
+					logger(g_log, "Using ONLY npp...\n");
 					s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 					s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
 					s->value[C_TO_RESERVE] = 0.0;
@@ -184,7 +187,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 			else
 			{
-				Log("Using ONLY reserve...\n");
+				logger(g_log, "Using ONLY reserve...\n");
 				s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 				s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
 				s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
@@ -198,7 +201,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 			}
 			break;
 		case 2:
-			Log("allocating into the three pools Ws+Wr+Wreserve\n");
+			logger(g_log, "allocating into the three pools Ws+Wr+Wreserve\n");
 
 			/*partitioning*/
 			if (s->value[NPP_tC] > 0.0)
@@ -209,7 +212,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 					//NPP for reproduction
 					s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
 					s->value[NPP_tC] -= s->value[C_TO_FRUIT];
-					Log("Biomass increment into cones = %f tDM/area\n", s->value[C_TO_FRUIT]);
+					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[C_TO_FRUIT]);
 				}
 				/* old version */
 				//				s->value[C_TO_ROOT] = s->value[NPP_tC] * pR_CTEM;
@@ -245,24 +248,24 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	/* recompute biomass pools for reserve, leaf and fine root pools */
 
-	Log("\n*Carbon allocation*\n");
+	logger(g_log, "\n*Carbon allocation*\n");
 	/* update class level carbon biomass pools */
 
 	s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
-	Log("Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
+	logger(g_log, "Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
 
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
-	Log("Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
 
 	Daily_lai (&c->heights[height].ages[age].species[species]);
 
 	/*check if re-transfer leaf or fine root biomass to reserve*/
-	Log("retranslocating carbon to reserve\n");
+	logger(g_log, "retranslocating carbon to reserve\n");
 	if (s->value[LAI] > s->value[PEAK_LAI])
 	{
 		/*partitioning*/
 		/* re-transfer mass to reserve */
-		Log("LAI exceeds Peak Lai\n");
+		logger(g_log, "LAI exceeds Peak Lai\n");
 		s->value[C_TO_LEAF] = s->value[MAX_LEAF_C] - old_leaf_c;
 		s->value[LAI] = s->value[MAX_LAI];
 		s->value[C_TO_RESERVE] = (s->value[LEAF_C] - s->value[MAX_LEAF_C]);
@@ -272,14 +275,14 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 
 	}
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
-	Log("Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_log, "Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
 
 	//fixme check if necessary or turnover does all
 	if(s->value[FINE_ROOT_C] > s->value[MAX_FINE_ROOT_C])
 	{
 		/*partitioning*/
 		/* re-transfer mass to reserve */
-		Log("Fine root exceeds Max fine root\n");
+		logger(g_log, "Fine root exceeds Max fine root\n");
 		s->value[C_TO_FINEROOT] = s->value[MAX_FINE_ROOT_C] - old_fineroot_c;
 		s->value[DEL_RESERVE] = (s->value[FINE_ROOT_C] - s->value[MAX_FINE_ROOT_C]);
 		/* update biomass pools */
@@ -288,80 +291,80 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	}
 
 	s->value[STEM_C] += s->value[C_TO_STEM];
-	Log("Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
+	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
 
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
-	Log("Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
+	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
 
 	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
-	Log("Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
+	logger(g_log, "Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
 
 	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
-	Log("Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
+	logger(g_log, "Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
 
 	s->value[TOT_STEM_C] += s->value[C_TO_TOT_STEM];
-	Log("Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
+	logger(g_log, "Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
 
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
-	Log("Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
+	logger(g_log, "Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
 
 	s->value[STEM_LIVE_WOOD_C] += s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC];
-	Log("Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
+	logger(g_log, "Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
 	//s->value[STEM_DEAD_WOOD_C] += s->value[C_TO_STEM] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
+	logger(g_log, "Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
 	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_ROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_log, "Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
 	//s->value[COARSE_ROOT_DEAD_WOOD_C] += s->value[C_TO_COARSEROOT] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_log, "Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
 	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	Log("Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
 	//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
-	Log("Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
+	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
-	Log("Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
+	logger(g_log, "Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */
 	if (fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C])>1e-4)
 	{
-		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
-		Log("Total stem = %f\n", s->value[STEM_C]);
+		logger(g_log, "Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
+		logger(g_log, "Total stem = %f\n", s->value[STEM_C]);
 		//ALESSIOR
-		Log("ATTENTION CHECK BALANCE!\n");
+		logger(g_log, "ATTENTION CHECK BALANCE!\n");
 	}
 	else
 	{
-		Log("Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
-		Log("Total stem = %f\n", s->value[STEM_C]);
+		logger(g_log, "Live stem + dead stem = %f\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
+		logger(g_log, "Total stem = %f\n", s->value[STEM_C]);
 	}
 	if (fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C])>1e-4)
 	{
-		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
+		logger(g_log, "Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
+		logger(g_log, "Total coarse = %f\n", s->value[COARSE_ROOT_C]);
 		//ALESSIOR
-		Log("ATTENTION CHECK BALANCE!\n");
+		logger(g_log, "ATTENTION CHECK BALANCE!\n");
 	}
 	else
 	{
-		Log("Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		Log("Total coarse = %f\n", s->value[COARSE_ROOT_C]);
+		logger(g_log, "Live coarse + dead coarse = %f\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
+		logger(g_log, "Total coarse = %f\n", s->value[COARSE_ROOT_C]);
 	}
 	if (fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C])>1e-4)
 	{
-		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
-		Log("Total branch = %f\n", s->value[BRANCH_C]);
+		logger(g_log, "Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
+		logger(g_log, "Total branch = %f\n", s->value[BRANCH_C]);
 		//ALESSIOR
-		Log("ATTENTION CHECK BALANCE!\n");
+		logger(g_log, "ATTENTION CHECK BALANCE!\n");
 	}
 	else
 	{
-		Log("Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
-		Log("Total branch = %f\n", s->value[BRANCH_C]);
+		logger(g_log, "Live branch + dead branch = %f\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
+		logger(g_log, "Total branch = %f\n", s->value[BRANCH_C]);
 	}
 
 	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
@@ -385,14 +388,14 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 //	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
 //	CHECK_CONDITION(s->value[FRUIT_C], < 0);
 
-	Log("\n-Daily increment in carbon pools-\n");
-	Log("C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
-	Log("C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
-	Log("C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	Log("C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	Log("C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
-	Log("C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
-	Log("C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "\n-Daily increment in carbon pools-\n");
+	logger(g_log, "C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
+	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
 
 	c->daily_lai[i] = s->value[LAI];
 	c->annual_delta_wres[i] += s->value[DEL_RESERVE];
@@ -474,7 +477,7 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	c->daily_root_carbon_tC += s->value[C_TO_ROOT];
 	c->daily_litter_carbon_tC += s->value[C_TO_LITTER];
 
-	Log("******************************\n");
+	logger(g_log, "******************************\n");
 }
 
 /**/

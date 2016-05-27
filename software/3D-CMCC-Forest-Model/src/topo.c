@@ -6,6 +6,9 @@
 #include <assert.h>
 #include "types.h"
 #include "netcdf.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 extern char *g_sz_program_path;
 
@@ -108,7 +111,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	if ( ret != NC_NOERR ) goto quit;
 
 	if ( ! dims_count || ! vars_count ) {
-		Log("bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
+		logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
 		goto quit2;
 	}
 
@@ -124,7 +127,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 		for ( y = 0; y < DIMS_COUNT; ++y ) {
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
-					Log("dimension %s already found!\n", sz_dims[y]);
+					logger(g_log, "dimension %s already found!\n", sz_dims[y]);
 					goto quit2;
 				}
 				dims_size[y] = size;
@@ -136,26 +139,26 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	/* check if we have all dimensions */
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
-			Log("dimension %s not found!\n", sz_dims[i]);
+			logger(g_log, "dimension %s not found!\n", sz_dims[i]);
 			goto quit2;
 		}
 	}
 
 	/* check if time is 1 */
 	if ( dims_size[TIME_DIM] != 1 ) {
-		Log("time size must be 1\n");
+		logger(g_log, "time size must be 1\n");
 		goto quit2;
 	}
 
 	/* check if x_cell is >= x_dim */
 	if ( x_cell >= dims_size[X_DIM] ) {
-		Log("x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
+		logger(g_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
 		goto quit2;
 	}
 
 	/* check if y_cell is >= y_dim */
 	if ( y_cell >= dims_size[Y_DIM] ) {
-		Log("y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
+		logger(g_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
 		goto quit2;
 	}
 
@@ -171,7 +174,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 			if ( ! string_compare_i(name, sz_vars[y]) ) {
 				/* check if we already have imported that var */
 				if ( vars[y] ) {
-					Log("var %s already imported\n", sz_vars[y]);
+					logger(g_log, "var %s already imported\n", sz_vars[y]);
 					goto quit2;
 				}
 
@@ -185,7 +188,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 					t->values[y] = (float)value;
 				} else {
 					/* type format not supported! */
-					Log("type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
+					logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
 					goto quit2;
 				}
 				vars[y] = 1;
@@ -197,7 +200,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	return 1;
 
 quit:
-	Log(nc_strerror(ret));
+	logger(g_log, nc_strerror(ret));
 quit2:
 	nc_close(id_file);
 	return 0;

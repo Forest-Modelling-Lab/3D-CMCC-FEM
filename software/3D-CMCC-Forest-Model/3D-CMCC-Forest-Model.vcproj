@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\cumulative_balance.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\dataset.c"
 				>
 			</File>
@@ -292,7 +296,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\log.c"
+				RelativePath=".\src\logger.c"
 				>
 			</File>
 			<File
@@ -431,6 +435,10 @@
 			</File>
 			<File
 				RelativePath=".\src\constants.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\cumulative_balance.h"
 				>
 			</File>
 			<File

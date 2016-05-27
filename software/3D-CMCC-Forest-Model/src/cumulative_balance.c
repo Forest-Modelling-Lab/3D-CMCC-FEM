@@ -1,200 +1,36 @@
 #include <stdio.h>
-#include <stdarg.h>
+#include "logger.h"
 #include "types.h"
 
-extern int log_enabled;
-/*
-extern OUTPUT_VARS *output_vars;
-extern double *daily_output_vars;
-extern double *monthly_output_vars;
-extern double *yearly_output_vars;
-*/
-
-static FILE *file_log ;
-
-int logInit(char * logFileName)
-{
-	file_log = fopen(logFileName, "w");
-
-	if ( !file_log ) return 0;
-
-	return 1;
-}
-
-void Log(const char *szText, ...)
-{
-	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	va_list pArgList;
-
-	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
-	va_end(pArgList);
-
-	fputs(szBuffer, stdout);
-
-	if ( log_enabled && file_log )
-		fputs(szBuffer, file_log);
-}
-
-void logClose(void)
-{
-	if ( file_log )	fclose(file_log);
-}
-
-//for daily output
-static FILE *daily_file_log ;
-
-int daily_logInit(char * daily_logFileName)
-{
-	daily_file_log = fopen(daily_logFileName, "w");
-
-	if ( !daily_file_log ) return 0;
-
-	return 1;
-}
-
-void Daily_Log(const char *szText, ...)
-{
-	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	//va_list pArgList = { 0 };
-	va_list pArgList;
-
-	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
-	va_end(pArgList);
-
-	fputs(szBuffer, stdout);
-
-	if ( log_enabled && daily_file_log )
-		fputs(szBuffer, daily_file_log);
-}
-
-void daily_logClose(void)
-{
-	if ( daily_file_log )	fclose(daily_file_log);
-}
-
-//for monthly output
-static FILE *monthly_file_log ;
-
-int monthly_logInit(char * monthly_logFileName)
-{
-	monthly_file_log = fopen(monthly_logFileName, "w");
-
-	if ( !monthly_file_log ) return 0;
-
-	return 1;
-}
-
-void Monthly_Log(const char *szText, ...)
-{
-	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	//va_list pArgList = { 0 };
-	va_list pArgList;
-
-	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
-	va_end(pArgList);
-
-	fputs(szBuffer, stdout);
-
-	if ( log_enabled && monthly_file_log )
-		fputs(szBuffer, monthly_file_log);
-}
-
-void monthly_logClose(void)
-{
-	if ( monthly_file_log )	fclose(monthly_file_log);
-}
-
-//for annual output
-static FILE *annual_file_log ;
-
-int annual_logInit(char * annual_logFileName)
-{
-	annual_file_log = fopen(annual_logFileName, "w");
-
-	if ( !annual_file_log ) return 0;
-
-	return 1;
-}
-
-void Annual_Log(const char *szText, ...)
-{
-	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	//va_list pArgList = { 0 };
-	va_list pArgList;
-
-	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
-	va_end(pArgList);
-
-	fputs(szBuffer, stdout);
-
-	if ( log_enabled && annual_file_log )
-		fputs(szBuffer, annual_file_log);
-}
-
-void annual_logClose(void)
-{
-	if ( annual_file_log )	fclose(annual_file_log);
-}
-//for soil output Marconi Sergio
-static FILE *soil_file_log ;
-
-int soil_logInit(char * soil_logFileName)
-{
-	soil_file_log = fopen(soil_logFileName, "w");
-
-	if ( !soil_file_log ) return 0;
-
-	return 1;
-}
-
-void soil_Log(const char *szText, ...)
-{
-	char szBuffer[BUFFER_SIZE_LOG] = { 0 };
-	//va_list pArgList = { 0 };
-	va_list pArgList;
-
-	va_start(pArgList, szText);
-	vsnprintf(szBuffer, BUFFER_SIZE_LOG, szText, pArgList);
-	va_end(pArgList);
-
-	fputs(szBuffer, stdout);
-
-	if ( log_enabled && soil_file_log )
-		fputs(szBuffer, soil_file_log);
-}
-
-void soil_logClose(void)
-{
-	if ( soil_file_log )	fclose(soil_file_log);
-}
+extern logger_t* g_log;
+extern logger_t* g_daily_log;
+extern logger_t* g_monthly_log;
+extern logger_t* g_annual_log;
+extern logger_t* g_soil_log;
 
 void EOY_cumulative_balance_layer_level (SPECIES *s, HEIGHT *h)
 {
 
 	//CUMULATIVE BALANCE FOR ENTIRE LAYER
 	/*
-	Log("**CUMULATIVE BALANCE for layer %d ** \n", h->z);
-	Log("END of Year Yearly Cumulated GPP for layer %d  = %f gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_gC]);
-	Log("END of Year Yearly Cumulated NPP for layer %d  = %f tDM/area year\n", h->z, s->value[YEARLY_NPP_tDM]);
-	Log("END of Year Yearly Cumulated NPP/ha_area_covered for layer %d  = %f tDM/ha_area_covered year\n", h->z, (s->value[YEARLY_NPP_tDM]/settings->sizeCell) * (10000 * s->value[CANOPY_COVER_DBHDC]));
-	Log("END of Year Yearly Cumulated DEL STEM layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WS]);
-	Log("END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WF]);
-	Log("END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WFR]);
-	Log("END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WCR]);
-	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WRES]);
-	Log("END of Year Yearly Cumulated DEL RESERVE layer %d  = %f KgC tree year\n", h->z, (s->value[DEL_Y_WRES]*2000)/s->counter[N_TREE]);
-	Log("END of Year Yearly Cumulated DEL BB layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_BB]);
-	Log("END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WR]);
+	logger(g_log, "**CUMULATIVE BALANCE for layer %d ** \n", h->z);
+	logger(g_log, "END of Year Yearly Cumulated GPP for layer %d  = %f gCm^2 year\n", h->z, s->value[YEARLY_POINT_GPP_gC]);
+	logger(g_log, "END of Year Yearly Cumulated NPP for layer %d  = %f tDM/area year\n", h->z, s->value[YEARLY_NPP_tDM]);
+	logger(g_log, "END of Year Yearly Cumulated NPP/ha_area_covered for layer %d  = %f tDM/ha_area_covered year\n", h->z, (s->value[YEARLY_NPP_tDM]/settings->sizeCell) * (10000 * s->value[CANOPY_COVER_DBHDC]));
+	logger(g_log, "END of Year Yearly Cumulated DEL STEM layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WS]);
+	logger(g_log, "END of Year Yearly Cumulated DEL FOLIAGE layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WF]);
+	logger(g_log, "END of Year Yearly Cumulated DEL FINE ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WFR]);
+	logger(g_log, "END of Year Yearly Cumulated DEL COARSE ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WCR]);
+	logger(g_log, "END of Year Yearly Cumulated DEL RESERVE layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WRES]);
+	logger(g_log, "END of Year Yearly Cumulated DEL RESERVE layer %d  = %f KgC tree year\n", h->z, (s->value[DEL_Y_WRES]*2000)/s->counter[N_TREE]);
+	logger(g_log, "END of Year Yearly Cumulated DEL BB layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_BB]);
+	logger(g_log, "END of Year Yearly Cumulated DEL TOT ROOT layer %d  = %f tDM/area year\n", h->z, s->value[DEL_Y_WR]);
 	*/
 
 	if (s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP_tDM])
 	{
-		Log("ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
-		Log("DEL SUM = %f \n", s->value[DEL_Y_WS] + s->value[DEL_Y_WCR] + s->value[DEL_Y_WFR] + s->value[DEL_Y_BB] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES]);
+		logger(g_log, "ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
+		logger(g_log, "DEL SUM = %f \n", s->value[DEL_Y_WS] + s->value[DEL_Y_WCR] + s->value[DEL_Y_WFR] + s->value[DEL_Y_BB] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES]);
 	}
 }
 
@@ -210,26 +46,26 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 
 //	if (years == 0)
 //	{
-//		Annual_Log("Site name = %s\n", g_soil->values[SOIL_sitename);
-//		Annual_Log("Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-//		Annual_Log("years of simulation = %d\n", years_of_simulation);
-//		Annual_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
-//		Annual_Log("HC(n) = height class counter for n layer\n");
-//		Annual_Log("Annual GPP = annual total gross primary production (gC/m2/year)\n");
-//		Annual_Log("Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
+//		logger(g_annual_log, "Site name = %s\n", g_soil->values[SOIL_sitename);
+//		logger(g_annual_log, "Annual summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+//		logger(g_annual_log, "years of simulation = %d\n", years_of_simulation);
+//		logger(g_annual_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
+//		logger(g_annual_log, "HC(n) = height class counter for n layer\n");
+//		logger(g_annual_log, "Annual GPP = annual total gross primary production (gC/m2/year)\n");
+//		logger(g_annual_log, "Annual AR = annual total autotrophic respiration (gC/m2/year)\n");
 //		if (!string_compare_i(settings->dndc, "on"))
 //		{
-//			Annual_Log("Annual HR = annual total heterotrophic respiration (gC/m2/year)\n");
-//			Annual_Log("Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
+//			logger(g_annual_log, "Annual HR = annual total heterotrophic respiration (gC/m2/year)\n");
+//			logger(g_annual_log, "Annual Reco = annual total ecosystem respiration (gC/m2/year)\n");
 //		}
-//		Annual_Log("Annual Cf = annual c-fluxes (gC/m2/year)\n");
-//		Annual_Log("Annual Y = NPP/GPP ratio (%%)\n");
-//		Annual_Log("Annual NPP = annual total net primary production (tDM/m2/year)\n");
-//		Annual_Log("Annual CE = annual canopy evapotranspiration(mm/year)\n");
-//		Annual_Log("Annual ASW = end of year annual available soil water(mm)\n");
-//		Annual_Log("Annual Wf = annual water-fluxes (mm/year)\n");
-//		Annual_Log("Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
-//		Annual_Log("Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
+//		logger(g_annual_log, "Annual Cf = annual c-fluxes (gC/m2/year)\n");
+//		logger(g_annual_log, "Annual Y = NPP/GPP ratio (%%)\n");
+//		logger(g_annual_log, "Annual NPP = annual total net primary production (tDM/m2/year)\n");
+//		logger(g_annual_log, "Annual CE = annual canopy evapotranspiration(mm/year)\n");
+//		logger(g_annual_log, "Annual ASW = end of year annual available soil water(mm)\n");
+//		logger(g_annual_log, "Annual Wf = annual water-fluxes (mm/year)\n");
+//		logger(g_annual_log, "Annual PEAK_LAI = annual Peak Lai (m^2/m^2)\n");
+//		logger(g_annual_log, "Annual Dead tree = annual dead tree (n tree/cell)\n\n\n");
 //	}
 
 	//reset
@@ -290,39 +126,39 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 		//check if layer number is changed since last yearly run
 		if(previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+			logger(g_annual_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
 	}
 
-	//Annual_Log ("-%d %10f %10f %10f %10f %10f %10f %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
+	//logger(g_annual_log, "-%d %10f %10f %10f %10f %10f %10f %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
 
 	if (c->annual_layer_number == 1)
 	{
 		if ((years == 0 || previous_layer_number != c->annual_layer_number) && cell_index == 0 )
 		{
-			Annual_Log ("%s \t%4s \t%s", "YEAR", "CELL", "HC(0)");
+			logger(g_annual_log, "%s \t%4s \t%s", "YEAR", "CELL", "HC(0)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%3s", "NEE");
+				logger(g_annual_log, "\t%3s", "NEE");
 			}
-			Annual_Log ("\t%s \t%s \t%s \t%s" ,
+			logger(g_annual_log, "\t%s \t%s \t%s \t%s" ,
 					"GPP(gC/m2y)", "AR(gC/m2y)", "MR(gC/m2y)", "GR(gC/m2y)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%7s, \t%3s", "HR (tot)", "Reco");
+				logger(g_annual_log, "\t%7s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%10s \t%10s \t%6s \t%6s \t%8s \t%10s \t%3s \t%10s \t%10s \t%6s \t%6s \t%6s \t%6s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%5s \t%10s \t%8s \t%8s \t%9s \t%7s \t%9s \t%8s \t%9s \t%7s \t%6s\n",
+			logger(g_annual_log, "\t%10s \t%10s \t%6s \t%6s \t%8s \t%10s \t%3s \t%10s \t%10s \t%6s \t%6s \t%6s \t%6s \t%8s \t%8s  \t%8s \t%8s \t%8s \t%5s \t%10s \t%8s \t%8s \t%9s \t%7s \t%9s \t%8s \t%9s \t%7s \t%6s\n",
 					"Y(%)", "NPP(gC/m2y)", "ET(mm/m2)", "LE(W/m2)", "ASW", "PEAK_LAI",
 					"CC", "LIVE TREE", "DEAD TREE", "avDBH", "wf", "ws", "wsl", "ws-sap", "wbb", "wbbl", "wbb-sap", "wfr", "wcr", "wcrl", "wcr-sap", "wsap", "Wres(KG/t)", "D-Wres", "leafAR", "stemAR", "branchAR", "frAR", "crAR");
 
 		}
-		Annual_Log ("%d \t%d,%d \t%2d", yos[years].year, c->x, c->y, c->height_class_in_layer_dominant_counter);
+		logger(g_annual_log, "%d \t%d,%d \t%2d", yos[years].year, c->x, c->y, c->height_class_in_layer_dominant_counter);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%6.2f", c->annual_nee);
+			logger(g_annual_log, "\t%6.2f", c->annual_nee);
 		}
-		Annual_Log("\t%10.2f \t%10.2f \t%12.2f \t%10.2f",
+		logger(g_annual_log, "\t%10.2f \t%10.2f \t%12.2f \t%10.2f",
 				c->annual_gpp,
 				c->annual_aut_resp,
 				c->annual_maint_resp,
@@ -331,11 +167,11 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
+			logger(g_annual_log, "\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 		}
 
 
-		Annual_Log("\t%12.2f \t%8.2f \t%10.2f \t%10.2f \t%10.2f \t%6.2f "
+		logger(g_annual_log, "\t%12.2f \t%8.2f \t%10.2f \t%10.2f \t%10.2f \t%6.2f "
 				"\t%5.2f \t%8.2d \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%8.2f "
 				"\t%8.2f \t%8.2f \t%7.2f \t%6.2f \t%6.2f \t%10.2f \t%8.2f "
 				"\t%8.2f \t%8.2f \t%9.4f \t%6.2f \t%10.2f \t%8.2f \t%8.2f "
@@ -416,46 +252,46 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%4s \t%4s",
+			logger(g_annual_log, "\n%s \t%4s \t%4s",
 					"YEAR", "HC(1)", "HC(0)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%3s", "NEE");
+				logger(g_annual_log, "\t%3s", "NEE");
 			}
 
-			Annual_Log ("\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+			logger(g_annual_log, "\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR(0)", "AR(tot)");
 
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_annual_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n",
+			logger(g_annual_log, "\t%4s \t%4s\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%7s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s\n",
 					"Y(1)", "Y(0)", "Y(tot)", "NPP(1)", "NPP(0)", "NPP (tot)", "NPP(gC/m2yr)", "CE(1)", "CE(0)", "CE (tot)", "ASW",
 					"Wf", "PEAK_LAI(1)", "PEAK_LAI(0)", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)",
 					"Wres(1)", "Wres(0)");
 
 		}
 
-		Annual_Log ("%d \t%4d \t%4d", yos[years].year,
+		logger(g_annual_log, "%d \t%4d \t%4d", yos[years].year,
 				c->height_class_in_layer_dominant_counter, c->height_class_in_layer_dominated_counter);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%6.2f", c->annual_nee);
+			logger(g_annual_log, "\t%6.2f", c->annual_nee);
 		}
 
-		Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f  \t%4.2f",
+		logger(g_annual_log, "\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f  \t%4.2f",
 
 				c->layer_annual_gpp[1],c->layer_annual_gpp[0], c->annual_gpp,
 				c->layer_annual_aut_resp[1],c->layer_annual_aut_resp[0], c->annual_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
+			logger(g_annual_log, "\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 		}
 
-		Annual_Log ("\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
+		logger(g_annual_log, "\t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f"
 				" \t%4.2f \t%2.2f \t%4.2f \t%4.2f \t%4.2f \t%4.2f \t%12d \t%12d \t%12d \t%4.2f \t%4.2f\n",
 
 				(c->layer_annual_aut_resp[1]*100)/ c->layer_annual_gpp[1],(c->layer_annual_aut_resp[0]*100)/ c->layer_annual_gpp[0],(c->annual_aut_resp*100)/c->annual_gpp,
@@ -523,23 +359,23 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 	{
 		if (years == 0 || previous_layer_number != c->annual_layer_number)
 		{
-			Annual_Log ("\n%s \t%2s \t%2s \t%2s",
+			logger(g_annual_log, "\n%s \t%2s \t%2s \t%2s",
 					"YEAR", "HC(2)", "HC(1)", "HC(0)");
 
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%3s", "NEE");
+				logger(g_annual_log, "\t%3s", "NEE");
 			}
 
-			Annual_Log ("\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s",
+			logger(g_annual_log, "\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s",
 					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)", "AR(1)", "AR(0)", "AR(tot)");
 
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Annual_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_annual_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
 
-			Annual_Log ("\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s "
+			logger(g_annual_log, "\t%2s \t%s \t%s \t%s \t%s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s "
 					"\t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s \t%2s\n",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "Y(2)", "Y(1)", "Y(0)", "Y(tot)","NPP(2)", "NPP(1)", "NPP(0)", "NPP (tot)",
 					"CE(2)", "CE(1)", "CE(0)", 	"CE(tot)", "ASW", "Wf",  "PEAK_LAI(2)", "PEAK_LAI(1)", "PEAK_LAI(0)",
@@ -548,22 +384,22 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 
 		}
 
-		Annual_Log ("%d \t%2d \t%2d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter,c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter);
+		logger(g_annual_log, "%d \t%2d \t%2d \t%2d", yos[years].year, c->height_class_in_layer_dominant_counter,c->height_class_in_layer_dominated_counter, c->height_class_in_layer_subdominated_counter);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%6.2f", c->annual_nee);
+			logger(g_annual_log, "\t%6.2f", c->annual_nee);
 		}
 
-		Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f ",
+		logger(g_annual_log, "\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f ",
 				c->layer_annual_gpp[2], c->layer_annual_gpp[1],c->layer_annual_gpp[0], c->layer_annual_gpp,
 				c->layer_annual_aut_resp[2], c->layer_annual_aut_resp[1],c->layer_annual_aut_resp[0], c->annual_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Annual_Log ("\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
+			logger(g_annual_log, "\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 		}
 
-		Annual_Log ("\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
+		logger(g_annual_log, "\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f "
 				" \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2d \t%2d \t%2d \t%2d "
 				" \t%5.2f \t%5.2f \t%5.2f \t%5.2f \t%5.2f \n",
 				c->layer_annual_c_flux[2], c->layer_annual_c_flux[1], c->layer_annual_c_flux[0], c->annual_C_flux,
@@ -672,9 +508,9 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 			avg_cf_tot /= years_of_simulation;
 			avg_npp_tot /= years_of_simulation;
 			avg_ce_tot /= years_of_simulation;
-			Annual_Log ("-----------------------------------------------------------------------------------------------------------------------------------------------------"
+			logger(g_annual_log, "-----------------------------------------------------------------------------------------------------------------------------------------------------"
 					"---------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("AVG/TOT \t\t%5f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t%49d\n",
+			logger(g_annual_log, "AVG/TOT \t\t%5f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t%49d\n",
 					avg_gpp_tot, avg_ar_tot, avg_cf_tot, (avg_ar_tot*100.0)/avg_gpp_tot, avg_npp_tot, ((avg_npp_tot/settings->sizeCell)*1000000)/GC_GDM , avg_ce_tot, tot_dead_tree_tot);
 		}
 		if (c->annual_layer_number == 2)
@@ -695,9 +531,9 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_npp_tot_gC /= years_of_simulation;
 			avg_ce_tot /= years_of_simulation;
-			Annual_Log ("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------,"
+			logger(g_annual_log, "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------,"
 					"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("AVG/TOT \t\t\t%14f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t\t\t\t\t%76d \n",
+			logger(g_annual_log, "AVG/TOT \t\t\t%14f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t\t\t\t\t%76d \n",
 					avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[1], avg_ar[0], avg_ar_tot, (avg_ar[1]*100.0)/avg_gpp[1],
 					((avg_ar[0]*100.0)/avg_gpp[0]),(avg_ar_tot*100.0)/avg_gpp_tot,avg_npp[1], avg_npp[0], avg_npp_tot, avg_npp_tot_gC, avg_ce[1], avg_ce[0], avg_ce_tot, tot_dead_tree_tot);
 		}
@@ -724,8 +560,8 @@ void EOY_cumulative_balance_cell_level (MATRIX *m, CELL *c, const YOS *const yos
 			avg_npp_tot /= years_of_simulation;
 			avg_ce_tot /= years_of_simulation;
 
-			Annual_Log ("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-			Annual_Log ("AVG/TOT \t\t\t\t%17f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t\t\t\t\t%42d \n",
+			logger(g_annual_log, "----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+			logger(g_annual_log, "AVG/TOT \t\t\t\t%17f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t%10f \t\t\t\t\t\t\t\t\t%42d \n",
 					avg_gpp[2], avg_gpp[1], avg_gpp[0], avg_gpp_tot, avg_ar[2], avg_ar[1], avg_ar[0], avg_ar_tot,
 					avg_cf[2], avg_cf[1], avg_cf[0], avg_cf_tot,
 					(avg_ar[2]*100.0)/avg_gpp[2], (avg_ar[1]*100.0)/avg_gpp[1], (avg_ar[0]*100.0)/avg_gpp[0], (avg_ar_tot*100.0)/avg_gpp_tot,
@@ -741,26 +577,26 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 	/*if(month == 0 && years == 0)
 	{
-		Monthly_Log("Site name = %s\n", g_soil->values[SOIL_sitename);
-		Monthly_Log("Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		Monthly_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
+		logger(g_monthly_log, "Site name = %s\n", g_soil->values[SOIL_sitename);
+		logger(g_monthly_log, "Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		logger(g_monthly_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log("Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
+			logger(g_monthly_log, "Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
 		}
-		Monthly_Log("Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
-		Monthly_Log("Monthly AR = monthly total autotrophic respiration (gC/m2/month)\n");
+		logger(g_monthly_log, "Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
+		logger(g_monthly_log, "Monthly AR = monthly total autotrophic respiration (gC/m2/month)\n");
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log("Annual HR = Monthly total heterotrophic respiration (gC/m2/month)\n");
-			Monthly_Log("Annual Reco = Monthly total ecosystem respiration (gC/m2/month)\n");
+			logger(g_monthly_log, "Annual HR = Monthly total heterotrophic respiration (gC/m2/month)\n");
+			logger(g_monthly_log, "Annual Reco = Monthly total ecosystem respiration (gC/m2/month)\n");
 		}
-		Monthly_Log("Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
-		Monthly_Log("Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
-		Monthly_Log("Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
-		Monthly_Log("Monthly ASW = monthly ASW (at the end of month) (mm)\n");
-		Monthly_Log("Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
-		Monthly_Log("Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
+		logger(g_monthly_log, "Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
+		logger(g_monthly_log, "Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
+		logger(g_monthly_log, "Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
+		logger(g_monthly_log, "Monthly ASW = monthly ASW (at the end of month) (mm)\n");
+		logger(g_monthly_log, "Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
+		logger(g_monthly_log, "Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}*/
 	if (years == 0)
 	{
@@ -771,7 +607,7 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//check if layer number is changed since last yearly run
 		if(previous_layer_number != c->annual_layer_number)
 		{
-			Monthly_Log ("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+			logger(g_monthly_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
 		previous_layer_number = c->annual_layer_number;
 	}
@@ -780,34 +616,34 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (month == 0 && years == 0 && cell_index == 0)
 		{
-			Monthly_Log ("%s \t%2s \t%s", "YEAR", "Month", "CELL");
+			logger(g_monthly_log, "%s \t%2s \t%s", "YEAR", "Month", "CELL");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s", "NEE");
+				logger(g_monthly_log, "\t%3s", "NEE");
 			}
-			Monthly_Log ("\t%6s \t%10s" ,
+			logger(g_monthly_log, "\t%6s \t%10s" ,
 					"GPP (tot)", "AR (tot)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s\n",
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s\n",
 					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%2d \t%4d,\t%d", yos[years].year, month+1, c->x, c->y);
+		logger(g_monthly_log, "%d \t%2d \t%4d,\t%d", yos[years].year, month+1, c->x, c->y);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%6.2f", c->monthly_nee);
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
 		}
-		Monthly_Log("\t%10.2f \t%10.2f",
+		logger(g_monthly_log, "\t%10.2f \t%10.2f",
 				c->monthly_gpp,
 				c->monthly_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
+			logger(g_monthly_log, "\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
 		}
-		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f\n",
+		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f\n",
 				c->monthly_C_flux,
 				c->monthly_npp_tDM,
 				c->monthly_npp_gC,
@@ -829,35 +665,35 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("%s \t%2s", "YEAR", "Month");
+			logger(g_monthly_log, "%s \t%2s", "YEAR", "Month");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s", "NEE");
+				logger(g_monthly_log, "\t%3s", "NEE");
 			}
-			Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
 					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
 					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
+		logger(g_monthly_log, "%d \t%2d", yos[years].year, month+1);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%6.2f", c->monthly_nee);
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
 		}
-		Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
 				c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
+			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
-		Monthly_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
 				c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_npp_tDM,
@@ -889,36 +725,36 @@ void EOM_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if (month == 0 && years == 0)
 		{
-			Monthly_Log ("\n%s \t%2s", "YEAR", "Month");
+			logger(g_monthly_log, "\n%s \t%2s", "YEAR", "Month");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s", "NEE");
+				logger(g_monthly_log, "\t%3s", "NEE");
 			}
-			Monthly_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Monthly_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Monthly_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
 					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
 					"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
 		}
-		Monthly_Log ("%d \t%2d", yos[years].year, month+1);
+		logger(g_monthly_log, "%d \t%2d", yos[years].year, month+1);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%6.2f", c->monthly_nee);
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
 		}
-		Monthly_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->layer_monthly_gpp[2], c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
 				c->layer_monthly_aut_resp[2], c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Monthly_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
+			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
-		Monthly_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+		logger(g_monthly_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_monthly_c_flux[2],c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
 				c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_npp_tDM,
@@ -978,39 +814,39 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	if(day  == 0 && month == 0 && years == 0)
 	{
 
-		//Daily_Log("Site name = %s\n", g_soil->values[SOIL_sitename);
-		//Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-		//Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
+		//logger(g_daily_log, "Site name = %s\n", g_soil->values[SOIL_sitename);
+		//logger(g_daily_log, "Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+		//logger(g_daily_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
 
 
-		//Daily_Log ("HC\n");
+		//logger(g_daily_log, "HC\n");
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			//Daily_Log("Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
+			//logger(g_daily_log, "Daily NEE = daily total net ecosystem exchange (gC/m2/day)\n");
 		}
-		//Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
-		//Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
-		//Daily_Log("Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
+		//logger(g_daily_log, "Daily GPP = daily total gross primary production (gC/m2/day)\n");
+		//logger(g_daily_log, "Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+		//logger(g_daily_log, "Daily ARtDM = daily total autotrophic respiration (tDM/day cell)\n");
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			//Daily_Log("Daily HR = daily total heterotrophic respiration (gC/m2/day)\n");
-			//Daily_Log("Daily Reco = daily total ecosystem respiration (gC/m2/day)\n");
+			//logger(g_daily_log, "Daily HR = daily total heterotrophic respiration (gC/m2/day)\n");
+			//logger(g_daily_log, "Daily Reco = daily total ecosystem respiration (gC/m2/day)\n");
 		}
 		/*
-		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
-		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
-		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
-		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
-		Daily_Log("Daily LE = daily latent heat (W/m^2)\n");
-		Daily_Log("Daily ASW = daily Available Soil Water(mm/day)\n");
-		Daily_Log("Daily Wfl = daily water fluxes (mm/day)\n");
-		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
-		Daily_Log("Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
-		Daily_Log("Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
-		Daily_Log("Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
-		Daily_Log("Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
-		Daily_Log("Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
-		Daily_Log("Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily Cf = daily c-fluxes (gC/m2/day)\n");
+		logger(g_daily_log, "Daily CftDM = daily c-fluxes (tDM/day cell)\n");
+		logger(g_daily_log, "Daily NPP = daily total net primary production (tDM/m2/day)\n");
+		logger(g_daily_log, "Daily CE = daily canopy evapotranspiration(mm/day)\n");
+		logger(g_daily_log, "Daily LE = daily latent heat (W/m^2)\n");
+		logger(g_daily_log, "Daily ASW = daily Available Soil Water(mm/day)\n");
+		logger(g_daily_log, "Daily Wfl = daily water fluxes (mm/day)\n");
+		logger(g_daily_log, "Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
+		logger(g_daily_log, "Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
+		logger(g_daily_log, "Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
 		 */
 
 	}
@@ -1024,7 +860,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		//check if layer number is changed since last yearly run
 		if(previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+			logger(g_daily_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
 	}
 	if (c->annual_layer_number == 1)
@@ -1032,18 +868,18 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 		if (((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number) && cell_index == 0)
 		{
 			//todo include x and y log if cells > 1
-			Daily_Log ("%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", /*"CELL",*/ "HC");
+			logger(g_daily_log, "%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", /*"CELL",*/ "HC");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s", "NEE");
+				logger(g_daily_log, "\t%3s", "NEE");
 			}
-			Daily_Log ("\t%4s \t%6s \t%10s \t%8s",
+			logger(g_daily_log, "\t%4s \t%6s \t%10s \t%8s",
 					"GPP(gC/m2d)", "AR(gC/m2d)","MR(gC/m2d)", "GR(gC/m2d)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%s, \t%3s", "HR (tot)", "Reco");
+				logger(g_daily_log, "\t%s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%6s \t%6s \t%4s \t%8s \t%6s\t%6s \t%10s "
+			logger(g_daily_log, "\t%6s \t%6s \t%4s \t%8s \t%6s\t%6s \t%10s "
 					"\t%5s \t%8s \t%10s \t%11s \t%11s \t%11s \t%11s \t%10s \t%11s \t%11s \t%11s \t%11s\n",
 					"NPP(gC/m2d)", "ET(mm/m2/d)","LE(W/m2)", "ASW(mm)", "LAI",
 					"CC", "DEADTREE", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres", "wlAR", "wsAR", "wbbAR", "wfrAR", "wcrAR");
@@ -1053,12 +889,12 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 			doy = 1;
 		}
 
-		Daily_Log ("%d \t%3d \t%4d \t%3d", yos[years].year, month+1, day+1,/* c->x, c->y,*/ c->height_class_in_layer_dominant_counter);
+		logger(g_daily_log, "%d \t%3d \t%4d \t%3d", yos[years].year, month+1, day+1,/* c->x, c->y,*/ c->height_class_in_layer_dominant_counter);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_nee);
+			logger(g_daily_log, "\t%6.2f", c->daily_nee);
 		}
-		Daily_Log("\t%10.4f \t%10.4f \t%10.4f \t%10.4f",
+		logger(g_daily_log, "\t%10.4f \t%10.4f \t%10.4f \t%10.4f",
 				c->layer_daily_gpp[0],
 				c->layer_daily_aut_resp[0],
 				c->layer_daily_maint_resp[0],
@@ -1066,9 +902,9 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
+			logger(g_daily_log, "\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
-		Daily_Log("\t%11.4f \t%8.4f \t%10.4f \t%11.4f \t%7.4f \t%7.4f \t%2.2d \t%9.4f \t%8.4f \t%10.4f"
+		logger(g_daily_log, "\t%11.4f \t%8.4f \t%10.4f \t%11.4f \t%7.4f \t%7.4f \t%2.2d \t%9.4f \t%8.4f \t%10.4f"
 				" \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%10.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
 				c->layer_daily_npp_gC[0],
 				c->daily_et,
@@ -1114,18 +950,18 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC(1)", "HC(0)");
+			logger(g_daily_log, "\n%s \t%s \t%2s \t%2s \t%2s \t%2s", "DOY", "YEAR", "MONTH", "DAY", "HC(1)", "HC(0)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s", "NEE");
+				logger(g_daily_log, "\t%3s", "NEE");
 			}
-			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+			logger(g_daily_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(1)", "GPP(0)", "GPP(tot)", "AR(1)", "AR", "AR(tot)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_daily_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
+			logger(g_daily_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\t%10s \t%10s "
 					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
 					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)","CE(1)", "CE(0)", "CE(tot)","ASW",
 					"LAI(1)", "LAI(0)", "CC(1)", "CC(0)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
@@ -1135,22 +971,22 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 			doy = 1;
 		}
 
-		Daily_Log ("%d \t%8d \t%5d \t%5d  \t%5d \t%2d",doy, yos[years].year, month+1, day+1,
+		logger(g_daily_log, "%d \t%8d \t%5d \t%5d  \t%5d \t%2d",doy, yos[years].year, month+1, day+1,
 				c->height_class_in_layer_dominant_counter,
 				c->height_class_in_layer_dominated_counter);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_nee);
+			logger(g_daily_log, "\t%6.2f", c->daily_nee);
 		}
-		Daily_Log("\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
+		logger(g_daily_log, "\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
 				c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->daily_gpp,
 				c->layer_daily_aut_resp[1], c->layer_daily_aut_resp[0], c->daily_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
+			logger(g_daily_log, "\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
-		Daily_Log("\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
+		logger(g_daily_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_daily_c_flux[1], c->layer_daily_c_flux[0], c->daily_C_flux,
 				c->layer_daily_npp_tDM[1], c->layer_daily_npp_tDM[0], c->daily_npp_tDM,
 				c->layer_daily_c_evapotransp[1], c->layer_daily_c_evapotransp[0], c->daily_c_evapotransp,
@@ -1196,36 +1032,36 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
 		{
-			Daily_Log ("\n%s \t%2s\t%2s ", "YEAR", "MONTH", "DAY");
+			logger(g_daily_log, "\n%s \t%2s\t%2s ", "YEAR", "MONTH", "DAY");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s", "NEE");
+				logger(g_daily_log, "\t%3s", "NEE");
 			}
-			Daily_Log ("\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+			logger(g_daily_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
 					"GPP(2)","GPP(1)", "GPP(0)", "GPP(tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
 			if (!string_compare_i(settings->dndc, "on"))
 			{
-				Daily_Log ("\t%3s, \t%3s", "HR (tot)", "Reco");
+				logger(g_daily_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			Daily_Log ("\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+			logger(g_daily_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
 					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
 					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)", "NPP(tot)", "NPPgC(2)","NPPgC(1)", "NPPgC(0)", "NPPgC(tot)",
 					"CE(2)","CE(1)", "CE(0)", "CE(tot)", "ASW", "LAI(2)","LAI(1)", "LAI(0)", "CC(2)", "CC(1)", "CC(0)", "DEADTREE(2)", "DEADTREE(1)", "DEADTREE(0)", "DEADTREE(tot)");
 		}
-		Daily_Log ("%d \t%2d \t%2d", yos[years].year, month+1, day+1);
+		logger(g_daily_log, "%d \t%2d \t%2d", yos[years].year, month+1, day+1);
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%6.2f", c->daily_nee);
+			logger(g_daily_log, "\t%6.2f", c->daily_nee);
 		}
-		Daily_Log("\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+		logger(g_daily_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->layer_daily_gpp[2], c->layer_daily_gpp[1],c->layer_daily_gpp[0], c->daily_gpp,
 				c->layer_daily_aut_resp[2], c->layer_daily_aut_resp[1],c->layer_daily_aut_resp[0], c->daily_aut_resp);
 
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			Daily_Log ("\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
+			logger(g_daily_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
-		Daily_Log("\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+		logger(g_daily_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				"\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_daily_c_flux[2],c->layer_daily_c_flux[1],c->layer_daily_c_flux[0],c->daily_C_flux,
@@ -1333,38 +1169,38 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 	{
 		if (!string_compare_i(settings->dndc, "on"))
 		{
-			soil_Log("RUNNING DNDC.....\n");
+			logger(g_soil_log, "RUNNING DNDC.....\n");
 			//fixSergio improve a multilayer based log, specular to the one used for the aboveground
 
 		}
 		else
 		{
-			soil_Log("No soil simulation!!!\n");
+			logger(g_soil_log, "No soil simulation!!!\n");
 		}
 	}
-	//		Daily_Log("Site name = %s\n", g_soil->values[SOIL_sitename);
-	//		Daily_Log("Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
-	//		Daily_Log("\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
+	//		logger(g_daily_log, "Site name = %s\n", g_soil->values[SOIL_sitename);
+	//		logger(g_daily_log, "Daily summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",settings->version, settings->time, settings->spatial);
+	//		logger(g_daily_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil->values[SOIL_lat, g_soil->values[SOIL_lon );
 	//
 	//
-	//		Daily_Log ("HC\n");
+	//		logger(g_daily_log, "HC\n");
 	//
-	//		Daily_Log("Daily GPP = daily total gross primary production (gC/m2/day)\n");
-	//		Daily_Log("Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
-	//		Daily_Log("Daily ARtC = daily total autotrophic respiration (tC/day cell)\n");
-	//		Daily_Log("Daily Cf = daily c-fluxes (gC/m2/day)\n");
-	//		Daily_Log("Daily CftDM = daily c-fluxes (tDM/day cell)\n");
-	//		Daily_Log("Daily NPP = daily total net primary production (tDM/m2/day)\n");
-	//		Daily_Log("Daily CE = daily canopy evapotranspiration(mm/day)\n");
-	//		Daily_Log("Daily ASW = daily Available Soil Water(mm/day)\n");
-	//		Daily_Log("Daily Wfl = daily water fluxes (mm/day)\n");
-	//		Daily_Log("Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
-	//		Daily_Log("Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
-	//		Daily_Log("Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
-	//		Daily_Log("Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
-	//		Daily_Log("Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
-	//		Daily_Log("Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
-	//		Daily_Log("Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily GPP = daily total gross primary production (gC/m2/day)\n");
+	//		logger(g_daily_log, "Daily AR = daily total autotrophic respiration (gC/m2/day)\n");
+	//		logger(g_daily_log, "Daily ARtC = daily total autotrophic respiration (tC/day cell)\n");
+	//		logger(g_daily_log, "Daily Cf = daily c-fluxes (gC/m2/day)\n");
+	//		logger(g_daily_log, "Daily CftDM = daily c-fluxes (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily NPP = daily total net primary production (tDM/m2/day)\n");
+	//		logger(g_daily_log, "Daily CE = daily canopy evapotranspiration(mm/day)\n");
+	//		logger(g_daily_log, "Daily ASW = daily Available Soil Water(mm/day)\n");
+	//		logger(g_daily_log, "Daily Wfl = daily water fluxes (mm/day)\n");
+	//		logger(g_daily_log, "Daily LAI = daily Leaf Area Index (m^2/m^2)\n");
+	//		logger(g_daily_log, "Daily D-Wf = daily fraction of NPP to foliage pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily D-Ws = daily fraction of NPP to stem pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily D-Wbb = daily fraction of NPP to branch and bark pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily D-Wfr = daily fraction of NPP to fine root pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily D-Wcr = daily fraction of NPP to coarse root pool (tDM/day cell)\n");
+	//		logger(g_daily_log, "Daily D-Wres = daily fraction of NPP to reserve pool (tDM/day cell)\n");
 	//
 	//	}
 
@@ -1378,7 +1214,7 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 		//check if layer number is changed since last yearly run
 		if(previous_layer_number != c->annual_layer_number)
 		{
-			soil_Log("\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+			logger(g_soil_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
 	}
 	if (!string_compare_i(settings->dndc, "on"))
@@ -1394,7 +1230,7 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 			//					"wrcvl", "wrcl", "wrcr", "wcrb", "wcrh","whumus", "wtcavai", "w_no3", "w_nh4", "w_nh3", "wsoc", "day_no2",
 			//					"runoff_N", "previousSoilT", "soilSurfaceT", "temp_avet", "yr_avet","base_clay_N", "max_clay_N",
 			//					"AddC", "AddCN", "AddC1", "AddC2", "AddC3");
-			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s "
+			logger(g_soil_log, "\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s "
 					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s"
 					"\t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \n",
 					"DOY", "YEAR", "MONTH", "DAY", "soilMoisture","soilTemp", "leafLittering","fineRootLittering", "woodLittering",
@@ -1458,7 +1294,7 @@ void Get_EOD_soil_balance_cell_level (CELL *c, const YOS *const yos, int years, 
 		//		{
 		//			doy = 1;
 		//		}
-		soil_Log ("%d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
+		logger(g_soil_log, "%d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f  \t%8.6f \n ",

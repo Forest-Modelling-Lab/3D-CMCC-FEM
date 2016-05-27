@@ -6,43 +6,46 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 //not used
 void Get_allometry (SPECIES *const s, AGE *const a, int years)
 {
-	Log("\n*********ALLOMETRY FUNCTION *********\n");
+	logger(g_log, "\n*********ALLOMETRY FUNCTION *********\n");
 	/*
-	   Log("-Chapman-Richards allometry function-\n");
+	   logger(g_log, "-Chapman-Richards allometry function-\n");
 	//tree height from champan-richards function
 	if (!years)
 	{
 	s->value[INITIAL_TREE_HEIGHT_CR] = 1.3 + s->value[CRA] * pow (1 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
-	Log("Initial Tree Height from Chapman-Richards function = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
+	logger(g_log, "Initial Tree Height from Chapman-Richards function = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
 	//control
 	if (s->value[INITIAL_TREE_HEIGHT_CR] > s->value[HMAX])
 	{
 	s->value[INITIAL_TREE_HEIGHT_CR] = s->value[HMAX];
-	Log("Initial Tree Height CR > HMAX !!  \n");
-	Log("Initial Tree Height = HMAX  = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
+	logger(g_log, "Initial Tree Height CR > HMAX !!  \n");
+	logger(g_log, "Initial Tree Height = HMAX  = %f m\n", s->value[INITIAL_TREE_HEIGHT_CR]);
 	}
 	}
 	else
 	{
 	s->value[TREE_HEIGHT_CR] = 1.3 + s->value[CRA] * pow (1 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
-	Log("Tree Height from Chapman-Richards function = %f m\n", s->value[TREE_HEIGHT_CR]);
+	logger(g_log, "Tree Height from Chapman-Richards function = %f m\n", s->value[TREE_HEIGHT_CR]);
 	//control
 	if (s->value[TREE_HEIGHT_CR] > s->value[HMAX])
 	{
 	s->value[TREE_HEIGHT_CR] = s->value[HMAX];
-	Log("Tree Height CR > HMAX !!  \n");
-	Log("Tree Height = HMAX  = %f m\n", s->value[TREE_HEIGHT_CR]);
+	logger(g_log, "Tree Height CR > HMAX !!  \n");
+	logger(g_log, "Tree Height = HMAX  = %f m\n", s->value[TREE_HEIGHT_CR]);
 	}
 	}
 	 */
 
 	/*LPJ allometry function*/
 	/*
-	   Log("-LPJ-allometry function-\n");
+	   logger(g_log, "-LPJ-allometry function-\n");
 	   if(!years)
 	   {
 	   s->value[TREE_HEIGHT_LPJ] = s->value[KALLOMB] * pow (( s->value[AVDBH] / 100) , s->value[KALLOMC] );
@@ -57,23 +60,23 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	s->value[CROWN_AREA_LPJ] = s->value[KALLOMA] * pow (( s->value[AVDBH] / 100) , s->value[KRP] );
 	}
 
-	Log("LPJ Height = %f m\n", s->value[TREE_HEIGHT_LPJ]);
-	Log("LPJ Crown Area = %f m^2\n", s->value[CROWN_AREA_LPJ] );
+	logger(g_log, "LPJ Height = %f m\n", s->value[TREE_HEIGHT_LPJ]);
+	logger(g_log, "LPJ Crown Area = %f m^2\n", s->value[CROWN_AREA_LPJ] );
 
 	s->value[CROWN_DIAMETER_LPJ] = sqrt (s->value[CROWN_AREA_LPJ]  / ( Pi / 4) ) ;
-	Log("LPJ Crown Diameter = %f m\n", s->value[CROWN_DIAMETER_LPJ]);
+	logger(g_log, "LPJ Crown Diameter = %f m\n", s->value[CROWN_DIAMETER_LPJ]);
 
 
 	s->value[CANOPY_COVER_LPJ] = s->counter[N_TREE] * s->value[CROWN_AREA_LPJ] / SIZECELL ;
 
-	Log("LPJ Canopy Cover = %f m^2\n", s->value[CANOPY_COVER_LPJ]);
-	Log("-------------------------\n");
+	logger(g_log, "LPJ Canopy Cover = %f m^2\n", s->value[CANOPY_COVER_LPJ]);
+	logger(g_log, "-------------------------\n");
 	 */
 
 
 	/*Sortie Allometry Function*/
 	/*
-	   Log("-SORTIE allometry function-\n");
+	   logger(g_log, "-SORTIE allometry function-\n");
 
 	   if(!years)
 	   {
@@ -90,17 +93,17 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 	// Crown Radius in m
 	s->value[CROWN_RADIUS_SORTIE] = s->value[RPOWER] * (s->value[AVDBH] * exp (b_RPOWER));
 	}
-	Log("Tree Height from Sortie Allometry Function = %f m\n", s->value[TREE_HEIGHT_SORTIE] );
-	Log("Crown Radius from Sortie Allometry Function = %f m\n", s->value[CROWN_RADIUS_SORTIE]);
+	logger(g_log, "Tree Height from Sortie Allometry Function = %f m\n", s->value[TREE_HEIGHT_SORTIE] );
+	logger(g_log, "Crown Radius from Sortie Allometry Function = %f m\n", s->value[CROWN_RADIUS_SORTIE]);
 
 	// Crown Height in m
 	s->value[CROWN_HEIGHT_SORTIE] = (s->value[CHPOWER] * (s->value[TREE_HEIGHT_SORTIE] * exp (b_CHPOWER));
-	Log("Crown Height from Sortie Allometry Function = %f m\n", s->value[CROWN_HEIGHT_SORTIE]);
+	logger(g_log, "Crown Height from Sortie Allometry Function = %f m\n", s->value[CROWN_HEIGHT_SORTIE]);
 
 	// Crown Diameter in m
 	s->value[CROWN_DIAMETER_SORTIE] = s->value[CROWN_RADIUS_SORTIE] * 2;
-	Log("Crown Diameter from Sortie Allometry Function = %f m\n", s->value[CROWN_DIAMETER_SORTIE]);
-	Log("-------------------------\n");
+	logger(g_log, "Crown Diameter from Sortie Allometry Function = %f m\n", s->value[CROWN_DIAMETER_SORTIE]);
+	logger(g_log, "-------------------------\n");
 	 */
 
 
@@ -119,7 +122,7 @@ void Allometry_Power_Function (AGE *a, SPECIES *s)
 	double MassDensity;
 
 	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	Log("-Mass Density = %f\n", MassDensity);
+	logger(g_log, "-Mass Density = %f\n", MassDensity);
 
 	if (s->value[AVDBH] < 9)
 	{
@@ -133,5 +136,5 @@ void Allometry_Power_Function (AGE *a, SPECIES *s)
 	{
 		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
 	}
-	Log("-Stem const = %f\n", s->value[STEMCONST]);
+	logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
 }

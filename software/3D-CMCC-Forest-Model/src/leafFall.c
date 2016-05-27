@@ -5,6 +5,10 @@
 #include "mpfit.h"
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
+extern logger_t* g_soil_log;
 
 void Leaf_fall(SPECIES *s, int* doy)
 {
@@ -17,14 +21,14 @@ void Leaf_fall(SPECIES *s, int* doy)
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
 
-	Log("\n**Leaf_fall**\n");
+	logger(g_log, "\n**Leaf_fall**\n");
 
-	Log("LEAF_FALL_COUNTER = %d\n", s->counter[LEAF_FALL_COUNTER]);
+	logger(g_log, "LEAF_FALL_COUNTER = %d\n", s->counter[LEAF_FALL_COUNTER]);
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
-		Log("First day of Leaf fall\n");
-		Log("DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+		logger(g_log, "First day of Leaf fall\n");
+		logger(g_log, "DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
 
 		s->value[MAX_LAI] = s->value[LAI];
@@ -32,7 +36,7 @@ void Leaf_fall(SPECIES *s, int* doy)
 
 		//		/* assuming linear leaf fall */
 		//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		//		Log("daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
+		//		logger(g_log, "daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
 		//		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
@@ -53,8 +57,8 @@ void Leaf_fall(SPECIES *s, int* doy)
 		currentLai = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
 				* doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
-		Log("previousLai = %f\n", previousLai);
-		Log("currentLai = %f\n", currentLai);
+		logger(g_log, "previousLai = %f\n", previousLai);
+		logger(g_log, "currentLai = %f\n", currentLai);
 
 		CHECK_CONDITION(previousLai, <currentLai);
 
@@ -62,36 +66,36 @@ void Leaf_fall(SPECIES *s, int* doy)
 
 		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
-		Log("foliage_to_remove = %f\n", foliage_to_remove);
+		logger(g_log, "foliage_to_remove = %f\n", foliage_to_remove);
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
 		fineroot_to_remove = (s->value[FINE_ROOT_C]*foliage_to_remove)/s->value[LEAF_C];
-		Log("fineroot_to_remove = %f\n", fineroot_to_remove);
+		logger(g_log, "fineroot_to_remove = %f\n", fineroot_to_remove);
 
 
 		s->value[C_TO_LEAF] = -foliage_to_remove ;
-		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
+		logger(g_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = -fineroot_to_remove;
-		Log("C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
+		logger(g_log, "C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
 		s->value[RETRANSL_C_LEAF_TO_RESERVE] = retransl_leaf_c_to_reserve;
-		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
+		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
 		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = retransl_fineroot_c_to_reserve;
-		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 		s->value[C_TO_LITTER] = (foliage_to_remove - retransl_leaf_c_to_reserve) + (fineroot_to_remove - retransl_fineroot_c_to_reserve);
-		Log("C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
+		logger(g_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
 	else
 	{
-		Log("Last day of leaffall\n");
+		logger(g_log, "Last day of leaffall\n");
 		s->value[C_TO_LEAF] = -s->value[LEAF_C];
-		Log("C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
+		logger(g_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
-		Log("C_TO_FINEROOT = %f\n", -s->value[C_TO_FINEROOT]);
+		logger(g_log, "C_TO_FINEROOT = %f\n", -s->value[C_TO_FINEROOT]);
 		s->value[RETRANSL_C_LEAF_TO_RESERVE] = s->value[LEAF_C];
-		Log("RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
+		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
 		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
-		Log("RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 		s->value[C_TO_LITTER] = 0.0;
-		Log("C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
+		logger(g_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
 }
 
@@ -103,11 +107,11 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 	double previous_Biomass_fineroot;
 	//s->counter[DAY_FRAC_FOLIAGE_REMOVE] = 130;
 
-	Log("\n**LEAFFALL_MARCONI FUNCTION**\n");
+	logger(g_log, "\n**LEAFFALL_MARCONI FUNCTION**\n");
 
 	if(*doy == s->counter[SENESCENCE_DAYONE])
 	{
-		Log("Senescence day one\n");
+		logger(g_log, "Senescence day one\n");
 		//ALESSIOC che è sto MAX_LAI??
 		s->value[MAX_LAI] = s->value[LAI];
 	}
@@ -119,7 +123,7 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 	s->value[LAI] = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 			*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 					log(.11111111111))))));
-	Log("LAI = %f\n", s->value[LAI]);
+	logger(g_log, "LAI = %f\n", s->value[LAI]);
 	previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0);
 	//s->value[BIOMASS_FOLIAGE_tDM] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
 	s->value[LEAF_C] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
@@ -136,24 +140,24 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 	//	//ALESSIOC
 	//	if(s->value[BIOMASS_FOLIAGE_tDM] > 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
 	//	{
-	//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
-	//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
+	//		logger(g_log, "Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+	//		logger(g_log, "Biomass fine root = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
 	//		s->value[DEL_FOLIAGE]  = -fabs(previousBiomass_lai - s->value[BIOMASS_FOLIAGE_tDM]);
-	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+	//		logger(g_log, "DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
 	//		s->value[DEL_ROOTS_FINE]  = -fabs(previous_Biomass_fineroot - s->value[BIOMASS_FINE_ROOT_tDM]);
-	//		Log("DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
+	//		logger(g_log, "DEL_ROOTS_FINE_CTEM = %f\n", s->value[DEL_ROOTS_FINE]);
 	//
 	//	}
 	//	else
 	//	{
-	//		Log("Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
+	//		logger(g_log, "Biomass foliage = %f\n", s->value[BIOMASS_FOLIAGE_tDM]);
 	//		s->value[DEL_FOLIAGE]  = 0.0;
-	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
-	//		Log("Biomass fine root = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+	//		logger(g_log, "DEL_FOLIAGE = %f\n", s->value[DEL_FOLIAGE]);
+	//		logger(g_log, "Biomass fine root = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);
 	//		s->value[DEL_FOLIAGE]  = 0.0;
-	//		Log("DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
+	//		logger(g_log, "DEL_FOLIAGE = %f\n", s->value[DEL_ROOTS_FINE]);
 	//	}
-	//	Log("****************************\n\n");
+	//	logger(g_log, "****************************\n\n");
 }
 
 struct vars_struct {
@@ -212,7 +216,7 @@ int endOfYellowing(const MET_DATA *const met, SPECIES *const s)
 
 		}
 	}
-	soil_Log("Attention!! senescenceNoOccurred!!!");
+	logger(g_soil_log, "Attention!! senescenceNoOccurred!!!");
 	endOfYellowing = 310;
 	return endOfYellowing;
 }
@@ -235,7 +239,7 @@ void get_vpsat(CELL *const c,  int day, int month, int years, YOS *yos, int i)
 	met = (MET_DATA*) yos[years].m;
 
 	c->vpSat[i] = 0.35*(0.6107*exp(17.38*(met[month].d[day].tavg)/(239.0 +(met[month].d[day].tavg))))+0.154;
-	//soil_Log("\nvpSat: %g", c->vpSat[i]);
+	//logger(g_soil_log, "\nvpSat: %g", c->vpSat[i]);
 }
 
 int gaussian_x_y(int m, int n, double *p, double *dy,
@@ -325,8 +329,8 @@ void senescenceDayOne(SPECIES *const s, const MET_DATA *const met, CELL *const c
 	status = mpfit(gaussian_x_y, 365, 4, p, pars, 0, (void *) &v, &result);
 	s->counter[SENESCENCE_DAYONE] = p[1]; //check if 2 is the correct parameter
 	//todo the 1.6 cap
-	//soil_Log("\nfirstDayOfSenescence senescence:\t%g", s->value[SENESCENCE_DAYONE]);
-	//soil_Log("\n*** testlinfit status = %d\n", status);
+	//logger(g_soil_log, "\nfirstDayOfSenescence senescence:\t%g", s->value[SENESCENCE_DAYONE]);
+	//logger(g_soil_log, "\n*** testlinfit status = %d\n", status);
 	/* ... print or use the results of the fitted parametres p[] here! ... */
 	//Marconi: turn on the following function to print the parameters
 	//printresult(p, pactual, &result);
@@ -340,22 +344,22 @@ void printresult(double *x, double *xact, mp_result *result)
 	int i;
 
 	if ((x == 0) || (result == 0)) return;
-	soil_Log("  CHI-SQUARE = %f    (%d DOF)\n",
+	logger(g_soil_log, "  CHI-SQUARE = %f    (%d DOF)\n",
 			result->bestnorm, result->nfunc-result->nfree);
-	soil_Log("        NPAR = %d\n", result->npar);
-	soil_Log("       NFREE = %d\n", result->nfree);
-	soil_Log("     NPEGGED = %d\n", result->npegged);
-	soil_Log("     NITER = %d\n", result->niter);
-	soil_Log("      NFEV = %d\n", result->nfev);
-	soil_Log("\n");
+	logger(g_soil_log, "        NPAR = %d\n", result->npar);
+	logger(g_soil_log, "       NFREE = %d\n", result->nfree);
+	logger(g_soil_log, "     NPEGGED = %d\n", result->npegged);
+	logger(g_soil_log, "     NITER = %d\n", result->niter);
+	logger(g_soil_log, "      NFEV = %d\n", result->nfev);
+	logger(g_soil_log, "\n");
 	if (xact) {
 		for (i=0; i<result->npar; i++) {
-			soil_Log("  P[%d] = %f +/- %f     (ACTUAL %f)\n",
+			logger(g_soil_log, "  P[%d] = %f +/- %f     (ACTUAL %f)\n",
 					i, x[i], result->xerror[i], xact[i]);
 		}
 	} else {
 		for (i=0; i<result->npar; i++) {
-			soil_Log("  P[%d] = %f +/- %f\n",
+			logger(g_soil_log, "  P[%d] = %f +/- %f\n",
 					i, x[i], result->xerror[i]);
 		}
 	}

@@ -1228,24 +1228,6 @@ void Annual_met_values (CELL *, int, int, int, YOS *);
 void Annual_CO2_concentration (CELL *, int, int, int, YOS *);
 void Abscission_DayLength (CELL *);
 int Establishment_LPJ (CELL *const, SPECIES *const);
-int logInit(char*);
-void Log(const char *, ...);
-void logClose(void);
-int daily_logInit(char*);
-void Daily_Log(const char *, ...);
-void daily_logClose(void);
-int monthly_logInit(char*);
-void Monthly_Log(const char *, ...);
-void monthly_logClose(void);
-int annual_logInit(char*);
-void Annual_Log(const char *, ...);
-void annual_logClose(void);
-int soil_logInit(char*);
-void soil_Log(const char *, ...);
-void soil_logClose(void);
-int soilDebug_logInit(char*);
-void soilDebug_Log(const char *, ...);
-void soilDebug_logClose(void);
 void Age_Mortality (SPECIES *const, AGE *const);
 void Greff_Mortality (SPECIES *const);
 void Mortality (SPECIES *const, int);
@@ -1317,10 +1299,6 @@ void water_upward_balance (CELL *, const MET_DATA *const, int, int);
 void Soil_water_balance (CELL *const, const MET_DATA *const, int, int);
 void Annual_average_values_modifiers (SPECIES *);
 void Annual_average_values_met_data (CELL *, double, double, double, double);
-void EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
-void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int, const int cell_index);
-void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
-void EOY_cumulative_balance_cell_level (MATRIX *, CELL *, const YOS *const , int, int, const int cell_index);
 void Average_tree_biomass (SPECIES *);
 void Total_class_level_biomass (SPECIES *);
 void Renovation (CELL *, HEIGHT *, SPECIES *);
@@ -1385,7 +1363,7 @@ const char *GetNetCDFVersion(void);
 #define STR(a)		#a
 #define CHECK_CONDITION(x,c) {																																\
 		if ( (x)c )		{																																	\
-			Log("\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
+			logger(g_log, "\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
 			exit(1);																																		\
 		}																																					\
 }

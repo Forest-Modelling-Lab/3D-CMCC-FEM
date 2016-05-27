@@ -10,6 +10,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, int rv, double net_rad)
 {
@@ -49,7 +52,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 
 
-	Log("**Penmon**\n");
+	logger(g_log, "**Penmon**\n");
 
 	/* assign ta (Celsius) and tk (Kelvins) */
 	tairK = met[month].d[day].tday + TempAbs;
@@ -81,7 +84,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 	/* check */
 	if (evap_or_transp < 0.0) evap_or_transp = 0.0;
-	Log("Penmon evap_or_transp = %.10f mm/m2/sec\n", evap_or_transp);
+	logger(g_log, "Penmon evap_or_transp = %.10f mm/m2/sec\n", evap_or_transp);
 
 	return(evap_or_transp);
 }

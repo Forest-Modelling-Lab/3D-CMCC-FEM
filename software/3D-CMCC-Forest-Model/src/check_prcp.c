@@ -10,6 +10,9 @@
 #include "math.h"
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 {
@@ -24,7 +27,7 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	double t_melt, r_melt, r_sub;
 
 
-	Log("-CHECK PRECIPITATION-\n");
+	logger(g_log, "-CHECK PRECIPITATION-\n");
 
 	t_melt = r_melt = r_sub = 0;
 	t_melt = t_coeff * met[month].d[day].tavg;
@@ -41,16 +44,16 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 	{
 		c->prcp_rain = met[month].d[day].prcp;
 
-		Log("prcp_rain = rain = %f mm\n", c->prcp_rain);
+		logger(g_log, "prcp_rain = rain = %f mm\n", c->prcp_rain);
 
 		if (c->snow_pack > 0.0)
 		{
-			Log("tavg = %f\n", met[month].d[day].tavg);
-			Log("snow pack = %f cm\n", c->snow_pack);
-			Log("Snow melt!!\n");
+			logger(g_log, "tavg = %f\n", met[month].d[day].tavg);
+			logger(g_log, "snow pack = %f cm\n", c->snow_pack);
+			logger(g_log, "Snow melt!!\n");
 			r_melt = incident_rad / met[month].d[day].lh_fus;
 			c->snow_melt = t_melt + r_melt;
-			//Log("snow_melt %f\n", c->snow_melt);
+			//logger(g_log, "snow_melt %f\n", c->snow_melt);
 
 			if (c->snow_melt > c->snow_pack)
 			{
@@ -59,21 +62,21 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 
 				/*reset snow*/
 				c->snow_pack = 0.0;
-				Log("ALL Snow melt!!\n");
-				Log("snow melt %f\n", c->snow_melt);
+				logger(g_log, "ALL Snow melt!!\n");
+				logger(g_log, "snow melt %f\n", c->snow_melt);
 			}
 			else
 			{
 				/*snow pack melts partially*/
 				c->snow_pack -= c->snow_melt;
-				Log("snow_pack %f\n", c->snow_pack);
-				Log("A FRACTION OF Snow melt!!\n");
+				logger(g_log, "snow_pack %f\n", c->snow_pack);
+				logger(g_log, "A FRACTION OF Snow melt!!\n");
 			}
 			c->snow_to_soil=c->snow_melt;
-			Log("snow to soil %f\n", c->snow_to_soil);
+			logger(g_log, "snow to soil %f\n", c->snow_to_soil);
 
 			/*check for balance*/
-			Log("Snow pack = %f (cm)\n", c->snow_pack);
+			logger(g_log, "Snow pack = %f (cm)\n", c->snow_pack);
 		}
 	}
 	else
@@ -81,10 +84,10 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 		if(met[month].d[day].prcp > 0.0)
 		{
 			c->prcp_snow = met[month].d[day].prcp;
-			Log("prcp = snow = %f cm\n", c->prcp_snow);
+			logger(g_log, "prcp = snow = %f cm\n", c->prcp_snow);
 
 			c->snow_pack += c->prcp_snow;
-			Log("snow pack  + daily snow= %f cm\n", c->snow_pack);
+			logger(g_log, "snow pack  + daily snow= %f cm\n", c->snow_pack);
 		}
 		r_sub = incident_rad / met[month].d[day].lh_sub;
 
@@ -93,10 +96,10 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 			/*snow sublimation*/
 			if (r_sub > c->snow_pack)
 			{
-				Log("Snow sublimation!!\n");
+				logger(g_log, "Snow sublimation!!\n");
 				r_sub = c->snow_pack;
 				c->snow_subl = r_sub;
-				Log("Snow sublimated = %f mm\n", c->snow_subl);
+				logger(g_log, "Snow sublimated = %f mm\n", c->snow_subl);
 				/*check for balance*/
 				if (c->snow_subl < c->snow_pack)
 				{
@@ -115,8 +118,8 @@ void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
 		}
 		else
 		{
-			Log("NO snow pack to sublimate\n");
+			logger(g_log, "NO snow pack to sublimate\n");
 		}
 	}
-	Log("*****************************************\n");
+	logger(g_log, "*****************************************\n");
 }

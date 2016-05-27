@@ -6,8 +6,10 @@
 #include "soil.h"
 #include "topo.h"
 #include "constants.h"
+#include "logger.h"
 
 /* externs */
+extern logger_t* g_log;
 extern soil_t *g_soil;
 extern topo_t *g_topo;
 extern char *input_dir;
@@ -366,7 +368,7 @@ int fill_species_from_file(SPECIES *const s)
 	species_count = SIZE_OF_ARRAY(species_values);
 	species_flags = malloc(sizeof*species_flags*species_count);
 	if ( ! species_flags ) {
-		Log(err_out_of_memory);
+		logger(g_log, err_out_of_memory);
 		return 0;
 	}
 
@@ -378,7 +380,7 @@ int fill_species_from_file(SPECIES *const s)
 	f = fopen(filename, "r");
 	if ( !f )
 	{
-		Log(err_unable_open_file, filename);
+		logger(g_log, err_unable_open_file, filename);
 		free(species_flags);
 		return 0;
 	}
@@ -412,7 +414,7 @@ int fill_species_from_file(SPECIES *const s)
 		// GET VARIABLE NAME
 		token = mystrtok(buffer, species_values_delimiter, &p);
 		if ( !token ) {
-			Log("unable to get value token in file \"%s\", line %s.\n", filename, buffer);
+			logger(g_log, "unable to get value token in file \"%s\", line %s.\n", filename, buffer);
 			free(species_flags);
 			fclose(f);
 			return 0;
@@ -424,7 +426,7 @@ int fill_species_from_file(SPECIES *const s)
 				// GET VALUE TOKEN
 				token2 = mystrtok(NULL, species_values_delimiter, &p);
 				if ( !token2 ) {
-					Log("unable to get value for \"%s\" in \"%s\".\n", token, filename);
+					logger(g_log, "unable to get value for \"%s\" in \"%s\".\n", token, filename);
 					free(species_flags);
 					fclose(f);
 					return 0;
@@ -433,7 +435,7 @@ int fill_species_from_file(SPECIES *const s)
 				// CONVERT TOKEN
 				value = convert_string_to_prec(token2, &result);
 				if ( result ) {
-					Log("unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
+					logger(g_log, "unable to convert value \"%s\" for \"%s\" in \"%s\".\n", token2, token, filename);
 					free(species_flags);
 					fclose(f);
 					return 0;
@@ -459,7 +461,7 @@ int fill_species_from_file(SPECIES *const s)
 		}
 		assert(i < species_count);
 		
-		Log("error: %s value missing in %s\n", species_values[i], filename);
+		logger(g_log, "error: %s value missing in %s\n", species_values[i], filename);
 		free(species_flags);
 		fclose(f);
 		return 0;
@@ -492,7 +494,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count)
 		return NULL;
 	}
 
-	Log("Creating matrix....\n");
+	logger(g_log, "Creating matrix....\n");
 
 	/* init matrix */
 	m->cells = NULL;
@@ -541,7 +543,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count)
 		//							if ( !string_compare_i(rows[row].species, m->cells[cell].heights[height].ages[age].species[species].name) )
 		//							{
 		//								/* */
-		//								Log((char *)err_equal_rows, row + 1);
+		//								logger(g_log, (char *)err_equal_rows, row + 1);
 		//								matrix_free(m);
 		//								return NULL;
 		//							}
@@ -581,7 +583,7 @@ MATRIX *matrix_create(ROW *const rows, const int rows_count)
 		/* check result */
 		if ( !result )
 		{
-			Log(err_out_of_memory);
+			logger(g_log, err_out_of_memory);
 			matrix_free(m);
 			return NULL;
 		}
@@ -626,30 +628,30 @@ void matrix_summary(const MATRIX *const m)
 	//check parameter
 	assert (m);
 
-	Log ("RUN COMPSET\n");
+	logger(g_log, "RUN COMPSET\n");
 
 	//cell MUST be squares
 	resol = (int)sqrt(settings->sizeCell);
 
-	Log ("Cell resolution = %d x %d = %f m^2\n", resol, resol, settings->sizeCell);
+	logger(g_log, "Cell resolution = %d x %d = %f m^2\n", resol, resol, settings->sizeCell);
 	if (settings->version == 'f')
 	{
-		Log ("Model version = FEM \n");
+		logger(g_log, "Model version = FEM \n");
 	}
 	else
 	{
-		Log("Model version = BGC \n");
+		logger(g_log, "Model version = BGC \n");
 	}
 
 	if (settings->spatial == 's')
 	{
-		Log ("Model spatial = spatial \n");
+		logger(g_log, "Model spatial = spatial \n");
 	}
 	else
 	{
-		Log ("Model spatial = un-spatial \n");
+		logger(g_log, "Model spatial = un-spatial \n");
 	}
-	Log ("Temporal scale = daily \n");
+	logger(g_log, "Temporal scale = daily \n");
 	if (settings->symmetric_water_competition == 'y')
 	{
 		//Log ("Symmetric water competition\n");
@@ -660,15 +662,15 @@ void matrix_summary(const MATRIX *const m)
 	}
 
 	/*Site definition*/
-	Log("***************************************************\n");
-	Log("SITE DATASET\n");
-	Log("Site Name = %s\n", g_soil->sitename);
-	Log("Latitude = %f° \n", g_soil->values[SOIL_LAT]);
-	Log("Longitude = %f° \n", g_soil->values[SOIL_LON]);
-	Log("Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
-	if (g_soil->values[SOIL_LAT] > 0) Log("North hemisphere\n");
-	else Log("South hemisphere\n");
-	Log("***************************************************\n");
+	logger(g_log, "***************************************************\n");
+	logger(g_log, "SITE DATASET\n");
+	logger(g_log, "Site Name = %s\n", g_soil->sitename);
+	logger(g_log, "Latitude = %f° \n", g_soil->values[SOIL_LAT]);
+	logger(g_log, "Longitude = %f° \n", g_soil->values[SOIL_LON]);
+	logger(g_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
+	if (g_soil->values[SOIL_LAT] > 0) logger(g_log, "North hemisphere\n");
+	else logger(g_log, "South hemisphere\n");
+	logger(g_log, "***************************************************\n");
 
 
 	//loop on each cell
@@ -676,10 +678,10 @@ void matrix_summary(const MATRIX *const m)
 	{
 		if (m->cells[cell].landuse == F)
 		{
-			Log ("FOREST DATASET\n");
-			Log("matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
-			Log("****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-			Log("- cell n.%02d is at %d, %d and has %d height classes \n",
+			logger(g_log, "FOREST DATASET\n");
+			logger(g_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
+			logger(g_log, "****GET FOREST CHARACTERISTICS for cell  (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
+			logger(g_log, "- cell n.%02d is at %d, %d and has %d height classes \n",
 					cell+1,
 					m->cells[cell].x,
 					m->cells[cell].y,
@@ -688,8 +690,8 @@ void matrix_summary(const MATRIX *const m)
 			//loop on each height
 			for ( height = 0; height < m->cells[cell].heights_count; height++ )
 			{
-				Log("**(%d)\n", height + 1);
-				Log("-- height n.%02d is %f m and has %d age classes\n",
+				logger(g_log, "**(%d)\n", height + 1);
+				logger(g_log, "-- height n.%02d is %f m and has %d age classes\n",
 						height + 1,
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages_count);
@@ -697,7 +699,7 @@ void matrix_summary(const MATRIX *const m)
 				//loop on each age
 				for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
 				{
-					Log("--- age n.%02d is %d yrs and has %d species \n\n",
+					logger(g_log, "--- age n.%02d is %d yrs and has %d species \n\n",
 							age + 1,
 							m->cells[cell].heights[height].ages[age].value,
 							m->cells[cell].heights[height].ages[age].species_count
@@ -713,7 +715,7 @@ void matrix_summary(const MATRIX *const m)
 						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
 						//HEIGHT VALUES ARE MANDATORY
 						Initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
-						Log(
+						logger(g_log, 
 								"\n\n----- CLASS DATASET-----\n"
 								"----- height = %f\n"
 								"----- age = %d\n"
@@ -761,19 +763,19 @@ void matrix_summary(const MATRIX *const m)
 			}
 
 			/*Soil definition*/
-			Log("***************************************************\n");
-			Log("SOIL DATASET\n");
-			Log("Number of soil layers = %.0f\n", settings->soil_layer);
-			Log("***************************************************\n");
+			logger(g_log, "***************************************************\n");
+			logger(g_log, "SOIL DATASET\n");
+			logger(g_log, "Number of soil layers = %.0f\n", settings->soil_layer);
+			logger(g_log, "***************************************************\n");
 
 			Initialization_site_data (&m->cells[cell]);
 
 		}
 		else if (m->cells[cell].landuse == Z)
 		{
-			Log ("*********************\n\n\n");
-			Log ("CROP DATASET\n");
-			Log("*(%d)\n", cell + 1);
+			logger(g_log, "*********************\n\n\n");
+			logger(g_log, "CROP DATASET\n");
+			logger(g_log, "*(%d)\n", cell + 1);
 
 		}
 	}

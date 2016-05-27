@@ -11,6 +11,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void Check_carbon_balance (CELL *c)
 {
@@ -20,7 +23,7 @@ void Check_carbon_balance (CELL *c)
 	double carbon_stored;
 
 
-	Log("\n*********CHECK CARBON BALANCE************\n");
+	logger(g_log, "\n*********CHECK CARBON BALANCE************\n");
 
 	/* DAILY CHECK ON CARBON BALANCE */
 
@@ -39,36 +42,36 @@ void Check_carbon_balance (CELL *c)
 
 	if(c->years_count == 0 && c->doy == 1)
 	{
-		Log("NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
-		Log("carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
+		logger(g_log, "NO CHECK CARBON BALANCE FOR THE FIRST DAY\n");
+		logger(g_log, "carbon balance (carbon_in - carbon_out - carbon_stored) = %f\n", c->carbon_balance);
 	}
 	else
 	{
 		if (fabs(c->old_carbon_balance - c->carbon_balance) > 1e-4 )
 		{
-			Log("in\n");
-			Log("c->daily_gpp = %f\n", c->daily_gpp);
-			Log("out\n");
-			Log("c->daily_tot_aut_resp = %f\n",c->daily_aut_resp);
-			Log("stored\n");
-			Log("c->daily_leaf_carbon = %f\n", c->daily_leaf_carbon);
-			Log("c->daily_stem_carbon = %f\n", c->daily_stem_carbon);
-			Log("c->daily_fine_root_carbon = %f\n", c->daily_fine_root_carbon);
-			Log("c->daily_coarse_root_carbon = %f\n", c->daily_coarse_root_carbon);
-			Log("c->daily_branch_carbon = %f\n", c->daily_branch_carbon);
-			Log("c->daily_reserve_carbon = %f\n", c->daily_reserve_carbon);
-			Log("c->daily_litter_carbon = %f\n", c->daily_litter_carbon);
-			Log("carbon in = %f\n", carbon_in);
-			Log("carbon out = %f\n", carbon_out);
-			Log("carbon stored = %f\n", carbon_stored);
-			Log("differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
-			Log("...FATAL ERROR IN carbon balance\n");
-			Log("DOY CB = %d\n", c->doy);
+			logger(g_log, "in\n");
+			logger(g_log, "c->daily_gpp = %f\n", c->daily_gpp);
+			logger(g_log, "out\n");
+			logger(g_log, "c->daily_tot_aut_resp = %f\n",c->daily_aut_resp);
+			logger(g_log, "stored\n");
+			logger(g_log, "c->daily_leaf_carbon = %f\n", c->daily_leaf_carbon);
+			logger(g_log, "c->daily_stem_carbon = %f\n", c->daily_stem_carbon);
+			logger(g_log, "c->daily_fine_root_carbon = %f\n", c->daily_fine_root_carbon);
+			logger(g_log, "c->daily_coarse_root_carbon = %f\n", c->daily_coarse_root_carbon);
+			logger(g_log, "c->daily_branch_carbon = %f\n", c->daily_branch_carbon);
+			logger(g_log, "c->daily_reserve_carbon = %f\n", c->daily_reserve_carbon);
+			logger(g_log, "c->daily_litter_carbon = %f\n", c->daily_litter_carbon);
+			logger(g_log, "carbon in = %f\n", carbon_in);
+			logger(g_log, "carbon out = %f\n", carbon_out);
+			logger(g_log, "carbon stored = %f\n", carbon_stored);
+			logger(g_log, "differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
+			logger(g_log, "...FATAL ERROR IN carbon balance\n");
+			logger(g_log, "DOY CB = %d\n", c->doy);
 			exit(1);
 		}
 		else
 		{
-			Log("...ok carbon balance\n");
+			logger(g_log, "...ok carbon balance\n");
 		}
 	}
 	c->old_carbon_balance = c->carbon_balance;
@@ -80,7 +83,7 @@ void Check_water_balance (CELL *c)
 	double water_out;
 	double water_stored;
 
-	Log("\n*********CHECK WATER BALANCE************\n");
+	logger(g_log, "\n*********CHECK WATER BALANCE************\n");
 	/* DAILY CHECK ON WATER BALANCE */
 
 
@@ -101,43 +104,43 @@ void Check_water_balance (CELL *c)
 
 	if(c->years_count == 0 && c->doy == 1)
 	{
-		Log("NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
-		Log("water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
+		logger(g_log, "NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
+		logger(g_log, "water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
 	}
 	else
 	{
 		if (fabs(c->old_water_balance - c->water_balance) > 1e-4 )
 		{
-			Log("in\n");
-			Log("c->prcp_rain = %f\n", c->prcp_rain);
-			Log("c->prcp_snow = %f\n", c->prcp_snow);
-			Log("out\n");
-			Log("c->daily_tot_c_transp = %f\n", c->daily_c_transp);
-			Log("c->daily_tot_c_int = %f\n", c->daily_c_int);
-			Log("c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
-			Log("c->soil_evaporation = %f\n", c->daily_soil_evapo);
-			Log("c->snow_subl = %f\n", c->snow_subl);
-			Log("c->snow_melt = %f\n", c->snow_melt);
-			Log("c->out_flow = %f\n", c->out_flow);
-			Log("stored\n");
-			Log("delta c->asw = %f\n", (c->asw - c->old_asw));
-			Log("c->snow_pack = %f\n", c->snow_pack);
-			Log("c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
-			Log("c->asw = %f\n", c->asw);
-			Log("c->old_asw = %f\n", c->old_asw);
-			Log("water in = %f\n", water_in);
-			Log("water out = %f\n", water_out);
-			Log("water stored = %f\n", water_stored);
-			Log("water balance = %f\n", c->water_balance);
-			Log("old water balance = %f\n", c->old_water_balance);
-			Log("differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
-			Log("...FATAL ERROR IN water balance\n");
-			Log("DOY = %d\n", c->doy);
+			logger(g_log, "in\n");
+			logger(g_log, "c->prcp_rain = %f\n", c->prcp_rain);
+			logger(g_log, "c->prcp_snow = %f\n", c->prcp_snow);
+			logger(g_log, "out\n");
+			logger(g_log, "c->daily_tot_c_transp = %f\n", c->daily_c_transp);
+			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
+			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
+			logger(g_log, "c->soil_evaporation = %f\n", c->daily_soil_evapo);
+			logger(g_log, "c->snow_subl = %f\n", c->snow_subl);
+			logger(g_log, "c->snow_melt = %f\n", c->snow_melt);
+			logger(g_log, "c->out_flow = %f\n", c->out_flow);
+			logger(g_log, "stored\n");
+			logger(g_log, "delta c->asw = %f\n", (c->asw - c->old_asw));
+			logger(g_log, "c->snow_pack = %f\n", c->snow_pack);
+			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
+			logger(g_log, "c->asw = %f\n", c->asw);
+			logger(g_log, "c->old_asw = %f\n", c->old_asw);
+			logger(g_log, "water in = %f\n", water_in);
+			logger(g_log, "water out = %f\n", water_out);
+			logger(g_log, "water stored = %f\n", water_stored);
+			logger(g_log, "water balance = %f\n", c->water_balance);
+			logger(g_log, "old water balance = %f\n", c->old_water_balance);
+			logger(g_log, "differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
+			logger(g_log, "...FATAL ERROR IN water balance\n");
+			logger(g_log, "DOY = %d\n", c->doy);
 			exit(1);
 		}
 		else
 		{
-			Log("...ok water balance\n");
+			logger(g_log, "...ok water balance\n");
 		}
 	}
 	c->old_water_balance = c->water_balance;

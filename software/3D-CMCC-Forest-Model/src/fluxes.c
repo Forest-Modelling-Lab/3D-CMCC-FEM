@@ -11,7 +11,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
 
+extern logger_t* g_log;
 
 void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
 {
@@ -20,11 +22,11 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 	i = c->heights[height].z;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
-	Log("\nC-FLUXES\n");
+	logger(g_log, "\nC-FLUXES\n");
 
 	s->value[C_FLUX] = s->value[DAILY_GPP_gC] - fabs(s->value[TOTAL_AUT_RESP]);
-	Log("c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
-//	Log("c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
+	logger(g_log, "c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
+//	logger(g_log, "c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
 
 	c->layer_daily_c_flux[i] = s->value[C_FLUX];
 	c->daily_C_flux += s->value[C_FLUX];
@@ -37,13 +39,13 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 //too remove after made water_balance function
 void Water_fluxes (CELL *const c)
 {
-	Log("\nW-FLUXES\n");
+	logger(g_log, "\nW-FLUXES\n");
 	//todo make it better
 	c->daily_tot_w_flux = c->water_to_soil + c->prcp_snow - c->water_to_atmosphere - c->out_flow;
 	c->monthly_tot_w_flux += c->daily_tot_w_flux;
 	c->annual_tot_w_flux += c->daily_tot_w_flux;
 
-	Log("Daily_w_flux = %f \n", c->daily_tot_w_flux);
+	logger(g_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
 void get_net_ecosystem_exchange(CELL *const c)

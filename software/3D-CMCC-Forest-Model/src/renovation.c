@@ -12,7 +12,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
 
+extern logger_t* g_log;
 
 
 extern void Renovation (CELL *c, HEIGHT *h, SPECIES *s)
@@ -22,41 +24,41 @@ extern void Renovation (CELL *c, HEIGHT *h, SPECIES *s)
 
 	if (h->z == 0)
 	{
-		//Log("Average Yearly Par at Soil Level for renovation = %f molPAR/m^2 month\n", m->cells[cell].av_yearly_par_soil);
+		//logger(g_log, "Average Yearly Par at Soil Level for renovation = %f molPAR/m^2 month\n", m->cells[cell].av_yearly_par_soil);
 		//convert molPAR/m^2 month into W/m^2 hour
 		//3600 = seconds in a hour
-		Log("Average Yearly Par at Soil Level for renovation = %f W/m^2 hour\n", c->av_yearly_par_soil);
+		logger(g_log, "Average Yearly Par at Soil Level for renovation = %f W/m^2 hour\n", c->av_yearly_par_soil);
 		c->av_yearly_par_soil = (c->av_yearly_par_soil / ( MOLPAR_MJ * 365 * c->av_yearly_daylength * 3600 )) * W_MJ;
-		Log("Average Yearly Par at Soil Level for renovation from previous year = %f W/m^2 hour\n", c->av_yearly_par_soil);
+		logger(g_log, "Average Yearly Par at Soil Level for renovation from previous year = %f W/m^2 hour\n", c->av_yearly_par_soil);
 
 
 		//ERRORE PÈERCHÈ IN QUESTO CASO PRENDEREBBE IL VALORE "LIGHT_TOL" DELLA SPECIE A z == 0
 		if (s->value[LIGHT_TOL] <= 2)
 		{
 			//Shade Tolerant
-			Log("%s is Shade Tolerant\n", s->name);
-			Log("Minimum Par at Soil level for Establishment = %f W/m^2 hour\n", s->value[MINPAREST]);
+			logger(g_log, "%s is Shade Tolerant\n", s->name);
+			logger(g_log, "Minimum Par at Soil level for Establishment = %f W/m^2 hour\n", s->value[MINPAREST]);
 			if (c->av_yearly_par_soil < s->value[MINPAREST])
 			{
-				Log("NO light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
+				logger(g_log, "NO light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
 			}
 			else
 			{
-				Log("Light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
+				logger(g_log, "Light available for establishment of SHADE TOLLERANT TREES Under Dominant Canopy !!\n");
 			}
 		}
 		else
 		{
 			//Shade Intolerant
-			Log("%s is Shade Intolerant\n", s->name);
-			Log("Minimum Par at Soil level for Establishment = %f W/m^2 hour\n", s->value[MINPAREST]);
+			logger(g_log, "%s is Shade Intolerant\n", s->name);
+			logger(g_log, "Minimum Par at Soil level for Establishment = %f W/m^2 hour\n", s->value[MINPAREST]);
 			if (c->av_yearly_par_soil < s->value[MINPAREST])
 			{
-				Log("NO light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
+				logger(g_log, "NO light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
 			}
 			else
 			{
-				Log("Light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
+				logger(g_log, "Light available for establishment of SHADE INTOLLERANT TREES Under Dominant Canopy !!\n");
 			}
 		}
 	}

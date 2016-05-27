@@ -6,6 +6,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void Reset_daily_variables (CELL *const c, const int count)
 {
@@ -14,7 +17,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 	int species;
 	int i;
 
-	Log("...resetting daily variables...\n");
+	logger(g_log, "...resetting daily variables...\n");
 
 	/*reset daily carbon variables*/
 	c->daily_gpp = 0.0;
@@ -159,7 +162,7 @@ void Reset_monthly_variables (CELL *const c, const int count)
 	int age;
 	int species;
 
-	Log("...resetting monthly variables...\n");
+	logger(g_log, "...resetting monthly variables...\n");
 
 	c->basal_area = 0.0;
 
@@ -209,7 +212,7 @@ void Reset_annual_variables (CELL *const c, const int count)
 	int height;
 	int age;
 	int species;
-	Log("...resetting annual variables...\n");
+	logger(g_log, "...resetting annual variables...\n");
 
 	/*reset cell related variables*/
 	c->canopy_cover_dominant = 0.0;
@@ -315,7 +318,7 @@ void First_day (CELL *const c, const int count)
 	int age;
 	int species;
 
-	Log("..first day..\n");
+	logger(g_log, "..first day..\n");
 
 	c->days_since_rain = 0.0;
 
@@ -375,7 +378,7 @@ void First_day (CELL *const c, const int count)
 
 //void Annual_average_values_met_data (CELL *c, double Yearly_Solar_Rad, double Yearly_Vpd, double Yearly_Temp, double Yearly_Rain )
 //{
-//	//Log("--AVERAGE YEARLY MET DATA--\n");
+//	//logger(g_log, "--AVERAGE YEARLY MET DATA--\n");
 //	//SOLAR RAD
 //	Yearly_Solar_Rad /= 12;
 //	//Log ("average Solar Rad = %f MJ m^2 month\n", Yearly_Solar_Rad );
@@ -389,11 +392,11 @@ void First_day (CELL *const c, const int count)
 //	//Log ("average Temperature = %f C° month\n", Yearly_Temp );
 //	Yearly_Temp = 0;
 //	//RAIN
-//	//Log("yearly Rain = %f mm year\n", Yearly_Rain);
+//	//logger(g_log, "yearly Rain = %f mm year\n", Yearly_Rain);
 //	Yearly_Rain = 0;
 //	//MOIST RATIO
 //	c->av_soil_moist_ratio /= 12;
-//	//Log("average Moist Ratio = %f year\n",c->av_soil_moist_ratio);
+//	//logger(g_log, "average Moist Ratio = %f year\n",c->av_soil_moist_ratio);
 //	//Log ("average Yearly Rain = %f MJ m^2 month\n",  );
 //}
 

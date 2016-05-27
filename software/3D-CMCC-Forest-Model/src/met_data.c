@@ -8,7 +8,10 @@
 #include "constants.h"
 #include "soil.h"
 #include "topo.h"
+#include "logger.h"
 
+/* externs */
+extern logger_t* g_log;
 extern soil_t *g_soil;
 extern topo_t *g_topo;
 
@@ -39,11 +42,11 @@ void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
 	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
 	ampl = (exp (7.42 + (0.045 * (g_soil->values[SOIL_LAT]+adjust_latitude)))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//Log("with altitude = %f\n", met[month].d[day].daylength);
+	//logger(g_log, "with altitude = %f\n", met[month].d[day].daylength);
 
 	//	ampl = (exp (7.42 + (0.045 * g_soil->values[SOIL_lat))) / 3600;
 	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//	Log("without altitude = %f\n", met[month].d[day].daylength);
+	//	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
 
 }
 
@@ -52,7 +55,7 @@ void Avg_temperature (CELL * c, int day, int month, int years)
 {
 	/*
 	if (!day )
-			Log("computing Get_avg_temperature...\n");
+			logger(g_log, "computing Get_avg_temperature...\n");
 	 */
 
 	MET_DATA *met;
@@ -63,12 +66,12 @@ void Avg_temperature (CELL * c, int day, int month, int years)
 	{
 		if (met[month].d[day].tmax == NO_DATA && met[month].d[day].tmin == NO_DATA)
 		{
-			Log("NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+			logger(g_log, "NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
 		}
 		else
 		{
 			met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
-			//Log("tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
+			//logger(g_log, "tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 		}
 	}
 
@@ -80,7 +83,7 @@ extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, Y
 {
 	/*
 	if (!day)
-		Log("computing Get_daylight_avg_temperature...\n");
+		logger(g_log, "computing Get_daylight_avg_temperature...\n");
 	 */
 
 	MET_DATA *met;
@@ -93,7 +96,7 @@ extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, Y
 	else
 	{
 		met[month].d[day].tday = NO_DATA;
-		Log("NO TMAX and TMIN can't compute TDAY!!! \n");
+		logger(g_log, "NO TMAX and TMIN can't compute TDAY!!! \n");
 	}
 }
 
@@ -103,7 +106,7 @@ extern void Nightime_avg_temperature (CELL * c,  int day, int month, int years, 
 {
 	/*
 	if (!day)
-		Log("computing Get_nightime_avg_temperature...\n");
+		logger(g_log, "computing Get_nightime_avg_temperature...\n");
 	 */
 
 	MET_DATA *met;
@@ -116,7 +119,7 @@ extern void Nightime_avg_temperature (CELL * c,  int day, int month, int years, 
 	else
 	{
 		met[month].d[day].tnight = NO_DATA;
-		Log("NO TMAX and TMIN can't compute TNIGHT!!! \n");
+		logger(g_log, "NO TMAX and TMIN can't compute TNIGHT!!! \n");
 	}
 }
 
@@ -143,7 +146,7 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 			previous_thermic_sum = 0;
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-			Log("tavg NO_DATA!!\n");
+			logger(g_log, "tavg NO_DATA!!\n");
 	}
 	else
 	{
@@ -159,7 +162,7 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 			//Log ("day = %d month = %d somma termica %f\n",day+1, month+1,  met[month].d[day].thermic_sum);
 		}
 		if (met[month].d[day].tavg == NO_DATA)
-			Log("tavg NO_DATA!!\n");
+			logger(g_log, "tavg NO_DATA!!\n");
 	}
 }
 
@@ -180,7 +183,7 @@ void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
 	t1 = 1.0 - (LR_STD * g_topo->values[TOPO_ELEV])/T_STD;
 	t2 = G_STD / (LR_STD * (Rgas / MA));
 	met[month].d[day].air_pressure = P_STD * pow (t1, t2);
-	//Log("Air pressure = %f Pa\n", met[month].d[day].air_pressure);
+	//logger(g_log, "Air pressure = %f Pa\n", met[month].d[day].air_pressure);
 }
 
 
@@ -200,13 +203,13 @@ void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 	{
 		met[month].d[day].rho_air = 1.292 - (0.00428 * met[month].d[day].tavg);
 		c->gcorr = pow((met[month].d[day].tavg + TempAbs)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
-		//Log("gcorr = %f\n", c->gcorr);
+		//logger(g_log, "gcorr = %f\n", c->gcorr);
 	}
 	else
 	{
 		met[month].d[day].rho_air= 1.292 - (0.00428 * met[month].d[day].tday);
 		c->gcorr = pow((met[month].d[day].tday + TempAbs)/293.15, 1.75) * 101300.0/met[month].d[day].air_pressure;
-		//Log("gcorr = %f\n", c->gcorr);
+		//logger(g_log, "gcorr = %f\n", c->gcorr);
 	}
 }
 
@@ -234,7 +237,7 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	int weight;
 	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-	//Log("\n\nGET_SOIL_TEMPERATURE\n");
+	//logger(g_log, "\n\nGET_SOIL_TEMPERATURE\n");
 
 	/*following BIOME-bgc 4.1.2*/
 	/* for this version, an 11-day running weighted average of daily
@@ -331,8 +334,8 @@ void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 			/* then for other years increment each beginning of year */
 			met[month].d[day].co2_conc = previous_co2_conc + (previous_co2_conc * settings->co2_incr);
 			previous_co2_conc = met[month].d[day].co2_conc;
-			Log("CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * settings->co2_incr);
-			Log("CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
+			logger(g_log, "CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * settings->co2_incr);
+			logger(g_log, "CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
 		}
 	}
 }
@@ -375,16 +378,16 @@ void Annual_met_values (CELL * c, int day, int month, int years, YOS *yos)
 		c->annual_solar_rad /= 365;
 		//c->annual_precip = 365;
 		c->annual_vpd /= 365;
-		Log("**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, years+1);
-		Log("-Annual average tavg = %f C°\n", c->annual_tavg);
-		Log("-Annual average tmax = %f C°\n", c->annual_tmax);
-		Log("-Annual average tmin = %f C°\n", c->annual_tmin);
-		Log("-Annual average tday = %f C°\n", c->annual_tday);
-		Log("-Annual average tnight = %f C°\n", c->annual_tnight);
-		Log("-Annual average tsoil = %f C°\n", c->annual_tsoil);
-		Log("-Annual average solar rad = %f MJ/m2/day\n", c->annual_solar_rad);
-		Log("-Annual average prcp = %f mm/m2/day\n", c->annual_precip);
-		Log("-Annual average vpd = %f hPa/day \n", c->annual_vpd);
+		logger(g_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, years+1);
+		logger(g_log, "-Annual average tavg = %f C°\n", c->annual_tavg);
+		logger(g_log, "-Annual average tmax = %f C°\n", c->annual_tmax);
+		logger(g_log, "-Annual average tmin = %f C°\n", c->annual_tmin);
+		logger(g_log, "-Annual average tday = %f C°\n", c->annual_tday);
+		logger(g_log, "-Annual average tnight = %f C°\n", c->annual_tnight);
+		logger(g_log, "-Annual average tsoil = %f C°\n", c->annual_tsoil);
+		logger(g_log, "-Annual average solar rad = %f MJ/m2/day\n", c->annual_solar_rad);
+		logger(g_log, "-Annual average prcp = %f mm/m2/day\n", c->annual_precip);
+		logger(g_log, "-Annual average vpd = %f hPa/day \n", c->annual_vpd);
 	}
 
 }

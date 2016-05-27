@@ -6,6 +6,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month, int day)
 {
@@ -35,8 +38,8 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		with standard conditions assumed to be 20 deg C, 101300 Pa */
 	rcorr = 1.0/(pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure);
 
-	Log("\n**SOIL EVAPORATION BIOME**\n");
-	Log("snowpack = %f\n", c->snow_pack);
+	logger(g_log, "\n**SOIL EVAPORATION BIOME**\n");
+	logger(g_log, "snowpack = %f\n", c->snow_pack);
 
 	/* soil evaporation if snowpack = 0 */
 	if (c->snow_pack == 0.0)
@@ -58,18 +61,18 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		if (c->Veg_Counter >= 1)
 		{
 			net_rad = c->net_radiation_for_soil * (1.0 - soil_albedo);
-			Log("Filtered Net Radiation for soil = %f W/m2\n", net_rad);
+			logger(g_log, "Filtered Net Radiation for soil = %f W/m2\n", net_rad);
 		}
 		else
 		{
 			net_rad = c->net_radiation * (1.0 - soil_albedo);
-			Log("UN-Filtered Net Radiation for soil = %f W/m2\n", net_rad);
+			logger(g_log, "UN-Filtered Net Radiation for soil = %f W/m2\n", net_rad);
 		}
 
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith (met, month, day, rv, rh, net_rad);
-		Log("Potential soil evaporation = %.10f mm/m2/sec\n", pot_soil_evap);
+		logger(g_log, "Potential soil evaporation = %.10f mm/m2/sec\n", pot_soil_evap);
 
 		/* covert to daily total kg/m2 */
 		pot_soil_evap *= (met[month].d[day].daylength * 3600.0);
@@ -90,7 +93,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 			/* calculate the realized proportion of potential evaporation
 			as a function of the days since rain */
 			ratio = 0.3/pow(c->days_since_rain,2.0);
-			Log("ratio = %f \n", ratio);
+			logger(g_log, "ratio = %f \n", ratio);
 
 			/* calculate evaporation for dry days and scaled to cell uncovered*/
 			c->daily_soil_evapo = ratio * pot_soil_evap * (1.0 - c->cell_cover);
@@ -113,16 +116,16 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		c->daily_soil_evapo = 0.0;
 	}
 
-	Log("day(s) since rain = %f day(s)\n", c->days_since_rain);
-	Log("Daily Soil Evaporation = %.10f mm/m2/day\n", c->daily_soil_evapo);
+	logger(g_log, "day(s) since rain = %f day(s)\n", c->days_since_rain);
+	logger(g_log, "Daily Soil Evaporation = %.10f mm/m2/day\n", c->daily_soil_evapo);
 	c->monthly_soil_evapo += c->daily_soil_evapo;
-	Log("Monthly Soil Evaporation = %f mm/m2/month\n", c->monthly_soil_evapo);
+	logger(g_log, "Monthly Soil Evaporation = %f mm/m2/month\n", c->monthly_soil_evapo);
 	c->annual_soil_evapo += c->daily_soil_evapo;
-	Log("Annual Soil Evaporation = %f mm/m2/year\n", c->annual_soil_evapo);
+	logger(g_log, "Annual Soil Evaporation = %f mm/m2/year\n", c->annual_soil_evapo);
 
 	/* compute a energy balance evaporation from soil */
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
-	Log("Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
+	logger(g_log, "Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 
 
@@ -148,7 +151,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		*/
 		c->daily_soil_sensible_heat_flux = 0.0;
 	}
-	Log("Daily soil_sensible_heat flux = %f W/m^2\n", c->daily_soil_sensible_heat_flux);
+	logger(g_log, "Daily soil_sensible_heat flux = %f W/m^2\n", c->daily_soil_sensible_heat_flux);
 
 }
 
@@ -158,13 +161,13 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
 	double sat, gamma;
-	Log ("\nSOIL_EVAPORATION_ROUTINE\n");
+	logger(g_log, "\nSOIL_EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;
 	sat = ((2.503e6 * exp((17.268*met[month].d[day].tday)/(237.3+met[month].d[day].tday))))/
 			pow((237.3+met[month].d[day].tday),2);
 
-	Log("T_soil = %f\n", met[month].d[day].tsoil);
+	logger(g_log, "T_soil = %f\n", met[month].d[day].tsoil);
 	if (met[month].d[day].tsoil > 0)
 	{
 
@@ -202,7 +205,7 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 		}
 		else
 		{
-			//Log("ONLY ONE LAYER\n");
+			//logger(g_log, "ONLY ONE LAYER\n");
 			cc = c->canopy_cover_dominant;
 
 		}
@@ -210,14 +213,14 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
 		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / met[month].d[day].lh_vap_soil;
-		Log("Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
+		logger(g_log, "Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
 		{
 			PotEvap = 0;
 		}
 
 		c->soil_moist_ratio = c->asw / c->max_asw_fc;
-		//Log("Soil moisture = %f %\n", c->soil_moist_ratio );
+		//logger(g_log, "Soil moisture = %f %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
 		if(cc>=1)
@@ -225,22 +228,22 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 			cc = 1;
 		}
 		c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
-		Log("Daily Soil Evaporation = %fmm/day \n", c->daily_soil_evapo );
+		logger(g_log, "Daily Soil Evaporation = %fmm/day \n", c->daily_soil_evapo );
 	}
 	else
 	{
-		Log("\n");
+		logger(g_log, "\n");
 		c->daily_soil_evapo = 0;
 	}
 
 	c->monthly_soil_evapo += c->daily_soil_evapo;
-	Log("Monthly Soil Evaporation = %f mm/month\n", c->monthly_soil_evapo);
+	logger(g_log, "Monthly Soil Evaporation = %f mm/month\n", c->monthly_soil_evapo);
 	c->annual_soil_evapo += c->daily_soil_evapo;
-	Log("Annual Soil Evaporation = %f mm/year\n", c->annual_soil_evapo);
+	logger(g_log, "Annual Soil Evaporation = %f mm/year\n", c->annual_soil_evapo);
 
 	/*compute a energy balance evaporation from soil*/
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
-	Log("Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
+	logger(g_log, "Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 }
 

@@ -3,7 +3,9 @@
 #include "soil.h"
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
 
+extern logger_t* g_log;
 extern soil_t *g_soil;
 
 extern int sort_by_years(const void *a, const void *b)
@@ -59,13 +61,13 @@ void Pool_fraction (SPECIES * s)
 {
 	/*using biome parameter for allocation recomputed values to have fraction*/
 	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
-	//Log("biome fine root leaf frac (fraction to fine root = %f; fraction to leaf = %f)\n", s->value[FINE_ROOT_LEAF_FRAC], 1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+	//logger(g_log, "biome fine root leaf frac (fraction to fine root = %f; fraction to leaf = %f)\n", s->value[FINE_ROOT_LEAF_FRAC], 1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 	s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
-	//Log("biome stem leaf frac (fraction to stem = %f; fraction to leaf = %f\n", s->value[STEM_LEAF_FRAC], 1.0 - s->value[STEM_LEAF_FRAC]);
+	//logger(g_log, "biome stem leaf frac (fraction to stem = %f; fraction to leaf = %f\n", s->value[STEM_LEAF_FRAC], 1.0 - s->value[STEM_LEAF_FRAC]);
 	s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
-	//Log("biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
+	//logger(g_log, "biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
 	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
-	//Log("biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
+	//logger(g_log, "biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
 
 }
 
@@ -75,7 +77,7 @@ void Pool_fraction (SPECIES * s)
 void Abscission_DayLength ( CELL * c)
 {
 	c->abscission_daylength = (39132 + (pow (1.088, (g_soil->values[SOIL_LAT] + 60.753))))/(60*60);
-	//Log("Abscission day length = %f hrs\n", c->abscission_daylength);
+	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
 extern void Tree_period (SPECIES *s, AGE *a, CELL *c)
@@ -96,7 +98,7 @@ extern void Tree_period (SPECIES *s, AGE *a, CELL *c)
 	else
 	{
 		s->period = 1;
-		//Log("- Class Period = Saplings\n");
+		//logger(g_log, "- Class Period = Saplings\n");
 	}
 }
 
@@ -114,7 +116,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 	met = (MET_DATA*) yos[years].m;
 
 	if (!day && !month)
-		Log("VEG_DAYS_for year %d\n", years);
+		logger(g_log, "VEG_DAYS_for year %d\n", years);
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -131,7 +133,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 						if (day == 0 && month == JANUARY)
 						{
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
-							//Log("reset DAY_VEG_FOR_LITTERFALL_RATE\n");
+							//logger(g_log, "reset DAY_VEG_FOR_LITTERFALL_RATE\n");
 						}
 						//the same approach must be used in "Get_daily_vegetative_period" func
 
@@ -141,8 +143,8 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 							c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							if (c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
 							{
-								Log("GDD basis = %d\n", GDD_BASIS);
-								Log("species %s First day of growing season day = %d month = %d\n", c->heights[height].ages[age].species[species].name, day+1, month+1);
+								logger(g_log, "GDD basis = %d\n", GDD_BASIS);
+								logger(g_log, "species %s First day of growing season day = %d month = %d\n", c->heights[height].ages[age].species[species].name, day+1, month+1);
 							}
 						}
 					}
@@ -157,7 +159,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 																											 * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
 																											 * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-						Log("Day frac foliage remove = %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] );
+						logger(g_log, "Day frac foliage remove = %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] );
 						//add leaf fall days
 						if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
@@ -165,7 +167,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 							                                                                                                                                                  * c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]);
 
 						}
-						Log("-SPECIES %s TOTAL VEGETATIVE DAYS = %d \n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "-SPECIES %s TOTAL VEGETATIVE DAYS = %d \n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 					}
 				}
 				else
@@ -187,7 +189,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 					}
 					if (day == 30 && month == DECEMBER)
 					{
-						Log("----- TOTAL VEGETATIVE DAYS = %d \n\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 					}
 				}
 			}

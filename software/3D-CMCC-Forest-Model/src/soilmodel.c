@@ -11,6 +11,9 @@
 #include <assert.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 //this function should be used only for function not directly related to the forest layers, it just run at the end
 //of all physiological function for all forest/crop layers
@@ -42,7 +45,7 @@ void soil_model(MATRIX *const m, const YOS *const yos, const int years, const in
 				m->cells[cell].soils[soil].variabile = m->cells[cell].soils[soil-1].variabile + 1;
 			}
 
-			Log("soil layer = %d\n", soil);
+			logger(g_log, "soil layer = %d\n", soil);
 		}
 	}
 }

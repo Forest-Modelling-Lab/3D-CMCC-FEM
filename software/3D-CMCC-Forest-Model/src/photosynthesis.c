@@ -6,7 +6,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
 
+extern logger_t* g_log;
 
 void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
 {
@@ -16,9 +18,9 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
 	double cell_coverage;
 
-	Log("\n**PHOTOSYNTHESIS**\n");
+	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
 
-	Log("VegUnveg = %d\n", s->counter[VEG_UNVEG]);
+	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
 	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
 	{
@@ -38,22 +40,22 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		{
 			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
 					 /**s->value[FRAC_DAYTIME_TRANSP] */;
-			Log("Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
+			logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 
 			//convert epsilon from gCMJ^-1 to molCmolPAR^-1
 			Epsilon = Alpha_C * MOLPAR_MJ * GC_MOL;
 		}
 		else
 		{
-			Log("NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
+			logger(g_log, "NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
 			Epsilon = s->value[EPSILONgCMJ] * /*s->value[F_LIGHT]*/ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
-			Log("Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
+			logger(g_log, "Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
-			Log("Alpha C = %f molC/molPAR\n", Alpha_C);
+			logger(g_log, "Alpha C = %f molC/molPAR\n", Alpha_C);
 		}
-		Log("**************************** GPP-'%c' ************************************ \n", settings->time);
+		logger(g_log, "**************************** GPP-'%c' ************************************ \n", settings->time);
 
 		//test 12 May 2016 test
 		//GPP depends on canopy wet (no photosynthesis occurs if canopy is wet)
@@ -61,35 +63,35 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		//Alpha_C *= s->value[CANOPY_FRAC_DAY_TRANSP];
 
 		/* GPP */
-		Log("Apar for GPP = %f\n", s->value[APAR]);
+		logger(g_log, "Apar for GPP = %f\n", s->value[APAR]);
 
 		//DailyGPP in mol of Carbon
 		GPPmolC = s->value[APAR] * Alpha_C;
 		GPPmolC_sun = s->value[APAR_SUN]* Alpha_C;
 		GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
 		GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
-		Log("GPPmolC = %f molC/m^2 day/month\n", GPPmolC);
-		Log("GPPmolC_sun = %f molC/m^2 day/month\n", GPPmolC_sun);
-		Log("GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
-		Log("GPPmolC_tot = %f molC/m^2 day/month\n", GPPmolC_tot);
+		logger(g_log, "GPPmolC = %f molC/m^2 day/month\n", GPPmolC);
+		logger(g_log, "GPPmolC_sun = %f molC/m^2 day/month\n", GPPmolC_sun);
+		logger(g_log, "GPPmolC_shade = %f molC/m^2 day/month\n", GPPmolC_shaded);
+		logger(g_log, "GPPmolC_tot = %f molC/m^2 day/month\n", GPPmolC_tot);
 
 		CHECK_CONDITION(fabs(GPPmolC - GPPmolC_tot), > 1e-4);
 
 		/* Daily GPP in grams of C/m^2 */
 		/* Convert molC into grams */
 		s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;
-		Log("DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
+		logger(g_log, "DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
 		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * cell_coverage;
-		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
+		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
 	{
-		Log("Un-vegetative period !! \n");
+		logger(g_log, "Un-vegetative period !! \n");
 		s->value[DAILY_GPP_gC] = 0;
 		s->value[DAILY_POINT_GPP_gC] = 0;
-		Log("DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
+		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
@@ -100,19 +102,19 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
 	c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
 
-	Log("-CELL LEVEL\n");
-	Log("-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 area covered/yr\n", c->daily_gpp);
+	logger(g_log, "-CELL LEVEL\n");
+	logger(g_log, "-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 area covered/yr\n", c->daily_gpp);
 	c->daily_gpp += s->value[DAILY_GPP_gC];
 	c->monthly_gpp += s->value[DAILY_GPP_gC];
 	c->annual_gpp += s->value[DAILY_GPP_gC];
 
-	Log("***************************** ANNUAL GPP *************************** \n");
+	logger(g_log, "***************************** ANNUAL GPP *************************** \n");
 
-	Log("*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
+	logger(g_log, "*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
 	//class level
 	s->value[YEARLY_POINT_GPP_gC] += s->value[DAILY_GPP_gC];
-	Log("-CLASS LEVEL\n");
-	Log("-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_gC]);
+	logger(g_log, "-CLASS LEVEL\n");
+	logger(g_log, "-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_gC]);
 
-	Log("*********************** STAND LEVEL ANNUAL GPP ********************** \n");
+	logger(g_log, "*********************** STAND LEVEL ANNUAL GPP ********************** \n");
 }

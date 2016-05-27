@@ -12,6 +12,9 @@
 #include <math.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
 {
@@ -58,9 +61,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
 
-	Log("\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
+	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
 
-	Log("**CANOPY INTERCEPTION BIOME**\n");
+	logger(g_log, "**CANOPY INTERCEPTION BIOME**\n");
 
 	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
 	{
@@ -75,7 +78,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
 
-	Log("ALL_LAI = %f mm/m^2/day\n", s->value[ALL_LAI]);
+	logger(g_log, "ALL_LAI = %f mm/m^2/day\n", s->value[ALL_LAI]);
 
 	/* no rain interception if canopy is wet from the day(s) before */
 	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
@@ -102,8 +105,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_INT] = 0.0;
 	}
 
-	Log("Rain intercepted = %f mm/m^2/day\n", s->value[CANOPY_INT]);
-	Log("CANOPY_WATER = %f mm/m^2/day\n", s->value[CANOPY_WATER]);
+	logger(g_log, "Rain intercepted = %f mm/m^2/day\n", s->value[CANOPY_INT]);
+	logger(g_log, "CANOPY_WATER = %f mm/m^2/day\n", s->value[CANOPY_WATER]);
 
 
 	/* temperature and pressure correction factor for conductances */
@@ -129,16 +132,16 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	/* photosynthetic photon flux density conductance control */
 	//	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
-	//	//Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	//	//logger(g_log, "m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
 	//	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
-	//	//Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+	//	//logger(g_log, "m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
 	//04/apr/2016
 	/* photosynthetic photon flux density conductance control */
 	m_ppfd_sun = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
-	Log("m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
+	logger(g_log, "m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
 	m_ppfd_shade = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
-	Log("m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
+	logger(g_log, "m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
 
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
@@ -168,7 +171,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
 	gl_sh = gl_bl;
-	Log("Leaf conductance to sensible heat = %f\n", gl_sh);
+	logger(g_log, "Leaf conductance to sensible heat = %f\n", gl_sh);
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv = gl_e_wv * s->value[LAI];
@@ -191,7 +194,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* if canopy is wet */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
-			Log("Canopy wet\n");
+			logger(g_log, "Canopy wet\n");
 
 			rv = 1.0/gc_e_wv;
 			rh = 1.0/gc_sh;
@@ -201,19 +204,19 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			s->value[CANOPY_EVAPO] = evapo;
 			/* calculate the time required to evaporate all the canopy water */
 			evap_daylength = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
-			Log("evap_daylength = %f sec\n", evap_daylength);
+			logger(g_log, "evap_daylength = %f sec\n", evap_daylength);
 
 			if(evap_daylength > daylength_sec)
 			{
 				/* day not long enough to evap. all int. water */
-				Log("day not long enough to evap all rain intercepted\n");
+				logger(g_log, "day not long enough to evap all rain intercepted\n");
 
 				days_with_canopy_wet ++;
 				/* adjust daylength for transpiration */
 				//fixme this variable should be used also in photosynthesis
 				transp_daylength = 0.0;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.0;
-				Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+				logger(g_log, "transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
 				s->value[CANOPY_EVAPO] *= daylength_sec * cell_coverage;   /* daylength limits canopy evaporation */
@@ -225,7 +228,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			else
 			{
 				/* all intercepted water evaporated */
-				Log("all intercepted water evaporated\n");
+				logger(g_log, "all intercepted water evaporated\n");
 				days_with_canopy_wet = 0;
 				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
 				s->value[CANOPY_WATER] = 0.0;
@@ -234,7 +237,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				//fixme this variable should be used also in photosynthesis
 				transp_daylength = daylength_sec - evap_daylength;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength / daylength_sec;
-				Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+				logger(g_log, "transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 
 				/* calculate transpiration using adjusted daylength */
@@ -244,11 +247,11 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				//test 11 MAY 2016 following biome approach
 				//net_rad = s->value[NET_RAD_ABS_SUN]
 				net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
-				Log("net rad = %f\n", net_rad);
+				logger(g_log, "net rad = %f\n", net_rad);
 				/* call penman-monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
 				transp_sun *=  transp_daylength * s->value[LAI_SUN];
-				Log("transp_sun = %.10f mm/m2/day\n", transp_sun);
+				logger(g_log, "transp_sun = %.10f mm/m2/day\n", transp_sun);
 
 				/* next for shaded canopy fraction */
 				rv = 1.0/gl_t_wv_shade;
@@ -257,15 +260,15 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				//test 11 May 2016 following biome approach
 				//net_rad = s->value[NET_RAD_ABS_SHADE];
 				net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
-				Log("net rad = %f\n", net_rad);
+				logger(g_log, "net rad = %f\n", net_rad);
 				/* call penman-monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
 				transp_shade *=  transp_daylength * s->value[LAI_SHADE];
-				Log("transp_shade = %.10f mm/m2/day\n", transp_shade);
+				logger(g_log, "transp_shade = %.10f mm/m2/day\n", transp_shade);
 
 				//test include F_CO2 effect
 				transp = transp_sun + transp_shade;
-				Log("transp = %.10f mm/m2/day\n", transp);
+				logger(g_log, "transp = %.10f mm/m2/day\n", transp);
 				s->value[CANOPY_TRANSP] = transp;
 
 				/* considering effective coverage of cell */
@@ -281,7 +284,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* if canopy is dry */
 		else
 		{
-			Log("Canopy dry\n");
+			logger(g_log, "Canopy dry\n");
 			/* no canopy evaporation occurs */
 			s->value[CANOPY_EVAPO]= 0.0;
 
@@ -293,16 +296,16 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			//test 11 MAY 2016 following biome approach
 			//net_rad = s->value[NET_RAD_ABS_SUN]
 			net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
-			Log("net rad = %f\n", net_rad);
+			logger(g_log, "net rad = %f\n", net_rad);
 
 			/* all day transp */
 			transp_daylength = 1.0;
 			s->value[CANOPY_FRAC_DAY_TRANSP] = 1.0;
-			Log("transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
+			logger(g_log, "transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 			transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
 			transp_sun *= daylength_sec * s->value[LAI_SUN];
-			Log("transp_sun = %.10f mm/m2/day\n", transp_sun);
+			logger(g_log, "transp_sun = %.10f mm/m2/day\n", transp_sun);
 
 			/* next for shaded canopy fraction */
 			rv = 1.0/gl_t_wv_shade;
@@ -311,14 +314,14 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			//test 11 May 2016 following biome approach
 			//net_rad = s->value[NET_RAD_ABS_SHADE];
 			net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
-			Log("net rad = %f\n", net_rad);
+			logger(g_log, "net rad = %f\n", net_rad);
 			transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
 			transp_shade *= daylength_sec * s->value[LAI_SHADE];
-			Log("transp_shade = %.10f mm/m2/day\n", transp_shade);
+			logger(g_log, "transp_shade = %.10f mm/m2/day\n", transp_shade);
 
 			//test include F_CO2 effect
 			transp = transp_sun + transp_shade;
-			Log("transp = %.10f mm/m2/day\n", transp);
+			logger(g_log, "transp = %.10f mm/m2/day\n", transp);
 			s->value[CANOPY_TRANSP] = transp;
 
 			/* considering effective coverage of cell and convert to daily amount */
@@ -333,23 +336,23 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 		/* following TLEAF in MAESPA model (physiol.f90, row 197) check for consistency in units */
 		/*
-		Log("TDIFF from maespa = %f\n", ((net_rad - (s->value[CANOPY_EVAPO_TRANSP] / daylength_sec) *met[month].d[day].lh_vap ))/(CP*MA*gl_bl));
+		logger(g_log, "TDIFF from maespa = %f\n", ((net_rad - (s->value[CANOPY_EVAPO_TRANSP] / daylength_sec) *met[month].d[day].lh_vap ))/(CP*MA*gl_bl));
 		getchar();
 		*/
 
 		//TEST
 		/* CANOPY SENSIBLE HEAT FLUX */
-		Log("\ncanopy sensible heat\n");
+		logger(g_log, "\ncanopy sensible heat\n");
 
-		Log("LAI = %f\n", s->value[LAI]);
+		logger(g_log, "LAI = %f\n", s->value[LAI]);
 
 		net_rad = s->value[NET_RAD_ABS_SUN];
-		Log("net rad = %f\n", net_rad);
+		logger(g_log, "net rad = %f\n", net_rad);
 
 		/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
 		/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
 		psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
-		Log("psych = %f\n", psych);
+		logger(g_log, "psych = %f\n", psych);
 
 		/* calculate temperature offsets for slope estimate */
 		t1 = met[month].d[day].tday+dt;
@@ -357,16 +360,16 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 		/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 		pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-		Log("pvs1 = %f\n", pvs1);
+		logger(g_log, "pvs1 = %f\n", pvs1);
 		pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
-		Log("pvs2 = %f\n", pvs2);
+		logger(g_log, "pvs2 = %f\n", pvs2);
 
 		/* calculate slope of pvs vs. T curve, at ta */
 		//test this is the "DELTA" function as in Webber et al., 2016
 		delta = (pvs1-pvs2) / (t1-t2);
 		/* converts into kPA fgollowing Webber et al., 2016 */
 		delta /= 1000.0;
-		Log("delta = %f KPa\n", delta);
+		logger(g_log, "delta = %f KPa\n", delta);
 
 		//test
 		/* canopy resistance m sec-1)*/
@@ -381,33 +384,33 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* compute product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016 */
 		/* then ra = rhr */
 		psych_p = psych *(1+(rc/rhr));
-		Log("psych_p = %f\n", psych_p);
+		logger(g_log, "psych_p = %f\n", psych_p);
 
 		/* compute relative humidity */
 		/*
 		svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
 		vp = svp - met[month].d[day].vpd;
 		rel_hum = vp/svp;
-		Log("RH = %f\n", rel_hum);
+		logger(g_log, "RH = %f\n", rel_hum);
 		*/
 
 		/* canopy temperature as in Webber et al., 2016 */
 		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
-		Log("met[month].d[day].rho_air = %f\n", met[month].d[day].rho_air);
-		Log("rc = %f\n", rc);
-		Log("rhr = %f\n", rhr);
-		Log("tavg = %f °C\n", met[month].d[day].tavg);
-		Log("canopy temp = %f °C\n", tcanopy);
-		Log("differences = %f °C\n", tcanopy - met[month].d[day].tavg);
+		logger(g_log, "met[month].d[day].rho_air = %f\n", met[month].d[day].rho_air);
+		logger(g_log, "rc = %f\n", rc);
+		logger(g_log, "rhr = %f\n", rhr);
+		logger(g_log, "tavg = %f °C\n", met[month].d[day].tavg);
+		logger(g_log, "canopy temp = %f °C\n", tcanopy);
+		logger(g_log, "differences = %f °C\n", tcanopy - met[month].d[day].tavg);
 
 		tcanopyK = tcanopy + TempAbs;
 
-		Log("canopy_temp = %f K\n", tcanopyK);
-		Log("tairK = %f K\n", tairK);
+		logger(g_log, "canopy_temp = %f K\n", tcanopyK);
+		logger(g_log, "tairK = %f K\n", tairK);
 
 		//fixme this is valid for cell level not for class level
 		c->daily_canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tcanopyK-tairK)/rhr);
-		Log("canopy_sensible_heat_flux = %f Wm-2\n", c->daily_canopy_sensible_heat_flux);
+		logger(g_log, "canopy_sensible_heat_flux = %f Wm-2\n", c->daily_canopy_sensible_heat_flux);
 		//getchar();
 
 		//todo
@@ -425,11 +428,11 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
 
-	Log("CANOPY_TRANSP = %.10f mm/m2/day\n", s->value[CANOPY_TRANSP]);
-	Log("CANOPY_WATER = %.10f mm/m2/day\n", s->value[CANOPY_WATER]);
-	Log("CANOPY_INT = %.10f mm/m2/day\n", s->value[CANOPY_INT]);
-	Log("CANOPY_EVAPO = %.10f mm/m2/day\n", s->value[CANOPY_EVAPO]);
-	Log("CANOPY_EVAPO_TRANSP = %f mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
+	logger(g_log, "CANOPY_TRANSP = %.10f mm/m2/day\n", s->value[CANOPY_TRANSP]);
+	logger(g_log, "CANOPY_WATER = %.10f mm/m2/day\n", s->value[CANOPY_WATER]);
+	logger(g_log, "CANOPY_INT = %.10f mm/m2/day\n", s->value[CANOPY_INT]);
+	logger(g_log, "CANOPY_EVAPO = %.10f mm/m2/day\n", s->value[CANOPY_EVAPO]);
+	logger(g_log, "CANOPY_EVAPO_TRANSP = %f mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 	c->daily_c_int += s->value[CANOPY_INT];
 	c->daily_c_evapo += s->value[CANOPY_EVAPO];

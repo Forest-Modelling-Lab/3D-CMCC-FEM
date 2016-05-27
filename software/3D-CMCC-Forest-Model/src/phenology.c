@@ -10,10 +10,13 @@ F * phenology.c
 #include <assert.h>
 #include "types.h"
 #include "constants.h"
+#include "logger.h"
+
+extern logger_t* g_log;
 
 void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
 {
-	Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 
 	//defining phenology phase
 	if (settings->spatial == 'u') //for unspatial version
@@ -35,8 +38,8 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 					//Maximum Growth
 					else if (s->value[LAI] > (s->value[PEAK_LAI] * 0.5)	&& s->value[LAI] < s->value[PEAK_LAI])
 					{
-						Log("LAI = %f\n", s->value[LAI]);
-						Log("PEAK LAI = %f\n", s->value[PEAK_LAI]);
+						logger(g_log, "LAI = %f\n", s->value[LAI]);
+						logger(g_log, "PEAK LAI = %f\n", s->value[PEAK_LAI]);
 						s->phenology_phase = 2;
 					}
 					//Full growing season
@@ -116,13 +119,13 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 	{
 
 	}
-	Log("phenology phase = %d\n", s->phenology_phase);
+	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
 }
 
 void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
 {
 
-	Log("--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -207,5 +210,5 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 			s->value[DAILY_LEAVES_BIOMASS_TO_REMOVE] = 0.0;
 		}
 	}
-	Log("phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
+	logger(g_log, "phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
 }
