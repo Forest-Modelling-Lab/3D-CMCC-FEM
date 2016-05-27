@@ -66,8 +66,6 @@ int convert_string_to_int(const char *const string, int *const error);
 PREC get_standard_deviation(const PREC *const values, const int count);
 PREC get_median(const PREC *const values, const int count, int *const error);
 PREC get_mean(const PREC *const values, const int count);
-FILES *get_files(const char *const program_path, char *string, int *const count, int *const error);
-void free_files(FILES *files, const int count);
 void init_random_seed(void);
 int get_random_number(int max);
 int parse_arguments(int argc, char *argv[], const ARGUMENT *const args, const int arg_count);

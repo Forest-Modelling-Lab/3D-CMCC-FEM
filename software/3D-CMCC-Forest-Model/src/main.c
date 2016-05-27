@@ -59,7 +59,7 @@ soil_t *g_soil = NULL;
 topo_t *g_topo = NULL;
 
 /* global variables */
-char 	*program_path		=	NULL,	// mandatory
+char 	*g_sz_program_path	=	NULL,	// mandatory
 		*input_dir			=	NULL,	// mandatory
 		*input_path		=	NULL,	// mandatory
 		*dataset_filename	=	NULL,	// mandatory
@@ -190,8 +190,8 @@ static void clean_up(void)
 	if( settings )
 		free(settings);
 
-	if (program_path)
-		free(program_path);
+	if (g_sz_program_path)
+		free(g_sz_program_path);
 
 #ifdef _WIN32
 #ifdef _DEBUG
@@ -1169,9 +1169,8 @@ int main(int argc, char *argv[])
 	}
 
 	/* get program path */
-	program_path = get_current_directory();
-	if ( !program_path )
-	{
+	g_sz_program_path = get_current_directory();
+	if ( ! g_sz_program_path ) {
 		puts(err_unable_get_current_directory);
 		return 1;
 	}
@@ -1240,19 +1239,11 @@ int main(int argc, char *argv[])
 	Log("\n3D-CMCC MODEL START....\n\n\n\n");
 	for ( cell = 0; cell < m->cells_count; ++cell )
 	{
-		int err;
-
 		Log("Processing met data files for cell at %d,%d...\n", m->cells[cell].x, m->cells[cell].y);
 		Log("input_met_path = %s\n", input_met_path);
 
-		/* reset soil values */
-		soil_reset(g_soil);
-
 		/* import soil values */
-		err = soil_import(g_soil, soil_path, m->cells[cell].x, m->cells[cell].y);
-		if ( err ) {
-			if ( 1 == err ) Log("file not found\n\n");
-			if ( 2 == err ) Log("file not imported\n\n");			
+		if ( ! soil_import(g_soil, soil_path, m->cells[cell].x, m->cells[cell].y) ) {
 			matrix_free(m);
 			return 1;
 		}
@@ -1274,14 +1265,8 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 
-		/* reset topo values */
-		topo_reset(g_topo);
-
 		/* import topo values */
-		err = topo_import(g_topo, topo_path, m->cells[cell].x, m->cells[cell].y);
-		if ( err ) {
-			if ( 1 == err ) Log("file not found\n\n");
-			if ( 2 == err ) Log("file not imported\n\n");			
+		if ( ! topo_import(g_topo, topo_path, m->cells[cell].x, m->cells[cell].y) ) {
 			matrix_free(m);
 			return 1;
 		}

@@ -20,7 +20,7 @@ please ASK before modify it!
 #include "netcdf.h"
 
 /* */
-extern char *program_path;
+extern char *g_sz_program_path;
 
 /* do not change this order */
 enum {
@@ -1252,7 +1252,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	/* get filename path */
 	sz_path[0] = '\0';
 	if ( filename[1] != ':' ) {
-		strncpy(sz_path, program_path, 256);
+		strncpy(sz_path, g_sz_program_path, 256);
 	}
 	/* check for buffer overflow */
 	strcat(sz_path, filename);
@@ -2096,7 +2096,7 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 //
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
 /*
-	la memoria � stata allocata come C*R*Y*X
+	la memoria e' stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
 	R = righe ( anni di elaborazione * 366 )

@@ -3,7 +3,7 @@
 #define SOIL_H_
 
 enum {
-	SOIL_LAT = 0 /* fuck standard */
+	SOIL_LAT = 0
 	, SOIL_LON
 	, SOIL_CLAY_PERC
 	, SOIL_SILT_PERC
@@ -34,18 +34,17 @@ enum {
 	, SOIL_DC_HUMADS
 	, SOIL_DC_HUMUS
 
-	, SOIL_VALUES_COUNT
+	, SOIL_VARS_COUNT
 };
 
 typedef struct {
 	//todo this should be used only in txt simulations (is it still necessary due to the signature of output files ?)
 	char sitename[1024];
-	double values[SOIL_VALUES_COUNT];
+	double values[SOIL_VARS_COUNT];
 	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
 } soil_t;
 
 soil_t* soil_new(void);
-void soil_reset(soil_t* const s);
 int soil_import(soil_t *const s, const char *const filename, const int x, const int y);
 
-#endif
+#endif /* SOIL_H_ */
