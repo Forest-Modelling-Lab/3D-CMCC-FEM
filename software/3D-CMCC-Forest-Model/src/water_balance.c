@@ -15,7 +15,7 @@
 
 void water_downward_balance (CELL *c, const MET_DATA *const met, int month, int day)
 {
-	Log("\nWATER BALANCE\n");
+	//Log("\nWATER BALANCE\n");
 
 
 

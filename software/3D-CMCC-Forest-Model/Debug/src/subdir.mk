@@ -23,6 +23,7 @@ C_SRCS += \
 ../src/common.c \
 ../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
+../src/cumulative_balance.c \
 ../src/dataset.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
@@ -36,7 +37,7 @@ C_SRCS += \
 ../src/lai.c \
 ../src/leafFall.c \
 ../src/light.c \
-../src/log.c \
+../src/logger.c \
 ../src/main.c \
 ../src/management.c \
 ../src/matrix.c \
@@ -86,6 +87,7 @@ OBJS += \
 ./src/common.o \
 ./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
+./src/cumulative_balance.o \
 ./src/dataset.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
@@ -99,7 +101,7 @@ OBJS += \
 ./src/lai.o \
 ./src/leafFall.o \
 ./src/light.o \
-./src/log.o \
+./src/logger.o \
 ./src/main.o \
 ./src/management.o \
 ./src/matrix.o \
@@ -149,6 +151,7 @@ C_DEPS += \
 ./src/common.d \
 ./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
+./src/cumulative_balance.d \
 ./src/dataset.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
@@ -162,7 +165,7 @@ C_DEPS += \
 ./src/lai.d \
 ./src/leafFall.d \
 ./src/light.d \
-./src/log.d \
+./src/logger.d \
 ./src/main.d \
 ./src/management.d \
 ./src/matrix.d \
@@ -197,7 +200,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross GCC Compiler'
-	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

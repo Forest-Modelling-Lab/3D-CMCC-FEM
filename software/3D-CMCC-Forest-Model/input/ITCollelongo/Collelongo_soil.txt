@@ -1,4 +1,4 @@
- SITENAME "Collelongo" //Site Name
+SITENAME "Collelongo" //Site Name
 LAT "41.94836" //Site Latitude negative for south hemisphere 
 LONG "13.58814" //Site Longitude 
 
