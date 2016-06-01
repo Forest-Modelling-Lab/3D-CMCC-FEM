@@ -16,7 +16,7 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 	 * based on the assumption that the live wood decrease linearly increasing age */
 	/* e.g. for Fagus sylvatica  base on simulation for Hesse site (age 30) and Collelongo site (age 160)*/
 
-	// test values should be included in species.txt
+	// fixme values should be included in species.txt
 	double max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 30 */
 	double min_live_total_ratio = 0.04; /* for max_age = 160 */
 
