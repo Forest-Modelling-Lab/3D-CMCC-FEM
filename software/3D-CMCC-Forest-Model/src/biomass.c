@@ -17,10 +17,11 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 	/* e.g. for Fagus sylvatica  base on simulation for Hesse site (age 30) and Collelongo site (age 160)*/
 
 	// test values should be included in species.txt
-	double max_live_total_ratio; /* for min_age = 30 */
+	double max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 30 */
 	double min_live_total_ratio = 0.04; /* for max_age = 160 */
 
-	double max_age = 160; /* for min_live_total_wood = 0.04 */
+	//01 June 2016 changed from 160 to MAX_AGE
+	double max_age = s->value[MAXAGE]; /* for min_live_total_wood = 0.04 */
 	double min_age = 30; /* for max_live_total_wood = 0.15 */
 
 	double t1;
@@ -28,15 +29,15 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 
 	//fixme it should be included in the species.txt files */
 	/* for deciduous */
-	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-	{
-		max_live_total_ratio = 0.15;
-	}
-	/* for evergreen */
-	else
-	{
-		max_live_total_ratio = 0.10;
-	}
+//	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+//	{
+//		max_live_total_ratio = 0.15;
+//	}
+//	/* for evergreen */
+//	else
+//	{
+//		max_live_total_ratio = 0.10;
+//	}
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
 	t2 = max_age - min_age;
