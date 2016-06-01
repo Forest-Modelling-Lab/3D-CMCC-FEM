@@ -1421,8 +1421,7 @@ int main(int argc, char *argv[])
 							else
 							{
 								puts(msg_ok);
-								//										logger(g_soil_log, "\nsoilLog prova");
-								//run for SOIL functions
+								/* run for SOIL */
 								//soil_model (m, yos, years, month, day, years_of_simulation);
 
 								if (!string_compare_i(settings->dndc, "on"))
