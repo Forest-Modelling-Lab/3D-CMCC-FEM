@@ -132,12 +132,7 @@ typedef struct
 	light_estab_intolerant;
 	/* control check */
 	double maxlai,
-	defaultlai,
-	maxdays,
-	maxrg,
-	maxtavg,
-	maxvpd,
-	maxprecip;
+	defaultlai;
 	double 	switchtounspatial;
 
 } settings_t;

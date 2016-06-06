@@ -22,6 +22,13 @@ please ASK before modify it!
 
 extern logger_t* g_log;
 
+#define MAX_DAYS   31   //define max days in a month
+#define MAX_RG     40   //define maximum radiation for a given day
+#define MAX_TAVG   40   //define maximum daily avg temperature for a given day
+#define MAX_VPD    40   //define maximum daily vpd  for a given day
+#define MAX_PRECIP 100  //define maximum precipitation for a given day
+
+
 /* */
 extern char *g_sz_program_path;
 
@@ -475,7 +482,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 
 		yos[*yos_count-1].m[month].d[day].n_days = day+1;
-		if (yos[*yos_count-1].m[month].d[day].n_days > (int)settings->maxdays)
+		if (yos[*yos_count-1].m[month].d[day].n_days > MAX_DAYS)
 		{
 			puts("ERROR IN N_DAYS DATA!!\n");
 			logger(g_log, "ERROR IN N_DAYS DATA!!\n");
@@ -691,7 +698,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 
 		//CONTROL
-		if (yos[*yos_count-1].m[month].d[day].prcp > settings->maxprecip)
+		if (yos[*yos_count-1].m[month].d[day].prcp > MAX_PRECIP)
 		{
 			//logger(g_log, "ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
 		}
