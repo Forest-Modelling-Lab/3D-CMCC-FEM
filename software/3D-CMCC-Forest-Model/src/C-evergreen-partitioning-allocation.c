@@ -290,6 +290,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
 	}
 
+	/* update live_total wood fraction based on age */
+	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
+
 	s->value[STEM_C] += s->value[C_TO_STEM];
 	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
 
