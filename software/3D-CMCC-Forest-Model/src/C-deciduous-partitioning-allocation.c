@@ -127,16 +127,23 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
 		logger(g_log, "daily amount of reserve for foliage  and fine roots budburst %f = tC/cell/day\n", reserve_for_budburst);
 
-		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
-		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
-		s->value[C_TO_COARSEROOT] = 0.0;
-		s->value[C_TO_STEM] = 0.0;
-		s->value[C_TO_BRANCH] = 0.0;
-		s->value[C_TO_FRUIT] = 0.0;
-		s->value[C_TO_LITTER] = 0.0;
+		if(s->value[RESERVE_C] > 0.0)
+		{
+			s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
+			s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
+			s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
+			s->value[C_TO_COARSEROOT] = 0.0;
+			s->value[C_TO_STEM] = 0.0;
+			s->value[C_TO_BRANCH] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
+		}
+		else
+		{
+			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+		}
 
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+
 
 		break;
 
@@ -162,7 +169,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 				s->value[C_TO_LITTER] = 0.0;
 			}
 			/* it needs */
-			else
+			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE] = s->value[NPP_tC];
@@ -173,6 +180,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FRUIT] = 0.0;
 				s->value[C_TO_LITTER] = 0.0;
+			}
+			else
+			{
+				CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 			}
 		}
 		else

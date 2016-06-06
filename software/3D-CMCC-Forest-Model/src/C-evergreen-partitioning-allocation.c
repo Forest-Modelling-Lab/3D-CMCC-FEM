@@ -34,9 +34,9 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double Light_trasm;
-//	double Perc_fine;
-//	double Perc_coarse;
-//	double oldW;
+	//	double Perc_fine;
+	//	double Perc_coarse;
+	//	double oldW;
 
 	double r0Ctem_increment;
 	double old_r0Ctem = r0Ctem;
@@ -78,11 +78,11 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	//7 May 2012
 	//compute static ratio of allocation between fine
 	//fixme see if change with new parameters checked in "Pool_fraction"
-//	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-//	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
-//	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-//	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
-//	Perc_coarse = 1- Perc_fine;
+	//	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
+	//	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+	//	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
+	//	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+	//	Perc_coarse = 1- Perc_fine;
 	//logger(g_log, "Percentage of coarse root against total root= %f %%\n", Perc_coarse * 100 );
 
 	/* Partitioning ratios from Arora and Boer 2005 */
@@ -94,157 +94,160 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 	logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
 	CHECK_CONDITION(pR_CTEM + pS_CTEM + pF_CTEM, != 100.0);
 
-	if (settings->spatial == 'u')
-	{
-		old_leaf_c = s->value[LEAF_C];
-		old_fineroot_c = s->value[FINE_ROOT_C];
 
-		if (s->management == 0)
+	old_leaf_c = s->value[LEAF_C];
+	old_fineroot_c = s->value[FINE_ROOT_C];
+
+	if (s->management == 0)
+	{
+		//logger(g_log, "Management type = TIMBER\n");
+	}
+	else
+	{
+		logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
+		logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
+		logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION]);
+
+		//considering a LINEAR increment
+		//allocation ratio to roots
+		r0Ctem -= s->value[MIN_R0CTEM];
+		r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
+		r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
+		logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
+
+		if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
 		{
-			//logger(g_log, "Management type = TIMBER\n");
+			logger(g_log, "ERROR IN r0Ctem !!! \n");
+		}
+
+		//considering a LINEAR decrement
+		//allocation ratio to stem + bb
+		s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
+		s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
+		s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
+		logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
+
+		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
+		{
+			logger(g_log, "ERROR IN s0Ctem !!! \n");
+		}
+
+	}
+	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+	logger(g_log, "LAI = %f \n", s->value[LAI]);
+	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+
+
+	switch (s->phenology_phase)
+	{
+	/************************************************************/
+	case 1:
+		logger(g_log, "Allocating only into foliage and fine root pools\n");
+		logger(g_log, "LAI = %f \n", s->value[LAI]);
+
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+
+		/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
+		 * and Barbaroux et al., 2002,
+													the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+		 */
+		/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
+		 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
+		//fixme model gets 10%
+		reserve_for_budburst = (s->value[RESERVE_C]) * 0.05;
+		logger(g_log, "fraction of reserve for foliage and fine root = %f\n", reserve_for_budburst);
+
+		/*partitioning*/
+		if (s->value[NPP_tC] > 0.0)
+		{
+			/* check if minimum reserve pool needs to be refilled */
+			/* it doesn't need */
+			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
+			{
+				logger(g_log, "Using ONLY npp...\n");
+				s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+				s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
+				s->value[C_TO_RESERVE] = 0.0;
+			}
+			/* it needs */
+			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
+			{
+				s->value[C_TO_LEAF] = 0.0;
+				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			}
+			else
+			{
+				CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
+			}
+
+			s->value[C_TO_COARSEROOT] = 0.0;
+			s->value[C_TO_STEM] = 0.0;
+			s->value[C_TO_TOT_STEM] = 0.0;
+			s->value[C_TO_BRANCH] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
 		}
 		else
 		{
-			logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
-			logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
-			logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION]);
-
-			//considering a LINEAR increment
-			//allocation ratio to roots
-			r0Ctem -= s->value[MIN_R0CTEM];
-			r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
-			r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-			logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
-
-			if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
-			{
-				logger(g_log, "ERROR IN r0Ctem !!! \n");
-			}
-
-			//considering a LINEAR decrement
-			//allocation ratio to stem + bb
-			s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
-			s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
-			s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-			logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
-
-			if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
-			{
-				logger(g_log, "ERROR IN s0Ctem !!! \n");
-			}
-
+			logger(g_log, "Using ONLY reserve...\n");
+			s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
+			s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
+			s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
+			s->value[C_TO_RESERVE] = 0.0;
+			s->value[C_TO_COARSEROOT] = 0.0;
+			s->value[C_TO_STEM] = 0.0;
+			s->value[C_TO_TOT_STEM] = 0.0;
+			s->value[C_TO_BRANCH] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
 		}
-		logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-		logger(g_log, "LAI = %f \n", s->value[LAI]);
-		logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+		break;
+	case 2:
+		logger(g_log, "allocating into the three pools Ws+Wr+Wreserve\n");
 
-
-		switch (s->phenology_phase)
+		/*partitioning*/
+		if (s->value[NPP_tC] > 0.0)
 		{
-		/************************************************************/
-		case 1:
-			logger(g_log, "Allocating only into foliage and fine root pools\n");
-			logger(g_log, "LAI = %f \n", s->value[LAI]);
-
-			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
-
-			/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
-			 * and Barbaroux et al., 2002,
-													the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
-			 */
-			/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
-			 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
-			//fixme model gets 10%
-			reserve_for_budburst = (s->value[RESERVE_C]) * 0.05;
-			logger(g_log, "fraction of reserve for foliage and fine root = %f\n", reserve_for_budburst);
-
-			/*partitioning*/
-			if (s->value[NPP_tC] > 0.0)
+			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			if(s->value[PHENOLOGY] == 1.2)
 			{
-				/* check if minimum reserve pool needs to be refilled */
-				/* it doesn't need */
-				if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
-				{
-					logger(g_log, "Using ONLY npp...\n");
-					s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-					s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
-					s->value[C_TO_RESERVE] = 0.0;
-				}
-				/* it needs */
-				else
-				{
-					s->value[C_TO_LEAF] = 0.0;
-					s->value[C_TO_FINEROOT] = 0.0;
-					s->value[C_TO_RESERVE] = s->value[NPP_tC];
-				}
-
-				s->value[C_TO_COARSEROOT] = 0.0;
-				s->value[C_TO_STEM] = 0.0;
-				s->value[C_TO_TOT_STEM] = 0.0;
-				s->value[C_TO_BRANCH] = 0.0;
-				s->value[C_TO_FRUIT] = 0.0;
-				s->value[C_TO_LITTER] = 0.0;
+				//NPP for reproduction
+				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
+				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
+				logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[C_TO_FRUIT]);
 			}
-			else
-			{
-				logger(g_log, "Using ONLY reserve...\n");
-				s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
-				s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
-				s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
-				s->value[C_TO_RESERVE] = 0.0;
-				s->value[C_TO_COARSEROOT] = 0.0;
-				s->value[C_TO_STEM] = 0.0;
-				s->value[C_TO_TOT_STEM] = 0.0;
-				s->value[C_TO_BRANCH] = 0.0;
-				s->value[C_TO_FRUIT] = 0.0;
-				s->value[C_TO_LITTER] = 0.0;
-			}
-			break;
-		case 2:
-			logger(g_log, "allocating into the three pools Ws+Wr+Wreserve\n");
-
-			/*partitioning*/
-			if (s->value[NPP_tC] > 0.0)
-			{
-				//REPRODUCTION ONLY FOR NEEDLE LEAF
-				if(s->value[PHENOLOGY] == 1.2)
-				{
-					//NPP for reproduction
-					s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
-					s->value[NPP_tC] -= s->value[C_TO_FRUIT];
-					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[C_TO_FRUIT]);
-				}
-				/* old version */
-				//				s->value[C_TO_ROOT] = s->value[NPP_tC] * pR_CTEM;
-				//				s->value[C_TO_FINEROOT] = s->value[C_TO_ROOT] * Perc_fine;
-				//				s->value[C_TO_COARSEROOT] = s->value[C_TO_ROOT] - s->value[C_TO_FINEROOT];
-				/* new one */
-				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
-				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
-				s->value[C_TO_TOT_STEM] = s->value[NPP_tC] * pS_CTEM;
-				s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-				s->value[C_TO_BRANCH] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
-				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_FRUIT] = 0.0;
-			}
-			else
-			{
-				s->value[C_TO_RESERVE] = s->value[NPP_tC];
-				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_COARSEROOT] = 0.0;
-				s->value[C_TO_TOT_STEM] = 0.0;
-				s->value[C_TO_STEM] = 0.0;
-				s->value[C_TO_BRANCH] = 0.0;
-				s->value[C_TO_LEAF] = 0.0;
-				s->value[C_TO_FRUIT] = 0.0;
-				s->value[C_TO_LITTER] = 0.0;
-			}
-
-			break;
-
+			/* old version */
+			//				s->value[C_TO_ROOT] = s->value[NPP_tC] * pR_CTEM;
+			//				s->value[C_TO_FINEROOT] = s->value[C_TO_ROOT] * Perc_fine;
+			//				s->value[C_TO_COARSEROOT] = s->value[C_TO_ROOT] - s->value[C_TO_FINEROOT];
+			/* new one */
+			s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
+			s->value[C_TO_TOT_STEM] = s->value[NPP_tC] * pS_CTEM;
+			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
+			s->value[C_TO_BRANCH] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
+			s->value[C_TO_LEAF] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
 		}
+		else
+		{
+			s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_COARSEROOT] = 0.0;
+			s->value[C_TO_TOT_STEM] = 0.0;
+			s->value[C_TO_STEM] = 0.0;
+			s->value[C_TO_BRANCH] = 0.0;
+			s->value[C_TO_LEAF] = 0.0;
+			s->value[C_TO_FRUIT] = 0.0;
+			s->value[C_TO_LITTER] = 0.0;
+		}
+
+		break;
+
 	}
+
 
 	/* recompute biomass pools for reserve, leaf and fine root pools */
 
@@ -377,19 +380,19 @@ void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const M
 		Dendrometry (c, &c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
-//	CHECK_CONDITION(s->value[RESERVE_C], < 0);
-//	CHECK_CONDITION(s->value[LEAF_C], < 0);
-//	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
-//	CHECK_CONDITION(s->value[STEM_C], < 0);
-//	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[BRANCH_C], < 0);
-//	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
-//	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
-//	CHECK_CONDITION(s->value[FRUIT_C], < 0);
+	//	CHECK_CONDITION(s->value[RESERVE_C], < 0);
+	//	CHECK_CONDITION(s->value[LEAF_C], < 0);
+	//	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0);
+	//	CHECK_CONDITION(s->value[STEM_C], < 0);
+	//	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[BRANCH_C], < 0);
+	//	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[COARSE_ROOT_C], < 0);
+	//	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], < 0);
+	//	CHECK_CONDITION(s->value[FRUIT_C], < 0);
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
 	logger(g_log, "C_TO_TOT_STEM = %f tC/cell/day\n", s->value[C_TO_TOT_STEM]);
