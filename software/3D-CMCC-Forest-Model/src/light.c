@@ -16,6 +16,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade; //fraction of light absorbed
 	double LightTrasm, LightTrasm_sun, LightTrasm_shade; //fraction of light trasmitted
+	double LightReflected, LightReflected_sun, LightReflected_shade;
 	double a = 107.0;//(W/m)  empirical constants for long wave radiation computation
 	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
 	double ni; //proportion of daylength
@@ -64,21 +65,19 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)
 	{
-		if (settings->spatial == 's')
-		{
-			//fixme
-			LightTrasm = (exp(- s->value[K] * met[month].d[day].ndvi_lai));
-			//logger(g_log, "NDVI-LAI = %f \n", met[month].ndvi_lai );
-			LightTrasm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
-			LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
-		}
-		else
-		{
-			LightTrasm = (exp(- s->value[K] * s->value[LAI]));
-			LightTrasm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
-			LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
+		//TEST TEST TEST for energy balance closure include LightRelected variableS
+		//IT SHOULD DIFFERENTIATED FOR PAR AND NET RADIATION DUE TO DIFFERENT BANDS
+		/* light reflected through the canopy */
+//		LightReflected = ;
+//		LightReflected_sun = ;
+//		LightReflected_shade = ;
 
-		}
+		/* transmitted light through the canopy */
+		LightTrasm = (exp(- s->value[K] * s->value[LAI]));
+		LightTrasm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
+		LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
+
+		/* light absorbed through the canopy */
 		LightAbsorb = 1.0 - LightTrasm;
 		LightAbsorb_sun = 1.0 - LightTrasm_sun;
 		LightAbsorb_shade = 1.0 - LightTrasm_shade;

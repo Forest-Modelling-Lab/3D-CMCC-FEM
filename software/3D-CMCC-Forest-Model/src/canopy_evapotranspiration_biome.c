@@ -335,10 +335,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		}
 
 		/* following TLEAF in MAESPA model (physiol.f90, row 197) check for consistency in units */
-		/*
-		logger(g_log, "TDIFF from maespa = %f\n", ((net_rad - (s->value[CANOPY_EVAPO_TRANSP] / daylength_sec) *met[month].d[day].lh_vap ))/(CP*MA*gl_bl));
-		getchar();
-		*/
 
 		//TEST
 		/* CANOPY SENSIBLE HEAT FLUX */
@@ -385,14 +381,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* then ra = rhr */
 		psych_p = psych *(1+(rc/rhr));
 		logger(g_log, "psych_p = %f\n", psych_p);
-
-		/* compute relative humidity */
-		/*
-		svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
-		vp = svp - met[month].d[day].vpd;
-		rel_hum = vp/svp;
-		logger(g_log, "RH = %f\n", rel_hum);
-		*/
 
 		/* canopy temperature as in Webber et al., 2016 */
 		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
