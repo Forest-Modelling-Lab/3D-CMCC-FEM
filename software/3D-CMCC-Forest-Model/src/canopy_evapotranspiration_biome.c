@@ -55,7 +55,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double dt = 0.2;
 	double delta;
 	double rc, rr, rhr;
+	double rh_mol; //boundary layer resistance in mol m/sec
 	double tcanopy, tcanopyK;
+	double tcanopy_day, tcanopy_night;
 
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
@@ -342,7 +344,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 		logger(g_log, "LAI = %f\n", s->value[LAI]);
 
-		net_rad = s->value[NET_RAD_ABS_SUN];
+		net_rad = s->value[NET_RAD_ABS];
 		logger(g_log, "net rad = %f\n", net_rad);
 
 		/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
@@ -363,7 +365,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		/* calculate slope of pvs vs. T curve, at ta */
 		//test this is the "DELTA" function as in Webber et al., 2016
 		delta = (pvs1-pvs2) / (t1-t2);
-		/* converts into kPA fgollowing Webber et al., 2016 */
+		/* converts into kPA following Webber et al., 2016 */
 		delta /= 1000.0;
 		logger(g_log, "delta = %f KPa\n", delta);
 
@@ -386,14 +388,29 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		psych_p = psych *(1+(rc/rhr));
 		logger(g_log, "psych_p = %f\n", psych_p);
 
-		/* canopy temperature as in Webber et al., 2016 */
-		tcanopy = met[month].d[day].tavg + ((net_rad * rhr)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
-		logger(g_log, "met[month].d[day].rho_air = %f\n", met[month].d[day].rho_air);
+		//test to avoid problems using generic daily data we should divide the fluxes into diurnal (using tday) and nocturnal (using tnight) (but for net_rad???)
+		//to have tcanopy_day and tcanopy_night considering day length
+
+		//fixme conductance and resistance variables following Norman And Campbell should be in mol m sec (not m sec)
+		//test convert boundary layer conductance from m/sec into mol m/sec
+		//following Pearcy, Schulze and Zimmermann
+		rh_mol = rh * 0.0446 * ((TempAbs / (met[month].d[day].tavg+TempAbs))*((met[month].d[day].air_pressure/1000.0)/101.3));
+		logger(g_log, "boundary layer resistance = %g mol m/sec\n", rh_mol);
+
+		/* canopy temperature as in Webber et al., 2016 it takes rh in m/sec*/
+		tcanopy = met[month].d[day].tavg + ((net_rad * rh_mol)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
+
+		//test 07 june 2016 using only boundary layer resistance as in Ryder et al., 2016
+		//tcanopy = met[month].d[day].tavg + ((net_rad * rh)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
+
+		logger(g_log, "net rad = %f\n", net_rad);
+		logger(g_log, "rho_air = %f\n", met[month].d[day].rho_air);
 		logger(g_log, "rc = %f\n", rc);
 		logger(g_log, "rhr = %f\n", rhr);
 		logger(g_log, "tavg = %f °C\n", met[month].d[day].tavg);
 		logger(g_log, "canopy temp = %f °C\n", tcanopy);
 		logger(g_log, "differences = %f °C\n", tcanopy - met[month].d[day].tavg);
+		getchar();
 
 		tcanopyK = tcanopy + TempAbs;
 

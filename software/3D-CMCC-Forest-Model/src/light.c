@@ -46,13 +46,21 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	/*proportion of daylength*/
 	ni = met[month].d[day].daylength/24.0;
 
+	logger(g_log, "met[month].d[day].daylength = %f hours\n", met[month].d[day].daylength);
+	logger(g_log, "met[month].d[day].solar_rad = %f MJ/m^2 day\n", met[month].d[day].solar_rad);
+
+	/* convert MJ/m2/day to molPAR/m2/day */
 	c->par = (met[month].d[day].solar_rad * MOLPAR_MJ);
 	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
+
+	/* convert solar radiation from MJ/m2/day to Watt/m2 */
 	c->short_wave_radiation = met[month].d[day].solar_rad * pow (10.0, 6)/86400.0;
 	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation);
+
 	/*following LPJ approach*/
 	c->long_wave_radiation = (b+(1.0-b)*ni)*(a - met[month].d[day].tday);
 	logger(g_log, "Long wave radiation (upward) = %f W/m2\n", c->long_wave_radiation);
+
 	c->net_radiation = c->short_wave_radiation - c->long_wave_radiation;
 	//fixme is it correct to avoid negative values?
 	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
@@ -61,6 +69,8 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 		c->net_radiation = 0.00000001;
 		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 	}
+
+	//if(month == 6)getchar();
 
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)
