@@ -1249,11 +1249,11 @@ int M_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
 //deciduous routine for carbon allocation
 void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-//evergreen routine for carbon allocation
-void Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 
+
+void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
 void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int, int);
-void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+
 
 void Nitrogen_stock (SPECIES *);
 

@@ -16,7 +16,7 @@ extern logger_t* g_log;
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 {
 	//CTEM VERSION
 
