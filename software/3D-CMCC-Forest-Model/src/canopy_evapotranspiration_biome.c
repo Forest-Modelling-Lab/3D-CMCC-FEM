@@ -368,6 +368,10 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		logger(g_log, "delta = %f KPa\n", delta);
 
 		//test
+		// as in Ryder et al., 2016 resistance to sensible heat flux is equal to boundary layer resistance (see also BIOME)
+		// so it should be rh (1/gl_sh)
+
+
 		/* canopy resistance m sec-1)*/
 		//fixme gl_sh or gc_sh? Wang and Leuning 1998 use stomatal conductance
 		//fixme this is valid for cell level not for class level
