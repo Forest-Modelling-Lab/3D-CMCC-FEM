@@ -28,6 +28,7 @@
 #define GC_MOL                    12      //Convert molC to grams of C
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
 #define SBC                  5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
+#define SBC_MJ              4.903e-9      //(MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day
 #define CP                    1010.0      //(J/kg K) specific heat of air
 #define G_STD                9.80665      //(m/s2) standard gravitational accel. */
 #define P_STD               101325.0      //(Pa) standard pressure at 0.0 m elevation */

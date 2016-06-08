@@ -6,10 +6,12 @@
 #include "constants.h"
 #include "logger.h"
 #include "soil.h"
+#include "topo.h"
 
 
 extern logger_t* g_log;
 extern soil_t *g_soil;
+extern topo_t *g_topo;
 
  void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int years, int month, int day, int DaysInMonth, int height)
 {
@@ -45,6 +47,22 @@ extern soil_t *g_soil;
 	double sigma;                                                  //solar declination (radians)
 	double omega_s;                                                //sunset hour angle
 	int days_of_year;
+	double TmaxK, TminK;
+	double clear_sky_radiation;
+
+	double e0;                                                     //saturation vapour pressure at the air temperature (KPa)
+	double ea;                                                     //actual vapour pressure derived from relative humidity data (KPa)
+
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
+	/* compute saturation vapour pressure at the air temperature */
+	e0 = 0.6108 * exp((17.27*met[month].d[day].tavg)/(met[month].d[day].tavg+237.3));
+	/* compute actual vapour pressure derived from relative humidity data */
+	ea = met[month].d[day].rh_f*(((e0*met[month].d[day].tmax)+(e0*met[month].d[day].tmin))/2.0);
+	logger(g_log, "rh_f = %f\n", met[month].d[day].rh_f);
+	logger(g_log, "ea = %f\n", ea);
+
 
 	if(IS_LEAP_YEAR(years))
 	{
@@ -80,9 +98,10 @@ extern soil_t *g_soil;
 
 	/* compute extraterrestrial radiation (MJ/m^2/day) */
 	c->extra_terr_radiation = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
+	logger(g_log, "extra terrestrial radiation = %f (MJ/m^2/day)\n", c->extra_terr_radiation);
+	/* convert into W/m2 */
+	c->extra_terr_radiation *= pow(10, 6) / 86400.0;
 	logger(g_log, "extra terrestrial radiation = %f (W/m2)\n", c->extra_terr_radiation);
-
-	if(month == 2)getchar();
 
 
 	//test from where does this stuff come?
@@ -100,6 +119,9 @@ extern soil_t *g_soil;
 
 
 	/* RADIATION BALANCE */
+
+	/* SHORT WAVE RADIATION */
+
 	/* convert solar radiation from MJ/m2/day to W/m2 */
 	c->short_wave_radiation_DW = met[month].d[day].solar_rad * pow (10.0, 6)/86400.0;
 	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation_DW);
@@ -107,6 +129,7 @@ extern soil_t *g_soil;
 	//test
 	//fixme change albedo with variable LightReflect
 	//fixme the light reflected should consider all reflected light through the cell (soil included)
+	//fixme in this it doesn't take into account the LAI values
 	c->short_wave_radiation_UW = c->short_wave_radiation_DW * s->value[ALBEDO];
 	logger(g_log, "Short wave radiation (upward) = %f W/m2\n", c->short_wave_radiation_UW);
 
@@ -114,29 +137,39 @@ extern soil_t *g_soil;
 	c->net_short_wave_radiation = c->short_wave_radiation_DW - c->short_wave_radiation_UW;
 	logger(g_log, "Net Short wave radiation = %f W/m2\n", c->net_short_wave_radiation);
 
-	/* Upward long wave radiation following Prentice et al., 1993, Linacre, 1986*/
+	/* compute clear sky radiation */
+	clear_sky_radiation = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]) * c->extra_terr_radiation;
+	logger(g_log, "clar_sky_radiation = %f W/m2\n", clear_sky_radiation);
+
+	/* LONG WAVE RADIATION */
+
+	//test to be checked
+	//following Allen et al., 1998 */
+	c->long_wave_radiation_UW = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(ea)))*(1.35*(met[month].d[day].solar_rad/clear_sky_radiation)-0.35);
+	logger(g_log, "Long wave radiation (upward)  (Allen)= %f W/m2\n", c->long_wave_radiation_UW);
+	/* net long wave radiation based on Allen et al., 1998*/
+	c->net_radiation = c->net_short_wave_radiation - c->long_wave_radiation_UW;
+	logger(g_log, "Net radiation (Allen) = %f W/m2\n", c->net_radiation);
+
+		/* Upward long wave radiation following Prentice et al., 1993, Linacre, 1986*/
 	c->long_wave_radiation_UW = (b+(1.0-b)*ni)*(a - met[month].d[day].tavg);
 	logger(g_log, "Long wave radiation (upward) = %f W/m2\n", c->long_wave_radiation_UW);
-
-	/* being Rnet(Q0) = Sw-down - Sw-up + Lw-down - Lw-up */
-	/* Downward long wave radiation */
-	c->long_wave_radiation_DW = Q0 - c->short_wave_radiation_DW + c->short_wave_radiation_UW - c->long_wave_radiation_UW;
-	logger (g_log, "Long wave radiation (downward) = %f W/m2\n", c->long_wave_radiation_DW);
 
 	/* net long wave radiation */
 	c->net_long_wave_radiation = c->short_wave_radiation_UW - c->long_wave_radiation_UW;
 	logger(g_log, "Net Long wave radiation = %f W/m2\n", c->net_long_wave_radiation);
 
-	CHECK_CONDITION((c->short_wave_radiation_DW - c->short_wave_radiation_UW + c->long_wave_radiation_DW - c->long_wave_radiation_UW), == Q0);
 
-	logger(g_log, "PROVA Net radiation = %f W/m2\n", (c->short_wave_radiation_DW + c->short_wave_radiation_UW) - (c->long_wave_radiation_DW + c->long_wave_radiation_UW));
-
-
+	//fixme include reflected part and remove it below at row 227
+	/* net radiation (without the replected part)*/
 	c->net_radiation = c->short_wave_radiation_DW - c->long_wave_radiation_UW;
+
 	//fixme is it correct to avoid negative values?
 	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
-	//fixme which one?
-	logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//3-PG method
+	//logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+
+	//if(month==8)getchar();
 
 
 	/* convert MJ/m2/day to molPAR/m2/day */
@@ -153,6 +186,7 @@ extern soil_t *g_soil;
 	if (c->Veg_Counter > 0.0)
 	{
 
+		//fixme move them up over the radiative balance
 		/* fraction of light transmitted through the canopy */
 		LightTransm = (exp(- s->value[K] * s->value[LAI]));
 		LightTransm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
@@ -208,6 +242,7 @@ extern soil_t *g_soil;
 			//amount of Net Rad that is reflected but leaves*/
 
 			//test 11 May 2016 test
+			//fixme remove ALBEDO/LightReflec and put it above
 			s->value[NET_RAD] = c->net_radiation * (1.0 - LightReflec);
 			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			s->value[NET_RAD_ABS_SUN] = s->value[NET_RAD] * LightAbsorb_sun;
