@@ -79,7 +79,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	evap_or_transp = ((delta * net_rad) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
 			(((met[month].d[day].air_pressure * CP * rv) / (met[month].d[day].lh_vap * EPS * rhr)) + delta);
 
-	/* evporation or transpiration is converted into kg-mm/m2/sec */
+	/* evaporation or transpiration is converted into kg-mm/m2/sec */
 	evap_or_transp /= met[month].d[day].lh_vap;
 
 	/* check */

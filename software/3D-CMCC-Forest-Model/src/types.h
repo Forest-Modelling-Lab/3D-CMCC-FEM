@@ -909,9 +909,14 @@ typedef struct {
 	double basal_area;
 
 	/*radiation variables*/
-	double long_wave_radiation; //net upward longwave radiation flux ('terrestrial radiation') (W/m2)
-	double short_wave_radiation; //net downward shortwave radiation flux ('terrestrial radiation') (W/m2)
-	double net_radiation;
+	double extra_terr_radiation;                        //Extraterrestrial radiation (W/m2)
+	double net_long_wave_radiation;                     //Net long wave radiation flux (W/m2)
+	double long_wave_radiation_DW;                      //Downward long wave radiation flux (W/m2)
+	double long_wave_radiation_UW;                      //Upward long wave radiation flux (W/m2)
+	double net_short_wave_radiation;                    //Net short wave radiation flux (W/m2)
+	double short_wave_radiation_DW;                     //Downward short wave radiation flux (W/m2)
+	double short_wave_radiation_UW;                     //Upward short wave radiation flux (W/m2)
+	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
@@ -1271,7 +1276,7 @@ void Turnover(SPECIES *, CELL *);
 void EOY_Turnover(SPECIES *);
 void Leaf_fall(SPECIES *, int *);
 void Light_Recruitment (SPECIES *const, double, double);
-void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int);
+void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
 void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
 void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);

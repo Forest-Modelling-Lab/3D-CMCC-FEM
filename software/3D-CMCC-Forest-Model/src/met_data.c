@@ -19,7 +19,7 @@ extern topo_t *g_topo;
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Day_Length ( CELL * c,  int day, int month, int years, YOS *yos)
+void Day_Length ( CELL * c, int day, int month, int years, YOS *yos)
 {
 
 	double ampl;  //seasonal variation in Day Length from 12 h

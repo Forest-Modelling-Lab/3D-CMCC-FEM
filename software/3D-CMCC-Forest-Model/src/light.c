@@ -5,18 +5,19 @@
 #include "types.h"
 #include "constants.h"
 #include "logger.h"
+#include "soil.h"
+
 
 extern logger_t* g_log;
+extern soil_t *g_soil;
 
-
-
-
-void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int DaysInMonth, int height)
+ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int years, int month, int day, int DaysInMonth, int height)
 {
 
-	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade; //fraction of light absorbed
-	double LightTrasm, LightTrasm_sun, LightTrasm_shade; //fraction of light trasmitted
-	double LightReflected, LightReflected_sun, LightReflected_shade;
+	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade;       //fraction of light absorbed
+	double LightTransm, LightTransm_sun, LightTransm_shade;       //fraction of light transmitted
+	double LightReflec, LightReflec_sun, LightReflec_shade;       //fraction of light reflected
+	double LightReflec_soil;
 	double a = 107.0;//(W/m)  empirical constants for long wave radiation computation
 	double b = 0.2; //(unitless) empirical constants for long wave radiation computation
 	double ni; //proportion of daylength
@@ -35,67 +36,143 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 	double actual_albedo;
 	double soil_albedo = 0.17; //(see Wiki)
 
-	//test
-	//fixme LAI values should integrated over the cell considering different
-	actual_albedo = s->value[ALBEDO] * (s->value[ALBEDO]-soil_albedo * exp(-0.75 * s->value[LAI]));
-	//logger(g_log, "actual_albedo = %f\n", actual_albedo);
+
+	double lat_decimal;
+	double lat_degrees;
+	double lat_rad;
+
+	double dr;                                                     //inverse relative distance Earth-Sun
+	double sigma;                                                  //solar declination (radians)
+	double omega_s;                                                //sunset hour angle
+	int days_of_year;
+
+	if(IS_LEAP_YEAR(years))
+	{
+		days_of_year = 365;
+	}
+	else
+	{
+		days_of_year = 366;
+	}
 
 
 	logger(g_log, "\nRADIATION ROUTINE\n");
 
-	/*proportion of daylength*/
+
+	/* Following Allen et al., 1998 */
+	/* convert latitude in radians */
+	lat_decimal = g_soil->values[SOIL_LAT] - (int)g_soil->values[SOIL_LAT];
+	lat_degrees = (int)g_soil->values[SOIL_LAT] + (lat_decimal/60.0);
+	lat_rad = (Pi/180.0)*lat_degrees;
+	logger(g_log, "lat_rad = %f\n", lat_rad);
+
+	/* compute inverse relative distance Earth-Sun */
+	dr = 1.0 + 0.033 * cos(((2*Pi)/days_of_year)*c->doy);
+	logger(g_log, "dr = %f\n", dr);
+
+	/* compute solar declination */
+	sigma = 0.409 * sin((((2*Pi)/days_of_year)*c->doy)-1.39);
+	logger(g_log, "sigma = %f\n",sigma);
+
+	/* compute sunset hour angle */
+	omega_s = acos((-tan(lat_rad) * tan(sigma)));
+	logger(g_log, "omega_s = %f\n", omega_s);
+
+	/* compute extraterrestrial radiation (MJ/m^2/day) */
+	c->extra_terr_radiation = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
+	logger(g_log, "extra terrestrial radiation = %f (W/m2)\n", c->extra_terr_radiation);
+
+	if(month == 2)getchar();
+
+
+	//test from where does this stuff come?
+	LightReflec_soil = soil_albedo;
+	//fixme LAI values should integrated over the cell considering different
+	actual_albedo = LightReflec * (LightReflec-LightReflec_soil * exp(-0.75 * s->value[LAI]));
+	//logger(g_log, "actual_albedo = %f\n", actual_albedo);
+
+
+
+	/*proportion of day length*/
 	ni = met[month].d[day].daylength/24.0;
 
-	logger(g_log, "met[month].d[day].daylength = %f hours\n", met[month].d[day].daylength);
-	logger(g_log, "met[month].d[day].solar_rad = %f MJ/m^2 day\n", met[month].d[day].solar_rad);
+	logger(g_log, "Solar_rad = %f MJ/m^2 day\n", met[month].d[day].solar_rad);
+
+
+	/* RADIATION BALANCE */
+	/* convert solar radiation from MJ/m2/day to W/m2 */
+	c->short_wave_radiation_DW = met[month].d[day].solar_rad * pow (10.0, 6)/86400.0;
+	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation_DW);
+
+	//test
+	//fixme change albedo with variable LightReflect
+	//fixme the light reflected should consider all reflected light through the cell (soil included)
+	c->short_wave_radiation_UW = c->short_wave_radiation_DW * s->value[ALBEDO];
+	logger(g_log, "Short wave radiation (upward) = %f W/m2\n", c->short_wave_radiation_UW);
+
+	/* net short wave radiation */
+	c->net_short_wave_radiation = c->short_wave_radiation_DW - c->short_wave_radiation_UW;
+	logger(g_log, "Net Short wave radiation = %f W/m2\n", c->net_short_wave_radiation);
+
+	/* Upward long wave radiation following Prentice et al., 1993, Linacre, 1986*/
+	c->long_wave_radiation_UW = (b+(1.0-b)*ni)*(a - met[month].d[day].tavg);
+	logger(g_log, "Long wave radiation (upward) = %f W/m2\n", c->long_wave_radiation_UW);
+
+	/* being Rnet(Q0) = Sw-down - Sw-up + Lw-down - Lw-up */
+	/* Downward long wave radiation */
+	c->long_wave_radiation_DW = Q0 - c->short_wave_radiation_DW + c->short_wave_radiation_UW - c->long_wave_radiation_UW;
+	logger (g_log, "Long wave radiation (downward) = %f W/m2\n", c->long_wave_radiation_DW);
+
+	/* net long wave radiation */
+	c->net_long_wave_radiation = c->short_wave_radiation_UW - c->long_wave_radiation_UW;
+	logger(g_log, "Net Long wave radiation = %f W/m2\n", c->net_long_wave_radiation);
+
+	CHECK_CONDITION((c->short_wave_radiation_DW - c->short_wave_radiation_UW + c->long_wave_radiation_DW - c->long_wave_radiation_UW), == Q0);
+
+	logger(g_log, "PROVA Net radiation = %f W/m2\n", (c->short_wave_radiation_DW + c->short_wave_radiation_UW) - (c->long_wave_radiation_DW + c->long_wave_radiation_UW));
+
+
+	c->net_radiation = c->short_wave_radiation_DW - c->long_wave_radiation_UW;
+	//fixme is it correct to avoid negative values?
+	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
+	//fixme which one?
+	logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+
 
 	/* convert MJ/m2/day to molPAR/m2/day */
 	c->par = (met[month].d[day].solar_rad * MOLPAR_MJ);
 	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
 
-	/* convert solar radiation from MJ/m2/day to Watt/m2 */
-	c->short_wave_radiation = met[month].d[day].solar_rad * pow (10.0, 6)/86400.0;
-	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation);
-
-	/*following LPJ approach*/
-	c->long_wave_radiation = (b+(1.0-b)*ni)*(a - met[month].d[day].tday);
-	logger(g_log, "Long wave radiation (upward) = %f W/m2\n", c->long_wave_radiation);
-
-	c->net_radiation = c->short_wave_radiation - c->long_wave_radiation;
-	//fixme is it correct to avoid negative values?
-	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 	if(c->net_radiation < 0.00000001)
 	{
 		c->net_radiation = 0.00000001;
 		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 	}
 
-	//if(month == 6)getchar();
-
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)
 	{
-		//TEST TEST TEST for energy balance closure include LightRelected variableS
-		//IT SHOULD DIFFERENTIATED FOR PAR AND NET RADIATION DUE TO DIFFERENT BANDS
-		/* light reflected through the canopy */
-//		LightReflected = ;
-//		LightReflected_sun = ;
-//		LightReflected_shade = ;
 
-		/* transmitted light through the canopy */
-		LightTrasm = (exp(- s->value[K] * s->value[LAI]));
-		LightTrasm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
-		LightTrasm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
+		/* fraction of light transmitted through the canopy */
+		LightTransm = (exp(- s->value[K] * s->value[LAI]));
+		LightTransm_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
+		LightTransm_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
 
-		/* light absorbed through the canopy */
-		LightAbsorb = 1.0 - LightTrasm;
-		LightAbsorb_sun = 1.0 - LightTrasm_sun;
-		LightAbsorb_shade = 1.0 - LightTrasm_shade;
+		/* fraction of light absorbed by the canopy */
+		LightAbsorb = 1.0 - LightTransm;
+		LightAbsorb_sun = 1.0 - LightTransm_sun;
+		LightAbsorb_shade = 1.0 - LightTransm_shade;
+
+		//fixme
+		/* fraction of light reflected by the canopy */
+		LightReflec = s->value[ALBEDO];
+		LightReflec_sun = s->value[ALBEDO];
+		LightReflec_shade = s->value[ALBEDO];
 
 		logger(g_log, "LightAbsorb_sun = %f\n", LightAbsorb_sun);
-		logger(g_log, "LightTrasm_sun = %f\n", LightTrasm_sun);
+		logger(g_log, "LightTrasm_sun = %f\n", LightTransm_sun);
 		logger(g_log, "LightAbsorb_shade = %f\n", LightAbsorb_shade);
-		logger(g_log, "LightTrasm_sun = %f\n", LightTrasm_shade);
+		logger(g_log, "LightTrasm_sun = %f\n", LightTransm_shade);
 
 
 		//LIGHT DOMINANT
@@ -104,7 +181,6 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
 
-			//todo check if albedo is necessary
 			//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT LAI_RATIO
 			//following BIOME albedo for PAR is 1/3 of albedo
 			//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
@@ -112,10 +188,9 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 			logger(g_log, "**BIOME APPROACH for dominant**\n");
 			/*compute APAR for sun and shaded leaves*/
-			//amount of total par that is reflected but leaves*/
+			//amount of total par that is reflected by the leaves*/
 
-			//test 11 May 2016 test
-			s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
+			s->value[PAR] = c->par *(1.0 - (LightReflec/(3.0)));
 			s->value[APAR] = s->value[PAR] * LightAbsorb;
 			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 			s->value[TRASM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
@@ -133,7 +208,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			//amount of Net Rad that is reflected but leaves*/
 
 			//test 11 May 2016 test
-			s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
+			s->value[NET_RAD] = c->net_radiation * (1.0 - LightReflec);
 			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			s->value[NET_RAD_ABS_SUN] = s->value[NET_RAD] * LightAbsorb_sun;
 			s->value[NET_RAD_TRASM_SUN] = s->value[NET_RAD] - s->value[NET_RAD_ABS_SUN];
@@ -159,7 +234,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 			logger(g_log, "par_abs_lai_shade NetRad shade = %f\n", par_abs_lai_shade);
 */
 			//test 12 May 2016 test
-			par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0)) * ppfd_coeff;
+			par = c->net_radiation * RAD2PAR * (1.0 - (LightReflec/3.0)) * ppfd_coeff;
 			par_abs = par * LightAbsorb;
 			par_abs_lai_sun = par * LightAbsorb_sun;
 			par_trasm_lai_sun = par - par_abs_lai_sun;
@@ -340,7 +415,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				logger(g_log, "**BIOME APPROACH for dominted**\n");
 				/*compute APAR for sun and shaded leaves*/
 				//amount of total par that is reflected but leaves*/
-				s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
+				s->value[PAR] = c->par *(1.0 - (LightReflec/(3.0)));
 				s->value[APAR] = s->value[PAR] * LightAbsorb;
 				s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
 				s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
@@ -351,7 +426,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				/*compute NetRad for sun and shaded leaves*/
 				//amount of Net Rad that is reflected but leaves*/
-				s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
+				s->value[NET_RAD] = c->net_radiation * (1.0 - LightReflec);
 				s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 				s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
 				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
@@ -364,7 +439,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				//04/05/2016
 				//TEST
-				par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+				par = c->net_radiation * RAD2PAR * (1.0 - (LightReflec/3.0));
 				par_abs = par * LightAbsorb;
 				par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
 				par_abs_lai_shade = par_abs - par_abs_lai_sun;
@@ -608,7 +683,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 				logger(g_log, "**BIOME APPROACH for dominant**\n");
 				/*compute APAR for sun and shaded leaves*/
 				//amount of total par that is reflected but leaves*/
-				s->value[PAR] = c->par *(1.0 - (s->value[ALBEDO]/(3.0)));
+				s->value[PAR] = c->par *(1.0 - (LightReflec/(3.0)));
 				s->value[APAR] = s->value[PAR] * LightAbsorb;
 				s->value[APAR_SUN] = c->par * s->value[LAI_SUN] * s->value[K];
 				s->value[APAR_SHADE] = s->value[APAR] - s->value[APAR_SUN];
@@ -619,7 +694,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				/*compute NetRad for sun and shaded leaves*/
 				//amount of Net Rad that is reflected but leaves*/
-				s->value[NET_RAD] = c->net_radiation * (1.0 - s->value[ALBEDO]);
+				s->value[NET_RAD] = c->net_radiation * (1.0 - LightReflec);
 				s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 				s->value[NET_RAD_ABS_SUN] = c->net_radiation * s->value[LAI_SUN] * s->value[K];
 				s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_ABS] - s->value[NET_RAD_ABS_SUN];
@@ -631,7 +706,7 @@ void Radiation ( SPECIES *const s, CELL *const c, const MET_DATA *const met, int
 
 				//04/05/2016
 				//TEST
-				par = c->net_radiation * RAD2PAR * (1.0 - (s->value[ALBEDO]/3.0));
+				par = c->net_radiation * RAD2PAR * (1.0 - (LightReflec/3.0));
 				par_abs = par * LightAbsorb;
 				par_abs_lai_sun = s->value[K]*par*s->value[LAI_SUN];
 				par_abs_lai_shade = par_abs - par_abs_lai_sun;

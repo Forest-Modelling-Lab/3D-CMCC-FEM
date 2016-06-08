@@ -14,6 +14,8 @@
 //----------------------------CONSTANTS------------------------------------
 
 //LIGHT
+#define Q0                    1360.1      //Solar constant (W/m^2)
+#define Q0_MJ                  0.082      //Solar constant (MJ/m^2/day)
 #define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
 #define QB                       0.8      //Slope of Net vs Solar Radiation
 #define RAD2PAR                 0.45      // (DIM) ratio PAR / SWtotal

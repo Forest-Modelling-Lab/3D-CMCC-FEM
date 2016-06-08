@@ -410,7 +410,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		logger(g_log, "tavg = %f °C\n", met[month].d[day].tavg);
 		logger(g_log, "canopy temp = %f °C\n", tcanopy);
 		logger(g_log, "differences = %f °C\n", tcanopy - met[month].d[day].tavg);
-		getchar();
+		//getchar();
 
 		tcanopyK = tcanopy + TempAbs;
 
