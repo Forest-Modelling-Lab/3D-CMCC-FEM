@@ -405,29 +405,29 @@ static void compute_rh(double *const values, const int rows_count, const int col
 //			printf("vpd = %g\n", vpd);
 //
 //			/* compute relative humidity */
-//			rel_hum = (vp/svp)*100.0;
+//			rel_hum = (ea/es)*100.0;
 //			value = rel_hum;
-//			printf("rel_hum = %g %%\n", rel_hum);
+//			printf("rel_hum = %g\n", rel_hum);
 
 
 			/* compute saturation vapour pressure at the maximum and minimum air temperature (hPa) */
 			e0max = 6.1076 * exp((17.27*tmax)/(tmax+237.3));
 			e0min = 6.1076 * exp((17.27*tmin)/(tmin+237.3));
-			//printf("e0max = %g\n", e0max);
-			//printf("e0min = %g\n", e0min);
+			printf("e0max = %g\n", e0max);
+			printf("e0min = %g\n", e0min);
 
 			/* compute mean saturation vapour pressure at the air temperature */
 			es = (e0max + e0min)/2.0;
-			//printf("es = %g\n", es);
+			printf("es = %g\n", es);
 
 			/* compute actual vapour pressure */
 			ea = es - vpd;
-			//printf("ea = %g\n", ea);
-			//printf("vpd = %g\n", vpd);
+			printf("ea = %g\n", ea);
+			printf("vpd = %g\n", vpd);
 
 			rel_hum = (ea/es)*100.0;
 			value = rel_hum;
-			//printf("rel_hum = %g %%\n", rel_hum);
+			printf("rel_hum = %g %%\n", rel_hum);
 
 			CHECK_CONDITION(rel_hum, < RH_RANGE_MIN);
 			CHECK_CONDITION(rel_hum, > RH_RANGE_MAX);
