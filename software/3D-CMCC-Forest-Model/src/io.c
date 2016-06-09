@@ -373,22 +373,65 @@ static void compute_rh(double *const values, const int rows_count, const int col
 
 	int i;
 	double value;
+	double svp, vp;
+	double rel_hum;
+
+	double e0max, e0min;
+	double es;
+	double ea;
 
 	for ( i = 0; i < rows_count; i++ ) {
 		double ta = values[VALUE_AT(i, TA_F)];
+		double tmax = values[VALUE_AT(i, TMAX)];
+		double tmin = values[VALUE_AT(i, TMIN)];
 		double vpd = values[VALUE_AT(i, VPD_F)];
 		value = INVALID_VALUE;
 
-		if ( ! IS_INVALID_VALUE(ta) && ! IS_INVALID_VALUE(vpd) ) {
-			/* TODO remove this, only for reference
-			svp = 6.1076 * exp(17.26938818 * met[month].d[day].tavg/ (237.3 + met[month].d[day].tavg));
-			vp = svp - met[month].d[day].vpd;
-			rel_hum = vp/svp;
-			logger(g_log, "RH = %f\n", rel_hum);
-			*/
-			/* 6.1076 is for hPa */
-			value = 6.1076 * exp(17.26938818 * ta / (237.3 + ta));
-			value = (value-vpd) / value;
+		if ( ! IS_INVALID_VALUE(ta)
+			&& ! IS_INVALID_VALUE(tmax)
+			&& ! IS_INVALID_VALUE(tmin)
+			&& ! IS_INVALID_VALUE(vpd))
+		{
+
+//			/* see Zhang et al., 2008 Ecological Modelling */
+//			/* saturation vapour pressure at the air temperature T (mbar-hPa) */
+//			svp = 6.1076 * exp((17.26 * ta) / (237.3 + ta));
+//			printf("ta = %g\n", ta);
+//			printf("svp = %f\n", svp);
+//
+//			/* compute vapour pressure */
+//			vp = svp - vpd;
+//			printf("vp = %g\n", vp);
+//			printf("vpd = %g\n", vpd);
+//
+//			/* compute relative humidity */
+//			rel_hum = (vp/svp)*100.0;
+//			value = rel_hum;
+//			printf("rel_hum = %g %%\n", rel_hum);
+
+
+			/* compute saturation vapour pressure at the maximum and minimum air temperature (hPa) */
+			e0max = 6.1076 * exp((17.27*tmax)/(tmax+237.3));
+			e0min = 6.1076 * exp((17.27*tmin)/(tmin+237.3));
+			//printf("e0max = %g\n", e0max);
+			//printf("e0min = %g\n", e0min);
+
+			/* compute mean saturation vapour pressure at the air temperature */
+			es = (e0max + e0min)/2.0;
+			//printf("es = %g\n", es);
+
+			/* compute actual vapour pressure */
+			ea = es - vpd;
+			//printf("ea = %g\n", ea);
+			//printf("vpd = %g\n", vpd);
+
+			rel_hum = (ea/es)*100.0;
+			value = rel_hum;
+			//printf("rel_hum = %g %%\n", rel_hum);
+
+			CHECK_CONDITION(rel_hum, < RH_RANGE_MIN);
+			CHECK_CONDITION(rel_hum, > RH_RANGE_MAX);
+
 			/* convert NaN to invalid value */
 			if ( value != value ) {
 				value = INVALID_VALUE;
