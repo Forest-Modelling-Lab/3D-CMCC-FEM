@@ -1,6 +1,7 @@
 /* logger.c */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdarg.h>
 #include <assert.h>
 #include "logger.h"
@@ -14,6 +15,33 @@ logger_t* logger_new(const char* const filename) {
 	p->std_output = 1;
 
 	p->f = fopen(filename, "w");
+	if ( ! p->f ) {
+		free(p);
+		p = NULL;
+	}
+	return p;
+}
+
+logger_t* logger_new_ex(const char* const filename, const char* const s) {
+	char *buffer;
+	int i;
+	logger_t* p;
+
+	p = malloc(sizeof*p);
+	if ( ! p ) return NULL;
+	p->file_output = 1;
+	p->std_output = 1;
+
+	i = strlen(filename);
+	i += strlen(s);
+	++i;
+
+	buffer = malloc(i*sizeof*buffer);
+	if ( ! buffer ) return NULL;
+	sprintf(buffer, "%s%s", filename, s);
+
+	p->f = fopen(buffer, "w");
+	free(buffer);
 	if ( ! p->f ) {
 		free(p);
 		p = NULL;

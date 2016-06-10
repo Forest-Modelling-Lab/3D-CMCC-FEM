@@ -72,15 +72,15 @@ extern topo_t *g_topo;
 
 	/* compute actual vapour pressure derived from relative humidity data (KPa) */
 	ea = (met[month].d[day].rh_f/100.0)*es;
-	CHECK_CONDITION(ea, < 0.0);
+	//CHECK_CONDITION(ea, < 0.0);
 
 	if(IS_LEAP_YEAR(years))
 	{
-		days_of_year = 365;
+		days_of_year = 366;
 	}
 	else
 	{
-		days_of_year = 366;
+		days_of_year = 365;
 	}
 
 	/* compute extraterrestrial radiation (MJ/m^2/day) */

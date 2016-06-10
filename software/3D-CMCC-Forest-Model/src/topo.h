@@ -5,12 +5,12 @@
 enum {
 	TOPO_ELEV = 0,
 	//TOPO_SLOPE,
-	//TOPO_ASPECT, //should be N or S or E or W
 	TOPO_VARS_COUNT
 };
 
 typedef struct {
 	float values[TOPO_VARS_COUNT];
+	//char aspect;
 } topo_t;
 
 topo_t *topo_new(void);

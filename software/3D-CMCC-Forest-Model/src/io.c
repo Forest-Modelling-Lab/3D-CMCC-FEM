@@ -392,24 +392,6 @@ static void compute_rh(double *const values, const int rows_count, const int col
 			&& ! IS_INVALID_VALUE(tmin)
 			&& ! IS_INVALID_VALUE(vpd))
 		{
-
-//			/* see Zhang et al., 2008 Ecological Modelling */
-//			/* saturation vapour pressure at the air temperature T (mbar-hPa) */
-//			svp = 6.1076 * exp((17.26 * ta) / (237.3 + ta));
-//			printf("ta = %g\n", ta);
-//			printf("svp = %f\n", svp);
-//
-//			/* compute vapour pressure */
-//			vp = svp - vpd;
-//			printf("vp = %g\n", vp);
-//			printf("vpd = %g\n", vpd);
-//
-//			/* compute relative humidity */
-//			rel_hum = (ea/es)*100.0;
-//			value = rel_hum;
-//			printf("rel_hum = %g\n", rel_hum);
-
-
 			/* compute saturation vapour pressure at the maximum and minimum air temperature (hPa) */
 			e0max = 6.1076 * exp((17.27*tmax)/(tmax+237.3));
 			e0min = 6.1076 * exp((17.27*tmin)/(tmin+237.3));
@@ -2147,7 +2129,8 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 // if type is 1, write monthly
 // if type is 2, write yearly
 //
-int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+// path must terminate with a backslash!
+int WriteNetCDFOutput(const char *const path, const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
 /*
 	la memoria e' stata allocata come C*R*Y*X
 
@@ -2232,13 +2215,13 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	for ( i = 0; i < n; ++i ) {
 		/* create output filename */
 		if ( 0 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->daily_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->daily_vars[i]]);
 
 		if ( 1 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->monthly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->monthly_vars[i]]);
 
 		if ( 2 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->yearly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->yearly_vars[i]]);
 
 		/* create file */
 		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
