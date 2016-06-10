@@ -76,6 +76,12 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	const char *sz_time = "time";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time" };
 	const char *sz_vars[TOPO_VARS_COUNT] = { "ELEV" };
+	//const char *sz_vars[TOPO_VARS_COUNT] = {
+	//"ELEV",
+	//"SLOPE",
+	//"ASPECT"
+	//};
+
 
 	int y;
 	int id_file;

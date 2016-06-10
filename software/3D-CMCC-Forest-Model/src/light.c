@@ -63,14 +63,14 @@ extern topo_t *g_topo;
 	logger(g_log, "\nRADIATION ROUTINE\n");
 
 	/* following Allen et al., 1998 */
-	/* compute saturation vapour pressure at the maximum and minimum air temperature */
-	e0max = 0.6108 * exp((17.27*met[month].d[day].tmax)/(met[month].d[day].tmax+237.3));
-	e0min = 0.6108 * exp((17.27*met[month].d[day].tmin)/(met[month].d[day].tmin+237.3));
+	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
+	e0max = 0.61076 * exp((17.27*met[month].d[day].tmax)/(met[month].d[day].tmax+237.3));
+	e0min = 0.61076 * exp((17.27*met[month].d[day].tmin)/(met[month].d[day].tmin+237.3));
 
-	/* compute mean saturation vapour pressure at the air temperature */
+	/* compute mean saturation vapour pressure at the air temperature (KPa)*/
 	es = (e0max + e0min)/2.0;
 
-	/* compute actual vapour pressure derived from relative humidity data */
+	/* compute actual vapour pressure derived from relative humidity data (KPa) */
 	ea = (met[month].d[day].rh_f/100.0)*es;
 	CHECK_CONDITION(ea, < 0.0);
 
@@ -102,6 +102,9 @@ extern topo_t *g_topo;
 	/* compute sunset hour angle */
 	omega_s = acos((-tan(lat_rad) * tan(sigma)));
 	logger(g_log, "omega_s = %f\n", omega_s);
+
+	//fixme cos(omega) should takes into account slope and aspect (once they will be included in "topo" files)
+	//following Allen et al., 2006 Agric and Forest Meteorology (parag. 2)
 
 	/* compute extraterrestrial radiation (MJ/m^2/day) */
 	c->extra_terr_radiation = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));

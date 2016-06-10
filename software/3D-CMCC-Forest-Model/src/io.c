@@ -373,7 +373,7 @@ static void compute_rh(double *const values, const int rows_count, const int col
 
 	int i;
 	double value;
-	double svp, vp;
+	//double svp, vp;
 	double rel_hum;
 
 	double e0max, e0min;
@@ -416,11 +416,11 @@ static void compute_rh(double *const values, const int rows_count, const int col
 			printf("e0max = %g\n", e0max);
 			printf("e0min = %g\n", e0min);
 
-			/* compute mean saturation vapour pressure at the air temperature */
+			/* compute mean saturation vapour pressure at the air temperature (hPa) */
 			es = (e0max + e0min)/2.0;
 			printf("es = %g\n", es);
 
-			/* compute actual vapour pressure */
+			/* compute actual vapour pressure (hPa) */
 			ea = es - vpd;
 			printf("ea = %g\n", ea);
 			printf("vpd = %g\n", vpd);

@@ -3,8 +3,10 @@
 #define TOPO_H_
 
 enum {
-	TOPO_ELEV = 0
-	, TOPO_VARS_COUNT
+	TOPO_ELEV = 0,
+	//TOPO_SLOPE,
+	//TOPO_ASPECT, //should be N or S or E or W
+	TOPO_VARS_COUNT
 };
 
 typedef struct {
