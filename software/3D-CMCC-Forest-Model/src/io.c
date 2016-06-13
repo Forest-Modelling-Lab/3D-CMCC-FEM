@@ -416,7 +416,8 @@ static void compute_rh(double *const values, const int rows_count, const int col
 			printf("e0max = %g\n", e0max);
 			printf("e0min = %g\n", e0min);
 
-			/* compute mean saturation vapour pressure at the air temperature (hPa) */
+			/* compute weighted mean saturation vapour pressure at the air temperature (hPa) */
+			//todo ((e0max*c->ni) + (e0min*(1.0-c->ni)));
 			es = (e0max + e0min)/2.0;
 			printf("es = %g\n", es);
 

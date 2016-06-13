@@ -47,11 +47,11 @@ enum {
 typedef struct {
 	int n_days;
 	PREC solar_rad;
-	PREC tavg;			/* (deg C) daily average air temperature */
-	PREC tmax;			/* (deg C) daily maximum air temperature */
-	PREC tmin;			/* (deg C) daily minimum air temperature */
-	PREC tday;			/* (deg C) daylight average air temperature */
-	PREC tnight;		/* (deg C) nightime average air temperature */
+	PREC tavg;          /* (deg C) daily average air temperature */
+	PREC tmax;          /* (deg C) daily maximum air temperature */
+	PREC tmin;          /* (deg C) daily minimum air temperature */
+	PREC tday;          /* (deg C) daylight average air temperature */
+	PREC tnight;        /* (deg C) nightime average air temperature */
 	PREC vpd;
 	PREC rh_f;
 	PREC ts_f;
@@ -59,7 +59,7 @@ typedef struct {
 	PREC swc;
 	PREC ndvi_lai;
 	PREC daylength;
-	PREC thermic_sum;	/* daily thermic sum */
+	PREC thermic_sum;   /* daily thermic sum */
 	PREC rho_air;
 	PREC tsoil;
 	PREC et;
@@ -70,6 +70,8 @@ typedef struct {
 	PREC lh_sub;
 	PREC air_pressure;
 	PREC co2_conc;
+	PREC es;            /* (KPa) weighted mean saturation vapour pressure at the air temperature */
+	PREC ea;            /* (KPa) actual vapour pressure derived from relative humidity data */
 
 } MET_DAILY_DATA;
 
@@ -862,8 +864,8 @@ typedef struct {
 	int cum_dayOfyear;
 	double abscission_daylength;
 	double av_yearly_daylength;
-	double gcorr;
-	int north; //northern hemisphere north = 0, south hemisphere south = 1
+	int north;                                                   //northern hemisphere north = 0, south hemisphere south = 1
+	double ni;                                                   //proportion of day length (frac)
 
 	/* annual met values */
 	double annual_tavg;
@@ -1005,6 +1007,7 @@ typedef struct {
 
 	/*water variables*/
 	//todo move these variables into soil struct
+
 	double wilting_point;
 	double field_capacity;
 	double sat_hydr_conduct;
@@ -1013,7 +1016,7 @@ typedef struct {
 	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
 	double asw;
 	double old_asw;
-	double max_asw_fc; /* max available soil water at field capacity mmKgH2O/m3*/
+	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
 
 
@@ -1236,8 +1239,8 @@ void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 ROW *import_dataset(const char *const, int *const);
 int importSettingsFile(char *);
 
+void Sat_vapour_pressure (CELL *, int, int, int, YOS *);
 
-void Solar_Radiation (CELL *, int, int, int, YOS *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
 void Annual_met_values (CELL *, int, int, int, YOS *);
@@ -1292,6 +1295,7 @@ void Turnover(SPECIES *, CELL *);
 void EOY_Turnover(SPECIES *);
 void Leaf_fall(SPECIES *, int *);
 void Light_Recruitment (SPECIES *const, double, double);
+void Solar_radiation (CELL *, int, int, int);
 void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int);
 void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
 void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);

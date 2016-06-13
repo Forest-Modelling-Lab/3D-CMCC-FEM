@@ -1374,9 +1374,9 @@ int main(int argc, char *argv[])
 					Day_Length (&m->cells[cell], day, month, year, yos);
 					Latent_heat (&m->cells[cell], day, month, year, yos);
 					Air_pressure (&m->cells[cell], day, month, year, yos);
+					Sat_vapour_pressure (&m->cells[cell], day, month, year, yos);
 					Annual_met_values (&m->cells[cell], day, month, year, yos);
 					Annual_CO2_concentration (&m->cells[cell], day, month, year, yos);
-					Solar_Radiation (&m->cells[cell], day, month, year, yos);
 
 					if(m->cells[cell].landuse == F)
 					{
