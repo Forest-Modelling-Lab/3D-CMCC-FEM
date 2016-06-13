@@ -909,13 +909,26 @@ typedef struct {
 	double basal_area;
 
 	/*radiation variables*/
-	double extra_terr_radiation;                        //Extraterrestrial radiation (W/m2)
-	double net_long_wave_radiation;                     //Net long wave radiation flux (W/m2)
-	double long_wave_radiation_DW;                      //Downward long wave radiation flux (W/m2)
-	double long_wave_radiation_UW;                      //Upward long wave radiation flux (W/m2)
-	double net_short_wave_radiation;                    //Net short wave radiation flux (W/m2)
-	double short_wave_radiation_DW;                     //Downward short wave radiation flux (W/m2)
-	double short_wave_radiation_UW;                     //Upward short wave radiation flux (W/m2)
+	double extra_terr_radiation_MJ;                     //Extraterrestrial radiation (MJ/m2/day)
+	double extra_terr_radiation_W;                      //Extraterrestrial radiation (W/m2)
+	double short_wave_clear_sky_radiation_MJ;           //Short wave clear sky radiation (MJ/m2/day)
+	double short_wave_clear_sky_radiation_W;            //Short wave clear sky radiation (W/m2)
+	double short_wave_radiation_DW_MJ;                  //Downward short wave radiation flux (MJ/m2/day)
+	double short_wave_radiation_DW_W;                   //Downward short wave radiation flux (W/m2)
+	double short_wave_radiation_UW_MJ;                  //Upward short wave radiation flux (MJ/m2/day)
+	double short_wave_radiation_UW_W;                   //Upward short wave radiation flux (W/m2)
+	double net_short_wave_radiation_MJ;                 //Net short wave radiation flux (MJ/m2/day)
+	double net_short_wave_radiation_W;                  //Net short wave radiation flux (W/m2)
+
+	double long_wave_radiation_DW_MJ;                   //Downward long wave radiation flux (MJ/m2/day)
+	double long_wave_radiation_DW_W;                    //Downward long wave radiation flux (W/m2)
+	double long_wave_radiation_UW_MJ;                   //Upward long wave radiation flux (MJ/m2/day)
+	double long_wave_radiation_UW_W;                    //Upward long wave radiation flux (W/m2)
+	double net_long_wave_radiation_MJ;                  //Net long wave radiation flux (MJ/m2/day)
+	double net_long_wave_radiation_W;                   //Net long wave radiation flux (W/m2)
+
+	double cloud_cover_frac;                            //cloud cover fraction
+
 	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
@@ -1222,6 +1235,9 @@ double Canopy_cover (SPECIES *const, int, int, int);
 void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
 ROW *import_dataset(const char *const, int *const);
 int importSettingsFile(char *);
+
+
+void Solar_Radiation (CELL *, int, int, int, YOS *);
 void Day_Length (CELL *, int, int, int, YOS *);
 void DayLength_3PG (CELL *, int, int, int, int, YOS *);
 void Annual_met_values (CELL *, int, int, int, YOS *);
@@ -1357,7 +1373,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 int fill_species_from_file(SPECIES *const s);
 OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
 void FreeOutputVars(OUTPUT_VARS *ov);
-int WriteNetCDFOutput(const char *const path, const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
+int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
 const char *GetNetCDFVersion(void);
 #define XSTR(a)		STR(a)
 #define STR(a)		#a

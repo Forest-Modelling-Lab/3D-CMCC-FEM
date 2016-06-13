@@ -22,10 +22,6 @@ extern topo_t *g_topo;
 	double LightReflec_par                                            ;                   //fraction of light reflected (for par)
 	double LightReflec_soil;
 
-	double a = 107.0;                                                                     //(W/m)  empirical constants for long wave radiation computation
-	double b = 0.2;                                                                       //(unitless) empirical constants for long wave radiation computation
-	double ni;                                                                            //proportion of daylength
-
 	/* for biome's ppfd */
 	double par;
 	double par_abs;
@@ -41,77 +37,7 @@ extern topo_t *g_topo;
 	double soil_albedo = 0.17; //(see Wiki)
 
 
-	double lat_decimal;
-	double lat_degrees;
-	double lat_rad;
 
-	double dr;                                                                           //inverse relative distance Earth-Sun
-	double sigma;                                                                        //solar declination (radians)
-	double omega_s;                                                                      //sunset hour angle
-	int days_of_year;
-	double TmaxK, TminK;
-	double clear_sky_radiation;
-
-	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
-	double e0min;                                                                        //saturation vapour pressure at the minimum air temperature (KPa)
-	double es;                                                                           //mean saturation vapour pressure at the air temperature (KPa)
-	double ea;                                                                           //actual vapour pressure derived from relative humidity data (KPa)
-
-	TmaxK = met[month].d[day].tmax + TempAbs;
-	TminK = met[month].d[day].tmin + TempAbs;
-
-	logger(g_log, "\nRADIATION ROUTINE\n");
-
-	/* following Allen et al., 1998 */
-	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
-	e0max = 0.61076 * exp((17.27*met[month].d[day].tmax)/(met[month].d[day].tmax+237.3));
-	e0min = 0.61076 * exp((17.27*met[month].d[day].tmin)/(met[month].d[day].tmin+237.3));
-
-	/* compute mean saturation vapour pressure at the air temperature (KPa)*/
-	es = (e0max + e0min)/2.0;
-
-	/* compute actual vapour pressure derived from relative humidity data (KPa) */
-	ea = (met[month].d[day].rh_f/100.0)*es;
-	//CHECK_CONDITION(ea, < 0.0);
-
-	if(IS_LEAP_YEAR(years))
-	{
-		days_of_year = 366;
-	}
-	else
-	{
-		days_of_year = 365;
-	}
-
-	/* compute extraterrestrial radiation (MJ/m^2/day) */
-	/* Following Allen et al., 1998 */
-	/* convert latitude in radians */
-	lat_decimal = g_soil->values[SOIL_LAT] - (int)g_soil->values[SOIL_LAT];
-	lat_degrees = (int)g_soil->values[SOIL_LAT] + (lat_decimal/60.0);
-	lat_rad = (Pi/180.0)*lat_degrees;
-	logger(g_log, "lat_rad = %f\n", lat_rad);
-
-	/* compute inverse relative distance Earth-Sun */
-	dr = 1.0 + 0.033 * cos(((2*Pi)/days_of_year)*c->doy);
-	logger(g_log, "dr = %f\n", dr);
-
-	/* compute solar declination */
-	sigma = 0.409 * sin((((2*Pi)/days_of_year)*c->doy)-1.39);
-	logger(g_log, "sigma = %f\n",sigma);
-
-	/* compute sunset hour angle */
-	omega_s = acos((-tan(lat_rad) * tan(sigma)));
-	logger(g_log, "omega_s = %f\n", omega_s);
-
-	//fixme cos(omega) should takes into account slope and aspect (once they will be included in "topo" files)
-	//following Allen et al., 2006 Agric and Forest Meteorology (parag. 2)
-
-	/* compute extraterrestrial radiation (MJ/m^2/day) */
-	c->extra_terr_radiation = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
-	logger(g_log, "extra terrestrial radiation = %f (MJ/m^2/day)\n", c->extra_terr_radiation);
-	/* convert into W/m2 */
-	c->extra_terr_radiation *= pow(10, 6) / 86400.0;
-	logger(g_log, "extra terrestrial radiation = %f (W/m2)\n", c->extra_terr_radiation);
 
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -155,62 +81,37 @@ extern topo_t *g_topo;
 	actual_albedo = LightReflec_net_rad * (LightReflec_net_rad-LightReflec_soil * exp(-0.75 * s->value[LAI]));
 	//logger(g_log, "actual_albedo = %f\n", actual_albedo);
 
-	/*proportion of day length*/
-	ni = met[month].d[day].daylength/24.0;
 
 	/* RADIATION BALANCE */
-
-	/* SHORT WAVE RADIATION */
-	logger(g_log, "\nSHORT WAVE RADIATION\n");
-
-	/* convert solar radiation from MJ/m2/day to W/m2 */
-	c->short_wave_radiation_DW = met[month].d[day].solar_rad * pow (10.0, 6)/86400.0;
-	logger(g_log, "Solar_rad = %f MJ/m^2 day\n", met[month].d[day].solar_rad);
-	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation_DW);
+	/**************************************************************************/
 
 	//test
 	//fixme the light reflected should consider all reflected light through the cell (soil included)
-	c->short_wave_radiation_UW = c->short_wave_radiation_DW * LightReflec_net_rad;
-	logger(g_log, "Short wave radiation (upward) = %f W/m2\n", c->short_wave_radiation_UW);
+	c->short_wave_radiation_UW_W = c->short_wave_radiation_DW_W * LightReflec_net_rad;
+	logger(g_log, "Short wave radiation (upward) = %f W/m2\n", c->short_wave_radiation_UW_W);
 
 	/* net short wave radiation */
-	c->net_short_wave_radiation = c->short_wave_radiation_DW - c->short_wave_radiation_UW;
-	logger(g_log, "Net Short wave radiation = %f W/m2\n", c->net_short_wave_radiation);
+	c->net_short_wave_radiation_W = c->short_wave_radiation_DW_W - c->short_wave_radiation_UW_W;
+	logger(g_log, "Net Short wave radiation = %f W/m2\n", c->net_short_wave_radiation_W);
 
-	/* compute clear sky radiation */
-	clear_sky_radiation = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]) * c->extra_terr_radiation;
-	logger(g_log, "clar_sky_radiation = %f W/m2\n", clear_sky_radiation);
-	/*****************************************************************************************/
-
-	/* LONG WAVE RADIATION */
-	logger(g_log, "\nLONG WAVE RADIATION\n");
 
 	/*****************************************************************************************/
-	/* following Allen et al., 1998 */
-	/* Upward long wave radiation (MJ/m2/day) based on Allen et al., 1998 */
-	c->long_wave_radiation_UW = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(ea)))*(1.35*(met[month].d[day].solar_rad/clear_sky_radiation)-0.35);
-	/* convert from MJ/m2/day to W/m2 */
-	c->long_wave_radiation_UW *= pow(10, -6)*86400.0;
-	logger(g_log, "Long wave radiation (upward) (Allen)= %f W/m2\n", c->long_wave_radiation_UW);
 
 	/* net radiation based on Allen et al., 1998 */
-	c->net_radiation = c->net_short_wave_radiation - c->long_wave_radiation_UW;
+	c->net_radiation = c->net_short_wave_radiation_W - c->long_wave_radiation_UW_W;
 	logger(g_log, "Net radiation (Allen) = %f W/m2\n", c->net_radiation);
-	/*****************************************************************************************/
-
-	//test try to remove it
-	/* following Prentice et al., 1993 */
-	/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
-	c->long_wave_radiation_UW = (b+(1.0-b)*ni)*(a - met[month].d[day].tavg);
-	logger(g_log, "Long wave radiation (upward) = %f W/m2\n", c->long_wave_radiation_UW);
 
 	/* net radiation based on Prentice et., 1993 */
-	c->net_radiation = c->net_short_wave_radiation - c->long_wave_radiation_UW;
-	logger(g_log, "Net radiation (Monteith) = %f W/m2\n", c->net_radiation);
+	c->net_radiation = c->net_short_wave_radiation_W - c->long_wave_radiation_UW_W;
+	logger(g_log, "Net radiation (Prentice) = %f W/m2\n", c->net_radiation);
+
+	/* net radiation based on 3-PG method */
+	//logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//logger(g_log, "Net radiation (3-PG method) = %f W/m2\n", c->net_radiation);
 	/*****************************************************************************************/
 
-	//3-PG method
-	//logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//getchar();
+
 
 	/* PAR RADIATION */
 
@@ -902,6 +803,7 @@ extern topo_t *g_topo;
 	}
 	else
 	{
+		//fixme it should accounted for here the soil albedo NOT in soil_evaporation.c
 		c->net_radiation_for_soil = c->net_radiation;
 		logger(g_log, "Net Radiation for soil outside growing season = %f \n", c->net_radiation_for_soil);
 	}

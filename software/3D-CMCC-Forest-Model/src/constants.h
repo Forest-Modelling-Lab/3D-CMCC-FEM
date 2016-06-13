@@ -26,6 +26,8 @@
 #define MOLPAR_MJ                2.3      //Conversion of Solar Radiation to PAR - CONVERT MJ TO MOLPAR -- 1 MJ = 2.3 molPAR
 #define GDM_MOL                   24      //Molecular weight of dry matter - CONVERT molC TO gDM (12 Molecular weight of C * 2 to have DM)(IPCC guidelines 1996)
 #define GC_MOL                    12      //Convert molC to grams of C
+#define MJ_TO_W         11.574074074      //Convert MJ/m2/day to W/m2
+#define W_TO_MJ               0.0864      //Convert W/m2 to MJ/m2/day
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
 #define SBC                  5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
 #define SBC_MJ              4.903e-9      //(MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day

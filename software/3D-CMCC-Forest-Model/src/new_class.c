@@ -69,7 +69,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 		return 0;
 	}
 	s = &a->species[a->species_count-1];
-	s->name = string_copy(settings->replanted_species);
+	s->name = mystrdup(settings->replanted_species);
 	if ( ! s->name ) {
 		logger(g_log, "unable to copy replanted species from settins. out of memory.");
 		return 0;

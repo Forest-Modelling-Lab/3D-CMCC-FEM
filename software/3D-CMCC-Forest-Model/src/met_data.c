@@ -16,10 +16,165 @@ extern soil_t *g_soil;
 extern topo_t *g_topo;
 
 
+void Solar_Radiation (CELL * c, int day, int month, int years, YOS *yos)
+{
+	double a = 107.0;                                                                    //(W/m)  empirical constants for long wave radiation computation
+	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
+	double ni;                                                                           //proportion of dayl ength
+	double lat_decimal;
+	double lat_degrees;
+	double lat_rad;
+	double atmospheric_transmissivity;
+
+	double dr;                                                                           //inverse relative distance Earth-Sun
+	double sigma;                                                                        //solar declination (radians)
+	double omega_s;                                                                      //sunset hour angle
+	int days_of_year;
+	double TmaxK, TminK;
+
+	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
+	double e0min;                                                                        //saturation vapour pressure at the minimum air temperature (KPa)
+	double es;                                                                           //mean saturation vapour pressure at the air temperature (KPa)
+	double ea;                                                                           //actual vapour pressure derived from relative humidity data (KPa)
+
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
+	/*proportion of day length*/
+	ni = met[month].d[day].daylength/24.0;
+
+
+	logger(g_log, "\nRADIATION ROUTINE\n");
+
+	/* following Allen et al., 1998 */
+	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
+	e0max = 0.61076 * exp((17.27*met[month].d[day].tmax)/(met[month].d[day].tmax+237.3));
+	e0min = 0.61076 * exp((17.27*met[month].d[day].tmin)/(met[month].d[day].tmin+237.3));
+
+	/* compute mean saturation vapour pressure at the air temperature (KPa)*/
+	es = (e0max + e0min)/2.0;
+
+	/* compute actual vapour pressure derived from relative humidity data (KPa) */
+	ea = (met[month].d[day].rh_f/100.0)*es;
+	CHECK_CONDITION(ea, < 0.0);
+
+	if(IS_LEAP_YEAR(years))
+	{
+		days_of_year = 366;
+	}
+	else
+	{
+		days_of_year = 365;
+	}
+
+	/* Following Allen et al., 1998 */
+	/* convert latitude in radians */
+	lat_decimal = g_soil->values[SOIL_LAT] - (int)g_soil->values[SOIL_LAT];
+	lat_degrees = (int)g_soil->values[SOIL_LAT] + (lat_decimal/60.0);
+	lat_rad = (Pi/180.0)*lat_degrees;
+	//logger(g_log, "lat_rad = %f\n", lat_rad);
+
+	/* compute inverse relative distance Earth-Sun */
+	dr = 1.0 + 0.033 * cos(((2*Pi)/days_of_year)*c->doy);
+	//logger(g_log, "dr = %f\n", dr);
+
+	/* compute solar declination */
+	sigma = 0.409 * sin((((2*Pi)/days_of_year)*c->doy)-1.39);
+	//logger(g_log, "sigma = %f\n",sigma);
+
+	/* compute sunset hour angle */
+	omega_s = acos((-tan(lat_rad) * tan(sigma)));
+	//logger(g_log, "omega_s = %f\n", omega_s);
+
+	/* compute atmospheric transmissivity */
+	atmospheric_transmissivity = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]);
+
+	//fixme cos(omega) should takes into account slope and aspect (once they will be included in "topo" files)
+	//following Allen et al., 2006 Agric and Forest Meteorology (parag. 2)
+
+	/* compute extra terrestrial radiation (MJ/m^2/day) */
+	c->extra_terr_radiation_MJ = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
+	logger(g_log, "extra terrestrial radiation = %f (MJ/m^2/day)\n", c->extra_terr_radiation_MJ);
+
+	/* convert into W/m2 */
+	c->extra_terr_radiation_W = c->extra_terr_radiation_MJ * MJ_TO_W;
+	logger(g_log, "extra terrestrial radiation = %f (W/m2)\n", c->extra_terr_radiation_W);
+
+
+	/*****************************************************************************************/
+	/* SHORT WAVE RADIATION */
+	logger(g_log, "\nSHORT WAVE RADIATION\n");
+
+	/* INCOMING SHORT WAVE RADIATION */
+	logger(g_log, "\(incoming short wave)\n");
+
+	/* compute short wave clear sky radiation (Tasumi et al., 2000)*/
+	c->short_wave_clear_sky_radiation_MJ = atmospheric_transmissivity * c->extra_terr_radiation_MJ;
+	logger(g_log, "Short wave clear_sky_radiation = %f (MJ/m^2/day)\n", c->short_wave_clear_sky_radiation_MJ);
+
+	/* convert into W/m2 */
+	c->short_wave_clear_sky_radiation_W = c->short_wave_clear_sky_radiation_MJ * MJ_TO_W;
+	logger(g_log, "Short wave clear_sky_radiation = %f (W/m2)\n", c->short_wave_clear_sky_radiation_W);
+
+	/* from input met data */
+	//logger(g_log, "Solar_rad = %f MJ/m^2 day\n", met[month].d[day].solar_rad);
+
+	c->short_wave_radiation_DW_MJ = met[month].d[day].solar_rad;
+	logger(g_log, "Short_wave_radiation_DW_MJ (downward) = %f MJ/m^2 day\n", c->short_wave_radiation_DW_MJ);
+
+	/* convert into W/m2 */
+	c->short_wave_radiation_DW_W = c->short_wave_radiation_DW_MJ * MJ_TO_W;
+	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation_DW_W);
+
+	/* cloud cover fraction */
+	c->cloud_cover_frac = 1.0 -(c->short_wave_radiation_DW_MJ/c->short_wave_clear_sky_radiation_MJ);
+	logger(g_log, "cloud_cover_frac = %f %%\n", c->cloud_cover_frac * 100.0);
+
+
+	/*****************************************************************************************/
+	/* LONG WAVE RADIATION */
+	logger(g_log, "\nLONG WAVE RADIATION\n");
+
+	/* INCOMING LONG WAVE RADIATION */
+	logger(g_log, "\(incoming long wave)\n");
+
+	/* following Costa dos Santos et al., */
+
+
+	/* OUTGOING LONG WAVE RADIATION */
+	logger(g_log, "\(outgoing long wave)\n");
+
+	/* following Allen et al., 1998 */
+	/* Upward long wave radiation (MJ/m2/day) based on Allen et al., 1998 */
+	c->long_wave_radiation_UW_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(ea)))*(1.35*(c->short_wave_radiation_DW_MJ/c->short_wave_clear_sky_radiation_MJ)-0.35);
+	logger(g_log, "Long wave radiation (upward) (Allen)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
+
+	/* convert into W/m2 */
+	c->long_wave_radiation_UW_W = c->long_wave_radiation_UW_MJ * MJ_TO_W;
+	logger(g_log, "Long wave radiation (upward) (Allen)= %f W/m2\n", c->long_wave_radiation_UW_W);
+
+	/* following Prentice et al., 1993 */
+	/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
+	c->long_wave_radiation_UW_W = (b+(1.0-b)*ni)*(a - met[month].d[day].tavg);
+	logger(g_log, "Long wave radiation (upward) (Prentice)= %f W/m2\n", c->long_wave_radiation_UW_W);
+
+	/* convert into W/m2 */
+	c->long_wave_radiation_UW_MJ = c->long_wave_radiation_UW_W * W_TO_MJ;
+	logger(g_log, "Long wave radiation (upward) (Prentice)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
+
+	//getchar();
+
+
+}
+
+
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Day_Length ( CELL * c, int day, int month, int years, YOS *yos)
+void Day_Length (CELL * c, int day, int month, int years, YOS *yos)
 {
 
 	double ampl;  //seasonal variation in Day Length from 12 h

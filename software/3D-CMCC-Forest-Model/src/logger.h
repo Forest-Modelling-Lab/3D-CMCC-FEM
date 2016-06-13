@@ -8,7 +8,6 @@ typedef struct {
 	int std_output;
 } logger_t;
 
-logger_t* logger_new_ex(const char* const filename, const char* const s);
 logger_t* logger_new(const char* const filename);
 #define logger_enable_file(p)	((p)->file_output=1)
 #define logger_disable_file(p)	((p)->file_output=0)

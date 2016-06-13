@@ -12,7 +12,7 @@
 extern logger_t* g_log;
 extern soil_t *g_soil;
 extern topo_t *g_topo;
-extern char *input_path;
+extern char *input_dir;
 
 /* constants */
 #define EQUAL_CELL                     1
@@ -243,7 +243,7 @@ static int fill_cell_from_species(AGE *const a, const ROW *const row)
 
 	// set values
 	a->species[a->species_count-1].management = row->management;
-	a->species[a->species_count-1].name = string_copy(row->species);
+	a->species[a->species_count-1].name = mystrdup(row->species);
 	a->species[a->species_count-1].counter[N_TREE] = row->n;
 	a->species[a->species_count-1].counter[N_STUMP] = row->stump;
 	a->species[a->species_count-1].value[AVDBH] = row->avdbh;
@@ -376,7 +376,7 @@ int fill_species_from_file(SPECIES *const s)
 		species_flags[i] = 0;
 	}
 
-	sprintf(filename, "%s%s.txt", input_path, s->name);
+	sprintf(filename, "%s/%s.txt", input_dir, s->name);
 	f = fopen(filename, "r");
 	if ( !f )
 	{

@@ -43,6 +43,9 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	assert(m && yos);
 	met = (MET_DATA*) yos[years].m;
 
+
+	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS!!!!!!!!!!!!!!!!!!
+
 	//	/* daily loop on each cell before start with treemodel_daily */
 	//	for ( cell = 0; cell < m->cells_count; cell++)
 	//	{
