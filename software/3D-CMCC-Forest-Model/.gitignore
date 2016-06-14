@@ -9,7 +9,7 @@
 /Debug
 /Debug
 
-# ignore all .txt files in output folders
+# ignore all .txt files in output folders except for daily output files 
 /output/debug_output/*.txt
 /output/annual_output/*.txt
 /output/monthly_output/*.txt
