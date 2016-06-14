@@ -41,7 +41,7 @@
 #define Rgas                  8.3144      //(m3 Pa/ mol K) gas law constant */
 #define EPS                   0.6219      //(MW/MA) unitless ratio of molec weights */
 #define PPFD50                  75.0      //(umol/m2/s) PPFD for 1/2 stomatal closure */
-#define EPAR                    4.55      //(umol/J) PAR photon energy ratio */
+#define EPAR                    4.55      //(umol/J OR mol/MJ) PAR photon energy ratio */
 #define SLAMKG                   0.1	  //Convert SLA IN cm ^2/gC in m^2/KgC
 #define E20                      2.2      //rate of change of saturated VPD with T at 20C
 #define VPDCONV             0.000622      //convert VPD to saturation deficit = 18/29/1000

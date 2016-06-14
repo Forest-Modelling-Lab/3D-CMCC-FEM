@@ -172,7 +172,8 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	c->short_wave_radiation_DW_W = c->short_wave_radiation_DW_MJ * MJ_TO_W;
 	logger(g_log, "Short wave radiation (downward) = %f W/m2\n", c->short_wave_radiation_DW_W);
 
-	/* cloud cover fraction */
+	/* cloud cover fraction from Allen et al., 1998 */
+	//note: Allen says that cloud_cover_frac must be li mited to 1.0
 	c->cloud_cover_frac = (1.35*(c->short_wave_radiation_DW_MJ/c->short_wave_clear_sky_radiation_MJ)-0.35);
 	if(c->cloud_cover_frac > 1.0) c->cloud_cover_frac = 1.0;
 	logger(g_log, "cloud_cover_frac = %f %%\n", c->cloud_cover_frac * 100.0);
@@ -191,72 +192,139 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	/* LONG WAVE RADIATION */
 	logger(g_log, "\nLONG WAVE RADIATION\n");
 
-	/* INCOMING LONG WAVE RADIATION */
-	logger(g_log, "\(incoming long wave)\n");
+//	/* INCOMING LONG WAVE RADIATION */
+//	logger(g_log, "\(incoming long wave)\n");
+//
+//	//todo and for Cloudy Sky???
+//	/* following Sicart et al., 2006 */
+//	/* Downward long wave radiation (W/m2) for Clear Sky*/
+//	c->long_wave_radiation_DW_W = atmospheric_emissivity * SBC * pow((met[month].d[day].tavg+TempAbs), 4.0);
+//	logger(g_log, "Long wave radiation (downward) = %f W/m2\n", c->long_wave_radiation_DW_W);
+//
+//	/* convert into MJ/m^2 day */
+//	c->long_wave_radiation_DW_MJ = c->long_wave_radiation_DW_W * W_TO_MJ;
+//	logger(g_log, "Long wave radiation (downward) = %f MJ/m^2 day\n", c->long_wave_radiation_DW_MJ);
+//
+//
+//	/* OUTGOING LONG WAVE RADIATION */
+//	logger(g_log, "\(outgoing long wave)\n");
+//
+//	logger(g_log, "ea = %f\n", met[month].d[day].ea);
+//
+//	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
+//	if(met[month].d[day].ea < 0.0)
+//	{
+//		/* following Allen et al., 1998 */
+//		/* Upward long wave radiation (MJ/m2/day) */
+//		c->long_wave_radiation_UW_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(met[month].d[day].ea)))*c->cloud_cover_frac;
+//		logger(g_log, "Long wave radiation (upward) (Allen)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
+//
+//		/* convert into W/m2 */
+//		c->long_wave_radiation_UW_W = c->long_wave_radiation_UW_MJ * MJ_TO_W;
+//		logger(g_log, "Long wave radiation (upward) (Allen)= %f W/m2\n", c->long_wave_radiation_UW_W);
+//		/***********************************/
+//	}
+//	else
+//	{
+//		/* following Prentice et al., 1993 */
+//		/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
+//		c->long_wave_radiation_UW_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
+//		logger(g_log, "Long wave radiation (upward) (Prentice)= %f W/m2\n", c->long_wave_radiation_UW_W);
+//
+//		/* convert into MJ/m^2 day */
+//		c->long_wave_radiation_UW_MJ = c->long_wave_radiation_UW_W * W_TO_MJ;
+//		logger(g_log, "Long wave radiation (upward) (Prentice)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
+//		/*****************************************************************************************/
+//	}
+	/* net radiation based on 3-PG method */
+	//logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//logger(g_log, "Net radiation (3-PG method) = %f W/m2\n", c->net_radiation);
+//
+//	/* NET RADIATION */
+//	logger(g_log, "\nNET RADIATION\n");
+//
+//	//fixme IT MUST TAKES INTO ACCOUNT INCOMING LONG WAVE RADIATION
+//	c->net_radiation = c->net_short_wave_radiation_W - c->long_wave_radiation_UW_W;
+//	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 
-	//todo check it
-	/* following Costa dos Santos et al., 2011 */
-	/* Downward long wave radiation (W/m2) */
-	c->long_wave_radiation_DW_W = atmospheric_emissivity * SBC * pow((met[month].d[day].tavg+TempAbs), 4.0);
-	logger(g_log, "Long wave radiation (downward) (Costas)= %f W/m2\n", c->long_wave_radiation_DW_W);
 
-	/* convert into MJ/m^2 day */
-	c->long_wave_radiation_DW_MJ = c->long_wave_radiation_DW_W * W_TO_MJ;
-	logger(g_log, "Long wave radiation (downward) (Costas)= %f MJ/m^2 day\n", c->long_wave_radiation_DW_MJ);
+	logger(g_log, "ea = %f\n", met[month].d[day].ea);
 
+	/* NET LONG WAVE RADIATION */
+	logger(g_log, "\(net long wave)\n");
 
-	/* OUTGOING LONG WAVE RADIATION */
-	logger(g_log, "\(outgoing long wave)\n");
+	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
+	if(met[month].d[day].ea < 0.0)
+	{
+		/* following Allen et al., 1998 */
+		/* Upward long wave radiation (MJ/m2/day) */
+		c->net_long_wave_radiation_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(met[month].d[day].ea)))*c->cloud_cover_frac;
+		logger(g_log, "Net Long wave radiation (Allen)= %f MJ/m^2 day\n", c->net_long_wave_radiation_MJ);
 
-	/* following Allen et al., 1998 */
-	/* Upward long wave radiation (MJ/m2/day) */
-	c->long_wave_radiation_UW_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(met[month].d[day].ea)))*c->cloud_cover_frac;
-	logger(g_log, "Long wave radiation (upward) (Allen)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
+		/* convert into W/m2 */
+		c->net_long_wave_radiation_W = c->net_long_wave_radiation_MJ * MJ_TO_W;
+		logger(g_log, "Net Long wave radiation (Allen)= %f W/m2\n", c->net_long_wave_radiation_W);
+		/***********************************/
+	}
+	else
+	{
+		//todo check it Prentice says "net upward long-wave flux"
+		/* following Prentice et al., 1993 */
+		/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
+		c->net_long_wave_radiation_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
+		logger(g_log, "Net Long wave radiation (Prentice)= %f W/m2\n", c->net_long_wave_radiation_W);
 
-	/* convert into W/m2 */
-	c->long_wave_radiation_UW_W = c->long_wave_radiation_UW_MJ * MJ_TO_W;
-	logger(g_log, "Long wave radiation (upward) (Allen)= %f W/m2\n", c->long_wave_radiation_UW_W);
-
-	/* net radiation based on Allen et al., 1998 */
-	c->net_radiation = c->net_short_wave_radiation_W - c->long_wave_radiation_UW_W;
-	logger(g_log, "Net radiation (Allen) = %f W/m2\n", c->net_radiation);
-
-	/***********************************/
-
-	/* following Prentice et al., 1993 */
-	/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
-	//c->long_wave_radiation_UW_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
-	logger(g_log, "Long wave radiation (upward) (Prentice)= %f W/m2\n", c->long_wave_radiation_UW_W);
-
-	/* convert into MJ/m^2 day */
-	//c->long_wave_radiation_UW_MJ = c->long_wave_radiation_UW_W * W_TO_MJ;
-	logger(g_log, "Long wave radiation (upward) (Prentice)= %f MJ/m^2 day\n", c->long_wave_radiation_UW_MJ);
-
-	/* net radiation based on Prentice et., 1993 */
-	//c->net_radiation = c->net_short_wave_radiation_W - c->long_wave_radiation_UW_W;
-	logger(g_log, "Net radiation (Prentice) = %f W/m2\n", c->net_radiation);
+		/* convert into MJ/m^2 day */
+		c->net_long_wave_radiation_MJ = c->net_long_wave_radiation_W * W_TO_MJ;
+		logger(g_log, "Net Long wave radiation (Prentice)= %f MJ/m^2 day\n", c->net_long_wave_radiation_MJ);
+		/*****************************************************************************************/
+	}
 
 	/* net radiation based on 3-PG method */
 	//logger(g_log, "Net radiation using Qa and Qb = %f W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
 	//logger(g_log, "Net radiation (3-PG method) = %f W/m2\n", c->net_radiation);
 
+	/* NET RADIATION */
+	logger(g_log, "\nNET RADIATION\n");
 
-	/*****************************************************************************************/
-	/* PAR RADIATION */
-	logger(g_log, "\nPAR RADIATION\n");
+	//fixme IT MUST TAKES INTO ACCOUNT INCOMING LONG WAVE RADIATION??
+	c->net_radiation = c->net_short_wave_radiation_W - c->net_long_wave_radiation_W;
+	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 
-	/* convert MJ/m2/day to molPAR/m2/day */
-	c->par = (met[month].d[day].solar_rad * MOLPAR_MJ);
-
-	/* Remove the reflected PAR */
-	c->par *= (1.0 - LightReflec_par);
-	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
-
+	//fixme useless?
 	if(c->net_radiation < 0.00000001)
 	{
 		c->net_radiation = 0.00000001;
 		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 	}
+	/*****************************************************************************************/
+
+	/* PAR RADIATION */
+	logger(g_log, "\nPAR RADIATION\n");
+
+//	/* convert MJ/m2/day to molPAR/m2/day (3-PG method)*/
+//	c->par = (c->short_wave_radiation_DW_MJ * MOLPAR_MJ);
+//	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
+	//test
+	/* convert MJ/m2/day to molPAR/m2/day (Biome-BGC method)*/
+	c->par = (c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
+	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
+
+	/* Remove the reflected PAR */
+	c->par *= (1.0 - LightReflec_par);
+	logger(g_log, "Par = %f molPAR/m^2 day\n", c->par);
+	/*****************************************************************************************/
+
+	/* PPFD RADIATION */
+	logger(g_log, "\nPPFD RADIATION\n");
+
+	/* compute PPFD (umol/m2/sec) */
+	c->ppfd = c->short_wave_radiation_DW_W * RAD2PAR * EPAR;
+
+	/* Remove the reflected PPFD */
+	c->ppfd *= (1.0 - LightReflec_par);
+	logger(g_log, "PPFD = %f umolPPFD/m2/sec\n", c->ppfd);
+	/*****************************************************************************************/
 
 	//FIXME CHECK LIGHT REFLECTED FOR DOMINATED LAYERS!!!
 
@@ -269,16 +337,13 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
 
-
-			/*compute APAR for sun and shaded leaves*/
-
+			/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
 			s->value[PAR] = c->par;
 			s->value[APAR] = s->value[PAR] * LightAbsorb;
 			s->value[APAR_SUN] = s->value[PAR] * LightAbsorb_sun;
 			s->value[TRASM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
 			s->value[APAR_SHADE] = s->value[TRASM_PAR_SUN] * LightAbsorb_shade;
 			s->value[TRASM_PAR_SHADE] = s->value[TRASM_PAR_SUN] - s->value[APAR_SHADE];
-
 			logger(g_log, "INCOMING par = %f molPAR/m^2 day\n", c->par);
 			logger(g_log, "Par = %f molPAR/m^2 day\n", s->value[PAR]);
 			logger(g_log, "Apar sun = %f molPAR/m^2 day\n", s->value[APAR_SUN]);
@@ -286,8 +351,9 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			logger(g_log, "Apar shade = %f molPAR/m^2 day\n", s->value[APAR_SHADE]);
 			logger(g_log, "Trasmitted Par shade = %f molPAR/m^2 day\n", s->value[TRASM_PAR_SHADE]);
 
-			/*compute NetRad for sun and shaded leaves*/
-
+			/*compute NetRad (W/m^2) for sun and shaded leaves*/
+			//todo check if remove (it seems to be used in the old functions for interception and evaporation
+			//BUT IT IS USED FOR SOIL EVAPO
 			s->value[NET_RAD] = c->net_radiation;
 			s->value[NET_RAD_ABS] = s->value[NET_RAD] * LightAbsorb;
 			s->value[NET_RAD_ABS_SUN] = s->value[NET_RAD] * LightAbsorb_sun;
@@ -302,47 +368,42 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			logger(g_log, "Trasmitted NetRad shade = %f W/m^2\n", s->value[NET_RAD_TRASM_SHADE]);
 			logger(g_log, "Absorbed total = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]+s->value[NET_RAD_ABS_SHADE]);
 
-			/*compute PPFD for sun and shaded leaves*/
-			par = c->net_radiation * RAD2PAR * ppfd_coeff;
-			par_abs = par * LightAbsorb;
-			par_abs_lai_sun = par * LightAbsorb_sun;
-			par_trasm_lai_sun = par - par_abs_lai_sun;
-			par_abs_lai_shade = par_trasm_lai_sun * LightAbsorb_shade;
-			par_trasm_lai_shade = par_trasm_lai_sun - par_abs_lai_shade;
-			logger(g_log, "par = %f\n",par);
-			logger(g_log, "par_abs_lai_sun = %f\n", par_abs_lai_sun);
-			logger(g_log, "par_trasm_lai_sun = %f\n", par_trasm_lai_sun);
-			logger(g_log, "par_abs_lai_shade shade = %f\n", par_abs_lai_shade);
-			logger(g_log, "par_trasm_lai_shade = %f\n", par_trasm_lai_shade);
+			/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
+			s->value[PPFD] = c->ppfd;
+			s->value[PPFD_ABS] = c->ppfd * LightAbsorb;
+			s->value[PPFD_ABS_SUN] = c->ppfd * LightAbsorb_sun;
+			s->value[PPFD_TRASM_SUN] = c->ppfd - s->value[PPFD_ABS_SUN];
+			s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRASM_SUN] * LightAbsorb_shade;
+			s->value[PPFD_TRASM_SHADE] = s->value[PPFD_TRASM_SUN] - s->value[PPFD_ABS_SHADE];
+			logger(g_log, "INCOMING ppfd = %f umol/m2/sec\n", c->ppfd);
+			logger(g_log, "ppfd = %f umol/m2/sec\n",s->value[PPFD]);
+			logger(g_log, "ppfd_abs_lai_sun = %f umol/m2/sec\n", s->value[PPFD_ABS_SUN]);
+			logger(g_log, "ppfd_trasm_lai_sun = %f umol/m2/sec\n", s->value[PPFD_TRASM_SUN]);
+			logger(g_log, "ppfd_abs_lai_shade shade = %f umol/m2/sec\n", s->value[PPFD_ABS_SHADE]);
+			logger(g_log, "ppfd_trasm_lai_shade = %f umol/m2/sec\n", s->value[PPFD_TRASM_SHADE]);
 
 			/* it follows rationale of BIOME-BGC */
-			if(par_abs_lai_shade < 0.0)
+			if(s->value[PPFD_ABS_SHADE] < 0.0)
 			{
-				par_abs_lai_sun = par_abs;
+				s->value[PPFD_ABS_SUN] = s->value[PPFD_ABS];
 				par_abs_lai_shade = 0.0;
 			}
 			if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
 			{
-				par_abs_per_lai_sun = par_abs_lai_sun / s->value[LAI_SUN];
-				par_abs_per_lai_shade = par_abs_lai_shade / s->value[LAI_SHADE];
+				par_abs_per_lai_sun = s->value[PPFD_ABS_SUN] / s->value[LAI_SUN];
+				par_abs_per_lai_shade = s->value[PPFD_ABS_SHADE] / s->value[LAI_SHADE];
 			}
 			else
 			{
 				par_abs_per_lai_sun = par_abs_per_lai_shade = 0.0;
+
 			}
 
-			s->value[PPFD_SUN] = par_abs_lai_sun * EPAR;
-			s->value[PPFD_SHADE] = par_abs_lai_shade * EPAR;
+			s->value[PPFD_SUN] = par_abs_per_lai_sun;
+			s->value[PPFD_SHADE] = par_abs_per_lai_shade;
 			logger(g_log, "Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
 			logger(g_log, "Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
 			logger(g_log, "Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
-			//test 12 May 2016 test
-			s->value[PPFD_SUN] = par_abs_per_lai_sun * EPAR;
-			s->value[PPFD_SHADE] = par_abs_per_lai_shade * EPAR;
-			logger(g_log, "Absorbed PPFD = %f umol/m^2 sec\n", s->value[PPFD]);
-			logger(g_log, "Absorbed PPFD sun = %f umol/m^2 sec\n", s->value[PPFD_SUN]);
-			logger(g_log, "Absorbed PPFD shade = %f umol/m^2 sec\n", s->value[PPFD_SHADE]);
-
 
 			//only one height class in layer
 			if ( c->height_class_in_layer_dominant_counter == 1 )

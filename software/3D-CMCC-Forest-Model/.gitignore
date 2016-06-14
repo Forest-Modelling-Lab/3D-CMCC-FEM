@@ -13,7 +13,7 @@
 /output/debug_output/*.txt
 /output/annual_output/*.txt
 /output/monthly_output/*.txt
-
+/output/daily_output/*.txt
 
 # ignore all .nc files in output folders
 /output/debug_output/*.nc

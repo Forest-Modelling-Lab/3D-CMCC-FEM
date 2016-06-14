@@ -129,26 +129,11 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	/* leaf cuticular conductance */
 	gl_c = s->value[CUTCOND] * g_corr;
 
-	/* leaf stomatal conductance: first generate multipliers, then apply them
-		to maximum stomatal conductance */
-
-	/* photosynthetic photon flux density conductance control */
-	//	m_ppfd_sun = (s->value[APAR_SUN] * daylength_sec)/(PPFD50 + (s->value[APAR_SUN]* daylength_sec));
-	//	//logger(g_log, "m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
-	//	m_ppfd_shade = (s->value[APAR_SHADE] * daylength_sec)/(PPFD50 + (s->value[APAR_SHADE]* daylength_sec));
-	//	//logger(g_log, "m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
-
-	//04/apr/2016
-	/* photosynthetic photon flux density conductance control */
-	m_ppfd_sun = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
-	logger(g_log, "m_ppfd_sun for biome = %f mol/sec\n", m_ppfd_sun);
-	m_ppfd_shade = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
-	logger(g_log, "m_ppfd_shade for biome = %f mol/sec\n", m_ppfd_shade);
-
+	/* leaf stomatal conductance: first generate multipliers, then apply them to maximum stomatal conductance */
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
-	m_final_sun = m_ppfd_sun * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
-	m_final_shade = m_ppfd_shade * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
 
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;

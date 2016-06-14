@@ -1,0 +1,123 @@
+static int compute_calc(DATASET *const dataset) {
+ int i;
+ int y;
+ int z;
+ const PREC sigma = 5.6696e-8;
+ const PREC T0 = 273.15;
+ const PREC Tstroke = 36;
+ const PREC ESTAR = 611;
+ const PREC A = 17.27;
+ PREC value;
+ int valids_count;
+ int years_rows_count;
+ int index;
+
+ / /
+ z = 48;
+ if ( dataset->hourly ) {
+  z /= 2;
+ }
+
+ for ( i = 0; i < dataset->rows_count; i += z ) {
+  value = 0.0;
+  valids_count = 0;
+  for ( y = 0; y < z; y++ ) {
+   dataset->rows[i+y].value[FPAR] = INVALID_VALUE;
+   if ( !ARE_FLOATS_EQUAL(dataset->rows[i+y].value[RPOT_MET], 0.0) && !IS_INVALID_VALUE(dataset->rows[i+y].value[SW_IN_FILLED]) ) {
+    dataset->rows[i+y].value[FPAR] = dataset->rows[i+y].value[SW_IN_FILLED] / dataset->rows[i+y].value[RPOT_MET];
+    if ( dataset->rows[i+y].value[FPAR] < 0.0 ) {
+     dataset->rows[i+y].value[FPAR] = 0.0;
+    }
+    value += dataset->rows[i+y].value[FPAR];
+    ++valids_count;
+   }
+  }
+  if ( valids_count )  {
+   value /= valids_count; / mean /
+   for ( y = 0; y < z; y++ ) {
+    if ( ARE_FLOATS_EQUAL(dataset->rows[i+y].value[RPOT_MET], 0.0) ) {
+     assert(dataset->rows[i+y].value[FPAR] == INVALID_VALUE);
+     dataset->rows[i+y].value[FPAR] = value;
+    }
+   }
+  }
+ }
+
+ index = 0;
+ for ( y = 0; y < dataset->years_count; y++ ) {
+  years_rows_count = IS_LEAP_YEAR(dataset->years[y].year) ? LEAP_YEAR_ROWS : YEAR_ROWS;
+  if ( dataset->hourly ) {
+   years_rows_count /= 2;
+  }
+  value = 0.0;
+  valids_count = 0;
+  for ( i = 0; i < years_rows_count; i++ ) {
+   if ( !IS_INVALID_VALUE(dataset->rows[index+i].value[FPAR]) ) {
+    value += dataset->rows[index+i].value[FPAR];
+    ++valids_count;
+   }
+  }
+
+  if ( valids_count && (valids_count != years_rows_count) ) {
+   value /= valids_count;
+   for ( i = 0; i < years_rows_count; i++ ) {
+    if ( IS_INVALID_VALUE(dataset->rows[index+i].value[FPAR]) ) {
+     dataset->rows[index+i].value[FPAR] = value;
+    }
+   }
+  }
+
+  index += years_rows_count;
+ }
+
+ for ( i = 0; i < dataset->rows_count; i++ ) {
+  if ( IS_INVALID_VALUE(dataset->rows[i].value[FPAR]) ||
+    IS_INVALID_VALUE(dataset->rows[i].value[TA_FILLED]) ||
+    IS_INVALID_VALUE(dataset->rows[i].value[VPD_FILLED]) ) {
+   dataset->rows[i].value[LW_IN_CALC] = INVALID_VALUE;
+   continue;
+  }
+  
+  / Cloud cover and cloud correction factor Eq. (3) /
+  dataset->rows[i].value[CLOUD_COVER] = 1.0 - (dataset->rows[i].value[FPAR] - 0.5) / 0.4;
+  if ( dataset->rows[i].value[CLOUD_COVER] > 1.0 ) {
+   dataset->rows[i].value[CLOUD_COVER] = 1.0;
+  }
+  if ( dataset->rows[i].value[CLOUD_COVER] < 0.0 ) {
+   dataset->rows[i].value[CLOUD_COVER] = 0.0;
+  }
+  dataset->rows[i].value[R_CLOUD] = 1 + 0.22 * SQUARE(dataset->rows[i].value[CLOUD_COVER]);
+
+  / Saturation and actual Vapour pressure [3], and associated  emissivity Eq. (2) /
+  dataset->rows[i].value[ESAT] = ESTAR * exp(A*((dataset->rows[i].value[TA_FILLED]/((dataset->rows[i].value[TA_FILLED]+T0)-Tstroke))));
+  
+  dataset->rows[i].value[VP] = dataset->rows[i].value[ESAT] - dataset->rows[i].value[VPD_FILLED] * 100;
+
+  if ( dataset->rows[i].value[VP] < 0.0 ) {
+   dataset->rows[i].value[VP] = 3.3546e-004;
+  }
+
+  dataset->rows[i].value[epsA] = 0.64 * pow(dataset->rows[i].value[VP] / (dataset->rows[i].value[TA_FILLED]+T0), 0.14285714);
+
+  / Longwave radiation flux downward Eq. (1) /
+  dataset->rows[i].value[LW_IN_CALC] = dataset->rows[i].value[R_CLOUD]  dataset->rows[i].value[epsA]  sigma * pow(dataset->rows[i].value[TA_FILLED]+T0, 4);
+  if ( (dataset->rows[i].value[LW_IN_CALC] < 10.0) || (dataset->rows[i].value[LW_IN_CALC] > 1000.0) )  {
+   dataset->rows[i].value[LW_IN_CALC] = INVALID_VALUE;
+  }
+ }
+
+ / qc /
+ for ( i = 0; i < dataset->rows_count; i++ ) {
+  if ( ! IS_INVALID_VALUE(dataset->rows[i].value[LW_IN_CALC]) ) {
+   dataset->rows[i].value[LW_IN_CALC_QC] = dataset->rows[i].value[SW_IN_QC];
+   if ( dataset->rows[i].value[TA_QC] > dataset->rows[i].value[LW_IN_CALC_QC] ) {
+    dataset->rows[i].value[LW_IN_CALC_QC] = dataset->rows[i].value[TA_QC];
+   }
+   if ( dataset->rows[i].value[VPD_QC] > dataset->rows[i].value[LW_IN_CALC_QC] ) {
+    dataset->rows[i].value[LW_IN_CALC_QC] = dataset->rows[i].value[VPD_QC];
+   }
+  }
+ }
+
+ return 1;
+}

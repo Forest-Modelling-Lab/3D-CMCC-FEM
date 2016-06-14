@@ -59,7 +59,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	s->value[F_CO2] = v1*v2;
 	logger(g_log, "F_CO2 modifier  = %f\n", s->value[F_CO2]);
 
-	//LIGHT MODIFIER (Following Makela et al , 2008, Peltioniemi_etal_2012)
+	/* LIGHT MODIFIER */
+	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
@@ -77,7 +78,17 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
 	}
 
-	/*TEMPERATURE MODIFIER*/
+	/* following Biome-BGC */
+	/* photosynthetic photon flux density conductance control */
+	/* for sun leaves */
+	s->value[F_LIGHT_SUN] = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
+	logger(g_log, "F_LIGHT_SUN = %f \n", s->value[F_LIGHT_SUN]);
+	/* for shaded leaves */
+	s->value[F_LIGHT_SHADE] = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
+	logger(g_log, "F_LIGHT_SHADE = %f \n", s->value[F_LIGHT_SHADE]);
+
+
+	/* TEMPERATURE MODIFIER */
 	if (met[month].d[day].tday == NO_DATA)
 	{
 		if ((met[month].d[day].tavg <= s->value[GROWTHTMIN]) || (met[month].d[day].tavg >= s->value[GROWTHTMAX]))
@@ -187,6 +198,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 
 	/*SOIL WATER MODIFIER*/
+	//fixme include "dAdjMod" from 3-PG code
 	c->soil_moist_ratio = c->asw/c->max_asw_fc;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);

@@ -338,6 +338,11 @@ enum
 	NET_RAD_TRASM_SUN,
 	NET_RAD_TRASM_SHADE,
 	PPFD,
+	PPFD_ABS,
+	PPFD_ABS_SUN,
+	PPFD_TRASM_SUN,
+	PPFD_ABS_SHADE,
+	PPFD_TRASM_SHADE,
 	PPFD_SUN,
 	PPFD_SHADE,
 
@@ -346,6 +351,8 @@ enum
 	//ALTER_VPD,                    //Alternative VPD
 	//ALTER_F_VPD,                  //Alternative VPD Modifier
 	F_LIGHT,                        //LIGHT modifier
+	F_LIGHT_SUN,                    //LIGHT modifier for Sun leaves
+	F_LIGHT_SHADE,                  //LIGHT modifier for Shaded leaves
 	F_AGE,                          //AGE modifier
 	F_NUTR,                         //SOIL NUTRIENT Modifer
 	F_T,                            //TEMPERATURE modifier
@@ -929,18 +936,24 @@ typedef struct {
 	double net_long_wave_radiation_MJ;                  //Net long wave radiation flux (MJ/m2/day)
 	double net_long_wave_radiation_W;                   //Net long wave radiation flux (W/m2)
 
-	double cloud_cover_frac;                            //cloud cover fraction
-
 	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
+
 	double par;
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;
 	double par_for_establishment;
-	double ppfd;
+
+	double ppfd;                                        //Photosynthetic phton flux density (umol/m2/sec)
+
+	double cloud_cover_frac;                            //cloud cover fraction
+
+
+
+
 	double av_yearly_par_soil;
 
 	/*carbon variables*/
