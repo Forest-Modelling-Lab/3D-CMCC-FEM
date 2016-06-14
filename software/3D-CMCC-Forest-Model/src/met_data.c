@@ -35,7 +35,12 @@ void Sat_vapour_pressure (CELL * c, int day, int month, int years, YOS *yos)
 
 	/* compute actual vapour pressure derived from relative humidity data (KPa) */
 	met[month].d[day].ea = (met[month].d[day].rh_f/100.0)*met[month].d[day].es;
-	CHECK_CONDITION(met[month].d[day].ea, < 0.0);
+	//CHECK_CONDITION(met[month].d[day].ea, < 0.0);
+	//fixme
+	if (met[month].d[day].ea < 0.0)
+	{
+		met[month].d[day].ea = 0.0;
+	}
 
 }
 
