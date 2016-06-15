@@ -81,10 +81,10 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */
 	/* for sun leaves */
-	s->value[F_LIGHT_SUN] = s->value[PPFD_SUN] /(PPFD50 + s->value[PPFD_SUN]);
+	s->value[F_LIGHT_SUN] = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
 	logger(g_log, "F_LIGHT_SUN = %f \n", s->value[F_LIGHT_SUN]);
 	/* for shaded leaves */
-	s->value[F_LIGHT_SHADE] = s->value[PPFD_SHADE] /(PPFD50 + s->value[PPFD_SHADE]);
+	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] /(PPFD50 + s->value[PPFD_ABS_SHADE]);
 	logger(g_log, "F_LIGHT_SHADE = %f \n", s->value[F_LIGHT_SHADE]);
 
 

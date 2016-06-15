@@ -324,28 +324,30 @@ enum
 	STEMCONST,
 
 	/*radiation*/
-	PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
+	//PAR,                            //Photosyntheticallyl Active Radiation molPAR/m^2/day
 	APAR,                           //Available Physiological Active Radiation molPAR/m^2/day  for DOMINANT LAYER
 	APAR_SUN,
 	APAR_SHADE,
-	TRASM_PAR,
-	TRASM_PAR_SUN,
-	TRASM_PAR_SHADE,
+	TRANSM_PAR,
+	TRANSM_PAR_SUN,
+	TRANSM_PAR_SHADE,
 	APARU,                          //"Utilisable PAR" 'mol/m^2'
-	NET_RAD,                        //Daily Net Solar Radiation in W/m2
+	//NET_RAD,                        //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS,                    //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS_SUN,
 	NET_RAD_ABS_SHADE,
-	NET_RAD_TRASM_SUN,
-	NET_RAD_TRASM_SHADE,
-	PPFD,
+	NET_RAD_TRANSM,
+	NET_RAD_TRANSM_SUN,
+	NET_RAD_TRANSM_SHADE,
+	//PPFD,
 	PPFD_ABS,
+	PPFD_TRANSM,
 	PPFD_ABS_SUN,
-	PPFD_TRASM_SUN,
+	PPFD_TRANSM_SUN,
 	PPFD_ABS_SHADE,
-	PPFD_TRASM_SHADE,
-	PPFD_SUN,
-	PPFD_SHADE,
+	PPFD_TRANSM_SHADE,
+	//PPFD_SUN,
+	//PPFD_SHADE,
 
 	/*modifiers variables*/
 	F_VPD,                          //VPD modifier
@@ -772,6 +774,13 @@ typedef struct {
 	int ages_count;
 
 	int z;
+
+	double Abs_par;                 /* overall gridcell weighted average absorbed par (MJ/m2/day) */
+	double Transm_par;              /* overall gridcell weighted average transmitted par (MJ/m2/day) */
+	double Abs_net_rad;             /* overall gridcell weighted average absorbed net radiation (W/m2) */
+	double Transm_net_rad;          /* overall gridcell weighted average transmitted net radiation (W/m2) */
+	double Abs_ppfd;                /* overall gridcell weighted average absorbed ppfd (umol/m2/sec) */
+	double Transm_ppfd;             /* overall gridcell weighted average transmitted ppfd (umol/m2/sec) */
 	//int top_layer;
 
 } HEIGHT;

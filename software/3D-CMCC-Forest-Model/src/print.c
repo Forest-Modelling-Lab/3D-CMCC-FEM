@@ -105,13 +105,19 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			"-tday (computed)= %.2f °C\n"
 			"-tnight (computed)= %.2f °C\n"
 			"-tsoil (computed)= %.2f °C\n"
-			"-rh = %.2f %%\n"
-			"-vpd = %.2f mbar\n"
-			"-ts_f = %.2f °C\n"
-			"-rain = %.2f mm\n"
-			"-swc = %.2f %%vol\n"
+			"-relative humidity = %.2f %%\n"
+			"-vpd = %.2f mbar/hPa\n"
+			"-ts_f (measured)= %.2f °C\n"
+			"-precip = %.2f mm\n"
+			"-swc (computed/measured)= %.2f %%vol\n"
 			"-thermic_sum = %.2f °C\n"
+			"-rho air = %.2f kg/m3\n"
 			"-daylength = %.2f hrs\n"
+			"-wind speed = %.2f m/sec\n"
+			"-air pressure = %.2f Pa\n"
+			"-es = %.2f KPa\n"
+			"-ea = %.2f KPa\n"
+			"-air psych = %.2f KPa\n"
 			"-co2 concentration = %.2f ppmv\n"
 			"-DOY = %d\n"
 
@@ -130,11 +136,15 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			met[month].d[day].prcp,
 			met[month].d[day].swc,
 			met[month].d[day].thermic_sum,
+			met[month].d[day].rho_air,
 			met[month].d[day].daylength,
+			met[month].d[day].windspeed,
+			met[month].d[day].air_pressure,
+			met[month].d[day].es,
+			met[month].d[day].ea,
+			met[month].d[day].psych,
 			settings->co2Conc,
 			doy
-			//,met[month].avg_monthly_temp
-			//,met[month].cum_monthly_rain
 	);
 	if (settings->spatial == 's')
 	{

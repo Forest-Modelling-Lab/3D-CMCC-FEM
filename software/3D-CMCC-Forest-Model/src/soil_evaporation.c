@@ -17,8 +17,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double ratio;            /* actual/potential evaporation for dry day */
 	double rv, rh;
 
-	//test check albedo for other typos
-	double soil_albedo = 0.20; /* for deciduous Monteith 1973 */
+
 	double net_rad;
 	double pot_soil_evap;    /* (kg/m2/s) potential evaporation (daytime) */
 
@@ -58,17 +57,9 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		rv = rbl;
 		rh = rbl;
 
-		if (c->Veg_Counter >= 1)
-		{
-			net_rad = c->net_radiation_for_soil * (1.0 - soil_albedo);
-			logger(g_log, "Filtered Net Radiation for soil = %f W/m2\n", net_rad);
-		}
-		else
-		{
-			net_rad = c->net_radiation * (1.0 - soil_albedo);
-			logger(g_log, "UN-Filtered Net Radiation for soil = %f W/m2\n", net_rad);
-		}
-
+		/* assign net radiation as local variable */
+		net_rad = c->net_radiation_for_soil;
+		logger(g_log, "net_radiation_for_soil = %.10f W/m2\n", c->net_radiation_for_soil);
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith (met, month, day, rv, rh, net_rad);
@@ -152,7 +143,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 		c->daily_soil_sensible_heat_flux = 0.0;
 	}
 	logger(g_log, "Daily soil_sensible_heat flux = %f W/m^2\n", c->daily_soil_sensible_heat_flux);
-
 }
 
 

@@ -193,7 +193,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 		/* IMPORTANT! reserve computation if not in init data are computed from DM */
 		s->value[RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
-		//fixme
+		//fixme how it does??
 		s->value[RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 
 		logger(g_log, "\n!!!!RESERVE ARE COMPUTED AS A COSTANT FRACTION OF SAPWOOD IN DRYMATTER!!!!\n");

@@ -263,7 +263,6 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 		c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
 		c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
 	}
-	//fixme if used
 	else
 	{
 		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * settings->Fixed_Aut_Resp_rate;
