@@ -3,7 +3,7 @@
 re-written by Alessio Ribeca on January 2016
 please ASK before modify it!
 
-*/
+ */
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -23,10 +23,8 @@ please ASK before modify it!
 extern logger_t* g_log;
 
 #define MAX_DAYS   31   //define max days in a month
-#define MAX_RG     40   //define maximum radiation for a given day
-#define MAX_TAVG   40   //define maximum daily avg temperature for a given day
-#define MAX_VPD    40   //define maximum daily vpd  for a given day
-#define MAX_PRECIP 100  //define maximum precipitation for a given day
+
+
 
 
 /* */
@@ -60,17 +58,17 @@ static const char sz_err_out_of_memory[] = "out of memory.";
 
 /* DO NOT CHANGE THIS ORDER */
 static const char *sz_output_vars[OUTPUT_VARS_COUNT] = {
-	"daily_ar"
-	, "monthly_ar"
-	, "annual_ar"
+		"daily_ar"
+		, "monthly_ar"
+		, "annual_ar"
 
-	, "daily_gpp"
-	, "monthly_gpp"
-	, "annual_gpp"
+		, "daily_gpp"
+		, "monthly_gpp"
+		, "annual_gpp"
 
-	, "daily_npp"
-	, "monthly_npp"
-	, "annual_npp"
+		, "daily_npp"
+		, "monthly_npp"
+		, "annual_npp"
 };
 
 /* do not change this order */
@@ -103,8 +101,8 @@ static int days_per_month [] = {
 };
 
 static const char *MonthName[MONTHS] = {
-	"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY"
-	, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+		"JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY"
+		, "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
 };
 
 //
@@ -211,35 +209,35 @@ OUTPUT_VARS *ImportOutputVarsFile(const char *const filename)
 						break;
 					}
 					else /* monthly */
-					if ( ('m' == token[0]) || ('M' == token[0]) ) {
-						int_no_leak = realloc(ov->monthly_vars, (ov->monthly_vars_count+1)*sizeof*int_no_leak);
-						if ( ! int_no_leak )
-						{
-							logger(g_log, sz_err_out_of_memory);
-							FreeOutputVars(ov);
-							free(buffer);
-							return NULL;
+						if ( ('m' == token[0]) || ('M' == token[0]) ) {
+							int_no_leak = realloc(ov->monthly_vars, (ov->monthly_vars_count+1)*sizeof*int_no_leak);
+							if ( ! int_no_leak )
+							{
+								logger(g_log, sz_err_out_of_memory);
+								FreeOutputVars(ov);
+								free(buffer);
+								return NULL;
+							}
+							ov->monthly_vars = int_no_leak;
+							ov->monthly_vars[ov->monthly_vars_count++] = i;
+							flag = 1;
+							break;
 						}
-						ov->monthly_vars = int_no_leak;
-						ov->monthly_vars[ov->monthly_vars_count++] = i;
-						flag = 1;
-						break;
-					}
-					else /* yearly */
-					if ( ('a' == token[0]) || ('A' == token[0]) ) { /* a/A means annual */
-						int_no_leak = realloc(ov->yearly_vars, (ov->yearly_vars_count+1)*sizeof*int_no_leak);
-						if ( ! int_no_leak )
-						{
-							logger(g_log, sz_err_out_of_memory);
-							FreeOutputVars(ov);
-							free(buffer);
-							return NULL;
-						}
-						ov->yearly_vars = int_no_leak;
-						ov->yearly_vars[ov->yearly_vars_count++] = i;
-						flag = 1;
-						break;
-					}
+						else /* yearly */
+							if ( ('a' == token[0]) || ('A' == token[0]) ) { /* a/A means annual */
+								int_no_leak = realloc(ov->yearly_vars, (ov->yearly_vars_count+1)*sizeof*int_no_leak);
+								if ( ! int_no_leak )
+								{
+									logger(g_log, sz_err_out_of_memory);
+									FreeOutputVars(ov);
+									free(buffer);
+									return NULL;
+								}
+								ov->yearly_vars = int_no_leak;
+								ov->yearly_vars[ov->yearly_vars_count++] = i;
+								flag = 1;
+								break;
+							}
 				}
 			}
 			if ( ! flag ) {
@@ -330,8 +328,8 @@ void atts_free(ATT *att, const int atts_count) {
 }
 
 static void compute_vpd(double *const values, const int rows_count, const int columns_count) {
-#define VPD_RANGE_MIN	-5
-#define VPD_RANGE_MAX	120
+#define VPD_RANGE_MIN      0
+#define VPD_RANGE_MAX    150
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 
 	int i;
@@ -367,8 +365,8 @@ static void compute_vpd(double *const values, const int rows_count, const int co
 }
 
 static void compute_rh(double *const values, const int rows_count, const int columns_count) {
-#define RH_RANGE_MIN	0
-#define RH_RANGE_MAX	100
+#define RH_RANGE_MIN      0
+#define RH_RANGE_MAX    100
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 
 	int i;
@@ -388,26 +386,26 @@ static void compute_rh(double *const values, const int rows_count, const int col
 		value = INVALID_VALUE;
 
 		if ( ! IS_INVALID_VALUE(ta)
-			&& ! IS_INVALID_VALUE(tmax)
-			&& ! IS_INVALID_VALUE(tmin)
-			&& ! IS_INVALID_VALUE(vpd))
+				&& ! IS_INVALID_VALUE(tmax)
+				&& ! IS_INVALID_VALUE(tmin)
+				&& ! IS_INVALID_VALUE(vpd))
 		{
 
-//			/* see Zhang et al., 2008 Ecological Modelling */
-//			/* saturation vapour pressure at the air temperature T (mbar-hPa) */
-//			svp = 6.1076 * exp((17.26 * ta) / (237.3 + ta));
-//			printf("ta = %g\n", ta);
-//			printf("svp = %f\n", svp);
-//
-//			/* compute vapour pressure */
-//			vp = svp - vpd;
-//			printf("vp = %g\n", vp);
-//			printf("vpd = %g\n", vpd);
-//
-//			/* compute relative humidity */
-//			rel_hum = (ea/es)*100.0;
-//			value = rel_hum;
-//			printf("rel_hum = %g\n", rel_hum);
+			//			/* see Zhang et al., 2008 Ecological Modelling */
+			//			/* saturation vapour pressure at the air temperature T (mbar-hPa) */
+			//			svp = 6.1076 * exp((17.26 * ta) / (237.3 + ta));
+			//			printf("ta = %g\n", ta);
+			//			printf("svp = %f\n", svp);
+			//
+			//			/* compute vapour pressure */
+			//			vp = svp - vpd;
+			//			printf("vp = %g\n", vp);
+			//			printf("vpd = %g\n", vpd);
+			//
+			//			/* compute relative humidity */
+			//			rel_hum = (ea/es)*100.0;
+			//			value = rel_hum;
+			//			printf("rel_hum = %g\n", rel_hum);
 
 
 			/* compute saturation vapour pressure at the maximum and minimum air temperature (hPa) */
@@ -453,8 +451,25 @@ static void compute_rh(double *const values, const int rows_count, const int col
 #undef RH_RANGE_MIN
 }
 
-int yos_from_arr(const double *const values, const int rows_count, const int columns_count, YOS **p_yos, int *const yos_count) {
+int yos_from_arr(const double *const values, const int rows_count, const int columns_count, YOS **p_yos, int *const yos_count)
+{
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
+
+/* define maximum and minimum values for check */
+#define RG_RANGE_MIN         0
+#define RG_RANGE_MAX        50
+#define TA_RANGE_MIN       -20
+#define TA_RANGE_MAX        50
+#define TMAX_RANGE_MIN     -20
+#define TMAX_RANGE_MAX      50
+#define TMIN_RANGE_MIN     -20
+#define TMIN_RANGE_MAX      50
+#define VPD_RANGE_MIN        0
+#define VPD_RANGE_MAX      150
+#define PRECIP_RANGE_MIN     0
+#define PRECIP_RANGE_MAX   250
+#define RH_RANGE_MIN         0
+#define RH_RANGE_MAX       100
 
 	YOS *yos_no_leak;
 	YOS *yos;
@@ -465,14 +480,14 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 	int current_year;
 
 	static double previous_solar_rad,
-		previous_tavg,
-		previous_tmax,
-		previous_tmin,
-		previous_vpd,
-		previous_ts_f,
-		previous_prcp,
-		previous_swc,
-		previous_ndvi_lai;
+	previous_tavg,
+	previous_tmax,
+	previous_tmin,
+	previous_vpd,
+	previous_ts_f,
+	previous_prcp,
+	previous_swc,
+	previous_ndvi_lai;
 
 	assert(p_yos && yos_count);
 
@@ -534,8 +549,6 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			return 0;
 		}
 
-		//switch ( i )
-		//{
 		//case RG_F: //Rg_f - solar_rad -daily average solar radiation
 		yos[*yos_count-1].m[month].d[day].solar_rad = values[VALUE_AT(row,RG_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].solar_rad) && (!((day == 0) && (1 == *yos_count) && (month == 0))))
@@ -566,16 +579,22 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 						Log ("********* SOLAR RAD -NO DATA- in previous day!!!!\n" );
 						exit(1);
 					}
-					*/
+					 */
 				}
 			}
+		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].solar_rad < RG_RANGE_MIN || yos[*yos_count-1].m[month].d[day].solar_rad > RG_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR RG = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].solar_rad, day+1, month+1, year);
+			exit(1);
 		}
 		else
 		{
 			previous_solar_rad = yos[*yos_count-1].m[month].d[day].solar_rad;
 		}
 
-	//case TA_F: //Ta_f -  temperature average
+		//case TA_F: //Ta_f -  temperature average
 		yos[*yos_count-1].m[month].d[day].tavg = values[VALUE_AT(row,TA_F)];
 		if (IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tavg) && (!((day == 0) && (*yos_count == 1) && (month == 0))))
 		{
@@ -595,12 +614,18 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				}
 			}
 		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].tavg < TA_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tavg > TA_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR Tavg = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tavg, day+1, month+1, year);
+			exit(1);
+		}
 		else
 		{
 			previous_tavg = yos[*yos_count-1].m[month].d[day].tavg;
 		}
 
-	//case TMAX: //TMAX -  maximum temperature
+		//case TMAX: //TMAX -  maximum temperature
 		yos[*yos_count-1].m[month].d[day].tmax = values[VALUE_AT(row,TMAX)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmax) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -621,12 +646,18 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				}
 			}
 		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].tmax < TMAX_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmax > TMAX_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR Tmax = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmax, day+1, month+1, year);
+			exit(1);
+		}
 		else
 		{
 			previous_tmax = yos[*yos_count-1].m[month].d[day].tmax;
 		}
 
-	//case TMIN: //TMIN -  minimum temperature
+		//case TMIN: //TMIN -  minimum temperature
 		yos[*yos_count-1].m[month].d[day].tmin = values[VALUE_AT(row,TMIN)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].tmin) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -647,13 +678,19 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 				}
 			}
 		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].tmin < TMIN_RANGE_MIN || yos[*yos_count-1].m[month].d[day].tmin > TMIN_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR Tmin = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].tmin, day+1, month+1, year);
+			exit(1);
+		}
 		else
 		{
 			previous_tmin = yos[*yos_count-1].m[month].d[day].tmin;
 		}
 
 
-	//case VPD_F: //RH_f - RH
+		//case VPD_F: //RH_f - RH
 		yos[*yos_count-1].m[month].d[day].vpd = values[VALUE_AT(row,VPD_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].vpd) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -677,13 +714,19 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 
 			}
 		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].vpd < VPD_RANGE_MIN || yos[*yos_count-1].m[month].d[day].vpd > VPD_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR vpd = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].vpd, day+1, month+1, year);
+			exit(1);
+		}
 		else
 		{
 			previous_vpd = yos[*yos_count-1].m[month].d[day].vpd;
 		}
 		//logger(g_log, "%d-%s-vpd = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].vpd);
 
-	//case TS_F: // ts_f   Soil temperature
+		//case TS_F: // ts_f   Soil temperature
 		yos[*yos_count-1].m[month].d[day].ts_f = values[VALUE_AT(row,TS_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].ts_f) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -704,14 +747,14 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 					yos[*yos_count-1].m[month].d[day].ts_f = NO_DATA;
 				}
 			}
-			*/
+			 */
 		}
 		else
 		{
 			previous_ts_f = yos[*yos_count-1].m[month].d[day].ts_f;
 		}
 
-	//case PRECIP:  //Precip - rain
+		//case PRECIP:  //Precip - rain
 		yos[*yos_count-1].m[month].d[day].prcp = values[VALUE_AT(row,PRECIP)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].prcp) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -736,20 +779,18 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			}
 			//logger(g_log, "precipitation of previous year = %f mm\n", yos[*yos_count-1].m[month].rain);
 		}
+		/* check if values are outside ranges */
+		else if(yos[*yos_count-1].m[month].d[day].prcp < PRECIP_RANGE_MIN || yos[*yos_count-1].m[month].d[day].prcp > PRECIP_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR prcp = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].prcp, day+1, month+1, year);
+			exit(1);
+		}
 		else
 		{
 			previous_prcp = yos[*yos_count-1].m[month].d[day].prcp;
 		}
 
-		//CONTROL
-		if (yos[*yos_count-1].m[month].d[day].prcp > MAX_PRECIP)
-		{
-			//logger(g_log, "ERROR IN PRECIP DATA in year %d month %s!!!! %f\n", yos[*yos_count-1].year, MonthName[month], settings->maxprecip);
-		}
-		//logger(g_log, "%d-%s-precip = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].rain);
-
-
-	//case SWC: //Soil Water Content (%)
+		//case SWC: //Soil Water Content (%)
 
 		yos[*yos_count-1].m[month].d[day].swc = values[VALUE_AT(row,SWC)];
 		/*if ( error_flag )
@@ -779,7 +820,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 					yos[*yos_count-1].m[month].d[day].swc = NO_DATA;
 				}
 			}
-			*/
+			 */
 		}
 		else
 		{
@@ -788,7 +829,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 
 		//logger(g_log, "%d-%s-swc= %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].swc);
 		//break;
-	//case NDVI_LAI: //Get LAI in spatial version
+		//case NDVI_LAI: //Get LAI in spatial version
 		if (settings->spatial == 's')
 		{
 			yos[*yos_count-1].m[month].d[day].ndvi_lai = values[VALUE_AT(row,NDVI_LAI)];
@@ -838,7 +879,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			}
 		}
 
-	//case ET: //ET for stand alone RothC (todo remove)
+		//case ET: //ET for stand alone RothC (todo remove)
 		yos[*yos_count-1].m[month].d[day].et = values[VALUE_AT(row,ET)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].et) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -847,7 +888,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 		//logger(g_log, "%d-%s-tavg = %f\n",yos[*yos_count-1].m[month].d[day].n_days, MonthName[month], yos[*yos_count-1].m[month].d[day].tavg);
 
-	//case WS_F: //windspeed
+		//case WS_F: //windspeed
 		yos[*yos_count-1].m[month].d[day].windspeed = values[VALUE_AT(row,WS_F)];
 		if ( IS_INVALID_VALUE (yos[*yos_count-1].m[month].d[day].windspeed) && (!((day == 0) && (*yos_count == 1)&& (month == 0))))
 		{
@@ -863,6 +904,11 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 			// ALESSIOR
 			// TODO: ask ALESSIOC
 		}
+		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
+		{
+			logger(g_log, "BAD DATA FOR rh = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
+			exit(1);
+		}
 	}
 	*p_yos = yos;
 	return 1;
@@ -871,10 +917,10 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 
 //
 int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
-/*
+	/*
 #define COLUMN_AT(x,y,c)	(((c)*dims_size[ROWS_DIM])+((x)*dims_size[ROWS_DIM]*(MET_COLUMNS+2))+((y)*dims_size[ROWS_DIM]*(MET_COLUMNS+2)*dims_size[X_DIM]))
 #define VALUE_AT(x,y,r,c)	((r)+((c)*dims_size[ROWS_DIM])+((x)*dims_size[ROWS_DIM]*(MET_COLUMNS+2))+((y)*dims_size[ROWS_DIM]*(MET_COLUMNS+2)*dims_size[X_DIM]))
-*/
+	 */
 #define COLUMN_AT(c)	((c)*dims_size[ROWS_DIM])
 #define VALUE_AT(r,c)	((r)+(COLUMN_AT((c))))
 	int i;
@@ -908,7 +954,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 
 	/* */
 	ret = nc_open(filename, NC_NOWRITE, &id_file);
-    if ( ret != NC_NOERR ) goto quit;
+	if ( ret != NC_NOERR ) goto quit;
 
 	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
 	if ( ret != NC_NOERR ) goto quit;
@@ -1070,7 +1116,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		 ret = nc_inq_att(id_file, atts[i].name, &atts[i].type, &atts[i].size);
 		 if ( ret != NC_NOERR ) goto quit;
 	}
-	*/
+	 */
 
 	/* save file */
 #if 0
@@ -1088,8 +1134,8 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 		/* write header */
 		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
 		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
-				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
-						/*
+			fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+					/*
 						(int)values[VALUE_AT(0,0,row,YEAR)]
 						, (int)values[VALUE_AT(0,0,row,MONTH)]
 						, (int)values[VALUE_AT(0,0,row,DAY)]
@@ -1103,24 +1149,24 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 						, values[VALUE_AT(0,0,row,NDVI_LAI)]
 						, values[VALUE_AT(0,0,row,ET)]
 						, values[VALUE_AT(0,0,row,WS)]
-						*/
-						(int)values[VALUE_AT(row,YEAR)]
-						, (int)values[VALUE_AT(row,MONTH)]
-						, (int)values[VALUE_AT(row,DAY)]
-						, values[VALUE_AT(row,RG_F)]
-						, values[VALUE_AT(row,TA_F)]
-						, values[VALUE_AT(row,TMAX)]
-						, values[VALUE_AT(row,TMIN)]
-						, values[VALUE_AT(row,VPD_F)]
-						, values[VALUE_AT(row,TS_F)]
-						, values[VALUE_AT(row,PRECIP)]
-						, values[VALUE_AT(row,SWC)]
-						, values[VALUE_AT(row,NDVI_LAI)]
-						, values[VALUE_AT(row,ET)]
-						//ALESSIOC
-						, values[VALUE_AT(row,WS_F)]
+					 */
+					(int)values[VALUE_AT(row,YEAR)]
+								, (int)values[VALUE_AT(row,MONTH)]
+											  , (int)values[VALUE_AT(row,DAY)]
+															, values[VALUE_AT(row,RG_F)]
+																	 , values[VALUE_AT(row,TA_F)]
+																			  , values[VALUE_AT(row,TMAX)]
+																					   , values[VALUE_AT(row,TMIN)]
+																								, values[VALUE_AT(row,VPD_F)]
+																										 , values[VALUE_AT(row,TS_F)]
+																												  , values[VALUE_AT(row,PRECIP)]
+																														   , values[VALUE_AT(row,SWC)]
+																																	, values[VALUE_AT(row,NDVI_LAI)]
+																																			 , values[VALUE_AT(row,ET)]
+																																					  //ALESSIOC
+																																					  , values[VALUE_AT(row,WS_F)]
 
-				);
+			);
 		}
 		fclose(f);
 	}
@@ -1132,7 +1178,7 @@ int ImportNCFile(const char *const filename, YOS **pyos, int *const yos_count) {
 	/* hack */
 	ret = 0;
 
-quit:
+	quit:
 	nc_close(id_file);
 	free(values);
 	free(i_values);
@@ -1249,17 +1295,17 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	const char *sz_time = "time";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time", "height_2m" }; /* DO NOT CHANGE THIS ORDER...please see above */
 	const char *sz_vars[VARS_COUNT] = { "RADS"
-										, "T_2M"
-										, "TMAX_2M"
-										, "TMIN_2M"
-										, "VPD"
-										, "TSOIL"
-										, "TOT_PREC"
-										, "SWC"
-										, "LAI"
-										, "ET"
-										, "WS_F"
-										, "RH"
+			, "T_2M"
+			, "TMAX_2M"
+			, "TMIN_2M"
+			, "VPD"
+			, "TSOIL"
+			, "TOT_PREC"
+			, "SWC"
+			, "LAI"
+			, "ET"
+			, "WS_F"
+			, "RH"
 	};
 
 	int y;
@@ -1579,38 +1625,38 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	/* check for missing vars */
 	for ( i = 0; i < VARS_COUNT; ++i ) {
 		switch ( i ) {
-			case VPD_F-3:
-			case RH_F-3:
-				if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-					logger(g_log, "VPD and RH columns are missing!\n\n");
-					free(values);
-					return 0;
-				}
-			break;
+		case VPD_F-3:
+		case RH_F-3:
+		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+			logger(g_log, "VPD and RH columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
 
-			case TA_F-3:
-				if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-					logger(g_log, "TA, TMIN and TMAX columns are missing!\n\n");
-					free(values);
-					return 0;
-				}
-			break;
+		case TA_F-3:
+		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+			logger(g_log, "TA, TMIN and TMAX columns are missing!\n\n");
+			free(values);
+			return 0;
+		}
+		break;
 
-			case TMIN-3:
-			case TMAX-3:
-				if ( ! vars[i] && ! vars[TA_F-3]) {
-					logger(g_log, "%s is missing!\n\n", sz_vars[i]);
-					free(values);
-					return 0;
-				}
-			break;
+		case TMIN-3:
+		case TMAX-3:
+		if ( ! vars[i] && ! vars[TA_F-3]) {
+			logger(g_log, "%s is missing!\n\n", sz_vars[i]);
+			free(values);
+			return 0;
+		}
+		break;
 
-			default:
-				if ( ! vars[i] ) {
-					logger(g_log, "met columns %s is missing!\n\n", sz_vars[i]);
-					free(values);
-					return 0;
-				}
+		default:
+			if ( ! vars[i] ) {
+				logger(g_log, "met columns %s is missing!\n\n", sz_vars[i]);
+				free(values);
+				return 0;
+			}
 		}
 	}
 
@@ -1636,7 +1682,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	if ( ! vars[TA_F-3] ) {
 		for ( i = 0; i < rows_count; ++i ) {
 			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TMAX)])
-				&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
+					&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
 				values[VALUE_AT(i, TA_F)] = (0.606 * values[VALUE_AT(i, TMAX)]) + (0.394 * values[VALUE_AT(i, TMIN)]);
 				//met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 			}
@@ -1659,24 +1705,24 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 		/* write header */
 		fputs("LAT,LON,DATE,ET,LAI,RADS,SWC,TMAX,TMIN,TOT_PREC,TSOIL,VPD,WS_f\n", f);
 		for ( row = 0; row < dims_size[TIME_DIM]; ++row ) {
-				fprintf(f, "%g,%g,%02d/%02d/%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
-							, lat
-							, lon
-							,(int)values[VALUE_AT(row,DAY)]
-							, (int)values[VALUE_AT(row,MONTH)]
-							, (int)values[VALUE_AT(row,YEAR)]
-							, values[VALUE_AT(row,ET)]
-							, values[VALUE_AT(row,NDVI_LAI)]
-							, values[VALUE_AT(row,RG_F)]
-							, values[VALUE_AT(row,SWC)]
-							, values[VALUE_AT(row,TMAX)]
-							, values[VALUE_AT(row,TMIN)]
-							, values[VALUE_AT(row,PRECIP)]
-							, values[VALUE_AT(row,TS_F)]
-							, values[VALUE_AT(row,VPD_F)]
-							, values[VALUE_AT(row,WS_F)]
+			fprintf(f, "%g,%g,%02d/%02d/%d,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g\n"
+					, lat
+					, lon
+					,(int)values[VALUE_AT(row,DAY)]
+								 , (int)values[VALUE_AT(row,MONTH)]
+											   , (int)values[VALUE_AT(row,YEAR)]
+															 , values[VALUE_AT(row,ET)]
+																	  , values[VALUE_AT(row,NDVI_LAI)]
+																			   , values[VALUE_AT(row,RG_F)]
+																						, values[VALUE_AT(row,SWC)]
+																								 , values[VALUE_AT(row,TMAX)]
+																										  , values[VALUE_AT(row,TMIN)]
+																												   , values[VALUE_AT(row,PRECIP)]
+																															, values[VALUE_AT(row,TS_F)]
+																																	 , values[VALUE_AT(row,VPD_F)]
+																																			  , values[VALUE_AT(row,WS_F)]
 
-				);
+			);
 		}
 		fclose(f);
 	}
@@ -1687,7 +1733,7 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	free(values);
 	return i;
 
-quit:
+	quit:
 	puts(nc_strerror(ret));
 	nc_close(id_file);
 	free(f_values);
@@ -1703,12 +1749,12 @@ quit:
 int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_count) {
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	int i = 0,
-		column = 0,
-		month = 0,
-		day = 0,
-		year = 0,
-		error_flag = 0,
-		columns[MET_COLUMNS];
+			column = 0,
+			month = 0,
+			day = 0,
+			year = 0,
+			error_flag = 0,
+			columns[MET_COLUMNS];
 
 	int no_year_column;
 	int current_year = 0;
@@ -1716,9 +1762,9 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	int current_row;
 
 	char *token = NULL,
-	*token2 = NULL,
-	*p,
-	buffer[BUFFER_SIZE] = { 0 };
+			*token2 = NULL,
+			*p,
+			buffer[BUFFER_SIZE] = { 0 };
 	int rows_count;
 	double *values;
 
@@ -1941,7 +1987,7 @@ int ImportStandardFile(const char *const filename, YOS **p_yos, int *const yos_c
 	}
 
 	if ( (-1 == columns[RH_F]) 
-		&& (-1 == columns[VPD_F]) ) {
+			&& (-1 == columns[VPD_F]) ) {
 		logger(g_log, "rh and vpd not found!");
 		free(values);
 		return 0;
@@ -2149,7 +2195,7 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 // if type is 2, write yearly
 //
 int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
-/*
+	/*
 	la memoria e' stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
@@ -2164,7 +2210,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	ossia
 
 	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-*/
+	 */
 
 	int i;
 	int ret;
@@ -2316,7 +2362,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	free(time_rows);
 	return 1;
 
-quit:
+	quit:
 	logger(g_log, "unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
 	free(time_rows);
 	nc_close(id_file);
@@ -2355,7 +2401,7 @@ static topo_import_nc(const char *const filename) {
 
 	/* */
 	ret = nc_open(filename, NC_NOWRITE, &id_file);
-    if ( ret != NC_NOERR ) goto quit;
+	if ( ret != NC_NOERR ) goto quit;
 
 	ret = nc_inq(id_file, &dims_count, &vars_count, &atts_count, &unl_count);
 	if ( ret != NC_NOERR ) goto quit;
@@ -2517,7 +2563,7 @@ static topo_import_nc(const char *const filename) {
 		 ret = nc_inq_att(id_file, atts[i].name, &atts[i].type, &atts[i].size);
 		 if ( ret != NC_NOERR ) goto quit;
 	}
-	*/
+	 */
 
 	/* save file */
 #if 0
@@ -2535,8 +2581,8 @@ static topo_import_nc(const char *const filename) {
 		/* write header */
 		fputs("Year\tMonth\tn_days\tRg_f\tTa_f\tTmax\tTmin\tVPD_f\tTs_f\tPrecip\tSWC\tLAI\tET\tWS_F\n", f);
 		for ( row = 0; row < dims_size[ROWS_DIM]; ++row ) {
-				fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
-						/*
+			fprintf(f, "%d\t%d\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\n",
+					/*
 						(int)values[VALUE_AT(0,0,row,YEAR)]
 						, (int)values[VALUE_AT(0,0,row,MONTH)]
 						, (int)values[VALUE_AT(0,0,row,DAY)]
@@ -2550,24 +2596,24 @@ static topo_import_nc(const char *const filename) {
 						, values[VALUE_AT(0,0,row,NDVI_LAI)]
 						, values[VALUE_AT(0,0,row,ET)]
 						, values[VALUE_AT(0,0,row,WS)]
-						*/
-						(int)values[VALUE_AT(row,YEAR)]
-						, (int)values[VALUE_AT(row,MONTH)]
-						, (int)values[VALUE_AT(row,DAY)]
-						, values[VALUE_AT(row,RG_F)]
-						, values[VALUE_AT(row,TA_F)]
-						, values[VALUE_AT(row,TMAX)]
-						, values[VALUE_AT(row,TMIN)]
-						, values[VALUE_AT(row,VPD_F)]
-						, values[VALUE_AT(row,TS_F)]
-						, values[VALUE_AT(row,PRECIP)]
-						, values[VALUE_AT(row,SWC)]
-						, values[VALUE_AT(row,NDVI_LAI)]
-						, values[VALUE_AT(row,ET)]
-						//ALESSIOC
-						, values[VALUE_AT(row,WS_F)]
+					 */
+					(int)values[VALUE_AT(row,YEAR)]
+								, (int)values[VALUE_AT(row,MONTH)]
+											  , (int)values[VALUE_AT(row,DAY)]
+															, values[VALUE_AT(row,RG_F)]
+																	 , values[VALUE_AT(row,TA_F)]
+																			  , values[VALUE_AT(row,TMAX)]
+																					   , values[VALUE_AT(row,TMIN)]
+																								, values[VALUE_AT(row,VPD_F)]
+																										 , values[VALUE_AT(row,TS_F)]
+																												  , values[VALUE_AT(row,PRECIP)]
+																														   , values[VALUE_AT(row,SWC)]
+																																	, values[VALUE_AT(row,NDVI_LAI)]
+																																			 , values[VALUE_AT(row,ET)]
+																																					  //ALESSIOC
+																																					  , values[VALUE_AT(row,WS_F)]
 
-				);
+			);
 		}
 		fclose(f);
 	}
@@ -2579,7 +2625,7 @@ static topo_import_nc(const char *const filename) {
 	/* hack */
 	ret = 0;
 
-quit:
+	quit:
 	nc_close(id_file);
 	free(values);
 	free(i_values);

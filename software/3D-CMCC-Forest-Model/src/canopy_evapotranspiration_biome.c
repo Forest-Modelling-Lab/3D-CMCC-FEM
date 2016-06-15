@@ -280,8 +280,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			rv = 1.0/gl_t_wv_sun;
 			rh = 1.0/gl_sh;
 
-			//test 11 MAY 2016 following biome approach
-			//net_rad = s->value[NET_RAD_ABS_SUN]
+			/* note: differently from Biome model uses Net Radiation instead Short wave flux */
 			net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 			logger(g_log, "net rad = %f\n", net_rad);
 
@@ -298,8 +297,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			rv = 1.0/gl_t_wv_shade;
 			rh = 1.0/gl_sh;
 
-			//test 11 May 2016 following biome approach
-			//net_rad = s->value[NET_RAD_ABS_SHADE];
+			/* note: differently from Biome model uses Net Radiation instead Short wave flux */
 			net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 			logger(g_log, "net rad = %f\n", net_rad);
 			transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
@@ -320,6 +318,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
+
+
+		/********************************************************************************************************************/
 
 		/* following TLEAF in MAESPA model (physiol.f90, row 197) check for consistency in units */
 
