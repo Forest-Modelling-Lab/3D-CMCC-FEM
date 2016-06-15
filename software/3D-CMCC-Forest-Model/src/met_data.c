@@ -84,13 +84,7 @@ void Day_Length (CELL * c, int day, int month, int years, YOS *yos)
 //following Running et al., 1987
 void Avg_temperature (CELL * c, int day, int month, int years)
 {
-	/*
-	if (!day )
-			logger(g_log, "computing Get_avg_temperature...\n");
-	 */
-
 	MET_DATA *met;
-	// check parameters
 	met = (MET_DATA*) c->years[years].m;
 
 	if ( met[month].d[day].tavg == NO_DATA)
@@ -108,14 +102,19 @@ void Avg_temperature (CELL * c, int day, int month, int years)
 
 }
 
+void Psychrometric (CELL * c, int day, int month, int years, YOS *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) c->years[years].m;
+
+	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
+	met[month].d[day].psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
+}
+
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
 extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
-	/*
-	if (!day)
-		logger(g_log, "computing Get_daylight_avg_temperature...\n");
-	 */
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -135,10 +134,6 @@ extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, Y
 //compute nightime average air temperature
 extern void Nightime_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
 {
-	/*
-	if (!day)
-		logger(g_log, "computing Get_nightime_avg_temperature...\n");
-	 */
 
 	MET_DATA *met;
 	met = (MET_DATA*) yos[years].m;
@@ -277,8 +272,7 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 
 	//FIXME model doesn't get for the first 10 days of the year the averaged values
 	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
-	/* soil temperature correction using difference from
-				annual average tair */
+	/* soil temperature correction using difference from annual average tair */
 	/*file bgc.c
 
 	 *

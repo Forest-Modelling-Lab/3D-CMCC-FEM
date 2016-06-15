@@ -20,7 +20,6 @@ void canopy_sensible_heat (SPECIES *const s, CELL *const c, const MET_DATA *cons
 {
 
 	double rad_abs;           //absorbed shortwave longwave radiation (W/m2)
-	double psych;             //psychrometric constant (KPa/°C)
 	double psych_p;           //product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016
 	double dt = 0.2;
 	double t1, t2;            //temperature offset (°C)
@@ -44,10 +43,6 @@ void canopy_sensible_heat (SPECIES *const s, CELL *const c, const MET_DATA *cons
 	logger(g_log, "rad_abs = %f\n", rad_abs);
 
 	/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
-	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
-	psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
-	logger(g_log, "psych = %f\n", psych);
-
 	/* calculate temperature offsets for slope estimate */
 	t1 = met[month].d[day].tday+dt;
 	t2 = met[month].d[day].tday-dt;
@@ -81,7 +76,7 @@ void canopy_sensible_heat (SPECIES *const s, CELL *const c, const MET_DATA *cons
 //	rhr = (rh * rr) / (rh + rr);
 //	/* compute product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016 */
 //	/* then ra = rhr */
-//	psych_p = psych *(1+(rc/rhr));
+//	psych_p = met[month].d[day].psych *(1+(rc/rhr));
 //	logger(g_log, "psych_p = %f\n", psych_p);
 //
 //	//test to avoid problems using generic daily data we should divide the fluxes into diurnal (using tday) and nocturnal (using tnight) (but for net_rad???)

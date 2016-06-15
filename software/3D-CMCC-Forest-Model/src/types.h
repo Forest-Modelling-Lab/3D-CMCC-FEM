@@ -72,6 +72,7 @@ typedef struct {
 	PREC co2_conc;
 	PREC es;            /* (KPa) weighted mean saturation vapour pressure at the air temperature */
 	PREC ea;            /* (KPa) actual vapour pressure derived from relative humidity data */
+	PREC psych;         /* (KPa/°C) psychrometric constant */
 
 } MET_DAILY_DATA;
 
@@ -1243,6 +1244,7 @@ void Air_density (CELL *, int, int, int, YOS *);
 void Latent_heat (CELL *, int, int, int, YOS *);
 void Thermic_sum (CELL *, int, int, int, YOS *);
 void Air_pressure (CELL *c, int, int, int, YOS *);
+void Psychrometric (CELL *c, int, int, int, YOS *);
 void Veg_Days (CELL *const, const YOS *const, const int, const int, const int);
 int sort_by_years(const void *, const void *);
 int sort_by_heights_asc(const void * , const void * );

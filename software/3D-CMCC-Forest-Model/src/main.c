@@ -4,8 +4,6 @@
 
 //TODO SIMULAZIONI DA bareground
 //TODO RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
-//TODO INSERIRE UN MAX NUMBER OF LAYER IN FUNZIONE DEL TREE HEIGHT (chiedere Arianna)
-//TODO NETCDF
 //TODO VERSION FEM AND BGC
 //TODO RIMETTERE PER L'ACQUA COMPETIZIONE SIMMETRICA
 
@@ -1374,6 +1372,7 @@ int main(int argc, char *argv[])
 					Day_Length (&m->cells[cell], day, month, year, yos);
 					Latent_heat (&m->cells[cell], day, month, year, yos);
 					Air_pressure (&m->cells[cell], day, month, year, yos);
+					Psychrometric (&m->cells[cell], day, month, year, yos);
 					Sat_vapour_pressure (&m->cells[cell], day, month, year, yos);
 					Annual_met_values (&m->cells[cell], day, month, year, yos);
 					Annual_CO2_concentration (&m->cells[cell], day, month, year, yos);
