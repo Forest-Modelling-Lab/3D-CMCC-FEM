@@ -437,8 +437,10 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			}
 
 			//todo compute a weighted average Net Radiation, Par and PPFD absorbed and transmitted through the overall gridcell
+
+			//todo CHECK IT in struct height is ok!!
 			/*
-			c->heights[height].Abs_par = ;
+			c->heights[height].layers[].Abs_par = ;
 			c->heights[height].Transm_par = ;
 			c->heights[height].Abs_net_rad = ;
 			c->heights[height].Transm_net_rad = ;

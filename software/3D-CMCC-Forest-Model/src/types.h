@@ -763,6 +763,18 @@ typedef struct {
 	int species_count;
 } AGE;
 
+//all variables related to layers
+typedef struct {
+
+	double Abs_par;                 /* overall gridcell weighted average absorbed par (MJ/m2/day) */
+	double Transm_par;              /* overall gridcell weighted average transmitted par (MJ/m2/day) */
+	double Abs_net_rad;             /* overall gridcell weighted average absorbed net radiation (W/m2) */
+	double Transm_net_rad;          /* overall gridcell weighted average transmitted net radiation (W/m2) */
+	double Abs_ppfd;                /* overall gridcell weighted average absorbed ppfd (umol/m2/sec) */
+	double Transm_ppfd;             /* overall gridcell weighted average transmitted ppfd (umol/m2/sec) */
+
+} LAYER;
+
 /* */
 //all variables related to the height class
 typedef struct {
@@ -773,14 +785,12 @@ typedef struct {
 	AGE *ages;
 	int ages_count;
 
+	LAYER *layers;
+	int layer_count;
+
+
 	int z;
 
-	double Abs_par;                 /* overall gridcell weighted average absorbed par (MJ/m2/day) */
-	double Transm_par;              /* overall gridcell weighted average transmitted par (MJ/m2/day) */
-	double Abs_net_rad;             /* overall gridcell weighted average absorbed net radiation (W/m2) */
-	double Transm_net_rad;          /* overall gridcell weighted average transmitted net radiation (W/m2) */
-	double Abs_ppfd;                /* overall gridcell weighted average absorbed ppfd (umol/m2/sec) */
-	double Transm_ppfd;             /* overall gridcell weighted average transmitted ppfd (umol/m2/sec) */
 	//int top_layer;
 
 } HEIGHT;
