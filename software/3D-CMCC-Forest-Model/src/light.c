@@ -29,6 +29,16 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	double par_trasm_lai_sun, par_trasm_lai_shade;
 	double par_trasm_per_lai_sun, par_trasm_per_lai_shade;
 
+	int counter;
+
+	double temp_abs_net_rad;
+	double temp_abs_par;
+	double temp_abs_ppfd;
+
+	double temp_net_rad;
+	double temp_par;
+	double temp_ppfd;
+
 	//double ppfd_coeff = 0.01;                                                             //parameter that quantifies the effect of light on conductance see Schwalm and Ek 2004 and Kimbal et al., 1997
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
@@ -343,6 +353,11 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
 
+			/* reset counter */
+			if (c->dominant_veg_counter == 1) counter = 0;
+			/* increment layer counter */
+			counter ++;
+
 			/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
 			s->value[APAR_SUN] = c->par * LightAbsorb_sun;
 			s->value[TRANSM_PAR_SUN] = c->par - s->value[APAR_SUN];
@@ -438,17 +453,43 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 
 			//todo compute a weighted average Net Radiation, Par and PPFD absorbed and transmitted through the overall gridcell
 
-			//todo CHECK IT in struct height is ok!!
-			/*
-			c->heights[height].layers[].Abs_par = ;
-			c->heights[height].Transm_par = ;
-			c->heights[height].Abs_net_rad = ;
-			c->heights[height].Transm_net_rad = ;
-			c->heights[height].Abs_ppfd = ;
-			c->heights[height].Transm_ppfd = ;
-			*/
+			//todo CHECK IT in struct height is ok!!as ALESSIOR
+//			c->heights[height].layers[].Abs_par = ;
+//			c->heights[height].Transm_par = ;
+//			c->heights[height].Abs_net_rad = ;
+//			c->heights[height].Transm_net_rad = ;
+//			c->heights[height].Abs_ppfd = ;
+//			c->heights[height].Transm_ppfd = ;
 
-
+			//TODO TO INCLUDE
+//			/* first height class processed */
+//			if(counter == 1)
+//			{
+//				//fixme unfortunately both par, net rad and ppfd take into account ABOVE albedo also if they do NOT
+//				/* assign values */
+//				temp_par = c->par;
+//				temp_net_rad = c->net_radiation;
+//				temp_ppfd = c->ppfd;
+//			}
+//			/* compute effective absorbed net radiation, par and ppfd based on effective gridcell coverage */
+//			temp_abs_par = s->value[APAR]*canopy_cover_eff;
+//			temp_abs_net_rad = s->value[NET_RAD_ABS]*canopy_cover_eff;
+//			temp_abs_ppfd = s->value[PPFD_ABS]*canopy_cover_eff;
+//			/* compute effective un-absorbed net radiation, par and ppfd based on effective gridcell gap cover */
+//			//fixme unfortunately both par, net rad and ppfd take into ABOVE account albedo also if they do NOT
+//			temp_par -= c->par - temp_abs_par;
+//			temp_net_rad -= c->net_radiation - temp_net_rad;
+//			temp_ppfd = -c->ppfd - temp_ppfd;
+//
+//			/* last height class processed assign value for lower/soil layers */
+//			if(counter == c->dominant_veg_counter)
+//			{
+				//note : lower layers use c->par, c->net_radiation, c->ppfd
+//				c->par = temp_par;
+//				c->net_radiation = temp_net_rad;
+//				c->ppfd = temp_ppfd;
+//			}
+			//todo to remove
 			/* compute available light for lower/soil layer */
 			/* soil layer below dominant layer */
 			if(c->height_class_in_layer_dominated_counter == 0)
