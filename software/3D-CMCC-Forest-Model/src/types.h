@@ -1072,8 +1072,6 @@ typedef struct {
 	double daily_canopy_sensible_heat_flux;
 	double daily_soil_sensible_heat_flux;
 
-
-
 	/*energy balance*/
 	double daily_c_int_watt;
 	double daily_c_transp_watt;

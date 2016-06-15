@@ -31,7 +31,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	logger(g_log, "\n\n...checking initial biomass data...\n");
 
 	/*check for initial biomass*/
-	if (s->value[BIOMASS_STEM_tDM]== 0.0 )
+	if (s->value[BIOMASS_STEM_tDM] == 0.0 || s->value[BIOMASS_STEM_tDM] == NO_DATA)
 	{
 		logger(g_log, "\nNo Stem Biomass Data are available for model initialization \n");
 		logger(g_log, "...Generating input Stem Biomass biomass data from DBH = %f cm\n", s->value[AVDBH]);
@@ -79,7 +79,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	logger(g_log, "-Individual stem biomass = %f KgDM\n", s->value[AV_STEM_MASS_KgDM]);
 	logger(g_log, "-Individual stem biomass = %f KgC\n", s->value[AV_STEM_MASS_KgC]);
 
-	if (s->value[BIOMASS_BRANCH_tDM] == 0.0)
+	if (s->value[BIOMASS_BRANCH_tDM] == 0.0 || s->value[BIOMASS_BRANCH_tDM] == NO_DATA)
 	{
 		logger(g_log, "\nNo Branch and Bark Data are available from model initialization\n"
 				"Is the Stem biomass initial value with Branch and Bark?\n");
@@ -122,7 +122,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	logger(g_log, "-Individual total stem = %f KgC\n", s->value[AV_TOT_STEM_MASS_KgC]);
 	CHECK_CONDITION(fabs((s->value[AV_TOT_STEM_MASS_KgC])-(s->value[AV_STEM_MASS_KgC] + s->value[AV_BRANCH_MASS_KgC])), >1e-4);
 
-	if(s->value[BIOMASS_COARSE_ROOT_tDM]== 0)
+	if(s->value[BIOMASS_COARSE_ROOT_tDM]== 0 || s->value[BIOMASS_COARSE_ROOT_tDM] == NO_DATA)
 	{
 		logger(g_log, "\nNo Coarse root Biomass Data are available for model initialization \n");
 		logger(g_log, "...Generating input Coarse root Biomass biomass data from DBH data...\n");
@@ -184,7 +184,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	logger(g_log, "   Total Sapwood biomass per tree = %f gC tree \n", (s->value[TOT_SAPWOOD_C]/s->counter[N_TREE])*1000000.0);
 
 	/*reserve*/
-	if (s->value[RESERVE_tDM] == 0)
+	if (s->value[RESERVE_tDM] == 0 || s->value[RESERVE_tDM] == NO_DATA)
 	{
 		logger(g_log, "\nNo Reserve Biomass Data are available for model initialization \n");
 		logger(g_log, "...Generating input Reserve Biomass biomass data\n");
@@ -220,7 +220,7 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 	logger(g_log, "-Individual minimum reserve = %f KgC/tree\n", s->value[AV_MIN_RESERVE_KgC]);
 
 	/* leaf */
-	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0)
+	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0 || s->value[BIOMASS_FOLIAGE_tDM] == NO_DATA)
 	{
 		if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 		{
@@ -253,7 +253,8 @@ void Initialization_biomass_data (SPECIES *s, HEIGHT *h)
 
 
 	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
-	if (s->value[BIOMASS_FINE_ROOT_tDM] == 0.0 && (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
+	if (( s->value[BIOMASS_FINE_ROOT_tDM] == 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] == NO_DATA)
+			&& (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
 		logger(g_log, "\nNo Fine root Biomass Data are available for model initialization \n");
 		logger(g_log, "...Generating input Fine root Biomass biomass data from DBH data...\n");

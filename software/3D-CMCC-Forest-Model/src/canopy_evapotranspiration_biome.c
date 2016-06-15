@@ -186,7 +186,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			rv = 1.0/gc_e_wv;
 			rh = 1.0/gc_sh;
 			net_rad = s->value[NET_RAD_ABS];
-			/* call penman-monteith function, returns e in kg/m2/s for evaporation and W/m2 for latent heat*/
+			/* call Penman-Monteith function, returns e in kg/m2/s for evaporation and W/m2 for latent heat*/
 			evapo = Penman_Monteith (met, month, day, rv, rh, net_rad);
 			s->value[CANOPY_EVAPO] = evapo;
 			/* calculate the time required to evaporate all the canopy water */
@@ -235,7 +235,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				//net_rad = s->value[NET_RAD_ABS_SUN]
 				net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 				logger(g_log, "net rad = %f\n", net_rad);
-				/* call penman-monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
+				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
 				transp_sun *=  transp_daylength * s->value[LAI_SUN];
 				logger(g_log, "transp_sun = %.10f mm/m2/day\n", transp_sun);
@@ -253,7 +253,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				transp_shade *=  transp_daylength * s->value[LAI_SHADE];
 				logger(g_log, "transp_shade = %.10f mm/m2/day\n", transp_shade);
 
-				//test include F_CO2 effect
 				transp = transp_sun + transp_shade;
 				logger(g_log, "transp = %.10f mm/m2/day\n", transp);
 				s->value[CANOPY_TRANSP] = transp;
@@ -261,7 +260,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* considering effective coverage of cell */
 				s->value[CANOPY_TRANSP] *= cell_coverage;
 
-				//test 12 May 2016 test
 				/* including CO2 effect */
 				s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
@@ -304,7 +302,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			transp_shade *= daylength_sec * s->value[LAI_SHADE];
 			logger(g_log, "transp_shade = %.10f mm/m2/day\n", transp_shade);
 
-			//test include F_CO2 effect
 			transp = transp_sun + transp_shade;
 			logger(g_log, "transp = %.10f mm/m2/day\n", transp);
 			s->value[CANOPY_TRANSP] = transp;
@@ -312,7 +309,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			/* considering effective coverage of cell and convert to daily amount */
 			s->value[CANOPY_TRANSP] *= cell_coverage;
 
-			//test 12 May 2016 test
 			/* including CO2 effect */
 			s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
