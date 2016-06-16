@@ -601,6 +601,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	else
 	{
 		/* net radiation for the soil outside growing season (bare soil condition) */
+		//fixme is it correct net_radiation????????
 		c->net_radiation_for_soil = c->net_radiation * (1.0 - LightReflec_soil);
 		logger(g_log, "Net Radiation for soil outside growing season = %f \n", c->net_radiation_for_soil);
 	}
