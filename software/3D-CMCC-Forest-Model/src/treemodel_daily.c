@@ -176,7 +176,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 
-								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height);
+								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height, age, species);
 
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 										met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
@@ -207,7 +207,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 
 								}
-								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height);
+								Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height, age, species);
 								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
 
 								/* nitrogen block */
@@ -242,7 +242,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 							logger(g_log, "VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
-							Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height);
+							Radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, yos[years].year, month, day, DaysInMonth[month], height, age, species);
 
 							/* modifiers */
 							Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
