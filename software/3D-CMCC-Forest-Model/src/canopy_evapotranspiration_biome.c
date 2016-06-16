@@ -42,7 +42,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
-	double cell_coverage;
+	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
 	static int days_with_canopy_wet;
 
 	double tairK;
@@ -67,13 +67,20 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	logger(g_log, "**CANOPY INTERCEPTION BIOME**\n");
 
-	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	/* compute effective canopy cover */
+	if(s->value[LAI] < 1.0)
 	{
-		cell_coverage = 1.0;
+		/* special case when LAI = < 1.0 */
+		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	}
 	else
 	{
-		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	}
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cover_eff > 1.0)
+	{
+		leaf_cover_eff = 1.0;
 	}
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
@@ -124,7 +131,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	//add 6 May 2016
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI];
 	/* upscaled to day time */
-	s->value[CANOPY_BLCOND] *= daylength_sec * cell_coverage;
+	s->value[CANOPY_BLCOND] *= daylength_sec * leaf_cover_eff;
 
 	/* leaf cuticular conductance */
 	gl_c = s->value[CUTCOND] * g_corr;
@@ -206,7 +213,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				logger(g_log, "transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
-				s->value[CANOPY_EVAPO] *= daylength_sec * cell_coverage;   /* daylength limits canopy evaporation */
+				s->value[CANOPY_EVAPO] *= daylength_sec * leaf_cover_eff;   /* daylength limits canopy evaporation */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 				/* check if canopy is wet for too long period */
@@ -258,7 +265,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				s->value[CANOPY_TRANSP] = transp;
 
 				/* considering effective coverage of cell */
-				s->value[CANOPY_TRANSP] *= cell_coverage;
+				s->value[CANOPY_TRANSP] *= leaf_cover_eff;
 
 				/* including CO2 effect */
 				s->value[CANOPY_TRANSP] *= s->value[F_CO2];
@@ -307,7 +314,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			s->value[CANOPY_TRANSP] = transp;
 
 			/* considering effective coverage of cell and convert to daily amount */
-			s->value[CANOPY_TRANSP] *= cell_coverage;
+			s->value[CANOPY_TRANSP] *= leaf_cover_eff;
 
 			/* including CO2 effect */
 			s->value[CANOPY_TRANSP] *= s->value[F_CO2];

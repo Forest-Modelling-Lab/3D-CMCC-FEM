@@ -22,7 +22,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 {
 
 	int i;
-	double cell_coverage;
+	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
 	//maintenance respiration routine
 	//Uses reference values at 20 deg C and an empirical relationship between
 	//tissue N content and respiration rate given in:
@@ -57,13 +57,20 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
-	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	/* compute effective canopy cover */
+	if(s->value[LAI] < 1.0)
 	{
-		cell_coverage = 1.0;
+		/* special case when LAI = < 1.0 */
+		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	}
 	else
 	{
-		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	}
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cover_eff > 1.0)
+	{
+		leaf_cover_eff = 1.0;
 	}
 
 	// leaf day and night maintenance respiration when leaves on
@@ -126,7 +133,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 			s->value[BRANCH_MAINT_RESP];
 	logger(g_log, "TOTAL maintenance respiration = %f gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-	s->value[TOTAL_MAINT_RESP] *= cell_coverage;
+	s->value[TOTAL_MAINT_RESP] *= leaf_cover_eff;
 	logger(g_log, "TOTAL maintenance respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	c->daily_leaf_maint_resp += s->value[TOT_DAY_LEAF_MAINT_RESP];
@@ -151,17 +158,24 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 {
 
 	int i;
-	double cell_coverage;
+	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
-	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+	/* compute effective canopy cover */
+	if(s->value[LAI] < 1.0)
 	{
-		cell_coverage = 1.0;
+		/* special case when LAI = < 1.0 */
+		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	}
 	else
 	{
-		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	}
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cover_eff > 1.0)
+	{
+		leaf_cover_eff = 1.0;
 	}
 
 	if (s->value[C_TO_LEAF] > 0.0
@@ -197,7 +211,7 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	}
 	logger(g_log, "daily total growth respiration = %.10f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-	s->value[TOTAL_GROWTH_RESP] *= cell_coverage;
+	s->value[TOTAL_GROWTH_RESP] *= leaf_cover_eff;
 	logger(g_log, "TOTAL growth respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
