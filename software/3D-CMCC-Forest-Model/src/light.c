@@ -24,10 +24,12 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 
 	int counter;
 
-	double cumulated_canopy_cover_eff;
-	double cumulated_gap_cover_eff;
+	double leaf_cover_eff;                                                               //fraction of square meter covered by leaf over the gridcell
+	double gap_canopy_cover_eff;                                                         //fraction of square meter un-covered by leaf over the gridcell
+	double cumulated_leaf_cover_eff;                                                      //fraction of square meter covered by leaf over the gridcell
+	double cumulated_gap_cover_eff;                                                       //fraction of square meter un-covered by leaf over the gridcell
 
-	//double ppfd_coeff = 0.01;                                                             //parameter that quantifies the effect of light on conductance see Schwalm and Ek 2004 and Kimbal et al., 1997
+	//double ppfd_coeff = 0.01;                                                           //parameter that quantifies the effect of light on conductance see Schwalm and Ek 2004 and Kimbal et al., 1997
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	double actual_albedo;
@@ -36,8 +38,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	//test check albedo for other typos
 	double soil_albedo = 0.17; //(see Wiki)
 
-	double canopy_cover_eff;                                                             //effective canopy cover
-	double gap_canopy_cover_eff;                                                         //effective gap canopy cover
+
 
 	double a = 107.0;                                                                    //(W/m)  empirical constants for long wave radiation computation
 	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
@@ -301,7 +302,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(counter == 1)
 			{
 				/* reset values */
-				cumulated_canopy_cover_eff = 0.0;
+				cumulated_leaf_cover_eff = 0.0;
 				cumulated_gap_cover_eff = 0.0;
 			}
 
@@ -311,32 +312,32 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(s->value[LAI] < 1.0)
 			{
 				/* special case when LAI = < 1.0 */
-				canopy_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 			}
 			else
 			{
-				canopy_cover_eff = s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 			}
-			gap_canopy_cover_eff = 1.0 - canopy_cover_eff;
+			gap_canopy_cover_eff = 1.0 - leaf_cover_eff;
 
 			/* check for the special case in which is allowed to have more 100% of grid cell covered */
-			if(canopy_cover_eff > 0.0)
+			if(leaf_cover_eff > 1.0)
 			{
-				canopy_cover_eff = 1.0;
+				leaf_cover_eff = 1.0;
 				gap_canopy_cover_eff = 0.0;
 			}
 			logger(g_log, "single height class light absorption = %f %%\n", LightAbsorb*100.0);
-			logger(g_log, "single height class canopy cover = %f %%\n", canopy_cover_eff*100.0);
+			logger(g_log, "single height class canopy cover = %f %%\n", leaf_cover_eff*100.0);
 			logger(g_log, "single height class gap cover = %f %%\n", gap_canopy_cover_eff*100.0);
 
 			logger(g_log, "\n**LAYER LEVEL COMPUTATION**\n");
 
 			/* compute cumulated canopy cover and gap for layer */
-			cumulated_canopy_cover_eff += canopy_cover_eff;
-			cumulated_gap_cover_eff = 1.0 - cumulated_canopy_cover_eff;
-			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_canopy_cover_eff * 100.0);
+			cumulated_leaf_cover_eff += leaf_cover_eff;
+			cumulated_gap_cover_eff = 1.0 - cumulated_leaf_cover_eff;
+			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_leaf_cover_eff * 100.0);
 			logger(g_log, "layer level gap cover = %f %%\n", cumulated_gap_cover_eff * 100.0);
-			CHECK_CONDITION(cumulated_canopy_cover_eff + cumulated_gap_cover_eff, == 0);
+			CHECK_CONDITION(cumulated_leaf_cover_eff + cumulated_gap_cover_eff, == 0);
 
 			/* last height class processed assign value for lower/soil layers */
 			if(counter == c->dominant_veg_counter)
@@ -346,7 +347,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 				/* note : lower layers use c->par, c->net_radiation, c->ppfd */
 				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over gridcell */
 				/* if there's absorption from trees */
-				if(cumulated_canopy_cover_eff > 0.0)
+				if(cumulated_leaf_cover_eff > 0.0)
 				{
 					logger(g_log,"incoming par = %f MJ/m^2/day\n", (c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR));
 					logger(g_log,"incoming net radiation = %f W/m^2\n", (c->short_wave_radiation_DW_W - c->net_long_wave_radiation_W));
@@ -357,9 +358,9 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 					logger(g_log,"BELOW TREES ppfd for lower/soil layer = %f umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
-					c->par = ((c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->par_transm * cumulated_canopy_cover_eff) ;
-					c->net_radiation = ((c->short_wave_radiation_DW_W - c->net_long_wave_radiation_W)*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_canopy_cover_eff);
-					c->ppfd = ((c->short_wave_radiation_DW_W * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_canopy_cover_eff);
+					c->par = ((c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
+					c->net_radiation = ((c->short_wave_radiation_DW_W - c->net_long_wave_radiation_W)*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->ppfd = ((c->short_wave_radiation_DW_W * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 
 				}
 
@@ -408,7 +409,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(counter == 1)
 			{
 				/* reset values */
-				cumulated_canopy_cover_eff = 0.0;
+				cumulated_leaf_cover_eff = 0.0;
 				cumulated_gap_cover_eff = 0.0;
 			}
 
@@ -418,32 +419,32 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(s->value[LAI] < 1.0)
 			{
 				/* special case when LAI = < 1.0 */
-				canopy_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 			}
 			else
 			{
-				canopy_cover_eff = s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 			}
-			gap_canopy_cover_eff = 1.0 - canopy_cover_eff;
+			gap_canopy_cover_eff = 1.0 - leaf_cover_eff;
 
 			/* check for the special case in which is allowed to have more 100% of grid cell covered */
-			if(canopy_cover_eff > 0.0)
+			if(leaf_cover_eff > 1.0)
 			{
-				canopy_cover_eff = 1.0;
+				leaf_cover_eff = 1.0;
 				gap_canopy_cover_eff = 0.0;
 			}
 			logger(g_log, "single height class light absorption = %f %%\n", LightAbsorb*100.0);
-			logger(g_log, "single height class canopy cover = %f %%\n", canopy_cover_eff*100.0);
+			logger(g_log, "single height class canopy cover = %f %%\n", leaf_cover_eff*100.0);
 			logger(g_log, "single height class gap cover = %f %%\n", gap_canopy_cover_eff*100.0);
 
 			logger(g_log, "\n**LAYER LEVEL COMPUTATION**\n");
 
 			/* compute cumulated canopy cover and gap for layer */
-			cumulated_canopy_cover_eff += canopy_cover_eff;
-			cumulated_gap_cover_eff = 1.0 - cumulated_canopy_cover_eff;
-			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_canopy_cover_eff * 100.0);
+			cumulated_leaf_cover_eff += leaf_cover_eff;
+			cumulated_gap_cover_eff = 1.0 - cumulated_leaf_cover_eff;
+			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_leaf_cover_eff * 100.0);
 			logger(g_log, "layer level gap cover = %f %%\n", cumulated_gap_cover_eff * 100.0);
-			CHECK_CONDITION(cumulated_canopy_cover_eff + cumulated_gap_cover_eff, == 0);
+			CHECK_CONDITION(cumulated_leaf_cover_eff + cumulated_gap_cover_eff, == 0);
 
 			/* last height class processed assign value for lower/soil layers */
 			if(counter == c->dominated_veg_counter)
@@ -453,7 +454,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 				/* note : lower layers use c->par, c->net_radiation, c->ppfd */
 				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over gridcell */
 				/* if there's absorption from trees */
-				if(cumulated_canopy_cover_eff > 0.0)
+				if(cumulated_leaf_cover_eff > 0.0)
 				{
 					logger(g_log,"incoming par = %f MJ/m^2/day\n", c->par);
 					logger(g_log,"incoming net radiation = %f W/m^2\n", c->net_radiation);
@@ -464,9 +465,9 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 					logger(g_log,"BELOW TREES ppfd for lower/soil layer = %f umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
-					c->par = (c->par*cumulated_gap_cover_eff) + (c->par_transm * cumulated_canopy_cover_eff) ;
-					c->net_radiation = (c->net_radiation*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_canopy_cover_eff);
-					c->ppfd = (c->ppfd*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_canopy_cover_eff);
+					c->par = (c->par*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
+					c->net_radiation = (c->net_radiation*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->ppfd = (c->ppfd*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 				}
 
 				logger(g_log,"par for lower/soil layer = %f MJ/m^2/day\n", c->par);
@@ -515,7 +516,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(counter == 1)
 			{
 				/* reset values */
-				cumulated_canopy_cover_eff = 0.0;
+				cumulated_leaf_cover_eff = 0.0;
 				cumulated_gap_cover_eff = 0.0;
 			}
 
@@ -525,32 +526,32 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 			if(s->value[LAI] < 1.0)
 			{
 				/* special case when LAI = < 1.0 */
-				canopy_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 			}
 			else
 			{
-				canopy_cover_eff = s->value[CANOPY_COVER_DBHDC];
+				leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 			}
-			gap_canopy_cover_eff = 1.0 - canopy_cover_eff;
+			gap_canopy_cover_eff = 1.0 - leaf_cover_eff;
 
 			/* check for the special case in which is allowed to have more 100% of grid cell covered */
-			if(canopy_cover_eff > 0.0)
+			if(leaf_cover_eff > 1.0)
 			{
-				canopy_cover_eff = 1.0;
+				leaf_cover_eff = 1.0;
 				gap_canopy_cover_eff = 0.0;
 			}
 			logger(g_log, "single height class light absorption = %f %%\n", LightAbsorb*100.0);
-			logger(g_log, "single height class canopy cover = %f %%\n", canopy_cover_eff*100.0);
+			logger(g_log, "single height class canopy cover = %f %%\n", leaf_cover_eff*100.0);
 			logger(g_log, "single height class gap cover = %f %%\n", gap_canopy_cover_eff*100.0);
 
 			logger(g_log, "\n**LAYER LEVEL COMPUTATION**\n");
 
 			/* compute cumulated canopy cover and gap for layer */
-			cumulated_canopy_cover_eff += canopy_cover_eff;
-			cumulated_gap_cover_eff = 1.0 - cumulated_canopy_cover_eff;
-			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_canopy_cover_eff * 100.0);
+			cumulated_leaf_cover_eff += leaf_cover_eff;
+			cumulated_gap_cover_eff = 1.0 - cumulated_leaf_cover_eff;
+			logger(g_log, "layer level canopy cover = %f %%\n", cumulated_leaf_cover_eff * 100.0);
 			logger(g_log, "layer level gap cover = %f %%\n", cumulated_gap_cover_eff * 100.0);
-			CHECK_CONDITION(cumulated_canopy_cover_eff + cumulated_gap_cover_eff, == 0);
+			CHECK_CONDITION(cumulated_leaf_cover_eff + cumulated_gap_cover_eff, == 0);
 
 			/* last height class processed assign value for lower/soil layers */
 			if(counter == c->subdominated_veg_counter)
@@ -560,7 +561,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 				/* note : lower layers use c->par, c->net_radiation, c->ppfd */
 				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over gridcell */
 				/* if there's absorption from trees */
-				if(cumulated_canopy_cover_eff > 0.0)
+				if(cumulated_leaf_cover_eff > 0.0)
 				{
 					logger(g_log,"incoming par = %f MJ/m^2/day\n", c->par);
 					logger(g_log,"incoming net radiation = %f W/m^2\n", c->net_radiation);
@@ -571,9 +572,9 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 					logger(g_log,"BELOW TREES ppfd for lower/soil layer = %f umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
-					c->par = (c->par*cumulated_gap_cover_eff) + (c->par_transm * cumulated_canopy_cover_eff) ;
-					c->net_radiation = (c->net_radiation*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_canopy_cover_eff);
-					c->ppfd = (c->ppfd*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_canopy_cover_eff);
+					c->par = (c->par*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
+					c->net_radiation = (c->net_radiation*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->ppfd = (c->ppfd*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 				}
 
 				logger(g_log,"par for lower/soil layer = %f MJ/m^2/day\n", c->par);

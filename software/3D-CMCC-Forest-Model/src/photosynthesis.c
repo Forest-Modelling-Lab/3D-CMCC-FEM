@@ -16,20 +16,38 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	double Alpha_C;
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
-	double cell_coverage;
+	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
+//	double cell_coverage;
 
 	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
 
 	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
-	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+
+	/* compute effective canopy cover */
+	if(s->value[LAI] < 1.0)
 	{
-		cell_coverage = 1.0;
+		/* special case when LAI = < 1.0 */
+		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	}
 	else
 	{
-		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 	}
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cover_eff > 1.0)
+	{
+		leaf_cover_eff = 1.0;
+	}
+
+//	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
+//	{
+//		cell_coverage = 1.0;
+//	}
+//	else
+//	{
+//		cell_coverage = s->value[CANOPY_COVER_DBHDC];
+//	}
 
 	//Veg period
 	//fixme
@@ -83,7 +101,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		logger(g_log, "DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
 		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * cell_coverage;
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * leaf_cover_eff;
 		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
