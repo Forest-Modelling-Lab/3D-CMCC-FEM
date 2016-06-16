@@ -763,6 +763,7 @@ typedef struct {
 	int species_count;
 } AGE;
 
+//todo
 //all variables related to layers
 typedef struct {
 
@@ -957,17 +958,20 @@ typedef struct {
 	double net_long_wave_radiation_W;                   //Net long wave radiation flux (W/m2)
 
 	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
+	double net_radiation_filtered;
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
 
 	double par;
+	double par_filtered;
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;
 	double par_for_establishment;
 
 	double ppfd;                                        //Photosynthetic phton flux density (umol/m2/sec)
+	double ppfd_filtered;
 
 	double cloud_cover_frac;                            //cloud cover fraction
 
