@@ -20,7 +20,7 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 {
 	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
 
-	/*compute energy balance transpiration from canopy*/
+	/*compute latent heat from canopy*/
 	c->daily_c_evapo_watt = c->daily_c_evapo * met[month].d[day].lh_vap / 86400.0;
 	c->daily_c_transp_watt = c->daily_c_transp * met[month].d[day].lh_vap / 86400.0;
 	c->daily_c_evapotransp_watt = c->daily_c_evapo_watt + c->daily_c_transp_watt;
@@ -28,8 +28,8 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 
 	c->daily_latent_heat_flux = c->daily_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 
-	/*in case of snow formation*/
-	if(c->prcp_snow != 0.0 && c->snow_subl != 0.0)
+	/*in case of snow formation or dew fall*/
+	if(c->prcp_snow != 0.0)
 	{
 		logger(g_log, "implement negative heat fluxes!\n");
 	}

@@ -105,6 +105,7 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			"-tday (computed)= %.2f °C\n"
 			"-tnight (computed)= %.2f °C\n"
 			"-tsoil (computed)= %.2f °C\n"
+			"-tdew (computed)= %.2f °C\n"
 			"-relative humidity = %.2f %%\n"
 			"-vpd = %.2f mbar/hPa\n"
 			"-ts_f (measured)= %.2f °C\n"
@@ -130,6 +131,7 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			met[month].d[day].tday,
 			met[month].d[day].tnight,
 			met[month].d[day].tsoil,
+			met[month].d[day].tdew,
 			met[month].d[day].rh_f,
 			met[month].d[day].vpd,
 			met[month].d[day].ts_f,

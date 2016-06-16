@@ -434,7 +434,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	c->daily_c_water_stored += s->value[CANOPY_WATER];
 	c->daily_c_evapotransp += s->value[CANOPY_EVAPO_TRANSP];
 	c->daily_c_bl_cond += s->value[CANOPY_BLCOND];
-
 }
 
 

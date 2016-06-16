@@ -329,6 +329,14 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 		met[month].d[day].tsoil = met[month].d[day].ts_f;
 	}
 }
+void Dew_temperature (CELL * c, int day, int month, int years, YOS *yos)
+{
+	MET_DATA *met;
+	met = (MET_DATA*) yos[years].m;
+
+	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
+	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
+}
 
 void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
 {

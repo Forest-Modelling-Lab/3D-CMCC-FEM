@@ -1374,6 +1374,7 @@ int main(int argc, char *argv[])
 					Air_pressure (&m->cells[cell], day, month, year, yos);
 					Psychrometric (&m->cells[cell], day, month, year, yos);
 					Sat_vapour_pressure (&m->cells[cell], day, month, year, yos);
+					Dew_temperature (&m->cells[cell], day, month, year, yos);
 					Annual_met_values (&m->cells[cell], day, month, year, yos);
 					Annual_CO2_concentration (&m->cells[cell], day, month, year, yos);
 

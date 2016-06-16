@@ -50,8 +50,9 @@ typedef struct {
 	PREC tavg;          /* (deg C) daily average air temperature */
 	PREC tmax;          /* (deg C) daily maximum air temperature */
 	PREC tmin;          /* (deg C) daily minimum air temperature */
-	PREC tday;          /* (deg C) daylight average air temperature */
-	PREC tnight;        /* (deg C) nightime average air temperature */
+	PREC tday;          /* (deg C) daylight  daily air temperature */
+	PREC tnight;        /* (deg C) nightime average daily air temperature */
+	PREC tdew;          /* (deg C) dew average daily air temperature */
 	PREC vpd;
 	PREC rh_f;
 	PREC ts_f;
@@ -1259,6 +1260,7 @@ int is_valid_met(const char *const);
 void Avg_temperature (CELL *, int, int, int);
 void Daylight_avg_temperature (CELL *, int, int, int, YOS *);
 void Nightime_avg_temperature (CELL *, int, int, int, YOS *);
+void Dew_temperature (CELL *, int , int , int , YOS *);
 void Soil_temperature (CELL *, int, int, int, YOS *);
 void Air_density (CELL *, int, int, int, YOS *);
 void Latent_heat (CELL *, int, int, int, YOS *);

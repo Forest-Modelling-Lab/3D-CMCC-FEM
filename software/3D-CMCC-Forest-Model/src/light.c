@@ -246,12 +246,12 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	c->net_radiation = c->net_short_wave_radiation_W - c->net_long_wave_radiation_W;
 	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 
-	//fixme useless?
-	if(c->net_radiation < 0.00000001)
-	{
-		c->net_radiation = 0.00000001;
-		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
-	}
+//	//fixme useless?
+//	if(c->net_radiation < 0.00000001)
+//	{
+//		c->net_radiation = 0.00000001;
+//		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
+//	}
 	/*****************************************************************************************/
 
 	/* PAR RADIATION */
@@ -607,7 +607,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	else
 	{
 		/* net radiation for the soil outside growing season (bare soil condition) */
-		c->net_radiation_for_soil = c->short_wave_radiation_DW_W * (1.0 - LightReflec_soil);
+		c->net_radiation_for_soil = c->net_radiation * (1.0 - LightReflec_soil);
 		logger(g_log, "Net Radiation for soil outside growing season = %f \n", c->net_radiation_for_soil);
 	}
 }
