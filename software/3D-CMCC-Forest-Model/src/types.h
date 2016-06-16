@@ -933,7 +933,6 @@ typedef struct {
 	double layer_cover_dominated;
 	double layer_cover_subdominated;
 
-	double gapcover[3];
 	int n_tree;
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 	double basal_area;
@@ -958,20 +957,20 @@ typedef struct {
 	double net_long_wave_radiation_W;                   //Net long wave radiation flux (W/m2)
 
 	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
-	double net_radiation_filtered;
+	double net_radiation_transm;
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
 
 	double par;
-	double par_filtered;
+	double par_transm;
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;
 	double par_for_establishment;
 
 	double ppfd;                                        //Photosynthetic phton flux density (umol/m2/sec)
-	double ppfd_filtered;
+	double ppfd_transm;
 
 	double cloud_cover_frac;                            //cloud cover fraction
 

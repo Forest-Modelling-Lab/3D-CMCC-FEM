@@ -19,6 +19,11 @@ void Reset_daily_variables (CELL *const c, const int count)
 
 	logger(g_log, "...resetting daily variables...\n");
 
+	c->par_transm = 0.0;
+	c->net_radiation_transm = 0.0;
+	c->ppfd_transm = 0.0;
+
+
 	/*reset daily carbon variables*/
 	c->daily_gpp = 0.0;
 	c->daily_npp_tDM = 0.0;
