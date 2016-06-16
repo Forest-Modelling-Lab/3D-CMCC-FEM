@@ -118,9 +118,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
 	logger(g_log, "Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
-
-	getchar();
-
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */
 	if(c->snow_pack == 0)

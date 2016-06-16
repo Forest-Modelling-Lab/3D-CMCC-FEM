@@ -246,12 +246,6 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	c->net_radiation = c->net_short_wave_radiation_W - c->net_long_wave_radiation_W;
 	logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
 
-//	//fixme useless?
-//	if(c->net_radiation < 0.00000001)
-//	{
-//		c->net_radiation = 0.00000001;
-//		logger(g_log, "Net radiation = %f W/m2\n", c->net_radiation);
-//	}
 	/*****************************************************************************************/
 
 	/* PAR RADIATION */
