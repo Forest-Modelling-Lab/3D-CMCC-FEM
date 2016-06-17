@@ -193,9 +193,15 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			rv = 1.0/gc_e_wv;
 			rh = 1.0/gc_sh;
 			net_rad = s->value[NET_RAD_ABS];
+
 			/* call Penman-Monteith function, returns e in kg/m2/s for evaporation and W/m2 for latent heat*/
 			evapo = Penman_Monteith (met, month, day, rv, rh, net_rad);
+
+			/* check for negative values */
+			if(evapo < 0.0) evapo = 0.0;
+
 			s->value[CANOPY_EVAPO] = evapo;
+
 			/* calculate the time required to evaporate all the canopy water */
 			evap_daylength = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
 			logger(g_log, "evap_daylength = %f sec\n", evap_daylength);
@@ -233,7 +239,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength / daylength_sec;
 				logger(g_log, "transp_daylength = %f\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
-
 				/* calculate transpiration using adjusted daylength */
 				rv = 1.0/gl_t_wv_sun;
 				rh = 1.0/gl_sh;
@@ -255,6 +260,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				//net_rad = s->value[NET_RAD_ABS_SHADE];
 				net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 				logger(g_log, "net rad = %f\n", net_rad);
+
 				/* call penman-monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
 				transp_shade *=  transp_daylength * s->value[LAI_SHADE];
@@ -262,6 +268,10 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 				transp = transp_sun + transp_shade;
 				logger(g_log, "transp = %.10f mm/m2/day\n", transp);
+
+				/* check for negative values */
+				if(transp < 0.0) transp = 0.0;
+
 				s->value[CANOPY_TRANSP] = transp;
 
 				/* considering effective coverage of cell */
@@ -311,6 +321,11 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 			transp = transp_sun + transp_shade;
 			logger(g_log, "transp = %.10f mm/m2/day\n", transp);
+
+			/* check for negative values */
+			if(transp < 0.0) transp = 0.0;
+
+			/* assign values */
 			s->value[CANOPY_TRANSP] = transp;
 
 			/* considering effective coverage of cell and convert to daily amount */
