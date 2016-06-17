@@ -212,6 +212,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				logger(g_log, "day not long enough to evap all rain intercepted\n");
 
 				days_with_canopy_wet ++;
+
 				/* adjust daylength for transpiration */
 				//fixme this variable should be used also in photosynthesis
 				transp_daylength = 0.0;
