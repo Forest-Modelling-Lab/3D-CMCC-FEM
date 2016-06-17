@@ -16,8 +16,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 	double rcorr;            /* correction factor for temp and pressure */
 	double ratio;            /* actual/potential evaporation for dry day */
 	double rv, rh;
-
-
 	double net_rad;
 	double pot_soil_evap;    /* (kg/m2/s) potential evaporation (daytime) */
 
@@ -25,7 +23,6 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 
 	double tsnow = 0.0, tsnowK;
 
-	//test
 	double rr;
 	double rhr;
 

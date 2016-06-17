@@ -54,7 +54,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 	logger(g_log, "**Penmon**\n");
 
-	/* assign ta (Celsius) and tk (Kelvins) */
+	/* convert tday Celsius in Kelvin */
 	tairK = met[month].d[day].tday + TempAbs;
 
 	/* calculate resistance to radiative heat transfer through air, rr */
@@ -83,6 +83,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 	evap_or_transp /= met[month].d[day].lh_vap;
 
 	/* check */
+	//deleted to avoid dew fall formation
 	//if (evap_or_transp < 0.0) evap_or_transp = 0.0;
 
 	logger(g_log, "Penmon evap_or_transp = %.10f mm/m2/sec\n", evap_or_transp);
