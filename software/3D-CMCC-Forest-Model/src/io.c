@@ -906,7 +906,7 @@ int yos_from_arr(const double *const values, const int rows_count, const int col
 		}
 		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
 		{
-			logger(g_log, "BAD DATA FOR rh = %f in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
+			logger(g_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
 			exit(1);
 		}
 	}
@@ -1625,44 +1625,71 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 	/* check for missing vars */
 	for ( i = 0; i < VARS_COUNT; ++i ) {
 		switch ( i ) {
-		case VPD_F-3:
-		case RH_F-3:
-		if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
-			logger(g_log, "VPD and RH columns are missing!\n\n");
-			free(values);
-			return 0;
-		}
-		break;
-
-		case TA_F-3:
-		if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
-			logger(g_log, "TA, TMIN and TMAX columns are missing!\n\n");
-			free(values);
-			return 0;
-		}
-		break;
-
-		case TMIN-3:
-		case TMAX-3:
-		if ( ! vars[i] && ! vars[TA_F-3]) {
-			logger(g_log, "%s is missing!\n\n", sz_vars[i]);
-			free(values);
-			return 0;
-		}
-		break;
-
-		default:
-			if ( ! vars[i] ) {
-				logger(g_log, "met columns %s is missing!\n\n", sz_vars[i]);
+			case VPD_F-3:
+			case RH_F-3:
+			if ( ! vars[VPD_F-3] && ! vars[RH_F-3] ) {
+				logger(g_log, "VPD and RH columns are missing!\n\n");
 				free(values);
 				return 0;
 			}
+			break;
+
+			case TA_F-3:
+			if ( ! vars[i] && ! vars[TMIN-3] && ! vars[TMAX-3] ) {
+				logger(g_log, "TA, TMIN and TMAX columns are missing!\n\n");
+				free(values);
+				return 0;
+			}
+			break;
+
+			case TMIN-3:
+			case TMAX-3:
+			if ( ! vars[i] && ! vars[TA_F-3]) {
+				logger(g_log, "%s is missing!\n\n", sz_vars[i]);
+				free(values);
+				return 0;
+			}
+			break;
+
+			default:
+				if ( ! vars[i] ) {
+					logger(g_log, "met columns %s is missing!\n\n", sz_vars[i]);
+					free(values);
+					return 0;
+				}
 		}
 	}
 
-	/* compute vpd ?*/
-	if ( -1 == vars[VPD_F-3] ) {
-		compute_vpd(values, rows_count, MET_COLUMNS);
+	/* check if RH is valid ( not all -9999 ) */
+	if ( vars[RH_F-3] ) {
+		int current_row = 0; /* used as rows count for valid RH */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, RH_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			vars[RH_F-3] = 0;
+		}
+	}
+
+	/* check if VPD is valid ( not all -9999 ) */
+	if ( vars[VPD_F] ) {
+		int current_row = 0; /* used as rows count for valid VPD */
+		for ( i = 0; i < rows_count; ++i ) {
+			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, VPD_F)]) ) {
+				++current_row;
+			}
+		}
+		if ( ! current_row ) {
+			vars[VPD_F-3] = 0;
+		}
+	}
+
+	if ( ! vars[RH_F-3] && ! vars[VPD_F-3] ) {
+		logger(g_log, "rh and vpd not found!");
+		free(values);
+		return 0;
 	}
 
 	/* compute ta ? */
@@ -1684,9 +1711,16 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 			if ( ! IS_INVALID_VALUE(values[VALUE_AT(i, TMAX)])
 					&& ! IS_INVALID_VALUE(values[VALUE_AT(i, TMIN)]) ) {
 				values[VALUE_AT(i, TA_F)] = (0.606 * values[VALUE_AT(i, TMAX)]) + (0.394 * values[VALUE_AT(i, TMIN)]);
-				//met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 			}
 		}
+	}
+
+	/* compute vpd ? or rh ?*/
+	/* please note that we must have TA, so computing is done after computing TA (if needed) */
+	if ( ! vars[VPD_F-3] ) {
+		compute_vpd(values, rows_count, MET_COLUMNS);
+	} else if ( ! vars[RH_F-3] ) {
+		compute_rh(values, rows_count, MET_COLUMNS);
 	}
 
 #ifdef _WIN32
@@ -1709,18 +1743,18 @@ static int ImportListFile(const char *const filename, YOS **p_yos, int *const yo
 					, lat
 					, lon
 					,(int)values[VALUE_AT(row,DAY)]
-								 , (int)values[VALUE_AT(row,MONTH)]
-											   , (int)values[VALUE_AT(row,YEAR)]
-															 , values[VALUE_AT(row,ET)]
-																	  , values[VALUE_AT(row,NDVI_LAI)]
-																			   , values[VALUE_AT(row,RG_F)]
-																						, values[VALUE_AT(row,SWC)]
-																								 , values[VALUE_AT(row,TMAX)]
-																										  , values[VALUE_AT(row,TMIN)]
-																												   , values[VALUE_AT(row,PRECIP)]
-																															, values[VALUE_AT(row,TS_F)]
-																																	 , values[VALUE_AT(row,VPD_F)]
-																																			  , values[VALUE_AT(row,WS_F)]
+					, (int)values[VALUE_AT(row,MONTH)]
+					, (int)values[VALUE_AT(row,YEAR)]
+					, values[VALUE_AT(row,ET)]
+					, values[VALUE_AT(row,NDVI_LAI)]
+					, values[VALUE_AT(row,RG_F)]
+					, values[VALUE_AT(row,SWC)]
+					, values[VALUE_AT(row,TMAX)]
+					, values[VALUE_AT(row,TMIN)]
+					, values[VALUE_AT(row,PRECIP)]
+					, values[VALUE_AT(row,TS_F)]
+					, values[VALUE_AT(row,VPD_F)]
+					, values[VALUE_AT(row,WS_F)]
 
 			);
 		}
@@ -2194,8 +2228,9 @@ int get_monthly_date_from_row(const int row, const int yyyy) {
 // if type is 1, write monthly
 // if type is 2, write yearly
 //
-int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
-	/*
+// path must terminate with a backslash!
+int WriteNetCDFOutput(const char *const path, const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+/*
 	la memoria e' stata allocata come C*R*Y*X
 
 	C = colonne ( variabili )
@@ -2279,13 +2314,13 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	for ( i = 0; i < n; ++i ) {
 		/* create output filename */
 		if ( 0 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->daily_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->daily_vars[i]]);
 
 		if ( 1 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->monthly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->monthly_vars[i]]);
 
 		if ( 2 == type )
-			sprintf(sz_buffer, "%s.nc", sz_output_vars[vars->yearly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->yearly_vars[i]]);
 
 		/* create file */
 		ret = nc_create(sz_buffer, NC_CLOBBER, &id_file);
@@ -2370,8 +2405,7 @@ int WriteNetCDFOutput(const OUTPUT_VARS *const vars, const int year_start, const
 	return 0;
 }
 
-const char *GetNetCDFVersion(void)
-{
+const char *get_netcdf_version(void) {
 	return nc_inq_libvers();
 }
 

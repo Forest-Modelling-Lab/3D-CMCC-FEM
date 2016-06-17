@@ -1,5 +1,6 @@
 /*constants.h*/
-
+#ifndef CONSTANTS_H_
+#define CONSTANTS_H_
 
 #include "common.h"
 #include <stdio.h>
@@ -83,3 +84,4 @@
 //#define um_no    .34
 //#define um_n2o   .34
 
+#endif /* CONSTANTS_H */

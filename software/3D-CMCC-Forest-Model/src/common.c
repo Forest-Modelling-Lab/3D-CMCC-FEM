@@ -198,24 +198,15 @@ int string_compare_i(const char *str1, const char *str2) {
 }
 
 /* */
-char *mystrdup(const char *const string) {
-	char *p;
-
-	/* check for null pointer */
-	if ( !string ) {
-		return NULL;
+char *string_copy(const char *const s) {
+	if ( s ) {
+		char *p = malloc(strlen(s)+1);
+		if ( p ) {
+			return strcpy(p, s);
+		}
 	}
-
-	/* allocate memory */
-	p = malloc(strlen(string)+1);
-	if ( !p ) {
-		return NULL;
-	}
-
-	/* ok ? */
-	return strcpy(p, string);
+	return NULL;
 }
-
 
 /* stolen to wikipedia */
 char *mystrtok(char *string, const char *delimiters, char **p) {

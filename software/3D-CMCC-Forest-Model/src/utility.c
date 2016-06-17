@@ -74,15 +74,15 @@ void Reset_daily_variables (CELL *const c, const int count)
 
 	c->daily_litterfall = 0.0;
 	c->cell_cover = 0.0;
-	c->dominant_veg_counter = 0.0;
-	c->dominated_veg_counter = 0.0;
-	c->subdominated_veg_counter = 0.0;
+	c->dominant_veg_counter = 0;
+	c->dominated_veg_counter = 0;
+	c->subdominated_veg_counter = 0;
 
 
-	c->layer_daily_dead_tree[0] = 0.0;
-	c->layer_daily_dead_tree[1] = 0.0;
-	c->layer_daily_dead_tree[2] = 0.0;
-	c->daily_dead_tree = 0.0;
+	c->layer_daily_dead_tree[0] = 0;
+	c->layer_daily_dead_tree[1] = 0;
+	c->layer_daily_dead_tree[2] = 0;
+	c->daily_dead_tree = 0;
 
 	for ( height = count - 1; height >= 0; height-- )
 	{
@@ -260,16 +260,16 @@ void Reset_annual_variables (CELL *const c, const int count)
 				c->heights[height].ages[age].species[species].value[MAX_LEAF_C] = 0.0;
 				/*reset cumulative values*/
 
-				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0.0;
-				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0.0;
+				c->heights[height].ages[age].species[species].counter[VEG_DAYS] = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_PHYS_MOD] = 0;
 
-				c->heights[height].ages[age].species[species].value[YEARLY_GPP_gC] = 0.0;
-				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_gC] = 0.0;
-				c->heights[height].ages[age].species[species].value[YEARLY_NPP_tDM] = 0.0;
+				c->heights[height].ages[age].species[species].value[YEARLY_GPP_gC] = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_POINT_GPP_gC] = 0;
+				c->heights[height].ages[age].species[species].value[YEARLY_NPP_tDM] = 0;
 
 				// ALESSIOR DEL_STEMS used instead of DEAD_STEMS
-				c->heights[height].ages[age].species[species].counter[DEAD_STEMS] = 0.0;
-				c->heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0.0;
+				c->heights[height].ages[age].species[species].counter[DEAD_STEMS] = 0;
+				c->heights[height].ages[age].species[species].counter[N_TREE_SAP] = 0;
 
 				//INITIALIZE AVERAGE YEARLY MODIFIERS
 				c->heights[height].ages[age].species[species].value[AVERAGE_F_VPD]  = 0.0;

@@ -204,19 +204,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_evapotranspiration.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\canopy_evapotranspiration_biome.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\canopy_interception.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\canopy_transpiration.c"
 				>
 			</File>
 			<File
