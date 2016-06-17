@@ -85,6 +85,22 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
+	//test following Lawrence et al., 2006
+	//todo change INT_COEFF to 0.25
+	/* for rain */
+	if(c->prcp_rain != 0.0)
+	{
+		s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI]));
+		logger(g_log, "CANOPY_INT with rain (Lowrence) = %f\n", s->value[CANOPY_INT]);
+	}
+	/* for snow */
+	else
+	{
+		s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI]));
+		logger(g_log, "CANOPY_INT with snow (Lowrence) = %f\n", s->value[CANOPY_INT]);
+	}
+
+	//test check why a so low values for int coeff (should be 0.30??)
 	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
 
 	logger(g_log, "ALL_LAI = %f mm/m^2/day\n", s->value[ALL_LAI]);
