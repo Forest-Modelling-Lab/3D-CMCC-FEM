@@ -148,6 +148,10 @@ extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, in
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
 	double sat, gamma;
+
+	/*following Priestley and Taylor,1972; Gerten et al., 2004*/
+	/**********************************************************/
+
 	logger(g_log, "\nSOIL_EVAPORATION_ROUTINE\n");
 
 	gamma = 65.05+met[month].d[day].tday*0.064;

@@ -23,6 +23,9 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 	double sat;
 	double cell_coverage;
 
+	/*following Priestley and Taylor,1972; Gerten et al., 2004*/
+	/**********************************************************/
+
 	logger(g_log, "\nCANOPY_INTERCEPTION-EVAPORATION_ROUTINE\n");
 
 	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
@@ -40,7 +43,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 
 	logger(g_log, "Rainfall = %f mm\n", met[month].d[day].prcp);
 
-	/*following Gerten et al., 2004*/
+
 	/*compute potential  and actual evaporation for each layer*/
 	PotEvap = (sat / (sat + gamma)/ met[month].d[day].lh_vap)* s->value[NET_RAD_ABS] * 86400;
 	logger(g_log, "Potential evaporation = %f mm/m^2 day\n",PotEvap);

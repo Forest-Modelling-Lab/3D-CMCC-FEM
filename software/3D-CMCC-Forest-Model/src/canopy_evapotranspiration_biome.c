@@ -159,7 +159,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 		LAI.  This formula is derived from stomatal and cuticular conductances
 		in parallel with each other, and both in series with leaf boundary
 		layer conductance. */
-	//gl_t_wv = (gl_bl * (gl_s + gl_c)) / (gl_bl + gl_s + gl_c);
 	gl_t_wv_sun = (gl_bl * (gl_s_sun + gl_c)) / (gl_bl + gl_s_sun + gl_c);
 	gl_t_wv_shade = (gl_bl * (gl_s_shade + gl_c)) / (gl_bl + gl_s_shade + gl_c);
 
@@ -171,7 +170,7 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	gc_e_wv = gl_e_wv * s->value[LAI];
 
 	/* Canopy conductance to sensible heat */
-	/* not clear why not shared between sun and shaded */
+	/* note: not clear why not shared between sun and shaded */
 	gc_sh = gl_sh * s->value[LAI];
 
 	s->value[CANOPY_EVAPO] = s->value[CANOPY_TRANSP] = 0.0;
@@ -185,6 +184,8 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 
 	if(s->value[ALL_LAI]>0.0)
 	{
+
+		//fixme why for evaporation BIOME uses stomatal condictance??
 		/* if canopy is wet */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
@@ -206,9 +207,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 			evap_daylength = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
 			logger(g_log, "evap_daylength = %f sec\n", evap_daylength);
 
+			/* day not long enough to evap. all int. water */
 			if(evap_daylength > daylength_sec)
 			{
-				/* day not long enough to evap. all int. water */
 				logger(g_log, "day not long enough to evap all rain intercepted\n");
 
 				days_with_canopy_wet ++;
@@ -226,9 +227,9 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				/* check if canopy is wet for too long period */
 				//CHECK_CONDITION(days_with_canopy_wet, > 10);
 			}
+			/* all intercepted water evaporated */
 			else
 			{
-				/* all intercepted water evaporated */
 				logger(g_log, "all intercepted water evaporated\n");
 				days_with_canopy_wet = 0;
 				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
@@ -244,8 +245,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				rv = 1.0/gl_t_wv_sun;
 				rh = 1.0/gl_sh;
 
-				//test 11 MAY 2016 following biome approach
-				//net_rad = s->value[NET_RAD_ABS_SUN]
 				net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 				logger(g_log, "net rad = %f\n", net_rad);
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
@@ -257,8 +256,6 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 				rv = 1.0/gl_t_wv_shade;
 				rh = 1.0/gl_sh;
 
-				//test 11 May 2016 following biome approach
-				//net_rad = s->value[NET_RAD_ABS_SHADE];
 				net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 				logger(g_log, "net rad = %f\n", net_rad);
 
