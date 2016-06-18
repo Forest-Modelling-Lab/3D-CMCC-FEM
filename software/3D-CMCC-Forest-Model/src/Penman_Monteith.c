@@ -52,7 +52,7 @@ double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, i
 
 
 
-	logger(g_log, "**Penmon**\n");
+	logger(g_log, "\n**Penman-Monteith function**\n");
 
 	/* convert tday Celsius in Kelvin */
 	tairK = met[month].d[day].tday + TempAbs;

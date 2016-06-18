@@ -78,7 +78,6 @@ void Reset_daily_variables (CELL *const c, const int count)
 	c->dominated_veg_counter = 0;
 	c->subdominated_veg_counter = 0;
 
-
 	c->layer_daily_dead_tree[0] = 0;
 	c->layer_daily_dead_tree[1] = 0;
 	c->layer_daily_dead_tree[2] = 0;

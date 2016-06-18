@@ -70,9 +70,6 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
 
-	logger(g_log, "*CANOPY INTERCEPTION*\n");
-	logger(g_log, "Rain = %g mm\n",c->prcp_rain);
-
 	/* compute effective canopy cover */
 	if(s->value[LAI] < 1.0)
 	{
@@ -95,6 +92,9 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	//todo change INT_COEFF to 0.25
 	if(met[month].d[day].prcp > 0.0 && s->value[ALL_LAI]>0.0)
 	{
+		//logger(g_log, "*CANOPY INTERCEPTION*\n");
+		//logger(g_log, "Rain = %g mm\n",c->prcp_rain);
+
 		//todo in case substitute int_coeff (0.25) with s->value[INT_COEFF]
 		double int_coeff = 0.25;
 
@@ -116,11 +116,14 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	//test check why a so low values for int coeff (should be 0.30??)
 	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
 
-	logger(g_log, "ALL_LAI = %g\n", s->value[ALL_LAI]);
-
 	/* no rain interception if canopy is wet from the day(s) before */
 	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
+		logger(g_log, "\n*CANOPY INTERCEPTION*\n");
+		logger(g_log, "Rain = %g mm\n",c->prcp_rain);
+		logger(g_log, "LAI = %g\n",s->value[ALL_LAI]);
+		logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
+
 		/* all rain intercepted */
 		if (c->prcp_rain <= max_int)
 		{
@@ -143,9 +146,6 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	{
 		s->value[CANOPY_INT] = 0.0;
 	}
-
-	logger(g_log, "Rain intercepted = %f mm/m^2/day\n", s->value[CANOPY_INT]);
-	logger(g_log, "CANOPY_WATER = %f mm/m^2/day\n", s->value[CANOPY_WATER]);
 
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
@@ -193,7 +193,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 	/* Leaf conductance to sensible heat, per unit all-sided LAI */
 	gl_sh = gl_bl;
-	logger(g_log, "Leaf conductance to sensible heat = %f\n", gl_sh);
+	//logger(g_log, "Leaf conductance to sensible heat = %f\n", gl_sh);
 
 	/* Canopy conductance to evaporated water vapor */
 	gc_e_wv = gl_e_wv * s->value[LAI];
@@ -213,12 +213,13 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 	if(s->value[ALL_LAI]>0.0)
 	{
-
 		//fixme why for evaporation BIOME uses stomatal conductance??
 		/* if canopy is wet */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
-			logger(g_log, "Canopy wet\n");
+			logger(g_log, "\n*CANOPY EVAPORATION (Canopy Wet) *\n");
+			logger(g_log, "LAI = %g\n",s->value[ALL_LAI]);
+			logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 
 			rv = 1.0/gc_e_wv;
 			rh = 1.0/gc_sh;
@@ -260,6 +261,8 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 			else
 			{
 				logger(g_log, "all intercepted water evaporated\n");
+				logger(g_log, "\n*CANOPY TRANSPIRATION (Canopy Dry)*\n");
+
 				days_with_canopy_wet = 0;
 				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
@@ -309,11 +312,12 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
+			logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 		}
 		/* if canopy is dry */
 		else
 		{
-			logger(g_log, "Canopy dry\n");
+			logger(g_log, "*CANOPY TRANSPIRATION (Canopy Dry)*\n");
 			/* no canopy evaporation occurs */
 			s->value[CANOPY_EVAPO]= 0.0;
 
