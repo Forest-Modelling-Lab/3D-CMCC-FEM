@@ -119,7 +119,7 @@ void Check_water_balance (CELL *c)
 	canopy_water_pool_out = c->daily_c_evapo;
 
 	/* sum of current storage in canopy */
-	canopy_water_pool_stored = c->daily_c_water_stored;
+	canopy_water_pool_stored = c->daily_c_water_stored - c->old_daily_c_water_stored;
 
 	/* check canopy pool water balance */
 	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
@@ -184,11 +184,11 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
 			logger(g_log, "stored\n");
 			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
+			logger(g_log, "c->old_daily_c_water_stored = %f\n", c->old_daily_c_water_stored);
 			logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
 			logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
 			logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
 			logger(g_log, "canopy water balance = %f\n", c->canopy_pool_water_balance);
-			logger(g_log, "old canopy water balance = %f\n", c->old_canopy_pool_water_balance);
 			logger(g_log, "differences in canopy balance (old - current)= %f\n", c->old_canopy_pool_water_balance - c->canopy_pool_water_balance);
 			logger(g_log, "...FATAL ERROR IN canopy water balance\n");
 			logger(g_log, "DOY = %d\n", c->doy);

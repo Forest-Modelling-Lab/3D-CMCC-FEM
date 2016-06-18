@@ -64,6 +64,9 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
+	/* assign values of previous day canopy water */
+	c->old_daily_c_water_stored = c->daily_c_water_stored;
+
 
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
 
@@ -116,7 +119,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	logger(g_log, "ALL_LAI = %g\n", s->value[ALL_LAI]);
 
 	/* no rain interception if canopy is wet from the day(s) before */
-	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] < max_int)
+	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
 		/* all rain intercepted */
 		if (c->prcp_rain <= max_int)
@@ -259,7 +262,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 				logger(g_log, "all intercepted water evaporated\n");
 				days_with_canopy_wet = 0;
 				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
-				s->value[CANOPY_WATER] = 0.0;
+				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 
 				/* adjust daylength for transpiration */
 				//fixme this variable should be used also in photosynthesis
@@ -461,11 +464,11 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
 
-	logger(g_log, "CANOPY_TRANSP = %.10f mm/m2/day\n", s->value[CANOPY_TRANSP]);
-	logger(g_log, "CANOPY_WATER = %.10f mm/m2/day\n", s->value[CANOPY_WATER]);
-	logger(g_log, "CANOPY_INT = %.10f mm/m2/day\n", s->value[CANOPY_INT]);
-	logger(g_log, "CANOPY_EVAPO = %.10f mm/m2/day\n", s->value[CANOPY_EVAPO]);
-	logger(g_log, "CANOPY_EVAPO_TRANSP = %f mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
+	logger(g_log, "CANOPY_TRANSP = %g mm/m2/day\n", s->value[CANOPY_TRANSP]);
+	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);
+	logger(g_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
+	logger(g_log, "CANOPY_EVAPO = %g mm/m2/day\n", s->value[CANOPY_EVAPO]);
+	logger(g_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 	c->daily_c_int += s->value[CANOPY_INT];
 	c->daily_c_evapo += s->value[CANOPY_EVAPO];

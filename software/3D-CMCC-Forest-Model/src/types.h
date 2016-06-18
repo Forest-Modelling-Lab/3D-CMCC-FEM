@@ -1085,6 +1085,7 @@ typedef struct {
 	double daily_c_int, monthly_c_int, annual_c_int;
 	double daily_c_transp, monthly_c_transp, annual_c_transp;
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;
+	double old_daily_c_water_stored;
 	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored; //not used
 	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
 	double daily_c_bl_cond, monthly_c_bl_cond, annual_c_bl_cond;
