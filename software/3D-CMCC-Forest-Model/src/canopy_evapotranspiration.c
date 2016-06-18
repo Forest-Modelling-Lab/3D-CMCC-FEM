@@ -67,7 +67,8 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
 
-	logger(g_log, "**CANOPY INTERCEPTION BIOME**\n");
+	logger(g_log, "*CANOPY INTERCEPTION*\n");
+	logger(g_log, "Rain = %g mm\n",c->prcp_rain);
 
 	/* compute effective canopy cover */
 	if(s->value[LAI] < 1.0)
@@ -98,24 +99,24 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		if(c->prcp_rain != 0.0)
 		{
 			s->value[CANOPY_INT] = int_coeff*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI]));
-			logger(g_log, "Rain = %g\n",c->prcp_rain);
-			logger(g_log, "CANOPY_INT with rain (Lowrence) = %g\n", s->value[CANOPY_INT]);
+			//logger(g_log, "Rain = %g mm\n",c->prcp_rain);
+			//logger(g_log, "CANOPY_INT with rain (Lowrence) = %g\n", s->value[CANOPY_INT]);
 		}
 		/* for snow */
 		else
 		{
 			s->value[CANOPY_INT] = int_coeff*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI]));
-			logger(g_log, "CANOPY_INT with snow (Lowrence) = %f\n", s->value[CANOPY_INT]);
+			//logger(g_log, "CANOPY_INT with snow (Lowrence) = %f\n", s->value[CANOPY_INT]);
 		}
 	}
 
 	//test check why a so low values for int coeff (should be 0.30??)
 	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
 
-	logger(g_log, "ALL_LAI = %f\n", s->value[ALL_LAI]);
+	logger(g_log, "ALL_LAI = %g\n", s->value[ALL_LAI]);
 
 	/* no rain interception if canopy is wet from the day(s) before */
-	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
+	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] < max_int)
 	{
 		/* all rain intercepted */
 		if (c->prcp_rain <= max_int)
