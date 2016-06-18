@@ -1,5 +1,5 @@
 /*
- * canopy_evapo_biome.c
+ * canopy_evapotranspiration.c
  *
  *  Created on: 23/mar/2016
  *      Author: alessio
@@ -16,7 +16,7 @@
 
 extern logger_t* g_log;
 
-void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
+void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
 {
 
 	double max_int;
@@ -59,11 +59,13 @@ void canopy_evapotranspiration_biome (SPECIES *const s, CELL *const c, const MET
 	double tcanopy, tcanopyK;
 	double tcanopy_day, tcanopy_night;
 
+	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
+
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
 
-	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION BIOME**\n");
+	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
 
 	logger(g_log, "**CANOPY INTERCEPTION BIOME**\n");
 

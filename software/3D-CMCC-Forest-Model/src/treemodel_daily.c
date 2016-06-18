@@ -185,7 +185,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* canopy water fluxes block */
-								canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+								Canopy_evapo_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 
 								/* canopy carbon fluxes block */
 								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
@@ -249,7 +249,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 									met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
 
 							/* canopy water fluxes block */
-							canopy_evapotranspiration_biome (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+							Canopy_evapo_transpiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
 
 							/* canopy carbon fluxes block */
 							Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);

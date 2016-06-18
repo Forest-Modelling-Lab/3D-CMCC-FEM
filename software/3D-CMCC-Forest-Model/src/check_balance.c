@@ -83,6 +83,10 @@ void Check_water_balance (CELL *c)
 	double water_out;
 	double water_stored;
 
+	double daily_frac_transp;
+	double daily_frac_evapo;
+	double daily_frac_soil_evapo;
+
 	logger(g_log, "\n*********CHECK WATER BALANCE************\n");
 	/* DAILY CHECK ON WATER BALANCE */
 
@@ -93,7 +97,7 @@ void Check_water_balance (CELL *c)
 	/* sum of sinks*/
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
 	//fixme check for daily_c_evapo
-	water_out = c->daily_c_transp /* + c->daily_c_evapo */+ c->daily_c_int + c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
+	water_out = c->daily_c_transp + /*c->daily_c_evapo */+ c->daily_c_int + c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage */
 	//fixme check for daily_c_water_stored
@@ -101,6 +105,18 @@ void Check_water_balance (CELL *c)
 
 	/* check balance */
 	c->water_balance = water_in - water_out - water_stored;
+
+	/* check fractions */
+	if(c->daily_et != 0)
+	{
+		daily_frac_transp = (100 * c->daily_c_transp)/c->daily_et;
+		daily_frac_evapo = (100 * c->daily_c_evapo)/c->daily_et;
+		daily_frac_soil_evapo = (100 * c->daily_soil_evapo)/c->daily_et;
+		logger(g_log, "c->daily_et = %g\n", c->daily_et);
+		logger(g_log, "daily_frac_transp = %g %%\n", daily_frac_transp);
+		logger(g_log, "daily_frac_evapo = %g %%\n", daily_frac_evapo);
+		logger(g_log, "daily_frac_soil_evapo = %g %%\n", daily_frac_soil_evapo);
+	}
 
 	if(c->years_count == 0 && c->doy == 1)
 	{

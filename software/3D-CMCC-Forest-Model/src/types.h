@@ -1406,7 +1406,7 @@ void Stool_mortality (SPECIES *const, int);
 
 //test
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
-void canopy_evapotranspiration_biome (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
+void Canopy_evapo_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
 void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
 double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);

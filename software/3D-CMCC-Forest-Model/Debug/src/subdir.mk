@@ -14,7 +14,7 @@ C_SRCS += \
 ../src/aut_respiration.c \
 ../src/biomass.c \
 ../src/canopy_cover.c \
-../src/canopy_evapotranspiration_biome.c \
+../src/canopy_evapotranspiration.c \
 ../src/canopy_sensible_heat.c \
 ../src/check_balance.c \
 ../src/check_prcp.c \
@@ -76,7 +76,7 @@ OBJS += \
 ./src/aut_respiration.o \
 ./src/biomass.o \
 ./src/canopy_cover.o \
-./src/canopy_evapotranspiration_biome.o \
+./src/canopy_evapotranspiration.o \
 ./src/canopy_sensible_heat.o \
 ./src/check_balance.o \
 ./src/check_prcp.o \
@@ -138,7 +138,7 @@ C_DEPS += \
 ./src/aut_respiration.d \
 ./src/biomass.d \
 ./src/canopy_cover.d \
-./src/canopy_evapotranspiration_biome.d \
+./src/canopy_evapotranspiration.d \
 ./src/canopy_sensible_heat.d \
 ./src/check_balance.d \
 ./src/check_prcp.d \
