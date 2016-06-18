@@ -54,7 +54,7 @@ void Check_carbon_balance (CELL *c)
 			logger(g_log, "c->daily_gpp = %f\n", c->daily_gpp);
 			logger(g_log, "out\n");
 			logger(g_log, "c->daily_tot_aut_resp = %f\n",c->daily_aut_resp);
-			logger(g_log, "stored\n");
+			logger(g_log, "stored (as a difference between old and current)\n");
 			logger(g_log, "c->daily_leaf_carbon = %f\n", c->daily_leaf_carbon);
 			logger(g_log, "c->daily_stem_carbon = %f\n", c->daily_stem_carbon);
 			logger(g_log, "c->daily_fine_root_carbon = %f\n", c->daily_fine_root_carbon);
@@ -158,7 +158,7 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "c->snow_subl = %f\n", c->snow_subl);
 			logger(g_log, "c->snow_melt = %f\n", c->snow_melt);
 			logger(g_log, "c->out_flow = %f\n", c->out_flow);
-			logger(g_log, "stored\n");
+			logger(g_log, "stored (as a difference between old and current)\n");
 			logger(g_log, "delta c->asw = %f\n", (c->asw - c->old_asw));
 			logger(g_log, "c->snow_pack = %f\n", c->snow_pack);
 			logger(g_log, "c->asw = %f\n", c->asw);
@@ -185,7 +185,7 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
 			logger(g_log, "out\n");
 			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
-			logger(g_log, "stored\n");
+			logger(g_log, "stored (as a difference between old and current)\n");
 			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
 			logger(g_log, "c->old_daily_c_water_stored = %f\n", c->old_daily_c_water_stored);
 			logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
