@@ -98,7 +98,8 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		if(c->prcp_rain != 0.0)
 		{
 			s->value[CANOPY_INT] = int_coeff*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI]));
-			logger(g_log, "CANOPY_INT with rain (Lowrence) = %f\n", s->value[CANOPY_INT]);
+			logger(g_log, "Rain = %g\n",c->prcp_rain);
+			logger(g_log, "CANOPY_INT with rain (Lowrence) = %g\n", s->value[CANOPY_INT]);
 		}
 		/* for snow */
 		else
@@ -130,7 +131,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		}
 
 		s->value[CANOPY_WATER] = s->value[CANOPY_INT];
-		s->value[CANOPY_INT] = 0.0;
+		//s->value[CANOPY_INT] = 0.0;
 	}
 	/* in case of snow no interception */
 	else
@@ -208,7 +209,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	if(s->value[ALL_LAI]>0.0)
 	{
 
-		//fixme why for evaporation BIOME uses stomatal condictance??
+		//fixme why for evaporation BIOME uses stomatal conductance??
 		/* if canopy is wet */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{

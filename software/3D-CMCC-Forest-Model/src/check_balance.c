@@ -79,32 +79,52 @@ void Check_carbon_balance (CELL *c)
 
 void Check_water_balance (CELL *c)
 {
-	double water_in;
-	double water_out;
-	double water_stored;
+	double soil_water_pool_in;
+	double soil_water_pool_out;
+	double soil_water_pool_stored;
+
+	double canopy_water_pool_in;
+	double canopy_water_pool_out;
+	double canopy_water_pool_stored;
 
 	double daily_frac_transp;
 	double daily_frac_evapo;
 	double daily_frac_soil_evapo;
 
 	logger(g_log, "\n*********CHECK WATER BALANCE************\n");
-	/* DAILY CHECK ON WATER BALANCE */
+	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
+	/* it takes into account soil-atmosphere fluxes */
 
+	/* sum of sources (rain + snow) */
+	soil_water_pool_in = c->prcp_rain + c->prcp_snow + c->snow_melt;
 
-	/*sum of sources (rain + snow)*/
-	water_in = c->prcp_rain + c->prcp_snow + c->snow_melt;
-
-	/* sum of sinks*/
+	/* sum of sinks */
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
-	//fixme check for daily_c_evapo
-	water_out = c->daily_c_transp + /*c->daily_c_evapo */+ c->daily_c_int + c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
+	soil_water_pool_out = c->daily_c_transp + /* c->daily_c_evapo + */ c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
-	/* sum of current storage */
+	/* sum of current storage in soil */
 	//fixme check for daily_c_water_stored
-	water_stored = (c->asw - c->old_asw) + /* c->daily_c_water_stored + */ c->prcp_snow;
+	soil_water_pool_stored = (c->asw - c->old_asw) /*+ c->daily_c_water_stored */ + c->prcp_snow;
 
-	/* check balance */
-	c->water_balance = water_in - water_out - water_stored;
+	/* check soil pool water balance */
+	c->soil_pool_water_balance = soil_water_pool_in - soil_water_pool_out - soil_water_pool_stored;
+
+	/*******************************************************************************************************************/
+	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
+
+	/* sum of sources (intercepted rain + snow) */
+	canopy_water_pool_in = c->daily_c_int;
+
+	/* sum of sinks */
+	canopy_water_pool_out = c->daily_c_evapo;
+
+	/* sum of current storage in canopy */
+	canopy_water_pool_stored = c->daily_c_water_stored;
+
+	/* check canopy pool water balance */
+	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
+
+	/*******************************************************************************************************************/
 
 	/* check fractions */
 	if(c->daily_et != 0)
@@ -112,7 +132,6 @@ void Check_water_balance (CELL *c)
 		daily_frac_transp = (100 * c->daily_c_transp)/c->daily_et;
 		daily_frac_evapo = (100 * c->daily_c_evapo)/c->daily_et;
 		daily_frac_soil_evapo = (100 * c->daily_soil_evapo)/c->daily_et;
-		logger(g_log, "c->daily_et = %g\n", c->daily_et);
 		logger(g_log, "daily_frac_transp = %g %%\n", daily_frac_transp);
 		logger(g_log, "daily_frac_evapo = %g %%\n", daily_frac_evapo);
 		logger(g_log, "daily_frac_soil_evapo = %g %%\n", daily_frac_soil_evapo);
@@ -121,19 +140,18 @@ void Check_water_balance (CELL *c)
 	if(c->years_count == 0 && c->doy == 1)
 	{
 		logger(g_log, "NO CHECK WATER BALANCE FOR THE FIRST DAY\n");
-		logger(g_log, "water balance (water_in - water_out - water_stored) = %f\n", c->water_balance);
+		logger(g_log, "soil pool water balance (water_in - water_out - water_stored) = %f\n", c->soil_pool_water_balance);
 	}
 	else
 	{
-		if (fabs(c->old_water_balance - c->water_balance) > 1e-4 )
+		/* check for soil water pool water balance */
+		if (fabs(c->old_soil_pool_water_balance - c->soil_pool_water_balance) > 1e-4 )
 		{
 			logger(g_log, "in\n");
 			logger(g_log, "c->prcp_rain = %f\n", c->prcp_rain);
 			logger(g_log, "c->prcp_snow = %f\n", c->prcp_snow);
 			logger(g_log, "out\n");
 			logger(g_log, "c->daily_tot_c_transp = %f\n", c->daily_c_transp);
-			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
-			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
 			logger(g_log, "c->soil_evaporation = %f\n", c->daily_soil_evapo);
 			logger(g_log, "c->snow_subl = %f\n", c->snow_subl);
 			logger(g_log, "c->snow_melt = %f\n", c->snow_melt);
@@ -141,23 +159,48 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "stored\n");
 			logger(g_log, "delta c->asw = %f\n", (c->asw - c->old_asw));
 			logger(g_log, "c->snow_pack = %f\n", c->snow_pack);
-			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
 			logger(g_log, "c->asw = %f\n", c->asw);
 			logger(g_log, "c->old_asw = %f\n", c->old_asw);
-			logger(g_log, "water in = %f\n", water_in);
-			logger(g_log, "water out = %f\n", water_out);
-			logger(g_log, "water stored = %f\n", water_stored);
-			logger(g_log, "water balance = %f\n", c->water_balance);
-			logger(g_log, "old water balance = %f\n", c->old_water_balance);
-			logger(g_log, "differences in balance (old - current)= %f\n", c->old_water_balance - c->water_balance);
-			logger(g_log, "...FATAL ERROR IN water balance\n");
+			logger(g_log, "soil water in = %f\n", soil_water_pool_in);
+			logger(g_log, "soil water out = %f\n", soil_water_pool_out);
+			logger(g_log, "soil water stored = %f\n", soil_water_pool_stored);
+			logger(g_log, "soil water balance = %f\n", c->soil_pool_water_balance);
+			logger(g_log, "old soil water balance = %f\n", c->old_soil_pool_water_balance);
+			logger(g_log, "differences in soil water balance (old - current)= %f\n", c->old_soil_pool_water_balance - c->soil_pool_water_balance);
+			logger(g_log, "...FATAL ERROR IN soil water balance\n");
 			logger(g_log, "DOY = %d\n", c->doy);
 			exit(1);
 		}
 		else
 		{
-			logger(g_log, "...ok water balance\n");
+			logger(g_log, "...ok soil water balance\n");
+		}
+		/* check for soil water pool water balance */
+		if (fabs(c->old_canopy_pool_water_balance - c->canopy_pool_water_balance) > 1e-4 )
+		{
+			logger(g_log, "in\n");
+			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
+			logger(g_log, "out\n");
+			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
+			logger(g_log, "stored\n");
+			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
+			logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
+			logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
+			logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
+			logger(g_log, "canopy water balance = %f\n", c->canopy_pool_water_balance);
+			logger(g_log, "old canopy water balance = %f\n", c->old_canopy_pool_water_balance);
+			logger(g_log, "differences in canopy balance (old - current)= %f\n", c->old_canopy_pool_water_balance - c->canopy_pool_water_balance);
+			logger(g_log, "...FATAL ERROR IN canopy water balance\n");
+			logger(g_log, "DOY = %d\n", c->doy);
+			exit(1);
+		}
+		else
+		{
+			logger(g_log, "...ok canopy water balance\n");
 		}
 	}
-	c->old_water_balance = c->water_balance;
+
+	/* assign values for previous day pools */
+	c->old_soil_pool_water_balance = c->soil_pool_water_balance;
+	c->old_canopy_pool_water_balance = c->canopy_pool_water_balance;
 }

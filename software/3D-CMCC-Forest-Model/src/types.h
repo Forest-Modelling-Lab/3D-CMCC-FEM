@@ -1056,9 +1056,8 @@ typedef struct {
 	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
 
-
-	double previous_available_soil_water;
-	double water_balance, old_water_balance;
+	double soil_pool_water_balance, old_soil_pool_water_balance;
+	double canopy_pool_water_balance, old_canopy_pool_water_balance;
 	double soil_moist_ratio;
 	double av_soil_moist_ratio;
 	double swc;//volumetric soil water content (%vol)
