@@ -49,6 +49,7 @@ void Check_carbon_balance (CELL *c)
 	{
 		if (fabs(c->old_carbon_balance - c->carbon_balance) > 1e-4 )
 		{
+			logger(g_log, "\nCARBON BALANCE\n");
 			logger(g_log, "in\n");
 			logger(g_log, "c->daily_gpp = %f\n", c->daily_gpp);
 			logger(g_log, "out\n");
@@ -65,7 +66,7 @@ void Check_carbon_balance (CELL *c)
 			logger(g_log, "carbon out = %f\n", carbon_out);
 			logger(g_log, "carbon stored = %f\n", carbon_stored);
 			logger(g_log, "differences in balance (old - current)= %f\n", c->old_carbon_balance - c->carbon_balance);
-			logger(g_log, "...FATAL ERROR IN carbon balance\n");
+			logger(g_log, "...FATAL ERROR IN carbon balance (exit)\n");
 			logger(g_log, "DOY CB = %d\n", c->doy);
 			exit(1);
 		}
@@ -147,6 +148,7 @@ void Check_water_balance (CELL *c)
 		/* check for soil water pool water balance */
 		if (fabs(c->old_soil_pool_water_balance - c->soil_pool_water_balance) > 1e-4 )
 		{
+			logger(g_log, "\nSOIL POOL WATER BALANCE\n");
 			logger(g_log, "in\n");
 			logger(g_log, "c->prcp_rain = %f\n", c->prcp_rain);
 			logger(g_log, "c->prcp_snow = %f\n", c->prcp_snow);
@@ -167,7 +169,7 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "soil water balance = %f\n", c->soil_pool_water_balance);
 			logger(g_log, "old soil water balance = %f\n", c->old_soil_pool_water_balance);
 			logger(g_log, "differences in soil water balance (old - current)= %f\n", c->old_soil_pool_water_balance - c->soil_pool_water_balance);
-			logger(g_log, "...FATAL ERROR IN soil water balance\n");
+			logger(g_log, "...FATAL ERROR IN soil water balance (exit)\n");
 			logger(g_log, "DOY = %d\n", c->doy);
 			exit(1);
 		}
@@ -175,9 +177,10 @@ void Check_water_balance (CELL *c)
 		{
 			logger(g_log, "...ok soil water balance\n");
 		}
-		/* check for soil water pool water balance */
+		/* check for canopy water pool water balance */
 		if (fabs(c->old_canopy_pool_water_balance - c->canopy_pool_water_balance) > 1e-4 )
 		{
+			logger(g_log, "\nCANOPY POOL WATER BALANCE\n");
 			logger(g_log, "in\n");
 			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
 			logger(g_log, "out\n");
@@ -190,7 +193,7 @@ void Check_water_balance (CELL *c)
 			logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
 			logger(g_log, "canopy water balance = %f\n", c->canopy_pool_water_balance);
 			logger(g_log, "differences in canopy balance (old - current)= %f\n", c->old_canopy_pool_water_balance - c->canopy_pool_water_balance);
-			logger(g_log, "...FATAL ERROR IN canopy water balance\n");
+			logger(g_log, "...FATAL ERROR IN canopy water balance (exit)\n");
 			logger(g_log, "DOY = %d\n", c->doy);
 			exit(1);
 		}
