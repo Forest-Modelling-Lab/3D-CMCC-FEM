@@ -130,6 +130,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 		}
 
+
 		s->value[CANOPY_WATER] = s->value[CANOPY_INT];
 		//s->value[CANOPY_INT] = 0.0;
 	}
