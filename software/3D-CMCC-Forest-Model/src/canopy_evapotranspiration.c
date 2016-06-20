@@ -81,24 +81,24 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
 
 
-//	/* compute effective canopy cover */
-//	if(s->value[LAI] < 1.0)
-//	{
-//		/* special case when LAI = < 1.0 */
-//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-//	}
-//	else
-//	{
-//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//	}
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cover_eff > 1.0)
-//	{
-//		leaf_cover_eff = 1.0;
-//	}
+	/* compute effective canopy cover */
+	if(s->value[LAI] < 1.0)
+	{
+		/* special case when LAI = < 1.0 */
+		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	}
+	else
+	{
+		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	}
+	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	if(leaf_cover_eff > 1.0)
+	{
+		leaf_cover_eff = 1.0;
+	}
 
-	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
+//	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
