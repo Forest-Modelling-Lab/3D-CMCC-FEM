@@ -265,6 +265,15 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							Daily_C_Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, years, DaysInMonth[month], height, age, species);
 							logger(g_log, "--------------------------------------------------------------------------\n\n\n");
 						}
+
+
+						/* check balances class level */
+						/*canopy water balance */
+						Check_canopy_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);
+						/****************************************************************************************************************************************/
+
+
+
 						/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 						/* END OF YEAR */
 						if (day == 30 && month == DECEMBER)
@@ -570,7 +579,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	/*CHECK FOR CARBON BALANCE CLOSURE*/
 	Check_carbon_balance (&m->cells[cell]);
 	/*CHECK FOR WATER BALANCE CLOSURE*/
-	Check_water_balance (&m->cells[cell]);
+	Check_soil_water_balance (&m->cells[cell]);
 
 	m->cells[cell].dos  += 1;
 	//todo: soilmodel could stay here or in main.c

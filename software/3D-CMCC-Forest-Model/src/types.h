@@ -391,14 +391,16 @@ enum
 	ASW,                            //available soil water per mm/ha
 	WUE,                            //Water use efficiency (gDM/mm)
 
-	//biome's
 	CANOPY_INT,
 	CANOPY_EVAPO,
-	CANOPY_WET,//it should'nt be reset every day
+	CANOPY_WET,                             //it should'nt be reset every day
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
-	CANOPY_WATER,//it should'nt be reset every day
-	CANOPY_FRAC_DAY_TRANSP, //Fraction of daily canopy transpiration (DIM)
+	OLD_CANOPY_WATER,                       //it should'nt be reset every day
+	CANOPY_WATER,                           //it should'nt be reset every day
+	CANOPY_FRAC_DAY_TRANSP,                 //Fraction of daily canopy transpiration (DIM)
+	CANOPY_WATER_BALANCE,                   //
+	OLD_CANOPY_WATER_BALANCE,               //
 
 	/*LAI*/
 	LAI,                            //LAI (m^2/m2)
@@ -1381,7 +1383,8 @@ void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);
 void Latent_heat_flux (CELL *, const MET_DATA *const, int, int);
 void Check_carbon_balance (CELL *);
-void Check_water_balance (CELL *);
+void Check_canopy_water_balance (SPECIES *);
+void Check_soil_water_balance (CELL *);
 void Check_C_flux_balance (CELL *);
 
 void live_total_wood_age(AGE *, SPECIES *);

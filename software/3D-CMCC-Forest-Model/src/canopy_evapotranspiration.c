@@ -64,8 +64,18 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	tairK = met[month].d[day].tavg + TempAbs;
 	tsoilK = met[month].d[day].tsoil + TempAbs;
 
-	/* assign values of previous day canopy water */
-	c->old_daily_c_water_stored = c->daily_c_water_stored;
+	/* assign values of previous day canopy water (it determines canopy water fluxes */
+	/* reset if LAI == 0.0*/
+	if(s->value[LAI] == 0.0)
+	{
+		s->value[OLD_CANOPY_WATER]= 0.0;
+		s->value[CANOPY_WATER] = 0.0;
+	}
+	/* otherwise assign values of the day before */
+	else
+	{
+		s->value[OLD_CANOPY_WATER]= s->value[CANOPY_WATER];
+	}
 
 
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
@@ -121,7 +131,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	{
 		logger(g_log, "\n*CANOPY INTERCEPTION*\n");
 		logger(g_log, "Rain = %g mm\n",c->prcp_rain);
-		logger(g_log, "LAI = %g\n",s->value[ALL_LAI]);
+		logger(g_log, "LAI = %g\n",s->value[LAI]);
 		logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 
 		/* all rain intercepted */
@@ -403,7 +413,6 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		// as in Ryder et al., 2016 resistance to sensible heat flux is equal to boundary layer resistance (see also BIOME)
 		// so it should be rh (1/gl_sh)
 
-
 		/* canopy resistance m sec-1)*/
 		//fixme gl_sh or gc_sh? Wang and Leuning 1998 use stomatal conductance
 		//fixme this is valid for cell level not for class level
@@ -467,6 +476,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
 
+	logger(g_log, "OLD CANOPY_WATER = %g mm/m2/day\n", s->value[OLD_CANOPY_WATER]);
 	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);
 	logger(g_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
 	logger(g_log, "CANOPY_EVAPO = %g mm/m2/day\n", s->value[CANOPY_EVAPO]);
@@ -476,7 +486,7 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	c->daily_c_int += s->value[CANOPY_INT];
 	c->daily_c_evapo += s->value[CANOPY_EVAPO];
 	c->daily_c_transp += s->value[CANOPY_TRANSP];
-	c->daily_c_water_stored += s->value[CANOPY_WATER];
+	c->daily_c_water_stored += (s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER]);
 	c->daily_c_evapotransp += s->value[CANOPY_EVAPO_TRANSP];
 	c->daily_c_bl_cond += s->value[CANOPY_BLCOND];
 }

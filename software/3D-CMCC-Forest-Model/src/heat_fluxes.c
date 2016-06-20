@@ -25,6 +25,7 @@ void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
 	c->daily_c_transp_watt = c->daily_c_transp * met[month].d[day].lh_vap / 86400.0;
 	c->daily_c_evapotransp_watt = c->daily_c_evapo_watt + c->daily_c_transp_watt;
 	logger(g_log, "Latent heat canopy evapotranspiration = %f W/m^2\n", c->daily_c_evapotransp_watt);
+	logger(g_log, "Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
 	c->daily_latent_heat_flux = c->daily_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 
