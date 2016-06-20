@@ -221,7 +221,53 @@ void Check_soil_water_balance (CELL *c)
 //	c->old_canopy_pool_water_balance = c->canopy_pool_water_balance;
 }
 
-void Check_canopy_water_balance (SPECIES *s)
+void Check_class_carbon_balance (SPECIES *s)
+{
+	double carbon_pool_in;
+	double carbon_pool_out;
+	double carbon_pool_stored;
+	double carbon_balance;
+
+
+	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
+
+	/* sum of sources (intercepted rain + snow) */
+	carbon_pool_in = s->value[DAILY_GPP_gC];
+
+	/* sum of sinks */
+	carbon_pool_out = s->value[TOTAL_AUT_RESP];
+
+	/* sum of current storage in canopy */
+	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_COARSEROOT] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_BRANCH] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell
+			+ s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
+
+	/* check canopy pool water balance */
+	carbon_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
+
+	/*******************************************************************************************************************/
+	/* check for canopy water pool water balance during growing season */
+	if (fabs(carbon_balance)> 1e-4)
+	{
+		logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
+		logger(g_log, "carbon in = %f\n", carbon_pool_in);
+		logger(g_log, "carbon out = %f\n", carbon_pool_out);
+		logger(g_log, "carbon stored = %f\n", carbon_pool_stored);
+		logger(g_log, "carbon balance = %f\n", carbon_balance);
+		logger(g_log, "...FATAL ERROR IN CELL LEVEL carbon balance (exit)\n");
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok canopy water balance\n");
+	}
+}
+
+void Check_class_water_balance (SPECIES *s)
 {
 	double canopy_water_pool_in;
 	double canopy_water_pool_out;
@@ -247,12 +293,12 @@ void Check_canopy_water_balance (SPECIES *s)
 	/* check for canopy water pool water balance during growing season */
 	if (fabs(canopy_water_balance)> 1e-4 && s->counter[VEG_UNVEG] == 1)
 	{
-		logger(g_log, "\nCLASS LEVEL CANOPY POOL WATER BALANCE\n");
+		logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
 		logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
 		logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
 		logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
 		logger(g_log, "canopy water balance = %f\n", canopy_water_balance);
-		logger(g_log, "...FATAL ERROR IN canopy water balance (exit)\n");
+		logger(g_log, "...FATAL ERROR IN CELL LEVEL canopy water balance (exit)\n");
 		exit(1);
 	}
 	else

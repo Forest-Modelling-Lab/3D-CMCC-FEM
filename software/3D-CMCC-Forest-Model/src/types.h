@@ -1381,8 +1381,9 @@ void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, in
 void Canopy_evapotranspiration (SPECIES *, CELL *, int);
 void Evapotranspiration (CELL *);
 void Latent_heat_flux (CELL *, const MET_DATA *const, int, int);
+void Check_class_carbon_balance (SPECIES *);
 void Check_carbon_balance (CELL *);
-void Check_canopy_water_balance (SPECIES *);
+void Check_class_water_balance (SPECIES *);
 void Check_soil_water_balance (CELL *);
 void Check_C_flux_balance (CELL *);
 
