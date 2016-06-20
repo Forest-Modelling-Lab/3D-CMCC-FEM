@@ -269,6 +269,7 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 
 						/* check balances class level */
 						/*canopy water balance */
+						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 						Check_canopy_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);
 						/****************************************************************************************************************************************/
 

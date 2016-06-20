@@ -398,9 +398,9 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 
 		/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 		pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-		logger(g_log, "pvs1 = %g\n", pvs1);
+		//logger(g_log, "pvs1 = %g\n", pvs1);
 		pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
-		logger(g_log, "pvs2 = %g\n", pvs2);
+		//logger(g_log, "pvs2 = %g\n", pvs2);
 
 		/* calculate slope of pvs vs. T curve, at ta */
 		//test this is the "DELTA" function as in Webber et al., 2016

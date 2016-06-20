@@ -226,6 +226,7 @@ void Check_canopy_water_balance (SPECIES *s)
 	double canopy_water_pool_in;
 	double canopy_water_pool_out;
 	double canopy_water_pool_stored;
+	double canopy_water_balance;
 
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
@@ -240,21 +241,17 @@ void Check_canopy_water_balance (SPECIES *s)
 	canopy_water_pool_stored = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
 
 	/* check canopy pool water balance */
-	s->value[CANOPY_WATER_BALANCE] = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
+	canopy_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
 
 	/*******************************************************************************************************************/
-	/* check for canopy water pool water balance */
-	if (fabs(s->value[OLD_CANOPY_WATER_BALANCE] - s->value[CANOPY_WATER_BALANCE]))
+	/* check for canopy water pool water balance during growing season */
+	if (fabs(canopy_water_balance)> 1e-4 && s->counter[VEG_UNVEG] == 1)
 	{
 		logger(g_log, "\nCLASS LEVEL CANOPY POOL WATER BALANCE\n");
-		logger(g_log, "in\n");
-		logger(g_log, "out\n");
-		logger(g_log, "stored (as a difference between old and current)\n");
 		logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
 		logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
 		logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
-		logger(g_log, "canopy water balance = %f\n", s->value[CANOPY_WATER_BALANCE]);
-		logger(g_log, "differences in canopy balance (old - current)= %f\n", s->value[OLD_CANOPY_WATER_BALANCE] - s->value[CANOPY_WATER_BALANCE]);
+		logger(g_log, "canopy water balance = %f\n", canopy_water_balance);
 		logger(g_log, "...FATAL ERROR IN canopy water balance (exit)\n");
 		exit(1);
 	}
@@ -262,7 +259,5 @@ void Check_canopy_water_balance (SPECIES *s)
 	{
 		logger(g_log, "...ok canopy water balance\n");
 	}
-	/* assign values for previous day pools */
-	s->value[OLD_CANOPY_WATER_BALANCE] = s->value[CANOPY_WATER_BALANCE];
 }
 
