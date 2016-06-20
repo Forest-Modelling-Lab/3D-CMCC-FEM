@@ -24,21 +24,25 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
 
-	/* compute effective canopy cover */
-	if(s->value[LAI] < 1.0)
-	{
-		/* special case when LAI = < 1.0 */
-		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	}
-	else
-	{
-		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	}
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cover_eff > 1.0)
-	{
-		leaf_cover_eff = 1.0;
-	}
+	//fixme in this case when LAI = 0 there's no respiration
+//	/* compute effective canopy cover */
+//	if(s->value[LAI] < 1.0)
+//	{
+//		/* special case when LAI = < 1.0 */
+//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//	}
+//	else
+//	{
+//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//	}
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if(leaf_cover_eff > 1.0)
+//	{
+//		leaf_cover_eff = 1.0;
+//	}
+
+	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
 
 //	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
 //	{

@@ -10,7 +10,7 @@
 
 extern logger_t* g_log;
 
-void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month, int day)
+void Soil_evaporation (CELL *const c, const MET_DATA *const met, int month, int day)
 {
 	double rbl;              /* (m/s) boundary layer resistance */
 	double rcorr;            /* correction factor for temp and pressure */
@@ -140,7 +140,7 @@ void soil_evaporation_biome (CELL *const c, const MET_DATA *const met, int month
 }
 
 
-extern void Soil_evaporation (CELL * c, const MET_DATA *const met, int month, int day)
+extern void Soil_evaporation_old (CELL * c, const MET_DATA *const met, int month, int day)
 {
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;

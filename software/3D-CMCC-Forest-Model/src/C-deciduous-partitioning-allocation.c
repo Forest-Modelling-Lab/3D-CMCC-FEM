@@ -258,7 +258,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
 	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
 
-	s->value[RESERVE_C] +=  s->value[C_TO_RESERVE];
+	s->value[RESERVE_C] += s->value[C_TO_RESERVE];
 	logger(g_log, "Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
 
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];

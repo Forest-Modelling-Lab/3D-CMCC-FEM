@@ -57,21 +57,24 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
-	/* compute effective canopy cover */
-	if(s->value[LAI] < 1.0)
-	{
-		/* special case when LAI = < 1.0 */
-		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	}
-	else
-	{
-		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	}
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cover_eff > 1.0)
-	{
-		leaf_cover_eff = 1.0;
-	}
+	//fixme in this case when LAI = 0 there's no respiration
+//	/* compute effective canopy cover */
+//	if(s->value[LAI] < 1.0)
+//	{
+//		/* special case when LAI = < 1.0 */
+//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//	}
+//	else
+//	{
+//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//	}
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if(leaf_cover_eff > 1.0)
+//	{
+//		leaf_cover_eff = 1.0;
+//	}
+
+	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 
 	// leaf day and night maintenance respiration when leaves on
 	if (s->counter[VEG_UNVEG] == 1)
@@ -162,21 +165,25 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
-	/* compute effective canopy cover */
-	if(s->value[LAI] < 1.0)
-	{
-		/* special case when LAI = < 1.0 */
-		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	}
-	else
-	{
-		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	}
-	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cover_eff > 1.0)
-	{
-		leaf_cover_eff = 1.0;
-	}
+	//fixme in this case when LAI = 0 there's no respiration
+//	/* compute effective canopy cover */
+//	if(s->value[LAI] < 1.0)
+//	{
+//		/* special case when LAI = < 1.0 */
+//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//	}
+//	else
+//	{
+//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//	}
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if(leaf_cover_eff > 1.0)
+//	{
+//		leaf_cover_eff = 1.0;
+//	}
+
+	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
 
 	if (s->value[C_TO_LEAF] > 0.0
 			|| s->value[C_TO_FINEROOT] > 0.0

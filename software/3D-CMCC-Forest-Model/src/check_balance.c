@@ -229,15 +229,15 @@ void Check_class_carbon_balance (SPECIES *s)
 	double carbon_balance;
 
 
-	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
+	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
 
-	/* sum of sources (intercepted rain + snow) */
+	/* sum of sources */
 	carbon_pool_in = s->value[DAILY_GPP_gC];
 
 	/* sum of sinks */
 	carbon_pool_out = s->value[TOTAL_AUT_RESP];
 
-	/* sum of current storage in canopy */
+	/* sum of current storage */
 	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell
 			+ s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell
 			+ s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell
@@ -246,11 +246,11 @@ void Check_class_carbon_balance (SPECIES *s)
 			+ s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell
 			+ s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
 
-	/* check canopy pool water balance */
+	/* check carbon balance */
 	carbon_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
 
 	/*******************************************************************************************************************/
-	/* check for canopy water pool water balance during growing season */
+	/* check for carbon balance closure */
 	if (fabs(carbon_balance)> 1e-4)
 	{
 		logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
@@ -263,7 +263,7 @@ void Check_class_carbon_balance (SPECIES *s)
 	}
 	else
 	{
-		logger(g_log, "...ok canopy water balance\n");
+		logger(g_log, "...ok carbon balance at class level\n");
 	}
 }
 
@@ -277,20 +277,20 @@ void Check_class_water_balance (SPECIES *s)
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
-	/* sum of sources (intercepted rain + snow) */
+	/* sum of sources */
 	canopy_water_pool_in = s->value[CANOPY_INT];
 
 	/* sum of sinks */
 	canopy_water_pool_out = s->value[CANOPY_EVAPO];
 
-	/* sum of current storage in canopy */
+	/* sum of current storage */
 	canopy_water_pool_stored = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
 
-	/* check canopy pool water balance */
+	/* check canopy water balance */
 	canopy_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
 
 	/*******************************************************************************************************************/
-	/* check for canopy water pool water balance during growing season */
+	/* check for canopy water pool water balance closure (during growing season) */
 	if (fabs(canopy_water_balance)> 1e-4 && s->counter[VEG_UNVEG] == 1)
 	{
 		logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
@@ -303,7 +303,7 @@ void Check_class_water_balance (SPECIES *s)
 	}
 	else
 	{
-		logger(g_log, "...ok canopy water balance\n");
+		logger(g_log, "...ok canopy water balance at class level\n");
 	}
 }
 

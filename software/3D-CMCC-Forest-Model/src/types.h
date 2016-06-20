@@ -1326,7 +1326,7 @@ void Carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
 void Soil_respiration (CELL *);
 void Carbon_fluxes (SPECIES *const, CELL *const, int, int, int);
 void Water_fluxes (CELL *const);
-void Soil_evaporation (CELL *, const MET_DATA *const, int, int);
+void Soil_evaporation_old (CELL *, const MET_DATA *const, int, int);
 void Daily_lai (SPECIES *const);
 void Peak_lai(SPECIES *const , CELL *const, int, int, int, int, int );
 void Turnover(SPECIES *, CELL *);
@@ -1410,7 +1410,7 @@ void Stool_mortality (SPECIES *const, int);
 //test
 void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
 void Canopy_evapo_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
-void soil_evaporation_biome (CELL *const c, const MET_DATA *const, int, int);
+void Soil_evaporation (CELL *const c, const MET_DATA *const, int, int);
 double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
 void Annual_minimum_reserve (SPECIES *);
 int alloc_struct(void **t, int *count, unsigned int size);

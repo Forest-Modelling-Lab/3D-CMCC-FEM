@@ -267,16 +267,15 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 						}
 
 
-						/* check balances class level */
-
+						/* check fo balance closure at the class level */
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
-						/* carbon balance */
+
+						/* check for carbon balance closure */
 						Check_class_carbon_balance (&m->cells[cell].heights[height].ages[age].species[species]);
-						/* water balance */
+
+						/* check for water balance closure */
 						Check_class_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);
 						/****************************************************************************************************************************************/
-
-
 
 						/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 						/* END OF YEAR */
@@ -285,7 +284,6 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 							logger(g_log, "*****END OF YEAR******\n");
 							/*FRUIT ALLOCATION*/
 							//Only for dominant layer
-
 							//logger(g_log, "Dominant Canopy Cover = %f\n", m->cells[cell].canopy_cover_dominant);
 
 							/*
@@ -566,23 +564,22 @@ int Tree_model_daily (MATRIX *const m, const YOS *const yos, const int years, co
 	}
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
-	/*compute soil respiration*/
+	/* computations during the last height class processing */
+	/* compute soil respiration */
 	Soil_respiration (&m->cells[cell]);
-	/*compute soil evaporation-cell evapotranspiration-cell water balance in the last loop of height*/
-	//Soil_evaporation (&m->cells[cell], met, month, day);
-	//test
-	soil_evaporation_biome (&m->cells[cell], met, month, day);
-	/*compute evapotranspiration*/
+	/* compute soil evaporation */
+	Soil_evaporation (&m->cells[cell], met, month, day);
+	/* compute evapotranspiration */
 	Evapotranspiration (&m->cells[cell]);
-	/*compute latent heat flux*/
+	/* compute latent heat flux */
 	Latent_heat_flux (&m->cells[cell], met, month, day);
-	/*compute soil water balance*/
+	/* compute soil water balance */
 	Soil_water_balance (&m->cells[cell], met, month, day);
-	/*compute water fluxes*/
+	/* compute water fluxes */
 	Water_fluxes (&m->cells[cell]);
-	/*CHECK FOR CARBON BALANCE CLOSURE*/
+	/* CHECK FOR CARBON BALANCE CLOSURE */
 	Check_carbon_balance (&m->cells[cell]);
-	/*CHECK FOR WATER BALANCE CLOSURE*/
+	/* CHECK FOR WATER BALANCE CLOSURE */
 	Check_soil_water_balance (&m->cells[cell]);
 
 	m->cells[cell].dos  += 1;
