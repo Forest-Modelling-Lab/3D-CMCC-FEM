@@ -137,6 +137,8 @@ void Annual_minimum_reserve (SPECIES *s)
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 	//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
 
+	/* following Krinner et al., 2005 */
+
 	/* IMPORTANT! reserve computation if not in init data are computed from DM */
 	logger(g_log, "\n*annual minimum reserve*\n");
 	s->value[MIN_RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
@@ -147,3 +149,5 @@ void Annual_minimum_reserve (SPECIES *s)
 	s->value[AV_MIN_RESERVE_KgC] = s->value[MIN_RESERVE_C] *1000.0 /s->counter[N_TREE];
 	logger(g_log, "--Average MINIMUM Reserve Biomass = %f Kgres/tree \n", s->value[RESERVE_C]);
 }
+
+
