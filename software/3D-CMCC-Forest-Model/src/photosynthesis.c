@@ -58,9 +58,10 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 	//photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
 	if (s->counter[VEG_UNVEG] == 1 /* && s->value[DAILY_TRANSP] != 0.0*/)
 	{
+		//test without F_CO2
 		if (s->value[ALPHA] > 0.0)
 		{
-			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
+			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
 					 /**s->value[FRAC_DAYTIME_TRANSP] */;
 			logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %f molC/molPAR\n", Alpha_C);
 
@@ -71,7 +72,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 		{
 			logger(g_log, "NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
-			Epsilon = s->value[EPSILONgCMJ] * /*s->value[F_LIGHT]*/ s->value[F_CO2] * s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
+			Epsilon = s->value[EPSILONgCMJ] * /* s->value[F_LIGHT]*/ /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
 			logger(g_log, "Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);

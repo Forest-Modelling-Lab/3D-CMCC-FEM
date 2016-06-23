@@ -246,7 +246,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		logger(g_log, "Water stress\n");
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 
-		/* forced to  0.3 to avoid too much low values */
+		/* forced to  0.3 to avoid zero values */
 		//fixme
 		s->value[F_PSI] = 0.3;
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
@@ -260,8 +260,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 		counter_water_stress = 0.0;
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
-		//test 12 May 2016 test
-		if(s->value[F_PSI]< 0.3) s->value[F_PSI] = 0.3;
+		//test
+		if(s->value[F_PSI]< 0.1) s->value[F_PSI] = 0.1;
 	}
 
 	//test using f_psi as f_sw
@@ -288,6 +288,9 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
 	//logger(g_log, "Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
+
+
+	//if(month == 5 && day == 4) getchar();
 
 
 	/*SOIL DROUGHT MODIFIER*/
