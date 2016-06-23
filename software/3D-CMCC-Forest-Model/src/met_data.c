@@ -68,14 +68,14 @@ void Day_Length (CELL * c, int day, int month, int years, YOS *yos)
 	//4/apr/2016
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
-	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
-	ampl = (exp (7.42 + (0.045 * (g_soil->values[SOIL_LAT]+adjust_latitude)))) / 3600;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+//	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
+//	ampl = (exp (7.42 + (0.045 * (g_soil->values[SOIL_LAT]+adjust_latitude)))) / 3600;
+//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	//	ampl = (exp (7.42 + (0.045 * g_soil->values[SOIL_lat))) / 3600;
-	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
+	ampl = (exp (7.42 + (0.045 * g_soil->values[SOIL_LAT]))) / 3600;
+	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
 
 	c->ni = met[month].d[day].daylength/24.0;
 
