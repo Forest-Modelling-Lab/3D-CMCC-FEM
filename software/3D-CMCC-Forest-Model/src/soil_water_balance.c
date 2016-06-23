@@ -41,9 +41,6 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 	logger(g_log, "ASW = %f mm\n", c->asw);
 	logger(g_log, "snow pack = %f mm\n", c->snow_pack);
 
-	/* check */
-	CHECK_CONDITION(c->asw, < 0.0)
-
 
 	if ( c->asw > c->max_asw_fc)
 	{
@@ -53,23 +50,22 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 		c->asw = c->max_asw_fc;
 		logger(g_log, "Available soil water = %f\n", c->asw);
 	}
-
-
 	/* calculates the outflow flux from the difference between soilwater
 	and maximum soilwater */
 	/* water in excess of saturation to outflow */
-//	if (c->asw > c->soilw_sat)
+//todo test it
+//	if (c->asw > c->max_asw_sat)
 //	{
 //		logger(g_log, "c->asw = %f\n", c->asw);
-//		c->out_flow = c->asw - c->soilw_sat;
+//		c->out_flow = c->asw - c->max_asw_sat;
 //		c->asw -= c->out_flow;
 //		logger(g_log, "c->out_flow = %f\n", c->out_flow);
 //	}
 //	/* slow drainage from saturation to field capacity */
-//	else if (c->asw > c->soilw_fc)
+//	else if (c->asw > c->max_asw_fc)
 //	{
 //		logger(g_log, "c->asw > c->soilw_fc\n");
-//		c->out_flow = 0.5 * (c->asw - c->soilw_fc);
+//		c->out_flow = 0.5 * (c->asw - c->max_asw_fc);
 //		c->asw -= c->out_flow;
 //		logger(g_log, "c->out_flow = %f\n", c->out_flow);
 //	}
@@ -78,6 +74,24 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 //	{
 //		c->out_flow = 0.0;
 //	}
+
+	/* from BIOME-BGC */
+	/* the following special case prevents evaporation under very
+	dry conditions from causing a negative soilwater content */
+	/* negative soilwater */
+	if (c->asw < 0.0)
+	{
+		/* add back the evaporation and transpiration fluxes, and
+		set these fluxes to 0.0 */
+		c->asw             += c->daily_soil_evapo;
+		c->asw             += c->daily_c_transp;
+		c->daily_soil_evapo = 0.0;
+		c->daily_c_transp   = 0.0;
+
+		/* test again for negative soilwater...should never be true */
+		CHECK_CONDITION(c->asw, < 0.0)
+	}
+
 	c->swc = (c->asw * 100)/c->max_asw_fc;
 	logger(g_log, "asw = %g\n", c->asw);
 	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);

@@ -80,6 +80,7 @@ void Initialization_site_data (CELL *c)
 	logger(g_log, "soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
 	c->max_asw_fc = c->soilw_fc;
+	c->max_asw_sat = c->soilw_sat;
 
 	//compute initialization soil water content
 	c->asw = (c->soilw_sat * settings->init_frac_maxasw);

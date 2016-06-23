@@ -77,6 +77,7 @@ void Day_Length (CELL *c, int day, int month, int years, YOS *yos)
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
 
+	/* compute fraction of daytime */
 	c->ni = met[month].d[day].daylength/24.0;
 
 }
