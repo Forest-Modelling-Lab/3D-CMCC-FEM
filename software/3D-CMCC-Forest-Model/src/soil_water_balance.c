@@ -78,6 +78,12 @@ void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
 //	{
 //		c->out_flow = 0.0;
 //	}
-	c->swc = (c->asw * 100)/c->soilw_fc;
+	c->swc = (c->asw * 100)/c->max_asw_fc;
+	logger(g_log, "asw = %g\n", c->asw);
+	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
 	logger(g_log, "SWC = %g(%vol)\n", c->swc);
+
+	/* check */
+	CHECK_CONDITION (c->swc, > 100.1);
+	CHECK_CONDITION (c->swc, < 0);
 }

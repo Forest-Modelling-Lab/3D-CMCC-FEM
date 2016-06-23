@@ -881,7 +881,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 			}
 			logger(g_daily_log, "\t%6s \t%6s \t%4s \t%8s \t%6s\t%6s \t%10s "
 					"\t%5s \t%8s \t%10s \t%11s \t%11s \t%11s \t%11s \t%10s \t%11s \t%11s \t%11s \t%11s\n",
-					"NPP(gC/m2d)", "ET(mm/m2/d)","LE(W/m2)", "ASW(mm)", "LAI",
+					"NPP(gC/m2d)", "ET(mm/m2/d)","LE(W/m2)", "SWC(%)", "LAI",
 					"CC", "DEADTREE", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres", "wlAR", "wsAR", "wbbAR", "wfrAR", "wcrAR");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
@@ -909,7 +909,7 @@ void EOD_cumulative_balance_cell_level (CELL *c, const YOS *const yos, int years
 				c->layer_daily_npp_gC[0],
 				c->daily_et,
 				c->daily_latent_heat_flux,
-				c->asw,
+				c->swc,
 				c->daily_lai[0],
 				c->layer_daily_cc[0]*100,
 				c->layer_daily_dead_tree[0],

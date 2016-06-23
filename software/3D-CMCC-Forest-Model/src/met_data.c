@@ -48,7 +48,7 @@ void Sat_vapour_pressure (CELL * c, int day, int month, int years, YOS *yos)
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Day_Length (CELL * c, int day, int month, int years, YOS *yos)
+void Day_Length (CELL *c, int day, int month, int years, YOS *yos)
 {
 
 	double ampl;  //seasonal variation in Day Length from 12 h
@@ -132,7 +132,7 @@ extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, Y
 
 //following BIOME-BGC 4.2 src
 //compute nightime average air temperature
-extern void Nightime_avg_temperature (CELL * c,  int day, int month, int years, YOS *yos)
+extern void Nightime_avg_temperature (CELL * c, int day, int month, int years, YOS *yos)
 {
 
 	MET_DATA *met;
