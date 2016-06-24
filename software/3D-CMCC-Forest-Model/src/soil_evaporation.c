@@ -11,7 +11,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void soil_evaporation_biome(cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
 	double rbl;              /* (m/s) boundary layer resistance */
 	double rcorr;            /* correction factor for temp and pressure */
@@ -141,7 +141,7 @@ void soil_evaporation_biome(cell_t *const c, const meteo_t *const met, const int
 }
 
 
-void Soil_evaporation(cell_t * c, const meteo_t *const met, int month, int day)
+void Soil_evaporation_old (cell_t * c, const meteo_t *const met, int month, int day)
 {
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
@@ -201,7 +201,7 @@ void Soil_evaporation(cell_t * c, const meteo_t *const met, int month, int day)
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
-		PotEvap = (sat / (sat + gamma )) * (c->net_radiation * 86400) / met[month].d[day].lh_vap_soil;
+		PotEvap = (sat / (sat + gamma )) * (c->net_radiation_for_soil * 86400) / met[month].d[day].lh_vap_soil;
 		logger(g_log, "Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
 		{

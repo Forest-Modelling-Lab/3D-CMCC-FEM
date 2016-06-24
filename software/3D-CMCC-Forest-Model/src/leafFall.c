@@ -107,7 +107,7 @@ void leaffall(species_t *const s, const meteo_t *const met, int* doy, int* topla
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */
 	double previousLai, previousBiomass_lai;	//lai of the day before, used to calculate previous biomass and evaluate delta_foliage biomass
-	double previous_Biomass_fineroot;
+	//double previous_Biomass_fineroot;
 	//s->counter[DAY_FRAC_FOLIAGE_REMOVE] = 130;
 
 	logger(g_log, "\n**LEAFFALL_MARCONI FUNCTION**\n");
@@ -119,7 +119,7 @@ void leaffall(species_t *const s, const meteo_t *const met, int* doy, int* topla
 		s->value[MAX_LAI] = s->value[LAI];
 	}
 	previousLai = s->value[LAI];
-	previous_Biomass_fineroot = s->value[BIOMASS_FINE_ROOT_tDM];
+	//previous_Biomass_fineroot = s->value[BIOMASS_FINE_ROOT_tDM];
 
 
 

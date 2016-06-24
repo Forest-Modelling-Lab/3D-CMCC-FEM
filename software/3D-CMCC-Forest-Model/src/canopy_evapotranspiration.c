@@ -46,7 +46,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	static int days_with_canopy_wet;
 
 	double tairK;
-	double tsoilK;
+	//double tsoilK;
 
 	//test
 	double psych_p;
@@ -61,7 +61,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 
 	tairK = met[month].d[day].tavg + TempAbs;
-	tsoilK = met[month].d[day].tsoil + TempAbs;
+	//tsoilK = met[month].d[day].tsoil + TempAbs;
 
 	/* assign values of previous day canopy water (it determines canopy water fluxes */
 	/* reset if LAI == 0.0*/

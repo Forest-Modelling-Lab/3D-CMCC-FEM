@@ -32,7 +32,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	double pF_CTEM = 0.0;
 	double Light_trasm;
 	double Perc_fine;
-	static double frac_to_foliage_fineroot;
+	//static double frac_to_foliage_fineroot;
 	static double reserve_for_foliage_budburst;
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;

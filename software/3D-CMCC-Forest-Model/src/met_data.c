@@ -53,7 +53,7 @@ void Day_Length(cell_t *const c, const int day, const int month, const int year)
 
 	double ampl;  //seasonal variation in Day Length from 12 h
 	static int doy;
-	double adjust_latitude;
+	//double adjust_latitude;
 
 	meteo_t *met;
 	met = c->years[year].m;
@@ -68,15 +68,16 @@ void Day_Length(cell_t *const c, const int day, const int month, const int year)
 	//4/apr/2016
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
-	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
-	ampl = (exp (7.42 + (0.045 * (g_soil_settings->values[SOIL_LAT]+adjust_latitude)))) / 3600;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	//	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
+	//	ampl = (exp (7.42 + (0.045 * (g_soil_settings->values[SOIL_LAT]+adjust_latitude)))) / 3600;
+	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	//	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_lat))) / 3600;
-	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	//	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
-
+	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600;
+	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
+	
+	/* compute fraction of daytime */
 	c->ni = met[month].d[day].daylength/24.0;
 
 }

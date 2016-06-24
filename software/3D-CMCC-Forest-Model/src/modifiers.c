@@ -36,8 +36,8 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	static int counter_water_stress;
 
 	//test
-	double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
-	double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
+	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
+	//double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
 
 	logger(g_log, "\nDAILY_MODIFIERS\n\n");
 

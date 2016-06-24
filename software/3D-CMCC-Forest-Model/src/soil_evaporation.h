@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-void soil_evaporation_biome(cell_t *const c, const meteo_t *const met, const int month, const int day);
-void Soil_evaporation(cell_t * c, const meteo_t *const met, int month, int day);
+void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month, const int day);
+void Soil_evaporation_old(cell_t * c, const meteo_t *const met, int month, int day);
 
 #endif /* SOIL_EVAPORATION_H_ */
