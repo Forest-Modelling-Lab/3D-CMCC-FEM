@@ -1,0 +1,1 @@
+@3D-CMCC-Forest-Model -i input/nc_test_case -p parameterization -o output/debug_output -b output/daily_output -f output/monthly_output -e output/annual_output -d input.nc -m climate_nc/6_climate.lst -s soil.nc -t topo.nc -c settings.txt -n output/soil_output/soil_output -r output_vars.lst > result_nc.txt 

@@ -1,0 +1,14 @@
+0,Fagussylvatica
+1,Castaneasativa
+2,Fraxinusangustifolia
+3,Larixdecidua
+4,larixSergio
+5,Piceaabies
+6,Pinussylvestris
+7,Quercuscerris
+8,Quercusilex
+9,Quercusrobur
+10,quercus_deciduous
+11,quercus_evergreen
+12,Wheat
+

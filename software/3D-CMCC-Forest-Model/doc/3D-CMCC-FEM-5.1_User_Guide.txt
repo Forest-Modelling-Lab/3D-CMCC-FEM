@@ -71,13 +71,14 @@ Usage
 3D-CMCC-FEM is a command line program, and its behaviour is controlled by
 several command line options, specified in unix style.  
 
-3D-CMCC-FEM reads input parameters from five text or netcdf files:
+3D-CMCC-FEM reads input parameters from six text or netcdf files:
 
 -settings.txt
 -input.txt
 -species.txt
--year.txt
--site.txt
+-meteo.txt
+-soil.txt
+-topo.txt
 
 RUN THE MODEL
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -142,7 +143,7 @@ The text file must be created following this logic architecture
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 METEOROLOGICAL DATA
 The second required input file is the meteorological data file named using the year of simulation (optionally), 
-(e.g. "2007.txt") containing the daily meteorological data information for that year.
+(e.g. "2007_2010.txt") containing the daily meteorological data information for that years.
 Years of simulation depends on the number of the met data file passed as argument. But it can be used also a multi-year file in which have to be included as a first
 column the value of the year. Some met data are mandatory: temperature, precipitation, humidity, radiation, and number of days of the month at the simulation site.
 Others are optional: Soil Temperature (Ts) and Soil Water Content (SWC).
@@ -150,7 +151,7 @@ If the model runs in "spatial version" daily or monthly LAI values are mandatory
 
 Each variable must be separated by one tab character.
 
-example for year 2007 in daily/unspatial version
+example for year 2007-200x in daily/unspatial version
 
 Year    Month   n_days  Rg_f    Ta_f    Tmax    Tmin    VPD_f   Ts_f    Precip  SWC     LAI 
 2007    1       1       5.1     -9999   13.1    7.1     0.2     7.8     1       -9999   0
