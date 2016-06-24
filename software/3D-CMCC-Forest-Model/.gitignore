@@ -14,12 +14,14 @@
 /output/annual_output/*.txt
 /output/monthly_output/*.txt
 /output/daily_output/*.txt
+/output/soil_output/*.txt
 
 # ignore all .nc files in output folders
 /output/debug_output/*.nc
 /output/annual_output/*nc.txt
 /output/monthly_output/*.nc
 /output/daily_output/*.nc
+/output/soil_output/*.nc
 /output_6.1
 
 
