@@ -6,13 +6,16 @@
 #include <math.h>
 #include <assert.h>
 #include <string.h>
-#include "soil.h"
-#include "types.h"
+#include "soil_settings.h"
+#include "cropmodel_daily.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
-extern soil_t *g_soil;
+extern soil_settings_t *g_soil_settings;
 
 //define
 #define SNOW_COEFF 15 		// snow cm;
@@ -23,22 +26,21 @@ extern soil_t *g_soil;
 //#define E_SPIN
 
 /* */
-int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const int month, const int day, const int years_of_simulation)
+int crop_model_D(matrix_t *const m, const int _cell, const int year, const int month, const int day, const int years_of_simulation)
 {
-	MET_DATA *met;
+	meteo_t *met;
 
-	static int cell;
-	static int height;
-	static int age;
-	static int species;
-
+	int cell;
+	int height;
+	int age;
+	int species;
 
 	/**************************************************************************************************************************************
 	 * 									STATIC AND CONST PARAMETERS
 	 **************************************************************************************************************************************/
 
-	int   const   soilLayer = 1;						// when done a cropType.h point to the value in site
-	int   const   phyllocron = 95;						// time interval between leaf tip appearancE it shoul be somehow variable (see Ritchie et al., 91)
+	const int soilLayer = 1;						// when done a cropType.h point to the value in site
+	const int phyllocron = 95;						// time interval between leaf tip appearancE it shoul be somehow variable (see Ritchie et al., 91)
 	const int     MAXINT = 32767;
 	const double   scatterLightParameter = 0.2;			//scatter of light parameter; set as default 0.02 (Zhang et al. 2002)
 	const double   rootWaterUptakeCoefficient = 0.003;	// root water uptake coefficient (0.003 cm water/cm root)
@@ -388,16 +390,16 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 	// check parameters
-	assert(m && yos);
-	met = (MET_DATA*) yos[years].m;
+	assert(m);
+	met = m->cells[_cell].years[year].m;
 
 	//control if all soil data are available
 	for ( cell = 0; cell < m->cells_count; cell++)
 	{
-		if (	IS_INVALID_VALUE(g_soil->values[SOIL_SAND_PERC])
-				|| IS_INVALID_VALUE(g_soil->values[SOIL_CLAY_PERC])
-				|| IS_INVALID_VALUE(g_soil->values[SOIL_SILT_PERC])
-				|| IS_INVALID_VALUE(g_soil->values[SOIL_DEPTH]) )
+		if (	IS_INVALID_VALUE(g_soil_settings->values[SOIL_SAND_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_CLAY_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_SILT_PERC])
+				|| IS_INVALID_VALUE(g_soil_settings->values[SOIL_DEPTH]) )
 		{
 			logger(g_log, "NO SOIL DATA AVAILABLE\n");
 			return 0;
@@ -420,7 +422,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 			{
 				/*increment age after first year*/
 
-				if ( day == 0 && month == JANUARY && years == 0)
+				if ( day == 0 && month == JANUARY && year == 0)
 				{
 					logger(g_log, "***** VERY FIRST VARIABLES INITIALIZATION *****\n"); 	//PAY ATTENTION, IS THIS ALLRIGHT TO CALL IT INITIALIZATION!?
 					//shandong K coefficient
@@ -494,14 +496,14 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					lag 							= 0;			// set at 0.5: weighted the current T estimates equally with the previous day’s temperature.
 
 					//soil moisture of layer l at wilting point; assumed as 10% fraction of max swc ( filed capacity) (Collalti)
-					layerWilting[0] = fieldCapacityLayerMoisture[0] * settings->init_frac_maxasw;
+					layerWilting[0] = fieldCapacityLayerMoisture[0] * g_settings->init_frac_maxasw;
 					driestSoilWaterContent = 0.5 * layerWilting[0];
 
 					/****************************************************
 					 * 				GENERAL SITE PARAMETERS
 					 ***************************************************/
 
-					julianDate = (4713 * 365) + (4713 + yos[years].year) / 4 + (yos[years].year * 365) - 14;
+					julianDate = (4713 * 365) + (4713 + m->cells[_cell].years[year].year) / 4 + (m->cells[_cell].years[year].year * 365) - 14;
 
 					for (l = 0; l < soilLayer; l++)
 					{
@@ -526,7 +528,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					{
 						_LAI 						= 0.5;
 						totalCumulativeLeafArea 	= _LAI;
-						plants 						= 300.0;
+						plants 						= 300;
 						tillNumber 					= 1.0;
 
 						maxDevelopmentTemperature 	= 34.0;
@@ -589,7 +591,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 					}
-					cumPhyllocrons 						= 1.0; //number of cumulative phyllocrones since emergence
+					cumPhyllocrons 						= 1; //number of cumulative phyllocrones since emergence
 
 					logger(g_log, "\nhydroCondition %d \nHydrogroup %d \nLuse %s \npract %s", hydroCondition, hydroGroup, Luse, pract);
 					/*********************************************************************************************************************************
@@ -599,14 +601,14 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					//riordina perbene
 
 
-					stageLimit[0] 			= 400.0;
+					stageLimit[0] 			= 400;
 					stageLimit[1] 			= 3 * phyllocron;
 					stageLimit[2] 			= 2 * phyllocron;
 					stageLimit[3] 			= THERMAL_STAGE1;
 					stageLimit[4] 			= 200;
 					stageLimit[5] 			= 500;
 					stageLimit[6] 			= MAXINT;							//set by harvest date; switch (if(date == harvest date) {stage++}
-					stageLimit[7]			= 40.0 + 10.0 * sowingdepth / 5.0;	//to be clarified
+					stageLimit[7]			= 40 + 10 * sowingdepth / 5;	//to be clarified
 					stageLimit[8] 			= 1; 								//to be clarified
 
 					dailyThermalTime		= 0;
@@ -617,7 +619,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					canopyHeight 		   += 0.1; 	//fixsergio sergio find out a way to compute crop height; now setted as a +10cm per month
 				}
-				else if( day == 0 && month == JANUARY && years != 0)
+				else if( day == 0 && month == JANUARY && year != 0)
 				{
 					m->cells[cell].heights[height].ages[age].value += 1;
 				}
@@ -652,7 +654,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 					//julian date
 					actualDate ++;
-					logger(g_log, "\nstarting from year %d\njulianDate: %d", yos[years].year, actualDate);
+					logger(g_log, "\nstarting from year %d\njulianDate: %d", m->cells[_cell].years[year].year, actualDate);
 
 					//should be set here maxAltitudeJulianDate: julian date when sun is higher?
 
@@ -664,8 +666,8 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					// there are some potential dicrepancies with literature versions; watch out! c computes angle operation ALWAYS as radiants!
 
 					//and what if they're in radiants and not degrees!?!?!
-					Cfactor = cos(g_soil->values[SOIL_LAT] * 2 * Pi / 360.0) * cos(solarDeclination);
-					Sfactor = sin(g_soil->values[SOIL_LAT] * 2 * Pi / 360.0) * sin(solarDeclination);
+					Cfactor = cos(g_soil_settings->values[SOIL_LAT] * 2 * Pi / 360.0) * cos(solarDeclination);
+					Sfactor = sin(g_soil_settings->values[SOIL_LAT] * 2 * Pi / 360.0) * sin(solarDeclination);
 					logger(g_log, "\nC value = %f\nS value = %f", Cfactor, Sfactor);
 
 					//------------------------------------------------------------------------------------------------------------------
@@ -869,7 +871,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					}
 					else if (meanDailyTemperature <0 )
 					{
-						snow_eff = 2 + meanDailyTemperature * (0.4 + 0.0018 * pow((Minimum(SNOW_COEFF,snow) -15), 2));
+						snow_eff = 2 + meanDailyTemperature * (0.4 + 0.0018 * pow((MIN(SNOW_COEFF,snow) -15), 2));
 					}
 					logger(g_log, "\nsnow effect coefficient equal to %f", snow_eff);
 
@@ -1567,7 +1569,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								logger(g_log, "\nflux > hold: drain[%d] = %f\n\tflux = %f",l,drain[l],flux);
 							}
 							logger(g_log, "\n\n****UPWARD MOVEMENT****");
-							normVolumetricWater[l] = Maximum(layerMoisture[l] - layerWilting[l],0);		// LL[i] constant (wilting point)
+							normVolumetricWater[l] = MAX(layerMoisture[l] - layerWilting[l],0);		// LL[i] constant (wilting point)
 							logger(g_log, "\nnormalizedVolumetricWaterContent %f", normVolumetricWater[l]);
 						}
 					}
@@ -1754,9 +1756,9 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					//effect of soil moisture on evaporation
 					for (l = 0; l < soilLayer; l++)
 					{
-						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / g_soil->values[SOIL_DEPTH];
+						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l] / g_soil_settings->values[SOIL_DEPTH];
 					}
-					//moistureSoilEvaporationEffect /= g_soil->values[SOIL_DEPTH];
+					//moistureSoilEvaporationEffect /= g_soil_settings->values[SOIL_DEPTH];
 					logger(g_log, "\nSoil moisture effect on evaporation is: %f\n", moistureSoilEvaporationEffect);
 
 					//actual soil evaporation
@@ -1790,7 +1792,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					logger(g_log, "\nwater total uptake is %f", waterUptakeSoilLayer);
 
 					//Actual transpiration
-					actualTranspiration = Minimum(potentialTranspiration, waterUptakeSoilLayer);
+					actualTranspiration = MIN(potentialTranspiration, waterUptakeSoilLayer);
 					logger(g_log, "\nActual transpiration: %f", actualTranspiration);
 
 					/*********************************************************************************************************************************************************
@@ -1867,9 +1869,9 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					//effect of soil moisture on evaporation
 					for (l = 0; l < soilLayer; l++)
 					{
-						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/g_soil->values[SOIL_DEPTH];
+						moistureSoilEvaporationEffect += ((layerMoisture[l] - layerWilting[l]) / (fieldCapacityLayerMoisture[l] - layerWilting[l])) * soilLayerThickness[l]/g_soil_settings->values[SOIL_DEPTH];
 					}
-					//moistureSoilEvaporationEffect /= g_soil->values[SOIL_DEPTH];
+					//moistureSoilEvaporationEffect /= g_soil_settings->values[SOIL_DEPTH];
 					logger(g_log, "\nSoil moisture effect on evaporation is: %f\n", moistureSoilEvaporationEffect);
 
 					//actual soil evaporation
@@ -1894,7 +1896,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 					logger(g_log, "\nwater total uptake is %f", waterUptakeSoilLayer);
 
 					//Actual transpiration
-					actualTranspiration = Minimum(actualTranspiration, waterUptakeSoilLayer);
+					actualTranspiration = MIN(actualTranspiration, waterUptakeSoilLayer);
 					logger(g_log, "\nActual transpiration: %f", actualTranspiration);
 
 					if (potentialTranspiration == 0)
@@ -2004,7 +2006,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						//assumed soil water content and bulk density as a soil constant
 
 						// SW and BD have to be layer specific not the value for the whole profile
-						mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * g_soil->values[SOIL_DEPTH];
+						mid2 = profileWaterContent / (0.356 - 0.144 * soilBulkDensity) * g_soil_settings->values[SOIL_DEPTH];
 						maxDampingDepth = 1.00 + 2.5 * soilBulkDensity / (soilBulkDensity + exp (6.53 - 5.63 * soilBulkDensity));
 						logger(g_log, "\n***Coefficients to evaluate depth weighting factors ***\ncoeff1: %f \ncoeff2: %f", maxDampingDepth, mid2);
 
@@ -2111,7 +2113,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						{
 
 							/*********************************************************************************************************
-							 * 							SPECIES/ VARIETAS SPECIFIC VARIABLES' SETTINGS
+							 * 							species_t/ VARIETAS SPECIFIC VARIABLES' SETTINGS
 							 ********************************************************************************************************/
 
 							//getDaylength(&m->cells[cell], day, month, years, MonthLength[month], yos);
@@ -2183,13 +2185,13 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								//added a fork to avoid photoperiodFactor or vernalization factor to bve equal to 0; so that Dtt 'd not increase by 0
 								if (photoperiodFactor <= 0 || vernalizationFactor <= 0)
 								{
-									dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+									dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 									logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 								}
 								else
 								{
-									dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature))
-																													* Minimum(photoperiodFactor, vernalizationFactor);
+									dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature))
+																													* MIN(photoperiodFactor, vernalizationFactor);
 									logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 								}
 
@@ -2396,11 +2398,11 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(g_settings->co2Conc/340.0);
 
 								logger(g_log, "\nwaterStress %f \nnitrogenStress %f \n fco2 %f", waterStressFactor, nitrogenStressFactor, fCO2);
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
-								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
+								dailyGrossPhoto = MIN(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
 								logger(g_log, "\ndaily gross photosynthesis: %f g/m^2", dailyGrossPhoto);
 
 
@@ -2476,7 +2478,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 								tillerRate2 = 2.56 * exp(-10.0) * pow(2500 - tillersPerSquareMeter, 3.0);
 
-								tillNumber += dailyThermalTime / phyllocron * Minimum(tillerRate1, tillerRate2);
+								tillNumber += dailyThermalTime / phyllocron * MIN(tillerRate1, tillerRate2);
 
 								//tillering factor corrected with SWDF2 from water balance routine
 
@@ -2535,7 +2537,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 									dailyThermalTime -= stageLimit[stage];
 									stage += 1;
 
-									tillersPerSquareMeter = Minimum(1000, tillNumber);
+									tillersPerSquareMeter = MIN(1000, tillNumber);
 
 									developmentRate = dailyThermalTime / stageLimit[stage];		//it can be probably deleted: it'll be set the very next cycle (we're interested in fact in
 									// stage rather than surfaceTemperatureAdjustment)
@@ -2557,7 +2559,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								//number of tilelrs developed usually exceeds the one that can develope stems and ears (potential exceeding sink)
 								soilWaterInfluenceOnAssimilation = 0.1;
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -2752,10 +2754,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(g_settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
-								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
+								dailyGrossPhoto = MIN(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
 								logger(g_log, "\ndaily gross photosynthesis: %f g/m^2", dailyGrossPhoto);
 
 
@@ -2785,7 +2787,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 
 								//partitioning of the assimilate to the non-root parts of the plant
-								plantAssimilatesTopFraction = 0.7 + Minimum(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
+								plantAssimilatesTopFraction = 0.7 + MIN(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
 
 								//abovegroundFraction: fraction of assimilates allocated in stems
 								potentialStemGrowth = (0.15 + 0.12 * dailyThermalTime /phyllocron) * plantAssimilatesTopFraction * dailyAssimilate;
@@ -2851,7 +2853,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								//number of tiller per plant
 								tillNumber -= (tillNumber * dailyThermalTime * 0.005 * (1 - dailyRatioStemToTotalWeight));
 
-								if (abs(stemWeight - (singleTillerPotentialBiomassGain * tillNumber)) > 0.0001)
+								if ( fabs(stemWeight - (singleTillerPotentialBiomassGain * tillNumber)) > 0.0001 )
 								{
 									//fixsergio subtract lost tiller weight to the total stemWeight
 								}
@@ -2877,7 +2879,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							case 2:
 								logger(g_log, "\nstage %d", stage);
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3078,10 +3080,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(g_settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
-								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
+								dailyGrossPhoto = MIN(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
 								logger(g_log, "\ndaily gross photosynthesis: %f g/m^2", dailyGrossPhoto);
 
 
@@ -3110,7 +3112,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								 ********************************************************/
 
 								//partitioning of the assimilate to the non-root parts of the plant: for this stage it means it's stem (+ ears) allocation
-								plantAssimilatesTopFraction = 0.75 + Minimum(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
+								plantAssimilatesTopFraction = 0.75 + MIN(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
 
 								//abovegroundFraction: fraction of assimilates allocated in stems
 								potentialStemGrowth =  plantAssimilatesTopFraction * dailyAssimilate;
@@ -3169,7 +3171,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 										"\n***************************************************");
 								// cumulated phyllocrons
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3370,10 +3372,10 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								gaussIntegPhotoSum /= 3.6;
 
 								// Effects of CO2 concentration on photosynthesis
-								fCO2 = 1 + co2EffectPhotosynthesis * log(settings->co2Conc/340.0);
+								fCO2 = 1 + co2EffectPhotosynthesis * log(g_settings->co2Conc/340.0);
 
 								//daily gross photosynthesis (g/m^2) = 0.1×30/44min(waterStressFactor,ns)fCO2 sum(sum(P(Li,tj )LAI DLw2j w2)3, 3)
-								dailyGrossPhoto = Minimum(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
+								dailyGrossPhoto = MIN(waterStressFactor,nitrogenStressFactor) * fCO2 * gaussIntegPhotoSum;
 								logger(g_log, "\ndaily gross photosynthesis: %f g/m^2", dailyGrossPhoto);
 
 
@@ -3402,7 +3404,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								 ********************************************************/
 
 								//partitioning of the assimilate to the non-root parts of the plant: for this stage it means it's stem (+ ears) allocation
-								plantAssimilatesTopFraction = 0.8 + Minimum(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
+								plantAssimilatesTopFraction = 0.8 + MIN(soilWaterInfluenceOnAssimilation, nitrogenStressFactor) * 0.1;
 
 								//stemWeight
 								stemWeight += dailyAssimilate * plantAssimilatesTopFraction;
@@ -3424,7 +3426,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								leafWeight += potentialLeafGrowth - leafFallWeight;
 
 								//number of kernels (chicchi) per plant are assumed to be:
-								kernelsPerPlant = stemWeight * geneticFactor2;
+								kernelsPerPlant = (int)(stemWeight * geneticFactor2);
 
 								if (developmentRate >= 1.0)
 								{
@@ -3446,7 +3448,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 										"\n		grain filling"
 										"\n************************************");
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3487,7 +3489,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								{
 									grainFillingRate = 0.0;
 								}
-								grainFillingRate = Minimum(1 , grainFillingRate);
+								grainFillingRate = MIN(1 , grainFillingRate);
 
 								//whole plant potential grainGrowth
 								plantPotentialGrainGrowth = grainFillingRate * kernelsPerPlant * geneticFactor3 * 0.001;
@@ -3528,7 +3530,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							case 5:
 								logger(g_log, "\nstage %d", stage);
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3537,7 +3539,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 								developmentRate = dailyThermalTime / stageLimit[stage];
 								logger(g_log, "\ndevelopmentRate = %f",developmentRate);
 								//fraction of assimilates pertitioned to shoot
-								//					abovegroundFraction = 0.75 + 0.1 * Minimum(waterStressFactor,ns);
+								//					abovegroundFraction = 0.75 + 0.1 * MIN(waterStressFactor,ns);
 								//waterStressFactor and ns are water and nitrogen stress factors
 								/*
 								//Leaf fraction of assimilare
@@ -3565,7 +3567,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 							case 6:
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3602,7 +3604,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 
 							case 7:
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3640,7 +3642,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 							case 8:
 								logger(g_log, "\nstage %d", stage);
 
-								dailyThermalTime += Minimum((maxDevelopmentTemperature - basalTemperature), Maximum(0, meanCanopyTemperature));
+								dailyThermalTime += MIN((maxDevelopmentTemperature - basalTemperature), MAX(0, meanCanopyTemperature));
 								logger(g_log, "\ndailyThermalTime = %f", dailyThermalTime);
 
 								sumDailyThermalTime += dailyThermalTime;
@@ -3691,7 +3693,7 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 						Rta[l] = CPwet + (1 - CPwet) * (UL[l] - SW[l])/(UL[l] - fieldCapacityLayerMoisture[l]);
 
 						// soil strength limiting factor (layer specific)
-						Rts[l] = ((1.6 + 0.4 * g_soil->values[SOIL_sand_perc - soilBulkDensity[l])/(0.5 - 0.1 * g_soil->values[SOIL_sand_perc)) *
+						Rts[l] = ((1.6 + 0.4 * g_soil_settings->values[SOIL_sand_perc - soilBulkDensity[l])/(0.5 - 0.1 * g_soil_settings->values[SOIL_sand_perc)) *
 								sin(1.25 *((SW[l] - LL[l])* Pi)/((fieldCapacityLayerMoisture[l] - LL[l]) * 2));
 						logger(g_log, "\nSoil nitrogen limiting factors (layer %d):\n\tsoil temperature limiting factor: "
 								"%f\n\tsoil areation limiting factor: %f\n\tsoil strength limiting factor: %f"
@@ -3953,14 +3955,14 @@ int crop_model_D(MATRIX *const m, const YOS *const yos, const int years, const i
 				}
 				logger(g_log, "\n/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 
-				logger(g_log, "****************END OF SPECIES CLASS***************\n");
+				logger(g_log, "****************END OF species_t CLASS***************\n");
 			}
 
 			logger(g_log, "****************END OF AGE CLASS***************\n");
 		}
 		logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 	}
-	logger(g_log, "\n****************END OF CELL***************\n");
+	logger(g_log, "\n****************END OF cell_t***************\n");
 
 	/* ok */
 	return 1;

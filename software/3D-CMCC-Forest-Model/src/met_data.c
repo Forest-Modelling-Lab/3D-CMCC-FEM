@@ -1,28 +1,28 @@
-/*met_data.c*/
-
-/* includes */
+/* met_data.c */
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "math.h"
-#include "types.h"
 #include "constants.h"
-#include "soil.h"
+#include "soil_settings.h"
 #include "topo.h"
+#include "settings.h"
 #include "logger.h"
+#include "matrix.h"
+#include "common.h"
 
-/* externs */
-extern logger_t* g_log;
-extern soil_t *g_soil;
+extern settings_t* g_settings;
+extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
+extern logger_t* g_log;
 
-
-void Sat_vapour_pressure (CELL * c, int day, int month, int years, YOS *yos)
+void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
 	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
 	double e0min;                                                                        //saturation vapour pressure at the minimum air temperature (KPa)
 
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
 
 	/* following Allen et al., 1998 */
 	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
@@ -48,15 +48,15 @@ void Sat_vapour_pressure (CELL * c, int day, int month, int years, YOS *yos)
 //BIOME-BGC version
 //Running-Coughlan 1988, Ecological Modelling
 
-void Day_Length (CELL *c, int day, int month, int years, YOS *yos)
+void Day_Length(cell_t *const c, const int day, const int month, const int year)
 {
 
 	double ampl;  //seasonal variation in Day Length from 12 h
 	static int doy;
 	double adjust_latitude;
 
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
+	meteo_t *met;
+	met = c->years[year].m;
 
 	//compute yearday for GeDdayLength function
 	if (day == 0 && month == JANUARY)
@@ -68,64 +68,41 @@ void Day_Length (CELL *c, int day, int month, int years, YOS *yos)
 	//4/apr/2016
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
-//	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
-//	ampl = (exp (7.42 + (0.045 * (g_soil->values[SOIL_LAT]+adjust_latitude)))) / 3600;
-//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
+	ampl = (exp (7.42 + (0.045 * (g_soil_settings->values[SOIL_LAT]+adjust_latitude)))) / 3600;
+	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_log, "with altitude = %f\n", met[month].d[day].daylength);
 
-	ampl = (exp (7.42 + (0.045 * g_soil->values[SOIL_LAT]))) / 3600;
-	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
-	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
+	//	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_lat))) / 3600;
+	//	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
+	//	logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
 
-	/* compute fraction of daytime */
 	c->ni = met[month].d[day].daylength/24.0;
 
 }
 
-//following Running et al., 1987
-void Avg_temperature (CELL * c, int day, int month, int years)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) c->years[years].m;
-
-	if ( met[month].d[day].tavg == NO_DATA)
-	{
-		if (met[month].d[day].tmax == NO_DATA && met[month].d[day].tmin == NO_DATA)
-		{
+/* following Running et al., 1987 */
+void Avg_temperature(meteo_t *const met, const int day, const int month) {
+	if ( NO_DATA == met[month].d[day].tavg ) {
+		if ( (NO_DATA == met[month].d[day].tmax) && (NO_DATA == met[month].d[day].tmin) ) {
 			logger(g_log, "NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
-		}
-		else
-		{
+		} else {
 			met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
-			//logger(g_log, "tmax = %f, tmin = %f day = %d month = %d recomputed tavg = %f\n", met[month].d[day].tmax, met[month].d[day].tmin, day+1, month+1, met[month].d[day].tavg);
 		}
 	}
-
 }
 
-void Psychrometric (CELL * c, int day, int month, int years, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) c->years[years].m;
-
+void Psychrometric(meteo_t *const met, const int day, const int month) {
 	/* compute psychrometric (KPa/°C) constant as in Allen et al., 1998 */
 	met[month].d[day].psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
 }
 
 //following BIOME-BGC 4.2 src
 //compute daylight average air temperature
-extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, YOS *yos)
-{
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
-	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA)
-	{
+void Daylight_avg_temperature(meteo_t *const met, const int day, const int month) {
+	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA) {
 		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
-	}
-	else
-	{
+	} else {
 		met[month].d[day].tday = NO_DATA;
 		logger(g_log, "NO TMAX and TMIN can't compute TDAY!!! \n");
 	}
@@ -133,12 +110,8 @@ extern void Daylight_avg_temperature (CELL * c, int day, int month, int years, Y
 
 //following BIOME-BGC 4.2 src
 //compute nightime average air temperature
-extern void Nightime_avg_temperature (CELL * c, int day, int month, int years, YOS *yos)
+void Nightime_avg_temperature(meteo_t *const met, const int day, const int month)
 {
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
 	if (met[month].d[day].tday != NO_DATA )
 	{
 		met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
@@ -150,13 +123,8 @@ extern void Nightime_avg_temperature (CELL * c, int day, int month, int years, Y
 	}
 }
 
-extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
-{
-
+void Thermic_sum (meteo_t *const met, const int day, const int month) {
 	static double previous_thermic_sum;
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
 
 	if (day == 0 && month == 0)
 	{
@@ -194,11 +162,9 @@ extern void Thermic_sum (CELL * c, int day, int month, int years, YOS *yos)
 }
 
 
-void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
+void Air_pressure(meteo_t *const met, const int day, const int month)
 {
 	double t1, t2;
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
 
 	/*compute air pressure*/
 	/* daily atmospheric pressure (Pa) as a function of elevation (m) */
@@ -214,11 +180,7 @@ void Air_pressure (CELL *c, int day, int month, int years, YOS *yos)
 }
 
 
-void Air_density (CELL * c, int day, int month, int years, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
+void Air_density (meteo_t *const met, const int day, const int month) {
 	/*compute density of air (in kg/m3)*/
 	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
 
@@ -232,11 +194,7 @@ void Air_density (CELL * c, int day, int month, int years, YOS *yos)
 	}
 }
 
-void Latent_heat (CELL *c, int day, int month, int years, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
+void Latent_heat(meteo_t *met, const int day, const int month) {
 	/*BIOME-BGC APPROACH*/
 	/*compute latent heat of vaporization (J/Kg)*/
 	met[month].d[day].lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
@@ -247,8 +205,7 @@ void Latent_heat (CELL *c, int day, int month, int years, YOS *yos)
 	met[month].d[day].lh_sub = 2845.0;
 }
 
-void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
-{
+void Soil_temperature(meteo_t* const met, const int day, const int month) {
 	double avg = 0;
 	int i;
 	int day_temp = day;
@@ -265,11 +222,6 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 	The tail of the running average is weighted linearly from 1 to 11.
 	There are no corrections for snowpack or vegetation cover.
 	 */
-
-	MET_DATA *met;
-	// check parameters
-	met = (MET_DATA*) yos[years].m;
-
 
 	//FIXME model doesn't get for the first 10 days of the year the averaged values
 	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
@@ -330,48 +282,40 @@ void Soil_temperature (CELL * c, int day, int month, int years, YOS *yos)
 		met[month].d[day].tsoil = met[month].d[day].ts_f;
 	}
 }
-void Dew_temperature (CELL * c, int day, int month, int years, YOS *yos)
-{
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
+void Dew_temperature(meteo_t *const met, const int day, const int month) {
 	/* dew point temperature based on Allen et al., 1998; Bosen, 1958; Murray, 1967 */
 	met[month].d[day].tdew = (116.91 + 237.3 * log(met[month].d[day].ea))/(16.78 - log(met[month].d[day].ea));
 }
 
-void Annual_CO2_concentration (CELL *c, int day, int month, int years, YOS *yos)
-{
+void Annual_CO2_concentration (meteo_t *const met, const int day, const int month, const int year) {
 	static double previous_co2_conc;
 
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
-
 	/* recompute co2 concentration at the beginning of each year */
-	if( ! string_compare_i(settings->CO2_fixed, "off") && day == 0 && month == 0)
+	if( ! string_compare_i(g_settings->CO2_fixed, "off") && day == 0 && month == 0)
 	{
 		/* assign first year value from site.txt */
-		if(years == 0)
+		if(year == 0)
 		{
-			met[month].d[day].co2_conc = settings->co2Conc;
+			met[month].d[day].co2_conc = g_settings->co2Conc;
 			previous_co2_conc = met[month].d[day].co2_conc;
 		}
 		else
 		{
 			/* then for other years increment each beginning of year */
-			met[month].d[day].co2_conc = previous_co2_conc + (previous_co2_conc * settings->co2_incr);
+			met[month].d[day].co2_conc = previous_co2_conc + (previous_co2_conc * g_settings->co2_incr);
 			previous_co2_conc = met[month].d[day].co2_conc;
-			logger(g_log, "CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * settings->co2_incr);
+			logger(g_log, "CO2 annual increment = %f ppmv\n", met[month].d[day].co2_conc * g_settings->co2_incr);
 			logger(g_log, "CO2 concentration  = %f ppmv\n", met[month].d[day].co2_conc);
 		}
 	}
 }
 
-void Annual_met_values (CELL * c, int day, int month, int years, YOS *yos)
-{
-	MET_DATA *met;
-	// check parameters
-	met = (MET_DATA*) yos[years].m;
+void Annual_met_values(cell_t *const c, const int day, const int month, const int year) {
+	meteo_t* met;
 
+	assert(c);
+
+	met = c->years[year].m;
 	if(day == 0 && month == 0)
 	{
 		c->annual_tavg = 0.0;
@@ -404,7 +348,7 @@ void Annual_met_values (CELL * c, int day, int month, int years, YOS *yos)
 		c->annual_solar_rad /= 365;
 		//c->annual_precip = 365;
 		c->annual_vpd /= 365;
-		logger(g_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, years+1);
+		logger(g_log, "**ANNUAL MET VALUES day = %d month = %d year = %d**\n", day+1, month+1, year+1);
 		logger(g_log, "-Annual average tavg = %f C°\n", c->annual_tavg);
 		logger(g_log, "-Annual average tmax = %f C°\n", c->annual_tmax);
 		logger(g_log, "-Annual average tmin = %f C°\n", c->annual_tmin);

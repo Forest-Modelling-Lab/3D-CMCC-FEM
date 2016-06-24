@@ -4,8 +4,10 @@
 #include <string.h>
 #include <stdarg.h>
 #include <assert.h>
+#include "common.h"
 #include "logger.h"
 
+/*
 logger_t* logger_new(const char* const filename) {
 	logger_t* p;
 
@@ -21,36 +23,39 @@ logger_t* logger_new(const char* const filename) {
 	}
 	return p;
 }
+*/
 
-logger_t* logger_new_ex(const char* const filename, const char* const s) {
-	char *buffer;
-	int i;
+logger_t* logger_new(const char* const path, ...) {
+#define BUFFER_SIZE	256
+	char buffer[BUFFER_SIZE];
+	va_list va;
 	logger_t* p;
+
+	va_start(va, path);
+	vsnprintf(buffer, BUFFER_SIZE, path, va);
+	va_end(va);
+
+	if ( ! path_create(buffer) ) {
+		printf("unable to create %s\n", path);
+		return NULL;
+	}
 
 	p = malloc(sizeof*p);
 	if ( ! p ) return NULL;
 	p->file_output = 1;
 	p->std_output = 1;
 
-	i = strlen(filename);
-	i += strlen(s);
-	++i;
-
-	buffer = malloc(i*sizeof*buffer);
-	if ( ! buffer ) return NULL;
-	sprintf(buffer, "%s%s", filename, s);
-
 	p->f = fopen(buffer, "w");
-	free(buffer);
 	if ( ! p->f ) {
 		free(p);
 		p = NULL;
 	}
 	return p;
+#undef BUFFER_SIZE
 }
 
 void logger(logger_t *p, const char *text, ...) {
-#define LOGGER_BUFFER_SIZE	1024
+#define LOGGER_BUFFER_SIZE	4096
 	char buffer[LOGGER_BUFFER_SIZE];
 	va_list va;
 

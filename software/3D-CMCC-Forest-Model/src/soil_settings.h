@@ -1,4 +1,4 @@
-/* soil.h */
+/* soil_settings.h */
 #ifndef SOIL_H_
 #define SOIL_H_
 
@@ -42,9 +42,9 @@ typedef struct {
 	char sitename[1024];
 	double values[SOIL_VARS_COUNT];
 	//todo lat long and elev should be taken from met netcdf files (but for .txt files??)
-} soil_t;
+} soil_settings_t;
 
-soil_t* soil_new(void);
-int soil_import(soil_t *const s, const char *const filename, const int x, const int y);
+soil_settings_t* soil_settings_new(void);
+int soil_settings_import(soil_settings_t *const s, const char *const filename, const int x, const int y);
 
 #endif /* SOIL_H_ */

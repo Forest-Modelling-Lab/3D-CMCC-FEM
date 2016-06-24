@@ -9,13 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "check_balance.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Check_carbon_balance (CELL *c)
+void Check_carbon_balance(cell_t *const c)
 {
 
 	double carbon_in;
@@ -78,15 +80,11 @@ void Check_carbon_balance (CELL *c)
 	c->old_carbon_balance = c->carbon_balance;
 }
 
-void Check_soil_water_balance (CELL *c)
+void Check_soil_water_balance(cell_t *const c)
 {
 	double soil_water_pool_in;
 	double soil_water_pool_out;
 	double soil_water_pool_stored;
-
-//	double canopy_water_pool_in;
-//	double canopy_water_pool_out;
-//	double canopy_water_pool_stored;
 
 	double daily_frac_transp;
 	double daily_frac_evapo;
@@ -221,7 +219,7 @@ void Check_soil_water_balance (CELL *c)
 //	c->old_canopy_pool_water_balance = c->canopy_pool_water_balance;
 }
 
-void Check_class_carbon_balance (SPECIES *s)
+void Check_class_carbon_balance(species_t* const s)
 {
 	double carbon_pool_in;
 	double carbon_pool_out;
@@ -238,13 +236,13 @@ void Check_class_carbon_balance (SPECIES *s)
 	carbon_pool_out = s->value[TOTAL_AUT_RESP];
 
 	/* sum of current storage */
-	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_COARSEROOT] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_BRANCH] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell
-			+ s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
+	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
 
 	/* check carbon balance */
 	carbon_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
@@ -267,7 +265,7 @@ void Check_class_carbon_balance (SPECIES *s)
 	}
 }
 
-void Check_class_water_balance (SPECIES *s)
+void Check_class_water_balance(species_t* s)
 {
 	double canopy_water_pool_in;
 	double canopy_water_pool_out;

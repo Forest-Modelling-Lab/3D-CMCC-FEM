@@ -1,23 +1,14 @@
-/*
- * heat_fluxes.c
- *
- *  Created on: 01/01/2016
- *      Author: alessio
- */
-
-
-/* includes */
+/* heat_fluxes.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "heat_fluxes.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Latent_heat_flux (CELL *c, const MET_DATA *met, int month, int day)
-{
+void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int month, const int day) {
 	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
 
 	/*compute latent heat from canopy*/

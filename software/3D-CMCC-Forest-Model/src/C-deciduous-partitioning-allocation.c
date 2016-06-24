@@ -4,14 +4,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "C-deciduous-partitioning-allocation.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
+#include "leaffall.h"
+#include "biomass.h"
+#include "dendometry.h"
+#include "turnover.h"
+#include "lai.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 //Deciduous carbon allocation routine
-void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int height, int age, int species)
+void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int years, const int height, const int age, const int species)
 {
 
 	int i;
@@ -32,11 +40,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
-
-	//Marconi
-	double parameter; // parameter for exponential function to be used to gradually allocate biomass reserve during bud burst
-
-
 	i = c->heights[height].z;
 
 
@@ -65,7 +68,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 	if (s->counter[VEG_DAYS] == 1)
 	{
-		s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
+		s->counter[BUD_BURST_COUNTER] = (int)s->value[BUD_BURST];
 		logger(g_log, "First day of budburst\n");
 		logger(g_log, "Days for bud burst = %f\n", s->value[BUD_BURST]);
 	}
@@ -384,14 +387,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
 
 	/* update cell level carbon biomass in gC/m2/day */
-	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;
-	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell ;
-	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / settings->sizeCell ;
-	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell ;
-	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
+	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];
@@ -406,7 +409,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	logger(g_log, "******************************\n");
 }
 
-//void simple_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+//void simple_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 //{
 //
 //	int i;
@@ -503,7 +506,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //	 */
 //
 //	logger(g_log, "BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
-//	if (settings->spatial == 'u')
+//	if (g_settings->spatial == 'u')
 //	{
 //		oldW = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_BRANCH_tDM];
 //
@@ -626,7 +629,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
 //				s->value[DEL_ROOTS_FINE] = 0.0;
 //				//fixme remove CANOPY_COVER??
-//				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +	biomass_foliage_budburst);
+//				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) +	biomass_foliage_budburst);
 //				s->value[DEL_STEMS] = 0.0;
 //				s->value[DEL_ROOTS_COARSE] = 0.0;
 //				s->value[DEL_ROOTS_TOT] = 0.0;
@@ -639,12 +642,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
 //			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 //
-//			c->daily_leaf_drymatter += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_drymatter += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_leaf_drymatter += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_drymatter += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //		case 2:
@@ -690,7 +693,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			{
 //				s->value[DEL_FOLIAGE] = 0.0;
 //				s->value[DEL_ROOTS_FINE] = 0.0;
-//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //				s->value[DEL_ROOTS_COARSE] = 0.0;
 //				s->value[DEL_ROOTS_TOT] = 0.0;
 //				s->value[DEL_TOT_STEM] = 0.0;
@@ -699,12 +702,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0);
 //			}
 //
-//			c->daily_leaf_drymatter += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_drymatter += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_leaf_drymatter += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_drymatter += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //			/**********************************************************************/
@@ -770,21 +773,21 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				s->value[DEL_ROOTS_COARSE] = 0;
 //				s->value[DEL_ROOTS_TOT] = 0;
 //				s->value[DEL_BB] = 0;
-//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
+//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) +
 //						(s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM] + s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
 //			}
 //
 //
-//			c->daily_leaf_drymatter += 0.0/* s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
-//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_drymatter += 0.0/*s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
-//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
-//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
-//			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
-//			c->fineRootlitN += s->value[BIOMASS_FINE_ROOT_tDM] / GC_GDM * 1000 / settings->sizeCell  / s->value[CN_FINE_ROOTS];
+//			c->daily_leaf_drymatter += 0.0/* s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell)*/;
+//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_drymatter += 0.0/*s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell)*/;
+//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / g_settings->sizeCell /s->value[CN_DEAD_WOODS];
+//			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->fineRootlitN += s->value[BIOMASS_FINE_ROOT_tDM] / GC_GDM * 1000 / g_settings->sizeCell  / s->value[CN_FINE_ROOTS];
 //
 //			break;
 //
@@ -795,7 +798,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
 //			/*partitioning*/
-//			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			//SERGIOM
 //			//using the sigmoid it is necessary to leave the remainder at the very begining of the phase 0; that
@@ -819,14 +822,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			s->value[DEL_STEMS]= 0;
 //			s->value[DEL_BB]= 0;
 //
-//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
-//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
+//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / g_settings->sizeCell /s->value[CN_DEAD_WOODS];
 //			c->daily_leaf_drymatter += 0.0;
-//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			c->daily_fine_root_drymatter += 0.0;
-//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_coarse_root_drymatter += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_drymatter += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_drymatter += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //
 //
@@ -933,7 +936,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 
 ////VERSION CURRENTLY not USED
 ////Deciduous carbon allocation routine
-//void Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+//void Deciduous_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
 //{
 //
 //	int i;
@@ -1037,7 +1040,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //	 */
 //
 //	logger(g_log, "BIOMASS PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
-//	if (settings->spatial == 'u')
+//	if (g_settings->spatial == 'u')
 //	{
 //		oldW = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_BRANCH_tDM];
 //
@@ -1167,7 +1170,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				logger(g_log, "Using ONLY reserve\n");
 //				s->value[DEL_FOLIAGE] = biomass_foliage_budburst;
 //				s->value[DEL_ROOTS_FINE] = 0.0;
-//				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +	biomass_foliage_budburst);
+//				s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) +	biomass_foliage_budburst);
 //				s->value[DEL_STEMS] = 0.0;
 //				s->value[DEL_ROOTS_COARSE] = 0.0;
 //				s->value[DEL_ROOTS_TOT] = 0.0;
@@ -1203,7 +1206,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //					logger(g_log, "Using ONLY reserve\n");
 //					s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
 //					s->value[DEL_STEMS] = 0.0;
-//					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+//					s->value[DEL_RESERVE] = - (((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) + frac_to_foliage_fineroot);
 //					s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 //					s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 //					s->value[DEL_ROOTS_TOT] = 0.0;
@@ -1285,12 +1288,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
 //			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 //
-//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //
@@ -1323,12 +1326,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			//				logger(g_log, "NPP < 0, nothing to allocate\n");
 //			//				//TEST
 //			//				//				s->value[DEL_FOLIAGE] = (frac_to_foliage_fineroot * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]));
-//			//				//				s->value[DEL_RESERVE] =-(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) + frac_to_foliage_fineroot);
+//			//				//				s->value[DEL_RESERVE] =-(((fabs(s->value[C_FLUX]) * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) + frac_to_foliage_fineroot);
 //			//				//				s->value[DEL_ROOTS_FINE_CTEM] = (frac_to_foliage_fineroot - s->value[DEL_FOLIAGE]);
 //			//
 //			//				s->value[DEL_FOLIAGE] = 0;
 //			//				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-//			//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			//				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 //			//				s->value[DEL_ROOTS_TOT] = 0;
 //			//				s->value[DEL_TOT_STEM] = 0;
@@ -1402,12 +1405,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			//			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
 //			//			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
 //			//
-//			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //			/************************************************************/
@@ -1455,7 +1458,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			//			{
 //			//				s->value[DEL_FOLIAGE] = 0;
 //			//				s->value[DEL_ROOTS_FINE_CTEM] = 0;
-//			//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			//				s->value[DEL_ROOTS_COARSE_CTEM] = 0;
 //			//				s->value[DEL_ROOTS_TOT] = 0;
 //			//				s->value[DEL_ROOTS_COARSE_CTEM] = s->value[DEL_ROOTS_TOT] - s->value[DEL_ROOTS_FINE_CTEM];
@@ -1523,12 +1526,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 //			//			}
 //			//
-//			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //			/************************************************************************/
@@ -1575,7 +1578,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			{
 //				s->value[DEL_FOLIAGE] = 0.0;
 //				s->value[DEL_ROOTS_FINE] = 0.0;
-//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //				s->value[DEL_ROOTS_COARSE] = 0.0;
 //				s->value[DEL_ROOTS_TOT] = 0.0;
 //				s->value[DEL_TOT_STEM] = 0.0;
@@ -1584,12 +1587,12 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				CHECK_CONDITION(s->value[RESERVE_tDM], < 0.0);
 //			}
 //
-//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_carbon += s->value[DEL_ROOTS_FINE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			break;
 //			/**********************************************************************/
@@ -1661,20 +1664,20 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //				s->value[DEL_ROOTS_COARSE] = 0;
 //				s->value[DEL_ROOTS_TOT] = 0;
 //				s->value[DEL_BB] = 0;
-//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell) +
+//				s->value[DEL_RESERVE] = -((fabs(s->value[C_FLUX]) * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell) +
 //						(s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM] + s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
 //			}
 //
-//			c->daily_leaf_carbon += 0.0/* s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
-//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_fine_root_carbon += 0.0/*s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell)*/;
-//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
-//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
-//			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / settings->sizeCell;
-//			c->fineRootlitN += s->value[BIOMASS_FINE_ROOT_tDM] / GC_GDM * 1000 / settings->sizeCell  / s->value[CN_FINE_ROOTS];
+//			c->daily_leaf_carbon += 0.0/* s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell)*/;
+//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_fine_root_carbon += 0.0/*s->value[DEL_ROOTS_FINE_CTEM]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell)*/;
+//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / g_settings->sizeCell /s->value[CN_DEAD_WOODS];
+//			c->fineRootLittering +=  s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->fineRootlitN += s->value[BIOMASS_FINE_ROOT_tDM] / GC_GDM * 1000 / g_settings->sizeCell  / s->value[CN_FINE_ROOTS];
 //
 //			break;
 //
@@ -1685,7 +1688,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
 //			/*partitioning*/
-//			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			s->value[DEL_RESERVE] = -((s->value[TOTAL_AUT_RESP] * GC_GDM)/1000000.0) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //			//SERGIOM
 //			//using the sigmoid it is necessary to leave the remainder at the very begining of the phase 0; that
@@ -1709,14 +1712,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 //			s->value[DEL_STEMS]= 0;
 //			s->value[DEL_BB]= 0;
 //
-//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / settings->sizeCell;
-//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / settings->sizeCell /s->value[CN_DEAD_WOODS];
+//			c->leafLittering += fabs(s->value[DEL_FOLIAGE]) / GC_GDM * 1000 / g_settings->sizeCell;
+//			c->leaflitN = c->leafLittering /GC_GDM * 1000 / g_settings->sizeCell /s->value[CN_DEAD_WOODS];
 //			c->daily_leaf_carbon += 0.0;
-//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			c->daily_fine_root_carbon += 0.0;
-//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
-//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell);
+//			c->daily_coarse_root_carbon += s->value[DEL_ROOTS_COARSE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_branch_carbon += s->value[DEL_BB]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
+//			c->daily_reserve_carbon += s->value[DEL_RESERVE] / GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //
 //
 //

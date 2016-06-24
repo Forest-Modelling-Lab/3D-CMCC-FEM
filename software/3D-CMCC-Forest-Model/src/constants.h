@@ -1,18 +1,25 @@
-/*constants.h*/
+/* constants.h */
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-#include "common.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include "types.h"
+enum {
+	JANUARY
+	, FEBRUARY
+	, MARCH
+	, APRIL
+	, MAY
+	, JUNE
+	, JULY
+	, AUGUST
+	, SEPTEMBER
+	, OCTOBER
+	, NOVEMBER
+	, DECEMBER
 
+	, MONTHS_COUNT
+};
 
-/* */
-
-//----------------------------CONSTANTS------------------------------------
+#define NO_DATA				-9999
 
 //LIGHT
 #define Q0                    1360.1      //Solar constant (W/m^2)
@@ -66,7 +73,6 @@
 #define  STEMPOWER_C	        2.51    //Power in the Stem Mass v. diameter relationship for DBH > 15 cm
 
 //MARCONI CONSTANTS::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-#define MAXTURNTIME 5000
 //soil constants
 #define DRF   0.04//0.03
 #define EFFRB .67

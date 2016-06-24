@@ -9,13 +9,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-int Create_new_class(CELL *const c, const int height, const int age, const int species)
+int Create_new_class(cell_t *const c, const int height, const int age, const int species)
 {
 	int i;
 	int y;
@@ -23,7 +25,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 	int flag;
 	HEIGHT *h;
 	AGE *a;
-	SPECIES *s;
+	species_t *s;
 
 	logger(g_log, "Creating new class....\n");
 
@@ -36,7 +38,7 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 		return 0;
 	}
 	h = &c->heights[c->heights_count-1];
-	h->value = settings->height_sapling;
+	h->value = g_settings->height_sapling;
 
 	/*
 
@@ -59,17 +61,17 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 		return 0;
 	}
 	a = &h->ages[h->ages_count-1];
-	a->value = settings->age_sapling;
+	a->value = g_settings->age_sapling;
 	a->species = NULL;
 	a->species_count = 0;
 
 	// add species
-	if ( !alloc_struct((void **)&a->species, &a->species_count, sizeof(SPECIES)) )
+	if ( !alloc_struct((void **)&a->species, &a->species_count, sizeof(species_t)) )
 	{
 		return 0;
 	}
 	s = &a->species[a->species_count-1];
-	s->name = string_copy(settings->replanted_species);
+	s->name = string_copy(g_settings->replanted_species);
 	if ( ! s->name ) {
 		logger(g_log, "unable to copy replanted species from settins. out of memory.");
 		return 0;
@@ -115,9 +117,9 @@ int Create_new_class(CELL *const c, const int height, const int age, const int s
 	logger(g_log, "**species_count = %d \n", a->species_count);
 	logger(g_log, "**height_sapling = %f\n", h->value);
 	logger(g_log, "**age_sapling = %d\n", a->value);
-	s->value[AVDBH] = settings->avdbh_sapling;
+	s->value[AVDBH] = g_settings->avdbh_sapling;
 	logger(g_log, "**avdbh sampling = %f\n", s->value[AVDBH]);
-	s->counter[N_TREE] = settings->replanted_tree;
+	s->counter[N_TREE] = g_settings->replanted_tree;
 	logger(g_log, "**n tree %d of %s\n", s->counter[N_TREE], s->name);
 
 	/* compute all other variables */

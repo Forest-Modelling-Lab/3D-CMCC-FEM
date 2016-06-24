@@ -8,13 +8,13 @@ F * phenology.c
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-#include "types.h"
+#include "phenology.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
+void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
 {
 	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 
@@ -103,7 +103,7 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 				s->counter[LEAF_FALL_COUNTER] = 2;
 			}
 		}
-		if (day == 0 && month == 0 && years == 0)
+		if (day == 0 && month == 0 && year == 0)
 		{
 			s->phenology_phase = 1;
 			s->counter[LEAF_FALL_COUNTER] = 0;
@@ -114,7 +114,7 @@ void Phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, c
 	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
 }
 
-void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int years, const int month, const int day)
+void simple_phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
 {
 
 	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
@@ -195,7 +195,7 @@ void simple_phenology_phase (SPECIES * s, const MET_DATA *const met, const int y
 				s->counter[LEAF_FALL_COUNTER] = 2;
 			}
 		}
-		if (day == 0 && month == 0 && years == 0)
+		if (day == 0 && month == 0 && year == 0)
 		{
 			s->phenology_phase = 1;
 			s->counter[LEAF_FALL_COUNTER] = 0;

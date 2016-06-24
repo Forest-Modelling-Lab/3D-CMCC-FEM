@@ -4,16 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "soil.h"
-#include "types.h"
+#include "soil_settings.h"
+#include "modifiers.h"
 #include "constants.h"
+#include "common.h"
+#include "settings.h"
 #include "logger.h"
 
 /* externs */
+extern settings_t* g_settings;
 extern logger_t* g_log;
-extern soil_t *g_soil;
+extern soil_settings_t *g_soil_settings;
 
-void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_DATA *const met, int month, int day, int z, int management, int height)
+void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c, const meteo_t *const met, const int month, const int day, const int z, const int management, const int height)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
@@ -53,8 +56,8 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	tau = Atau * exp (-Eatau/(Rgas*(tairK)));
 
-	v1 = (settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
-	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+settings->co2Conc);
+	v1 = (g_settings->co2Conc-(O2CONC/(2*tau)))/(refCO2CONC-(O2CONC/(2*tau)));
+	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
 
 	s->value[F_CO2] = v1*v2;
 	logger(g_log, "F_CO2 modifier  = %f\n", s->value[F_CO2]);
@@ -193,7 +196,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	}
 
 	/*SOIL NUTRIENT MODIFIER*/
-	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil->values[SOIL_FN0])  * pow ((1.0 - g_soil->values[SOIL_FR]), g_soil->values[SOIL_FNN]);
+	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0])  * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 
@@ -219,7 +222,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	logger(g_log, "\nBIOME SOIL WATER MODIFIER\n");
 	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	c->vwc = c->asw / (1000.0 * (g_soil->values[SOIL_DEPTH]/100));
+	c->vwc = c->asw / (1000.0 * (g_soil_settings->values[SOIL_DEPTH]/100));
 	logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
 	logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
 	logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
@@ -233,7 +236,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	if (c->psi > s->value[SWPOPEN])
 	{
 		logger(g_log, "no water stress\n");
-		counter_water_stress = 0.0;
+		counter_water_stress = 0;
 		s->value[F_PSI] = 1.0;
 	}
 	/* full water stress */
@@ -257,7 +260,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	else
 	{
 		logger(g_log, "partial water stress\n");
-		counter_water_stress = 0.0;
+		counter_water_stress = 0;
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
 		//test
@@ -275,7 +278,7 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 	s->value[AVERAGE_F_SW] += s->value[F_SW];
 
 	/*PHYSIOLOGICAL MODIFIER*/
-	s->value[PHYS_MOD] = Minimum (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
+	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
 	logger(g_log, "PhysMod = %f\n", s->value[PHYS_MOD]);
 	if (s->value[F_VPD] < (s->value[F_SW] * s->value[F_AGE]))
 	{
@@ -288,9 +291,6 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
 	//logger(g_log, "Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
-
-
-	//if(month == 5 && day == 4) getchar();
 
 
 	/*SOIL DROUGHT MODIFIER*/
@@ -331,14 +331,14 @@ void Daily_modifiers (SPECIES *const s, AGE *const a, CELL *const c, const MET_D
 
 		//compute soil hydraulic characteristics from soil granulometry
 		//from model Hydrall
-		eq1 = (g_soil->values[SOIL_CLAY_PERC] * log(clay_dim)) + (g_soil->values[SOIL_silt_perc * log(silt_dim)) + (g_soil->values[SOIL_sand_perc * log(sand_dim));
+		eq1 = (g_soil_settings->values[SOIL_CLAY_PERC] * log(clay_dim)) + (g_soil_settings->values[SOIL_silt_perc * log(silt_dim)) + (g_soil_settings->values[SOIL_sand_perc * log(sand_dim));
 		logger(g_log, "eq1 = %f\n", eq1);
 
 		//soil mean particle diameter in mm
 		soil_avg_dim = exp(eq1);
 		logger(g_log, "soil_avg_dim = %f\n", soil_avg_dim);
 
-	    eq2 = sqrt ((pow ((g_soil->values[SOIL_CLAY_PERC] * log(clay_dim)),2)) + (pow ((g_soil->values[SOIL_sand_perc * log(sand_dim)),2)) + (pow ((g_soil->values[SOIL_silt_perc * log(silt_dim)),2)));
+	    eq2 = sqrt ((pow ((g_soil_settings->values[SOIL_CLAY_PERC] * log(clay_dim)),2)) + (pow ((g_soil_settings->values[SOIL_sand_perc * log(sand_dim)),2)) + (pow ((g_soil_settings->values[SOIL_silt_perc * log(silt_dim)),2)));
 	    logger(g_log, "eq2 = %f\n", eq2);
 
 	    //geometric standard deviation in particle size distribution (mm)

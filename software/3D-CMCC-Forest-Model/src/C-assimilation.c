@@ -8,14 +8,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "C-assimilation.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 
-void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month, int day, int height)
+void Carbon_assimilation(species_t *const s, cell_t *const c, const int years, const int month, const int day, const int height)
 {
 	int i;
 
@@ -23,8 +25,8 @@ void Carbon_assimilation (SPECIES *const s, CELL *const c, int years, int month,
 
 	/* NPP computation is based on ground surface area */
 	s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
-	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * settings->sizeCell;
-	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * settings->sizeCell;
+	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * g_settings->sizeCell;
+	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * g_settings->sizeCell;
 
 	logger(g_log, "Daily NPP = %f gC/m^2 ground surface area/day\n", s->value[NPP_gC]);
 	logger(g_log, "Daily NPP = %f tC/area/day\n", s->value[NPP_tC]);

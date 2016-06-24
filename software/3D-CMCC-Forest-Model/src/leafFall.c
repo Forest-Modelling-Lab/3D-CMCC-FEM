@@ -3,14 +3,17 @@
 #include <math.h>
 #include <string.h>
 #include "mpfit.h"
-#include "types.h"
+#include "common.h"
+#include "leaffall.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 extern logger_t* g_soil_log;
 
-void Leaf_fall(SPECIES *s, int* doy)
+void Leaf_fall(species_t *const s, int* const doy)
 {
 	static double foliage_to_remove;
 	static double fineroot_to_remove;
@@ -54,7 +57,7 @@ void Leaf_fall(SPECIES *s, int* doy)
 
 		previousLai = s->value[LAI];
 
-		currentLai = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
+		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
 				* doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
 		logger(g_log, "previousLai = %f\n", previousLai);
@@ -62,9 +65,9 @@ void Leaf_fall(SPECIES *s, int* doy)
 
 		CHECK_CONDITION(previousLai, <currentLai);
 
-		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
+		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
-		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
+		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
 		logger(g_log, "foliage_to_remove = %f\n", foliage_to_remove);
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
@@ -99,7 +102,7 @@ void Leaf_fall(SPECIES *s, int* doy)
 	}
 }
 
-void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplayer, int z)
+void leaffall(species_t *const s, const meteo_t *const met, int* doy, int* toplayer, int z)
 {
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */
@@ -120,13 +123,13 @@ void leaffall(SPECIES *const s, const MET_DATA *const met, int* doy, int* toplay
 
 
 
-	s->value[LAI] = Maximum(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
+	s->value[LAI] = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE] -
 			*doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + s->counter[SENESCENCE_DAYONE]) -
 					log(.11111111111))))));
 	logger(g_log, "LAI = %f\n", s->value[LAI]);
-	previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0);
-	//s->value[BIOMASS_FOLIAGE_tDM] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
-	s->value[LEAF_C] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
+	previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0);
+	//s->value[BIOMASS_FOLIAGE_tDM] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
+	s->value[LEAF_C] = (s->value[LAI] * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * GC_GDM * 1000.0));
 	s->value[C_TO_LEAF]  = -fabs(previousBiomass_lai - s->value[LEAF_C]);
 
 	/* a simple correlation from leaf carbon to remove and fine root to remove */
@@ -166,7 +169,7 @@ struct vars_struct {
 	double *ey;
 };
 
-int endOfYellowing(const MET_DATA *const met, SPECIES *const s)
+int endOfYellowing(const meteo_t *const met, species_t *const s)
 {
 	int endOfYellowing;
 	int month, day;
@@ -232,13 +235,11 @@ int endOfYellowing(const MET_DATA *const met, SPECIES *const s)
 // see http://cow.physics.wisc.edu/~craigm/idl/idl.html)
 // Copyright (C) 2003, 2004, 2006, 2007, 2009, 2010 Craig B. Markwardt
 
-void get_vpsat(CELL *const c,  int day, int month, int years, YOS *yos, int i)
+void get_vpsat(cell_t *const c, const int day, const int month, const int year, const int index)
 {
-	MET_DATA *met;
-	// check parameters
-	met = (MET_DATA*) yos[years].m;
-
-	c->vpSat[i] = 0.35*(0.6107*exp(17.38*(met[month].d[day].tavg)/(239.0 +(met[month].d[day].tavg))))+0.154;
+	meteo_t *met;
+	met = c->years[year].m;
+	c->vpSat[index] = 0.35*(0.6107*exp(17.38*(met[month].d[day].tavg)/(239.0 +(met[month].d[day].tavg))))+0.154;
 	//logger(g_soil_log, "\nvpSat: %g", c->vpSat[i]);
 }
 
@@ -266,7 +267,7 @@ int gaussian_x_y(int m, int n, double *p, double *dy,
 }
 
 
-void senescenceDayOne(SPECIES *const s, const MET_DATA *const met, CELL *const c)
+void senescenceDayOne(species_t *const s, const meteo_t *const met, cell_t *const c)
 {
 	/* Test harness routine, which contains test data, invokes mpfit() */
 	/* X - independent variable */
@@ -327,7 +328,7 @@ void senescenceDayOne(SPECIES *const s, const MET_DATA *const met, CELL *const c
 
 	/* Call fitting function for 10 data points and 2 parameters */
 	status = mpfit(gaussian_x_y, 365, 4, p, pars, 0, (void *) &v, &result);
-	s->counter[SENESCENCE_DAYONE] = p[1]; //check if 2 is the correct parameter
+	s->counter[SENESCENCE_DAYONE] = (int)p[1]; //check if 2 is the correct parameter
 	//todo the 1.6 cap
 	//logger(g_soil_log, "\nfirstDayOfSenescence senescence:\t%g", s->value[SENESCENCE_DAYONE]);
 	//logger(g_soil_log, "\n*** testlinfit status = %d\n", status);

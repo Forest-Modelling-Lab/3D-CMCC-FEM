@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "fluxes.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int month)
+void Carbon_fluxes (species_t *const s, cell_t *const c, const int height, const int day, const int month)
 {
 	int i;
 
@@ -26,7 +26,7 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 
 	s->value[C_FLUX] = s->value[DAILY_GPP_gC] - fabs(s->value[TOTAL_AUT_RESP]);
 	logger(g_log, "c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
-//	logger(g_log, "c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* settings->sizeCell));
+//	logger(g_log, "c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell));
 
 	c->layer_daily_c_flux[i] = s->value[C_FLUX];
 	c->daily_C_flux += s->value[C_FLUX];
@@ -37,7 +37,7 @@ void Carbon_fluxes (SPECIES *const s, CELL *const c, int height, int day, int mo
 }
 
 //too remove after made water_balance function
-void Water_fluxes (CELL *const c)
+void Water_fluxes(cell_t *const c)
 {
 	logger(g_log, "\nW-FLUXES\n");
 	//todo make it better
@@ -48,7 +48,7 @@ void Water_fluxes (CELL *const c)
 	logger(g_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
-void get_net_ecosystem_exchange(CELL *const c)
+void get_net_ecosystem_exchange(cell_t *const c)
 {
 	int i;
 	for(i = 0; i< c->soils_count; i++)

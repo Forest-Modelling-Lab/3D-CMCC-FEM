@@ -1,16 +1,18 @@
-/*photosynthesis.c*/
-
-/* includes */
+/* photosynthesis.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "photosynthesis.h"
+#include "canopy_evapotranspiration.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int DaysInMonth, int height, int age, int species)
+void Phosynthesis (species_t *const s, cell_t *const c, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
 {
 	int i;
 	double Alpha_C;
@@ -78,7 +80,7 @@ void Phosynthesis (SPECIES *const s, CELL *const c, int month, int day, int Days
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
 			logger(g_log, "Alpha C = %f molC/molPAR\n", Alpha_C);
 		}
-		logger(g_log, "**************************** GPP-'%c' ************************************ \n", settings->time);
+		logger(g_log, "**************************** GPP-'%c' ************************************ \n", g_settings->time);
 
 		//test 12 May 2016 test
 		//GPP depends on canopy wet (no photosynthesis occurs if canopy is wet)

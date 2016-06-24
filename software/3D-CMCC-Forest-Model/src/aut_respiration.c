@@ -9,16 +9,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "aut_respiration.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 
 //FOLLOWING BIOME-BGC
 
-void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height)
+void Maintenance_respiration (species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height)
 {
 
 	int i;
@@ -157,8 +160,7 @@ void Maintenance_respiration (SPECIES *const s, CELL *const c, const MET_DATA *c
 	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0)
 }
 
-void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int month, int years)
-{
+void Growth_respiration(species_t *const s, cell_t *const c, const int height) {
 
 	int i;
 	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
@@ -194,20 +196,20 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 		//converting to gC
 		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
 
-		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/settings->sizeCell) * GRPERC;
+		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
 		logger(g_log, "daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
 		//see golinkoff for upscaling to PLAI
 
-		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(settings->sizeCell))* GRPERC;
+		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* GRPERC;
 		logger(g_log, "daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(settings->sizeCell))* GRPERC;
+		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* GRPERC;
 		logger(g_log, "daily stem growth respiration = %.10f gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
 
-		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(settings->sizeCell))* GRPERC;
+		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* GRPERC;
 		logger(g_log, "daily coarse root growth respiration = %.10f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
 
-		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(settings->sizeCell))* GRPERC;
+		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* GRPERC;
 		logger(g_log, "daily branch growth respiration = %.10f gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 
 		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
@@ -239,11 +241,11 @@ void Growth_respiration (SPECIES *s, CELL *const c, int height, int day, int mon
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
 }
 
-void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
+void Autotrophic_respiration (species_t *const s, cell_t *const c, const int height)
 {
 	int i;
 
-	if (!string_compare_i(settings->Prog_Aut_Resp, "on"))
+	if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 	{
 		logger(g_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 		//compute autotrophic respiration for each classes
@@ -251,23 +253,23 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 		logger(g_log, "TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
 
 		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
-		logger(g_log, "TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * settings->sizeCell);
+		logger(g_log, "TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
 		CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
 
 		//compute autotrophic respiration for each layer
 		i = c->heights[height].z;
 
 		c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
-		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* settings->sizeCell;
+		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* g_settings->sizeCell;
 		c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 		c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 
 		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * g_settings->sizeCell;
 
 		/* among pools */
 		/* daily */
@@ -286,21 +288,21 @@ void Autotrophic_respiration (SPECIES *s, CELL *const c, int height)
 	}
 	else
 	{
-		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * settings->Fixed_Aut_Resp_rate;
+		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * g_settings->Fixed_Aut_Resp_rate;
 		//compute autotrophic respiration for each layer
 		i = c->heights[height].z;
 
 		c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
-		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* settings->sizeCell;
+		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* g_settings->sizeCell;
 		c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 		c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
 
 		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * settings->sizeCell;
+		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * settings->sizeCell;
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * g_settings->sizeCell;
 
 	}
 }

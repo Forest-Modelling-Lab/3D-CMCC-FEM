@@ -8,15 +8,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
-
+#include "lai.h"
+#include "turnover.h"
+#include "dendometry.h"
+#include "biomass.h"
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 //VERSION CURRENTLY USED
 //Evergreen carbon allocation routine
-void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int day, int month, int years, int DaysInMonth, int height, int age, int species)
+void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int years, const int DaysInMonth, const int height, const int age, const int species)
 {
 	//CTEM VERSION
 
@@ -464,14 +470,14 @@ void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const s, CELL *const c,
 	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
 
 	/* update cell level carbon biomass in gC/m2/day*/
-	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / settings->sizeCell ;
-	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / settings->sizeCell ;
-	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / settings->sizeCell ;
-	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / settings->sizeCell ;
-	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / settings->sizeCell ;
-	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / settings->sizeCell ;
+	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_stem_carbon += s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_fine_root_carbon += s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_coarse_root_carbon += s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
 
 	/* update cell level carbon biomass in tC/cell/day*/
 	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];

@@ -10,13 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "canopy_evapotranspiration.h"
 #include "constants.h"
 #include "logger.h"
+#include "Penman_Monteith.h"
 
 extern logger_t* g_log;
 
-void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
+void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height, const int age, const int species)
 {
 
 	double max_int;
@@ -25,7 +26,6 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	double gl_bl;
 	double gl_s_sun, gl_s_shade;
 	double gl_c;
-	double m_ppfd_sun, m_ppfd_shade;
 	double m_final_sun, m_final_shade;
 	double gl_e_wv;
 	double gl_t_wv_sun, gl_t_wv_shade;
@@ -57,7 +57,6 @@ void Canopy_evapo_transpiration (SPECIES *const s, CELL *const c, const MET_DATA
 	double rc, rr, rhr;
 	double rh_mol; //boundary layer resistance in mol m/sec
 	double tcanopy, tcanopyK;
-	double tcanopy_day, tcanopy_night;
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 

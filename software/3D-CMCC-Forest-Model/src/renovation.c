@@ -10,14 +10,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
 
-extern void Renovation (CELL *c, HEIGHT *h, SPECIES *s)
+extern void Renovation (cell_t *c, height_t *h, species_t *s)
 {
 
 	//compute light availability for seeds of dominant layer

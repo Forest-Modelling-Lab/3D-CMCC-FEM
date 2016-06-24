@@ -9,14 +9,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "soil_water_balance.h"
+#include "common.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
 //fixme  maybe it can be moved to soil_model.c
-void Soil_water_balance (CELL *c, const MET_DATA *const met, int month, int day)
+void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, const int day)
 {
 	double water_to_soil;
 	double soilwater_to_atmosphere;

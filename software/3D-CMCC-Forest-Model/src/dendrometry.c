@@ -2,13 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "dendometry.h"
+#include "common.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Dendrometry (CELL *const c, SPECIES *const s, HEIGHT *const h, int years)
+void Dendrometry(cell_t *const c, species_t *const s, height_t *const h, const int year)
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -93,7 +94,7 @@ void Dendrometry (CELL *const c, SPECIES *const s, HEIGHT *const h, int years)
 
 	CHECK_CONDITION(oldavDBH, > s->value[AVDBH] + 1e-10);
 	/* to avoid that error appears due to differences between measured and computed tree height values */
-	if(years > 0)
+	if(year > 0)
 	{
 		CHECK_CONDITION(oldTreeHeight, > h->value + 1e-10);
 	}
@@ -131,7 +132,7 @@ void Dendrometry (CELL *const c, SPECIES *const s, HEIGHT *const h, int years)
 
 
 }
-void Annual_minimum_reserve (SPECIES *s)
+void Annual_minimum_reserve (species_t *const s)
 {
 	/* recompute annual minimum reserve pool for  year allocation */
 	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling

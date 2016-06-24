@@ -1,153 +1,26 @@
-/* types.h */
-#ifndef TYPES_H
-#define TYPES_H
+/* matrix.h */
+#ifndef MATRIX_H_
+#define MATRIX_H_
 
-/* precision */
-#include "common.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include "constants.h"
+#include "yos.h"
 
+#define MAXTURNTIME 5000
 
-#define NO_DATA -9999
-
-/* enums */
 typedef enum {
-	F = 0,      //forest
-	Z          //crop
-} eLanduse;
+	F		/* forest */
+	, Z		/* crop */
+} e_landuse;
 
-/* */
 typedef enum {
-	T = 0,      //Timber
-	C          //Coppice
-} eManagement;
+	T		/* timber */
+	, C		/* coppice */
+} e_management;
 
-/* */
 enum {
-	JANUARY,
-	FEBRUARY,
-	MARCH,
-	APRIL,
-	MAY,
-	JUNE,
-	JULY,
-	AUGUST,
-	SEPTEMBER,
-	OCTOBER,
-	NOVEMBER,
-	DECEMBER,
-
-	MONTHS
-};
-
-/* */
-typedef struct {
-	int n_days;
-	PREC solar_rad;
-	PREC tavg;          /* (deg C) daily average air temperature */
-	PREC tmax;          /* (deg C) daily maximum air temperature */
-	PREC tmin;          /* (deg C) daily minimum air temperature */
-	PREC tday;          /* (deg C) daylight  daily air temperature */
-	PREC tnight;        /* (deg C) nightime average daily air temperature */
-	PREC tdew;          /* (deg C) dew average daily air temperature */
-	PREC vpd;
-	PREC rh_f;
-	PREC ts_f;
-	PREC prcp;
-	PREC swc;
-	PREC ndvi_lai;
-	PREC daylength;
-	PREC thermic_sum;   /* daily thermic sum */
-	PREC rho_air;
-	PREC tsoil;
-	PREC et;
-	PREC windspeed;
-	PREC lh_vap;
-	PREC lh_vap_soil;
-	PREC lh_fus;
-	PREC lh_sub;
-	PREC air_pressure;
-	PREC co2_conc;
-	PREC es;            /* (KPa) weighted mean saturation vapour pressure at the air temperature */
-	PREC ea;            /* (KPa) actual vapour pressure derived from relative humidity data */
-	PREC psych;         /* (KPa/Â°C) psychrometric constant */
-
-} MET_DAILY_DATA;
-
-/* */
-typedef struct {
-	MET_DAILY_DATA d[31];
-} MET_DATA;
-
-/* */
-typedef struct {
-	int year;
-	MET_DATA m[MONTHS];
-} YOS; /* YEARS OF SIMULATION */
-
-// Struct representing settings.txt content
-#define SETTINGS_REPLANTED_SPECIES_MAX_SIZE		(32+1)
-typedef struct
-{
-	char version,
-	spatial, // must be 's' or 'u' (spatial or unspatial)
-	time,  // must be 'm' or 'd' (monthly or daily)
-	symmetric_water_competition; // must be 'y' or 'n' (y = yes for symmetric competition)
-
-	char spin_up[4];
-	char CO2_fixed[4];
-	char Ndep_fixed[4];
-	char management[4];
-	char Prog_Aut_Resp[4]; //Prognostic autotrophic respiration
-	char dndc[4];
-	char replanted_species[SETTINGS_REPLANTED_SPECIES_MAX_SIZE]; /* species name of replanted species */
-
-	/* DO NOT MODIFY BELOW, PLEASE INSERT STUFF IN SPACE ABOVE */
-
-	double sizeCell;
-
-	double Fixed_Aut_Resp_rate; //It is the "Y"values for fixed autotrophic respiration
-
-	double co2Conc, co2_incr; // Co2 concentration and annual co2 increment
-
-	double init_frac_maxasw; //minimum fraction of available soil water at the beginning of simulation
-
-	double tree_layer_limit,
-	soil_layer,
-	min_layer_cover,
-	max_layer_cover;
-
-	/* management/renovation (human or natural) input */
-	double removing_basal_area; /* percentage of basal area to remove per sizecell */
-	double replanted_tree, /* number of replanted trees per sizecell */
-	age_sapling;
-	double avdbh_sapling,
-	lai_sapling,
-	height_sapling,
-	ws_sapling, /* probably no need to be used */
-	wr_sapling, /* probably no need to be used */
-	wf_sapling, /* probably no need to be used */
-	light_estab_very_tolerant,
-	light_estab_tolerant,
-	light_estab_intermediate,
-	light_estab_intolerant;
-	/* control check */
-	double maxlai,
-	defaultlai;
-	double 	switchtounspatial;
-
-} settings_t;
-
-/* */
-enum
-{
 	/*valori relativi alla specie*/
 	/* !!!!! NON SPOSTARE !!!!!!*/
 	/* serve questo ordine per l'importazione, vedere species_values dentro matrix.c */
-	LIGHT_TOL = 0,
+	LIGHT_TOL,
 	PHENOLOGY,                  //PHENOLOGY 0=deciduous, 1=evergreen
 	ALPHA,                      // Canopy quantum efficiency (molC/molPAR)
 	EPSILONgCMJ,                // Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)
@@ -165,7 +38,7 @@ enum
 	FRACBB1,                    //Branch and Bark fraction for mature stands (m^2/kg)
 	TBB,                        //Age at which fracBB = (FRACBB0 + FRACBB1 )/ 2
 	RHOMIN,                     //Minimum Basic Density for young Trees
-	RHOMAX,                     //Maximum Basic Density for young Trees (Ferrara-NolÃ¨)
+	RHOMAX,                     //Maximum Basic Density for young Trees (Ferrara-Nolè)
 	TRHO,                       //Age at which rho = (RHOMIN + RHOMAX )/2
 	COEFFCOND,                  //Define stomatal responsee to VPD in m/sec TO REMOVE
 	BLCOND,                     //Canopy Boundary Layer conductance
@@ -180,8 +53,8 @@ enum
 	GROWTHTMIN,                 //Minimum temperature for growth
 	GROWTHTMAX,                 //Maximum temperature for growth
 	GROWTHTOPT,                 //Optimum temperature fro growth
-	GROWTHSTART,                //Thermic sum  value for starting growth in Â°C
-	GROWTHEND,                  //Thermic sum  value for ending growth in Â°C
+	GROWTHSTART,                //Thermic sum  value for starting growth in °C
+	GROWTHEND,                  //Thermic sum  value for ending growth in °C
 	MINDAYLENGTH,               //minimum day length for phenology
 	SWPOPEN,
 	SWPCLOSE,
@@ -251,7 +124,7 @@ enum
 	WEIGHTSEED,                 //peso frutto in g
 	SEXAGE,                         //Age at Sexual Maturity
 	GERMCAPACITY,               //Geminability (Lischke H. & Loffler T. J.)
-	MINTEMP,                    //Minimum temperature for germination in Â°C
+	MINTEMP,                    //Minimum temperature for germination in °C
 	ESTMAX,                     //Potential Establishment rate in the absence of competition
 	FRACFRUIT,                  //Fraction of NPP to Fruit Production
 	ROTATION,
@@ -259,22 +132,13 @@ enum
 	MINDBHMANAG,                //Minimum DBH for Managment
 	AV_SHOOT,                   //Average number of shoots produced after coppicing
 
-	/************************************************* VARIABLES *****************************************************/
-
-
-
-	//VEG_PERIOD,
-	//STRUCTURE
-
 	/* ALESSIOR:
 	
-		AVDBH deve essere sempre il primo perchÃ¨ prima di lui ci sono i
+		AVDBH deve essere sempre il primo perchè prima di lui ci sono i
 		parametri con i valori CHE NON CAMBIANO MAI (COSTANTI!!!!!)
 
 		oltretutto l'indice AVDBH viene usato in new_class.c
-		e perdio non lo cambiate!
 	*/
-
 
 	AVDBH,                          //Average DBH in cm
 	CROWN_DIAMETER,                 //Crown Diameter in m
@@ -391,15 +255,15 @@ enum
 	ASW,                            //available soil water per mm/ha
 	WUE,                            //Water use efficiency (gDM/mm)
 
+	//biome's
 	CANOPY_INT,
 	CANOPY_EVAPO,
-	CANOPY_WET,                             //it should'nt be reset every day
+	CANOPY_WET,//it should'nt be reset every day
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
-	OLD_CANOPY_WATER,                       //it should'nt be reset every day
-	CANOPY_WATER,                           //it should'nt be reset every day
-	CANOPY_FRAC_DAY_TRANSP,                 //Fraction of daily canopy transpiration (DIM)
-
+	CANOPY_WATER,//it should'nt be reset every day
+	OLD_CANOPY_WATER, //it should'nt be reset every day
+	CANOPY_FRAC_DAY_TRANSP, //Fraction of daily canopy transpiration (DIM)
 
 	/*LAI*/
 	LAI,                            //LAI (m^2/m2)
@@ -672,7 +536,6 @@ enum
 	VALUES
 };
 
-/* enum for counters */
 enum {
 
 	N_TREE,                         //Numbers of Tree per cell
@@ -705,30 +568,6 @@ enum {
 	COUNTERS
 };
 
-/* structures */
-// A row inside input.txt file
-typedef struct {
-	int x;
-	int y;
-	eLanduse landuse;
-	int age;
-	char *species;
-	//ePhenology phenology;
-	eManagement management;
-	int n;
-	int stump;
-	PREC avdbh;
-	PREC height;
-	PREC wf;
-	PREC wrc;
-	PREC wrf;
-	PREC ws;
-	PREC wbb;
-	PREC wres;
-	PREC lai;
-
-} ROW;
-
 // variables related to plant pools turnover; it can't be placed int he ordinary species structure, since there are up to 5 arrays
 typedef struct {
 	double fineroot[MAXTURNTIME];
@@ -741,67 +580,50 @@ typedef struct {
 	int COARSERTOVER;
 	int STEMTOVER;
 	int BRANCHTOVER;
-} TURNOVER;
-/* */
-//all variables related to the species class
+} turnover_t;
+
 typedef struct {
 	char *name;
-	//ePhenology phenology;
-	eManagement management;
-	int period;            // period = 0 for adult tree ; 1 for very young tree
+	e_management management;
+	int period;            /* period = 0 for adult tree ; 1 for very young tree */
 
-	PREC value[VALUES];
-
+	double value[VALUES];
 	int counter[COUNTERS];
 	int phenology_phase;
-	TURNOVER *turnover;
-} SPECIES;
+	turnover_t* turnover;
+} species_t;
 
-/* */
-//all variables related to the age class
 typedef struct {
 	int value;
-	SPECIES *species;
+	species_t* species;
 	int species_count;
-} AGE;
+} age_t;
 
-//todo
-//all variables related to layers
 typedef struct {
-
 	double Abs_par;                 /* overall gridcell weighted average absorbed par (MJ/m2/day) */
 	double Transm_par;              /* overall gridcell weighted average transmitted par (MJ/m2/day) */
 	double Abs_net_rad;             /* overall gridcell weighted average absorbed net radiation (W/m2) */
 	double Transm_net_rad;          /* overall gridcell weighted average transmitted net radiation (W/m2) */
 	double Abs_ppfd;                /* overall gridcell weighted average absorbed ppfd (umol/m2/sec) */
 	double Transm_ppfd;             /* overall gridcell weighted average transmitted ppfd (umol/m2/sec) */
+} layer_t;
 
-} LAYER;
-
-/* */
-//all variables related to the height class
 typedef struct {
-	PREC value;
+	double value;
 	int layer_coverage;
 	int layer;
-	int dominance;         //dominance = -1 no trees in veg period, dominance = 1 trees in veg period
-	AGE *ages;
+	int dominance;         /* dominance = -1 no trees in veg period, dominance = 1 trees in veg period */
+
+	age_t *ages;
 	int ages_count;
 
-	LAYER *layers;
+	layer_t* layers;
 	int layer_count;
 
-
 	int z;
+} height_t;
 
-	//int top_layer;
-
-} HEIGHT;
-
-/* */
-//all variables related to the soil site
-typedef struct
-{
+typedef struct {
 	double variabile;
 
 	double bulk_density,
@@ -850,43 +672,17 @@ typedef struct
 	double initialOrganicC;
 	double waterContent;
 	double CEC;
-} SOIL;
+} soil_t;
 
-
-//fixme
-typedef struct {
-	int class;
-
-	//cumulative variables class related used in annual-monthly-daily Log
-	/*
-	//test set as class level result e.g. class_daily_gpp[]
-	double class_daily_gpp[3], class_daily_tot_gpp, monthly_gpp[3], monthly_tot_gpp, annual_gpp[3], annual_tot_gpp;
-	double class_daily_npp[3], class_daily_tot_npp, monthly_npp[3], class_monthly_tot_npp, annual_npp[3], class_annual_tot_npp;
-	double class_daily_et[3], daily_tot_et, class_monthly_et[3], monthly_tot_et, class_annual_et[3], annual_tot_et;
-	double class_daily_maint_resp[3], class_daily_tot_maint_resp, class_monthly_maint_resp[3], class_monthly_tot_maint_resp, class_annual_maint_resp[3], class_annual_tot_maint_resp;
-	double class_daily_growth_resp[3], class_daily_tot_growth_resp, monthly_gowth_resp[3], class_monthly_tot_growth_resp, class_annual_growth_resp[3], class_annual_tot_growth_resp;
-	double class_daily_aut_resp[3], daily_tot_aut_resp, daily_tot_het_resp,  monthly_aut_resp[3], monthly_tot_aut_resp, annual_aut_resp[3], annual_tot_aut_resp;
-	double daily_aut_resp_tDM[3];
-	double daily_cc[3], monthly_cc[3], annual_cc[3];
-	double daily_lai[3];
-	double annual_peak_lai[10];
-	int daily_dead_tree[3], daily_tot_dead_tree, monthly_dead_tree[3], monthly_tot_dead_tree, annual_dead_tree[3], annual_tot_dead_tree;
-	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
-	 */
-} CLASS;
-
-/* */
-//all variables related to the cell (stand) are here defined
 typedef struct {
 	int x;
 	int y;
 
-	eLanduse landuse;
+	e_landuse landuse;
 
-	HEIGHT *heights;
-	SOIL *soils;
-	CLASS *class;
-	int heights_count; //number of heights
+	height_t* heights;
+	soil_t* soils;
+	int heights_count;
 	int soils_count;
 
 	/* general variables */
@@ -1055,11 +851,13 @@ typedef struct {
 	double asw;
 	double old_asw;
 	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
-	double max_asw_sat;              /* max available soil water at field capacity mmKgH2O/m3*/
+	double max_asw_sat;				/* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
-
 	double soil_pool_water_balance, old_soil_pool_water_balance;
 	double canopy_pool_water_balance, old_canopy_pool_water_balance;
+	
+	double previous_available_soil_water;
+	double water_balance, old_water_balance;
 	double soil_moist_ratio;
 	double av_soil_moist_ratio;
 	double swc;//volumetric soil water content (%vol)
@@ -1205,247 +1003,18 @@ typedef struct {
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
 
-	/* ALESSIOR */
+	/* added by ALESSIOR */
 	int years_count;
-	YOS *years;
-} CELL;
+	yos_t *years;
+} cell_t;
 
-/* */
 typedef struct {
-	CELL *cells;
+	cell_t *cells;
 	int cells_count;
-} MATRIX;
+} matrix_t;
 
-typedef struct {
-	int *daily_vars;
-	int daily_vars_count;
-	int *monthly_vars;
-	int monthly_vars_count;
-	int *yearly_vars;
-	int yearly_vars_count;
-	double *daily_vars_value;
-	double *monthly_vars_value;
-	double *yearly_vars_value;
-} OUTPUT_VARS;
+matrix_t* matrix_create(const char* const filename);
+void matrix_free(matrix_t *m);
+void matrix_summary(const matrix_t* const m);
 
-/* constants */
-#define MET_FILENAME_LEN                1024
-
-/* defines */
-#define Minimum(a, b)  (((a) < (b)) ? (a) : (b))
-#define Maximum(a, b)  (((a) > (b)) ? (a) : (b))
-
-
-
-//-----------------------------DEAFULT PARAMETERS------------------------------------- This was run_model.h
-
-//#define LOGFILE		"output.txt"
-/* #define BUFFER_SIZE	4096 */
-#define BUFFER_SIZE	585600
-#define BUFFER_SIZE_LOG 67500
-
-
-
-// Store site.txt and settings.txt data
-settings_t *settings;
-
-
-// External functions
-YOS *ImportYosFiles(char *, int *const, const int, const int);
-int Tree_model_daily (MATRIX *const, const YOS *const, const int, const int, const int, const int, const int);
-//if putted into main.c
-//int soil_model (MATRIX *const, const YOS *const, const int, const int, const int);
-void soil_model (MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void Phenology_phase (SPECIES *, const MET_DATA *const, const int , const int , const int);
-void met_summary(MET_DATA *);
-int is_valid_met(const char *const);
-void Avg_temperature (CELL *, int, int, int);
-void Daylight_avg_temperature (CELL *, int, int, int, YOS *);
-void Nightime_avg_temperature (CELL *, int, int, int, YOS *);
-void Dew_temperature (CELL *, int , int , int , YOS *);
-void Soil_temperature (CELL *, int, int, int, YOS *);
-void Air_density (CELL *, int, int, int, YOS *);
-void Latent_heat (CELL *, int, int, int, YOS *);
-void Thermic_sum (CELL *, int, int, int, YOS *);
-void Air_pressure (CELL *c, int, int, int, YOS *);
-void Psychrometric (CELL *c, int, int, int, YOS *);
-void Veg_Days (CELL *const, const YOS *const, const int, const int, const int);
-int sort_by_years(const void *, const void *);
-int sort_by_heights_asc(const void * , const void * );
-int sort_by_heights_desc(const void * , const void * );
-double Canopy_cover (SPECIES *const, int, int, int);
-void Crowding_competition (SPECIES *const, HEIGHT *, int, int , int);
-ROW *import_dataset(const char *const, int *const);
-int importSettingsFile(char *);
-
-void Sat_vapour_pressure (CELL *, int, int, int, YOS *);
-
-void Day_Length (CELL *, int, int, int, YOS *);
-void DayLength_3PG (CELL *, int, int, int, int, YOS *);
-void Annual_met_values (CELL *, int, int, int, YOS *);
-void Annual_CO2_concentration (CELL *, int, int, int, YOS *);
-void Abscission_DayLength (CELL *);
-int Establishment_LPJ (CELL *const, SPECIES *const);
-void Age_Mortality (SPECIES *const, AGE *const);
-void Greff_Mortality (SPECIES *const);
-void Mortality (SPECIES *const, int);
-void Daily_modifiers (SPECIES *const, AGE *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
-void Management (SPECIES *const, AGE *const, int);
-void Clearcut_Timber_upon_request (SPECIES *const, int, int, int);
-void Clearcut_Timber_without_request (SPECIES *, CELL*, int);
-void Clearcut_Coppice (SPECIES *const, int, int, int);
-MATRIX *matrix_create(ROW *const, const int);
-void matrix_free(MATRIX *);
-void matrix_summary(const MATRIX *const);
-void Dominant_Light(HEIGHT *, CELL *, const int, const MET_DATA *const, const int, const int);
-//yearly allocation
-void Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
-int Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
-int Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
-
-//monthly allocation
-void M_Fruit_Allocation_LPJ (SPECIES *const, int, int, double, double);
-int M_Fruit_Allocation_Logistic_Equation (SPECIES *const, AGE *const);
-int M_Fruit_Allocation_TREEMIG (SPECIES *const, AGE *const);
-
-
-//deciduous routine for carbon allocation
-void Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-void simple_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-
-
-void Daily_C_Evergreen_Partitioning_Allocation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-void Daily_C_Deciduous_Partitioning_Allocation (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int, int);
-
-
-void Nitrogen_stock (SPECIES *);
-
-void Maintenance_respiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
-void Growth_respiration (SPECIES *const, CELL *, int, int, int, int);
-void Autotrophic_respiration (SPECIES *const, CELL *, int);
-void Carbon_assimilation (SPECIES *const , CELL *const , int, int, int, int);
-void Soil_respiration (CELL *);
-void Carbon_fluxes (SPECIES *const, CELL *const, int, int, int);
-void Water_fluxes (CELL *const);
-void Soil_evaporation_old (CELL *, const MET_DATA *const, int, int);
-void Daily_lai (SPECIES *const);
-void Peak_lai(SPECIES *const , CELL *const, int, int, int, int, int );
-void Turnover(SPECIES *, CELL *);
-void EOY_Turnover(SPECIES *);
-void Leaf_fall(SPECIES *, int *);
-void Light_Recruitment (SPECIES *const, double, double);
-void Solar_radiation (CELL *, int, int, int);
-void Radiation (SPECIES *const, CELL *, const MET_DATA *const, int, int, int, int, int, int, int);
-void Rad_abs_transm (CELL *const, SPECIES *const, double, double);
-void Phosynthesis(SPECIES *const , CELL *, int , int, int, int, int, int);
-void Biomass_increment_BOY ( CELL *const, SPECIES *const, int, int, int);
-void Biomass_increment_EOY ( CELL *const, SPECIES *const, int, int, int, int);
-void AGB_BGB_biomass (CELL *const , int, int, int);
-void Dendrometry (CELL *const, SPECIES *const, HEIGHT *, int);
-void Daily_layer_cover (CELL *, const MET_DATA *const, int, int);
-void Daily_Forest_structure (CELL *, const int,const int,const int);
-void Print_met_daily_data (const YOS *const , int , int , int );
-void Print_met_data (const MET_DATA *const, int, int);
-void Print_init_month_stand_data (CELL *, const MET_DATA *const, const int, const int, int, int, int);
-void Print_end_month_stand_data (CELL *, const YOS *const, const MET_DATA *const, const int, const int, int, int, int);
-void Print_parameters (SPECIES *const, int, int, int);
-void Daily_vegetative_period (CELL *, const MET_DATA *const, int, int);
-int  Number_of_layers (CELL *);
-void Annual_numbers_of_layers (CELL *);
-void Daily_numbers_of_layers (CELL *);
-void Layer_cover_mortality (CELL *, int, int, int, double, int);
-void water_downward_balance (CELL *, const MET_DATA *const, int, int);
-void water_upward_balance (CELL *, const MET_DATA *const, int, int);
-void Soil_water_balance (CELL *const, const MET_DATA *const, int, int);
-void Annual_average_values_modifiers (SPECIES *);
-void Annual_average_values_met_data (CELL *, double, double, double, double);
-void Average_tree_biomass (SPECIES *);
-void Total_class_level_biomass (SPECIES *);
-void Renovation (CELL *, HEIGHT *, SPECIES *);
-void Water_Use_Efficiency (SPECIES *);
-void Tree_period (SPECIES *, AGE *, CELL *);
-void Daily_veg_counter (CELL *, SPECIES * , int);
-void First_day (CELL *const, const int);
-void Reset_daily_variables (CELL *const, const int);
-void Reset_monthly_variables (CELL *const, const int);
-void Reset_annual_variables (CELL *const, const int);
-void Initialization_biomass_data (SPECIES *, HEIGHT *);
-void Initialization_site_data (CELL *);
-void Choose_management (CELL *, SPECIES *, int , int );
-void Tree_Branch_Bark (SPECIES *, AGE *, int, int, int);
-void Allometry_Power_Function (AGE *, SPECIES *);
-void Check_prcp (CELL *c, MET_DATA *, int, int);
-void Pool_fraction (SPECIES *);
-void Canopy_transpiration (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
-void Canopy_transpiration_biome (SPECIES *, CELL *, const MET_DATA *const, int, int, int, int, int);
-void Canopy_interception (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int);
-void Canopy_evapotranspiration (SPECIES *, CELL *, int);
-void Evapotranspiration (CELL *);
-void Latent_heat_flux (CELL *, const MET_DATA *const, int, int);
-void Check_class_carbon_balance (SPECIES *);
-void Check_carbon_balance (CELL *);
-void Check_class_water_balance (SPECIES *);
-void Check_soil_water_balance (CELL *);
-void Check_C_flux_balance (CELL *);
-
-void live_total_wood_age(AGE *, SPECIES *);
-
-//sergio's functions
-int crop_model_M (MATRIX *const, const YOS *const, const int, const int, const int);
-int crop_model_D (MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void Get_EOD_soil_balance_cell_level (CELL *, const YOS *const , int, int, int);
-void get_av_year_temperature(CELL * const, int, int, int, const MET_DATA *const);
-void soil_temperature(CELL * const, int, int, int, const MET_DATA *const);
-void soil_dndc_sgm(MATRIX *const, const YOS *const, const int, const int, const int, const int);
-void soil_initialization(CELL *);
-void tree_leaves_fall(MATRIX *const, int const);
-void soilCEC(CELL *const);
-void leaffall(SPECIES *, const MET_DATA *const, int*, int*, int );
-void get_vpsat(CELL *, int , int , int , YOS *, int);
-void Get_turnover_Marconi (SPECIES *, CELL *, int, int);
-void get_net_ecosystem_exchange(CELL *);
-int endOfYellowing(const MET_DATA *const, SPECIES *);
-void senescenceDayOne(SPECIES *, const MET_DATA *const, CELL *const);
-void Stool_mortality (SPECIES *const, int);
-
-//test
-void simple_phenology_phase (SPECIES *, const MET_DATA *const, const int, const int, const int);
-void Canopy_evapo_transpiration (SPECIES *const, CELL *const, const MET_DATA *const, int, int, int, int, int);
-void Soil_evaporation (CELL *const c, const MET_DATA *const, int, int);
-double Penman_Monteith (const MET_DATA *const, int, int, int, int, double);
-void Annual_minimum_reserve (SPECIES *);
-int alloc_struct(void **t, int *count, unsigned int size);
-int Create_new_class(CELL *const c, const int height, const int age, const int species);
-int fill_species_from_file(SPECIES *const s);
-OUTPUT_VARS *ImportOutputVarsFile(const char *const filename);
-void FreeOutputVars(OUTPUT_VARS *ov);
-int WriteNetCDFOutput(const char *const path, const OUTPUT_VARS *const vars, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type);
-const char* get_netcdf_version(void);
-#define XSTR(a)		STR(a)
-#define STR(a)		#a
-#define CHECK_CONDITION(x,c) {																																\
-		if ( (x)c )		{																																	\
-			logger(g_log, "\nerror: condition (%s %s) is true, value of %s is %g in %s on line %d\n", XSTR(x), XSTR(c), XSTR(x), (double)(x),  __FILE__, __LINE__);	\
-			exit(1);																																		\
-		}																																					\
-}
-
-/* DO NOT CHANGE THIS ORDER */
-enum {
-	AR_DAILY_OUT
-	, AR_MONTHLY_OUT
-	, AR_YEARLY_OUT
-
-	, GPP_DAILY_OUT
-	, GPP_MONTHLY_OUT
-	, GPP_YEARLY_OUT
-
-	, NPP_DAILY_OUT
-	, NPP_MONTHLY_OUT
-	, NPP_YEARLY_OUT
-
-	, OUTPUT_VARS_COUNT
-};
-
-/* */
-#endif /* TYPES_H */
+#endif /* MATRIX_H_ */

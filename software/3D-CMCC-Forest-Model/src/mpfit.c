@@ -21,7 +21,7 @@
 #include <math.h>
 #include <string.h>
 #include "mpfit.h"
-#include "types.h"
+#include "matrix.h"
 
 /* Forward declarations of functions in this module */
 static int mp_fdjac2(mp_func funct,

@@ -4,13 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "lai.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Daily_lai (SPECIES *const s)
+void Daily_lai (species_t *const s)
 {
 	double leaf_c; //leaf carbon KgC/m^2
 
@@ -21,7 +24,7 @@ void Daily_lai (SPECIES *const s)
 
 	logger(g_log, "Foliage Biomass = %f KgC/cell\n", leaf_c);
 
-	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell);
+	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
 	logger(g_log, "LAI = %f\n", s->value[LAI]);
 	s->value[ALL_LAI] = s->value[LAI] * s->value[LAI_RATIO];
 	//logger(g_log, "ALL LAI BIOME = %f\n", s->value[ALL_LAI]);
@@ -34,7 +37,7 @@ void Daily_lai (SPECIES *const s)
 
 	/*compute SLA for SUN and SHADED*/
 	if(s->value[LAI_SUN] > 0.0)
-	s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO]))/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * settings->sizeCell));
+	s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO]))/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell));
 	logger(g_log, "SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
 	if(s->value[LAI_SHADE] > 0.0)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
@@ -43,7 +46,7 @@ void Daily_lai (SPECIES *const s)
 	CHECK_CONDITION(fabs(s->value[LAI]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0.0);
-	CHECK_CONDITION(fabs(s->value[LAI]), > settings->maxlai);
+	CHECK_CONDITION(fabs(s->value[LAI]), > g_settings->maxlai);
 //	CHECK_CONDITION(s->value[LAI], > s->value[PEAK_LAI])
 }
 

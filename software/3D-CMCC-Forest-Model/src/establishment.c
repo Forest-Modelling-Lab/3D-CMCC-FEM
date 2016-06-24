@@ -2,14 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t *g_settings;
 extern logger_t* g_log;
 
 /**/
-int Establishment_LPJ (CELL *const c, SPECIES *const s)
+int Establishment_LPJ (cell_t *const c, species_t *const s)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
@@ -48,9 +50,9 @@ int Establishment_LPJ (CELL *const c, SPECIES *const s)
 
 
 
-	Nsapling = s->counter[N_SEED] * EstabRate ;
+	Nsapling = (int)(s->counter[N_SEED] * EstabRate);
 	logger(g_log, "Annual Number of Saplings per hectare using LPJ = %d Saplings/year hectare\n", Nsapling);
-	logger(g_log, "Annual Number of Saplings using LPJ = %f Saplings/year m^2\n", (double) Nsapling / settings->sizeCell );
+	logger(g_log, "Annual Number of Saplings using LPJ = %f Saplings/year m^2\n", (double) Nsapling / g_settings->sizeCell );
 	logger(g_log, "Percentage of seeds survived using LPJ = %f %% seeds/year hectare\n", ((double)Nsapling * 100)/(double)s->counter[N_SEED] );
 
 

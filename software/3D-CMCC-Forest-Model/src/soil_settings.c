@@ -1,10 +1,11 @@
-/* soil.c */
-#include "soil.h"
+/* soil_settings.c */
+#include "soil_settings.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "types.h"
+#include "matrix.h"
+#include "common.h"
 #include "netcdf.h"
 #include "logger.h"
 
@@ -45,7 +46,7 @@ static const char *sz_vars[SOIL_VARS_COUNT] = {
 	, "DC_HUMUS"
 };
 
-static void reset(soil_t* const s) {
+static void reset(soil_settings_t* const s) {
 	int i;
 	assert(s);
 	s->sitename[0] = '\0';
@@ -54,7 +55,7 @@ static void reset(soil_t* const s) {
 	}
 }
 
-static int import_txt(soil_t *const s, const char *const filename, const int x, const int y) {
+static int import_txt(soil_settings_t *const s, const char *const filename, const int x, const int y) {
 #define SOIL_BUFFER_SIZE 1024
 	char buffer[SOIL_BUFFER_SIZE];
 	int i;
@@ -96,11 +97,10 @@ static int import_txt(soil_t *const s, const char *const filename, const int x, 
 #undef SOIL_BUFFER_SIZE
 }
 
-static int import_nc(soil_t *const s, const char *const filename, const int x_cell, const int y_cell) {
+static int import_nc(soil_settings_t *const s, const char *const filename, const int x_cell, const int y_cell) {
 	enum {
 		X_DIM = 0
 		, Y_DIM
-		, TIME_DIM
 		, DIMS_COUNT
 	};
 
@@ -111,10 +111,10 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 	int vars[SOIL_VARS_COUNT];
 	float value;
 	int dims_size[DIMS_COUNT];
+	int x_id;
 	const char *sz_lat = "lat";
 	const char *sz_lon = "lon";
-	const char *sz_time = "time";
-	const char *sz_dims[DIMS_COUNT] = { "x", "y", "time" };
+	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
 
 	int y;
 	int id_file;
@@ -129,8 +129,8 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 	int n_dims;
 	int ids[NC_MAX_VAR_DIMS];
 
-	size_t start[] = { 0, 0, 0 };
-	size_t count[] = { 0, 1, 1 };
+	size_t start[DIMS_COUNT] = { 0, 0 };
+	size_t count[DIMS_COUNT] = { 1, 1 };
 
 	rows_count = 0;
 	for ( i = 0; i < SOIL_VARS_COUNT; i++ ) {
@@ -151,7 +151,13 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 
 	if ( ! dims_count || ! vars_count ) {
 		logger(g_log, "bad nc file! %d dimensions and %d vars\n\n", dims_count, vars_count);
-		goto quit2;
+		goto quit_no_nc_err;
+	}
+
+	/* dims_count can be only 2 and ids only x and y */
+	if ( 2 != dims_count ) {
+		logger(g_log, "bad dimension size. It should be 2 not %d\n", dims_count);
+		goto quit_no_nc_err;
 	}
 
 	/* reset */
@@ -167,10 +173,11 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 			if ( ! string_compare_i(sz_dims[y], name) ) {
 				if ( dims_size[y] != -1 ) {
 					logger(g_log, "dimension %s already found!\n", sz_dims[y]);
-					goto quit2;
+					goto quit_no_nc_err;
 				}
 				dims_size[y] = size;
-				break;
+				if ( X_DIM == y ) x_id = i;
+				break;			
 			}
 		}
 	}
@@ -179,42 +186,47 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		if ( -1 == dims_size[i] ) {
 			logger(g_log, "dimension %s not found!\n", sz_dims[i]);
-			goto quit2;
+			goto quit_no_nc_err;
 		}
-	}
-
-	/* check if time is 1 */
-	if ( dims_size[TIME_DIM] != 1 ) {
-		logger(g_log, "time size must be 1\n");
-		goto quit2;
 	}
 
 	/* check if x_cell is >= x_dim */
 	if ( x_cell >= dims_size[X_DIM] ) {
 		logger(g_log, "x_cell >= x_dim: %d,%d\n", x_cell, dims_size[X_DIM]);
-		goto quit2;
+		goto quit_no_nc_err;
 	}
 
 	/* check if y_cell is >= y_dim */
 	if ( y_cell >= dims_size[Y_DIM] ) {
 		logger(g_log, "y_cell >= y_dim: %d,%d\n", y_cell, dims_size[Y_DIM]);
-		goto quit2;
+		goto quit_no_nc_err;
 	}
-
-	start[1] = y_cell;
-	start[2] = x_cell;
-	count[0] = dims_size[TIME_DIM];
 
 	/* get vars */
 	for ( i = 0; i < vars_count; ++i ) {
 		ret = nc_inq_var(id_file, i, name, &type, &n_dims, ids, NULL);
 		if ( ret != NC_NOERR ) goto quit;
+		/* who cames first ? x or y ? */
+		if ( x_id == ids[0] ) {
+			/* x first */
+			start[0] = x_cell;
+			start[1] = y_cell;			
+		} else {
+			/* y first */
+			start[0] = y_cell;
+			start[1] = x_cell;
+		}
 		for ( y = 0; y  < SOIL_VARS_COUNT; ++y ) {
 			if ( ! string_compare_i(name, sz_vars[y]) ) {
 				/* check if we already have imported that var */
 				if ( vars[y] ) {
 					logger(g_log, "var %s already imported\n", sz_vars[y]);
-					goto quit2;
+					goto quit_no_nc_err;
+				}
+				/* n_dims can be only 2 and ids only x and y */
+				if ( 2 != n_dims ) {
+					logger(g_log, "bad %s dimension size. It should be 2 not %d\n", sz_vars[y], n_dims);
+					goto quit_no_nc_err;
 				}
 				/* get values */
 				if ( NC_FLOAT == type ) {
@@ -227,7 +239,7 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 				} else {
 					/* type format not supported! */
 					logger(g_log, "type format in %s for %s column not supported\n\n", buffer, sz_vars[y]);
-					goto quit2;
+					goto quit_no_nc_err;
 				}
 				vars[y] = 1;
 				break;
@@ -239,18 +251,18 @@ static int import_nc(soil_t *const s, const char *const filename, const int x_ce
 
 quit:
 	logger(g_log, nc_strerror(ret));
-quit2:
+quit_no_nc_err:
 	nc_close(id_file);
 	return 0;
 }
 
-soil_t* soil_new(void) {
-	soil_t* s = malloc(sizeof*s);
+soil_settings_t* soil_settings_new(void) {
+	soil_settings_t* s = malloc(sizeof*s);
 	if ( s ) reset(s);
 	return s;
 }
 
-int soil_import(soil_t *const s, const char *const filename, const int x, const int y) {
+int soil_settings_import(soil_settings_t *const s, const char *const filename, const int x, const int y) {
 	char *p;
 	assert(s);
 	reset(s);

@@ -2,11 +2,12 @@
 #ifndef CUMULATIVE_BALANCE_H_
 #define CUMULATIVE_BALANCE_H_
 
-#include "types.h"
+#include "matrix.h"
 
-void EOY_cumulative_balance_layer_level (SPECIES *, HEIGHT *);
-void EOD_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, int, const int cell_index);
-void EOM_cumulative_balance_cell_level (CELL *, const YOS *const , int, int, const int cell_index);
-void EOY_cumulative_balance_cell_level (MATRIX *, CELL *, const YOS *const , int, int, const int cell_index);
+void EOY_cumulative_balance_layer_level(const species_t *const s, const height_t* const h);
+void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int day, const int cell_index);
+void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int cell_index);
+void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const int years_of_simulation, const int cell_index);
+void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day);
 
 #endif /* CUMULATIVE_BALANCE_H_ */

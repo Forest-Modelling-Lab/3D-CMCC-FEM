@@ -1,17 +1,15 @@
 /* allometry.c */
-
-/* includes */
+#include "allometry.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
 //not used
-void Get_allometry (SPECIES *const s, AGE *const a, int years)
+void Get_allometry (species_t* const s, age_t* const a, int years)
 {
 	logger(g_log, "\n*********ALLOMETRY FUNCTION *********\n");
 	/*
@@ -114,8 +112,7 @@ void Get_allometry (SPECIES *const s, AGE *const a, int years)
 
 }
 
-void Allometry_Power_Function (AGE *a, SPECIES *s)
-{
+void Allometry_Power_Function(age_t *const a, species_t *const s) {
 	//todo ask to Laura references
 	//this function computes the STEMCONST values using the values reported from ...... ask to Laura
 

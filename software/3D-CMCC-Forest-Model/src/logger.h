@@ -2,14 +2,15 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
+#include <stdio.h>
+
 typedef struct {
 	FILE *f;
 	int file_output;
 	int std_output;
 } logger_t;
 
-logger_t* logger_new_ex(const char* const filename, const char* const s);
-logger_t* logger_new(const char* const filename);
+logger_t* logger_new(const char* const text, ...);
 #define logger_enable_file(p)	((p)->file_output=1)
 #define logger_disable_file(p)	((p)->file_output=0)
 #define logger_enable_std(p)	((p)->std_output=1)

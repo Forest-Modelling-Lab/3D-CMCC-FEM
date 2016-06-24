@@ -1,86 +1,65 @@
-//
+/* g-function.c */
+#include <stdio.h>
 #include <math.h>
-#include "soil.h"
-#include "types.h"
+#include "soil_settings.h"
 #include "constants.h"
+#include "settings.h"
+#include "yos.h"
 #include "logger.h"
+#include "matrix.h"
 
+extern settings_t *g_settings;
 extern logger_t* g_log;
-extern soil_t *g_soil;
+extern soil_settings_t *g_soil_settings;
 
-extern int sort_by_years(const void *a, const void *b)
-{
-	if ( ((YOS *)a)->year < ((YOS *)b)->year )
-	{
+int sort_by_years(const void *a, const void *b) {
+	if ( ((yos_t*)a)->year < ((yos_t*)b)->year ) {
 		return -1;
-	}
-	else if ( ((YOS *)a)->year > ((YOS *)b)->year )
-	{
+	} else if ( ((yos_t*)a)->year > ((yos_t*)b)->year ) {
 		return 1;
-	}
-	else
-	{
+	} else {
 		return 0;
 	}
 }
 /* todo : implement a better comparison for equality */
-int sort_by_heights_asc(const void * a, const void * b)
-{
-	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
-	{
+int sort_by_heights_asc(const void * a, const void * b) {
+	if ( ((height_t *)a)->value < ((height_t *)b)->value ) {
 		return -1;
-	}
-	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
-	{
+	} else if ( ((height_t *)a)->value > ((height_t *)b)->value ) {
 		return 1;
-	}
-	else
-	{
+	} else {
 		return 0;
 	}
 }
 
 /* todo : implement a better comparison for equality */
-int sort_by_heights_desc(const void * a, const void * b)
-{
-	if ( ((HEIGHT *)a)->value < ((HEIGHT *)b)->value )
-	{
+int sort_by_heights_desc(const void * a, const void * b) {
+	if ( ((height_t *)a)->value < ((height_t *)b)->value ) {
 		return 1;
-	}
-	else if ( ((HEIGHT *)a)->value > ((HEIGHT *)b)->value )
-	{
+	} else if ( ((height_t *)a)->value > ((height_t *)b)->value ) {
 		return -1;
-	}
-	else
-	{
+	} else {
 		return 0;
 	}
 }
 
-void Pool_fraction (SPECIES * s)
-{
-	/*using biome parameter for allocation recomputed values to have fraction*/
+void Pool_fraction(species_t *const s) {
 	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
-	//logger(g_log, "biome fine root leaf frac (fraction to fine root = %f; fraction to leaf = %f)\n", s->value[FINE_ROOT_LEAF_FRAC], 1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 	s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
-	//logger(g_log, "biome stem leaf frac (fraction to stem = %f; fraction to leaf = %f\n", s->value[STEM_LEAF_FRAC], 1.0 - s->value[STEM_LEAF_FRAC]);
 	s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
-	//logger(g_log, "biome coarse root stem frac (fraction to coarse root = %f; fraction to stem = %f\n", s->value[COARSE_ROOT_STEM_FRAC], 1.0 - s->value[COARSE_ROOT_STEM_FRAC]);
 	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
-	//logger(g_log, "biome live wood total wood frac (fraction to new live total wood = %f, fraction to total wood = %f\n", s->value[LIVE_TOTAL_WOOD_FRAC], 1.0 - s->value[LIVE_TOTAL_WOOD_FRAC]);
-
 }
 
 /*to compute dayleght for stopping growth*/
 //from Schwalm and Ek, 2004
 //but it considers a value independently from species
-void Abscission_DayLength ( CELL * c)
+void Abscission_DayLength ( cell_t * c)
 {
-	c->abscission_daylength = (39132 + (pow (1.088, (g_soil->values[SOIL_LAT] + 60.753))))/(60*60);
+	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
 	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
-extern void Tree_period (SPECIES *s, AGE *a, CELL *c)
+void Tree_period(species_t* const s, age_t* const a, cell_t* const  c)
 {
 	/*Set Tree period*/
 	// 0 = adult tree
@@ -104,19 +83,17 @@ extern void Tree_period (SPECIES *s, AGE *a, CELL *c)
 
 
 //compute annual number of vegetative days
-void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int years)
+void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 {
 
 	static int height;
 	static int age;
 	static int species;
 
-
-	MET_DATA *met;
-	met = (MET_DATA*) yos[years].m;
+	const meteo_t *met = c->years[year].m;
 
 	if (!day && !month)
-		logger(g_log, "VEG_DAYS_for year %d\n", years);
+		logger(g_log, "VEG_DAYS_for year %d\n", year);
 
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -125,7 +102,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
-				if (settings->spatial == 'u')
+				if (g_settings->spatial == 'u')
 				{
 					if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 					{
@@ -167,7 +144,7 @@ void Veg_Days (CELL *const c, const YOS *const yos, int day, int month, int year
 							                                                                                                                                                  * c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]);
 
 						}
-						logger(g_log, "-SPECIES %s TOTAL VEGETATIVE DAYS = %d \n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "-species_t %s TOTAL VEGETATIVE DAYS = %d \n", c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
 					}
 				}
 				else

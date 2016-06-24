@@ -4,13 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "turnover.h"
+#include "common.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Turnover(SPECIES *s, CELL *c)
+void Turnover(species_t *const s, cell_t *const c)
 {
 	static double daily_live_turnover_rate;
 
@@ -102,7 +103,7 @@ void Turnover(SPECIES *s, CELL *c)
 	}
 }
 
-void EOY_Turnover(SPECIES *s)
+void EOY_Turnover(species_t *s)
 {
 	static int counter_turnover;
 	static double c_to_stem;
@@ -112,7 +113,7 @@ void EOY_Turnover(SPECIES *s)
 	/* reset previous annual values */
 	if (s->counter[VEG_DAYS] == 1)
 	{
-		counter_turnover = 0.0;
+		counter_turnover = 0;
 		c_to_stem = 0.0;
 		c_to_branch = 0.0;
 		c_to_coarseroot = 0.0;

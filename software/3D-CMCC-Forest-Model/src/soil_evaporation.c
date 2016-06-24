@@ -1,16 +1,17 @@
-/*soil_evaporation.c*/
-
-/* includes */
+/* soil_evaporation.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "soil_evaporation.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
+#include "Penman_monteith.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Soil_evaporation (CELL *const c, const MET_DATA *const met, int month, int day)
+void soil_evaporation_biome(cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
 	double rbl;              /* (m/s) boundary layer resistance */
 	double rcorr;            /* correction factor for temp and pressure */
@@ -140,7 +141,7 @@ void Soil_evaporation (CELL *const c, const MET_DATA *const met, int month, int 
 }
 
 
-extern void Soil_evaporation_old (CELL * c, const MET_DATA *const met, int month, int day)
+void Soil_evaporation(cell_t * c, const meteo_t *const met, int month, int day)
 {
 	static double PotEvap;            //Potential evapotranspiration
 	double cc;
@@ -166,7 +167,7 @@ extern void Soil_evaporation_old (CELL * c, const MET_DATA *const met, int month
 			switch (c->daily_layer_number)
 			{
 			case 3:
-				if (settings->spatial == 's')
+				if (g_settings->spatial == 's')
 				{
 					//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
 				}
@@ -176,7 +177,7 @@ extern void Soil_evaporation_old (CELL * c, const MET_DATA *const met, int month
 				}
 				break;
 			case 2:
-				if (settings->spatial == 's')
+				if (g_settings->spatial == 's')
 				{
 					//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
 				}

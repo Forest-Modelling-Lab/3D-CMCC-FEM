@@ -2,18 +2,105 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "light.h"
+#include "common.h"
 #include "constants.h"
 #include "logger.h"
-#include "soil.h"
+#include "soil_settings.h"
 #include "topo.h"
 
-
 extern logger_t* g_log;
-extern soil_t *g_soil;
+extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 
-void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int years, int month, int day, int DaysInMonth, int height, int age, int species)
+static void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade)
+{
+	/* This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height class/layer */
+
+	/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
+	logger(g_log, "\nAVAILABLE par = %f molPAR/m^2 day\n", c->par);
+	s->value[APAR_SUN] = c->par * LightAbsorb_sun;
+	s->value[TRANSM_PAR_SUN] = c->par - s->value[APAR_SUN];
+	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * LightAbsorb_shade;
+	s->value[TRANSM_PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[APAR_SHADE];
+	/* overall canopy */
+	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
+	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-c->par),>1e-4);
+	/* cumulate over the layer filtered par */
+	c->par_transm += s->value[TRANSM_PAR];
+
+	logger(g_log, "Apar sun = %f molPAR/m^2 day\n", s->value[APAR_SUN]);
+	logger(g_log, "Transmitted Par sun = %f molPAR/m^2 day\n", s->value[TRANSM_PAR_SUN]);
+	logger(g_log, "Apar shade = %f molPAR/m^2 day\n", s->value[APAR_SHADE]);
+	logger(g_log, "Transmitted Par shade = %f molPAR/m^2 day\n", s->value[TRANSM_PAR_SHADE]);
+	logger(g_log, "Apar total = %f molPAR/m^2 day\n", s->value[APAR]);
+	logger(g_log, "Transmitted Par total = %f molPAR/m^2 day\n", s->value[TRANSM_PAR]);
+	logger(g_log, "Below the canopy par (filtered)= %f molPAR/m^2 day\n", c->par_transm);
+
+
+	/*compute NetRad (W/m^2) for sun and shaded leaves*/
+	logger(g_log, "\nAVAILABLE net_radiation = %f W/m^2\n", c->net_radiation);
+	s->value[NET_RAD_ABS_SUN] = c->net_radiation * LightAbsorb_sun;
+	s->value[NET_RAD_TRANSM_SUN] = c->net_radiation - s->value[NET_RAD_ABS_SUN];
+	s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_TRANSM_SUN] * LightAbsorb_shade;
+	s->value[NET_RAD_TRANSM_SHADE] = s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_ABS_SHADE];
+	/* overall canopy */
+	s->value[NET_RAD_ABS] = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
+	s->value[NET_RAD_TRANSM] = s->value[NET_RAD_TRANSM_SHADE];
+	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-c->net_radiation),>1e-4);
+	/* cumulate over the layer net radiation */
+	c->net_radiation_transm += s->value[NET_RAD_TRANSM];
+
+	logger(g_log, "Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
+	logger(g_log, "Transmitted NetRad sun = %f W/m^2\n", s->value[NET_RAD_TRANSM_SUN]);
+	logger(g_log, "Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
+	logger(g_log, "Transmitted NetRad shade = %f W/m^2\n", s->value[NET_RAD_TRANSM_SHADE]);
+	logger(g_log, "Absorbed total = %f W/m^2\n", s->value[NET_RAD_ABS]);
+	logger(g_log, "Transmitted total = %f W/m^2\n", s->value[NET_RAD_TRANSM]);
+	logger(g_log, "Below the canopy net radiation (filtered)= %f molPAR/m^2 day\n", c->net_radiation_transm);
+
+
+	/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
+	logger(g_log, "\nAVAILABLE ppfd = %f umol/m2/sec\n", c->ppfd);
+	s->value[PPFD_ABS_SUN] = c->ppfd * LightAbsorb_sun;
+	s->value[PPFD_TRANSM_SUN] = c->ppfd - s->value[PPFD_ABS_SUN];
+	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * LightAbsorb_shade;
+	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_ABS_SHADE];
+	/* overall canopy */
+	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
+	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-c->ppfd),>1e-4);
+	/* cumulate over the layer ppfd */
+	c->ppfd_transm += s->value[PPFD_TRANSM];
+
+	logger(g_log, "Absorbed ppfd sun = %f umol/m2/sec\n", s->value[PPFD_ABS_SUN]);
+	logger(g_log, "Transmitted ppfd sun = %f umol/m2/sec\n", s->value[PPFD_TRANSM_SUN]);
+	logger(g_log, "Absorbed ppfd shade = %f umol/m2/sec\n", s->value[PPFD_ABS_SHADE]);
+	logger(g_log, "Transmitted ppfd shade = %f umol/m2/sec\n", s->value[PPFD_TRANSM_SHADE]);
+	logger(g_log, "Absorbed ppfd total  = %f umol/m2/sec\n", s->value[PPFD_ABS]);
+	logger(g_log, "Transmitted ppfd total  = %f umol/m2/sec\n", s->value[PPFD_TRANSM]);
+	logger(g_log, "Below the canopy ppfd (filtered)= %f molPAR/m^2 day\n", c->ppfd_transm);
+
+
+	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2*/
+	if(s->value[PPFD_ABS_SHADE] < 0.0)
+	{
+		s->value[PPFD_ABS_SHADE]  = 0.0;
+	}
+	if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
+	{
+		s->value[PPFD_ABS_SUN] /= s->value[LAI_SUN];
+		s->value[PPFD_ABS_SHADE] /= s->value[LAI_SHADE];
+	}
+	else
+	{
+		s->value[PPFD_ABS_SUN] = s->value[PPFD_ABS_SHADE] = 0.0;
+
+	}
+}
+
+void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
 {
 
 	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade;                               //fraction of light absorbed
@@ -109,7 +196,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	TmaxK = met[month].d[day].tmax + TempAbs;
 	TminK = met[month].d[day].tmin + TempAbs;
 
-	if(IS_LEAP_YEAR(years))
+	if(IS_LEAP_YEAR(year))
 	{
 		days_of_year = 366;
 	}
@@ -120,8 +207,8 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 
 	/* Following Allen et al., 1998 */
 	/* convert latitude in radians */
-	lat_decimal = g_soil->values[SOIL_LAT] - (int)g_soil->values[SOIL_LAT];
-	lat_degrees = (int)g_soil->values[SOIL_LAT] + (lat_decimal/60.0);
+	lat_decimal = g_soil_settings->values[SOIL_LAT] - (int)g_soil_settings->values[SOIL_LAT];
+	lat_degrees = (int)g_soil_settings->values[SOIL_LAT] + (lat_decimal/60.0);
 	lat_rad = (Pi/180.0)*lat_degrees;
 	//logger(g_log, "lat_rad = %f\n", lat_rad);
 
@@ -164,7 +251,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	logger(g_log, "\nSHORT WAVE RADIATION\n");
 
 	/* INCOMING SHORT WAVE RADIATION */
-	logger(g_log, "\(incoming short wave)\n");
+	logger(g_log, "\n(incoming short wave)\n");
 
 	/* compute short wave clear sky radiation (Tasumi et al., 2000)*/
 	c->short_wave_clear_sky_radiation_MJ = atmospheric_transmissivity * c->extra_terr_radiation_MJ;
@@ -206,7 +293,7 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	logger(g_log, "ea = %f\n", met[month].d[day].ea);
 
 	/* NET LONG WAVE RADIATION */
-	logger(g_log, "\(net long wave)\n");
+	logger(g_log, "\n(net long wave)\n");
 
 	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
 	if(met[month].d[day].ea < 0.0)
@@ -607,89 +694,3 @@ void Radiation (SPECIES *const s, CELL *const c, const MET_DATA *const met, int 
 	}
 }
 
-void Rad_abs_transm (CELL *const c, SPECIES *const s, double LightAbsorb_sun, double LightAbsorb_shade)
-{
-	/* This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height class/layer */
-
-	/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE par = %f molPAR/m^2 day\n", c->par);
-	s->value[APAR_SUN] = c->par * LightAbsorb_sun;
-	s->value[TRANSM_PAR_SUN] = c->par - s->value[APAR_SUN];
-	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * LightAbsorb_shade;
-	s->value[TRANSM_PAR_SHADE] = s->value[TRANSM_PAR_SUN] - s->value[APAR_SHADE];
-	/* overall canopy */
-	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
-	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-c->par),>1e-4);
-	/* cumulate over the layer filtered par */
-	c->par_transm += s->value[TRANSM_PAR];
-
-	logger(g_log, "Apar sun = %f molPAR/m^2 day\n", s->value[APAR_SUN]);
-	logger(g_log, "Transmitted Par sun = %f molPAR/m^2 day\n", s->value[TRANSM_PAR_SUN]);
-	logger(g_log, "Apar shade = %f molPAR/m^2 day\n", s->value[APAR_SHADE]);
-	logger(g_log, "Transmitted Par shade = %f molPAR/m^2 day\n", s->value[TRANSM_PAR_SHADE]);
-	logger(g_log, "Apar total = %f molPAR/m^2 day\n", s->value[APAR]);
-	logger(g_log, "Transmitted Par total = %f molPAR/m^2 day\n", s->value[TRANSM_PAR]);
-	logger(g_log, "Below the canopy par (filtered)= %f molPAR/m^2 day\n", c->par_transm);
-
-
-	/*compute NetRad (W/m^2) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE net_radiation = %f W/m^2\n", c->net_radiation);
-	s->value[NET_RAD_ABS_SUN] = c->net_radiation * LightAbsorb_sun;
-	s->value[NET_RAD_TRANSM_SUN] = c->net_radiation - s->value[NET_RAD_ABS_SUN];
-	s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_TRANSM_SUN] * LightAbsorb_shade;
-	s->value[NET_RAD_TRANSM_SHADE] = s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_ABS_SHADE];
-	/* overall canopy */
-	s->value[NET_RAD_ABS] = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
-	s->value[NET_RAD_TRANSM] = s->value[NET_RAD_TRANSM_SHADE];
-	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-c->net_radiation),>1e-4);
-	/* cumulate over the layer net radiation */
-	c->net_radiation_transm += s->value[NET_RAD_TRANSM];
-
-	logger(g_log, "Absorbed NetRad sun = %f W/m^2\n", s->value[NET_RAD_ABS_SUN]);
-	logger(g_log, "Transmitted NetRad sun = %f W/m^2\n", s->value[NET_RAD_TRANSM_SUN]);
-	logger(g_log, "Absorbed NetRad shade = %f W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
-	logger(g_log, "Transmitted NetRad shade = %f W/m^2\n", s->value[NET_RAD_TRANSM_SHADE]);
-	logger(g_log, "Absorbed total = %f W/m^2\n", s->value[NET_RAD_ABS]);
-	logger(g_log, "Transmitted total = %f W/m^2\n", s->value[NET_RAD_TRANSM]);
-	logger(g_log, "Below the canopy net radiation (filtered)= %f molPAR/m^2 day\n", c->net_radiation_transm);
-
-
-	/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE ppfd = %f umol/m2/sec\n", c->ppfd);
-	s->value[PPFD_ABS_SUN] = c->ppfd * LightAbsorb_sun;
-	s->value[PPFD_TRANSM_SUN] = c->ppfd - s->value[PPFD_ABS_SUN];
-	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * LightAbsorb_shade;
-	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_ABS_SHADE];
-	/* overall canopy */
-	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
-	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-c->ppfd),>1e-4);
-	/* cumulate over the layer ppfd */
-	c->ppfd_transm += s->value[PPFD_TRANSM];
-
-	logger(g_log, "Absorbed ppfd sun = %f umol/m2/sec\n", s->value[PPFD_ABS_SUN]);
-	logger(g_log, "Transmitted ppfd sun = %f umol/m2/sec\n", s->value[PPFD_TRANSM_SUN]);
-	logger(g_log, "Absorbed ppfd shade = %f umol/m2/sec\n", s->value[PPFD_ABS_SHADE]);
-	logger(g_log, "Transmitted ppfd shade = %f umol/m2/sec\n", s->value[PPFD_TRANSM_SHADE]);
-	logger(g_log, "Absorbed ppfd total  = %f umol/m2/sec\n", s->value[PPFD_ABS]);
-	logger(g_log, "Transmitted ppfd total  = %f umol/m2/sec\n", s->value[PPFD_TRANSM]);
-	logger(g_log, "Below the canopy ppfd (filtered)= %f molPAR/m^2 day\n", c->ppfd_transm);
-
-
-	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2*/
-	if(s->value[PPFD_ABS_SHADE] < 0.0)
-	{
-		s->value[PPFD_ABS_SHADE]  = 0.0;
-	}
-	if(s->value[LAI_SUN] > 0.0 && s->value[LAI_SHADE] > 0.0)
-	{
-		s->value[PPFD_ABS_SUN] /= s->value[LAI_SUN];
-		s->value[PPFD_ABS_SHADE] /= s->value[LAI_SHADE];
-	}
-	else
-	{
-		s->value[PPFD_ABS_SUN] = s->value[PPFD_ABS_SHADE] = 0.0;
-
-	}
-}

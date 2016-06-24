@@ -5,13 +5,16 @@
  *      Author: alessio
  */
 #include <math.h>
-#include "types.h"
+#include <assert.h>
+#include "print.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Print_parameters (SPECIES *const s, int species_count, int month, int years)
+void Print_parameters (species_t *const s, int species_count, int month, int years)
 {
 	int species;
 
@@ -85,7 +88,7 @@ void Print_parameters (SPECIES *const s, int species_count, int month, int years
 	}
 }
 
-void Print_met_data (const MET_DATA *const met, int month, int day)
+void Print_met_data (const meteo_t *const met, const int month, const int day)
 {
 	//here is valid only into function
 	static int doy;
@@ -145,10 +148,10 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 			met[month].d[day].es,
 			met[month].d[day].ea,
 			met[month].d[day].psych,
-			settings->co2Conc,
+			g_settings->co2Conc,
 			doy
 	);
-	if (settings->spatial == 's')
+	if (g_settings->spatial == 's')
 	{
 		logger(g_log, "-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
 	}
@@ -158,13 +161,14 @@ void Print_met_data (const MET_DATA *const met, int month, int day)
 
 }
 
-void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
+static void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)
 {
-	MET_DATA *met;
-	assert(yos);
-	met = (MET_DATA*) yos[years].m;
+	meteo_t *met;
 
-	if (settings->time == 'd')
+	assert(yos);
+
+	met = yos[years].m;
+	if (g_settings->time == 'd')
 	{
 		logger(g_log, "n_days %10d "
 				"Rg_f %10g "
@@ -185,7 +189,7 @@ void Print_met_daily_data (const YOS *const yos, int day, int month, int years)
 	}
 
 }
-void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, const int month, const int years, int height, int age, int species)
+void Print_init_month_stand_data(cell_t* const c, const int month, const int year, const int height, const int age, const int species)
 {
 	logger(g_log, "******************************************************\n\n");
 	logger(g_log, "cell = \n");
@@ -234,7 +238,7 @@ void Print_init_month_stand_data (CELL *c, const MET_DATA *const met, const int 
 
 }
 
-void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET_DATA *const met, const int month, const int years, int height, int age, int species)
+void Print_end_month_stand_data (cell_t* const c, const int year, const int height, const int age, const int species)
 {
 	logger(g_log, "> x = %d\n", c->x);
 	logger(g_log, "> y = %d\n", c->y);
@@ -261,7 +265,7 @@ void Print_end_month_stand_data (CELL *c, const YOS *const yos, const MET_DATA *
 
 	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.2 )
 	{
-		logger(g_log, "[%d] layer %d > wcones = %f\n", yos[years].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_FRUIT_tDM]);
+		logger(g_log, "[%d] layer %d > wcones = %f\n", c->years[year].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_FRUIT_tDM]);
 	}
 	logger(g_log, "> Dead Trees = %d\n",c->heights[height].ages[age].species[species].counter[DEAD_STEMS]);
 	logger(g_log, "> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);

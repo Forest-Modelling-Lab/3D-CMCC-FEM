@@ -4,13 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "utility.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Reset_daily_variables (CELL *const c, const int count)
+void Reset_daily_variables (cell_t *const c, const int count)
 {
 	int height;
 	int age;
@@ -160,7 +160,7 @@ void Reset_daily_variables (CELL *const c, const int count)
 
 }
 
-void Reset_monthly_variables (CELL *const c, const int count)
+void Reset_monthly_variables (cell_t *const c, const int count)
 {
 	int height;
 	int age;
@@ -211,7 +211,7 @@ void Reset_monthly_variables (CELL *const c, const int count)
 }
 
 
-void Reset_annual_variables (CELL *const c, const int count)
+void Reset_annual_variables (cell_t *const c, const int count)
 {
 	int height;
 	int age;
@@ -316,7 +316,7 @@ void Reset_annual_variables (CELL *const c, const int count)
 	}
 }
 
-void First_day (CELL *const c, const int count)
+void First_day(cell_t *const c, const int count)
 {
 	int height;
 	int age;
@@ -356,7 +356,7 @@ void First_day (CELL *const c, const int count)
 }
 
 
-//void Annual_average_values_modifiers (SPECIES *s)
+//void Annual_average_values_modifiers (species_t *s)
 //{
 //
 //	//compute to control annual average values for modifiers
@@ -380,7 +380,7 @@ void First_day (CELL *const c, const int count)
 //
 //}
 
-//void Annual_average_values_met_data (CELL *c, double Yearly_Solar_Rad, double Yearly_Vpd, double Yearly_Temp, double Yearly_Rain )
+//void Annual_average_values_met_data (cell_t *c, double Yearly_Solar_Rad, double Yearly_Vpd, double Yearly_Temp, double Yearly_Rain )
 //{
 //	//logger(g_log, "--AVERAGE YEARLY MET DATA--\n");
 //	//SOLAR RAD

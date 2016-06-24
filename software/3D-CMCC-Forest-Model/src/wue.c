@@ -9,12 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "wue.h"
 #include "constants.h"
 
-
-extern void Water_Use_Efficiency (SPECIES *s)
-{
+void Water_Use_Efficiency(species_t *const s) {
 	/*WATER USE EFFICIENCY*/
 	//fixme it doensn't have sense
 	s->value[WUE] = 100 * ( s->value[YEARLY_NPP_tDM] / s->counter[VEG_DAYS]) / (s->value[MONTHLY_EVAPOTRANSPIRATION] / s->counter[VEG_DAYS]);

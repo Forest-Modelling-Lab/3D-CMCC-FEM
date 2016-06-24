@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-double Penman_Monteith (const MET_DATA *const met, int month, int day, int rh, int rv, double net_rad)
+double Penman_Monteith(const meteo_t *const met, const int month, const int day, const double rh, const double rv, const double net_rad)
 {
 	double tairK;
 	double delta;

@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 // per determinare l'incremento di Height e DBH in funzione della densità di popolazione
@@ -23,7 +25,7 @@ extern logger_t* g_log;
 // in the first year avdbh and height are from input data
 
 
-void Crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int top_layer)
+void Crowding_competition (species_t *const s, height_t *h, int z, int years, int top_layer)
 {
 
 	static double delHeight;    //height increment
@@ -53,8 +55,8 @@ void Crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int to
 
 		// Compute and use H/D effective
 
-		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (settings->max_layer_cover - settings->min_layer_cover)) *
-				( s->value[CANOPY_COVER_DBHDC] - settings->min_layer_cover) + s->value[HDMIN];
+		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (g_settings->max_layer_cover - g_settings->min_layer_cover)) *
+				( s->value[CANOPY_COVER_DBHDC] - g_settings->min_layer_cover) + s->value[HDMIN];
 		logger(g_log, "H/D Ratio Effective = %f\n", s->value[HD_EFF]);
 
 
@@ -118,7 +120,7 @@ void Crowding_competition (SPECIES *const s, HEIGHT *h, int z, int years, int to
 
 		// Compute DBH increment
 
-		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (settings->max_layer_cover - settings->min_layer_cover)) * ( s->value[CANOPY_COVER_DBHDC] - settings->min_layer_cover) + s->value[HDMIN];
+		s->value[HD_EFF] = (( s->value[HDMAX] - s->value[HDMIN]) / (g_settings->max_layer_cover - g_settings->min_layer_cover)) * ( s->value[CANOPY_COVER_DBHDC] - g_settings->min_layer_cover) + s->value[HDMIN];
 		delDBH = ( 1 /((s->value[HD_EFF] / s->value[CC_TREE_HEIGHT]) + (2 / ( s->value[CC_AVDBH] / 100)))) * (1 / oldWS) * s->value[DEL_STEMS];
 
 

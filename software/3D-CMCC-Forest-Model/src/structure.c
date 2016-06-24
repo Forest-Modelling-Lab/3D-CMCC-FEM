@@ -1,17 +1,19 @@
-/*structure.c*/
-
-/* includes */
+/* structure.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
+#include "g-function.h"
+#include "mortality.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Annual_numbers_of_layers (CELL *const c)
+void Annual_numbers_of_layers (cell_t *const c)
 {
 	/*determines number of layer in function of:
 	-differences between tree height classes
@@ -29,10 +31,10 @@ void Annual_numbers_of_layers (CELL *const c)
 	logger(g_log, "****ANNUAL_FOREST_STRUCTURE_ROUTINE****\n");
 	logger(g_log, "--NUMBER OF ANNUAL LAYERS--\n");
 
-	if (settings->spatial == 'u')
+	if (g_settings->spatial == 'u')
 	{
 		//the model sorts starting from highest tree class
-		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
@@ -48,7 +50,7 @@ void Annual_numbers_of_layers (CELL *const c)
 					}
 					else
 					{
-						if ((previous_height -current_height ) > settings->tree_layer_limit)
+						if ((previous_height -current_height ) > g_settings->tree_layer_limit)
 						{
 							c->annual_layer_number += 1;
 							previous_height = current_height;
@@ -80,7 +82,7 @@ void Annual_numbers_of_layers (CELL *const c)
 				}
 				else
 				{
-					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
+					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
 						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
@@ -100,7 +102,7 @@ void Annual_numbers_of_layers (CELL *const c)
 				}
 				else
 				{
-					if ((c->heights[height+1].value - c->heights[height].value) > settings->tree_layer_limit)
+					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
 						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
@@ -131,7 +133,7 @@ void Annual_numbers_of_layers (CELL *const c)
 }
 
 
-void Daily_Forest_structure (CELL *const c,int day,int month,int years)
+void Daily_Forest_structure (cell_t *const c, const int day, const int month, const int year)
 {
 	int height;
 	int age;
@@ -160,11 +162,11 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 	c->layer_cover_subdominated = 0;
 
 	logger(g_log, "\n\n***FOREST_STRUCTURE***\n");
-	if (settings->spatial == 'u')
+	if (g_settings->spatial == 'u')
 	{
 		for (height = c->heights_count - 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
@@ -177,20 +179,20 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					case 1:
 						c->height_class_in_layer_dominant_counter += 1;
 						c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-						c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+						c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
 						break;
 					case 2:
 						if (c->heights[height].z == c->annual_layer_number- 1)
 						{
 							c->height_class_in_layer_dominant_counter += 1;
 							c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+							c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
 						}
 						else
 						{
 							c->height_class_in_layer_dominated_counter += 1;
 							c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominated = c->tree_number_dominated / settings->sizeCell;
+							c->density_dominated = c->tree_number_dominated / g_settings->sizeCell;
 						}
 						break;
 					case 3:
@@ -198,19 +200,19 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						{
 							c->height_class_in_layer_dominant_counter += 1;
 							c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+							c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
 						{
 							c->height_class_in_layer_dominated_counter += 1;
 							c->tree_number_dominated += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_dominated = c->tree_number_dominated / settings->sizeCell;
+							c->density_dominated = c->tree_number_dominated / g_settings->sizeCell;
 						}
 						else
 						{
 							c->height_class_in_layer_subdominated_counter += 1;
 							c->tree_number_subdominated  += c->heights[height].ages[age].species[species].counter[N_TREE];
-							c->density_subdominated = c->tree_number_subdominated / settings->sizeCell;
+							c->density_subdominated = c->tree_number_subdominated / g_settings->sizeCell;
 						}
 						break;
 					}
@@ -253,7 +255,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		/* Compute class canopy cover */
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
@@ -272,7 +274,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					potential_maximum_crown_area = pow(((potential_maximum_crown_diameter)/2),2)*Pi;
 					logger(g_log, "potential maximum crown area with DBHDCMAX = %f m^2\n", potential_maximum_crown_area);
 
-					potential_minimum_density =settings->sizeCell /potential_maximum_crown_area;
+					potential_minimum_density =g_settings->sizeCell /potential_maximum_crown_area;
 					logger(g_log, "number of potential minimum trees with DBHDCMAX = %f\n", potential_minimum_density);
 
 					logger(g_log, "if High density\n");
@@ -282,16 +284,16 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					potential_minimum_crown_area = pow(((potential_minimum_crown_diameter)/2),2)*Pi;
 					logger(g_log, "potential minimum crown area with DBHDCMIN = %f m^2\n", potential_minimum_crown_area);
 
-					potential_maximum_density = settings->sizeCell /potential_minimum_crown_area;
+					potential_maximum_density = g_settings->sizeCell /potential_minimum_crown_area;
 					logger(g_log, "number of potential maximum trees with DBHDCMIN = %f\n", potential_maximum_density);
 
-					c->heights[height].ages[age].species[species].value[DENMAX] = potential_maximum_density/settings->sizeCell;
+					c->heights[height].ages[age].species[species].value[DENMAX] = potential_maximum_density/g_settings->sizeCell;
 					logger(g_log, "potential density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX],
-							c->heights[height].ages[age].species[species].value[DENMAX] * settings->sizeCell);
+							c->heights[height].ages[age].species[species].value[DENMAX] * g_settings->sizeCell);
 
-					c->heights[height].ages[age].species[species].value[DENMIN] = potential_minimum_density/settings->sizeCell;
+					c->heights[height].ages[age].species[species].value[DENMIN] = potential_minimum_density/g_settings->sizeCell;
 					logger(g_log, "potential density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN],
-							c->heights[height].ages[age].species[species].value[DENMIN] * settings->sizeCell);
+							c->heights[height].ages[age].species[species].value[DENMIN] * g_settings->sizeCell);
 
 					logger(g_log, "\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z,
 							c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].ages[age].species[species].name);
@@ -310,7 +312,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						 *
 						 * Lhotka and Loewenstein 2008, Can J For Res
 						 */
-						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
+						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*g_settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
 						                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 						logger(g_log, "-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 						c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
@@ -336,7 +338,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					{
 					/* only one layer */
 					case 1:
-						logger(g_log, "density in dominant layer = %f (%f trees)\n", c->density_dominant,c->density_dominant * settings->sizeCell);
+						logger(g_log, "density in dominant layer = %f (%f trees)\n", c->density_dominant,c->density_dominant * g_settings->sizeCell);
 						if (c->density_dominant > c->heights[height].ages[age].species[species].value[DENMAX])
 						{
 							c->density_dominant = c->heights[height].ages[age].species[species].value[DENMAX];
@@ -459,7 +461,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					//test 16 MAY 2016 test check removing block that assumes no reduction in DBHDCeff
 					//Answer: it causes an high increment in LAI values!!
 
-					if(day == 0 && month == JANUARY && years == 0)
+					if(day == 0 && month == JANUARY && year == 0)
 					{
 						c->heights[height].ages[age].species[species].value[PREVIOUS_DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDC_EFF];
 					}
@@ -501,7 +503,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 
 					/* Canopy Cover using DBH-DC */
 					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-									  * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
+									  * c->heights[height].ages[age].species[species].counter[N_TREE] / g_settings->sizeCell;
 					logger(g_log, "Canopy cover DBH-DC class related = %f\n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 				}
 			}
@@ -510,7 +512,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		//compute layer cover
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
@@ -583,7 +585,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		//the model makes die trees of the lower height class for that layer because
 		//it passes through the function sort_by_height_desc the height classes starting from the lowest
 
-		qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
@@ -595,7 +597,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					switch (c->annual_layer_number)
 					{
 					case 1:
-						if (c->layer_cover_dominant >= settings->max_layer_cover)
+						if (c->layer_cover_dominant >= g_settings->max_layer_cover)
 						{
 							//mortality
 							layer_cover = c->layer_cover_dominant;
@@ -607,7 +609,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					case 2:
 						if (c->heights[height].z == c->annual_layer_number- 1)
 						{
-							if (c->layer_cover_dominant >= settings->max_layer_cover)
+							if (c->layer_cover_dominant >= g_settings->max_layer_cover)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -618,7 +620,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						}
 						else
 						{
-							if (c->layer_cover_dominated >= settings->max_layer_cover)
+							if (c->layer_cover_dominated >= g_settings->max_layer_cover)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominated;
@@ -632,7 +634,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 					case 3:
 						if (c->heights[height].z == c->annual_layer_number- 1)
 						{
-							if (c->layer_cover_dominant >= settings->max_layer_cover)
+							if (c->layer_cover_dominant >= g_settings->max_layer_cover)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominant;
@@ -643,7 +645,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						}
 						else if (c->heights[height].z == c->annual_layer_number - 2)
 						{
-							if (c->layer_cover_dominated >= settings->max_layer_cover)
+							if (c->layer_cover_dominated >= g_settings->max_layer_cover)
 							{
 								//mortality
 								layer_cover = c->layer_cover_dominated;
@@ -654,7 +656,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 						}
 						else
 						{
-							if (c->layer_cover_subdominated >= settings->max_layer_cover)
+							if (c->layer_cover_subdominated >= g_settings->max_layer_cover)
 							{
 								//mortality
 								layer_cover = c->layer_cover_subdominated;
@@ -673,14 +675,14 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 	{
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
 				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
 					c->height_class_in_layer_dominant_counter += 1;
 					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-					c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+					c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
 
 					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
 							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
@@ -712,7 +714,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 
 					//Canopy Cover using DBH-DC
 
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / settings->sizeCell;
+					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / g_settings->sizeCell;
 					logger(g_log, "-Canopy Cover from DBHDC function = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
 					//Canopy Layer Cover
 					c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
@@ -724,10 +726,10 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 		}
 		logger(g_log, "Number of adult height classes in layer 0 = %d\n", c->height_class_in_layer_dominant_counter);
 		logger(g_log, "Tree number in layer 0 = %d \n", c->tree_number_dominant);
-		c->density_dominant = c->tree_number_dominant / settings->sizeCell;
+		c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
 		logger(g_log, "Density in layer 0 = %f trees/area\n", c->density_dominant);
 
-		if (c->layer_cover_dominant >=  settings->max_layer_cover)
+		if (c->layer_cover_dominant >=  g_settings->max_layer_cover)
 		{
 			logger(g_log, "Layer cover exceeds max layer cover!!!\n");
 		}
@@ -737,7 +739,7 @@ void Daily_Forest_structure (CELL *const c,int day,int month,int years)
 }
 
 //define VEG_UNVEG for deciduous species
-void Daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int day)
+void Daily_vegetative_period (cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
 
 	static int height;
@@ -773,7 +775,7 @@ void Daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int
 				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 				{
 					logger(g_log, "-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
-					if (settings->spatial == 's')
+					if (g_settings->spatial == 's')
 					{
 						//logger(g_log, "Spatial version \n");
 
@@ -878,7 +880,7 @@ void Daily_vegetative_period (CELL *c, const MET_DATA *const met, int month, int
 	logger(g_log, "classes in veg period = %d\n", c->Veg_Counter);
 }
 
-void Daily_numbers_of_layers (CELL *const c)
+void Daily_numbers_of_layers (cell_t *const c)
 {
 	//determines number of vegetative layer in function of:
 	//-differences between tree height classes
@@ -895,7 +897,7 @@ void Daily_numbers_of_layers (CELL *const c)
 	logger(g_log, "\n--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
 
 
-	qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_asc);
+	qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
@@ -912,7 +914,7 @@ void Daily_numbers_of_layers (CELL *const c)
 						c->daily_layer_number += 1;
 						previous_height = current_height;
 					}
-					if ((previous_height - current_height ) > settings->tree_layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
+					if ((previous_height - current_height ) > g_settings->tree_layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 					{
 						c->daily_layer_number += 1;
 						previous_height = current_height;
@@ -930,7 +932,7 @@ void Daily_numbers_of_layers (CELL *const c)
 	//logger(g_log, "height count = %d \n", c->heights_count);
 }
 
-void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
+void Daily_layer_cover(cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
 
 	//compute if is in veg period
@@ -1030,7 +1032,7 @@ void Daily_layer_cover (CELL * c, const MET_DATA *const met, int month, int day)
 }
 
 /*
-void Get_top_layer (CELL *const c, int heights_count, HEIGHT *heights)
+void Get_top_layer (cell_t *const c, int heights_count, HEIGHT *heights)
 {
 
 	logger(g_log, " GET_TOP_LAYER_FUNCTION \n");
@@ -1060,7 +1062,7 @@ void Get_top_layer (CELL *const c, int heights_count, HEIGHT *heights)
  */
 
 //This function compute if there is a class age in veg period
-void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *const met, const int month, const int DaysInMonth)
+void Dominant_Light(height_t *const heights, cell_t *const c, const int count, const meteo_t *const met, const int month, const int DaysInMonth)
 {
 	int height;
 	int age;
@@ -1075,7 +1077,7 @@ void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *c
 		//highest z value in veg period determines top_layer value
 		for ( height = count- 1; height >= 0; height-- )
 		{
-			qsort (c->heights, c->heights_count, sizeof (HEIGHT), sort_by_heights_desc);
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
 			for ( age = 0; age < heights[height].ages_count; age++ )
 			{
 				for ( species = 0; species < heights[height].ages[age].species_count; species++ )
@@ -1083,7 +1085,7 @@ void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *c
 					if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
 					{
 
-						if (settings->spatial == 'u')
+						if (g_settings->spatial == 'u')
 						{
 							c->top_layer = c->heights[height].z;
 						}
@@ -1101,7 +1103,7 @@ void Dominant_Light(HEIGHT *heights, CELL* c, const int count, const MET_DATA *c
 }
 
 
-int Number_of_layers (CELL *c)
+int Number_of_layers (cell_t *c)
 {
 	// ALESSIOR number_of_layers can be uninitialized
 	int number_of_layers = 0;
@@ -1125,7 +1127,7 @@ int Number_of_layers (CELL *c)
 
 }
 
-extern void Daily_veg_counter (CELL *c, SPECIES *s, int height)
+void Daily_veg_counter(cell_t *const c, species_t *const s, const int height)
 {
 	switch (c->daily_layer_number)
 	{

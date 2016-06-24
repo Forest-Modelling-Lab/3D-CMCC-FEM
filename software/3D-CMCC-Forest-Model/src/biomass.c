@@ -1,16 +1,17 @@
-/*biomass_increment.c*/
-
-/* includes */
+/* biomass.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "biomass.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void live_total_wood_age(AGE *a, SPECIES *s)
+void live_total_wood_age(const age_t *const a, species_t *const s)
 {
 	/* this function update based on current tree age the amount of live:total wood ratio
 	 * based on the assumption that the live wood decrease linearly increasing age */
@@ -46,7 +47,7 @@ void live_total_wood_age(AGE *a, SPECIES *s)
 	logger(g_log, "Effective live:total wood fraction based on stand age = %f\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 }
 
-void Tree_Branch_Bark (SPECIES *s, AGE *a, int heigth, int age, int species)
+void Tree_Branch_Bark (species_t *s, age_t *a, int heigth, int age, int species)
 {
 
 	if (s->value[FRACBB0] == 0)
@@ -63,7 +64,7 @@ void Tree_Branch_Bark (SPECIES *s, AGE *a, int heigth, int age, int species)
 }
 
 //not used
-void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age, int years)
+void Biomass_increment_BOY (cell_t *const c, species_t *const s, int height, int age, int years)
 {
 	double oldBasalArea;
 
@@ -144,7 +145,7 @@ void Biomass_increment_BOY (CELL *const c, SPECIES *const s, int height, int age
 	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>1e-4);
 }
 
-void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int z, int height, int age)
+void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_layer, const int z, const int height, const int age)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
 	double MassDensity;
@@ -167,7 +168,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 	s->value[VOLUME] = s->value[STEM_C] * GC_GDM * (1 - s->value[FRACBB]) / MassDensity;
 
 
-	if (settings->spatial == 'u')
+	if (g_settings->spatial == 'u')
 	{
 		switch (c->annual_layer_number)
 		{
@@ -282,7 +283,7 @@ void Biomass_increment_EOY (CELL *const c, SPECIES *const s, int top_layer, int 
 	s->value[PREVIOUS_VOLUME] = s->value[VOLUME];
 }
 
-void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
+void AGB_BGB_biomass (cell_t *const c, const int height, const int age, const int species)
 {
 
 	logger(g_log, "**AGB & BGB**\n");
@@ -305,7 +306,7 @@ void AGB_BGB_biomass (CELL *const c, int height, int age, int species)
 
 }
 
-void Average_tree_biomass (SPECIES *s)
+void Average_tree_biomass(species_t *const s)
 {
 	/* compute tree average biomass */
 	s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C]/(double)s->counter[N_TREE])*1000.0;
@@ -323,7 +324,7 @@ void Average_tree_biomass (SPECIES *s)
 	s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C]/(double)s->counter[N_TREE])*1000.0;
 }
 
-void Total_class_level_biomass (SPECIES *s)
+void Total_class_level_biomass (species_t *s)
 {
 	// Total Biomass less Litterfall and Root turnover
 	s->value[TOTAL_W] =  s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] +s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_BRANCH_tDM];

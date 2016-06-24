@@ -1,19 +1,19 @@
-/*canopy cover.c*/
-
-/* includes */
+/* canopy cover.c */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
+#include "settings.h"
 #include "logger.h"
 
+extern settings_t* g_settings;
 extern logger_t* g_log;
 
 
 
 // NOT USED //
-double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
+double Canopy_cover (species_t *const s, int z, int years, int top_layer)
 {
 	//DBH-CrownDiameter Function
 	//Effective ratio dbh-crown diameter in function of Density (Ntree/10000 m^2)
@@ -35,7 +35,7 @@ double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	/*Density*/
 
-	s->value[DENSITY] = (double)s->counter[N_TREE] / settings->sizeCell;
+	s->value[DENSITY] = (double)s->counter[N_TREE] / g_settings->sizeCell;
 	logger(g_log, "Tree Number = %d trees/area\n", s->counter[N_TREE]);
 	logger(g_log, "Density = %f trees/area\n", s->value[DENSITY]);
 
@@ -71,7 +71,7 @@ double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 
 	/*Canopy Cover using DBH-DC*/
 
-	s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / settings->sizeCell;
+	s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
 
 
 	/*
@@ -110,7 +110,7 @@ double Canopy_cover (SPECIES *const s, int z, int years, int top_layer)
 		{
 			s->counter[N_TREE] -= 1;
 			deadtree += 1;
-			s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / settings->sizeCell;
+			s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
 		}
 		oldNtree -= s->counter[N_TREE];
 		//s->value[BIOMASS_FOLIAGE] = s->value[WF] - s->value[MF] * s->counter[DEL_STEMS] * (s->value[WF] / s->counter[N_TREE]);

@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "math.h"
-#include "types.h"
+#include "check_prcp.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Check_prcp (CELL *c, MET_DATA *met, int month, int day)
+void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int day)
 {
 
 	//FOLLOWING BIOME APPROACH
