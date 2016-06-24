@@ -325,13 +325,10 @@ static dataset_t* dataset_import_nc(const char* const filename) {
 
 							case SPECIES_COLUMN: {
 								char temp[256];
-								if ( g_sz_input_path ) {
-									sprintf(temp, "%s%s%s", g_sz_input_path, g_sz_parameterization_path, sz_species);
-								} else {
-									sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
-								}
+								sprintf(temp, "%s%s", g_sz_parameterization_path, sz_species);
 								d->rows[index].species = species_get(temp, (int)value);
 								if ( ! d->rows[index].species ) {
+									logger(g_log, "unable to get species from %s\n", temp);
 									goto quit_no_nc_err;
 								}
 							}

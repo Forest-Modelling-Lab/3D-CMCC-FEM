@@ -682,7 +682,7 @@ int main(int argc, char *argv[]) {
 	int prog_ret;
 	int flag;
 	matrix_t* matrix;
-	output_t* output_vars;
+	output_t* output_vars = NULL;
 
 	/*
 	_CrtSetBreakAlloc(181);
@@ -862,7 +862,6 @@ int main(int argc, char *argv[]) {
 		}
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger(g_log, "ok\n");
-
 
 		// alloc memory for daily output netcdf vars (if any)
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {

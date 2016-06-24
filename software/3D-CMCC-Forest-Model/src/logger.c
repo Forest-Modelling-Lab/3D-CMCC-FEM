@@ -7,24 +7,6 @@
 #include "common.h"
 #include "logger.h"
 
-/*
-logger_t* logger_new(const char* const filename) {
-	logger_t* p;
-
-	p = malloc(sizeof*p);
-	if ( ! p ) return NULL;
-	p->file_output = 1;
-	p->std_output = 1;
-
-	p->f = fopen(filename, "w");
-	if ( ! p->f ) {
-		free(p);
-		p = NULL;
-	}
-	return p;
-}
-*/
-
 logger_t* logger_new(const char* const path, ...) {
 #define BUFFER_SIZE	256
 	char buffer[BUFFER_SIZE];
