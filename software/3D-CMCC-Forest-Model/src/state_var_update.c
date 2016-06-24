@@ -9,10 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
 #include "constants.h"
+#include "matrix.h"
 
-void Daily_water_state_update (CELL *const c)
+
+void Daily_water_state_update (cell_t *const c)
 {
 	/* daily update of the water state variables */
 	//Log("\nDAILY WATER UPDATE\n");

@@ -4,12 +4,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
+#include "common.h"
 #include "constants.h"
+#include "settings.h"
+#include "logger.h"
+#include "lai.h"
+#include "turnover.h"
+#include "dendometry.h"
+#include "biomass.h"
+
 
 /**/
 
-void M_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Yearly_Rain, double canopy_cover_dominant )
+void M_Fruit_Allocation_LPJ (species_t *const s, int z, int years, double Yearly_Rain, double canopy_cover_dominant )
 {
 	//static double WseedTree;    //fruit biomass per Tree
 	static int NseedTree;      //Number of fruits per Tree
@@ -99,7 +107,7 @@ void M_Fruit_Allocation_LPJ (SPECIES *const s, int z, int years, double Yearly_R
 
 
 /**/
-int M_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
+int M_Fruit_Allocation_Logistic_Equation (species_t *const s, age_t *const a)
 {
 	/*USING A LOGISTIC EQUATION*/
 	static int NumberSeed;                  //Number of Seeds per tree
@@ -128,7 +136,7 @@ int M_Fruit_Allocation_Logistic_Equation (SPECIES *const s, AGE *const a)
 }
 /**/
 
-int M_Fruit_Allocation_TREEMIG (SPECIES *const s, AGE *const a)
+int M_Fruit_Allocation_TREEMIG (species_t *const s, age_t *const a)
 {
 	static int NumberSeed;
 	static double heigthdependence;

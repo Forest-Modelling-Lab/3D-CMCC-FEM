@@ -427,7 +427,7 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 	if ( ! filename || '\0' == filename[0] ) {
 		return NULL;
 	}
-	
+
 	f = fopen(filename, "r");
 	if ( ! f ) {
 		puts(err_unable_open_file);
@@ -863,8 +863,7 @@ static const char *sz_species_values[] = {
 
 /* error strings */
 extern const char sz_err_out_of_memory[];
-static const char err_equal_rows[] = "equal values at row %d\n";
-static const char err_unable_open_file[] = "unable to open file \"%s\".\n";
+
 
 /* */
 static int alloc_struct(void** t, int* count, unsigned int size) {
@@ -996,15 +995,10 @@ static int fill_species_from_file(species_t *const s) {
 	for ( i = 0; i < species_count; ++i ) {
 		species_flags[i] = 0;
 	}
-
-	if ( g_sz_input_path ) {
-		sprintf(filename, "%s%s%s.txt", g_sz_input_path, g_sz_parameterization_path, s->name);
-	} else {
-		sprintf(filename, "%s%s.txt", g_sz_parameterization_path, s->name);
-	}
+	sprintf(filename, "%s%s.txt", g_sz_parameterization_path, s->name);
 	f = fopen(filename, "r");
 	if ( ! f ){
-		printf(err_unable_open_file, filename);
+		printf("unable to open %s!", filename);
 		free(species_flags);
 		return 0;
 	}

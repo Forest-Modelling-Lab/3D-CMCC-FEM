@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
+#include "matrix.h"
 #include "constants.h"
 
 
-void water_downward_balance (CELL *c, const MET_DATA *const met, int month, int day)
+void water_downward_balance (cell_t *c, const meteo_t *const met, int month, int day)
 {
 	//Log("\nWATER BALANCE\n");
 

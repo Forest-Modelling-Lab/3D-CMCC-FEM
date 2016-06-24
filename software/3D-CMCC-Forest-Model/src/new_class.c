@@ -13,6 +13,7 @@
 #include "constants.h"
 #include "settings.h"
 #include "logger.h"
+#include "common.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -23,17 +24,17 @@ int Create_new_class(cell_t *const c, const int height, const int age, const int
 	int y;
 	int z;
 	int flag;
-	HEIGHT *h;
-	AGE *a;
+	height_t *h;
+	age_t *a;
 	species_t *s;
 
 	logger(g_log, "Creating new class....\n");
 
-	/* ist is used only with "human" regeneration */
+	/* it is used only with "human" regeneration */
 	logger(g_log, "Human management\n");
 
 	// add height
-	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(HEIGHT)) )
+	if (!alloc_struct((void **)&c->heights, &c->heights_count, sizeof(height_t)) )
 	{
 		return 0;
 	}
@@ -56,7 +57,7 @@ int Create_new_class(cell_t *const c, const int height, const int age, const int
 	h->ages_count = 0;
 
 	// add age
-	if ( !alloc_struct((void **)&h->ages, &h->ages_count, sizeof(AGE)) )
+	if ( !alloc_struct((void **)&h->ages, &h->ages_count, sizeof(age_t)) )
 	{
 		return 0;
 	}

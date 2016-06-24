@@ -22,16 +22,13 @@ C_SRCS += \
 ../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
 ../src/cumulative_balance.c \
-../src/dataset.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
 ../src/fluxes.c \
 ../src/g-function.c \
 ../src/heat_fluxes.c \
-../src/initialization_biomass_data.c \
-../src/initialization_soil_data.c \
-../src/io.c \
+../src/initialization.c \
 ../src/lai.c \
 ../src/leafFall.c \
 ../src/light.c \
@@ -43,16 +40,18 @@ C_SRCS += \
 ../src/modifiers.c \
 ../src/mortality.c \
 ../src/mpfit.c \
-../src/new_class.c \
+../src/nc.c \
+../src/output.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
 ../src/photosynthesis.c \
 ../src/print.c \
 ../src/renovation.c \
-../src/soil.c \
+../src/settings.c \
 ../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
+../src/soil_settings.c \
 ../src/soil_water_balance.c \
 ../src/soilmodel.c \
 ../src/state_var_update.c \
@@ -63,7 +62,8 @@ C_SRCS += \
 ../src/turnover_Marconi.c \
 ../src/utility.c \
 ../src/water_balance.c \
-../src/wue.c 
+../src/wue.c \
+../src/yos.c 
 
 OBJS += \
 ./src/C-assimilation.o \
@@ -84,16 +84,13 @@ OBJS += \
 ./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
 ./src/cumulative_balance.o \
-./src/dataset.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
 ./src/fluxes.o \
 ./src/g-function.o \
 ./src/heat_fluxes.o \
-./src/initialization_biomass_data.o \
-./src/initialization_soil_data.o \
-./src/io.o \
+./src/initialization.o \
 ./src/lai.o \
 ./src/leafFall.o \
 ./src/light.o \
@@ -105,16 +102,18 @@ OBJS += \
 ./src/modifiers.o \
 ./src/mortality.o \
 ./src/mpfit.o \
-./src/new_class.o \
+./src/nc.o \
+./src/output.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
 ./src/photosynthesis.o \
 ./src/print.o \
 ./src/renovation.o \
-./src/soil.o \
+./src/settings.o \
 ./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
+./src/soil_settings.o \
 ./src/soil_water_balance.o \
 ./src/soilmodel.o \
 ./src/state_var_update.o \
@@ -125,7 +124,8 @@ OBJS += \
 ./src/turnover_Marconi.o \
 ./src/utility.o \
 ./src/water_balance.o \
-./src/wue.o 
+./src/wue.o \
+./src/yos.o 
 
 C_DEPS += \
 ./src/C-assimilation.d \
@@ -146,16 +146,13 @@ C_DEPS += \
 ./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
 ./src/cumulative_balance.d \
-./src/dataset.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
 ./src/fluxes.d \
 ./src/g-function.d \
 ./src/heat_fluxes.d \
-./src/initialization_biomass_data.d \
-./src/initialization_soil_data.d \
-./src/io.d \
+./src/initialization.d \
 ./src/lai.d \
 ./src/leafFall.d \
 ./src/light.d \
@@ -167,16 +164,18 @@ C_DEPS += \
 ./src/modifiers.d \
 ./src/mortality.d \
 ./src/mpfit.d \
-./src/new_class.d \
+./src/nc.d \
+./src/output.d \
 ./src/peak_lai.d \
 ./src/phenology.d \
 ./src/photosynthesis.d \
 ./src/print.d \
 ./src/renovation.d \
-./src/soil.d \
+./src/settings.d \
 ./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
+./src/soil_settings.d \
 ./src/soil_water_balance.d \
 ./src/soilmodel.d \
 ./src/state_var_update.d \
@@ -187,7 +186,8 @@ C_DEPS += \
 ./src/turnover_Marconi.d \
 ./src/utility.d \
 ./src/water_balance.d \
-./src/wue.d 
+./src/wue.d \
+./src/yos.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

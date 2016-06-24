@@ -1564,20 +1564,16 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 #define VALUE_AT(r,c)	((r)+((c)*rows_count))
 	int i = 0,
 			column = 0,
-			month = 0,
-			day = 0,
 			year = 0,
 			error_flag = 0,
 			columns[MET_COLUMNS_COUNT];
 
 	int no_year_column;
-	int current_year = 0;
 	const char met_delimiter[] = " ,\t\r\n";
 
 	int current_row;
 
-	char *token = NULL,
-			*token2 = NULL,
+	char *token2 = NULL,
 			*p,
 			buffer[BUFFER_SIZE] = { 0 };
 	int rows_count;
@@ -1629,9 +1625,6 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 
 	// reset
 	year = 0;
-	month = INVALID_VALUE;
-	day = INVALID_VALUE;
-	current_year = 0;
 	for ( i = 0; i < MET_COLUMNS_COUNT; ++i )
 	{
 		columns[i] = -1;

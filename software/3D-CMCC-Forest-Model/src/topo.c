@@ -68,13 +68,10 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	char buffer[256];
 	char sz_nc_filename[256];
 	int i;
-	int rows_count;
 	int vars[TOPO_VARS_COUNT];
 	double value;
 	int dims_size[DIMS_COUNT];
 	int x_id;
-	const char *sz_lat = "lat";
-	const char *sz_lon = "lon";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
 	const char *sz_vars[TOPO_VARS_COUNT] = { "ELEV" };
 
@@ -94,7 +91,6 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	size_t start[DIMS_COUNT] = { 0, 0 };
 	size_t count[DIMS_COUNT] = { 1, 1 };
 
-	rows_count = 0;
 	for ( i = 0; i < TOPO_VARS_COUNT; i++ ) {
 		vars[i] = 0;
 	}

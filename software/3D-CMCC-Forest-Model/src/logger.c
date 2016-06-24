@@ -35,10 +35,29 @@ logger_t* logger_new(const char* const path, ...) {
 	vsnprintf(buffer, BUFFER_SIZE, path, va);
 	va_end(va);
 
+	/* ALESSIOR TODO REMOVE */
+#if defined (_linux) || defined (__linux__)
+	{
+		char *buffer2;
+		char *p2;
+		char buffer3[256];
+		buffer2 = string_copy(buffer);
+		if ( ! buffer2 ) {
+			puts("out of memory!");
+			return NULL;
+		}
+		p2 = strrchr(buffer2, '/');
+		if ( p2 ) { *p2 = '\0'; }
+		sprintf(buffer3, "mkdir -p %s", buffer2);
+		system(buffer3);
+		free(buffer2);
+	}
+#else
 	if ( ! path_create(buffer) ) {
 		printf("unable to create %s\n", path);
 		return NULL;
 	}
+#endif
 
 	p = malloc(sizeof*p);
 	if ( ! p ) return NULL;

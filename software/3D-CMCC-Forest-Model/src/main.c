@@ -143,7 +143,6 @@ static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
-static const char msg_processing[]				=	"processing %s...\n";
 static const char msg_ok[]						=	"ok";
 static const char msg_usage[]					=	"\nusage:\n"
 													"  3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-h]\n"
@@ -180,14 +179,7 @@ const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
 static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
-static const char err_site_already_specified[] = "site already specified (%s)! \"%s\" skipped.\n";
-static const char err_settings_already_specified[] = "settings already specified (%s)! \"%s\" skipped.\n";
-static const char err_met_already_specified[] = "met already specified (%s)! \"%s\" skipped.\n";
-static const char err_output_already_specified[] = "output path already specified (%s)! \"%s\" skipped.\n";
-static const char err_outname_already_specified[] = "output filename specified without output path (%s)! \"%s\" skipped.\n";
-static const char err_arg_needs_param[] = "%s parameter not specified.\n\n";
-static const char err_arg_no_needs_param[] = "%s no needs parameter.\n\n";
-static const char err_unable_convert_value_arg[] = "unable to convert value \"%s\" for %s.\n\n";
+
 
 static void clean_up(void) {
 	if ( g_sz_output_vars_file ) free(g_sz_output_vars_file);

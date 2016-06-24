@@ -25,8 +25,6 @@ static HANDLE handle;
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-static DIR *dir;
-static struct dirent *dit;
 #endif
 
 /* external error strings */
@@ -96,6 +94,30 @@ char *string_tokenizer(char* string, const char* delimiters, char **p) {
 	return sbegin;
 }
 
+int add_char_to_string(char *const string, char c, const int size) {
+ int i;
+
+ /* check for null pointer */
+ if ( !string ) {
+  return 0;
+ }
+
+ /* compute length */
+ for ( i = 0; string[i]; i++ );
+
+ /* check length */
+ if ( i >= size-1 ) {
+  return 0;
+ }
+
+ /* add char */
+ string[i] = c;
+ string[i+1] = '\0';
+
+ /**/
+ return 1;
+}
+
 /* */
 char *get_current_directory(void) {
 	char *p;
@@ -126,8 +148,8 @@ char *get_current_directory(void) {
 		free(p);
 		return NULL;
 	}
-	if ( p[len-1] != FOLDER_DELIMITER ) {
-		if ( !add_char_to_string(p, FOLDER_DELIMITER, MAXPATHLEN) ) {
+	if ( p[len-1] != FOLDER_DELIMITER_C ) {
+		if ( !add_char_to_string(p, FOLDER_DELIMITER_C, MAXPATHLEN) ) {
 			free(p);
 			return NULL;
 		}
@@ -277,7 +299,7 @@ int path_create(const char *const path) {
 		}
 	}
 #else
-	if ( mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) <!= 0 ) {
+	if ( mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 ) {
 		return 0;
 	}
 #endif

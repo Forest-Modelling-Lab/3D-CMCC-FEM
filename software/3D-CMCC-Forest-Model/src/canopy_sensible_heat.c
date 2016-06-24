@@ -10,13 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "types.h"
 #include "constants.h"
 #include "logger.h"
+#include "matrix.h"
+
 
 extern logger_t* g_log;
 
-void canopy_sensible_heat (SPECIES *const s, CELL *const c, const MET_DATA *const met, int month, int day, int height, int age, int species)
+void canopy_sensible_heat (species_t *const s, cell_t *const c, const meteo_t *const met, int month, int day, int height, int age, int species)
 {
 
 	double rad_abs;           //absorbed shortwave longwave radiation (W/m2)
