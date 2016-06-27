@@ -160,8 +160,8 @@ void Print_met_data (const meteo_t *const met, const int month, const int day)
 	logger(g_log, "***************\n");
 
 }
-
-static void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)
+/*
+void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)
 {
 	meteo_t *met;
 
@@ -189,13 +189,16 @@ static void Print_met_daily_data(yos_t *const yos, const int day, const int mont
 	}
 
 }
-void Print_init_month_stand_data(cell_t* const c, const int month, const int year, const int height, const int age, const int species)
+ */
+void Print_stand_data(cell_t* const c, const int month, const int year, const int height, const int age, const int species)
 {
+	/* print at the beginning of simulation class level data */
 	logger(g_log, "******************************************************\n\n");
 	logger(g_log, "cell = \n");
-	logger(g_log, "- x = %d\n", c->x);
-	logger(g_log, "- y = %d\n", c->y);
-	logger(g_log, "- z = %d\n", c->heights[height].z);
+	logger(g_log, "* x = %d\n", c->x);
+	logger(g_log, "* y = %d\n", c->y);
+	logger(g_log, "* z = %d\n", c->heights[height].z);
+	logger(g_log, "-class level data\n");
 	logger(g_log, "- Class Age = %d years \n", c->heights[height].ages[age].value);
 	logger(g_log, "- Species = %s\n", c->heights[height].ages[age].species[species].name);
 	logger(g_log, "- DBH = %f\n", c->heights[height].ages[age].species[species].value[AVDBH]);
@@ -212,45 +215,10 @@ void Print_init_month_stand_data(cell_t* const c, const int month, const int yea
 	logger(g_log, "- Daily LAI from Model= %f \n", c->heights[height].ages[age].species[species].value[LAI]);
 	logger(g_log, "- Crown Diameter = %f \n",  c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
 	logger(g_log, "- Canopy Cover = %f \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
-	logger(g_log, "- ASW layer %d month %d  = %f mm\n",  c->heights[height].z, month + 1, c->asw);
-
-	if (!month)
-	{
-		/*Phenology*/
-		logger(g_log, "- Phenology type = %f\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
-		/*Management*/
-		logger(g_log, "- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
-		//logger(g_log, "+ Lai = %f\n", c->heights[height].ages[age].species[species].value[LAI]);
-		logger(g_log, "+ AvDBH = %f cm\n",  c->heights[height].ages[age].species[species].value[AVDBH]);
-		logger(g_log, "--Carbon pools in tC\n");
-		logger(g_log, "+ Wf = %f tC/area\n", c->heights[height].ages[age].species[species].value[LEAF_C]);
-		logger(g_log, "+ Wts = %f tC/area\n", c->heights[height].ages[age].species[species].value[TOT_STEM_C]);
-		logger(g_log, "+ Ws = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_C]);
-		logger(g_log, "+ Wbb = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_C]);
-		logger(g_log, "+ Wrc = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_C]);
-		logger(g_log, "+ Wrf = %f tC/area\n", c->heights[height].ages[age].species[species].value[FINE_ROOT_C]);
-		logger(g_log, "+ Wr Tot = %f tC/area\n", c->heights[height].ages[age].species[species].value[TOT_ROOT_C]);
-		logger(g_log, "+ Wres = %f tC/area\n", c->heights[height].ages[age].species[species].value[RESERVE_C]);
-		logger(g_log, "+ Ws live = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C]);
-		logger(g_log, "+ Wrc live = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C]);
-		logger(g_log, "+ wbb live = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C]);
-	}
-
-}
-
-void Print_end_month_stand_data (cell_t* const c, const int year, const int height, const int age, const int species)
-{
-	logger(g_log, "> x = %d\n", c->x);
-	logger(g_log, "> y = %d\n", c->y);
-	logger(g_log, "> z = %d\n", c->heights[height].z);
-	logger(g_log, "> height = %f\n", c->heights[height].value);
-	logger(g_log, "> age = %d\n", c->heights[height].ages[age].value);
-	logger(g_log, "> species = %s\n", c->heights[height].ages[age].species[species].name);
-	logger(g_log, "> phenology = %f\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
-	logger(g_log, "> management = %d\n", c->heights[height].ages[age].species[species].management);
-	logger(g_log, ">n tree = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE]);
-	logger(g_log, ">avdbh = %f\n", c->heights[height].ages[age].species[species].value[AVDBH]);
-	logger(g_log, "\n--Carbon pools in tC\n");
+	logger(g_log, "- ASW = %f mm\n", c->asw);
+	logger(g_log, "- Phenology type = %f\n", c->heights[height].ages[age].species[species].value[PHENOLOGY]);
+	logger(g_log, "- Management type = %s\n", c->heights[height].ages[age].species[species].management ? "C" : "T");
+	logger(g_log, "--Carbon pools in tC\n");
 	logger(g_log, "+ Wf = %f tC/area\n", c->heights[height].ages[age].species[species].value[LEAF_C]);
 	logger(g_log, "+ Wts = %f tC/area\n", c->heights[height].ages[age].species[species].value[TOT_STEM_C]);
 	logger(g_log, "+ Ws = %f tC/area\n", c->heights[height].ages[age].species[species].value[STEM_C]);
@@ -263,12 +231,6 @@ void Print_end_month_stand_data (cell_t* const c, const int year, const int heig
 	logger(g_log, "+ Wrc live = %f tC/area\n", c->heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C]);
 	logger(g_log, "+ wbb live = %f tC/area\n", c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C]);
 
-	if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 1.2 )
-	{
-		logger(g_log, "[%d] layer %d > wcones = %f\n", c->years[year].year, c->heights[height].z, c->heights[height].ages[age].species[species].value[BIOMASS_FRUIT_tDM]);
-	}
-	logger(g_log, "> Dead Trees = %d\n",c->heights[height].ages[age].species[species].counter[DEAD_STEMS]);
-	logger(g_log, "> New Saplings = %d\n", c->heights[height].ages[age].species[species].counter[N_TREE_SAP]);
-	logger(g_log, "*****************************\n");
 }
+
 

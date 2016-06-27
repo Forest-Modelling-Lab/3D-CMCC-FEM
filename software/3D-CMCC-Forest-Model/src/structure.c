@@ -150,6 +150,11 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	double potential_maximum_density,
 	potential_minimum_density;
 
+	/* it defines the number of tree height classes in each canopy layer,
+	 * the height class level cell coverage through the DBHDC_EFF function,
+	 * the density of each layer and then the current tree mortality based on it
+	 * on a daily basis */
+
 
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
@@ -738,18 +743,15 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	logger(g_log, "*************************************************** \n");
 }
 
-//define VEG_UNVEG for deciduous species
 void Daily_vegetative_period (cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
-
 	static int height;
 	static int age;
 	static int species;
 
-
-
-
-
+	/* it computes the vegetative state for each species class,
+	 * the number of days of leaf fall and
+	 * the rate for leaves reduction (for deciduous species) */
 
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
@@ -882,14 +884,15 @@ void Daily_vegetative_period (cell_t *const c, const meteo_t *const met, const i
 
 void Daily_numbers_of_layers (cell_t *const c)
 {
-	//determines number of vegetative layer in function of:
-	//-differences between tree height classes
-	//-vegetative or un-vegetative period
 	static int height;
 	static int age;
 	static int species;
 	static double current_height;
 	static double previous_height;
+
+	/* determines number of vegetative layer in function of:
+	 *-differences between tree height classes
+	 *-vegetative or un-vegetative period */
 
 
 	c->daily_layer_number = 0;
@@ -934,11 +937,11 @@ void Daily_numbers_of_layers (cell_t *const c)
 
 void Daily_layer_cover(cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
-
-	//compute if is in veg period
 	static int height;
 	static int age;
 	static int species;
+
+	/* it daily computes the layer coverage based on the vegetative status of each species class*/
 
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
@@ -1061,14 +1064,16 @@ void Get_top_layer (cell_t *const c, int heights_count, HEIGHT *heights)
 }
  */
 
-//This function compute if there is a class age in veg period
-void Dominant_Light(height_t *const heights, cell_t *const c, const int count, const meteo_t *const met, const int month, const int DaysInMonth)
+
+void Daily_dominant_Light(height_t *const heights, cell_t *const c, const int count, const meteo_t *const met, const int month, const int DaysInMonth)
 {
 	int height;
 	int age;
 	int species;
 
 	assert(heights);
+
+	/* it computes which canopy layers is in dominant position for light */
 
 	if (c->daily_layer_number != 0)
 	{
