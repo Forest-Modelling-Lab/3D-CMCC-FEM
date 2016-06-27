@@ -772,7 +772,6 @@ int main(int argc, char *argv[]) {
 	free(g_sz_dataset_file); g_sz_dataset_file = NULL;
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
-
 	/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
 	/* reset */
 	x_cells_count = 0;
@@ -785,7 +784,6 @@ int main(int argc, char *argv[]) {
 		goto err;
 	}
 	puts(msg_ok);
-
 	printf("topo allocation...");
 	g_topo = topo_new();
 	if ( ! g_topo ) {

@@ -1,5 +1,4 @@
 SITENAME "Renon - Italy" //Site Name
-
 LAT "46.25" //Site Latitude negative for south hemisphere
 LONG "11.17" //Site Longitude 
 

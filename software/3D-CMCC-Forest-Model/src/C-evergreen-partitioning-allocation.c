@@ -93,12 +93,12 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	/* Partitioning ratios from Arora and Boer 2005 */
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-	logger(g_log, "Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
+	logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-	logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
-	CHECK_CONDITION(pR_CTEM + pS_CTEM + pF_CTEM, != 100.0);
+	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
+	CHECK_CONDITION(fabs(pR_CTEM + pS_CTEM + pF_CTEM), > 1 + 1e-4);
 
 
 	old_leaf_c = s->value[LEAF_C];
@@ -150,14 +150,13 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	case 1:
 		logger(g_log, "Allocating only into foliage and fine root pools\n");
 		logger(g_log, "LAI = %f \n", s->value[LAI]);
+		logger(g_log, "Tot biomass reserve = %f\n", s->value[RESERVE_C]);
 
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 		/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
-		 * and Barbaroux et al., 2002,
-													the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
-		 */
-		/*the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
+		 * and Barbaroux et al., 2002, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
+		 * the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 		 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 		//fixme model gets 10%
 		reserve_for_budburst = (s->value[RESERVE_C]) * 0.05;

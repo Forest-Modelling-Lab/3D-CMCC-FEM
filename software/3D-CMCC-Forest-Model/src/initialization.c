@@ -208,21 +208,42 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 	/* leaf */
 	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0 || s->value[BIOMASS_FOLIAGE_tDM] == NO_DATA)
 	{
+		/* deciduous */
 		if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 		{
 			/* assuming no leaf at 1st of January */
 			s->value[BIOMASS_FOLIAGE_tDM] = 0.0;
 			s->value[LEAF_C] = 0.0;
 		}
+		/* evergreen */
 		else
 		{
 			logger(g_log, "\nNo Foliage Biomass Data are available for model initialization \n");
-			logger(g_log, "...Generating input Foliage Biomass biomass data\n");
+			logger(g_log, "...Generating input Foliage Biomass biomass data from LAI\n");
 			//fixme it seems to not have sense
-			s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
-			s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
-			logger(g_log, "----Foliage Biomass initialization data  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-			logger(g_log, "----Foliage Biomass initialization data  = %f tC cell\n", s->value[LEAF_C]);
+			/* a very special (and hopefully rare) case in which there'nt data for LAI or LEAF_C */
+			if(!s->value[LAI])
+			{
+				s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
+				s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
+				logger(g_log, "----Foliage Biomass initialization data  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+				logger(g_log, "----Foliage Biomass initialization data  = %f tC cell\n", s->value[LEAF_C]);
+			}
+			/* otherwise use LAI */
+			else
+			{
+				//s->value[BIOMASS_FOLIAGE_tDM] = 0.0;
+				s->value[LEAF_C] = s->value[LAI] / s->value[SLA_AVG];
+				/* convert to tons of C */
+				s->value[LEAF_C] /= 1000.0;
+				logger(g_log, "--Leaf carbon  = %f tC/cell size\n", s->value[MIN_RESERVE_C]);
+
+				/* Calculate projected LAI for sunlit and shaded canopy portions */
+				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+				logger(g_log, "LAI SUN = %f\n", s->value[LAI_SUN]);
+				logger(g_log, "LAI SHADE = %f\n", s->value[LAI_SHADE]);
+			}
 		}
 	}
 	else
@@ -238,7 +259,7 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 	logger(g_log, "-Individual foliage biomass = %f KgC\n", s->value[AV_LEAF_MASS_KgC]);
 
 
-	//FIXME MODEL ASSUMES TAHT IF NOT BIOMASS FOLIAGE ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
+	//FIXME MODEL ASSUMES TAHT IF NOT FINE-ROOT BIOMASS ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
 	if (( s->value[BIOMASS_FINE_ROOT_tDM] == 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] == NO_DATA)
 			&& (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
@@ -345,8 +366,8 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 			s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]+
 			s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
 	s->value[LIVE_WOOD_C] = s->value[STEM_LIVE_WOOD_C]+
-				s->value[COARSE_ROOT_LIVE_WOOD_C]+
-				s->value[BRANCH_LIVE_WOOD_C];
+			s->value[COARSE_ROOT_LIVE_WOOD_C]+
+			s->value[BRANCH_LIVE_WOOD_C];
 	logger(g_log, "---Live biomass = %f tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM]);
 	logger(g_log, "---Live biomass = %f tC/area\n", s->value[LIVE_WOOD_C]);
 	s->value[AV_LIVE_WOOD_MASS_KgDM] = s->value[BIOMASS_LIVE_WOOD_tDM] * 1000.0/s->counter[N_TREE];
@@ -410,8 +431,8 @@ void Initialization_site_data(cell_t *const c)
 	Saxton, K.E., W.J. Rawls, J.S. Romberger, and R.I. Papendick, 1986.
 		Estimating generalized soil-water characteristics from texture.
 		Soil Sci. Soc. Am. J. 50:1031-1036.
-	*/
-	
+	 */
+
 	logger(g_log, "BIOME soil characteristics\n");
 	//double soilw_fc; //maximum volume soil water content in m3/m3
 	// (DIM) Clapp-Hornberger "b" parameter

@@ -19,7 +19,7 @@ void Daily_lai (species_t *const s)
 
 	logger(g_log, "\n**DAILY_LAI**\n");
 
-	/*CONVERT tC/cell to KgC/m^2*/
+	/* convert tC/cell to KgC/m^2 */
 	leaf_c = s->value[LEAF_C] * 1000.0 ;
 
 	logger(g_log, "Foliage Biomass = %f KgC/cell\n", leaf_c);
