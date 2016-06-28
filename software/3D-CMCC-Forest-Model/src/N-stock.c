@@ -26,7 +26,7 @@ void Nitrogen_stock(species_t *const s)
 
 	/*computing Nitrogen content from tons DM/ha to gC/m^2 and then as in BIOME to gN*/
 	s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LEAVES];
-	logger(g_log, "Foliage nitrogen content = %f gN/m^2\n", s->value[LEAF_NITROGEN]);
+	logger(g_log, "Leaf nitrogen content = %f gN/m^2\n", s->value[LEAF_NITROGEN]);
 	s->value[FINE_ROOT_NITROGEN] = (s->value[FINE_ROOT_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FINE_ROOTS];
 	logger(g_log, "Fine root nitrogen content = %f gN/m^2\n", s->value[FINE_ROOT_NITROGEN]);
 	s->value[STEM_NITROGEN] = (s->value[STEM_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];

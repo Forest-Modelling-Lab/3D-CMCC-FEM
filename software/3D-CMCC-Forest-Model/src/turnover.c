@@ -52,7 +52,8 @@ void Turnover(species_t *const s, cell_t *const c)
 			logger(g_log, "Leaf poool after turnover = %g tC/cell\n", s->value[LEAF_C]);
 
 			/* considering that both leaf and fine root contribute to the litter pool */
-			s->value[C_TO_LITTER] = leaf_to_remove + fine_root_to_remove;
+			s->value[C_TO_LITTER] = (leaf_to_remove + fine_root_to_remove) -
+					(s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 			logger(g_log, " to litter = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 		}
 

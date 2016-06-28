@@ -266,7 +266,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
-	logger(g_log, "Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "Leaf Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
 
 	s->value[STEM_C] += s->value[C_TO_STEM];
 	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);

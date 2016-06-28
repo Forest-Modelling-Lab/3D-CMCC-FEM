@@ -22,7 +22,7 @@ void Daily_lai (species_t *const s)
 	/* convert tC/cell to KgC/m^2 */
 	leaf_c = s->value[LEAF_C] * 1000.0 ;
 
-	logger(g_log, "Foliage Biomass = %f KgC/cell\n", leaf_c);
+	logger(g_log, "Leaf Biomass = %f KgC/cell\n", leaf_c);
 
 	s->value[LAI] = (leaf_c * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
 	logger(g_log, "LAI = %f\n", s->value[LAI]);

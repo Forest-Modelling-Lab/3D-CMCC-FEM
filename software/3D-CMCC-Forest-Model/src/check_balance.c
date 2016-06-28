@@ -163,83 +163,12 @@ void Check_soil_water_balance(cell_t *const c)
 
 void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 {
-	double leaf_pool_in;
-	double leaf_pool_out;
-	double leaf_pool_storage;
-	double leaf_pool_balance;
-
-
 	double carbon_pool_in;
 	double carbon_pool_out;
 	double carbon_pool_stored;
 	double carbon_pool_balance;
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
-
-	/* check leaf balance */
-
-	/* sum of sources */
-	leaf_pool_in = s->value[C_TO_LEAF];
-
-	/* sum of sinks */
-	leaf_pool_out = s->value[C_TO_LITTER];
-
-	/* sum of current storage */
-	leaf_pool_storage = s->value[LEAF_C] - s->value[OLD_LEAF_C];
-
-	/* check leaf pool balance */
-	leaf_pool_balance = leaf_pool_in - leaf_pool_out - leaf_pool_storage;
-
-	/* check for leaf balance closure */
-	//fixme both function should be the same
-	/* deciduous */
-	if(s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-	{
-		/*
-		if (fabs(leaf_pool_balance)> 1e-4)
-		{
-			logger(g_log, "\nCLASS LEVEL LEAF CARBON BALANCE\n");
-			logger(g_log, "leaf in = %g \n", leaf_pool_in);
-			logger(g_log, "leaf out = %g \n", leaf_pool_out);
-			logger(g_log, "leaf stored = %g \n", leaf_pool_storage);
-			logger(g_log, "leaf balance = %g \n", leaf_pool_balance);
-			logger(g_log, "C_TO_LEAF = %g \n", s->value[C_TO_LEAF]);
-			logger(g_log, "C_TO_LITTER = %g \n", s->value[C_TO_LITTER]);
-			logger(g_log, "LEAF_C = %g \n", s->value[LEAF_C]);
-			logger(g_log, "OLD_LEAF_C = %g \n", s->value[OLD_LEAF_C]);
-			logger(g_log, "...FATAL ERROR IN CELL LEVEL leaf balance (exit)\n");
-			exit(1);
-		}
-		else
-		{
-			logger(g_log, "...ok leaf carbon balance at class level\n");
-		}
-		*/
-	}
-	/* evergreen */
-	else
-	{
-		if (fabs(leaf_pool_balance)> 1e-4)
-		{
-			logger(g_log, "\nCLASS LEVEL LEAF CARBON BALANCE\n");
-			logger(g_log, "leaf in = %g \n", leaf_pool_in);
-			logger(g_log, "leaf out = %g \n", leaf_pool_out);
-			logger(g_log, "leaf stored = %g \n", leaf_pool_storage);
-			logger(g_log, "leaf balance = %g \n", leaf_pool_balance);
-			logger(g_log, "C_TO_LEAF = %g \n", s->value[C_TO_LEAF]);
-			logger(g_log, "C_TO_LITTER = %g \n", s->value[C_TO_LITTER]);
-			logger(g_log, "LEAF_C = %g \n", s->value[LEAF_C]);
-			logger(g_log, "OLD_LEAF_C = %g \n", s->value[OLD_LEAF_C]);
-			logger(g_log, "...FATAL ERROR IN CELL LEVEL leaf balance (exit)\n");
-			exit(1);
-		}
-		else
-		{
-			logger(g_log, "...ok leaf carbon balance at class level\n");
-		}
-	}
-	/*******************************************************************************************************************/
-
 	/* check complete tree level carbon balance */
 
 	/* sum of sources */

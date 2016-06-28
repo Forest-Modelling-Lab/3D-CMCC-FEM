@@ -219,16 +219,16 @@ void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t 
 		/* evergreen */
 		else
 		{
-			logger(g_log, "\nNo Foliage Biomass Data are available for model initialization \n");
-			logger(g_log, "...Generating input Foliage Biomass biomass data from LAI\n");
+			logger(g_log, "\nNo Leaf Biomass Data are available for model initialization \n");
+			logger(g_log, "...Generating input Leaf Biomass biomass data from LAI\n");
 			//fixme it seems to not have sense
 			/* a very special (and hopefully rare) case in which there'nt data for LAI or LEAF_C */
 			if(!s->value[LAI])
 			{
 				s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				logger(g_log, "----Foliage Biomass initialization data  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-				logger(g_log, "----Foliage Biomass initialization data  = %f tC cell\n", s->value[LEAF_C]);
+				logger(g_log, "----Leaf Biomass initialization data  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+				logger(g_log, "----Leaf Biomass initialization data  = %f tC cell\n", s->value[LEAF_C]);
 			}
 			/* otherwise use LAI */
 			else
@@ -252,9 +252,9 @@ void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t 
 	else
 	{
 		s->value[LEAF_C] = s->value[BIOMASS_FOLIAGE_tDM]/GC_GDM;
-		logger(g_log, "Ok foliage biomass..\n");
-		logger(g_log, "---Foliage Biomass from init file  cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-		logger(g_log, "---Foliage Biomass from init file = %f tC cell\n", s->value[LEAF_C]);
+		logger(g_log, "Ok Leaf biomass..\n");
+		logger(g_log, "---Leaf Biomass from init file  cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+		logger(g_log, "---Leaf Biomass from init file = %f tC cell\n", s->value[LEAF_C]);
 	}
 	/* for leaf balance */
 	s->value[OLD_LEAF_C] = s->value[LEAF_C];
@@ -262,7 +262,7 @@ void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t 
 	s->value[AV_LEAF_MASS_KgC] = s->value[LEAF_C] *1000.0 /s->counter[N_TREE];
 	logger(g_log, "-Individual foliage biomass = %f KgC\n", s->value[AV_LEAF_MASS_KgC]);
 
-	//FIXME MODEL ASSUMES TAHT IF NOT FINE-ROOT BIOMASS ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
+	//FIXME MODEL ASSUMES THAT IF NO FINE-ROOT BIOMASS ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
 	if (( s->value[BIOMASS_FINE_ROOT_tDM] == 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] == NO_DATA)
 			&& (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2))
 	{
