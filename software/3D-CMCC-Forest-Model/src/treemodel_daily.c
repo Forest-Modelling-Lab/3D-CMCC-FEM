@@ -185,7 +185,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							}
 						}
 						/* loop for deciduous */
-						if ( m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
 							/* compute annual prognostically Maximum LAI */
 							if (day == 0 && month == JANUARY) Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
@@ -287,11 +287,12 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							logger(g_log, "--------------------------------------------------------------------------\n\n\n");
 						}
 
-						/* check fo balance closure at the class level */
+						/* check for balance closure at the class level */
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
 						/* check for carbon balance closure */
 						Check_class_carbon_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+
 
 						/* check for water balance closure */
 						Check_class_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -348,10 +349,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								/*Mortality based on Growth efficiency(LPJ)*/
 								//Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 							}
-							if ( m->cells[cell].heights[height].ages[age].species[species].management == C)
-							{
-								Stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], year);
-							}
+							if ( m->cells[cell].heights[height].ages[age].species[species].management == C) Stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], year);
+
 							//Renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 							AGB_BGB_biomass(&m->cells[cell], height, age, species);

@@ -39,9 +39,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double Light_trasm;
-	//	double Perc_fine;
-	//	double Perc_coarse;
-	//	double oldW;
 
 	double r0Ctem_increment;
 	double old_r0Ctem = r0Ctem;
@@ -58,7 +55,11 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	double old_leaf_c;
 	double old_fineroot_c;
 
-	logger(g_log, "ALLOCATION_ROUTINE\n\n");
+	/* for check */
+	double npp_to_alloc;
+	double npp_alloc;
+
+	logger(g_log, "\n*ALLOCATION_ROUTINE*\n\n");
 
 	logger(g_log, "Carbon allocation routine for evergreen\n");
 
@@ -129,15 +130,15 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
 		logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
 
-		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
-		{
-			logger(g_log, "ERROR IN s0Ctem !!! \n");
-		}
+		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)logger(g_log, "ERROR IN s0Ctem !!! \n");
 
 	}
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
 	logger(g_log,"PHENOLOGY PHASE (CASE): %d\n", s->phenology_phase);
+
+	/* assign NPP to local variable */
+	npp_to_alloc = s->value[NPP_tC];
 
 
 	switch (s->phenology_phase)
@@ -150,17 +151,20 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		 * the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 		 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
 
+		/*note: every day of the year leaf and fine root turnover happens, that's why every day
+		 * an amount of leaf and fine root C is re-translocated to the reserve pool*/
+
 		/* partitioning */
-		if (s->value[NPP_tC] > 0.0)
+		if (npp_to_alloc > 0.0)
 		{
 			/* check if minimum reserve pool needs to be refilled */
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
 				logger(g_log, "Allocating only into foliage and fine root pools\n");
-				s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
-				s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
-				s->value[C_TO_RESERVE] = 0.0;
+				s->value[C_TO_LEAF] = npp_to_alloc * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
+				s->value[C_TO_FINEROOT] = npp_to_alloc - s->value[C_TO_LEAF];
+				s->value[C_TO_RESERVE] = 0.0 + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 			}
 			/* it needs */
 			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
@@ -168,7 +172,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = s->value[NPP_tC];
+				s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 			}
 			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
@@ -182,7 +186,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			logger(g_log, "Allocating only into reserve pool (low reserves, negative NPP)\n");
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
@@ -191,36 +195,33 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 	case 2:
-		logger(g_log, "allocating into the three pools Ws+Wr+Wreserve\n");
 
 		/* partitioning */
-		if (s->value[NPP_tC] > 0.0)
+		if (npp_to_alloc > 0.0)
 		{
 			/* REPRODUCTION ONLY FOR NEEDLE LEAF */
 			if(s->value[PHENOLOGY] == 1.2)
 			{
 				//NPP for reproduction
 				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
-				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
+				npp_to_alloc -= s->value[C_TO_FRUIT];
 				logger(g_log, "including Biomass increment into cones = %f tC/area\n", s->value[C_TO_FRUIT]);
 			}
 			else
 			{
 				s->value[C_TO_FRUIT] = 0.0;
 			}
-
-			s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
-			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
-			s->value[C_TO_TOT_STEM] = s->value[NPP_tC] * pS_CTEM;
-			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
-			s->value[C_TO_BRANCH] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
 			s->value[C_TO_LEAF] = 0.0;
-
+			s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM) + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+			s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
+			s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
+			s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];
 		}
 		else
 		{
-			s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_TOT_STEM] = 0.0;
@@ -231,6 +232,20 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		}
 		break;
 	}
+
+	/* CHECK */
+	/* sum all biomass pools increments */
+	/*
+	npp_alloc = s->value[C_TO_RESERVE] +
+			s->value[C_TO_FINEROOT] +
+			s->value[C_TO_COARSEROOT] +
+			s->value[C_TO_TOT_STEM] +
+			s->value[C_TO_STEM] +
+			s->value[C_TO_BRANCH] +
+			s->value[C_TO_LEAF] +
+			s->value[C_TO_FRUIT];
+	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
+	*/
 
 	logger(g_log, "\n*Carbon allocation*\n");
 

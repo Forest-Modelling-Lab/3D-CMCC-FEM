@@ -256,6 +256,9 @@ void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t 
 		logger(g_log, "---Foliage Biomass from init file  cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
 		logger(g_log, "---Foliage Biomass from init file = %f tC cell\n", s->value[LEAF_C]);
 	}
+	/* for leaf balance */
+	s->value[OLD_LEAF_C] = s->value[LEAF_C];
+
 	s->value[AV_LEAF_MASS_KgC] = s->value[LEAF_C] *1000.0 /s->counter[N_TREE];
 	logger(g_log, "-Individual foliage biomass = %f KgC\n", s->value[AV_LEAF_MASS_KgC]);
 

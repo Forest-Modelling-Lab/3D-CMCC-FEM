@@ -37,6 +37,10 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;
 
+	/* for check */
+	double npp_to_alloc;
+	double npp_alloc;
+
 	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
@@ -93,6 +97,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
 
+	/* assign NPP to local variable */
+	npp_to_alloc = s->value[NPP_tC];
 
 	switch (s->phenology_phase)
 	{
@@ -133,7 +139,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
+		s->value[C_TO_RESERVE] = npp_to_alloc - reserve_for_budburst;
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
@@ -147,14 +153,14 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		logger(g_log, "allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
-		if (s->value[NPP_tC] > 0.0)
+		if (npp_to_alloc > 0.0)
 		{
 			/* check if minimum reserve pool needs to be refilled */
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
 				/* allocating into c pools */
-				s->value[C_TO_RESERVE] = s->value[NPP_tC] * pF_CTEM;
+				s->value[C_TO_RESERVE] = npp_to_alloc * pF_CTEM;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
 				s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
@@ -167,7 +173,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
 				/* allocating into c pools */
-				s->value[C_TO_RESERVE] = s->value[NPP_tC];
+				s->value[C_TO_RESERVE] = npp_to_alloc;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_COARSEROOT] = 0.0;
 				s->value[C_TO_TOT_STEM] = 0.0;
@@ -183,7 +189,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		}
 		else
 		{
-			s->value[C_TO_RESERVE] = s->value[NPP_tC];
+			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
@@ -200,19 +206,19 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		logger(g_log, "LEAF FALL\n");
 		logger(g_log, "allocating into W reserve pool\n");
 
-		if (s->value[NPP_tC] > 0.0)
+		if (npp_to_alloc > 0.0)
 		{
 			//fixme do it also for 0.1
 			/* reproduction only for needle leaf */
 			if (s->value[PHENOLOGY] == 0.2)
 			{
-				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
-				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
+				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
+				npp_to_alloc -= s->value[C_TO_FRUIT];
 			}
 		}
 
 		Leaf_fall(&c->heights[height].ages[age].species[species], &c->doy);
-		/* these are computed in leaffall function */
+		/* note: these are computed in Leaf_fall function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
 		//		s->value[C_TO_LITTER] = ;
@@ -234,9 +240,24 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = 0.0;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC];
+		s->value[C_TO_RESERVE] = npp_to_alloc;
 		break;
 	}
+
+	//todo to be checked
+	/* CHECK */
+	/* sum all biomass pools increments */
+	/*
+	npp_alloc = s->value[C_TO_RESERVE] +
+			s->value[C_TO_FINEROOT] +
+			s->value[C_TO_COARSEROOT] +
+			s->value[C_TO_TOT_STEM] +
+			s->value[C_TO_STEM] +
+			s->value[C_TO_BRANCH] +
+			s->value[C_TO_LEAF] +
+			s->value[C_TO_FRUIT];
+	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
+	*/
 
 	logger(g_log, "\n*Carbon allocation*\n");
 

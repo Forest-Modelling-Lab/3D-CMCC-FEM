@@ -309,6 +309,7 @@ enum {
 
 	//carbon biomass pools in tons of C/area
 	LEAF_C,
+	OLD_LEAF_C,
 	MAX_LEAF_C,
 	TOT_ROOT_C,
 	COARSE_ROOT_C,
@@ -790,7 +791,7 @@ typedef struct {
 	double daily_C_flux, monthly_C_flux, annual_C_flux;
 	double litter;
 	double ter;  //total ecosystem respiration
-	double carbon_balance, old_carbon_balance;
+	double carbon_balance;
 	double daily_nee, monthly_nee, annual_nee;
 	double daily_leaf_carbon;/* daily carbon assimilated to c pool in gC/m2/day */
 	double daily_stem_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
@@ -853,7 +854,7 @@ typedef struct {
 	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
 	double max_asw_sat;				/* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
-	double soil_pool_water_balance, old_soil_pool_water_balance;
+	double soil_pool_water_balance;
 	double canopy_pool_water_balance, old_canopy_pool_water_balance;
 	
 	double previous_available_soil_water;
