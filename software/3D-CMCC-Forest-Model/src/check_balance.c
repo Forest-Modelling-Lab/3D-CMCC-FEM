@@ -108,22 +108,22 @@ void Check_soil_water_balance(cell_t *const c)
 	/* check soil pool water balance */
 	c->soil_pool_water_balance = soil_water_pool_in - soil_water_pool_out - soil_water_pool_stored;
 
-//	/*******************************************************************************************************************/
-//	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
-//
-//	/* sum of sources (intercepted rain + snow) */
-//	canopy_water_pool_in = c->daily_c_int;
-//
-//	/* sum of sinks */
-//	canopy_water_pool_out = c->daily_c_evapo;
-//
-//	/* sum of current storage in canopy */
-//	canopy_water_pool_stored = c->daily_c_water_stored - c->old_daily_c_water_stored;
-//
-//	/* check canopy pool water balance */
-//	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
-//
-//	/*******************************************************************************************************************/
+	//	/*******************************************************************************************************************/
+	//	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
+	//
+	//	/* sum of sources (intercepted rain + snow) */
+	//	canopy_water_pool_in = c->daily_c_int;
+	//
+	//	/* sum of sinks */
+	//	canopy_water_pool_out = c->daily_c_evapo;
+	//
+	//	/* sum of current storage in canopy */
+	//	canopy_water_pool_stored = c->daily_c_water_stored - c->old_daily_c_water_stored;
+	//
+	//	/* check canopy pool water balance */
+	//	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
+	//
+	//	/*******************************************************************************************************************/
 
 	/* check fractions */
 	if(c->daily_et != 0)
@@ -175,59 +175,78 @@ void Check_soil_water_balance(cell_t *const c)
 		{
 			logger(g_log, "...ok soil water balance\n");
 		}
-//		/* check for canopy water pool water balance */
-//		if (fabs(c->old_canopy_pool_water_balance - c->canopy_pool_water_balance) > 1e-4 )
-//		{
-//			logger(g_log, "\nCANOPY POOL WATER BALANCE\n");
-//			logger(g_log, "in\n");
-//			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
-//			logger(g_log, "out\n");
-//			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
-//			logger(g_log, "stored (as a difference between old and current)\n");
-//			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
-//			logger(g_log, "c->old_daily_c_water_stored = %f\n", c->old_daily_c_water_stored);
-//			logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
-//			logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
-//			logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
-//			logger(g_log, "canopy water balance = %f\n", c->canopy_pool_water_balance);
-//			logger(g_log, "differences in canopy balance (old - current)= %f\n", c->old_canopy_pool_water_balance - c->canopy_pool_water_balance);
-//			logger(g_log, "...FATAL ERROR IN canopy water balance (exit)\n");
-//			logger(g_log, "DOY = %d\n", c->doy);
-//			exit(1);
-//		}
-//		else
-//		{
-//			logger(g_log, "\nCANOPY POOL WATER BALANCE\n");
-//			logger(g_log, "in\n");
-//			logger(g_log, "c->daily_tot_c_int = %f\n", c->daily_c_int);
-//			logger(g_log, "out\n");
-//			logger(g_log, "c->daily_tot_c_evapo = %f\n", c->daily_c_evapo);
-//			logger(g_log, "stored (as a difference between old and current)\n");
-//			logger(g_log, "c->daily_tot_c_water_stored = %f\n", c->daily_c_water_stored);
-//			logger(g_log, "c->old_daily_c_water_stored = %f\n", c->old_daily_c_water_stored);
-//			logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
-//			logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
-//			logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
-//			logger(g_log, "canopy water balance = %f\n", c->canopy_pool_water_balance);
-//			logger(g_log, "differences in canopy balance (old - current)= %f\n", c->old_canopy_pool_water_balance - c->canopy_pool_water_balance);
-//			logger(g_log, "...ok canopy water balance\n");
-//		}
 	}
 
 	/* assign values for previous day pools */
 	c->old_soil_pool_water_balance = c->soil_pool_water_balance;
-//	c->old_canopy_pool_water_balance = c->canopy_pool_water_balance;
+	//	c->old_canopy_pool_water_balance = c->canopy_pool_water_balance;
 }
 
-void Check_class_carbon_balance(species_t* const s)
+void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 {
+	double leaf_pool_in;
+	double leaf_pool_out;
+	double leaf_pool_storage;
+	static double old_leaf_pool_storage;
+	double leaf_pool_balance;
+
+
 	double carbon_pool_in;
 	double carbon_pool_out;
 	double carbon_pool_stored;
-	double carbon_balance;
+	double carbon_pool_balance;
 
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
+
+	/* check leaf balance */
+//	if(c->years_count == 0 && c->doy == 1)
+//	{
+//		logger(g_log, "NO CHECK LEAF BALANCE FOR THE FIRST DAY\n");
+//
+//		/* initialize to zero variables */
+//		leaf_pool_balance = 0.0;
+//		old_leaf_pool_storage = 0.0;
+//	}
+//	else
+//	{
+//		/* sum of sources */
+//		leaf_pool_in = fabs(s->value[C_TO_LEAF]);
+//
+//		/* sum of sinks */
+//		leaf_pool_out = s->value[C_TO_LITTER];
+//
+//		/* sum of current storage */
+//		leaf_pool_storage = s->value[LEAF_C];
+//
+//		/* check leaf pool balance */
+//		leaf_pool_balance = leaf_pool_in - leaf_pool_out - (leaf_pool_storage - old_leaf_pool_storage);
+//
+//		/* check for leaf balance closure */
+//		if (fabs(leaf_pool_balance)> 1e-4)
+//		{
+//			logger(g_log, "\nCLASS LEVEL LEAF CARBON BALANCE\n");
+//			logger(g_log, "leaf in = %g \n", leaf_pool_in);
+//			logger(g_log, "leaf out = %g \n", leaf_pool_out);
+//			logger(g_log, "leaf stored = %g \n", leaf_pool_storage);
+//			logger(g_log, "leaf balance = %g \n", leaf_pool_balance);
+//			logger(g_log, "old leaf balance = %g \n", old_leaf_pool_storage);
+//			logger(g_log, "C_TO_LEAF = %g \n", s->value[C_TO_LEAF]);
+//			logger(g_log, "C_TO_LITTER = %g \n", s->value[C_TO_LITTER]);
+//			logger(g_log, "LEAF_C = %g \n", s->value[LEAF_C]);
+//			logger(g_log, "...FATAL ERROR IN CELL LEVEL leaf balance (exit)\n");
+//			exit(1);
+//		}
+//		else
+//		{
+//			logger(g_log, "...ok leaf carbon balance at class level\n");
+//		}
+//	}
+//	/* assign value of the previous day */
+//	old_leaf_pool_storage = leaf_pool_balance;
+	/*******************************************************************************************************************/
+
+	/* check complete tree level carbon balance */
 
 	/* sum of sources */
 	carbon_pool_in = s->value[DAILY_GPP_gC];
@@ -242,20 +261,28 @@ void Check_class_carbon_balance(species_t* const s)
 			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
+			+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
 
-	/* check carbon balance */
-	carbon_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
+	/* check carbon pool balance */
+	carbon_pool_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
 
 	/*******************************************************************************************************************/
 	/* check for carbon balance closure */
-	if (fabs(carbon_balance)> 1e-4)
+	if (fabs(carbon_pool_balance)> 1e-4)
 	{
 		logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
-		logger(g_log, "carbon in = %f\n", carbon_pool_in);
-		logger(g_log, "carbon out = %f\n", carbon_pool_out);
-		logger(g_log, "carbon stored = %f\n", carbon_pool_stored);
-		logger(g_log, "carbon balance = %f\n", carbon_balance);
+		logger(g_log, "carbon in = %g gC/m2\n", carbon_pool_in);
+		logger(g_log, "carbon out = %g gC/m2\n", carbon_pool_out);
+		logger(g_log, "carbon stored = %g gC/m2\n", carbon_pool_stored);
+		logger(g_log, "carbon balance = %g gC/m2\n", carbon_pool_balance);
+		logger(g_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_COARSEROOT]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_STEM = %g gC/m2\n", s->value[C_TO_STEM]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_TO_LITTER = %g gC/m2\n\n", s->value[C_TO_LITTER]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "...FATAL ERROR IN CELL LEVEL carbon balance (exit)\n");
 		exit(1);
 	}
@@ -263,6 +290,26 @@ void Check_class_carbon_balance(species_t* const s)
 	{
 		logger(g_log, "...ok carbon balance at class level\n");
 	}
+
+	/* sum of sources */
+	carbon_pool_in = s->value[DAILY_GPP_gC];
+
+	/* sum of sinks */
+	carbon_pool_out = s->value[TOTAL_AUT_RESP];
+
+	/* sum of current storage */
+	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
+
+	/* check carbon pool balance */
+	carbon_pool_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
+
+	/*******************************************************************************************************************/
 }
 
 void Check_class_water_balance(species_t* s)
@@ -270,7 +317,7 @@ void Check_class_water_balance(species_t* s)
 	double canopy_water_pool_in;
 	double canopy_water_pool_out;
 	double canopy_water_pool_stored;
-	double canopy_water_balance;
+	double canopy_water_pool_balance;
 
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
@@ -284,18 +331,18 @@ void Check_class_water_balance(species_t* s)
 	/* sum of current storage */
 	canopy_water_pool_stored = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
 
-	/* check canopy water balance */
-	canopy_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
+	/* check canopy water pool balance */
+	canopy_water_pool_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
 
 	/*******************************************************************************************************************/
 	/* check for canopy water pool water balance closure (during growing season) */
-	if (fabs(canopy_water_balance)> 1e-4 && s->counter[VEG_UNVEG] == 1)
+	if (fabs(canopy_water_pool_balance)> 1e-4 && s->counter[VEG_UNVEG] == 1)
 	{
 		logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
 		logger(g_log, "canopy water in = %f\n", canopy_water_pool_in);
 		logger(g_log, "canopy water out = %f\n", canopy_water_pool_out);
 		logger(g_log, "canopy water stored = %f\n", canopy_water_pool_stored);
-		logger(g_log, "canopy water balance = %f\n", canopy_water_balance);
+		logger(g_log, "canopy water balance = %f\n", canopy_water_pool_balance);
 		logger(g_log, "...FATAL ERROR IN CELL LEVEL canopy water balance (exit)\n");
 		exit(1);
 	}

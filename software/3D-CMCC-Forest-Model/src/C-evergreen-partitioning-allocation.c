@@ -53,9 +53,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	// every pool except foliage
-	static double reserve_for_foliage_budburst;
-	static double reserve_for_fine_root_budburst;
-	static double reserve_for_budburst;
 
 	/* both used in case of retranslocation of carbon to reserve */
 	double old_leaf_c;
@@ -140,28 +137,18 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	}
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+	logger(g_log,"PHENOLOGY PHASE (CASE): %d\n", s->phenology_phase);
 
 
 	switch (s->phenology_phase)
 	{
 	/************************************************************/
-	logger(g_log,"Case: %d\n", s->phenology_phase);
 	case 1:
-		logger(g_log, "Allocating only into foliage and fine root pools\n");
-		logger(g_log, "LAI = %f \n", s->value[LAI]);
-		logger(g_log, "Tot biomass reserve = %f\n", s->value[RESERVE_C]);
-
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 		/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 		 * and Barbaroux et al., 2002, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
 		 * the fraction of reserve to allocate for foliage is re-computed for each of the BUD_BURST days
 		 * sharing the daily remaining amount (taking into account respiration costs)of NSC */
-
-		//fixme fixme fixme
-		//fixme model gets 10%
-		reserve_for_budburst = (s->value[RESERVE_C]) * 0.05;
-		logger(g_log, "fraction of reserve for foliage and fine root = %f\n", reserve_for_budburst);
 
 		/* partitioning */
 		if (s->value[NPP_tC] > 0.0)
@@ -170,7 +157,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-				logger(g_log, "Using ONLY npp...\n");
+				logger(g_log, "Allocating only into foliage and fine root pools\n");
 				s->value[C_TO_LEAF] = s->value[NPP_tC] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 				s->value[C_TO_FINEROOT] = s->value[NPP_tC] - s->value[C_TO_LEAF];
 				s->value[C_TO_RESERVE] = 0.0;
@@ -178,35 +165,30 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			/* it needs */
 			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
+				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_RESERVE] = s->value[NPP_tC];
 			}
-			else
-			{
-				CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
-			}
+			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
-			s->value[C_TO_TOT_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
-			s->value[C_TO_LITTER] = 0.0;
 		}
 		else
 		{
-			logger(g_log, "Using ONLY reserve...\n");
-			s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
-			s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
-			s->value[C_TO_RESERVE] = s->value[NPP_tC] - reserve_for_budburst;
+			logger(g_log, "Allocating only into reserve pool (low reserves, negative NPP)\n");
+			s->value[C_TO_LEAF] = 0.0;
+			s->value[C_TO_FINEROOT] = 0.0;
+			s->value[C_TO_RESERVE] = s->value[NPP_tC];
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
-			s->value[C_TO_TOT_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
-			s->value[C_TO_LITTER] = 0.0;
 		}
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 	case 2:
 		logger(g_log, "allocating into the three pools Ws+Wr+Wreserve\n");
@@ -214,13 +196,17 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		/* partitioning */
 		if (s->value[NPP_tC] > 0.0)
 		{
-			//REPRODUCTION ONLY FOR NEEDLE LEAF
+			/* REPRODUCTION ONLY FOR NEEDLE LEAF */
 			if(s->value[PHENOLOGY] == 1.2)
 			{
 				//NPP for reproduction
 				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
 				s->value[NPP_tC] -= s->value[C_TO_FRUIT];
-				logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[C_TO_FRUIT]);
+				logger(g_log, "including Biomass increment into cones = %f tC/area\n", s->value[C_TO_FRUIT]);
+			}
+			else
+			{
+				s->value[C_TO_FRUIT] = 0.0;
 			}
 
 			s->value[C_TO_COARSEROOT] = s->value[NPP_tC] * pR_CTEM;
@@ -230,7 +216,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_STEM] = (s->value[NPP_tC] * pS_CTEM) * (1.0 - s->value[FRACBB]);
 			s->value[C_TO_BRANCH] = (s->value[NPP_tDM] * pS_CTEM) * s->value[FRACBB];
 			s->value[C_TO_LEAF] = 0.0;
-			s->value[C_TO_FRUIT] = 0.0;
+
 		}
 		else
 		{
@@ -242,7 +228,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_BRANCH] = 0.0;
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
-			s->value[C_TO_LITTER] = 0.0;
 		}
 		break;
 	}
@@ -252,9 +237,12 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
 
+	/* update leaf biomass through turnover */
+	Turnover(&c->heights[height].ages[age].species[species], c);
+
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
-	logger(g_log, "Foliage Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "Leaf Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
 
 	s->value[STEM_C] += s->value[C_TO_STEM];
 	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
@@ -328,11 +316,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	Daily_lai (&c->heights[height].ages[age].species[species]);
 	c->daily_lai[i] = s->value[LAI];
 	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
-
-	/* turnover */
-	Turnover(&c->heights[height].ages[age].species[species], c);
-	/* annual version */
-	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
