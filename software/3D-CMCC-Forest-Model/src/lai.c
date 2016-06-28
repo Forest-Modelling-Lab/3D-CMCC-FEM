@@ -15,9 +15,9 @@ extern logger_t* g_log;
 
 void Daily_lai (species_t *const s)
 {
-	double leaf_c; //leaf carbon KgC/m^2
+	double leaf_c;                             //leaf carbon KgC/m^2
 
-	logger(g_log, "\n**DAILY_LAI**\n");
+	logger(g_log, "\n**daily LAI**\n");
 
 	/* convert tC/cell to KgC/m^2 */
 	leaf_c = s->value[LEAF_C] * 1000.0 ;
@@ -42,6 +42,7 @@ void Daily_lai (species_t *const s)
 	if(s->value[LAI_SHADE] > 0.0)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
 	logger(g_log, "SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
+	logger(g_log, "*****************************\n");
 
 	CHECK_CONDITION(fabs(s->value[LAI]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0.0);

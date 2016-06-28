@@ -1015,6 +1015,6 @@ typedef struct {
 
 matrix_t* matrix_create(const char* const filename);
 void matrix_free(matrix_t *m);
-void matrix_summary(const matrix_t* const m);
+void matrix_summary(const matrix_t* const m, const int, const int, const int);
 
 #endif /* MATRIX_H_ */

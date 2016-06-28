@@ -14,6 +14,7 @@
 #include "common.h"
 #include "g-function.h"
 #include "initialization.h"
+#include "structure.h"
 #include "netcdf.h"
 
 extern logger_t* g_log;
@@ -1163,7 +1164,8 @@ matrix_t* matrix_create(const char* const filename) {
 	return m;
 }
 
-void matrix_summary(const matrix_t* const m) {
+void matrix_summary(const matrix_t* const m, const int day, const int month, const int year)
+{
 	int cell;
 	int species;
 	int age;
@@ -1249,16 +1251,22 @@ void matrix_summary(const matrix_t* const m) {
 							m->cells[cell].heights[height].ages[age].species_count
 					/*m->cells[cell].heights[height].ages[age].species[species].name*/);
 
-					// loop on each species
+					/* loop on each species */
 					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 					{
 						Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
-						//*************FOREST INITIALIZATION DATA***********
+
+						/*************FOREST INITIALIZATION DATA***********/
 						Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], &m->cells[cell].heights[height].ages[age].species[species]);
 
-						//IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT)
-						//HEIGHT VALUES ARE MANDATORY
-						Initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
+						/* compute annual number of different layers */
+						Annual_numbers_of_layers (&m->cells[cell]);
+
+						/* compute forest structure */
+						Daily_Forest_structure (&m->cells[cell], day, month, year);
+
+						/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
+						Initialization_biomass_data (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height], &m->cells[cell], day, month, year);
 						logger(g_log, 
 								"\n\n----- CLASS DATASET-----\n"
 								"----- height = %f\n"

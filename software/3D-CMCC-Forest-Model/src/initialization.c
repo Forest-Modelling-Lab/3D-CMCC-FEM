@@ -13,7 +13,8 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Initialization_biomass_data (species_t *const s, height_t *const h) {
+void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t *const c, const int day, const int month, const int year)
+{
 	logger(g_log, "\n\n...checking initial biomass data...\n");
 
 	/*check for initial biomass*/
@@ -177,7 +178,7 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 		//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
 		//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
 
-		/* IMPORTANT! reserve computation if not in init data are computed from DM */
+		/* IMPORTANT! reserve computation if not in initialized is computed from DryMatter */
 		s->value[RESERVE_tDM] = s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
 		//fixme how it does??
 		s->value[RESERVE_C]= s->value[WTOT_sap_tDM] * s->value[SAP_WRES];
@@ -193,7 +194,7 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 	else
 	{
 		logger(g_log, "Ok reserve biomass..\n");
-		logger(g_log, "---Reserve from init file = %f \n", s->value[RESERVE_tDM]);
+		logger(g_log, "---Reserve from initialization file = %f \n", s->value[RESERVE_tDM]);
 	}
 	s->value[AV_RESERVE_MASS_KgDM] = s->value[RESERVE_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_RESERVE_MASS_KgC] = s->value[RESERVE_C] *1000.0 /s->counter[N_TREE];
@@ -232,17 +233,19 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 			/* otherwise use LAI */
 			else
 			{
-				//s->value[BIOMASS_FOLIAGE_tDM] = 0.0;
-				s->value[LEAF_C] = s->value[LAI] / s->value[SLA_AVG];
-				/* convert to tons of C */
-				s->value[LEAF_C] /= 1000.0;
-				logger(g_log, "--Leaf carbon  = %f tC/cell size\n", s->value[MIN_RESERVE_C]);
+				/* compute leaf carbon to LAI down-scaled to canopy cover*/
+				s->value[LEAF_C] = (s->value[LAI] / s->value[SLA_AVG]);
+				logger(g_log, "--Leaf carbon  = %g KgC/m2\n", s->value[LEAF_C]);
+				//fixme it should takes into account effective cell coverage
+				/* convert to tons of C and to cell area*/
+				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
+				logger(g_log, "--Leaf carbon  = %g tC/cell size\n", s->value[LEAF_C]);
 
 				/* Calculate projected LAI for sunlit and shaded canopy portions */
 				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
 				s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
-				logger(g_log, "LAI SUN = %f\n", s->value[LAI_SUN]);
-				logger(g_log, "LAI SHADE = %f\n", s->value[LAI_SHADE]);
+				logger(g_log, "LAI SUN = %g\n", s->value[LAI_SUN]);
+				logger(g_log, "LAI SHADE = %g\n", s->value[LAI_SHADE]);
 			}
 		}
 	}
@@ -250,14 +253,11 @@ void Initialization_biomass_data (species_t *const s, height_t *const h) {
 	{
 		s->value[LEAF_C] = s->value[BIOMASS_FOLIAGE_tDM]/GC_GDM;
 		logger(g_log, "Ok foliage biomass..\n");
-		logger(g_log, "---Foliage Biomass from init file  = %f tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-		logger(g_log, "---Foliage Biomass from init file  = %f tC cell\n", s->value[LEAF_C]);
+		logger(g_log, "---Foliage Biomass from init file  cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+		logger(g_log, "---Foliage Biomass from init file = %f tC cell\n", s->value[LEAF_C]);
 	}
-	s->value[AV_FOLIAGE_MASS_KgDM] = s->value[BIOMASS_FOLIAGE_tDM] *1000.0 /s->counter[N_TREE];
 	s->value[AV_LEAF_MASS_KgC] = s->value[LEAF_C] *1000.0 /s->counter[N_TREE];
-	logger(g_log, "-Individual foliage biomass = %f KgDM\n", s->value[AV_FOLIAGE_MASS_KgDM]);
 	logger(g_log, "-Individual foliage biomass = %f KgC\n", s->value[AV_LEAF_MASS_KgC]);
-
 
 	//FIXME MODEL ASSUMES TAHT IF NOT FINE-ROOT BIOMASS ARE AVAILABLE THE SAME RATIO FOLIAGE-FINE ROOTS is used
 	if (( s->value[BIOMASS_FINE_ROOT_tDM] == 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] == NO_DATA)

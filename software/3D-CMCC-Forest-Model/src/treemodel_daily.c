@@ -92,11 +92,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 
 
 	/* compute daily-monthly-annual forest structure (overall cell) */
-	if (day == 0 && month == JANUARY)
-	{
-		/* compute annual number of different layers */
-		Annual_numbers_of_layers (&m->cells[cell]);
-	}
+	if (day == 0 && month == JANUARY)Annual_numbers_of_layers (&m->cells[cell]);
+
 	/* daily forest structure */
 	//ALESSIOR
 	//fixme it must be called in a previous "for" to compute the total number of layers, densities and other things as above

@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-//Deciduous carbon allocation routine
+/* Deciduous carbon allocation routine */
 void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int years, const int height, const int age, const int species)
 {
 
@@ -293,7 +293,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	logger(g_log, "Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */
-
 	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>1e-4);
 	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[COARSE_ROOT_C]),>1e-4);
 	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>1e-4);

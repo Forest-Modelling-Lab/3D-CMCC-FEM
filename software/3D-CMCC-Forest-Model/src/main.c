@@ -916,7 +916,7 @@ int main(int argc, char *argv[]) {
 			logger(g_log, "\n-Year simulated = %d\n", matrix->cells[cell].years[year].year);
 
 			/* only for first year */
-			if ( ! year ) matrix_summary(matrix);
+			if ( ! year ) matrix_summary(matrix, day, month, year);
 
 			i =0;
 			for (month = 0; month < MONTHS_COUNT; month++)

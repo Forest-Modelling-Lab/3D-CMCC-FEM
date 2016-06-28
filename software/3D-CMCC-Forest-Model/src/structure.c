@@ -293,11 +293,11 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 					logger(g_log, "number of potential maximum trees with DBHDCMIN = %f\n", potential_maximum_density);
 
 					c->heights[height].ages[age].species[species].value[DENMAX] = potential_maximum_density/g_settings->sizeCell;
-					logger(g_log, "potential density with dbhdcmax (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX],
+					logger(g_log, "potential density with dbhdcmax (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMAX],
 							c->heights[height].ages[age].species[species].value[DENMAX] * g_settings->sizeCell);
 
 					c->heights[height].ages[age].species[species].value[DENMIN] = potential_minimum_density/g_settings->sizeCell;
-					logger(g_log, "potential density with dbhdcmin (high density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN],
+					logger(g_log, "potential density with dbhdcmin (low density) = %f (%f tree)\n", c->heights[height].ages[age].species[species].value[DENMIN],
 							c->heights[height].ages[age].species[species].value[DENMIN] * g_settings->sizeCell);
 
 					logger(g_log, "\n\n**CANOPY COVER from DBH-DC Function layer %d dbh %f species %s **\n", c->heights[height].z,
@@ -317,8 +317,9 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 						 *
 						 * Lhotka and Loewenstein 2008, Can J For Res
 						 */
-						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*g_settings->sizeCell))*(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]
-						                                                                                                                                                                     +(3.345241*pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
+						c->heights[height].ages[age].species[species].value[MCA] = ((100.0*Pi)/(4*g_settings->sizeCell))*
+								(9.7344+(11.48612*c->heights[height].ages[age].species[species].value[AVDBH]+(3.345241*
+										pow(c->heights[height].ages[age].species[species].value[AVDBH], 2))));
 						logger(g_log, "-MCA (Maximum Crown Area) = %f m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 						c->heights[height].ages[age].species[species].value[MCD] = 2.0 * sqrt(c->heights[height].ages[age].species[species].value[MCA]/Pi);
 						logger(g_log, "-MCD (Maximum Crown Diameter) = %f m\n", c->heights[height].ages[age].species[species].value[MCD]);
