@@ -291,10 +291,11 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
 						/* check for carbon balance closure */
-						Check_class_carbon_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						//todo fixme
+						//Check_class_carbon_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
 
 						/* check for water balance closure */
-						Check_class_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);
+						Check_class_water_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
 						/****************************************************************************************************************************************/
 
 						/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */

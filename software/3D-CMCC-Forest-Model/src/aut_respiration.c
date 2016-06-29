@@ -61,21 +61,21 @@ void Maintenance_respiration (species_t *const s, cell_t *const c, const meteo_t
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
 	//fixme in this case when LAI = 0 there's no respiration
-//	/* compute effective canopy cover */
-//	if(s->value[LAI] < 1.0)
-//	{
-//		/* special case when LAI = < 1.0 */
-//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-//	}
-//	else
-//	{
-//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//	}
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cover_eff > 1.0)
-//	{
-//		leaf_cover_eff = 1.0;
-//	}
+	//	/* compute effective canopy cover */
+	//	if(s->value[LAI] < 1.0)
+	//	{
+	//		/* special case when LAI = < 1.0 */
+	//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	//	}
+	//	else
+	//	{
+	//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	//	}
+	//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	//	if(leaf_cover_eff > 1.0)
+	//	{
+	//		leaf_cover_eff = 1.0;
+	//	}
 
 	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 
@@ -168,57 +168,49 @@ void Growth_respiration(species_t *const s, cell_t *const c, const int height) {
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
 	//fixme in this case when LAI = 0 there's no respiration
-//	/* compute effective canopy cover */
-//	if(s->value[LAI] < 1.0)
-//	{
-//		/* special case when LAI = < 1.0 */
-//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-//	}
-//	else
-//	{
-//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//	}
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cover_eff > 1.0)
-//	{
-//		leaf_cover_eff = 1.0;
-//	}
+	//	/* compute effective canopy cover */
+	//	if(s->value[LAI] < 1.0)
+	//	{
+	//		/* special case when LAI = < 1.0 */
+	//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	//	}
+	//	else
+	//	{
+	//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	//	}
+	//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+	//	if(leaf_cover_eff > 1.0)
+	//	{
+	//		leaf_cover_eff = 1.0;
+	//	}
 
 	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
 	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
 
-	if (s->value[C_TO_LEAF] > 0.0
-			|| s->value[C_TO_FINEROOT] > 0.0
-			|| s->value[C_TO_STEM] > 0.0
-			|| s->value[C_TO_COARSEROOT] > 0.0
-			|| s->value[C_TO_BRANCH] > 0.0)
-	{
-		//converting to gC
-		//fixme see if use CANOPY_COVER_DBHDC or just sizecell
+	//fixme see if use CANOPY_COVER_DBHDC or just sizecell
+	/* values are computed in  gC/m2/day */
+	if (s->value[C_TO_LEAF] > 0.0)s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
+	logger(g_log, "daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
 
-		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
-		logger(g_log, "daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
-		//see golinkoff for upscaling to PLAI
+	if (s->value[C_TO_FINEROOT] > 0.0)s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* GRPERC;
+	logger(g_log, "daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
 
-		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* GRPERC;
-		logger(g_log, "daily fine root growth respiration = %.10f gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
+	if (s->value[C_TO_STEM] > 0.0)s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	logger(g_log, "daily stem growth respiration = %.10f gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
 
-		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-		logger(g_log, "daily stem growth respiration = %.10f gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
+	if (s->value[C_TO_COARSEROOT] > 0.0)s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	logger(g_log, "daily coarse root growth respiration = %.10f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
 
-		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-		logger(g_log, "daily coarse root growth respiration = %.10f gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+	if (s->value[C_TO_BRANCH] > 0.0)s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	logger(g_log, "daily branch growth respiration = %.10f gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 
-		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-		logger(g_log, "daily branch growth respiration = %.10f gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
-
-		s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
-				s->value[FINE_ROOT_GROWTH_RESP] +
-				s->value[STEM_GROWTH_RESP] +
-				s->value[COARSE_ROOT_GROWTH_RESP] +
-				s->value[BRANCH_GROWTH_RESP];
-	}
+	s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
+			s->value[FINE_ROOT_GROWTH_RESP] +
+			s->value[STEM_GROWTH_RESP] +
+			s->value[COARSE_ROOT_GROWTH_RESP] +
+			s->value[BRANCH_GROWTH_RESP];
 	logger(g_log, "daily total growth respiration = %.10f gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	s->value[TOTAL_GROWTH_RESP] *= leaf_cover_eff;
 	logger(g_log, "TOTAL growth respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);

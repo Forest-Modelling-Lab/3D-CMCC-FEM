@@ -145,6 +145,10 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	{
 	/************************************************************/
 	case 1:
+		/* this phenological phase happens when:
+		 * - thermic sum > GROWTH_START
+		 * - LAI < PEAK_LAI
+		 * - month > 6*/
 
 		/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 		 * and Barbaroux et al., 2002, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -161,7 +165,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-				logger(g_log, "Allocating only into foliage and fine root pools\n");
+				logger(g_log, "Allocating only into foliage and fine root pools (positive NPP)\n");
 				s->value[C_TO_LEAF] = npp_to_alloc * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 				s->value[C_TO_FINEROOT] = npp_to_alloc - s->value[C_TO_LEAF];
 				s->value[C_TO_RESERVE] = 0.0;
@@ -194,6 +198,10 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 	case 2:
+		/* this phenological phase happens when:
+		 * - thermic sum < GROWTH_START
+		 * - LAI > PEAK_LAI
+		 * - month < 6*/
 
 		/* partitioning */
 		if (npp_to_alloc > 0.0)
@@ -251,11 +259,23 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	logger(g_log, "\n*Carbon allocation*\n");
 
+	logger(g_log, "\n-Daily increment in carbon pools (before turnover)-\n");
+	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
+
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
 
 	/* update leaf biomass through turnover */
 	Turnover(&c->heights[height].ages[age].species[species], c);
+
+	logger(g_log, "\n****BIOMASS POOLS UPDATE****\n");
 
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
@@ -319,7 +339,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		Dendrometry (c, &c->heights[height].ages[age].species[species], &c->heights[height], years);
 	}
 
-	logger(g_log, "\n-Daily increment in carbon pools-\n");
+	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");
 	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
 	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);

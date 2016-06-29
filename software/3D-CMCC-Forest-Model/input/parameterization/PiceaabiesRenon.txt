@@ -114,7 +114,7 @@ MF  0.64               //Fraction mean single tree foliage biomass lost per dead
 MR  0.64             //Fraction mean single tree root biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 MS  0.61             //Fraction mean single tree stem biomass lost per dead tree for P. sylvestris from Landsberg et al., 2005
 //ALLOMETRIC RELATIONSHIPS
-DBHDCMAX    0.18    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
+DBHDCMAX    0.22    //Low Density for Picea abies 0.255 Seidl et al., 2012, 0.18 from Kalliovirta and Tokola 2005, 0.34 from Grote 2001
 DBHDCMIN    0.14    //High Density for P. sylvestris from Ameztegui et al., 2012 0.14, 0.015 from Kalliovirta and Tokola 2005, 0.2 from Grote 2001
 
 //SAPWOOD ALLOMETRIC RELATIONSHIP

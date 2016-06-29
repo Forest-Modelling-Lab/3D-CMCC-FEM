@@ -387,7 +387,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 				cumulated_gap_cover_eff = 0.0;
 			}
 
-			logger(g_log, "\n**SINGLE HIGHT CLASS COMPUTATION**\n");
+			logger(g_log, "\n**SINGLE HEIGHT CLASS COMPUTATION**\n");
 
 			/* compute effective canopy cover */
 			if(s->value[LAI] < 1.0)
@@ -494,7 +494,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 				cumulated_gap_cover_eff = 0.0;
 			}
 
-			logger(g_log, "\n**SINGLE HIGHT CLASS COMPUTATION**\n");
+			logger(g_log, "\n**SINGLE HEIGHT CLASS COMPUTATION**\n");
 
 			/* compute effective canopy cover */
 			if(s->value[LAI] < 1.0)
@@ -601,7 +601,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 				cumulated_gap_cover_eff = 0.0;
 			}
 
-			logger(g_log, "\n**SINGLE HIGHT CLASS COMPUTATION**\n");
+			logger(g_log, "\n**SINGLE HEIGHT CLASS COMPUTATION**\n");
 
 			/* compute effective canopy cover */
 			if(s->value[LAI] < 1.0)
