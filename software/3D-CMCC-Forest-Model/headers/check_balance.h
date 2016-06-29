@@ -10,5 +10,6 @@ void Check_carbon_balance(cell_t *const c);
 void Check_soil_water_balance(cell_t *const c);
 
 void New_Check_carbon_balance (cell_t *const c, species_t* const s);
+void leaf_balance (cell_t *const c, species_t* const s);
 
 #endif /* CHECK_BALANCE_H_ */

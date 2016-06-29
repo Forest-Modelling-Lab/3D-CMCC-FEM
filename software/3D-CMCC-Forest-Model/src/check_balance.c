@@ -277,9 +277,11 @@ void New_Check_carbon_balance (cell_t *const c, species_t* const s)
 	if(!c->years_count && c->doy == 1)first_balance = 1;
 	else first_balance = 0;
 
+	//note: it should be called within the c-partitioning allocation routine to avoid a double accounting of c_to_x
+
 	/* sum of sources gC/m2/day */
 	in = s->value[DAILY_GPP_gC];
-	
+
 	/* sum of sinks gC/m2/day */
 	out = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] +
 			((s->value[LITTER_C] + s->value[C_TO_LITTER]) * 1000000.0 / g_settings->sizeCell);
@@ -290,15 +292,15 @@ void New_Check_carbon_balance (cell_t *const c, species_t* const s)
 			(s->value[COARSE_ROOT_C] + s->value[C_TO_COARSEROOT]) +
 			(s->value[STEM_C] + s->value[C_TO_STEM]) +
 			(s->value[BRANCH_C] + s->value[C_TO_BRANCH]) +
-			(s->value[RESERVE_C] + s->value[C_TO_RESERVE]) +
+			(s->value[RESERVE_C] + s->value[C_TO_RESERVE] + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]) +
 			(s->value[FRUIT_C] + s->value[C_TO_FRUIT]));
-	
+
 	/* convert current storage in gC/m2/day */
 	store *= 1000000.0 / g_settings->sizeCell;
-	
+
 	/* calculate current balance */
 	balance = in - out - store;
-	
+
 	if(!first_balance)
 	{
 		if(fabs(old_balance - balance) > 1e-8)
@@ -322,6 +324,8 @@ void New_Check_carbon_balance (cell_t *const c, species_t* const s)
 			logger(g_log, "C_TO_STEM = %g gC/m2\n", s->value[C_TO_STEM]* 1000000.0 / g_settings->sizeCell);
 			logger(g_log, "STEM_C = %g gC/m2\n", s->value[STEM_C]* 1000000.0 / g_settings->sizeCell);
 			logger(g_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_LEAF_TO_RESERVE = %g gC/m2\n", s->value[C_LEAF_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_FINEROOT_TO_RESERVE = %g gC/m2\n", s->value[C_FINEROOT_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
 			logger(g_log, "RESERVE_C = %g gC/m2\n", s->value[RESERVE_C]* 1000000.0 / g_settings->sizeCell);
 			logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
 			logger(g_log, "BRANCH_C = %g gC/m2\n", s->value[BRANCH_C]* 1000000.0 / g_settings->sizeCell);
@@ -334,9 +338,49 @@ void New_Check_carbon_balance (cell_t *const c, species_t* const s)
 			exit(1);
 		}
 	}
-	
+
 	/* assign current value to old for next check */
 	old_balance = balance;
-	
+
 }
 
+void leaf_balance (cell_t *const c, species_t* const s)
+{
+	int first_balance;
+	double in, out, store, balance;
+	static double old_balance;
+
+	if(!c->years_count && c->doy == 1)first_balance = 1;
+	else first_balance = 0;
+
+	in = s->value[C_TO_LEAF];
+	out = s->value[C_TO_LITTER];
+	store = s->value[LEAF_C] + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
+	balance = in - out -store;
+
+	if(!first_balance)
+	{
+		if(fabs(old_balance - balance)>1e-8)
+		{
+			logger(g_log, "\n\nfatal error in leaf balance\n");
+			logger(g_log, "\nin = %g gC/m2\n", in);
+			logger(g_log, "out = %g gC/m2\n", out);
+			logger(g_log, "store = %g gC/m2\n", store);
+			logger(g_log, "balance = %g gC/m2\n", balance);
+			logger(g_log, "old balance = %g gC/m2\n", old_balance);
+			logger(g_log, "Difference (previous - current) = %g\n",old_balance-balance);
+			exit(1);
+		}
+	}
+	else
+	{
+		logger(g_log, "\nin = %g gC/m2\n", in);
+		logger(g_log, "out = %g gC/m2\n", out);
+		logger(g_log, "store = %g gC/m2\n", store);
+		logger(g_log, "balance = %g gC/m2\n", balance);
+		logger(g_log, "old balance = %g gC/m2\n", old_balance);
+	}
+	getchar();
+	old_balance = balance;
+
+}

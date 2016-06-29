@@ -17,6 +17,7 @@
 #include "turnover.h"
 #include "dendometry.h"
 #include "biomass.h"
+#include "check_balance.h"
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
@@ -35,7 +36,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	double pS_CTEM;
 	double pR_CTEM;
 	double pF_CTEM;
-	//double max_DM_foliage;
+
 	//double reductor;           //instead soil water the routine take into account the minimum between F_VPD and F_SW and F_NUTR
 
 	double Light_trasm;
@@ -49,7 +50,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//allocation ratio parameter between them. That because
 	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
-	// every pool except foliage
+	//every pool except foliage
 
 	/* both used in case of retranslocation of carbon to reserve */
 	double old_leaf_c;
@@ -245,7 +246,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	/* CHECK */
 	/* sum all biomass pools increments */
-	/*
+
 	npp_alloc = s->value[C_TO_RESERVE] +
 			s->value[C_TO_FINEROOT] +
 			s->value[C_TO_COARSEROOT] +
@@ -254,8 +255,8 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
-	*/
+	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-8)
+
 
 	logger(g_log, "\n*Carbon allocation*\n");
 
@@ -274,6 +275,9 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	/* update leaf biomass through turnover */
 	Turnover(&c->heights[height].ages[age].species[species], c);
+
+	leaf_balance(c, &c->heights[height].ages[age].species[species]);
+
 
 	logger(g_log, "\n****BIOMASS POOLS UPDATE****\n");
 
