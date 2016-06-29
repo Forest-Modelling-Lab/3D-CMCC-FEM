@@ -9,6 +9,6 @@ void Check_class_water_balance(cell_t *const c, species_t* const s);
 void Check_carbon_balance(cell_t *const c);
 void Check_soil_water_balance(cell_t *const c);
 
-void Check_class_biomass_balance(cell_t *const c, species_t* const s);
+void New_Check_carbon_balance (cell_t *const c, species_t* const s);
 
 #endif /* CHECK_BALANCE_H_ */

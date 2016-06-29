@@ -22,7 +22,7 @@ void Check_carbon_balance(cell_t *const c)
 
 	double in;
 	double out;
-	double stored;
+	double store;
 
 	logger(g_log, "\n*********CHECK CARBON BALANCE************\n");
 
@@ -36,12 +36,12 @@ void Check_carbon_balance(cell_t *const c)
 	out = c->daily_maint_resp + c->daily_growth_resp;
 
 	/* sum of current storage */
-	stored = c->daily_leaf_carbon + c->daily_stem_carbon +
+	store = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_fine_root_carbon + c->daily_coarse_root_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
 			c->daily_litter_carbon + c->daily_fruit_carbon;
 
-	c->carbon_balance = in - out -stored;
+	c->carbon_balance = in - out -store;
 
 	if (fabs(c->carbon_balance) > 1e-8 )
 	{
@@ -51,7 +51,7 @@ void Check_carbon_balance(cell_t *const c)
 		logger(g_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
-		logger(g_log, "\nstored\n");
+		logger(g_log, "\nstore\n");
 		logger(g_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
 		logger(g_log, "c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
 		logger(g_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_fine_root_carbon);
@@ -62,7 +62,7 @@ void Check_carbon_balance(cell_t *const c)
 		logger(g_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
 		logger(g_log, "\ncarbon in = %g gC/m2/day\n", in);
 		logger(g_log, "carbon out = %g gC/m2/day\n", out);
-		logger(g_log, "carbon stored = %g gC/m2/day\n", stored);
+		logger(g_log, "carbon store = %g gC/m2/day\n", store);
 		logger(g_log, "carbon_balance = %g gC/m2/day\n",c->carbon_balance);
 		logger(g_log, "...FATAL ERROR IN carbon balance (exit)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
@@ -78,7 +78,7 @@ void Check_soil_water_balance(cell_t *const c)
 {
 	double in;
 	double out;
-	double stored;
+	double store;
 
 	double daily_frac_transp;
 	double daily_frac_evapo;
@@ -92,15 +92,15 @@ void Check_soil_water_balance(cell_t *const c)
 	in = c->prcp_rain + c->prcp_snow + c->snow_melt;
 
 	/* sum of sinks */
-	//comment: snow_subl is not considered here otherwise it could accounted twice (out and stored)
+	//comment: snow_subl is not considered here otherwise it could accounted twice (out and store)
 	out = c->daily_c_transp + /* c->daily_c_evapo + */ c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage in soil */
-	//fixme check for daily_c_water_stored
-	stored = (c->asw - c->old_asw) /*+ c->daily_c_water_stored */ + c->prcp_snow;
+	//fixme check for daily_c_water_store
+	store = (c->asw - c->old_asw) /*+ c->daily_c_water_store */ + c->prcp_snow;
 
 	/* check soil pool water balance */
-	c->soil_pool_water_balance = in - out - stored;
+	c->soil_pool_water_balance = in - out - store;
 
 	//	/*******************************************************************************************************************/
 	//	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
@@ -112,10 +112,10 @@ void Check_soil_water_balance(cell_t *const c)
 	//	canopy_water_pool_out = c->daily_c_evapo;
 	//
 	//	/* sum of current storage in canopy */
-	//	canopy_water_pool_stored = c->daily_c_water_stored - c->old_daily_c_water_stored;
+	//	canopy_water_pool_store = c->daily_c_water_store - c->old_daily_c_water_store;
 	//
 	//	/* check canopy pool water balance */
-	//	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_stored;
+	//	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_store;
 	//
 	//	/*******************************************************************************************************************/
 
@@ -144,14 +144,14 @@ void Check_soil_water_balance(cell_t *const c)
 		logger(g_log, "c->snow_subl = %g\n", c->snow_subl);
 		logger(g_log, "c->snow_melt = %g\n", c->snow_melt);
 		logger(g_log, "c->out_flow = %g\n", c->out_flow);
-		logger(g_log, "\nstored (as a difference between old and current)\n");
+		logger(g_log, "\nstore (as a difference between old and current)\n");
 		logger(g_log, "delta c->asw = %g\n", (c->asw - c->old_asw));
 		logger(g_log, "c->snow_pack = %g\n", c->snow_pack);
 		logger(g_log, "c->asw = %g\n", c->asw);
 		logger(g_log, "c->old_asw = %g\n", c->old_asw);
 		logger(g_log, "soil water in = %g\n", in);
 		logger(g_log, "soil water out = %g\n", out);
-		logger(g_log, "soil water stored = %g\n", stored);
+		logger(g_log, "soil water store = %g\n", store);
 		logger(g_log, "soil water balance = %g\n", c->soil_pool_water_balance);
 		logger(g_log, "...FATAL ERROR IN soil water balance (exit)\n");
 		exit(1);
@@ -166,7 +166,7 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 {
 	double in;
 	double out;
-	double stored;
+	double store;
 	double balance;
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
@@ -179,18 +179,17 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] + s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
 
 	/* sum of current storage */
-	stored = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
+	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
 			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
+			+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
 
 
 	/* check carbon pool balance */
-	balance = in - out - stored;
+	balance = in - out - store;
 
 	/*******************************************************************************************************************/
 	/* check for carbon balance closure */
@@ -204,7 +203,7 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
 		logger(g_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
 		logger(g_log, "C_TO_LITTER = %g gC/m2\n", s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
-		logger(g_log, "\nstored = %g gC/m2\n", stored);
+		logger(g_log, "\nstore = %g gC/m2\n", store);
 		logger(g_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_COARSEROOT]* 1000000.0 / g_settings->sizeCell);
@@ -232,11 +231,11 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 {
 	double in;
 	double out;
-	double stored;
+	double store;
 	double balance;
 
 
-	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE CONTINUUM WATER BALANCE */
+	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
 	/* sum of sources */
 	in = s->value[CANOPY_INT];
@@ -245,10 +244,10 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 	out = s->value[CANOPY_EVAPO];
 
 	/* sum of current storage */
-	stored = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
+	store = s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER];
 
 	/* check canopy water pool balance */
-	balance = in - out - stored;
+	balance = in - out - store;
 
 	/*******************************************************************************************************************/
 	/* check for canopy water pool water balance closure (during growing season) */
@@ -258,7 +257,7 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "canopy water in = %g\n", in);
 		logger(g_log, "canopy water out = %g\n", out);
-		logger(g_log, "canopy water stored = %g\n", stored);
+		logger(g_log, "canopy water store = %g\n", store);
 		logger(g_log, "canopy water balance = %g\n", balance);
 		logger(g_log, "...FATAL ERROR IN CELL LEVEL canopy water balance (exit)\n");
 		exit(1);
@@ -267,5 +266,77 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 	{
 		logger(g_log, "...ok canopy water balance at class level\n");
 	}
+}
+
+void New_Check_carbon_balance (cell_t *const c, species_t* const s)
+{
+	int first_balance;
+	double in, out, store, balance;
+	static double old_balance;
+
+	if(!c->years_count && c->doy == 1)first_balance = 1;
+	else first_balance = 0;
+
+	/* sum of sources gC/m2/day */
+	in = s->value[DAILY_GPP_gC];
+	
+	/* sum of sinks gC/m2/day */
+	out = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP] +
+			((s->value[LITTER_C] + s->value[C_TO_LITTER]) * 1000000.0 / g_settings->sizeCell);
+
+	/* sum of current storage tC/area*/
+	store = ((s->value[LEAF_C] + s->value[C_TO_LEAF]) +
+			(s->value[FINE_ROOT_C] + s->value[C_TO_FINEROOT]) +
+			(s->value[COARSE_ROOT_C] + s->value[C_TO_COARSEROOT]) +
+			(s->value[STEM_C] + s->value[C_TO_STEM]) +
+			(s->value[BRANCH_C] + s->value[C_TO_BRANCH]) +
+			(s->value[RESERVE_C] + s->value[C_TO_RESERVE]) +
+			(s->value[FRUIT_C] + s->value[C_TO_FRUIT]));
+	
+	/* convert current storage in gC/m2/day */
+	store *= 1000000.0 / g_settings->sizeCell;
+	
+	/* calculate current balance */
+	balance = in - out - store;
+	
+	if(!first_balance)
+	{
+		if(fabs(old_balance - balance) > 1e-8)
+		{
+			logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
+			logger(g_log, "DOY = %d\n", c->doy);
+			logger(g_log, "\nin = %g gC/m2\n", in);
+			logger(g_log, "DAILY_GPP_gC = %g gC/m2\n", s->value[DAILY_GPP_gC]);
+			logger(g_log, "\nout = %g gC/m2\n", out);
+			logger(g_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
+			logger(g_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
+			logger(g_log, "C_TO_LITTER = %g gC/m2\n", s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "LITTER_C = %g gC/m2\n", s->value[LITTER_C] * 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "\nstore = %g gC/m2\n", store);
+			logger(g_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "LEAF_C = %g gC/m2\n", s->value[LEAF_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "FINE_ROOT_C = %g gC/m2\n", s->value[FINE_ROOT_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_COARSEROOT]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "COARSE_ROOT_C = %g gC/m2\n", s->value[COARSE_ROOT_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_STEM = %g gC/m2\n", s->value[C_TO_STEM]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "STEM_C = %g gC/m2\n", s->value[STEM_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "RESERVE_C = %g gC/m2\n", s->value[RESERVE_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "BRANCH_C = %g gC/m2\n", s->value[BRANCH_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "FRUIT_C = %g gC/m2\n", s->value[FRUIT_C]* 1000000.0 / g_settings->sizeCell);
+			logger(g_log, "\ncarbon balance = %g\n", balance);
+			logger(g_log, "old carbon balance = %g\n", old_balance);
+			logger(g_log, "Difference (previous - current) = %g\n",old_balance-balance);
+			logger(g_log, "...FATAL ERROR IN CLASS LEVEL in carbon balance (exit)\n");
+			exit(1);
+		}
+	}
+	
+	/* assign current value to old for next check */
+	old_balance = balance;
+	
 }
 

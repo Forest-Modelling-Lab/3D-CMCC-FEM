@@ -305,6 +305,9 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
 	logger(g_log, "Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
 
+	s->value[LITTER_C] += s->value[C_TO_LITTER];
+	logger(g_log, "Litter Biomass (Wlitter)= %f tC/area\n", s->value[LITTER_C]);
+
 	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
 	logger(g_log, "Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 

@@ -291,8 +291,18 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
 						/* check for carbon balance closure */
-						//todo fixme
-						//Check_class_carbon_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						//todo fixme they should have both the same function
+						/* note currently it can be used only for deciduous */
+						if(m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 ||
+								m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+						{
+							Check_class_carbon_balance(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						}
+						else
+						{
+							//test
+							New_Check_carbon_balance(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						}
 
 						/* check for water balance closure */
 						Check_class_water_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
@@ -595,11 +605,11 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	/* compute water fluxes */
 	Water_fluxes (&m->cells[cell]);
 	/* CHECK FOR CARBON BALANCE CLOSURE */
-	Check_carbon_balance (&m->cells[cell]);
+	//Check_carbon_balance (&m->cells[cell]);
 	/* CHECK FOR WATER BALANCE CLOSURE */
 	Check_soil_water_balance (&m->cells[cell]);
 	//todo
-	/* /* CHECK FOR RADIATIVE BALANCE CLOSURE */
+	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
 	//Check_radiative_balance (&m->cells[cell]);
 
 	m->cells[cell].dos  += 1;

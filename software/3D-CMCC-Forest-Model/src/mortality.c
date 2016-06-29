@@ -225,6 +225,14 @@ void Layer_cover_mortality(cell_t *const c, const int height, const int age, con
 		c->heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree);
 		c->heights[height].ages[age].species[species].value[BRANCH_DEAD_WOOD_C] -= (c->heights[height].ages[age].species[species].value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree);
 
+		c->heights[height].ages[age].species[species].value[LITTER_C] += (c->heights[height].ages[age].species[species].value[AV_LEAF_MASS_KgC]*1000.0*deadtree) +
+				(c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree) +
+				(c->heights[height].ages[age].species[species].value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree) +
+				(c->heights[height].ages[age].species[species].value[AV_STEM_MASS_KgC]*1000.0*deadtree) +
+				(c->heights[height].ages[age].species[species].value[AV_RESERVE_MASS_KgC]*1000.0*deadtree) +
+				(c->heights[height].ages[age].species[species].value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
+
+
 		logger(g_log, "Number of Trees = %d trees \n", c->heights[height].ages[age].species[species].counter[N_TREE]);
 		logger(g_log, "LEAF_C removed =%f tC\n",(c->heights[height].ages[age].species[species].value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
 		logger(g_log, "FINE_ROOT_C removed =%f tC\n",(c->heights[height].ages[age].species[species].value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
