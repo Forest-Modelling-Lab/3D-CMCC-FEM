@@ -226,7 +226,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE];
+		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
 
 
 		break;

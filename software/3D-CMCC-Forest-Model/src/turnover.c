@@ -38,23 +38,31 @@ void Turnover(species_t *const s, cell_t *const c)
 			fine_root_to_remove = (s->value[FINE_ROOT_C] * s->value[LITTERFALL_RATE]);
 
 			/* compute daily amount of C to re-translocate before reomve leaf and fine root */
-			s->value[RETRANSL_C_LEAF_TO_RESERVE] = leaf_to_remove * fraction_to_retransl;
-			logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-			s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = fine_root_to_remove * fraction_to_retransl;
-			logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+			s->value[C_LEAF_TO_RESERVE] = leaf_to_remove * fraction_to_retransl;
+			logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[C_LEAF_TO_RESERVE]);
+			s->value[C_FINEROOT_TO_RESERVE] = fine_root_to_remove * fraction_to_retransl;
+			logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 
 			/* reduce daily an amount of total leaf linearly */
 			s->value[LEAF_C] -= leaf_to_remove;
-			logger(g_log, "Leaf poool after turnover = %g tC/cell\n", s->value[LEAF_C]);
+			logger(g_log, "Leaf pool after turnover = %g tC/cell\n", s->value[LEAF_C]);
 
 			/* reduce daily an amount of total fine root linearly */
 			s->value[FINE_ROOT_C] -= fine_root_to_remove;
-			logger(g_log, "Leaf poool after turnover = %g tC/cell\n", s->value[LEAF_C]);
+			logger(g_log, "Leaf pool after turnover = %g tC/cell\n", s->value[LEAF_C]);
 
 			/* considering that both leaf and fine root contribute to the litter pool */
 			s->value[C_TO_LITTER] = (leaf_to_remove + fine_root_to_remove) -
-					(s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+					(s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);
 			logger(g_log, " to litter = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+
+			/* update */
+			s->value[C_TO_LEAF]= -leaf_to_remove;
+			s->value[C_TO_FINEROOT] =-fine_root_to_remove;
+
+			/* retranslocate C from leaf and fine root to reserve pool */
+			s->value[C_TO_RESERVE] += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);
+
 		}
 
 		/* daily stem turnover live to dead wood*/

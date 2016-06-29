@@ -178,29 +178,14 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 	carbon_pool_out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] + s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
 
 	/* sum of current storage */
-	//fixme both function should be the same
-	/* deciduous */
-	if(s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-	{
-		carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
-	}
-	/* evergreen */
-	else
-	{
-		carbon_pool_stored = (s->value[LEAF_C] - s->value[OLD_LEAF_C]) * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
-				+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
-	}
+	carbon_pool_stored = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
+			+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
+
 
 	/* check carbon pool balance */
 	carbon_pool_balance = carbon_pool_in - carbon_pool_out - carbon_pool_stored;
@@ -210,10 +195,13 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 	if (fabs(carbon_pool_balance)> 1e-4)
 	{
 		logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
-		logger(g_log, "carbon in = %g gC/m2\n", carbon_pool_in);
-		logger(g_log, "carbon out = %g gC/m2\n", carbon_pool_out);
-		logger(g_log, "carbon stored = %g gC/m2\n", carbon_pool_stored);
-		logger(g_log, "carbon balance = %g gC/m2\n", carbon_pool_balance);
+		logger(g_log, "\nin = %g gC/m2\n", carbon_pool_in);
+		logger(g_log, "DAILY_GPP_gC = %g gC/m2\n", s->value[DAILY_GPP_gC]);
+		logger(g_log, "\nout = %g gC/m2\n", carbon_pool_out);
+		logger(g_log, "TOTAL_MAINT_RESP = %g gC/m2\n", s->value[TOTAL_MAINT_RESP]);
+		logger(g_log, "TOTAL_GROWTH_RESP = %g gC/m2\n", s->value[TOTAL_GROWTH_RESP]);
+		logger(g_log, "C_TO_LITTER = %g gC/m2\n", s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "\nstored = %g gC/m2\n", carbon_pool_stored);
 		logger(g_log, "C_TO_LEAF = %g gC/m2\n", s->value[C_TO_LEAF]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_FINEROOT = %g gC/m2\n", s->value[C_TO_FINEROOT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_COARSEROOT = %g gC/m2\n", s->value[C_TO_COARSEROOT]* 1000000.0 / g_settings->sizeCell);
@@ -221,7 +209,9 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "C_TO_RESERVE = %g gC/m2\n", s->value[C_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
-		logger(g_log, "C_TO_LITTER = %g gC/m2\n\n", s->value[C_TO_LITTER]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_LEAF_TO_RESERVE = %g gC/m2\n", s->value[C_LEAF_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "C_FINEROOT_TO_RESERVE = %g gC/m2\n", s->value[C_FINEROOT_TO_RESERVE]* 1000000.0 / g_settings->sizeCell);
+		logger(g_log, "\nbalance = %g gC/m2\n", carbon_pool_balance);
 		logger(g_log, "...FATAL ERROR IN CELL LEVEL carbon balance (exit)\n");
 		exit(1);
 	}

@@ -164,7 +164,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 				logger(g_log, "Allocating only into foliage and fine root pools\n");
 				s->value[C_TO_LEAF] = npp_to_alloc * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 				s->value[C_TO_FINEROOT] = npp_to_alloc - s->value[C_TO_LEAF];
-				s->value[C_TO_RESERVE] = 0.0 + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+				s->value[C_TO_RESERVE] = 0.0;
 			}
 			/* it needs */
 			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
@@ -172,7 +172,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FINEROOT] = 0.0;
-				s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+				s->value[C_TO_RESERVE] = npp_to_alloc;
 			}
 			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
@@ -186,7 +186,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			logger(g_log, "Allocating only into reserve pool (low reserves, negative NPP)\n");
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
 			s->value[C_TO_BRANCH] = 0.0;
@@ -214,14 +214,14 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
 			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM) + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+			s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM);
 			s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
 			s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
 			s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];
 		}
 		else
 		{
-			s->value[C_TO_RESERVE] = npp_to_alloc + (s->value[RETRANSL_C_LEAF_TO_RESERVE] + s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);;
+			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_TOT_STEM] = 0.0;

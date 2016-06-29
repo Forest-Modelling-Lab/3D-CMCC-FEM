@@ -51,10 +51,10 @@ void Leaf_fall(species_t *const s, int* const doy)
 	{
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * fraction_to_retransl) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE]= (s->value[FINE_ROOT_C] * fraction_to_retransl) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		s->value[C_LEAF_TO_RESERVE] = (s->value[LEAF_C] * fraction_to_retransl) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[C_LEAF_TO_RESERVE]);
+		s->value[C_FINEROOT_TO_RESERVE]= (s->value[FINE_ROOT_C] * fraction_to_retransl) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
+		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 
 		previousLai = s->value[LAI];
 
@@ -80,7 +80,7 @@ void Leaf_fall(species_t *const s, int* const doy)
 		logger(g_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = -fine_root_to_remove;
 		logger(g_log, "C_TO_FINEROOT = %f\n", s->value[C_TO_FINEROOT]);
-		s->value[C_TO_LITTER] = (foliage_to_remove - s->value[RETRANSL_C_LEAF_TO_RESERVE]) + (fine_root_to_remove - s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		s->value[C_TO_LITTER] = (foliage_to_remove - s->value[C_LEAF_TO_RESERVE]) + (fine_root_to_remove - s->value[C_FINEROOT_TO_RESERVE]);
 		logger(g_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
 	else
@@ -90,10 +90,10 @@ void Leaf_fall(species_t *const s, int* const doy)
 		logger(g_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);
 		s->value[C_TO_FINEROOT] = - s->value[FINE_ROOT_C];
 		logger(g_log, "C_TO_FINEROOT = %f\n", -s->value[C_TO_FINEROOT]);
-		s->value[RETRANSL_C_LEAF_TO_RESERVE] = s->value[LEAF_C];
-		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[RETRANSL_C_LEAF_TO_RESERVE]);
-		s->value[RETRANSL_C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
-		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[RETRANSL_C_FINEROOT_TO_RESERVE]);
+		s->value[C_LEAF_TO_RESERVE] = s->value[LEAF_C];
+		logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %f\n", s->value[C_LEAF_TO_RESERVE]);
+		s->value[C_FINEROOT_TO_RESERVE] = s->value[FINE_ROOT_C];
+		logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %f\n", s->value[C_FINEROOT_TO_RESERVE]);
 		s->value[C_TO_LITTER] = 0.0;
 		logger(g_log, "C_TO_LITTER = %f\n", s->value[C_TO_LITTER]);
 	}
