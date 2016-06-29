@@ -394,7 +394,8 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	c->daily_branch_carbon += s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_reserve_carbon += s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell ;
 	c->daily_root_carbon += s->value[C_TO_ROOT] * 1000000.0 / g_settings->sizeCell ;
-	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell ;
+	c->daily_litter_carbon += s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
+	c->daily_fruit_carbon += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
 
 	/* update cell level carbon biomass in tC/cell/day */
 	c->daily_leaf_carbon_tC += s->value[C_TO_LEAF];
@@ -405,6 +406,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	c->daily_reserve_carbon_tC += s->value[C_TO_RESERVE];
 	c->daily_root_carbon_tC += s->value[C_TO_ROOT];
 	c->daily_litter_carbon_tC += s->value[C_TO_LITTER];
+	c->daily_fruit_carbon_tC += s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
 
 	logger(g_log, "******************************\n");
 }

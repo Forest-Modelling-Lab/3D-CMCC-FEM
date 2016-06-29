@@ -55,6 +55,7 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	c->daily_branch_carbon = 0.0;
 	c->daily_reserve_carbon = 0.0;
 	c->daily_litter_carbon = 0.0;
+	c->daily_fruit_carbon = 0.0;
 	c->daily_litterfall = 0.0;
 
 	/*reset daily water variables*/

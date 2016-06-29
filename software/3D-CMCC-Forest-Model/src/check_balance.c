@@ -40,7 +40,7 @@ void Check_carbon_balance(cell_t *const c)
 	carbon_stored = c->daily_leaf_carbon + c->daily_stem_carbon +
 			c->daily_fine_root_carbon + c->daily_coarse_root_carbon +
 			c->daily_branch_carbon + c->daily_reserve_carbon +
-			c->daily_litter_carbon;
+			c->daily_litter_carbon + c->daily_fruit_carbon;
 
 	c->carbon_balance = carbon_in - carbon_out -carbon_stored;
 
@@ -59,6 +59,7 @@ void Check_carbon_balance(cell_t *const c)
 		logger(g_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
 		logger(g_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
 		logger(g_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
+		logger(g_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
 		logger(g_log, "\ncarbon in = %g gC/m2/day\n", carbon_in);
 		logger(g_log, "carbon out = %g gC/m2/day\n", carbon_out);
 		logger(g_log, "carbon stored = %g gC/m2/day\n", carbon_stored);

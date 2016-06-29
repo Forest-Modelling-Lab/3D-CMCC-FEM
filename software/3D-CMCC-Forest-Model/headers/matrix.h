@@ -793,22 +793,24 @@ typedef struct {
 	double ter;  //total ecosystem respiration
 	double carbon_balance;
 	double daily_nee, monthly_nee, annual_nee;
-	double daily_leaf_carbon;/* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_stem_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_fine_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_coarse_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_root_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_branch_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_reserve_carbon;/* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_litter_carbon;/* daily carbon to litter  c pool in gC/m2/day  */
-	double daily_leaf_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_stem_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fine_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_coarse_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_branch_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_reserve_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_root_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_litter_carbon_tC;/* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_leaf_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_stem_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_fine_root_carbon;                              /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_coarse_root_carbon;                            /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_root_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_branch_carbon;                                 /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_reserve_carbon;                                /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_litter_carbon;                                 /* daily carbon to litter c pool in gC/m2/day */
+	double daily_fruit_carbon;                                  /* daily carbon to fruit c pool in gC/m2/day */
+	double daily_leaf_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_stem_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fine_root_carbon_tC;                           /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_coarse_root_carbon_tC;                         /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_branch_carbon_tC;                              /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_reserve_carbon_tC;                             /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_root_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_litter_carbon_tC;                              /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fruit_carbon_tC;                               /* daily carbon assimilated to c pool in tC/cell/day */
 	double daily_leaf_drymatter;
 	double daily_stem_drymatter;
 	double daily_fine_root_drymatter;
