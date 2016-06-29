@@ -284,7 +284,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 							Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height);
 							Daily_C_Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, DaysInMonth[month], height, age, species);
-							logger(g_log, "--------------------------------------------------------------------------\n\n\n");
+							logger(g_log, "--------------------------------------------------------------------------\n");
 						}
 
 						/* check for balance closure at the class level */
@@ -292,7 +292,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 
 						/* check for carbon balance closure */
 						Check_class_carbon_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
-
 
 						/* check for water balance closure */
 						Check_class_water_balance (&m->cells[cell].heights[height].ages[age].species[species]);

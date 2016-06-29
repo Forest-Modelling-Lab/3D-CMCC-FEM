@@ -174,7 +174,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 				s->value[C_TO_FINEROOT] = 0.0;
 				s->value[C_TO_RESERVE] = npp_to_alloc;
 			}
-			CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 
 			s->value[C_TO_COARSEROOT] = 0.0;
 			s->value[C_TO_STEM] = 0.0;
@@ -183,7 +182,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		}
 		else
 		{
-			logger(g_log, "Allocating only into reserve pool (low reserves, negative NPP)\n");
+			logger(g_log, "Consuming reserve pool (negative NPP)\n");
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_RESERVE] = npp_to_alloc;
@@ -199,6 +198,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		/* partitioning */
 		if (npp_to_alloc > 0.0)
 		{
+			logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
 			/* REPRODUCTION ONLY FOR NEEDLE LEAF */
 			if(s->value[PHENOLOGY] == 1.2)
 			{
@@ -221,6 +221,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		}
 		else
 		{
+			logger(g_log, "Consuming reserve pool (negative NPP)\n");
 			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
@@ -230,6 +231,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_LEAF] = 0.0;
 			s->value[C_TO_FRUIT] = 0.0;
 		}
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 	}
 
