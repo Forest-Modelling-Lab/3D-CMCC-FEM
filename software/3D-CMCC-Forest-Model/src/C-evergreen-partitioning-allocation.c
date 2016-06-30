@@ -66,16 +66,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	i = c->heights[height].z;
 
-	//	if(day == 0 && month == 0)
-	//	{
-	//		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
-	//		{
-	//			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
-	//			logger(g_log, "Daily litter fall rate = %f\n", s->value[LITTERFALL_RATE]);
-	//		}
-	//	}
-
-
 	/* following Arora and Boer 2005 */
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
@@ -83,11 +73,11 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//compute static ratio of allocation between fine
 	//fixme see if change with new parameters checked in "Pool_fraction"
 	//	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-	//	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+	//	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 	//	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-	//	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+	//	logger(g_log, "Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
 	//	Perc_coarse = 1- Perc_fine;
-	//logger(g_log, "Percentage of coarse root against total root= %f %%\n", Perc_coarse * 100 );
+	//logger(g_log, "Percentage of coarse root against total root= %g %%\n", Perc_coarse * 100 );
 
 	/* Partitioning ratios from Arora and Boer 2005 */
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
@@ -108,16 +98,16 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	}
 	else
 	{
-		logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
-		logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
-		logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION]);
+		logger(g_log, "min r0 ctem = %g\n",s->value[MIN_R0CTEM] );
+		logger(g_log, "max s0 ctem = %g\n",s->value[MAX_S0CTEM] );
+		logger(g_log, "years for conversion = %g\n",s->value[YEARS_FOR_CONVERSION]);
 
 		//considering a LINEAR increment
 		//allocation ratio to roots
 		r0Ctem -= s->value[MIN_R0CTEM];
 		r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
 		r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-		logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
+		logger(g_log, "new r0_CTEM = %g \n", r0Ctem);
 
 		if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
 		{
@@ -129,13 +119,13 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
 		s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
 		s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-		logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
+		logger(g_log, "new s0_CTEM = %g \n", s0Ctem);
 
 		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)logger(g_log, "ERROR IN s0Ctem !!! \n");
 
 	}
-	logger(g_log, "LAI = %f \n", s->value[LAI]);
-	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+	logger(g_log, "LAI = %g \n", s->value[LAI]);
+	logger(g_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
 	logger(g_log,"PHENOLOGY PHASE (CASE): %d\n", s->phenology_phase);
 
 	/* assign NPP to local variable */
@@ -214,7 +204,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 				//NPP for reproduction
 				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
 				npp_to_alloc -= s->value[C_TO_FRUIT];
-				logger(g_log, "including Biomass increment into cones = %f tC/area\n", s->value[C_TO_FRUIT]);
+				logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
 			}
 			else
 			{
@@ -255,20 +245,11 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-8)
+	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-8)
 
 
 	logger(g_log, "\n*Carbon allocation*\n");
 
-	logger(g_log, "\n-Daily increment in carbon pools (before turnover)-\n");
-	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
@@ -276,62 +257,82 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	/* update leaf biomass through turnover */
 	Turnover(&c->heights[height].ages[age].species[species], c);
 
-	leaf_balance(c, &c->heights[height].ages[age].species[species]);
+	logger(g_log, "\n-Daily increment to be accounted in carbon pools (after turnover)-\n");
+	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+	logger(g_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
+	logger(g_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
+	logger(g_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
+	logger(g_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
+	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 
 	logger(g_log, "\n****BIOMASS POOLS UPDATE****\n");
 
 	/* update class level carbon biomass pools */
 	s->value[LEAF_C] += s->value[C_TO_LEAF];
-	logger(g_log, "Leaf Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
-
-	s->value[STEM_C] += s->value[C_TO_STEM];
-	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
-
-	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
-	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
-
-	s->value[RESERVE_C] += s->value[C_TO_RESERVE];
-	logger(g_log, "Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
+	//s->value[LEAF_C] -= s->value[C_LEAF_TO_LITTER];
+	logger(g_log, "Leaf Biomass (Wf) = %g tC/area\n", s->value[LEAF_C]);
 
 	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
-	logger(g_log, "Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
+	//s->value[FINE_ROOT_C] -= s->value[C_FINE_ROOT_TO_LITTER];
+	logger(g_log, "Fine Root Biomass (Wrf) = %g tC/area\n", s->value[FINE_ROOT_C]);
+
+	s->value[RESERVE_C] += s->value[C_TO_RESERVE];
+	s->value[RESERVE_C] += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);;
+	logger(g_log, "Reserve Biomass (Wres) = %g tC/area\n", s->value[RESERVE_C]);
+
+	s->value[STEM_C] += s->value[C_TO_STEM];
+	logger(g_log, "Stem Biomass (Ws) = %g tC/area\n", s->value[STEM_C]);
+
+	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
+	logger(g_log, "Branch and Bark Biomass (Wbb) = %g tC/area\n", s->value[BRANCH_C]);
 
 	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
-	logger(g_log, "Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
+	logger(g_log, "Coarse Root Biomass (Wrc) = %g tC/area\n", s->value[COARSE_ROOT_C]);
 
 	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
-	logger(g_log, "Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
+	logger(g_log, "Total Root Biomass (Wr TOT) = %g tC/area\n", s->value[TOT_ROOT_C]);
 
 	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
-	logger(g_log, "Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
+	logger(g_log, "Total Stem Biomass (Wts)= %g tC/area\n", s->value[TOT_STEM_C]);
 
 	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
-	logger(g_log, "Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
+	logger(g_log, "Fuit Biomass (Wfruit)= %g tC/area\n", s->value[FRUIT_C]);
 
-	s->value[LITTER_C] += s->value[C_TO_LITTER];
-	logger(g_log, "Litter Biomass (Wlitter)= %f tC/area\n", s->value[LITTER_C]);
+	s->value[LITTER_C] += s->value[C_TO_LITTER] + s->value[C_FRUIT_TO_LITTER];
+	logger(g_log, "Litter Biomass (Wlitter)= %g tC/area\n", s->value[LITTER_C]);
 
+	/* live-dead wood biomass */
 	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
+	s->value[STEM_LIVE_WOOD_C] -= s->value[C_STEM_LIVEWOOD_TO_DEADWOOD];
+	logger(g_log, "Live Stem Biomass (Ws) = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
 
 	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
-	logger(g_log, "Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
+	logger(g_log, "Dead Stem Biomass (Ws) = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
 
 	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_COARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	s->value[COARSE_ROOT_LIVE_WOOD_C] -= s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD];
+	logger(g_log, "Live Coarse Biomass (Ws) = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 
 	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
-	logger(g_log, "Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_log, "Dead Coarse Biomass (Ws) = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 
 	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	s->value[BRANCH_LIVE_WOOD_C] -= s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD];
+	logger(g_log, "Live Stem Branch Biomass (Ws) = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
 	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
-	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
+	logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
-	logger(g_log, "Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
+	logger(g_log, "Total Carbon Biomass (W) = %g tC/area\n", s->value[TOTAL_C]);
 
 	/* check for closure */
 	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>1e-4);
@@ -347,14 +348,18 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");
-	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
+	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+
+
+	//leaf_balance(c, &c->heights[height].ages[age].species[species]);
+
 
 	/* update Leaf Area Index */
 	Daily_lai (&c->heights[height].ages[age].species[species]);

@@ -13,122 +13,84 @@ extern logger_t* g_log;
 
 void Turnover(species_t *const s, cell_t *const c)
 {
-	static double daily_live_turnover_rate;
-	double leaf_to_remove;
-	double fine_root_to_remove;
-	static double fraction_to_retransl = 0.1; //fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013
+	static double daily_live_wood_turnover_rate;
+	static double daily_leaf_fineroot_turnover_rate;
+	//fixme fixme fixme fixme
+	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
-	daily_live_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+	logger(g_log, "\n*DAILY_TURNOVER*\n");
 
-	/*following biome turnover occurs only during growing season */
+	/* compute rates */
+	/* compute leaf and fine root turnover rate (ratio) */
+	daily_leaf_fineroot_turnover_rate = s->value[LEAVES_FINERTTOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE];
+	logger(g_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
+	/* compute live-wood turnover rate (ratio) */
+	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+	logger(g_log, "Daily live-wood turnover rate = %g (ratio)\n", daily_live_wood_turnover_rate);
+
+	/*following BIOME_BGC turnover occurs only during growing season */
 	if (s->counter[VEG_UNVEG] == 1)
 	{
-		logger(g_log, "\n*DAILY_TURNOVER*\n");
 		/*daily leaf turnover for evergreen */
 		if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 		{
 			logger(g_log, "****leaf and fine root turnover for evergreen****\n");
 
-			 /* compute litterfall rate (ratio) */
-			s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
-			logger(g_log, "Daily litter fall rate = %g (ratio)\n", s->value[LITTERFALL_RATE]);
+			logger(g_log, "Leaf pool before turnover = %g tC/cell\n", s->value[LEAF_C]);
+			logger(g_log, "Fine root pool before turnover = %g tC/cell\n", s->value[FINE_ROOT_C]);
 
 			/* compute daily amount of leaf and fine root to remove */
-			leaf_to_remove = (s->value[LEAF_C] * s->value[LITTERFALL_RATE]);
-			logger(g_log, "Daily leaf litter fall rate = %g tC/cell/day\n", s->value[LITTERFALL_RATE]);
-			fine_root_to_remove = (s->value[FINE_ROOT_C] * leaf_to_remove);
-			logger(g_log, "Daily fine root litter fall rate = %g tC/cell/day\n", fine_root_to_remove);
+			s->value[C_LEAF_TO_LITTER] = (s->value[LEAF_C] * daily_leaf_fineroot_turnover_rate);
+			logger(g_log, "Daily leaf turnover = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+			s->value[C_FINE_ROOT_TO_LITTER] = (s->value[FINE_ROOT_C] * daily_leaf_fineroot_turnover_rate);
+			logger(g_log, "Daily fine root turnover = %g tC/cell/day\n", s->value[C_FINE_ROOT_TO_LITTER]);
+			logger(g_log, "Daily biomass turnover to litter before retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);
 
 			/* compute daily amount of C to re-translocate before remove leaf and fine root */
-			s->value[C_LEAF_TO_RESERVE] = leaf_to_remove * fraction_to_retransl;
+			s->value[C_LEAF_TO_RESERVE] = s->value[C_LEAF_TO_LITTER] * fraction_to_retransl;
 			logger(g_log, "RETRANSL_C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
-			s->value[C_FINEROOT_TO_RESERVE] = fine_root_to_remove * fraction_to_retransl;
+			s->value[C_FINEROOT_TO_RESERVE] = s->value[C_FINE_ROOT_TO_LITTER] * fraction_to_retransl;
 			logger(g_log, "RETRANSL_C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
 
-			/* reduce daily an amount of total leaf linearly */
-			s->value[LEAF_C] -= leaf_to_remove;
-			logger(g_log, "Leaf pool after turnover = %g tC/cell\n", s->value[LEAF_C]);
+			/* update considering retranslocation */
+			s->value[C_LEAF_TO_LITTER] -= s->value[C_LEAF_TO_RESERVE];
+			logger(g_log, "Daily leaf turnover after retranslocation = %g tC/cell/day\n", s->value[C_LEAF_TO_LITTER]);
+			s->value[C_FINE_ROOT_TO_LITTER] -= s->value[C_FINEROOT_TO_RESERVE];
+			logger(g_log, "Daily fine root turnover after retranslocation = %g tC/cell/day\n", s->value[C_FINE_ROOT_TO_LITTER]);
 
-			/* reduce daily an amount of total fine root linearly */
-			s->value[FINE_ROOT_C] -= fine_root_to_remove;
-			logger(g_log, "Fine root pool after turnover = %g tC/cell\n", s->value[FINE_ROOT_C]);
+			/**/
+			s->value[C_TO_LEAF] -= s->value[C_LEAF_TO_LITTER];
+			s->value[C_TO_FINEROOT] -= s->value[C_FINE_ROOT_TO_LITTER];
 
 			/* considering that both leaf and fine root contribute to the litter pool */
-			s->value[C_TO_LITTER] = (leaf_to_remove + fine_root_to_remove) -
-					(s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);
-			logger(g_log, "biomass to litter = %g tC/cell/day\n", s->value[C_TO_LITTER]);
-
-			/* retranslocate C from leaf and fine root to reserve pool */
-			s->value[C_TO_RESERVE] += (s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]);
-			logger(g_log, "biomass to retranslocate = %g tC/cell/day\n", (s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE]));
-			logger(g_log, "biomass to reserve (after retranslocation) = %g tC/cell/day\n", s->value[C_TO_LITTER]);
+			s->value[C_TO_LITTER] = (s->value[C_LEAF_TO_LITTER] + s->value[C_FINE_ROOT_TO_LITTER]);
+			logger(g_log, "biomass to litter after retranslocation = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 
 		}
 
 		/* daily stem turnover live to dead wood*/
-		logger(g_log, "Live:Dead turnover rate = %g tC/day\n", daily_live_turnover_rate);
-		logger(g_log, "****Stem turnover****\n");
-		logger(g_log, "Previous Live Stem Biomass = %g tC/cell\n", s->value[STEM_LIVE_WOOD_C]);
-		logger(g_log, "Live Stem Biomass to turnover= %g tC/cell/day\n", s->value[STEM_LIVE_WOOD_C] * daily_live_turnover_rate);
-		s->value[STEM_LIVE_WOOD_C] -= (s->value[C_TO_STEM] * daily_live_turnover_rate);
-		//s->value[STEM_LIVE_WOOD_C] -= (s->value[STEM_LIVE_WOOD_C] * daily_live_turnover_rate);
-		logger(g_log, "Live Stem Biomass = %g tC/cell\n", s->value[STEM_LIVE_WOOD_C]);
-		s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
-		logger(g_log, "Dead Stem Biomass = %g tC/cell\n", s->value[STEM_DEAD_WOOD_C]);
-		logger(g_log, "Live stem + dead stem = %g tC/cell\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
-		logger(g_log, "Total stem = %g tC/cell\n", s->value[STEM_C]);
-		CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]) - s->value[STEM_C]), >1e-4)
-		//exit(1);
+		logger(g_log, "\n****Stem turnover****\n");
+
+		s->value[C_STEM_LIVEWOOD_TO_DEADWOOD] = (s->value[C_TO_STEM] * daily_live_wood_turnover_rate);
+		logger(g_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
 
 		/* daily coarse root turnover live to dead wood */
-		logger(g_log, "****Coarse root turnover****\n");
-		logger(g_log, "Previous Live Coarse Root  Biomass = %g tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
-		s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[C_TO_COARSEROOT] * daily_live_turnover_rate);
-		//s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[COARSE_ROOT_LIVE_WOOD_C] * daily_live_turnover_rate);
-		logger(g_log, "Live Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
-		s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
-		logger(g_log, "Dead Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+		logger(g_log, "\n****Coarse root turnover****\n");
 
-		/* adding a daily turnover that goes to litter */
-		//		s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS]);
-		//		logger(g_log, "Dead Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		//		s->value[COARSE_ROOT_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS]);
-		//		logger(g_log, "Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		//		s->value[C_COARSE_ROOT_TO_LITTER] = s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS];
-		//		logger(g_log, "Coarse root Biomass to litter = %g tC/cell\n", s->value[C_COARSE_ROOT_TO_LITTER]);
-
-		logger(g_log, "Live coarse + dead coarse = %g tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);
-		logger(g_log, "Total coarse = %g tC/cell\n", s->value[COARSE_ROOT_C]);
-		logger(g_log, "difference in coarse root = %g tC/cell\n", (s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C]);
-		CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]) - s->value[COARSE_ROOT_C]), >1e-4)
+		s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD] = (s->value[C_TO_COARSEROOT] * daily_live_wood_turnover_rate);
+		logger(g_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
 
 		/* daily branch turnover live to dead wood */
-		logger(g_log, "****Branch turnover****\n");
-		logger(g_log, "Previous Live Branch  Biomass = %g tC/cell\n", s->value[BRANCH_LIVE_WOOD_C]);
-		s->value[BRANCH_LIVE_WOOD_C] -= (s->value[C_TO_BRANCH] * daily_live_turnover_rate);
-		//s->value[BRANCH_LIVE_WOOD_C] -= (s->value[BRANCH_LIVE_WOOD_C] * daily_live_turnover_rate);
-		logger(g_log, "Live Stem branch Biomass = %g tC/cell\n", s->value[BRANCH_LIVE_WOOD_C]);
-		s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
-		logger(g_log, "Dead Stem Biomass = %g tC/cell\n", s->value[BRANCH_DEAD_WOOD_C]);
+		logger(g_log, "\n****Branch turnover****\n");
 
-		/* adding a daily turnover that goes to litter */
-		//		s->value[BRANCH_DEAD_WOOD_C] -= (s->value[C_TO_BRANCH] * s->value[BRANCHTTOVER]/s->counter[VEG_DAYS]);
-		//		logger(g_log, "Dead Branch Biomass = %g tC/cell\n", s->value[BRANCH_DEAD_WOOD_C]);
-		//		s->value[BRANCH_C] -= (s->value[C_TO_BRANCH] * s->value[BRANCHTTOVER]/s->counter[VEG_DAYS]);
-		//		logger(g_log, "Branch Biomass = %g tC/cell\n", s->value[BRANCH_C]);
-		//		s->value[C_BRANCH_TO_LITTER] = s->value[C_TO_BRANCH] * s->value[BRANCHTTOVER]/s->counter[VEG_DAYS];
-		//		logger(g_log, "Branch Biomass to litter = %g tC/cell\n", s->value[C_BRANCH_TO_LITTER]);
-
-		logger(g_log, "Live branch + dead branch = %g tC/cell\n", s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]);
-		logger(g_log, "Total branch = %g tC/cell\n", s->value[BRANCH_C]);
-		logger(g_log, "difference in branch = %g tC/cell\n", (s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C]);
-		CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C]) - s->value[BRANCH_C]), >1e-4);
+		s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD] = (s->value[C_TO_BRANCH] * daily_live_wood_turnover_rate);
+		logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 		/* daily fruit turnover */
 		if(s->value[PHENOLOGY] == 1.2 && s->value[FRUIT_C] != 0.0)
 		{
-			s->value[FRUIT_C] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
-			logger(g_log, "Cones biomass after turonver = %g tC/cell\n", s->value[FRUIT_C]);
+			s->value[C_FRUIT_TO_LITTER] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
+			logger(g_log, "C_FRUIT_TO_LITTER = %g tC/cell\n", s->value[C_FRUIT_TO_LITTER]);
 		}
 	}
 }

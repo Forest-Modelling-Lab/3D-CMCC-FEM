@@ -84,7 +84,7 @@ enum {
 	BUD_BURST,                  //days of bud burst at the beginning of growing season (only for deciduous)
 	LEAF_FALL_FRAC_GROWING,     //proportions of the growing season of leaf fall
 	LEAF_LIFE_SPAN,             //Leaf life span
-	LEAVES_FINERTTOVER,         //Average daily fine root turnover rate
+	LEAVES_FINERTTOVER,         //Average daily leaves and fine root turnover rate (for evergreen)
 	COARSERTTOVER,              //Average daily coarse root turnover rate
 	SAPWOODTTOVER,	            //Average daily sapwood turnover rate
 	BRANCHTTOVER,	            //Average daily branch turnover rate
@@ -303,9 +303,13 @@ enum {
 	C_TO_LITTER,
 	C_LEAF_TO_RESERVE,
 	C_FINEROOT_TO_RESERVE,
-	C_BRANCH_TO_LITTER,
-	C_COARSE_ROOT_TO_LITTER,
-	C_STEM_TO_LITTER,
+	C_LEAF_TO_LITTER,
+	C_FINE_ROOT_TO_LITTER,
+	C_FRUIT_TO_LITTER,
+	C_STEM_LIVEWOOD_TO_DEADWOOD,
+	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD,
+	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,
+
 
 	//carbon biomass pools in tons of C/area
 	LEAF_C,
@@ -456,7 +460,6 @@ enum {
 	LIVE_TOTAL_WOOD_FRAC,
 	//FINE/COARSE RATIO
 	FR_CR,                         //FINE-COARSE ROOT RATIO
-	LITTERFALL_RATE,               //daily/monthly litterfall rate from CTEM
 	FRACBB,
 
 
