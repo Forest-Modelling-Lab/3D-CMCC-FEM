@@ -13,9 +13,6 @@ GAMMA_LIGHT 0.039   //Light parameter for light modifier 0.039 see Bagnara et al
 
 
 INT_COEFF  0.05    //precip interception coefficient
-LAIGCX  3.3               //LAI for maximum canopy conductance
-LAIMAXINTCPTN   5.8       //LAI for maximum rainfall interception (R.R.R. Oerlemans & R.P. Vink 2010)
-MAXINTCPTN  0.25    //Maximum proportion of rainfall interception evaporated from canopy(0.25 Xenakis et al 2008, Mateos & Scnabel 2001) (0.17, R.R.R. Oerlemans & R.P. Vink 2010)
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 10.47                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone

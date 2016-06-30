@@ -14,10 +14,12 @@ F * phenology.c
 
 extern logger_t* g_log;
 
-void simple_phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
+void Phenology (cell_t *const c, species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
 {
+	static int phenology_counter;
 
 	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
 
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -70,38 +72,28 @@ void simple_phenology_phase (species_t *const s, const meteo_t* const met, const
 	/*for evergreen*/
 	else
 	{
-		//fixme
+		if(!c->years_count && c->doy == 1) phenology_counter = 0;
+
 		/* a very simplistic way to define a phenological phase for evergreen*/
 		/*just two phase are considered
 		 * shoot elongation
 		 * secondary growth*/
 		/*see Ludeke et al., 1994*/
 		/* Beginning of a "growing season" */
-		if (met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /* && month < JULY */)
+		if ( met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /*&& phenology_counter == 0 *//* && month < JULY */)
 		{
+			phenology_counter = 0;//not used
 			s->phenology_phase = 1;
-			s->counter[LEAF_FALL_COUNTER] = 0;
 		}
 		/* Normal growth*/
 		else
 		{
+			phenology_counter = 1;//not used
 			s->phenology_phase = 2;
-			if (s->counter[LEAF_FALL_COUNTER] == 0)
-			{
-				s->counter[LEAF_FALL_COUNTER] = 1;
-			}
-			else if (s->counter[LEAF_FALL_COUNTER] == 1)
-			{
-				s->counter[LEAF_FALL_COUNTER] = 2;
-			}
 		}
-		if (day == 0 && month == 0 && year == 0)
-		{
-			s->phenology_phase = 1;
-			s->counter[LEAF_FALL_COUNTER] = 0;
-			s->value[DAILY_LEAVES_BIOMASS_TO_REMOVE] = 0.0;
-		}
+
 	}
+	logger(g_log, "phenology_counter = %d\n", phenology_counter);
 	logger(g_log, "phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
 }
 

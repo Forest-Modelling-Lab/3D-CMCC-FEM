@@ -14,9 +14,6 @@ ALBEDO  0.2
 GAMMA_LIGHT 0.01   //Light parameter for light modifier
 
 INT_COEFF  0.034    //precip interception coefficient
-LAIGCX  5              //LAI for maximum canopy conductance
-LAIMAXINTCPTN   8       //LAI for maximum rainfall interception
-MAXINTCPTN  0.33    //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 48                 //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005

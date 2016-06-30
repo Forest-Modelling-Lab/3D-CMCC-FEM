@@ -193,9 +193,6 @@ example:
 ALPHA   0.055		//   // Canopy quantum efficiency (molC/molPAR)0.75
 EPSILONgCPAR   0 // Light Use Efficiency  (gC/molPAR)(used if ALPHA is not available) 
 K	0.60		//0.54 Extinction coefficient for absorption of PAR by canopy 
-LAIGCX	8               //LAI for maximum canopy conductance
-LAIMAXINTCPTN	5       //LAI for maximum rainfall interception
-MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy 
 .....
 .....
 

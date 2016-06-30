@@ -26,12 +26,8 @@ void Print_parameters (species_t *const s, int species_count, int month, int yea
 			logger(g_log, "VALUE LIST FOR THE MAIN PARAMETERS FOR = %s\n", s->name);
 			logger(g_log, "ALPHA= %f \n"
 					"EPSILONgCMJ= %f \n"
-					//"Y= %f \n"
 					"K= %f \n"
 					"INT_COEFF = %f"
-					"LAIGCX = %f \n"
-					"LAIMAXINTCPTN = %f \n"
-					"MAXINTCPTN = %f \n"
 					"SLA = %f \n"
 					"FRACBB0 = %f \n"
 					"FRACBB1 = %f \n"
@@ -56,12 +52,8 @@ void Print_parameters (species_t *const s, int species_count, int month, int yea
 					"STEMPOWER_C = %f \n",
 					s->value[ALPHA],
 					s->value[EPSILONgCMJ],
-					//s->value[Y],
 					s->value[K],
 					s->value[INT_COEFF],
-					s->value[LAIGCX],
-					s->value[LAIMAXINTCPTN],
-					s->value[MAXINTCPTN],
 					s->value[FRACBB0],
 					s->value[FRACBB1],
 					s->value[TBB],

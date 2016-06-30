@@ -13,9 +13,6 @@ GAMMA_LIGHT -9999   //Light parameter for light modifier
 
 
 INT_COEFF  0.038    //precip interception coefficient
-LAIGCX  5               //LAI for maximum canopy conductance
-LAIMAXINTCPTN   5       //LAI for maximum rainfall interception
-MAXINTCPTN  0.30    //Maximum proportion of rainfall interception evaporated from canopy for Q. robur from Tatarinov and Cenciala 2006
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 26                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone

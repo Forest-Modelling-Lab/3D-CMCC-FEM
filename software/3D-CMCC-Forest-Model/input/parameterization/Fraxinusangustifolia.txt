@@ -10,13 +10,7 @@ K   ?        //Extinction coefficient for absorption of PAR by canopy
 
 ALBEDO  ?    //
 GAMMA_LIGHT ?   //Light parameter for light modifier
-
-
 INT_COEFF ?   //precip interception coefficient
-LAIGCX  ?               //LAI for maximum canopy conductance
-LAIMAXINTCPTN   ?       //LAI for maximum rainfall interception 
-MAXINTCPTN  ?    //Maximum proportion of rainfall interception evaporated from canopy
-
 //SPECIFIC LEAF AREA 
 SLA_AVG ?                 //Average Specific Leaf Area m^2/KgC sunlit leaves
 SLA_RATIO   ?       //(DIM) ratio of shaded to sunlit projected SLA      

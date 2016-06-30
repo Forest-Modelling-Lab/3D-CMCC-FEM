@@ -144,7 +144,7 @@ int M_Fruit_Allocation_TREEMIG (species_t *const s, age_t *const a)
 
 	//Log("------TREEMIG FRUIT ALLOCATION------\n");
 
-	heigthdependence = s->value[LAI] / s->value[LAIGCX] ;//sarebbe Lai  / Lai max;
+	heigthdependence = s->value[LAI] / s->value[PEAK_LAI] ;//sarebbe Lai  / Lai max;
 	//Log("heigthdependence = %f \n", heigthdependence);
 
 	//numero semi prodotti

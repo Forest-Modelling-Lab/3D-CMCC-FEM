@@ -149,8 +149,12 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 					{
 						/* compute annual minimum reserve for incoming year */
 						Annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
+
 						/* reset annual variables */
 						Reset_annual_variables (&m->cells[cell], m->cells[cell].heights_count);
+
+						/* compute annual prognostically Maximum LAI */
+						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
 					}
 					/* reset monthly variables */
 					if (day == 0) Reset_monthly_variables (&m->cells[cell], m->cells[cell].heights_count);
@@ -162,7 +166,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 					Check_prcp (&m->cells[cell], met, month, day);
 
 					/* compute species-specific phenological phase */
-					simple_phenology_phase (&m->cells[cell].heights[height].ages[age].species[species], met, year, month, day);
+					Phenology (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], met, year, month, day);
 
 					/* check for adult or sapling age */
 					Tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
@@ -187,9 +191,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						/* loop for deciduous */
 						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
-							/* compute annual prognostically Maximum LAI */
-							if (day == 0 && month == JANUARY) Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
-
 							/* within vegetative period for deciduous */
 							if (m->cells[cell].heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
 							{
@@ -252,9 +253,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						/* loop for evergreen */
 						else
 						{
-							/* compute annual prognostically Maximum LAI */
-							if (day == 0 && month == JANUARY) Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
-
 							logger(g_log, "*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
 							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
 

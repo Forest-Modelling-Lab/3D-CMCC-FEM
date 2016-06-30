@@ -12,9 +12,6 @@ ALBEDO	0.095 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT -9999   //Light parameter for light modifier
 
 INT_COEFF  0.051    //precip interception coefficient
-LAIGCX	3.33               //LAI for maximum canopy conductance for P. sylvestris from Landsberg et al., 2005, for P. sylvestris, from Xenakis et al., 2008
-LAIMAXINTCPTN	5       //LAI for maximum rainfall interception for P. sylvestris from Landsberg et al., 2005
-MAXINTCPTN	0.15    //Maximum proportion of rainfall interception evaporated from canopy for P. sylvestris from Landsberg et al., 2005, 0.051 from Pietsch et al., 2005
 
 //SPECIFIC LEAF AREA 
 SLA_AVG 9.47                 //Average Specific Leaf Area m^2/KgC sunlit/shaded leaves from Mollicone

@@ -7,9 +7,6 @@ K   0.60                //0.54 Extinction coefficient for absorption of PAR by c
 ALBEDO  0.2             //Albedo
 GAMMA_LIGHT 0.01        //Light parameter for light modifier
 INT_COEFF  0.034        //precip interception coefficient 0.3 for Tatarinov et al., 2006
-LAIGCX  5               //LAI for maximum canopy conductance
-LAIMAXINTCPTN   8       //LAI for maximum rainfall interception
-MAXINTCPTN  0.33        //Maximum proportion of rainfall interception evaporated from canopy for Fagus sylvatica from Iovino et al., 2009
 SLA_AVG 48              //Average Specific Leaf Area m^2/KgC sunlit leaves for Fagus s. 27.8 to 48 from Pietsch 2005, 35 for Tatarinov et al., 2006
 SLA_RATIO   2.3         //(DIM) ratio of shaded to sunlit projected SLA  for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005
 LAI_RATIO   2           //(DIM) all-sided to projected leaf area ratio for F. sylvatyica from Mollicone et al., 2002 , 2.0 from Pietsch 2005

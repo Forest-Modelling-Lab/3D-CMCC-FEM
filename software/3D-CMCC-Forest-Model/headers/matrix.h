@@ -28,9 +28,6 @@ enum {
 	ALBEDO,                     //species-specific albedo (ratio)
 	GAMMA_LIGHT,                //parameter for light modifier (not used)
 	INT_COEFF,                  //precip interception coefficient LAI-1day-1
-	LAIGCX,                     //LAI for maximum canopy conductance
-	LAIMAXINTCPTN,              //LAI for maximum rainfall interception
-	MAXINTCPTN,                 //Maximum proportion of rainfall interception evaporated from canopy for Quercus spp Breuer et al 2003
 	SLA_AVG,                    //AVERAGE Specific Leaf Area m^2/KgC for sunlit/shaded leaves
 	SLA_RATIO,                  //(DIM) ratio of shaded to sunlit projected SLA
 	LAI_RATIO,                  //(DIM) all-sided to projected leaf area ratio

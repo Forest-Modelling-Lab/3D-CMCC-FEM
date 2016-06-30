@@ -136,10 +136,11 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	{
 	/************************************************************/
 	case 1:
-		/* this phenological phase happens when:
+		/*
+		 * this phenological phase happens when:
 		 * - thermic sum > GROWTH_START
 		 * - LAI < PEAK_LAI
-		 * - month > 6*/
+		 * */
 
 		/*just a fraction of biomass reserve is used for foliage the other part is allocated to the stem (Magnani pers comm),
 		 * and Barbaroux et al., 2002, the ratio is driven by the BIOME_BGC newStem:newLeaf ratio
@@ -189,10 +190,11 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 	case 2:
-		/* this phenological phase happens when:
+		/*
+		 * this phenological phase happens when:
 		 * - thermic sum < GROWTH_START
 		 * - LAI > PEAK_LAI
-		 * - month < 6*/
+		 */
 
 		/* partitioning */
 		if (npp_to_alloc > 0.0)
