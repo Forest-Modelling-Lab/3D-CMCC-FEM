@@ -23,6 +23,8 @@ void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, co
 	double soilwater_to_atmosphere;
 
 	logger(g_log, "\n**SOIL WATER BALACE**\n");
+	/* water pools */
+	c->old_daily_c_water_stored = c->daily_c_water_stored;
 	c->old_asw = c->asw;
 
 	water_to_soil = c->asw + c->prcp_rain + c->snow_melt;

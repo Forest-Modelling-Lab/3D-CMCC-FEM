@@ -302,6 +302,11 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						if (day == 30 && month == DECEMBER)
 						{
 							logger(g_log, "*****END OF YEAR******\n");
+
+
+
+
+
 							/*FRUIT ALLOCATION*/
 							/*
 								if (m->cells[cell].heights[height].ages[age].value >= m->cells[cell].heights[height].ages[age].species[species].value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))

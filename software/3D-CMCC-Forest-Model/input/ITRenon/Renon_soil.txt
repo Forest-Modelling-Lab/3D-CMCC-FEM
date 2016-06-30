@@ -8,7 +8,7 @@ SAND_PERC "49.4"	//PERCENTAGE OF SAND (0,05 - 2 mm) estimated from EU SOIL MAPS
 SOIL_DEPTH "60" //SOIL DEPTH (cm) estimated from EU SOIL MAPS
 
 //SITE NUTRITION
-FR "0.7" //Fertility rating (estimated)
+FR "0.6" //Fertility rating (estimated)
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0

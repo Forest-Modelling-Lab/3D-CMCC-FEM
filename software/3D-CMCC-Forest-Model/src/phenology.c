@@ -77,7 +77,7 @@ void simple_phenology_phase (species_t *const s, const meteo_t* const met, const
 		 * secondary growth*/
 		/*see Ludeke et al., 1994*/
 		/* Beginning of a "growing season" */
-		if (met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] && month < JULY)
+		if (met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /* && month < JULY */)
 		{
 			s->phenology_phase = 1;
 			s->counter[LEAF_FALL_COUNTER] = 0;

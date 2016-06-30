@@ -15,7 +15,6 @@ void Turnover(species_t *const s, cell_t *const c)
 {
 	static double daily_live_wood_turnover_rate;
 	static double daily_leaf_fineroot_turnover_rate;
-	//fixme fixme fixme fixme
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
 	logger(g_log, "\n*DAILY_TURNOVER*\n");

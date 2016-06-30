@@ -72,6 +72,8 @@ void Check_carbon_balance(cell_t *const c)
 	{
 		logger(g_log, "...ok carbon balance\n");
 	}
+	//todo it should also include non only on daily movement of carbon but also the biomass stocks
+
 }
 
 void Check_soil_water_balance(cell_t *const c)
@@ -93,11 +95,11 @@ void Check_soil_water_balance(cell_t *const c)
 
 	/* sum of sinks */
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and store)
-	out = c->daily_c_transp + /* c->daily_c_evapo + */ c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
+	out = c->daily_c_transp + /*c->daily_c_evapo + */ c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
 
 	/* sum of current storage in soil */
 	//fixme check for daily_c_water_store
-	store = (c->asw - c->old_asw) /*+ c->daily_c_water_store */ + c->prcp_snow;
+	store = (c->asw - c->old_asw) + /*(c->daily_c_water_stored - c->old_daily_c_water_stored)*/ + c->prcp_snow;
 
 	/* check soil pool water balance */
 	c->soil_pool_water_balance = in - out - store;
@@ -140,11 +142,13 @@ void Check_soil_water_balance(cell_t *const c)
 		logger(g_log, "c->prcp_snow = %g\n", c->prcp_snow);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->daily_tot_c_transp = %g\n", c->daily_c_transp);
+		logger(g_log, "c->daily_c_evapo = %g\n", c->daily_c_evapo);
 		logger(g_log, "c->soil_evaporation = %g\n", c->daily_soil_evapo);
 		logger(g_log, "c->snow_subl = %g\n", c->snow_subl);
 		logger(g_log, "c->snow_melt = %g\n", c->snow_melt);
 		logger(g_log, "c->out_flow = %g\n", c->out_flow);
 		logger(g_log, "\nstore (as a difference between old and current)\n");
+		logger(g_log, "c->daily_c_water_stored = %g\n", c->daily_c_water_stored);
 		logger(g_log, "delta c->asw = %g\n", (c->asw - c->old_asw));
 		logger(g_log, "c->snow_pack = %g\n", c->snow_pack);
 		logger(g_log, "c->asw = %g\n", c->asw);
@@ -219,10 +223,7 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 	{
 		logger(g_log, "...ok carbon balance at class level\n");
 	}
-
-	s->value[OLD_LEAF_C] = s->value[LEAF_C];
-
-	/*******************************************************************************************************************/
+ 	/*******************************************************************************************************************/
 }
 
 void Check_class_water_balance(cell_t *const c, species_t* const s)
