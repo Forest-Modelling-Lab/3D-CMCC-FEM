@@ -311,7 +311,7 @@ static int log_start(const char* const sitename) {
 	/* absolute path ? */
 	g_log = logger_new("%s%s", g_sz_debug_output_filename, buffer);
 	if ( ! g_log ) {
-		printf("Unable to create log file:%s\n", g_sz_debug_output_filename);
+		puts("Unable to create log!");
 		return 0;
 	}
 	

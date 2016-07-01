@@ -189,6 +189,7 @@ static dataset_t* dataset_import_nc(const char* const filename) {
 	size_t start[DIMS_COUNT] = { 0, 0 };
 	size_t count[DIMS_COUNT] = { 1, 1 };
 
+	d = NULL;
 	sz_nc_filename[0] = '\0';
 	if ( filename[1] != ':' ) {
 		strncpy(sz_nc_filename, g_sz_program_path, 256);
@@ -303,15 +304,10 @@ static dataset_t* dataset_import_nc(const char* const filename) {
 							value = f_value;
 						}
 						index = _y * dims_size[X_DIM] + _x;
+						/* ALESSIOR: those fill filled multiple times...fix it */
+						d->rows[index].x = _x;
+						d->rows[index].y = _y;
 						switch ( y ) {
-							case X_COLUMN:
-								d->rows[index].x = (int)value;
-							break;
-
-							case Y_COLUMN:
-								d->rows[index].y = (int)value;
-							break;
-
 							case LANDUSE_COLUMN:
 								if ( 0 == (int)value ) {
 									d->rows[index].landuse = F;

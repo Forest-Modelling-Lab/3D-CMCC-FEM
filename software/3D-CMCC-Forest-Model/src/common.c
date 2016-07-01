@@ -250,16 +250,6 @@ int file_get_rows_count(const char* const filename) {
 	return rows_count;
 }
 
-/* ALESSIOR: very weak function */
-int path_is_absolute(const char *const path) {
-	assert(path);
-#ifdef _WIN32
-	return (':' == path[1]);
-#else
-	return ('/' == path[0]);
-#endif
-}
-
 int path_create(const char *const path) {
 #ifdef _WIN32
 	char folder[MAX_PATH] = { 0 };

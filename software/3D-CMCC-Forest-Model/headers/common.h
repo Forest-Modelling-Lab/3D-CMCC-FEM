@@ -47,7 +47,6 @@ char* string_tokenizer(char *string, const char *delimiters, char **p);
 char* get_current_directory(void);
 int file_get_rows_count(const char* const filename);
 unsigned int file_load_in_memory(const char* const filename, char** result);
-int path_is_absolute(const char *const path);
 int path_create(const char *const path);
 
 #endif /* COMMON_H */
