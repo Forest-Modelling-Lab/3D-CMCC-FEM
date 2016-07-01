@@ -316,8 +316,8 @@ int path_create(const char *const path) {
 		return 0;
 	}
 	p = strrchr(buffer, FOLDER_DELIMITER_C);
-	if ( p ) { *2 = '\0'; }
-	ret = mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 );
+	if ( p ) { ++p; *p = '\0'; }
+	ret = mkdir(buffer, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	free(buffer);
 	return (-1 == ret) ? 0 : 1;
 #endif

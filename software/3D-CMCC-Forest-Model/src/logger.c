@@ -18,7 +18,6 @@ logger_t* logger_new(const char* const path, ...) {
 	va_end(va);
 
 	if ( ! path_create(buffer) ) {
-		printf("unable to create %s\n", path);
 		return NULL;
 	}
 
