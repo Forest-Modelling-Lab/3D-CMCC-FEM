@@ -118,18 +118,18 @@ void Reset_daily_variables (cell_t *const c, const int count)
 				c->heights[height].ages[age].species[species].value[PHYS_MOD] = 0.0;
 
 				/* reset daily carbon fluxes among pools */
-//				c->heights[height].ages[age].species[species].value[C_TO_LEAF] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_ROOT] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_FINEROOT] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_COARSEROOT] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_TOT_STEM] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_STEM] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_BRANCH] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_RESERVE] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_FRUIT] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_TO_LITTER] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_LEAF_TO_RESERVE] = 0.0;
-//				c->heights[height].ages[age].species[species].value[C_FINEROOT_TO_RESERVE] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_LEAF] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_ROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_FINEROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_COARSEROOT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_TOT_STEM] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_STEM] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_BRANCH] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_RESERVE] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_FRUIT] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_TO_LITTER] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_LEAF_TO_RESERVE] = 0.0;
+				c->heights[height].ages[age].species[species].value[C_FINEROOT_TO_RESERVE] = 0.0;
 
 				/* reset daily maint and growth respiration */
 				c->heights[height].ages[age].species[species].value[DAILY_LEAF_MAINT_RESP] = 0.0;
