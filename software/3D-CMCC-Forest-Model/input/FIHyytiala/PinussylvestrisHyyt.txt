@@ -92,7 +92,6 @@ CN_DEAD_WOODS   1400  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!
 BUD_BURST	0					//days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC, CTEM
 LEAF_FALL_FRAC_GROWING	0		//proportions of the growing season of leaf fall 
-LEAF_LIFE_SPAN  0.33     //Leaf life span  for P. sylvestris from Mollicone et al , 0.345 from White et al., 2000
 
 //TURNOVER
 LEAVES_FINERTTOVER	0.18       //Average YEARLY fine root turnover rate 
@@ -104,8 +103,6 @@ COARSERTTOVER	0.02	//deducted from Yuste et al., 2005, 0.02 Kurz et al., 1996
 SAPWOODTTOVER	0.0025	//Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER	0.01	//Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate
-
-
 
 //MORTALITY
 WSX1000	550             //Max stem mass (kg) per tree at 1000 trees/hectare

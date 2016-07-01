@@ -83,15 +83,11 @@ CN_FINE_ROOTS   48  // CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et a
 CN_LIVE_WOODS   48  //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 
-
-
-
 //per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 //LITTERFALL
 BUD_BURST	30					//days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
-LEAF_LIFE_SPAN  1     //Leaf life span
 
 //TURNOVER (values in year)
 LEAVES_FINERTTOVER	1       //Average yearly fine root turnover rate
@@ -99,9 +95,6 @@ COARSERTTOVER	0.03	//Average yearly coarse root turnover rate
 SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate 
 BRANCHTTOVER	0.03	//Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate co
-
-
-
 
 
 //MORTALITY

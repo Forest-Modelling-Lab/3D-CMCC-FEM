@@ -92,7 +92,6 @@ CN_DEAD_WOODS   535  //CN of dead woods (kgC/kgN) for Picea abies from Pietsch e
 BUD_BURST   0                   //days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC, CTEM
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
-LEAF_LIFE_SPAN  0.26     //Leaf life span  for Picea abies from Mollicone et al , 0.345 from White et al., 2000
 
 //TURNOVER
 LEAVES_FINERTTOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012

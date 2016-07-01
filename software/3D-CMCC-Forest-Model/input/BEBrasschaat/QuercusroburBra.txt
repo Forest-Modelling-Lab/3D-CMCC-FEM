@@ -90,7 +90,6 @@ CN_DEAD_WOODS   451  //CN of dead woods (kgC/kgN) for Q. robur from Pietsch et a
 BUD_BURST   30                  //days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  0.3     //proportions of the growing season of leaf fall Q. robur from Pietsch et al 2005
-LEAF_LIFE_SPAN  1     //Leaf life span
 
 //TURNOVER
 LEAVES_FINERTTOVER  1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005

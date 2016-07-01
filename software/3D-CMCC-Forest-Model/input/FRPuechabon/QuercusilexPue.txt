@@ -91,7 +91,6 @@ CN_DEAD_WOODS   300  //CN of dead woods (kgC/kgN) for Q. ilex from Chiesi et al.
 BUD_BURST   0                   //days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  0.2     //proportions of the growing season of leaf fall
-LEAF_LIFE_SPAN  0.5     //Leaf life span for Q. ilex from Chiesi et al., 2007
 
 //TURNOVER
 LEAVES_FINERTTOVER  0.5 //Average yearly fine root turnover rate for Q. ilex from Chiesi et al., 2007, 0.9 for fine root, 1.5 foliage (Hoff et al., 2002) 0.33 fro Mollicone et al.,

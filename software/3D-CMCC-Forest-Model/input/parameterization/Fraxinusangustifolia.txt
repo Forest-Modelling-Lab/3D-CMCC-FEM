@@ -88,7 +88,6 @@ CN_DEAD_WOODS   ?  //CN of dead woods (kgC/kgN)
 BUD_BURST   ?                   //days of bud burst at the beginning of growing season (only for deciduous)
 //FOLLOWING BIOME-BGC
 LEAF_FALL_FRAC_GROWING  ?     //proportions of the growing season of leaf fall
-LEAF_LIFE_SPAN  0     //Leaf life span (just for evergreen)
 
 //TURNOVER
 LEAVES_FINERTTOVER  ?       //Average yearly fine root turnover rate 

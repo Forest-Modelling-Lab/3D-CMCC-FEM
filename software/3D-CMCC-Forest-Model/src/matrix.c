@@ -773,8 +773,6 @@ static const char *sz_species_values[] = {
 		"BUD_BURST",					//days of bud burst at the beginning of growing season (only for deciduous)
 		//FOLLOWING BIOME-BGC
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
-		"LEAF_LIFE_SPAN",				//Leaf life span
-
 		//ROOT TURNOVER
 		"LEAVES_FINERTTOVER",             //Average yearly leaves and fine root turnover rate
 		"COARSERTTOVER",                  //Average yearly coarse root turnover rate
