@@ -63,10 +63,9 @@ int string_compare_i(const char *str1, const char *str2) {
 	return __res;
 }
 
-char *string_copy_ex(const char *const s, const int n) {
-	assert(n>=0);
+char *string_copy(const char *const s) {
 	if ( s ) {
-		char *p = malloc(strlen(s)+n+1);
+		char *p = malloc(strlen(s)+1);
 		if ( p ) {
 			return strcpy(p, s);
 		}
@@ -297,26 +296,17 @@ int path_create(const char *const path) {
 #elif defined (linux) || defined (_linux) || defined (__linux__)
 	char* p;
 	char* buffer;
-	int i;
 
 	assert(path);
 
-	i = ! (FOLDER_DELIMITER_C == path[0]);
-	buffer = string_copy_ex(path, i);
+	buffer = string_copy(path);
 	if ( ! buffer ) {
 		return 0;
-	}
-	if ( i ) {
-		i = strlen(buffer);
-		for ( ; i > 0; --i ) {
-			buffer[i] = buffer[i-1];
-		}
-		buffer[0] = FOLDER_DELIMITER_C;
 	}
 
 	for ( p = strchr(buffer+1, FOLDER_DELIMITER_C); p; p = strchr(p+1, FOLDER_DELIMITER_C) ) {
 		*p = '\0';
-		if ( -1 == mkdir(file_path, S_IRWXU) ) {
+		if ( -1 == mkdir(buffer, S_IRWXU) ) {
 			if ( errno != EEXIST) {
 				*p = '/';
 				free(buffer);
