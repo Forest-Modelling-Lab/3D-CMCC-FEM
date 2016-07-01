@@ -265,11 +265,18 @@ int path_is_absolute(const char *const path) {
 #endif
 }
 
+/*
+	please note that this function create path until last '/' is reached
+	after that it is intented to be filename
+	so we need to remove it for __linux__ version
+*/
+
+
 int path_create(const char *const path) {
 #ifdef _WIN32
 	char folder[MAX_PATH] = { 0 };
-	char *p;
-	char *p2;
+	char* p;
+	char* p2;
 
 	assert(path);
 
@@ -298,10 +305,20 @@ int path_create(const char *const path) {
 			p = p2;
 		}
 	}
+	return 1;
 #else
-	if ( mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 ) {
+	char* p;
+	char* buffer;
+	int ret;
+
+	buffer = string_copy(path);
+	if ( ! buffer ) {
 		return 0;
 	}
+	p = strrchr(buffer, FOLDER_DELIMITER_C);
+	if ( p ) { *2 = '\0'; }
+	ret = mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) != 0 );
+	free(buffer);
+	return (-1 == ret) ? 0 : 1;
 #endif
-	return 1;
 }

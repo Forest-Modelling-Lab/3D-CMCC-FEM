@@ -254,21 +254,21 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 			{
 				RR2 = g_soil_settings->values[SOIL_RCNRL];
 				RR3 = g_soil_settings->values[SOIL_RCNRR];
-				pc = (1.0 / AddCN);
-				pd = (1.0 / RR2);
+				pc = (1.f / AddCN);
+				pd = (1.f / RR2);
 				pa = pc - pd;
-				pe = (1.0 / RR3);
-				pf = (1.0 / RR2);
+				pe = (1.f / RR3);
+				pf = (1.f / RR2);
 				pb = pe - pf;
 				AddC3 = (float)(AddC * (pa / pb));
 				AddC2 = (float)(AddC - AddC3);
-				AddC1 = (float)0.0;
+				AddC1 = 0.f;
 			}
 			else if ( AddCN < g_soil_settings->values[SOIL_RCNRVL] )
 			{
 				float ActN = AddC/g_soil_settings->values[SOIL_RCNRVL];
-				AddC3 = 0.0;
-				AddC2 = 0.0;
+				AddC3 = 0.f;
+				AddC2 = 0.f;
 				AddC1 = AddC;
 				m->cells[cell].soils[0].nh4 += (AddC / (AddCN+0.0000001) - ActN);
 				if( m->cells[cell].soils[0].nh4<0) m->cells[cell].soils[0].nh4	= .0000001;
@@ -278,8 +278,8 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 			{
 				float ActC = AddC/ AddCN * g_soil_settings->values[SOIL_RCNRR];
 				AddC3 = ActC;
-				AddC2 = 0.0;
-				AddC1 = 0.0;
+				AddC2 = 0.f;
+				AddC1 = 0.f;
 
 				//dInertC = AddC - ActC;
 				//inert_C[1] += dInertC;
@@ -288,9 +288,9 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 				AddCN = g_soil_settings->values[SOIL_RCNRR];
 			}
 
-			if (AddC1 < 0.0) AddC1 = 0.0;
-			if (AddC2 < 0.0) AddC2 = 0.0;
-			if (AddC3 < 0.0) AddC3 = 0.0;
+			if (AddC1 < 0.f) AddC1 = 0.f;
+			if (AddC2 < 0.f) AddC2 = 0.f;
+			if (AddC3 < 0.f) AddC3 = 0.f;
 
 
 
@@ -341,9 +341,9 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 		//		yr_addtc += (AddC1 + AddC2 + AddC3);
 		//		yr_addtn += (AddC1 / g_soil_settings->values[SOIL_RCNRVL] + AddC2 / g_soil_settings->values[SOIL_RCNRL] + AddC3 / g_soil_settings->values[SOIL_RCNRR]);
 
-		AddC1 = 0.0;
-		AddC2 = 0.0;
-		AddC3 = 0.0;
+		AddC1 = 0.f;
+		AddC2 = 0.f;
+		AddC3 = 0.f;
 		//		AddP = 0.0;
 
 		//root litter incorporation
