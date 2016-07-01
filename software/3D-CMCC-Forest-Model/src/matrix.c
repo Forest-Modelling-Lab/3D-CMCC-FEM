@@ -217,6 +217,7 @@ static dataset_t* dataset_import_nc(const char* const filename) {
 	}
 
 	/* get dimensions */
+	x_id = 0;
 	for ( i = 0; i < DIMS_COUNT; ++i ) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
@@ -413,7 +414,6 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 	FILE *f;
 	int *columns;
 	double value;
-	row_t* rows;
 	row_t* rows_no_leak;
 	dataset_t* dataset;
 	int assigned;
@@ -483,7 +483,6 @@ static dataset_t* dataset_import_txt(const char* const filename) {
 	dataset->rows_count = 0;
 
 	/* get data */
-	rows = NULL; /* mandatory, because I use realloc instead of malloc */
 	while ( fgets(buffer, BUFFER_SIZE, f) ) {
 		/* remove carriage return and newline */
 		for ( i = 0; buffer[i]; ++i ) {
@@ -1157,13 +1156,16 @@ matrix_t* matrix_create(const char* const filename) {
 	return m;
 }
 
-void matrix_summary(const matrix_t* const m, const int day, const int month, const int year)
+void matrix_summary(const matrix_t* const m/*, const int day, const int month, const int year*/)
 {
 	int cell;
 	int species;
 	int age;
 	int height;
 	int resol;
+	int day = 0;
+	int month = 0;
+	int year = 0;
 
 	assert (m);
 

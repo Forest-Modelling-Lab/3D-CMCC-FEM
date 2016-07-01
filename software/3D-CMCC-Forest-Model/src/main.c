@@ -1,8 +1,8 @@
 /* main.c */
-/* 
+/*
 
 	ALESSIOC TODO :
-	
+
 	-SIMULAZIONI DA bareground
 	-RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)
 	-VERSION FEM AND BGC
@@ -314,13 +314,13 @@ static int log_start(const char* const sitename) {
 		puts("Unable to create log!");
 		return 0;
 	}
-	
+
 	g_daily_log = logger_new("%s%s", g_sz_daily_output_filename, buffer);
 	if ( ! g_daily_log ) {
 		puts("Unable to create daily log!");
 		return 0;
 	}
-	
+
 	g_monthly_log = logger_new("%s%s", g_sz_monthly_output_filename, buffer);
 	if ( ! g_monthly_log ) {
 		puts("Unable to create monthly log!");
@@ -332,7 +332,7 @@ static int log_start(const char* const sitename) {
 		puts("Unable to create annual log!");
 		return 0;
 	}
-	
+
 	g_soil_log = logger_new("%s%s", g_sz_soil_output_filename, buffer);
 	if ( ! g_soil_log ) {
 		puts("Unable to create soil log!");
@@ -344,7 +344,7 @@ static int log_start(const char* const sitename) {
 	logger_enable_std(g_log);
 
 	/* show paths */
-	if ( g_sz_input_path ) 
+	if ( g_sz_input_path )
 		logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_log, msg_soil_file, g_sz_soil_file);
@@ -411,7 +411,7 @@ char* path_copy(const char *const s) {
 }
 
 /*
-	parse and check passed args 
+	parse and check passed args
 */
 static int parse_args(int argc, char *argv[]) {
 	int i;
@@ -617,27 +617,27 @@ static int parse_args(int argc, char *argv[]) {
 		puts("parameterization path not specified!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_debug_output_filename ) {
 		puts("output filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_monthly_output_filename ) {
 		puts("monthly output filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_yearly_output_filename ) {
 		puts("annual output filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_soil_output_filename ) {
 		puts("soil output filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_dataset_file ) {
 		puts("dataset filename not specified!");
 		goto err_show_usage;
@@ -652,17 +652,17 @@ static int parse_args(int argc, char *argv[]) {
 		puts("soil filename not specified!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! topo_path ) {
 		puts("topo filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	if ( ! g_sz_settings_file ) {
 		puts("settings filename option is missing!");
 		goto err_show_usage;
 	}
-	
+
 	return 1;
 
 err_show_usage:
@@ -674,20 +674,24 @@ err:
 
 int main(int argc, char *argv[]) {
 	char temp[256];
-	int i;
+	int ret;
 	int year;
 	int month;
 	int day;
 	int cell;
 	int prog_ret;
 	int flag;
+	int start_year;
 	matrix_t* matrix;
-	output_t* output_vars = NULL;
+	output_t* output_vars;
 
 	/*
 	_CrtSetBreakAlloc(181);
 	*/
 
+	/* initialize */
+	matrix = NULL;
+	output_vars = NULL;
 	prog_ret = 1;
 
 	/* get program path */
@@ -717,6 +721,7 @@ int main(int argc, char *argv[]) {
 	puts(msg_ok);
 
 	/* some check for fix import path */
+	flag = 0;
 	if ( g_sz_input_path ) {
 		int len = strlen(g_sz_input_path);
 		flag = (('/' == g_sz_input_path[len-1]) || ('\\' == g_sz_input_path[len-1]));
@@ -725,7 +730,7 @@ int main(int argc, char *argv[]) {
 	/* import output vars file ? */
 	if ( g_sz_output_vars_file ) {
 		printf("import output file...");
-		if ( g_sz_input_path ) {		
+		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
 			strcat(temp, g_sz_output_vars_file);
@@ -742,7 +747,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("import settings file %s...", g_sz_settings_file);
-	if ( g_sz_input_path ) {		
+	if ( g_sz_input_path ) {
 		strcpy(temp, g_sz_input_path);
 		if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
 		strcat(temp, g_sz_settings_file);
@@ -761,7 +766,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	printf("build matrix using %s...", g_sz_dataset_file);
-	if ( g_sz_input_path ) {		
+	if ( g_sz_input_path ) {
 		strcpy(temp, g_sz_input_path);
 		if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
 		strcat(temp, g_sz_dataset_file);
@@ -792,8 +797,16 @@ int main(int argc, char *argv[]) {
 	}
 	puts(msg_ok);
 
+	
+	/* ALESSIOR remove this */
+	start_year = -1;
+
 	logger(g_log, "\n3D-CMCC MODEL START....\n\n\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell ) {
+		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
+		/* ALESSIOR: i renamed to index_vpsat */
+		int index_vpsat;
+
 		logger(g_log, "Processing met data files for cell at %d,%d...\n", matrix->cells[cell].x, matrix->cells[cell].y);
 		logger(g_log, "input_met_path = %s\n", g_input_met_file);
 
@@ -803,11 +816,11 @@ int main(int argc, char *argv[]) {
 			strcpy(temp, g_sz_input_path);
 			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
 			strcat(temp, g_sz_soil_file);
-			i = soil_settings_import(g_soil_settings, temp, matrix->cells[cell].x, matrix->cells[cell].y);
+			ret = soil_settings_import(g_soil_settings, temp, matrix->cells[cell].x, matrix->cells[cell].y);
 		} else {
-			i = soil_settings_import(g_soil_settings, g_sz_soil_file, matrix->cells[cell].x, matrix->cells[cell].y);
+			ret = soil_settings_import(g_soil_settings, g_sz_soil_file, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
-		if ( ! i ) {
+		if ( ! ret ) {
 			goto err;
 		}
 		logger(g_log, "ok\n");
@@ -831,13 +844,13 @@ int main(int argc, char *argv[]) {
 		logger(g_log, "importing topo settings...");
 		if ( g_sz_input_path ) {
 			strcpy(temp, g_sz_input_path);
-			if ( ! flag ) strcat(temp, "/");
+			if ( ! flag ) strcat(temp, FOLDER_DELIMITER);
 			strcat(temp, topo_path);
-			i = topo_import(g_topo, temp, matrix->cells[cell].x, matrix->cells[cell].y);
+			ret = topo_import(g_topo, temp, matrix->cells[cell].x, matrix->cells[cell].y);
 		} else {
-			i = topo_import(g_topo, topo_path, matrix->cells[cell].x, matrix->cells[cell].y);
+			ret = topo_import(g_topo, topo_path, matrix->cells[cell].x, matrix->cells[cell].y);
 		}
-		if ( ! i ) {
+		if ( ! ret ) {
 			goto err;
 		}
 		logger(g_log, "ok\n");
@@ -860,6 +873,11 @@ int main(int argc, char *argv[]) {
 		}
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger(g_log, "ok\n");
+
+		/* ALESSIOR: REMOVE THIS! */
+		if ( -1 == start_year ) {
+			start_year =  matrix->cells[0].years[0].year;
+		}
 
 		// alloc memory for daily output netcdf vars (if any)
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
@@ -906,19 +924,21 @@ int main(int argc, char *argv[]) {
 		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_log, "***************************************************\n");
 
-		for ( year = 0; year < years_of_simulation; ++year )
-		{
-			//Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1)
-			int i;
-			// ALESSIOR for handling leap years
+		matrix_summary(matrix/*, day, month, year*/);
+
+		for ( year = 0; year < years_of_simulation; ++year ) {
+			/* ALESSIOR for handling leap years */
 			int days_per_month;
 
 			logger(g_log, "\n-Year simulated = %d\n", matrix->cells[cell].years[year].year);
 
 			/* only for first year */
+			/* moved at beginning of for loop! */
+			/*
 			if ( ! year ) matrix_summary(matrix, day, month, year);
+			*/
 
-			i =0;
+			index_vpsat = 0;
 			for (month = 0; month < MONTHS_COUNT; month++)
 			{
 				days_per_month = DaysInMonth[month];
@@ -950,8 +970,8 @@ int main(int argc, char *argv[]) {
 						/* compute before any other processes annually the days for the growing season */
 						Veg_Days (&matrix->cells[cell], day, month, year);
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
-						get_vpsat(&matrix->cells[cell], day, month, year, i);
-						i++;
+						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
+						++index_vpsat;
 					}
 					else if (matrix->cells[cell].landuse == Z)
 					{
@@ -1025,14 +1045,14 @@ int main(int argc, char *argv[]) {
 					if ( output_vars && output_vars->daily_vars_count ) {
 					/*
 						la memoria è stata allocata come C*R*Y*X
-						
+
 						C = colonne ( variabili )
 						R = righe ( anni di elaborazione * 366 )
 						Y = numero y celle
 						X = numero x celle
-						
-						quindi il valore [v1][v2][v3][v4] è indicizzato a 
-						
+
+						quindi il valore [v1][v2][v3][v4] è indicizzato a
+
 						[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
 						ossia
@@ -1116,7 +1136,7 @@ int main(int argc, char *argv[]) {
 			EOY_cumulative_balance_cell_level(&matrix->cells[cell], year, years_of_simulation, cell);
 			logger(g_log, "...%d finished to simulate\n\n\n\n\n\n", matrix->cells[cell].years[year].year);
 		}
-		i = matrix->cells[cell].years[0].year;
+		index_vpsat = matrix->cells[cell].years[0].year;
 		free(matrix->cells[cell].years);
 		matrix->cells[cell].years = NULL; /* required */
 	}
@@ -1126,13 +1146,12 @@ int main(int argc, char *argv[]) {
 
 	/* NETCDF output */
 	if ( output_vars && output_vars->daily_vars_value ) {
-		int ret;
 		char *path = get_path(g_sz_daily_output_filename);
 		if ( ! path && g_sz_daily_output_filename  ) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, i, years_of_simulation, x_cells_count, y_cells_count, 0);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 0);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);
@@ -1143,13 +1162,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->monthly_vars_value ) {
-		int ret;
 		char *path = get_path(g_sz_monthly_output_filename);
 		if ( ! path && g_sz_monthly_output_filename ) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, i, years_of_simulation, x_cells_count, y_cells_count, 1);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 1);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);
@@ -1160,13 +1178,12 @@ int main(int argc, char *argv[]) {
 	}
 
 	if ( output_vars && output_vars->yearly_vars_value ) {
-		int ret;
 		char *path = get_path(g_sz_yearly_output_filename);
 		if ( ! path && g_sz_yearly_output_filename) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, i, years_of_simulation, x_cells_count, y_cells_count, 2);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 2);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);

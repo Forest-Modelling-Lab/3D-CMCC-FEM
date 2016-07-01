@@ -124,6 +124,7 @@ static int import_nc(topo_t *const t, const char *const filename, const int x_ce
 	}
 
 	/* get dimensions */
+	x_id = 0;
 	for ( i = 0; i < dims_count; ++i ) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;

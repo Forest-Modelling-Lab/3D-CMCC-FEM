@@ -98,7 +98,7 @@ void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, co
 	c->swc = (c->asw * 100)/c->max_asw_fc;
 	logger(g_log, "asw = %g\n", c->asw);
 	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
-	logger(g_log, "SWC = %g(%vol)\n", c->swc);
+	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
 
 	/* check */
 	CHECK_CONDITION (c->swc, > 100.1);

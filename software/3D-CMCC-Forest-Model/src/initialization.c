@@ -449,13 +449,13 @@ void Initialization_site_data(cell_t *const c)
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	// (DIM) Soil volumetric water content at saturation
 	c->vwc_sat = (50.5 - 0.142*g_soil_settings->values[SOIL_SAND_PERC] - 0.037*g_soil_settings->values[SOIL_CLAY_PERC])/100.0; /* ok for schwalm*/
-	logger(g_log, "volumetric water content at saturation (BIOME) = %f %(vol)\n", c->vwc_sat);
+	logger(g_log, "volumetric water content at saturation (BIOME) = %f %%(vol)\n", c->vwc_sat);
 	// (MPa) soil matric potential at saturation
 	c->psi_sat = -(exp((1.54 - 0.0095*g_soil_settings->values[SOIL_SAND_PERC] + 0.0063*g_soil_settings->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
 	logger(g_log, "psi_sat = %f MPa \n", c->psi_sat);
 	// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa)
 	c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
-	logger(g_log, "volumetric water content at field capacity (BIOME) = %f %(vol) \n", c->vwc_fc);
+	logger(g_log, "volumetric water content at field capacity (BIOME) = %f %%(vol) \n", c->vwc_fc);
 
 	// define maximum soilwater content, for outflow calculation
 	//converts volumetric water content (m3/m3) --> (kg/m2)
@@ -497,21 +497,21 @@ void Initialization_site_data(cell_t *const c)
 	/* corrections from Steve Del Grosso */
 	/* volumetric percentage wilting point */
 	volumetric_wilting_point += (-0.15 * volumetric_wilting_point);
-	logger(g_log, "*volumetric water content at wilting point (CENTURY) = %f %(vol)\n", volumetric_wilting_point);
+	logger(g_log, "*volumetric water content at wilting point (CENTURY) = %f %%(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
 	c->wilting_point = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_wilting_point * 1000.0;
 	logger(g_log, "**Wilting point (CENTURY) = %f mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
 	volumetric_field_capacity += (0.07 * volumetric_field_capacity);
-	logger(g_log, "*volumetric water content at field capacity (CENTURY) = %f %(vol)\n", volumetric_field_capacity);
+	logger(g_log, "*volumetric water content at field capacity (CENTURY) = %f %%(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
 	c->field_capacity = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_field_capacity * 1000.0;
 	logger(g_log, "**Field capacity (CENTURY) = %f mm/m2\n", c->field_capacity);
 
 	/* volumetric percentage saturated hydraulic conductivity */
 	volumetric_saturated_hydraulic_conductivity /= 1500.0;
-	logger(g_log, "*volumetric water content at saturated hydraulic conductance (CENTURY) = %f %(vol)\n", volumetric_saturated_hydraulic_conductivity);
+	logger(g_log, "*volumetric water content at saturated hydraulic conductance (CENTURY) = %f %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
 	//fixme not clear what it is
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
 	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_saturated_hydraulic_conductivity * 1000.0;

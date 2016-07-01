@@ -208,6 +208,13 @@ int output_write(const output_t* const vars, const char *const path, const int y
 
 	assert(vars && years_count && x_cells_count && y_cells_count && ((type >=0) && (type<=3)));
 
+	/* init */
+	time_rows = NULL;
+	values = NULL;
+	p = NULL;
+	n = 0;
+	index = 0;
+
 	/* create time rows */
 	if ( 0 == type ) time_rows = malloc(years_count*366*sizeof*time_rows);
 	else if ( 1 == type ) time_rows = malloc(years_count*12*sizeof*time_rows);

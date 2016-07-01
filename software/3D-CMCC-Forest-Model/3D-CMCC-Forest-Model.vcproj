@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)"
+			OutputDirectory="bin"
 			IntermediateDirectory="tmp\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
@@ -43,9 +43,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;C:\REPO\3D-CMCC-FEM\software\netcdf-4.4.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)headers&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -94,8 +94,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="bin"
+			IntermediateDirectory="tmp\$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -117,11 +117,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\REPO\3D-CMCC-FEM\software\netcdf-4.4.0\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)headers&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\C-allocation.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\C-assimilation.c"
 				>
 			</File>
@@ -204,7 +208,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_evapotranspiration_biome.c"
+				RelativePath=".\src\canopy_evapotranspiration.c"
 				>
 			</File>
 			<File
@@ -232,10 +236,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\dataset.c"
-				>
-			</File>
-			<File
 				RelativePath=".\src\dendrometry.c"
 				>
 			</File>
@@ -260,15 +260,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\initialization_biomass_data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\initialization_soil_data.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\io.c"
+				RelativePath=".\src\initialization.c"
 				>
 			</File>
 			<File
@@ -320,7 +312,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\new_class.c"
+				RelativePath=".\src\nc.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\output.c"
 				>
 			</File>
 			<File
@@ -348,11 +344,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\soil.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\soil.h"
+				RelativePath=".\src\settings.c"
 				>
 			</File>
 			<File
@@ -365,6 +357,10 @@
 			</File>
 			<File
 				RelativePath=".\src\soil_respiration.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\soil_settings.c"
 				>
 			</File>
 			<File
@@ -407,36 +403,16 @@
 				RelativePath=".\src\wue.c"
 				>
 			</File>
+			<File
+				RelativePath=".\src\yos.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\src\common.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\compiler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\constants.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\cumulative_balance.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\mpfit.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\types.h"
-				>
-			</File>
 			<Filter
 				Name="netcdf"
 				>

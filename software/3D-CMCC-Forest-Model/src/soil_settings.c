@@ -107,13 +107,10 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	char buffer[256];
 	char sz_nc_filename[256];
 	int i;
-	int rows_count;
 	int vars[SOIL_VARS_COUNT];
 	float value;
 	int dims_size[DIMS_COUNT];
 	int x_id;
-	const char *sz_lat = "lat";
-	const char *sz_lon = "lon";
 	const char *sz_dims[DIMS_COUNT] = { "x", "y" };
 
 	int y;
@@ -132,7 +129,6 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	size_t start[DIMS_COUNT] = { 0, 0 };
 	size_t count[DIMS_COUNT] = { 1, 1 };
 
-	rows_count = 0;
 	for ( i = 0; i < SOIL_VARS_COUNT; i++ ) {
 		vars[i] = 0;
 	}
@@ -166,6 +162,7 @@ static int import_nc(soil_settings_t *const s, const char *const filename, const
 	}
 
 	/* get dimensions */
+	x_id = 0;
 	for ( i = 0; i < dims_count; ++i ) {
 		ret = nc_inq_dim(id_file, i, name, &size);
 		if ( ret != NC_NOERR ) goto quit;
