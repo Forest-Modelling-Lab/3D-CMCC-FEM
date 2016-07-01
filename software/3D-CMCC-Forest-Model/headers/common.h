@@ -43,6 +43,8 @@
 double convert_string_to_float(const char *const string, int *const error);
 int string_compare_i(const char *str1, const char *str2);
 char* string_copy(const char *const string);
+#define string_copy(s)	string_copy_ex((s),0)
+char *string_copy_ex(const char *const s, const int n);
 char* string_tokenizer(char *string, const char *delimiters, char **p);
 char* get_current_directory(void);
 int file_get_rows_count(const char* const filename);

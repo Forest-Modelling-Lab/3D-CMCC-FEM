@@ -19,7 +19,7 @@
 #include <windows.h>
 static WIN32_FIND_DATA wfd;
 static HANDLE handle;
-#elif defined (_linux) || defined (__linux__)
+#elif defined (linux) || defined (_linux) || defined (__linux__)
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/param.h>
@@ -63,9 +63,10 @@ int string_compare_i(const char *str1, const char *str2) {
 	return __res;
 }
 
-char *string_copy(const char *const s) {
+char *string_copy_ex(const char *const s, const int n) {
+	assert(n>=0);
 	if ( s ) {
-		char *p = malloc(strlen(s)+1);
+		char *p = malloc(strlen(s)+n+1);
 		if ( p ) {
 			return strcpy(p, s);
 		}
@@ -73,7 +74,6 @@ char *string_copy(const char *const s) {
 	return NULL;
 }
 
-/* stolen to wikipedia */
 char *string_tokenizer(char* string, const char* delimiters, char **p) {
 	char *sbegin;
 	char *send;
@@ -97,28 +97,21 @@ char *string_tokenizer(char* string, const char* delimiters, char **p) {
 int add_char_to_string(char *const string, char c, const int size) {
  int i;
 
- /* check for null pointer */
  if ( !string ) {
   return 0;
  }
 
- /* compute length */
- for ( i = 0; string[i]; i++ );
-
- /* check length */
+ i = strlen(string);
  if ( i >= size-1 ) {
   return 0;
  }
 
- /* add char */
  string[i] = c;
  string[i+1] = '\0';
 
- /**/
  return 1;
 }
 
-/* */
 char *get_current_directory(void) {
 	char *p;
 #if defined (_WIN32)
@@ -132,7 +125,7 @@ char *get_current_directory(void) {
 	}
 	p[(strrchr(p, '\\')-p)+1] = '\0';
 	return p;
-#elif defined (linux)
+#elif defined (linux) || defined (_linux) || defined (__linux__)
 	int len;
 	p = malloc((MAXPATHLEN+1)*sizeof *p);
 	if ( !p ) {
@@ -156,6 +149,7 @@ char *get_current_directory(void) {
 	}
 	return p;
 #else
+	assert(1);
 	return NULL;
 #endif
 }
@@ -191,10 +185,12 @@ int path_exists(const char *const path) {
 	if (dwResult != INVALID_FILE_ATTRIBUTES && (dwResult & FILE_ATTRIBUTE_DIRECTORY)) {
 		return 1;
 	}
-#elif defined (linux)
+#elif defined (linux) || defined (_linux) || defined (__linux__)
 	if ( ! access(path, W_OK) ) {
 		return 1;
 	}
+#else
+	assert(1);
 #endif
 	return 0;
 }
@@ -306,19 +302,33 @@ int path_create(const char *const path) {
 		}
 	}
 	return 1;
-#else
+#elif defined (linux) || defined (_linux) || defined (__linux__)
 	char* p;
 	char* buffer;
-	int ret;
+	int i;
 
-	buffer = string_copy(path);
+	assert(path);
+
+	i = ! (FOLDER_DELIMITER_C == path[0]);
+	buffer = string_copy_ex(path, i);
 	if ( ! buffer ) {
 		return 0;
 	}
+	if ( i ) {
+		i = strlen(buffer);
+		for ( ; i > 0; --i ) {
+			buffer[i] = buffer[i-1];
+		}
+		buffer[0] = FOLDER_DELIMITER_C;
+	}
+
 	p = strrchr(buffer, FOLDER_DELIMITER_C);
 	if ( p ) { ++p; *p = '\0'; }
-	ret = mkdir(buffer, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	i = mkdir(buffer, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	free(buffer);
-	return (-1 == ret) ? 0 : 1;
+	return (-1 == i) ? 0 : 1;
+#else
+	assert(1);
+	return 0;
 #endif
 }
