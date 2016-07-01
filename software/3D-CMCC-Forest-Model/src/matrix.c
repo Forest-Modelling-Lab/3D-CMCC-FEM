@@ -93,7 +93,7 @@ static const char* sz_vars[COLUMNS_COUNT] = {
 	, "LAI"
 };
 
-static const char sz_species[] = "species.txt";
+static const char sz_species[] = "species_code.txt";
 
 static const char header_delimiter[] = ", \r\n";
 static const char dataset_delimiter[] = ",\r\n";

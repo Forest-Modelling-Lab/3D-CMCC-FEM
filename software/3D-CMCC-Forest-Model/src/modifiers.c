@@ -250,7 +250,7 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 
 		/* forced to  0.3 to avoid zero values */
-		//fixme
+		//see: Clark et al., 2011 for JULES model impose 0.2
 		s->value[F_PSI] = 0.3;
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);
