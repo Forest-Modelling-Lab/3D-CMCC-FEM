@@ -94,12 +94,12 @@ BUD_BURST   0                   //days of bud burst at the beginning of growing 
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 
 //TURNOVER
-LEAVES_FINERTTOVER  0.18       //Average YEARLY fine root turnover rate 
+LEAF_FINEROOT_TURNOVER  0.18       //Average YEARLY fine root turnover rate 
                             //0.031875 CONVERTED FROM 0.3825 YR^-1 for P. sylvestris from White et al., 2000, 
                             //0.061666667 month^-1, 0.74 YR^-1 from Jansenn 2002
                             //0.066666667 month^-1  0.8  YR^-1 from Gill and Jackson 2000
                             //0.18 yr^-1 from Pietsch
-COARSERTTOVER   0.02    //deducted from Yuste et al., 2005
+COARSEROOT_TURNOVER   0.02    //deducted from Yuste et al., 2005
 SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER    0.01    //Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate

@@ -41,7 +41,7 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 			if(c->dos  < s->turnover->FINERTOVER)
 			{
 				logger(g_log, "****leaf turnover for evergreen****\n");
-				litterfall_rate = s->value[LEAVES_FINERTTOVER]/365.0;
+				litterfall_rate = s->value[LEAF_FINEROOT_TURNOVER]/365.0;
 				logger(g_log, "Daily litter fall rate = %f\n", litterfall_rate);
 				s->value[BIOMASS_FOLIAGE_tDM] -= (s->value[OLD_BIOMASS_LEAVES] * litterfall_rate);
 				/*recompute LAI after turnover*/
@@ -64,7 +64,7 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 				}
 				logger(g_log, "++Lai from foliage or reserve = %f\n", s->value[LAI]);
 				//marconi: 21/6 --> removed the 365 factor; using the dBiomass it the turnover factors may not be divided by 365 days of the year
-				//			s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[DEL_ROOTS_FINE_CTEM] * (s->value[LEAVES_FINERTTOVER]);
+				//			s->value[DAILY_FINEROOT_BIOMASS_TO_REMOVE] = s->value[DEL_ROOTS_FINE_CTEM] * (s->value[LEAF_FINEROOT_TURNOVER]);
 
 				//logger(g_soil_log, "fine root senescence time: from %d for %d days\n", c->doy, s->counter[FROM_SEN_TO_EOY] );
 				if (s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
@@ -73,11 +73,11 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 					/*daily fine root turnover*/
 					logger(g_log, "****Fine root turnover****\n");
 					//turnover of fine root
-					s->value[BIOMASS_FINE_ROOT_tDM] -= MAX(0, s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAVES_FINERTTOVER])/365.0);
+					s->value[BIOMASS_FINE_ROOT_tDM] -= MAX(0, s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAF_FINEROOT_TURNOVER])/365.0);
 					s->value[BIOMASS_FINE_ROOT_tDM] = 1.2;
-					c->fineRootLittering += MAX(0, s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAVES_FINERTTOVER])/365.0) /
+					c->fineRootLittering += MAX(0, s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAF_FINEROOT_TURNOVER])/365.0) /
 							GC_GDM * 1000 / g_settings->sizeCell;
-					c->fineRootlitN += MAX(0,s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAVES_FINERTTOVER])/365.0) /
+					c->fineRootlitN += MAX(0,s->value[OLD_BIOMASS_FINE_ROOT_tDM] * (s->value[LEAF_FINEROOT_TURNOVER])/365.0) /
 							GC_GDM * 1000 / g_settings->sizeCell  /s->value[CN_FINE_ROOTS];
 				}
 			}
@@ -182,7 +182,7 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] -= dCoarseBiomass;
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] += dCoarseBiomass;
 
-	dCoarseBiomass = MAX(0.0, s->value[OLD_BIOMASS_ROOTS_COARSE] / 365.0 * s->value[COARSERTTOVER]);
+	dCoarseBiomass = MAX(0.0, s->value[OLD_BIOMASS_ROOTS_COARSE] / 365.0 * s->value[COARSEROOT_TURNOVER]);
 	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] -= dCoarseBiomass;	//Marconi
 	c->coarseRootLittering += dCoarseBiomass / GC_GDM * 1000 / g_settings->sizeCell;
 	c->coarseRootlitN += dCoarseBiomass / GC_GDM * 1000 / g_settings->sizeCell /s->value[CN_DEAD_WOODS];

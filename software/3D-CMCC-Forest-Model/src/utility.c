@@ -338,9 +338,9 @@ void First_day(cell_t *const c, const int count)
 				c->n_tree += c->heights[height].ages[age].species[species].counter[N_TREE];
 
 				c->heights[height].ages[age].species[species].turnover->FINERTOVER = 365 /
-						c->heights[height].ages[age].species[species].value[LEAVES_FINERTTOVER];
+						c->heights[height].ages[age].species[species].value[LEAF_FINEROOT_TURNOVER];
 				c->heights[height].ages[age].species[species].turnover->COARSERTOVER = 365 /
-						c->heights[height].ages[age].species[species].value[COARSERTTOVER];
+						c->heights[height].ages[age].species[species].value[COARSEROOT_TURNOVER];
 				c->heights[height].ages[age].species[species].turnover->STEMTOVER = 365 /
 						c->heights[height].ages[age].species[species].value[LIVE_WOOD_TURNOVER];
 				c->heights[height].ages[age].species[species].turnover->BRANCHTOVER = 365 /

@@ -21,7 +21,7 @@ void Turnover(species_t *const s, cell_t *const c)
 
 	/* compute rates */
 	/* compute leaf and fine root turnover rate (ratio) */
-	daily_leaf_fineroot_turnover_rate = s->value[LEAVES_FINERTTOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE];
+	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE];
 	logger(g_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
 	/* compute live-wood turnover rate (ratio) */
 	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
@@ -121,7 +121,7 @@ void Turnover(species_t *const s, cell_t *const c)
 //	if (s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2)
 //	{
 //		logger(g_log, "****leaf turnover for evergreen****\n");
-//		s->value[LITTERFALL_RATE] = s->value[LEAVES_FINERTTOVER]/365.0;
+//		s->value[LITTERFALL_RATE] = s->value[LEAF_FINEROOT_TURNOVER]/365.0;
 //		logger(g_log, "Daily litter fall rate = %g\n", s->value[LITTERFALL_RATE]);
 //
 //		/* reduce daily amount of leaf linearly */
@@ -158,11 +158,11 @@ void Turnover(species_t *const s, cell_t *const c)
 //		logger(g_log, "Dead Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 //
 //		/* adding a daily turnover that goes to litter */
-//		//		s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS]);
+//		//		s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSEROOT_TURNOVER]/s->counter[VEG_DAYS]);
 //		//		logger(g_log, "Dead Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
-//		//		s->value[COARSE_ROOT_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS]);
+//		//		s->value[COARSE_ROOT_C] -= (s->value[COARSE_ROOT_C] * s->value[COARSEROOT_TURNOVER]/s->counter[VEG_DAYS]);
 //		//		logger(g_log, "Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
-//		//		s->value[C_COARSE_ROOT_TO_LITTER] = s->value[COARSE_ROOT_C] * s->value[COARSERTTOVER]/s->counter[VEG_DAYS];
+//		//		s->value[C_COARSE_ROOT_TO_LITTER] = s->value[COARSE_ROOT_C] * s->value[COARSEROOT_TURNOVER]/s->counter[VEG_DAYS];
 //		//		logger(g_log, "Coarse root Biomass to litter = %g tC/cell\n", s->value[C_COARSE_ROOT_TO_LITTER]);
 //
 //		logger(g_log, "Live coarse + dead coarse = %g tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C]);

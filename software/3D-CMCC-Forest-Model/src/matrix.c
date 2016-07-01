@@ -774,8 +774,8 @@ static const char *sz_species_values[] = {
 		//FOLLOWING BIOME-BGC
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
 		//ROOT TURNOVER
-		"LEAVES_FINERTTOVER",             //Average yearly leaves and fine root turnover rate
-		"COARSERTTOVER",                  //Average yearly coarse root turnover rate
+		"LEAF_FINEROOT_TURNOVER",             //Average yearly leaves and fine root turnover rate
+		"COARSEROOT_TURNOVER",                  //Average yearly coarse root turnover rate
 		"SAPWOODTTOVER",	              //Average yearly sapwood turnover rate
 		"BRANCHTTOVER",	                  //Average yearly branch turnover rate
 		"LIVE_WOOD_TURNOVER",             //Average yearly live wood turnover rate

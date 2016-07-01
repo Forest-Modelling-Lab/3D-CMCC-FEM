@@ -92,9 +92,9 @@ BUD_BURST   0                   //days of bud burst at the beginning of growing 
 LEAF_FALL_FRAC_GROWING  0       //proportions of the growing season of leaf fall 
 
 //TURNOVER
-LEAVES_FINERTTOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
+LEAF_FINEROOT_TURNOVER  0.195       //Average YEARLY leaves and fine root turnover rate for Picea abies from Pietsch et al., 2005, 0.11 for Picea abies Seidl et al., 2012
                             //varying from 0.182 to 0.400 yr-1 (for Picea abies see White et al., 1999)
-COARSERTTOVER   0.02    //deducted from Yuste et al., 2005
+COARSEROOT_TURNOVER   0.02    //deducted from Yuste et al., 2005
 SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
 BRANCHTTOVER    0.01    //Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate for Picea abies from Pietsch et al., 2005
