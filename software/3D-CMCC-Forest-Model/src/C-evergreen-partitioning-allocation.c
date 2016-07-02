@@ -67,16 +67,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	/* following Arora and Boer 2005 */
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
-	//7 May 2012
-	//compute static ratio of allocation between fine
-	//fixme see if change with new parameters checked in "Pool_fraction"
-	//	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-	//	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
-	//	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-	//	logger(g_log, "Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
-	//	Perc_coarse = 1- Perc_fine;
-	//logger(g_log, "Percentage of coarse root against total root= %g %%\n", Perc_coarse * 100 );
-
 	/* Partitioning ratios from Arora and Boer 2005 */
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
 	logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
@@ -198,7 +188,7 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			if(s->value[PHENOLOGY] == 1.2)
 			{
 				//NPP for reproduction
-				s->value[C_TO_FRUIT] = s->value[NPP_tC] * s->value[FRUIT_PERC];
+				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 				npp_to_alloc -= s->value[C_TO_FRUIT];
 				logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
 			}
@@ -230,18 +220,24 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 		break;
 	}
 
+	//todo to be checked
 	/* CHECK */
 	/* sum all biomass pools increments */
-
+	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 	npp_alloc = s->value[C_TO_RESERVE] +
 			s->value[C_TO_FINEROOT] +
 			s->value[C_TO_COARSEROOT] +
-			s->value[C_TO_TOT_STEM] +
 			s->value[C_TO_STEM] +
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-8)
+	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);

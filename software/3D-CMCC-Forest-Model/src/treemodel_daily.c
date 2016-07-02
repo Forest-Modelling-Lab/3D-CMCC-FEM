@@ -288,6 +288,9 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						/* check for balance closure at the class level */
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
+						/* check for radiative balance closure */
+						Check_class_radiation_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+
 						/* check for carbon balance closure */
 						Check_class_carbon_balance(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
 

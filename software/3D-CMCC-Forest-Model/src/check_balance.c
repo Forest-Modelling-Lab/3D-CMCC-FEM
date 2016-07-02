@@ -216,7 +216,7 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "\nbalance = %g gC/m2\n", balance);
-		logger(g_log, "...FATAL ERROR IN CELL LEVEL carbon balance (exit)\n");
+		logger(g_log, "...FATAL ERROR AT CELL LEVEL carbon balance (exit)\n");
 		exit(1);
 	}
 	else
@@ -232,7 +232,6 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 	double out;
 	double store;
 	double balance;
-
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 
@@ -258,12 +257,52 @@ void Check_class_water_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "canopy water out = %g\n", out);
 		logger(g_log, "canopy water store = %g\n", store);
 		logger(g_log, "canopy water balance = %g\n", balance);
-		logger(g_log, "...FATAL ERROR IN CELL LEVEL canopy water balance (exit)\n");
+		logger(g_log, "...FATAL ERROR AT CELL LEVEL canopy water balance (exit)\n");
 		exit(1);
 	}
 	else
 	{
 		logger(g_log, "...ok canopy water balance at class level\n");
+	}
+}
+
+void Check_class_radiation_balance(cell_t *const c, species_t* const s)
+{
+	double in;
+	double out;
+	double store;
+	double balance;
+
+	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE RADIATIVE BALANCE */
+
+	/* PAR balance */
+	/* sum of sources */
+	in = s->value[PAR];
+
+	/* sum of sinks */
+	out = s->value[REFL_PAR]+ s->value[TRANSM_PAR_SUN] + s->value[TRANSM_PAR_SHADE];
+
+	/* sum of current storage */
+	store = s->value[APAR_SUN] + s->value[APAR_SUN];
+
+	/* check canopy water pool balance */
+	balance = in - out - store;
+
+	/* check for PAR balance closure*/
+	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	{
+		logger(g_log, "\nCLASS LEVEL PAR BALANCE\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "PAR in = %g\n", in);
+		logger(g_log, "PAR out = %g\n", out);
+		logger(g_log, "PAR store = %g\n", store);
+		logger(g_log, "PAR balance = %g\n", balance);
+		logger(g_log, "...FATAL ERROR AT CELL LEVEL PAR balance (exit)\n");
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok PAR balance at class level\n");
 	}
 }
 

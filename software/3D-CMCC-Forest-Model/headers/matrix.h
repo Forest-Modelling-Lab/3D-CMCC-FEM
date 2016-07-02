@@ -130,7 +130,7 @@ enum {
 
 	/* ALESSIOR:
 	
-		AVDBH deve essere sempre il primo perch� prima di lui ci sono i
+		AVDBH deve essere sempre il primo perchè prima di lui ci sono i
 		parametri con i valori CHE NON CAMBIANO MAI (COSTANTI!!!!!)
 
 		oltretutto l'indice AVDBH viene usato in new_class.c
@@ -185,13 +185,14 @@ enum {
 	STEMCONST,
 
 	/*radiation*/
-	//PAR,                      //Photosynthetically Active Radiation molPAR/m^2/day
+	PAR,                        //Photosynthetically Active Radiation molPAR/m^2/day
 	APAR,                       //Absorbed Physiological Active Radiation molPAR/m^2/day
 	APAR_SUN,                   //Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves
 	APAR_SHADE,                 //Absorbed Physiological Active Radiation molPAR/m^2/day for shaded leaves
 	TRANSM_PAR,                 //Transmitted Photosynthetically Active Radiation molPAR/m^2/day
 	TRANSM_PAR_SUN,             //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves
 	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
+	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
 
 	//NET_RAD,                  //Daily Net Solar Radiation in W/m2
 	NET_RAD_ABS,                //Daily Net Solar Radiation in W/m2
@@ -200,6 +201,7 @@ enum {
 	NET_RAD_TRANSM,             //Transmitted Net Radiation W/m2
 	NET_RAD_TRANSM_SUN,         //Transmitted Net Radiation W/m2 for sun leaves
 	NET_RAD_TRANSM_SHADE,       //Transmitted Net Radiation W/m2 for shaded leaves
+	NET_RAD_REFL,               //Transmitted Net Radiation W/m2 OVERALL CANOPY
 
 	//PPFD,
 	PPFD_ABS,                   //Absorbed Photosynthetic Photon Flux Density umol/m2/sec
@@ -208,6 +210,7 @@ enum {
 	PPFD_TRANSM,                //Transmitted Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_TRANSM_SUN,            //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from sun leaves
 	PPFD_TRANSM_SHADE,          //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves
+	PPFD_REFL,                  //Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY
 
 
 	/*modifiers variables*/

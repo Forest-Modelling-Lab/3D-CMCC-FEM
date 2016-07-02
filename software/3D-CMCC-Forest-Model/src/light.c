@@ -13,12 +13,14 @@ extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 
-static void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade)
+void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade,
+		double LightReflec_par, double LightReflec_net_rad)
 {
-	/* This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height class/layer */
+	/* This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height classes/layers */
 
 	/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE par = %f molPAR/m^2 day\n", c->par);
+	s->value[PAR] = c->par;
 	s->value[APAR_SUN] = c->par * LightAbsorb_sun;
 	s->value[TRANSM_PAR_SUN] = c->par - s->value[APAR_SUN];
 	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * LightAbsorb_shade;
@@ -26,6 +28,7 @@ static void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbs
 	/* overall canopy */
 	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
 	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
+	s->value[REFL_PAR] = c->par * LightReflec_par;
 	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-c->par),>1e-4);
 	/* cumulate over the layer filtered par */
 	c->par_transm += s->value[TRANSM_PAR];
@@ -48,6 +51,7 @@ static void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbs
 	/* overall canopy */
 	s->value[NET_RAD_ABS] = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
 	s->value[NET_RAD_TRANSM] = s->value[NET_RAD_TRANSM_SHADE];
+	s->value[NET_RAD_REFL] = c->net_radiation * LightReflec_net_rad;
 	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-c->net_radiation),>1e-4);
 	/* cumulate over the layer net radiation */
 	c->net_radiation_transm += s->value[NET_RAD_TRANSM];
@@ -70,6 +74,7 @@ static void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbs
 	/* overall canopy */
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
+	s->value[PPFD_REFL] = c->ppfd * LightReflec_par;
 	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-c->ppfd),>1e-4);
 	/* cumulate over the layer ppfd */
 	c->ppfd_transm += s->value[PPFD_TRANSM];
@@ -105,8 +110,8 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 
 	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade;                               //fraction of light absorbed
 	double LightTransm, LightTransm_sun, LightTransm_shade;                               //fraction of light transmitted
-	double LightReflec_net_rad, LightReflec_net_rad_sun, LightReflec_net_rad_shade;       //fraction of light reflected (for net radiation)
-	double LightReflec_par, LightReflec_par_sun, LightReflec_par_shade;                   //fraction of light reflected (for par)
+	double LightReflec_net_rad;                                                           //fraction of light reflected (for net radiation)
+	double LightReflec_par;                                                               //fraction of light reflected (for par)
 	double LightReflec_soil;
 
 	int counter;
@@ -377,7 +382,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 			counter ++;
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd */
-			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade);
+			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* first height class processed */
 			if(counter == 1)
@@ -484,7 +489,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 			counter ++;
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd */
-			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade);
+			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* first height class processed */
 			if(counter == 1)
@@ -591,7 +596,7 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 			counter ++;
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd */
-			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade);
+			Rad_abs_transm (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* first height class processed */
 			if(counter == 1)

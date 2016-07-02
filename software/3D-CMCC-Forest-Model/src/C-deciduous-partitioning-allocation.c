@@ -248,17 +248,21 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//todo to be checked
 	/* CHECK */
 	/* sum all biomass pools increments */
-	/*
+	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 	npp_alloc = s->value[C_TO_RESERVE] +
 			s->value[C_TO_FINEROOT] +
 			s->value[C_TO_COARSEROOT] +
-			s->value[C_TO_TOT_STEM] +
 			s->value[C_TO_STEM] +
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
-	*/
+	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
@@ -291,8 +295,6 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 
 	/* turnover */
 	Turnover(&c->heights[height].ages[age].species[species], c);
-	/* annual version */
-	//EOY_Turnover(&c->heights[height].ages[age].species[species]);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
