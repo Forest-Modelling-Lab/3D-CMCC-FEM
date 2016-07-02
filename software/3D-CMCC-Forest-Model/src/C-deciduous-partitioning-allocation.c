@@ -14,6 +14,7 @@
 #include "dendometry.h"
 #include "turnover.h"
 #include "lai.h"
+#include "C-allocation.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -259,72 +260,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 	*/
 
-	logger(g_log, "\n*Carbon allocation*\n");
-
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
 
-	//fixme to remove
-	logger(g_log, "\n****BIOMASS POOLS UPDATE****\n");
-
-	/* update class level carbon biomass pools */
-	s->value[LEAF_C] += s->value[C_TO_LEAF];
-	logger(g_log, "Leaf Biomass (Wf) = %f tC/area\n", s->value[LEAF_C]);
-
-	s->value[STEM_C] += s->value[C_TO_STEM];
-	logger(g_log, "Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_C]);
-
-	s->value[BRANCH_C] += s->value[C_TO_BRANCH];
-	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tC/area\n", s->value[BRANCH_C]);
-
-	s->value[RESERVE_C] += s->value[C_TO_RESERVE];
-	logger(g_log, "Reserve Biomass (Wres) = %f tC/area\n", s->value[RESERVE_C]);
-
-	s->value[FINE_ROOT_C] += s->value[C_TO_FINEROOT];
-	logger(g_log, "Fine Root Biomass (Wrf) = %f tC/area\n", s->value[FINE_ROOT_C]);
-
-	s->value[COARSE_ROOT_C] += s->value[C_TO_COARSEROOT];
-	logger(g_log, "Coarse Root Biomass (Wrc) = %f tC/area\n", s->value[COARSE_ROOT_C]);
-
-	s->value[TOT_ROOT_C] =  s->value[COARSE_ROOT_C] + s->value[FINE_ROOT_C];
-	logger(g_log, "Total Root Biomass (Wr TOT) = %f tC/area\n", s->value[TOT_ROOT_C]);
-
-	s->value[TOT_STEM_C] += s->value[C_TO_STEM] + s->value[C_TO_BRANCH];
-	logger(g_log, "Total Stem Biomass (Wts)= %f tC/area\n", s->value[TOT_STEM_C]);
-
-	s->value[FRUIT_C] += s->value[C_TO_FRUIT];
-	logger(g_log, "Fuit Biomass (Wfruit)= %f tC/area\n", s->value[FRUIT_C]);
-
-	s->value[STEM_LIVE_WOOD_C] += (s->value[C_TO_STEM] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
-
-	s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
-	logger(g_log, "Dead Stem Biomass (Ws) = %f tC/area\n", s->value[STEM_DEAD_WOOD_C]);
-
-	s->value[COARSE_ROOT_LIVE_WOOD_C] += (s->value[C_TO_COARSEROOT] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
-
-	s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
-	logger(g_log, "Dead Coarse Biomass (Ws) = %f tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
-
-	s->value[BRANCH_LIVE_WOOD_C] += (s->value[C_TO_BRANCH] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
-
-	s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
-	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
-
-	//note problems with C-allocation is fruit pool
-	s->value[TOTAL_C] = s->value[LEAF_C] +s->value[STEM_C] + s->value[BRANCH_C] + s->value[TOT_ROOT_C] + /*s->value[FRUIT_C] +*/ s->value[RESERVE_C];
-	logger(g_log, "Total Carbon Biomass (W) = %f tC/area\n", s->value[TOTAL_C]);
-
-	/* check for closure */
-	CHECK_CONDITION(fabs((s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C])-s->value[STEM_C]),>1e-4);
-	CHECK_CONDITION(fabs((s->value[COARSE_ROOT_LIVE_WOOD_C] + s->value[COARSE_ROOT_DEAD_WOOD_C])-s->value[COARSE_ROOT_C]),>1e-4);
-	CHECK_CONDITION(fabs((s->value[BRANCH_LIVE_WOOD_C] + s->value[BRANCH_DEAD_WOOD_C])-s->value[BRANCH_C]),>1e-4);
-
-	//fixme
-//	/* allocate daily carbon */
-//	C_allocation (s, c, day, month, years, height, age, species);
+	/* allocate daily carbon */
+	C_allocation (s, c, day, month, years, height, age, species);
 
 	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
 

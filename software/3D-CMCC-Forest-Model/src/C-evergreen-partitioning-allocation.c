@@ -54,10 +54,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	//every pool except foliage
 
-	/* both used in case of retranslocation of carbon to reserve */
-	double old_leaf_c;
-	double old_fineroot_c;
-
 	/* for check */
 	double npp_to_alloc;
 	double npp_alloc;
@@ -89,10 +85,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 	CHECK_CONDITION(fabs(pR_CTEM + pS_CTEM + pF_CTEM), > 1 + 1e-4);
-
-
-	old_leaf_c = s->value[LEAF_C];
-	old_fineroot_c = s->value[FINE_ROOT_C];
 
 	if (s->management == 0)
 	{
@@ -250,10 +242,6 @@ void Daily_C_Evergreen_Partitioning_Allocation (species_t *const s, cell_t *cons
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
 	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-8)
-
-
-	logger(g_log, "\n*Carbon allocation*\n");
-
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
