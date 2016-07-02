@@ -37,7 +37,7 @@ void Check_radiation_balance (cell_t *const c)
 	/* sum of current storage */
 	//store = ;
 
-	balance = in - out -store;
+	//balance = in - out -store;
 
 	if (fabs(balance) > 1e-8 )
 	{

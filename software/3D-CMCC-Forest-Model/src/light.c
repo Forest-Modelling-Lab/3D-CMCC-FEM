@@ -699,5 +699,13 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 		c->net_radiation_for_soil = c->net_radiation * (1.0 - LightReflec_soil);
 		logger(g_log, "Net Radiation for soil outside growing season = %f \n", c->net_radiation_for_soil);
 	}
+
+	/* for radiative balance */
+	/* cumulate radiation */
+	c->apar += s->value[APAR];
+	c->par_refl += s->value[REFL_PAR];
+	c->net_radiation_absorbed += s->value[NET_RAD_ABS];
+	c->net_radiation_reflected += s->value[NET_RAD_REFL];
+
 }
 
