@@ -17,12 +17,66 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
+void Check_radiation_balance (cell_t *const c)
+{
+	double in;
+	double out;
+	double store;
+	double balance;
+
+	logger(g_log,"\n*********CHECK RADIATIVE BALANCE************\n");
+
+	/* DAILY CHECK ON RADIATIVE BALANCE */
+
+	/* sum of sources */
+	in = (c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
+
+	/* sum of sinks */
+	//out = ;
+
+	/* sum of current storage */
+	//store = ;
+
+	balance = in - out -store;
+
+	if (fabs(balance) > 1e-8 )
+	{
+		logger(g_log, "\nCELL RADIATIVE BALANCE\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "\nin\n");
+		logger(g_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+		logger(g_log, "\nout\n");
+		logger(g_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
+		logger(g_log, "\nstore\n");
+		logger(g_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
+		logger(g_log, "c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
+		logger(g_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_fine_root_carbon);
+		logger(g_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_coarse_root_carbon);
+		logger(g_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
+		logger(g_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
+		logger(g_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
+		logger(g_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
+		logger(g_log, "\ncarbon in = %g gC/m2/day\n", in);
+		logger(g_log, "carbon out = %g gC/m2/day\n", out);
+		logger(g_log, "carbon store = %g gC/m2/day\n", store);
+		logger(g_log, "carbon_balance = %g gC/m2/day\n",balance);
+		logger(g_log, "...FATAL ERROR IN radiative balance (exit)\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok radiative balance\n");
+	}
+}
+
 void Check_carbon_balance(cell_t *const c)
 {
 
 	double in;
 	double out;
 	double store;
+	double balance;
 
 	logger(g_log, "\n*********CHECK CARBON BALANCE************\n");
 
@@ -41,9 +95,9 @@ void Check_carbon_balance(cell_t *const c)
 			c->daily_branch_carbon + c->daily_reserve_carbon +
 			c->daily_litter_carbon + c->daily_fruit_carbon;
 
-	c->carbon_balance = in - out -store;
+	balance = in - out -store;
 
-	if (fabs(c->carbon_balance) > 1e-8 )
+	if (fabs(balance) > 1e-8 )
 	{
 		logger(g_log, "\nCELL CARBON POOL BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
@@ -63,7 +117,7 @@ void Check_carbon_balance(cell_t *const c)
 		logger(g_log, "\ncarbon in = %g gC/m2/day\n", in);
 		logger(g_log, "carbon out = %g gC/m2/day\n", out);
 		logger(g_log, "carbon store = %g gC/m2/day\n", store);
-		logger(g_log, "carbon_balance = %g gC/m2/day\n",c->carbon_balance);
+		logger(g_log, "carbon_balance = %g gC/m2/day\n",balance);
 		logger(g_log, "...FATAL ERROR IN carbon balance (exit)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		exit(1);
@@ -81,6 +135,7 @@ void Check_soil_water_balance(cell_t *const c)
 	double in;
 	double out;
 	double store;
+	double balance;
 
 	double daily_frac_transp;
 	double daily_frac_evapo;
@@ -102,7 +157,7 @@ void Check_soil_water_balance(cell_t *const c)
 	store = (c->asw - c->old_asw) + /*(c->daily_c_water_stored - c->old_daily_c_water_stored)*/ + c->prcp_snow;
 
 	/* check soil pool water balance */
-	c->soil_pool_water_balance = in - out - store;
+	balance = in - out - store;
 
 	//	/*******************************************************************************************************************/
 	//	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
@@ -133,7 +188,7 @@ void Check_soil_water_balance(cell_t *const c)
 	}
 
 	/* check for soil water pool water balance */
-	if (fabs(c->soil_pool_water_balance) > 1e-8 )
+	if (fabs(balance) > 1e-8 )
 	{
 		logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
@@ -156,7 +211,7 @@ void Check_soil_water_balance(cell_t *const c)
 		logger(g_log, "soil water in = %g\n", in);
 		logger(g_log, "soil water out = %g\n", out);
 		logger(g_log, "soil water store = %g\n", store);
-		logger(g_log, "soil water balance = %g\n", c->soil_pool_water_balance);
+		logger(g_log, "soil water balance = %g\n", balance);
 		logger(g_log, "...FATAL ERROR IN soil water balance (exit)\n");
 		exit(1);
 	}

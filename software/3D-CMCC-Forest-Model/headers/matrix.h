@@ -740,41 +740,42 @@ typedef struct {
 	double basal_area;
 
 	/*radiation variables*/
-	double extra_terr_radiation_MJ;                     //Extraterrestrial radiation (MJ/m2/day)
-	double extra_terr_radiation_W;                      //Extraterrestrial radiation (W/m2)
-	double short_wave_clear_sky_radiation_MJ;           //Short wave clear sky radiation (MJ/m2/day)
-	double short_wave_clear_sky_radiation_W;            //Short wave clear sky radiation (W/m2)
-	double short_wave_radiation_DW_MJ;                  //Downward short wave radiation flux (MJ/m2/day)
-	double short_wave_radiation_DW_W;                   //Downward short wave radiation flux (W/m2)
-	double short_wave_radiation_UW_MJ;                  //Upward short wave radiation flux (MJ/m2/day)
-	double short_wave_radiation_UW_W;                   //Upward short wave radiation flux (W/m2)
-	double net_short_wave_radiation_MJ;                 //Net short wave radiation flux (MJ/m2/day)
-	double net_short_wave_radiation_W;                  //Net short wave radiation flux (W/m2)
+	double extra_terr_radiation_MJ;                     /* Extraterrestrial radiation (MJ/m2/day) */
+	double extra_terr_radiation_W;                      /* Extraterrestrial radiation (W/m2) */
+	double short_wave_clear_sky_radiation_MJ;           /* Short wave clear sky radiation (MJ/m2/day) */
+	double short_wave_clear_sky_radiation_W;            /* Short wave clear sky radiation (W/m2) */
+	double short_wave_radiation_DW_MJ;                  /* Downward short wave radiation flux (MJ/m2/day) */
+	double short_wave_radiation_DW_W;                   /* Downward short wave radiation flux (W/m2) */
+	double short_wave_radiation_UW_MJ;                  /* Upward short wave radiation flux (MJ/m2/day) */
+	double short_wave_radiation_UW_W;                   /* Upward short wave radiation flux (W/m2) */
+	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
+	double net_short_wave_radiation_W;                  /* Net short wave radiation flux (W/m2) */
+	double long_wave_radiation_DW_MJ;                   /* Downward long wave radiation flux (MJ/m2/day) */
+	double long_wave_radiation_DW_W;                    /* Downward long wave radiation flux (W/m2) */
+	double long_wave_radiation_UW_MJ;                   /* Upward long wave radiation flux (MJ/m2/day) */
+	double long_wave_radiation_UW_W;                    /* Upward long wave radiation flux (W/m2) */
+	double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
+	double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
 
-	double long_wave_radiation_DW_MJ;                   //Downward long wave radiation flux (MJ/m2/day)
-	double long_wave_radiation_DW_W;                    //Downward long wave radiation flux (W/m2)
-	double long_wave_radiation_UW_MJ;                   //Upward long wave radiation flux (MJ/m2/day)
-	double long_wave_radiation_UW_W;                    //Upward long wave radiation flux (W/m2)
-	double net_long_wave_radiation_MJ;                  //Net long wave radiation flux (MJ/m2/day)
-	double net_long_wave_radiation_W;                   //Net long wave radiation flux (W/m2)
-
-	double net_radiation;                               //Net radiation flux ('terrestrial radiation') (W/m2)
+	double net_radiation;                               /*  Net radiation ('terrestrial radiation') (W/m2) */
 	double net_radiation_transm;
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
 
 	double par;
+	double apar;
 	double par_transm;
+	double par_refl;
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;
 	double par_for_establishment;
 
-	double ppfd;                                        //Photosynthetic phton flux density (umol/m2/sec)
+	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;
 
-	double cloud_cover_frac;                            //cloud cover fraction
+	double cloud_cover_frac;                            /* cloud cover fraction */
 
 
 
@@ -793,27 +794,26 @@ typedef struct {
 	double daily_het_resp, monthly_het_resp, annual_het_resp;
 	double daily_C_flux, monthly_C_flux, annual_C_flux;
 	double litter;
-	double ter;  //total ecosystem respiration
-	double carbon_balance;
+	double ter;                                                            /*total ecosystem respiration */
 	double daily_nee, monthly_nee, annual_nee;
-	double daily_leaf_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_stem_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_fine_root_carbon;                              /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_coarse_root_carbon;                            /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_root_carbon;                                   /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_branch_carbon;                                 /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_reserve_carbon;                                /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_litter_carbon;                                 /* daily carbon to litter c pool in gC/m2/day */
-	double daily_fruit_carbon;                                  /* daily carbon to fruit c pool in gC/m2/day */
-	double daily_leaf_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_stem_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fine_root_carbon_tC;                           /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_coarse_root_carbon_tC;                         /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_branch_carbon_tC;                              /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_reserve_carbon_tC;                             /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_root_carbon_tC;                                /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_litter_carbon_tC;                              /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fruit_carbon_tC;                               /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_leaf_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_stem_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day  */
+	double daily_fine_root_carbon;                                         /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_coarse_root_carbon;                                       /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_root_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_branch_carbon;                                            /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_reserve_carbon;                                           /* daily carbon assimilated to c pool in gC/m2/day */
+	double daily_litter_carbon;                                            /* daily carbon assimilated to litter c pool in gC/m2/day */
+	double daily_fruit_carbon;                                             /* daily carbon assimilated to fruit c pool in gC/m2/day */
+	double daily_leaf_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_stem_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fine_root_carbon_tC;                                      /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_coarse_root_carbon_tC;                                    /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_branch_carbon_tC;                                         /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_reserve_carbon_tC;                                        /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_root_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_litter_carbon_tC;                                         /* daily carbon assimilated to c pool in tC/cell/day */
+	double daily_fruit_carbon_tC;                                          /* daily carbon assimilated to c pool in tC/cell/day */
 	double daily_leaf_drymatter;
 	double daily_stem_drymatter;
 	double daily_fine_root_drymatter;
@@ -859,7 +859,6 @@ typedef struct {
 	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
 	double max_asw_sat;				/* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;
-	double soil_pool_water_balance;
 	double canopy_pool_water_balance, old_canopy_pool_water_balance;
 	
 	double previous_available_soil_water;
