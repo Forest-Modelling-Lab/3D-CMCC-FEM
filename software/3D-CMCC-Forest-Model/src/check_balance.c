@@ -32,41 +32,35 @@ void Check_radiation_balance (cell_t *const c)
 	in = (c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
 
 	/* sum of sinks */
-	//out = ;
+	out = c->par_reflected;
 
 	/* sum of current storage */
-	//store = ;
+	store = c->apar + c->par_for_soil;
 
-	//balance = in - out -store;
+	balance = in - out -store;
 
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL RADIATIVE BALANCE\n");
+		logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
+		logger(g_log, "incoming par = %g molPAR/m2/day\n", c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
 		logger(g_log, "\nout\n");
-		logger(g_log, "c->daily_tot_aut_resp = %g gC/m2/day\n",c->daily_maint_resp + c->daily_growth_resp);
+		logger(g_log, "c->par_reflected = %g molPAR/m2/day\n",c->par_reflected);
 		logger(g_log, "\nstore\n");
-		logger(g_log, "c->daily_leaf_carbon = %g gC/m2/day\n", c->daily_leaf_carbon);
-		logger(g_log, "c->daily_stem_carbon = %g gC/m2/day\n", c->daily_stem_carbon);
-		logger(g_log, "c->daily_fine_root_carbon = %g gC/m2/day\n", c->daily_fine_root_carbon);
-		logger(g_log, "c->daily_coarse_root_carbon = %g gC/m2/day\n", c->daily_coarse_root_carbon);
-		logger(g_log, "c->daily_branch_carbon = %g gC/m2/day\n", c->daily_branch_carbon);
-		logger(g_log, "c->daily_reserve_carbon = %g gC/m2/day\n", c->daily_reserve_carbon);
-		logger(g_log, "c->daily_litter_carbon = %g gC/m2/day\n", c->daily_litter_carbon);
-		logger(g_log, "c->daily_fruit_carbon = %g gC/m2/day\n", c->daily_fruit_carbon);
-		logger(g_log, "\ncarbon in = %g gC/m2/day\n", in);
-		logger(g_log, "carbon out = %g gC/m2/day\n", out);
-		logger(g_log, "carbon store = %g gC/m2/day\n", store);
-		logger(g_log, "carbon_balance = %g gC/m2/day\n",balance);
-		logger(g_log, "...FATAL ERROR IN radiative balance (exit)\n");
+		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
+		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->par_for_soil);
+		logger(g_log, "\npar in = %g molPAR/m2/day\n", in);
+		logger(g_log, "par out = %g molPAR/m2/day\n", out);
+		logger(g_log, "par store = %g molPAR/m2/day\n", store);
+		logger(g_log, "par balance = %g molPAR/m2/day\n",balance);
+		logger(g_log, "...FATAL ERROR IN PAR radiative balance (exit)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		exit(1);
 	}
 	else
 	{
-		logger(g_log, "...ok radiative balance\n");
+		logger(g_log, "...ok PAR radiative balance\n");
 	}
 }
 

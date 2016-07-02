@@ -757,7 +757,7 @@ typedef struct {
 	double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
 	double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
 
-	double net_radiation;                               /*  Net radiation ('terrestrial radiation') (W/m2) */
+	double net_radiation;                               /* Net radiation ('terrestrial radiation') (W/m2) */
 	double net_radiation_absorbed;                      /* Net radiation absorbed (W/m2) */
 	double net_radiation_reflected;                     /* Net radiation reflected (W/m2) */
 	double net_radiation_transm;
@@ -768,7 +768,7 @@ typedef struct {
 	double par;
 	double apar;
 	double par_transm;
-	double par_refl;
+	double par_reflected;
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;

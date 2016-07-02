@@ -585,6 +585,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	}
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
+	/*******************************************************************************************************/
 	/* note: computations that involve all classes and are related to the overall cell */
 	/* computations during the last height class processing */
 	/* compute soil respiration */
@@ -599,13 +600,17 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	Soil_water_balance (&m->cells[cell], met, month, day);
 	/* compute water fluxes */
 	Water_fluxes (&m->cells[cell]);
+
+	/*******************************************************************************************************/
+	/* CHECK FOR BALANCE CLOSURE */
+
+	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
+	//Check_radiative_balance (&m->cells[cell]);
 	/* CHECK FOR CARBON BALANCE CLOSURE */
 	Check_carbon_balance (&m->cells[cell]);
 	/* CHECK FOR WATER BALANCE CLOSURE */
 	Check_soil_water_balance (&m->cells[cell]);
-	//todo
-	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
-	//Check_radiative_balance (&m->cells[cell]);
+	/*******************************************************************************************************/
 
 	m->cells[cell].dos  += 1;
 	//todo: soilmodel could stay here or in main.c
