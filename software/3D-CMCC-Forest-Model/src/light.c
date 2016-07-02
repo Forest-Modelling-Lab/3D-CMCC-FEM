@@ -90,7 +90,8 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 	logger(g_log, "Below the canopy ppfd (filtered)= %f molPAR/m^2 day\n", c->ppfd_transm);
 
 
-	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2*/
+	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2 */
+	//fixme then recompute transmitted fraction!!!!!!!!!!!!
 	if(s->value[PPFD_ABS_SHADE] < 0.0)
 	{
 		s->value[PPFD_ABS_SHADE]  = 0.0;
