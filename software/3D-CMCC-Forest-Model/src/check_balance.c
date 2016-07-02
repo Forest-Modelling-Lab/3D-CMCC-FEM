@@ -223,7 +223,7 @@ void Check_class_carbon_balance(cell_t *const c, species_t* const s)
 	{
 		logger(g_log, "...ok carbon balance at class level\n");
 	}
- 	/*******************************************************************************************************************/
+	/*******************************************************************************************************************/
 }
 
 void Check_class_water_balance(cell_t *const c, species_t* const s)
@@ -274,16 +274,18 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 	double balance;
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE RADIATIVE BALANCE */
+	//fixme: for all the balance doesn't takes into account the amount of light previously removed in Radiation function
 
 	/* PAR balance */
 	/* sum of sources */
 	in = s->value[PAR];
 
 	/* sum of sinks */
-	out = s->value[REFL_PAR]+ s->value[TRANSM_PAR_SUN] + s->value[TRANSM_PAR_SHADE];
+	/* it must take into account the overall transmitted PAR */
+	out = /*s->value[REFL_PAR] + */ s->value[TRANSM_PAR];
 
 	/* sum of current storage */
-	store = s->value[APAR_SUN] + s->value[APAR_SUN];
+	store = s->value[APAR_SUN] + s->value[APAR_SHADE];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
@@ -303,6 +305,70 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 	else
 	{
 		logger(g_log, "...ok PAR balance at class level\n");
+	}
+	/****************************************************************************************************************/
+	/* Net radiation balance */
+	/* sum of sources */
+	in = s->value[NET_RAD];
+
+	/* sum of sinks */
+	/* it must take into account the overall transmitted NET_RAD */
+	out = /*s->value[NET_RAD_REFL] + */ s->value[NET_RAD_TRANSM];
+
+	/* sum of current storage */
+	store = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
+
+	/* check canopy water pool balance */
+	balance = in - out - store;
+
+	/* check for NET_RAD balance closure*/
+	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	{
+		logger(g_log, "\nCLASS LEVEL NET_RAD BALANCE\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "NET_RAD in = %g\n", in);
+		logger(g_log, "NET_RAD out = %g\n", out);
+		logger(g_log, "NET_RAD store = %g\n", store);
+		logger(g_log, "NET_RAD balance = %g\n", balance);
+		logger(g_log, "...FATAL ERROR AT CELL LEVEL NET_RAD balance (exit)\n");
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok NET_RAD balance at class level\n");
+	}
+	/****************************************************************************************************************/
+	/* PPFD balance */
+	/* sum of sources */
+	in = s->value[PPFD];
+
+	/* sum of sinks */
+	/* it must take into account the overall transmitted NET_RAD */
+	out = /*s->value[PPFD_REFL] + */ s->value[PPFD_TRANSM];
+
+	/* sum of current storage */
+	store = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
+	logger(g_log, "PPFD_ABS_SUN  = %g\n", s->value[PPFD_ABS_SUN]);
+	logger(g_log, "PPFD_ABS_SHADE  = %g\n", s->value[PPFD_ABS_SHADE]);
+
+	/* check canopy water pool balance */
+	balance = in - out - store;
+
+	/* check for PPFD balance closure*/
+	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	{
+		logger(g_log, "\nCLASS LEVEL PPFD BALANCE\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "PPFD in = %g\n", in);
+		logger(g_log, "PPFD out = %g\n", out);
+		logger(g_log, "PPFD store = %g\n", store);
+		logger(g_log, "PPFD balance = %g\n", balance);
+		logger(g_log, "...FATAL ERROR AT CELL LEVEL PPFD balance (exit)\n");
+		//exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok PPFD balance at class level\n");
 	}
 }
 

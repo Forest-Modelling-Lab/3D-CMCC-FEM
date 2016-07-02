@@ -44,6 +44,7 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 
 	/*compute NetRad (W/m^2) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE net_radiation = %f W/m^2\n", c->net_radiation);
+	s->value[NET_RAD] = c->net_radiation;
 	s->value[NET_RAD_ABS_SUN] = c->net_radiation * LightAbsorb_sun;
 	s->value[NET_RAD_TRANSM_SUN] = c->net_radiation - s->value[NET_RAD_ABS_SUN];
 	s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_TRANSM_SUN] * LightAbsorb_shade;
@@ -67,6 +68,7 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 
 	/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE ppfd = %f umol/m2/sec\n", c->ppfd);
+	s->value[PPFD] = c->ppfd;
 	s->value[PPFD_ABS_SUN] = c->ppfd * LightAbsorb_sun;
 	s->value[PPFD_TRANSM_SUN] = c->ppfd - s->value[PPFD_ABS_SUN];
 	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * LightAbsorb_shade;
@@ -162,7 +164,6 @@ void Radiation(species_t *const s, cell_t *const c, const meteo_t *const met, co
 
 	/* fraction of light reflected by the canopy */
 	/* for net radiation and par */
-	//AS FOR PAR ALBEDO SHOULD BE TAKEN INTO ACCOUNT ONLY FOR SUN LEAVES THAT REPRESENT LAI_RATIO
 	//following BIOME albedo for PAR is 1/3 of albedo
 	//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
 	//PAR is reflected than net_radiation (Jones 1992)

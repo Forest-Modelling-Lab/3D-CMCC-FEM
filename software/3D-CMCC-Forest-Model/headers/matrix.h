@@ -194,8 +194,8 @@ enum {
 	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
 	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
 
-	//NET_RAD,                  //Daily Net Solar Radiation in W/m2
-	NET_RAD_ABS,                //Daily Net Solar Radiation in W/m2
+	NET_RAD,                    //Net Solar Radiation in W/m2
+	NET_RAD_ABS,                //Absorbed Net Solar Radiation in W/m2
 	NET_RAD_ABS_SUN,            //Absorbed Net Radiation W/m2 for sun leaves
 	NET_RAD_ABS_SHADE,          //Absorbed Net Radiation W/m2 for shaded leaves
 	NET_RAD_TRANSM,             //Transmitted Net Radiation W/m2
@@ -203,7 +203,7 @@ enum {
 	NET_RAD_TRANSM_SHADE,       //Transmitted Net Radiation W/m2 for shaded leaves
 	NET_RAD_REFL,               //Transmitted Net Radiation W/m2 OVERALL CANOPY
 
-	//PPFD,
+	PPFD,                       //Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_ABS,                   //Absorbed Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_ABS_SUN,               //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves
 	PPFD_ABS_SHADE,             //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves
