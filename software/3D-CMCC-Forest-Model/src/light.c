@@ -41,7 +41,6 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 	logger(g_log, "Transmitted Par total = %f molPAR/m^2 day\n", s->value[TRANSM_PAR]);
 	logger(g_log, "Below the canopy par (filtered)= %f molPAR/m^2 day\n", c->par_transm);
 
-
 	/*compute NetRad (W/m^2) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE net_radiation = %f W/m^2\n", c->net_radiation);
 	s->value[NET_RAD] = c->net_radiation;
@@ -64,7 +63,6 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 	logger(g_log, "Absorbed total = %f W/m^2\n", s->value[NET_RAD_ABS]);
 	logger(g_log, "Transmitted total = %f W/m^2\n", s->value[NET_RAD_TRANSM]);
 	logger(g_log, "Below the canopy net radiation (filtered)= %f molPAR/m^2 day\n", c->net_radiation_transm);
-
 
 	/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE ppfd = %f umol/m2/sec\n", c->ppfd);
