@@ -20,8 +20,8 @@ typedef struct {
 	double prcp;                                /* (mm) daily precipitation */
 	double swc;                                 /* (% vol) daily soil wtaer content from data file */
 	double ndvi_lai;                            /* (m2/m2) daily LAI from data file */
-	double daylength;                           /* () day length */
-	double thermic_sum;                         /* daily thermic sum */
+	double daylength;                           /* (hours) day length */
+	double thermic_sum;                         /* (deg C) daily thermic sum */
 	double rho_air;                             /* (kg/m3) daily air density */
 	double tsoil;                               /* (deg C) daily soil temperature computed by the model */
 	double et;                                  /* (mm) daily evapo-transpiration (not used)*/

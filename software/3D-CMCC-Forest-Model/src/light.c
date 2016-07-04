@@ -16,7 +16,8 @@ extern topo_t *g_topo;
 void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade,
 		double LightReflec_par, double LightReflec_net_rad)
 {
-	/* This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height classes/layers */
+	/* note: This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height classes/layers
+	 * considering at square meter without takes into account coverage*/
 
 	/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE par = %g molPAR/m^2 day\n", c->par);
@@ -123,8 +124,6 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	double cumulated_leaf_cover_eff;                                                      //fraction of square meter covered by leaf over the gridcell
 	double cumulated_gap_cover_eff;                                                       //fraction of square meter un-covered by leaf over the gridcell
 
-	//double ppfd_coeff = 0.01;                                                           //parameter that quantifies the effect of light on conductance see Schwalm and Ek 2004 and Kimbal et al., 1997
-
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	double actual_albedo;
 
@@ -132,19 +131,17 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	//test check albedo for other typos
 	double soil_albedo = 0.17; //(see Wiki)
 
-	logger(g_log, "\nRADIATION ROUTINE\n");
-	logger(g_log, "INCOMING RADIATION\n");
-	logger(g_log, "extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
-	logger(g_log, "extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
-	logger(g_log, "Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
-	logger(g_log, "Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
-	logger(g_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
-	logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
-	logger(g_log, "cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
-	logger(g_log, "Net Long wave radiation = %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
-	logger(g_log, "Net Long wave radiation = %g W/m2\n", met[month].d[day].lw_net_W);
-
-
+	logger(g_log, "\n**RADIATION ROUTINE**\n");
+	logger(g_log, "-INCOMING RADIATION\n");
+	logger(g_log, "-extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
+	logger(g_log, "-extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
+	logger(g_log, "-Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
+	logger(g_log, "-Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
+	logger(g_log, "-Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
+	logger(g_log, "-Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
+	logger(g_log, "-Net Long wave radiation = %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+	logger(g_log, "-Net Long wave radiation = %g W/m2\n", met[month].d[day].lw_net_W);
+	logger(g_log, "-cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
 
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -156,7 +153,6 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	LightAbsorb = 1.0 - LightTransm;
 	LightAbsorb_sun = 1.0 - LightTransm_sun;
 	LightAbsorb_shade = 1.0 - LightTransm_shade;
-
 
 	/* fraction of light reflected by the canopy */
 	/* for net radiation and par */
@@ -186,8 +182,8 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	logger(g_log, "LightTrasm_sun = %g %%\n", LightTransm_sun);
 	logger(g_log, "LightAbsorb_shade = %g %%\n", LightAbsorb_shade);
 	logger(g_log, "LightTrasm_sun = %g %%\n", LightTransm_shade);
-	logger(g_log, "LightAbsorb (tot) = %g %%\n", LightAbsorb);
-	logger(g_log, "LightTrasm (tot)= %g %%\n", LightTransm);
+	logger(g_log, "LightAbsorb (sun+shaded) = %g %%\n", LightAbsorb);
+	logger(g_log, "LightTrasm (sun+shaded)= %g %%\n", LightTransm);
 	logger(g_log, "LightReflec_net_rad = %g %%\n", LightReflec_net_rad);
 	logger(g_log, "LightReflec_par = %g %%\n", LightReflec_par);
 
@@ -228,7 +224,8 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	logger(g_log, "Par = %g molPAR/m^2 day\n", c->par);
 
 	/* Remove the reflected PAR */
-	c->par *= (1.0 - LightReflec_par);
+	c->par_reflected = c->par * LightReflec_par;
+	c->par -= c->par_reflected;
 	logger(g_log, "Par less reflected part = %g molPAR/m^2 day\n", c->par);
 	/*****************************************************************************************/
 
@@ -309,7 +306,7 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 				logger(g_log, "\n**LIGHT FOR LOWER/SOIL LAYER**\n");
 
 				/* note : lower layers use c->par, c->net_radiation, c->ppfd */
-				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over gridcell */
+				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over grid cell */
 				/* if there's absorption from trees */
 				if(cumulated_leaf_cover_eff > 0.0)
 				{
@@ -572,13 +569,12 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 		logger(g_log, "Par for soil outside growing season = %g \n", c->par_for_soil);
 		c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
 		logger(g_log, "Net Radiation for soil outside growing season = %g \n", c->net_radiation_for_soil);
-		getchar();
 	}
 
 	/* for radiative balance */
 	/* cumulate radiation */
-	c->apar += s->value[APAR];
-	c->par_reflected += s->value[REFL_PAR];
+	c->apar += (s->value[APAR] * cumulated_leaf_cover_eff);
+	c->par_reflected += (s->value[REFL_PAR] * cumulated_leaf_cover_eff);
 	c->net_radiation_absorbed += s->value[NET_RAD_ABS];
 	c->net_radiation_reflected += s->value[NET_RAD_REFL];
 

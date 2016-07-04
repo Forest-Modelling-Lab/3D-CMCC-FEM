@@ -31,8 +31,11 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 
 	/* DAILY CHECK ON RADIATIVE BALANCE */
 
+	//note: it currently doesn't work properly because model cumulate amount of light for class without takes into account the coverage
+	//while for cell level considering coverage, so balance overestimates balance
+
 	/* sum of sources */
-	in = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR) + c->par;
+	in = met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR;
 
 	/* sum of sinks */
 	out = c->par_reflected + c->par_reflected_soil;
@@ -48,7 +51,6 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming par = %g molPAR/m2/day\n", met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
-		logger(g_log, "trasmitted par = %g molPAR/m2/day\n", c->par);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->par_reflected = %g molPAR/m2/day\n",c->par_reflected);
 		logger(g_log, "c->par_reflected_soil = %g molPAR/m2/day\n",c->par_reflected_soil);

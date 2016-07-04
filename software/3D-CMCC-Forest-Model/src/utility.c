@@ -19,6 +19,10 @@ void Reset_daily_variables (cell_t *const c, const int count)
 
 	logger(g_log, "...resetting daily variables...\n");
 
+	c->apar = 0.0;
+	c->par_for_soil = 0.0;
+	c->net_radiation_absorbed = 0.0;
+	c->net_radiation_for_soil = 0.0;
 	c->par_transm = 0.0;
 	c->net_radiation_transm = 0.0;
 	c->ppfd_transm = 0.0;

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "common.h"
 #include "canopy_evapotranspiration.h"
 #include "constants.h"
 #include "logger.h"
@@ -42,7 +43,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
-	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
+	double leaf_cover_eff;                                            /* fraction of square meter covered by leaf over the gridcell */
 	static int days_with_canopy_wet;
 
 	double tairK;
@@ -61,7 +62,6 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 
 	tairK = met[month].d[day].tavg + TempAbs;
-	//tsoilK = met[month].d[day].tsoil + TempAbs;
 
 	/* assign values of previous day canopy water (it determines canopy water fluxes */
 	/* reset if LAI == 0.0*/
@@ -76,9 +76,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 		s->value[OLD_CANOPY_WATER]= s->value[CANOPY_WATER];
 	}
 
-
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
-
 
 	/* compute effective canopy cover */
 	if(s->value[LAI] < 1.0)
@@ -101,36 +99,24 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 
-	//test following Lawrence et al., 2006
-	//todo change INT_COEFF to 0.25
+	/********************************************************************************************************/
+	/* compute maximum interception coefficient */
 	if(met[month].d[day].prcp > 0.0 && s->value[ALL_LAI]>0.0)
 	{
-		//logger(g_log, "*CANOPY INTERCEPTION*\n");
-		//logger(g_log, "Rain = %g mm\n",c->prcp_rain);
-
-		//todo in case substitute int_coeff (0.25) with s->value[INT_COEFF]
-		double int_coeff = 0.25;
-
 		/* for rain */
 		if(c->prcp_rain != 0.0)
 		{
-			s->value[CANOPY_INT] = int_coeff*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI]));
-			//logger(g_log, "Rain = %g mm\n",c->prcp_rain);
-			//logger(g_log, "CANOPY_INT with rain (Lowrence) = %g\n", s->value[CANOPY_INT]);
+			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
 		}
 		/* for snow */
 		else
 		{
-			s->value[CANOPY_INT] = int_coeff*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI]));
-			//logger(g_log, "CANOPY_INT with snow (Lowrence) = %g\n", s->value[CANOPY_INT]);
+			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
 		}
 	}
-
-	//test check why a so low values for int coeff (should be 0.30??)
-	max_int = s->value[INT_COEFF] * s->value[ALL_LAI];
-
-	/* no rain interception if canopy is wet from the day(s) before */
-	if (c->prcp_rain>0.0 && s->value[ALL_LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
+	/********************************************************************************************************/
+	/* rain interception only if canopy is dry */
+	if (c->prcp_rain>0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
 		logger(g_log, "\n*CANOPY INTERCEPTION*\n");
 		logger(g_log, "Rain = %g mm\n",c->prcp_rain);
@@ -138,23 +124,21 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 		logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 
 		/* all rain intercepted */
+		/* and scaled to effective cover */
 		if (c->prcp_rain <= max_int)
 		{
-			s->value[CANOPY_INT] = c->prcp_rain;
+			s->value[CANOPY_INT] = c->prcp_rain * leaf_cover_eff;
 		}
 		/* canopy limits interception */
 		else
 		{
-			s->value[CANOPY_INT] = max_int;
+			s->value[CANOPY_INT] = max_int * leaf_cover_eff;
 			c->prcp_rain -= s->value[CANOPY_INT];
 
 		}
-
-
 		s->value[CANOPY_WATER] = s->value[CANOPY_INT];
-		//s->value[CANOPY_INT] = 0.0;
 	}
-	/* in case of snow no interception */
+	/* in case of canopy wet or snow no interception */
 	else
 	{
 		s->value[CANOPY_INT] = 0.0;
@@ -224,14 +208,14 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	subtract that time from the daylength to get the effective daylength for
 	transpiration. */
 
-	if(s->value[ALL_LAI]>0.0)
+	if(s->value[LAI]>0.0)
 	{
 		//fixme why for evaporation BIOME uses stomatal conductance??
 		/* if canopy is wet */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
 			logger(g_log, "\n*CANOPY EVAPORATION (Canopy Wet) *\n");
-			logger(g_log, "LAI = %g\n",s->value[ALL_LAI]);
+			logger(g_log, "LAI = %g\n",s->value[LAI]);
 			logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
 
 			rv = 1.0/gc_e_wv;
@@ -263,8 +247,8 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.0;
 				logger(g_log, "transp_daylength = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
-				s->value[CANOPY_TRANSP] = 0.0;    /* no time left for transpiration */
-				s->value[CANOPY_EVAPO] *= daylength_sec * leaf_cover_eff;   /* daylength limits canopy evaporation */
+				s->value[CANOPY_TRANSP] = 0.0;             /* no time left for transpiration */
+				s->value[CANOPY_EVAPO] *= daylength_sec;   /* daylength limits canopy evaporation */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 				/* check if canopy is wet for too long period */
@@ -380,7 +364,6 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 
-
 		/********************************************************************************************************************/
 
 		/* following TLEAF in MAESPA model (physiol.f90, row 197) check for consistency in units */
@@ -445,24 +428,13 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 		//test 07 june 2016 using only boundary layer resistance as in Ryder et al., 2016
 		//tcanopy = met[month].d[day].tavg + ((net_rad * rh)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
 
-//		logger(g_log, "net rad = %g\n", net_rad);
-//		logger(g_log, "rho_air = %g\n", met[month].d[day].rho_air);
-//		logger(g_log, "rc = %g\n", rc);
-//		logger(g_log, "rhr = %g\n", rhr);
-//		logger(g_log, "tavg = %g °C\n", met[month].d[day].tavg);
-//		logger(g_log, "canopy temp = %g °C\n", tcanopy);
-//		logger(g_log, "differences = %g °C\n", tcanopy - met[month].d[day].tavg);
-		//getchar();
-
 		tcanopyK = tcanopy + TempAbs;
-
 		//logger(g_log, "canopy_temp = %g K\n", tcanopyK);
 		//logger(g_log, "tairK = %g K\n", tairK);
 
 		//fixme this is valid for cell level not for class level
 		c->daily_canopy_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tcanopyK-tairK)/rhr);
 		//logger(g_log, "canopy_sensible_heat_flux = %g Wm-2\n", c->daily_canopy_sensible_heat_flux);
-		//getchar();
 
 		//todo
 		/*following TLEAF in Campbell and Norman "Environmental Biophysics" 1998 pg 225*/

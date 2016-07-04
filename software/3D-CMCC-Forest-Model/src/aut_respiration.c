@@ -157,7 +157,7 @@ void Maintenance_respiration (species_t *const s, cell_t *const c, const meteo_t
 	c->monthly_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->annual_maint_resp += s->value[TOTAL_MAINT_RESP];
 
-	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0)
+	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0);
 }
 
 void Growth_respiration(species_t *const s, cell_t *const c, const int height) {
