@@ -21,7 +21,7 @@ extern logger_t* g_log;
 void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height, const int age, const int species)
 {
 
-	double max_int;
+	//double max_int;
 
 	double g_corr;
 	double gl_bl;
@@ -98,52 +98,28 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 //	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
-
+	
 	/********************************************************************************************************/
-	/* compute maximum interception coefficient */
-	if(met[month].d[day].prcp > 0.0 && s->value[ALL_LAI]>0.0)
+	/* compute interception for dry canopy (Lawrence et al., 2006) */
+	if(met[month].d[day].prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
 		/* for rain */
 		if(c->prcp_rain != 0.0)
 		{
 			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
+			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
+			CHECK_CONDITION(s->value[CANOPY_INT], > c->prcp_rain);
 		}
 		/* for snow */
 		else
 		{
-			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
+			//s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
+			//s->value[CANOPY_SNOW] = s->value[CANOPY_INT];
 		}
 	}
+	else s->value[CANOPY_INT] = 0.0;
 	/********************************************************************************************************/
-	/* rain interception only if canopy is dry */
-	if (c->prcp_rain>0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
-	{
-		logger(g_log, "\n*CANOPY INTERCEPTION*\n");
-		logger(g_log, "Rain = %g mm\n",c->prcp_rain);
-		logger(g_log, "LAI = %g\n",s->value[LAI]);
-		logger(g_log, "CANOPY_WATER = %g mm\n",s->value[CANOPY_WATER]);
-
-		/* all rain intercepted */
-		/* and scaled to effective cover */
-		if (c->prcp_rain <= max_int)
-		{
-			s->value[CANOPY_INT] = c->prcp_rain * leaf_cover_eff;
-		}
-		/* canopy limits interception */
-		else
-		{
-			s->value[CANOPY_INT] = max_int * leaf_cover_eff;
-			c->prcp_rain -= s->value[CANOPY_INT];
-
-		}
-		s->value[CANOPY_WATER] = s->value[CANOPY_INT];
-	}
-	/* in case of canopy wet or snow no interception */
-	else
-	{
-		s->value[CANOPY_INT] = 0.0;
-	}
-
+	
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 
