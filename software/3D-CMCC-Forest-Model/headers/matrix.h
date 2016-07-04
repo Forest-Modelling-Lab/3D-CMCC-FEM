@@ -740,12 +740,12 @@ typedef struct {
 	double basal_area;
 
 	/*radiation variables*/
-	double extra_terr_radiation_MJ;                     /* Extraterrestrial radiation (MJ/m2/day) */
-	double extra_terr_radiation_W;                      /* Extraterrestrial radiation (W/m2) */
-	double short_wave_clear_sky_radiation_MJ;           /* Short wave clear sky radiation (MJ/m2/day) */
-	double short_wave_clear_sky_radiation_W;            /* Short wave clear sky radiation (W/m2) */
-	double short_wave_radiation_DW_MJ;                  /* Downward short wave radiation flux (MJ/m2/day) */
-	double short_wave_radiation_DW_W;                   /* Downward short wave radiation flux (W/m2) */
+	//double extra_terr_radiation_MJ;                     /* Extraterrestrial radiation (MJ/m2/day) */
+	//double extra_terr_radiation_W;                      /* Extraterrestrial radiation (W/m2) */
+	//double short_wave_clear_sky_radiation_MJ;           /* Short wave clear sky radiation (MJ/m2/day) */
+	//double short_wave_clear_sky_radiation_W;            /* Short wave clear sky radiation (W/m2) */
+	//double short_wave_radiation_DW_MJ;                  /* Downward short wave radiation flux (MJ/m2/day) */
+	//double short_wave_radiation_DW_W;                   /* Downward short wave radiation flux (W/m2) */
 	double short_wave_radiation_UW_MJ;                  /* Upward short wave radiation flux (MJ/m2/day) */
 	double short_wave_radiation_UW_W;                   /* Upward short wave radiation flux (W/m2) */
 	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
@@ -754,8 +754,8 @@ typedef struct {
 	double long_wave_radiation_DW_W;                    /* Downward long wave radiation flux (W/m2) */
 	double long_wave_radiation_UW_MJ;                   /* Upward long wave radiation flux (MJ/m2/day) */
 	double long_wave_radiation_UW_W;                    /* Upward long wave radiation flux (W/m2) */
-	double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
-	double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
+	//double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
+	//double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
 
 	double net_radiation;                               /* Net radiation ('terrestrial radiation') (W/m2) */
 	double net_radiation_absorbed;                      /* Net radiation absorbed (W/m2) */
@@ -764,6 +764,7 @@ typedef struct {
 	double net_radiation_for_dominated;
 	double net_radiation_for_subdominated;
 	double net_radiation_for_soil;
+	double net_radiation_for_soil_reflected;
 
 	double par;
 	double apar;
@@ -772,12 +773,13 @@ typedef struct {
 	double par_for_dominated;
 	double par_for_subdominated;
 	double par_for_soil;
+	double par_reflected_soil;
 	double par_for_establishment;
 
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;
 
-	double cloud_cover_frac;                            /* cloud cover fraction */
+	//double cloud_cover_frac;                            /* cloud cover fraction */
 
 
 

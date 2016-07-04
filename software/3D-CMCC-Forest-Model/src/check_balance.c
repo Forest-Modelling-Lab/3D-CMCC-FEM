@@ -17,22 +17,25 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Check_radiation_balance (cell_t *const c)
+void Check_radiation_balance (cell_t *const c, const int day, const int month, const int year)
 {
 	double in;
 	double out;
 	double store;
 	double balance;
 
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
+
 	logger(g_log,"\n*********CHECK RADIATIVE BALANCE************\n");
 
 	/* DAILY CHECK ON RADIATIVE BALANCE */
 
 	/* sum of sources */
-	in = (c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
+	in = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR) + c->par;
 
 	/* sum of sinks */
-	out = c->par_reflected;
+	out = c->par_reflected + c->par_reflected_soil;
 
 	/* sum of current storage */
 	store = c->apar + c->par_for_soil;
@@ -44,9 +47,11 @@ void Check_radiation_balance (cell_t *const c)
 		logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "incoming par = %g molPAR/m2/day\n", c->short_wave_radiation_DW_MJ * RAD2PAR * EPAR);
+		logger(g_log, "incoming par = %g molPAR/m2/day\n", met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
+		logger(g_log, "trasmitted par = %g molPAR/m2/day\n", c->par);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->par_reflected = %g molPAR/m2/day\n",c->par_reflected);
+		logger(g_log, "c->par_reflected_soil = %g molPAR/m2/day\n",c->par_reflected_soil);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
 		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->par_for_soil);

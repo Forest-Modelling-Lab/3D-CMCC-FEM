@@ -22,6 +22,8 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	c->par_transm = 0.0;
 	c->net_radiation_transm = 0.0;
 	c->ppfd_transm = 0.0;
+	c->par_reflected = 0.0;
+	c->net_radiation_for_soil_reflected = 0.0;
 
 
 	/*reset daily carbon variables*/

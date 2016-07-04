@@ -16,6 +16,8 @@ extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_log;
 
+
+
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
 	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
@@ -42,6 +44,149 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 		met[month].d[day].ea = 0.0;
 	}
 
+}
+
+void Radiation (cell_t *const c, const int day, const int month, const int year)
+{
+	double a = 107.0;                                                                    //(W/m)  empirical constants for long wave radiation computation
+	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
+	double lat_decimal;
+	double lat_degrees;
+	double lat_rad;
+	double atmospheric_transmissivity;
+	double atmospheric_emissivity;                                                       //emissivity of the clear-sky atmosphere
+
+	double dr;                                                                           //inverse relative distance Earth-Sun
+	double sigma;                                                                        //solar declination (radians)
+	double omega_s;                                                                      //sunset hour angle
+	int days_of_year;
+	double TmaxK, TminK;
+
+	logger(g_log, "\nRADIATION ROUTINE\n");
+
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
+
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
+	if(IS_LEAP_YEAR(year))
+	{
+		days_of_year = 366;
+	}
+	else
+	{
+		days_of_year = 365;
+	}
+
+	/* Following Allen et al., 1998 */
+	/* convert latitude in radians */
+	lat_decimal = g_soil_settings->values[SOIL_LAT] - (int)g_soil_settings->values[SOIL_LAT];
+	lat_degrees = (int)g_soil_settings->values[SOIL_LAT] + (lat_decimal/60.0);
+	lat_rad = (Pi/180.0)*lat_degrees;
+	//logger(g_log, "lat_rad = %g\n", lat_rad);
+
+	/* compute inverse relative distance Earth-Sun */
+	dr = 1.0 + 0.033 * cos(((2*Pi)/days_of_year)*c->doy);
+	//logger(g_log, "dr = %g\n", dr);
+
+	/* compute solar declination */
+	sigma = 0.409 * sin((((2*Pi)/days_of_year)*c->doy)-1.39);
+	//logger(g_log, "sigma = %g\n",sigma);
+
+	/* compute sunset hour angle */
+	omega_s = acos((-tan(lat_rad) * tan(sigma)));
+	//logger(g_log, "omega_s = %g\n", omega_s);
+
+	/* compute atmospheric transmissivity */
+	atmospheric_transmissivity = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]);
+	logger(g_log, "atmospheric_transmissivity = %g\n", atmospheric_transmissivity);
+
+	/* compute emissivity of the clear-sky atmosphere see Sun et al., 2013; Campbell and Normal 1998; Brutsaert, 1984; from Gao et al., 2008 instead 1.72 uses 1.24*/
+	//fixme it should takes into account cloud cover
+	atmospheric_emissivity = (1.72 * pow ((met[month].d[day].ea*10)/(met[month].d[day].tavg+TempAbs), 1.0/7.0));
+	logger(g_log, "atmospheric_emissivity = %g\n", atmospheric_emissivity);
+
+	//fixme cos(omega) should takes into account slope and aspect (once they will be included in "topo" files)
+	//following Allen et al., 2006 Agric and Forest Meteorology (parag. 2)
+
+	/* compute extra terrestrial radiation (MJ/m^2/day) */
+	met[month].d[day].extra_terr_rad_MJ = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
+	logger(g_log, "extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
+
+	/* convert into W/m2 */
+	met[month].d[day].extra_terr_rad_W = met[month].d[day].extra_terr_rad_MJ * MJ_TO_W;
+	logger(g_log, "extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
+
+	/***************************************************************************************************************************************/
+
+	/* SHORT WAVE RADIATION */
+	logger(g_log, "\nSHORT WAVE RADIATION\n");
+
+	/* INCOMING SHORT WAVE RADIATION */
+	logger(g_log, "\n(incoming short wave)\n");
+
+	/* compute short wave clear sky radiation (Tasumi et al., 2000)*/
+	met[month].d[day].sw_clear_sky_MJ = atmospheric_transmissivity * met[month].d[day].extra_terr_rad_MJ;
+	logger(g_log, "Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
+
+	/* convert into W/m2 */
+	met[month].d[day].sw_clear_sky_W = met[month].d[day].sw_clear_sky_MJ * MJ_TO_W;
+	logger(g_log, "Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
+
+	/* compute downward short wave radiation*/
+	met[month].d[day].sw_downward_MJ = met[month].d[day].solar_rad;
+	logger(g_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
+
+	/* convert into W/m2 */
+	met[month].d[day].sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
+	logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
+
+	/* cloud cover fraction from Allen et al., 1998 */
+	//note: Allen says that cloud_cover_frac must be li mited to 1.0
+	met[month].d[day].cloud_cover_frac = (1.35*(met[month].d[day].sw_downward_MJ/met[month].d[day].sw_clear_sky_MJ)-0.35);
+	if(met[month].d[day].cloud_cover_frac > 1.0) met[month].d[day].cloud_cover_frac = 1.0;
+	logger(g_log, "cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
+	/***************************************************************************************************************************************/
+
+	/* LONG WAVE RADIATION */
+	logger(g_log, "\nLONG WAVE RADIATION\n");
+	logger(g_log, "ea = %g\n", met[month].d[day].ea);
+
+	/* NET LONG WAVE RADIATION */
+	logger(g_log, "\n(net long wave)\n");
+
+	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
+	if(met[month].d[day].ea < 0.0)
+	{
+		/* following Allen et al., 1998 */
+		/* Upward long wave radiation (MJ/m2/day) */
+		met[month].d[day].lw_net_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
+		logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+
+		/* convert into W/m2 */
+		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
+		logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		/*****************************************************************************************/
+	}
+	else
+	{
+		//todo check it Prentice says "net upward long-wave flux"
+		/* following Prentice et al., 1993 */
+		/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
+		met[month].d[day].lw_net_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
+		logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
+
+		/* convert into MJ/m^2 day */
+		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
+		logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		/*****************************************************************************************/
+	}
+
+	/* net radiation based on 3-PG method */
+	//logger(g_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
+	//logger(g_log, "Net radiation (3-PG method) = %g W/m2\n", c->net_radiation);
+	/***************************************************************************************************************************************/
 }
 
 
@@ -76,7 +221,7 @@ void Day_Length(cell_t *const c, const int day, const int month, const int year)
 	ampl = (exp (7.42 + (0.045 * g_soil_settings->values[SOIL_LAT]))) / 3600;
 	met[month].d[day].daylength = ampl * (sin ((doy - 79) * 0.01721)) + 12;
 	//logger(g_log, "without altitude = %f\n", met[month].d[day].daylength);
-	
+
 	/* compute fraction of daytime */
 	c->ni = met[month].d[day].daylength/24.0;
 

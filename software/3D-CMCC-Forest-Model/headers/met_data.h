@@ -4,6 +4,7 @@
 
 #include "matrix.h"
 
+void Radiation (cell_t *const c, const int day, const int month, const int year);
 void Avg_temperature(meteo_t *const met, const int day, const int month);
 void Daylight_avg_temperature(meteo_t *const met, const int day, const int month);
 void Nightime_avg_temperature(meteo_t *const met,  const int day, const int month);
