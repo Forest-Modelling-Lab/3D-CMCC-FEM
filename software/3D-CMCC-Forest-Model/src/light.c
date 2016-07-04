@@ -133,6 +133,18 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	double soil_albedo = 0.17; //(see Wiki)
 
 	logger(g_log, "\nRADIATION ROUTINE\n");
+	logger(g_log, "INCOMING RADIATION\n");
+	logger(g_log, "extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
+	logger(g_log, "extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
+	logger(g_log, "Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
+	logger(g_log, "Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
+	logger(g_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
+	logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
+	logger(g_log, "cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
+	logger(g_log, "Net Long wave radiation = %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+	logger(g_log, "Net Long wave radiation = %g W/m2\n", met[month].d[day].lw_net_W);
+
+
 
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
@@ -326,8 +338,8 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 			if(c->height_class_in_layer_dominated_counter == 0)
 			{
 				/* remove reflected part */
-				c->par_reflected_soil = c->par * (1.0 - LightReflec_soil);
-				c->net_radiation_for_soil_reflected = c->net_radiation * (1.0 - LightReflec_soil);
+				c->par_reflected_soil = c->par * LightReflec_soil;
+				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
@@ -429,8 +441,8 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 			if(c->height_class_in_layer_subdominated_counter == 0)
 			{
 				/* remove reflected part */
-				c->par_reflected_soil = c->par * (1.0 - LightReflec_soil);
-				c->net_radiation_for_soil_reflected = c->net_radiation * (1.0 - LightReflec_soil);
+				c->par_reflected_soil = c->par *LightReflec_soil;
+				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
@@ -533,8 +545,8 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 			if(c->height_class_in_layer_subdominated_counter == 0)
 			{
 				/* remove reflected part */
-				c->par_reflected_soil = c->par * (1.0 - LightReflec_soil);
-				c->net_radiation_for_soil_reflected = c->net_radiation * (1.0 - LightReflec_soil);
+				c->par_reflected_soil = c->par * LightReflec_soil;
+				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
@@ -548,17 +560,19 @@ void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const
 	/* outside growing season */
 	else
 	{
+		logger(g_log, "\n**LIGHT FOR SOIL LAYER (outside the growing season)**\n");
 		//fixme
 		//c->par = (c->par * cumulated_leaf_cover_eff) + (c->par * cumulated_gap_cover_eff);
 		/* remove reflected part */
-		c->par_reflected_soil = c->par * (1.0 - LightReflec_soil);
-		c->net_radiation_for_soil_reflected = c->net_radiation * (1.0 - LightReflec_soil);
+		c->par_reflected_soil = c->par * LightReflec_soil;
+		c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
 
 		/* Par and net radiation for the soil outside growing season (bare soil condition) */
 		c->par_for_soil = c->par - c->par_reflected_soil;
-		logger(g_log, "Par for soil outside growing season = %g \n", c->net_radiation_for_soil);
+		logger(g_log, "Par for soil outside growing season = %g \n", c->par_for_soil);
 		c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
 		logger(g_log, "Net Radiation for soil outside growing season = %g \n", c->net_radiation_for_soil);
+		getchar();
 	}
 
 	/* for radiative balance */
