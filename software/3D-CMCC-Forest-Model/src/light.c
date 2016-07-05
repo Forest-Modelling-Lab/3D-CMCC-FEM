@@ -17,7 +17,7 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 		double LightReflec_par, double LightReflec_net_rad)
 {
 	/* note: This function computes absorbed and transmitted PAR, NET RADIATION and PPFD through different height classes/layers
-	 * considering at square meter without takes into account coverage*/
+	 * considering at square meter WITHOUT takes into account coverage*/
 
 	/*compute APAR (molPAR/m^2 day) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE par = %g molPAR/m^2 day\n", c->par);
