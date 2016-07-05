@@ -201,7 +201,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 
 								/* radiation block */
-								canoppy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 								/* compute daily modifier */
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
@@ -232,7 +232,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								if (g_settings->spatial == 'u') m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 
 								/* radiation block */
-								canoppy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 								/* nitrogen block */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -261,7 +261,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							logger(g_log, "VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 							/* radiation block */
-							canoppy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+							canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 							/* modifiers */
 							Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],

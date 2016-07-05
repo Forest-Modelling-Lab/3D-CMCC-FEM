@@ -43,6 +43,7 @@ typedef struct {
 	double sw_downward_W;                       /* (W/m2) daily downward short wave radiation */
 	double lw_net_MJ;                           /* (MJ/m2/day) daily net long wave radiation */
 	double lw_net_W;                            /* (W/m2) daily net long wave radiation */
+	double par;                                 /* (molPAR/m2/day) incoming PAR */
 	double cloud_cover_frac;                    /* (ratio) daily cloud cover fraction */
 } meteo_daily_t;
 

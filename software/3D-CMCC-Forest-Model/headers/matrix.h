@@ -739,7 +739,7 @@ typedef struct {
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 	double basal_area;
 
-	/*radiation variables*/
+	/* radiation variables */
 	double short_wave_radiation_UW_MJ;                  /* Upward short wave radiation flux (MJ/m2/day) */
 	double short_wave_radiation_UW_W;                   /* Upward short wave radiation flux (W/m2) */
 	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
@@ -769,7 +769,8 @@ typedef struct {
 	double par_for_establishment;
 
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
-	double ppfd_transm;
+	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
+	double ppfd_reflected;                              /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
 
 
 	double av_yearly_par_soil;

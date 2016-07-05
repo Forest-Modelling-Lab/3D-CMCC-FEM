@@ -10,8 +10,8 @@
 #include "topo.h"
 
 extern logger_t* g_log;
-extern soil_settings_t *g_soil_settings;
-extern topo_t *g_topo;
+//extern soil_settings_t *g_soil_settings;
+//extern topo_t *g_topo;
 
 void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade,
 		double LightReflec_par, double LightReflec_net_rad)
@@ -108,7 +108,7 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 	}
 }
 
-void canoppy_radiation(species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
+void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
 {
 
 	double LightAbsorb, LightAbsorb_sun, LightAbsorb_shade;                               //fraction of light absorbed
