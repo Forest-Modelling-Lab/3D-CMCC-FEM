@@ -28,14 +28,12 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 	met = (meteo_t*) c->years[year].m;
 
 	logger(g_log,"\n*********CHECK RADIATIVE BALANCE************\n");
-
 	/* DAILY CHECK ON RADIATIVE BALANCE */
 
-	//note: it currently doesn't work properly because model cumulate amount of light for class without takes into account the coverage
-	//while for cell level considering coverage, so balance overestimates balance
+	/* PAR RADIATIVE BALANCE */
 
 	/* sum of sources */
-	in = met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR;
+	in = met[month].d[day].par;
 
 	/* sum of sinks */
 	out = c->par_reflected + c->par_reflected_soil;
@@ -69,6 +67,54 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 	{
 		logger(g_log, "...ok PAR radiative balance\n");
 	}
+
+	/*******************************************************************************************************************************************/
+
+	/* NET RADIATION RADIATIVE BALANCE */
+
+	/* sum of sources */
+	in = met[month].d[day].sw_downward_W;
+
+	/* sum of sinks */
+	out = c->par_reflected + c->par_reflected_soil;
+
+	/* sum of current storage */
+	store = c->apar + c->par_for_soil;
+
+	balance = in - out -store;
+
+	if (fabs(balance) > 1e-8 )
+	{
+		logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "\nin\n");
+		logger(g_log, "incoming par = %g molPAR/m2/day\n", met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
+		logger(g_log, "\nout\n");
+		logger(g_log, "c->par_reflected = %g molPAR/m2/day\n",c->par_reflected);
+		logger(g_log, "c->par_reflected_soil = %g molPAR/m2/day\n",c->par_reflected_soil);
+		logger(g_log, "\nstore\n");
+		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
+		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->par_for_soil);
+		logger(g_log, "\npar in = %g molPAR/m2/day\n", in);
+		logger(g_log, "par out = %g molPAR/m2/day\n", out);
+		logger(g_log, "par store = %g molPAR/m2/day\n", store);
+		logger(g_log, "par balance = %g molPAR/m2/day\n",balance);
+		logger(g_log, "...FATAL ERROR IN PAR radiative balance (exit)\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok PAR radiative balance\n");
+	}
+	/*******************************************************************************************************************************************/
+
+	/* PPFD RADIATIVE BALANCE */
+
+
+
+
+	/*******************************************************************************************************************************************/
 }
 
 void Check_carbon_balance(cell_t *const c)

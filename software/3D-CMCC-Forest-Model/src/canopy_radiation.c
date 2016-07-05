@@ -42,7 +42,7 @@ void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, 
 	/* overall canopy */
 	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
 	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-c->par),>1e-4);
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>1e-4);
 
 	logger(g_log, "Apar sun = %g molPAR/m^2 covered/day\n", s->value[APAR_SUN]);
 	logger(g_log, "Transmitted Par sun = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR_SUN]);
@@ -61,7 +61,7 @@ void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, 
 	/* overall canopy */
 	s->value[NET_RAD_ABS] = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
 	s->value[NET_RAD_TRANSM] = s->value[NET_RAD_TRANSM_SHADE];
-	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-c->net_radiation),>1e-4);
+	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-s->value[NET_RAD]),>1e-4);
 
 	logger(g_log, "Absorbed NetRad sun = %g W/m^2 covered\n", s->value[NET_RAD_ABS_SUN]);
 	logger(g_log, "Transmitted NetRad sun = %g W/m^2 covered\n", s->value[NET_RAD_TRANSM_SUN]);
@@ -71,16 +71,15 @@ void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, 
 	logger(g_log, "Transmitted total = %g W/m^2 covered\n", s->value[NET_RAD_TRANSM]);
 
 	/* compute PPFD (umol/m^2 covered/sec) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE ppfd = %g umol/m2 covered/sec\n", c->ppfd);
-	s->value[PPFD] = c->ppfd;
-	s->value[PPFD_ABS_SUN] = c->ppfd * LightAbsorb_sun * leaf_cover_eff;
-	s->value[PPFD_TRANSM_SUN] = c->ppfd - s->value[PPFD_ABS_SUN];
+	logger(g_log, "\nAVAILABLE ppfd = %g umol/m2 covered/sec\n", s->value[PPFD]);
+	s->value[PPFD_ABS_SUN] = s->value[PPFD] * LightAbsorb_sun * leaf_cover_eff;
+	s->value[PPFD_TRANSM_SUN] = s->value[PPFD] - s->value[PPFD_ABS_SUN];
 	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * LightAbsorb_shade* leaf_cover_eff;
 	s->value[PPFD_TRANSM_SHADE] = s->value[PPFD_TRANSM_SUN] - s->value[PPFD_ABS_SHADE];
 	/* overall canopy */
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-c->ppfd),>1e-4);
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>1e-4);
 
 	logger(g_log, "Absorbed ppfd sun = %g umol/m2 covered/sec\n", s->value[PPFD_ABS_SUN]);
 	logger(g_log, "Transmitted ppfd sun = %g umol/m2 covered/sec\n", s->value[PPFD_TRANSM_SUN]);
@@ -534,4 +533,6 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 		logger(g_log, "Net Radiation for soil outside growing season = %g \n", c->net_radiation_for_soil);
 		logger(g_log, "PPFD for soil outside growing season = %g \n", c->ppfd_for_soil);
 	}
+
+	//if(month == 7)getchar();
 }

@@ -108,7 +108,8 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 		logger(g_log, "DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
 		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] * leaf_cover_eff;
+		//test 5 July 2016 without leaf_cover_eff
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /* * leaf_cover_eff*/;
 		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period
