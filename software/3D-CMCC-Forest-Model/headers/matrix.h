@@ -769,8 +769,11 @@ typedef struct {
 	double par_for_establishment;
 
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
+	double ppfd_abs;                                    /* Absorbed Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_reflected;                              /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
+	double ppfd_for_soil;
+	double ppfd_reflected_soil;
 
 
 	double av_yearly_par_soil;
@@ -994,10 +997,10 @@ typedef struct {
 	double base_clay_N, max_clay_N;
 	double AddC, AddCN, AddC1, AddC2, AddC3;
 
-	//potentially already existant
+	//potentially already existent
 	int doy, dos;
 
-	//todo to be remopved used just to evaluate total biomass flutctations in the several different compartments
+	//todo to be removed used just to evaluate total biomass fluctuations in the several different compartments
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
 

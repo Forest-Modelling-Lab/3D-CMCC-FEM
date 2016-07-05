@@ -142,9 +142,13 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	//logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
-	/* compute incoming PAR (molPAR/m2/day) MJ/m2/day to molPAR/m2/day (Biome-BGC method)*/
+	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method)*/
 	met[month].d[day].par = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
-	logger(g_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
+	//logger(g_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
+
+	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method)*/
+	met[month].d[day].ppfd = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
+	//logger(g_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
 	/* cloud cover fraction from Allen et al., 1998 */
 	//note: Allen says that cloud_cover_frac must be li mited to 1.0

@@ -15,51 +15,51 @@
 #include "matrix.h"
 
 
-extern logger_t* g_log;
+//extern logger_t* g_log;
 
 void canopy_sensible_heat (species_t *const s, cell_t *const c, const meteo_t *const met, int month, int day, int height, int age, int species)
 {
 
-	double rad_abs;           //absorbed shortwave longwave radiation (W/m2)
-	double psych_p;           //product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016
-	double dt = 0.2;
-	double t1, t2;            //temperature offset (°C)
-	double pvs1, pvs2;        //calculate saturation vapor pressures (Pa)
-	double delta;             //slope of pvs vs. T curve, at ta
-	double tairK;             //air temperature (K)
-	double tcanopy,           //canopy temperature (°C)
-	       t_canopy_day,      //day time canopy temperature (°C)
-	       tcanopy_night;     //night time canopy temperature (°C)
-	double tcanopy_K,         //canopy temperature (K)
-	       t_canopy_day_K,    //day time canopy temperature (K)
-	       tcanopy_night_K;   //night time canopy temperature (K)
-
-
-	/* CANOPY SENSIBLE HEAT FLUX */
-	logger(g_log, "\ncanopy sensible heat\n");
-
-	logger(g_log, "LAI = %f\n", s->value[LAI]);
-
-//	rad_abs = ;
-	logger(g_log, "rad_abs = %f\n", rad_abs);
-
-	/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
-	/* calculate temperature offsets for slope estimate */
-	t1 = met[month].d[day].tday+dt;
-	t2 = met[month].d[day].tday-dt;
-
-	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
-	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-	logger(g_log, "pvs1 = %f\n", pvs1);
-	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
-	logger(g_log, "pvs2 = %f\n", pvs2);
-
-	/* calculate slope of pvs vs. T curve, at ta */
-	//test this is the "DELTA" function as in Webber et al., 2016
-	delta = (pvs1-pvs2) / (t1-t2);
-	/* converts into kPA following Webber et al., 2016 */
-	delta /= 1000.0;
-	logger(g_log, "delta = %f KPa\n", delta);
+//	//double rad_abs;           //absorbed shortwave longwave radiation (W/m2)
+//	double psych_p;           //product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016
+//	double dt = 0.2;
+//	double t1, t2;            //temperature offset (°C)
+//	double pvs1, pvs2;        //calculate saturation vapor pressures (Pa)
+//	double delta;             //slope of pvs vs. T curve, at ta
+//	double tairK;             //air temperature (K)
+//	double tcanopy,           //canopy temperature (°C)
+//	       t_canopy_day,      //day time canopy temperature (°C)
+//	       tcanopy_night;     //night time canopy temperature (°C)
+//	double tcanopy_K,         //canopy temperature (K)
+//	       t_canopy_day_K,    //day time canopy temperature (K)
+//	       tcanopy_night_K;   //night time canopy temperature (K)
+//
+//
+//	/* CANOPY SENSIBLE HEAT FLUX */
+//	logger(g_log, "\ncanopy sensible heat\n");
+//
+//	logger(g_log, "LAI = %f\n", s->value[LAI]);
+//
+////	rad_abs = ;
+//	//logger(g_log, "rad_abs = %f\n", rad_abs);
+//
+//	/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
+//	/* calculate temperature offsets for slope estimate */
+//	t1 = met[month].d[day].tday+dt;
+//	t2 = met[month].d[day].tday-dt;
+//
+//	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
+//	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+//	logger(g_log, "pvs1 = %f\n", pvs1);
+//	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
+//	logger(g_log, "pvs2 = %f\n", pvs2);
+//
+//	/* calculate slope of pvs vs. T curve, at ta */
+//	//test this is the "DELTA" function as in Webber et al., 2016
+//	delta = (pvs1-pvs2) / (t1-t2);
+//	/* converts into kPA following Webber et al., 2016 */
+//	delta /= 1000.0;
+//	logger(g_log, "delta = %f KPa\n", delta);
 
 	//test
 	// as in Ryder et al., 2016 resistance to sensible heat flux is equal to boundary layer resistance (see also BIOME)
