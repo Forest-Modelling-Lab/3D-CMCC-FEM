@@ -272,8 +272,6 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	s->value[F_SW] = s->value[F_PSI];
 	logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 
-	if(day == 13 && month == 7)getchar();
-
 	c->daily_f_psi = s->value[F_PSI];
 
 	//average yearly f_sw modifiers
