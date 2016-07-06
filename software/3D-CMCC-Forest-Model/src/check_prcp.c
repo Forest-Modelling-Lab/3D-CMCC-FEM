@@ -47,7 +47,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 		{
 			logger(g_log, "tavg = %f\n", met[month].d[day].tavg);
 			logger(g_log, "snow pack = %f cm\n", c->snow_pack);
-			logger(g_log, "Snow melt!!\n");
+			logger(g_log, "Snow melts!!\n");
 			r_melt = incident_rad / met[month].d[day].lh_fus;
 			c->snow_melt = t_melt + r_melt;
 
@@ -66,7 +66,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 				/*snow pack melts partially*/
 				c->snow_pack -= c->snow_melt;
 				logger(g_log, "snow_pack %f\n", c->snow_pack);
-				logger(g_log, "A FRACTION OF Snow melt!!\n");
+				logger(g_log, "a fraction of Snow melts!!\n");
 			}
 			c->snow_to_soil = c->snow_melt;
 			logger(g_log, "snow to soil %f\n", c->snow_to_soil);
@@ -120,6 +120,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 
 	/* following Lagergren et al., 2006 */
 	/* impose zero value for tsoil in case of snow presence */
+	//todo move to soil when snow melt and subl will go to soil
 	if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
 
 	logger(g_log, "*****************************************\n");
