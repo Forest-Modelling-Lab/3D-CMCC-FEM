@@ -197,11 +197,11 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 	/* NET SHORT WAVE RADIATION */
 
 	//fixme the light reflected should consider all reflected light through the cell (soil included)
-	c->short_wave_radiation_UW_W = met[month].d[day].sw_downward_W  * LightReflec_net_rad;
-	logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_UW_W);
+	c->short_wave_radiation_upward_W = met[month].d[day].sw_downward_W  * LightReflec_net_rad;
+	logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
 
 	/* net short wave radiation */
-	c->net_short_wave_radiation_W = met[month].d[day].sw_downward_W - c->short_wave_radiation_UW_W;
+	c->net_short_wave_radiation_W = met[month].d[day].sw_downward_W - c->short_wave_radiation_upward_W;
 	logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
 
 

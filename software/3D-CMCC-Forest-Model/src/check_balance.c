@@ -72,41 +72,41 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 
 	/* NET RADIATION RADIATIVE BALANCE */
 
-//	/* sum of sources */
-//	in = met[month].d[day].sw_downward_W;
-//
-//	/* sum of sinks */
-//	out = c->net_radiation_reflected + c->net_radiation_for_soil_reflected;
-//
-//	/* sum of current storage */
-//	store = c->net_radiation_absorbed + c->net_radiation_for_soil;
-//
-//	balance = in - out -store;
-//
-//	if (fabs(balance) > 1e-8 )
-//	{
-//		logger(g_log, "\nCELL RADIATIVE BALANCE (Net Radiation)\n");
-//		logger(g_log, "DOY = %d\n", c->doy);
-//		logger(g_log, "\nin\n");
-//		logger(g_log, "incoming radiation = %g W/m2\n", met[month].d[day].sw_downward_MJ);
-//		logger(g_log, "\nout\n");
-//		logger(g_log, "c->net_radiation_reflected = %g W/m2\n",c->net_radiation_reflected);
-//		logger(g_log, "c->net_radiation_for_soil = %g W/m2\n",c->net_radiation_for_soil);
-//		logger(g_log, "\nstore\n");
-//		logger(g_log, "c->net_radiation_absorbed = %g W/m2\n", c->net_radiation_absorbed);
-//		logger(g_log, "c->net_radiation_for_soil = %g W/m2\n", c->net_radiation_for_soil);
-//		logger(g_log, "\n radiation in = %g W/m2\n", in);
-//		logger(g_log, "radiation out = %g W/m2\n", out);
-//		logger(g_log, "net radiation store = %g W/m2\n", store);
-//		logger(g_log, "radiation balance = %g W/m2\n",balance);
-//		logger(g_log, "...FATAL ERROR IN Net Radiation radiative balance (exit)\n");
-//		logger(g_log, "DOY = %d\n", c->doy);
-//		exit(1);
-//	}
-//	else
-//	{
-//		logger(g_log, "...ok Net Radiation radiative balance\n");
-//	}
+	/* sum of sources */
+	in = met[month].d[day].sw_downward_W;
+
+	/* sum of sinks */
+	out = c->net_radiation_reflected + c->net_radiation_for_soil_reflected;
+
+	/* sum of current storage */
+	store = c->net_radiation_absorbed + c->net_radiation_for_soil;
+
+	balance = in - out -store;
+
+	if (fabs(balance) > 1e-8 )
+	{
+		logger(g_log, "\nCELL RADIATIVE BALANCE (Net Radiation)\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "\nin\n");
+		logger(g_log, "incoming radiation = %g W/m2\n", met[month].d[day].sw_downward_W);
+		logger(g_log, "\nout\n");
+		logger(g_log, "c->net_radiation_reflected = %g W/m2\n",c->net_radiation_reflected);
+		logger(g_log, "c->net_radiation_for_soil_reflected = %g W/m2\n",c->net_radiation_for_soil_reflected);
+		logger(g_log, "\nstore\n");
+		logger(g_log, "c->net_radiation_absorbed = %g W/m2\n", c->net_radiation_absorbed);
+		logger(g_log, "c->net_radiation_for_soil = %g W/m2\n", c->net_radiation_for_soil);
+		logger(g_log, "radiation in = %g W/m2\n", in);
+		logger(g_log, "radiation out = %g W/m2\n", out);
+		logger(g_log, "net radiation store = %g W/m2\n", store);
+		logger(g_log, "radiation balance = %g W/m2\n",balance);
+		logger(g_log, "...FATAL ERROR IN Net Radiation radiative balance (exit)\n");
+		logger(g_log, "DOY = %d\n", c->doy);
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok Net Radiation radiative balance\n");
+	}
 	/*******************************************************************************************************************************************/
 
 	/* PPFD RADIATIVE BALANCE */
@@ -414,8 +414,8 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 	in = s->value[NET_RAD];
 
 	/* sum of sinks */
-	/* it must take into account the overall transmitted NET_RAD */
-	out = /*s->value[NET_RAD_REFL] + */ s->value[NET_RAD_TRANSM];
+	/* it must take into account the overall transmitted NET_RAD (reflected is yet computed for net radiation) */
+	out = s->value[NET_RAD_TRANSM];
 
 	/* sum of current storage */
 	store = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];

@@ -740,8 +740,8 @@ typedef struct {
 	double basal_area;
 
 	/* radiation variables */
-	double short_wave_radiation_UW_MJ;                  /* Upward short wave radiation flux (MJ/m2/day) */
-	double short_wave_radiation_UW_W;                   /* Upward short wave radiation flux (W/m2) */
+	double short_wave_radiation_upward_MJ;              /* Upward short wave radiation flux (MJ/m2/day) */
+	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
 	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
 	double net_short_wave_radiation_W;                  /* Net short wave radiation flux (W/m2) */
 	double long_wave_radiation_DW_MJ;                   /* Downward long wave radiation flux (MJ/m2/day) */

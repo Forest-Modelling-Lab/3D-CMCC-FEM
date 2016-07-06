@@ -19,7 +19,7 @@ enum {
 	, MONTHS_COUNT
 };
 
-#define NO_DATA				-9999
+#define NO_DATA                -9999
 
 //LIGHT
 #define Q0                    1360.1      //Solar constant (W/m^2)
