@@ -103,6 +103,7 @@ void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month
 	else
 	{
 		c->daily_soil_evapo = 0.0;
+		//todo get functions from check_prcp snow subl (evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 	}
 
 	logger(g_log, "day(s) since rain = %f day(s)\n", c->days_since_rain);

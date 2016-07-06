@@ -21,9 +21,9 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	/* temperature and radiation snowmelt,
 	from Joseph Coughlan PhD thesis, 1991 */
 
-	static double snow_abs = 0.6; // absorptivity of snow
-	static double t_coeff = 0.65; // (kg/m2/deg C/d) temp. snowmelt coeff
-	double incident_rad;  //incident radiation (kJ/m2/d) incident radiation
+	static double snow_abs = 0.6;             /* absorptivity of snow */
+	static double t_coeff = 0.65;             /* (kg/m2/deg C/d) temp. snowmelt coeff */
+	double incident_rad;                      /* incident radiation(kJ/m2/d) */
 	double t_melt, r_melt, r_sub;
 
 
@@ -33,10 +33,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	t_melt = t_coeff * met[month].d[day].tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	//incident_rad = c->net_radiation_for_soil * snow_abs * 0.001;
-
-	/* canopy transmitted radiation: convert from MJ/m2/d  --> KJ/m2/d */
-	incident_rad = met[month].d[day].solar_rad * (met[month].d[day].solar_rad / 24.0) * snow_abs * 1000;
+	incident_rad = (c->net_radiation_for_soil * met[month].d[day].daylength * 3600) * snow_abs * 0.001;
 
 
 	/* temperature and radiation melt from snowpack */
@@ -53,7 +50,6 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 			logger(g_log, "Snow melt!!\n");
 			r_melt = incident_rad / met[month].d[day].lh_fus;
 			c->snow_melt = t_melt + r_melt;
-			//logger(g_log, "snow_melt %f\n", c->snow_melt);
 
 			if (c->snow_melt > c->snow_pack)
 			{
@@ -72,7 +68,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 				logger(g_log, "snow_pack %f\n", c->snow_pack);
 				logger(g_log, "A FRACTION OF Snow melt!!\n");
 			}
-			c->snow_to_soil=c->snow_melt;
+			c->snow_to_soil = c->snow_melt;
 			logger(g_log, "snow to soil %f\n", c->snow_to_soil);
 
 			/*check for balance*/
@@ -121,5 +117,10 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 			logger(g_log, "NO snow pack to sublimate\n");
 		}
 	}
+
+	/* following Lagergren et al., 2006 */
+	/* impose zero value for tsoil in case of snow presence */
+	if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
+
 	logger(g_log, "*****************************************\n");
 }

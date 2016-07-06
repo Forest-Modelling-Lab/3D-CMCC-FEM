@@ -260,8 +260,11 @@ enum {
 	CANOPY_WET,                 //it should'nt be reset every day
 	CANOPY_TRANSP,
 	CANOPY_EVAPO_TRANSP,
+	CANOPY_INT_SNOW,
 	CANOPY_WATER,               //it should'nt be reset every day
 	OLD_CANOPY_WATER,           //it should'nt be reset every day
+	CANOPY_SNOW,                //it should'nt be reset every day
+	OLD_CANOPY_SNOW,            //it should'nt be reset every day
 	CANOPY_FRAC_DAY_TRANSP,     //Fraction of daily canopy transpiration (DIM)
 
 	/*LAI*/

@@ -43,7 +43,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
 
-	double leaf_cover_eff;                                            /* fraction of square meter covered by leaf over the gridcell */
+	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
 
 	double tairK;
@@ -63,39 +63,46 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 	tairK = met[month].d[day].tavg + TempAbs;
 
-	/* assign values of previous day canopy water (it determines canopy water fluxes */
+	/* assign values of previous day canopy water/snow */
 	/* reset if LAI == 0.0*/
 	if(s->value[LAI] == 0.0)
 	{
 		s->value[OLD_CANOPY_WATER]= 0.0;
 		s->value[CANOPY_WATER] = 0.0;
+		s->value[CANOPY_SNOW] = 0.0;
+		s->value[OLD_CANOPY_SNOW] = 0.0;
 	}
 	/* otherwise assign values of the day before */
 	else
 	{
-		s->value[OLD_CANOPY_WATER]= s->value[CANOPY_WATER];
+		/* in case of water on canopy */
+		if(s->value[CANOPY_WATER] >= 0.0)s->value[OLD_CANOPY_WATER]= s->value[CANOPY_WATER];
+		/* in case of snow on canopy */
+		else s->value[OLD_CANOPY_SNOW] = s->value[CANOPY_SNOW];
 	}
 
 	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
+
+	/*********************************************************************************************************/
 
 	/* compute effective canopy cover */
 	if(s->value[LAI] < 1.0)
 	{
 		/* special case when LAI = < 1.0 */
-		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+		leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	}
 	else
 	{
-		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+		leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 	}
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cover_eff > 1.0)
+	if(leaf_cell_cover_eff > 1.0)
 	{
-		leaf_cover_eff = 1.0;
+		leaf_cell_cover_eff = 1.0;
 	}
 
-//	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
+//	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 
 	daylength_sec = met[month].d[day].daylength * 3600.0;
 	
@@ -103,21 +110,29 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
 	if(met[month].d[day].prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
+		double Int_max_snow;                           /*maximum intercepted snow (mm)*/
+
+		/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
+		Int_max_snow = 4.4 * s->value[LAI];
+
 		/* for rain */
 		if(c->prcp_rain != 0.0)
 		{
-			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
+			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
 			CHECK_CONDITION(s->value[CANOPY_INT], > c->prcp_rain);
 		}
 		/* for snow */
 		else
 		{
-			//s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_snow*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cover_eff;
-			//s->value[CANOPY_SNOW] = s->value[CANOPY_INT];
+			/* see Dewire PhD thesis */
+//			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * (Int_max_snow - s->value[CANOPY_SNOW]) *
+//					(1 - exp(-(c->prcp_snow/Int_max_snow))) * leaf_cell_cover_eff;
+//			exit (1);
 		}
 	}
 	else s->value[CANOPY_INT] = 0.0;
+
 	/********************************************************************************************************/
 	
 	/* temperature and pressure correction factor for conductances */
@@ -130,10 +145,9 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	gl_bl = s->value[BLCOND] * g_corr;
 
 	/* canopy boundary layer conductance */
-	//add 6 May 2016
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI];
 	/* upscaled to day time */
-	s->value[CANOPY_BLCOND] *= daylength_sec * leaf_cover_eff;
+	s->value[CANOPY_BLCOND] *= daylength_sec * leaf_cell_cover_eff;
 
 	/* leaf cuticular conductance */
 	gl_c = s->value[CUTCOND] * g_corr;
@@ -141,8 +155,9 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* leaf stomatal conductance: first generate multipliers, then apply them to maximum stomatal conductance */
 	/* apply all multipliers to the maximum stomatal conductance */
 	/* differently from BIOME we use F_T that takes into account not only minimum temperature effects */
-	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
-	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD];
+	/* differently from BIOME we use also F_AGE */
+	m_final_sun = s->value[F_LIGHT_SUN] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
+	m_final_shade = s->value[F_LIGHT_SHADE] * s->value[F_SW] * s->value[F_CO2] * s->value[F_T] * s->value[F_VPD] * s->value[F_AGE];
 
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
@@ -187,7 +202,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	if(s->value[LAI]>0.0)
 	{
 		//fixme why for evaporation BIOME uses stomatal conductance??
-		/* if canopy is wet */
+		/* if canopy has water */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
 			logger(g_log, "\n*CANOPY EVAPORATION (Canopy Wet) *\n");
@@ -279,13 +294,18 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 				/* considering effective coverage of cell */
 				//test 6 July 2016
-				//s->value[CANOPY_TRANSP] *= leaf_cover_eff;
+				//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 				/* including CO2 effect */
 				s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
+		}
+		/* if canopy has snow */
+		else if (s->value[CANOPY_SNOW] > 0.0)
+		{
+			//todo get functions from check_prcp snow subl(evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 		}
 		/* if canopy is dry */
 		else
@@ -334,7 +354,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 			/* considering effective coverage of cell and convert to daily amount */
 			//test 6 July 2016
-			//s->value[CANOPY_TRANSP] *= leaf_cover_eff;
+			//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 			/* including CO2 effect */
 			s->value[CANOPY_TRANSP] *= s->value[F_CO2];

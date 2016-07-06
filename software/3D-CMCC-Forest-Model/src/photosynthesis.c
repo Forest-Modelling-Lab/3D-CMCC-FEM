@@ -18,7 +18,7 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 	double Alpha_C;
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
-	double leaf_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
+	double leaf_cell_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
 //	double cell_coverage;
 
 	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
@@ -31,20 +31,20 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 //	if(s->value[LAI] < 1.0)
 //	{
 //		/* special case when LAI = < 1.0 */
-//		leaf_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//		leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 //	}
 //	else
 //	{
-//		leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//		leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 //	}
 //	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cover_eff > 1.0)
+//	if(leaf_cell_cover_eff > 1.0)
 //	{
-//		leaf_cover_eff = 1.0;
+//		leaf_cell_cover_eff = 1.0;
 //	}
 
-	leaf_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	if(leaf_cover_eff > 1.0) leaf_cover_eff = 1.0;
+	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 
 //	if(s->value[CANOPY_COVER_DBHDC] > 1.0)
 //	{
@@ -61,7 +61,7 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 	if (s->counter[VEG_UNVEG] == 1 /* && s->value[DAILY_TRANSP] != 0.0*/)
 	{
 		//test without F_CO2
-		if (s->value[ALPHA] > 0.0)
+		if (s->value[ALPHA] != NO_DATA)
 		{
 			Alpha_C = (s->value[ALPHA] * /* s->value[F_LIGHT] */ /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
 					 /**s->value[FRAC_DAYTIME_TRANSP] */;
@@ -74,7 +74,7 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 		{
 			logger(g_log, "NO ALPHA - MODEL USE EPSILON LIGHT USE EFFICIENCY!!!!\n");
 
-			Epsilon = s->value[EPSILONgCMJ] * /* s->value[F_LIGHT]*/ /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
+			Epsilon = s->value[EPSILONgCMJ] * /* s->value[F_LIGHT]*//* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST];
 			logger(g_log, "Epsilon (LUE) = %f gDM/MJ\n", Epsilon);
 
 			Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
@@ -108,8 +108,8 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 		logger(g_log, "DAILY_POINT_GPP_gC = %f gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
 		/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-		//test 5 July 2016 without leaf_cover_eff
-		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /* * leaf_cover_eff*/;
+		//test 5 July 2016 without leaf_cell_cover_eff
+		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /* * leaf_cell_cover_eff*/;
 		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
 	else //Un Veg period

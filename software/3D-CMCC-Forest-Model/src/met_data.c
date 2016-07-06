@@ -380,9 +380,9 @@ void Soil_temperature(meteo_t* const met, const int day, const int month) {
 	//FIXME model doesn't get for the first 10 days of the year the averaged values
 	//TODO CHECK SOIL TEMPÈRATURE CORRECTION FROM BIOME
 	/* soil temperature correction using difference from annual average tair */
-	/*file bgc.c
-
-	 *
+	/*file bgc.c*/
+	/* original biome_bgc version */
+	/* *
 			tdiff = tair_avg - metv.tsoil;
 			if (ws.snoww)
 			{
@@ -394,7 +394,8 @@ void Soil_temperature(meteo_t* const met, const int day, const int month) {
 			}
 	 */
 
-	//compute soil temperature if no data are available from met_data files
+	/* compute soil temperature if no data are available from met_data files */
+	/* adapted version from biome */
 	if (met[month].d[day].ts_f == -9999)
 	{
 		if (day < 11.0 && month == 0)

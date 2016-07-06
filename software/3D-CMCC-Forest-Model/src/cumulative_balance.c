@@ -599,7 +599,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 	{
 		if (month == 0 && years == 0 && cell_index == 0)
 		{
-			logger(g_monthly_log, "%s \t%2s \t%s", "YEAR", "Month", "cell_t");
+			logger(g_monthly_log, "%s \t%2s \t%s", "YEAR", "Month", "cell_x");
 			if (!string_compare_i(g_settings->dndc, "on"))
 			{
 				logger(g_monthly_log, "\t%3s", "NEE");
@@ -610,10 +610,10 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 			{
 				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
 			}
-			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s  \t%10s\n",
-					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "ASW",  "Cw", "CC(0)", "DEAD TREE(tot)");
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "LE", "ASW", "Cw", "CC(0)", "DEAD TREE(tot)");
 		}
-		logger(g_monthly_log, "%d \t%2d \t%4d,\t%d", c->years[years].year, month+1, c->x, c->y);
+		logger(g_monthly_log, "%d \t%2d \t%4d", c->years[years].year, month+1, c->x);
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
@@ -626,12 +626,13 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		{
 			logger(g_monthly_log, "\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
 		}
-		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f  \t%11.2f \t%11.2f \t%11.2f\n",
+		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->monthly_C_flux,
 				c->monthly_npp_tDM,
 				c->monthly_npp_gC,
 				c->monthly_c_evapotransp,
-				c->asw,
+				c->monthly_latent_heat_flux,
+				c->swc,
 				c->monthly_tot_w_flux,
 				c->layer_monthly_cc[0]);
 
