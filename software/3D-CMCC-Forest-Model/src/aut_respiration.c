@@ -39,7 +39,7 @@ void Maintenance_respiration (species_t *const s, cell_t *const c, const meteo_t
 	mrpern = 0.218 (kgC/kgN/d)
 
 	Leaf maintenance respiration is calculated separately for day and
-	night, since the PSN routine needs the daylight value.
+	night.
 
 	Leaf and fine root respiration are dependent on phenology. */
 

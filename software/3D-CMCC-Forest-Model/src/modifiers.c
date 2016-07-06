@@ -222,7 +222,7 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	logger(g_log, "\nBIOME SOIL WATER MODIFIER\n");
 	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	c->vwc = c->asw / (1000.0 * (g_soil_settings->values[SOIL_DEPTH]/100));
+	c->vwc = c->asw / c->max_asw_fc/*(1000.0 * (g_soil_settings->values[SOIL_DEPTH]/100))*/;
 	logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
 	logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
 	logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
@@ -230,7 +230,6 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	logger(g_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
 	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
 	logger(g_log, "PSI BIOME = %f (MPa)\n", c->psi);
-
 
 	/*no water stress*/
 	if (c->psi > s->value[SWPOPEN])
@@ -264,13 +263,16 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 		s->value[F_PSI] = (s->value[SWPCLOSE] - c->psi)/(s->value[SWPCLOSE] - s->value[SWPOPEN]);
 
 		//test
-		if(s->value[F_PSI]< 0.1) s->value[F_PSI] = 0.1;
+		// for consistency with complete stress values
+		if(s->value[F_PSI]< 0.3) s->value[F_PSI] = 0.3;
 	}
 
 	//test using f_psi as f_sw
 	//4/apr/2016
 	s->value[F_SW] = s->value[F_PSI];
 	logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
+
+	if(day == 13 && month == 7)getchar();
 
 	c->daily_f_psi = s->value[F_PSI];
 
