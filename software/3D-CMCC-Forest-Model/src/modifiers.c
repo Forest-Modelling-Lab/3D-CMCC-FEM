@@ -222,7 +222,7 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	logger(g_log, "\nBIOME SOIL WATER MODIFIER\n");
 	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	c->vwc = c->asw / c->max_asw_fc/*(1000.0 * (g_soil_settings->values[SOIL_DEPTH]/100))*/;
+	c->vwc = c->asw / c->max_asw_fc/*(100.0 * g_soil_settings->values[SOIL_DEPTH]))*/;
 	logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
 	logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
 	logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
