@@ -110,10 +110,10 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
 	if(met[month].d[day].prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
-		double Int_max_snow;                           /*maximum intercepted snow (mm)*/
+		//double Int_max_snow;                           /*maximum intercepted snow (mm)*/
 
 		/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
-		Int_max_snow = 4.4 * s->value[LAI];
+		//Int_max_snow = 4.4 * s->value[LAI];
 
 		/* for rain */
 		if(c->prcp_rain != 0.0)
@@ -238,8 +238,8 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.0;
 				logger(g_log, "transp_daylength = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
-				s->value[CANOPY_TRANSP] = 0.0;             /* no time left for transpiration */
-				s->value[CANOPY_EVAPO] *= daylength_sec;   /* daylength limits canopy evaporation */
+				s->value[CANOPY_TRANSP] = 0.0;              /* no time left for transpiration */
+				s->value[CANOPY_EVAPO] *= daylength_sec;    /* daylength limits canopy evaporation */
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 				/* check if canopy is wet for too long period */
@@ -297,7 +297,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 				/* including CO2 effect */
-				s->value[CANOPY_TRANSP] *= s->value[F_CO2];
+				//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 			}
@@ -336,7 +336,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			rv = 1.0/gl_t_wv_shade;
 			rh = 1.0/gl_sh;
 
-			/* note: differently from Biome model uses Net Radiation instead Short wave flux */
+			/* note: Net Rad is Short wave flux */
 			net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 			logger(g_log, "net rad = %g\n", net_rad);
 			transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
@@ -357,7 +357,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 			/* including CO2 effect */
-			s->value[CANOPY_TRANSP] *= s->value[F_CO2];
+			//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
 
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
@@ -455,6 +455,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	logger(g_log, "CANOPY_EVAPO = %g mm/m2/day\n", s->value[CANOPY_EVAPO]);
 	logger(g_log, "CANOPY_TRANSP = %g mm/m2/day\n", s->value[CANOPY_TRANSP]);
 	logger(g_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
+	logger(g_log, "CANOPY LATENT HEAT = %g W/m2\n", s->value[CANOPY_EVAPO_TRANSP] * met[month].d[day].lh_vap / 86400.0);
 
 	c->daily_c_int += s->value[CANOPY_INT];
 	c->daily_c_evapo += s->value[CANOPY_EVAPO];

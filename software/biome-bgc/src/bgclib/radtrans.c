@@ -117,7 +117,7 @@ metvar_struct* metv, epvar_struct* epv, double albedo)
 		swabs_plaishade  = 0;
 	}
 	
-	if (swabs_plaishade < 0.0) /* AAN: Is this block even necesary? */
+	if (swabs_plaishade < 0.0) /* AAN: Is this block even necessary? */
 	{
 		bgc_printf(BV_ERROR, "FATAL ERROR: negative swabs_plaishade (%lf)\n",swabs_plaishade);
 		ok=0;
