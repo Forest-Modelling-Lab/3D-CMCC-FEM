@@ -198,7 +198,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
 		logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 		/*****************************************************************************************/
-	}getchar();
+	}
 
 	/* net radiation based on 3-PG method */
 	//logger(g_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));

@@ -266,8 +266,6 @@ enum {
 	CANOPY_SNOW,                //it should'nt be reset every day
 	OLD_CANOPY_SNOW,            //it should'nt be reset every day
 	CANOPY_FRAC_DAY_TRANSP,     //Fraction of daily canopy transpiration (DIM)
-	CANOPY_EVAPO_W,             //Canopy evaporation in W/m2
-	CANOPY_TRANSP_W,            //Canopy transpiration in W/m2
 	CANOPY_LATENT_HEAT,
 	CANOPY_SENSIBLE_HEAT,
 
@@ -280,6 +278,10 @@ enum {
 	PEAK_LAI,                   //PEAK LAI
 	SLA_SUN,
 	SLA_SHADE,
+
+	LEAF_TEMPERATURE,
+	CANOPY_TEMPERATURE,
+
 
 	/*carbon variables*/
 	DAILY_GPP_gC,               //Daily Gross Primary Production gC/m^2 day
