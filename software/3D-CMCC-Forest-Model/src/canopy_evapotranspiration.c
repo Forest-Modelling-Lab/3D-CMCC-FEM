@@ -15,6 +15,7 @@
 #include "constants.h"
 #include "logger.h"
 #include "Penman_Monteith.h"
+#include "heat_fluxes.h"
 
 extern logger_t* g_log;
 
@@ -455,7 +456,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	Canopy_latent_heat_fluxes (s, met, month, day);
 
 	/* compute sensible heat fluxes for canopy */
-	Canopy_sensible_heat_fluxes (s, met, month, day);
+	//Canopy_sensible_heat_fluxes (s, met, month, day);
 
 	logger(g_log, "OLD CANOPY_WATER = %g mm/m2/day\n", s->value[OLD_CANOPY_WATER]);
 	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);

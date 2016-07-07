@@ -6,7 +6,9 @@
 #include "constants.h"
 #include "logger.h"
 
+
 extern logger_t* g_log;
+
 void Canopy_latent_heat_fluxes (species_t *const s, const meteo_t *const met, const int month, const int day)
 {
 	/* canopy canopy level latent heat fluxes (W/m2) */
