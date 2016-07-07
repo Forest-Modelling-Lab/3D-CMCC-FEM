@@ -17,13 +17,29 @@
 
 extern logger_t* g_log;
 
-void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, double LightAbsorb_sun, double LightAbsorb_shade, double LightReflec_par, double LightReflec_net_rad)
+void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, double LightAbsorb, double LightAbsorb_sun, double LightAbsorb_shade, double LightReflec_par, double LightReflec_net_rad)
 {
 	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
 
 	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
 	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
 	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
+
+	/* it follows a little bit different rationale compared to BIOME-BGC approach
+	 * in BIOME_BGC:
+	 * apar = par * (1 - (exp(- K * LAI)));
+	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+	 * apar_shade = apar- apar_sun;
+	 *
+	 * in 3D-CMCC FEM:
+	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+	 * par_transm_sun  = par - apar_sun;
+	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
+	 * apar = apar_sun + apar_shade;
+	 *
+	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
+	 * but there's an exponential decay of absorption also for sunlit foliage	 *
+	 */
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -90,6 +106,7 @@ void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, 
 
 	/* it follows rationale of BIOME-BGC to obtain m2 instead m2/m2 */
 	//fixme then recompute transmitted fraction!!!!!!!!!!!!
+	/*
 	if(s->value[PPFD_ABS_SHADE] < 0.0)
 	{
 		s->value[PPFD_ABS_SHADE]  = 0.0;
@@ -105,6 +122,7 @@ void new_canopy_abs_transm_refl_radiation (cell_t *const c, species_t *const s, 
 
 	}
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
+	*/
 }
 
 void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
@@ -226,6 +244,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			if (c->dominant_veg_counter == 1)
 			{
 				counter = 0;
+
 				temp_apar = 0.0;
 				temp_par_reflected = 0.0;
 				temp_net_radiation_abs = 0.0;
@@ -267,7 +286,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd class level */
-			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
+			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb, LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
@@ -281,7 +300,6 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			temp_net_radiation_reflected += s->value[REFL_PAR];
 			c->net_radiation_reflected += s->value[NET_RAD_REFL];
 			logger(g_log, "net_radiation_reflected = %g \n", s->value[NET_RAD_REFL] );
-			//getchar();
 
 			/* update temporary absorbed and transmitted par net radiation lower layer */
 			temp_ppfd_abs += s->value[PPFD_ABS];
@@ -332,6 +350,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			if (c->dominant_veg_counter == 1)
 			{
 				counter = 0;
+
 				temp_apar = 0.0;
 				temp_par_reflected = 0.0;
 				temp_net_radiation_abs = 0.0;
@@ -364,7 +383,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd class level */
-			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
+			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb, LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
@@ -426,6 +445,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			if (c->subdominated_veg_counter == 1)
 			{
 				counter = 0;
+
 				temp_apar = 0.0;
 				temp_par_reflected = 0.0;
 				temp_net_radiation_abs = 0.0;
@@ -457,7 +477,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net radiation and ppfd class level */
-			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
+			new_canopy_abs_transm_refl_radiation (c, &c->heights[height].ages[age].species[species], LightAbsorb, LightAbsorb_sun, LightAbsorb_shade, LightReflec_par, LightReflec_net_rad);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
