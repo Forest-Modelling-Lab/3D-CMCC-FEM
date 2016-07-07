@@ -902,16 +902,18 @@ typedef struct {
 	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
 	double daily_soil_bl_cond, monthly_soil_bl_cond, annual_soil_bl_cond;
 	double daily_et, monthly_et, annual_et;
-	double daily_canopy_sensible_heat_flux;
-	double daily_soil_sensible_heat_flux;
 
 	/*energy balance*/
 	double daily_c_int_watt;
 	double daily_c_transp_watt;
 	double daily_c_evapo_watt;
 	double daily_c_evapotransp_watt;
+	double daily_c_latent_heat_flux;
 	double daily_soil_evaporation_watt;
+	double daily_soil_latent_heat_flux;
 	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;
+	double daily_c_sensible_heat_flux;
+	double daily_soil_sensible_heat_flux;
 	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;
 
 

@@ -115,7 +115,8 @@ void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month
 
 	/* compute a energy balance evaporation from soil */
 	c->daily_soil_evaporation_watt = c->daily_soil_evapo * met[month].d[day].lh_vap_soil / 86400.0;
-	logger(g_log, "Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
+	c->daily_soil_latent_heat_flux = c->daily_soil_evaporation_watt;
+	logger(g_log, "Daily Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_latent_heat_flux);
 
 	//test 9 May 2016 following Maes & Steppe 2012 as in JULES model (Best et al., GMD)
 	/* soil sensible heat flux */

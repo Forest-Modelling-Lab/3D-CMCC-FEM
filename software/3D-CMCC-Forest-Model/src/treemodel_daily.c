@@ -623,6 +623,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	Evapotranspiration (&m->cells[cell]);
 	/* compute latent heat flux */
 	Latent_heat_flux (&m->cells[cell], met, month, day);
+	/* compute sensible heat flux */
+	Sensible_heat_flux (&m->cells[cell], met, month, day);
 	/* compute soil water balance */
 	Soil_water_balance (&m->cells[cell], met, month, day);
 	/* compute water fluxes */

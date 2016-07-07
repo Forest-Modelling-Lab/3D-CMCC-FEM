@@ -85,6 +85,8 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	c->daily_c_evapo = 0.0;
 	c->daily_soil_evapo = 0.0;
 	c->daily_c_bl_cond = 0.0;
+	c->daily_c_sensible_heat_flux = 0.0;
+	c-> daily_soil_latent_heat_flux = 0.0;
 	c->daily_latent_heat_flux = 0.0;
 	c->daily_sensible_heat_flux = 0.0;
 

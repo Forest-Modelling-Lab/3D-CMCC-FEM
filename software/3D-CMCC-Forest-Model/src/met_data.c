@@ -102,7 +102,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	atmospheric_transmissivity = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]);
 	//logger(g_log, "atmospheric_transmissivity = %g\n", atmospheric_transmissivity);
 
-	/* compute emissivity of the clear-sky atmosphere see Sun et al., 2013; Campbell and Normal 1998; Brutsaert, 1984; from Gao et al., 2008 instead 1.72 uses 1.24*/
+	/* compute emissivity of the clear-sky atmosphere see Sun et al., 2013; (1.72) Campbell and Normal 1998; (0.642) Brutsaert, 1984; (1.24) from Gao et al., 2008 */
 	//fixme it should takes into account cloud cover
 	atmospheric_emissivity = (1.72 * pow ((met[month].d[day].ea*10)/(met[month].d[day].tavg+TempAbs), 1.0/7.0));
 	//logger(g_log, "atmospheric_emissivity = %g\n", atmospheric_emissivity);
