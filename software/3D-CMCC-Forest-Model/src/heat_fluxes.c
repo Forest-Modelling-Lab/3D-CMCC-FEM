@@ -7,8 +7,16 @@
 #include "logger.h"
 
 extern logger_t* g_log;
+void Canopy_latent_heat_fluxes (species_t *const s, const meteo_t *const met, const int month, const int day)
+{
+	/* canopy canopy level latent heat fluxes (W/m2) */
 
-void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int month, const int day) {
+}
+
+
+
+void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int month, const int day)
+{
 	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
 
 	/*compute latent heat from canopy*/
@@ -18,6 +26,7 @@ void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int mont
 	logger(g_log, "Latent heat canopy evapotranspiration = %f W/m^2\n", c->daily_c_evapotransp_watt);
 	logger(g_log, "Latent heat soil evaporation = %f W/m^2\n", c->daily_soil_evaporation_watt);
 
+	/* adding soil latent heat flux to overall latent heat flux */
 	c->daily_latent_heat_flux = c->daily_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 
 	/*in case of snow formation or dew fall*/

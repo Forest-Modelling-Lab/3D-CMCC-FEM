@@ -17,7 +17,7 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	int species;
 	int i;
 
-	logger(g_log, "...resetting daily variables...\n");
+	logger(g_log, "...resetting cell level daily variables...\n");
 
 	/* reset daily radiative variables */
 	c->apar = 0.0;
@@ -99,6 +99,8 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	c->layer_daily_dead_tree[2] = 0;
 	c->daily_dead_tree = 0;
 
+	logger(g_log, "...resetting class level daily variables...\n");
+
 	for ( height = count - 1; height >= 0; height-- )
 	{
 		i = c->heights[height].z;
@@ -107,6 +109,29 @@ void Reset_daily_variables (cell_t *const c, const int count)
 		{
 			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 			{
+				/* reset daily radiative variables */
+				c->heights[height].ages[age].species[species].value[PAR] = 0.0;
+				c->heights[height].ages[age].species[species].value[APAR] = 0.0;
+				c->heights[height].ages[age].species[species].value[APAR_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[APAR_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[TRANSM_PAR] = 0.0;
+				c->heights[height].ages[age].species[species].value[TRANSM_PAR_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[TRANSM_PAR_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_ABS] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_ABS_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_ABS_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_ABS] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_ABS_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_ABS_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_TRANSM] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_TRANSM_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[PPFD_TRANSM_SHADE] = 0.0;
+
 				/* reset daily carbon fluxes */
 				c->heights[height].ages[age].species[species].value[DAILY_GPP_gC] = 0.0;
 				c->heights[height].ages[age].species[species].value[DAILY_POINT_GPP_gC] = 0.0;

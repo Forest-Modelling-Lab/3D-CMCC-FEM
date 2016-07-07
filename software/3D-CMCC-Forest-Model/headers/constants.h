@@ -37,7 +37,7 @@ enum {
 #define MJ_TO_W         11.574074074      //Convert MJ/m2/day to W/m2
 #define W_TO_MJ               0.0864      //Convert W/m2 to MJ/m2/day
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
-#define SBC                  5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
+#define SBC_W                5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
 #define SBC_MJ              4.903e-9      //(MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day
 #define CP                    1010.0      //(J/kg K) specific heat of air
 #define G_STD                9.80665      //(m/s2) standard gravitational accel. */
@@ -57,6 +57,8 @@ enum {
 #define MWratio                0.622      //ratio molecular weight of water vapour air
 #define TempAbs               273.13      //absolute temperature in Kelvin
 #define GDD_BASIS                  5      //temperature C° basis for thermic sum
+#define EMLEAF                  0.95      //Emissivity of thermal radiation by leaf (see MAESPA)
+#define EMSOIL                  0.95      //Emissivity of thermal radiation by soil (see MAESPA)
 
 //COSTANTS
 #define Pi               3.141592654      //Pi greco

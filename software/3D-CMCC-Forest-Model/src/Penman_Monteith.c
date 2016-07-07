@@ -58,7 +58,7 @@ double Penman_Monteith(const meteo_t *const met, const int month, const int day,
 	tairK = met[month].d[day].tday + TempAbs;
 
 	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tairK, 3)));
+	rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
 
 	/* calculate combined resistance to convective and radiative heat transfer,
 	    parallel resistances : rhr = (rh * rr) / (rh + rr) */

@@ -40,8 +40,10 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	double evap_daylength;
 	double transp_daylength;
 	double evapo;
+	double evapo_W;
 	//double evapo, evapo_sun, evapo_shade;
 	double transp, transp_sun, transp_shade;
+	double transp_W, transp_sun_W, transp_shade_W;
 
 	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
@@ -147,7 +149,9 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/* canopy boundary layer conductance */
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI];
 	/* upscaled to day time */
-	s->value[CANOPY_BLCOND] *= daylength_sec * leaf_cell_cover_eff;
+	//s->value[CANOPY_BLCOND] *= daylength_sec * leaf_cell_cover_eff;
+	//test
+	s->value[CANOPY_BLCOND] *= leaf_cell_cover_eff;
 
 	/* leaf cuticular conductance */
 	gl_c = s->value[CUTCOND] * g_corr;
@@ -162,6 +166,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	if (m_final_sun < 0.00000001) m_final_sun = 0.00000001;
 	if (m_final_shade < 0.00000001) m_final_shade = 0.00000001;
 
+	/* folllowing Jarvis 1997 approach */
 	gl_s_sun = s->value[MAXCOND] * m_final_sun * g_corr;
 	gl_s_shade = s->value[MAXCOND] * m_final_shade * g_corr;
 
@@ -215,11 +220,14 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for evaporation and W/m2 for latent heat*/
 			evapo = Penman_Monteith (met, month, day, rv, rh, net_rad);
+			evapo_W = evapo * met[month].d[day].lh_vap;
+
 
 			/* check for negative values */
-			if(evapo < 0.0) evapo = 0.0;
+			if(evapo < 0.0) evapo = 0.0; evapo_W = 0.0;
 
 			s->value[CANOPY_EVAPO] = evapo;
+			s->value[CANOPY_EVAPO_W] = evapo_W;
 
 			/* calculate the time required to evaporate all the canopy water */
 			evap_daylength = s->value[CANOPY_WATER] / s->value[CANOPY_EVAPO];
@@ -264,7 +272,6 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				/* calculate transpiration using adjusted daylength */
 				rv = 1.0/gl_t_wv_sun;
 				rh = 1.0/gl_sh;
-
 				net_rad = s->value[NET_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 				logger(g_log, "net rad = %g\n", net_rad);
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
@@ -275,10 +282,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				/* next for shaded canopy fraction */
 				rv = 1.0/gl_t_wv_shade;
 				rh = 1.0/gl_sh;
-
 				net_rad = s->value[NET_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
-				logger(g_log, "net rad = %g\n", net_rad);
-
 				/* call penman-monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
 				transp_shade *=  transp_daylength * s->value[LAI_SHADE];
@@ -293,8 +297,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				s->value[CANOPY_TRANSP] = transp;
 
 				/* considering effective coverage of cell */
-				//test 6 July 2016
-				//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
+				s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 				/* including CO2 effect */
 				//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
@@ -353,8 +356,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			s->value[CANOPY_TRANSP] = transp;
 
 			/* considering effective coverage of cell and convert to daily amount */
-			//test 6 July 2016
-			//s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
+			s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
 
 			/* including CO2 effect */
 			//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
@@ -404,7 +406,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 		//test this is the equivalent "ra" aerodynamic resistance as in Allen et al., 1998
 		/* calculate resistance to radiative heat transfer through air, rr */
-		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tairK, 3)));
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
 		rhr = (rh * rr) / (rh + rr);
 		/* compute product as psychrometric constant and (1+(rc/ra)) see Webber et al., 2016 */
 		/* then ra = rhr */
@@ -421,7 +423,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 		//logger(g_log, "boundary layer resistance = %g mol m/sec\n", rh_mol);
 
 		/* canopy temperature as in Webber et al., 2016 it takes rh in m/sec*/
-		tcanopy = met[month].d[day].tavg + ((net_rad * rh_mol)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
+		/*tcanopy = met[month].d[day].tavg + ((net_rad * rh_mol)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);*/
 
 		//test 07 june 2016 using only boundary layer resistance as in Ryder et al., 2016
 		//tcanopy = met[month].d[day].tavg + ((net_rad * rh)/(CP*met[month].d[day].rho_air))*(psych_p/(delta*psych_p))- ((1.0-met[month].d[day].rh_f)/delta +psych_p);
@@ -448,6 +450,12 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 		s->value[CANOPY_INT] = 0.0;
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
+
+	/* compute latent heat fluxes for canopy */
+	Canopy_latent_heat_fluxes (s, met, month, day);
+
+	/* compute sensible heat fluxes for canopy */
+	Canopy_sensible_heat_fluxes (s, met, month, day);
 
 	logger(g_log, "OLD CANOPY_WATER = %g mm/m2/day\n", s->value[OLD_CANOPY_WATER]);
 	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);

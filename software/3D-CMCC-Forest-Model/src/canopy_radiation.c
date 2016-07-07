@@ -142,14 +142,14 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 	static double temp_ppfd_reflected;                                                    /* temporary reflected PPFD for layer */
 
 	static int counter;
+	//fixme move soil albedo into soil.txt file
+	double soil_albedo = 0.15;                                                            /* soil albedo without snow (see MAESPA model) */
 
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	//double actual_albedo;
 
-	//fixme move soil albedo into soil.txt file
-	//test check albedo for other typos
-	double soil_albedo = 0.17;
+
 
 	logger(g_log, "\n**RADIATION ROUTINE**\n");
 	logger(g_log, "-INCOMING RADIATION\n");

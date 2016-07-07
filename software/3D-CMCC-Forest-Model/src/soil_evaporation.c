@@ -124,14 +124,14 @@ void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month
 		//test 11 May 2016 following Webber et al., 2016 as in JULES model (Best et al., GMD)
 		/* soil sensible heat flux */
 		/* calculate resistance to radiative heat transfer through air, rr */
-		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tsoilK, 3)));
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(tsoilK, 3)));
 		rhr = (rh * rr)/ (rh + rr);
 		c->daily_soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsoilK)/rhr);
 	}
 	else
 	{
 		tsnowK = tsnow + TempAbs;
-		rr = met[month].d[day].rho_air * CP / (4.0 * SBC * (pow(tsnowK, 3)));
+		rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(tsnowK, 3)));
 		/*
 		rhr = ???;
 		c->daily_soil_sensible_heat_flux = met[month].d[day].rho_air * CP * ((tairK-tsnowK)/rhr);

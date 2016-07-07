@@ -161,6 +161,15 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	//logger(g_log, "\nLONG WAVE RADIATION\n");
 	//logger(g_log, "ea = %g\n", met[month].d[day].ea);
 
+	/*  INCOMING LONG WAVE RADIATION */
+	//logger(g_log, "\n(incoming short wave)\n");
+
+	met[month].d[day].lw_downward_W = atmospheric_emissivity * SBC_W * (pow(((TmaxK + TminK)/2.0),4));
+	logger(g_log, "downward long wave radiation = %g W/m2\n", met[month].d[day].lw_downward_W);
+
+	met[month].d[day].lw_downward_MJ = atmospheric_emissivity * SBC_MJ *  (pow(((TmaxK + TminK)/2.0),4));
+	logger(g_log, "downward long wave radiation = %g MJ/m2/day\n", met[month].d[day].lw_downward_MJ);
+
 	/* NET LONG WAVE RADIATION */
 	//logger(g_log, "\n(net long wave)\n");
 
@@ -169,12 +178,12 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	{
 		/* following Allen et al., 1998 */
 		/* Upward long wave radiation (MJ/m2/day) */
-		met[month].d[day].lw_net_MJ = SBC_MJ * (((pow(TmaxK, 4)) + (pow(TminK,4)))/2.0)*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
-		//logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		met[month].d[day].lw_net_MJ = SBC_MJ * (pow(((TmaxK + TminK)/2.0),4))*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
+		logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		//logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
 		/*****************************************************************************************/
 	}
 	else
@@ -183,13 +192,13 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 		/* following Prentice et al., 1993 */
 		/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
 		met[month].d[day].lw_net_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
-		//logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
+		logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
 
 		/* convert into MJ/m^2 day */
 		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
-		//logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 		/*****************************************************************************************/
-	}
+	}getchar();
 
 	/* net radiation based on 3-PG method */
 	//logger(g_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
