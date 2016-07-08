@@ -16,8 +16,6 @@ extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern logger_t* g_log;
 
-
-
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
 	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
@@ -43,7 +41,114 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 	{
 		met[month].d[day].ea = 0.0;
 	}
+}
 
+static double get_daily_rpot(const double latitude, const double longitude, const int d_, const double t_) {
+	double localstandardtime;
+	double localapparentsolartime;
+	double tthet;
+	double signedLAS;
+	double omega;
+	double decl_rad;
+	double lat_rad;
+	double theta_rad;
+	double Rpot;
+	double Rpot_h;
+
+	const double pi = 3.141592654;
+	const double solarconst = 1376.;
+
+	localstandardtime = t_;
+	tthet = 2.*pi*(d_-1.) / 365.;
+
+	localapparentsolartime = localstandardtime;
+	signedLAS = 12.-localapparentsolartime;
+	signedLAS = fabs(signedLAS);
+
+	omega = -15.*signedLAS;
+	decl_rad = 0.006918-0.399912*cos(tthet)+0.070257*sin(tthet)-0.006758*cos(2*tthet)+0.000907*sin(2*tthet)-0.002697*cos(3*tthet)+0.00148*sin(3*tthet);
+	lat_rad = latitude*pi/180.;
+
+	theta_rad = acos(sin(decl_rad)*sin(lat_rad)+cos(decl_rad)*cos(lat_rad)*cos(omega*pi/180.));
+
+	Rpot = solarconst*(1.00011+0.034221*cos(tthet)+0.00128*sin(tthet)+0.000719*cos(2*tthet)+0.000077*sin(2*tthet));
+	Rpot_h = Rpot*cos(theta_rad);
+
+	return (Rpot_h > 0) ? Rpot_h : 0.0;
+}
+
+static double compute_rpot(const double lat, const double lon, const int day) {
+#define ROWS_PER_DAY	(60*24)
+	int i;
+	double rpot;
+
+	/* rpots is computed for each minute */
+	rpot = 0.;
+	for ( i = 0; i < ROWS_PER_DAY; ++i ) {
+		double doy;
+		double hrs;
+		doy = ((double)(day*ROWS_PER_DAY+i) / ROWS_PER_DAY) + 1;
+		hrs = (double)((day*ROWS_PER_DAY+i) % ROWS_PER_DAY) / 60.;
+		rpot += get_daily_rpot(lat, lon, doy, hrs);
+	}
+	rpot /= ROWS_PER_DAY;
+	return rpot;
+
+#undef ROWS_PER_DAY
+}
+
+static double compute_lwin(const meteo_daily_t* const m, const double rpot) {
+	const double sigma = 5.6696e-8;
+	const double T0 = 273.15;
+	const double Tstroke = 36;
+	const double ESTAR = 611;
+	const double A = 17.27;
+
+	double fpar;
+	double cloud_cover;
+	double r_cloud;
+	double esat;
+	double vp;
+	double epsA;
+	double lwin;
+
+	/* check this */
+	double sw_in = m->sw_downward_W;
+	double ta = m->tavg;
+	double vpd = m->vpd;
+
+	fpar = 0.;
+	if ( ! (0. == rpot) && ! IS_INVALID_VALUE(sw_in) ) {
+		fpar = sw_in / rpot;
+		if ( fpar < 0. ) {
+			fpar = 0.;
+		}
+	}
+	
+	/* Cloud cover and cloud correction factor Eq. (3) */
+	cloud_cover = 1.0 - (fpar - 0.5) / 0.4;
+	if ( cloud_cover > 1.0 ) {
+		cloud_cover = 1.0;
+	}
+	if ( cloud_cover < 0. ) {
+		cloud_cover = 0.0;
+	}
+	r_cloud = 1 + 0.22 * cloud_cover * cloud_cover;
+
+	/* Saturation and actual Vapour pressure [3], and associated  emissivity Eq. (2) */
+	esat = ESTAR * exp(A*((ta/((ta+T0)-Tstroke))));
+	vp = esat - vpd * 100;
+	if ( vp < 0.0 ) {
+		vp = 3.3546e-004;
+	}
+	epsA = 0.64 * pow(vp / (ta+T0), 0.14285714);
+
+	/* Longwave radiation flux downward Eq. (1) */
+	lwin = r_cloud * epsA * sigma * pow(ta+T0, 4);
+	if ( (lwin < 10.) || (lwin > 1000.) ) {
+		lwin = INVALID_VALUE;
+	}
+	return lwin;
 }
 
 void Radiation (cell_t *const c, const int day, const int month, const int year)
@@ -204,6 +309,18 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	//logger(g_log, "Net radiation using Qa and Qb = %g W/m2\n", QA + QB * (met[month].d[day].solar_rad * pow (10.0, 6)/86400.0));
 	//logger(g_log, "Net radiation (3-PG method) = %g W/m2\n", c->net_radiation);
 	/***************************************************************************************************************************************/
+
+	/* compute rpot */
+	{
+		double rpot = compute_rpot(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
+		printf("DEBUG: computed rpot is %g\n", rpot);
+
+		/* compute lwin */
+		{
+			double lwin = compute_lwin(&c->years[year].m[month].d[day], rpot);
+			printf("DEBUG: computed lwin is %g\n", lwin);
+		}
+	}
 }
 
 
