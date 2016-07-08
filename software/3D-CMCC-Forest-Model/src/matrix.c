@@ -1122,10 +1122,21 @@ static int compute_x_y_cells_count(matrix_t* const m) {
 		}
 	}
 
+	/* 
+		TODO:
+		ALESSIOR
+
+		this condition can be broken by multilayer...
+		e.g.
+		x,y,...
+		0,0...
+		0,0...
+		so we need to fix it
 	if  ( x_count*y_count != m->cells_count ) {
 		puts("bad x and y computation!");
 		goto err;
 	}
+	*/
 	m->x_cells_count = x_count;
 	m->y_cells_count = y_count;
 	ret = 1;

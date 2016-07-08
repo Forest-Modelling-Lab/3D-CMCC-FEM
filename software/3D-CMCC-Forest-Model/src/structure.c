@@ -1108,7 +1108,7 @@ void Daily_dominant_Light(height_t *const heights, cell_t *const c, const int co
 	//logger(g_log, "-Species in veg period = %d\n", c->Veg_Counter);
 }
 
-
+/*
 int Number_of_layers (cell_t *c)
 {
 	// ALESSIOR number_of_layers can be uninitialized
@@ -1132,6 +1132,7 @@ int Number_of_layers (cell_t *c)
 	return number_of_layers;
 
 }
+*/
 
 void Daily_veg_counter(cell_t *const c, species_t *const s, const int height)
 {
