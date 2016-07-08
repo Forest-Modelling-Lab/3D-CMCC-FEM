@@ -33,7 +33,6 @@ C_SRCS += \
 ../src/initialization.c \
 ../src/lai.c \
 ../src/leafFall.c \
-../src/light.c \
 ../src/logger.c \
 ../src/main.c \
 ../src/management.c \
@@ -97,7 +96,6 @@ OBJS += \
 ./src/initialization.o \
 ./src/lai.o \
 ./src/leafFall.o \
-./src/light.o \
 ./src/logger.o \
 ./src/main.o \
 ./src/management.o \
@@ -161,7 +159,6 @@ C_DEPS += \
 ./src/initialization.d \
 ./src/lai.d \
 ./src/leafFall.d \
-./src/light.d \
 ./src/logger.d \
 ./src/main.d \
 ./src/management.d \

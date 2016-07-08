@@ -305,10 +305,6 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 				/* considering effective coverage of cell */
 				s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
-
-				/* including CO2 effect */
-				//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
-
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 
 			}
@@ -369,10 +365,6 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 			/* considering effective coverage of cell and convert to daily amount */
 			s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
-
-			/* including CO2 effect */
-			//s->value[CANOPY_TRANSP] *= s->value[F_CO2];
-
 			s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
 		}
 	}

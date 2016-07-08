@@ -159,9 +159,12 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 	logger(g_log, "-Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
 	logger(g_log, "-Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 	logger(g_log, "-Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
+	logger(g_log, "-downward long wave radiation = %g MJ/m2/day\n", met[month].d[day].lw_downward_MJ);
+	logger(g_log, "-downward long wave radiation = %g W/m2\n", met[month].d[day].lw_downward_W);
 	logger(g_log, "-Net Long wave radiation = %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 	logger(g_log, "-Net Long wave radiation = %g W/m2\n", met[month].d[day].lw_net_W);
 	logger(g_log, "-cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
+
 
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
