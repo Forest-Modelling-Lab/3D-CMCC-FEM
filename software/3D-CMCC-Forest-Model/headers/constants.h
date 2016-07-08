@@ -22,7 +22,7 @@ enum {
 #define NO_DATA                -9999
 
 //LIGHT
-#define Q0                    1360.1      //Solar constant (W/m^2)
+#define Q0                    1376.1      //Solar constant (W/m^2)
 #define Q0_MJ                  0.082      //Solar constant (MJ/m^2/day)
 #define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
 #define QB                       0.8      //Slope of Net vs Solar Radiation
@@ -37,7 +37,7 @@ enum {
 #define MJ_TO_W         11.574074074      //Convert MJ/m2/day to W/m2
 #define W_TO_MJ               0.0864      //Convert W/m2 to MJ/m2/day
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
-#define SBC_W                5.67e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
+#define SBC_W              5.6696e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
 #define SBC_MJ              4.903e-9      //(MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day
 #define CP                    1010.0      //(J/kg K) specific heat of air
 #define G_STD                9.80665      //(m/s2) standard gravitational accel. */
@@ -62,7 +62,7 @@ enum {
 #define EMSOIL                  0.95      //Emissivity of thermal radiation by soil (see MAESPA)
 
 //COSTANTS
-#define Pi               3.141592654      //Pi greco
+#define Pi               3.141592654      //Pi greek
 #define ln2              0.693147181
 #define eps                   0.0001
 #define e                 2.71828183      //nepero/eulero number

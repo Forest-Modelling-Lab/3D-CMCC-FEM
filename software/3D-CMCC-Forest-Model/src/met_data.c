@@ -43,7 +43,7 @@ void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const 
 	}
 }
 
-static double get_daily_rpot(const double latitude, const double longitude, const int d_, const double t_) {
+static double get_daily_potential_radiation(const double latitude, const double longitude, const int d_, const double t_) {
 	double localstandardtime;
 	double localapparentsolartime;
 	double tthet;
@@ -55,11 +55,8 @@ static double get_daily_rpot(const double latitude, const double longitude, cons
 	double Rpot;
 	double Rpot_h;
 
-	const double pi = 3.141592654;
-	const double solarconst = 1376.;
-
 	localstandardtime = t_;
-	tthet = 2.*pi*(d_-1.) / 365.;
+	tthet = 2.*Pi*(d_-1.) / 365.;
 
 	localapparentsolartime = localstandardtime;
 	signedLAS = 12.-localapparentsolartime;
@@ -67,29 +64,30 @@ static double get_daily_rpot(const double latitude, const double longitude, cons
 
 	omega = -15.*signedLAS;
 	decl_rad = 0.006918-0.399912*cos(tthet)+0.070257*sin(tthet)-0.006758*cos(2*tthet)+0.000907*sin(2*tthet)-0.002697*cos(3*tthet)+0.00148*sin(3*tthet);
-	lat_rad = latitude*pi/180.;
+	lat_rad = latitude*Pi/180.;
 
-	theta_rad = acos(sin(decl_rad)*sin(lat_rad)+cos(decl_rad)*cos(lat_rad)*cos(omega*pi/180.));
+	theta_rad = acos(sin(decl_rad)*sin(lat_rad)+cos(decl_rad)*cos(lat_rad)*cos(omega*Pi/180.));
 
-	Rpot = solarconst*(1.00011+0.034221*cos(tthet)+0.00128*sin(tthet)+0.000719*cos(2*tthet)+0.000077*sin(2*tthet));
+	/* Compute Potential short wave downward radiation [W m-2] (short wave clear sky radiation) */
+	Rpot = Q0*(1.00011+0.034221*cos(tthet)+0.00128*sin(tthet)+0.000719*cos(2*tthet)+0.000077*sin(2*tthet));
 	Rpot_h = Rpot*cos(theta_rad);
 
 	return (Rpot_h > 0) ? Rpot_h : 0.0;
 }
 
-static double compute_rpot(const double lat, const double lon, const int day) {
+static double compute_potential_rad(const double lat, const double lon, const int day) {
 #define ROWS_PER_DAY	(60*24)
 	int i;
 	double rpot;
 
-	/* rpots is computed for each minute */
+	/* potential radiation is computed for each minute */
 	rpot = 0.;
 	for ( i = 0; i < ROWS_PER_DAY; ++i ) {
 		double doy;
 		double hrs;
 		doy = ((double)(day*ROWS_PER_DAY+i) / ROWS_PER_DAY) + 1;
 		hrs = (double)((day*ROWS_PER_DAY+i) % ROWS_PER_DAY) / 60.;
-		rpot += get_daily_rpot(lat, lon, doy, hrs);
+		rpot += get_daily_potential_radiation(lat, lon, doy, hrs);
 	}
 	rpot /= ROWS_PER_DAY;
 	return rpot;
@@ -97,11 +95,43 @@ static double compute_rpot(const double lat, const double lon, const int day) {
 #undef ROWS_PER_DAY
 }
 
-static double compute_lwin(const meteo_daily_t* const m, const double rpot) {
-	const double sigma = 5.6696e-8;
-	const double T0 = 273.15;
+static double compute_lw_downward_W(const meteo_daily_t* const m) {
+
+	/*calculates longwave radiation from Vapour Pressure and Air Temp. and Radiation
+	-------------------------------------------------------------------------------
+	implemented by Sönke Zaehle (szaehle@bgc-jena.mpg.de)
+	MPI for Biogeochemistry, Jena Germany
+
+	DISCLAIMER:
+	This software comes with absolutely no warrenty whatsoever wrt to its performance
+	or scientific correctness. Any error associated with results produced from
+	this routine is not in the responsibility of the author of this routine
+	-------------------------------------------------------------------------------
+	Input:
+	 -Tair: Air temperature [°C]
+	 -sw_downward_W: Shortwave downward radiation [W m-2]
+	 -Rg_pot: Potential shortwave downward radiation [W m-2]
+	 -VP:  Vapour Pressure [Pa]
+	Output:
+	 -lw_downward_W: Longwave downward radiation [W m-2]
+	-------------------------------------------------------------------------------
+	Calculation of Longwave follows the JSBACH algorithm
+	Downward long wave radiation flux "R_d" [W/m^2] is according to [1],[2] computed by
+	(1) R_d = r_cloud * epsA * SBC_W * T^4,
+	where "TairK" is the air temperature [K] (in the bottom layer?), SBC_W is the Stefan-Boltzmann constant (in W),
+	"epsA" is the emissivity of the cloudless atmosphere given by
+	(2) epsA = epsA0 * (e_A/T)^(1/7).
+	Here "e_vap" is the vapor pressure in [Pa] from above, and epsA0 = 0.64 (units: [(K/Pa)^(1/7)]) a constant (see [2]).
+	The factor "r_cloud" in (1) corrects for clouds and is given by
+	(3) r_cloud = 1+0.22*n^2,
+	where "n" is the cloudcover.
+	[1] W. Knorr, "Satellite remote sensing and modelling of the global CO2 exchange of land vegetation", Examensarbeit 49,
+	(Max Planck Institut fuer Meteorologie, Hamburg, 1998).
+	[2] W. Brutsaert, "Evaporation into the Atmosphere", (Reidel, Dordrecht, 1982), pp. 299.
+	Calculation of Vapour Pressure follows Monteith & Unsworth 2008, page 11f [3] */
+
 	const double Tstroke = 36;
-	const double ESTAR = 611;
+	const double ESTAR = 611;                   /* in Pa =.611 kPa */
 	const double A = 17.27;
 
 	double fpar;
@@ -109,65 +139,61 @@ static double compute_lwin(const meteo_daily_t* const m, const double rpot) {
 	double r_cloud;
 	double esat;
 	double vp;
-	double epsA;
-	double lwin;
+	double epsA;                                /* emissivity of the cloudless atmosphere */
+	double lw_downward_W;
 
 	/* check this */
 	double sw_in = m->sw_downward_W;
 	double ta = m->tavg;
 	double vpd = m->vpd;
+	double sw_pot_in = m->sw_pot_downward_W;
+	double TairK = ta + TempAbs;
 
 	fpar = 0.;
-	if ( ! (0. == rpot) && ! IS_INVALID_VALUE(sw_in) ) {
-		fpar = sw_in / rpot;
-		if ( fpar < 0. ) {
+	if ( ! (0. == sw_pot_in) && ! IS_INVALID_VALUE(sw_in) )
+	{
+		fpar = sw_in / sw_pot_in;
+		if ( fpar < 0. )
+		{
 			fpar = 0.;
 		}
 	}
-	
+
 	/* Cloud cover and cloud correction factor Eq. (3) */
 	cloud_cover = 1.0 - (fpar - 0.5) / 0.4;
-	if ( cloud_cover > 1.0 ) {
+	if ( cloud_cover > 1.0 )
+	{
 		cloud_cover = 1.0;
 	}
-	if ( cloud_cover < 0. ) {
+	if ( cloud_cover < 0. )
+	{
 		cloud_cover = 0.0;
 	}
-	r_cloud = 1 + 0.22 * cloud_cover * cloud_cover;
+	r_cloud = 1 + 0.22 * pow(cloud_cover, 2.0);
 
-	/* Saturation and actual Vapour pressure [3], and associated  emissivity Eq. (2) */
-	esat = ESTAR * exp(A*((ta/((ta+T0)-Tstroke))));
+	/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. (2) */
+	esat = ESTAR * exp(A*((ta/(TairK-Tstroke))));
 	vp = esat - vpd * 100;
-	if ( vp < 0.0 ) {
+	if ( vp < 0.0 )
+	{
 		vp = 3.3546e-004;
 	}
-	epsA = 0.64 * pow(vp / (ta+T0), 0.14285714);
+	epsA = 0.64 * pow(vp / TairK, 0.14285714);
 
 	/* Longwave radiation flux downward Eq. (1) */
-	lwin = r_cloud * epsA * sigma * pow(ta+T0, 4);
-	if ( (lwin < 10.) || (lwin > 1000.) ) {
-		lwin = INVALID_VALUE;
+	lw_downward_W = r_cloud * epsA * SBC_W * pow(TairK, 4);
+	if ( (lw_downward_W < 10.) || (lw_downward_W > 1000.) )
+	{
+		lw_downward_W = INVALID_VALUE;
 	}
-	return lwin;
+	return lw_downward_W;
 }
 
 void Radiation (cell_t *const c, const int day, const int month, const int year)
 {
 	double a = 107.0;                                                                    //(W/m)  empirical constants for long wave radiation computation
 	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
-	double lat_decimal;
-	double lat_degrees;
-	double lat_rad;
-	double atmospheric_transmissivity;
-	double atmospheric_emissivity;                                                       //emissivity of the clear-sky atmosphere
-
-	double dr;                                                                           //inverse relative distance Earth-Sun
-	double sigma;                                                                        //solar declination (radians)
-	double omega_s;                                                                      //sunset hour angle
-	int days_of_year;
 	double TmaxK, TminK;
-
-	//logger(g_log, "\nRADIATION ROUTINE\n");
 
 	meteo_t *met;
 	met = (meteo_t*) c->years[year].m;
@@ -175,71 +201,12 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	TmaxK = met[month].d[day].tmax + TempAbs;
 	TminK = met[month].d[day].tmin + TempAbs;
 
-	if(IS_LEAP_YEAR(year))
-	{
-		days_of_year = 366;
-	}
-	else
-	{
-		days_of_year = 365;
-	}
-
-	/* Following Allen et al., 1998 */
-	/* convert latitude in radians */
-	lat_decimal = g_soil_settings->values[SOIL_LAT] - (int)g_soil_settings->values[SOIL_LAT];
-	lat_degrees = (int)g_soil_settings->values[SOIL_LAT] + (lat_decimal/60.0);
-	lat_rad = (Pi/180.0)*lat_degrees;
-	//logger(g_log, "lat_rad = %g\n", lat_rad);
-
-	/* compute inverse relative distance Earth-Sun */
-	dr = 1.0 + 0.033 * cos(((2*Pi)/days_of_year)*c->doy);
-	//logger(g_log, "dr = %g\n", dr);
-
-	/* compute solar declination */
-	sigma = 0.409 * sin((((2*Pi)/days_of_year)*c->doy)-1.39);
-	//logger(g_log, "sigma = %g\n",sigma);
-
-	/* compute sunset hour angle */
-	omega_s = acos((-tan(lat_rad) * tan(sigma)));
-	//logger(g_log, "omega_s = %g\n", omega_s);
-
-	/* compute atmospheric transmissivity */
-	atmospheric_transmissivity = (0.75 + 2e-5 * g_topo->values[TOPO_ELEV]);
-	//logger(g_log, "atmospheric_transmissivity = %g\n", atmospheric_transmissivity);
-
-	/* compute emissivity of the clear-sky atmosphere see Sun et al., 2013; (1.72) Campbell and Normal 1998; (0.642) Brutsaert, 1984; (1.24) from Gao et al., 2008 */
-	//fixme it should takes into account cloud cover
-	atmospheric_emissivity = (1.72 * pow ((met[month].d[day].ea*10)/(met[month].d[day].tavg+TempAbs), 1.0/7.0));
-	//logger(g_log, "atmospheric_emissivity = %g\n", atmospheric_emissivity);
-
-	//fixme cos(omega) should takes into account slope and aspect (once they will be included in "topo" files)
-	//following Allen et al., 2006 Agric and Forest Meteorology (parag. 2)
-
-	/* compute extra terrestrial radiation (MJ/m^2/day) */
-	met[month].d[day].extra_terr_rad_MJ = ((24.0*60.0)/Pi) * Q0_MJ * dr * ((omega_s * sin(lat_rad)* sin(sigma))+(cos(lat_rad)*cos(sigma)*sin(omega_s)));
-	//logger(g_log, "extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
-
-	/* convert into W/m2 */
-	met[month].d[day].extra_terr_rad_W = met[month].d[day].extra_terr_rad_MJ * MJ_TO_W;
-	//logger(g_log, "extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
-
 	/***************************************************************************************************************************************/
 
 	/* SHORT WAVE RADIATION */
-	//logger(g_log, "\nSHORT WAVE RADIATION\n");
-
 	/* INCOMING SHORT WAVE RADIATION */
-	//logger(g_log, "\n(incoming short wave)\n");
 
-	/* compute short wave clear sky radiation (Tasumi et al., 2000)*/
-	met[month].d[day].sw_clear_sky_MJ = atmospheric_transmissivity * met[month].d[day].extra_terr_rad_MJ;
-	//logger(g_log, "Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
-
-	/* convert into W/m2 */
-	met[month].d[day].sw_clear_sky_W = met[month].d[day].sw_clear_sky_MJ * MJ_TO_W;
-	//logger(g_log, "Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
-
-	/* compute downward short wave radiation*/
+	/* compute downward Short-Wave radiation */
 	met[month].d[day].sw_downward_MJ = met[month].d[day].solar_rad;
 	//logger(g_log, "Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 
@@ -247,61 +214,50 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	//logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
-	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method)*/
+	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
 	met[month].d[day].par = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
 	//logger(g_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
 
-	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method)*/
+	/* convert incoming Short-Wave flux in PPFD from W/m2 to umol/m2/sec (Biome-BGC method) */
 	met[month].d[day].ppfd = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	//logger(g_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
-	/* cloud cover fraction from Allen et al., 1998 */
-	//note: Allen says that cloud_cover_frac must be li mited to 1.0
-	met[month].d[day].cloud_cover_frac = (1.35*(met[month].d[day].sw_downward_MJ/met[month].d[day].sw_clear_sky_MJ)-0.35);
-	if(met[month].d[day].cloud_cover_frac > 1.0) met[month].d[day].cloud_cover_frac = 1.0;
-	//logger(g_log, "cloud_cover_frac = %g %%\n", met[month].d[day].cloud_cover_frac * 100.0);
+	met[month].d[day].sw_pot_downward_W = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
+	//logger(g_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
+
 	/***************************************************************************************************************************************/
 
 	/* LONG WAVE RADIATION */
-	//logger(g_log, "\nLONG WAVE RADIATION\n");
-	//logger(g_log, "ea = %g\n", met[month].d[day].ea);
+	/* INCOMING LONG WAVE RADIATION */
 
-	/*  INCOMING LONG WAVE RADIATION */
-	//logger(g_log, "\n(incoming short wave)\n");
-
-	met[month].d[day].lw_downward_W = atmospheric_emissivity * SBC_W * (pow(((TmaxK + TminK)/2.0),4));
-	logger(g_log, "downward long wave radiation = %g W/m2\n", met[month].d[day].lw_downward_W);
-
-	met[month].d[day].lw_downward_MJ = atmospheric_emissivity * SBC_MJ *  (pow(((TmaxK + TminK)/2.0),4));
-	logger(g_log, "downward long wave radiation = %g MJ/m2/day\n", met[month].d[day].lw_downward_MJ);
+	/* compute Long-Wave radiation flux downward (following JULES model) */
+	met[month].d[day].lw_downward_W = compute_lw_downward_W(&c->years[year].m[month].d[day]);
+	//logger(g_log, "Incoming Long wave radiation = %g W/m2\n", met[month].d[day].lw_downward_W);
 
 	/* NET LONG WAVE RADIATION */
-	//logger(g_log, "\n(net long wave)\n");
 
 	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
 	if(met[month].d[day].ea < 0.0)
 	{
 		/* following Allen et al., 1998 */
-		/* Upward long wave radiation (MJ/m2/day) */
 		met[month].d[day].lw_net_MJ = SBC_MJ * (pow(((TmaxK + TminK)/2.0),4))*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
-		logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		//logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		//logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
 		/*****************************************************************************************/
 	}
 	else
 	{
 		//todo check it Prentice says "net upward long-wave flux"
 		/* following Prentice et al., 1993 */
-		/* Upward long wave radiation based on Monteith, 1973; Prentice et al., 1993; Linacre, 1986 */
 		met[month].d[day].lw_net_W = (b+(1.0-b)*c->ni)*(a - met[month].d[day].tavg);
-		logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
+		//logger(g_log, "Net Long wave radiation (Prentice)= %g W/m2\n", met[month].d[day].lw_net_W);
 
 		/* convert into MJ/m^2 day */
 		met[month].d[day].lw_net_MJ = met[month].d[day].lw_net_W * W_TO_MJ;
-		logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
+		//logger(g_log, "Net Long wave radiation (Prentice)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 		/*****************************************************************************************/
 	}
 
@@ -310,17 +266,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	//logger(g_log, "Net radiation (3-PG method) = %g W/m2\n", c->net_radiation);
 	/***************************************************************************************************************************************/
 
-	/* compute rpot */
-	{
-		double rpot = compute_rpot(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
-		printf("DEBUG: computed rpot is %g\n", rpot);
 
-		/* compute lwin */
-		{
-			double lwin = compute_lwin(&c->years[year].m[month].d[day], rpot);
-			printf("DEBUG: computed lwin is %g\n", lwin);
-		}
-	}
 }
 
 

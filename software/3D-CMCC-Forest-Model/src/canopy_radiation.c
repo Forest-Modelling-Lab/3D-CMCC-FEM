@@ -152,10 +152,7 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 
 	logger(g_log, "\n**RADIATION ROUTINE**\n");
 	logger(g_log, "-INCOMING RADIATION\n");
-	logger(g_log, "-extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
-	logger(g_log, "-extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
-	logger(g_log, "-Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
-	logger(g_log, "-Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
+	logger(g_log, "-Potential shortwave radiation (downward) = %W/m2\n", met[month].d[day].sw_pot_downward_W);
 	logger(g_log, "-Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 	logger(g_log, "-Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 	logger(g_log, "-downward long wave radiation = %g MJ/m2/day\n", met[month].d[day].lw_downward_MJ);

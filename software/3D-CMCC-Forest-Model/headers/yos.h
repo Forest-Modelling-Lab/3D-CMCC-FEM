@@ -35,10 +35,7 @@ typedef struct {
 	double es;                                  /* (KPa) daily weighted mean saturation vapour pressure at the air temperature */
 	double ea;                                  /* (KPa) daily actual vapour pressure derived from relative humidity data */
 	double psych;                               /* (KPa/°C) daily psychrometric constant */
-	double extra_terr_rad_MJ;                   /* (MJ/m2/day) daily extra-terrestrial radiation */
-	double extra_terr_rad_W;                    /* (W/m2) daily extra-terrestrial radiation */
-	double sw_clear_sky_MJ;                     /* (MJ/m2/day) daily short wave clear sky radiation */
-	double sw_clear_sky_W;                      /* (W/m2) daily short wave clear sky radiation */
+	double sw_pot_downward_W;                   /* (W/m2) potential shortwave downward radiation */
 	double sw_downward_MJ;                      /* (MJ/m2/day) daily downward short wave radiation */
 	double sw_downward_W;                       /* (W/m2) daily downward short wave radiation */
 	double lw_downward_MJ;                      /* (MJ/m2/day) daily downward long wave radiation */
