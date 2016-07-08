@@ -954,6 +954,20 @@ int main(int argc, char *argv[]) {
 							//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
 							//if(day == 0 && month == 0) leaffall(&matrix->cells[cell]);
 							//run for FEM version
+							
+							///* FOREST STRUCTURE */
+							//if (day == 0 && month == JANUARY)
+							//{
+							//	/* compute annual number of different layers */
+							//	Annual_numbers_of_layers (&matrix->cells[cell]);
+							//}
+							///* daily forest structure */
+							//Daily_Forest_structure (&matrix->cells[cell], day, month, years);
+							//Daily_vegetative_period (&matrix->cells[cell], met, month, day);
+							//Daily_numbers_of_layers (&matrix->cells[cell]);
+							//Daily_layer_cover (&matrix->cells[cell], met, month, day);
+							//Daily_dominant_Light (matrix->cells[cell].heights, &matrix->cells[cell], matrix->cells[cell].heights_count, met, month, DaysInMonth[month]);
+
 							if (!Tree_model_daily(matrix, year, month, day, years_of_simulation, cell) )
 							{
 								logger(g_log, "tree model daily failed.");
