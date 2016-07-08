@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.cdt.launch.launchGroup">
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.0.action" value="WAIT_FOR_TERMINATION"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.0.enabled" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.0.mode" value="run"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.0.name" value="Collelongo_1997_2014_new_db"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.action" value="WAIT_FOR_TERMINATION"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.enabled" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.mode" value="run"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.1.name" value="Renon_2006_2013_new_db_1L"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.action" value="WAIT_FOR_TERMINATION"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.enabled" value="true"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.mode" value="run"/>
+<stringAttribute key="org.eclipse.cdt.launch.launchGroup.2.name" value="Soroe_2001_2014_new_db"/>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.profile"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+</listAttribute>
+</launchConfiguration>

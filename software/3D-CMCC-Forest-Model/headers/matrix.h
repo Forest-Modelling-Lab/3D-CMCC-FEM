@@ -757,6 +757,11 @@ typedef struct {
 	double long_wave_radiation_DW_W;                    /* Downward long wave radiation flux (W/m2) */
 	double long_wave_radiation_UW_MJ;                   /* Upward long wave radiation flux (MJ/m2/day) */
 	double long_wave_radiation_UW_W;                    /* Upward long wave radiation flux (W/m2) */
+	double short_wave_absorbed;                         /* Total absorbed short wave radiation flux (W/m2) */
+	double short_wave_reflected;                        /* Total reflected short wave radiation flux (W/m2) */
+	double long_wave_absorbed;                          /* Total absorbed long wave wave radiation flux (W/m2) */
+	double long_wave_reflected;                         /* Total reflected long wave radiation flux (W/m2) */
+	double long_wave_emitted;                           /* Total emitted long wave radiation flux (W/m2) */
 
 	double net_radiation;                               /* Net radiation ('terrestrial radiation') (W/m2) */
 	double net_radiation_absorbed;                      /* Net radiation absorbed (W/m2) */
