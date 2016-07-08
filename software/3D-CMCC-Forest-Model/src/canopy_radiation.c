@@ -150,7 +150,6 @@ void new_canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *c
 	//double actual_albedo;
 
 
-
 	logger(g_log, "\n**RADIATION ROUTINE**\n");
 	logger(g_log, "-INCOMING RADIATION\n");
 	logger(g_log, "-extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);

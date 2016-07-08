@@ -47,22 +47,8 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
 
-	double tairK;
-	//double tsoilK;
-
-	//test
-	double psych_p;
-	double t1, t2;
-	double pvs1, pvs2;
-	double dt = 0.2;
-	double delta;
-	double rc, rr, rhr;
-	double rh_mol; //boundary layer resistance in mol m/sec
-	double tcanopy, tcanopyK;
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
-
-	tairK = met[month].d[day].tavg + TempAbs;
 
 	/* assign values of previous day canopy water/snow */
 	/* reset if LAI == 0.0*/
@@ -201,6 +187,10 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	evaporate all the canopy water at the daily average conditions, and
 	subtract that time from the daylength to get the effective daylength for
 	transpiration. */
+
+	/* note: as in Campbell and Norman, Environmental Biophysiscs,
+	model should use Absorbed Radiation (instead just incident) but
+	composed of Short and Long wave radiation */
 
 	if(s->value[LAI]>0.0)
 	{
