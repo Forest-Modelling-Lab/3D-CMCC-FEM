@@ -1023,6 +1023,8 @@ typedef struct {
 typedef struct {
 	cell_t *cells;
 	int cells_count;
+	int x_cells_count;
+	int y_cells_count;
 } matrix_t;
 
 matrix_t* matrix_create(const char* const filename);

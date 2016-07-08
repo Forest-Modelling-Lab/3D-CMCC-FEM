@@ -58,6 +58,7 @@ enum {
 #define TempAbs               273.13      //absolute temperature in Kelvin
 #define GDD_BASIS                  5      //temperature C° basis for thermic sum
 #define EMLEAF                  0.95      //Emissivity of thermal radiation by leaf (see MAESPA)
+#define EMCANOPY				0.987		//Emissivity of thermal radiation by canopy (see Campbell & Norman, Environmental Biophysics, 2nd edition, page 273)
 #define EMSOIL                  0.95      //Emissivity of thermal radiation by soil (see MAESPA)
 
 //COSTANTS

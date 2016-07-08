@@ -212,6 +212,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\canopy_radiation.c"
+				>
+			</File>
+			<File
 				RelativePath=".\src\check_balance.c"
 				>
 			</File>
@@ -269,10 +273,6 @@
 			</File>
 			<File
 				RelativePath=".\src\leafFall.c"
-				>
-			</File>
-			<File
-				RelativePath=".\src\light.c"
 				>
 			</File>
 			<File

@@ -111,7 +111,7 @@ int add_char_to_string(char *const string, char c, const int size) {
  return 1;
 }
 
-char *get_current_directory(void) {
+char *get_current_path(void) {
 	char *p;
 #if defined (_WIN32)
 	p = malloc((MAX_PATH+1)*sizeof *p);

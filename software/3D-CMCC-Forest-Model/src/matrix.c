@@ -154,7 +154,7 @@ static void dataset_free(dataset_t *p) {
 	}
 }
 
-static dataset_t* dataset_import_nc(const char* const filename) {
+static dataset_t* dataset_import_nc(const char* const filename, int* const px_cells_count, int* const py_cells_count) {
 	enum {
 		X_DIM
 		, Y_DIM
@@ -241,7 +241,11 @@ static dataset_t* dataset_import_nc(const char* const filename) {
 			goto quit_no_nc_err;
 		}
 	}
-	
+
+	/* assign xy size */
+	*px_cells_count = dims_size[X_DIM];
+	*py_cells_count = dims_size[Y_DIM];
+		
 	d = malloc(sizeof*d);
 	if ( ! d ) {
 		logger(g_log, "%s\n", sz_err_out_of_memory);
@@ -1061,6 +1065,77 @@ static int fill_species_from_file(species_t *const s) {
 #undef BUFFER_SIZE
 }
 
+static int compute_x_y_cells_count(matrix_t* const m) {
+	int *px;
+	int x_count;
+	int *py;
+	int y_count;
+	int i;
+	int ret;
+
+	assert(m);
+
+	px = NULL;
+	x_count = 0;
+	py = NULL;
+	y_count = 0;
+	ret = 0;
+
+	px = malloc(m->cells_count*sizeof*px);
+	if ( ! px ) {
+		puts(sz_err_out_of_memory);
+		goto err;
+	}
+
+	py = malloc(m->cells_count*sizeof*py);
+	if ( ! py ) {
+		puts(sz_err_out_of_memory);
+		goto err;
+	}
+
+	for ( i = 0; i < m->cells_count; ++i ) {
+		int z;
+		int flag;
+
+		flag = 0;
+		for ( z = 0; z < x_count; ++z ) {
+			if ( px[z] == m->cells[i].x ) {
+				flag = 1;
+				break;
+			}
+
+		}
+		if ( ! flag ) {
+			px[x_count++] = m->cells[i].x;
+		}
+
+		flag = 0;
+		for ( z = 0; z < y_count; ++z ) {
+			if ( py[z] == m->cells[i].y ) {
+				flag = 1;
+				break;
+			}
+
+		}
+		if ( ! flag ) {
+			py[y_count++] = m->cells[i].y;
+		}
+	}
+
+	if  ( x_count*y_count != m->cells_count ) {
+		puts("bad x and y computation!");
+		goto err;
+	}
+	m->x_cells_count = x_count;
+	m->y_cells_count = y_count;
+	ret = 1;
+
+err:
+	if ( py ) free(py);
+	if ( px ) free(px);
+	return ret;
+}
+
 matrix_t* matrix_create(const char* const filename) {
 	int row;
 	int cell;
@@ -1069,16 +1144,20 @@ matrix_t* matrix_create(const char* const filename) {
 	int height;
 	dataset_t *d;
 	matrix_t* m;
+	int x_cells_count;
+	int y_cells_count;
 
 	assert(filename);
 
+	x_cells_count = 0;
+	y_cells_count = 0;
 	/* import txt or nc ? */
 	{
 	char *p;
 	p = strrchr(filename, '.');
 	if ( p ) {
 		if ( ! string_compare_i(++p, "nc") ) {
-			d = dataset_import_nc(filename);
+			d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
 		} else {
 			d = dataset_import_txt(filename);
 		}
@@ -1128,6 +1207,8 @@ matrix_t* matrix_create(const char* const filename) {
 	}
 	m->cells = NULL;
 	m->cells_count = 0;
+	m->x_cells_count = 0;
+	m->y_cells_count = 0;
 
 	for ( row = 0; row < d->rows_count; row++ ) {
 		if ( ! fill_cell(m, &d->rows[row]) ) {
@@ -1151,11 +1232,32 @@ matrix_t* matrix_create(const char* const filename) {
 			}
 		}
 	}
+
+	/* compute x and y cells count */
+	if ( ! compute_x_y_cells_count(m) ) {
+		matrix_free(m);
+		m = NULL;
+	}
+
+	/* check against nc dimension */
+	if ( x_cells_count ) {
+		if (	(x_cells_count != m->x_cells_count)
+				|| (y_cells_count != m->y_cells_count) ) {
+			printf("dimensions differs between nc and check: x(%d,%d), y(%d,%d)\n"
+																					, x_cells_count
+																					, m->x_cells_count
+																					, y_cells_count
+																					, m->y_cells_count
+			);
+			matrix_free(m);
+			m = NULL;
+		}
+	}
+
 	return m;
 }
 
-void matrix_summary(const matrix_t* const m/*, const int day, const int month, const int year*/)
-{
+void matrix_summary(const matrix_t* const m) {
 	int cell;
 	int species;
 	int age;

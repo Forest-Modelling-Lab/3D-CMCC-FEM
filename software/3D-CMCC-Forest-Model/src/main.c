@@ -90,10 +90,6 @@ char 	*g_sz_program_path = NULL
 
 static int years_of_simulation;	// default is none
 
-// ALESSIOR: PORCATA fixme
-int x_cells_count;
-int y_cells_count;
-
 /* strings */
 static const char banner[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n"
 							"by Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it]\n"
@@ -177,7 +173,7 @@ extern const char sz_err_out_of_memory[];
 const char err_unable_open_file[] = "unable to open file.";
 const char err_empty_file[] = "empty file ?";
 const char err_window_size_too_big[] = "window size too big.";
-static const char err_unable_get_current_directory[] = "unable to retrieve current directory.\n";
+static const char err_unable_get_current_path[] = "unable to retrieve current path.\n";
 static const char err_unable_to_register_atexit[] = "unable to register clean-up routine.\n";
 
 
@@ -695,9 +691,9 @@ int main(int argc, char *argv[]) {
 	prog_ret = 1;
 
 	/* get program path */
-	g_sz_program_path = get_current_directory();
+	g_sz_program_path = get_current_path();
 	if ( ! g_sz_program_path ) {
-		puts(err_unable_get_current_directory);
+		puts(err_unable_get_current_path);
 		return 1;
 	}
 
@@ -777,10 +773,6 @@ int main(int argc, char *argv[]) {
 	free(g_sz_dataset_file); g_sz_dataset_file = NULL;
 	if ( ! matrix ) goto err;
 	puts(msg_ok);
-	/* fixme ALESSIOR: a porcata, maybe one day will be fixed */
-	/* reset */
-	x_cells_count = 0;
-	y_cells_count = 0;
 
 	printf("soil allocation...");
 	g_soil_settings = soil_settings_new();
@@ -798,9 +790,7 @@ int main(int argc, char *argv[]) {
 	puts(msg_ok);
 
 	
-	/* ALESSIOR remove this */
 	start_year = -1;
-
 	logger(g_log, "\n3D-CMCC MODEL START....\n\n\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell ) {
 		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
@@ -874,12 +864,12 @@ int main(int argc, char *argv[]) {
 		if ( ! matrix->cells[cell].years ) goto err;
 		logger(g_log, "ok\n");
 
-		/* ALESSIOR: REMOVE THIS! */
+		/* get start year */
 		if ( -1 == start_year ) {
 			start_year =  matrix->cells[0].years[0].year;
 		}
 
-		// alloc memory for daily output netcdf vars (if any)
+		/* alloc memory for daily output netcdf vars (if any) */
 		if ( output_vars && output_vars->daily_vars_count && ! output_vars->daily_vars_value ) {
 			int ii;
 			int rows_count = matrix->cells_count*years_of_simulation*366*output_vars->daily_vars_count;
@@ -893,7 +883,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
-		// alloc memory for monthly output netcdf vars (if any)
+		/* alloc memory for monthly output netcdf vars (if any) */
 		if ( output_vars && output_vars->monthly_vars_count && ! output_vars->monthly_vars_value ) {
 			int ii;
 			int rows_count = matrix->cells_count*years_of_simulation*12*output_vars->monthly_vars_count;
@@ -907,7 +897,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 
-		// alloc memory for yearly output netcdf vars (if any)
+		/* alloc memory for yearly output netcdf vars (if any) */
 		if ( output_vars && output_vars->yearly_vars_count && ! output_vars->yearly_vars_value ) {
 			int ii;
 			int rows_count = matrix->cells_count*years_of_simulation*output_vars->yearly_vars_count;
@@ -932,23 +922,14 @@ int main(int argc, char *argv[]) {
 
 			logger(g_log, "\n-Year simulated = %d\n", matrix->cells[cell].years[year].year);
 
-			/* only for first year */
-			/* moved at beginning of for loop! */
-			/*
-			if ( ! year ) matrix_summary(matrix, day, month, year);
-			*/
-
 			index_vpsat = 0;
-			for (month = 0; month < MONTHS_COUNT; month++)
-			{
+			for ( month = 0; month < MONTHS_COUNT; ++month ) {
 				days_per_month = DaysInMonth[month];
-				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
-				{
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) ) {
 					++days_per_month;
 				}
 
-				for (day = 0; day < days_per_month; day++)
-				{
+				for ( day = 0; day < days_per_month; ++day ) {
 					/* daily climate variables */
 					Avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
@@ -966,16 +947,13 @@ int main(int argc, char *argv[]) {
 					Annual_met_values(&matrix->cells[cell], day, month, year);
 					Annual_CO2_concentration(matrix->cells[cell].years[year].m, day, month, year);
 
-					if(matrix->cells[cell].landuse == F)
-					{
+					if ( F == matrix->cells[cell].landuse ) {
 						/* compute before any other processes annually the days for the growing season */
 						Veg_Days (&matrix->cells[cell], day, month, year);
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
 						++index_vpsat;
-					}
-					else if (matrix->cells[cell].landuse == Z)
-					{
+					} else if ( Z == matrix->cells[cell].landuse ) {
 						//sergio
 					}
 
@@ -987,18 +965,14 @@ int main(int argc, char *argv[]) {
 				}
 				 */
 			}
-			for ( month = 0; month < MONTHS_COUNT; ++ month ) {
+			for ( month = 0; month < MONTHS_COUNT; ++month ) {
 				days_per_month = DaysInMonth[month];
-				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
-				{
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) ) {
 					++days_per_month;
 				}
-				for (day = 0; day < days_per_month; day++ )
-				{
-					if(matrix->cells[cell].landuse == F)
-					{
-						if (g_settings->version == 'f')
-						{
+				for ( day = 0; day < days_per_month; ++day ) {
+					if ( F == matrix->cells[cell].landuse ) {
+						if ( 'f' == g_settings->version ) {
 							//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
 							//if(day == 0 && month == 0) leaffall(&matrix->cells[cell]);
 							//run for FEM version
@@ -1061,8 +1035,8 @@ int main(int argc, char *argv[]) {
 						[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 					*/
 
-					#define YS					(y_cells_count)
-					#define XS					(x_cells_count)
+					#define YS					(matrix->y_cells_count)
+					#define XS					(matrix->x_cells_count)
 					#define ROWS				(366*years_of_simulation)
 					#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
 						int i;
@@ -1090,8 +1064,8 @@ int main(int argc, char *argv[]) {
 
 				// save values for put in output netcdf
 				if ( output_vars && output_vars->monthly_vars_count ) {
-				#define YS					(y_cells_count)
-				#define XS					(x_cells_count)
+				#define YS					(matrix->y_cells_count)
+				#define XS					(matrix->x_cells_count)
 				#define ROWS				(12*years_of_simulation)
 				#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
 					int i;
@@ -1116,8 +1090,8 @@ int main(int argc, char *argv[]) {
 
 			// save values for put in output netcdf
 			if ( output_vars && output_vars->yearly_vars_count ) {
-			#define YS					(y_cells_count)
-			#define XS					(x_cells_count)
+			#define YS					(matrix->y_cells_count)
+			#define XS					(matrix->x_cells_count)
 			#define ROWS				(years_of_simulation)
 			#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
 				int i;
@@ -1142,9 +1116,6 @@ int main(int argc, char *argv[]) {
 		matrix->cells[cell].years = NULL; /* required */
 	}
 
-	/* free memory */
-	matrix_free(matrix); matrix = NULL;
-
 	/* NETCDF output */
 	if ( output_vars && output_vars->daily_vars_value ) {
 		char *path = get_path(g_sz_daily_output_filename);
@@ -1152,7 +1123,7 @@ int main(int argc, char *argv[]) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 0);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 0);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);
@@ -1168,7 +1139,7 @@ int main(int argc, char *argv[]) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 1);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 1);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);
@@ -1184,7 +1155,7 @@ int main(int argc, char *argv[]) {
 			logger(g_log, sz_err_out_of_memory);
 			goto err;
 		}
-		ret = output_write(output_vars, path, start_year, years_of_simulation, x_cells_count, y_cells_count, 2);
+		ret = output_write(output_vars, path, start_year, years_of_simulation, matrix->x_cells_count, matrix->y_cells_count, 2);
 		free(path);
 		if ( ! ret ) {
 			logger(g_log, sz_err_out_of_memory);
@@ -1193,6 +1164,9 @@ int main(int argc, char *argv[]) {
 		free(output_vars->yearly_vars_value);
 		output_vars->yearly_vars_value = NULL;
 	}
+
+	/* free memory */
+	matrix_free(matrix); matrix = NULL;
 
 	/* ok ! */
 	prog_ret = 0;

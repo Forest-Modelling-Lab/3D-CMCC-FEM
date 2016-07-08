@@ -61,10 +61,6 @@ static const char *sz_month_names[YOS_MONTHS_COUNT] = {
 };
 
 extern logger_t* g_log;
-// ALESSIOR: PORCATA fixme
-extern int x_cells_count;
-extern int y_cells_count;
-// end fixme
 extern settings_t* g_settings;
 extern const char sz_err_out_of_memory[];
 extern char *g_sz_program_path;
@@ -1174,10 +1170,12 @@ static int import_lst(const char *const filename, yos_t** p_yos, int *const yos_
 			goto quit_no_nc_err;
 		}
 
+		/*
 		if ( ! x_cells_count ) {
 			x_cells_count = dims_size[X_DIM];
 			y_cells_count = dims_size[Y_DIM];
 		}
+		*/
 
 		/* check if y_cell is >= y_dim */
 		if ( y_cell >= dims_size[Y_DIM] ) {
