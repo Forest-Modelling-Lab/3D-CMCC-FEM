@@ -2,6 +2,16 @@
 #ifndef OUTPUT_H_
 #define OUTPUT_H_
 
+#include "matrix.h"
+
+typedef enum {
+	OUTPUT_TYPE_DAILY
+	, OUTPUT_TYPE_MONTHLY
+	, OUTPUT_TYPE_YEARLY
+
+	, OUTPUT_TYPES_COUNT
+} e_output_types;
+
 enum {
 	AR_DAILY_OUT
 	, AR_MONTHLY_OUT
@@ -31,11 +41,21 @@ typedef struct {
 } output_t;
 
 output_t* output_import(const char *const filename);
+void output_push_values(const output_t* const o
+							, const cell_t* const c
+							, const int month
+							, const int day
+							, const int year_index
+							, const int years_count
+							, const int x_cells_count
+							, const int y_cells_count
+							, const e_output_types type);
 void output_free(output_t *ov);
-int output_write(const output_t* const vars, const char *const path
-					, const int year_start, const int years_count
+int output_write(const output_t* const vars
+					, const char *const path
+					, const int year_start
+					, const int years_count
 					, const int x_cells_count
-					, const int y_cells_count, const int type);
-
+					, const int y_cells_count, const e_output_types type);
 
 #endif /* OUTPUT_H_ */

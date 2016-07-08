@@ -216,28 +216,6 @@ static void show_usage(void) {
 	puts(msg_usage);
 }
 
-/*
-	please note: mm and dd must starts from 0 not 1
-*/
-static int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
-	int i;
-	int days;
-	int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
-	if ( IS_LEAP_YEAR(yyyy) ) {
-		++days_per_month[1];
-	}
-
-	/* check args */
-	assert(((mm >= 0) && (mm < 12)) && ((dd >= 0) && (dd < days_per_month[mm])));
-
-	days = 0;
-	for ( i = 0; i < mm; ++i ) {
-		days += days_per_month[i];
-	}
-	return (days+dd);
-}
-
 static int log_start(const char* const sitename) {
 	struct tm* data;
 	time_t rawtime;
@@ -1034,7 +1012,7 @@ int main(int argc, char *argv[]) {
 
 						[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 					*/
-
+					/*
 					#define YS					(matrix->y_cells_count)
 					#define XS					(matrix->x_cells_count)
 					#define ROWS				(366*years_of_simulation)
@@ -1052,6 +1030,17 @@ int main(int argc, char *argv[]) {
 					#undef ROWS
 					#undef XS
 					#undef YS
+					*/
+						output_push_values(output_vars
+							, &matrix->cells[cell]
+							, month
+							, day
+							, year
+							, years_of_simulation
+							, matrix->x_cells_count
+							, matrix->y_cells_count
+							, OUTPUT_TYPE_DAILY
+						);
 					}
 
 					EOD_cumulative_balance_cell_level (&matrix->cells[cell], year, month, day, cell);
@@ -1062,8 +1051,9 @@ int main(int argc, char *argv[]) {
 				}
 				logger(g_log, "****************END OF MONTH (%d)*******************\n", month+1);
 
-				// save values for put in output netcdf
+				/* save values for put in output netcdf */
 				if ( output_vars && output_vars->monthly_vars_count ) {
+				/*
 				#define YS					(matrix->y_cells_count)
 				#define XS					(matrix->x_cells_count)
 				#define ROWS				(12*years_of_simulation)
@@ -1081,6 +1071,17 @@ int main(int argc, char *argv[]) {
 				#undef ROWS
 				#undef XS
 				#undef YS
+				*/
+					output_push_values(output_vars
+						, &matrix->cells[cell]
+						, month
+						, day
+						, year
+						, years_of_simulation
+						, matrix->x_cells_count
+						, matrix->y_cells_count
+						, OUTPUT_TYPE_MONTHLY
+					);
 				}
 
 				EOM_cumulative_balance_cell_level(&matrix->cells[cell], year, month, cell);
@@ -1090,6 +1091,7 @@ int main(int argc, char *argv[]) {
 
 			// save values for put in output netcdf
 			if ( output_vars && output_vars->yearly_vars_count ) {
+			/*
 			#define YS					(matrix->y_cells_count)
 			#define XS					(matrix->x_cells_count)
 			#define ROWS				(years_of_simulation)
@@ -1106,6 +1108,17 @@ int main(int argc, char *argv[]) {
 			#undef ROWS
 			#undef XS
 			#undef YS
+			*/
+				output_push_values(output_vars
+					, &matrix->cells[cell]
+					, month
+					, day
+					, year
+					, years_of_simulation
+					, matrix->x_cells_count
+					, matrix->y_cells_count
+					, OUTPUT_TYPE_YEARLY
+				);
 			}
 
 			EOY_cumulative_balance_cell_level(&matrix->cells[cell], year, years_of_simulation, cell);

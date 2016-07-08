@@ -11,7 +11,8 @@
 extern logger_t* g_log;
 extern const char sz_err_out_of_memory[];
 
-/* DO NOT CHANGE THIS ORDER
+/*
+	DO NOT CHANGE THIS ORDER
 	please see output.h
 */
 static const char *sz_output_vars[OUTPUT_VARS_COUNT] = {
@@ -154,15 +155,115 @@ static int get_daily_date_from_row(const int doy, int yyyy) {
 	return (yyyy*10000)+(mm*100)+dd;
 }
 
+/* please note: mm and dd must starts from 0 not 1 */
+static int get_daily_row_from_date(const int yyyy, const int mm, const int dd) {
+	int i;
+	int days;
+	int days_per_month[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
+	if ( IS_LEAP_YEAR(yyyy) ) {
+		++days_per_month[1];
+	}
+
+	/* check args */
+	assert(((mm >= 0) && (mm < 12)) && ((dd >= 0) && (dd < days_per_month[mm])));
+
+	days = 0;
+	for ( i = 0; i < mm; ++i ) {
+		days += days_per_month[i];
+	}
+	return (days+dd);
+}
+
+static void daily_push_values(const output_t* const o, const cell_t* const c, const int year, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count) {
 /*
-	if type is 0, write daily
-	if type is 1, write monthly
-	if type is 2, write yearly
+	la memoria è stata allocata come C*R*Y*X
 
-	path must terminate with a backslash!
+	C = colonne ( variabili )
+	R = righe ( anni di elaborazione * 366 )
+	Y = numero y celle
+	X = numero x celle
+
+	quindi il valore [v1][v2][v3][v4] è indicizzato a
+
+	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
+
+	ossia
+
+	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 */
-int output_write(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const int type) {
+#define YS					(y_cells_count)
+#define XS					(x_cells_count)
+#define ROWS				(366*years_count)
+#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+	int i;
+	for ( i = 0; i < o->daily_vars_count; ++i ) {
+		int row = get_daily_row_from_date(year, month, day) + (year_index*366);
+		int index = VALUE_AT(c->x, c->y, row, i);
+		if ( AR_DAILY_OUT == o->daily_vars[i] )		o->daily_vars_value[index] = c->daily_aut_resp;
+		if ( GPP_DAILY_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_gpp;
+		if ( NPP_DAILY_OUT == o->daily_vars[i] )	o->daily_vars_value[index] = c->daily_npp_gC;
+	}
+#undef VALUE_AT
+#undef ROWS
+#undef XS
+#undef YS
+}
+
+static void monthly_push_values(const output_t* const o, const cell_t* const c, const int year, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count) {
+#define YS					(y_cells_count)
+#define XS					(x_cells_count)
+#define ROWS				(12*years_count)
+#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+	int i;
+	for ( i = 0; i < o->monthly_vars_count; ++i ) {
+		int row = month + (year_index*12);
+		int index = VALUE_AT(c->x, c->y, row, i);
+		if ( AR_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_aut_resp;
+		if ( GPP_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_gpp;
+		if ( NPP_MONTHLY_OUT == o->monthly_vars[i] ) o->monthly_vars_value[index] = c->monthly_npp_gC;
+	}
+#undef VALUE_AT
+#undef ROWS
+#undef XS
+#undef YS
+}
+
+static void yearly_push_values(const output_t* const o, const cell_t* const c, const int year, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count) {
+#define YS					(y_cells_count)
+#define XS					(x_cells_count)
+#define ROWS				(years_count)
+#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+	int i;
+	for ( i = 0; i < o->yearly_vars_count; ++i )
+	{
+		int index = VALUE_AT(c->x, c->y, year_index, i);
+		if ( AR_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_aut_resp;
+		if ( GPP_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_gpp;
+		if ( NPP_YEARLY_OUT == o->yearly_vars[i] ) o->yearly_vars_value[index] = c->annual_npp_gC;
+	}
+#undef VALUE_AT
+#undef ROWS
+#undef XS
+#undef YS
+}
+
+void output_push_values(const output_t* const o, const cell_t* const c, const int month, const int day, const int year_index, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
+	int year;
+	assert(o && c);
+	assert((type >= OUTPUT_TYPE_DAILY) && (type < OUTPUT_TYPES_COUNT));
+	year = c->years[year_index].year;
+	if ( OUTPUT_TYPE_DAILY == type ) {
+		daily_push_values(o, c, year, month, day, year_index, years_count, x_cells_count, y_cells_count);
+	} else if ( OUTPUT_TYPE_MONTHLY == type ) {
+		monthly_push_values(o, c, year, month, day, year_index, years_count, x_cells_count, y_cells_count);
+	} else {
+		yearly_push_values(o, c, year, month, day, year_index, years_count, x_cells_count, y_cells_count);
+	}
+}
+
+/* path must terminate with a backslash! */
+int output_write(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
 /*
 	la memoria e' stata allocata come C*R*Y*X
 
@@ -178,7 +279,7 @@ int output_write(const output_t* const vars, const char *const path, const int y
 	ossia
 
 	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-	 */
+*/
 
 	int i;
 	int ret;
@@ -206,7 +307,7 @@ int output_write(const output_t* const vars, const char *const path, const int y
 	const char sz_lon[] = "lon";
 	const char sz_time[] = "time";
 
-	assert(vars && years_count && x_cells_count && y_cells_count && ((type >=0) && (type<=3)));
+	assert(vars && years_count && x_cells_count && y_cells_count && ((type >= OUTPUT_TYPE_DAILY) && (type < OUTPUT_TYPES_COUNT)));
 
 	/* init */
 	time_rows = NULL;
@@ -224,7 +325,7 @@ int output_write(const output_t* const vars, const char *const path, const int y
 		return 0;
 	}
 
-	if ( 0 == type ) {
+	if ( OUTPUT_TYPE_DAILY == type ) {
 		rows_count = 0;
 		for ( n = 0; n < years_count; ++n ) {
 			ret = 365 + IS_LEAP_YEAR(year_start+n);
@@ -233,7 +334,7 @@ int output_write(const output_t* const vars, const char *const path, const int y
 			}
 			rows_count += ret;
 		}
-	} else if ( 1 == type ) {
+	} else if ( OUTPUT_TYPE_MONTHLY == type ) {
 		for ( n = 0; n < years_count; ++n ) {
 			for ( i = 0; i < 12; i++ ) {
 				time_rows[i+n*12] = get_monthly_date_from_row(i, year_start+n);
@@ -247,19 +348,17 @@ int output_write(const output_t* const vars, const char *const path, const int y
 		rows_count = years_count;
 	}
 
-	if ( 0 == type ) n = vars->daily_vars_count;
-	if ( 1 == type ) n = vars->monthly_vars_count;
-	if ( 2 == type ) n = vars->yearly_vars_count;
+	if ( OUTPUT_TYPE_DAILY == type ) n = vars->daily_vars_count;
+	else if ( OUTPUT_TYPE_MONTHLY == type ) n = vars->monthly_vars_count;
+	else n = vars->yearly_vars_count;
 
 	for ( i = 0; i < n; ++i ) {
 		/* create output filename */
-		if ( 0 == type )
+		if ( OUTPUT_TYPE_DAILY == type )
 			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->daily_vars[i]]);
-
-		if ( 1 == type )
+		else if ( OUTPUT_TYPE_MONTHLY == type )
 			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->monthly_vars[i]]);
-
-		if ( 2 == type )
+		else
 			sprintf(sz_buffer, "%s%s.nc", path, sz_output_vars[vars->yearly_vars[i]]);
 
 		/* create file */
@@ -292,11 +391,11 @@ int output_write(const output_t* const vars, const char *const path, const int y
 		if ( ret != NC_NOERR ) goto quit;
 
 		/* remove suffix from var name(daily, month or annual) */
-		if ( 0 == type)
+		if ( OUTPUT_TYPE_DAILY == type)
 			p = strchr(sz_output_vars[vars->daily_vars[i]], '_');
-		if ( 1 == type)
+		else if ( OUTPUT_TYPE_MONTHLY == type)
 			p = strchr(sz_output_vars[vars->monthly_vars[i]], '_');
-		if ( 2 == type)
+		else
 			p = strchr(sz_output_vars[vars->yearly_vars[i]], '_');
 		assert(p);
 		++p;
@@ -313,18 +412,15 @@ int output_write(const output_t* const vars, const char *const path, const int y
 		if ( ret != NC_NOERR ) goto quit;
 
 		/* puts values */
-		if ( 0 == type )
-		{
+		if ( OUTPUT_TYPE_DAILY == type ) {
 			values = vars->daily_vars_value;
 			index = x_cells_count*y_cells_count*366*years_count*i;
 		}
-		if ( 1 == type )
-		{
+		else if ( OUTPUT_TYPE_MONTHLY == type ) {
 			values = vars->monthly_vars_value;
 			index = x_cells_count*y_cells_count*12*years_count*i;
 		}
-		if ( 2 == type )
-		{
+		else  {
 			values = vars->yearly_vars_value;
 			index = x_cells_count*y_cells_count*years_count*i;
 		}
