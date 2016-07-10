@@ -80,9 +80,9 @@ void Print_parameters (species_t *const s, int species_count, int month, int yea
 	}
 }
 
-void Print_met_data (const meteo_t *const met, const int month, const int day)
+void Print_daily_met_data (const meteo_t *const met, const int month, const int day)
 {
-	//here is valid only into function
+
 	static int doy;
 
 	if (day == 0 && month == 0)
@@ -92,7 +92,7 @@ void Print_met_data (const meteo_t *const met, const int month, const int day)
 	doy += 1;
 
 	logger(g_log, "***************\n");
-	logger(g_log, "**Daily MET DATA day %d month %d**\n", met[month].d[day].n_days, month+1);
+	logger(g_log, "**Daily MET DATA day %d month %d**\n", day + 1, month+1);
 	logger(g_log, "-solar_rad = %.2f MJ/m^2/day\n"
 			"-tavg = %.2f °C\n"
 			"-tmax = %.2f °C\n"
@@ -116,9 +116,6 @@ void Print_met_data (const meteo_t *const met, const int month, const int day)
 			"-air psych = %.2f KPa\n"
 			"-co2 concentration = %.2f ppmv\n"
 			"-DOY = %d\n"
-
-			//"-month avg temp = %.2f °C\n"
-			//"-month cum rain = %.2f mm\n"
 			,met[month].d[day].solar_rad,
 			met[month].d[day].tavg,
 			met[month].d[day].tmax,
@@ -147,10 +144,7 @@ void Print_met_data (const meteo_t *const met, const int month, const int day)
 	{
 		logger(g_log, "-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
 	}
-
-
 	logger(g_log, "***************\n");
-
 }
 /*
 void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)

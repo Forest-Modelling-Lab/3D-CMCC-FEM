@@ -744,7 +744,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	logger(g_log, "*************************************************** \n");
 }
 
-void Daily_vegetative_period (cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Daily_check_for_veg_period (cell_t *const c, const meteo_t *const met, const int month, const int day)
 {
 	static int height;
 	static int age;

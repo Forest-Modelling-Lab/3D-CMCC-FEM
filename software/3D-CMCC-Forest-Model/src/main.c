@@ -943,19 +943,22 @@ int main(int argc, char *argv[]) {
 				}
 				 */
 			}
-			for ( month = 0; month < MONTHS_COUNT; ++month ) {
+			for ( month = 0; month < MONTHS_COUNT; ++month )
+			{
 				days_per_month = DaysInMonth[month];
-				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) ) {
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
+				{
 					++days_per_month;
 				}
-				for ( day = 0; day < days_per_month; ++day ) {
-					if ( F == matrix->cells[cell].landuse ) {
-						if ( 'f' == g_settings->version ) {
-							//Marconi: 18/06: fitting vpSat on gaussian curve to asses peak value (parameter b1)
-							//if(day == 0 && month == 0) leaffall(&matrix->cells[cell]);
-							//run for FEM version
+				for ( day = 0; day < days_per_month; ++day )
+				{
+					if ( F == matrix->cells[cell].landuse )
+					{
+						if ( 'f' == g_settings->version )
+						{
+
 							
-							///* FOREST STRUCTURE */
+							/* FOREST STRUCTURE */
 							//if (day == 0 && month == JANUARY)
 							//{
 							//	/* compute annual number of different layers */
@@ -963,7 +966,7 @@ int main(int argc, char *argv[]) {
 							//}
 							///* daily forest structure */
 							//Daily_Forest_structure (&matrix->cells[cell], day, month, years);
-							//Daily_vegetative_period (&matrix->cells[cell], met, month, day);
+							//Daily_check_for_veg_period (&matrix->cells[cell], met, month, day);
 							//Daily_numbers_of_layers (&matrix->cells[cell]);
 							//Daily_layer_cover (&matrix->cells[cell], met, month, day);
 							//Daily_dominant_Light (matrix->cells[cell].heights, &matrix->cells[cell], matrix->cells[cell].heights_count, met, month, DaysInMonth[month]);

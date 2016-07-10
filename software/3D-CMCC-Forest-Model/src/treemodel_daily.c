@@ -55,41 +55,56 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	static int age;
 	static int species;
 
-	//Yearly average met data
-	static double Yearly_Solar_Rad;
-	static double Yearly_Temp;
-	static double Yearly_Vpd;
-	static double Yearly_Rain;
-
 	static int rotation_counter;
 
 	/* check parameters */
 	assert(m);
 	met = m->cells[cell].years[year].m;
 
+	/* initialize days of year (each year) */
+	if(day == 0 && month == 0) m->cells[cell].doy = 1;
+	/* cumulate days of year (other days) */
+	else m->cells[cell].doy += 1;
 
-	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS!!!!!!!!!!!!!!!!!!
 
-	//	/* daily loop on each cell before start with treemodel_daily */
-	//	for ( cell = 0; cell < m->cells_count; cell++)
-	//	{
-	//		/* FOREST STRUCTURE */
-	//		if (day == 0 && month == JANUARY)
-	//		{
-	//			/* compute annual number of different layers */
-	//			Annual_numbers_of_layers (&m->cells[cell]);
-	//		}
-	//		/* daily forest structure */
-	//		Daily_Forest_structure (&m->cells[cell], day, month, years);
-	//		Daily_vegetative_period (&m->cells[cell], met, month, day);
-	//		Daily_numbers_of_layers (&m->cells[cell]);
-	//		Daily_layer_cover (&m->cells[cell], met, month, day);
-	//		Daily_dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
-	//
-	//		logger(g_log, "***************************************************\n");
-	//	}
-	//	for ( cell = 0; cell < m->cells_count; cell++)
-	//	{
+	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS
+	//fixme remember to remove definition of forest structure later than this one once completed
+	/* daily loop on each cell to define forest structure before anything else computation */
+
+//	/* sort class in ascending way by heights */
+//	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
+//
+//	/* loop on each heights starting from highest to lower */
+//	logger(g_log, "******FOREST STRUCTURE for CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
+//	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
+//	{
+//		/* loop on each age class */
+//		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
+//		{
+//			/* loop on each species class */
+//			for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
+//			{
+//				/* taking into account only classes with at least one live tree */
+//				if(m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE] > 0)
+//				{
+//					/* FOREST STRUCTURE */
+//					if (day == 0 && month == JANUARY)
+//					{
+//						/* compute annual number of different layers */
+//						Annual_numbers_of_layers (&m->cells[cell]);
+//					}
+//					/* daily forest structure */
+//					Daily_Forest_structure (&m->cells[cell], day, month, year);
+//					Daily_check_for_veg_period (&m->cells[cell], met, month, day);
+//					Daily_numbers_of_layers (&m->cells[cell]);
+//					Daily_layer_cover (&m->cells[cell], met, month, day);
+//					Daily_dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+//				}
+//			}
+//		}
+//	}
+//	logger(g_log, "***************************************************\n");getchar();
+
 
 
 	/* compute daily-monthly-annual forest structure (overall cell) */
@@ -100,7 +115,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	//fixme it must be called in a previous "for" to compute the total number of layers, densities and other things as above
 	//otherwise model cannot run for multi-layered purposes
 	Daily_Forest_structure (&m->cells[cell], day, month, year);
-	Daily_vegetative_period (&m->cells[cell], met, month, day);
+	Daily_check_for_veg_period (&m->cells[cell], met, month, day);
 	Daily_numbers_of_layers (&m->cells[cell]);
 	Daily_layer_cover (&m->cells[cell], met, month, day);
 	Daily_dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
@@ -110,25 +125,14 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	logger(g_log, "--MONTH SIMULATED = %s\n", szMonth[month]);
 	logger(g_log, "---DAY SIMULATED = %d\n", met[month].d[day].n_days);
 
-	/* initialize days of year (each year) */
-	if(day == 0 && month == 0) m->cells[cell].doy = 1;
-	/* cumulate days of year (other days) */
-	else m->cells[cell].doy += 1;
-
-	/* compute average yearly met data */
-	Yearly_Solar_Rad += met[month].d[day].solar_rad;
-	Yearly_Vpd += met[month].d[day].vpd;
-	Yearly_Temp += met[month].d[day].tavg;
-	Yearly_Rain += met[month].d[day].prcp;
-
 	/* print daily met data */
-	Print_met_data (met, month, day);
+	Print_daily_met_data (met, month, day);
 
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
 
 	/* loop on each heights starting from highest to lower */
-	logger(g_log, "******CELL x = %d, y = %d STRUCTURE******\n", m->cells[cell].x, m->cells[cell].y);
+	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
 	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 	{
 		/* loop on each age class */
@@ -154,7 +158,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						/* reset annual variables */
 						Reset_annual_variables (&m->cells[cell], m->cells[cell].heights_count);
 
-						/* compute annual prognostically Maximum LAI */
+						/* compute prognostically annual Maximum LAI */
 						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
 					}
 					/* reset monthly variables */
@@ -181,14 +185,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 					/* Loop for adult trees */
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
 					{
-						if (day == 0 && month == JANUARY)
-						{
-							if (!year)
-							{
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM] = m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM] +
-										m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM];
-							}
-						}
+
 						/* loop for deciduous */
 						if (m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || m->cells[cell].heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
 						{
@@ -393,8 +390,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							/* print at the end of simulation class level data */
 							Print_stand_data (&m->cells[cell], month, year, height, age, species);
 
-							// ALESSIOR see utility.c... la funzione commentata non fa nulla!
-							//Annual_average_values_modifiers (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
@@ -402,115 +397,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 
 							/* management blocks */
 							//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
-							/*
-                           if ( m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] != 0 && m->cells[cell].heights[height].z == m->cells[cell].top_layer )
-                           {
 
-                                //create new class
-                                ROW r;
-                                int i;
-
-                                //SET VALUES
-                                m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE_SAPLING] = 0;
-                                m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING] = g_settings->lai_sapling;
-                                //m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING] = g_settings->avdbh_sapling;
-                                m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAPLING] = g_settings->height_sapling;
-                                m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING] = g_settings->wf_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING] = g_settings->wr_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-                                m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING] = g_settings->ws_sapling * m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP];
-
-                                logger(g_log, "\n\n----A new Height class must be created---------\n\n");
-
-                                //add values for a new a height class
-                                //CREATE A NEW ROW
-                                r.x = m->cells[cell].x;
-                                r.y = m->cells[cell].y;
-                                r.age = 0 ;
-                                r.species = m->cells[cell].heights[height].ages[age].species[species].name;
-                                r.phenology = m->cells[cell].heights[height].ages[age].species[species].phenology;
-                                r.management = m->cells[cell].heights[height].ages[age].species[species].management;
-                                r.lai = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING];
-                                r.n = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING];
-                                r.avdbh = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING];
-                                r.height = m->cells[cell].heights[height].ages[age].species[species].value[TREE_HELINGIGHT_SAPLING];
-                                r.wf = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING];
-                                r.wr = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING];
-                                r.ws = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING];
-							  	  logger(g_log, "....adding new row\n");
-                                //create new height class
-                                if ( !fill_cell_from_heights(m->cells, &r) )
-                                {
-                                logger(g_log, "UNABLE TO ADD NEW HEIGHT!!!\n");
-                                return 0;
-                                }
-                                else
-                                {
-                                logger(g_log, "FILLED CELL!!\n");
-                                }
-
-                                //add new row  space for values of new height class
-
-                                for ( i = 0; i < VALUES; i++ )
-                                {
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[i] =
-                                m->cells[cell].heights[height].ages[age].species[species].value[i];
-                                }
-
-                                for ( i = 0; i < COUNTERS; i++ )
-                                {
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].counter[i] =
-                                m->cells[cell].heights[height].ages[age].species[species].counter[i];
-                                }
-
-
-                                //pass new values to new height class
-
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].period = 1;
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].value = m->cells[cell].heights[height].ages[age].species[species].value[TREE_HEIGHT_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].value = m->cells[cell].heights[height].ages[age].species[species].counter[TREE_AGE_SAP];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].name = m->cells[cell].heights[height].ages[age].species[species].name;
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].phenology = m->cells[cell].heights[height].ages[age].species[species].phenology;
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].management = m->cells[cell].heights[height].ages[age].species[species].management;
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[LAI] = m->cells[cell].heights[height].ages[age].species[species].value[LAI_SAPLING];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].counter[N_TREE] = m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAPLING];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[AVDBH] = m->cells[cell].heights[height].ages[age].species[species].value[AVDBH_SAPLING];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_FOLIAGE] = m->cells[cell].heights[height].ages[age].species[species].value[WF_SAPLING];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_ROOTS_CTEM] = m->cells[cell].heights[height].ages[age].species[species].value[WR_SAPLING];
-                                m->cells[cell].heights[m->cells[cell].heights_count-1].ages[0].species[0].value[BIOMASS_STEM] = m->cells[cell].heights[height].ages[age].species[species].value[WS_SAPLING];
-
-                                //height class summary
-                                logger(g_log, "**********************************\n");
-                                logger(g_log, "x = %d\n", r.x);
-                                logger(g_log, "y = %d\n", r.y);
-                                logger(g_log, "age = %d\n", r.age);
-                                logger(g_log, "species = %s\n", r.species);
-                                logger(g_log, "phenology = %d\n", r.phenology);
-                                logger(g_log, "management = %d\n", r.management);
-                                logger(g_log, "lai = %f\n", r.lai);
-                                logger(g_log, "n tree = %d\n", r.n);
-                                logger(g_log, "avdbh = %f\n", r.avdbh);
-                                logger(g_log, "height = %f\n", r.height);
-                                logger(g_log, "wf = %f\n", r.wf);
-                                logger(g_log, "wr = %f\n", r.wr);
-                                logger(g_log, "ws = %f\n", r.ws);
-
-                                Saplings_counter += 1;
-                                logger(g_log, "Sapling Classes counter = %d\n", Saplings_counter);
-
-                                logger(g_log, "*****************************\n");
-                                logger(g_log, "*****************************\n");
-                            }
-                            if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
-                            {
-                                logger(g_log, "....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
-
-                                m->cells[cell].heights[height].value = 1 ;
-                                logger(g_log, "Height class passing from Sapling to Adult = %f m\n", m->cells[cell].heights[height].value);
-
-                                //Saplings_counter -= 1;
-                            }
-							 */
 							/* simulate management */
 							if(! string_compare_i(g_settings->management, "on") && year == 0)
 							{
@@ -585,14 +472,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 									logger(g_log, "NO Light for Establishment\n");
 								}
 							}
-							/*
-								if (m->cells[cell].heights[height].ages[age].species[species].period == 0)
-								{
-									logger(g_log, "....A NEW HEIGHT CLASS IS PASSING IN ADULT PERIOD\n");
-
-									Saplings_counter -= 1;
-								}
-							 */
 							logger(g_log, "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 						}
 					}
