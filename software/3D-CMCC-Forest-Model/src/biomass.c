@@ -100,10 +100,9 @@ void Biomass_increment_BOY (cell_t *const c, species_t *const s, int height, int
 	logger(g_log, "Basal Area for this layer = %f cm^2/tree\n", s->value[BASAL_AREA]*10000);
 	logger(g_log, "Stand Basal Area for this layer = %f m^2/area\n", s->value[STAND_BASAL_AREA]);
 
-
-	//logger(g_log, "**Kostner eq** \n");
-	//sapwood area
-	//see Kostner et al in Biogeochemistry of Forested Catchments in a Changing Environment, Matzner, Springer for Q. petraea
+	/* sapwood area */
+	/* see Kostner et al in Biogeochemistry of Forested Catchments in
+	 * a Changing Environment, Matzner, Springer for Q. petraea */
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 
 	logger(g_log, "sapwood area from Kostner = %f cm^2\n", s->value[SAPWOOD_AREA]);
