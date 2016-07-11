@@ -18,16 +18,24 @@ extern logger_t* g_log;
 
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year)
 {
-	double e0max;                                                                        //saturation vapour pressure at the maximum air temperature (KPa)
-	double e0min;                                                                        //saturation vapour pressure at the minimum air temperature (KPa)
+	double e0max;                                         //saturation vapour pressure at the maximum air temperature (KPa)
+	double e0min;                                         //saturation vapour pressure at the minimum air temperature (KPa)
+	double A = 17.27;
+	static double ESTAR_kPa = ESTAR / 1000.0;             // ESTAR in kPa
+	static double Tstroke = 36.0;
+	double TmaxK;
+	double TminK;
 
 	meteo_t *met;
 	met = (meteo_t*) c->years[year].m;
 
+	TmaxK = met[month].d[day].tmax + TempAbs;
+	TminK = met[month].d[day].tmin + TempAbs;
+
 	/* following Allen et al., 1998 */
 	/* compute saturation vapour pressure at the maximum and minimum air temperature (KPa) */
-	e0max = 0.61076 * exp((17.27*met[month].d[day].tmax)/(met[month].d[day].tmax+237.3));
-	e0min = 0.61076 * exp((17.27*met[month].d[day].tmin)/(met[month].d[day].tmin+237.3));
+	e0max = ESTAR_kPa * exp((A*met[month].d[day].tmax)/(TmaxK - Tstroke));
+	e0min = ESTAR_kPa * exp((A*met[month].d[day].tmin)/(TminK- Tstroke));
 
 	/* compute weighted mean saturation vapour pressure at the air temperature (KPa)*/
 	met[month].d[day].es = ((e0max*c->ni) + (e0min*(1.0-c->ni)));
@@ -130,23 +138,19 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	[2] W. Brutsaert, "Evaporation into the Atmosphere", (Reidel, Dordrecht, 1982), pp. 299.
 	Calculation of Vapour Pressure follows Monteith & Unsworth 2008, page 11f [3] */
 
-	const double Tstroke = 36;
-	const double ESTAR = 611;                   /* in Pa =.611 kPa */
-	const double A = 17.27;
-
 	double fpar;
 	double cloud_cover;
 	double r_cloud;
-	double esat;
 	double vp;
 	double epsA;                                /* emissivity of the cloudless atmosphere */
 	double lw_downward_W;
 
-	/* check this */
+	/* met data */
 	double sw_in = m->sw_downward_W;
 	double ta = m->tavg;
 	double vpd = m->vpd;
 	double sw_pot_in = m->sw_pot_downward_W;
+	double esat = m->es;
 	double TairK = ta + TempAbs;
 
 	fpar = 0.;
@@ -172,7 +176,6 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	r_cloud = 1 + 0.22 * pow(cloud_cover, 2.0);
 
 	/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. (2) */
-	esat = ESTAR * exp(A*((ta/(TairK-Tstroke))));
 	vp = esat - vpd * 100;
 	if ( vp < 0.0 )
 	{
@@ -230,7 +233,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	/* LONG WAVE RADIATION */
 	/* INCOMING LONG WAVE RADIATION */
 
-	/* compute Long-Wave radiation flux downward (following JULES model) */
+	/* compute Long-Wave radiation flux downward (following JSBACH model) */
 	met[month].d[day].lw_downward_W = compute_lw_downward_W(&c->years[year].m[month].d[day]);
 	//logger(g_log, "Incoming Long wave radiation = %g W/m2\n", met[month].d[day].lw_downward_W);
 
@@ -270,15 +273,15 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 }
 
 
-//BIOME-BGC version
-//Running-Coughlan 1988, Ecological Modelling
-
 void Day_Length(cell_t *const c, const int day, const int month, const int year)
 {
 
-	double ampl;  //seasonal variation in Day Length from 12 h
+	double ampl;                       //seasonal variation in Day Length from 12 h
 	static int doy;
 	//double adjust_latitude;
+
+	/* BIOME-BGC version */
+	/* Running-Coughlan 1988, Ecological Modelling */
 
 	meteo_t *met;
 	met = c->years[year].m;
@@ -290,7 +293,7 @@ void Day_Length(cell_t *const c, const int day, const int month, const int year)
 	}
 	doy +=1;
 
-	//4/apr/2016
+	//4/apr/2016 (not used)
 	//test following Schwalm & Ek 2004 instead of only geographical latitude adjusted latitude is used
 	// for every 125m in altitude 1° in latitude is added
 	//	adjust_latitude = g_topo->values[TOPO_ELEV] / 125.0;
@@ -307,11 +310,13 @@ void Day_Length(cell_t *const c, const int day, const int month, const int year)
 
 }
 
-/* following Running et al., 1987 */
-void Avg_temperature(meteo_t *const met, const int day, const int month) {
+void Avg_temperature(meteo_t *const met, const int day, const int month)
+{
+	/* following Running et al., 1987 */
+
 	if ( NO_DATA == met[month].d[day].tavg ) {
 		if ( (NO_DATA == met[month].d[day].tmax) && (NO_DATA == met[month].d[day].tmin) ) {
-			logger(g_log, "NO DATA FOR TEMPERATURE!!!!!!!!!!!!!!!!!!");
+			logger(g_log, "NO DATA FOR TEMPERATURE!");
 		} else {
 			met[month].d[day].tavg =  (0.606 * met[month].d[day].tmax) + (0.394 * met[month].d[day].tmin);
 		}
@@ -323,9 +328,11 @@ void Psychrometric(meteo_t *const met, const int day, const int month) {
 	met[month].d[day].psych = ((CP/1000000.0)*(met[month].d[day].air_pressure/1000.0))/(MWratio*(met[month].d[day].lh_vap/1000000.0));
 }
 
-//following BIOME-BGC 4.2 src
-//compute daylight average air temperature
-void Daylight_avg_temperature(meteo_t *const met, const int day, const int month) {
+void Daylight_avg_temperature(meteo_t *const met, const int day, const int month)
+{
+	/* following BIOME-BGC 4.2 */
+	/* compute daylight average air temperature */
+
 	if (met[month].d[day].tmax != NO_DATA && met[month].d[day].tmin != NO_DATA) {
 		met[month].d[day].tday = 0.45 * (met[month].d[day].tmax - met[month].d[day].tavg) + met[month].d[day].tavg;
 	} else {
@@ -334,10 +341,11 @@ void Daylight_avg_temperature(meteo_t *const met, const int day, const int month
 	}
 }
 
-//following BIOME-BGC 4.2 src
-//compute nightime average air temperature
 void Nightime_avg_temperature(meteo_t *const met, const int day, const int month)
 {
+	/* following BIOME-BGC 4.2 */
+	/* compute nightime average air temperature */
+
 	if (met[month].d[day].tday != NO_DATA )
 	{
 		met[month].d[day].tnight = (met[month].d[day].tday + met[month].d[day].tmin)/2 ;
@@ -407,8 +415,9 @@ void Air_pressure(meteo_t *const met, const int day, const int month)
 
 
 void Air_density (meteo_t *const met, const int day, const int month) {
-	/*compute density of air (in kg/m3)*/
-	//following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available
+
+	/* compute density of air (in kg/m3) */
+	/* following Solantie R., 2004, Boreal Environmental Research, 9: 319-333, the model uses tday if available */
 
 	if(met[month].d[day].tday == NO_DATA)
 	{
@@ -421,8 +430,10 @@ void Air_density (meteo_t *const met, const int day, const int month) {
 }
 
 void Latent_heat(meteo_t *met, const int day, const int month) {
-	/*BIOME-BGC APPROACH*/
-	/*compute latent heat of vaporization (J/Kg)*/
+
+	/* following BIOME-BGC 4.2 */
+	/* compute latent heat of vaporization (J/Kg) */
+
 	met[month].d[day].lh_vap = 2.5023e6 - 2430.54 * met[month].d[day].tavg;
 	met[month].d[day].lh_vap_soil = 2.5023e6 - 2430.54 * met[month].d[day].tsoil;
 	/*latent heat of fusion (KJ/Kg)*/
@@ -439,9 +450,7 @@ void Soil_temperature(meteo_t* const met, const int day, const int month) {
 	int weight;
 	const int days_per_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-	//logger(g_log, "\n\nGET_SOIL_TEMPERATURE\n");
-
-	/*following BIOME-bgc 4.1.2*/
+	/* following BIOME-BGC 4.2 */
 	/* for this version, an 11-day running weighted average of daily
 	average temperature is used as the soil temperature at 10 cm.
 	For days 1-10, a 1-10 day running weighted average is used instead.

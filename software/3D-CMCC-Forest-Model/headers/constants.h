@@ -27,7 +27,7 @@ enum {
 #define QA                       -90      //Intercept of Net vs Solar Radiation (W/m^2)
 #define QB                       0.8      //Slope of Net vs Solar Radiation
 #define RAD2PAR                 0.45      // (DIM) ratio PAR / SWtotal
-#define RAD2PPFD                0.45      //
+#define RAD2PPFD                0.45      // (DIM) ratio PPFD / SWtotal
 
 #define GC_GDM                     2      //convert grams C to grams DM (Campioli et al., 2013)
 #define GLUCOSE_C                0.4      //fraction of Carbon in glucose reserve (Barbaroux et al., 2002)
@@ -39,6 +39,7 @@ enum {
 #define W_MJ                 1000000      //convert Watt to MegaJoule/sec m^2
 #define SBC_W              5.6696e-8      //(W/(m^2 K^4)) Stefan-Boltzmann constant
 #define SBC_MJ              4.903e-9      //(MJ/K^4/m^2/day) Stefan-Boltzmann constant in MJ day
+#define ESTAR                 610.76      // in Pa = 0.611 kPa
 #define CP                    1010.0      //(J/kg K) specific heat of air
 #define G_STD                9.80665      //(m/s2) standard gravitational accel. */
 #define P_STD               101325.0      //(Pa) standard pressure at 0.0 m elevation */
@@ -58,7 +59,7 @@ enum {
 #define TempAbs               273.13      //absolute temperature in Kelvin
 #define GDD_BASIS                  5      //temperature C° basis for thermic sum
 #define EMLEAF                  0.95      //Emissivity of thermal radiation by leaf (see MAESPA)
-#define EMCANOPY				0.987		//Emissivity of thermal radiation by canopy (see Campbell & Norman, Environmental Biophysics, 2nd edition, page 273)
+#define EMCANOPY               0.987      //Emissivity of thermal radiation by canopy (see Campbell & Norman, Environmental Biophysics, 2nd edition, page 273)
 #define EMSOIL                  0.95      //Emissivity of thermal radiation by soil (see MAESPA)
 
 //COSTANTS
