@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "light.h"
 #include "common.h"
 #include "constants.h"
 #include "logger.h"
 #include "soil_settings.h"
 #include "topo.h"
 #include "canopy_temperature.h"
+#include "canopy_radiation_lw_band.h"
 
 extern logger_t* g_log;
 
@@ -33,6 +33,7 @@ void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_
 	double lw_out_canopy;
 	double lw_out_soil;
 	double lw_out;
+	double net_lw;
 
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
 
@@ -50,7 +51,7 @@ void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_
 	/***********************************************************************************************************/
 
 	/* call canopy temperature function*/
-	canopy_temperature (s, c, met, day, month, year);
+	s->value[CANOPY_TEMP_K] = canopy_temperature (s, c, met, day, month, year);
 
 	/* LONG WAVE RADIATION FRACTIONS */
 	/* CLM 4.0 APPROACH */
@@ -74,16 +75,16 @@ void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_
 	/***********************************************************************************************************/
 
 	//prova
-	lw_out_canopy = LW_emis_frac * SBC_W * pow(s->value[CANOPY_TEMPERATURE], 4.0) * leaf_cell_cover_eff;
-	logger(g_log, "CANOPY_TEMPERATURE = %g K\n", s->value[CANOPY_TEMPERATURE]);
-	logger(g_log, "lw canopy out  = %g W/m2\n", lw_out_canopy);
+	lw_out_canopy = LW_emis_frac * SBC_W * pow(s->value[CANOPY_TEMP_K], 4.0)/* * leaf_cell_cover_eff*/;
+	logger(g_log, "lw canopy out = %g W/m2\n", lw_out_canopy);
 
-	lw_out_soil = LW_emis_frac_soil * SBC_W * pow(TsoilK, 4.0) * (1.0 -leaf_cell_cover_eff);
-	logger(g_log, "met[month].d[day].tsoil = %g K\n", met[month].d[day].tsoil);
-	logger(g_log, "SOIL_TEMPERATURE = %g K\n", TsoilK);
+	lw_out_soil = LW_emis_frac_soil * SBC_W * pow(TsoilK, 4.0) /* * (1.0 -leaf_cell_cover_eff)*/;
 	logger(g_log, "lw soil out = %g W/m2\n", lw_out_soil);
 
 	lw_out = lw_out_canopy + lw_out_soil;
 	logger(g_log, "lw out = %g W/m2\n", lw_out);
+
+	net_lw = met[month].d[day].lw_downward_W - lw_out;
+	logger(g_log, "lw net_lw = %g W/m2\n", net_lw);
 
 }

@@ -19,7 +19,6 @@
 #include "check_prcp.h"
 #include "phenology.h"
 #include "peak_lai.h"
-#include "light.h"
 #include "canopy_radiation_sw_band.h"
 #include "canopy_radiation_lw_band.h"
 #include "modifiers.h"
@@ -72,7 +71,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	{
 		m->cells[cell].doy += 1;
 	}
-
 
 
 	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS
@@ -277,9 +275,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						{
 							logger(g_log, "*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", m->cells[cell].heights[height].ages[age].species[species].name);
 							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", m->cells[cell].heights[height].z);
-
-
-							//logger(g_log, "-ni %g --\n", met[month].d[day].ni);getchar();
 
 							/* increment vegetative days counter */
 							m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;

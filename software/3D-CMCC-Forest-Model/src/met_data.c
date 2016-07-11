@@ -493,12 +493,8 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 		{
 			weight = 11-i;
 
-			//fixme
-			/*
 			if (!i) incr_weight = 1;
 			else incr_weight += i;
-			logger(g_log, "incr_weight = %d\n", incr_weight);
-			*/
 
 			if (day > 10.0)
 			{
@@ -520,7 +516,9 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 				}
 			}
 		}
-		avg = avg / 77;
+		//avg = avg / 77;
+		//test 11 July 2016
+		avg = avg / incr_weight;
 		met[month].d[day].tsoil = avg;
 	}
 }

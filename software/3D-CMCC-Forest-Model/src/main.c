@@ -964,7 +964,6 @@ int main(int argc, char *argv[]) {
 							//Daily_numbers_of_layers (&matrix->cells[cell]);
 							//Daily_layer_cover (&matrix->cells[cell], met, month, day);
 							//Daily_dominant_Light (matrix->cells[cell].heights, &matrix->cells[cell], matrix->cells[cell].heights_count, met, month, DaysInMonth[month]);
-
 							if (!Tree_model_daily(matrix, year, month, day, years_of_simulation, cell) )
 							{
 								logger(g_log, "tree model daily failed.");

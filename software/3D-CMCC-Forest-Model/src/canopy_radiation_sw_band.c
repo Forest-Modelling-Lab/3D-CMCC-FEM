@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "light.h"
 #include "common.h"
 #include "constants.h"
 #include "logger.h"
 #include "soil_settings.h"
 #include "topo.h"
+#include "canopy_radiation_sw_band.h"
 
 extern logger_t* g_log;
 
@@ -149,8 +149,6 @@ void canopy_radiation_sw_band (species_t *const s, cell_t *const c, const meteo_
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	//double actual_albedo;
-
-
 
 	logger(g_log, "\n**SHORT WAVE BAND RADIATION ROUTINE**\n");
 

@@ -304,8 +304,8 @@ enum {
 	SLA_SUN,
 	SLA_SHADE,
 
-	LEAF_TEMPERATURE,
-	CANOPY_TEMPERATURE,
+	LEAF_TEMP_K,
+	CANOPY_TEMP_K,
 
 
 	/*carbon variables*/
