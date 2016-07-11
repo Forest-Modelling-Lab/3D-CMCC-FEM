@@ -33,7 +33,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	t_melt = t_coeff * met[month].d[day].tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	incident_rad = (c->net_radiation_for_soil * met[month].d[day].daylength * 3600) * snow_abs * 0.001;
+	incident_rad = (c->net_sw_rad_for_soil * met[month].d[day].daylength * 3600) * snow_abs * 0.001;
 
 
 	/* temperature and radiation melt from snowpack */

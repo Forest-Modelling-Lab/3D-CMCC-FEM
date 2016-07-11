@@ -184,7 +184,7 @@ enum {
 	MAI,                        //Mean Annual Volume Increment (m^3/area year)
 	STEMCONST,
 
-	/*radiation*/
+	/* PAR */
 	PAR,                        //Photosynthetically Active Radiation molPAR/m^2/day
 	APAR,                       //Absorbed Physiological Active Radiation molPAR/m^2/day
 	APAR_SUN,                   //Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves
@@ -194,15 +194,40 @@ enum {
 	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
 	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
 
-	NET_RAD,                    //Net Solar Radiation in W/m2
-	NET_RAD_ABS,                //Absorbed Net Solar Radiation in W/m2
+	/* short wave */
+	NET_SW_RAD,                 //Short Wave Radiation in W/m2
+	NET_SW_RAD_ABS,             //Absorbed Net Short Wave radiation in W/m2
+	NET_SW_RAD_ABS_SUN,         //Absorbed Net Short Wave Radiation W/m2 for sun leaves
+	NET_SW_RAD_ABS_SHADE,       //Absorbed Net Short Wave Radiation W/m2 for shaded leaves
+	NET_SW_RAD_TRANSM,          //Transmitted Net Short Wave Radiation W/m2
+	NET_SW_RAD_TRANSM_SUN,      //Transmitted Net Short Wave Radiation W/m2 for sun leaves
+	NET_SW_RAD_TRANSM_SHADE,    //Transmitted Net Short Wave Radiation W/m2 for shaded leaves
+	SW_RAD_REFL,               //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
+
+	/* long wave */
+	NET_LW_RAD,                 //Long Wave Radiation in W/m2
+	NET_LW_RAD_ABS,             //Absorbed Net Long Wave radiation in W/m2
+	NET_LW_RAD_ABS_SUN,         //Absorbed Net Long Wave Radiation W/m2 for sun leaves
+	NET_LW_RAD_ABS_SHADE,       //Absorbed Net Long Wave Radiation W/m2 for shaded leaves
+	NET_LW_RAD_TRANSM,          //Transmitted Net Long Wave Radiation W/m2
+	NET_LW_RAD_TRANSM_SUN,      //Transmitted Net Long Wave Radiation W/m2 for sun leaves
+	NET_LW_RAD_TRANSM_SHADE,    //Transmitted Net Long Wave Radiation W/m2 for shaded leaves
+	LW_RAD_REFL,                //Reflected Long Wave Radiation W/m2 OVERALL CANOPY
+	/* special case for long wave bands */
+	LW_RAD_EMIT,                    //Emitted Long Wave Radiation W/m2
+
+
+	/* net radiation */
+	NET_RAD,                    //Short Wave Radiation in W/m2
+	NET_RAD_ABS,                //Absorbed Net radiation in W/m2
 	NET_RAD_ABS_SUN,            //Absorbed Net Radiation W/m2 for sun leaves
 	NET_RAD_ABS_SHADE,          //Absorbed Net Radiation W/m2 for shaded leaves
 	NET_RAD_TRANSM,             //Transmitted Net Radiation W/m2
 	NET_RAD_TRANSM_SUN,         //Transmitted Net Radiation W/m2 for sun leaves
-	NET_RAD_TRANSM_SHADE,       //Transmitted Net Radiation W/m2 for shaded leaves
-	NET_RAD_REFL,               //Transmitted Net Radiation W/m2 OVERALL CANOPY
+	NET_TRANSM_SHADE,           //Transmitted Net Radiation W/m2 for shaded leaves
+	RAD_REFL,                   //Reflected Radiation W/m2 OVERALL CANOPY
 
+	/* PPFD */
 	PPFD,                       //Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_ABS,                   //Absorbed Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_ABS_SUN,               //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves
@@ -763,14 +788,13 @@ typedef struct {
 	double long_wave_reflected;                         /* Total reflected long wave radiation flux (W/m2) */
 	double long_wave_emitted;                           /* Total emitted long wave radiation flux (W/m2) */
 
-	double net_radiation;                               /* Net radiation ('terrestrial radiation') (W/m2) */
-	double net_radiation_absorbed;                      /* Net radiation absorbed (W/m2) */
-	double net_radiation_reflected;                     /* Net radiation reflected (W/m2) */
-	double net_radiation_transm;
-	double net_radiation_for_dominated;
-	double net_radiation_for_subdominated;
-	double net_radiation_for_soil;
-	double net_radiation_for_soil_reflected;
+	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
+	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
+	double net_sw_rad;                                  /* Net Short Wave radiation incoming (W/m2) */
+	double net_sw_rad_abs;                              /* Net Short Wave radiation absorbed (W/m2) */
+	double net_sw_rad_transm;                           /* Net Short Wave radiation transmitted (W/m2) */
+	double net_sw_rad_for_soil;                         /* Net Short Wave radiation incoming to soil level (W/m2) */
+
 
 	double par;
 	double apar;

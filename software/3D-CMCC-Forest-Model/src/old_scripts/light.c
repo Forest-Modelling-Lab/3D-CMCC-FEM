@@ -44,27 +44,27 @@ void Rad_abs_transm (cell_t *const c, species_t *const s, double LightAbsorb_sun
 	logger(g_log, "Below the canopy par (filtered)= %g molPAR/m^2 day\n", c->par_transm);
 
 	/*compute NetRad (W/m^2) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE net_radiation = %g W/m^2\n", c->net_radiation);
-	s->value[NET_RAD] = c->net_radiation;
-	s->value[NET_RAD_ABS_SUN] = c->net_radiation * LightAbsorb_sun;
-	s->value[NET_RAD_TRANSM_SUN] = c->net_radiation - s->value[NET_RAD_ABS_SUN];
-	s->value[NET_RAD_ABS_SHADE] = s->value[NET_RAD_TRANSM_SUN] * LightAbsorb_shade;
-	s->value[NET_RAD_TRANSM_SHADE] = s->value[NET_RAD_TRANSM_SUN] - s->value[NET_RAD_ABS_SHADE];
+	logger(g_log, "\nAVAILABLE net_sw_rad = %g W/m^2\n", c->net_sw_rad);
+	s->value[NET_SW_RAD] = c->net_sw_rad;
+	s->value[NET_SW_RAD_ABS_SUN] = c->net_sw_rad * LightAbsorb_sun;
+	s->value[NET_SW_RAD_TRANSM_SUN] = c->net_sw_rad - s->value[NET_SW_RAD_ABS_SUN];
+	s->value[NET_SW_RAD_ABS_SHADE] = s->value[NET_SW_RAD_TRANSM_SUN] * LightAbsorb_shade;
+	s->value[NET_SW_RAD_TRANSM_SHADE] = s->value[NET_SW_RAD_TRANSM_SUN] - s->value[NET_SW_RAD_ABS_SHADE];
 	/* overall canopy */
-	s->value[NET_RAD_ABS] = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
-	s->value[NET_RAD_TRANSM] = s->value[NET_RAD_TRANSM_SHADE];
-	s->value[NET_RAD_REFL] = c->net_radiation * LightReflec_net_rad;
-	CHECK_CONDITION(fabs((s->value[NET_RAD_ABS] + s->value[NET_RAD_TRANSM])-c->net_radiation),>1e-4);
+	s->value[NET_SW_RAD_ABS] = s->value[NET_SW_RAD_ABS_SUN] + s->value[NET_SW_RAD_ABS_SHADE];
+	s->value[NET_SW_RAD_TRANSM] = s->value[NET_SW_RAD_TRANSM_SHADE];
+	s->value[SW_RAD_REFL] = c->net_sw_rad * LightReflec_net_rad;
+	CHECK_CONDITION(fabs((s->value[NET_SW_RAD_ABS] + s->value[NET_SW_RAD_TRANSM])-c->net_sw_rad),>1e-4);
 	/* cumulate over the layer net radiation */
-	c->net_radiation_transm += s->value[NET_RAD_TRANSM];
+	c->net_sw_rad_transm += s->value[NET_SW_RAD_TRANSM];
 
-	logger(g_log, "Absorbed NetRad sun = %g W/m^2\n", s->value[NET_RAD_ABS_SUN]);
-	logger(g_log, "Transmitted NetRad sun = %g W/m^2\n", s->value[NET_RAD_TRANSM_SUN]);
-	logger(g_log, "Absorbed NetRad shade = %g W/m^2\n", s->value[NET_RAD_ABS_SHADE]);
-	logger(g_log, "Transmitted NetRad shade = %g W/m^2\n", s->value[NET_RAD_TRANSM_SHADE]);
-	logger(g_log, "Absorbed total = %g W/m^2\n", s->value[NET_RAD_ABS]);
-	logger(g_log, "Transmitted total = %g W/m^2\n", s->value[NET_RAD_TRANSM]);
-	logger(g_log, "Below the canopy net radiation (filtered)= %g molPAR/m^2 day\n", c->net_radiation_transm);
+	logger(g_log, "Absorbed NetRad sun = %g W/m^2\n", s->value[NET_SW_RAD_ABS_SUN]);
+	logger(g_log, "Transmitted NetRad sun = %g W/m^2\n", s->value[NET_SW_RAD_TRANSM_SUN]);
+	logger(g_log, "Absorbed NetRad shade = %g W/m^2\n", s->value[NET_SW_RAD_ABS_SHADE]);
+	logger(g_log, "Transmitted NetRad shade = %g W/m^2\n", s->value[NET_SW_RAD_TRANSM_SHADE]);
+	logger(g_log, "Absorbed total = %g W/m^2\n", s->value[NET_SW_RAD_ABS]);
+	logger(g_log, "Transmitted total = %g W/m^2\n", s->value[NET_SW_RAD_TRANSM]);
+	logger(g_log, "Below the canopy net radiation (filtered)= %g molPAR/m^2 day\n", c->net_sw_rad_transm);
 
 	/* compute PPFD (umol/m^2/sec) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE ppfd = %g umol/m2/sec\n", c->ppfd);
@@ -133,10 +133,6 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 
 	logger(g_log, "\n**RADIATION ROUTINE**\n");
 	logger(g_log, "-INCOMING RADIATION\n");
-	logger(g_log, "-extra terrestrial radiation = %g (MJ/m^2/day)\n", met[month].d[day].extra_terr_rad_MJ);
-	logger(g_log, "-extra terrestrial radiation = %g (W/m2)\n", met[month].d[day].extra_terr_rad_W);
-	logger(g_log, "-Short wave clear_sky_radiation = %g (MJ/m^2/day)\n", met[month].d[day].sw_clear_sky_MJ);
-	logger(g_log, "-Short wave clear_sky_radiation = %g (W/m2)\n", met[month].d[day].sw_clear_sky_W);
 	logger(g_log, "-Short_wave_radiation (downward) = %g MJ/m^2 day\n", met[month].d[day].sw_downward_MJ);
 	logger(g_log, "-Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 	logger(g_log, "-Net Long wave radiation = %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
@@ -211,8 +207,8 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 	logger(g_log, "\nNET RADIATION\n");
 
 	//fixme DOES IT MUST TAKES INTO ACCOUNT INCOMING LONG WAVE RADIATION??
-	c->net_radiation = c->net_short_wave_radiation_W - met[month].d[day].lw_net_W;
-	logger(g_log, "Net radiation = %g W/m2\n", c->net_radiation);
+	c->net_sw_rad = c->net_short_wave_radiation_W - met[month].d[day].lw_net_W;
+	logger(g_log, "Net radiation = %g W/m2\n", c->net_sw_rad);
 
 	/*****************************************************************************************/
 
@@ -316,18 +312,18 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 					logger(g_log,"incoming ppfd = %g umol/m^2/sec\n", (met[month].d[day].sw_downward_W * RAD2PAR * EPAR));
 					logger(g_log,"\n-WITH ABSORPTION BY THE TREES..\n");
 					logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par_transm);
-					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation_transm);
+					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad_transm);
 					logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
 					c->par = ((met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
-					c->net_radiation = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W )*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->net_sw_rad = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W )*cumulated_gap_cover_eff) + (c->net_sw_rad_transm * cumulated_leaf_cover_eff);
 					c->ppfd = ((met[month].d[day].sw_downward_W * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 
 				}
 				logger(g_log,"\n-AVERAGING BETWEEN COVERAGE AND GAPS..\n");
 				logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par);
-				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation);
+				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad);
 				logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd);
 			}
 
@@ -336,13 +332,13 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 			{
 				/* remove reflected part */
 				c->par_reflected_soil = c->par * LightReflec_soil;
-				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
+				c->sw_rad_for_soil_refl = c->net_sw_rad * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
-				logger(g_log, "Par for soil during growing season = %g \n", c->net_radiation_for_soil);
-				c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
-				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_radiation_for_soil);
+				logger(g_log, "Par for soil during growing season = %g \n", c->net_sw_rad_for_soil);
+				c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_sw_rad_for_soil);
 			}
 		}
 		/*************************************************************************************************************************************************************************************/
@@ -419,18 +415,18 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 					logger(g_log,"incoming ppfd = %g umol/m^2/sec\n", (met[month].d[day].sw_downward_W * RAD2PAR * EPAR));
 					logger(g_log,"\n-WITH ABSORPTION BY THE TREES..\n");
 					logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par_transm);
-					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation_transm);
+					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad_transm);
 					logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
 					c->par = ((met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
-					c->net_radiation = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W)*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->net_sw_rad = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W)*cumulated_gap_cover_eff) + (c->net_sw_rad_transm * cumulated_leaf_cover_eff);
 					c->ppfd = ((met[month].d[day].sw_downward_W * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 
 				}
 				logger(g_log,"\n-AVERAGING BETWEEN COVERAGE AND GAPS..\n");
 				logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par);
-				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation);
+				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad);
 				logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd);
 			}
 
@@ -439,13 +435,13 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 			{
 				/* remove reflected part */
 				c->par_reflected_soil = c->par *LightReflec_soil;
-				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
+				c->sw_rad_for_soil_refl = c->net_sw_rad * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
-				logger(g_log, "Par for soil during growing season = %g \n", c->net_radiation_for_soil);
-				c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
-				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_radiation_for_soil);
+				logger(g_log, "Par for soil during growing season = %g \n", c->net_sw_rad_for_soil);
+				c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_sw_rad_for_soil);
 			}
 		}
 		/*******************************************************************************************************************************************************************************/
@@ -512,7 +508,7 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 			{
 				logger(g_log, "\n**LIGHT FOR LOWER/SOIL LAYER**\n");
 
-				/* note : lower layers use c->par, c->net_radiation, c->ppfd */
+				/* note : lower layers use c->par, c->net_sw_rad, c->ppfd */
 				/* compute weighted average radiation taking into account "pure, un-filtered un-reflected light" and "filtered and reflected light" over gridcell */
 				/* if there's absorption from trees */
 				if(cumulated_leaf_cover_eff > 0.0)
@@ -523,18 +519,18 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 					logger(g_log,"incoming ppfd = %g umol/m^2/sec\n", (met[month].d[day].sw_downward_W * RAD2PAR * EPAR));
 					logger(g_log,"\n-WITH ABSORPTION BY THE TREES..\n");
 					logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par_transm);
-					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation_transm);
+					logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad_transm);
 					logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd_transm);
 
 					/* first term is un-filtered light, the second is filtered light */
 					c->par = ((met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->par_transm * cumulated_leaf_cover_eff) ;
-					c->net_radiation = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W)*cumulated_gap_cover_eff) + (c->net_radiation_transm * cumulated_leaf_cover_eff);
+					c->net_sw_rad = ((met[month].d[day].sw_downward_W - met[month].d[day].lw_net_W)*cumulated_gap_cover_eff) + (c->net_sw_rad_transm * cumulated_leaf_cover_eff);
 					c->ppfd = ((met[month].d[day].sw_downward_W * RAD2PAR * EPAR)*cumulated_gap_cover_eff) + (c->ppfd_transm * cumulated_leaf_cover_eff);
 
 				}
 				logger(g_log,"\n-AVERAGING BETWEEN COVERAGE AND GAPS..\n");
 				logger(g_log,"par for lower/soil layer = %g MJ/m^2/day\n", c->par);
-				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_radiation);
+				logger(g_log,"net radiation for lower/soil layer = %g W/m^2\n", c->net_sw_rad);
 				logger(g_log,"ppfd for lower/soil layer = %g umol/m^2/sec\n", c->ppfd);
 			}
 
@@ -543,13 +539,13 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 			{
 				/* remove reflected part */
 				c->par_reflected_soil = c->par * LightReflec_soil;
-				c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
+				c->sw_rad_for_soil_refl = c->net_sw_rad * LightReflec_soil;
 
 				/* Par and net radiation for the soil during growing season */
 				c->par_for_soil = c->par - c->par_reflected_soil;
-				logger(g_log, "Par for soil during growing season = %g \n", c->net_radiation_for_soil);
-				c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
-				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_radiation_for_soil);
+				logger(g_log, "Par for soil during growing season = %g \n", c->net_sw_rad_for_soil);
+				c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+				logger(g_log, "Net Radiation for soil during growing season = %g \n", c->net_sw_rad_for_soil);
 			}
 		}
 	}
@@ -562,21 +558,21 @@ void canopy_radiation(species_t *const s, cell_t *const c, const meteo_t *const 
 		//c->par = (c->par * cumulated_leaf_cover_eff) + (c->par * cumulated_gap_cover_eff);
 		/* remove reflected part */
 		c->par_reflected_soil = c->par * LightReflec_soil;
-		c->net_radiation_for_soil_reflected = c->net_radiation * LightReflec_soil;
+		c->sw_rad_for_soil_refl = c->net_sw_rad * LightReflec_soil;
 
 		/* Par and net radiation for the soil outside growing season (bare soil condition) */
 		c->par_for_soil = c->par - c->par_reflected_soil;
 		logger(g_log, "Par for soil outside growing season = %g \n", c->par_for_soil);
-		c->net_radiation_for_soil = c->net_radiation - c->net_radiation_for_soil_reflected;
-		logger(g_log, "Net Radiation for soil outside growing season = %g \n", c->net_radiation_for_soil);
+		c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+		logger(g_log, "Net Radiation for soil outside growing season = %g \n", c->net_sw_rad_for_soil);
 	}
 
 	/* for radiative balance */
 	/* cumulate radiation */
 	c->apar += (s->value[APAR] * cumulated_leaf_cover_eff);
 	c->par_reflected += (s->value[REFL_PAR] * cumulated_leaf_cover_eff);
-	c->net_radiation_absorbed += s->value[NET_RAD_ABS];
-	c->net_radiation_reflected += s->value[NET_RAD_REFL];
+	c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+	c->sw_rad_refl += s->value[SW_RAD_REFL];
 
 }
 

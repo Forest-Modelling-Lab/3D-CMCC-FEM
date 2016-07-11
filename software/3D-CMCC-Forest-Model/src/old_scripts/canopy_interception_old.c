@@ -45,7 +45,7 @@ void Canopy_interception  (SPECIES *const s, CELL *const c, const MET_DATA *cons
 
 
 	/*compute potential  and actual evaporation for each layer*/
-	PotEvap = (sat / (sat + gamma)/ met[month].d[day].lh_vap)* s->value[NET_RAD_ABS] * 86400;
+	PotEvap = (sat / (sat + gamma)/ met[month].d[day].lh_vap)* s->value[NET_SW_RAD_ABS] * 86400;
 	logger(g_log, "Potential evaporation = %f mm/m^2 day\n",PotEvap);
 
 	/*compute interception rate */

@@ -77,7 +77,7 @@ void Canopy_transpiration (SPECIES *const s,  CELL *const c, const MET_DATA *con
 	logger(g_log, "defTerm = %f\n", defTerm);
 	duv = (1.0 + E20 + boundary_layer_conductance / s->value[CANOPY_CONDUCTANCE]);
 	//logger(g_log, "duv = %f\n", duv);
-	PotEvap = (E20 * s->value[NET_RAD_ABS]+ defTerm) / duv; // in J/m2/s
+	PotEvap = (E20 * s->value[NET_SW_RAD_ABS]+ defTerm) / duv; // in J/m2/s
 	logger(g_log, "PotEvap = %f\n", PotEvap);
 
 	/*compute transpiration*/

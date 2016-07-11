@@ -56,8 +56,8 @@ void Soil_evaporation(cell_t *const c, const meteo_t *const met, const int month
 		rh = rbl;
 
 		/* assign net radiation as local variable */
-		net_rad = c->net_radiation_for_soil;
-		logger(g_log, "net_radiation_for_soil = %.10f W/m2\n", c->net_radiation_for_soil);
+		net_rad = c->net_sw_rad_for_soil;
+		logger(g_log, "net_sw_rad_for_soil = %.10f W/m2\n", c->net_sw_rad_for_soil);
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith (met, month, day, rv, rh, net_rad);
@@ -203,7 +203,7 @@ void Soil_evaporation_old (cell_t * c, const meteo_t *const met, int month, int 
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
-		PotEvap = (sat / (sat + gamma )) * (c->net_radiation_for_soil * 86400) / met[month].d[day].lh_vap_soil;
+		PotEvap = (sat / (sat + gamma )) * (c->net_sw_rad_for_soil * 86400) / met[month].d[day].lh_vap_soil;
 		logger(g_log, "Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
 		{

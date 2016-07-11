@@ -26,11 +26,11 @@ void Reset_daily_variables (cell_t *const c, const int count)
 	c->par_for_soil = 0.0;
 	c->par_reflected_soil = 0.0;
 
-	c->net_radiation_absorbed = 0.0;
-	c->net_radiation_reflected = 0.0;
-	c->net_radiation_transm = 0.0;
-	c->net_radiation_for_soil = 0.0;
-	c->net_radiation_for_soil_reflected = 0.0;
+	c->sw_rad_refl = 0.0;
+	c->sw_rad_for_soil_refl = 0.0;
+	c->net_sw_rad_abs = 0.0;
+	c->net_sw_rad_transm = 0.0;
+	c->net_sw_rad_for_soil = 0.0;
 
 	c->ppfd_abs = 0.0;
 	c->ppfd_transm = 0.0;
@@ -119,13 +119,13 @@ void Reset_daily_variables (cell_t *const c, const int count)
 				c->heights[height].ages[age].species[species].value[TRANSM_PAR] = 0.0;
 				c->heights[height].ages[age].species[species].value[TRANSM_PAR_SUN] = 0.0;
 				c->heights[height].ages[age].species[species].value[TRANSM_PAR_SHADE] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_ABS] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_ABS_SUN] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_ABS_SHADE] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM_SUN] = 0.0;
-				c->heights[height].ages[age].species[species].value[NET_RAD_TRANSM_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_ABS] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_ABS_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_ABS_SHADE] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_TRANSM] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_TRANSM_SUN] = 0.0;
+				c->heights[height].ages[age].species[species].value[NET_SW_RAD_TRANSM_SHADE] = 0.0;
 				c->heights[height].ages[age].species[species].value[PPFD] = 0.0;
 				c->heights[height].ages[age].species[species].value[PPFD_ABS] = 0.0;
 				c->heights[height].ages[age].species[species].value[PPFD_ABS_SUN] = 0.0;

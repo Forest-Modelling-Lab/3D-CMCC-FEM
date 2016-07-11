@@ -70,16 +70,16 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 
 	/*******************************************************************************************************************************************/
 
-	/* NET RADIATION RADIATIVE BALANCE */
+	/* NET SHORT WAVE RADIATION RADIATIVE BALANCE */
 
 	/* sum of sources */
 	in = met[month].d[day].sw_downward_W;
 
 	/* sum of sinks */
-	out = c->net_radiation_reflected + c->net_radiation_for_soil_reflected;
+	out = c->sw_rad_refl + c->sw_rad_for_soil_refl;
 
 	/* sum of current storage */
-	store = c->net_radiation_absorbed + c->net_radiation_for_soil;
+	store = c->net_sw_rad_abs + c->net_sw_rad_for_soil;
 
 	balance = in - out -store;
 
@@ -90,11 +90,11 @@ void Check_radiation_balance (cell_t *const c, const int day, const int month, c
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming radiation = %g W/m2\n", met[month].d[day].sw_downward_W);
 		logger(g_log, "\nout\n");
-		logger(g_log, "c->net_radiation_reflected = %g W/m2\n",c->net_radiation_reflected);
-		logger(g_log, "c->net_radiation_for_soil_reflected = %g W/m2\n",c->net_radiation_for_soil_reflected);
+		logger(g_log, "c->sw_rad_refl = %g W/m2\n",c->sw_rad_refl);
+		logger(g_log, "c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
 		logger(g_log, "\nstore\n");
-		logger(g_log, "c->net_radiation_absorbed = %g W/m2\n", c->net_radiation_absorbed);
-		logger(g_log, "c->net_radiation_for_soil = %g W/m2\n", c->net_radiation_for_soil);
+		logger(g_log, "c->net_sw_rad_abs = %g W/m2\n", c->net_sw_rad_abs);
+		logger(g_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->net_sw_rad_for_soil);
 		logger(g_log, "radiation in = %g W/m2\n", in);
 		logger(g_log, "radiation out = %g W/m2\n", out);
 		logger(g_log, "net radiation store = %g W/m2\n", store);
@@ -341,16 +341,16 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 		logger(g_log, "...ok PAR balance at class level\n");
 	}
 	/****************************************************************************************************************/
-	/* Net radiation balance */
+	/* Net Short-Wave radiation balance */
 	/* sum of sources */
-	in = /*s->value[NET_RAD_REFL] + */s->value[NET_RAD];
+	in = /*s->value[SW_RAD_REFL] + */s->value[NET_SW_RAD];
 
 	/* sum of sinks */
 	/* it must take into account the overall transmitted NET_RAD (reflected is yet computed for net radiation) */
-	out = s->value[NET_RAD_TRANSM];
+	out = s->value[NET_SW_RAD_TRANSM];
 
 	/* sum of current storage */
-	store = s->value[NET_RAD_ABS_SUN] + s->value[NET_RAD_ABS_SHADE];
+	store = s->value[NET_SW_RAD_ABS_SUN] + s->value[NET_SW_RAD_ABS_SHADE];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
@@ -358,9 +358,9 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 	/* check for NET_RAD balance closure*/
 	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
 	{
-		logger(g_log, "\nCLASS LEVEL NET_RAD BALANCE\n");
+		logger(g_log, "\nCLASS LEVEL Net Short Wave BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
-		logger(g_log, "NET_RAD in = %g\n", in);
+		logger(g_log, "NET_SW_RAD in = %g\n", in);
 		logger(g_log, "NET_RAD out = %g\n", out);
 		logger(g_log, "NET_RAD store = %g\n", store);
 		logger(g_log, "NET_RAD balance = %g\n", balance);
@@ -369,7 +369,7 @@ void Check_class_radiation_balance(cell_t *const c, species_t* const s)
 	}
 	else
 	{
-		logger(g_log, "...ok NET_RAD balance at class level\n");
+		logger(g_log, "...ok Net Short Wave radiation balance at class level\n");
 	}
 	/****************************************************************************************************************/
 	/* PPFD balance */

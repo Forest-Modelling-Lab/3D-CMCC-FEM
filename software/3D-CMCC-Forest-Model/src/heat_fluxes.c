@@ -67,7 +67,7 @@ void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const met
 	//
 	//		//logger(g_log, "LAI = %g\n", s->value[LAI]);
 	//
-	//		net_rad = s->value[NET_RAD_ABS];
+	//		net_rad = s->value[NET_SW_RAD_ABS];
 	//		//logger(g_log, "net rad = %g\n", net_rad);
 	//
 	//		/* FIRST OF ALL COMPUTE CANOPY TEMPERATURE */
