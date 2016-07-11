@@ -19,18 +19,24 @@
 
 extern logger_t* g_log;
 
-void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
+void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year)
 {
 	double LW_emis_frac, LW_emis_frac_sun, LW_emis_frac_shade;                            /* (ratio) fraction of Long Wave radiation emissivity */
 	double LW_abs_frac, LW_abs_frac_sun, LW_abs_frac_shade;                               /* (ratio) fraction of Long Wave radiation absorptivity */
-	//const double soil_emis = 0.96;                                                        /* (ratio) soil emissivity */
+	const double LW_emis_frac_soil = 0.96;                                                        /* (ratio) soil emissivity */
 	//const double snow_emis = 0.97;                                                        /* (ratio) snow emissivity */
 
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
+	double TsoilK;
+
+	double lw_out_canopy;
+	double lw_out_soil;
 	double lw_out;
 
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
+
+	TsoilK = met[month].d[day].tsoil + TempAbs;
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -68,9 +74,16 @@ void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_
 	/***********************************************************************************************************/
 
 	//prova
-	lw_out = (LW_emis_frac * SBC_W * pow(s->value[CANOPY_TEMPERATURE], 4.0) * leaf_cell_cover_eff);
+	lw_out_canopy = LW_emis_frac * SBC_W * pow(s->value[CANOPY_TEMPERATURE], 4.0) * leaf_cell_cover_eff;
 	logger(g_log, "CANOPY_TEMPERATURE = %g K\n", s->value[CANOPY_TEMPERATURE]);
-	logger(g_log, "prova = %g W/m2\n", lw_out);
+	logger(g_log, "lw canopy out  = %g W/m2\n", lw_out_canopy);
 
+	lw_out_soil = LW_emis_frac_soil * SBC_W * pow(TsoilK, 4.0) * (1.0 -leaf_cell_cover_eff);
+	logger(g_log, "met[month].d[day].tsoil = %g K\n", met[month].d[day].tsoil);
+	logger(g_log, "SOIL_TEMPERATURE = %g K\n", TsoilK);
+	logger(g_log, "lw soil out = %g W/m2\n", lw_out_soil);
+
+	lw_out = lw_out_canopy + lw_out_soil;
+	logger(g_log, "lw out = %g W/m2\n", lw_out);
 
 }

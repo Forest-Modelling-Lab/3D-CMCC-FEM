@@ -729,7 +729,6 @@ typedef struct {
 	double abscission_daylength;
 	double av_yearly_daylength;
 	int north;                                                   //northern hemisphere north = 0, south hemisphere south = 1
-	double ni;                                                   //proportion of day length (frac)
 
 	/* annual met values */
 	double annual_tavg;
