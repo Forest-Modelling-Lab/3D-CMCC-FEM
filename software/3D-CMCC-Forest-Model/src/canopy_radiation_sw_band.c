@@ -125,7 +125,7 @@ void canopy_sw_band_abs_trans_refl_radiation (cell_t *const c, species_t *const 
 	*/
 }
 
-void canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
+void canopy_radiation_sw_band (species_t *const s, cell_t *const c, const meteo_t *const met, const int year, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
 {
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
@@ -139,20 +139,20 @@ void canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *const
 	static double temp_ppfd_abs;                                                          /* temporary absorbed PPFD for layer */
 	static double temp_ppfd_refl;                                                         /* temporary reflected PPFD for layer */
 
-	double LW_emis_frac, LW_emis_frac_sun, LW_emis_frac_shade;                            /* (ratio) fraction of Long Wave radiation emissivity */
-	double LW_abs_frac, LW_abs_frac_sun, LW_abs_frac_shade;                               /* (ratio) fraction of Long Wave radiation absorptivity */
-
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	static int counter;
 	//fixme move soil albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
-	const double soil_emis = 0.96;                                                        /* (ratio) soil emissivity */
-	const double snow_emis = 0.97;                                                        /* (ratio) snow emissivity */
+
 
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	//double actual_albedo;
+
+
+
+	logger(g_log, "\n**SHORT WAVE BAND RADIATION ROUTINE**\n");
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -165,28 +165,24 @@ void canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *const
 
 	/***********************************************************************************************************/
 
-
-	logger(g_log, "\n**RADIATION ROUTINE**\n");
-
-	/***********************************************************************************************************/
-
 	/* SHORT WAVE RADIATION FRACTIONS */
 	/* compute fractions of light intercepted, transmitted and reflected from the canopy */
 	/* fraction of light transmitted through the canopy */
-	Light_trasm_frac = (exp(- s->value[K] * s->value[LAI]));
+	Light_trasm_frac = (exp(- s->value[K] * s->value[LAI])); //not used
 	Light_trasm_frac_sun = (exp(- s->value[K] * s->value[LAI_SUN]));
 	Light_trasm_frac_shade = (exp(- s->value[K] * s->value[LAI_SHADE]));
 
 	/* fraction of light absorbed by the canopy */
-	Light_abs_frac = 1.0 - Light_trasm_frac;
+	Light_abs_frac = 1.0 - Light_trasm_frac; //not used
 	Light_abs_frac_sun = 1.0 - Light_trasm_frac_sun;
 	Light_abs_frac_shade = 1.0 - Light_trasm_frac_shade;
 
 	/* fraction of light reflected by the canopy */
-	/* for net radiation and par */
-	//following BIOME albedo for PAR is 1/3 of albedo
-	//The absorbed PAR is calculated similarly except that albedo is 1/3 as large for PAR because less
-	//PAR is reflected than net_radiation (Jones 1992)
+	/* for Short Wave radiation and PAR */
+	/* following BIOME albedo for PAR is 1/3 of albedo. the absorbed PAR is
+	calculated similarly to sw except that albedo is 1/3 for PAR because less
+	PAR is reflected than sw_radiation (Jones 1992)*/
+
 	if(s->value[LAI] >= 1.0)
 	{
 		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO];
@@ -218,21 +214,6 @@ void canopy_radiation (species_t *const s, cell_t *const c, const meteo_t *const
 	/* fraction of light reflected by the soil */
 	Light_refl_sw_rad_soil_frac = soil_albedo;
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_par_frac);
-	/***********************************************************************************************************/
-
-	/* LONG WAVE FRACTIONS */
-	/* CLM 4.0 APPROACH */
-	/* fraction of long wave absorptivity through the canopy */
-	LW_abs_frac = (exp(- s->value[LAI]));
-	LW_abs_frac_sun = (exp(- s->value[LAI_SUN]));
-	LW_abs_frac_shade = (exp(- s->value[LAI_SHADE]));
-
-	/* fraction of long wave  emissivity by the canopy */
-	LW_emis_frac = 1.0 - LW_abs_frac;
-	LW_emis_frac_sun = 1.0 - LW_abs_frac_sun;
-	LW_emis_frac_shade = 1.0 - LW_abs_frac_shade;
-
-	/***********************************************************************************************************/
 
 	/* assign incoming PAR */
 	c->par = met[month].d[day].par;

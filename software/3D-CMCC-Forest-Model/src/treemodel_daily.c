@@ -20,7 +20,8 @@
 #include "phenology.h"
 #include "peak_lai.h"
 #include "light.h"
-#include "canopy_radiation.h"
+#include "canopy_radiation_sw_band.h"
+#include "canopy_radiation_lw_band.h"
 #include "modifiers.h"
 #include "n-stock.h"
 #include "canopy_evapotranspiration.h"
@@ -199,9 +200,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 
 								/* radiation */
-								//canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
-								//test 5 Jul 2016
-								canopy_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 								/* daily modifier */
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
@@ -240,9 +240,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								if (g_settings->spatial == 'u') m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 
 								/* radiation */
-								//canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
-								//test 5 Jul 2016
-								canopy_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 								/* nitrogen */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -279,9 +278,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							logger(g_log, "VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 							/* radiation block */
-							//canopy_radiation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
-							//test 5 Jul 2016
-							canopy_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+							canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
+							canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, m->cells[cell].years[year].year, month, day, DaysInMonth[month], height, age, species);
 
 							/* daily modifier */
 							Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
