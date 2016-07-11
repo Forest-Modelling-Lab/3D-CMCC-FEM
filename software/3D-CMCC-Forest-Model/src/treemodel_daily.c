@@ -63,9 +63,16 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	met = m->cells[cell].years[year].m;
 
 	/* initialize days of year (each year) */
-	if(day == 0 && month == 0) m->cells[cell].doy = 1;
+	if(day == 0 && month == 0)
+	{
+		m->cells[cell].doy = 1;
+	}
 	/* cumulate days of year (other days) */
-	else m->cells[cell].doy += 1;
+	else
+	{
+		m->cells[cell].doy += 1;
+	}
+
 
 
 	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS
@@ -105,8 +112,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 //		}
 //	}
 //	logger(g_log, "***************************************************\n");getchar();
-
-
 
 	/* compute daily-monthly-annual forest structure (overall cell) */
 	if (day == 0 && month == JANUARY)Annual_numbers_of_layers (&m->cells[cell]);
