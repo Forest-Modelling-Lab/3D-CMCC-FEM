@@ -203,6 +203,9 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
 	double TmaxK, TminK;
 
+	double fpar;
+
+
 	meteo_t *met;
 	met = (meteo_t*) c->years[year].m;
 
@@ -222,6 +225,9 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].sw_downward_W = met[month].d[day].sw_downward_MJ * MJ_TO_W;
 	//logger(g_log, "Short wave radiation (downward) = %g W/m2\n", met[month].d[day].sw_downward_W);
 
+	met[month].d[day].sw_pot_downward_W = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
+	//logger(g_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
+
 	/* convert incoming Short-Wave flux in PAR from MJ/m2/day to molPAR/m2/day (Biome-BGC method) */
 	met[month].d[day].par = (met[month].d[day].sw_downward_MJ * RAD2PAR * EPAR);
 	//logger(g_log, "Par = %g molPAR/m^2 day\n", met[month].d[day].par);
@@ -230,9 +236,27 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	met[month].d[day].ppfd = met[month].d[day].sw_downward_W * RAD2PAR * EPAR;
 	//logger(g_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
-	met[month].d[day].sw_pot_downward_W = compute_potential_rad(g_soil_settings->values[SOIL_LAT], g_soil_settings->values[SOIL_LON], day);
-	//logger(g_log, "sw_pot_downward_W = %g W/m2\n", met[month].d[day].sw_pot_downward_W);
+	/***************************************************************************************************************************************/
+	/* compute cloud cover fraction */
+	fpar = 0.;
+	if ( ! (0. == met[month].d[day].sw_pot_downward_W) && ! IS_INVALID_VALUE(met[month].d[day].sw_downward_W) )
+	{
+		fpar = met[month].d[day].sw_downward_W / met[month].d[day].sw_pot_downward_W;
+		if ( fpar < 0. )
+		{
+			fpar = 0.;
+		}
+	}
 
+	met[month].d[day].cloud_cover_frac = 1.0 - (fpar - 0.5) / 0.4;
+	if ( met[month].d[day].cloud_cover_frac > 1.0 )
+	{
+		met[month].d[day].cloud_cover_frac = 1.0;
+	}
+	if ( met[month].d[day].cloud_cover_frac < 0. )
+	{
+		met[month].d[day].cloud_cover_frac = 0.0;
+	}
 	/***************************************************************************************************************************************/
 
 	/* LONG WAVE RADIATION */
@@ -244,15 +268,16 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	/* NET LONG WAVE RADIATION */
 
 	//fixme to avoid crash in model for negative "ea" values use different calculation of long_wave_radiation following Prentice (IT HAS TO BE SOLVED ANYWAY)
-	if(met[month].d[day].ea < 0.0)
+	if(met[month].d[day].ea > 0.0)
 	{
 		/* following Allen et al., 1998 */
+		/* it represents the outgoing part of long wave radiation */
 		met[month].d[day].lw_net_MJ = SBC_MJ * (pow(((TmaxK + TminK)/2.0),4))*(0.34-0.14*(sqrt(met[month].d[day].ea)))*met[month].d[day].cloud_cover_frac;
 		//logger(g_log, "Net Long wave radiation (Allen)= %g MJ/m^2 day\n", met[month].d[day].lw_net_MJ);
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		//logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
 		/*****************************************************************************************/
 	}
 	else

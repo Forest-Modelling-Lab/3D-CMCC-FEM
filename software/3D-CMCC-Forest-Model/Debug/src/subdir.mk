@@ -16,6 +16,7 @@ C_SRCS += \
 ../src/biomass.c \
 ../src/canopy_cover.c \
 ../src/canopy_evapotranspiration.c \
+../src/canopy_net_radiation.c \
 ../src/canopy_radiation_lw_band.c \
 ../src/canopy_radiation_sw_band.c \
 ../src/canopy_sensible_heat.c \
@@ -81,6 +82,7 @@ OBJS += \
 ./src/biomass.o \
 ./src/canopy_cover.o \
 ./src/canopy_evapotranspiration.o \
+./src/canopy_net_radiation.o \
 ./src/canopy_radiation_lw_band.o \
 ./src/canopy_radiation_sw_band.o \
 ./src/canopy_sensible_heat.o \
@@ -146,6 +148,7 @@ C_DEPS += \
 ./src/biomass.d \
 ./src/canopy_cover.d \
 ./src/canopy_evapotranspiration.d \
+./src/canopy_net_radiation.d \
 ./src/canopy_radiation_lw_band.d \
 ./src/canopy_radiation_sw_band.d \
 ./src/canopy_sensible_heat.d \
