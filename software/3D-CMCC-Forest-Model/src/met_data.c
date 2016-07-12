@@ -238,7 +238,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	/* LONG WAVE RADIATION */
 	/* INCOMING LONG WAVE RADIATION */
 
-	/* compute Long-Wave radiation flux downward (following JULES model) */
+	/* compute Long-Wave radiation flux downward (following JSBACH model) */
 	met[month].d[day].lw_downward_W = compute_lw_downward_W(&c->years[year].m[month].d[day]);
 
 	/* NET LONG WAVE RADIATION */
@@ -290,7 +290,7 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	met = c->years[year].m;
 
 	//compute yearday for GeDdayLength function
-	if (day == 0 && month == JANUARY)
+	if (!day && month == JANUARY)
 	{
 		doy = 0;
 	}
@@ -364,7 +364,7 @@ void Nightime_avg_temperature(meteo_t *met, const int day, const int month)
 void Thermic_sum (meteo_t *met, const int day, const int month) {
 	static double previous_thermic_sum;
 
-	if (day == 0 && month == 0)
+	if (!day && !month)
 	{
 		met[month].d[day].thermic_sum = 0;
 
@@ -483,7 +483,7 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 	 */
 
 
-	if (day < 11.0 && month == 0)
+	if (day < 11.0 && !month)
 	{
 		met[month_temp].d[day_temp].tsoil = met[month].d[day].ts_f;
 	}
@@ -518,8 +518,9 @@ void Soil_temperature(meteo_t* met, const int day, const int month) {
 		}
 		//avg = avg / 77;
 		//test 11 July 2016
-		avg = avg / incr_weight;
+		avg = avg / (double)incr_weight;
 		met[month].d[day].tsoil = avg;
+
 	}
 }
 void Dew_temperature(meteo_t *const met, const int day, const int month) {
@@ -531,10 +532,10 @@ void Annual_CO2_concentration (meteo_t *met, const int day, const int month, con
 	static double previous_co2_conc;
 
 	/* recompute co2 concentration at the beginning of each year */
-	if( ! string_compare_i(g_settings->CO2_fixed, "off") && day == 0 && month == 0)
+	if( ! string_compare_i(g_settings->CO2_fixed, "off") && !day && !month)
 	{
 		/* assign first year value from site.txt */
-		if(year == 0)
+		if(!year)
 		{
 			met[month].d[day].co2_conc = g_settings->co2Conc;
 			previous_co2_conc = met[month].d[day].co2_conc;

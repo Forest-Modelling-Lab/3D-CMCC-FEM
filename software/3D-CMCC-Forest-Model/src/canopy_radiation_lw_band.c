@@ -19,7 +19,7 @@
 
 extern logger_t* g_log;
 
-void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year)
+void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year, const int height, const int age, const int species)
 {
 	double LW_emis_frac, LW_emis_frac_sun, LW_emis_frac_shade;                            /* (ratio) fraction of Long Wave radiation emissivity */
 	double LW_abs_frac, LW_abs_frac_sun, LW_abs_frac_shade;                               /* (ratio) fraction of Long Wave radiation absorptivity */

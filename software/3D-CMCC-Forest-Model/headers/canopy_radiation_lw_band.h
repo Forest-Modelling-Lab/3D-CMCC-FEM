@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-void canopy_radiation_lw_band (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year);
+void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year, const int height, const int age, const int species);
 
 #endif /* HEADERS_CANOPY_RADIATION_LW_BAND_H_ */
