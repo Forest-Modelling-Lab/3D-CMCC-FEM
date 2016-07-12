@@ -211,6 +211,9 @@ enum {
 	LW_RAD_EMIT,                //Emitted Long Wave radiation in W/m2
 	LW_RAD_EMIT_SUN,            //Emitted Long Wave Radiation W/m2 for sun leaves
 	LW_RAD_EMIT_SHADE,          //Emitted Long Wave Radiation W/m2 for shaded leaves
+	LW_RAD_ABS,                 //Absorbed Long Wave radiation in W/m2
+	LW_RAD_ABS_SUN,             //Absorbed Long Wave Radiation W/m2 for sun leaves
+	LW_RAD_ABS_SHADE,           //Absorbed Long Wave Radiation W/m2 for shaded leaves
 	NET_LW_RAD_TRANSM,          //Transmitted Long Wave Radiation W/m2
 	NET_LW_RAD_TRANSM_SUN,      //Transmitted Long Wave Radiation W/m2 for sun leaves
 	NET_LW_RAD_TRANSM_SHADE,    //Transmitted Long Wave Radiation W/m2 for shaded leaves
