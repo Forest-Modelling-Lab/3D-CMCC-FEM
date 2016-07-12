@@ -27,7 +27,7 @@ double canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *c
 	//fixme it should be forced to air temperature just the first day of simulation!
 	if(s->counter[VEG_DAYS] == 1 && !day && !month && !year)
 	{
-		TcanopyK = met[month].d[day].tavg + TempAbs;
+		TcanopyK = met[month].d[day].tavg + TempAbs;logger(g_log, "lw  out = %g W/m2\n", TcanopyK);
 	}
 	else
 	{

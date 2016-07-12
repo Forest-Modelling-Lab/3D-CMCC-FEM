@@ -97,10 +97,11 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 	double lw_out;
 	double net_lw;
 
+
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
 
 	TsoilK = met[month].d[day].tsoil + TempAbs;
-	TcanopyK = s->value[CANOPY_TEMP_K];
+
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -114,7 +115,7 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 	/***********************************************************************************************************/
 
 	/* call canopy temperature function*/
-	s->value[CANOPY_TEMP_K] = canopy_temperature (s, c, met, day, month, year);
+	TcanopyK = canopy_temperature (s, c, met, day, month, year);
 
 	/* LONG WAVE RADIATION FRACTIONS */
 	/* CLM 4.5 APPROACH */
@@ -149,17 +150,26 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 //			((1. - LW_emis_soil_frac) * met[month].d[day].lw_downward_W) +
 //			(LW_emis_soil_frac * SBC_W * pow(TsoilK, 4.));
 
-	//prova
-	lw_out_canopy = LW_emis_canopy_frac * SBC_W * pow(TcanopyK, 4.0)/* * leaf_cell_cover_eff*/;
-	logger(g_log, "lw canopy out = %g W/m2\n", lw_out_canopy);
+	/* emitted lw radiation from canopy */
+	s->value[LW_RAD_EMIT] = (LW_emis_canopy_frac * SBC_W * pow(TcanopyK, 4.0));
 
-	lw_out_soil = LW_emis_soil_frac * SBC_W * pow(TsoilK, 4.0) /* * (1.0 -leaf_cell_cover_eff)*/;
-	logger(g_log, "lw soil out = %g W/m2\n", lw_out_soil);
+	/* reflected lw radiation from canopy */
+	s->value[LW_RAD_REFL] = (1. - LW_emis_canopy_frac) * met[month].d[day].lw_downward_W;
 
-	lw_out = lw_out_canopy + lw_out_soil;
-	logger(g_log, "lw out = %g W/m2\n", lw_out);
+	/* net long wave radiation for canopy */
+	s->value[NET_LW_RAD] = met[month].d[day].lw_downward_W - (s->value[LW_RAD_EMIT] + s->value[LW_RAD_REFL]);
 
-	net_lw = met[month].d[day].lw_downward_W - lw_out;
-	logger(g_log, "lw net_lw = %g W/m2\n", net_lw);
+	/* upward long-wave radiation from canopy */
+	c->long_wave_radiation_upward_W = s->value[LW_RAD_EMIT] + s->value[LW_RAD_REFL];/* * leaf_cell_cover_eff*/
+	logger(g_log, "Long Wave outgoing from canopy = %g W/m2\n", c->long_wave_radiation_upward_W);
+
+//	lw_out_soil = LW_emis_soil_frac * SBC_W * pow(TsoilK, 4.0) /* * (1.0 -leaf_cell_cover_eff)*/;
+//	logger(g_log, "lw soil out = %g W/m2\n", lw_out_soil);
+//
+//	lw_out = lw_out_canopy + lw_out_soil;
+//	logger(g_log, "lw out = %g W/m2\n", lw_out);
+//
+//	net_lw = met[month].d[day].lw_downward_W - lw_out;
+//	logger(g_log, "lw net_lw = %g W/m2\n", net_lw);
 
 }

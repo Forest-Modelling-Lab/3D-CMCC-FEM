@@ -186,56 +186,56 @@ enum {
 
 	/* PAR */
 	PAR,                        //Photosynthetically Active Radiation molPAR/m^2/day
+	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
 	APAR,                       //Absorbed Physiological Active Radiation molPAR/m^2/day
 	APAR_SUN,                   //Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves
 	APAR_SHADE,                 //Absorbed Physiological Active Radiation molPAR/m^2/day for shaded leaves
 	TRANSM_PAR,                 //Transmitted Photosynthetically Active Radiation molPAR/m^2/day
 	TRANSM_PAR_SUN,             //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves
 	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
-	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
+
 
 	/* short wave */
 	NET_SW_RAD,                 //Short Wave Radiation in W/m2
+	SW_RAD_REFL,               //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
 	NET_SW_RAD_ABS,             //Absorbed Net Short Wave radiation in W/m2
 	NET_SW_RAD_ABS_SUN,         //Absorbed Net Short Wave Radiation W/m2 for sun leaves
 	NET_SW_RAD_ABS_SHADE,       //Absorbed Net Short Wave Radiation W/m2 for shaded leaves
 	NET_SW_RAD_TRANSM,          //Transmitted Net Short Wave Radiation W/m2
 	NET_SW_RAD_TRANSM_SUN,      //Transmitted Net Short Wave Radiation W/m2 for sun leaves
 	NET_SW_RAD_TRANSM_SHADE,    //Transmitted Net Short Wave Radiation W/m2 for shaded leaves
-	SW_RAD_REFL,               //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
 
 	/* long wave */
 	NET_LW_RAD,                 //Long Wave Radiation in W/m2
-	NET_LW_RAD_ABS,             //Absorbed Net Long Wave radiation in W/m2
-	NET_LW_RAD_ABS_SUN,         //Absorbed Net Long Wave Radiation W/m2 for sun leaves
-	NET_LW_RAD_ABS_SHADE,       //Absorbed Net Long Wave Radiation W/m2 for shaded leaves
-	NET_LW_RAD_TRANSM,          //Transmitted Net Long Wave Radiation W/m2
-	NET_LW_RAD_TRANSM_SUN,      //Transmitted Net Long Wave Radiation W/m2 for sun leaves
-	NET_LW_RAD_TRANSM_SHADE,    //Transmitted Net Long Wave Radiation W/m2 for shaded leaves
 	LW_RAD_REFL,                //Reflected Long Wave Radiation W/m2 OVERALL CANOPY
-	/* special case for long wave bands */
-	LW_RAD_EMIT,                    //Emitted Long Wave Radiation W/m2
+	LW_RAD_EMIT,                //Emitted Long Wave radiation in W/m2
+	LW_RAD_EMIT_SUN,            //Emitted Long Wave Radiation W/m2 for sun leaves
+	LW_RAD_EMIT_SHADE,          //Emitted Long Wave Radiation W/m2 for shaded leaves
+	NET_LW_RAD_TRANSM,          //Transmitted Long Wave Radiation W/m2
+	NET_LW_RAD_TRANSM_SUN,      //Transmitted Long Wave Radiation W/m2 for sun leaves
+	NET_LW_RAD_TRANSM_SHADE,    //Transmitted Long Wave Radiation W/m2 for shaded leaves
 
 
 	/* net radiation */
 	NET_RAD,                    //Short Wave Radiation in W/m2
+	RAD_REFL,                   //Reflected Radiation W/m2 OVERALL CANOPY
 	NET_RAD_ABS,                //Absorbed Net radiation in W/m2
 	NET_RAD_ABS_SUN,            //Absorbed Net Radiation W/m2 for sun leaves
 	NET_RAD_ABS_SHADE,          //Absorbed Net Radiation W/m2 for shaded leaves
 	NET_RAD_TRANSM,             //Transmitted Net Radiation W/m2
 	NET_RAD_TRANSM_SUN,         //Transmitted Net Radiation W/m2 for sun leaves
 	NET_TRANSM_SHADE,           //Transmitted Net Radiation W/m2 for shaded leaves
-	RAD_REFL,                   //Reflected Radiation W/m2 OVERALL CANOPY
 
 	/* PPFD */
 	PPFD,                       //Photosynthetic Photon Flux Density umol/m2/sec
+	PPFD_REFL,                  //Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY
 	PPFD_ABS,                   //Absorbed Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_ABS_SUN,               //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for sun leaves
 	PPFD_ABS_SHADE,             //Absorbed Photosynthetic Photon Flux Density umol/m2/sec for shaded leaves
 	PPFD_TRANSM,                //Transmitted Photosynthetic Photon Flux Density umol/m2/sec
 	PPFD_TRANSM_SUN,            //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from sun leaves
 	PPFD_TRANSM_SHADE,          //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves
-	PPFD_REFL,                  //Transmitted Photosynthetic Photon Flux Density umol/m2/sec OVERALL CANOPY
+
 
 
 	/*modifiers variables*/
@@ -777,10 +777,10 @@ typedef struct {
 	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
 	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
 	double net_short_wave_radiation_W;                  /* Net short wave radiation flux (W/m2) */
-	double long_wave_radiation_DW_MJ;                   /* Downward long wave radiation flux (MJ/m2/day) */
-	double long_wave_radiation_DW_W;                    /* Downward long wave radiation flux (W/m2) */
-	double long_wave_radiation_UW_MJ;                   /* Upward long wave radiation flux (MJ/m2/day) */
-	double long_wave_radiation_UW_W;                    /* Upward long wave radiation flux (W/m2) */
+	double long_wave_radiation_upward_MJ;               /* Upward long wave radiation flux (MJ/m2/day) */
+	double long_wave_radiation_upward_W;                /* Upward long wave radiation flux (W/m2) */
+	double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
+	double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
 	double short_wave_absorbed;                         /* Total absorbed short wave radiation flux (W/m2) */
 	double short_wave_reflected;                        /* Total reflected short wave radiation flux (W/m2) */
 	double long_wave_absorbed;                          /* Total absorbed long wave wave radiation flux (W/m2) */

@@ -277,7 +277,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 
 		/* convert into W/m2 */
 		met[month].d[day].lw_net_W = met[month].d[day].lw_net_MJ * MJ_TO_W;
-		logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
+		//logger(g_log, "Net Long wave radiation (Allen)= %g W/m2\n", met[month].d[day].lw_net_W);
 		/*****************************************************************************************/
 	}
 	else
