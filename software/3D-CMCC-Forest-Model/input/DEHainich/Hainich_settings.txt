@@ -16,7 +16,7 @@ CO2_INCR "0.01" //1% increment
 INIT_FRAC_MAXASW "0.19" //Minimum fraction of asw based on maxasw (wilting point) from soil calculator
 TREE_LAYER_LIMIT "1.5"  //define differences among tree heights in meters classes to define number of layers in unspatial version
 
-SOIL_LAYER "0"  //define soil layer/s to consider
+SOIL_LAYER "1"  //define soil layer/s to consider
 
 //LIMIT FOR 'GET_LAYER_COVER_MORTALITY'
 MIN_LAYER_COVER "0.0001"
