@@ -26,7 +26,7 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 
 	//fixme porcata
 
-	double dt;
+	double dt = 0.2;
 	double t1, t2;
 	double pvs1, pvs2;
 	double delta;
@@ -111,4 +111,5 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	}
 	logger(g_log, "canopy temperature = %g (K)\n", s->value[CANOPY_TEMP_K]);
 	logger(g_log, "canopy temperature = %g (°C)\n", s->value[CANOPY_TEMP_K] - TempAbs);
+	if(month == 8)getchar();
 }
