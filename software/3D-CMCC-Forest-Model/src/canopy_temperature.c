@@ -24,21 +24,20 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	double rc;    /* canopy surface resistance to vapour transport */
 	double TairK;
 
-	//fixme porcata
-
 	double dt = 0.2;
 	double t1, t2;
 	double pvs1, pvs2;
 	double delta;
 	double psych_p;
 	double g_corr;
-
-
 	double gl_bl;
 	double gl_sh;
 	double gc_sh;
 	double gl_e_wv;
 	double gc_e_wv;
+
+	/* the function to compute canopy temperature use eq. in Webber et al., 2016
+	 * the resistance parts follows the rationale of BIOME-BGC model 	 */
 
 
 
@@ -107,9 +106,9 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 				TairK +
 				((s->value[NET_RAD] * ra)/(met[month].d[day].rho_air * CP)) *
 				(psych_p / (delta + psych_p)) -
-				((met[month].d[day].es - met[month].d[day].es)/(delta +psych_p));
+				((met[month].d[day].es - met[month].d[day].ea)/(delta +psych_p));
 	}
-	logger(g_log, "canopy temperature = %g (K)\n", s->value[CANOPY_TEMP_K]);
-	logger(g_log, "canopy temperature = %g (°C)\n", s->value[CANOPY_TEMP_K] - TempAbs);
-	if(month == 8)getchar();
+
+	logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
+	if(day == 0)getchar();
 }
