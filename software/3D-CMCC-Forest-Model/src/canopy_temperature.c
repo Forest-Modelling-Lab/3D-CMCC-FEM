@@ -86,11 +86,6 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	psych_p = met[month].d[day].psych * (1. + (rc/ra));
 
 
-
-
-
-
-
 	if(s->counter[VEG_DAYS] == 1 && !day && !month && !year)
 	{
 		/* assign canopy temperature the first day if simulation */
@@ -109,10 +104,11 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 
 		/* compute canopy temperature (Webber et al., 2016) */
 		s->value[CANOPY_TEMP_K] =
-				met[month].d[day].tavg +
+				TairK +
 				((s->value[NET_RAD] * ra)/(met[month].d[day].rho_air * CP)) *
 				(psych_p / (delta + psych_p)) -
 				((met[month].d[day].es - met[month].d[day].es)/(delta +psych_p));
 	}
-	getchar();
+	logger(g_log, "canopy temperature = %g (K)\n", s->value[CANOPY_TEMP_K]);
+	logger(g_log, "canopy temperature = %g (°C)\n", s->value[CANOPY_TEMP_K] - TempAbs);
 }
