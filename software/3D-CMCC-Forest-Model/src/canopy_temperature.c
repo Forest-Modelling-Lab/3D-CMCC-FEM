@@ -55,7 +55,8 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
 	/* calculate slope of pvs vs. T curve, at ta */
-	//test this is the "DELTA" function as in Webber et al., 2016
+	/* Slope of the saturated vapour pressure curve*/
+	//test this is NOT the "DELTA" function as in Webber et al., 2016 that use Tc ad Tair
 	delta = (pvs1-pvs2) / (t1-t2);
 	/* converts into kPA following Webber et al., 2016 */
 	delta /= 1000.0;
@@ -84,22 +85,17 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	/* compute product of psychrometric constant */
 	psych_p = met[month].d[day].psych * (1. + (rc/ra));
 
-
-	if(s->counter[VEG_DAYS] == 1 && !day && !month && !year)
+	if(s->counter[VEG_DAYS] == 1)
 	{
-		/* assign canopy temperature the first day if simulation */
-		//note: special case  leaf/canopy temperature = daily  average temperature
-		//fixme it should be forced to air temperature just the first day of simulation!
 
-		s->value[CANOPY_TEMP_K] = met[month].d[day].tavg + TempAbs;
+		//fixme it should be only for the first day of the first year
+		s->value[CANOPY_TEMP_K] = TairK;
 
-		/* assign previous day canopy temperature to local variable */
-		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];
+		/* assign previous day canopy temperature to local variable for long wave computation */
+		logger(g_log, "difference Tavg Tcanopy temperature = %g (K) month = %d\n",TairK - s->value[CANOPY_TEMP_K], month);
 	}
-	else
+	else if (s->counter[VEG_DAYS] > 1)
 	{
-		/* assign previous day canopy temperature to local variable */
-		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];
 
 		/* compute canopy temperature (Webber et al., 2016) */
 		s->value[CANOPY_TEMP_K] =
@@ -107,8 +103,14 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 				((s->value[NET_RAD] * ra)/(met[month].d[day].rho_air * CP)) *
 				(psych_p / (delta + psych_p)) -
 				((met[month].d[day].es - met[month].d[day].ea)/(delta +psych_p));
+
+		/* assign previous day canopy temperature to local variable for long wave computation */
+		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];
+		logger(g_log, "difference Tavg Tcanopy temperature = %g (K) month = %d\n",TairK - s->value[CANOPY_TEMP_K], month);
+	}
+	else
+	{
+		s->value[CANOPY_TEMP_K] = 0.;
 	}
 
-	logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
-	if(day == 0)getchar();
 }

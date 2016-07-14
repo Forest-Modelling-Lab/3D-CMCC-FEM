@@ -83,9 +83,6 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 
 	/***********************************************************************************************************/
 
-	/* call canopy temperature function*/
-	canopy_temperature (s, c, met, day, month, year);
-
 	/* LONG WAVE RADIATION FRACTIONS */
 	/* fraction of long wave emissivity  by the canopy CLM 4.5 (eq. 4.20)  */
 	/* for Dai et al., 2004 it represents also the absorbed */

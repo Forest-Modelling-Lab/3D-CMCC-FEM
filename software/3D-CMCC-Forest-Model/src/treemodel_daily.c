@@ -22,6 +22,7 @@
 #include "canopy_radiation_sw_band.h"
 #include "canopy_radiation_lw_band.h"
 #include "canopy_net_radiation.h"
+#include "canopy_temperature.h"
 #include "modifiers.h"
 #include "n-stock.h"
 #include "canopy_evapotranspiration.h"
@@ -208,6 +209,9 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 								canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 
+								/* canopy temperature */
+								canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
+
 								/* daily modifier */
 								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
 										met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
@@ -249,6 +253,9 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 								canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 
+								/* canopy temperature */
+								canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
+
 								/* nitrogen */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -287,6 +294,9 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 							canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 							canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+
+							/* canopy temperature */
+							canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
 
 							/* daily modifier */
 							Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
