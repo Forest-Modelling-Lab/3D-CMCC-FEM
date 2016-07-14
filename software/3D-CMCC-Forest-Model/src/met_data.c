@@ -101,7 +101,7 @@ static double compute_potential_rad(const double lat, const double lon, const in
 #undef ROWS_PER_DAY
 }
 
-static double compute_lw_downward_W(const meteo_daily_t* const m) {
+void compute_atm_lw_downward_W(cell_t *const c, const int day, const int month, const int year) {
 
 	/*calculates longwave radiation from Vapour Pressure and Air Temp. and Radiation
 	-------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	 -Rg_pot: Potential shortwave downward radiation [W m-2]
 	 -VP:  Vapour Pressure [Pa]
 	Output:
-	 -lw_downward_W: Longwave downward radiation [W m-2]
+	 -atm_lw_downward_W: Longwave downward radiation [W m-2]
 	-------------------------------------------------------------------------------
 	Calculation of Longwave follows the JSBACH algorithm
 	Downward long wave radiation flux "R_d" [W/m^2] is according to [1],[2] computed by
@@ -137,19 +137,30 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	Calculation of Vapour Pressure follows Monteith & Unsworth 2008, page 11f [3] */
 
 	double fpar;
-	double cloud_cover;
-	double r_cloud;
+	//double cloud_cover;
+	//double r_cloud;
 	double vp;
-	double epsA;                                /* emissivity of the cloudless atmosphere */
-	double lw_downward_W;
+	//double epsA;                                /* emissivity of the cloudless atmosphere */
+	//double lw_downward_W;
 
 	/* input met data */
-	double sw_in = m->sw_downward_W;
-	double ta = m->tavg;
-	double vpd = m->vpd;                        /* deficit vapour pressure at the air temperature in hPa */
-	double sw_pot_in = m->sw_pot_downward_W;
-	double esat = m->es;                        /* saturation vapour pressure at the air temperature (KPa)*/
-	double TairK = ta + TempAbs;
+	double sw_in;
+	double ta;
+	double vpd;                        /* deficit vapour pressure at the air temperature in hPa */
+	double sw_pot_in;
+	double esat;                        /* saturation vapour pressure at the air temperature (KPa)*/
+	double TairK;
+
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
+
+	sw_in = met[month].d[day].sw_downward_W;
+	ta = met[month].d[day].tavg;
+	vpd = met[month].d[day].vpd;
+	sw_pot_in = met[month].d[day].sw_pot_downward_W;
+	esat = met[month].d[day].es;
+	TairK = ta + TempAbs;
+
 
 	fpar = 0.;
 	if ( ! (0. == sw_pot_in) && ! IS_INVALID_VALUE(sw_in) )
@@ -162,16 +173,16 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	}
 
 	/* Cloud cover and cloud correction factor Eq. (3) */
-	cloud_cover = 1.0 - (fpar - 0.5) / 0.4;
-	if ( cloud_cover > 1.0 )
+	met[month].d[day].cloud_cover_frac = 1.0 - (fpar - 0.5) / 0.4;
+	if ( met[month].d[day].cloud_cover_frac > 1.0 )
 	{
-		cloud_cover = 1.0;
+		met[month].d[day].cloud_cover_frac = 1.0;
 	}
-	if ( cloud_cover < 0. )
+	if ( met[month].d[day].cloud_cover_frac < 0. )
 	{
-		cloud_cover = 0.0;
+		met[month].d[day].cloud_cover_frac = 0.0;
 	}
-	r_cloud = 1 + 0.22 * pow(cloud_cover, 2.0);
+	met[month].d[day].cloud_cover_frac_corr = 1 + 0.22 * pow(met[month].d[day].cloud_cover_frac, 2.0);
 
 	/* Saturation and actual Vapour pressure [3], and associated emissivity Eq. [2] */
 	/* convert esat kPa --> Pa */
@@ -186,15 +197,17 @@ static double compute_lw_downward_W(const meteo_daily_t* const m) {
 	{
 		vp = 3.3546e-004;
 	}
-	epsA = 0.64 * pow(vp / TairK, 0.14285714);
+	met[month].d[day].emis_atm_clear_sky = 0.64 * pow(vp / TairK, 0.14285714);
 
-	/* Longwave radiation flux downward Eq. [1] */
-	lw_downward_W = r_cloud * epsA * SBC_W * pow(TairK, 4);
-	if ( (lw_downward_W < 10.) || (lw_downward_W > 1000.) )
+	/* compute atmopsheric emissivity based on cloud cover corrected */
+	met[month].d[day].emis_atm = met[month].d[day].cloud_cover_frac_corr * met[month].d[day].emis_atm_clear_sky;
+
+	/* Atmospheric Longwave radiation flux downward Eq. [1] */
+	met[month].d[day].atm_lw_downward_W = met[month].d[day].emis_atm * SBC_W * pow(TairK, 4);
+	if ( (met[month].d[day].atm_lw_downward_W < 10.) || (met[month].d[day].atm_lw_downward_W > 1000.) )
 	{
-		lw_downward_W = INVALID_VALUE;
+		met[month].d[day].atm_lw_downward_W = INVALID_VALUE;
 	}
-	return lw_downward_W;
 }
 
 void Radiation (cell_t *const c, const int day, const int month, const int year)
@@ -237,33 +250,12 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	//logger(g_log, "PPFD = %g umolPPFD/m2/sec\n", met[month].d[day].ppfd);
 
 	/***************************************************************************************************************************************/
-	/* compute cloud cover fraction */
-	fpar = 0.;
-	if ( ! (0. == met[month].d[day].sw_pot_downward_W) && ! IS_INVALID_VALUE(met[month].d[day].sw_downward_W) )
-	{
-		fpar = met[month].d[day].sw_downward_W / met[month].d[day].sw_pot_downward_W;
-		if ( fpar < 0. )
-		{
-			fpar = 0.;
-		}
-	}
-
-	met[month].d[day].cloud_cover_frac = 1.0 - (fpar - 0.5) / 0.4;
-	if ( met[month].d[day].cloud_cover_frac > 1.0 )
-	{
-		met[month].d[day].cloud_cover_frac = 1.0;
-	}
-	if ( met[month].d[day].cloud_cover_frac < 0. )
-	{
-		met[month].d[day].cloud_cover_frac = 0.0;
-	}
-	/***************************************************************************************************************************************/
 
 	/* LONG WAVE RADIATION */
 	/* INCOMING LONG WAVE RADIATION */
 
 	/* compute Long-Wave radiation flux downward (following JSBACH model) */
-	met[month].d[day].lw_downward_W = compute_lw_downward_W(&c->years[year].m[month].d[day]);
+	compute_atm_lw_downward_W(c, day, month, year);
 
 	/* NET LONG WAVE RADIATION */
 

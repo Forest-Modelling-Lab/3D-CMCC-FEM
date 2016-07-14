@@ -94,8 +94,8 @@ void Print_daily_met_data (const meteo_t *const met, const int month, const int 
 	logger(g_log, "***************\n");
 	logger(g_log, "**Daily MET DATA day %d month %d**\n", day + 1, month+1);
 	logger(g_log, "-solar_rad = %.2f MJ/m^2/day\n"
-			"-short wave downward = %.2f W/m2\n"
-			"-long wave downward (computed) = %.2f W/m2\n"
+			"-s-wave downward = %.2f W/m2\n"
+			"-atmospheric l-wave downward (computed) = %.2f W/m2\n"
 			"-tavg = %.2f °C\n"
 			"-tmax = %.2f °C\n"
 			"-tmin = %.2f °C\n"
@@ -120,7 +120,7 @@ void Print_daily_met_data (const meteo_t *const met, const int month, const int 
 			"-DOY = %d\n"
 			,met[month].d[day].solar_rad,
 			met[month].d[day].solar_rad* MJ_TO_W,
-			met[month].d[day].lw_downward_W,
+			met[month].d[day].atm_lw_downward_W,
 			met[month].d[day].tavg,
 			met[month].d[day].tmax,
 			met[month].d[day].tmin,

@@ -25,7 +25,14 @@ void canopy_net_radiation(species_t *const s, cell_t *const c, const meteo_t *co
 	logger(g_log, "\n**NET RADIATION ROUTINE**\n");
 
 	/* compute net radiation */
-	s->value[NET_RAD] = s->value[NET_SW_RAD] - s->value[NET_LW_RAD];
+	s->value[NET_RAD] = s->value[NET_SW_RAD] + s->value[NET_LW_RAD];
+	logger(g_log, "Net SW Radiation for canopy = %g W/m2\n", s->value[NET_SW_RAD]);
+	logger(g_log, "Net LW Radiation for canopy = %g W/m2\n", s->value[NET_LW_RAD]);
 	logger(g_log, "Net Radiation for canopy = %g W/m2\n", s->value[NET_RAD]);
 
+	//note: it shouldn't include soil..
+	c->net_rad_for_soil = c->net_sw_rad_for_soil + c->net_lw_rad_for_soil;
+	logger(g_log, "Net SW Radiation for soil = %g W/m2\n", c->net_sw_rad_for_soil);
+	logger(g_log, "Net LW Radiation for soil = %g W/m2\n", c->net_lw_rad_for_soil);
+	logger(g_log, "Net Radiation for soil = %g W/m2\n", c->net_rad_for_soil);
 }

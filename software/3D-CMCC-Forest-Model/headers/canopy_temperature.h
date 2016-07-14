@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-double canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year);
+void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year);
 
 #endif /* HEADERS_CANOPY_TEMPERATURE_H_ */

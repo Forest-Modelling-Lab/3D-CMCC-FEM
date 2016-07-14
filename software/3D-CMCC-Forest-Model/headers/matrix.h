@@ -214,10 +214,9 @@ enum {
 	LW_RAD_ABS,                 //Absorbed Long Wave radiation in W/m2
 	LW_RAD_ABS_SUN,             //Absorbed Long Wave Radiation W/m2 for sun leaves
 	LW_RAD_ABS_SHADE,           //Absorbed Long Wave Radiation W/m2 for shaded leaves
-	NET_LW_RAD_TRANSM,          //Transmitted Long Wave Radiation W/m2
-	NET_LW_RAD_TRANSM_SUN,      //Transmitted Long Wave Radiation W/m2 for sun leaves
-	NET_LW_RAD_TRANSM_SHADE,    //Transmitted Long Wave Radiation W/m2 for shaded leaves
-
+	LW_RAD_TRANSM,              //Transmitted Long Wave Radiation W/m2
+	LW_RAD_TRANSM_SUN,          //Transmitted Long Wave Radiation W/m2 for sun leaves
+	LW_RAD_TRANSM_SHADE,        //Transmitted Long Wave Radiation W/m2 for shaded leaves
 
 	/* net radiation */
 	NET_RAD,                    //Short Wave Radiation in W/m2
@@ -309,6 +308,7 @@ enum {
 
 	LEAF_TEMP_K,
 	CANOPY_TEMP_K,
+	CANOPY_TEMP_K_OLD,
 
 
 	/*carbon variables*/
@@ -789,6 +789,9 @@ typedef struct {
 	double long_wave_absorbed;                          /* Total absorbed long wave wave radiation flux (W/m2) */
 	double long_wave_reflected;                         /* Total reflected long wave radiation flux (W/m2) */
 	double long_wave_emitted;                           /* Total emitted long wave radiation flux (W/m2) */
+	double soil_long_wave_emitted;                      /* Soil emitted long wave radiation flux (W/m2) */
+	double net_lw_rad_for_soil;                         /* Net Long Wave radiation to soil level (W/m2) */
+	double net_rad_for_soil;                            /* Net radiation to soil level (W/m2) */
 
 	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
 	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
