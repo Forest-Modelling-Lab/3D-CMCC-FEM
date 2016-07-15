@@ -44,19 +44,25 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	TairK = met[month].d[day].tavg + TempAbs;
 
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
-
-	/* calculate temperature offsets for slope estimate */
-	t1 = met[month].d[day].tday+dt;
-	t2 = met[month].d[day].tday-dt;
+	g_corr = pow((met[month].d[day].tavg+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 
 	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
 	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
+	/* calculate temperature offsets for slope estimate */
+	t1 = met[month].d[day].tavg+dt;
+	t2 = met[month].d[day].tavg-dt;
+
 	/* calculate slope of pvs vs. T curve, at ta */
 	/* Slope of the saturated vapour pressure curve*/
-	//test this is NOT the "DELTA" function as in Webber et al., 2016 that use Tc ad Tair
+	/* this is NOT the "DELTA" function as in Webber et al., 2016
+	 * it use:
+	 * -Tc ad Ta instead t1 and t2
+	 * -ec and ea instead pvs1 and pvs2
+	 * ec refers to saturated vapour pressure of air at the top of the canopy
+	 * */
+
 	delta = (pvs1-pvs2) / (t1-t2);
 	/* converts into kPA following Webber et al., 2016 */
 	delta /= 1000.0;
@@ -92,7 +98,7 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 		s->value[CANOPY_TEMP_K] = TairK;
 
 		/* assign previous day canopy temperature to local variable for long wave computation */
-		logger(g_log, "difference Tavg Tcanopy temperature = %g (K) month = %d\n",TairK - s->value[CANOPY_TEMP_K], month);
+		logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
 	}
 	else if (s->counter[VEG_DAYS] > 1)
 	{
@@ -106,11 +112,15 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 
 		/* assign previous day canopy temperature to local variable for long wave computation */
 		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];
-		logger(g_log, "difference Tavg Tcanopy temperature = %g (K) month = %d\n",TairK - s->value[CANOPY_TEMP_K], month);
+		logger(g_log, "difference Tavg Tcanopy temperature = %g (K)\n",TairK - s->value[CANOPY_TEMP_K]);
 	}
 	else
 	{
 		s->value[CANOPY_TEMP_K] = 0.;
 	}
+
+	//fixme it hasn't sense at cell level just to print
+	c->canopy_temp = s->value[CANOPY_TEMP_K] - TempAbs;
+	logger(g_log, "canopy_temp = %g (K)\n",c->canopy_temp);
 
 }

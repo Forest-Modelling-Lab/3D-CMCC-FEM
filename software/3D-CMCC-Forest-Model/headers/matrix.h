@@ -818,6 +818,9 @@ typedef struct {
 	double ppfd_for_soil;
 	double ppfd_reflected_soil;
 
+	double canopy_temp;
+	double canopy_temp_k;
+
 
 	double av_yearly_par_soil;
 
