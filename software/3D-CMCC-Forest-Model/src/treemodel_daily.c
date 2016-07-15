@@ -79,7 +79,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	//fixme remember to remove definition of forest structure later than this one once completed
 	/* daily loop on each cell to define forest structure before anything else computation */
 
-	/* sort class in ascending way by heights */
+//	/* sort class in ascending way by heights */
 //	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
 //
 //	/* loop on each heights starting from highest to lower */
