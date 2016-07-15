@@ -124,9 +124,10 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 
 	i = c->heights[height].z;
 
-	c->layer_daily_gpp[i] += s->value[DAILY_GPP_gC];
-	c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
-	c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
+	//ALESSIOC
+	//c->layer_daily_gpp[i] += s->value[DAILY_GPP_gC];
+	//c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
+	//c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
 
 	logger(g_log, "-CELL LEVEL\n");
 	logger(g_log, "-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 area covered/yr\n", c->daily_gpp);

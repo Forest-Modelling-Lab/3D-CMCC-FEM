@@ -68,137 +68,139 @@ void Layer_cover_mortality(cell_t *const c, const int height, const int age, con
 
 
 		//check if cc passed to function is correct
-		if (c->annual_layer_number == 1 && c->layer_cover_dominant >= g_settings->max_layer_cover)
-		{
-			logger(g_log, "Layer cover in layer 0 passed to while = %f %% \n", c->layer_cover_dominant * 100);
-		}
-		if (c->annual_layer_number == 2 && (c->layer_cover_dominant >= g_settings->max_layer_cover || c->layer_cover_dominated >= g_settings->max_layer_cover))
-		{
-			if(c->layer_cover_dominant >= g_settings->max_layer_cover)
-				logger(g_log, "Layer cover in layer 1 passed to while= %f %%\n", c->layer_cover_dominant * 100);
-			if(c->layer_cover_dominated >= g_settings->max_layer_cover)
-				logger(g_log, "Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_dominated * 100);
-		}
-		if (c->annual_layer_number > 2 && (c->layer_cover_dominant >= g_settings->max_layer_cover || c->layer_cover_dominated >= g_settings->max_layer_cover || c->layer_cover_subdominated >= g_settings->max_layer_cover))
-		{
-			if(c->layer_cover_dominant >= g_settings->max_layer_cover)
-				logger(g_log, "Layer cover in layer 2 passed to while= %f %%\n", c->layer_cover_dominant * 100);
-			if(c->layer_cover_dominated >= g_settings->max_layer_cover)
-				logger(g_log, "Layer cover in layer 1 passed to while= %f %% \n", c->layer_cover_dominated * 100);
-			if(c->layer_cover_subdominated >= g_settings->max_layer_cover)
-				logger(g_log, "Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_subdominated * 100);
-		}
+		//ALESSIOC
+		//if (c->annual_layer_number == 1 && c->layer_cover_dominant >= g_settings->max_layer_cover)
+		//{
+		//	logger(g_log, "Layer cover in layer 0 passed to while = %f %% \n", c->layer_cover_dominant * 100);
+		//}
+		//if (c->annual_layer_number == 2 && (c->layer_cover_dominant >= g_settings->max_layer_cover || c->layer_cover_dominated >= g_settings->max_layer_cover))
+		//{
+		//	if(c->layer_cover_dominant >= g_settings->max_layer_cover)
+		//		logger(g_log, "Layer cover in layer 1 passed to while= %f %%\n", c->layer_cover_dominant * 100);
+		//	if(c->layer_cover_dominated >= g_settings->max_layer_cover)
+		//		logger(g_log, "Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_dominated * 100);
+		//}
+		//if (c->annual_layer_number > 2 && (c->layer_cover_dominant >= g_settings->max_layer_cover || c->layer_cover_dominated >= g_settings->max_layer_cover || c->layer_cover_subdominated >= g_settings->max_layer_cover))
+		//{
+		//	if(c->layer_cover_dominant >= g_settings->max_layer_cover)
+		//		logger(g_log, "Layer cover in layer 2 passed to while= %f %%\n", c->layer_cover_dominant * 100);
+		//	if(c->layer_cover_dominated >= g_settings->max_layer_cover)
+		//		logger(g_log, "Layer cover in layer 1 passed to while= %f %% \n", c->layer_cover_dominated * 100);
+		//	if(c->layer_cover_subdominated >= g_settings->max_layer_cover)
+		//		logger(g_log, "Layer cover in layer 0 passed to while= %f %% \n", c->layer_cover_subdominated * 100);
+		//}
 
-		//test 13 MAY 2016 test check to reduce the DBHDC up to the minimum value before kill trees
-		//see structure.c
+		////test 13 MAY 2016 test check to reduce the DBHDC up to the minimum value before kill trees
+		////see structure.c
 
-		switch (c->annual_layer_number)
-		{
-		case 1:
-			while ((c->layer_cover_dominant >= g_settings->max_layer_cover) && (c->heights[height].ages[age].species[species].counter[N_TREE] > 0))
-			{
-				c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-				deadtree += 1;
+		//switch (c->annual_layer_number)
+		//{
+		//case 1:
+		//	while ((c->layer_cover_dominant >= g_settings->max_layer_cover) && (c->heights[height].ages[age].species[species].counter[N_TREE] > 0))
+		//	{
+		//		c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//		deadtree += 1;
 
-				c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-				c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-			}
-			break;
-		case 2:
-			if (c->layer_cover_dominant >= g_settings->max_layer_cover)
-			{
-				while ((c->layer_cover_dominant >= g_settings->max_layer_cover) && (c->heights[height].ages[age].species[species].counter[N_TREE] > 0))
-				{
-					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-					deadtree += 1;
+		//		c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//		c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																				   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//	}
+		//	break;
+		//case 2:
+		//	if (c->layer_cover_dominant >= g_settings->max_layer_cover)
+		//	{
+		//		while ((c->layer_cover_dominant >= g_settings->max_layer_cover) && (c->heights[height].ages[age].species[species].counter[N_TREE] > 0))
+		//		{
+		//			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//			deadtree += 1;
 
-					c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-				}
-			}
-			else
-			{
-				while (c->layer_cover_dominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
-				{
-					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-					deadtree += 1;
+		//			c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		while (c->layer_cover_dominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
+		//		{
+		//			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//			deadtree += 1;
 
-					c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-				}
-			}
-			break;
-		case 3:
-			if (c->layer_cover_dominant >= g_settings->max_layer_cover )
-			{
-				while (c->layer_cover_dominant >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
-				{
-					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-					deadtree += 1;
+		//			c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//		}
+		//	}
+		//	break;
+		//case 3:
+		//	if (c->layer_cover_dominant >= g_settings->max_layer_cover )
+		//	{
+		//		while (c->layer_cover_dominant >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
+		//		{
+		//			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//			deadtree += 1;
 
-					c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-				}
-			}
-			else if (c->layer_cover_dominated >= g_settings->max_layer_cover)
-			{
-				while (c->layer_cover_dominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
-				{
-					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-					deadtree += 1;
+		//			c->layer_cover_dominant -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//		}
+		//	}
+		//	else if (c->layer_cover_dominated >= g_settings->max_layer_cover)
+		//	{
+		//		while (c->layer_cover_dominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
+		//		{
+		//			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//			deadtree += 1;
 
-					c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-				}
-			}
-			else
-			{
-				while (c->layer_cover_subdominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
-				{
-					c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
-					deadtree += 1;
+		//			c->layer_cover_dominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]																					   * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//		}
+		//	}
+		//	else
+		//	{
+		//		while (c->layer_cover_subdominated >= g_settings->max_layer_cover && c->heights[height].ages[age].species[species].counter[N_TREE] > 0)
+		//		{
+		//			c->heights[height].ages[age].species[species].counter[N_TREE] -= 1;
+		//			deadtree += 1;
 
-					c->layer_cover_subdominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
-					c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
-					                                                                                                                               * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
-				}
-			}
-			break;
-		}
+		//			c->layer_cover_subdominated -= ((c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * 100.0) / g_settings->sizeCell)/100.0;
+		//			c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = (c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]
+		//			                                                                                                                               * c->heights[height].ages[age].species[species].counter[N_TREE]) / g_settings->sizeCell;
+		//		}
+		//	}
+		//	break;
+		//}
 
-		if(c->heights[height].ages[age].species[species].counter[N_TREE] == 0)
-		{
-			//delete classes due to mortality
-			logger(g_log, "All trees of species %s dbh %g height %g age %d are died!!!!\n",
-					c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].value, c->heights[height].ages[age].value);
+		//if(c->heights[height].ages[age].species[species].counter[N_TREE] == 0)
+		//{
+		//	//delete classes due to mortality
+		//	logger(g_log, "All trees of species %s dbh %g height %g age %d are died!!!!\n",
+		//			c->heights[height].ages[age].species[species].name, c->heights[height].ages[age].species[species].value[AVDBH], c->heights[height].value, c->heights[height].ages[age].value);
 
-			logger(g_log, "reducing counter for died classes...........!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
-			logger(g_log, "heights_count = %d, ages_count = %d, species_count = %d \n", c->heights_count, c->heights[height].ages_count, c->heights[height].ages[age].species_count);
-			//free (c->heights[height].ages[age].species[species].name);
+		//	logger(g_log, "reducing counter for died classes...........!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
+		//	logger(g_log, "heights_count = %d, ages_count = %d, species_count = %d \n", c->heights_count, c->heights[height].ages_count, c->heights[height].ages[age].species_count);
+		//	//free (c->heights[height].ages[age].species[species].name);
 
-			//todo it!!!
-			//fixme in this case to BE CANCELLED is the last PROCESSED class BUT NOT NECESSARILY THE CLASS REALLY DIED
-			if (c->heights[height].ages[age].species_count > 1)
-				logger(g_log, "Reducing species_count..\n");
-				c->heights[height].ages[age].species_count --;
-			//free (c->heights[height].ages[age].species);
-			if(c->heights[height].ages_count > 1)
-				logger(g_log, "Reducing ages_count..\n");
-				c->heights[height].ages_count --;
-			//free (c->heights[height].ages);
-			if (c->heights_count > 1)
-				logger(g_log, "Reducing heights_count..\n");
-				c->heights_count --;
+		//	//todo it!!!
+		//	//fixme in this case to BE CANCELLED is the last PROCESSED class BUT NOT NECESSARILY THE CLASS REALLY DIED
+		//	if (c->heights[height].ages[age].species_count > 1)
+		//		logger(g_log, "Reducing species_count..\n");
+		//		c->heights[height].ages[age].species_count --;
+		//	//free (c->heights[height].ages[age].species);
+		//	if(c->heights[height].ages_count > 1)
+		//		logger(g_log, "Reducing ages_count..\n");
+		//		c->heights[height].ages_count --;
+		//	//free (c->heights[height].ages);
+		//	if (c->heights_count > 1)
+		//		logger(g_log, "Reducing heights_count..\n");
+		//		c->heights_count --;
 
 
-		}
+		//}
 
 
 		i = c->heights[height].z;
 
-		c->layer_daily_dead_tree[i] += deadtree;
-		c->layer_monthly_dead_tree[i] += deadtree;
-		c->layer_annual_dead_tree[i] += deadtree;
+		//ALESSIOC
+		//c->layer_daily_dead_tree[i] += deadtree;
+		//c->layer_monthly_dead_tree[i] += deadtree;
+		//c->layer_annual_dead_tree[i] += deadtree;
 
 		c->n_tree -= deadtree;
 

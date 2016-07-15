@@ -610,7 +610,8 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int year, const int
 			if ( DDRF < 0.0 ) DDRF = 0.0;
 
 			//sergio: assumed bucket model for now (unilayer situation)
-			m->cells[cell].soils[l].soilMoisture = m->cells[cell].soil_moist_ratio;
+			//ALESSIOC
+			//m->cells[cell].soils[l].soilMoisture = m->cells[cell].soil_moist_ratio;
 
 			// Effect of temp/mois on decomposition
 			if (m->cells[cell].soils[l].soilMoisture<0.00001) m->cells[cell].soils[l].soilMoisture= 0.00001;

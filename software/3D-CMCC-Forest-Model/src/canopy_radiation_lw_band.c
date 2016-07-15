@@ -58,8 +58,9 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 {
 	double LW_emis_canopy_frac, LW_emis_canopy_frac_sun, LW_emis_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation emissivity */
 	double LW_transm_canopy_frac, LW_transm_canopy_frac_sun, LW_transm_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation transmittivity */
-	double LW_abs_canopy_frac, LW_abs_canopy_frac_sun, LW_abs_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation absrptivity */
-	double LW_refl_canopy_frac, LW_refl_canopy_frac_sun, LW_refl_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation reflectivity */
+	double LW_abs_canopy_frac;
+	//double LW_abs_canopy_frac_sun, LW_abs_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation absrptivity */
+	//double LW_refl_canopy_frac, LW_refl_canopy_frac_sun, LW_refl_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation reflectivity */
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	double TsoilK;

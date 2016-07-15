@@ -11,22 +11,33 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void live_total_wood_age(const age_t *const a, species_t *const s)
+void live_total_wood_age(const age_t *const a, const int species)
 {
 	/* this function update based on current tree age the amount of live:total wood ratio
 	 * based on the assumption that the live wood decrease linearly increasing age */
 	/* e.g. for Fagus sylvatica  base on simulation for Hesse site (age 30) and Collelongo site (age 160)*/
-
 	// fixme values should be included in species.txt
-	double max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 30 */
-	double min_live_total_ratio = 0.04; /* for max_age = 160 */
+	double max_live_total_ratio;
+	double min_live_total_ratio;
 
 	//01 June 2016 changed from 160 to MAX_AGE
-	double max_age = s->value[MAXAGE]; /* for min_live_total_wood = 0.04 */
-	double min_age = 30; /* for max_live_total_wood = 0.15 */
+	double max_age;
+	double min_age = 30;
 
 	double t1;
 	double t2;
+
+	species_t *s;
+
+	s = &a->species[species];
+
+	// fixme values should be included in species.txt
+	max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 30 */
+	min_live_total_ratio = 0.04; /* for max_age = 160 */
+
+	//01 June 2016 changed from 160 to MAX_AGE
+	max_age = s->value[MAXAGE]; /* for min_live_total_wood = 0.04 */
+
 
 	//fixme it should be included in the species.txt files */
 	/* for deciduous */
@@ -144,13 +155,16 @@ void Biomass_increment_BOY (cell_t *const c, species_t *const s, int height, int
 	CHECK_CONDITION(fabs((s->value[BRANCH_SAPWOOD_C] + s->value[BRANCH_HEARTWOOD_C])-s->value[BRANCH_C]),>1e-4);
 }
 
-void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_layer, const int z, const int height, const int age)
+void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	/*CURRENT ANNUAL INCREMENT-CAI*/
 	double MassDensity;
 	double dominant_prec_volume;
 	double dominated_prec_volume;
 	double subdominated_prec_volume;
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	//in m^3/area/yr
 	//Cai = Volume t1 - Volume t0
@@ -160,7 +174,7 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 
 	//sergio if prec_volume stands for precedent (year) volume, shouldn't the CAI be quantified before updating prec_volume? in this way it shold alway return ~0, being the product of the same formula expressed with the same quantities
 
-	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TRHO]));
+	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->t_layers[layer].heights[height].ages[age].value / s->value[TRHO]));
 	/*STAND VOLUME-(STEM VOLUME)*/
 
 	//new volume is computed using DM biomass
@@ -169,16 +183,19 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 
 	if (g_settings->spatial == 'u')
 	{
-		switch (c->annual_layer_number)
+		//ALESSIOC
+		//switch (c->annual_layer_number)
+		// ALESSIOR: mi raccomando ALESSIOC rimuovi la riga qui sotto ( SOLO LA RIGA! )
+		switch ( 0 )
 		{
 		case 3:
-			if (c->heights[height].z == 2)
+			if (c->t_layers[layer].heights[height].z == 2)
 			{
 				dominant_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 				logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+				s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
 				if (dominant_prec_volume > s->value[VOLUME])
 				{
@@ -186,13 +203,13 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 					logger(g_log, "prev_volume - VOLUME = %f\n", dominant_prec_volume - s->value[VOLUME]);
 				}
 			}
-			else if (c->heights[height].z == 1)
+			else if (c->t_layers[layer].heights[height].z == 1)
 			{
 				dominated_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
 				logger(g_log, "DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+				s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
 				if (dominated_prec_volume > s->value[VOLUME])
 				{
@@ -206,7 +223,7 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 				logger(g_log, "SubDominatedVolume = %f m^3/cell resolution\n", subdominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - subdominated_prec_volume;
 				logger(g_log, "SUBDOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+				s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
 				if (subdominated_prec_volume > s->value[VOLUME])
 				{
@@ -216,13 +233,13 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 			}
 			break;
 		case 2:
-			if (c->heights[height].z == 1)
+			if (c->t_layers[layer].heights[height].z == 1)
 			{
 				dominant_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 				logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+				s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
 				if (dominant_prec_volume > s->value[VOLUME])
 				{
@@ -236,7 +253,7 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 				logger(g_log, "DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
 				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
 				logger(g_log, "DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+				s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
 				if (dominated_prec_volume > s->value[VOLUME])
 				{
@@ -252,7 +269,7 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 			logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
 			s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
 			logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+			s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 			logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
 
 			if (dominant_prec_volume > s->value[VOLUME])
@@ -265,7 +282,7 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 			logger(g_log, "CURRENT Volume = %f m^3/cell resolution\n", s->value[VOLUME]);
 			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
 			logger(g_log, "Yearly Stand CAI = %f m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = s->value[VOLUME] / (double)c->heights[height].ages[age].value ;
+			s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
 			logger(g_log, "Yearly Stand MAI = %f m^3/area/yr \n", s->value[MAI]);
 			break;
 		}
@@ -276,32 +293,32 @@ void Biomass_increment_EOY (cell_t *const c, species_t *const s, const int top_l
 		s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
 		s->value[CAI] = s->value[VOLUME] * s->value[PERC] - s->value[PREVIOUS_VOLUME];
 		logger(g_log, "Yearly Stand CAI = %f m^3/area/yr\n", s->value[CAI]);
-		s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (double)c->heights[height].ages[age].value ;
+		s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (double)c->t_layers[layer].heights[height].ages[age].value ;
 		logger(g_log, "Yearly Stand MAI = %f m^3/area/yr \n", s->value[MAI] );
 	}
 	s->value[PREVIOUS_VOLUME] = s->value[VOLUME];
 }
 
-void AGB_BGB_biomass (cell_t *const c, const int height, const int age, const int species)
+void AGB_BGB_biomass(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 
 	logger(g_log, "**AGB & BGB**\n");
 	logger(g_log, "-for Class\n");
-	c->heights[height].ages[age].species[species].value[CLASS_AGB] = c->heights[height].ages[age].species[species].value[TOT_STEM_C]
-																														 + c->heights[height].ages[age].species[species].value[LEAF_C];
-	logger(g_log, "Yearly Class AGB = %f tC/area year\n", c->heights[height].ages[age].species[species].value[CLASS_AGB]);
-	c->heights[height].ages[age].species[species].value[CLASS_BGB] = c->heights[height].ages[age].species[species].value[TOT_ROOT_C];
-	logger(g_log, "Yearly Class BGB = %f tC/area year\n", c->heights[height].ages[age].species[species].value[CLASS_BGB]);
+	c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_AGB] = c->t_layers[layer].heights[height].ages[age].species[species].value[TOT_STEM_C]
+																														 + c->t_layers[layer].heights[height].ages[age].species[species].value[LEAF_C];
+	logger(g_log, "Yearly Class AGB = %f tC/area year\n", c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_AGB]);
+	c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_BGB] = c->t_layers[layer].heights[height].ages[age].species[species].value[TOT_ROOT_C];
+	logger(g_log, "Yearly Class BGB = %f tC/area year\n", c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_BGB]);
 
 
 	logger(g_log, "-for Stand\n");
 
-	c->stand_agb += c->heights[height].ages[age].species[species].value[CLASS_AGB] * c->heights[height].ages[age].species[species].value[PERC];
+	c->stand_agb += c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_AGB] * c->t_layers[layer].heights[height].ages[age].species[species].value[PERC];
 	logger(g_log, "Yearly Stand AGB = %f tC/area year\n", c->stand_agb);
-	c->stand_bgb += c->heights[height].ages[age].species[species].value[CLASS_BGB] * c->heights[height].ages[age].species[species].value[PERC];
+	c->stand_bgb += c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_BGB] * c->t_layers[layer].heights[height].ages[age].species[species].value[PERC];
 	logger(g_log, "Yearly Stand BGB = %f tC/area year\n", c->stand_bgb);
-	c->heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
-	c->heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
+	c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_AGB] = 0;
+	c->t_layers[layer].heights[height].ages[age].species[species].value[CLASS_BGB] = 0;
 
 }
 

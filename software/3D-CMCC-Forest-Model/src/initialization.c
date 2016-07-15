@@ -439,43 +439,44 @@ void Initialization_site_data(cell_t *const c)
 	logger(g_log, "BIOME soil characteristics\n");
 	//double soilw_fc; //maximum volume soil water content in m3/m3
 	// (DIM) Clapp-Hornberger "b" parameter
-	c->soil_b = -(3.10 + 0.157*g_soil_settings->values[SOIL_CLAY_PERC] - 0.003*g_soil_settings->values[SOIL_SAND_PERC]); /* ok for schwalm*/
-	logger(g_log, "soil_b = %f (DIM)\n", c->soil_b);
-	/* following Rawls et al., 1992 and Schwalm et al., 2004 */
-	/*texture-dependent empirical coefficinet */
-	// c->soil_b = 11.43 - (0.1034*g_soil_settings->values[SOIL_SAND_PERC) - (0.0687*0.157*g_soil_settings->values[SOIL_silt_perc);
+	// ALESSIOC
+	//c->soil_b = -(3.10 + 0.157*g_soil_settings->values[SOIL_CLAY_PERC] - 0.003*g_soil_settings->values[SOIL_SAND_PERC]); /* ok for schwalm*/
+	//logger(g_log, "soil_b = %f (DIM)\n", c->soil_b);
+	///* following Rawls et al., 1992 and Schwalm et al., 2004 */
+	///*texture-dependent empirical coefficinet */
+	//// c->soil_b = 11.43 - (0.1034*g_soil_settings->values[SOIL_SAND_PERC) - (0.0687*0.157*g_soil_settings->values[SOIL_silt_perc);
 
-	/* calculate the soil pressure-volume coefficients from texture data */
-	/* Uses the multivariate regressions from Cosby et al., 1984 */
-	// (DIM) Soil volumetric water content at saturation
-	c->vwc_sat = (50.5 - 0.142*g_soil_settings->values[SOIL_SAND_PERC] - 0.037*g_soil_settings->values[SOIL_CLAY_PERC])/100.0; /* ok for schwalm*/
-	logger(g_log, "volumetric water content at saturation (BIOME) = %f %%(vol)\n", c->vwc_sat);
-	// (MPa) soil matric potential at saturation
-	c->psi_sat = -(exp((1.54 - 0.0095*g_soil_settings->values[SOIL_SAND_PERC] + 0.0063*g_soil_settings->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
-	logger(g_log, "psi_sat = %f MPa \n", c->psi_sat);
-	// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa)
-	c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
-	logger(g_log, "volumetric water content at field capacity (BIOME) = %f %%(vol) \n", c->vwc_fc);
+	///* calculate the soil pressure-volume coefficients from texture data */
+	///* Uses the multivariate regressions from Cosby et al., 1984 */
+	//// (DIM) Soil volumetric water content at saturation
+	//c->vwc_sat = (50.5 - 0.142*g_soil_settings->values[SOIL_SAND_PERC] - 0.037*g_soil_settings->values[SOIL_CLAY_PERC])/100.0; /* ok for schwalm*/
+	//logger(g_log, "volumetric water content at saturation (BIOME) = %f %%(vol)\n", c->vwc_sat);
+	//// (MPa) soil matric potential at saturation
+	//c->psi_sat = -(exp((1.54 - 0.0095*g_soil_settings->values[SOIL_SAND_PERC] + 0.0063*g_soil_settings->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
+	//logger(g_log, "psi_sat = %f MPa \n", c->psi_sat);
+	//// Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa)
+	//c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
+	//logger(g_log, "volumetric water content at field capacity (BIOME) = %f %%(vol) \n", c->vwc_fc);
 
-	// define maximum soilwater content, for outflow calculation
-	//converts volumetric water content (m3/m3) --> (kg/m2)
+	//// define maximum soilwater content, for outflow calculation
+	////converts volumetric water content (m3/m3) --> (kg/m2)
 
-	// (kgH2O/m2) soil water at field capacity
-	c->soilw_fc = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_fc * 1000.0;
-	logger(g_log, "soilw_fc BIOME (MAXASW FC BIOME)= %f (kgH2O/m2)\n", c->soilw_fc);
-	//equal to MAXASW
-	// (kgH2O/m2) soil water at saturation
-	c->soilw_sat = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_sat * 1000.0;
-	logger(g_log, "soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
+	//// (kgH2O/m2) soil water at field capacity
+	//c->soilw_fc = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_fc * 1000.0;
+	//logger(g_log, "soilw_fc BIOME (MAXASW FC BIOME)= %f (kgH2O/m2)\n", c->soilw_fc);
+	////equal to MAXASW
+	//// (kgH2O/m2) soil water at saturation
+	//c->soilw_sat = (g_soil_settings->values[SOIL_DEPTH] / 100) * c->vwc_sat * 1000.0;
+	//logger(g_log, "soilw_sat BIOME (MAXASW SAT BIOME)= %f (kgH2O/m2)\n", c->soilw_sat);
 
-	c->max_asw_fc = c->soilw_fc;
+	//c->max_asw_fc = c->soilw_fc;
 
-	//compute initialization soil water content
-	c->asw = (c->soilw_sat * g_settings->init_frac_maxasw);
-	logger(g_log, "Initialization ASW = %f (mm-kgH2O/m2)\n\n\n", c->asw);
+	////compute initialization soil water content
+	//c->asw = (c->soilw_sat * g_settings->init_frac_maxasw);
+	//logger(g_log, "Initialization ASW = %f (mm-kgH2O/m2)\n\n\n", c->asw);
 
-	//snow initialization
-	c->snow_pack = 0.0;
+	////snow initialization
+	//c->snow_pack = 0.0;
 	//c->snow_subl = 0;
 
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */

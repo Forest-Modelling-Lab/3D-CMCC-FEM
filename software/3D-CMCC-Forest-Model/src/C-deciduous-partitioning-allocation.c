@@ -1,5 +1,3 @@
-
-
 /* includes */
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,14 +18,14 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 /* Deciduous carbon allocation routine */
-void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int years, const int height, const int age, const int species)
+void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age
+											   , const int species, const meteo_t *const met, const int day, const int year)
 {
 
 	int i;
-	double  s0Ctem = s->value[S0CTEM];
-	double  r0Ctem = s->value[R0CTEM];
-	//double  f0Ctem = s->value[F0CTEM];
-	double const omegaCtem = s->value[OMEGA_CTEM];
+	double  s0Ctem;
+	double  r0Ctem;
+	double omegaCtem;
 	double pS_CTEM = 0.0;
 	double pR_CTEM = 0.0;
 	double pF_CTEM = 0.0;
@@ -42,11 +40,18 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	double npp_to_alloc;
 	double npp_alloc;
 
+	species_t *s;
+
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+
+	s0Ctem = s->value[S0CTEM];
+	r0Ctem = s->value[R0CTEM];
+	omegaCtem = s->value[OMEGA_CTEM];
+
 	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
-	i = c->heights[height].z;
-
+	i = c->t_layers[layer].heights[height].z;
 
 	logger(g_log, "\n**ALLOCATION_ROUTINE**\n\n");
 	logger(g_log, "Carbon allocation routine for deciduous\n");
@@ -90,7 +95,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].z);
+	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->t_layers[layer].heights[height].z);
 
 	/* it mainly follows Arora V. K., Boer G. J., GCB, 2005 */
 
@@ -218,7 +223,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 			}
 		}
 
-		Leaf_fall(&c->heights[height].ages[age].species[species], &c->doy);
+		Leaf_fall(&c->t_layers[layer].heights[height].ages[age].species[species], &c->doy);
 		/* note: these are computed in Leaf_fall function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
@@ -265,17 +270,17 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
-	live_total_wood_age (&c->heights[height].ages[age], &c->heights[height].ages[age].species[species]);
+	live_total_wood_age (&c->t_layers[layer].heights[height].ages[age], species);
 
 	/* allocate daily carbon */
-	C_allocation (s, c, day, month, years, height, age, species);
+	C_allocation(&c->t_layers[layer].heights[height].ages[age].species[species]);
 
-	Average_tree_biomass (&c->heights[height].ages[age].species[species]);
+	Average_tree_biomass(&c->t_layers[layer].heights[height].ages[age].species[species]);
 
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if(day == 0)
 	{
-		Dendrometry (c, &c->heights[height].ages[age].species[species], &c->heights[height], years);
+		Dendrometry (c, &c->t_layers[layer].heights[height].ages[age].species[species], &c->t_layers[layer].heights[height], year);
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
@@ -289,12 +294,15 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update Leaf Area Index */
-	Daily_lai (&c->heights[height].ages[age].species[species]);
+	Daily_lai (&c->t_layers[layer].heights[height].ages[age].species[species]);
+	//ALESSIOC
+	/*
 	c->daily_lai[i] = s->value[LAI];
 	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
+	*/
 
 	/* turnover */
-	Turnover(&c->heights[height].ages[age].species[species], c);
+	Turnover(&c->t_layers[layer].heights[height].ages[age].species[species], c);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
@@ -307,6 +315,8 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	s->value[DEL_Y_BB] += s->value[C_TO_BRANCH];
 
 	/* update layer level daily carbon biomass increment in tC/cell/day */
+	//ALESSIOC
+	/*
 	c->daily_delta_wts[i] = s->value[C_TO_TOT_STEM];
 	c->daily_delta_ws[i] = s->value[C_TO_STEM];
 	c->daily_delta_wf[i] = s->value[C_TO_LEAF];
@@ -314,8 +324,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	c->daily_delta_wfr[i] = s->value[C_TO_FINEROOT];
 	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
 	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
+	*/
 
 	/* update dendrometry variables */
+	//ALESSIOC
+	/*
 	if(c->height_class_in_layer_dominant_counter>1)
 	{
 		c->annual_layer_avDBH[i] = (c->annual_layer_avDBH[i] + s->value[AVDBH]) / c->height_class_in_layer_dominant_counter;
@@ -324,8 +337,11 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	{
 		c->annual_layer_avDBH[i] = s->value[AVDBH];
 	}
+	*/
 
 	/* update layer level annual carbon increments and pools in tC/cell/year */
+	//ALESSIOC
+	/*
 	c->annual_delta_ws[i] += s->value[C_TO_STEM];
 	c->annual_layer_stem_c[i] = s->value[STEM_C];
 	c->annual_layer_live_stem_c[i] = s->value[STEM_LIVE_WOOD_C];
@@ -347,6 +363,7 @@ void Daily_C_Deciduous_Partitioning_Allocation (species_t *const s, cell_t *cons
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
 	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
 	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
+	*/
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;

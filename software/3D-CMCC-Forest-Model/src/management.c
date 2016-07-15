@@ -290,7 +290,8 @@ void Choose_management (cell_t *c, species_t *s, int years, int height)
 				logger(g_log, "Case CLEARCUT choiced \n");
 
 				//call function
-				Clearcut_Timber_upon_request (s,  years, c->heights[height].z, c->annual_layer_number);
+				//ALESSIOC
+				//Clearcut_Timber_upon_request (s,  years, c->heights[height].z, c->annual_layer_number);
 
 				break;
 
@@ -336,7 +337,8 @@ void Choose_management (cell_t *c, species_t *s, int years, int height)
 				logger(g_log, "Case CLEARCUT choiced \n");
 
 				//call function
-				Clearcut_Coppice (s,  years, c->heights[height].z, c->annual_layer_number);
+				//ALESSIOC
+				//Clearcut_Coppice (s,  years, c->heights[height].z, c->annual_layer_number);
 
 				break;
 

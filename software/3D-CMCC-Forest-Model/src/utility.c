@@ -94,14 +94,15 @@ void Reset_daily_variables (cell_t *const c, const int count)
 
 	c->daily_litterfall = 0.;
 	c->cell_cover = 0.;
-	c->dominant_veg_counter = 0;
-	c->dominated_veg_counter = 0;
-	c->subdominated_veg_counter = 0;
+	//ALESSIOC
+	//c->dominant_veg_counter = 0;
+	//c->dominated_veg_counter = 0;
+	//c->subdominated_veg_counter = 0;
 
-	c->layer_daily_dead_tree[0] = 0;
-	c->layer_daily_dead_tree[1] = 0;
-	c->layer_daily_dead_tree[2] = 0;
-	c->daily_dead_tree = 0;
+	//c->layer_daily_dead_tree[0] = 0;
+	//c->layer_daily_dead_tree[1] = 0;
+	//c->layer_daily_dead_tree[2] = 0;
+	//c->daily_dead_tree = 0;
 
 	logger(g_log, "...resetting class level daily variables...\n");
 
@@ -192,13 +193,14 @@ void Reset_daily_variables (cell_t *const c, const int count)
 				c->heights[height].ages[age].species[species].value[TOTAL_GROWTH_RESP] = 0.;
 
 				/* reset layer level daily carbon biomass increment in tC/cell/day */
-				c->daily_delta_wts[i] = 0.;
-				c->daily_delta_ws[i] = 0.;
-				c->daily_delta_wf[i] = 0.;
-				c->daily_delta_wbb[i] = 0.;
-				c->daily_delta_wfr[i] = 0.;
-				c->daily_delta_wcr[i] = 0.;
-				c->daily_delta_wres[i] = 0.;
+				//ALESSIOC
+				//c->daily_delta_wts[i] = 0.;
+				//c->daily_delta_ws[i] = 0.;
+				//c->daily_delta_wf[i] = 0.;
+				//c->daily_delta_wbb[i] = 0.;
+				//c->daily_delta_wfr[i] = 0.;
+				//c->daily_delta_wcr[i] = 0.;
+				//c->daily_delta_wres[i] = 0.;
 			}
 		}
 	}
@@ -241,7 +243,8 @@ void Reset_monthly_variables (cell_t *const c, const int count)
 	c->monthly_latent_heat_flux = 0.;
 	c->monthly_sensible_heat_flux = 0.;
 
-	c->layer_monthly_gpp[2] = 0.;
+	//ALESSIOC
+	//c->layer_monthly_gpp[2] = 0.;
 	//tocontinue...
 
 	for ( height = count - 1; height >= 0; height-- )
@@ -265,9 +268,10 @@ void Reset_annual_variables (cell_t *const c, const int count)
 	logger(g_log, "...resetting annual variables...\n");
 
 	/*reset cell related variables*/
-	c->canopy_cover_dominant = 0.;
-	c->canopy_cover_dominated = 0.;
-	c->canopy_cover_subdominated = 0.;
+	// ALESSIOC
+	//c->canopy_cover_dominant = 0.;
+	//c->canopy_cover_dominated = 0.;
+	//c->canopy_cover_subdominated = 0.;
 
 	c->annual_gpp = 0.;
 	c->annual_npp_gC = 0.;

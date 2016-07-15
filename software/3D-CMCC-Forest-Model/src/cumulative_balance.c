@@ -54,6 +54,8 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 	//reset
 	if ( 0 == year)
 	{
+		//ALESSIOC
+		/*
 		previous_layer_number = c->annual_layer_number;
 
 		avg_gpp_tot = 0;
@@ -103,18 +105,22 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 			avg_npp[0] = 0;
 			avg_ce[0] = 0;
 		}
+		*/
 	}
 	else
 	{
 		//check if layer number is changed since last yearly run
+		// ALESSIOC
+		/*
 		if(previous_layer_number != c->annual_layer_number)
 		{
 			logger(g_annual_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
+		*/
 	}
 
-	//logger(g_annual_log, "-%d %10f %10f %10f %10f %10f %10f %10d\n", yos[years].year, c->annual_gpp, c->annual_npp, c->annual_et, c->stand_agb, c->stand_bgb, c->annual_peak_lai, c->dead_tree);
-
+	// ALESSIOC
+	/*
 	if (c->annual_layer_number == 1)
 	{
 		if ((year == 0 || previous_layer_number != c->annual_layer_number) && cell_index == 0 )
@@ -152,7 +158,6 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 		{
 			logger(g_annual_log, "\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
 		}
-
 
 		logger(g_annual_log, "\t%12.2f \t%8.2f \t%10.2f \t%10.2f \t%10.2f \t%6.2f "
 				"\t%5.2f \t%8.2d \t%8.2d \t%8.2f \t%8.2f \t%8.2f \t%8.2f "
@@ -333,7 +338,6 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 		c->annual_layer_reserve_c[0] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
-
 	}
 
 
@@ -376,7 +380,6 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 		logger(g_annual_log, "\t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f \t%2.2f ",
 				c->layer_annual_gpp[2], c->layer_annual_gpp[1],c->layer_annual_gpp[0], c->layer_annual_gpp,
 				c->layer_annual_aut_resp[2], c->layer_annual_aut_resp[1],c->layer_annual_aut_resp[0], c->annual_aut_resp);
-
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_annual_log, "\t%10.2f \t%10.2f", c->annual_het_resp, c->annual_r_eco);
@@ -394,7 +397,6 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 				c->layer_annual_cc[2],c->layer_annual_cc[1], c->layer_annual_cc[0],
 				c->layer_annual_dead_tree[2], c->layer_annual_dead_tree[1], c->layer_annual_dead_tree[0], c->annual_dead_tree,
 				c->annual_layer_reserve_c[2], c->annual_layer_reserve_c[1], c->annual_layer_reserve_c[0]);
-
 		previous_layer_number = c->annual_layer_number;
 
 		//compute average
@@ -456,8 +458,8 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 		c->annual_peak_lai[2] = 0;
 		c->annual_peak_lai[1] = 0;
 		c->annual_peak_lai[0] = 0;
-
 	}
+	*/
 	c->annual_gpp = 0;
 	c->annual_aut_resp = 0;
 	c->annual_aut_resp_tC = 0.0;
@@ -467,6 +469,7 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 	c->annual_c_evapotransp = 0;
 	c->annual_tot_w_flux = 0;
 	c->annual_dead_tree = 0;
+
 
 	if (!string_compare_i(g_settings->dndc, "on"))
 	{
@@ -581,6 +584,9 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		logger(g_monthly_log, "Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
 		logger(g_monthly_log, "Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
 	}*/
+
+	// ALESSIOC
+	/*
 	if (years == 0)
 	{
 		previous_layer_number = c->annual_layer_number;
@@ -626,6 +632,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		{
 			logger(g_monthly_log, "\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
 		}
+		//ALESSIOC
 		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
 				c->monthly_C_flux,
 				c->monthly_npp_tDM,
@@ -636,7 +643,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				c->monthly_tot_w_flux,
 				c->layer_monthly_cc[0]);
 
-		//reset
+		//reset		
 		c->layer_monthly_gpp[0] = 0;
 		c->layer_monthly_aut_resp[0] = 0;
 		c->layer_monthly_npp_tDM[0] = 0;
@@ -644,6 +651,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->layer_monthly_cc[0] = 0;
 		c->layer_monthly_dead_tree[0] = 0;
 	}
+	
 	//fixme model doesn't log correct value for more then one class within a layer
 	if (c->annual_layer_number == 2)
 	{
@@ -677,6 +685,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		{
 			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
+
 		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
@@ -738,6 +747,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		{
 			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
+
 		logger(g_monthly_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
 				c->layer_monthly_c_flux[2],c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
@@ -773,6 +783,7 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->layer_monthly_cc[0] = 0;
 		c->layer_monthly_dead_tree[0] = 0;
 	}
+	*/
 	c->monthly_gpp = 0;
 	c->monthly_aut_resp = 0;
 	c->monthly_C_flux = 0;
@@ -837,22 +848,28 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 
 	if (years == 0)
 	{
-		previous_layer_number = c->annual_layer_number;
+		//ALESSIOC
+		//previous_layer_number = c->annual_layer_number;
 	}
 	else
 	{
 		//check if layer number is changed since last yearly run
+		//ALESSIOC
+		/*
 		if(previous_layer_number != c->annual_layer_number)
 		{
 			logger(g_daily_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
+		*/
 	}
+	// ALESSIOC
+	/*
 	if (c->annual_layer_number == 1)
 	{
 		if (((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number) && cell_index == 0)
 		{
 			//todo include x and y log if cells > 1
-			logger(g_daily_log, "%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", /*"CELL",*/ "HC");
+			logger(g_daily_log, "%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", "HC");
 			if (!string_compare_i(g_settings->dndc, "on"))
 			{
 				logger(g_daily_log, "\t%3s", "NEE");
@@ -873,7 +890,7 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 			doy = 1;
 		}
 
-		logger(g_daily_log, "%d \t%3d \t%4d \t%3d", c->years[years].year, month+1, day+1,/* c->x, c->y,*/ c->height_class_in_layer_dominant_counter);
+		logger(g_daily_log, "%d \t%3d \t%4d \t%3d", c->years[years].year, month+1, day+1, c->height_class_in_layer_dominant_counter);
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_daily_log, "\t%6.2f", c->daily_nee);
@@ -910,7 +927,6 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				c->daily_fine_root_aut_resp,
 				c->daily_coarse_root_aut_resp,
 				c->canopy_temp_diff);
-		//}
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -930,7 +946,11 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->layer_daily_cc[0] = 0;
 		c->layer_daily_dead_tree[0] = 0;
 	}
+	*/
+
 	//fixme model doesn't log correct value for more then one class within a layer
+	// ALESSIOC
+	/*
 	if (c->annual_layer_number == 2)
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
@@ -955,10 +975,11 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		{
 			doy = 1;
 		}
-
+	
 		logger(g_daily_log, "%d \t%8d \t%5d \t%5d  \t%5d \t%2d",doy, c->years[years].year, month+1, day+1,
 				c->height_class_in_layer_dominant_counter,
 				c->height_class_in_layer_dominated_counter);
+
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_daily_log, "\t%6.2f", c->daily_nee);
@@ -966,7 +987,6 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		logger(g_daily_log, "\t%10.2f \t%10.2f \t%10.2f\t%10.2f\t%10.2f \t%10.2f",
 				c->layer_daily_gpp[1], c->layer_daily_gpp[0], c->daily_gpp,
 				c->layer_daily_aut_resp[1], c->layer_daily_aut_resp[0], c->daily_aut_resp);
-
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_daily_log, "\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
@@ -979,8 +999,6 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				c->daily_lai[1], c->daily_lai[0],
 				c->layer_daily_cc[1]*100, c->layer_daily_cc[0]*100,
 				c->layer_daily_dead_tree[1], c->layer_daily_dead_tree[0], c->daily_dead_tree);
-
-		//}
 
 		previous_layer_number = c->annual_layer_number;
 
@@ -1011,8 +1029,11 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->layer_daily_cc[0] = 0;
 		c->layer_daily_dead_tree[0] = 0;
 	}
+	*/
 
 	//fixme model doesn't log correct value for more then one class within a layer
+	//ALESSIOC
+	/*
 	if (c->annual_layer_number == 3)
 	{
 		if ((day == 0 && month == 0 && years == 0) || previous_layer_number != c->annual_layer_number)
@@ -1041,11 +1062,11 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		logger(g_daily_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
 				c->layer_daily_gpp[2], c->layer_daily_gpp[1],c->layer_daily_gpp[0], c->daily_gpp,
 				c->layer_daily_aut_resp[2], c->layer_daily_aut_resp[1],c->layer_daily_aut_resp[0], c->daily_aut_resp);
-
 		if (!string_compare_i(g_settings->dndc, "on"))
 		{
 			logger(g_daily_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
 		}
+
 		logger(g_daily_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
 				"\t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
@@ -1057,7 +1078,6 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				c->daily_lai[2], c->daily_lai[1], c->daily_lai[0],
 				c->layer_daily_cc[2]*100, c->layer_daily_cc[1]*100,c->layer_daily_cc[0]*100,
 				c->layer_daily_dead_tree[2], c->layer_daily_dead_tree[1], c->layer_daily_dead_tree[0], c->daily_dead_tree);
-
 		previous_layer_number = c->annual_layer_number;
 
 		//reset
@@ -1102,10 +1122,8 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->layer_daily_et[0] = 0;
 		c->layer_daily_cc[0] = 0;
 		c->layer_daily_dead_tree[0] = 0;
-
-
-
 	}
+	*/
 
 	c->daily_gpp = 0.0;
 	c->daily_aut_resp = 0.0;
@@ -1192,20 +1210,26 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 
 	if (year == 0)
 	{
-		previous_layer_number = c->annual_layer_number;
+		//ALESSIOC
+		//previous_layer_number = c->annual_layer_number;
 	}
 	else
 	{
 		//potentially useless for soil, but what if we consider erosion losses or soil deposition? maintain it
 		//check if layer number is changed since last yearly run
+		//ALESSIOC
+		/*
 		if(previous_layer_number != c->annual_layer_number)
 		{
 			logger(g_soil_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
 		}
+		*/
 	}
 	if (!string_compare_i(g_settings->dndc, "on"))
 	{
 		//fixSergio improve a multilayer based log, specular to the one used for the aboveground
+		//ALESSIOC
+		/*
 		if ((day == 0 && month == 0 && year == 0) || previous_layer_number != c->annual_layer_number)
 		{
 			//			soil_Log ("\n%s \t%s \t%2s \t%2s \t%2s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s \t%8s "
@@ -1229,6 +1253,7 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 		{
 			doy = 1;
 		}
+		*/
 		//		soil_Log ("%d \t%8d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 		//				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
 		//				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
@@ -1280,6 +1305,9 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 		//		{
 		//			doy = 1;
 		//		}
+
+		//ALESSIOC
+		/*
 		logger(g_soil_log, "%d \t%5d \t%3d \t%2d \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f "
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
 				"\t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f \t%8.6f"
@@ -1330,6 +1358,7 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 				c->soils[0].litco22,
 				c->soils[0].litco23,
 				c->soils[0].CEC);
+		*/
 		c->leafLittering = 0;
 		c->fineRootLittering = 0;
 		c->coarseRootLittering =0;
@@ -1343,8 +1372,11 @@ void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int 
 
 		c->daily_gpp = 0;
 		c->daily_aut_resp = 0;
+
+		//ALESSIOC
+		/*
 		c->layer_daily_gpp[0] = 0;
 		c->layer_daily_aut_resp[0] = 0;
-
+		*/
 	}
 }

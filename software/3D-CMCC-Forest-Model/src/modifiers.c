@@ -202,12 +202,14 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 
 	/*SOIL WATER MODIFIER*/
 	//fixme include "dAdjMod" from 3-PG code
-	c->soil_moist_ratio = c->asw/c->max_asw_fc;
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+	//ALESSIOC
+	//c->soil_moist_ratio = c->asw/c->max_asw_fc;
+	//s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	logger(g_log, "ASW = %f mm/m2\n", c->asw);
 	logger(g_log, "Wilting point = %f mm/m2\n", c->wilting_point);
-	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
+	//ALESSIOC
+	//logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
 	logger(g_log, "fSW = %f\n", s->value[F_SW]);
 
 
@@ -223,14 +225,15 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
 	//note:changed from biome
-	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
-	logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
-	logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
-	logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
-	logger(g_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
-	logger(g_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
-	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
-	logger(g_log, "PSI BIOME = %f (MPa)\n", c->psi);
+	//ALESSIOC
+	//c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
+	//logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
+	//logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
+	//logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
+	//logger(g_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
+	//logger(g_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
+	//c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+	//logger(g_log, "PSI BIOME = %f (MPa)\n", c->psi);
 
 	/*no water stress*/
 	if (c->psi > s->value[SWPOPEN])

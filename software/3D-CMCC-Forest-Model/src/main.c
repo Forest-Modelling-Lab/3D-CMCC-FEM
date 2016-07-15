@@ -770,7 +770,8 @@ int main(int argc, char *argv[]) {
 	
 	start_year = -1;
 	logger(g_log, "\n3D-CMCC MODEL START....\n\n\n\n");
-	for ( cell = 0; cell < matrix->cells_count; ++cell ) {
+	for ( cell = 0; cell < matrix->cells_count; ++cell )
+	{
 		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
 		/* ALESSIOR: i renamed to index_vpsat */
 		int index_vpsat;

@@ -180,7 +180,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\allometry.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\aut_respiration.c"
+				>
+			</File>
+			<File
+				RelativePath=".\headers\aut_respiration.h"
 				>
 			</File>
 			<File
@@ -188,7 +196,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\biomass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\C-allocation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\headers\C-allocation.h"
 				>
 			</File>
 			<File
@@ -196,11 +212,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\C-assimilation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\C-deciduous-partitioning-allocation.c"
 				>
 			</File>
 			<File
+				RelativePath=".\headers\C-deciduous-partitioning-allocation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\C-evergreen-partitioning-allocation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\headers\C-evergreen-partitioning-allocation.h"
 				>
 			</File>
 			<File
@@ -212,7 +240,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\canopy_radiation.c"
+				RelativePath=".\src\canopy_net_radiation.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\canopy_radiation_lw_band.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\canopy_radiation_sw_band.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\canopy_sensible_heat.c"
+				>
+			</File>
+			<File
+				RelativePath=".\src\canopy_temperature.c"
 				>
 			</File>
 			<File
@@ -292,7 +336,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\matrix.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\met_data.c"
+				>
+			</File>
+			<File
+				RelativePath=".\headers\met_data.h"
 				>
 			</File>
 			<File

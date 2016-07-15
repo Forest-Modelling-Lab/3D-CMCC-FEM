@@ -641,15 +641,6 @@ typedef struct {
 } age_t;
 
 typedef struct {
-	double Abs_par;                 /* overall gridcell weighted average absorbed par (MJ/m2/day) */
-	double Transm_par;              /* overall gridcell weighted average transmitted par (MJ/m2/day) */
-	double Abs_net_rad;             /* overall gridcell weighted average absorbed net radiation (W/m2) */
-	double Transm_net_rad;          /* overall gridcell weighted average transmitted net radiation (W/m2) */
-	double Abs_ppfd;                /* overall gridcell weighted average absorbed ppfd (umol/m2/sec) */
-	double Transm_ppfd;             /* overall gridcell weighted average transmitted ppfd (umol/m2/sec) */
-} layer_t;
-
-typedef struct {
 	double value;
 	int layer_coverage;
 	int layer;
@@ -657,9 +648,6 @@ typedef struct {
 
 	age_t *ages;
 	int ages_count;
-
-	layer_t* layers;
-	int layer_count;
 
 	int z;
 } height_t;
@@ -715,16 +703,206 @@ typedef struct {
 	double CEC;
 } soil_t;
 
+enum {
+	T_LAYER_VALUE_COVER
+	, T_LAYER_VALUE_DENSITY
+	, T_LAYER_VALUE_CANOPY_COVER
+	, T_LAYER_VALUE_LAYER_COVER
+	, T_LAYER_VALUE_BASAL_AREA
+	, T_LAYER_VALUE_SHORT_WAVE_RADIATION_UPWARD_MJ
+	, T_LAYER_VALUE_SHORT_WAVE_RADIATION_UPWARD_W
+	, T_LAYER_VALUE_NET_SHORT_WAVE_RADIATION_MJ  
+	, T_LAYER_VALUE_NET_SHORT_WAVE_RADIATION_W   
+	, T_LAYER_VALUE_LONG_WAVE_RADIATION_UPWARD_MJ
+	, T_LAYER_VALUE_LONG_WAVE_RADIATION_UPWARD_W 
+	, T_LAYER_VALUE_NET_LONG_WAVE_RADIATION_MJ   
+	, T_LAYER_VALUE_NET_LONG_WAVE_RADIATION_W    
+	, T_LAYER_VALUE_SHORT_WAVE_ABSORBED          
+	, T_LAYER_VALUE_SHORT_WAVE_REFLECTED         
+	, T_LAYER_VALUE_LONG_WAVE_ABSORBED           
+	, T_LAYER_VALUE_LONG_WAVE_REFLECTED          
+	, T_LAYER_VALUE_LONG_WAVE_EMITTED            
+	, T_LAYER_VALUE_SOIL_LONG_WAVE_EMITTED       
+	, T_LAYER_VALUE_NET_LW_RAD_FOR_SOIL          
+	, T_LAYER_VALUE_NET_RAD_FOR_SOIL             
+	, T_LAYER_VALUE_SW_RAD_REFL                  
+	, T_LAYER_VALUE_SW_RAD_FOR_SOIL_REFL         
+	, T_LAYER_VALUE_NET_SW_RAD                   
+	, T_LAYER_VALUE_NET_SW_RAD_ABS               
+	, T_LAYER_VALUE_NET_SW_RAD_TRANSM            
+	, T_LAYER_VALUE_NET_SW_RAD_FOR_SOIL          
+	, T_LAYER_VALUE_PAR
+	, T_LAYER_VALUE_APAR
+	, T_LAYER_VALUE_PAR_TRANSM
+	, T_LAYER_VALUE_PAR_REFLECTED
+	, T_LAYER_VALUE_PAR_FOR_DOMINATED
+	, T_LAYER_VALUE_PAR_FOR_SUBDOMINATED
+	, T_LAYER_VALUE_PAR_FOR_SOIL
+	, T_LAYER_VALUE_PAR_REFLECTED_SOIL
+	, T_LAYER_VALUE_PAR_FOR_ESTABLISHMENT
+	, T_LAYER_VALUE_PPFD                         
+	, T_LAYER_VALUE_PPFD_ABS                     
+	, T_LAYER_VALUE_PPFD_TRANSM                  
+	, T_LAYER_VALUE_PPFD_REFLECTED               
+	, T_LAYER_VALUE_PPFD_FOR_SOIL
+	, T_LAYER_VALUE_PPFD_REFLECTED_SOIL
+
+	, T_LAYER_VALUE_DAILY_GPP
+	, T_LAYER_VALUE_MONTHLY_GPP
+	, T_LAYER_VALUE_ANNUAL_GPP     //IN G OF C M^2
+	, T_LAYER_VALUE_DAILY_NPP_GC
+	, T_LAYER_VALUE_MONTHLY_NPP_GC
+	, T_LAYER_VALUE_ANNUAL_NPP_GC	//IN G OF C M^2
+	, T_LAYER_VALUE_DAILY_NPP_TDM
+	, T_LAYER_VALUE_MONTHLY_NPP_TDM
+	, T_LAYER_VALUE_ANNUAL_NPP_TDM     //IN TONNES OF DM PER HECTARE
+	, T_LAYER_VALUE_DAILY_AUT_RESP
+	, T_LAYER_VALUE_MONTHLY_AUT_RESP
+	, T_LAYER_VALUE_ANNUAL_AUT_RESP
+	, T_LAYER_VALUE_DAILY_AUT_RESP_TC
+	, T_LAYER_VALUE_MONTHLY_AUT_RESP_TC
+	, T_LAYER_VALUE_ANNUAL_AUT_RESP_TC
+	, T_LAYER_VALUE_DAILY_MAINT_RESP
+	, T_LAYER_VALUE_MONTHLY_MAINT_RESP
+	, T_LAYER_VALUE_ANNUAL_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_GROWTH_RESP
+	, T_LAYER_VALUE_MONTHLY_GROWTH_RESP
+	, T_LAYER_VALUE_ANNUAL_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_R_ECO
+	, T_LAYER_VALUE_MONTHLY_R_ECO
+	, T_LAYER_VALUE_ANNUAL_R_ECO
+	, T_LAYER_VALUE_DAILY_HET_RESP
+	, T_LAYER_VALUE_MONTHLY_HET_RESP
+	, T_LAYER_VALUE_ANNUAL_HET_RESP
+	, T_LAYER_VALUE_DAILY_C_FLUX
+	, T_LAYER_VALUE_MONTHLY_C_FLUX
+	, T_LAYER_VALUE_ANNUAL_C_FLUX
+	, T_LAYER_VALUE_LITTER
+	, T_LAYER_VALUE_TER                                                            /*TOTAL ECOSYSTEM RESPIRATION */
+	, T_LAYER_VALUE_DAILY_NEE
+	, T_LAYER_VALUE_MONTHLY_NEE
+	, T_LAYER_VALUE_ANNUAL_NEE
+	, T_LAYER_VALUE_DAILY_LEAF_CARBON                                              /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_STEM_CARBON                                              /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY  */
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_CARBON                                         /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_CARBON                                       /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_ROOT_CARBON                                              /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_BRANCH_CARBON                                            /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_RESERVE_CARBON                                           /* DAILY CARBON ASSIMILATED TO C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_LITTER_CARBON                                            /* DAILY CARBON ASSIMILATED TO LITTER C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_FRUIT_CARBON                                             /* DAILY CARBON ASSIMILATED TO FRUIT C POOL IN GC/M2/DAY */
+	, T_LAYER_VALUE_DAILY_LEAF_CARBON_TC                                           /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_STEM_CARBON_TC                                           /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_CARBON_TC                                      /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_CARBON_TC                                    /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_BRANCH_CARBON_TC                                         /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_RESERVE_CARBON_TC                                        /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_ROOT_CARBON_TC                                           /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_LITTER_CARBON_TC                                         /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_FRUIT_CARBON_TC                                          /* DAILY CARBON ASSIMILATED TO C POOL IN TC/CELL/DAY */
+	, T_LAYER_VALUE_DAILY_LEAF_DRYMATTER
+	, T_LAYER_VALUE_DAILY_STEM_DRYMATTER
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_DRYMATTER
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_DRYMATTER
+	, T_LAYER_VALUE_DAILY_BRANCH_DRYMATTER
+	, T_LAYER_VALUE_DAILY_RESERVE_DRYMATTER
+	, T_LAYER_VALUE_DAILY_LEAF_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_STEM_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_BRANCH_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_MAINT_RESP
+	, T_LAYER_VALUE_DAILY_LEAF_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_STEM_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_BRANCH_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_GROWTH_RESP
+	, T_LAYER_VALUE_DAILY_LEAF_AUT_RESP
+	, T_LAYER_VALUE_DAILY_STEM_AUT_RESP
+	, T_LAYER_VALUE_DAILY_BRANCH_AUT_RESP
+	, T_LAYER_VALUE_DAILY_FINE_ROOT_AUT_RESP
+	, T_LAYER_VALUE_DAILY_COARSE_ROOT_AUT_RESP
+	, T_LAYER_VALUE_DAILY_F_SW
+	, T_LAYER_VALUE_DAILY_F_PSI
+	, T_LAYER_VALUE_DAILY_F_T
+	, T_LAYER_VALUE_DAILY_F_VPD
+	, T_LAYER_VALUE_DAILY_LITTERFALL
+	, T_LAYER_VALUE_MONTHLY_LITTERFALL
+	, T_LAYER_VALUE_ANNUAL_LITTERFALL
+	, T_LAYER_VALUE_AV_GPP
+	, T_LAYER_VALUE_AV_NPP
+	, T_LAYER_VALUE_STAND_AGB
+	, T_LAYER_VALUE_STAND_BGB
+
+	, T_LAYER_VALUE_DAILY_C_INT_WATT
+	, T_LAYER_VALUE_DAILY_C_TRANSP_WATT
+	, T_LAYER_VALUE_DAILY_C_EVAPO_WATT
+	, T_LAYER_VALUE_DAILY_C_EVAPOTRANSP_WATT
+	, T_LAYER_VALUE_DAILY_C_LATENT_HEAT_FLUX
+	, T_LAYER_VALUE_DAILY_LATENT_HEAT_FLUX
+	, T_LAYER_VALUE_MONTHLY_LATENT_HEAT_FLUX
+	, T_LAYER_VALUE_ANNUAL_LATENT_HEAT_FLUX
+	, T_LAYER_VALUE_DAILY_C_SENSIBLE_HEAT_FLUX
+	, T_LAYER_VALUE_DAILY_SENSIBLE_HEAT_FLUX
+	, T_LAYER_VALUE_MONTHLY_SENSIBLE_HEAT_FLUX
+	, T_LAYER_VALUE_ANNUAL_SENSIBLE_HEAT_FLUX
+
+	, T_LAYER_VALUES_COUNT
+};
+
+enum {
+	T_LAYER_COUNTER_VEG
+	, T_LAYER_COUNTER_N_TREE
+	, T_LAYER_COUNTER_DAILY
+	, T_LAYER_COUNTER_MONTHLY
+	, T_LAYER_COUNTER_ANNUAL
+	, T_LAYER_COUNTER_DAILY_DEAD_TREE
+	, T_LAYER_COUNTER_MONTHLY_DEAD_TREE
+	, T_LAYER_COUNTER_ANNUAL_DEAD_TREE
+
+	, T_LAYER_COUNTERS_COUNT
+};
+
+
+
+typedef struct {
+	height_t* heights;
+	int heights_count;
+	double value[T_LAYER_VALUES_COUNT];
+	int counter[T_LAYER_COUNTERS_COUNT];
+} tree_layer_t;
+
+enum {
+	S_LAYER_VALUE_PREVIOUS_AVAILABLE_SOIL_WATER
+	, S_LAYER_VALUE_WATER_BALANCE
+	, S_LAYER_VALUE_OLD_WATER_BALANCE
+	, S_LAYER_VALUE_SOIL_MOIST_RATIO
+	, S_LAYER_VALUE_AV_SOIL_MOIST_RATIO
+	, S_LAYER_VALUE_SWC//VOLUMETRIC SOIL WATER CONTENT (%VOL)
+	, S_LAYER_VALUE_PSI_SAT//SOIL SATURATED MATRIC POTENTIAL
+	, S_LAYER_VALUE_VWC
+	, S_LAYER_VALUE_VWC_FC
+	, S_LAYER_VALUE_VWC_SAT//SOIL SATURATED VOLUMETRIC WATER CONTENT
+	, S_LAYER_VALUE_SOIL_B //SOIL MOISTURE PARAMETER
+	, S_LAYER_VALUE_SOILW_SAT //(KGH2O/M2) SOILWATER AT SATURATION
+	, S_LAYER_VALUE_SOILW_FC //(KGH2O/M2) SOILWATER AT FIELD CAPACITY
+	, S_LAYER_VALUE_DAILY_SOIL_EVAPORATION_WATT
+	, S_LAYER_VALUE_DAILY_SOIL_LATENT_HEAT_FLUX
+	, S_LAYER_VALUE_DAILY_SOIL_SENSIBLE_HEAT_FLUX
+
+	, S_LAYER_VALUES_COUNT
+};
+
+typedef struct {
+	soil_t* soils;
+	int soils_count;
+	double value[S_LAYER_VALUES_COUNT];
+} soil_layer_t;
+
 typedef struct {
 	int x;
 	int y;
 
 	e_landuse landuse;
-
-	height_t* heights;
-	soil_t* soils;
-	int heights_count;
-	int soils_count;
 
 	/* general variables */
 	int yearday;
@@ -744,34 +922,13 @@ typedef struct {
 	double annual_precip;
 	double annual_vpd;
 
-	/*forest structure variables*/
-	int height_class_in_layer_dominant_counter;
-	int height_class_in_layer_dominated_counter;
-	int height_class_in_layer_subdominated_counter;
-	int dominant_veg_counter;
-	int dominated_veg_counter;
-	int subdominated_veg_counter;
+	/*forest structure variables*/	
 	int Veg_Counter;
-	int tree_number_dominant;
-	int tree_number_dominated;
-	int tree_number_subdominated;
-	int daily_layer_number;
-	int monthly_layer_number;
-	int annual_layer_number;
 	int top_layer;
 	int saplings_counter;
 	double cell_cover;
-	double density_dominant;
-	double density_dominated;
-	double density_subdominated;
-	double canopy_cover_dominant;
-	double canopy_cover_dominated;
-	double canopy_cover_subdominated;
-	double layer_cover_dominant;
-	double layer_cover_dominated;
-	double layer_cover_subdominated;
-
 	int n_tree;
+	
 	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
 	double basal_area;
 
@@ -889,8 +1046,6 @@ typedef struct {
 	double flux_C_balance, old_flux_C_balance;
 
 	/*water variables*/
-	//todo move these variables into soil struct
-
 	double wilting_point;
 	double field_capacity;
 	double sat_hydr_conduct;
@@ -904,25 +1059,11 @@ typedef struct {
 	double psi;
 	double canopy_pool_water_balance, old_canopy_pool_water_balance;
 	
-	double previous_available_soil_water;
-	double water_balance, old_water_balance;
-	double soil_moist_ratio;
-	double av_soil_moist_ratio;
-	double swc;//volumetric soil water content (%vol)
-	double psi_sat;//soil saturated matric potential
-	double vwc;
-	double vwc_fc;
-	double vwc_sat;//soil saturated Volumetric water content
-	double soil_b; //soil moisture parameter
-	double soilw_sat; //(kgH2O/m2) soilwater at saturation
-	double soilw_fc; //(kgH2O/m2) soilwater at field capacity
-	double prcp_rain;
-	double prcp_snow;
+	
 	double days_since_rain;
 	double rain_intercepted;
 	double water_to_soil;
 	double water_to_atmosphere;
-	double precip_sources;
 	double precip_canopy;
 	double precip_soil;
 	double snow_pack;  //amount of snow in Kg H2O
@@ -941,78 +1082,25 @@ typedef struct {
 	double daily_soil_bl_cond, monthly_soil_bl_cond, annual_soil_bl_cond;
 	double daily_et, monthly_et, annual_et;
 
+	double prcp_rain;
+	double prcp_snow;
+
+	double daily_soil_evaporation_watt;
+	double daily_soil_latent_heat_flux;
+	double daily_soil_sensible_heat_flux;
+	
 	/*energy balance*/
 	double daily_c_int_watt;
 	double daily_c_transp_watt;
 	double daily_c_evapo_watt;
 	double daily_c_evapotransp_watt;
 	double daily_c_latent_heat_flux;
-	double daily_soil_evaporation_watt;
-	double daily_soil_latent_heat_flux;
 	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;
 	double daily_c_sensible_heat_flux;
-	double daily_soil_sensible_heat_flux;
 	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;
 
-
-	//cumulative variables layer related used in annual-monthly-daily Log
-	double layer_daily_gpp[3], layer_monthly_gpp[3], layer_annual_gpp[3];
-	double layer_daily_npp_tDM[3], layer_monthly_npp_tDM[3], layer_annual_npp_tDM[3];
-	double layer_daily_npp_gC[3], layer_monthly_npp_gC[3], layer_annual_npp_gC[3];
-	double layer_daily_maint_resp[3], layer_monthly_maint_resp[3], layer_annual_maint_resp[3];
-	double layer_daily_growth_resp[3], layer_monthly_gowth_resp[3], layer_annual_growth_resp[3];
-	/* among pools */
-	double layer_daily_aut_resp[3], layer_monthly_aut_resp[3], layer_annual_aut_resp[3];
-	double layer_daily_leaf_aut_resp[3], layer_monthly_leaf_aut_resp[3], layer_annual_leaf_aut_resp[3];
-	double layer_daily_stem_aut_resp[3], layer_monthlyl_stem_aut_resp[3], layer_annual_stem_aut_resp[3];
-	double layer_daily_branch_aut_resp[3], layer_monthly_branch_aut_resp[3], layer_annual_branch_aut_resp[3];
-	double layer_daily_fine_root_aut_resp[3], layer_monthly_fine_root_aut_resp[3], layer_annual_fine_root_aut_resp[3];
-	double layer_daily_coarse_root_aut_resp[3], layer_monthly_coarse_root_aut_resp[3], layer_annual_coarse_root_aut_resp[3];
-
-	double layer_daily_c_flux[3], layer_monthly_c_flux[3], layer_annual_c_flux[3];
-	double layer_daily_aut_resp_tC[3];
-	double layer_daily_c_flux_tDM[3];
-
-
-	double daily_delta_wf[3], monthly_delta_wf[3], annual_delta_wf[3];
-	double daily_delta_wts[3], monthly_delta_wts[3], annual_delta_wts[3];
-	double daily_delta_ws[3], monthly_delta_ws[3],  annual_delta_ws[3];
-	double daily_delta_wbb[3], monthly_delta_wbb[3], annual_delta_wbb[3];
-	double daily_delta_wfr[3], monthly_delta_wfr[3], annual_delta_wfr[3];
-	double daily_delta_wcr[3], monthly_delta_wcr[3], annual_delta_wcr[3];
-	double daily_delta_wres[3], monthly_delta_wres[3], annual_delta_wres[3];
-
-	double daily_layer_avDBH[3], monthly_layer_avDBH[3], annual_layer_avDBH[3];
-	double daily_layer_stem_c[3], monthly_layer_stem_c[3], annual_layer_stem_c[3];
-	double daily_layer_live_stem_c[3], monthly_layer_live_stem_c[3], annual_layer_live_stem_c[3];
-	double daily_layer_stem_sapwood_c[3], monthly_layer_stem_sapwood_c[3], annual_layer_stem_sapwood_c[3];
-	double daily_layer_leaf_c[3], monthly_layer_leaf_c[3], annual_layer_leaf_c[3];
-	double daily_layer_tot_stem_c[3], monthly_layer_tot_stem_c[3], annual_layer_tot_stem_c[3];
-	double daily_layer_branch_c[3], monthly_layer_branch_c[3], annual_layer_branch_c[3];
-	double daily_layer_live_branch_c[3], monthly_layer_live_branch_c[3], annual_layer_live_branch_c[3];
-	double daily_layer_branch_sapwood_c[3], monthly_layer_branch_sapwood_c[3], annual_layer_branch_sapwood_c[3];
-	double daily_layer_fineroot_c[3], monthly_layer_fineroot_c[3], annual_layer_fineroot_c[3];
-	double daily_layer_coarseroot_c[3], monthly_layer_coarseroot_c[3], annual_layer_coarseroot_c[3];
-	double daily_layer_coarse_root_sapwood_c[3], monthly_layer_coarse_root_sapwood_c[3], annual_layer_coarse_root_sapwood_c[3];
-	double daily_layer_live_coarseroot_c[3], monthly_layer_live_coarseroot_c[3], annual_layer_live_coarseroot_c[3];
-	double daily_layer_sapwood_c[3], monthly_layer_sapwood_c[3], annual_layer_sapwood_c[3];
-	double daily_layer_reserve_c[3], monthly_layer_reserve_c[3], annual_layer_reserve_c[3];
-
-
-	double layer_daily_c_int[3], layer_monthly_c_int[3], layer_annual_c_int[3];
-	double layer_daily_c_transp[3], layer_monthly_c_transp[3], layer_annual_c_transp[3];
-	double layer_daily_c_evapo[3], layer_monthly_c_evapo[3], layer_annual_c_evapo[3];
-	double layer_daily_c_water_stored[3], layer_monthly_c_water_stored[3], layer_annual_c_water_stored[3];
-	double layer_daily_c_evapotransp[3], layer_monthly_c_evapotransp[3], layer_annual_c_evapotransp[3];
-	double layer_daily_et[3], layer_monthly_et[3], layer_annual_et[3];
-
-
-	double layer_daily_cc[3], layer_monthly_cc[3], layer_annual_cc[3];
-	double daily_lai[3];
 	double annual_peak_lai[10];
-	int layer_daily_dead_tree[3], layer_monthly_dead_tree[3], layer_annual_dead_tree[3];
-
-	double annual_dbh[3];
+	
 
 
 	/**************************************************************************************************
@@ -1053,7 +1141,15 @@ typedef struct {
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
 
-	/* added by ALESSIOR */
+	tree_layer_t* t_layers;
+	int t_layers_count;
+
+	soil_layer_t* s_layers;
+	int s_layers_count;
+
+	/*
+		those variables are referred to cell, they must be same for each layers
+	*/
 	int years_count;
 	yos_t *years;
 } cell_t;

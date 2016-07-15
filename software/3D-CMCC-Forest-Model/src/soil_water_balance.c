@@ -95,12 +95,15 @@ void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, co
 		CHECK_CONDITION(c->asw, < 0.0)
 	}
 
+	//ALESSIOC
+	/*
 	c->swc = (c->asw * 100)/c->max_asw_fc;
 	logger(g_log, "asw = %g\n", c->asw);
 	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
 	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
 
-	/* check */
+	// check
 	CHECK_CONDITION (c->swc, > 100.1);
 	CHECK_CONDITION (c->swc, < 0);
+	*/
 }

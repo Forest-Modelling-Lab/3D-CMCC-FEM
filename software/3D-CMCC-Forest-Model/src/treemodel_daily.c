@@ -228,8 +228,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								/* respiration */
 								if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 								{
-									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+									Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+									Growth_respiration (&m->cells[cell], layer, height, age, species);
 								}
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
@@ -237,10 +237,10 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 
 								/* C assimilation */
-								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height);
+								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 								/* C-N-partitioning-allocation */
-								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, met, day, year);
 							}
 							/*outside growing season*/
 							else
@@ -265,8 +265,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								/* respiration */
 								if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 								{
-									Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-									Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+									Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+									Growth_respiration (&m->cells[cell], layer, height, age, species);
 								}
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
@@ -274,10 +274,10 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 
 								/* C assimilation */
-								Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height);
+								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 								/* C-N-partitioning-allocation */
-								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, met, day, year);
 							}
 						}
 						/* loop for evergreen */
@@ -314,8 +314,8 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							/* respiration */
 							if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 							{
-								Maintenance_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height);
-								Growth_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+								Growth_respiration (&m->cells[cell], layer, height, age, species);
 							}
 							Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
@@ -323,10 +323,10 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
 
 							/* C assimilation */
-							Carbon_assimilation (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height);
+							Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 							/* C-N-partitioning-allocation */
-							Daily_C_Evergreen_Partitioning_Allocation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, DaysInMonth[month], height, age, species);
+							Daily_C_Evergreen_Partitioning_Allocation ( &m->cells[cell], layer, height, age, species, met, day, year);
 							logger(g_log, "--------------------------------------------------------------------------\n");
 						}
 
@@ -400,7 +400,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 
 							AGB_BGB_biomass(&m->cells[cell], height, age, species);
 
-							Biomass_increment_EOY ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].top_layer,  m->cells[cell].heights[height].z, height, age);
+							Biomass_increment_EOY(&m->cells[cell], layer, height, age, species);
 
 							/* print at the end of simulation class level data */
 							Print_stand_data (&m->cells[cell], month, year, height, age, species);

@@ -164,42 +164,42 @@ void Soil_evaporation_old (cell_t * c, const meteo_t *const met, int month, int 
 
 		//fixme HOW COMPUTE A CUMULATIVE CANOPY COVER AMONG ALLO CLASSES!!
 		/*following Gerten et al., 2004*/
-		if (c->daily_layer_number != 0)
-		{
-			switch (c->daily_layer_number)
-			{
-			case 3:
-				if (g_settings->spatial == 's')
-				{
-					//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
-				}
-				else
-				{
-					cc = c->canopy_cover_subdominated;
-				}
-				break;
-			case 2:
-				if (g_settings->spatial == 's')
-				{
-					//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
-				}
-				else
-				{
-					cc = c->canopy_cover_dominated;
-				}
-				break;
-			case 1:
-				//Net_Radiation = Net_Radiation_for_dominated;
-				cc = c->canopy_cover_dominant;
-				break;
-			}
-		}
-		else
-		{
-			//logger(g_log, "ONLY ONE LAYER\n");
-			cc = c->canopy_cover_dominant;
-
-		}
+		//ALESSIOC
+		//if (c->daily_layer_number != 0)
+		//{
+		//	switch (c->daily_layer_number)
+		//	{
+		//	case 3:
+		//		if (g_settings->spatial == 's')
+		//		{
+		//			//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
+		//		}
+		//		else
+		//		{
+		//			cc = c->canopy_cover_subdominated;
+		//		}
+		//		break;
+		//	case 2:
+		//		if (g_settings->spatial == 's')
+		//		{
+		//			//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * met[month].d[day].ndvi_lai));
+		//		}
+		//		else
+		//		{
+		//			cc = c->canopy_cover_dominated;
+		//		}
+		//		break;
+		//	case 1:
+		//		//Net_Radiation = Net_Radiation_for_dominated;
+		//		cc = c->canopy_cover_dominant;
+		//		break;
+		//	}
+		//}
+		//else
+		//{
+		//	//logger(g_log, "ONLY ONE LAYER\n");
+		//	cc = c->canopy_cover_dominant;
+		//}
 
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
 		//converting W/m^2 in Joule/m^2/day
@@ -210,7 +210,8 @@ void Soil_evaporation_old (cell_t * c, const meteo_t *const met, int month, int 
 			PotEvap = 0;
 		}
 
-		c->soil_moist_ratio = c->asw / c->max_asw_fc;
+		//ALESSIOC
+		//c->soil_moist_ratio = c->asw / c->max_asw_fc;
 		//logger(g_log, "Soil moisture = %f %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
@@ -218,7 +219,8 @@ void Soil_evaporation_old (cell_t * c, const meteo_t *const met, int month, int 
 		{
 			cc = 1;
 		}
-		c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
+		//ALESSIOC
+		//c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
 		logger(g_log, "Daily Soil Evaporation = %fmm/day \n", c->daily_soil_evapo );
 	}
 	else

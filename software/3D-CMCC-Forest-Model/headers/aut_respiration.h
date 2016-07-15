@@ -4,8 +4,8 @@
 
 #include "matrix.h"
 
-void Maintenance_respiration(species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height);
-void Growth_respiration(species_t *const s, cell_t *const c, const int height);
-void Autotrophic_respiration (species_t *const s, cell_t *const c, const int height);
+void Maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_t *const met, const int day, const int month);
+void Growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species);
+void Autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species);
 
 #endif /* AUT_RESPIRATION_H_ */
