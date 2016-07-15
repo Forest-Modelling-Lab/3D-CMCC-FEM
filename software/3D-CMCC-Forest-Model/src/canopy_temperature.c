@@ -46,13 +46,13 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((met[month].d[day].tavg+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
 
-	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
-	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
-	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
-
 	/* calculate temperature offsets for slope estimate */
 	t1 = met[month].d[day].tavg+dt;
 	t2 = met[month].d[day].tavg-dt;
+
+	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
+	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
+	pvs2 = 610.7 * exp(17.38 * t2 / (239.0 + t2));
 
 	/* calculate slope of pvs vs. T curve, at ta */
 	/* Slope of the saturated vapour pressure curve*/
