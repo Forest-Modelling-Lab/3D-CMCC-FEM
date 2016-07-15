@@ -11,12 +11,15 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 
 /**/
-int Establishment_LPJ (cell_t *const c, species_t *const s)
+void Establishment_LPJ (cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 
 	//double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
 	double EstabRate;   //Seed establishment rate Under Dominant Canopy
 	static int Nsapling;
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	logger(g_log, "\n--LPJ ESTABLISHMENT--\n");
 
@@ -25,9 +28,6 @@ int Establishment_LPJ (cell_t *const c, species_t *const s)
 	logger(g_log, "Annual Number of seeds using LPJ  = %d seeds/ha/year\n", s->counter[N_SEED]);
 
 	//da ricontrollare per vedere quale Lai prende di quale layer e semmai non utilizzare il FProCov
-
-
-
 
 	/*
 	   LightAbsorb = 1 -  (exp(- s->value[K] * s->value[LAI]));
@@ -48,13 +48,8 @@ int Establishment_LPJ (cell_t *const c, species_t *const s)
 	logger(g_log, "Light absorb for establishment = %f \n", c->par_for_establishment);
 	logger(g_log, "Seed Establishment Rate from LPJ = %f saplings/m^2 \n", EstabRate);
 
-
-
-	Nsapling = (int)(s->counter[N_SEED] * EstabRate);
+	s->counter[N_TREE_SAP] = (int)(s->counter[N_SEED] * EstabRate);
 	logger(g_log, "Annual Number of Saplings per hectare using LPJ = %d Saplings/year hectare\n", Nsapling);
 	logger(g_log, "Annual Number of Saplings using LPJ = %f Saplings/year m^2\n", (double) Nsapling / g_settings->sizeCell );
 	logger(g_log, "Percentage of seeds survived using LPJ = %f %% seeds/year hectare\n", ((double)Nsapling * 100)/(double)s->counter[N_SEED] );
-
-
-	return Nsapling;
 }

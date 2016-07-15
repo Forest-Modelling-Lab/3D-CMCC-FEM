@@ -14,7 +14,7 @@
 
 extern logger_t* g_log;
 
-void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int day)
+void Check_prcp (cell_t *const c,  meteo_daily_t *meteo_daily)
 {
 
 	//FOLLOWING BIOME APPROACH
@@ -30,25 +30,25 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	logger(g_log, "-CHECK PRECIPITATION-\n");
 
 	t_melt = r_melt = r_sub = 0;
-	t_melt = t_coeff * met[month].d[day].tavg;
+	t_melt = t_coeff * meteo_daily->tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
-	incident_rad = (c->net_sw_rad_for_soil * met[month].d[day].daylength * 3600) * snow_abs * 0.001;
+	incident_rad = (c->net_sw_rad_for_soil * meteo_daily->daylength * 3600) * snow_abs * 0.001;
 
 
 	/* temperature and radiation melt from snowpack */
-	if (met[month].d[day].tavg > 0.0)
+	if (meteo_daily->tavg > 0.0)
 	{
-		c->prcp_rain = met[month].d[day].prcp;
+		c->prcp_rain = meteo_daily->prcp;
 
 		logger(g_log, "prcp_rain = rain = %f mm\n", c->prcp_rain);
 
 		if (c->snow_pack > 0.0)
 		{
-			logger(g_log, "tavg = %f\n", met[month].d[day].tavg);
+			logger(g_log, "tavg = %f\n", meteo_daily->tavg);
 			logger(g_log, "snow pack = %f cm\n", c->snow_pack);
 			logger(g_log, "Snow melts!!\n");
-			r_melt = incident_rad / met[month].d[day].lh_fus;
+			r_melt = incident_rad / meteo_daily->lh_fus;
 			c->snow_melt = t_melt + r_melt;
 
 			if (c->snow_melt > c->snow_pack)
@@ -77,15 +77,15 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	}
 	else
 	{
-		if(met[month].d[day].prcp > 0.0)
+		if(meteo_daily->prcp > 0.0)
 		{
-			c->prcp_snow = met[month].d[day].prcp;
+			c->prcp_snow = meteo_daily->prcp;
 			logger(g_log, "prcp = snow = %f cm\n", c->prcp_snow);
 
 			c->snow_pack += c->prcp_snow;
 			logger(g_log, "snow pack  + daily snow= %f cm\n", c->snow_pack);
 		}
-		r_sub = incident_rad / met[month].d[day].lh_sub;
+		r_sub = incident_rad / meteo_daily->lh_sub;
 
 		if (c->snow_pack > 0.0)
 		{
@@ -121,7 +121,7 @@ void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int
 	/* following Lagergren et al., 2006 */
 	/* impose zero value for tsoil in case of snow presence */
 	//todo move to soil when snow melt and subl will go to soil
-	if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
+	if(c->snow_pack != 0) meteo_daily->tsoil = 0.0;
 
 	logger(g_log, "*****************************************\n");
 }

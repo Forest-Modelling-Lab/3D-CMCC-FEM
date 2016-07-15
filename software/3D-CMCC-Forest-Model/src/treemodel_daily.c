@@ -53,6 +53,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 {
 	meteo_t *met;
 
+	static int layer;
 	static int height;
 	static int age;
 	static int species;
@@ -234,7 +235,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/* carbon fluxes */
-								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
+								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* C assimilation */
 								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
@@ -271,7 +272,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 								/* carbon fluxes */
-								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
+								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* C assimilation */
 								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
@@ -320,7 +321,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
 
 							/* carbon fluxes */
-							Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height, day, month);
+							Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
 
 							/* C assimilation */
 							Carbon_assimilation(&m->cells[cell], layer, height, age, species);
@@ -363,7 +364,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								if (Yearly_Rain > m->cells[cell].heights[height].ages[age].species[species].value[MINRAIN])
 								{
 								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP] = Establishment_LPJ ( &m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+								Establishment_LPJ ( &m->cells[cell],layer, height, age, species);
 								logger(g_log, "Saplings Number from LPJ = %d\n", m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE_SAP]);
 								}
 								else
@@ -404,9 +405,6 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 
 							/* print at the end of simulation class level data */
 							Print_stand_data (&m->cells[cell], month, year, height, age, species);
-
-
-							EOY_cumulative_balance_layer_level (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height]);
 
 							Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
 

@@ -274,7 +274,7 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if(day == 0)
 	{
-		Dendrometry (c, &c->t_layers[layer].heights[height].ages[age].species[species], &c->t_layers[layer].heights[height], year);
+		Dendrometry (c, layer, height, age, species, year);
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");

@@ -4,7 +4,6 @@
 
 #include "matrix.h"
 
-void EOY_cumulative_balance_layer_level(const species_t *const s, const height_t* const h);
 void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int day, const int cell_index);
 void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int cell_index);
 void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const int years_of_simulation, const int cell_index);

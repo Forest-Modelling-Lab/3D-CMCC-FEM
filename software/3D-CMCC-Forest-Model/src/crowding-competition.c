@@ -24,7 +24,7 @@ extern logger_t* g_log;
 //bassa densità maggior dbh
 // in the first year avdbh and height are from input data
 
-
+//not used
 void Crowding_competition (species_t *const s, height_t *h, int z, int years, int top_layer)
 {
 

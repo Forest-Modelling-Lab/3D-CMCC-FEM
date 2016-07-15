@@ -4,7 +4,8 @@
 
 extern logger_t* g_log;
 
-void Evapotranspiration(cell_t* const c) {
+void Evapotranspiration(cell_t* const c)
+{
 	logger(g_log, "\n**EVAPOTRANSPIRATION_ROUTINE**\n");
 
 	c->daily_et = c->daily_c_evapotransp + c->daily_soil_evapo;

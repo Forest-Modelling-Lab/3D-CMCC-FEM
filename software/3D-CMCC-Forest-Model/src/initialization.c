@@ -13,8 +13,14 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Initialization_biomass_data (species_t *const s, height_t *const h, cell_t *const c, const int day, const int month, const int year)
+void Initialization_biomass_data(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
+	height_t *h;
+	h = &c->t_layers[layer].heights[height];
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+
 	logger(g_log, "\n\n...checking initial biomass data...\n");
 
 	/*check for initial biomass*/
@@ -412,8 +418,6 @@ void Initialization_site_data(cell_t *const c)
 	float bcoeff;
 	float sat;
 
-	int i;
-
 	float volumetric_wilting_point;
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
@@ -521,16 +525,6 @@ void Initialization_site_data(cell_t *const c)
 	/* bulk density g/cm3 */
 	c->bulk_density += (-0.08 * c->bulk_density);
 	logger(g_log, "**Bulk density = %f g/cm^3\n", c->bulk_density);
-
-	//test 5 may 2016
-	for (i = 0; i < c->soils_count; i++)
-	{
-		c->soils[i].bulk_density = 0.0;
-		c->soils[i].field_capacity = 0.0;
-		c->soils[i].wilting_point = 0.0;
-		//logger(g_log, "i= %d and soils_count = %d\n", i, c->soils_count);
-	}
-
 }
 
 

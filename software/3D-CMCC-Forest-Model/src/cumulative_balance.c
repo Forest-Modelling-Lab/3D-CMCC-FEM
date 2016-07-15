@@ -11,13 +11,6 @@ extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 extern logger_t* g_soil_log;
 
-void EOY_cumulative_balance_layer_level(const species_t* const s, const height_t* const h) {
-	if ( s->value[DEL_Y_WS] + s->value[DEL_Y_WR] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES] + s->value[DEL_Y_BB] != s->value[YEARLY_NPP_tDM] ) {
-		logger(g_log, "ATTENTION SUM OF ALL INCREMENTS DIFFERENT FROM YEARLY NPP \n");
-		logger(g_log, "DEL SUM = %f \n", s->value[DEL_Y_WS] + s->value[DEL_Y_WCR] + s->value[DEL_Y_WFR] + s->value[DEL_Y_BB] + s->value[DEL_Y_WF] + s->value[DEL_Y_WRES]);
-	}
-}
-
 void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const int years_of_simulation, const int cell_index)
 {
 	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;

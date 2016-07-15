@@ -382,7 +382,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	Canopy_latent_heat_fluxes (s, meteo_daily);
 
 	/* compute sensible heat fluxes for canopy */
-	Canopy_sensible_heat_fluxes(c, s, meteo_daily);
+	Canopy_sensible_heat_fluxes(c, layer, height, age, species, meteo_daily);
 
 
 	c->daily_c_int += s->value[CANOPY_INT];

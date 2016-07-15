@@ -9,10 +9,16 @@
 
 extern logger_t* g_log;
 
-void Dendrometry(cell_t *const c, species_t *const s, height_t *const h, const int year)
+void Dendrometry(cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
 {
 	double oldavDBH;
 	double oldTreeHeight;
+
+	height_t *h;
+	h = &c->t_layers[layer].heights[height];
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 
 	logger(g_log, "\n**DENDROMETRY_ROUTINE**\n");
@@ -135,9 +141,7 @@ void Dendrometry(cell_t *const c, species_t *const s, height_t *const h, const i
 void Annual_minimum_reserve (species_t *const s)
 {
 	/* recompute annual minimum reserve pool for  year allocation */
-	//these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling
-	//see if change with the ratio reported from Barbaroux et al., 2002 (using DryMatter)
-
+	/* these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling */
 	/* following Krinner et al., 2005 */
 
 	/* IMPORTANT! reserve computation if not in init data are computed from DM */

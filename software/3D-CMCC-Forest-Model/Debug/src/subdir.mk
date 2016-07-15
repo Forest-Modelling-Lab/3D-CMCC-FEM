@@ -24,7 +24,6 @@ C_SRCS += \
 ../src/check_balance.c \
 ../src/check_prcp.c \
 ../src/common.c \
-../src/cropmodel_daily.c \
 ../src/crowding-competition.c \
 ../src/cumulative_balance.c \
 ../src/dendrometry.c \
@@ -90,7 +89,6 @@ OBJS += \
 ./src/check_balance.o \
 ./src/check_prcp.o \
 ./src/common.o \
-./src/cropmodel_daily.o \
 ./src/crowding-competition.o \
 ./src/cumulative_balance.o \
 ./src/dendrometry.o \
@@ -156,7 +154,6 @@ C_DEPS += \
 ./src/check_balance.d \
 ./src/check_prcp.d \
 ./src/common.d \
-./src/cropmodel_daily.d \
 ./src/crowding-competition.d \
 ./src/cumulative_balance.d \
 ./src/dendrometry.d \

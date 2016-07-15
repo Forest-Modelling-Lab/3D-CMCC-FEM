@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Check_prcp (cell_t *const c, meteo_t *const met, const int month, const int day);
+void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily);
 
 #endif /* CHECK_PRCP_H */
