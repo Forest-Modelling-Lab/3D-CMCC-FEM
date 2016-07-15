@@ -207,7 +207,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								/* radiation */
 								canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
 								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-								canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+								canopy_net_radiation(&m->cells[cell], layer, height, age, species);
 
 								/* canopy temperature */
 								canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);

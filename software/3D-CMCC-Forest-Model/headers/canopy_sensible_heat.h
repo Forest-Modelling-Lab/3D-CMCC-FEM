@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-void canopy_sensible_heat (species_t *const s, cell_t *const c, const meteo_t *const met, int month, int day, int height, int age, int species);
+void canopy_sensible_heat(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily);
 
 #endif /* SRC_CANOPY_SENSIBLE_HEAT_H_ */

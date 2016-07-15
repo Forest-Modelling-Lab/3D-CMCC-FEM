@@ -19,58 +19,27 @@
 
 extern logger_t* g_log;
 
-//void canopy_lw_band_emit_trans_refl_radiation (cell_t *const c, species_t *const s, double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
-//{
-//	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
-//
-//	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
-//	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
-//	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
-//
-//	/* it follows a little bit different rationale compared to BIOME-BGC approach
-//	 * in BIOME_BGC:
-//	 * apar = par * (1 - (exp(- K * LAI)));
-//	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
-//	 * apar_shade = apar- apar_sun;
-//	 *
-//	 * in 3D-CMCC FEM:
-//	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
-//	 * par_transm_sun  = par - apar_sun;
-//	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
-//	 * apar = apar_sun + apar_shade;
-//	 *
-//	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
-//	 * but there's an exponential decay of absorption also for sunlit foliage	 *
-//	 */
-//
-//	/* compute effective canopy cover */
-//	/* special case when LAI = < 1.0 */
-//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-//
-//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-//	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-//
-//
-//}
-
-void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year, const int height, const int age, const int species)
+void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	double LW_emis_canopy_frac, LW_emis_canopy_frac_sun, LW_emis_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation emissivity */
-	double LW_transm_canopy_frac, LW_transm_canopy_frac_sun, LW_transm_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation transmittivity */
+	double LW_emis_canopy_frac;
+	//double LW_emis_canopy_frac_sun, LW_emis_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation emissivity */
+	double LW_transm_canopy_frac;
+	//double LW_transm_canopy_frac_sun, LW_transm_canopy_frac_shade;       /* (ratio) fraction of Long Wave radiation transmittivity */
 	double LW_abs_canopy_frac;
 	//double LW_abs_canopy_frac_sun, LW_abs_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation absrptivity */
 	//double LW_refl_canopy_frac, LW_refl_canopy_frac_sun, LW_refl_canopy_frac_shade;         /* (ratio) fraction of Long Wave radiation reflectivity */
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	double TsoilK;
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");
 
-	logger(g_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", met[month].d[day].atm_lw_downward_W);
+	logger(g_log, "-ATMOSPHERE DOWNWARD LONGWAVE RADIATION = %g  (W/m2)\n", meteo_daily->atm_lw_downward_W);
 
-	TsoilK = met[month].d[day].tsoil + TempAbs;
+	TsoilK = meteo_daily->tsoil + TempAbs;
 
 
 	/* compute effective canopy cover */
@@ -114,30 +83,30 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 			(2. - LW_emis_canopy_frac * (1.0 - EMSOIL)) *
 			s->value[LW_RAD_EMIT] -
 			(LW_emis_canopy_frac * c->soil_long_wave_emitted) -
-			(LW_emis_canopy_frac * ((1. + (1. - EMSOIL) * (1 - LW_emis_canopy_frac)) * met[month].d[day].atm_lw_downward_W));
+			(LW_emis_canopy_frac * ((1. + (1. - EMSOIL) * (1 - LW_emis_canopy_frac)) * meteo_daily->atm_lw_downward_W));
 	logger(g_log, "net canopy long wave fluxes (CLM 4.5) = %g (W/m2)\n", s->value[NET_LW_RAD]);
 
 	/* compute canopy downward long wave radiation (below the canopy) CLM 4.5 (eq. 4.16) */
 	//fixme CLM uses for TcanopyK_old Tn+1
 	//note: equation has been modified for canopy coverage
-	s->value[LW_RAD_TRANSM] = (((1. - LW_emis_canopy_frac) * met[month].d[day].atm_lw_downward_W) +
+	s->value[LW_RAD_TRANSM] = (((1. - LW_emis_canopy_frac) * meteo_daily->atm_lw_downward_W) +
 			s->value[LW_RAD_EMIT]  + (4. * LW_emis_canopy_frac * SBC_W * pow (s->value[CANOPY_TEMP_K], 3.) *
 			(s->value[CANOPY_TEMP_K_OLD] - s->value[CANOPY_TEMP_K])) * leaf_cell_cover_eff) +
-			(met[month].d[day].atm_lw_downward_W * (1. - leaf_cell_cover_eff));
+			(meteo_daily->atm_lw_downward_W * (1. - leaf_cell_cover_eff));
 	logger(g_log, "long wave fluxes below the canopy (CLM 4.5) = %g (W/m2)\n", s->value[LW_RAD_TRANSM]);
 
 	/* compute soil net long wave radiation CLM 4.5 (eq. 4.17) */
-	c->net_lw_rad_for_soil = c->soil_long_wave_emitted - (EMSOIL * s->value[LW_RAD_TRANSM]) - (EMSOIL * met[month].d[day].atm_lw_downward_W);
+	c->net_lw_rad_for_soil = c->soil_long_wave_emitted - (EMSOIL * s->value[LW_RAD_TRANSM]) - (EMSOIL * meteo_daily->atm_lw_downward_W);
 	logger(g_log, "net soil long wave fluxes (CLM 4.5) = %g (W/m2)\n", c->net_lw_rad_for_soil);
 
 	/***********************************************************************************************************/
 
 	/* following Gouttevin et al., 2015 (including emissivity for leaf and soil)*/
 //	/*original version*/
-//	s->value[LW_RAD_ABS] = LW_abs_canopy_frac * (met[month].d[day].atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT]));
+//	s->value[LW_RAD_ABS] = LW_abs_canopy_frac * (meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT]));
 //	//logger(g_log, "abs canopy long wave fluxes (Gouttevin)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
 //	/*modified version*/
-//	s->value[LW_RAD_ABS] = LW_abs_canopy_frac *(met[month].d[day].atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT])) * leaf_cell_cover_eff;
+//	s->value[LW_RAD_ABS] = LW_abs_canopy_frac *(meteo_daily->atm_lw_downward_W + lw_soil_emit - (2. * s->value[LW_RAD_EMIT])) * leaf_cell_cover_eff;
 //	logger(g_log, "abs canopy long wave fluxes (Gouttevin-modified)= %g (W/m2)\n", s->value[LW_RAD_ABS]);
 
 
@@ -163,11 +132,11 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 //
 //	/*** atmospheric long wave ***/
 //	/* atmospheric long wave radiation transmitted through the canopy */
-//	lw_atm_trasm_canopy_to_soil = met[month].d[day].atm_lw_downward_W * LW_transm_canopy_frac;
+//	lw_atm_trasm_canopy_to_soil = meteo_daily->atm_lw_downward_W * LW_transm_canopy_frac;
 //	logger(g_log, "lw_atm_trasm_canopy_to_soil = %g (W/m2)\n", lw_atm_trasm_canopy_to_soil);
 //
 //	/* taking into account canopy coverage */
-//	lw_atm_temp = (lw_atm_trasm_canopy_to_soil * leaf_cell_cover_eff) + (met[month].d[day].atm_lw_downward_W * (1. - leaf_cell_cover_eff));
+//	lw_atm_temp = (lw_atm_trasm_canopy_to_soil * leaf_cell_cover_eff) + (meteo_daily->atm_lw_downward_W * (1. - leaf_cell_cover_eff));
 //	logger(g_log, "lw_atm_temp = %g (W/m2)\n", lw_atm_temp);
 //
 //	/* atmospheric long wave radiation transmitted through the canopy and reflected by the soil */
@@ -248,7 +217,43 @@ void canopy_radiation_lw_band(species_t *const s, cell_t *const c, const meteo_t
 //	/*6*/		lw_soil_emit_to_canopy_trasm_canopy_to_atm;
 //	logger(g_log, "lw_total_upward_to_atm = %g (W/m2)\n", lw_total_upward_to_atm);
 //
-//	net_lw_canopy = met[month].d[day].atm_lw_downward_W - lw_total_upward_to_atm;
+//	net_lw_canopy = meteo_daily->atm_lw_downward_W - lw_total_upward_to_atm;
 //	logger(g_log, "net_lw_canopy = %g (W/m2)\n", net_lw_canopy);
 
 }
+
+
+//void canopy_lw_band_emit_trans_refl_radiation (cell_t *const c, species_t *const s, double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
+//{
+//	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
+//
+//	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
+//	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
+//	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
+//
+//	/* it follows a little bit different rationale compared to BIOME-BGC approach
+//	 * in BIOME_BGC:
+//	 * apar = par * (1 - (exp(- K * LAI)));
+//	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+//	 * apar_shade = apar- apar_sun;
+//	 *
+//	 * in 3D-CMCC FEM:
+//	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+//	 * par_transm_sun  = par - apar_sun;
+//	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
+//	 * apar = apar_sun + apar_shade;
+//	 *
+//	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
+//	 * but there's an exponential decay of absorption also for sunlit foliage	 *
+//	 */
+//
+//	/* compute effective canopy cover */
+//	/* special case when LAI = < 1.0 */
+//	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+//	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
+//
+//	/* check for the special case in which is allowed to have more 100% of grid cell covered */
+//	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+//
+//
+//}

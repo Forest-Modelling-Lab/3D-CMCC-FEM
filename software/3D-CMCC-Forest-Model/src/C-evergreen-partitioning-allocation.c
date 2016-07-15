@@ -25,12 +25,9 @@ extern logger_t* g_log;
 
 /* Evergreen carbon allocation routine */
 void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age
-											   , const int species, const meteo_t *const met, const int day, const int year)
+		, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
 {
-	//CTEM VERSION
-
-	int i;
-
+	//int i;
 	//allocation parameter. their sum must be = 1
 	double s0Ctem;
 	double r0Ctem;
@@ -65,21 +62,21 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	//every pool except foliage
 
-	
+
 
 	logger(g_log, "\n*ALLOCATION_ROUTINE*\n\n");
 
 	logger(g_log, "Carbon allocation routine for evergreen\n");
 
-	i = c->t_layers[layer].heights[height].z;
+	//i = c->t_layers[layer].heights[height].z;
 
 	/* following Arora and Boer 2005 */
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
 	/* Partitioning ratios from Arora and Boer 2005 */
-	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+	pR_CTEM = (r0Ctem + (omegaCtem * (1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
-	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
+	pS_CTEM = (s0Ctem + (omegaCtem * (1.0 - Light_trasm))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
@@ -316,7 +313,7 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	c->daily_delta_wfr[i] = s->value[C_TO_FINEROOT];
 	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
 	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
-	*/
+	 */
 
 	/* update dendrometry variables */
 	//ALESSIOC
@@ -329,7 +326,7 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	{
 		c->annual_layer_avDBH[i] = s->value[AVDBH];
 	}
-	*/
+	 */
 
 	/* update layer level annual carbon increments and pools in tC/cell/year */
 	//ALESSIOC
@@ -355,7 +352,7 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
 	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
 	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
-	*/
+	 */
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;

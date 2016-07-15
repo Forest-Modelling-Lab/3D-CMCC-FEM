@@ -18,7 +18,7 @@
 
 extern logger_t* g_log;
 
-void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year)
+void canopy_temperature(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double ra;    /* bulk canopy resistance to heat and vapour transport */
 	double rc;    /* canopy surface resistance to vapour transport */
@@ -36,19 +36,22 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	double gl_e_wv;
 	double gc_e_wv;
 
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+
 	/* the function to compute canopy temperature use eq. in Webber et al., 2016
 	 * the resistance parts follows the rationale of BIOME-BGC model 	 */
 
 
 
-	TairK = met[month].d[day].tavg + TempAbs;
+	TairK = meteo_daily->tavg + TempAbs;
 
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tavg+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
+	g_corr = pow((meteo_daily->tavg+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure;
 
 	/* calculate temperature offsets for slope estimate */
-	t1 = met[month].d[day].tavg+dt;
-	t2 = met[month].d[day].tavg-dt;
+	t1 = meteo_daily->tavg+dt;
+	t2 = meteo_daily->tavg-dt;
 
 	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
@@ -89,7 +92,7 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	rc = 1./gc_e_wv;
 
 	/* compute product of psychrometric constant */
-	psych_p = met[month].d[day].psych * (1. + (rc/ra));
+	psych_p = meteo_daily->psych * (1. + (rc/ra));
 
 	if(s->counter[VEG_DAYS] == 1)
 	{
@@ -106,9 +109,9 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 		/* compute canopy temperature (Webber et al., 2016) */
 		s->value[CANOPY_TEMP_K] =
 				TairK +
-				((s->value[NET_RAD] * ra)/(met[month].d[day].rho_air * CP)) *
+				((s->value[NET_RAD] * ra)/(meteo_daily->rho_air * CP)) *
 				(psych_p / (delta + psych_p)) -
-				((met[month].d[day].es - met[month].d[day].ea)/(delta +psych_p));
+				((meteo_daily->es - meteo_daily->ea)/(delta +psych_p));
 
 		/* assign previous day canopy temperature to local variable for long wave computation */
 		s->value[CANOPY_TEMP_K_OLD] = s->value[CANOPY_TEMP_K];

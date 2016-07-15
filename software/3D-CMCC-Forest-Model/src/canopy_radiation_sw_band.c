@@ -17,9 +17,13 @@
 
 extern logger_t* g_log;
 
-void canopy_sw_band_abs_trans_refl_radiation (cell_t *const c, species_t *const s, double Light_abs_frac, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
+void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int layer, const int height, const int age, const int species, double Light_abs_frac
+		, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
 {
 	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
 	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
@@ -125,7 +129,7 @@ void canopy_sw_band_abs_trans_refl_radiation (cell_t *const c, species_t *const 
 	*/
 }
 
-void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t *const met, const int day, const int month, const int year, const int height, const int age, const int species)
+void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
@@ -144,6 +148,9 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 	static int counter;
 	//fixme move soil albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 
 
@@ -214,10 +221,10 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_par_frac);
 
 	/* assign incoming PAR */
-	c->par = met[month].d[day].par;
+	c->par = meteo_daily->par;
 
 	/* assign incoming PPFD */
-	c->ppfd = met[month].d[day].ppfd;
+	c->ppfd = meteo_daily->ppfd;
 
 	/* RADIATION */
 	/*if at least one class is in veg period*/
@@ -225,7 +232,8 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 	{
 		/*************************************************************************************************************************************************************************************/
 		/* dominant layer */
-		if ( c->heights[height].z == c->top_layer )
+		//ALESSIOR come cazzo lo metto?
+		if ( c->t_layers[layer].heights[height].z == c->top_layer )
 		{
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			// ALESSIOC
@@ -260,15 +268,15 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 			/* Net Short Wave Radiation computation */
 			//note: as in BIOME_BGC model considers just SHORT WAVE FLUXES
 			/* Remove the reflected radiation */
-			c->short_wave_radiation_upward_W = met[month].d[day].sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+			c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
 			logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
 			/* Net Short Wave radiation */
-			c->net_short_wave_radiation_W = met[month].d[day].sw_downward_W - c->short_wave_radiation_upward_W;
+			c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
 			logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
 			/* Net Short Wave radiation */
 			s->value[SW_RAD_REFL] = c->short_wave_radiation_upward_W;
 			/*assign to class Net Short Wave Radiation */
-			s->value[NET_SW_RAD] = (met[month].d[day].sw_downward_W - s->value[SW_RAD_REFL]);
+			s->value[NET_SW_RAD] = (meteo_daily->sw_downward_W - s->value[SW_RAD_REFL]);
 			logger(g_log, "Net Short Wave Radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
 			/* assign to cell Net Short Wave Radiation */
 			c->net_sw_rad = s->value[NET_SW_RAD];
@@ -281,7 +289,8 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, &c->heights[height].ages[age].species[species], Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade, Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
@@ -336,7 +345,8 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 		}
 		/*************************************************************************************************************************************************************************************/
 		/* dominated layer */
-		else if (c->heights[height].z == c->top_layer - 1)
+		//ALESSIOR come cazzo lo metto?
+		else if (c->t_layers[layer].heights[height].z == c->top_layer - 1)
 		{
 			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
@@ -384,7 +394,8 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, &c->heights[height].ages[age].species[species], Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade, Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
@@ -483,7 +494,8 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, &c->heights[height].ages[age].species[species], Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade, Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
 			temp_apar += s->value[APAR];
@@ -542,26 +554,26 @@ void canopy_radiation_sw_band(species_t *const s, cell_t *const c, const meteo_t
 		logger(g_log, "\n**LIGHT FOR SOIL LAYER (outside the growing season)**\n");
 
 		/* Remove the reflected PAR */
-		c->par_reflected_soil = met[month].d[day].par * Light_refl_sw_rad_soil_frac;
+		c->par_reflected_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
 
 		/* Remove the reflected radiation */
-		c->short_wave_radiation_upward_W = met[month].d[day].sw_downward_W * Light_refl_sw_rad_soil_frac;
+		c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
 		logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
 
 		/* Net Short Wave Short Wave radiation */
-		c->net_short_wave_radiation_W = met[month].d[day].sw_downward_W - c->short_wave_radiation_upward_W;
+		c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
 		logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
 
 		c->sw_rad_for_soil_refl = c->short_wave_radiation_upward_W;
 
 		/* Remove the reflected PPFD */
-		c->ppfd_reflected_soil = met[month].d[day].ppfd * Light_refl_sw_rad_soil_frac;
+		c->ppfd_reflected_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
 
 		/* compute radiation absorbed by the soil */
 		/* Par and Net Short Wave radiation for the soil outside growing season (bare soil condition) */
-		c->par_for_soil = met[month].d[day].par - c->par_reflected_soil;
-		c->net_sw_rad_for_soil = met[month].d[day].sw_downward_W - c->short_wave_radiation_upward_W;
-		c->ppfd_for_soil = met[month].d[day].ppfd - c->ppfd_reflected_soil;
+		c->par_for_soil = meteo_daily->par - c->par_reflected_soil;
+		c->net_sw_rad_for_soil = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
+		c->ppfd_for_soil = meteo_daily->ppfd - c->ppfd_reflected_soil;
 		logger(g_log, "PAR for soil outside growing season = %g \n", c->par_for_soil);
 		logger(g_log, "Net Short Wave radiation for soil outside growing season = %g \n", c->net_sw_rad_for_soil);
 		logger(g_log, "PPFD for soil outside growing season = %g \n", c->ppfd_for_soil);

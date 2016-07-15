@@ -19,10 +19,9 @@ extern logger_t* g_log;
 
 /* Deciduous carbon allocation routine */
 void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age
-											   , const int species, const meteo_t *const met, const int day, const int year)
+		, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
 {
-
-	int i;
+	//int i;
 	double  s0Ctem;
 	double  r0Ctem;
 	double omegaCtem;
@@ -41,7 +40,6 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	double npp_alloc;
 
 	species_t *s;
-
 	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	s0Ctem = s->value[S0CTEM];
@@ -51,7 +49,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
-	i = c->t_layers[layer].heights[height].z;
+	//i = c->t_layers[layer].heights[height].z;
 
 	logger(g_log, "\n**ALLOCATION_ROUTINE**\n\n");
 	logger(g_log, "Carbon allocation routine for deciduous\n");
@@ -299,7 +297,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	/*
 	c->daily_lai[i] = s->value[LAI];
 	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
-	*/
+	 */
 
 	/* turnover */
 	Turnover(&c->t_layers[layer].heights[height].ages[age].species[species], c);
@@ -324,7 +322,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	c->daily_delta_wfr[i] = s->value[C_TO_FINEROOT];
 	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
 	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
-	*/
+	 */
 
 	/* update dendrometry variables */
 	//ALESSIOC
@@ -337,7 +335,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	{
 		c->annual_layer_avDBH[i] = s->value[AVDBH];
 	}
-	*/
+	 */
 
 	/* update layer level annual carbon increments and pools in tC/cell/year */
 	//ALESSIOC
@@ -363,7 +361,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
 	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
 	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
-	*/
+	 */
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;

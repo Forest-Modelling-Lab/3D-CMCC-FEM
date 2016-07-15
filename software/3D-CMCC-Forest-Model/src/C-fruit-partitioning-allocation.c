@@ -17,15 +17,18 @@
 
 /**/
 
-void M_Fruit_Allocation_LPJ (species_t *const s, int z, int years, double Yearly_Rain, double canopy_cover_dominant )
+void M_Fruit_Allocation_LPJ (cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, double Yearly_Rain)
 {
 	//static double WseedTree;    //fruit biomass per Tree
-	static int NseedTree;      //Number of fruits per Tree
+	//static int NseedTree;      //Number of fruits per Tree
 
 	//static double FProCov;   //LPJ Foliage Projective  Cover for Seed Establishment
 	//static double LightAbsorb;
 	//static double EstabRate;   //Seed establishment rate Under Dominant Canopy
 	//static int Nsapling;      //Number of saplings Under and Outside Dominant Canopy
+
+//	species_t *s;
+//	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 
 	//Log("**SEEDS-ALLOCATION**\n");
@@ -39,7 +42,7 @@ void M_Fruit_Allocation_LPJ (species_t *const s, int z, int years, double Yearly
 	//il 10% lo do ai frutti
 	//fraction of total NPP to Fruit compart
 	//biomass to seeds
-	s->value[W_SEED] = s->value[YEARLY_NPP_tDM] * s->value[FRACFRUIT];
+	//s->value[W_SEED] = s->value[YEARLY_NPP_tDM] * s->value[FRACFRUIT];
 	//Log("Costant Fraction Rate of Annual NPP for Fruit Production using LPJ = %f %%\n", s->value[FRACFRUIT] * 100);
 	//Log("Annual NPP to Seeds Biomass Compart = %f tDM/area/year\n", s->value[W_SEED]);
 
@@ -51,7 +54,7 @@ void M_Fruit_Allocation_LPJ (species_t *const s, int z, int years, double Yearly
 	//Log("Annual Biomass for Seeds Compart for Tree  = %f in tDM/tree/year\n", WseedTree);
 	//Log("Annual Biomass for Seeds Compart for Tree  = %f in Kg/tree/year\n", WseedTree * 1000);
 	//Number of seeds from tDM to grammes
-	s->counter[N_SEED] = (s->value[W_SEED] * 1000000)/ s->value[WEIGHTSEED];
+	//s->counter[N_SEED] = (s->value[W_SEED] * 1000000)/ s->value[WEIGHTSEED];
 	//Log("Annual Number of seeds using LPJ  = %d seeds/area/year\n", s->counter[N_SEED]);
 	/*
 	   Log("NSEED %f\n", s->counter[N_SEED]);
@@ -107,7 +110,7 @@ void M_Fruit_Allocation_LPJ (species_t *const s, int z, int years, double Yearly
 
 
 /**/
-int M_Fruit_Allocation_Logistic_Equation (species_t *const s, age_t *const a)
+int M_Fruit_Allocation_Logistic_Equation(age_t *const a, const int species)
 {
 	/*USING A LOGISTIC EQUATION*/
 	static int NumberSeed;                  //Number of Seeds per tree
@@ -116,6 +119,9 @@ int M_Fruit_Allocation_Logistic_Equation (species_t *const s, age_t *const a)
 	static int OptSexAge = 100;             //Age at maximum seeds production
 	static int MinSexAge = 20;              //Minimum age for sex maturity
 	static double WseedLE ;                  //Weight of seeds of population from Logistic Equation
+
+	species_t *s;
+	s = &a->species[species];
 
 	//Log("------LOGISTIC EQUATION FRUIT ALLOCATION------\n");
 
@@ -136,11 +142,14 @@ int M_Fruit_Allocation_Logistic_Equation (species_t *const s, age_t *const a)
 }
 /**/
 
-int M_Fruit_Allocation_TREEMIG (species_t *const s, age_t *const a)
+int M_Fruit_Allocation_TREEMIG (age_t *const a, const int species)
 {
 	static int NumberSeed;
 	static double heigthdependence;
 	static double WseedT;            //height dependence factor
+
+	species_t *s;
+	s = &a->species[species];
 
 	//Log("------TREEMIG FRUIT ALLOCATION------\n");
 
