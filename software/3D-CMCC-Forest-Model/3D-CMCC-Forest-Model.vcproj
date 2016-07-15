@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\canopy_evapotranspiration.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\canopy_net_radiation.c"
 				>
 			</File>
@@ -305,6 +309,10 @@
 			</File>
 			<File
 				RelativePath=".\src\heat_fluxes.c"
+				>
+			</File>
+			<File
+				RelativePath=".\headers\heat_fluxes.h"
 				>
 			</File>
 			<File

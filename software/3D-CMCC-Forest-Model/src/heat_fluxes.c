@@ -9,14 +9,14 @@
 
 extern logger_t* g_log;
 
-void Canopy_latent_heat_fluxes (species_t *const s, const meteo_t *const met, const int month, const int day)
+void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const meteo_daily)
 {
 	/* canopy canopy level latent heat fluxes (W/m2) */
-	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * met[month].d[day].lh_vap / 86400;
+	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * meteo_daily->lh_vap / 86400;
 	logger(g_log, "CANOPY LATENT HEAT FLUX = %g W/m2\n", s->value[CANOPY_LATENT_HEAT]);
 }
 
-void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const meteo_t *const met, const int month, const int day)
+void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const meteo_daily_t *const meteo_daily)
 {
 	double TairK;
 	double TcanopyK;
@@ -28,13 +28,13 @@ void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const met
 	double rr;
 	double rhr;
 
-	TairK = met[month].d[day].tavg + TempAbs;
+	TairK = meteo_daily->tavg + TempAbs;
 	TcanopyK = TairK;
 	if(s->value[LAI] > 0.0)
 	{
 
 		/* temperature and pressure correction factor for conductances */
-		g_corr = pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
+		g_corr = pow((meteo_daily->tday+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure;
 
 		/* leaf boundary-layer conductance */
 		gl_bl = s->value[BLCOND] * g_corr;
@@ -49,11 +49,11 @@ void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const met
 		rh = 1.0/gc_sh;
 
 		/* calculate resistance to radiative heat transfer through air, rr */
-		rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(TairK, 3)));
+		rr = meteo_daily->rho_air * CP / (4.0 * SBC_W * (pow(TairK, 3)));
 
 		rhr = (rh * rr) / (rh + rr);
 
-		s->value[CANOPY_SENSIBLE_HEAT] = met[month].d[day].rho_air * CP * ((TcanopyK-TairK)/rhr);
+		s->value[CANOPY_SENSIBLE_HEAT] = meteo_daily->rho_air * CP * ((TcanopyK-TairK)/rhr);
 
 		c->daily_c_sensible_heat_flux += s->value[CANOPY_SENSIBLE_HEAT];
 
@@ -134,13 +134,13 @@ void Canopy_sensible_heat_fluxes (cell_t *const c, species_t *const s, const met
 
 }
 
-void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
 
 	/*compute latent heat from canopy*/
-	c->daily_c_evapo_watt = c->daily_c_evapo * met[month].d[day].lh_vap / 86400.0;
-	c->daily_c_transp_watt = c->daily_c_transp * met[month].d[day].lh_vap / 86400.0;
+	c->daily_c_evapo_watt = c->daily_c_evapo * meteo_daily->lh_vap / 86400.0;
+	c->daily_c_transp_watt = c->daily_c_transp * meteo_daily->lh_vap / 86400.0;
 	c->daily_c_evapotransp_watt = c->daily_c_evapo_watt + c->daily_c_transp_watt;
 	c->daily_c_latent_heat_flux = c->daily_c_evapotransp_watt;
 	logger(g_log, "Latent heat canopy evapotranspiration = %g W/m^2\n", c->daily_c_latent_heat_flux);
@@ -157,7 +157,7 @@ void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int mont
 	/*in case of snow sublimation*/
 	if(c->snow_subl != 0.0)
 	{
-		c->daily_latent_heat_flux += c->snow_subl * (met[month].d[day].lh_sub * 1000.0) / 86400.0;
+		c->daily_latent_heat_flux += c->snow_subl * (meteo_daily->lh_sub * 1000.0) / 86400.0;
 		logger(g_log, "Daily total latent heat flux with sublimation = %g W/m\n", c->daily_latent_heat_flux);
 	}
 	else
@@ -170,7 +170,7 @@ void Latent_heat_flux (cell_t *const c, const meteo_t *const met, const int mont
 
 }
 
-void Sensible_heat_flux (cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Sensible_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\nSENSIBLE_HEAT_ROUTINE\n");
 

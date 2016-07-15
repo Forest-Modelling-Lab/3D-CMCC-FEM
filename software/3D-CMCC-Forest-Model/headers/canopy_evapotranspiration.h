@@ -4,6 +4,7 @@
 
 #include "matrix.h"
 
-void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height, const int age, const int species);
+void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int age
+							   , const int species, const meteo_daily_t *const meteo_daily);
 
 #endif /* CANOPY_EVAPOTRANSPIRATION_H_ */

@@ -14,7 +14,7 @@
 
 extern logger_t* g_log;
 
-double Penman_Monteith(const meteo_t *const met, const int month, const int day, const double rh, const double rv, const double net_rad)
+double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, const double rv, const double net_rad)
 {
 	double tairK;
 	double delta;
@@ -55,18 +55,18 @@ double Penman_Monteith(const meteo_t *const met, const int month, const int day,
 	logger(g_log, "\n**Penman-Monteith function**\n");
 
 	/* convert tday Celsius in Kelvin */
-	tairK = met[month].d[day].tday + TempAbs;
+	tairK = meteo_daily->tday + TempAbs;
 
 	/* calculate resistance to radiative heat transfer through air, rr */
-	rr = met[month].d[day].rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
+	rr = meteo_daily->rho_air * CP / (4.0 * SBC_W * (pow(tairK, 3)));
 
 	/* calculate combined resistance to convective and radiative heat transfer,
 	    parallel resistances : rhr = (rh * rr) / (rh + rr) */
 	rhr = (rh * rr) / (rh + rr);
 
 	/* calculate temperature offsets for slope estimate */
-	t1 = met[month].d[day].tday+dt;
-	t2 = met[month].d[day].tday-dt;
+	t1 = meteo_daily->tday+dt;
+	t2 = meteo_daily->tday-dt;
 
 	/* calculate saturation vapor pressures (Pa) at t1 and t2 */
 	pvs1 = 610.7 * exp(17.38 * t1 / (239.0 + t1));
@@ -76,11 +76,11 @@ double Penman_Monteith(const meteo_t *const met, const int month, const int day,
 	delta = (pvs1-pvs2) / (t1-t2);
 
 	/* latent heat fluxes of evaporation or transpiration W/m2 */
-	evap_or_transp = ((delta * net_rad) + (met[month].d[day].rho_air * CP * (met[month].d[day].vpd / 100.0) / rhr)) /
-			(((met[month].d[day].air_pressure * CP * rv) / (met[month].d[day].lh_vap * EPS * rhr)) + delta);
+	evap_or_transp = ((delta * net_rad) + (meteo_daily->rho_air * CP * (meteo_daily->vpd / 100.0) / rhr)) /
+			(((meteo_daily->air_pressure * CP * rv) / (meteo_daily->lh_vap * EPS * rhr)) + delta);
 
 	/* evaporation or transpiration is converted into kg-mm/m2/sec */
-	evap_or_transp /= met[month].d[day].lh_vap;
+	evap_or_transp /= meteo_daily->lh_vap;
 
 	/* check */
 	//deleted to avoid dew fall formation

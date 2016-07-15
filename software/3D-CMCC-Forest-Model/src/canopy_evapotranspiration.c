@@ -19,7 +19,7 @@
 
 extern logger_t* g_log;
 
-void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_t *const met, const int month, const int day, const int height, const int age, const int species)
+void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 
 	//double max_int;
@@ -46,6 +46,10 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 
 	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
+
+	species_t *s;
+
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
@@ -91,11 +95,11 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 //	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 //	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 
-	daylength_sec = met[month].d[day].daylength * 3600.0;
+	daylength_sec = meteo_daily->daylength * 3600.0;
 	
 	/********************************************************************************************************/
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
-	if(met[month].d[day].prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
+	if(meteo_daily->prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
 	{
 		//double Int_max_snow;                           /*maximum intercepted snow (mm)*/
 
@@ -123,7 +127,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	/********************************************************************************************************/
 	
 	/* temperature and pressure correction factor for conductances */
-	g_corr = pow((met[month].d[day].tday+TempAbs)/293.15, 1.75) * 101300/met[month].d[day].air_pressure;
+	g_corr = pow((meteo_daily->tday+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure;
 
 	/* calculate leaf- and canopy-level conductances to water vapor and
 		sensible heat fluxes */
@@ -207,7 +211,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			net_rad = s->value[NET_SW_RAD_ABS];
 
 			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat*/
-			evapo = Penman_Monteith (met, month, day, rv, rh, net_rad);
+			evapo = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 
 			/* check for negative values */
 			if(evapo < 0.0) evapo = 0.0;
@@ -269,7 +273,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				logger(g_log, "net rad = %g\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-				transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
+				transp_sun = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 				transp_sun *=  transp_daylength_sec * s->value[LAI_SUN];
 				logger(g_log, "transp_sun = %g mm/m2/day\n", transp_sun);
 
@@ -281,7 +285,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 				net_rad = s->value[NET_SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-				transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
+				transp_shade = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 				transp_shade *=  transp_daylength_sec * s->value[LAI_SHADE];
 				logger(g_log, "transp_shade = %g mm/m2/day\n", transp_shade);
 
@@ -326,7 +330,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			logger(g_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-			transp_sun = Penman_Monteith (met, month, day, rv, rh, net_rad);
+			transp_sun = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 			transp_sun *= daylength_sec * s->value[LAI_SUN];
 			logger(g_log, "transp_sun = %g mm/m2/day\n", transp_sun);
 
@@ -339,7 +343,7 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 			logger(g_log, "net rad = %g\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
-			transp_shade = Penman_Monteith (met, month, day, rv, rh, net_rad);
+			transp_shade = Penman_Monteith (meteo_daily, rv, rh, net_rad);
 			transp_shade *= daylength_sec * s->value[LAI_SHADE];
 			logger(g_log, "transp_shade = %g mm/m2/day\n", transp_shade);
 
@@ -376,10 +380,10 @@ void canopy_evapotranspiration(species_t *const s, cell_t *const c, const meteo_
 	logger(g_log, "CANOPY_EVAPO_TRANSP = %g mm/m2/day\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 	/* compute latent heat fluxes for canopy */
-	Canopy_latent_heat_fluxes (s, met, month, day);
+	Canopy_latent_heat_fluxes (s, meteo_daily);
 
 	/* compute sensible heat fluxes for canopy */
-	Canopy_sensible_heat_fluxes(c, s, met, month, day);
+	Canopy_sensible_heat_fluxes(c, s, meteo_daily);
 
 
 	c->daily_c_int += s->value[CANOPY_INT];
