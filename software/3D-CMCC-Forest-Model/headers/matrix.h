@@ -820,6 +820,7 @@ typedef struct {
 
 	double canopy_temp;
 	double canopy_temp_k;
+	double canopy_temp_diff;
 
 
 	double av_yearly_par_soil;

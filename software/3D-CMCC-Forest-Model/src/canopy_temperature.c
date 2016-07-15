@@ -122,5 +122,7 @@ void canopy_temperature (species_t *const s, cell_t *const c, const meteo_t *con
 	//fixme it hasn't sense at cell level just to print
 	c->canopy_temp = s->value[CANOPY_TEMP_K] - TempAbs;
 	logger(g_log, "canopy_temp = %g (K)\n",c->canopy_temp);
+	c->canopy_temp_k = s->value[CANOPY_TEMP_K];
+	c->canopy_temp_diff = c->canopy_temp_k - TairK;
 
 }

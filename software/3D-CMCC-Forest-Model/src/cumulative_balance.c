@@ -864,9 +864,9 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				logger(g_daily_log, "\t%s, \t%3s", "HR (tot)", "Reco");
 			}
 			logger(g_daily_log, "\t%6s \t%6s \t%4s \t%8s \t%6s\t%6s \t%10s "
-					"\t%5s \t%8s \t%10s \t%11s \t%11s \t%11s \t%11s \t%10s \t%11s \t%11s \t%11s \t%11s\n \t%11s\n",
+					"\t%5s \t%8s \t%10s \t%11s \t%11s \t%11s \t%11s \t%10s \t%11s \t%11s \t%11s \t%11s \t%11s\n",
 					"NPP(gC/m2d)", "ET(mm/m2/d)","LE(W/m2)", "SWC(%)", "LAI",
-					"CC", "DEADTREE", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres", "wlAR", "wsAR", "wbbAR", "wfrAR", "wcrAR" , "Tcan");
+					"CC", "DEADTREE", "D-Wf", "D-Ws", "D-Wbb", "D-Wfr", "D-Wcr", "D-Wres", "Wres", "wlAR", "wsAR", "wbbAR", "wfrAR", "wcrAR" , "Tdiff");
 		}
 		if ((day == 0 && month == 0) || previous_layer_number != c->annual_layer_number)
 		{
@@ -889,7 +889,7 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 			logger(g_daily_log, "\t%10.2f \t%10.2f", c->daily_het_resp, c->daily_r_eco);
 		}
 		logger(g_daily_log, "\t%11.4f \t%8.4f \t%10.4f \t%11.4f \t%7.4f \t%7.4f \t%2.2d \t%9.4f \t%8.4f \t%10.4f"
-				" \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%10.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n \t%11.4f\n",
+				" \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%10.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f \t%11.4f\n",
 				c->layer_daily_npp_gC[0],
 				c->daily_et,
 				c->daily_latent_heat_flux,
@@ -909,7 +909,7 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 				c->daily_branch_aut_resp,
 				c->daily_fine_root_aut_resp,
 				c->daily_coarse_root_aut_resp,
-				c->canopy_temp);
+				c->canopy_temp_diff);
 		//}
 
 		previous_layer_number = c->annual_layer_number;
