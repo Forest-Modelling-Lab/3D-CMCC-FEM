@@ -16,11 +16,11 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c, const meteo_t *const met, const int month, const int day, const int z, const int management, const int height)
+void Daily_modifiers(cell_t *const c, const int layer, const int height, const int age, const int species, const int z, const int management, const meteo_daily_t *const meteo_daily)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
-	double KmCO2;	//affinity coefficients  temperature dependent according to Arrhenius relationship
+	double KmCO2;	                                   /* affinity coefficients temperature dependent according to Arrhenius relationship */
 	double Ea1 = 59400.0; //KJ mol^-1
 	double A1 = 2.419 * pow(10,13);
 	double Ea2 = 109600.0;	//KJ mol^-1
@@ -35,6 +35,12 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	double v1, v2;
 	static int counter_water_stress;
 
+	age_t *a;
+	a = &c->t_layers[layer].heights[height].ages[age];
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+
 	//test
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
 	//double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
@@ -42,9 +48,9 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	logger(g_log, "\nDAILY_MODIFIERS\n\n");
 
 	/* CO2 MODIFIER FROM C-FIX */
-	tairK = met[month].d[day].tavg + TempAbs;
+	tairK = meteo_daily->tavg + TempAbs;
 
-	if (met[month].d[day].tavg >= 15)
+	if (meteo_daily->tavg >= 15)
 	{
 		KmCO2 = A1 * exp(-Ea1/(Rgas*tairK));
 	}
@@ -67,8 +73,8 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
-
-	if ( c->heights[height].z == c->top_layer )
+	//ALESSIOC
+	if (c->t_layers[layer].heights[height].z == c->top_layer )
 	{
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{
@@ -92,23 +98,23 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 
 
 	/* TEMPERATURE MODIFIER */
-	if (met[month].d[day].tday == NO_DATA)
+	if (meteo_daily->tday == NO_DATA)
 	{
-		if ((met[month].d[day].tavg <= s->value[GROWTHTMIN]) || (met[month].d[day].tavg >= s->value[GROWTHTMAX]))
+		if ((meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX]))
 		{
 			s->value[F_T] = 0;
 			logger(g_log, "F_T = 0 \n");
 		}
 		else
 		{
-			s->value[F_T] = ((met[month].d[day].tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
-					pow(((s->value[GROWTHTMAX] - met[month].d[day].tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+			s->value[F_T] = ((meteo_daily->tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
+					pow(((s->value[GROWTHTMAX] - meteo_daily->tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
 					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
 		}
 	}
 	else
 	{
-		if ((met[month].d[day].tday <= s->value[GROWTHTMIN]) || (met[month].d[day].tday >= s->value[GROWTHTMAX]))
+		if ((meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX]))
 		{
 			logger(g_log, "tday < 0 > GROWTHTMIN o GROWTHTMAX\n");
 			s->value[F_T] = 0;
@@ -116,8 +122,8 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 		}
 		else
 		{
-			s->value[F_T] = ((met[month].d[day].tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
-					pow(((s->value[GROWTHTMAX] - met[month].d[day].tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
+			s->value[F_T] = ((meteo_daily->tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
+					pow(((s->value[GROWTHTMAX] - meteo_daily->tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
 					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
 		}
 	}
@@ -130,7 +136,7 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
 	/*FROST MODIFIER*/
-	if(met[month].d[day].tday < s->value[GROWTHTMIN])
+	if(meteo_daily->tday < s->value[GROWTHTMIN])
 	{
 		s->value[F_FROST] = 0.0;
 		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
@@ -152,7 +158,7 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 	//1 hPa = 1 mbar
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
-	s->value[F_VPD] = exp (- s->value[COEFFCOND] * met[month].d[day].vpd);
+	s->value[F_VPD] = exp (- s->value[COEFFCOND] * meteo_daily->vpd);
 	c->daily_f_vpd = s->value[F_VPD];
 	logger(g_log, "fVPD = %f\n", s->value[F_VPD]);
 
@@ -161,12 +167,12 @@ void Daily_modifiers (species_t *const s, const age_t *const a, cell_t *const c,
 
 	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 	/* vapor pressure deficit multiplier, vpd in Pa */
-//	if (met[month].d[day].vpd < vpd_open)    /* no vpd effect */
+//	if (meteo_daily->vpd < vpd_open)    /* no vpd effect */
 //		s->value[F_VPD] = 1.0;
-//	else if (met[month].d[day].vpd > vpd_close)   /* full vpd effect */
+//	else if (meteo_daily->vpd > vpd_close)   /* full vpd effect */
 //		s->value[F_VPD] = 0.0;
 //	else                   /* partial vpd effect */
-//		s->value[F_VPD] = (vpd_close - met[month].d[day].vpd) / (vpd_close - vpd_open);
+//		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 
 	/* AGE MODIFIER */
 

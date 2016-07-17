@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Phenology (cell_t *const c, species_t *const s, const meteo_t* const met, const int year, const int month, const int day);
+void Phenology(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month);
 
 #endif /* PHENOLOGY_H_ */

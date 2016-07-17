@@ -26,6 +26,8 @@ void Annual_numbers_of_layers (cell_t *const c)
 	double current_height;
 	double previous_height;
 
+	//ALESSIOC TODO ALL
+
 	//height differences in meter to consider trees in two different layers
 
 	logger(g_log, "****ANNUAL_FOREST_STRUCTURE_ROUTINE****\n");

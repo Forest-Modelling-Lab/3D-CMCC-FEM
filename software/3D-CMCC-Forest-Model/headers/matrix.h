@@ -865,6 +865,7 @@ enum {
 
 
 typedef struct {
+	int z;
 	height_t* heights;
 	int heights_count;
 	double value[T_LAYER_VALUES_COUNT];

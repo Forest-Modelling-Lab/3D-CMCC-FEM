@@ -13,7 +13,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Peak_lai(species_t *const s, cell_t* const c, const int years, const int month, const int day, const int height, const int age)
+void Peak_lai(species_t *const s, const int day, const int month, const int years)
 {
 	int i;
 
@@ -56,6 +56,4 @@ void Peak_lai(species_t *const s, cell_t* const c, const int years, const int mo
 	/* check for reserve need for budburst (deciduous)*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) CHECK_CONDITION(s->value[RESERVE_C], < s->value[MAX_LEAF_C]);
 
-	i = c->heights[height].z;
-	c->annual_peak_lai[i] = s->value[PEAK_LAI];
 }

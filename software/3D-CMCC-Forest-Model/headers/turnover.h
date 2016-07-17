@@ -3,6 +3,7 @@
 #define TURNOVER_H_
 
 #include "matrix.h"
-void Turnover(species_t *const s, cell_t *const c);
+
+void Turnover(species_t *const s);
 
 #endif /* TURNOVER_H_ */

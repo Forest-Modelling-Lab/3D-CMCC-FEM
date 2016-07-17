@@ -14,10 +14,13 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 
-void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
+void Get_turnover_Marconi (cell_t *c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
 	static double litterfall_rate;
 	double dStemBiomass, dCoarseBiomass, dBranchBiomass;
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 		logger(g_log, "****DAILY TURNOVER following Marconi flowChart****\n");
 
@@ -53,7 +56,7 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 
 				/*recompute LAI after turnover*/
 				/*for dominant layer with sunlit foliage*/
-				if (c->top_layer == c->heights[height].z)
+				if (c->top_layer == c->t_layers[layer].heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_tDM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
 				}
@@ -99,7 +102,7 @@ void Get_turnover_Marconi (species_t *s, cell_t *c, int DaysInMonth, int height)
 
 				/*recompute LAI after turnover*/
 				/*for dominant layer with sunlit foliage*/
-				if (c->top_layer == c->heights[height].z)
+				if (c->top_layer == c->t_layers[layer].heights[height].z)
 				{
 					s->value[LAI] = (s->value[BIOMASS_FOLIAGE_tDM] * 1000) / (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) * (s->value[SLA_AVG] * GC_GDM);
 				}

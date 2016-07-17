@@ -12,7 +12,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Phosynthesis (species_t *const s, cell_t *const c, const int month, const int day, const int DaysInMonth, const int height, const int age, const int species)
+void Phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
 	int i;
 	double Alpha_C;
@@ -20,6 +20,9 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
 	double leaf_cell_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
 //	double cell_coverage;
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
 
@@ -122,9 +125,8 @@ void Phosynthesis (species_t *const s, cell_t *const c, const int month, const i
 
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
-	i = c->heights[height].z;
-
 	//ALESSIOC
+	//i = c->t_layers[layer].heights[height].z;
 	//c->layer_daily_gpp[i] += s->value[DAILY_GPP_gC];
 	//c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
 	//c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];

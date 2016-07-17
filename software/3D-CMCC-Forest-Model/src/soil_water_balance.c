@@ -17,7 +17,7 @@
 extern logger_t* g_log;
 
 //fixme  maybe it can be moved to soil_model.c
-void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, const int day)
+void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 {
 	double water_to_soil;
 	double soilwater_to_atmosphere;
@@ -33,7 +33,7 @@ void Soil_water_balance(cell_t *c, const meteo_t *const met, const int month, co
 	soilwater_to_atmosphere = c->daily_c_transp + c->daily_soil_evapo;
 
 	/*update balance*/
-	if(met[month].d[day].tavg>0.0)
+	if(meteo_daily->tavg>0.0)
 	{
 		c->asw = water_to_soil - soilwater_to_atmosphere;
 	}

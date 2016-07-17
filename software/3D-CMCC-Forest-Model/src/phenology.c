@@ -14,9 +14,12 @@ F * phenology.c
 
 extern logger_t* g_log;
 
-void Phenology (cell_t *const c, species_t *const s, const meteo_t* const met, const int year, const int month, const int day)
+void Phenology(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
 {
 	static int phenology_counter;
+
+	species_t *s;
+	s = &c->t_layers[layer].heights[height].ages[age].species[species];
 
 	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
@@ -51,7 +54,7 @@ void Phenology (cell_t *const c, species_t *const s, const meteo_t* const met, c
 				else
 				{
 					/* Normal growth */
-					if (met[month].d[day].daylength > s->value[MINDAYLENGTH])
+					if (meteo_daily->daylength > s->value[MINDAYLENGTH])
 					{
 						s->phenology_phase = 2;
 					}
@@ -80,7 +83,7 @@ void Phenology (cell_t *const c, species_t *const s, const meteo_t* const met, c
 		 * secondary growth*/
 		/*see Ludeke et al., 1994*/
 		/* Beginning of a "growing season" */
-		if ( met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /*&& phenology_counter == 0 *//* && month < JULY */)
+		if (meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /*&& phenology_counter == 0 *//* && month < JULY */)
 		{
 			phenology_counter = 0;//not used
 			s->phenology_phase = 1;
