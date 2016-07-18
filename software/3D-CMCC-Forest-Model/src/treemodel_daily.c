@@ -51,8 +51,6 @@ extern int DaysInMonth[];
 
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
-
-
 	static int layer;
 	static int height;
 	static int age;
@@ -60,8 +58,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	static int rotation_counter;
 
+	meteo_daily_t *meteo_daily;
+	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
+
 	/* check parameters */
-//	assert(m);
+	assert(m);
+
 //	meteo_t *met;
 //	met = m->cells[cell].years[year].m;
 
@@ -76,14 +78,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		m->cells[cell].doy += 1;
 	}
 
-	//ALESSIOR CHECK IF CORRECT
-	meteo_daily_t *meteo_daily;
-	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
 
-
-	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS
-	//fixme remember to remove definition of forest structure later than this one once completed
-	/* daily loop on each cell to define forest structure before anything else computation */
 
 //	/* sort class in ascending way by heights */
 //	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -109,10 +104,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 //					}
 //					/* daily forest structure */
 //					Daily_Forest_structure (&m->cells[cell], day, month, year);
-//					Daily_check_for_veg_period (&m->cells[cell], met, month, day);
+//					Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 //					Daily_numbers_of_layers (&m->cells[cell]);
-//					Daily_layer_cover (&m->cells[cell], met, month, day);
-//					Daily_dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+//					Daily_layer_cover (&m->cells[cell], meteo_daily, day, month);
+//					Daily_dominant_Light (&m->cells[cell], layer, height, age, species);
 //				}
 //			}
 //		}
@@ -120,12 +115,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 //	logger(g_log, "***************************************************\n");getchar();
 
 	/* compute daily-monthly-annual forest structure (overall cell) */
+
+	/* annual forest structure */
+	/* compute annual number of tree layer per cell */
 	if (day == 0 && month == JANUARY)Annual_numbers_of_layers (&m->cells[cell]);
 
 	/* daily forest structure */
-	//ALESSIOR
-	//fixme it must be called in a previous "for" to compute the total number of layers, densities and other things as above
-	//otherwise model cannot run for multi-layered purposes
 	Daily_Forest_structure (&m->cells[cell], day, month, year);
 	Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 	Daily_numbers_of_layers (&m->cells[cell]);

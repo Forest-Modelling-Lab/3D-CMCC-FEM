@@ -918,6 +918,9 @@ typedef struct {
 
 	e_landuse landuse;
 
+	/* forest structure variables */
+	int annual_tree_layer_number;
+
 	/* general variables */
 	int yearday;
 	int cum_dayOfyear;

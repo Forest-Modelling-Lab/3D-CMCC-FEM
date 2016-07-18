@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
+#include "common.h"
 #include "matrix.h"
 #include "constants.h"
 #include "settings.h"
@@ -15,14 +16,13 @@ extern logger_t* g_log;
 
 void Annual_numbers_of_layers (cell_t *const c)
 {
-	/*determines number of layer in function of:
+	/*determines number of tree layer in function of:
 	-differences between tree height classes
 	-vegetative or un-vegetative period
 	to determine crowding competition */
 
 	int height;
-	int age;
-	int species;
+	int layer;
 	double current_height;
 	double previous_height;
 
@@ -35,112 +35,101 @@ void Annual_numbers_of_layers (cell_t *const c)
 
 	if (g_settings->spatial == 'u')
 	{
-		//the model sorts starting from highest tree class
+		/* sort by ascending tree heights */
 		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
+			current_height = c->heights[height].value;
+			/* for the first height class processed */
+			if (height == c->heights_count - 1 )
 			{
-				for (species = 0; species < c->heights[height].ages[age].species_count; species++)
+				//ALESSIOC
+				//c->annual_layer_number = 1;
+				previous_height = current_height;
+			}
+			/* for the other height class processe */
+			else
+			{
+				if ((previous_height -current_height ) > g_settings->tree_layer_limit)
 				{
-					current_height = c->heights[height].value;
-					if (height == c->heights_count - 1 )
-					{
-						//ALESSIOC
-						//c->annual_layer_number = 1;
-						previous_height = current_height;
-					}
-					else
-					{
-						if ((previous_height -current_height ) > g_settings->tree_layer_limit)
-						{
-							//ALESSIOC
-							//c->annual_layer_number += 1;
-							previous_height = current_height;
-						}
-						else
-						{
-							previous_height = current_height;
-						}
-					}
+					/* increment annual tree layer number at cell level */
+					c->annual_tree_layer_number += 1;
+					previous_height = current_height;
 				}
+				else
+				{
+					previous_height = current_height;
+				}
+
 			}
 		}
-		//ALESSIOC
-		//logger(g_log, "ANNUAL LAYERS NUMBER = %d\n", c->annual_layer_number);
+		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->annual_tree_layer_number);
+		CHECK_CONDITION(c->annual_tree_layer_number, > MAX_N_TREE_LAYER);
 
-		//ASSIGN ANNUAL Z VALUE
+		/* assign z value */
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			//ALESSIOC
-			/*
-			switch (c->annual_layer_number)
+			switch (c->annual_tree_layer_number)
 			{
 			case 1:
-				c->heights[height].z = c->annual_layer_number - 1;
-				//logger(g_log, "height %f, z %d\n", c->heights[height].value, c->heights[height].z);
+				c->heights[height].z = c->annual_tree_layer_number - 1;
+				logger(g_log, "height %f, z %d\n", c->heights[height].value, c->heights[height].z);
 				break;
 			case 2:
 				if (height == c->heights_count - 1 )
 				{
-					c->heights[height].z = c->annual_layer_number - 1;
-					//logger(g_log, "height %f, z %d\n", c->heights[height].value, c->heights[height].z);
+					c->heights[height].z = c->annual_tree_layer_number - 1;
+					logger(g_log, "height %f, z %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
-						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
+						logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 					else
 					{
 						c->heights[height].z = c->heights[height+1].z;
-						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
+						logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 				}
 				break;
 			case 3:
 				if (height == c->heights_count - 1)
 				{
-					c->heights[height].z = c->annual_layer_number - 1;
-					//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
+					c->heights[height].z = c->annual_tree_layer_number - 1;
+					logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 				}
 				else
 				{
 					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
 					{
 						c->heights[height].z = c->heights[height+1].z - 1;
-						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
+						logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 					else
 					{
 						c->heights[height].z = c->heights[height+1].z;
-						//logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
+						logger(g_log, "height = %f, z = %d\n", c->heights[height].value, c->heights[height].z);
 					}
 				}
 				break;
 			}
-			*/
 		}
-		//ALESSIOC
-		//logger(g_log, "NUMBER OF DIFFERENT LAYERS = %d\n", c->annual_layer_number);
+		logger(g_log, "NUMBER OF DIFFERENT LAYERS = %d\n", c->annual_tree_layer_number);
 	}
 	else
 	{
-		//for spatial version only one layer
-		//ALESSIOC
-		/*
+		/* for spatial version only one layer */
 		logger(g_log, "SPATIAL VERSION ONLY ONE LAYER\n");
-		c->annual_layer_number = 1;
-		logger(g_log, "ANNUAL LAYERS NUMBER = %d\n", c->annual_layer_number);
+		c->annual_tree_layer_number = 1;
+		logger(g_log, "ANNUAL LAYERS NUMBER = %d\n", c->annual_tree_layer_number);
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
 			c->heights[height].z = 0;
 		}
-		*/
-
 	}
 }
 
@@ -179,7 +168,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	c->layer_cover_dominant = 0;
 	c->layer_cover_dominated = 0;
 	c->layer_cover_subdominated = 0;
-	*/
+	 */
 
 	logger(g_log, "\n\n***FOREST_STRUCTURE***\n");
 	if (g_settings->spatial == 'u')
@@ -271,7 +260,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 			logger(g_log, "Density in layer 1 = %f trees/area\n", c->density_dominated);
 			logger(g_log, "Density in layer 0 = %f trees/area\n", c->density_subdominated);
 		}
-		*/
+		 */
 
 		height = 0;
 
@@ -694,7 +683,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 						}
 						break;
 					}
-					*/
+					 */
 				}
 			}
 		}
@@ -716,9 +705,9 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 
 					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
 							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-							* (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
+					 * (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
 					logger(g_log, "DBHDC effective to apply = %f\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
-					*/
+					 */
 
 
 					/* check */
@@ -767,7 +756,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 		{
 			logger(g_log, "Layer cover exceeds max layer cover!!!\n");
 		}
-		*/
+		 */
 
 	}
 	logger(g_log, "*************************************************** \n");
@@ -1034,7 +1023,7 @@ void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily, 
 						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
 						//logger(g_log, "Layer cover in layer 0 = %f %% \n", c->layer_cover_dominant * 100);
 					}
-					*/
+					 */
 				}
 				else
 				{
@@ -1065,7 +1054,7 @@ void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily, 
 		logger(g_log, "Vegetated Layer cover in layer 0 = %f %% \n", c->layer_cover_subdominated * 100);
 	}
 	logger(g_log, "*************************************************** \n");
-	*/
+	 */
 
 }
 
@@ -1166,7 +1155,7 @@ int Number_of_layers (cell_t *c)
 	return number_of_layers;
 
 }
-*/
+ */
 
 void Daily_veg_counter(cell_t *const c, species_t *const s, const int height)
 {
@@ -1202,7 +1191,7 @@ void Daily_veg_counter(cell_t *const c, species_t *const s, const int height)
 		c->dominant_veg_counter += 1;
 		break;
 	}
-	*/
+	 */
 }
 
 
