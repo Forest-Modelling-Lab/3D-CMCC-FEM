@@ -60,8 +60,9 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 
 		previousLai = s->value[LAI];
 
+		//fixme
 		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
-				* c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
+				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
 		logger(g_log, "previousLai = %f\n", previousLai);
 		logger(g_log, "currentLai = %f\n", currentLai);
@@ -235,6 +236,7 @@ int endOfYellowing(const meteo_t *const met, species_t *const s)
 // see http://cow.physics.wisc.edu/~craigm/idl/idl.html)
 // Copyright (C) 2003, 2004, 2006, 2007, 2009, 2010 Craig B. Markwardt
 
+//ALESSIOC to remove
 void get_vpsat(cell_t *const c, const int day, const int month, const int year, const int index)
 {
 	meteo_t *met;
