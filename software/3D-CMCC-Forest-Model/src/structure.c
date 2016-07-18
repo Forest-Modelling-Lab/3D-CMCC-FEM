@@ -157,7 +157,14 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	 * on a daily basis */
 
 
-	// ALESSIOC
+	// ALESSIOC ask to ALESSIOR
+	/*
+	 * IT SHOULD BE SOMETHING LIKE THAT:
+	 * layer = annual_layer_number
+	 * c->heights[height].t_layer[layer].n_tree;
+	*/
+
+
 	/*
 	c->height_class_in_layer_dominant_counter = 0;
 	c->height_class_in_layer_dominated_counter = 0;
@@ -173,13 +180,13 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	logger(g_log, "\n\n***FOREST_STRUCTURE***\n");
 	if (g_settings->spatial == 'u')
 	{
-		for (height = c->heights_count - 1; height >= 0; height-- )
+		for (height = c->heights_count - 1; height >= 0; height--)
 		{
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
 			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
-				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species --)
 				{
 					/* define numbers of height classes and density for each layer (if present) */
 
