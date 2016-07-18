@@ -940,46 +940,46 @@ static int fill_cell_from_ages(height_t* const h, const row_t* const row) {
 //	// add age
 //	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 //}
-
-static int fill_cell(matrix_t* const m, const row_t* const row) {
-	static cell_t cell = { 0 };
-	int i;
-	int flag;
-	assert(m && row);
-
-	/* check if is a new cell or a layer */
-	flag = 0;
-	for ( i = 0; i < m->cells_count; ++i )
-	{
-		if ( (row->x == m->cells[i].x) && (row->y == m->cells[i].y) )
-		{
-			/* layer found! */
-			flag = 1;
-		}
-	}
-
-	if ( flag )
-	{
-	}
-	else
-	{
-		/* add a new cell */
-		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) ) {
-		return 0;
-	}
-		m->cells[m->cells_count-1] = cell;
-		m->cells[m->cells_count-1].landuse = row->landuse;
-		m->cells[m->cells_count-1].x = row->x;
-		m->cells[m->cells_count-1].y = row->y;
-		/* ALESSIOR TODO ask ALESSIOC: fixme without -1 the model gets 1 more!! */
-		m->cells[m->cells_count-1].s_layers[soil].soils_count = (int)g_settings->soil_layer - 1;
-
-		/* add species */
-		return fill_cell_from_heights_and_soils(&m->cells[m->cells_count-1], row);
-	}
-
-	
-}
+//ALESSIOC
+//static int fill_cell(matrix_t* const m, const row_t* const row) {
+//	static cell_t cell = { 0 };
+//	int i;
+//	int flag;
+//	assert(m && row);
+//
+//	/* check if is a new cell or a layer */
+//	flag = 0;
+//	for ( i = 0; i < m->cells_count; ++i )
+//	{
+//		if ( (row->x == m->cells[i].x) && (row->y == m->cells[i].y) )
+//		{
+//			/* layer found! */
+//			flag = 1;
+//		}
+//	}
+//
+//	if ( flag )
+//	{
+//	}
+//	else
+//	{
+//		/* add a new cell */
+//		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) ) {
+//		return 0;
+//	}
+//		m->cells[m->cells_count-1] = cell;
+//		m->cells[m->cells_count-1].landuse = row->landuse;
+//		m->cells[m->cells_count-1].x = row->x;
+//		m->cells[m->cells_count-1].y = row->y;
+//		/* ALESSIOR TODO ask ALESSIOC: fixme without -1 the model gets 1 more!! */
+//		m->cells[m->cells_count-1].s_layers[soil].soils_count = (int)g_settings->soil_layer - 1;
+//
+//		/* add species */
+//		return fill_cell_from_heights_and_soils(&m->cells[m->cells_count-1], row);
+//	}
+//
+//
+//}
 
 static int fill_species_from_file(species_t *const s) {
 #define BUFFER_SIZE	256
