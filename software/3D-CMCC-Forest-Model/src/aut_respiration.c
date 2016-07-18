@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Maintenance_respiration(cell_t *const c, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void Maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	/* maintenance respiration routine */
 
@@ -159,7 +159,7 @@ void Maintenance_respiration(cell_t *const c, const int height, const int age, c
 	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0);
 }
 
-void Growth_respiration(cell_t *const c, const int height, const int age, const int species)
+void Growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -224,7 +224,7 @@ void Growth_respiration(cell_t *const c, const int height, const int age, const 
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
 }
 
-void Autotrophic_respiration(cell_t *const c, const int height, const int age, const int species)
+void Autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];

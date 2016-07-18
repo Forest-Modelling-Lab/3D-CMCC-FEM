@@ -99,13 +99,14 @@ void Tree_period(cell_t* const c, const int layer, const int height, const int a
 }
 
 
-void Veg_Days(cell_t *const c, meteo_t *met, const int day, const int month, const int year)
+void Veg_Days(cell_t *const c,const int day, const int month, const int year)
 {
-
-	static int layer;
 	static int height;
 	static int age;
 	static int species;
+
+	meteo_t *met;
+	met = (meteo_t*) c->years[year].m;
 
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];

@@ -609,7 +609,7 @@ enum {
 	COUNTERS
 };
 
-// variables related to plant pools turnover; it can't be placed int he ordinary species structure, since there are up to 5 arrays
+//SERGIO
 typedef struct {
 	double fineroot[MAXTURNTIME];
 	double leaves[MAXTURNTIME];
@@ -653,54 +653,8 @@ typedef struct {
 } height_t;
 
 typedef struct {
-	double variabile;
 
-	double bulk_density,
-	field_capacity,
-	wilting_point;
-	/**************************************************************************************************
-	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
-	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
-	 *
-	 **************************************************************************************************/
-	//3d-cmcc-sgm
-	double sph; //check if removable (for sure in a single layer model)
-	double soilMoisture;
-	double soilTemp;
-	double ice;
-	double soc;
-	double doc;
-	double rcvl;
-	double rcr;
-	double rcl;
-	double CRB1;
-	double CRB2;
-	double crhl;
-	double crhr;
-	double dphum;
-	double no3;
-	double no2;
-	double nh4;
-	double nh3;
-	//double Eh;
-	double co2;
-	double day_O2;
-	double dcbavai;
-	double drcvl;
-	double DRCB1, DRCB2;
-	double soilDepth;
-	double clay_nh4;
-	double inert_C;
-	double LabP;
-	double AdsP;
-	//unknown
-	double sts,mmm;
-	double no, n2o;
-	double litco22, litco23;
 
-	double initialOrganicC;
-	double waterContent;
-	double CEC;
 } soil_t;
 
 enum {
@@ -867,6 +821,7 @@ enum {
 typedef struct {
 	int z;
 	int n_layers;
+	int daily_n_layer;
 	double value[T_LAYER_VALUES_COUNT];
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;
@@ -896,6 +851,51 @@ typedef struct {
 	soil_t* soils;
 	int soils_count;
 	double value[S_LAYER_VALUES_COUNT];
+
+	//ALESSIOC ALESSIOR SERGIOS STUFFS SEE IF REMOVE AND USE ARRAYS
+	/**************************************************************************************************
+	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE
+	 * 			for any issue contact Sergio Marconi (sergio.marconi@cmcc.it)
+	 *
+	 **************************************************************************************************/
+	double sph;
+	double soilMoisture;
+	double soilTemp;
+	double ice;
+	double soc;
+	double doc;
+	double rcvl;
+	double rcr;
+	double rcl;
+	double CRB1;
+	double CRB2;
+	double crhl;
+	double crhr;
+	double dphum;
+	double no3;
+	double no2;
+	double nh4;
+	double nh3;
+	//double Eh;
+	double co2;
+	double day_O2;
+	double dcbavai;
+	double drcvl;
+	double DRCB1, DRCB2;
+	double soilDepth;
+	double clay_nh4;
+	double inert_C;
+	double LabP;
+	double AdsP;
+	//unknown
+	double sts,mmm;
+	double no, n2o;
+	double litco22, litco23;
+
+	double initialOrganicC;
+	double waterContent;
+	double CEC;
+	/*********************************************************************************************/
 } soil_layer_t;
 
 typedef struct {

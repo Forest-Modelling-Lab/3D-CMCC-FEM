@@ -49,9 +49,9 @@ extern logger_t* g_log;
 extern const char *szMonth[MONTHS_COUNT];
 extern int DaysInMonth[];
 
-int Tree_model_daily (matrix_t *const m, const int year, const int month, const int day, const int years_of_simulation, const int cell)
+int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
-	meteo_t *met;
+
 
 	static int layer;
 	static int height;
@@ -61,8 +61,9 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	static int rotation_counter;
 
 	/* check parameters */
-	assert(m);
-	met = m->cells[cell].years[year].m;
+//	assert(m);
+//	meteo_t *met;
+//	met = m->cells[cell].years[year].m;
 
 	/* initialize days of year (each year) */
 	if(day == 0 && month == 0)
@@ -74,6 +75,10 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	{
 		m->cells[cell].doy += 1;
 	}
+
+	//ALESSIOR CHECK IF CORRECT
+	meteo_daily_t *meteo_daily;
+	meteo_daily = &m->cells[cell].years[year].m[month].d[day];
 
 
 	//FIXME IT MUST BE USED FOR MULILAYERED SIMULATIONS
@@ -122,18 +127,18 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	//fixme it must be called in a previous "for" to compute the total number of layers, densities and other things as above
 	//otherwise model cannot run for multi-layered purposes
 	Daily_Forest_structure (&m->cells[cell], day, month, year);
-	Daily_check_for_veg_period (&m->cells[cell], met, month, day);
+	Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 	Daily_numbers_of_layers (&m->cells[cell]);
-	Daily_layer_cover (&m->cells[cell], met, month, day);
-	Daily_dominant_Light (m->cells[cell].heights, &m->cells[cell], m->cells[cell].heights_count, met, month, DaysInMonth[month]);
+	Daily_layer_cover (&m->cells[cell], meteo_daily, day, month);
+	Daily_dominant_Light (&m->cells[cell], layer, height, age, species);
 
-	logger(g_log, "%d-%d-%d\n", met[month].d[day].n_days, month+1, m->cells[cell].years[year].year);
+	logger(g_log, "%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
 	logger(g_log, "-YEAR SIMULATION = %d (%d)\n", year+1, m->cells[cell].years[year].year );
 	logger(g_log, "--MONTH SIMULATED = %s\n", szMonth[month]);
-	logger(g_log, "---DAY SIMULATED = %d\n", met[month].d[day].n_days);
+	logger(g_log, "---DAY SIMULATED = %d\n", meteo_daily->n_days);
 
 	/* print daily met data */
-	Print_daily_met_data (met, month, day);
+	Print_daily_met_data (meteo_daily, day, month);
 
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -154,7 +159,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 				if(m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE] > 0)
 				{
 					/* beginning of simulation (only for first year) */
-					if(day == 0 && month == JANUARY && year == 0) First_day (&m->cells[cell], m->cells[cell].heights_count);
+					if(day == 0 && month == JANUARY && year == 0) First_day (&m->cells[cell], layer, height, age, species);
 
 					/* beginning of simulation (every year included the first one) */
 					if (day == 0 && month == JANUARY)
@@ -163,31 +168,31 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						Annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
 
 						/* reset annual variables */
-						Reset_annual_variables (&m->cells[cell], m->cells[cell].heights_count);
+						Reset_annual_variables (&m->cells[cell], layer, height, age, species);
 
 						/* compute prognostically annual Maximum LAI */
-						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year, month, day, height, age);
+						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], day, month, year);
 					}
 					/* reset monthly variables */
-					if (day == 0) Reset_monthly_variables (&m->cells[cell], m->cells[cell].heights_count);
+					if (day == 0) Reset_monthly_variables (&m->cells[cell], layer, height, age, species);
 
 					/* reset daily cell level variables */
-					Reset_daily_variables(&m->cells[cell], m->cells[cell].heights_count);
+					Reset_daily_variables(&m->cells[cell], layer, height, age, species);
 
 					/* check precipitation and compute for snow if needs */
-					Check_prcp (&m->cells[cell], met, month, day);
+					Check_prcp (&m->cells[cell], meteo_daily);
 
 					/* compute species-specific phenological phase */
-					Phenology (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], met, year, month, day);
+					Phenology (&m->cells[cell], layer, height, age, species, meteo_daily, month);
 
 					/* check for adult or sapling age */
-					Tree_period (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell]);
+					Tree_period (&m->cells[cell], layer, height, age, species);
 
 					/* compute how many classes are in vegetative period */
 					Daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
 
 					/* print at the beginning of simulation stand data */
-					Print_stand_data (&m->cells[cell], month, year, height, age, species);
+					Print_stand_data (&m->cells[cell], layer, height, age, species);
 
 					/* Loop for adult trees */
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)
@@ -206,33 +211,32 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS] += 1;
 
 								/* radiation */
-								canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+								canopy_radiation_sw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
+								canopy_radiation_lw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
 								canopy_net_radiation(&m->cells[cell], layer, height, age, species);
 
 								/* canopy temperature */
-								canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
+								canopy_temperature (&m->cells[cell], layer, height, age, species, meteo_daily);
 
 								/* daily modifier */
-								Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-										met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
+								Daily_modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
 
 								/* nitrogen */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* canopy water fluxes */
-								canopy_evapotranspiration(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+								canopy_evapotranspiration(&m->cells[cell], layer, height, age, species, meteo_daily);
 
 								/* canopy carbon fluxes */
-								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+								Phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
 
 								/* respiration */
 								if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 								{
-									Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+									Maintenance_respiration (&m->cells[cell], layer, height, age, species, meteo_daily);
 									Growth_respiration (&m->cells[cell], layer, height, age, species);
 								}
-								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Autotrophic_respiration (&m->cells[cell], layer, height, age, species);
 
 								/* carbon fluxes */
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -241,7 +245,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 								/* C-N-partitioning-allocation */
-								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, met, day, year);
+								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, meteo_daily, day, year);
 							}
 							/*outside growing season*/
 							else
@@ -250,26 +254,26 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								if (g_settings->spatial == 'u') m->cells[cell].heights[height].ages[age].species[species].value[LAI] = 0;
 
 								/* radiation */
-								canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-								canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-								canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+								canopy_radiation_sw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
+								canopy_radiation_lw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
+								canopy_net_radiation(&m->cells[cell], layer, height, age, species);
 
 								/* canopy temperature */
-								canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
+								canopy_temperature (&m->cells[cell], layer, height, age, species, meteo_daily);
 
 								/* nitrogen */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
 
 								/* canopy carbon fluxes */
-								Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+								Phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
 
 								/* respiration */
 								if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 								{
-									Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+									Maintenance_respiration (&m->cells[cell], layer, height, age, species, meteo_daily);
 									Growth_respiration (&m->cells[cell], layer, height, age, species);
 								}
-								Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+								Autotrophic_respiration (&m->cells[cell], layer, height, age, species);
 
 								/* carbon fluxes */
 								Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -278,7 +282,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 								/* C-N-partitioning-allocation */
-								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, met, day, year);
+								Daily_C_Deciduous_Partitioning_Allocation(&m->cells[cell], layer, height, age, species, meteo_daily, day, year);
 							}
 						}
 						/* loop for evergreen */
@@ -292,22 +296,21 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							logger(g_log, "VEG_DAYS = %d \n", m->cells[cell].heights[height].ages[age].species[species].counter[VEG_DAYS]);
 
 							/* radiation block */
-							canopy_radiation_sw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-							canopy_radiation_lw_band(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
-							canopy_net_radiation(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year, height, age, species);
+							canopy_radiation_sw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
+							canopy_radiation_lw_band(&m->cells[cell], layer, height, age, species, meteo_daily);
+							canopy_net_radiation(&m->cells[cell], layer, height, age, species);
 
 							/* canopy temperature */
-							canopy_temperature (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, day, month, year);
+							canopy_temperature (&m->cells[cell], layer, height, age, species, meteo_daily);
 
 							/* daily modifier */
-							Daily_modifiers (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age], &m->cells[cell],
-									met, month, day, m->cells[cell].heights[height].z, m->cells[cell].heights[height].ages[age].species[species].management, height);
+							Daily_modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
 
 							/* canopy water fluxes block */
-							canopy_evapotranspiration(&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], met, month, day, height, age, species);
+							canopy_evapotranspiration(&m->cells[cell], layer, height, age, species, meteo_daily);
 
 							/* canopy carbon fluxes block */
-							Phosynthesis (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], month, day, DaysInMonth[month], height, age, species);
+							Phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
 
 							/* nitrogen */
 							Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -315,10 +318,10 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							/* respiration */
 							if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 							{
-								Maintenance_respiration (&m->cells[cell], layer, height, age, species, met, day, month);
+								Maintenance_respiration (&m->cells[cell], layer, height, age, species, meteo_daily);
 								Growth_respiration (&m->cells[cell], layer, height, age, species);
 							}
-							Autotrophic_respiration (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], height);
+							Autotrophic_respiration (&m->cells[cell], layer, height, age, species);
 
 							/* carbon fluxes */
 							Carbon_fluxes (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -327,7 +330,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							Carbon_assimilation(&m->cells[cell], layer, height, age, species);
 
 							/* C-N-partitioning-allocation */
-							Daily_C_Evergreen_Partitioning_Allocation ( &m->cells[cell], layer, height, age, species, met, day, year);
+							Daily_C_Evergreen_Partitioning_Allocation (&m->cells[cell], layer, height, age, species, meteo_daily, day, year);
 							logger(g_log, "--------------------------------------------------------------------------\n");
 						}
 
@@ -335,13 +338,13 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 						logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
 						/* check for radiative balance closure */
-						Check_class_radiation_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						Check_class_radiation_balance (&m->cells[cell], layer, height, age, species);
 
 						/* check for carbon balance closure */
-						Check_class_carbon_balance(&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						Check_class_carbon_balance(&m->cells[cell], layer, height, age, species);
 
 						/* check for water balance closure */
-						Check_class_water_balance (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species]);
+						Check_class_water_balance (&m->cells[cell], layer, height, age, species);
 						/****************************************************************************************************************************************/
 
 						/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
@@ -395,7 +398,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 								/*Mortality based on Growth efficiency(LPJ)*/
 								//Greff_Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 							}
-							if ( m->cells[cell].heights[height].ages[age].species[species].management == C) Stool_mortality (&m->cells[cell].heights[height].ages[age].species[species], year);
+							if ( m->cells[cell].heights[height].ages[age].species[species].management == C) Stool_mortality (&m->cells[cell], layer, height, age, species);
 
 							//Renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -404,7 +407,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							Biomass_increment_EOY(&m->cells[cell], layer, height, age, species);
 
 							/* print at the end of simulation class level data */
-							Print_stand_data (&m->cells[cell], month, year, height, age, species);
+							Print_stand_data (&m->cells[cell], layer, height, age, species);
 
 							Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -420,7 +423,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 							{
 								if(year == (int)m->cells[cell].heights[height].ages[age].species[species].value[ROTATION])
 								{
-									Clearcut_Timber_without_request (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell], year);
+									Clearcut_Timber_without_request (&m->cells[cell], layer, height, age, species, year);
 
 									/* add multiples */
 									m->cells[cell].heights[height].ages[age].species[species].value[ROTATION] += rotation_counter;
@@ -510,15 +513,15 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	/* compute soil respiration */
 	Soil_respiration (&m->cells[cell]);
 	/* compute soil evaporation */
-	Soil_evaporation (&m->cells[cell], met, month, day);
+	Soil_evaporation (&m->cells[cell], meteo_daily);
 	/* compute evapotranspiration */
 	Evapotranspiration (&m->cells[cell]);
 	/* compute latent heat flux */
-	Latent_heat_flux (&m->cells[cell], met, month, day);
+	Latent_heat_flux (&m->cells[cell], meteo_daily);
 	/* compute sensible heat flux */
-	Sensible_heat_flux (&m->cells[cell], met, month, day);
+	Sensible_heat_flux (&m->cells[cell], meteo_daily);
 	/* compute soil water balance */
-	Soil_water_balance (&m->cells[cell], met, month, day);
+	Soil_water_balance (&m->cells[cell], meteo_daily);
 	/* compute water fluxes */
 	Water_fluxes (&m->cells[cell]);
 
@@ -526,7 +529,7 @@ int Tree_model_daily (matrix_t *const m, const int year, const int month, const 
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
-	Check_radiation_balance (&m->cells[cell], day, month, year);
+	Check_radiation_balance (&m->cells[cell], meteo_daily);
 	/* CHECK FOR CARBON BALANCE CLOSURE */
 	Check_carbon_balance (&m->cells[cell]);
 	/* CHECK FOR WATER BALANCE CLOSURE */

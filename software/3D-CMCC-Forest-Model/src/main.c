@@ -929,7 +929,7 @@ int main(int argc, char *argv[]) {
 					if ( F == matrix->cells[cell].landuse )
 					{
 						/* compute before any other processes annually the days for the growing season */
-						Veg_Days (&matrix->cells[cell], &matrix->cells[cell].years[year].m, day, month, year);
+						Veg_Days (&matrix->cells[cell], day, month, year);
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
 						++index_vpsat;
@@ -954,21 +954,7 @@ int main(int argc, char *argv[]) {
 					{
 						if ( 'f' == g_settings->version )
 						{
-
-							
-							/* FOREST STRUCTURE */
-							//if (day == 0 && month == JANUARY)
-							//{
-							//	/* compute annual number of different layers */
-							//	Annual_numbers_of_layers (&matrix->cells[cell]);
-							//}
-							///* daily forest structure */
-							//Daily_Forest_structure (&matrix->cells[cell], day, month, years);
-							//Daily_check_for_veg_period (&matrix->cells[cell], met, month, day);
-							//Daily_numbers_of_layers (&matrix->cells[cell]);
-							//Daily_layer_cover (&matrix->cells[cell], met, month, day);
-							//Daily_dominant_Light (matrix->cells[cell].heights, &matrix->cells[cell], matrix->cells[cell].heights_count, met, month, DaysInMonth[month]);
-							if (!Tree_model_daily(matrix, year, month, day, years_of_simulation, cell) )
+							if (!Tree_model_daily(matrix, cell, day, month, year) )
 							{
 								logger(g_log, "tree model daily failed.");
 							}
@@ -982,7 +968,7 @@ int main(int argc, char *argv[]) {
 								{
 									logger(g_log, "RUNNING DNDC.....\n");
 									//TODO SERGIO
-									soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
+									//soil_dndc_sgm (matrix, cell, year, month, day, years_of_simulation);
 									//soil_dndc......................................
 								}
 								else
@@ -997,14 +983,21 @@ int main(int argc, char *argv[]) {
 							//run for BGC version
 						}
 					}
-					if ( Z == matrix->cells[cell].landuse ) {
-						if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) ) {
-							logger(g_log, "crop model failed.");
-						} else {
-							puts(msg_ok);
-							//look if put it here or move before tree_model  at the beginning of each month simulation
-							//	soil_model (matrix, yos, years, month, years_of_simulation);
-						}
+					else if ( Z == matrix->cells[cell].landuse )
+					{
+//						if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) ) {
+//							logger(g_log, "crop model failed.");
+//						}
+//						else
+//						{
+//							puts(msg_ok);
+//							//look if put it here or move before tree_model  at the beginning of each month simulation
+//							//	soil_model (matrix, yos, years, month, years_of_simulation);
+//						}
+					}
+					else
+					{
+
 					}
 					logger(g_log, "****************END OF DAY (%d)*******************\n\n\n", day+1);
 

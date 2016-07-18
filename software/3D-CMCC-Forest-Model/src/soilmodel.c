@@ -20,7 +20,6 @@ extern logger_t* g_log;
 void soil_model(matrix_t *const m, const yos_t *const yos, const int years, const int month, const int day, const int years_of_simulation)
 {
 	int cell;
-	int soil;
 
 	// check parameters
 	assert(m);
@@ -30,24 +29,5 @@ void soil_model(matrix_t *const m, const yos_t *const yos, const int years, cons
 	{
 		//[soil] represents the soil layer number
 		//0 index if for the upper layer
-
-		/* useless just to try */
-
-		for (soil = 0; soil < m->cells[cell].s_layers[soil].soils_count; soil++)
-		{
-			m->cells[cell].s_layers[soil].value = 5;
-
-			//prova
-			if (soil == 0)
-			{
-				m->cells[cell].s_layers[soil].value = 5;
-			}
-			else
-			{
-				m->cells[cell].s_layers[soil].value = m->cells[cell].s_layers[soil-1].value + 1;
-			}
-
-			logger(g_log, "soil layer = %d\n", soil);
-		}
 	}
 }

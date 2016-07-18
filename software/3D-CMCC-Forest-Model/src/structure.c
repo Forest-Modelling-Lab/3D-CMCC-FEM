@@ -773,11 +773,14 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	logger(g_log, "*************************************************** \n");
 }
 
-void Daily_check_for_veg_period (cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
 {
 	static int height;
 	static int age;
 	static int species;
+
+	species_t *s;
+	s = &c->heights[height].ages[age].species[species];
 
 	/* it computes the vegetative state for each species class,
 	 * the number of days of leaf fall and
@@ -800,100 +803,99 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_t *const met, cons
 
 				if (day == 0 && month == 0)
 				{
-					c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER] = 0;
+					s->counter[LEAF_FALL_COUNTER] = 0;
 				}
 
 				/*PHENOLOGY = 0 FOR DECIDUOUS*/
-				if (c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.1 || c->heights[height].ages[age].species[species].value[PHENOLOGY] == 0.2)
+				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
-					logger(g_log, "-GET ANNUAL VEGETATIVE DAYS for species %s -\n", c->heights[height].ages[age].species[species].name);
+					logger(g_log, "-GET ANNUAL VEGETATIVE DAYS for species %s -\n", s->name);
 					if (g_settings->spatial == 's')
 					{
 						//logger(g_log, "Spatial version \n");
 
 						//veg period
-						if (met[month].d[day].ndvi_lai > 0.1)
+						if (meteo_daily->ndvi_lai > 0.1)
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							s->counter[VEG_UNVEG] = 1;
 							c->Veg_Counter += 1;
-							logger(g_log, "%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+							logger(g_log, "%s is in veg period\n", s->name);
 						}
 						//unveg period
 						else
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-							logger(g_log, "%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+							s->counter[VEG_UNVEG] = 0;
+							logger(g_log, "%s is in un-veg period\n", s->name);
 						}
 					}
 					else
 					{
 
 						/*compute annual days of leaf fall*/
-						c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(c->heights[height].ages[age].species[species].value[LEAF_FALL_FRAC_GROWING]
-						                                                                                                                                           * c->heights[height].ages[age].species[species].counter[DAY_VEG_FOR_LITTERFALL_RATE]);
-						logger(g_log, "Days of leaf fall for deciduous = %d day\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "Days of leaf fall for deciduous = %d day\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 
 						//currently the model considers a linear reduction in leaf fall
 						//it should be a negative sigmoid function
 						//todo: create a sigmoid function
-						c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] = 1.0 / (c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-						logger(g_log, "foliage reduction rate = %f,  = %f%%\n", c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE], c->heights[height].ages[age].species[species].value[FOLIAGE_REDUCTION_RATE] * 100);
+						s->value[FOLIAGE_REDUCTION_RATE] = 1.0 / (s->counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
+						logger(g_log, "foliage reduction rate = %f,  = %f%%\n", s->value[FOLIAGE_REDUCTION_RATE], s->value[FOLIAGE_REDUCTION_RATE] * 100);
 
 
 						//todo decidere se utlizzare growthend o mindaylenght
 						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
 						//currently model can simulate only forests in boreal hemisphere
-						if ((met[month].d[day].thermic_sum >= c->heights[height].ages[age].species[species].value[GROWTHSTART] && month <= 6)
-								|| (met[month].d[day].daylength >= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0))
+						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6)
+								|| (meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 						{
-							c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+							s->counter[VEG_UNVEG] = 1;
 							c->Veg_Counter += 1;
 							//FIXME check if it works (daily)
 							/* we consider that plants tend to occupy the part of the cell not covered by the others */
-							c->cell_cover += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
+							c->cell_cover += s->value[CANOPY_COVER_DBHDC];
 							if(c->cell_cover > 1.0)
 							{
 								c->cell_cover = 1.0;
 							}
-							logger(g_log, "%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+							logger(g_log, "%s is in veg period\n", s->name);
 							logger(g_log, "cell_cover counter = %f\n", c->cell_cover);
 						}
 						else
 						{
 							//check for case 0 of allocation
-							if (met[month].d[day].daylength <= c->heights[height].ages[age].species[species].value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
+							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 							{
 
-								logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE]);
+								logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
-								c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  += 1;
+								s->counter[LEAF_FALL_COUNTER]  += 1;
 								//check
-								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  == 1)
+								if(s->counter[LEAF_FALL_COUNTER]  == 1)
 								{
 									//assign value of thermic sum
-									c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG] = met[month].d[day].thermic_sum;
-									//logger(g_log, "thermic_sum END OF VEG = %f °C\n", c->heights[height].ages[age].species[species].value[THERMIC_SUM_FOR_END_VEG]);
+									s->value[THERMIC_SUM_FOR_END_VEG] = meteo_daily->thermic_sum;
+									//logger(g_log, "thermic_sum END OF VEG = %f °C\n", s->value[THERMIC_SUM_FOR_END_VEG]);
 								}
 
 								//check
-								if(c->heights[height].ages[age].species[species].counter[LEAF_FALL_COUNTER]  <= (int)c->heights[height].ages[age].species[species].counter[DAY_FRAC_FOLIAGE_REMOVE])
+								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
 								{
 									/*days of leaf fall*/
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
+									s->counter[VEG_UNVEG] = 1;
 									c->Veg_Counter += 1;
 								}
 								else
 								{
 									/*outside days of leaf fall*/
-									c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
+									s->counter[VEG_UNVEG] = 0;
 								}
 
 							}
 							else
 							{
-								c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 0;
-								logger(g_log, "%s is in un-veg period\n", c->heights[height].ages[age].species[species].name);
+								s->counter[VEG_UNVEG] = 0;
+								logger(g_log, "%s is in un-veg period\n", s->name);
 							}
 						}
 					}
@@ -901,10 +903,10 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_t *const met, cons
 				/*PHENOLOGY = 1 FOR EVERGREEN*/
 				else
 				{
-					c->heights[height].ages[age].species[species].counter[VEG_UNVEG] = 1;
-					logger(g_log, "Veg period = %d \n", c->heights[height].ages[age].species[species].counter[VEG_UNVEG]);
+					s->counter[VEG_UNVEG] = 1;
+					logger(g_log, "Veg period = %d \n", s->counter[VEG_UNVEG]);
 					c->Veg_Counter += 1;
-					logger(g_log, "%s is in veg period\n", c->heights[height].ages[age].species[species].name);
+					logger(g_log, "%s is in veg period\n", s->name);
 				}
 			}
 		}
@@ -968,7 +970,7 @@ void Daily_numbers_of_layers (cell_t *const c)
 	//logger(g_log, "number of vegetative layers = %d\n", c->daily_layer_number);
 }
 
-void Daily_layer_cover(cell_t *const c, const meteo_t *const met, const int month, const int day)
+void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
 {
 	static int height;
 	static int age;
@@ -1098,33 +1100,32 @@ void Get_top_layer (cell_t *const c, int heights_count, HEIGHT *heights)
  */
 
 
-void Daily_dominant_Light(height_t *const heights, cell_t *const c, const int count, const meteo_t *const met, const int month, const int DaysInMonth)
+void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int species)
 {
-	int height;
-	int age;
-	int species;
+	assert(height);
 
-	assert(heights);
+	species_t *s;
+	s = &c->heights[height].ages[age].species[species];
 
 	/* it computes which canopy layers is in dominant position for light */
-
-	//ALESSIOC
-	/*
-	if (c->daily_layer_number != 0)
+	//ALESSIOC CHECK IT
+	if (c->t_layers[layer].daily_n_layer != 0)
 	{
 		logger(g_log, "-Dominant Light Index Function-\n");
 
 		//highest z value in veg period determines top_layer value
-		for ( height = count- 1; height >= 0; height-- )
+		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
+			/* sort by ascending heights */
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
-			for ( age = 0; age < heights[height].ages_count; age++ )
-			{
-				for ( species = 0; species < heights[height].ages[age].species_count; species++ )
-				{
-					if (heights[height].ages[age].species[species].counter[VEG_UNVEG]==1)
-					{
 
+			for ( age = 0; age < c->heights[height].ages_count; age++ )
+			{
+				for ( species = 0; species < c->heights[height].ages[age].species_count; species++ )
+				{
+					if (s->counter[VEG_UNVEG]==1)
+					{
+						//ALESSIOC CHECK IT
 						if (g_settings->spatial == 'u')
 						{
 							c->top_layer = c->heights[height].z;
@@ -1139,8 +1140,6 @@ void Daily_dominant_Light(height_t *const heights, cell_t *const c, const int co
 		}
 		logger(g_log, "Daily/Monthly Dominant layer is z = %d\n", c->top_layer);
 	}
-	*/
-	//logger(g_log, "-Species in veg period = %d\n", c->Veg_Counter);
 }
 
 /*

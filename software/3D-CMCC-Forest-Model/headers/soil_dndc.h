@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void soil_dndc_sgm(matrix_t *const m, const int cell, const int year, const int month, const int day, const int years_of_simulation);
+void soil_dndc_sgm(matrix_t *const m, const int cell, const int day, const int month, const int year, const int years_of_simulation);
 
 #endif /* SOILDNDC_H_ */

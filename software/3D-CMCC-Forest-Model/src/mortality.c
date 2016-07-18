@@ -495,7 +495,11 @@ void Mortality (species_t *const s, int years)
 }
 
 
-void Stool_mortality(species_t *const s, const int year) {
+void Stool_mortality(cell_t *const c, const int layer, const int height, const int age, const int species)
+{
+	species_t *s;
+	s = &c->heights[height].ages[age].species[species];
+
 	//to compute stools mortality in function on age only for coppices
 	logger(g_log, "***STOOLS MORTALITY*** \n");
 }

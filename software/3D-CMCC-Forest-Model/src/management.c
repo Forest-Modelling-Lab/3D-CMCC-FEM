@@ -454,7 +454,7 @@ void Management (age_t * const a, const int height, const int age, const int spe
 	s->counter[CUT_TREES] = 0;
 }
 
-void Clearcut_Timber_without_request (cell_t *const c, const int height, const int age, const int species, const int year)
+void Clearcut_Timber_without_request (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
 {
 	int removed_tree = 0.0;
 	double IndWf,

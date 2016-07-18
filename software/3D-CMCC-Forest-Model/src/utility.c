@@ -10,13 +10,8 @@
 
 extern logger_t* g_log;
 
-void Reset_daily_variables(cell_t *const c, const int layer, const int height, const age, const int species)
+void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int species)
 {
-
-	//int i;
-
-	tree_layer_t *l;
-	l = &c->t_layers[layer];
 
 	height_t *h;
 	h = &c->heights[height];
@@ -201,7 +196,7 @@ void Reset_daily_variables(cell_t *const c, const int layer, const int height, c
 
 }
 
-void Reset_monthly_variables(cell_t *const c, const int layer, const int height, const age, const int species)
+void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, int species)
 {
 	tree_layer_t *l;
 	l = &c->t_layers[layer];
@@ -261,10 +256,8 @@ void Reset_monthly_variables(cell_t *const c, const int layer, const int height,
 }
 
 
-void Reset_annual_variables(cell_t *const c, const int layer, const int height, const age, const int species)
+void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int species)
 {
-	tree_layer_t *l;
-	l = &c->t_layers[layer];
 
 	height_t *h;
 	h = &c->heights[height];
@@ -371,7 +364,7 @@ void Reset_annual_variables(cell_t *const c, const int layer, const int height, 
 	}
 }
 
-void First_day(cell_t *const c, const int layer, const int height, const age, const int species)
+void First_day(cell_t *const c, int layer, int height, int age, int species)
 {
 
 

@@ -14,7 +14,7 @@
 
 extern logger_t* g_log;
 
-void Check_prcp (cell_t *const c,  meteo_daily_t *meteo_daily)
+void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
 {
 
 	//FOLLOWING BIOME APPROACH
