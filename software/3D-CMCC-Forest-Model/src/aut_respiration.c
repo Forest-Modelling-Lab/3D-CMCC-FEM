@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_t *const met, const int day, const int month)
+void Maintenance_respiration(cell_t *const c, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	/* maintenance respiration routine */
 
@@ -49,9 +49,9 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double exponent_tavg;
 	double exponent_tsoil;
 	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
-	species_t *s;
 
-	s  = &c->t_layers[layer].heights[height].ages[age].species[species];
+	species_t *s;
+	s  = &c->heights[height].ages[age].species[species];
 	
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
@@ -78,23 +78,23 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		/* leaves */
-		exponent_tday = (met[month].d[day].tday - Q10_temp) / 10.0;
+		exponent_tday = (meteo_daily->tday - Q10_temp) / 10.0;
 
 		t1 = s->value[LEAF_NITROGEN] * mrpern;
 
-		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tday) * (met[month].d[day].daylength/24.0));
+		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tday) * (meteo_daily->daylength/24.0));
 		logger(g_log, "daily leaf maintenance respiration = %f gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
-		exponent_tnight =  (met[month].d[day].tnight - Q10_temp) / 10.0;
+		exponent_tnight =  (meteo_daily->tnight - Q10_temp) / 10.0;
 
-		s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tnight) * (1.0 - (met[month].d[day].daylength/24.0)));
+		s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
 		logger(g_log, "nightly leaf maintenance respiration = %f gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 		logger(g_log, "Total daily leaf maintenance respiration = %f gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 		/* fine roots */
-		exponent_tsoil = (met[month].d[day].tsoil - Q10_temp) / 10.0;
+		exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 		t1 = s->value[FINE_ROOT_NITROGEN] * mrpern;
 		s->value[FINE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
 		logger(g_log, "Fine root maintenance respiration = %f gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
@@ -107,7 +107,7 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[FINE_ROOT_MAINT_RESP] = 0.0;
 	}
 
-	exponent_tavg = (met[month].d[day].tavg - Q10_temp) / 10.0;
+	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
 
 	/*  live stem maintenance respiration */
 	t1 = s->value[STEM_NITROGEN] * mrpern;
@@ -120,7 +120,7 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	logger(g_log, "Branch maintenance respiration = %f gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	//live coarse root maintenance respiration
-	exponent_tsoil = (met[month].d[day].tsoil - Q10_temp) / 10.0;
+	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 	t1 = s->value[COARSE_ROOT_NITROGEN] * mrpern;
 	s->value[COARSE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
 	logger(g_log, "Coarse root maintenance respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
@@ -159,11 +159,10 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0);
 }
 
-void Growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void Growth_respiration(cell_t *const c, const int height, const int age, const int species)
 {
 	species_t *s;
-
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
@@ -219,25 +218,16 @@ void Growth_respiration(cell_t *const c, const int layer, const int height, cons
 	c->daily_branch_growth_resp += s->value[BRANCH_GROWTH_RESP];
 	c->daily_coarse_root_growth_resp += s->value[COARSE_ROOT_GROWTH_RESP];
 
-	/* ALESSIOC
-	i = c->heights[height].z;
-	c->layer_daily_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-	c->layer_monthly_gowth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-	c->layer_annual_growth_resp[i] += s->value[TOTAL_GROWTH_RESP];
-	*/
-
 	c->daily_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	c->monthly_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	c->annual_growth_resp += s->value[TOTAL_GROWTH_RESP];
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
 }
 
-void Autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void Autotrophic_respiration(cell_t *const c, const int height, const int age, const int species)
 {
-	int i;
 	species_t *s;
-
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 	{
@@ -250,16 +240,6 @@ void Autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 		logger(g_log, "TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
 		CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
-
-		/* compute autotrophic respiration for each layer */
-		i = c->t_layers[layer].heights[height].z;
-
-		/* ALESSIOC
-		c->layer_daily_aut_resp[i] +=s->value[TOTAL_AUT_RESP];
-		c->layer_daily_aut_resp_tC[i] += s->value[TOTAL_AUT_RESP] / 1000000* g_settings->sizeCell;
-		c->layer_monthly_aut_resp[i] += s->value[TOTAL_AUT_RESP];
-		c->layer_annual_aut_resp[i] += s->value[TOTAL_AUT_RESP];
-		*/
 
 		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
 		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
@@ -275,26 +255,10 @@ void Autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		c->daily_branch_aut_resp += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
 		c->daily_fine_root_aut_resp += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
 		c->daily_coarse_root_aut_resp += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
-
-		/* annual */
-		//ALESSIOC
-		//c->layer_annual_leaf_aut_resp[i] += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
-		//c->layer_annual_stem_aut_resp[i] += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
-		//c->layer_annual_branch_aut_resp[i] += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
-		//c->layer_annual_fine_root_aut_resp[i] += s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
-		//c->layer_annual_coarse_root_aut_resp[i] += s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
 	}
 	else
 	{
 		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * g_settings->Fixed_Aut_Resp_rate;
-
-		/* compute autotrophic respiration for each layer */
-		i = c->t_layers[layer].heights[height].z;
-
-		c->t_layers[layer].value[T_LAYER_VALUE_DAILY_AUT_RESP] += s->value[TOTAL_AUT_RESP];
-		c->t_layers[layer].value[T_LAYER_VALUE_DAILY_AUT_RESP_TC] += s->value[TOTAL_AUT_RESP] / 1000000* g_settings->sizeCell;
-		c->t_layers[layer].value[T_LAYER_VALUE_MONTHLY_AUT_RESP] += s->value[TOTAL_AUT_RESP];
-		c->t_layers[layer].value[T_LAYER_VALUE_ANNUAL_AUT_RESP] += s->value[TOTAL_AUT_RESP];
 
 		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
 		c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;

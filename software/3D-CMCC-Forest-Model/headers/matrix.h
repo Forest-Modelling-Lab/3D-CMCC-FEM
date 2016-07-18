@@ -866,8 +866,6 @@ enum {
 
 typedef struct {
 	int z;
-	height_t* heights;
-	int heights_count;
 	double value[T_LAYER_VALUES_COUNT];
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;
@@ -902,6 +900,17 @@ typedef struct {
 typedef struct {
 	int x;
 	int y;
+
+	/* structs pointed */
+
+	height_t* heights;
+	int heights_count;
+
+	tree_layer_t* t_layers;
+	int t_layers_count;
+
+	soil_layer_t* s_layers;
+	int s_layers_count;
 
 	e_landuse landuse;
 
@@ -1141,12 +1150,6 @@ typedef struct {
 	//todo to be removed used just to evaluate total biomass fluctuations in the several different compartments
 	double leafBiomass, stemBiomass, fineRootBiomass, coarseRootBiomass,stemBranchBiomass;
 	double vpSat[365], maxVpSat;
-
-	tree_layer_t* t_layers;
-	int t_layers_count;
-
-	soil_layer_t* s_layers;
-	int s_layers_count;
 
 	/*
 		those variables are referred to cell, they must be same for each layers
