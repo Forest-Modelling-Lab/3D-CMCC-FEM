@@ -912,6 +912,9 @@ typedef struct {
 	soil_layer_t* s_layers;
 	int s_layers_count;
 
+	int years_count;
+	yos_t *years;
+
 	e_landuse landuse;
 
 	/* general variables */
@@ -1154,8 +1157,7 @@ typedef struct {
 	/*
 		those variables are referred to cell, they must be same for each layers
 	*/
-	int years_count;
-	yos_t *years;
+
 } cell_t;
 
 typedef struct {
