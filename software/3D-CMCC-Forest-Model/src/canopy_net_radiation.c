@@ -19,10 +19,10 @@
 
 extern logger_t* g_log;
 
-void canopy_net_radiation(cell_t *const c, const int layer, const int height, const int age, const int species)
+void canopy_net_radiation(cell_t *const c, const int height, const int age, const int species)
 {
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "\n**NET RADIATION ROUTINE**\n");
 

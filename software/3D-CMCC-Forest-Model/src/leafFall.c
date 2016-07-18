@@ -13,15 +13,17 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern logger_t* g_soil_log;
 
-void Leaf_fall(species_t *const s, int* const doy)
+void Leaf_fall(cell_t *const c, const int height, const int age, const int species)
 {
 	static double foliage_to_remove;
 	static double fine_root_to_remove;
 	static double fraction_to_retransl = 0.1; //fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013
 	static int senescenceDayOne;
-
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
+
+	species_t *s;
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "\n**Leaf_fall**\n");
 
@@ -34,7 +36,7 @@ void Leaf_fall(species_t *const s, int* const doy)
 		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
 
 		s->value[MAX_LAI] = s->value[LAI];
-		senescenceDayOne = *doy;
+		senescenceDayOne = c->doy;
 
 		//		/* assuming linear leaf fall */
 		//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
@@ -59,7 +61,7 @@ void Leaf_fall(species_t *const s, int* const doy)
 		previousLai = s->value[LAI];
 
 		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
-				* doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
+				* c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
 		logger(g_log, "previousLai = %f\n", previousLai);
 		logger(g_log, "currentLai = %f\n", currentLai);

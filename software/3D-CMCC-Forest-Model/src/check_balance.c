@@ -306,7 +306,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	double balance;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE RADIATIVE BALANCE */
 	//fixme: for all the balance doesn't takes into account the amount of light previously removed in Radiation function
@@ -410,7 +410,7 @@ void Check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	double balance;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CARBON BALANCE */
 	/* check complete tree level carbon balance */
@@ -473,7 +473,7 @@ void Check_class_water_balance(cell_t *const c, const int layer, const int heigh
 	double balance;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* DAILY CHECK ON CLASS LEVEL CANOPY POOL-ATMOSPHERE WATER BALANCE */
 

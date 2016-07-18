@@ -31,8 +31,9 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
 	double TsoilK;
+
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 
 	logger(g_log, "\n**LONG WAVE BAND RADIATION ROUTINE**\n");

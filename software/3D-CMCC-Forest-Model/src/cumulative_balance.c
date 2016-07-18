@@ -1,4 +1,4 @@
-/* cumulative_balance.c */
+ /* cumulative_balance.c */
 #include "cumulative_balance.h"
 #include "common.h"
 #include "settings.h"
@@ -13,12 +13,12 @@ extern logger_t* g_soil_log;
 
 void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const int years_of_simulation, const int cell_index)
 {
-	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
-	static double avg_ar[3], avg_ar_tot;
-	static double avg_cf[3], avg_cf_tot;
-	static int tot_dead_tree_tot;
-
-	static int previous_layer_number;
+//	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
+//	static double avg_ar[3], avg_ar_tot;
+//	static double avg_cf[3], avg_cf_tot;
+//	static int tot_dead_tree_tot;
+//
+//	static int previous_layer_number;
 
 //	if (years == 0)
 //	{
@@ -552,7 +552,7 @@ void EOY_cumulative_balance_cell_level(cell_t *const c, const int year, const in
 
 void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int cell_index)
 {
-	static int previous_layer_number;
+//	static int previous_layer_number;
 
 	/*if(month == 0 && years == 0)
 	{
@@ -796,8 +796,8 @@ void EOM_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 
 void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const int month, const int day, const int cell_index)
 {
-	static int previous_layer_number;
-	static int doy;
+//	static int previous_layer_number;
+//	static int doy;
 
 	if(day  == 0 && month == 0 && years == 0)
 	{
@@ -1158,9 +1158,9 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day)
 {
 
-	static int previous_layer_number;
-	static int doy;
-	int soil = 0;
+//	static int previous_layer_number;
+//	static int doy;
+//	int soil = 0;
 
 	if(day  == 0 && month == 0 && year == 0)
 	{

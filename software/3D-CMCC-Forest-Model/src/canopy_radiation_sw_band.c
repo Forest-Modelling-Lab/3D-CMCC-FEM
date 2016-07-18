@@ -17,13 +17,13 @@
 
 extern logger_t* g_log;
 
-void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int layer, const int height, const int age, const int species, double Light_abs_frac
+void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int age, const int species, double Light_abs_frac
 		, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
 {
 	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
 	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
@@ -150,9 +150,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
-
-
+	s = &c->heights[height].ages[age].species[species];
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	//double actual_albedo;
@@ -232,8 +230,8 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	{
 		/*************************************************************************************************************************************************************************************/
 		/* dominant layer */
-		//ALESSIOR come cazzo lo metto?
-		if ( c->t_layers[layer].heights[height].z == c->top_layer )
+		//ALESSIOR is that correct??
+		if(c->heights[height].z == c->t_layers[layer].z)
 		{
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			// ALESSIOC
@@ -289,7 +287,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
 					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
@@ -345,8 +343,8 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		}
 		/*************************************************************************************************************************************************************************************/
 		/* dominated layer */
-		//ALESSIOR come cazzo lo metto?
-		else if (c->t_layers[layer].heights[height].z == c->top_layer - 1)
+		//ALESSIOR is that correct???
+		else if (c->heights[height].z == c->t_layers[layer].z)
 		{
 			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
@@ -394,7 +392,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
 								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */
@@ -494,7 +492,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
 
 			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, layer, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
 								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
 
 			/* update temporary absorbed and reflected PAR for lower layer */

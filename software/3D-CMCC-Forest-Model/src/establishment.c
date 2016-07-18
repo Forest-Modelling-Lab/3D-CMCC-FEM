@@ -19,7 +19,7 @@ void Establishment_LPJ (cell_t *const c, const int layer, const int height, cons
 	static int Nsapling;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "\n--LPJ ESTABLISHMENT--\n");
 

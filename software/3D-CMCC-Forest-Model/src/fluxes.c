@@ -17,9 +17,7 @@ extern logger_t* g_log;
 
 void Carbon_fluxes (species_t *const s)
 {
-	//int i;
 
-	///i = c->heights[height].z;
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
 	logger(g_log, "\nC-FLUXES\n");
@@ -28,15 +26,6 @@ void Carbon_fluxes (species_t *const s)
 	logger(g_log, "c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
 //	logger(g_log, "c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell));
 
-	//ALESSIOC
-	/*
-	c->layer_daily_c_flux[i] = s->value[C_FLUX];
-	c->daily_C_flux += s->value[C_FLUX];
-	c->layer_monthly_c_flux[i] += s->value[C_FLUX];
-	c->monthly_C_flux +=  s->value[C_FLUX];
-	c->layer_annual_c_flux[i] += s->value[C_FLUX];
-	c->annual_C_flux +=  s->value[C_FLUX];
-	*/
 }
 
 //too remove after made water_balance function

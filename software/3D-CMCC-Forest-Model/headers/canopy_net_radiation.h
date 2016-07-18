@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-void canopy_net_radiation(cell_t *const c, const int layer, const int height, const int age, const int species);
+void canopy_net_radiation(cell_t *const c, const int height, const int age, const int species);
 
 #endif /* HEADERS_CANOPY_NET_RADIATION_H_ */

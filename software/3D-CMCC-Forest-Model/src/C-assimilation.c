@@ -20,7 +20,7 @@ extern logger_t* g_log;
 void Carbon_assimilation(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger (g_log, "\n**C-ASSIMILATION_ROUTINE**\n");
 
@@ -32,17 +32,6 @@ void Carbon_assimilation(cell_t *const c, const int layer, const int height, con
 	logger(g_log, "Daily NPP = %f gC/m^2 ground surface area/day\n", s->value[NPP_gC]);
 	logger(g_log, "Daily NPP = %f tC/area/day\n", s->value[NPP_tC]);
 	logger(g_log, "Daily NPP = %f tDM/area/day\n",  s->value[NPP_tDM]);
-
-	//ALESSIOC
-	/*
-	i = c->heights[height].z;
-	c->layer_daily_npp_tDM[i] += s->value[NPP_tDM];
-	c->layer_daily_npp_gC[i] += s->value[NPP_gC];
-	c->layer_monthly_npp_tDM[i] += s->value[NPP_tDM];
-	c->layer_monthly_npp_gC[i] += s->value[NPP_gC];
-	c->layer_annual_npp_tDM[i] += s->value[NPP_tDM];
-	c->layer_annual_npp_gC[i] += s->value[NPP_gC];
-	*/
 
 	c->daily_npp_tDM += s->value[NPP_tDM];
 	c->daily_npp_gC += s->value[NPP_gC];

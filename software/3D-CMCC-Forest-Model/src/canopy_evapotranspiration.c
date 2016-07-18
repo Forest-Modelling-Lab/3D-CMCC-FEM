@@ -21,9 +21,6 @@ extern logger_t* g_log;
 
 void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-
-	//double max_int;
-
 	double g_corr;
 	double gl_bl;
 	double gl_s_sun, gl_s_shade;
@@ -48,7 +45,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	static int days_with_canopy_wet;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */

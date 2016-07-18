@@ -37,7 +37,7 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	double gc_e_wv;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* the function to compute canopy temperature use eq. in Webber et al., 2016
 	 * the resistance parts follows the rationale of BIOME-BGC model 	 */

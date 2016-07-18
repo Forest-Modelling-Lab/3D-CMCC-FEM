@@ -18,8 +18,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 /* Deciduous carbon allocation routine */
-void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age
-		, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
+void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
 {
 	//int i;
 	double  s0Ctem;
@@ -39,8 +38,14 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	double npp_to_alloc;
 	double npp_alloc;
 
+	height_t *h;
+	h = &c->heights;
+
+	age_t *a;
+	a = &c->heights[height].ages;
+
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	s0Ctem = s->value[S0CTEM];
 	r0Ctem = s->value[R0CTEM];
@@ -93,7 +98,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->t_layers[layer].heights[height].z);
+	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->t_layers[layer].z);
 
 	/* it mainly follows Arora V. K., Boer G. J., GCB, 2005 */
 
@@ -221,7 +226,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 			}
 		}
 
-		Leaf_fall(&c->t_layers[layer].heights[height].ages[age].species[species], &c->doy);
+		Leaf_fall(c, height, age, species);
 		/* note: these are computed in Leaf_fall function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
@@ -268,17 +273,17 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
-	live_total_wood_age (&c->t_layers[layer].heights[height].ages[age], species);
+	live_total_wood_age (a, species);
 
 	/* allocate daily carbon */
-	C_allocation(&c->t_layers[layer].heights[height].ages[age].species[species]);
+	C_allocation(s);
 
-	Average_tree_biomass(&c->t_layers[layer].heights[height].ages[age].species[species]);
+	Average_tree_biomass(s);
 
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if(day == 0)
 	{
-		Dendrometry (c, layer, height, age, species, year);
+		Dendrometry(c, height, age, species, year);
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
@@ -292,15 +297,10 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update Leaf Area Index */
-	Daily_lai (&c->t_layers[layer].heights[height].ages[age].species[species]);
-	//ALESSIOC
-	/*
-	c->daily_lai[i] = s->value[LAI];
-	c->daily_layer_reserve_c[i] = s->value[RESERVE_C];
-	 */
+	Daily_lai(s);
 
 	/* turnover */
-	Turnover(&c->t_layers[layer].heights[height].ages[age].species[species], c);
+	Turnover(s);
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
@@ -311,57 +311,6 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	s->value[DEL_Y_WRES] += s->value[C_TO_RESERVE];
 	s->value[DEL_Y_WR] += s->value[C_TO_ROOT];
 	s->value[DEL_Y_BB] += s->value[C_TO_BRANCH];
-
-	/* update layer level daily carbon biomass increment in tC/cell/day */
-	//ALESSIOC
-	/*
-	c->daily_delta_wts[i] = s->value[C_TO_TOT_STEM];
-	c->daily_delta_ws[i] = s->value[C_TO_STEM];
-	c->daily_delta_wf[i] = s->value[C_TO_LEAF];
-	c->daily_delta_wbb[i] = s->value[C_TO_BRANCH];
-	c->daily_delta_wfr[i] = s->value[C_TO_FINEROOT];
-	c->daily_delta_wcr[i] = s->value[C_TO_COARSEROOT];
-	c->daily_delta_wres[i] = s->value[C_TO_RESERVE];
-	 */
-
-	/* update dendrometry variables */
-	//ALESSIOC
-	/*
-	if(c->height_class_in_layer_dominant_counter>1)
-	{
-		c->annual_layer_avDBH[i] = (c->annual_layer_avDBH[i] + s->value[AVDBH]) / c->height_class_in_layer_dominant_counter;
-	}
-	else
-	{
-		c->annual_layer_avDBH[i] = s->value[AVDBH];
-	}
-	 */
-
-	/* update layer level annual carbon increments and pools in tC/cell/year */
-	//ALESSIOC
-	/*
-	c->annual_delta_ws[i] += s->value[C_TO_STEM];
-	c->annual_layer_stem_c[i] = s->value[STEM_C];
-	c->annual_layer_live_stem_c[i] = s->value[STEM_LIVE_WOOD_C];
-	c->annual_layer_stem_sapwood_c[i] = s->value[STEM_SAPWOOD_C];
-	c->annual_delta_wres[i] += s->value[C_TO_RESERVE];
-	c->annual_layer_reserve_c[i] = s->value[RESERVE_C];
-	c->annual_delta_wf[i] += s->value[C_TO_LEAF];
-	c->annual_layer_leaf_c[i] = s->value[LEAF_C];
-	c->annual_delta_wts[i] += s->value[C_TO_TOT_STEM];
-	c->annual_layer_tot_stem_c[i] = s->value[TOT_STEM_C];
-	c->annual_delta_wbb[i] += s->value[C_TO_BRANCH];
-	c->annual_layer_branch_c[i] = s->value[BRANCH_C];
-	c->annual_layer_live_branch_c[i] = s->value[BRANCH_LIVE_WOOD_C];
-	c->annual_layer_branch_sapwood_c[i] = s->value[BRANCH_SAPWOOD_C];
-	c->annual_delta_wfr[i] += s->value[C_TO_FINEROOT];
-	c->annual_layer_fineroot_c[i] = s->value[FINE_ROOT_C];
-	c->annual_delta_wcr[i] += s->value[C_TO_COARSEROOT];
-	c->annual_layer_coarseroot_c[i] = s->value[COARSE_ROOT_C];
-	c->annual_layer_live_coarseroot_c[i] = s->value[COARSE_ROOT_LIVE_WOOD_C];
-	c->annual_layer_coarse_root_sapwood_c[i] = s->value[COARSE_ROOT_SAPWOOD_C];
-	c->annual_layer_sapwood_c[i] = s->value[TOT_SAPWOOD_C];
-	 */
 
 	/* update cell level carbon biomass in gC/m2/day */
 	c->daily_leaf_carbon += s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell ;
