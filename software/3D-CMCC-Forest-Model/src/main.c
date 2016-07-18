@@ -926,14 +926,17 @@ int main(int argc, char *argv[]) {
 					Annual_met_values(&matrix->cells[cell], day, month, year);
 					Annual_CO2_concentration(matrix->cells[cell].years[year].m, day, month, year);
 
-					if ( F == matrix->cells[cell].landuse ) {
+					if ( F == matrix->cells[cell].landuse )
+					{
 						/* compute before any other processes annually the days for the growing season */
-						Veg_Days (&matrix->cells[cell], day, month, year);
+						Veg_Days (&matrix->cells[cell], &matrix->cells[cell].years[year].m, day, month, year);
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
 						++index_vpsat;
-					} else if ( Z == matrix->cells[cell].landuse ) {
-						//sergio
+					}
+					else if ( Z == matrix->cells[cell].landuse )
+					{
+						/* include other land use */
 					}
 
 				}

@@ -51,7 +51,6 @@ C_SRCS += \
 ../src/print.c \
 ../src/renovation.c \
 ../src/settings.c \
-../src/soil_dndc.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
@@ -116,7 +115,6 @@ OBJS += \
 ./src/print.o \
 ./src/renovation.o \
 ./src/settings.o \
-./src/soil_dndc.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
@@ -181,7 +179,6 @@ C_DEPS += \
 ./src/print.d \
 ./src/renovation.d \
 ./src/settings.d \
-./src/soil_dndc.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \

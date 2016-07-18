@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Clearcut_Timber_without_request (species_t *const s, cell_t *const c, const int year);
+void Clearcut_Timber_without_request (cell_t *const c, const int height, const int age, const int species, const int year);
 
 #endif /* MANAGEMENT_H_ */

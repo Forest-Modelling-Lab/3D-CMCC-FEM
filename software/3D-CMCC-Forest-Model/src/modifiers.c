@@ -16,7 +16,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Daily_modifiers(cell_t *const c, const int layer, const int height, const int age, const int species, const int z, const int management, const meteo_daily_t *const meteo_daily)
+void Daily_modifiers(cell_t *const c, const int layer, const int height, const int age, const int species, const int management, const meteo_daily_t *const meteo_daily)
 {
 	double RelAge;
 	/*variables for CO2 modifier computation*/
@@ -33,13 +33,14 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	double Atau = 7.87 * pow(10,-5);
 	double tairK;
 	double v1, v2;
+
 	static int counter_water_stress;
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	//test
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
@@ -74,7 +75,7 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
 	//ALESSIOC
-	if (c->t_layers[layer].heights[height].z == c->top_layer )
+	if (c->heights[height].z == c->t_layers[layer].z )
 	{
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{

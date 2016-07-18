@@ -99,7 +99,7 @@ void Tree_period(cell_t* const c, const int layer, const int height, const int a
 }
 
 
-void Veg_Days(cell_t *const c, const int day, const int month, const int year, const meteo_daily_t *const meteo_daily)
+void Veg_Days(cell_t *const c, meteo_t *met, const int day, const int month, const int year)
 {
 
 	static int layer;
@@ -132,8 +132,8 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year, c
 						}
 						//the same approach must be used in "Get_daily_vegetative_period" func
 
-						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6)
-								|| (meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6))
+						if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
+								|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
 						{
 							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
 							if (s->counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
@@ -173,7 +173,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year, c
 					}
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 					{
-						if (meteo_daily->ndvi_lai >= 0.5)
+						if (met[month].d[day].ndvi_lai >= 0.5)
 						{
 							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] +=1;
 						}

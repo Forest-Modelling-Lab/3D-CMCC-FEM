@@ -866,6 +866,7 @@ enum {
 
 typedef struct {
 	int z;
+	int n_layers;
 	double value[T_LAYER_VALUES_COUNT];
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;

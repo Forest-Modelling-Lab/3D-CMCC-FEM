@@ -19,13 +19,13 @@ void Reset_daily_variables(cell_t *const c, const int layer, const int height, c
 	l = &c->t_layers[layer];
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "...resetting cell level daily variables...\n");
 
@@ -104,121 +104,99 @@ void Reset_daily_variables(cell_t *const c, const int layer, const int height, c
 
 	c->daily_litterfall = 0.;
 	c->cell_cover = 0.;
-	//ALESSIOC
-	//c->dominant_veg_counter = 0;
-	//c->dominated_veg_counter = 0;
-	//c->subdominated_veg_counter = 0;
-
-	//c->layer_daily_dead_tree[0] = 0;
-	//c->layer_daily_dead_tree[1] = 0;
-	//c->layer_daily_dead_tree[2] = 0;
-	//c->daily_dead_tree = 0;
 
 	logger(g_log, "...resetting class level daily variables...\n");
 
-	/* layer level */
-	for (layer = c->t_layers_count - 1; layer >= 0; layer--)
+	/* height class level */
+	for ( height = c->heights_count - 1; height >= 0; height--)
 	{
-		/* height class level */
-		for ( height = l->heights_count - 1; height >= 0; height-- )
+		/* age class level */
+		for (age = h->ages_count - 1; age >= 0; age --)
 		{
-			/* age class level */
-			for (age = h->ages_count - 1; age >= 0; age --)
+			/* species level */
+			for (species = a->species_count - 1; species >= 0; species --)
 			{
-				/* species level */
-				for (species = a->species_count - 1; species >= 0; species -- )
-				{
-					/* reset daily radiative variables */
-					s->value[PAR] = 0.;
-					s->value[APAR] = 0.;
-					s->value[APAR_SUN] = 0.;
-					s->value[APAR_SHADE] = 0.;
-					s->value[TRANSM_PAR] = 0.;
-					s->value[TRANSM_PAR_SUN] = 0.;
-					s->value[TRANSM_PAR_SHADE] = 0.;
-					s->value[NET_SW_RAD] = 0.;
-					s->value[NET_SW_RAD_ABS] = 0.;
-					s->value[NET_SW_RAD_ABS_SUN] = 0.;
-					s->value[NET_SW_RAD_ABS_SHADE] = 0.;
-					s->value[NET_SW_RAD_TRANSM] = 0.;
-					s->value[NET_SW_RAD_TRANSM_SUN] = 0.;
-					s->value[NET_SW_RAD_TRANSM_SHADE] = 0.;
-					s->value[PPFD] = 0.;
-					s->value[PPFD_ABS] = 0.;
-					s->value[PPFD_ABS_SUN] = 0.;
-					s->value[PPFD_ABS_SHADE] = 0.;
-					s->value[PPFD_TRANSM] = 0.;
-					s->value[PPFD_TRANSM_SUN] = 0.;
-					s->value[PPFD_TRANSM_SHADE] = 0.;
+				/* reset daily radiative variables */
+				s->value[PAR] = 0.;
+				s->value[APAR] = 0.;
+				s->value[APAR_SUN] = 0.;
+				s->value[APAR_SHADE] = 0.;
+				s->value[TRANSM_PAR] = 0.;
+				s->value[TRANSM_PAR_SUN] = 0.;
+				s->value[TRANSM_PAR_SHADE] = 0.;
+				s->value[NET_SW_RAD] = 0.;
+				s->value[NET_SW_RAD_ABS] = 0.;
+				s->value[NET_SW_RAD_ABS_SUN] = 0.;
+				s->value[NET_SW_RAD_ABS_SHADE] = 0.;
+				s->value[NET_SW_RAD_TRANSM] = 0.;
+				s->value[NET_SW_RAD_TRANSM_SUN] = 0.;
+				s->value[NET_SW_RAD_TRANSM_SHADE] = 0.;
+				s->value[PPFD] = 0.;
+				s->value[PPFD_ABS] = 0.;
+				s->value[PPFD_ABS_SUN] = 0.;
+				s->value[PPFD_ABS_SHADE] = 0.;
+				s->value[PPFD_TRANSM] = 0.;
+				s->value[PPFD_TRANSM_SUN] = 0.;
+				s->value[PPFD_TRANSM_SHADE] = 0.;
 
-					/* reset daily carbon fluxes */
-					s->value[DAILY_GPP_gC] = 0.;
-					s->value[DAILY_POINT_GPP_gC] = 0.;
-					s->value[NPP_gC] = 0.;
-					s->value[NPP_tDM] = 0.;
-					s->value[C_FLUX] = 0.;
+				/* reset daily carbon fluxes */
+				s->value[DAILY_GPP_gC] = 0.;
+				s->value[DAILY_POINT_GPP_gC] = 0.;
+				s->value[NPP_gC] = 0.;
+				s->value[NPP_tDM] = 0.;
+				s->value[C_FLUX] = 0.;
 
-					/* reset daily water fluxes */
-					s->value[CANOPY_INT] = 0.;
-					s->value[CANOPY_EVAPO] = 0.;
-					s->value[CANOPY_TRANSP] = 0.;
-					s->value[CANOPY_EVAPO_TRANSP] = 0.;
+				/* reset daily water fluxes */
+				s->value[CANOPY_INT] = 0.;
+				s->value[CANOPY_EVAPO] = 0.;
+				s->value[CANOPY_TRANSP] = 0.;
+				s->value[CANOPY_EVAPO_TRANSP] = 0.;
 
-					/* reset daily multipliers */
-					s->value[F_CO2] = 0.;
-					s->value[F_LIGHT] = 0.;
-					s->value[F_T] = 0.;
-					s->value[F_FROST] = 0.;
-					s->value[F_VPD] = 0.;
-					s->value[F_AGE] = 0.;
-					s->value[F_NUTR] = 0.;
-					s->value[F_SW] = 0.;
-					s->value[F_PSI] = 0.;
-					s->value[PHYS_MOD] = 0.;
+				/* reset daily multipliers */
+				s->value[F_CO2] = 0.;
+				s->value[F_LIGHT] = 0.;
+				s->value[F_T] = 0.;
+				s->value[F_FROST] = 0.;
+				s->value[F_VPD] = 0.;
+				s->value[F_AGE] = 0.;
+				s->value[F_NUTR] = 0.;
+				s->value[F_SW] = 0.;
+				s->value[F_PSI] = 0.;
+				s->value[PHYS_MOD] = 0.;
 
-					/* reset daily carbon fluxes among pools */
-					s->value[C_TO_LEAF] = 0.;
-					s->value[C_TO_ROOT] = 0.;
-					s->value[C_TO_FINEROOT] = 0.;
-					s->value[C_TO_COARSEROOT] = 0.;
-					s->value[C_TO_TOT_STEM] = 0.;
-					s->value[C_TO_STEM] = 0.;
-					s->value[C_TO_BRANCH] = 0.;
-					s->value[C_TO_RESERVE] = 0.;
-					s->value[C_TO_FRUIT] = 0.;
-					s->value[C_TO_LITTER] = 0.;
-					s->value[C_LEAF_TO_RESERVE] = 0.;
-					s->value[C_FINEROOT_TO_RESERVE] = 0.;
+				/* reset daily carbon fluxes among pools */
+				s->value[C_TO_LEAF] = 0.;
+				s->value[C_TO_ROOT] = 0.;
+				s->value[C_TO_FINEROOT] = 0.;
+				s->value[C_TO_COARSEROOT] = 0.;
+				s->value[C_TO_TOT_STEM] = 0.;
+				s->value[C_TO_STEM] = 0.;
+				s->value[C_TO_BRANCH] = 0.;
+				s->value[C_TO_RESERVE] = 0.;
+				s->value[C_TO_FRUIT] = 0.;
+				s->value[C_TO_LITTER] = 0.;
+				s->value[C_LEAF_TO_RESERVE] = 0.;
+				s->value[C_FINEROOT_TO_RESERVE] = 0.;
 
-					/* reset daily maint and growth respiration */
-					s->value[DAILY_LEAF_MAINT_RESP] = 0.;
-					s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
-					s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;
-					s->value[FINE_ROOT_MAINT_RESP] = 0.;
-					s->value[STEM_MAINT_RESP] = 0.;
-					s->value[BRANCH_MAINT_RESP] = 0.;
-					s->value[COARSE_ROOT_MAINT_RESP] = 0.;
-					s->value[TOTAL_MAINT_RESP] = 0.;
-					s->value[LEAF_GROWTH_RESP] = 0.;
-					s->value[FINE_ROOT_GROWTH_RESP] = 0.;
-					s->value[COARSE_ROOT_GROWTH_RESP] = 0.;
-					s->value[STEM_GROWTH_RESP] = 0.;
-					s->value[BRANCH_GROWTH_RESP] = 0.;
-					s->value[TOTAL_GROWTH_RESP] = 0.;
-
-					/* reset layer level daily carbon biomass increment in tC/cell/day */
-					//ALESSIOC
-					//c->daily_delta_wts[i] = 0.;
-					//c->daily_delta_ws[i] = 0.;
-					//c->daily_delta_wf[i] = 0.;
-					//c->daily_delta_wbb[i] = 0.;
-					//c->daily_delta_wfr[i] = 0.;
-					//c->daily_delta_wcr[i] = 0.;
-					//c->daily_delta_wres[i] = 0.;
-				}
+				/* reset daily maint and growth respiration */
+				s->value[DAILY_LEAF_MAINT_RESP] = 0.;
+				s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
+				s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;
+				s->value[FINE_ROOT_MAINT_RESP] = 0.;
+				s->value[STEM_MAINT_RESP] = 0.;
+				s->value[BRANCH_MAINT_RESP] = 0.;
+				s->value[COARSE_ROOT_MAINT_RESP] = 0.;
+				s->value[TOTAL_MAINT_RESP] = 0.;
+				s->value[LEAF_GROWTH_RESP] = 0.;
+				s->value[FINE_ROOT_GROWTH_RESP] = 0.;
+				s->value[COARSE_ROOT_GROWTH_RESP] = 0.;
+				s->value[STEM_GROWTH_RESP] = 0.;
+				s->value[BRANCH_GROWTH_RESP] = 0.;
+				s->value[TOTAL_GROWTH_RESP] = 0.;
 			}
 		}
 	}
+
 
 
 }
@@ -229,13 +207,13 @@ void Reset_monthly_variables(cell_t *const c, const int layer, const int height,
 	l = &c->t_layers[layer];
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "...resetting monthly variables...\n");
 
@@ -266,21 +244,17 @@ void Reset_monthly_variables(cell_t *const c, const int layer, const int height,
 	c->monthly_latent_heat_flux = 0.;
 	c->monthly_sensible_heat_flux = 0.;
 
-	//ALESSIOC
-	/* layer level */
-	for (layer = c->t_layers_count - 1; layer >= 0; layer--)
+
+	/* height class level */
+	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
-		/* height class level */
-		for ( height = l->heights_count - 1; height >= 0; height-- )
+		/* age class level */
+		for (age = h->ages_count - 1; age >= 0; age --)
 		{
-			/* age class level */
-			for (age = h->ages_count - 1; age >= 0; age --)
+			/* species level */
+			for (species = a->species_count - 1; species >= 0; species -- )
 			{
-				/* species level */
-				for (species = a->species_count - 1; species >= 0; species -- )
-				{
-					s->value[MONTHLY_EVAPOTRANSPIRATION] = 0.;
-				}
+				s->value[MONTHLY_EVAPOTRANSPIRATION] = 0.;
 			}
 		}
 	}
@@ -293,13 +267,13 @@ void Reset_annual_variables(cell_t *const c, const int layer, const int height, 
 	l = &c->t_layers[layer];
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 
 	logger(g_log, "...resetting annual variables...\n");
@@ -336,65 +310,62 @@ void Reset_annual_variables(cell_t *const c, const int layer, const int height, 
 	//c->dead_tree = 0;
 	c->annual_soil_evapo = 0.;
 
-	/* layer level */
-	for (layer = c->t_layers_count - 1; layer >= 0; layer--)
+
+	/* height class level */
+	for (height = c->heights_count - 1; height >= 0; height--)
 	{
-		/* height class level */
-		for (height = l->heights_count - 1; height >= 0; height--)
+		/* age class level */
+		for (age = h->ages_count - 1; age >= 0; age --)
 		{
-			/* age class level */
-			for (age = h->ages_count - 1; age >= 0; age --)
+			/* species level */
+			for (species = a->species_count - 1; species >= 0; species --)
 			{
-				/* species level */
-				for (species = a->species_count - 1; species >= 0; species --)
+				s->value[PEAK_LAI] = 0.;
+				s->value[MAX_LEAF_C] = 0.;
+				/*reset cumulative values*/
+
+				s->counter[VEG_DAYS] = 0;
+				s->value[YEARLY_PHYS_MOD] = 0;
+
+				s->value[YEARLY_GPP_gC] = 0;
+				s->value[YEARLY_POINT_GPP_gC] = 0;
+				s->value[YEARLY_NPP_tDM] = 0;
+
+				s->counter[DEAD_STEMS] = 0;
+				s->counter[N_TREE_SAP] = 0;
+
+				//INITIALIZE AVERAGE YEARLY MODIFIERS
+				s->value[AVERAGE_F_VPD]  = 0.;
+				s->value[AVERAGE_F_T]  = 0.;
+				s->value[AVERAGE_F_SW]  = 0.;
+				s->value[F_AGE]  = 0.;
+
+				s->value[DEL_Y_WS] = 0.;
+				s->value[DEL_Y_WF] = 0.;
+				s->value[DEL_Y_WFR] = 0.;
+				s->value[DEL_Y_WCR] = 0.;
+				s->value[DEL_Y_WRES] = 0.;
+				s->value[DEL_Y_WR] = 0.;
+				s->value[DEL_Y_BB] = 0.;
+
+				//SERGIO
+				c->fineRootBiomass = s->value[BIOMASS_FINE_ROOT_tDM];
+				//fixme
+				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
-					s->value[PEAK_LAI] = 0.;
-					s->value[MAX_LEAF_C] = 0.;
-					/*reset cumulative values*/
-
-					s->counter[VEG_DAYS] = 0;
-					s->value[YEARLY_PHYS_MOD] = 0;
-
-					s->value[YEARLY_GPP_gC] = 0;
-					s->value[YEARLY_POINT_GPP_gC] = 0;
-					s->value[YEARLY_NPP_tDM] = 0;
-
-					s->counter[DEAD_STEMS] = 0;
-					s->counter[N_TREE_SAP] = 0;
-
-					//INITIALIZE AVERAGE YEARLY MODIFIERS
-					s->value[AVERAGE_F_VPD]  = 0.;
-					s->value[AVERAGE_F_T]  = 0.;
-					s->value[AVERAGE_F_SW]  = 0.;
-					s->value[F_AGE]  = 0.;
-
-					s->value[DEL_Y_WS] = 0.;
-					s->value[DEL_Y_WF] = 0.;
-					s->value[DEL_Y_WFR] = 0.;
-					s->value[DEL_Y_WCR] = 0.;
-					s->value[DEL_Y_WRES] = 0.;
-					s->value[DEL_Y_WR] = 0.;
-					s->value[DEL_Y_BB] = 0.;
-
-					//SERGIO
-					c->fineRootBiomass = s->value[BIOMASS_FINE_ROOT_tDM];
-					//fixme
-					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-					{
-						c->fineRootBiomass = 0.;
-					}
-					c->coarseRootBiomass =  s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
-					c->stemBranchBiomass =  s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
-					c->stemBiomass =  s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
-					s->value[OLD_BIOMASS_ROOTS_COARSE] = s->value[BIOMASS_COARSE_ROOT_tDM];
-					s->value[OLD_BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FINE_ROOT_tDM];
-					s->value[OLD_BIOMASS_STEM] = s->value[BIOMASS_STEM_tDM];
-					s->value[OLD_BIOMASS_BRANCH] = s->value[BIOMASS_BRANCH_tDM];
-					s->value[OLD_BIOMASS_LEAVES] = s->value[BIOMASS_FOLIAGE_tDM];
-					s->value[OLD_BIOMASS_STEM_LIVE_WOOD] = s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
-					s->value[OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD] = s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
-					s->value[OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD] = s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
+					c->fineRootBiomass = 0.;
 				}
+				c->coarseRootBiomass =  s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
+				c->stemBranchBiomass =  s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
+				c->stemBiomass =  s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
+				s->value[OLD_BIOMASS_ROOTS_COARSE] = s->value[BIOMASS_COARSE_ROOT_tDM];
+				s->value[OLD_BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FINE_ROOT_tDM];
+				s->value[OLD_BIOMASS_STEM] = s->value[BIOMASS_STEM_tDM];
+				s->value[OLD_BIOMASS_BRANCH] = s->value[BIOMASS_BRANCH_tDM];
+				s->value[OLD_BIOMASS_LEAVES] = s->value[BIOMASS_FOLIAGE_tDM];
+				s->value[OLD_BIOMASS_STEM_LIVE_WOOD] = s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
+				s->value[OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD] = s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
+				s->value[OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD] = s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
 			}
 		}
 	}
@@ -408,42 +379,39 @@ void First_day(cell_t *const c, const int layer, const int height, const age, co
 	l = &c->t_layers[layer];
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "..first day..\n");
 
 	c->days_since_rain = 0.;
 
-	/* layer level */
-	for (layer = c->t_layers_count - 1; layer >= 0; layer--)
+
+	/* height class level */
+	for (height = c->heights_count - 1; height >= 0; height--)
 	{
-		/* height class level */
-		for (height = l->heights_count - 1; height >= 0; height--)
+		/* age class level */
+		for (age = h->ages_count - 1; age >= 0; age --)
 		{
-			/* age class level */
-			for (age = h->ages_count - 1; age >= 0; age --)
+			/* species level */
+			for (species = a->species_count - 1; species >= 0; species --)
 			{
-				/* species level */
-				for (species = a->species_count - 1; species >= 0; species --)
-				{
-					/* compute cell level number of trees */
-					c->n_tree += s->counter[N_TREE];
+				/* compute cell level number of trees */
+				c->n_tree += s->counter[N_TREE];
 
-					s->turnover->FINERTOVER = 365 / s->value[LEAF_FINEROOT_TURNOVER];
-					s->turnover->COARSERTOVER = 365 / s->value[COARSEROOT_TURNOVER];
-					s->turnover->STEMTOVER = 365 / s->value[LIVE_WOOD_TURNOVER];
-					s->turnover->BRANCHTOVER = 365 / s->value[BRANCHTTOVER];
+				s->turnover->FINERTOVER = 365 / s->value[LEAF_FINEROOT_TURNOVER];
+				s->turnover->COARSERTOVER = 365 / s->value[COARSEROOT_TURNOVER];
+				s->turnover->STEMTOVER = 365 / s->value[LIVE_WOOD_TURNOVER];
+				s->turnover->BRANCHTOVER = 365 / s->value[BRANCHTTOVER];
 
-					/* compute value for volume for next years comparisons (CAI-MAI) */
-					s->value[MASS_DENSITY] = s->value[RHOMAX] +	(s->value[RHOMIN] - s->value[RHOMAX]) *	exp(-ln2 * (h->value / s->value[TRHO]));
-					s->value[PREVIOUS_VOLUME] = s->value[STEM_C] * GC_GDM *	(1 - s->value[FRACBB]) / s->value[MASS_DENSITY];
-				}
+				/* compute value for volume for next years comparisons (CAI-MAI) */
+				s->value[MASS_DENSITY] = s->value[RHOMAX] +	(s->value[RHOMIN] - s->value[RHOMAX]) *	exp(-ln2 * (h->value / s->value[TRHO]));
+				s->value[PREVIOUS_VOLUME] = s->value[STEM_C] * GC_GDM *	(1 - s->value[FRACBB]) / s->value[MASS_DENSITY];
 			}
 		}
 	}

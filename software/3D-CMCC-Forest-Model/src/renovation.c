@@ -21,10 +21,10 @@ void Renovation(cell_t *const c, const int layer, const int height, const int ag
 {
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	//compute light availability for seeds of dominant layer
 

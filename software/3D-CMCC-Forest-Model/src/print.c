@@ -14,7 +14,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Print_parameters(species_t *const s, int species_count, int month, int years)
+void Print_parameters(species_t *const s, int species_count, const int day, const int month, const int years)
 {
 	int species;
 
@@ -85,7 +85,7 @@ void Print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 
 	static int doy;
 
-	if (day == 0 && month == 0)
+	if (!day && !month)
 	{
 		doy = 0;
 	}
@@ -187,13 +187,13 @@ void Print_stand_data(cell_t* const c, const int layer, const int height, const 
 	l = &c->t_layers[layer];
 
 	height_t *h;
-	h = &c->t_layers[layer].heights[height];
+	h = &c->heights[height];
 
 	age_t *a;
-	a = &c->t_layers[layer].heights[height].ages[age];
+	a = &c->heights[height].ages[age];
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* print at the beginning of simulation class level data */
 	logger(g_log, "******************************************************\n\n");

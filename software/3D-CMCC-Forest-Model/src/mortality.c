@@ -23,7 +23,7 @@ void Layer_cover_mortality(cell_t *const c, const int layer, const int height, c
 	int deadstump = 0;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	//the model makes die trees of the lower height class for that layer because
 	//it passes through the function sort_by_height_desc the height classes starting from the lowest
@@ -200,7 +200,7 @@ void Layer_cover_mortality(cell_t *const c, const int layer, const int height, c
 
 
 		s->value[CANOPY_COVER_DBHDC] = (s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE]) / g_settings->sizeCell;
-		logger(g_log, "Tree Removed for Crowding Competition from height class %f species %s dbh %f = %d trees\n", c->t_layers[layer].heights[height].value, s->name,
+		logger(g_log, "Tree Removed for Crowding Competition from height class %f species %s dbh %f = %d trees\n", c->heights[height].value, s->name,
 				s->value[AVDBH], deadtree);
 
 		s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree);

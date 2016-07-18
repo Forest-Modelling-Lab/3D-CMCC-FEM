@@ -13,7 +13,7 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Initialization_biomass_data(cell_t *const c, const int layer, const int height, const int age, const int species)
+void Initialization_biomass_data(cell_t *const c, const int height, const int age, const int species)
 {
 	height_t *h;
 	h = &c->heights[height];

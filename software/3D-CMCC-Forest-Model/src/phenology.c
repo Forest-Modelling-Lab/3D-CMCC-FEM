@@ -19,7 +19,7 @@ void Phenology(cell_t *const c, const int layer, const int height, const int age
 	static int phenology_counter;
 
 	species_t *s;
-	s = &c->t_layers[layer].heights[height].ages[age].species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);

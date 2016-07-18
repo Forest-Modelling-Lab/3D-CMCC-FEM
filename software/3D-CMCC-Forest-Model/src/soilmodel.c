@@ -31,18 +31,20 @@ void soil_model(matrix_t *const m, const yos_t *const yos, const int years, cons
 		//[soil] represents the soil layer number
 		//0 index if for the upper layer
 
-		for (soil = 0; soil < m->cells[cell].soils_count; soil++)
+		/* useless just to try */
+
+		for (soil = 0; soil < m->cells[cell].s_layers[soil].soils_count; soil++)
 		{
-			m->cells[cell].soils[soil].variabile = 5;
+			m->cells[cell].s_layers[soil].value = 5;
 
 			//prova
 			if (soil == 0)
 			{
-				m->cells[cell].soils[soil].variabile = 5;
+				m->cells[cell].s_layers[soil].value = 5;
 			}
 			else
 			{
-				m->cells[cell].soils[soil].variabile = m->cells[cell].soils[soil-1].variabile + 1;
+				m->cells[cell].s_layers[soil].value = m->cells[cell].s_layers[soil-1].value + 1;
 			}
 
 			logger(g_log, "soil layer = %d\n", soil);
