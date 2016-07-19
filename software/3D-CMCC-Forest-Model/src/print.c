@@ -182,25 +182,22 @@ void Print_met_daily_data(yos_t *const yos, const int day, const int month, cons
  */
 void Print_stand_data(cell_t* const c, const int layer, const int height, const int age, const int species)
 {
-
 	tree_layer_t *l;
-	l = &c->t_layers[layer];
-
 	height_t *h;
-	h = &c->heights[height];
-
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = &c->heights[height];
+	l = &h->t_layers[layer];
+	a = &h->ages[age];
+	s = &a->species[species];
 
 	/* print at the beginning of simulation class level data */
 	logger(g_log, "******************************************************\n\n");
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
-	logger(g_log, "* z = %d\n", c->t_layers[layer].z);
+	logger(g_log, "* z = %d\n", l->z);
 	logger(g_log, "-class level data\n");
 	logger(g_log, "- Height = %f m\n", h->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);

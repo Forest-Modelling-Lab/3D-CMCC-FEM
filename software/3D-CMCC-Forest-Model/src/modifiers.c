@@ -37,10 +37,10 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	static int counter_water_stress;
 
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	a = &c->heights[height].ages[age];
+	s = &a->species[species];
 
 	//test
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
@@ -75,7 +75,7 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
 	//ALESSIOC
-	if (c->heights[height].z == c->t_layers[layer].z )
+	if ( c->heights[height].z == c->heights[height].t_layers[layer].z )
 	{
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{

@@ -1003,41 +1003,41 @@ int main(int argc, char *argv[]) {
 
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count ) {
-					/*
-						la memoria è stata allocata come C*R*Y*X
+						/*
+							la memoria è stata allocata come C*R*Y*X
 
-						C = colonne ( variabili )
-						R = righe ( anni di elaborazione * 366 )
-						Y = numero y celle
-						X = numero x celle
+							C = colonne ( variabili )
+							R = righe ( anni di elaborazione * 366 )
+							Y = numero y celle
+							X = numero x celle
 
-						quindi il valore [v1][v2][v3][v4] è indicizzato a
+							quindi il valore [v1][v2][v3][v4] è indicizzato a
 
-						[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
+							[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
 
-						ossia
+							ossia
 
-						[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
-					*/
-					/*
-					#define YS					(matrix->y_cells_count)
-					#define XS					(matrix->x_cells_count)
-					#define ROWS				(366*years_of_simulation)
-					#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
-						int i;
-						for ( i = 0; i < output_vars->daily_vars_count; ++i )
-						{
-							int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
-							int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
-							if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
-							if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
-							if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
-						}
-					#undef VALUE_AT
-					#undef ROWS
-					#undef XS
-					#undef YS
-					*/
+							[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
+						*/
+						/*
+						#define YS					(matrix->y_cells_count)
+						#define XS					(matrix->x_cells_count)
+						#define ROWS				(366*years_of_simulation)
+						#define VALUE_AT(x,y,r,c)	((x)+(XS)*((y)+(YS)*((r)+(ROWS)*(c))))
+							int i;
+							for ( i = 0; i < output_vars->daily_vars_count; ++i )
+							{
+								int row = get_daily_row_from_date(matrix->cells[cell].years[year].year, month, day) + (year*366);
+								int index = VALUE_AT(matrix->cells[cell].x, matrix->cells[cell].y, row, i);
+								if ( AR_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_aut_resp;
+								if ( GPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_gpp;
+								if ( NPP_DAILY_OUT == output_vars->daily_vars[i] )	output_vars->daily_vars_value[index] = matrix->cells[cell].daily_npp_gC;
+							}
+						#undef VALUE_AT
+						#undef ROWS
+						#undef XS
+						#undef YS
+						*/
 						output_push_values(output_vars
 							, &matrix->cells[cell]
 							, month

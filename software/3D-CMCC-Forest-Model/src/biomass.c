@@ -68,10 +68,10 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 	double subdominated_prec_volume;
 
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	a = &c->heights[height].ages[age];
+	s = &a->species[species];
 
 	//in m^3/area/yr
 	//Cai = Volume t1 - Volume t0
@@ -96,7 +96,8 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 		switch ( 0 )
 		{
 		case 3://ALESSIOC CHECK IT!!
-			if (c->t_layers[layer].z == c->heights[height].z)
+			//if (c->t_layers[layer].z == c->heights[height].z)
+			if( c->heights[height].t_layers[layer].z == c->heights[height].z )
 			{
 				dominant_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
@@ -110,7 +111,9 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 					logger(g_log, "prev_volume - VOLUME = %f\n", dominant_prec_volume - s->value[VOLUME]);
 				}
 			}//ALESSIOC CHECK IT!!
-			else if (c->t_layers[layer].z == c->heights[height].z)
+			// ALESSIOR: LA CONDIZIONE E' IDENTICA A QUELLA SOPRA!!!!!!
+			//else if (c->t_layers[layer].z == c->heights[height].z)
+			else if( c->heights[height].t_layers[layer].z == c->heights[height].z )
 			{
 				dominated_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
@@ -140,7 +143,8 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 			}
 			break;
 		case 2://ALESSIOC CHECK IT!!
-			if (c->t_layers[layer].z == c->heights[height].z)
+			//if (c->t_layers[layer].z == c->heights[height].z)
+			if( c->heights[height].t_layers[layer].z == c->heights[height].z )
 			{
 				dominant_prec_volume = s->value[VOLUME];
 				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);

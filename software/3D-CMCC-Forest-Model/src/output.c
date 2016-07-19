@@ -262,8 +262,7 @@ void output_push_values(const output_t* const o, const cell_t* const c, const in
 	}
 }
 
-/* path must terminate with a backslash! */
-int output_write(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
+static int output_write_nc(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
 /*
 	la memoria e' stata allocata come C*R*Y*X
 
@@ -280,7 +279,6 @@ int output_write(const output_t* const vars, const char *const path, const int y
 
 	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 */
-
 	int i;
 	int ret;
 	char *p;
@@ -306,8 +304,6 @@ int output_write(const output_t* const vars, const char *const path, const int y
 	const char sz_lat[] = "lat";
 	const char sz_lon[] = "lon";
 	const char sz_time[] = "time";
-
-	assert(vars && years_count && x_cells_count && y_cells_count && ((type >= OUTPUT_TYPE_DAILY) && (type < OUTPUT_TYPES_COUNT)));
 
 	/* init */
 	time_rows = NULL;
@@ -433,12 +429,135 @@ int output_write(const output_t* const vars, const char *const path, const int y
 	free(time_rows);
 	return 1;
 
-	quit:
+quit:
 	logger(g_log, "unable to create output netcdf file %s: %s", sz_buffer, nc_strerror(ret));
 	free(time_rows);
 	nc_close(id_file);
 
 	return 0;
+}
+
+static int output_write_txt(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
+/*
+	la memoria e' stata allocata come C*R*Y*X
+
+	C = colonne ( variabili )
+	R = righe ( anni di elaborazione * 366 )
+	X = numero x celle
+	Y = numero y celle
+
+	quindi il valore a [v1][v2][v3][v4] va indicizzato a 
+
+	[v1 * n1 * n2 *n3 + v2 * n2 * n3 + v3 * n3 + v4]
+
+	ossia
+
+	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
+*/
+	char sz_buffer[256];
+	int i;
+	int n;
+	int x_cell;
+	int y_cell;
+	int year;
+	int var;
+	int vars_count;
+	int row;
+	int rows_count;
+	FILE *f;
+
+	if ( OUTPUT_TYPE_DAILY == type ) vars_count = vars->daily_vars_count;
+	else if ( OUTPUT_TYPE_MONTHLY == type ) vars_count = vars->monthly_vars_count;
+	else vars_count = vars->yearly_vars_count;
+
+	
+	/* loop each vars */
+	for ( var = 0; var < vars_count; ++var )
+	{
+		/* create output filename */
+		if ( OUTPUT_TYPE_DAILY == type )
+		{
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->daily_vars[i]]);			
+		}
+		else if ( OUTPUT_TYPE_MONTHLY == type )
+		{
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->monthly_vars[i]]);
+		}
+		else
+		{
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->yearly_vars[i]]);
+		}
+
+		/* create file */
+		f = fopen(sz_buffer, "w");
+		if ( ! f )
+		{
+			logger(g_log, "unable to create output file: %s", sz_buffer);
+			return 0;
+		}
+
+		/* loop each x */
+		for ( x_cell = 0; x_cell < x_cells_count; ++x_cell )
+		{
+			/* loop each y */
+			for ( y_cell = 0; y_cell < y_cells_count; ++y_cell )
+			{
+				fprintf(f, "cell: %d, %d\n", x_cell, y_cell);
+				fputs("time,", f);
+				if ( OUTPUT_TYPE_DAILY == type )
+				{
+					fprintf(f, "%s\n", sz_output_vars[vars->daily_vars[i]]);
+					fprintf(f, "%d,", get_daily_date_from_row(i, year));
+				}
+				else if ( OUTPUT_TYPE_MONTHLY == type )
+				{
+					fprintf(f, "%s\n", sz_output_vars[vars->monthly_vars[i]]);
+					fprintf(f, "%d,", get_monthly_date_from_row(i, year));
+				}
+				else
+				{
+					fprintf(f, "%s\n", sz_output_vars[vars->yearly_vars[i]]);
+					fprintf(f, "%d,", year);
+				}
+
+				/* loop each year */
+				for ( year = year_start; year < year_start+n; ++year )
+				{		
+					if ( OUTPUT_TYPE_DAILY == type ) rows_count = 365 + IS_LEAP_YEAR(year);
+					else if ( OUTPUT_TYPE_MONTHLY == type ) rows_count = 12;
+					else
+						rows_count = years_count;
+
+					for ( row = 0; row < rows_count; ++row )
+					{
+						if ( OUTPUT_TYPE_DAILY == type )
+						{
+							fprintf(f, "%d,", get_daily_date_from_row(row, year));
+						}
+						else if ( OUTPUT_TYPE_MONTHLY == type )
+						{
+							fprintf(f, "%d,", get_monthly_date_from_row(row, year));
+						}
+						else
+						{
+							fprintf(f, "%d,", year);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	fclose(f);
+	return 1;
+}
+
+/* path must terminate with a backslash! */
+int output_write(const output_t* const vars, const char *const path, const int year_start, const int years_count, const int x_cells_count, const int y_cells_count, const e_output_types type) {
+
+	assert(vars && years_count && x_cells_count && y_cells_count && ((type >= OUTPUT_TYPE_DAILY) && (type < OUTPUT_TYPES_COUNT)));
+
+	return output_write_nc(vars, path, year_start, years_count, x_cells_count, y_cells_count, type);
 }
 
 void output_free(output_t *ov) {

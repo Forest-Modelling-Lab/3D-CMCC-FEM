@@ -29,9 +29,9 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 	int shoots_number;    //number of shoots produced after coppicing
 
 	tree_layer_t *l;
-	l = &c->t_layers[layer].n_layers;
-
 	species_t *s;
+
+	l = &c->heights[height].t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
@@ -153,12 +153,10 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 	int shoots_number;
 
 	tree_layer_t *l;
-	l = &c->t_layers[layer].n_layers;
-
 	species_t *s;
+
+	l = &c->heights[height].t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
-
-
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
 	IndWs = s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE];
@@ -169,7 +167,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 
 	//CLEARCUT FOR TIMBER
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
-	logger(g_log, "Layer modelled z = %d \n", c->t_layers[layer].z);
+	logger(g_log, "Layer modelled z = %d \n", c->heights[height].t_layers[layer].z);
 	logger(g_log, "Numbers of layers = %d \n", l->n_layers);
 	logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
 
@@ -273,9 +271,9 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 void Choose_management(cell_t *const c, const int layer, const int height, const int age, const int species, const int years)
 {
 	tree_layer_t *l;
-	l = &c->t_layers[layer].n_layers;
-
 	species_t *s;
+
+	l = &c->heights[height].t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
 	if (years == 0)

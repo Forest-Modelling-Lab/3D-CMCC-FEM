@@ -14,7 +14,7 @@
 #include "common.h"
 #include "g-function.h"
 #include "initialization.h"
-#include "structure.h"
+#include "structure.h"tr
 #include "netcdf.h"
 
 extern logger_t* g_log;
@@ -941,32 +941,38 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 //}
 /****************************************************************************/
 //ALESSIOC
-static int fill_cell(matrix_t* const m, const row_t* const row) {
-	static cell_t cell = { 0 };
+static int fill_cell(matrix_t* const m, row_t* const row)
+{
 	int i;
 	int flag;
-	assert(m && row);
+	static cell_t cell = { 0 };
 
+	assert(m && row);
+	
 	/* check if is a new cell or a layer */
 	flag = 0;
 	for ( i = 0; i < m->cells_count; ++i )
 	{
 		if ( (row->x == m->cells[i].x) && (row->y == m->cells[i].y) )
 		{
-			/* layer found! */
 			flag = 1;
 		}
 	}
 
 	if ( flag )
 	{
+		// ALESSIOC
+		// IMPLEMENTARE IL LAYER
+		assert(0);
 	}
 	else
 	{
 		/* add a new cell */
-		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) ) {
-		return 0;
-	}
+		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) )
+		{
+			return 0;
+		}
+
 		//FIXME HERE FUNCTION THAT BEING A STATIC INT SHOULDN'T RETURN ANYTHING
 		m->cells[m->cells_count-1] = cell;
 		m->cells[m->cells_count-1].landuse = row->landuse;
@@ -1240,7 +1246,7 @@ matrix_t* matrix_create(const char* const filename) {
 	m->x_cells_count = 0;
 	m->y_cells_count = 0;
 
-	for ( row = 0; row < d->rows_count; row++ ) {
+	for ( row = 0; row < d->rows_count; ++row ) {
 		if ( ! fill_cell(m, &d->rows[row]) ) {
 			dataset_free(d);
 			matrix_free(m);
@@ -1460,81 +1466,72 @@ void matrix_summary(const matrix_t* const m) {
 
 void matrix_free(matrix_t *m)
 {
-	int cell;
-	int age;
-	int height;
-	int species;
-	int tree_layer;
-	int soil_layer;
+	assert(m);
 
-	/* free matrix from "tree class" */
-	if ( m ) {
-		if ( m->cells_count ) {
-			for ( cell = 0 ; cell < m->cells_count; ++cell ) {
-				if ( m->cells[cell].heights_count ) {
-					for ( height = 0; height < m->cells[cell].heights_count; ++height ) {
-						if ( m->cells[cell].heights[height].ages_count ) {
-							for ( age = 0; age < m->cells[cell].heights[height].ages_count; ++age ) {
-								if ( m->cells[cell].heights[height].ages[age].species ) {
-									for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species ) {
-										if ( m->cells[cell].heights[height].ages[age].species[species].name ) {
-											free(m->cells[cell].heights[height].ages[age].species[species].name);
-										}
-										if ( m->cells[cell].heights[height].ages[age].species[species].turnover ) {
-											free(m->cells[cell].heights[height].ages[age].species[species].turnover);
-										}
-									}
-									free ( m->cells[cell].heights[height].ages[age].species);
-								}
-							}
-							free ( m->cells[cell].heights[height].ages);
-						}
+	if ( m )
+	{
+		if ( m->cells_count )
+		{
+			int cell;
+			for ( cell = 0 ; cell < m->cells_count; ++cell )
+			{			
+				int height;
+				int soil;
+				for ( height = 0; height < m->cells[cell].heights_count; ++height )
+				{
+					if ( m->cells[cell].heights[height].t_layers_count )
+					{
+						free(m->cells[cell].heights[height].t_layers);
 					}
-					free ( m->cells[cell].heights);
+
+					if ( m->cells[cell].heights[height].ages_count )
+					{
+						int age;
+						for ( age = 0; age < m->cells[cell].heights[height].ages_count; ++age )
+						{
+							if ( m->cells[cell].heights[height].ages[age].species )
+							{
+								int species;
+								for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; ++species )
+								{
+									if ( m->cells[cell].heights[height].ages[age].species[species].name )
+									{
+										free(m->cells[cell].heights[height].ages[age].species[species].name);
+									}
+									if ( m->cells[cell].heights[height].ages[age].species[species].turnover )
+									{
+										free(m->cells[cell].heights[height].ages[age].species[species].turnover);
+									}
+								}
+								free ( m->cells[cell].heights[height].ages[age].species);
+							}
+						}
+						free ( m->cells[cell].heights[height].ages);
+					}
 				}
+
+				if ( m->cells[cell].heights_count )
+				{
+					free (m->cells[cell].heights);
+				}
+
+				for ( soil = 0; soil < m->cells[cell].s_layers_count; ++soil )
+				{
+					if ( m->cells[cell].s_layers[soil].soils_count )
+					{
+						free(m->cells[cell].s_layers[soil].soils);
+					}
+				}
+
+				if ( m->cells[cell].s_layers_count )
+				{
+					free (m->cells[cell].s_layers);
+				}
+
 				free (m->cells[cell].years);
 			}
 			free (m->cells);
 		}
 		free (m);
 	}
-	/* free tree layer */
-	if ( m ) {
-		if ( m->cells_count ) {
-			for ( cell = 0 ; cell < m->cells_count; ++cell ) {
-				if (m->cells[cell].t_layers_count ) {
-					for ( tree_layer = 0; tree_layer < m->cells[cell].t_layers_count; ++tree_layer ) {
-						if ( m->cells[cell].t_layers[tree_layer].counter)
-						{
-							//ALESSIOR
-						}
-					}
-					free (m->cells[cell].t_layers[tree_layer].value );
-				}
-				free ( m->cells[cell].t_layers_count );
-			}
-			free (m->cells[cell].years);
-		}
-		free (m);
-	}
-	/* free soil layer */
-	if ( m ) {
-		if ( m->cells_count ) {
-			for ( cell = 0 ; cell < m->cells_count; ++cell ) {
-				if (m->cells[cell].s_layers_count ) {
-					for ( soil_layer = 0; soil_layer < m->cells[cell].s_layers_count; ++soil_layer ) {
-						if ( m->cells[cell].s_layers[soil_layer].soils_count)
-						{
-							//ALESSIOR
-						}
-					}
-					free (m->cells[cell].s_layers[soil_layer].value );
-				}
-				free ( m->cells[cell].s_layers_count );
-			}
-			free (m->cells[cell].years);
-		}
-		free (m);
-	}
-
 }

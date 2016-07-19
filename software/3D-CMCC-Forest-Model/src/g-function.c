@@ -75,9 +75,9 @@ void Abscission_DayLength (cell_t * c)
 void Tree_period(cell_t* const c, const int layer, const int height, const int age, const int species)
 {
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
+
+	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 	/*Set Tree period*/
 	// 0 = adult tree
@@ -106,9 +106,9 @@ void Veg_Days(cell_t *const c,const int day, const int month, const int year)
 	static int species;
 
 	meteo_t *met;
-	met = (meteo_t*) c->years[year].m;
-
 	species_t *s;
+
+	met = c->years[year].m;
 	s = &c->heights[height].ages[age].species[species];
 
 	/* compute annual number of vegetative days */

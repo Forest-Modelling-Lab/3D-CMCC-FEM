@@ -11,16 +11,14 @@
 extern logger_t* g_log;
 
 void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int species)
-{
-
+{	
 	height_t *h;
-	h = &c->heights[height];
-
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = &c->heights[height];
+	a = &h->ages[age];
+	s = &a->species[species];
 
 	logger(g_log, "...resetting cell level daily variables...\n");
 
@@ -199,16 +197,14 @@ void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int 
 void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, int species)
 {
 	tree_layer_t *l;
-	l = &c->t_layers[layer];
-
 	height_t *h;
-	h = &c->heights[height];
-
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = &c->heights[height];
+	l = &h->t_layers[layer];
+	a = &h->ages[age];	
+	s = &a->species[species];
 
 	logger(g_log, "...resetting monthly variables...\n");
 
@@ -258,16 +254,13 @@ void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, in
 
 void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int species)
 {
-
 	height_t *h;
-	h = &c->heights[height];
-
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
 
+	h = &c->heights[height];
+	a = &c->heights[height].ages[age];
+	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "...resetting annual variables...\n");
 
@@ -366,19 +359,15 @@ void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int
 
 void First_day(cell_t *const c, int layer, int height, int age, int species)
 {
-
-
-	tree_layer_t *l;
-	l = &c->t_layers[layer];
-
 	height_t *h;
-	h = &c->heights[height];
-
+	tree_layer_t *l;
 	age_t *a;
-	a = &c->heights[height].ages[age];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = &c->heights[height];
+	l = &h->t_layers[layer];
+	a = &h->ages[age];
+	s = &a->species[species];
 
 	logger(g_log, "..first day..\n");
 

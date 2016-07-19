@@ -1098,14 +1098,15 @@ void Get_top_layer (cell_t *const c, int heights_count, HEIGHT *heights)
 
 void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int species)
 {
+	species_t *s;
+
 	assert(height);
 
-	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
 	/* it computes which canopy layers is in dominant position for light */
 	//ALESSIOC CHECK IT
-	if (c->t_layers[layer].daily_n_layer != 0)
+	if (c->heights[height].t_layers[layer].daily_n_layer != 0)
 	{
 		logger(g_log, "-Dominant Light Index Function-\n");
 

@@ -39,13 +39,12 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	double npp_alloc;
 
 	height_t *h;
-	h = &c->heights;
-
 	age_t *a;
-	a = &c->heights[height].ages;
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = c->heights;
+	a = h[height].ages;
+	s = &h->ages[age].species[species];
 
 	s0Ctem = s->value[S0CTEM];
 	r0Ctem = s->value[R0CTEM];
@@ -98,7 +97,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->t_layers[layer].z);
+	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->heights[height].t_layers[layer].z);
 
 	/* it mainly follows Arora V. K., Boer G. J., GCB, 2005 */
 

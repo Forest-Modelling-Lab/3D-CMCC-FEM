@@ -19,12 +19,11 @@ extern logger_t* g_log;
 
 void Renovation(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
-
 	height_t *h;
-	h = &c->heights[height];
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = &c->heights[height];
+	s = &h->ages[age].species[species];
 
 	//compute light availability for seeds of dominant layer
 

@@ -47,13 +47,12 @@ void Daily_C_Evergreen_Partitioning_Allocation(cell_t *const c, const int layer,
 	double npp_alloc;
 
 	height_t *h;
-	h = &c->heights;
-
 	age_t *a;
-	a = &c->heights[height].ages;
-
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
+
+	h = c->heights;
+	a = h[height].ages;
+	s = &a[age].species[species];
 
 	old_s0Ctem = s0Ctem = s->value[S0CTEM];
 	old_r0Ctem = r0Ctem = s->value[R0CTEM];

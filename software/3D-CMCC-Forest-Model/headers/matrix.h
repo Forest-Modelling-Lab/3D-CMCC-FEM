@@ -640,22 +640,6 @@ typedef struct {
 	int species_count;
 } age_t;
 
-typedef struct {
-	double value;
-	int layer_coverage;
-	int layer;
-	int dominance;         /* dominance = -1 no trees in veg period, dominance = 1 trees in veg period */
-
-	age_t *ages;
-	int ages_count;
-
-	int z;
-} height_t;
-
-typedef struct {
-
-
-} soil_t;
 
 enum {
 	T_LAYER_VALUE_COVER
@@ -816,8 +800,6 @@ enum {
 	, T_LAYER_COUNTERS_COUNT
 };
 
-
-
 typedef struct {
 	int z;
 	int n_layers;
@@ -825,6 +807,28 @@ typedef struct {
 	double value[T_LAYER_VALUES_COUNT];
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;
+
+typedef struct {
+	double value;
+	int layer_coverage;
+	int layer;
+	int dominance;         /* dominance = -1 no trees in veg period, dominance = 1 trees in veg period */
+
+	tree_layer_t* t_layers;
+	int t_layers_count;
+
+	age_t *ages;
+	int ages_count;
+
+	int z;
+} height_t;
+
+typedef struct {
+	// ALLESSIOR:
+	// VC++ 2008 do not allow empty structure
+	// TODO: REMOVE
+	int foo;
+} soil_t;
 
 enum {
 	S_LAYER_VALUE_PREVIOUS_AVAILABLE_SOIL_WATER
@@ -902,13 +906,8 @@ typedef struct {
 	int x;
 	int y;
 
-	/* structs pointed */
-
 	height_t* heights;
 	int heights_count;
-
-	tree_layer_t* t_layers;
-	int t_layers_count;
 
 	soil_layer_t* s_layers;
 	int s_layers_count;

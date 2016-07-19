@@ -436,6 +436,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\headers\structure.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\topo.c"
 				>
 			</File>

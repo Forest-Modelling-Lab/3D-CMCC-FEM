@@ -16,9 +16,9 @@ extern soil_settings_t *g_soil_settings;
 void Initialization_biomass_data(cell_t *const c, const int height, const int age, const int species)
 {
 	height_t *h;
-	h = &c->heights[height];
-
 	species_t *s;
+
+	h = &c->heights[height];
 	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "\n\n...checking initial biomass data...\n");

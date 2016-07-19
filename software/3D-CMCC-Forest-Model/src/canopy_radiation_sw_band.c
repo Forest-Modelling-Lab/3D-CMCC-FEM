@@ -230,8 +230,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	{
 		/*************************************************************************************************************************************************************************************/
 		/* dominant layer */
-		//ALESSIOR is that correct??
-		if(c->heights[height].z == c->t_layers[layer].z)
+		if(c->heights[height].z == c->heights[height].t_layers[layer].z)
 		{
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			// ALESSIOC
@@ -343,8 +342,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		}
 		/*************************************************************************************************************************************************************************************/
 		/* dominated layer */
-		//ALESSIOR is that correct???
-		else if (c->heights[height].z == c->t_layers[layer].z)
+		// ALESSIOC: STESSA CONDIZIONE IF!!!!!
+		//else if (c->heights[height].z == c->t_layers[layer].z)
+		else if(c->heights[height].z == c->heights[height].t_layers[layer].z)
 		{
 			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
