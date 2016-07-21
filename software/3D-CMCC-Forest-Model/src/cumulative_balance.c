@@ -1140,18 +1140,6 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 		c->daily_r_eco = 0.0;
 		c->daily_nee = 0.0;
 	}
-	//reset after printed at the end of the day
-	/*
-	c->class_daily_gpp = 0;
-	c->daily_npp = 0;
-	c->daily_et = 0;
-	c->daily_lai = 0;
-	 */
-	c->daily_f_sw = 0.0;
-	c->daily_f_psi = 0.0;
-	c->daily_f_t = 0.0;
-	c->daily_f_vpd = 0.0;
-
 }
 
 

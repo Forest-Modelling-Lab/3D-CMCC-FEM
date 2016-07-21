@@ -225,10 +225,10 @@ void AGB_BGB_biomass(cell_t *const c, const int height, const int age, const int
 
 
 	logger(g_log, "-for Stand\n");
-	c->stand_agb += s->value[CLASS_AGB] * s->value[PERC];
-	logger(g_log, "Yearly Stand AGB = %f tC/area year\n", c->stand_agb);
-	c->stand_bgb += s->value[CLASS_BGB] * s->value[PERC];
-	logger(g_log, "Yearly Stand BGB = %f tC/area year\n", c->stand_bgb);
+	c->agb += s->value[CLASS_AGB] * s->value[PERC];
+	logger(g_log, "Yearly Stand AGB = %f tC/area year\n", c->agb);
+	c->bgb += s->value[CLASS_BGB] * s->value[PERC];
+	logger(g_log, "Yearly Stand BGB = %f tC/area year\n", c->bgb);
 	s->value[CLASS_AGB] = 0.;
 	s->value[CLASS_BGB] = 0.;
 

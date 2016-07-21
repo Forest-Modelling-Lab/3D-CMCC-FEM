@@ -902,9 +902,10 @@ typedef struct {
 	/*********************************************************************************************/
 } soil_layer_t;
 
-typedef struct {
-	int x;
-	int y;
+typedef struct
+{
+	int x;                                             /* cell index within the matrix */
+	int y;                                             /* cell index within the matrix */
 
 	height_t* heights;
 	int heights_count;
@@ -915,38 +916,41 @@ typedef struct {
 	int years_count;
 	yos_t *years;
 
-	e_landuse landuse;
+	e_landuse landuse;                                  /* LandUse type */
 
 	/* forest structure variables */
-	int annual_tree_layer_number;
+	int annual_tree_layer_number;                       /* annual number of tree layer within the cell */
 
 	/* general variables */
-	int yearday;
-	int cum_dayOfyear;
-	double abscission_daylength;
-	double av_yearly_daylength;
-	int north;                                                   //northern hemisphere north = 0, south hemisphere south = 1
+	double abscission_daylength;                        /* day length for starting abscission (not used) */
+	double av_yearly_daylength;                         /* average yearly daylength for renovation function */
+	double av_yearly_par_soil;                          /* average yearly par for soil for renovation function */
+	int north;                                          /* northern hemisphere north = 0, south hemisphere south = 1 */
 
 	/* annual met values */
-	double annual_tavg;
-	double annual_tmin;
-	double annual_tmax;
-	double annual_tday;
-	double annual_tnight;
-	double annual_tsoil;
-	double annual_solar_rad;
-	double annual_precip;
-	double annual_vpd;
+	double annual_tavg;                                 /* annual avg daily avg temperature (°C) */
+	double annual_tmin;                                 /* annual avg daily min temperature (°C) */
+	double annual_tmax;                                 /* annual avg daily max temperature (°C) */
+	double annual_tday;                                 /* annual avg daily daytime temperature (°C) */
+	double annual_tnight;                               /* annual avg daily nighttime temperature (°C) */
+	double annual_tsoil;                                /* annual avg daily soil temperature (°C) */
+	double annual_solar_rad;                            /* annual avg daily solar radiation (short wave) (MJ/m2/day) */
+	double annual_precip;                               /* annual cumulate daily precipitation (mm) */
+	double annual_vpd;                                  /* annual avg daily vpd (hPa) */
 
 	/*forest structure variables*/	
-	int Veg_Counter;
-	int top_layer;
-	int saplings_counter;
-	double cell_cover;
-	int n_tree;
+	int Veg_Counter;                                    /* number of class in vegetative period  in the cell */
+	int top_layer;                                      /* index for dominant layer */
+	int saplings_counter;                               /* number of class as sapling */
+	double cell_cover;                                  /* canopy cover (ratio) */
+	int n_tree;                                         /* number of trees */
 	
-	int daily_dead_tree, monthly_dead_tree, annual_dead_tree ;
-	double basal_area;
+	int daily_dead_tree;                                /* daily number of dead tree */
+	double monthly_dead_tree;                           /* monthly number of dead tree */
+	double annual_dead_tree ;                           /* annual number of dead tree */
+	double basal_area;                                  /* cumulated basal area at cell level */
+	double agb;                                         /* current above ground biomass at cell level (tC/cell) */
+	double bgb;                                         /* current below ground biomass at cell level (tC/cell) */
 
 	/* radiation variables */
 	double short_wave_radiation_upward_MJ;              /* Upward short wave radiation flux (MJ/m2/day) */
@@ -973,120 +977,93 @@ typedef struct {
 	double net_sw_rad_transm;                           /* Net Short Wave radiation transmitted (W/m2) */
 	double net_sw_rad_for_soil;                         /* Net Short Wave radiation incoming to soil level (W/m2) */
 
-
-	double par;
-	double apar;
-	double par_transm;
-	double par_reflected;
-	double par_for_dominated;
-	double par_for_subdominated;
-	double par_for_soil;
-	double par_reflected_soil;
-	double par_for_establishment;
+	double par;                                         /* incoming PAR at cell level (molPAR/m2/day) */
+	double apar;                                        /* cumulated absorbed PAR at cell level (molPAR/m2/day) */
+	double par_transm;                                  /* cumulated transmitted PAR at cell level (molPAR/m2/day) */
+	double par_reflected;                               /* cumulated reflected PAR at cell level (molPAR/m2/day) */
+	double par_for_soil;                                /* available PAR for soil (molPAR/m2/day) */
+	double par_reflected_soil;                          /* reflected PAR by the soil (molPAR/m2/day) */
+	double par_for_establishment;                       /* available PAR for establishment (molPAR/m2/day) */
 
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_abs;                                    /* Absorbed Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_reflected;                              /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
-	double ppfd_for_soil;
-	double ppfd_reflected_soil;
+	double ppfd_for_soil;                               /* PPFD available for soil (umol/m2/sec) */
+	double ppfd_reflected_soil;                         /* PPFD reflected by the soil (umol/m2/day) */
 
-	double canopy_temp;
-	double canopy_temp_k;
-	double canopy_temp_diff;
-
-
-	double av_yearly_par_soil;
+	double canopy_temp;                                 /* daily canopy temperature (°C) */
+	double canopy_temp_k;                               /* daily canopy temperature (K) */
+	double canopy_temp_diff;                            /* daily canopy temperature (K) */
 
 	/*carbon variables*/
-	double daily_gpp, monthly_gpp, annual_gpp;     //in g of C m^2
-	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;	//in g of C m^2
-	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;     //in tonnes of DM per hectare
-	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;
-	double daily_aut_resp_tC, monthly_aut_resp_tC, annual_aut_resp_tC;
-	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;
-	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;
-	double daily_r_eco, monthly_r_eco, annual_r_eco;
-	double daily_het_resp, monthly_het_resp, annual_het_resp;
-	double daily_C_flux, monthly_C_flux, annual_C_flux;
-	double litter;
-	double ter;                                                            /*total ecosystem respiration */
-	double daily_nee, monthly_nee, annual_nee;
-	double daily_leaf_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_stem_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day  */
-	double daily_fine_root_carbon;                                         /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_coarse_root_carbon;                                       /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_root_carbon;                                              /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_branch_carbon;                                            /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_reserve_carbon;                                           /* daily carbon assimilated to c pool in gC/m2/day */
-	double daily_litter_carbon;                                            /* daily carbon assimilated to litter c pool in gC/m2/day */
-	double daily_fruit_carbon;                                             /* daily carbon assimilated to fruit c pool in gC/m2/day */
-	double daily_leaf_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_stem_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fine_root_carbon_tC;                                      /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_coarse_root_carbon_tC;                                    /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_branch_carbon_tC;                                         /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_reserve_carbon_tC;                                        /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_root_carbon_tC;                                           /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_litter_carbon_tC;                                         /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_fruit_carbon_tC;                                          /* daily carbon assimilated to c pool in tC/cell/day */
-	double daily_leaf_drymatter;
-	double daily_stem_drymatter;
-	double daily_fine_root_drymatter;
-	double daily_coarse_root_drymatter;
-	double daily_branch_drymatter;
-	double daily_reserve_drymatter;
-	double daily_leaf_maint_resp;
-	double daily_stem_maint_resp;
-	double daily_fine_root_maint_resp;
-	double daily_branch_maint_resp;
-	double daily_coarse_root_maint_resp;
-	double daily_leaf_growth_resp;
-	double daily_stem_growth_resp;
-	double daily_fine_root_growth_resp;
-	double daily_branch_growth_resp;
-	double daily_coarse_root_growth_resp;
-	double daily_leaf_aut_resp;
-	double daily_stem_aut_resp;
-	double daily_branch_aut_resp;
-	double daily_fine_root_aut_resp;
-	double daily_coarse_root_aut_resp;
-	double daily_f_sw, daily_f_psi, daily_f_t, daily_f_vpd;
-	double daily_litterfall, monthly_litterfall, annual_litterfall;
-	double av_gpp;
-	double av_npp;
-	double stand_agb;
-	double stand_bgb;
-
-	/* flux balance */
-	double flux_C_balance, old_flux_C_balance;
+	double daily_gpp, monthly_gpp, annual_gpp;                            /* daily, monthly and annual GPP at cell level (gC/m2/ ) */
+	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;                   /* daily, monthly and annual NPP at cell level (gC/m2/ ) */
+	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;                /* daily, monthly and annual NPP at cell level (tDM/cell/ ) */
+	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;             /* daily, monthly and annual aut resp at cell level (gC/m2/ ) */
+	double daily_aut_resp_tC, monthly_aut_resp_tC, annual_aut_resp_tC;    /* daily, monthly and annual aut resp at cell level (tC/cell/ ) */
+	double daily_maint_resp, monthly_maint_resp, annual_maint_resp;       /* daily, monthly and annual maint resp at cell level (gC/m2/ ) */
+	double daily_growth_resp, monthly_growth_resp, annual_growth_resp;    /* daily, monthly and annual growth resp at cell level (gC/m2/ ) */
+	double daily_r_eco, monthly_r_eco, annual_r_eco;                      /* daily, monthly and annual ecosystem resp at cell level (gC/m2/ ) */
+	double daily_het_resp, monthly_het_resp, annual_het_resp;             /* daily, monthly and annual heterotrophic resp at cell level (gC/m2/ ) */
+	double daily_C_flux, monthly_C_flux, annual_C_flux;                   /* daily, monthly and annual carbon fluxes at cell level (gC/m2/ ) */
+	double daily_nee, monthly_nee, annual_nee;                            /* daily, monthly and annual NEE at cell level (gC/m2/ ) */
+	double daily_leaf_carbon;                                             /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_stem_carbon;                                             /* daily carbon assimilated to c pool at cell level (gC/m2/day)  */
+	double daily_fine_root_carbon;                                        /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_coarse_root_carbon;                                      /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_root_carbon;                                             /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_branch_carbon;                                           /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_reserve_carbon;                                          /* daily carbon assimilated to c pool at cell level (gC/m2/day) */
+	double daily_litter_carbon;                                           /* daily carbon assimilated to litter c pool at cell level (gC/m2/day) */
+	double daily_fruit_carbon;                                            /* daily carbon assimilated to fruit c pool at cell level (gC/m2/day) */
+	double daily_leaf_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_stem_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_fine_root_carbon_tC;                                     /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_coarse_root_carbon_tC;                                   /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_branch_carbon_tC;                                        /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_reserve_carbon_tC;                                       /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_root_carbon_tC;                                          /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_litter_carbon_tC;                                        /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_fruit_carbon_tC;                                         /* daily carbon assimilated to c pool at cell level (tC/cell/day) */
+	double daily_leaf_maint_resp;                                         /* daily leaf maint resp at cell level (gC/m2/day) */
+	double daily_stem_maint_resp;                                         /* daily stem maint resp at cell level (gC/m2/day) */
+	double daily_fine_root_maint_resp;                                    /* daily fine root maint resp at cell level (gC/m2/day) */
+	double daily_branch_maint_resp;                                       /* daily branch and bark maint resp at cell level (gC/m2/day) */
+	double daily_coarse_root_maint_resp;                                  /* daily coarse root maint resp at cell level (gC/m2/day) */
+	double daily_leaf_growth_resp;                                        /* daily leaf growth resp at cell level (gC/m2/day) */
+	double daily_stem_growth_resp;                                        /* daily stem growth resp at cell level (gC/m2/day) */
+	double daily_fine_root_growth_resp;                                   /* daily fine root growth resp at cell level (gC/m2/day) */
+	double daily_branch_growth_resp;                                      /* daily branch and bark growth resp at cell level (gC/m2/day) */
+	double daily_coarse_root_growth_resp;                                 /* daily coarse root growth resp at cell level (gC/m2/day) */
+	double daily_leaf_aut_resp;                                           /* daily leaf aut resp at cell level (gC/m2/day) */
+	double daily_stem_aut_resp;                                           /* daily stem aut resp at cell level (gC/m2/day) */
+	double daily_branch_aut_resp;                                         /* daily branch and bark aut resp at cell level (gC/m2/day) */
+	double daily_fine_root_aut_resp;                                      /* daily fine root aut resp at cell level (gC/m2/day) */
+	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
 
 	/*water variables*/
-	double wilting_point;
-	double field_capacity;
-	double sat_hydr_conduct;
-	double bulk_density;
+	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
+	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
+	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
+	double bulk_density;                                                  /* soil bulk density (g/cm3) */
 
-	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;
-	double asw;
-	double old_asw;
-	double max_asw_fc;              /* max available soil water at field capacity mmKgH2O/m3*/
-	double max_asw_sat;				/* max available soil water at field capacity mmKgH2O/m3*/
-	double psi;
-	double canopy_pool_water_balance, old_canopy_pool_water_balance;
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;       /* daily, monthly and annual water fluxes at cell level (mm/m2/ ) */
+	double asw;                                                           /* current available soil water (mm/volume) */
+	double old_asw;                                                       /* old available soil water (mm/volume) */
+	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
+	double max_asw_sat;                                                   /* max available soil water at field capacity mmKgH2O/m3*/
+	double psi;                                                           /* water potential of soil and leaves (MPa) */
 	
-	
-	double days_since_rain;
-	double rain_intercepted;
-	double water_to_soil;
-	double water_to_atmosphere;
-	double precip_canopy;
-	double precip_soil;
-	double snow_pack;  //amount of snow in Kg H2O
-	double snow_melt; //melted snow
-	double snow_subl; //sublimated snow
-	double snow_to_soil;
-	double out_flow;
+	double days_since_rain;                                               /* consecutive days without rain */
+	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */
+	double water_to_soil;                                                 /* current water flux water to soil (mm/m2) */
+	double water_to_atmosphere;                                           /* current water flux water to atmosphere (mm/m2) */
+	double snow_pack;                                                     /* current amount of snow (Kg/m2) */
+	double snow_melt;                                                     /* current amount of melted snow (mm/m2) */
+	double snow_subl;                                                     /* current amount of sublimated snow (mm/m2) */
+	double snow_to_soil;                                                  /* current amount of water flux due to snow melt (mm/m2) */
+	double out_flow;                                                      /* current amount of water outflow (mm/m2) */
 	double daily_c_int, monthly_c_int, annual_c_int;
 	double daily_c_transp, monthly_c_transp, annual_c_transp;
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;

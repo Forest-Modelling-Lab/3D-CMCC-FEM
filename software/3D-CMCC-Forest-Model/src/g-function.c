@@ -65,7 +65,7 @@ void Pool_fraction(species_t *const s)
 
 void Abscission_DayLength (cell_t * c)
 {
-	/*to compute dayleght for stopping growth*/
+	/*to compute day length for stopping growth*/
 	//from Schwalm and Ek, 2004
 	//but it considers a value independently from species
 	c->abscission_daylength = (39132 + (pow (1.088, (g_soil_settings->values[SOIL_LAT] + 60.753))))/(60*60);
@@ -79,7 +79,7 @@ void Tree_period(cell_t* const c, const int layer, const int height, const int a
 
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
-	/*Set Tree period*/
+	/* Set Tree period */
 	// 0 = adult tree
 	// 1 = young tree
 

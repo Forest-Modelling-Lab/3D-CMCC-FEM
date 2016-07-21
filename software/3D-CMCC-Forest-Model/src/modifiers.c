@@ -132,7 +132,7 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 
 	CHECK_CONDITION(s->value[F_T], > 1);
 	CHECK_CONDITION(s->value[F_T], < 0);
-	c->daily_f_t = s->value[F_T];
+
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
@@ -160,7 +160,6 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	//s->value[F_VPD] = exp (- s->value[COEFFCOND] * vpd) * 10);
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * meteo_daily->vpd);
-	c->daily_f_vpd = s->value[F_VPD];
 	logger(g_log, "fVPD = %f\n", s->value[F_VPD]);
 
 	//average yearly f_vpd modifiers
@@ -281,7 +280,6 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	s->value[F_SW] = s->value[F_PSI];
 	logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 
-	c->daily_f_psi = s->value[F_PSI];
 
 	//average yearly f_sw modifiers
 	s->value[AVERAGE_F_SW] += s->value[F_SW];

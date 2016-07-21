@@ -234,23 +234,6 @@ void Check_soil_water_balance(cell_t *const c)
 	/* check soil pool water balance */
 	balance = in - out - store;
 
-	//	/*******************************************************************************************************************/
-	//	/* DAILY CHECK ON CANOPY POOL-ATMOSPHERE WATER BALANCE */
-	//
-	//	/* sum of sources (intercepted rain + snow) */
-	//	canopy_water_pool_in = c->daily_c_int;
-	//
-	//	/* sum of sinks */
-	//	canopy_water_pool_out = c->daily_c_evapo;
-	//
-	//	/* sum of current storage in canopy */
-	//	canopy_water_pool_store = c->daily_c_water_store - c->old_daily_c_water_store;
-	//
-	//	/* check canopy pool water balance */
-	//	c->canopy_pool_water_balance = canopy_water_pool_in - canopy_water_pool_out - canopy_water_pool_store;
-	//
-	//	/*******************************************************************************************************************/
-
 	/* check fractions */
 	if(c->daily_et != 0)
 	{

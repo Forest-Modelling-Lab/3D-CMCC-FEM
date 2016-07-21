@@ -306,7 +306,7 @@ void Day_Length(cell_t *c, const int day, const int month, const int year)
 	meteo_t *met;
 	met = c->years[year].m;
 
-	//compute yearday for GeDdayLength function
+	/* compute doy for GeDdayLength function */
 	if (!day && month == JANUARY)
 	{
 		doy = 0;
