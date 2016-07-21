@@ -800,7 +800,14 @@ enum {
 	, T_LAYER_COUNTERS_COUNT
 };
 
-typedef struct {
+typedef struct
+{
+	tree_layer_t* t_layers;
+	int t_layers_count;
+
+	age_t *ages;
+	int ages_count;
+
 	int z;
 	int n_layers;
 	int daily_n_layer;
@@ -810,27 +817,22 @@ typedef struct {
 
 typedef struct {
 	double value;
+	int z;
 	int layer_coverage;
 	int layer;
 	int dominance;         /* dominance = -1 no trees in veg period, dominance = 1 trees in veg period */
-
-	tree_layer_t* t_layers;
-	int t_layers_count;
-
-	age_t *ages;
-	int ages_count;
-
-	int z;
 } height_t;
 
-typedef struct {
+typedef struct
+{
 	// ALLESSIOR:
 	// VC++ 2008 do not allow empty structure
 	// TODO: REMOVE
 	int foo;
 } soil_t;
 
-enum {
+enum
+{
 	S_LAYER_VALUE_PREVIOUS_AVAILABLE_SOIL_WATER
 	, S_LAYER_VALUE_WATER_BALANCE
 	, S_LAYER_VALUE_OLD_WATER_BALANCE
@@ -904,9 +906,6 @@ typedef struct {
 
 typedef struct
 {
-	int x;                                             /* cell index within the matrix */
-	int y;                                             /* cell index within the matrix */
-
 	height_t* heights;
 	int heights_count;
 
@@ -917,6 +916,9 @@ typedef struct
 	yos_t *years;
 
 	e_landuse landuse;                                  /* LandUse type */
+
+	int x;                                              /* cell index within the matrix */
+	int y;                                              /* cell index within the matrix */
 
 	/* forest structure variables */
 	int annual_tree_layer_number;                       /* annual number of tree layer within the cell */
@@ -1043,12 +1045,13 @@ typedef struct
 	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
 
 	/*water variables*/
+	double prcp_rain;                                                     /* current amount of precipitation --> to rain (mm/m2) */
+	double prcp_snow;                                                     /* current amount of precipitation --> to snow (mm/m2) */
 	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
 	double bulk_density;                                                  /* soil bulk density (g/cm3) */
 
-	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;       /* daily, monthly and annual water fluxes at cell level (mm/m2/ ) */
 	double asw;                                                           /* current available soil water (mm/volume) */
 	double old_asw;                                                       /* old available soil water (mm/volume) */
 	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
@@ -1064,37 +1067,30 @@ typedef struct
 	double snow_subl;                                                     /* current amount of sublimated snow (mm/m2) */
 	double snow_to_soil;                                                  /* current amount of water flux due to snow melt (mm/m2) */
 	double out_flow;                                                      /* current amount of water outflow (mm/m2) */
-	double daily_c_int, monthly_c_int, annual_c_int;
-	double daily_c_transp, monthly_c_transp, annual_c_transp;
-	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;
+	double daily_c_int, monthly_c_int, annual_c_int;                      /* daily, monthly and canopy interception at cell level (mm/m2/ ) */
+	double daily_c_transp, monthly_c_transp, annual_c_transp;             /* daily, monthly and canopy transpiration at cell level (mm/m2/ ) */
+	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;                /* daily, monthly and canopy evaporation at cell level (mm/m2/ ) */
+	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored;/* daily, monthly and canopy water stored at cell level (mm/m2/ ) */
+	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;/* daily, monthly and canopy evapotranspiration at cell level (mm/m2/ ) */
+	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;       /* daily, monthly and soil evaporation at cell level (mm/m2/ ) */
+	double daily_et, monthly_et, annual_et;                               /* daily, monthly and evapotranspiration at cell level (mm/m2/ ) */
+	double daily_tot_w_flux, monthly_tot_w_flux, annual_tot_w_flux;       /* daily, monthly and annual water fluxes at cell level (mm/m2/ ) */
 	double old_daily_c_water_stored;
-	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored;
-	double daily_c_evapotransp, monthly_c_evapotransp, annual_c_evapotransp;
-	double daily_c_bl_cond, monthly_c_bl_cond, annual_c_bl_cond;
-	double daily_soil_evapo, monthly_soil_evapo, annual_soil_evapo;
-	double daily_soil_bl_cond, monthly_soil_bl_cond, annual_soil_bl_cond;
-	double daily_et, monthly_et, annual_et;
 
-	double prcp_rain;
-	double prcp_snow;
-
-	double daily_soil_evaporation_watt;
-	double daily_soil_latent_heat_flux;
-	double daily_soil_sensible_heat_flux;
+	double daily_soil_evaporation_watt;                                   /* current daily soil evaporation in watt at cell level (W/m2) */
+	double daily_soil_latent_heat_flux;                                   /* current daily soil latent heat flux  at cell level (W/m2) */
+	double daily_soil_sensible_heat_flux;                                 /* current daily soil sensible heat flux at cell level (W/m2) */
 	
 	/*energy balance*/
-	double daily_c_int_watt;
-	double daily_c_transp_watt;
-	double daily_c_evapo_watt;
-	double daily_c_evapotransp_watt;
-	double daily_c_latent_heat_flux;
-	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;
-	double daily_c_sensible_heat_flux;
-	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;
+	double daily_c_transp_watt;                                           /* daily canopy transpiration at cell level (W/m2) */
+	double daily_c_evapo_watt;                                            /* daily canopy evaporation at cell level (W/m2) */
+	double daily_c_evapotransp_watt;                                      /* daily canopy evapotranspiration at cell level (W/m2) */
+	double daily_c_latent_heat_flux;                                      /* daily canopy latent heat flux at cell level  (W/m2) */
+	double daily_latent_heat_flux, monthly_latent_heat_flux, annual_latent_heat_flux;/* daily, monthly and annual latent heat flux at cell level (W/m2) */
+	double daily_c_sensible_heat_flux;                                    /* current daily canopy sensible heat flux (W/m2) */
+	double daily_sensible_heat_flux, monthly_sensible_heat_flux, annual_sensible_heat_flux;/* daily, monthly and annual sensible heat flux at cell level (W/m2) */
 
 	double annual_peak_lai[10];
-	
-
 
 	/**************************************************************************************************
 	 * 	SOIL PART; DEVELOPMENT OF DAILY SOIL CARBON NITROGEN AND PHOSPHORUS BALANCE

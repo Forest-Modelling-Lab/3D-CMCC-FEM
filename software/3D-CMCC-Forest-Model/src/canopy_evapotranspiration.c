@@ -367,7 +367,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
 
-
 	logger(g_log, "OLD CANOPY_WATER = %g mm/m2/day\n", s->value[OLD_CANOPY_WATER]);
 	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);
 	logger(g_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
@@ -387,7 +386,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	c->daily_c_transp += s->value[CANOPY_TRANSP];
 	c->daily_c_water_stored += (s->value[CANOPY_WATER] - s->value[OLD_CANOPY_WATER]);
 	c->daily_c_evapotransp += s->value[CANOPY_EVAPO_TRANSP];
-	c->daily_c_bl_cond += s->value[CANOPY_BLCOND];
 }
 
 

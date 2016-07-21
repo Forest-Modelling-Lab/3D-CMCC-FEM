@@ -64,9 +64,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert(m);
 
-//	meteo_t *met;
-//	met = m->cells[cell].years[year].m;
-
 	/* initialize days of year (each year) */
 	if(day == 0 && month == 0)
 	{
