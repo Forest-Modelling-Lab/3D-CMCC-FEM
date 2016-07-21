@@ -828,7 +828,7 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 					{
 
 						/*compute annual days of leaf fall*/
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						logger(g_log, "Days of leaf fall for deciduous = %d day\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 						//monthly rate of foliage reduction
 
@@ -865,9 +865,9 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 
 								logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
-								s->counter[LEAF_FALL_COUNTER]  += 1;
+								s->counter[LEAF_FALL_COUNTER] += 1;
 								//check
-								if(s->counter[LEAF_FALL_COUNTER]  == 1)
+								if(s->counter[LEAF_FALL_COUNTER] == 1)
 								{
 									//assign value of thermic sum
 									s->value[THERMIC_SUM_FOR_END_VEG] = meteo_daily->thermic_sum;

@@ -21,10 +21,10 @@ void Turnover(species_t *const s)
 
 	/* compute rates */
 	/* compute leaf and fine root turnover rate (ratio) */
-	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE];
+	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL];
 	logger(g_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
 	/* compute live-wood turnover rate (ratio) */
-	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	logger(g_log, "Daily live-wood turnover rate = %g (ratio)\n", daily_live_wood_turnover_rate);
 
 	/*following BIOME_BGC turnover occurs only during growing season */
@@ -132,7 +132,7 @@ void Turnover(species_t *const s)
 //	}
 //	/* end of veg period turnover */
 //
-//	if(s->counter[VEG_DAYS] == s->counter[DAY_VEG_FOR_LITTERFALL_RATE])
+//	if(s->counter[VEG_DAYS] == s->counter[DAY_VEG_FOR_LEAF_FALL])
 //	{
 //		/* annual stem turnover live to dead wood*/
 //		//test turnover fraction should be divided for day_veg or for the day in which model allocates to stem?
@@ -140,7 +140,7 @@ void Turnover(species_t *const s)
 //		s->value[STEM_LIVE_WOOD_C] -= (s->value[STEM_LIVE_WOOD_C] * (s->value[LIVE_WOOD_TURNOVER]/(int)counter_turnover));
 //		logger(g_log, "Annual Live Stem Biomass = %g tC/cell\n", s->value[STEM_LIVE_WOOD_C]);
 //		s->value[STEM_DEAD_WOOD_C] = s->value[STEM_C] - s->value[STEM_LIVE_WOOD_C];
-//		//s->value[STEM_DEAD_WOOD_C] += (s->value[C_TO_STEM] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+//		//s->value[STEM_DEAD_WOOD_C] += (s->value[C_TO_STEM] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]));
 //		logger(g_log, "AnnualDead Stem Biomass = %g tC/cell\n", s->value[STEM_DEAD_WOOD_C]);
 //
 //		logger(g_log, "Live stem + dead stem = %g tC/cell\n", s->value[STEM_LIVE_WOOD_C] + s->value[STEM_DEAD_WOOD_C]);
@@ -154,7 +154,7 @@ void Turnover(species_t *const s)
 //		s->value[COARSE_ROOT_LIVE_WOOD_C] -= s->value[COARSE_ROOT_LIVE_WOOD_C] * (s->value[LIVE_WOOD_TURNOVER]/(int)counter_turnover);
 //		logger(g_log, "Live Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
 //		s->value[COARSE_ROOT_DEAD_WOOD_C] = s->value[COARSE_ROOT_C] - s->value[COARSE_ROOT_LIVE_WOOD_C];
-//		//s->value[COARSE_ROOT_DEAD_WOOD_C] += (s->value[C_TO_COARSEROOT] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+//		//s->value[COARSE_ROOT_DEAD_WOOD_C] += (s->value[C_TO_COARSEROOT] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]));
 //		logger(g_log, "Dead Coarse root Biomass = %g tC/cell\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
 //
 //		/* adding a daily turnover that goes to litter */
@@ -177,7 +177,7 @@ void Turnover(species_t *const s)
 //		s->value[BRANCH_LIVE_WOOD_C] -= s->value[BRANCH_LIVE_WOOD_C] * (s->value[LIVE_WOOD_TURNOVER]/(int)counter_turnover);
 //		logger(g_log, "Live Stem branch Biomass = %g tC/cell\n", s->value[BRANCH_LIVE_WOOD_C]);
 //		s->value[BRANCH_DEAD_WOOD_C] = s->value[BRANCH_C] - s->value[BRANCH_LIVE_WOOD_C];
-//		//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LITTERFALL_RATE]));
+//		//s->value[BRANCH_DEAD_WOOD_C] += (s->value[C_TO_BRANCH] * (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]));
 //		logger(g_log, "Dead Stem Biomass = %g tC/cell\n", s->value[BRANCH_DEAD_WOOD_C]);
 //
 //		/* adding a daily turnover that goes to litter */

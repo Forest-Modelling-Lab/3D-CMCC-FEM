@@ -129,15 +129,15 @@ void Veg_Days(cell_t *const c,const int day, const int month, const int year)
 						/* reset 'annual day_veg_for_litterfall_rate'*/
 						if (day == 0 && month == JANUARY)
 						{
-							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
 						}
 						//the same approach must be used in "Get_daily_vegetative_period" func
 
 						if ((met[month].d[day].thermic_sum >= s->value[GROWTHSTART] && month <= 6)
 								|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
 						{
-							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] += 1;
-							if (s->counter[DAY_VEG_FOR_LITTERFALL_RATE] == 1)
+							s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
+							if (s->counter[DAY_VEG_FOR_LEAF_FALL] == 1)
 							{
 								logger(g_log, "GDD basis = %d\n", GDD_BASIS);
 								logger(g_log, "species %s First day of growing season day = %d month = %d\n", s->name, day+1, month+1);
@@ -146,46 +146,46 @@ void Veg_Days(cell_t *const c,const int day, const int month, const int year)
 					}
 					else
 					{
-						s->counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
+						s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
 					}
 					/* compute last year day the number of days for leaf fall */
 					if (day == 30 && month == DECEMBER)
 					{
 						s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
-								s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+								s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
-								s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+								s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						logger(g_log, "Day frac foliage remove = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE] );
 						//add leaf fall days
 						if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 						{
-							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] += (int)(s->counter[DAY_VEG_FOR_LITTERFALL_RATE] *
+							s->counter[DAY_VEG_FOR_LEAF_FALL] += (int)(s->counter[DAY_VEG_FOR_LEAF_FALL] *
 									s->value[LEAF_FALL_FRAC_GROWING]);
 
 						}
-						logger(g_log, "-species_t %s TOTAL VEGETATIVE DAYS = %d \n", s->name, s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "-species_t %s TOTAL VEGETATIVE DAYS = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
 					}
 				}
 				else
 				{
 					if (!month)
 					{
-						s->counter[DAY_VEG_FOR_LITTERFALL_RATE] = 0;
+						s->counter[DAY_VEG_FOR_LEAF_FALL] = 0;
 					}
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 					{
 						if (met[month].d[day].ndvi_lai >= 0.5)
 						{
-							s->counter[DAY_VEG_FOR_LITTERFALL_RATE] +=1;
+							s->counter[DAY_VEG_FOR_LEAF_FALL] +=1;
 						}
 					}
 					else
 					{
-						s->counter[DAY_VEG_FOR_LITTERFALL_RATE] = 365;
+						s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
 					}
 					if (day == 30 && month == DECEMBER)
 					{
-						logger(g_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+						logger(g_log, "----- TOTAL VEGETATIVE DAYS = %d \n\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 					}
 				}
 			}

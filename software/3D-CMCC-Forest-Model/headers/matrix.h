@@ -579,32 +579,22 @@ enum {
 
 enum {
 
-	N_TREE,                      //Numbers of Tree per cell
-	N_STUMP,                     //Number of stumps for coppice
-	N_SEED,                      //Seeds number for cell
-	DEAD_STEMS,                  //Dead Trees
-	REM_TREES,                   //Yearly Total dead-removed Trees
-	CUT_TREES,                   //Cut trees for Management
-	TOT_REM_TREES,               //Total dead-removed Trees from the beginning of simulation
+	N_TREE,                      /* Numbers of Adult Tree per class */
+	N_STUMP,                     /* Number of stumps for coppice per class */
+	N_SEED,                      /* Seeds number per class */
+	DEAD_STEMS,                  /* Dead Trees per class */
+	CUT_TREES,                   /* Cut trees for Management per class */
+	N_TREE_SAP,                  /* Numbers of Saplings per class */
+	VEG_UNVEG,                   /* vegetative-un vegetative period per class */
+	VEG_DAYS,                    /* day of vegetative period for class */
+	BUD_BURST_COUNTER,           /* days of budburst per class */
+	DAY_FRAC_FOLIAGE_REMOVE,     /* days of leaf fall per class */
+	DAY_FRAC_FINE_ROOT_REMOVE,   /* days of "fine root fall" per class */
 
-	N_SAPLINGS,
-	TREE_AGE_SAP,
-	N_TREE_SAP,
-
-	VEG_UNVEG,
-	VEG_MONTHS,
-	VEG_DAYS,
-	BUD_BURST_COUNTER,
-	DAY_FRAC_FOLIAGE_REMOVE,     //number of leaf fall days
-	DAY_FRAC_FINE_ROOT_REMOVE,   //number of leaf fall days
-
-	DAY_VEG_FOR_LITTERFALL_RATE,
-	MONTH_VEG_FOR_LITTERFALL_RATE,
-	LEAF_FALL_COUNTER,
-	//included by Marconi
-	//FROM_SEN_TO_EOY,
-	//SENESCENCE_PERIOD,
-	SENESCENCE_DAYONE,
+	//fixme check differences with VEG_DAYS
+	DAY_VEG_FOR_LEAF_FALL,       /* days for leaf fall */
+	LEAF_FALL_COUNTER            /* counter for leaf fall*/,
+	SENESCENCE_DAYONE,  //Sergio's
 
 	COUNTERS
 };
@@ -624,19 +614,23 @@ typedef struct {
 } turnover_t;
 
 typedef struct {
-	char *name;
-	e_management management;
-	int period;            /* period = 0 for adult tree ; 1 for very young tree */
 
+	turnover_t* turnover;
+	e_management management;
+
+	char *name;
+	int period;            /* period = 0 for adult tree ; 1 for very young tree */
 	double value[VALUES];
 	int counter[COUNTERS];
 	int phenology_phase;
-	turnover_t* turnover;
+
 } species_t;
 
-typedef struct {
-	int value;
+typedef struct
+{
 	species_t* species;
+
+	int value;
 	int species_count;
 } age_t;
 
@@ -1111,7 +1105,7 @@ typedef struct
 	double day_clay_N, day_clayn;
 	double wrcvl, wrcl, wrcr, wcrb, wcrh,whumus;
 	double wtcavai,w_no2,w_no3,w_n2o, w_nh4, w_nh3, wpool_no;
-	double  wsoc;
+	double wsoc;
 	double leach_u, day_no2, flux_no2;
 	//double wFreezedoc;
 	double End_SON;

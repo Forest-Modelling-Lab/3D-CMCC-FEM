@@ -206,11 +206,11 @@ void Print_stand_data(cell_t* const c, const int layer, const int height, const 
 	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 	{
-		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	}
 	else
 	{
-		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LITTERFALL_RATE]);
+		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	}
 	logger(g_log, "- Daily LAI from Model= %f \n", s->value[LAI]);
 	logger(g_log, "- Crown Diameter = %f \n",  s->value[CROWN_DIAMETER_DBHDC_FUNC]);
