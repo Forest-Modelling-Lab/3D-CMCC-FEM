@@ -932,6 +932,12 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	// add age
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 }
+/****************************************************************************/
+//static int fill_cell_from_layers (cell_t *const c, const row_t * const row)
+//{
+//	//ALESSIOR TODO PLEASE
+//HERE MODEL SHOULD GET NUMBER OF TREE LAYERS FROM height struct
+//}
 
 /****************************************************************************/
 //static int fill_cell_from_soils (cell_t *const c, const row_t * const row)

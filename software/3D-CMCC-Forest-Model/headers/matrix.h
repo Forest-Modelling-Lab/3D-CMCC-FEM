@@ -796,9 +796,6 @@ enum {
 
 typedef struct
 {
-	tree_layer_t* t_layers;
-	int t_layers_count;
-
 	age_t *ages;
 	int ages_count;
 
@@ -809,7 +806,11 @@ typedef struct
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;
 
-typedef struct {
+typedef struct
+{
+	age_t *ages;
+	int ages_count;
+
 	double value;
 	int z;
 	int layer_coverage;
@@ -902,6 +903,9 @@ typedef struct
 {
 	height_t* heights;
 	int heights_count;
+
+	tree_layer_t* t_layers;
+	int t_layers_count;
 
 	soil_layer_t* s_layers;
 	int s_layers_count;

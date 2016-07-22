@@ -135,10 +135,17 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
 
+	//test
+	/* sort class in ascending way by heights */
+	//qsort (m->cells[cell].t_layers, m->cells[cell].t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
+
 	/* loop on each heights starting from highest to lower */
 	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
 	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 	{
+	//test remove "for" above
+//	for ( layer = m->cells[cell].t_layers_count -1 ; layer >= 0; layer-- )
+//	{
 		/* loop on each age class */
 		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{

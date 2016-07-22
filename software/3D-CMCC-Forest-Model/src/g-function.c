@@ -26,6 +26,35 @@ int sort_by_years(const void *a, const void *b)
 	}
 }
 /* todo : implement a better comparison for equality */
+int sort_by_layers_asc(const void * a, const void * b)
+{
+	if ( ((tree_layer_t *)a)->value < ((tree_layer_t *)b)->value )
+	{
+		return -1;
+	} else if ( ((tree_layer_t *)a)->value > ((tree_layer_t *)b)->value )
+	{
+		return 1;
+	} else
+	{
+		return 0;
+	}
+}
+
+/* todo : implement a better comparison for equality */
+int sort_by_layers_desc(const void * a, const void * b)
+{
+	if ( ((tree_layer_t *)a)->value < ((tree_layer_t *)b)->value )
+	{
+		return 1;
+	} else if ( ((tree_layer_t *)a)->value > ((tree_layer_t *)b)->value )
+	{
+		return -1;
+	} else
+	{
+		return 0;
+	}
+}
+/* todo : implement a better comparison for equality */
 int sort_by_heights_asc(const void * a, const void * b)
 {
 	if ( ((height_t *)a)->value < ((height_t *)b)->value )

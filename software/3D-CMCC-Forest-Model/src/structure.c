@@ -67,6 +67,12 @@ void Annual_numbers_of_layers (cell_t *const c)
 		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->annual_tree_layer_number);
 		CHECK_CONDITION(c->annual_tree_layer_number, > MAX_N_TREE_LAYER);
 
+		//test
+		/* fill layer struct with heights*/
+		c->t_layers[c->t_layers_count] = c->annual_tree_layer_number;
+		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->t_layers_count);
+
+		//this part below should be not more necessary
 		/* assign z value */
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
@@ -129,6 +135,10 @@ void Annual_numbers_of_layers (cell_t *const c)
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
 			c->heights[height].z = 0;
+			//test
+			/* fill layer struct with heights*/
+			c->t_layers[c->t_layers_count] = 0;
+
 		}
 	}
 }

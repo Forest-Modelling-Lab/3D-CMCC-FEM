@@ -131,6 +131,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
+	static int layer;
+
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
 	double Light_refl_sw_rad_canopy_frac;                                                 /* (ratio) fraction of Short Wave radiation reflected from the canopy */
@@ -228,9 +230,19 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	/*if at least one class is in veg period*/
 	if (c->Veg_Counter > 0.0)
 	{
+		//test
+		for (layer = c->t_layers_count -1 ; layer >= 0; layer-- )
+		{
+			//move everything here
+			/* special case for layer that use incoming radiation (dominant trees) */
+			if(layer == c->t_layers_count -1)
+			{
+
+			}
+		}
 		/*************************************************************************************************************************************************************************************/
 		/* dominant layer */
-		if(c->heights[height].z == c->heights[height].t_layers[layer].z)
+		if(c->heights[height].z == c->heights[height].z)
 		{
 			logger(g_log, "**LIGHT DOMINANT**\n");
 			// ALESSIOC
@@ -344,7 +356,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		/* dominated layer */
 		// ALESSIOC: STESSA CONDIZIONE IF!!!!!
 		//else if (c->heights[height].z == c->t_layers[layer].z)
-		else if(c->heights[height].z == c->heights[height].t_layers[layer].z)
+		else if(c->heights[height].z == c->heights[height].z)
 		{
 			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
 			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
