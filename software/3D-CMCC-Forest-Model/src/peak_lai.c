@@ -15,7 +15,7 @@ extern logger_t* g_log;
 
 void Peak_lai(species_t *const s, const int day, const int month, const int years)
 {
-	int i;
+	//int i;
 
 	logger(g_log, "\n**PEAK LAI**\n");
 

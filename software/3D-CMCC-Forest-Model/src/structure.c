@@ -22,7 +22,7 @@ void Annual_numbers_of_layers (cell_t *const c)
 	to determine crowding competition */
 
 	int height;
-	int layer;
+	//int layer;
 	double current_height;
 	double previous_height;
 
@@ -69,7 +69,7 @@ void Annual_numbers_of_layers (cell_t *const c)
 
 		//test
 		/* fill layer struct with heights*/
-		c->t_layers[c->t_layers_count] = c->annual_tree_layer_number;
+		c->t_layers_count = c->annual_tree_layer_number;
 		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->t_layers_count);
 
 		//this part below should be not more necessary
@@ -137,7 +137,9 @@ void Annual_numbers_of_layers (cell_t *const c)
 			c->heights[height].z = 0;
 			//test
 			/* fill layer struct with heights*/
-			c->t_layers[c->t_layers_count] = 0;
+			// ALESSIOR
+			//
+			//c->t_layers[c->t_layers_count] = 0;
 
 		}
 	}
@@ -149,17 +151,17 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	int height;
 	int age;
 	int species;
-	int tree_number;
-	double layer_cover;
+	//int tree_number;
+	//double layer_cover;
 
-	double potential_maximum_crown_diameter,
-	potential_minimum_crown_diameter;
+	//double potential_maximum_crown_diameter,
+	//potential_minimum_crown_diameter;
 
-	double potential_maximum_crown_area,
-	potential_minimum_crown_area;
+	//double potential_maximum_crown_area,
+	//potential_minimum_crown_area;
 
-	double potential_maximum_density,
-	potential_minimum_density;
+	//double potential_maximum_density,
+	//potential_minimum_density;
 
 	/* it defines the number of tree height classes in each canopy layer,
 	 * the height class level cell coverage through the DBHDC_EFF function,
@@ -976,7 +978,7 @@ void Daily_numbers_of_layers (cell_t *const c)
 	//logger(g_log, "number of vegetative layers = %d\n", c->daily_layer_number);
 }
 
-void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
+void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	static int height;
 	static int age;
@@ -1116,7 +1118,7 @@ void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int s
 
 	/* it computes which canopy layers is in dominant position for light */
 	//ALESSIOC CHECK IT
-	if (c->heights[height].t_layers[layer].daily_n_layer != 0)
+	if (c->t_layers[layer].daily_n_layer != 0)
 	{
 		logger(g_log, "-Dominant Light Index Function-\n");
 

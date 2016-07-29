@@ -297,7 +297,7 @@ void Age_Mortality (species_t *const s, age_t *const a)
 		logger(g_log, "**MORTALITY based on Tree Age (LPJ)**\n");
 		logger(g_log, "Age = %d years\n", a->value);
 		logger(g_log, "Age Mortality based on Tree Age (LPJ) = %f\n", s->value[AGEMORT]);
-		Dead_trees = s->counter[N_TREE] * s->value[AGEMORT];
+		Dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
 		logger(g_log, "DEAD TREES = %d\n", Dead_trees);
 		s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
 		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
@@ -347,7 +347,7 @@ void Greff_Mortality (species_t *const s)
 	mortgreff = kmort1 / (1 + kmort2 * greff);
 	//logger(g_log, "rate mort for greff from LPJ = %f\n", mortgreff);
 
-	GreffDeadTrees = mortgreff * s->counter[N_TREE];
+	GreffDeadTrees = (int)(mortgreff * s->counter[N_TREE]);
 
 	logger(g_log, "Dead trees for greff = %d\n", GreffDeadTrees);
 
@@ -436,7 +436,7 @@ void Mortality (species_t *const s, int years)
 				break;
 		}
 
-		s->counter[DEAD_STEMS] = s->counter[N_TREE] - 1000 * n;
+		s->counter[DEAD_STEMS] = (int)(s->counter[N_TREE] - 1000 * n);
 		logger(g_log, "Dead Tree In Mortality Function = %d trees \n", s->counter[DEAD_STEMS]);
 
 		//SERGIO CONTROL: if DEAD_STEMS < 0 set it to its minimum plausible value; that is 0

@@ -11,9 +11,9 @@ extern soil_settings_t *g_soil_settings;
 
 static void soil_temperature(cell_t *const c, const int soil_layer,int years, int month, int day, const meteo_t *const met )
 {
-	int l, n, qq;
-	double K[120], Z[120], C[120], outQ[120],outAir, Kave, dQ;
-	double Org, Min, Vwater, Vmin, Vorg, Vsoil, TM, Csoil, Ksoil, a,dQQ, tempSoilTemp, outBottom;
+	int /*l, n,*/ qq;
+	//double K[120], Z[120], C[120], outQ[120],outAir, Kave, dQ;
+	//double Org, Min, Vwater, Vmin, Vorg, Vsoil, TM, Csoil, Ksoil, a,dQQ, tempSoilTemp, outBottom;
 		double fsl;
 		double adjT;
 	//double Mleaf;
@@ -236,26 +236,26 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 
 			if ( AddCN >= g_soil_settings->values[SOIL_RCNRVL] &&  AddCN < g_soil_settings->values[SOIL_RCNRL] )
 			{
-				RR1 = g_soil_settings->values[SOIL_RCNRVL];
-				RR2 = g_soil_settings->values[SOIL_RCNRL];
+				RR1 = (float)g_soil_settings->values[SOIL_RCNRVL];
+				RR2 = (float)g_soil_settings->values[SOIL_RCNRL];
 
-				pc = (1.0 / AddCN);
-				pd = (1.0 / RR1);
+				pc = (float)(1. / AddCN);
+				pd = (float)(1. / RR1);
 				pa = pc - pd;
-				pe = (1.0 / RR2);
-				pf = (1.0 / RR1);
+				pe = (1.f / RR2);
+				pf = (1.f / RR1);
 				pb = pe - pf;
 
-				AddC2 = AddC * (pa / pb);
-				AddC1 = (AddC - AddC2);
-				AddC3 = 0.0;
+				AddC2 = (float)(AddC * (pa / pb));
+				AddC1 = (float)(AddC - AddC2);
+				AddC3 = 0.f;
 			}
 			else if ( AddCN >= g_soil_settings->values[SOIL_RCNRL] && AddCN <= g_soil_settings->values[SOIL_RCNRR] )
 			{
-				RR2 = g_soil_settings->values[SOIL_RCNRL];
-				RR3 = g_soil_settings->values[SOIL_RCNRR];
-				pc = (1.f / AddCN);
-				pd = (1.f / RR2);
+				RR2 = (float)g_soil_settings->values[SOIL_RCNRL];
+				RR3 = (float)g_soil_settings->values[SOIL_RCNRR];
+				pc = (float)(1. / AddCN);
+				pd = (float)(1. / RR2);
 				pa = pc - pd;
 				pe = (1.f / RR3);
 				pf = (1.f / RR2);
@@ -266,17 +266,17 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 			}
 			else if ( AddCN < g_soil_settings->values[SOIL_RCNRVL] )
 			{
-				float ActN = AddC/g_soil_settings->values[SOIL_RCNRVL];
+				float ActN = (float)(AddC/g_soil_settings->values[SOIL_RCNRVL]);
 				AddC3 = 0.f;
 				AddC2 = 0.f;
-				AddC1 = AddC;
-				m->cells[cell].s_layers[0].nh4 += (AddC / (AddCN+0.0000001) - ActN);
+				AddC1 = (float)AddC;
+				m->cells[cell].s_layers[0].nh4 += (float)(AddC / (AddCN+0.0000001) - ActN);
 				if( m->cells[cell].s_layers[0].nh4<0) m->cells[cell].s_layers[0].nh4	= .0000001;
 				AddCN = g_soil_settings->values[SOIL_RCNRVL];
 			}
 			else if ( AddCN > g_soil_settings->values[SOIL_RCNRR] )
 			{
-				float ActC = AddC/ AddCN * g_soil_settings->values[SOIL_RCNRR];
+				float ActC = (float)(AddC/ AddCN * g_soil_settings->values[SOIL_RCNRR]);
 				AddC3 = ActC;
 				AddC2 = 0.f;
 				AddC1 = 0.f;
@@ -326,7 +326,7 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 			}
 			 */
 		}
-		OutN = AddC1/g_soil_settings->values[SOIL_RCNRVL] + AddC2/g_soil_settings->values[SOIL_RCNRL] + AddC3/g_soil_settings->values[SOIL_RCNRR];
+		OutN = (float)(AddC1/g_soil_settings->values[SOIL_RCNRVL] + AddC2/g_soil_settings->values[SOIL_RCNRL] + AddC3/g_soil_settings->values[SOIL_RCNRR]);
 
 		m->cells[cell].s_layers[0].rcvl += AddC1;
 		m->cells[cell].s_layers[0].rcl += AddC2;
@@ -374,50 +374,50 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 
 				if ( AddCN >= g_soil_settings->values[SOIL_RCNRVL] &&  AddCN < g_soil_settings->values[SOIL_RCNRL] )
 				{
-					RR1 = g_soil_settings->values[SOIL_RCNRVL];
-					RR2 = g_soil_settings->values[SOIL_RCNRL];
+					RR1 = (float)g_soil_settings->values[SOIL_RCNRVL];
+					RR2 = (float)g_soil_settings->values[SOIL_RCNRL];
 
-					pc = (1.0 / AddCN);
-					pd = (1.0 / RR1);
+					pc = (float)(1.0 / AddCN);
+					pd = (float)(1.0 / RR1);
 					pa = pc - pd;
-					pe = (1.0 / RR2);
-					pf = (1.0 / RR1);
+					pe = (1.f / RR2);
+					pf = (1.f / RR1);
 					pb = pe - pf;
 
-					AddC2 = AddC * (pa / pb);
-					AddC1 = (AddC - AddC2);
-					AddC3 = 0.0;
+					AddC2 = (float)(AddC * (pa / pb));
+					AddC1 = (float)(AddC - AddC2);
+					AddC3 = 0.f;
 				}
 				else if ( AddCN >= g_soil_settings->values[SOIL_RCNRL] && AddCN <= g_soil_settings->values[SOIL_RCNRR] )
 				{
-					RR2 = g_soil_settings->values[SOIL_RCNRL];
-					RR3 = g_soil_settings->values[SOIL_RCNRR];
-					pc = (1.0 / AddCN);
-					pd = (1.0 / RR2);
-					pa = pc - pd;
-					pe = (1.0 / RR3);
-					pf = (1.0 / RR2);
+					RR2 = (float)g_soil_settings->values[SOIL_RCNRL];
+					RR3 = (float)g_soil_settings->values[SOIL_RCNRR];
+					pc = (float)(1.0 / AddCN);
+					pd = (float)(1.0 / RR2);
+					pa = (float)(pc - pd);
+					pe = (1.f / RR3);
+					pf = (1.f / RR2);
 					pb = pe - pf;
 					AddC3 = (float)(AddC * (pa / pb));
 					AddC2 = (float)(AddC - AddC3);
-					AddC1 = (float)0.0;
+					AddC1 = 0.f;
 				}
 				else if ( AddCN < g_soil_settings->values[SOIL_RCNRVL] )
 				{
-					float ActN = AddC/g_soil_settings->values[SOIL_RCNRVL];
-					AddC3 = 0.0;
-					AddC2 = 0.0;
-					AddC1 = AddC;
+					float ActN = (float)(AddC/g_soil_settings->values[SOIL_RCNRVL]);
+					AddC3 = 0.f;
+					AddC2 = 0.f;
+					AddC1 = (float)AddC;
 					m->cells[cell].s_layers[0].nh4 += (AddC / (AddCN+0.0000001) - ActN);
 					if( m->cells[cell].s_layers[0].nh4<0) m->cells[cell].s_layers[0].nh4	= .0000001;
 					AddCN = g_soil_settings->values[SOIL_RCNRVL];
 				}
 				else if ( AddCN > g_soil_settings->values[SOIL_RCNRR] )
 				{
-					float ActC = AddC/ AddCN * g_soil_settings->values[SOIL_RCNRR];
+					float ActC = (float)(AddC/ AddCN * g_soil_settings->values[SOIL_RCNRR]);
 					AddC3 = ActC;
-					AddC2 = 0.0;
-					AddC1 = 0.0;
+					AddC2 = 0.f;
+					AddC1 = 0.f;
 
 					dInertC = AddC - ActC;
 					//inert_C[1] += dInertC;
@@ -493,15 +493,16 @@ void tree_leaves_fall(matrix_t *const m, int const cell)	//, int years, int mont
 
 void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int month, const int year, const int years_of_simulation)
 {
-	int soil_layer;
+	int soil_layer = 0;
 
 	double  clayc, krh, hrh, DDRF;
 	double drcvl,DRCB,lit_co2, DRCB1, DRCB2, sumn, fb_nh4, fb_co2, fh_nh4, fh_co2;
-	int    cell, l = 0,ll, vv;
+	int cell, l=0, vv;
+	//int  ll;
 	double  RFM, RFMM, RFMT;
 	double Fl;
-	double Fhc, ActSOC, CRB, Thc,new_ActSOC,dActSOC;
-	double dlitter, Ftw;
+	//double Fhc, ActSOC, CRB, Thc,new_ActSOC,dActSOC;
+	//double dlitter, Ftw;
 	double sum_drcvl, f_till_fact;
 	double r_RFM, Frcvl, Frcl,Frcr;
 	double PTAN, PDN, p_drcl, p_DRCB2, total_drcl;
@@ -522,7 +523,7 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 	double ConsumedLitter1, ConsumedLitter2,ConsumedLitter3;
 	double TB, BAC, dDOC;
 	double fw;
-	double VVw,TP,dLabP,dAdsP,TTP;
+	//double VVw,TP,dLabP,dAdsP,TTP;
 	double wrnvl, wrnl, wrnr, wnrb, wnrh,  whumusn;
 	double total_drcr;
 	double Ftill2;
@@ -651,13 +652,13 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 			if((m->cells[cell].leafLittering + m->cells[cell].fineRootLittering+m->cells[cell].coarseRootLittering+
 					m->cells[cell].stemLittering+m->cells[cell].stemBrancLittering)>0.0&&met[month].d[day].tavg>0.0)
 			{
-				float Ftw= met[month].d[day].tavg * 0.001;//0.005
+				float Ftw= (float)(met[month].d[day].tavg * 0.001);//0.005
 				float dS1, dS2, dS3, dS4, dS5;
 
 				//Ftw = temp[1] / 40.0 * day_wfps[1];
-				Ftw = MAX(0.0, MIN(Ftw, 0.5));
+				Ftw = (float)MAX(0.0, MIN(Ftw, 0.5));
 
-				dS1 = m->cells[cell].leafLittering * Ftw;
+				dS1 = (float)(m->cells[cell].leafLittering * Ftw);
 				m->cells[cell].s_layers[l].co2 += dS1;
 				m->cells[cell].s_layers[l].day_O2 += dS1;
 				if(m->cells[cell].s_layers[l].day_O2<0.0) m->cells[cell].s_layers[l].day_O2=0.0;
@@ -665,7 +666,7 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 				m->cells[cell].leafLittering -= dS1;
 				if ( m->cells[cell].leafLittering <= 0.0000001 ) m->cells[cell].leafLittering = 0.0;
 
-				dS2 = m->cells[cell].fineRootLittering * Ftw;
+				dS2 = (float)(m->cells[cell].fineRootLittering * Ftw);
 				m->cells[cell].s_layers[l].co2 += dS2;
 				m->cells[cell].s_layers[l].day_O2 += dS2;
 				if(m->cells[cell].s_layers[l].day_O2<0.0) m->cells[cell].s_layers[l].day_O2=0.0;
@@ -673,7 +674,7 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 				m->cells[cell].fineRootLittering -= dS2;
 				if ( m->cells[cell].fineRootLittering <= 0.0000001 ) m->cells[cell].fineRootLittering = 0.0;
 
-				dS3 = m->cells[cell].coarseRootLittering * Ftw;
+				dS3 = (float)(m->cells[cell].coarseRootLittering * Ftw);
 				m->cells[cell].s_layers[l].co2 += dS3;
 				m->cells[cell].s_layers[l].day_O2 += dS3;
 				if(m->cells[cell].s_layers[l].day_O2<0.0) m->cells[cell].s_layers[l].day_O2=0.0;
@@ -681,7 +682,7 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 				m->cells[cell].coarseRootLittering -= dS3;
 				if ( m->cells[cell].coarseRootLittering <= 0.0000001 ) m->cells[cell].coarseRootLittering = 0.0;
 
-				dS4 = m->cells[cell].stemLittering * Ftw;
+				dS4 = (float)(m->cells[cell].stemLittering * Ftw);
 				m->cells[cell].s_layers[l].co2 += dS4;
 				m->cells[cell].s_layers[l].day_O2 += dS4;
 				if(m->cells[cell].s_layers[l].day_O2<0.0) m->cells[cell].s_layers[l].day_O2=0.0;
@@ -689,7 +690,7 @@ void soil_dndc_sgm(matrix_t *const m, const int _cell, const int day, const int 
 				m->cells[cell].stemLittering -= dS4;
 				if ( m->cells[cell].stemLittering <= 0.0000001 ) m->cells[cell].stemLittering = 0.0;
 
-				dS5 = m->cells[cell].stemBrancLittering * Ftw;
+				dS5 = (float)(m->cells[cell].stemBrancLittering * Ftw);
 				m->cells[cell].s_layers[l].co2 += dS5;
 				m->cells[cell].s_layers[l].day_O2 += dS5;
 				if(m->cells[cell].s_layers[l].day_O2<0.0) m->cells[cell].s_layers[l].day_O2=0.0;

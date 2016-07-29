@@ -75,7 +75,7 @@ void Daily_modifiers(cell_t *const c, const int layer, const int height, const i
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
 	//ALESSIOC
-	if ( c->heights[height].z == c->heights[height].t_layers[layer].z )
+	if ( c->heights[height].z == c->t_layers[layer].z )
 	{
 		if (s->value[GAMMA_LIGHT] != -9999)
 		{

@@ -486,29 +486,29 @@ void Initialization_site_data(cell_t *const c)
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
 	/* following Saxton et al 1986, 2006, 2008 */
 	logger(g_log, "CENTURY soil characteristics\n");
-	acoeff = exp(-4.396 - 0.0715 * g_soil_settings->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2)*g_soil_settings->values[SOIL_CLAY_PERC]);
-	bcoeff = (-3.14 - 0.00222 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) * g_soil_settings->values[SOIL_CLAY_PERC]);
-	sat = (0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
+	acoeff = (float)exp(-4.396 - 0.0715 * g_soil_settings->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2)*g_soil_settings->values[SOIL_CLAY_PERC]);
+	bcoeff = (float)(-3.14 - 0.00222 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) * g_soil_settings->values[SOIL_CLAY_PERC]);
+	sat = (float)(0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
 
 	/* volumetric percentage for wilting point */
-	volumetric_wilting_point = pow((15.0/acoeff), (1.0/bcoeff));
+	volumetric_wilting_point = (float)pow((15.0/acoeff), (1.0/bcoeff));
 	/* volumetric percentage for field capacity */
-	volumetric_field_capacity = pow((0.333/acoeff),(1.0/bcoeff));
+	volumetric_field_capacity = (float)pow((0.333/acoeff),(1.0/bcoeff));
 	/* volumetric percentage for saturated hydraulic conductivity */
-	volumetric_saturated_hydraulic_conductivity = exp((12.012 - 0.0755 * g_soil_settings->values[SOIL_SAND_PERC]) + (-3.895 + 0.03671 * g_soil_settings->values[SOIL_SAND_PERC] - 0.1103 * g_soil_settings->values[SOIL_CLAY_PERC] + 8.7546e-4 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2))/sat);
+	volumetric_saturated_hydraulic_conductivity = (float)exp((12.012 - 0.0755 * g_soil_settings->values[SOIL_SAND_PERC]) + (-3.895 + 0.03671 * g_soil_settings->values[SOIL_SAND_PERC] - 0.1103 * g_soil_settings->values[SOIL_CLAY_PERC] + 8.7546e-4 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2))/sat);
 	/* bulk density g/cm3 */
 	c->bulk_density = (1 - sat) * 2.65;
 
 	/* corrections from Steve Del Grosso */
 	/* volumetric percentage wilting point */
-	volumetric_wilting_point += (-0.15 * volumetric_wilting_point);
+	volumetric_wilting_point += (float)(-0.15 * volumetric_wilting_point);
 	logger(g_log, "*volumetric water content at wilting point (CENTURY) = %f %%(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
 	c->wilting_point = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_wilting_point * 1000.0;
 	logger(g_log, "**Wilting point (CENTURY) = %f mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
-	volumetric_field_capacity += (0.07 * volumetric_field_capacity);
+	volumetric_field_capacity += (float)(0.07 * volumetric_field_capacity);
 	logger(g_log, "*volumetric water content at field capacity (CENTURY) = %f %%(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
 	c->field_capacity = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_field_capacity * 1000.0;

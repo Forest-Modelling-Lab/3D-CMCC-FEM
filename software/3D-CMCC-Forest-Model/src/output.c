@@ -525,8 +525,7 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 				{		
 					if ( OUTPUT_TYPE_DAILY == type ) rows_count = 365 + IS_LEAP_YEAR(year);
 					else if ( OUTPUT_TYPE_MONTHLY == type ) rows_count = 12;
-					else
-						rows_count = years_count;
+					else rows_count = years_count;
 
 					for ( row = 0; row < rows_count; ++row )
 					{
@@ -542,6 +541,8 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 						{
 							fprintf(f, "%d,", year);
 						}
+
+
 					}
 				}
 			}

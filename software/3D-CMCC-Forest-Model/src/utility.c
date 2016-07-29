@@ -199,7 +199,7 @@ void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, in
 	species_t *s;
 
 	h = &c->heights[height];
-	l = &h->t_layers[layer];
+	l = &c->t_layers[layer];
 	a = &h->ages[age];	
 	s = &a->species[species];
 
@@ -359,7 +359,7 @@ void First_day(cell_t *const c, int layer, int height, int age, int species)
 	species_t *s;
 
 	h = &c->heights[height];
-	l = &h->t_layers[layer];
+	l = &c->t_layers[layer];
 	a = &h->ages[age];
 	s = &a->species[species];
 
@@ -380,10 +380,10 @@ void First_day(cell_t *const c, int layer, int height, int age, int species)
 				/* compute cell level number of trees */
 				c->n_tree += s->counter[N_TREE];
 
-				s->turnover->FINERTOVER = 365 / s->value[LEAF_FINEROOT_TURNOVER];
-				s->turnover->COARSERTOVER = 365 / s->value[COARSEROOT_TURNOVER];
-				s->turnover->STEMTOVER = 365 / s->value[LIVE_WOOD_TURNOVER];
-				s->turnover->BRANCHTOVER = 365 / s->value[BRANCHTTOVER];
+				s->turnover->FINERTOVER = (int)(365 / s->value[LEAF_FINEROOT_TURNOVER]);
+				s->turnover->COARSERTOVER = (int)(365 / s->value[COARSEROOT_TURNOVER]);
+				s->turnover->STEMTOVER = (int)(365 / s->value[LIVE_WOOD_TURNOVER]);
+				s->turnover->BRANCHTOVER = (int)(365 / s->value[BRANCHTTOVER]);
 
 				/* compute value for volume for next years comparisons (CAI-MAI) */
 				s->value[MASS_DENSITY] = s->value[RHOMAX] +	(s->value[RHOMIN] - s->value[RHOMAX]) *	exp(-ln2 * (h->value / s->value[TRHO]));

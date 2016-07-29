@@ -216,7 +216,7 @@ void Radiation (cell_t *const c, const int day, const int month, const int year)
 	double b = 0.2;                                                                      //(unit less) empirical constants for long wave radiation computation
 	double TmaxK, TminK;
 
-	double fpar;
+	//double fpar;
 
 
 	meteo_t *met;

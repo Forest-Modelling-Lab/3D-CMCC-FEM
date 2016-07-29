@@ -14,7 +14,7 @@ extern logger_t* g_log;
 
 void Phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
-	int i;
+	//int i;
 	double Alpha_C;
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;

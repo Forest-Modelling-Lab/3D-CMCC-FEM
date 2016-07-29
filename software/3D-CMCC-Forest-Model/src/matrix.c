@@ -14,7 +14,7 @@
 #include "common.h"
 #include "g-function.h"
 #include "initialization.h"
-#include "structure.h"tr
+#include "structure.h"
 #include "netcdf.h"
 
 extern logger_t* g_log;
@@ -933,18 +933,21 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 }
 /****************************************************************************/
-//static int fill_cell_from_layers (cell_t *const c, const row_t * const row)
-//{
-//	//ALESSIOR TODO PLEASE
-//HERE MODEL SHOULD GET NUMBER OF TREE LAYERS FROM height struct
-//}
+static int fill_cell_from_layers (cell_t *const c, const row_t * const row)
+{
+	//ALESSIOR: height_t struct has no t_layers
+	return c->t_layers_count;
+}
 
 /****************************************************************************/
-//static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
-//{
-//	//ALESSIOR TODO PLEASE
-//HERE MODEL SHOULD GET NUMBER OF SOIL LAYERS FROM SETTING.TXT FILE
-//}
+static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
+{
+	if ( g_settings )
+		// why double ?
+		return (int)g_settings->soil_layer;
+	else
+		return 0;
+}
 /****************************************************************************/
 //ALESSIOC
 static int fill_cell(matrix_t* const m, row_t* const row)
@@ -970,6 +973,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 		// ALESSIOC
 		// IMPLEMENTARE IL LAYER
 		assert(0);
+		return 0;
 	}
 	else
 	{
@@ -1485,9 +1489,9 @@ void matrix_free(matrix_t *m)
 				int soil;
 				for ( height = 0; height < m->cells[cell].heights_count; ++height )
 				{
-					if ( m->cells[cell].heights[height].t_layers_count )
+					if ( m->cells[cell].t_layers_count )
 					{
-						free(m->cells[cell].heights[height].t_layers);
+						free(m->cells[cell].t_layers);
 					}
 
 					if ( m->cells[cell].heights[height].ages_count )

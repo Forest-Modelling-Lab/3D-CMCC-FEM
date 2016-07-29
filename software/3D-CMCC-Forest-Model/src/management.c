@@ -25,13 +25,13 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 	IndWrc,
 	IndWbb,
 	IndWres;
-	double BiomRem;
-	int shoots_number;    //number of shoots produced after coppicing
+	//double BiomRem;
+	//int shoots_number;    //number of shoots produced after coppicing
 
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->heights[height].t_layers[layer];
+	l = &c->t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
@@ -148,14 +148,13 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 	IndWs,
 	IndWrf,
 	IndWrc;
-	double BiomRem;
-
-	int shoots_number;
+	//double BiomRem;
+	//int shoots_number;
 
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->heights[height].t_layers[layer];
+	l = &c->t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
 	IndWf = s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE];
@@ -167,7 +166,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 
 	//CLEARCUT FOR TIMBER
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
-	logger(g_log, "Layer modelled z = %d \n", c->heights[height].t_layers[layer].z);
+	logger(g_log, "Layer modelled z = %d \n", c->t_layers[layer].z);
 	logger(g_log, "Numbers of layers = %d \n", l->n_layers);
 	logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
 
@@ -273,7 +272,7 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 	tree_layer_t *l;
 	species_t *s;
 
-	l = &c->heights[height].t_layers[layer];
+	l = &c->t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
 	if (years == 0)
@@ -454,7 +453,7 @@ void Management (age_t * const a, const int height, const int age, const int spe
 
 void Clearcut_Timber_without_request (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
 {
-	int removed_tree = 0.0;
+	int removed_tree = 0;
 	double IndWf,
 	IndWs,
 	IndWrf,

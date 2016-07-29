@@ -14,7 +14,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Print_parameters(species_t *const s, int species_count, const int day, const int month, const int years)
+void Print_parameters(species_t *const s, const int species_count, const int day, const int month, const int years)
 {
 	int species;
 
@@ -188,7 +188,7 @@ void Print_stand_data(cell_t* const c, const int layer, const int height, const 
 	species_t *s;
 
 	h = &c->heights[height];
-	l = &h->t_layers[layer];
+	l = &c->t_layers[layer];
 	a = &h->ages[age];
 	s = &a->species[species];
 

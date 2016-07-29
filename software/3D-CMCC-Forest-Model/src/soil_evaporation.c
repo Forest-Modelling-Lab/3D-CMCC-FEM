@@ -143,10 +143,10 @@ void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 }
 
 
-void Soil_evaporation_old(cell_t * c, const meteo_daily_t *const meteo_daily)
+void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	static double PotEvap;            //Potential evapotranspiration
-	double cc;
+	double cc = 0.;
 	double sat, gamma;
 
 	/*following Priestley and Taylor,1972; Gerten et al., 2004*/

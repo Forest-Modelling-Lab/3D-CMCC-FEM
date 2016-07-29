@@ -121,7 +121,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	Daily_Forest_structure (&m->cells[cell], day, month, year);
 	Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 	Daily_numbers_of_layers (&m->cells[cell]);
-	Daily_layer_cover (&m->cells[cell], meteo_daily, day, month);
+	Daily_layer_cover (&m->cells[cell], meteo_daily);
 	Daily_dominant_Light (&m->cells[cell], layer, height, age, species);
 
 	logger(g_log, "%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
