@@ -454,12 +454,6 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 
 	[v4 + n3 * (v3 + n2 * (v2 + n1 * v1))]
 */
-	char sz_buffer[256];
-	int i;
-	int n;
-	int x_cell;
-	int y_cell;
-	int year;
 	int var;
 	int vars_count;
 	int row;
@@ -469,23 +463,28 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 	if ( OUTPUT_TYPE_DAILY == type ) vars_count = vars->daily_vars_count;
 	else if ( OUTPUT_TYPE_MONTHLY == type ) vars_count = vars->monthly_vars_count;
 	else vars_count = vars->yearly_vars_count;
-
 	
 	/* loop each vars */
 	for ( var = 0; var < vars_count; ++var )
 	{
+		char sz_buffer[256];
+		int x_cell;
+		int y_cell;
+		int year;
+		FILE *f;
+
 		/* create output filename */
 		if ( OUTPUT_TYPE_DAILY == type )
 		{
-			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->daily_vars[i]]);			
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->daily_vars[var]]);			
 		}
 		else if ( OUTPUT_TYPE_MONTHLY == type )
 		{
-			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->monthly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->monthly_vars[var]]);
 		}
 		else
 		{
-			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->yearly_vars[i]]);
+			sprintf(sz_buffer, "%s%s.txt", path, sz_output_vars[vars->yearly_vars[var]]);
 		}
 
 		/* create file */
@@ -506,22 +505,22 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 				fputs("time,", f);
 				if ( OUTPUT_TYPE_DAILY == type )
 				{
-					fprintf(f, "%s\n", sz_output_vars[vars->daily_vars[i]]);
-					fprintf(f, "%d,", get_daily_date_from_row(i, year));
+					fprintf(f, "%s\n", sz_output_vars[vars->daily_vars[var]]);
+					fprintf(f, "%d,", get_daily_date_from_row(var, year));
 				}
 				else if ( OUTPUT_TYPE_MONTHLY == type )
 				{
-					fprintf(f, "%s\n", sz_output_vars[vars->monthly_vars[i]]);
-					fprintf(f, "%d,", get_monthly_date_from_row(i, year));
+					fprintf(f, "%s\n", sz_output_vars[vars->monthly_vars[var]]);
+					fprintf(f, "%d,", get_monthly_date_from_row(var, year));
 				}
 				else
 				{
-					fprintf(f, "%s\n", sz_output_vars[vars->yearly_vars[i]]);
+					fprintf(f, "%s\n", sz_output_vars[vars->yearly_vars[var]]);
 					fprintf(f, "%d,", year);
 				}
 
 				/* loop each year */
-				for ( year = year_start; year < year_start+n; ++year )
+				for ( year = year_start; year < year_start+years_count; ++year )
 				{		
 					if ( OUTPUT_TYPE_DAILY == type ) rows_count = 365 + IS_LEAP_YEAR(year);
 					else if ( OUTPUT_TYPE_MONTHLY == type ) rows_count = 12;
@@ -529,20 +528,26 @@ static int output_write_txt(const output_t* const vars, const char *const path, 
 
 					for ( row = 0; row < rows_count; ++row )
 					{
+						int index;
+
 						if ( OUTPUT_TYPE_DAILY == type )
 						{
-							fprintf(f, "%d,", get_daily_date_from_row(row, year));
+							index = (x_cell+x_cells_count*(y_cell+y_cells_count*((row)+(366*(year-year_start))*(var))));
+
+							fprintf(f, "%d,%g\n", get_daily_date_from_row(row, year), vars->daily_vars_value[index]);
 						}
 						else if ( OUTPUT_TYPE_MONTHLY == type )
 						{
-							fprintf(f, "%d,", get_monthly_date_from_row(row, year));
+							index = (x_cell+x_cells_count*(y_cell+y_cells_count*((row)+(12*(year-year_start))*(var))));
+
+							fprintf(f, "%d,%g\n", get_monthly_date_from_row(row, year), vars->monthly_vars_value[index]);
 						}
 						else
 						{
-							fprintf(f, "%d,", year);
+							index = (x_cell+x_cells_count*(y_cell+y_cells_count*(row+year-year_start*(var))));
+
+							fprintf(f, "%d,%g\n", year, vars->yearly_vars_value[index]);
 						}
-
-
 					}
 				}
 			}

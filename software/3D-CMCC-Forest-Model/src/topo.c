@@ -228,7 +228,7 @@ int topo_import(topo_t *const t, const char *const filename, const int x, const 
 	reset(t);
 	p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! string_compare_i(++p, "nc") ) {
+		if ( ! string_compare_i(++p, "nc") || ! string_compare_i(++p, "nc4") ) {
 			return import_nc(t, filename, x, y);
 		}
 	}

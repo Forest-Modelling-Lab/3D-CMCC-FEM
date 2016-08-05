@@ -1202,7 +1202,7 @@ matrix_t* matrix_create(const char* const filename) {
 	char *p;
 	p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! string_compare_i(++p, "nc") ) {
+		if ( ! string_compare_i(++p, "nc") || ! ! string_compare_i(++p, "nc4") ) {
 			d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
 		} else {
 			d = dataset_import_txt(filename);

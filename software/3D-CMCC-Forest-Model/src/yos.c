@@ -1863,7 +1863,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		p2 = strrchr(filename, '.');
 		if ( p2 ) {
 			++p2;
-			if ( ! string_compare_i(p2, "nc") ) {
+			if ( ! string_compare_i(p2, "nc") || ! string_compare_i(++p, "nc4") ) {
 				i = 1; /* is a netcdf file */
 			}
 		}

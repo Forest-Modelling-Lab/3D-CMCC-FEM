@@ -265,7 +265,7 @@ int soil_settings_import(soil_settings_t *const s, const char *const filename, c
 	reset(s);
 	p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! string_compare_i(++p, "nc") ) {
+		if ( ! string_compare_i(++p, "nc") || ! string_compare_i(++p, "nc4") ) {
 			return import_nc(s, filename, x, y);
 		}
 	}

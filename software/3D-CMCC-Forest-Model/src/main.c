@@ -267,7 +267,7 @@ static int log_start(const char* const sitename) {
 			return -1;
 		}
 		++p;
-		if ( ! string_compare_i(p, "nc") ) {
+		if ( ! string_compare_i(p, "nc") || ! string_compare_i(++p, "nc4") ) {
 			ext = "_nc";
 		} else if ( ! string_compare_i(p, "lst") ) {
 			ext = "_lst";
