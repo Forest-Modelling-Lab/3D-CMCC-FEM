@@ -802,9 +802,15 @@ typedef struct
 	int z;
 	int n_layers;
 	int daily_n_layer;
+	int height_class;          /* number of height class per layer */
 	int n_trees;               /* number of trees per layer */
 	int n_class;               /* number of height class per layer */
+	double density;            /* tree density per layer (n_tree/sizecell) */
 	double layer_cover;        /* canopy cover per layer */
+
+	//TODO add variables that refers only to layer level not to tree height level
+
+
 	double value[T_LAYER_VALUES_COUNT];
 	int counter[T_LAYER_COUNTERS_COUNT];
 } tree_layer_t;
