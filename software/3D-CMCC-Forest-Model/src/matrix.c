@@ -1401,7 +1401,7 @@ void matrix_summary(const matrix_t* const m) {
 						Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
 
 						/* compute annual number of different layers */
-						Annual_numbers_of_layers (&m->cells[cell]);
+						Annual_Forest_structure (&m->cells[cell]);
 
 						/* compute forest structure */
 						Daily_Forest_structure (&m->cells[cell], day, month, year);
