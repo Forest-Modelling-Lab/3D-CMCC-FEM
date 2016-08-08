@@ -147,8 +147,6 @@ enum {
 	TREE_HEIGHT_LPJ,            //Tree Height in m from LPJ
 	CROWN_AREA_LPJ,             //Crown Area in m^2 from LPJ
 	CROWN_DIAMETER_LPJ,         //Crown Diameter in m from LPJ
-	MCA,                        //Maximum Crown Area in m^2
-	MCD,                        //Maximum Crown Diameter in m^2
 	DBHDC_EFF,                  //Crown Diameter from DBH in function of density
 	PREVIOUS_DBHDC_EFF,         //previous dbhdc value
 	CROWN_DIAMETER_DBHDC_FUNC,  //Crown Diameter in m from DBHDC function
@@ -806,7 +804,7 @@ typedef struct
 	int n_trees;               /* number of trees per layer */
 	int n_class;               /* number of height class per layer */
 	double density;            /* tree density per layer (n_tree/sizecell) */
-	double layer_cover;        /* canopy cover per layer */
+	double layer_cover;        /* layer canopy cover per layer */
 
 	//TODO add variables that refers only to layer level not to tree height level
 

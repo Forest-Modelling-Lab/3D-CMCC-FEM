@@ -14,7 +14,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Layer_cover_mortality(cell_t *const c, const int layer, const int height, const int age, const int species, const double layer_cover, const int tree_number)
+void Crowding_competition_mortality(cell_t *const c, const int layer, const int height, const int age, const int species, const double layer_cover, const int tree_number)
 {
 	//int i;
 	//int oldNtree;
