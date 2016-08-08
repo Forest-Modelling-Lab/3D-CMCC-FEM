@@ -337,9 +337,11 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 					 *
 					 * Lhotka and Loewenstein 2008, Can J For Res
 					 */
+					//fixme remove if not used
 					s->value[MCA] = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
 					logger(g_log, "-MCA (Maximum Crown Area) = %g m^2\n", c->heights[height].ages[age].species[species].value[MCA]);
 
+					//fixme remove if not used
 					s->value[MCD] = 2.0 * sqrt(s->value[MCA]/Pi);
 					logger(g_log, "-MCD (Maximum Crown Diameter) = %g m\n", c->heights[height].ages[age].species[species].value[MCD]);
 
