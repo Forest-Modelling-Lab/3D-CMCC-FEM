@@ -276,7 +276,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 					  and Krajicek, et al., "Crown competition: a measure of density.
 					  For. Sci. 7:36-42
 					  Lhotka and Loewenstein 2008, Can J For Res
-					 */
+					*/
 					potential_minimum_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
 					logger(g_log, "-MCA (Maximum Crown Area) = %g m^2\n", potential_minimum_crown_area);
 
@@ -465,62 +465,70 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	/**************************************************************************************************/
 	/* REcompute numbers of height classes, tree number and density after mortality for each layer */
 
-	for ( height = c->heights_count - 1; height >= 0; height-- )
+	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
-		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
+		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
+
+		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
-			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
+			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
+
+			for (age = c->heights[height].ages_count - 1; age >= 0; age --)
 			{
-				// ALESSIOC
-				/*
-					c->height_class_in_layer_dominant_counter += 1;
-					c->tree_number_dominant += c->heights[height].ages[age].species[species].counter[N_TREE];
-					c->density_dominant = c->tree_number_dominant / g_settings->sizeCell;
-
-					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = (( c->heights[height].ages[age].species[species].value[DBHDCMAX] - c->heights[height].ages[age].species[species].value[DBHDCMIN] )
-							/ (c->heights[height].ages[age].species[species].value[DENMAX] - c->heights[height].ages[age].species[species].value[DENMIN] )
-				 * (c->density_dominant - c->heights[height].ages[age].species[species].value[DENMIN] ) + c->heights[height].ages[age].species[species].value[DBHDCMIN]);
-					logger(g_log, "DBHDC effective to apply = %g\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
-				 */
-
-
-				/* check */
-				if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] > c->heights[height].ages[age].species[species].value[DBHDCMAX])
+				for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
 				{
-					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMAX];
-					logger(g_log, "DBHDC effective to apply = %g\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
+					/* number of height class for each layer */
+					//fixme check if correct and necessary..
+					//c->t_layers[c->heights[height].z].height_class = + 1;
+
+					/* compute tree number for each layer */
+					//fixme check if correct
+					if(c->t_layers[c->heights[height].z].height_class == h->z)
+					{
+						l->n_trees += s->counter[N_TREE];
+					}
+
+					/* compute density for each layer */
+					//fixme check if correct
+					l->density = l->n_trees / g_settings->sizeCell;
+
+					/* compute dbh/crown diameter ratio */
+					s->value[DBHDC_EFF] = (( s->value[DBHDCMAX] - s->value[DBHDCMIN])/ (s->value[DENMAX] - s->value[DENMIN])* (l->density - s->value[DENMIN] ) + s->value[DBHDCMIN]);
+					logger(g_log, "DBHDC effective to apply = %g\n", s->value[DBHDC_EFF]);
+
+
+					/* check if layer density exceeds potential maximum and minimum density */
+					if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
+					{
+						s->value[DBHDC_EFF] = s->value[DBHDCMAX];
+						logger(g_log, "DBHDC effective to apply = %g\n", s->value[DBHDC_EFF]);
+					}
+					else if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
+					{
+						s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+						logger(g_log, "DBHDC effective to apply = %g\n", s->value[DBHDC_EFF]);
+					}
+
+					/* REcompute crown diameter using DBH-DC */
+					s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+
+					/* REcompute crown are using DBH-DC */
+					s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
+					logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+
+					/* REcompute canopy cover using DBH-DC */
+					s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+					logger(g_log, "-Canopy Cover from DBHDC function = %g \n", s->value[CANOPY_COVER_DBHDC]);
+
+					/* REcompute layer cover using DBH-DC */
+					l->layer_cover += s->value[CANOPY_COVER_DBHDC];
+					logger(g_log, "-Layer Cover from DBHDC function = %g \n", l->layer_cover);
+					logger(g_log, "*************************************************** \n");
 				}
-				else if (c->heights[height].ages[age].species[species].value[DBHDC_EFF] < c->heights[height].ages[age].species[species].value[DBHDCMIN])
-				{
-					c->heights[height].ages[age].species[species].value[DBHDC_EFF] = c->heights[height].ages[age].species[species].value[DBHDCMIN];
-					logger(g_log, "DBHDC effective to apply = %g\n", c->heights[height].ages[age].species[species].value[DBHDC_EFF]);
-				}
-
-				/* Crown Diameter using DBH-DC */
-
-				c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC] = c->heights[height].ages[age].species[species].value[AVDBH] * c->heights[height].ages[age].species[species].value[DBHDC_EFF];
-				logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC]);
-
-				//Crown Area using DBH-DC
-				c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (c->heights[height].ages[age].species[species].value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-				logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC]);
-
-
-				//Canopy Cover using DBH-DC
-
-				c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC] = c->heights[height].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] * c->heights[height].ages[age].species[species].counter[N_TREE] / g_settings->sizeCell;
-				logger(g_log, "-Canopy Cover from DBHDC function = %g \n", c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC]);
-				//Canopy Layer Cover
-				//ALESSIOC
-				//c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-
-
-
 			}
 		}
 	}
-	logger(g_log, "*************************************************** \n");
 }
 
 void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
