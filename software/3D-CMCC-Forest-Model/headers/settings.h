@@ -29,7 +29,7 @@ typedef struct {
 	double init_frac_maxasw; /* minimum fraction of available soil water at the beginning of simulation */
 
 	double tree_layer_limit;
-	double soil_layer;
+	int soil_layer;
 	double min_layer_cover;
 	double max_layer_cover;
 

@@ -916,6 +916,7 @@ static int fill_cell_from_ages(height_t* const h, const row_t* const row) {
 static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 {
 	static height_t height = { 0 };
+
 	//check parameter
 	assert(c && row);
 
@@ -933,18 +934,27 @@ static int fill_cell_from_heights(cell_t *const c, const row_t *const row)
 	return fill_cell_from_ages(&c->heights[c->heights_count-1], row);
 }
 /****************************************************************************/
-static int fill_cell_from_layers (cell_t *const c, const row_t * const row)
+static int layer_add(cell_t* const c)
 {
-	//ALESSIOR: height_t struct has no t_layers
-	return c->t_layers_count;
+	int ret;
+	static tree_layer_t t_layer = { 0 };
+
+	assert(c);
+
+	ret = alloc_struct((void **)&c->t_layers, &c->t_layers_count, sizeof(tree_layer_t));
+	if ( ret )
+	{
+		c->t_layers[c->t_layers_count-1] = t_layer;
+	}
+
+	return ret;
 }
 
 /****************************************************************************/
 static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
 {
 	if ( g_settings )
-		// why double ?
-		return (int)g_settings->soil_layer;
+		return g_settings->soil_layer;
 	else
 		return 0;
 }
@@ -953,45 +963,38 @@ static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
 static int fill_cell(matrix_t* const m, row_t* const row)
 {
 	int i;
-	int flag;
+	int index;
 	static cell_t cell = { 0 };
 
 	assert(m && row);
-	
-	/* check if is a new cell or a layer */
-	flag = 0;
+
+	// check position
+	index = -1;
 	for ( i = 0; i < m->cells_count; ++i )
 	{
 		if ( (row->x == m->cells[i].x) && (row->y == m->cells[i].y) )
 		{
-			flag = 1;
+			index = i;
+			break;
 		}
 	}
 
-	if ( flag )
-	{
-		// ALESSIOC
-		// IMPLEMENTARE IL LAYER
-		assert(0);
-		return 0;
-	}
-	else
+	if ( -1 == index )
 	{
 		/* add a new cell */
 		if ( ! alloc_struct((void **)&m->cells, &m->cells_count, sizeof(cell_t)) )
 		{
 			return 0;
 		}
-
-		//FIXME HERE FUNCTION THAT BEING A STATIC INT SHOULDN'T RETURN ANYTHING
-		m->cells[m->cells_count-1] = cell;
-		m->cells[m->cells_count-1].landuse = row->landuse;
-		m->cells[m->cells_count-1].x = row->x;
-		m->cells[m->cells_count-1].y = row->y;
-
-		/* add species */
-		return fill_cell_from_heights(&m->cells[m->cells_count-1], row);
+		index = m->cells_count-1;
+		m->cells[index] = cell;
+		m->cells[index].landuse = row->landuse;
+		m->cells[index].x = row->x;
+		m->cells[index].y = row->y;
 	}
+
+	/* add species */
+	return fill_cell_from_heights(&m->cells[index], row);
 }
 
 static int fill_species_from_file(species_t *const s) {
@@ -1202,7 +1205,8 @@ matrix_t* matrix_create(const char* const filename) {
 	char *p;
 	p = strrchr(filename, '.');
 	if ( p ) {
-		if ( ! string_compare_i(++p, "nc") || ! ! string_compare_i(++p, "nc4") ) {
+		++p;
+		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
 			d = dataset_import_nc(filename, &x_cells_count, &y_cells_count);
 		} else {
 			d = dataset_import_txt(filename);
@@ -1274,6 +1278,40 @@ matrix_t* matrix_create(const char* const filename) {
 						matrix_free(m);
 						return NULL;
 					}
+				}
+			}
+		}
+	}
+
+	/* add layer, set z, add layer */
+	{
+		int count = 0;
+		for ( cell = 0; cell < m->cells_count; ++cell ) {
+			if ( ! layer_add(&m->cells[cell]) )
+			{
+				matrix_free(m);
+				return NULL;
+			}
+			qsort(m->cells[cell].heights, m->cells[cell].heights_count, sizeof(height_t), sort_by_heights_desc);
+			for ( height = 0; height < m->cells[cell].heights_count - 1; ++height ) {
+				assert(! m->cells[cell].heights[height].z);
+				if ( (m->cells[cell].heights[height].value - m->cells[cell].heights[height+1].value) > g_settings->tree_layer_limit ) {
+					m->cells[cell].heights[height].z = 1;
+					++count;
+
+					if ( ! layer_add(&m->cells[cell]) )
+					{
+						matrix_free(m);
+						return NULL;
+					}
+				}
+			}
+		}
+		for ( cell = 0; cell < m->cells_count; ++cell ) {
+			qsort(m->cells[cell].heights, m->cells[cell].heights_count, sizeof(height_t), sort_by_heights_desc);
+			for ( height = 0; height < m->cells[cell].heights_count - 1; ++height ) {
+				if ( m->cells[cell].heights[height].z ) {
+					m->cells[cell].heights[height].z = count--;
 				}
 			}
 		}
@@ -1400,9 +1438,6 @@ void matrix_summary(const matrix_t* const m)
 						/*************FOREST INITIALIZATION DATA***********/
 						Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
 
-						/* compute annual number of different layers */
-						Annual_Forest_structure (&m->cells[cell]);
-
 						/* compute forest structure */
 						Daily_Forest_structure (&m->cells[cell], day, month, year);
 
@@ -1458,7 +1493,7 @@ void matrix_summary(const matrix_t* const m)
 			/*Soil definition*/
 			logger(g_log, "***************************************************\n");
 			logger(g_log, "SOIL DATASET\n");
-			logger(g_log, "Number of soil layers = %.0f\n", g_settings->soil_layer);
+			logger(g_log, "Number of soil layers = %d\n", g_settings->soil_layer);
 			logger(g_log, "***************************************************\n");
 
 			Initialization_site_data (&m->cells[cell]);

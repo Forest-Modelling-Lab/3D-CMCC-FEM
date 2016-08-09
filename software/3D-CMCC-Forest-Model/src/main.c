@@ -267,7 +267,7 @@ static int log_start(const char* const sitename) {
 			return -1;
 		}
 		++p;
-		if ( ! string_compare_i(p, "nc") || ! string_compare_i(++p, "nc4") ) {
+		if ( ! string_compare_i(p, "nc") || ! string_compare_i(p, "nc4") ) {
 			ext = "_nc";
 		} else if ( ! string_compare_i(p, "lst") ) {
 			ext = "_lst";
@@ -893,7 +893,7 @@ int main(int argc, char *argv[]) {
 		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_log, "***************************************************\n");
 
-		matrix_summary(matrix/*, day, month, year*/);
+		matrix_summary(matrix);
 
 		for ( year = 0; year < years_of_simulation; ++year ) {
 			/* ALESSIOR for handling leap years */
@@ -929,7 +929,10 @@ int main(int argc, char *argv[]) {
 					if ( F == matrix->cells[cell].landuse )
 					{
 						/* compute before any other processes annually the days for the growing season */
+
 						Veg_Days (&matrix->cells[cell], day, month, year);
+
+
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
 						++index_vpsat;

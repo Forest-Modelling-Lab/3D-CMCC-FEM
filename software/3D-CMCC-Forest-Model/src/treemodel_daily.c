@@ -115,7 +115,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* annual forest structure */
 	/* compute annual number of tree layer per cell */
-	if (day == 0 && month == JANUARY)Annual_Forest_structure (&m->cells[cell]);
+	if (day == 0 && month == JANUARY && year != 0) Annual_Forest_structure (&m->cells[cell]);
 
 	/* daily forest structure */
 	Daily_Forest_structure (&m->cells[cell], day, month, year);

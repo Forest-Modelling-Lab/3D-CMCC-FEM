@@ -166,7 +166,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 
 	//CLEARCUT FOR TIMBER
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
-	logger(g_log, "Layer modelled z = %d \n", c->t_layers[layer].z);
+	logger(g_log, "Layer modelled z = %d \n", layer);
 	logger(g_log, "Numbers of layers = %d \n", l->n_layers);
 	logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
 
