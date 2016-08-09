@@ -23,10 +23,12 @@ void Annual_Forest_structure(cell_t* const c)
 
 void Daily_Forest_structure (cell_t *const c, const int day, const int month, const int year)
 {
-	int layer;
-	int height;
-	int age;
-	int species ;
+	int layer = 0;
+	int height = 0;
+	int age = 0;
+	int species = 0;
+
+	int i;
 
 	double layer_cover;
 	int tree_number;
@@ -40,13 +42,12 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	age_t *a;
 	species_t *s;
 
-	/*
+
 	l = &c->t_layers[layer];
 	h = &c->heights[height];
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
-	*/
-	
+
 
 	/* it defines the number of tree height classes in each canopy layer,
 	 * the height class level cell coverage through the DBHDC_EFF function,
@@ -59,16 +60,29 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	//ALESSIOC NEW
 	/**************************************************************************************************/
 	/* compute numbers of height classes for each layer */
-	//for (layer = c->t_layers_count - 1; layer >= 0; layer --)
-	//{
+
 	qsort (c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
-	for ( height = 0; height < c->heights_count; ++height )
-	{		
-		c->t_layers[c->heights[height].z-1].height_class += 1;
+
+	//FIXME
+	for ( layer = c->t_layers_count; layer > 0 ; --layer )
+	{
+		logger(g_log, "layer = %d\n", layer);
+
+		for ( height = 0; height < c->heights_count; ++height )
+		{
+			if( (layer - 1) == c->heights[height].z )
+				{
+					logger(g_log, "z = %d\n", c->heights[height].z);
+					c->t_layers[layer-1].height_class += 1;
+				}
+		}
+		logger(g_log, "layer %d height class = %d\n", layer, c->t_layers[layer].height_class);
 	}
-	//}
+	getchar();
+
 	/*************************************************************************************************/
 	/* compute numbers of trees for each layer */
+
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
 		for (height = c->heights_count - 1; height >= 0; height--)
@@ -151,7 +165,7 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 					  and Krajicek, et al., "Crown competition: a measure of density.
 					  For. Sci. 7:36-42
 					  Lhotka and Loewenstein 2008, Can J For Res
-					*/
+					 */
 					potential_minimum_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
 					logger(g_log, "-MCA (Maximum Crown Area) = %g m^2\n", potential_minimum_crown_area);
 
@@ -405,7 +419,7 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 	int species;
 
 	species_t *s;
-	
+
 	/* it computes the vegetative state for each species class,
 	 * the number of days of leaf fall and
 	 * the rate for leaves reduction (for deciduous species) */
