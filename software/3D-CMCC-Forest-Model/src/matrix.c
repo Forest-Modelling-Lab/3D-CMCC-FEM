@@ -1303,7 +1303,8 @@ matrix_t* matrix_create(const char* const filename) {
 	return m;
 }
 
-void matrix_summary(const matrix_t* const m) {
+void matrix_summary(const matrix_t* const m)
+{
 	int cell;
 	int species;
 	int age;
@@ -1358,7 +1359,6 @@ void matrix_summary(const matrix_t* const m) {
 	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_log, "North hemisphere\n");
 	else logger(g_log, "South hemisphere\n");
 	logger(g_log, "***************************************************\n");
-
 
 	//loop on each cell
 	for ( cell = 0; cell< m->cells_count; cell++)
