@@ -97,7 +97,7 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", c->t_layers[layer].z);
+	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", layer);
 
 	/* it mainly follows Arora V. K., Boer G. J., GCB, 2005 */
 

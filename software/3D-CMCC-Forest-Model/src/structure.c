@@ -14,139 +14,19 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Annual_Forest_structure (cell_t *const c)
+// FIXME
+void Annual_Forest_structure(cell_t* const c)
 {
-	/*determines number of tree layer in function of:
-	-differences between tree height classes
-	-vegetative or un-vegetative period
-	to determine crowding competition */
-
-	int height;
-	//int layer;
-	double current_height;
-	double previous_height;
-
-
-	logger(g_log, "****ANNUAL_FOREST_STRUCTURE_ROUTINE****\n");
-	logger(g_log, "--NUMBER OF ANNUAL LAYERS--\n");
-
-	if (g_settings->spatial == 'u')
-	{
-		/* sort by ascending tree heights */
-		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
-
-		for ( height = c->heights_count - 1; height >= 0; height-- )
-		{
-			current_height = c->heights[height].value;
-			/* for the first height class processed */
-			if (height == c->heights_count - 1 )
-			{
-				//ALESSIOC
-				//c->annual_layer_number = 1;
-				previous_height = current_height;
-			}
-			/* for the other height class processed */
-			else
-			{
-				/* check if differences with previous height is bigger than a fixed value in setting */
-				if ((previous_height -current_height ) > g_settings->tree_layer_limit)
-				{
-					/* increment annual tree layer number at cell level */
-					c->annual_tree_layer_number += 1;
-					//ALESSIOC
-					c->t_layers_count += 1;
-
-					previous_height = current_height;
-				}
-				else
-				{
-					previous_height = current_height;
-				}
-
-			}
-		}
-
-		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->annual_tree_layer_number);
-		CHECK_CONDITION(c->annual_tree_layer_number, > MAX_N_TREE_LAYER);
-		//ALESSIOC
-		logger(g_log, "ANNUAL TREE LAYERS NUMBER = %d\n", c->t_layers_count);
-		CHECK_CONDITION(c->t_layers_count, > MAX_N_TREE_LAYER);
-
-		//ALESSIOC NEW
-		/* assign z value for each height class */
-		for ( height = c->heights_count - 1; height >= 0; height-- )
-		{
-			switch (c->t_layers_count)
-			{
-			case 1: /* one layer */
-				c->heights[height].z = c->t_layers_count - 1;
-				logger(g_log, "height %g, z %d\n", c->heights[height].value, c->heights[height].z);
-				break;
-
-			case 2: /* two layers */
-				if (height == c->heights_count - 1 )
-				{
-					c->heights[height].z = c->t_layers_count - 1;
-					logger(g_log, "height %g, z %d\n", c->heights[height].value, c->heights[height].z);
-				}
-				else
-				{
-					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
-					{
-						c->heights[height].z = c->heights[height+1].z - 1;
-						logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
-					}
-					else
-					{
-						c->heights[height].z = c->heights[height+1].z;
-						logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
-					}
-				}
-				break;
-
-			case 3: /* three layers */
-				if (height == c->heights_count - 1)
-				{
-					c->heights[height].z = c->t_layers_count - 1;
-					logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
-				}
-				else
-				{
-					if ((c->heights[height+1].value - c->heights[height].value) > g_settings->tree_layer_limit)
-					{
-						c->heights[height].z = c->heights[height+1].z - 1;
-						logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
-					}
-					else
-					{
-						c->heights[height].z = c->heights[height+1].z;
-						logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
-					}
-				}
-				break;
-			}
-		}
-	}
-	else
-	{
-		/* for spatial version only one layer */
-		logger(g_log, "SPATIAL VERSION ONLY ONE LAYER\n");
-		c->t_layers_count = 1;
-		logger(g_log, "ANNUAL LAYERS NUMBER = %d\n", c->t_layers_count);
-		for ( height = c->heights_count - 1; height >= 0; height-- )
-		{
-			c->heights[height].z = 0;
-		}
-	}
+	//FIXME
 }
 
 
 void Daily_Forest_structure (cell_t *const c, const int day, const int month, const int year)
 {
-	int layer = 0;
-	int height = 0;
-	int age = 0;
-	int species = 0;
+	int layer;
+	int height;
+	int age;
+	int species ;
 
 	double layer_cover;
 	int tree_number;
@@ -160,10 +40,13 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	age_t *a;
 	species_t *s;
 
+	/*
 	l = &c->t_layers[layer];
 	h = &c->heights[height];
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
+	*/
+	
 
 	/* it defines the number of tree height classes in each canopy layer,
 	 * the height class level cell coverage through the DBHDC_EFF function,
@@ -171,29 +54,23 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	 * on a daily basis
 	 */
 
-	logger(g_log, "\n\n***FOREST_STRUCTURE***\n");
+	logger(g_log, "\n\n***DAILY_FOREST_STRUCTURE***\n");
 
 	//ALESSIOC NEW
 	/**************************************************************************************************/
 	/* compute numbers of height classes for each layer */
-	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
-	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
-		for (height = c->heights_count - 1; height >= 0; height--)
-		{
-			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
-
-			//fixme check if correct
-			c->t_layers[c->heights[height].z].height_class = + 1;
-		}
+	//for (layer = c->t_layers_count - 1; layer >= 0; layer --)
+	//{
+	qsort (c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+	for ( height = 0; height < c->heights_count; ++height )
+	{		
+		c->t_layers[c->heights[height].z-1].height_class += 1;
 	}
+	//}
 	/*************************************************************************************************/
 	/* compute numbers of trees for each layer */
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
 		for (height = c->heights_count - 1; height >= 0; height--)
 		{
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -215,8 +92,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	/* compute density for each layer */
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
 		//fixme check if correct
 		l->density = l->n_trees / g_settings->sizeCell;
 	}
@@ -304,8 +179,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	/* check if layer density exceeds potential maximum and minimum density */
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
 		for (height = c->heights_count - 1; height >= 0; height--)
 		{
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -408,8 +281,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
 		for (height = c->heights_count - 1; height >= 0; height--)
 		{
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -436,8 +307,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 
 	//the model makes die trees of the lower layer and height class for that layer because
 	//it passes through the function sort_by_layer/height_desc the layer/height classes starting from the lowest
-
-	qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_desc);
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
@@ -467,8 +336,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		qsort (c->t_layers, c->t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
-
 		for ( height = c->heights_count - 1; height >= 0; height-- )
 		{
 			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -533,13 +400,12 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 
 void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
 {
-	static int height;
-	static int age;
-	static int species;
+	int height;
+	int age;
+	int species;
 
 	species_t *s;
-	s = &c->heights[height].ages[age].species[species];
-
+	
 	/* it computes the vegetative state for each species class,
 	 * the number of days of leaf fall and
 	 * the rate for leaves reduction (for deciduous species) */
@@ -558,6 +424,7 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
+				s = &c->heights[height].ages[age].species[species];
 
 				if (day == 0 && month == 0)
 				{
@@ -862,8 +729,9 @@ void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int s
 {
 	species_t *s;
 
-	assert(height);
+	assert(c);
 
+	// FIXME ...height can be -1 !!!
 	s = &c->heights[height].ages[age].species[species];
 
 	/* it computes which canopy layers is in dominant position for light */

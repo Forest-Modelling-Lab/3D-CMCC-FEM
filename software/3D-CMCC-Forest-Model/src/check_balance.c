@@ -40,6 +40,8 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	balance = in - out -store;
 
+	//FIXME
+	/*
 	if (fabs(balance) > 1e-8 )
 	{
 		logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
@@ -64,6 +66,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "...ok PAR radiative balance\n");
 	}
+	*/
 
 	/*******************************************************************************************************************************************/
 
@@ -80,6 +83,8 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	balance = in - out -store;
 
+	//FIXME
+	/*
 	if (fabs(balance) > 1e-8 )
 	{
 		logger(g_log, "\nCELL RADIATIVE BALANCE (Net Radiation)\n");
@@ -104,6 +109,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "...ok Net Radiation radiative balance\n");
 	}
+	*/
 	/*******************************************************************************************************************************************/
 
 	/* PPFD RADIATIVE BALANCE */
@@ -118,6 +124,8 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	balance = in - out -store;
 
+	//FIXME
+	/*
 	if (fabs(balance) > 1e-8 )
 	{
 		logger(g_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
@@ -142,6 +150,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "...ok PPFD radiative balance\n");
 	}
+	*/
 	/*******************************************************************************************************************************************/
 }
 

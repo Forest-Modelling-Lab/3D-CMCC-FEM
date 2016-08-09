@@ -7,8 +7,6 @@
 int sort_by_years(const void *a, const void *b);
 int sort_by_heights_asc(const void* a, const void* b);
 int sort_by_heights_desc(const void * a, const void * b);
-int sort_by_layers_asc(const void* a, const void* b);
-int sort_by_layers_desc(const void * a, const void * b);
 
 void Pool_fraction(species_t *const s);
 void Tree_period(cell_t* const c, const int layer, const int height, const int age, const int species);

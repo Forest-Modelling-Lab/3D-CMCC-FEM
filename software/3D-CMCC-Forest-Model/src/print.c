@@ -197,7 +197,7 @@ void Print_stand_data(cell_t* const c, const int layer, const int height, const 
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
-	logger(g_log, "* z = %d\n", l->z);
+	logger(g_log, "* z = %d\n", layer);
 	logger(g_log, "-class level data\n");
 	logger(g_log, "- Height = %f m\n", h->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);

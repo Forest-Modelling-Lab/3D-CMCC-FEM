@@ -25,35 +25,7 @@ int sort_by_years(const void *a, const void *b)
 		return 0;
 	}
 }
-/* todo : implement a better comparison for equality */
-int sort_by_layers_asc(const void * a, const void * b)
-{
-	if ( ((tree_layer_t *)a)->value < ((tree_layer_t *)b)->value )
-	{
-		return -1;
-	} else if ( ((tree_layer_t *)a)->value > ((tree_layer_t *)b)->value )
-	{
-		return 1;
-	} else
-	{
-		return 0;
-	}
-}
 
-/* todo : implement a better comparison for equality */
-int sort_by_layers_desc(const void * a, const void * b)
-{
-	if ( ((tree_layer_t *)a)->value < ((tree_layer_t *)b)->value )
-	{
-		return 1;
-	} else if ( ((tree_layer_t *)a)->value > ((tree_layer_t *)b)->value )
-	{
-		return -1;
-	} else
-	{
-		return 0;
-	}
-}
 /* todo : implement a better comparison for equality */
 int sort_by_heights_asc(const void * a, const void * b)
 {
@@ -128,22 +100,20 @@ void Tree_period(cell_t* const c, const int layer, const int height, const int a
 }
 
 
-void Veg_Days(cell_t *const c,const int day, const int month, const int year)
+void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 {
-	static int height;
-	static int age;
-	static int species;
+	int height;
+	int age;
+	int species;
 
 	meteo_t *met;
 	species_t *s;
 
 	met = c->years[year].m;
-	s = &c->heights[height].ages[age].species[species];
-
+	
 	/* compute annual number of vegetative days */
 
-	logger(g_log, "VEG_DAYS_for year %d\n", year);
-
+	//logger(g_log, "VEG_DAYS_for year %d\n", year);
 
 	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
@@ -151,6 +121,8 @@ void Veg_Days(cell_t *const c,const int day, const int month, const int year)
 		{
 			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
 			{
+				s = &c->heights[height].ages[age].species[species];
+
 				if (g_settings->spatial == 'u')
 				{
 					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)

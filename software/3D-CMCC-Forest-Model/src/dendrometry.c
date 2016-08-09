@@ -98,7 +98,8 @@ void Dendrometry(cell_t *const c, const int height, const int age, const int spe
 		L
 */
 
-	CHECK_CONDITION(oldavDBH, > s->value[AVDBH] + 1e-10);
+	//FIXME
+	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH] + 1e-10);
 	/* to avoid that error appears due to differences between measured and computed tree height values */
 	if(year > 0)
 	{

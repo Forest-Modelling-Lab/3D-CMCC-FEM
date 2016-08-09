@@ -1748,8 +1748,6 @@ static int import_txt(const char *const filename, yos_t** p_yos, int *const yos_
 		}
 	}
 
-	logger(g_log, "ok met data\n");
-
 	fclose(f);
 
 	if ( rows_count != current_row ) {
@@ -1863,7 +1861,7 @@ yos_t* yos_import(const char *const file, int *const yos_count, const int x, con
 		p2 = strrchr(filename, '.');
 		if ( p2 ) {
 			++p2;
-			if ( ! string_compare_i(p2, "nc") || ! string_compare_i(++p, "nc4") ) {
+			if ( ! string_compare_i(p2, "nc") || ! string_compare_i(p2, "nc4") ) {
 				i = 1; /* is a netcdf file */
 			}
 		}
