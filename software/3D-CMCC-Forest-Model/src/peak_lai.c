@@ -13,9 +13,8 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Peak_lai(species_t *const s, const int day, const int month, const int years)
+void peak_lai(species_t *const s, const int day, const int month, const int years)
 {
-	//int i;
 
 	logger(g_log, "\n**PEAK LAI**\n");
 

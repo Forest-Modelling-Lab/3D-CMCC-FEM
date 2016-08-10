@@ -139,7 +139,7 @@ void Dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 
 }
-void Annual_minimum_reserve (species_t *const s)
+void annual_minimum_reserve (species_t *const s)
 {
 	/* recompute annual minimum reserve pool for  year allocation */
 	/* these values are taken from: following Schwalm and Ek, 2004 Ecological Modelling */

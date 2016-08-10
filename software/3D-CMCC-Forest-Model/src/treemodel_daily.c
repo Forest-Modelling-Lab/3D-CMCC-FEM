@@ -130,13 +130,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					if (day == 0 && month == JANUARY)
 					{
 						/* compute annual minimum reserve for incoming year */
-						Annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
+						annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
 
 						/* reset annual class variables */
 						reset_annual_class_variables (&m->cells[cell], layer, height, age, species);
 
 						/* compute annual Maximum LAI */
-						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], day, month, year);
+						peak_lai(&m->cells[cell].heights[height].ages[age].species[species], day, month, year);
 					}
 					/* reset monthly class variables */
 					if (day == 0) reset_monthly_class_variables (&m->cells[cell], layer, height, age, species);
@@ -144,17 +144,18 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					/* reset daily class level variables */
 					reset_daily_class_variables(&m->cells[cell], layer, height, age, species);
 
+					/* print at the beginning of simulation stand data */
+					print_stand_data (&m->cells[cell], layer, height, age, species);
+
 					/* compute species-specific phenological phase */
-					Phenology (&m->cells[cell], layer, height, age, species, meteo_daily, month);
+					phenology (&m->cells[cell], layer, height, age, species, meteo_daily, month);
 
 					/* check for adult or sapling age */
-					Tree_period (&m->cells[cell], layer, height, age, species);
+					tree_period (&m->cells[cell], layer, height, age, species);
 
+					//fixme still usefull?????
 					/* compute how many classes are in vegetative period */
 					daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
-
-					/* print at the beginning of simulation stand data */
-					Print_stand_data (&m->cells[cell], layer, height, age, species);
 
 					/* Loop for adult trees */
 					if (m->cells[cell].heights[height].ages[age].species[species].period == 0.0)

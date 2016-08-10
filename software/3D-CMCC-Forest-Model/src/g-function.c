@@ -73,7 +73,7 @@ void Abscission_DayLength (cell_t * c)
 	//logger(g_log, "Abscission day length = %f hrs\n", c->abscission_daylength);
 }
 
-void Tree_period(cell_t* const c, const int layer, const int height, const int age, const int species)
+void tree_period(cell_t* const c, const int layer, const int height, const int age, const int species)
 {
 	age_t *a;
 	species_t *s;

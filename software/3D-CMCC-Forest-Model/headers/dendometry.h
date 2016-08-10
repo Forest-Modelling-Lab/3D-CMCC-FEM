@@ -6,6 +6,6 @@
 
 void Dendrometry(cell_t *const c, const int height, const int age, const int species, const int year);
 
-void Annual_minimum_reserve (species_t *const s);
+void annual_minimum_reserve (species_t *const s);
 
 #endif /* DENDOMETRY_H_ */

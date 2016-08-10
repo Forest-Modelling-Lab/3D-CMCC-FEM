@@ -14,14 +14,14 @@ F * phenology.c
 
 extern logger_t* g_log;
 
-void Phenology(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
+void phenology(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
 {
 	static int phenology_counter;
 
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log, "--GET_DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_log, "--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
 
 	/*for deciduous*/
@@ -94,7 +94,6 @@ void Phenology(cell_t *const c, const int layer, const int height, const int age
 			phenology_counter = 1;//not used
 			s->phenology_phase = 2;
 		}
-
 	}
 	logger(g_log, "phenology_counter = %d\n", phenology_counter);
 	logger(g_log, "phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);

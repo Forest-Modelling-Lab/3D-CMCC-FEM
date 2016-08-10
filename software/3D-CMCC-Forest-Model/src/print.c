@@ -180,7 +180,7 @@ void Print_met_daily_data(yos_t *const yos, const int day, const int month, cons
 
 }
  */
-void Print_stand_data(cell_t* const c, const int layer, const int height, const int age, const int species)
+void print_stand_data(cell_t* const c, const int layer, const int height, const int age, const int species)
 {
 	tree_layer_t *l;
 	height_t *h;
