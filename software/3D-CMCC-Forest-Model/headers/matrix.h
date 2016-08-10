@@ -1146,6 +1146,9 @@ typedef struct {
 
 matrix_t* matrix_create(const char* const filename);
 void matrix_free(matrix_t *m);
-void matrix_summary(const matrix_t* const m/*, const int, const int, const int*/);
+void simulation_summary(const matrix_t* const m);
+void site_summary(const matrix_t* const m);
+void soil_summary(const matrix_t* const m, const cell_t* const cell);
+void forest_matrix_summary(const matrix_t* const m, const int cell);
 
 #endif /* MATRIX_H_ */

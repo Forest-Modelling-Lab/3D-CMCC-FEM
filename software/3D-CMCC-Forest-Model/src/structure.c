@@ -21,14 +21,13 @@ void Annual_Forest_structure(cell_t* const c)
 }
 
 
-void Daily_Forest_structure (cell_t *const c, const int day, const int month, const int year)
+void daily_forest_structure (cell_t *const c)
 {
 	int layer = 0;
 	int height = 0;
 	int age = 0;
 	int species = 0;
 
-	int i;
 
 	double layer_cover;
 	int tree_number;
@@ -41,7 +40,6 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	height_t *h;
 	age_t *a;
 	species_t *s;
-
 
 	l = &c->t_layers[layer];
 	h = &c->heights[height];
@@ -61,24 +59,17 @@ void Daily_Forest_structure (cell_t *const c, const int day, const int month, co
 	/**************************************************************************************************/
 	/* compute numbers of height classes for each layer */
 
-	qsort (c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
-
-	//FIXME
-	for ( layer = c->t_layers_count; layer > 0 ; --layer )
+	for ( layer = c->t_layers_count-1; layer >= 0 ; --layer )
 	{
-		logger(g_log, "layer = %d\n", layer);
-
-		for ( height = 0; height < c->heights_count; ++height )
+		for ( height = c->heights_count -1; height >= 0 ; --height )
 		{
-			if( (layer - 1) == c->heights[height].z )
+			if( layer == c->heights[height].z )
 				{
-					logger(g_log, "z = %d\n", c->heights[height].z);
-					c->t_layers[layer-1].height_class += 1;
+					c->t_layers[layer].height_class += 1;
 				}
 		}
-		logger(g_log, "layer %d height class = %d\n", layer, c->t_layers[layer].height_class);
+		logger(g_log, "-layer %d height class = %d\n", layer, c->t_layers[layer].height_class);
 	}
-	getchar();
 
 	/*************************************************************************************************/
 	/* compute numbers of trees for each layer */

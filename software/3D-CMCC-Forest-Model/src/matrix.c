@@ -1341,25 +1341,18 @@ matrix_t* matrix_create(const char* const filename) {
 	return m;
 }
 
-void matrix_summary(const matrix_t* const m)
+void simulation_summary (const matrix_t* const m)
 {
-	int cell;
-	int species;
-	int age;
-	int height;
 	int resol;
-	int day = 0;
-	int month = 0;
-	int year = 0;
 
-	assert (m);
+	/* cell MUST be in square meters */
+	resol = (int)sqrt(g_settings->sizeCell);
+
+	assert(m);
 
 	logger(g_log, "RUN COMPSET\n");
 
-	//cell MUST be squares
-	resol = (int)sqrt(g_settings->sizeCell);
-
-	logger(g_log, "Cell resolution = %d x %d = %f m^2\n", resol, resol, g_settings->sizeCell);
+	logger(g_log, "Cell resolution = %d x %d = %g m^2\n", resol, resol, g_settings->sizeCell);
 	if (g_settings->version == 'f')
 	{
 		logger(g_log, "Model version = FEM \n");
@@ -1386,6 +1379,11 @@ void matrix_summary(const matrix_t* const m)
 	{
 		//Log ("Asymmetric water competition\n");
 	}
+}
+
+void site_summary(const matrix_t* const m)
+{
+	assert(m);
 
 	/* Site definition */
 	logger(g_log, "***************************************************\n");
@@ -1396,140 +1394,137 @@ void matrix_summary(const matrix_t* const m)
 	logger(g_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
 	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_log, "North hemisphere\n");
 	else logger(g_log, "South hemisphere\n");
+}
+
+void soil_summary(const matrix_t* const m, const cell_t* const cell)
+{
+	assert(m);
+
+	/* Soil definition and initialization */
 	logger(g_log, "***************************************************\n");
+	logger(g_log, "SOIL DATASET\n");
+	logger(g_log, "-Number of soil layers = %d\n", g_settings->soil_layer);
+	logger(g_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
+	logger(g_log, "-Clay Percentage = %g %%\n", g_soil_settings->values[SOIL_CLAY_PERC]);
+	logger(g_log, "-Silt Percentage = %g %%\n", g_soil_settings->values[SOIL_SILT_PERC]);
+	logger(g_log, "-Sand Percentage = %g %%\n", g_soil_settings->values[SOIL_SAND_PERC]);
+	logger(g_log, "-Soil FR = %g\n", g_soil_settings->values[SOIL_FR]);
+	logger(g_log, "-Soil FN0 = %g\n", g_soil_settings->values[SOIL_FN0]);
+	logger(g_log, "-Soil FNN = %g\n", g_soil_settings->values[SOIL_FNN]);
+	logger(g_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
+	logger(g_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
-	/* loop on each cell */
-	for ( cell = 0; cell< m->cells_count; cell++)
+	Initialization_soil_data (m->cells);
+}
+
+void forest_matrix_summary(const matrix_t* const m, const int cell)
+{
+	int species;
+	int age;
+	int height;
+
+	assert (m);
+
+	logger(g_log, "***************************************************\n");
+	logger(g_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
+	logger(g_log, "FOREST DATASET\n");
+
+	logger(g_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
+
+	logger(g_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
+			cell+1,
+			m->cells[cell].x,
+			m->cells[cell].y,
+			m->cells[cell].heights_count);
+
+	/* loop on each height */
+	for ( height = 0; height < m->cells[cell].heights_count; height++ )
 	{
-		logger(g_log, "****FOREST CHARACTERISTICS for cell (%d, %d)****\n", m->cells[cell].x, m->cells[cell].y);
-		if (m->cells[cell].landuse == F)
+		logger(g_log, "**(%d)\n", height + 1);
+		logger(g_log, "-- height n.%02d is %f m and has %d age classes\n",
+				height + 1,
+				m->cells[cell].heights[height].value,
+				m->cells[cell].heights[height].ages_count);
+
+		/* loop on each age */
+		for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
 		{
-			logger(g_log, "FOREST DATASET\n");
-			logger(g_log, "matrix has %d cell%s\n", m->cells_count, (m->cells_count > 1 ? "s" : ""));
+			logger(g_log, "--- age n.%02d is %d yrs and has %d species\n",
+					age + 1,
+					m->cells[cell].heights[height].ages[age].value,
+					m->cells[cell].heights[height].ages[age].species_count);
 
-			logger(g_log, "- cell n.%02d is at %d, %d and has %d height classes\n",
-					cell+1,
-					m->cells[cell].x,
-					m->cells[cell].y,
-					m->cells[cell].heights_count);
-
-			/* loop on each height */
-			for ( height = 0; height < m->cells[cell].heights_count; height++ )
+			/* loop on each species */
+			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 			{
-				logger(g_log, "**(%d)\n", height + 1);
-				logger(g_log, "-- height n.%02d is %f m and has %d age classes\n",
-						height + 1,
+				logger(g_log, "--- species is %s\n",
+						m->cells[cell].heights[height].ages[age].species[species].name);
+			}
+		}
+	}
+
+	for ( height = 0; height < m->cells[cell].heights_count; height++ )
+	{
+		for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
+		{
+			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
+			{
+				Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
+
+				/*************FOREST INITIALIZATION DATA***********/
+				Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
+
+				/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
+				 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
+				Initialization_biomass_data (&m->cells[cell], height, age, species);
+				logger(g_log,
+						"\n\n----- CLASS DATASET-----\n"
+						"----- height = %f\n"
+						"----- age = %d\n"
+						"----- species = %s\n"
+						"----- n = %d trees\n"
+						"----- n stumps = %d stumps\n"
+						"----- avdbh = %f cm\n"
+						"----- wf = %f tDM/ha\n"
+						"----- wr coarse = %f tDM/area\n"
+						"----- wr fine = %f tDM/area\n"
+						"----- wr tot = %f tDM/area\n"
+						"----- ws = %f tDM/area\n"
+						"----- wbb = %f tDM/area\n"
+						"----- wres = %f tDM/area\n"
+						"----- ws live = %f tDM/area\n"
+						"----- wrc live = %f tDM/area\n"
+						"----- wbb live = %f tDM/area\n"
+						"----- w tot live = %f tDM/area\n"
+						"----- w tot dead = %f tDM/area\n"
+						"----- lai = %f tDM/area\n",
+
 						m->cells[cell].heights[height].value,
-						m->cells[cell].heights[height].ages_count);
-
-				/* loop on each age */
-				for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
-				{
-					logger(g_log, "--- age n.%02d is %d yrs and has %d species\n",
-							age + 1,
-							m->cells[cell].heights[height].ages[age].value,
-							m->cells[cell].heights[height].ages[age].species_count);
-
-					/* loop on each species */
-					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
-					{
-						logger(g_log, "--- species is %s\n",
-								m->cells[cell].heights[height].ages[age].species[species].name);
-					}
-				}
+						m->cells[cell].heights[height].ages[age].value,
+						m->cells[cell].heights[height].ages[age].species[species].name,
+						m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
+						m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
+						m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_LIVE_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_DEAD_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 			}
 		}
 	}
 
-	/* define daily forest structure */
-	for ( cell = 0; cell< m->cells_count; cell++)
-	{
-		/* compute forest structure */
-		Daily_Forest_structure (&m->cells[cell], day, month, year);
-	}
+	/* compute forest structure */
+	daily_forest_structure (&m->cells[cell]);
 
-
-	for ( cell = 0; cell< m->cells_count; cell++)
-	{
-		if (m->cells[cell].landuse == F)
-		{
-			for ( height = 0; height < m->cells[cell].heights_count; height++ )
-			{
-				for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
-				{
-					for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
-					{
-						Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
-
-						/*************FOREST INITIALIZATION DATA***********/
-						Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
-
-						/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-						Initialization_biomass_data (&m->cells[cell], height, age, species);
-						logger(g_log, 
-								"\n\n----- CLASS DATASET-----\n"
-								"----- height = %f\n"
-								"----- age = %d\n"
-								"----- species n.%02d is %s\n"
-								"----- n = %d trees\n"
-								"----- n stumps = %d stumps\n"
-								"----- avdbh = %f cm\n"
-								"----- wf = %f tDM/ha\n"
-								"----- wr coarse = %f tDM/area\n"
-								"----- wr fine = %f tDM/area\n"
-								"----- wr tot = %f tDM/area\n"
-								"----- ws = %f tDM/area\n"
-								"----- wbb = %f tDM/area\n"
-								"----- wres = %f tDM/area\n"
-								"----- ws live = %f tDM/area\n"
-								"----- wrc live = %f tDM/area\n"
-								"----- wbb live = %f tDM/area\n"
-								"----- w tot live = %f tDM/area\n"
-								"----- w tot dead = %f tDM/area\n"
-								"----- lai = %f tDM/area\n",
-
-								m->cells[cell].heights[height].value,
-								m->cells[cell].heights[height].ages[age].value,
-								species + 1,
-								m->cells[cell].heights[height].ages[age].species[species].name,
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
-								m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
-								m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_LIVE_WOOD_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_DEAD_WOOD_tDM],
-								m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
-
-					}
-				}
-			}
-
-			/*Soil definition*/
-			logger(g_log, "***************************************************\n");
-			logger(g_log, "SOIL DATASET\n");
-			logger(g_log, "Number of soil layers = %d\n", g_settings->soil_layer);
-			logger(g_log, "***************************************************\n");
-
-			Initialization_site_data (&m->cells[cell]);
-
-		}
-		else if (m->cells[cell].landuse == Z)
-		{
-			logger(g_log, "*********************\n\n\n");
-			logger(g_log, "CROP DATASET\n");
-			logger(g_log, "*(%d)\n", cell + 1);
-
-		}
-	}
 }
 
 void matrix_free(matrix_t *m)

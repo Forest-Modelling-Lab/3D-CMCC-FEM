@@ -893,23 +893,46 @@ int main(int argc, char *argv[]) {
 		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_log, "***************************************************\n");
 
-		matrix_summary(matrix);
+		/* general summary on model simulation */
+		simulation_summary(matrix);
 
-		for ( year = 0; year < years_of_simulation; ++year ) {
+		/* summary on site */
+		site_summary(matrix);
+
+		/* summary on soil */
+		soil_summary(matrix, matrix->cells);
+
+		if(F == matrix->cells[cell].landuse)
+		{
+			/* note: this happens just the first day of simulation */
+
+			/* forest summary */
+			forest_matrix_summary(matrix, cell);
+		}
+		else
+		{
+			/* include summary for other land uses */
+		}
+
+		for ( year = 0; year < years_of_simulation; ++year )
+		{
 			/* ALESSIOR for handling leap years */
 			int days_per_month;
 
 			logger(g_log, "\n-Year simulated = %d\n", matrix->cells[cell].years[year].year);
 
 			index_vpsat = 0;
-			for ( month = 0; month < MONTHS_COUNT; ++month ) {
+			for ( month = 0; month < MONTHS_COUNT; ++month )
+			{
 				days_per_month = DaysInMonth[month];
-				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) ) {
+				if ( (FEBRUARY == month) && IS_LEAP_YEAR(matrix->cells[cell].years[year].year) )
+				{
 					++days_per_month;
 				}
 
-				for ( day = 0; day < days_per_month; ++day ) {
-					/* daily climate variables */
+				for ( day = 0; day < days_per_month; ++day )
+				{
+					/* compute daily climate variables not coming from met data */
 					Avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Nightime_avg_temperature(matrix->cells[cell].years[year].m, day, month);
@@ -929,15 +952,13 @@ int main(int argc, char *argv[]) {
 					if ( F == matrix->cells[cell].landuse )
 					{
 						/* compute before any other processes annually the days for the growing season */
-
 						Veg_Days (&matrix->cells[cell], day, month, year);
-
 
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
 						get_vpsat(&matrix->cells[cell], day, month, year, index_vpsat);
 						++index_vpsat;
 					}
-					else if ( Z == matrix->cells[cell].landuse )
+					else
 					{
 						/* include other land use */
 					}

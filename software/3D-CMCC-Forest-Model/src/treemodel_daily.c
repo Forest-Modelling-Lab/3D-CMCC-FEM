@@ -75,50 +75,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		m->cells[cell].doy += 1;
 	}
 
-
-
-//	/* sort class in ascending way by heights */
-//	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
-//
-//	/* loop on each heights starting from highest to lower */
-//	logger(g_log, "******FOREST STRUCTURE for CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
-//	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
-//	{
-//		/* loop on each age class */
-//		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
-//		{
-//			/* loop on each species class */
-//			for (species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species++)
-//			{
-//				/* taking into account only classes with at least one live tree */
-//				if(m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE] > 0)
-//				{
-//					/* FOREST STRUCTURE */
-//					if (day == 0 && month == JANUARY)
-//					{
-//						/* compute annual number of different layers */
-//						Annual_Forest_structure (&m->cells[cell]);
-//					}
-//					/* daily forest structure */
-//					Daily_Forest_structure (&m->cells[cell], day, month, year);
-//					Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
-//					Daily_numbers_of_layers (&m->cells[cell]);
-//					Daily_layer_cover (&m->cells[cell], meteo_daily, day, month);
-//					Daily_dominant_Light (&m->cells[cell], layer, height, age, species);
-//				}
-//			}
-//		}
-//	}
-//	logger(g_log, "***************************************************\n");getchar();
-
-	/* compute daily-monthly-annual forest structure (overall cell) */
-
-	/* annual forest structure */
-	/* compute annual number of tree layer per cell */
+	/* annual forest structure (except the first year) */
 	if (day == 0 && month == JANUARY && year != 0) Annual_Forest_structure (&m->cells[cell]);
 
-	/* daily forest structure */
-	Daily_Forest_structure (&m->cells[cell], day, month, year);
+	/* daily forest structure (except the first day of the first year) */
+	if (day != 0 && year != 0)daily_forest_structure (&m->cells[cell]);
+
+
 	Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 	Daily_numbers_of_layers (&m->cells[cell]);
 	Daily_layer_cover (&m->cells[cell], meteo_daily);
