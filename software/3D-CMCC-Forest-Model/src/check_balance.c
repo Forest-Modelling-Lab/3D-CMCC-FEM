@@ -214,7 +214,7 @@ void Check_carbon_balance(cell_t *const c)
 
 }
 
-void Check_soil_water_balance(cell_t *const c)
+void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -230,7 +230,7 @@ void Check_soil_water_balance(cell_t *const c)
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow) */
-	in = c->prcp_rain + c->prcp_snow + c->snow_melt;
+	in = meteo_daily->rain + meteo_daily->snow + c->snow_melt;
 
 	/* sum of sinks */
 	//comment: snow_subl is not considered here otherwise it could accounted twice (out and store)
@@ -238,7 +238,8 @@ void Check_soil_water_balance(cell_t *const c)
 
 	/* sum of current storage in soil */
 	//fixme check for daily_c_water_store
-	store = (c->asw - c->old_asw) + /*(c->daily_c_water_stored - c->old_daily_c_water_stored)*/ + c->prcp_snow;
+	//fixme change snow with snowpack - old_snowpack
+	store = (c->asw - c->old_asw) + /*(c->daily_c_water_stored - c->old_daily_c_water_stored)*/ + meteo_daily->snow;
 
 	/* check soil pool water balance */
 	balance = in - out - store;
@@ -260,8 +261,8 @@ void Check_soil_water_balance(cell_t *const c)
 		logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
-		logger(g_log, "c->prcp_rain = %g\n", c->prcp_rain);
-		logger(g_log, "c->prcp_snow = %g\n", c->prcp_snow);
+		logger(g_log, "meteo_daily->rain = %g\n", meteo_daily->rain);
+		logger(g_log, "meteo_daily->snow = %g\n", meteo_daily->snow);
 		logger(g_log, "\nout\n");
 		logger(g_log, "c->daily_tot_c_transp = %g\n", c->daily_c_transp);
 		logger(g_log, "c->daily_c_evapo = %g\n", c->daily_c_evapo);

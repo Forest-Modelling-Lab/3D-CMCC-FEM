@@ -16,7 +16,7 @@
 #include "print.h"
 #include "utility.h"
 #include "dendometry.h"
-#include "check_prcp.h"
+#include "snow.h"
 #include "phenology.h"
 #include "peak_lai.h"
 #include "canopy_radiation_sw_band.h"
@@ -64,8 +64,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert(m);
 
+	//FIXME move to meteo_t structure
 	if(day == 0 && month == 0)m->cells[cell].doy = 1;
 	else m->cells[cell].doy += 1;
+
+	/****************************************************************************************************/
 
 	/* reset daily variables at cell level */
 	reset_daily_cell_variables (&m->cells[cell]);
@@ -78,10 +81,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/****************************************************************************************************/
 
+	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
+	logger(g_log, "\n\n%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
+
 	/* annual forest structure (except the first year) */
 	if( day == 0 && month == JANUARY && year != 0 ) annual_forest_structure (&m->cells[cell]);
-
-	logger(g_log, "\n\n%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
 
 	/* print daily met data */
 	print_daily_met_data (meteo_daily, day, month, year);
@@ -101,13 +105,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
 
-	/* loop on each heights starting from highest to lower */
-	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
-	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
-	{
-		/* loop on each layers starting from highest to lower */
+	//fixme check if use it
+	/* loop on each layers starting from highest to lower */
 //	for ( layer = m->cells[cell].t_layers_count -1 ; layer >= 0; layer-- )
 //	{
+	/* loop on each heights starting from highest to lower */
+	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
+	{
 		/* loop on each age class */
 		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{
@@ -139,9 +143,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 					/* reset daily class level variables */
 					reset_daily_class_variables(&m->cells[cell], layer, height, age, species);
-
-					/* check precipitation and compute for snow if needs */
-					Check_prcp (&m->cells[cell], meteo_daily);
 
 					/* compute species-specific phenological phase */
 					Phenology (&m->cells[cell], layer, height, age, species, meteo_daily, month);
@@ -471,30 +472,42 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/*******************************************************************************************************/
 	/* note: computations that involve all classes and are related to the overall cell */
 	/* computations during the last height class processing */
+
+	/* compute snow melt, snow sublimation */
+	snow_melt_subl (&m->cells[cell], meteo_daily);
+
 	/* compute soil respiration */
 	Soil_respiration (&m->cells[cell]);
+
 	/* compute soil evaporation */
 	Soil_evaporation (&m->cells[cell], meteo_daily);
+
 	/* compute evapotranspiration */
 	Evapotranspiration (&m->cells[cell]);
+
 	/* compute latent heat flux */
 	Latent_heat_flux (&m->cells[cell], meteo_daily);
+
 	/* compute sensible heat flux */
 	Sensible_heat_flux (&m->cells[cell], meteo_daily);
+
 	/* compute soil water balance */
 	Soil_water_balance (&m->cells[cell], meteo_daily);
+
 	/* compute water fluxes */
-	Water_fluxes (&m->cells[cell]);
+	Water_fluxes (&m->cells[cell], meteo_daily);
 
 	/*******************************************************************************************************/
 	/* CHECK FOR BALANCE CLOSURE */
 
 	/* CHECK FOR RADIATIVE BALANCE CLOSURE */
 	Check_radiation_balance (&m->cells[cell], meteo_daily);
+
 	/* CHECK FOR CARBON BALANCE CLOSURE */
 	Check_carbon_balance (&m->cells[cell]);
+
 	/* CHECK FOR WATER BALANCE CLOSURE */
-	Check_soil_water_balance (&m->cells[cell]);
+	Check_soil_water_balance (&m->cells[cell], meteo_daily);
 	/*******************************************************************************************************/
 
 	m->cells[cell].dos  += 1;

@@ -17,7 +17,6 @@ extern logger_t* g_log;
 
 void Carbon_fluxes (species_t *const s)
 {
-
 	//compute carbon balance between photosynthesis and autotrophic respiration
 	//recompute GPP
 	logger(g_log, "\nC-FLUXES\n");
@@ -29,11 +28,11 @@ void Carbon_fluxes (species_t *const s)
 }
 
 //too remove after made water_balance function
-void Water_fluxes(cell_t *const c)
+void Water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\nW-FLUXES\n");
 	//todo make it better
-	c->daily_tot_w_flux = c->water_to_soil + c->prcp_snow - c->water_to_atmosphere - c->out_flow;
+	c->daily_tot_w_flux = c->water_to_soil + meteo_daily->snow - c->water_to_atmosphere - c->out_flow;
 	c->monthly_tot_w_flux += c->daily_tot_w_flux;
 	c->annual_tot_w_flux += c->daily_tot_w_flux;
 

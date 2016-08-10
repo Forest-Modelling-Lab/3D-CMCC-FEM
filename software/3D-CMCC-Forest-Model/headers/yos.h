@@ -17,7 +17,9 @@ typedef struct {
 	double vpd;                                 /* (hPa-mbar) daily vapour pressure dificit */
 	double rh_f;                                /* (%) daily relative humidity */
 	double ts_f;                                /* (deg C) daily soil temperature from data file */
-	double prcp;                                /* (mm) daily precipitation */
+	double prcp;                                /* (mm/m2) daily precipitation */
+	double rain;                                /* (mm/m2) daily rain */
+	double snow;                                /* (cm/m2) daily snow */
 	double swc;                                 /* (% vol) daily soil wtaer content from data file */
 	double ndvi_lai;                            /* (m2/m2) daily LAI from data file */
 	double daylength;                           /* (hours) day length */

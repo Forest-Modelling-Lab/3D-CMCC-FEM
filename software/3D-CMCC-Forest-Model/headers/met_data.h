@@ -17,6 +17,7 @@ void Latent_heat(meteo_t *met, const int day, const int month);
 void Psychrometric(meteo_t *met, const int day, const int month);
 void Sat_vapour_pressure(cell_t *const c, const int day, const int month, const int year);
 void Dew_temperature(meteo_t *met, const int day, const int month);
+void Check_prcp(cell_t *c, const int day, const int month, const int year);
 void Annual_met_values(cell_t *const c, const int day, const int month, const int year);
 void Annual_CO2_concentration (meteo_t *met, const int day, const int month, const int year);
 

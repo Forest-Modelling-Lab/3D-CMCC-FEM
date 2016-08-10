@@ -103,11 +103,11 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		//Int_max_snow = 4.4 * s->value[LAI];
 
 		/* for rain */
-		if(c->prcp_rain != 0.0)
+		if(meteo_daily->rain != 0.0)
 		{
-			s->value[CANOPY_INT] = s->value[INT_COEFF]*c->prcp_rain*(1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
+			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
-			CHECK_CONDITION(s->value[CANOPY_INT], > c->prcp_rain);
+			CHECK_CONDITION(s->value[CANOPY_INT], > meteo_daily->rain);
 		}
 		/* for snow */
 		else
@@ -302,7 +302,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		/* if canopy has snow */
 		else if (s->value[CANOPY_SNOW] > 0.0)
 		{
-			//todo get functions from check_prcp snow subl(evaporated) or melt (that goes to soil pool) for canopy intercepted snow
+			//todo get functions from snow_melt_subl snow subl(evaporated) or melt (that goes to soil pool) for canopy intercepted snow
 		}
 		/* if canopy is dry */
 		else

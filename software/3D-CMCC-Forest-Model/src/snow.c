@@ -8,18 +8,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "math.h"
-#include "check_prcp.h"
+#include "snow.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
 
-void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
+void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 {
-
 	//FOLLOWING BIOME APPROACH
 	/* temperature and radiation snowmelt,
-	from Joseph Coughlan PhD thesis, 1991 */
+		from Joseph Coughlan PhD thesis, 1991 */
 
 	static double snow_abs = 0.6;             /* absorptivity of snow */
 	static double t_coeff = 0.65;             /* (kg/m2/deg C/d) temp. snowmelt coeff */
@@ -33,21 +32,18 @@ void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
 	t_melt = t_coeff * meteo_daily->tavg;
 
 	/* canopy transmitted radiation: convert from W/m2 --> KJ/m2/d */
+	//fixme wrong incident radiation used!! it should be at the end of radiation functions
 	incident_rad = (c->net_sw_rad_for_soil * meteo_daily->daylength * 3600) * snow_abs * 0.001;
 
-
-	/* temperature and radiation melt from snowpack */
+	/* temperature and radiation melt from snow pack */
 	if (meteo_daily->tavg > 0.0)
 	{
-		c->prcp_rain = meteo_daily->prcp;
-
-		logger(g_log, "prcp_rain = rain = %f mm\n", c->prcp_rain);
-
 		if (c->snow_pack > 0.0)
 		{
 			logger(g_log, "tavg = %f\n", meteo_daily->tavg);
 			logger(g_log, "snow pack = %f cm\n", c->snow_pack);
 			logger(g_log, "Snow melts!!\n");
+
 			r_melt = incident_rad / meteo_daily->lh_fus;
 			c->snow_melt = t_melt + r_melt;
 
@@ -77,14 +73,6 @@ void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
 	}
 	else
 	{
-		if(meteo_daily->prcp > 0.0)
-		{
-			c->prcp_snow = meteo_daily->prcp;
-			logger(g_log, "prcp = snow = %f cm\n", c->prcp_snow);
-
-			c->snow_pack += c->prcp_snow;
-			logger(g_log, "snow pack  + daily snow= %f cm\n", c->snow_pack);
-		}
 		r_sub = incident_rad / meteo_daily->lh_sub;
 
 		if (c->snow_pack > 0.0)
@@ -96,6 +84,7 @@ void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
 				r_sub = c->snow_pack;
 				c->snow_subl = r_sub;
 				logger(g_log, "Snow sublimated = %f mm\n", c->snow_subl);
+
 				/*check for balance*/
 				if (c->snow_subl < c->snow_pack)
 				{
@@ -124,4 +113,5 @@ void Check_prcp (cell_t *const c, meteo_daily_t *meteo_daily)
 	if(c->snow_pack != 0) meteo_daily->tsoil = 0.0;
 
 	logger(g_log, "*****************************************\n");
+
 }

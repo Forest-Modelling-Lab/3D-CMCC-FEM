@@ -148,7 +148,7 @@ void print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 	{
 		logger(g_log, "-lai from NDVI = %f \n", meteo_daily->ndvi_lai);
 	}
-	logger(g_log, "***************\n");getchar();
+	logger(g_log, "***************\n");
 }
 /*
 void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)

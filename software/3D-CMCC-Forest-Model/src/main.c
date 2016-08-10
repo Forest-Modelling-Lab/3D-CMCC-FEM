@@ -946,6 +946,7 @@ int main(int argc, char *argv[]) {
 					Sat_vapour_pressure(&matrix->cells[cell], day, month, year);
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
+					Check_prcp(&matrix->cells[cell], day, month, year);
 					Annual_met_values(&matrix->cells[cell], day, month, year);
 					Annual_CO2_concentration(matrix->cells[cell].years[year].m, day, month, year);
 

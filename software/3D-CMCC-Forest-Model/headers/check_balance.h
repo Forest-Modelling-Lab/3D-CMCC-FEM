@@ -12,7 +12,7 @@ void Check_class_water_balance(cell_t *const c, const int layer, const int heigh
 /* cell level */
 void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_daily);
 void Check_carbon_balance(cell_t *const c);
-void Check_soil_water_balance(cell_t *const c);
+void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_daily);
 
 void New_Check_carbon_balance (cell_t *const c, species_t* const s);
 void leaf_balance (cell_t *const c, species_t* const s);

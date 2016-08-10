@@ -70,8 +70,6 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_fruit_carbon = 0.;
 
 	/*reset daily water variables*/
-	c->prcp_rain = 0.;
-	c->prcp_snow = 0.;
 	c->snow_melt = 0.;
 	c->snow_subl = 0.;
 	c->out_flow = 0.;

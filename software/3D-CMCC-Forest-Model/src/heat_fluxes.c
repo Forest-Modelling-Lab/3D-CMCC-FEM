@@ -39,7 +39,7 @@ void Latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 	c->daily_latent_heat_flux = c->daily_c_evapotransp_watt + c->daily_soil_evaporation_watt;
 
 	/*in case of snow formation or dew fall*/
-	if(c->prcp_snow != 0.0)
+	if(meteo_daily->snow != 0.0)
 	{
 		logger(g_log, "implement negative heat fluxes!\n");
 	}

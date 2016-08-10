@@ -27,7 +27,7 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	c->old_daily_c_water_stored = c->daily_c_water_stored;
 	c->old_asw = c->asw;
 
-	water_to_soil = c->asw + c->prcp_rain + c->snow_melt;
+	water_to_soil = c->asw + meteo_daily->rain + c->snow_melt;
 
 	/* extracted water from the soil */
 	soilwater_to_atmosphere = c->daily_c_transp + c->daily_soil_evapo;

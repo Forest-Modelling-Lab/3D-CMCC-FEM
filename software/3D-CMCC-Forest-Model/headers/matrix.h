@@ -1044,8 +1044,8 @@ typedef struct
 	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
 
 	/*water variables*/
-	double prcp_rain;                                                     /* current amount of precipitation --> to rain (mm/m2) */
-	double prcp_snow;                                                     /* current amount of precipitation --> to snow (mm/m2) */
+//	double prcp_rain;                                                     /* current amount of precipitation --> to rain (mm/m2) */
+//	double prcp_snow;                                                     /* current amount of precipitation --> to snow (mm/m2) */
 	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */

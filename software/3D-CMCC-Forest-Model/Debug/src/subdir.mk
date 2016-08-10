@@ -22,7 +22,6 @@ C_SRCS += \
 ../src/canopy_sensible_heat.c \
 ../src/canopy_temperature.c \
 ../src/check_balance.c \
-../src/check_prcp.c \
 ../src/common.c \
 ../src/crowding-competition.c \
 ../src/cumulative_balance.c \
@@ -51,6 +50,7 @@ C_SRCS += \
 ../src/print.c \
 ../src/renovation.c \
 ../src/settings.c \
+../src/snow.c \
 ../src/soil_evaporation.c \
 ../src/soil_respiration.c \
 ../src/soil_settings.c \
@@ -86,7 +86,6 @@ OBJS += \
 ./src/canopy_sensible_heat.o \
 ./src/canopy_temperature.o \
 ./src/check_balance.o \
-./src/check_prcp.o \
 ./src/common.o \
 ./src/crowding-competition.o \
 ./src/cumulative_balance.o \
@@ -115,6 +114,7 @@ OBJS += \
 ./src/print.o \
 ./src/renovation.o \
 ./src/settings.o \
+./src/snow.o \
 ./src/soil_evaporation.o \
 ./src/soil_respiration.o \
 ./src/soil_settings.o \
@@ -150,7 +150,6 @@ C_DEPS += \
 ./src/canopy_sensible_heat.d \
 ./src/canopy_temperature.d \
 ./src/check_balance.d \
-./src/check_prcp.d \
 ./src/common.d \
 ./src/crowding-competition.d \
 ./src/cumulative_balance.d \
@@ -179,6 +178,7 @@ C_DEPS += \
 ./src/print.d \
 ./src/renovation.d \
 ./src/settings.d \
+./src/snow.d \
 ./src/soil_evaporation.d \
 ./src/soil_respiration.d \
 ./src/soil_settings.d \
