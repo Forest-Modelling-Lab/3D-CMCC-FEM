@@ -80,7 +80,7 @@ void Print_parameters(species_t *const s, const int species_count, const int day
 	}
 }
 
-void Print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day, const int month)
+void print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 
 	static int doy;
@@ -92,7 +92,7 @@ void Print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 	doy += 1;
 
 	logger(g_log, "***************\n");
-	logger(g_log, "**Daily MET DATA day %d month %d**\n", day + 1, month+1);
+	logger(g_log, "**Daily MET DATA day %d month %d, year %d**\n", day + 1, month + 1, year + 1);
 	logger(g_log, "-solar_rad = %.2f MJ/m^2/day\n"
 			"-s-wave downward = %.2f W/m2\n"
 			"-atmospheric l-wave downward (computed) = %.2f W/m2\n"
@@ -148,7 +148,7 @@ void Print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 	{
 		logger(g_log, "-lai from NDVI = %f \n", meteo_daily->ndvi_lai);
 	}
-	logger(g_log, "***************\n");
+	logger(g_log, "***************\n");getchar();
 }
 /*
 void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)

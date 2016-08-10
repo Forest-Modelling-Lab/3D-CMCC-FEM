@@ -67,6 +67,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if(day == 0 && month == 0)m->cells[cell].doy = 1;
 	else m->cells[cell].doy += 1;
 
+	logger(g_log, "\n\n%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
+
+	/* print daily met data */
+	print_daily_met_data (meteo_daily, day, month, year);
+
 	/* reset daily variables at cell level */
 	reset_daily_cell_variables (&m->cells[cell]);
 
@@ -84,13 +89,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	daily_dominant_light (&m->cells[cell], layer, height, age, species);
 
-	logger(g_log, "%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
-	logger(g_log, "-YEAR SIMULATION = %d (%d)\n", year+1, m->cells[cell].years[year].year );
-	logger(g_log, "--MONTH SIMULATED = %s\n", szMonth[month]);
-	logger(g_log, "---DAY SIMULATED = %d\n", meteo_daily->n_days);
 
-	/* print daily met data */
-	Print_daily_met_data (meteo_daily, day, month);
 
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
