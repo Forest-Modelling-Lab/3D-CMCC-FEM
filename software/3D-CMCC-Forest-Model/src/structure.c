@@ -716,15 +716,7 @@ void daily_dominant_light(cell_t *const c, int layer, int height, int age, int s
 				{
 					if (s->counter[VEG_UNVEG]==1)
 					{
-						//ALESSIOC CHECK IT
-						if (g_settings->spatial == 'u')
-						{
-							c->top_layer = c->heights[height].z;
-						}
-						else
-						{
-							c->top_layer = 0;
-						}
+						c->top_layer = c->heights[height].z;
 					}
 				}
 			}

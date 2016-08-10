@@ -87,11 +87,62 @@ void reset_daily_cell_variables(cell_t *const c)
 
 void reset_monthly_cell_variables(cell_t *const c)
 {
+	logger(g_log, "...resetting cell level monthly variables...\n");
+
+	/*reset cell level variables*/
+	c->monthly_gpp = 0.;
+	c->monthly_npp_gC = 0.;
+	c->monthly_npp_tDM = 0.;
+	c->monthly_aut_resp = 0.;
+	c->monthly_aut_resp_tC = 0.;
+	c->monthly_maint_resp = 0.;
+	c->monthly_growth_resp = 0.;
+	c->monthly_r_eco = 0.;
+	c->monthly_het_resp = 0.;
+	c->monthly_gpp = 0.;
+	c->monthly_C_flux = 0.;
+	c->monthly_nee = 0.;
+	c->monthly_tot_w_flux = 0.;
+	c->monthly_c_int = 0.;
+	c->monthly_c_transp = 0.;
+	c->monthly_c_evapo = 0.;
+	c->monthly_c_water_stored = 0.;
+	c->monthly_c_evapotransp = 0.;
+	c->monthly_soil_evapo = 0.;
+	c->monthly_et = 0.;
+	c->monthly_latent_heat_flux = 0.;
+	c->monthly_sensible_heat_flux = 0.;
+
 
 }
 
 void reset_annual_cell_variables(cell_t *const c)
 {
+	logger(g_log, "...resetting cell level annual variables...\n");
+
+	/*reset cell level variables*/
+	c->annual_gpp = 0.;
+	c->annual_npp_gC = 0.;
+	c->annual_npp_tDM = 0.;
+	c->annual_aut_resp = 0.;
+	c->annual_aut_resp_tC = 0.;
+	c->annual_maint_resp = 0.;
+	c->annual_growth_resp = 0.;
+	c->annual_r_eco = 0.;
+	c->annual_het_resp = 0.;
+	c->annual_c_int = 0.;
+	c->annual_c_transp = 0.;
+	c->annual_c_evapo = 0.;
+	c->annual_c_water_stored = 0.;
+	c->annual_c_evapotransp = 0.;
+	c->annual_soil_evapo = 0.;
+	c->annual_et = 0.;
+	c->annual_latent_heat_flux = 0.;
+	c->annual_sensible_heat_flux = 0.;
+	c->agb = 0.;
+	c->bgb = 0.;
+	//c->dead_tree = 0;
+	c->annual_soil_evapo = 0.;
 
 }
 
@@ -198,7 +249,7 @@ void reset_daily_class_variables(cell_t *const c, int layer, int height, int age
 	}
 }
 
-void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, int species)
+void reset_monthly_class_variables(cell_t *const c, int layer, int height, int age, int species)
 {
 	tree_layer_t *l;
 	height_t *h;
@@ -210,33 +261,7 @@ void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, in
 	a = &h->ages[age];	
 	s = &a->species[species];
 
-	logger(g_log, "...resetting monthly variables...\n");
-
-	c->basal_area = 0.;
-
-	c->monthly_gpp = 0.;
-	c->monthly_npp_gC = 0.;
-	c->monthly_npp_tDM = 0.;
-	c->monthly_aut_resp = 0.;
-	c->monthly_aut_resp_tC = 0.;
-	c->monthly_maint_resp = 0.;
-	c->monthly_growth_resp = 0.;
-	c->monthly_r_eco = 0.;
-	c->monthly_het_resp = 0.;
-	c->monthly_gpp = 0.;
-	c->monthly_C_flux = 0.;
-	c->monthly_nee = 0.;
-	c->monthly_tot_w_flux = 0.;
-	c->monthly_c_int = 0.;
-	c->monthly_c_transp = 0.;
-	c->monthly_c_evapo = 0.;
-	c->monthly_c_water_stored = 0.;
-	c->monthly_c_evapotransp = 0.;
-	c->monthly_soil_evapo = 0.;
-	c->monthly_et = 0.;
-	c->monthly_latent_heat_flux = 0.;
-	c->monthly_sensible_heat_flux = 0.;
-
+	logger(g_log, "...resetting class level monthly variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -254,7 +279,7 @@ void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, in
 }
 
 
-void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int species)
+void reset_annual_class_variables(cell_t *const c, int layer, int height, int age, int species)
 {
 	height_t *h;
 	age_t *a;
@@ -264,40 +289,7 @@ void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log, "...resetting annual variables...\n");
-
-	/*reset cell related variables*/
-	// ALESSIOC
-	//c->canopy_cover_dominant = 0.;
-	//c->canopy_cover_dominated = 0.;
-	//c->canopy_cover_subdominated = 0.;
-
-	c->annual_gpp = 0.;
-	c->annual_npp_gC = 0.;
-	c->annual_npp_tDM = 0.;
-	c->annual_aut_resp = 0.;
-	c->annual_aut_resp_tC = 0.;
-	c->annual_maint_resp = 0.;
-	c->annual_growth_resp = 0.;
-	c->annual_r_eco = 0.;
-	c->annual_het_resp = 0.;
-	c->annual_c_int = 0.;
-	c->annual_c_transp = 0.;
-	c->annual_c_evapo = 0.;
-	c->annual_c_water_stored = 0.;
-	c->annual_c_evapotransp = 0.;
-	c->annual_soil_evapo = 0.;
-	c->annual_et = 0.;
-	c->annual_latent_heat_flux = 0.;
-	c->annual_sensible_heat_flux = 0.;
-
-
-	c->agb = 0.;
-	c->bgb = 0.;
-	//c->dead_tree = 0;
-	c->annual_soil_evapo = 0.;
-
-
+	logger(g_log, "...resetting class level annual variables...\n");
 	/* height class level */
 	for (height = c->heights_count - 1; height >= 0; height--)
 	{
@@ -336,17 +328,6 @@ void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int
 				s->value[DEL_Y_WRES] = 0.;
 				s->value[DEL_Y_WR] = 0.;
 				s->value[DEL_Y_BB] = 0.;
-
-				//SERGIO
-				c->fineRootBiomass = s->value[BIOMASS_FINE_ROOT_tDM];
-				//fixme
-				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-				{
-					c->fineRootBiomass = 0.;
-				}
-				c->coarseRootBiomass =  s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM];
-				c->stemBranchBiomass =  s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM];
-				c->stemBiomass =  s->value[BIOMASS_STEM_LIVE_WOOD_tDM];
 				s->value[OLD_BIOMASS_ROOTS_COARSE] = s->value[BIOMASS_COARSE_ROOT_tDM];
 				s->value[OLD_BIOMASS_FINE_ROOT_tDM] = s->value[BIOMASS_FINE_ROOT_tDM];
 				s->value[OLD_BIOMASS_STEM] = s->value[BIOMASS_STEM_tDM];

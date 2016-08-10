@@ -67,16 +67,24 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if(day == 0 && month == 0)m->cells[cell].doy = 1;
 	else m->cells[cell].doy += 1;
 
+	/* reset daily variables at cell level */
+	reset_daily_cell_variables (&m->cells[cell]);
+
+	/* reset monthly variables at cell level */
+	if ( day == 0 ) reset_monthly_cell_variables(&m->cells[cell]);
+
+	/* reset annual variables at cell level */
+	if( day == 0 && month == JANUARY ) reset_annual_cell_variables(&m->cells[cell]);
+
+	/****************************************************************************************************/
+
+	/* annual forest structure (except the first year) */
+	if( day == 0 && month == JANUARY && year != 0 ) annual_forest_structure (&m->cells[cell]);
+
 	logger(g_log, "\n\n%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
 
 	/* print daily met data */
 	print_daily_met_data (meteo_daily, day, month, year);
-
-	/* reset daily variables at cell level */
-	reset_daily_cell_variables (&m->cells[cell]);
-
-	/* annual forest structure (except the first year) */
-	if (day == 0 && month == JANUARY && year != 0) annual_forest_structure (&m->cells[cell]);
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
@@ -87,9 +95,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 //	/* daily check for vegetative layer */
 //	daily_forest_structure_in_veg (&m->cells[cell]);
 
-	daily_dominant_light (&m->cells[cell], layer, height, age, species);
-
-
+//	/* daily defines which layer is in dominant position for light */
+//	daily_dominant_light (&m->cells[cell], layer, height, age, species);
 
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
@@ -98,7 +105,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
 	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 	{
-	//test remove "for" above
 		/* loop on each layers starting from highest to lower */
 //	for ( layer = m->cells[cell].t_layers_count -1 ; layer >= 0; layer-- )
 //	{
@@ -122,14 +128,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						/* compute annual minimum reserve for incoming year */
 						Annual_minimum_reserve(&m->cells[cell].heights[height].ages[age].species[species]);
 
-						/* reset annual variables */
-						Reset_annual_variables (&m->cells[cell], layer, height, age, species);
+						/* reset annual class variables */
+						reset_annual_class_variables (&m->cells[cell], layer, height, age, species);
 
-						/* compute prognostically annual Maximum LAI */
+						/* compute annual Maximum LAI */
 						Peak_lai(&m->cells[cell].heights[height].ages[age].species[species], day, month, year);
 					}
-					/* reset monthly variables */
-					if (day == 0) Reset_monthly_variables (&m->cells[cell], layer, height, age, species);
+					/* reset monthly class variables */
+					if (day == 0) reset_monthly_class_variables (&m->cells[cell], layer, height, age, species);
 
 					/* reset daily class level variables */
 					reset_daily_class_variables(&m->cells[cell], layer, height, age, species);
