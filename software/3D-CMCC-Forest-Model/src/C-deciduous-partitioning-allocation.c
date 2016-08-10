@@ -643,7 +643,6 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 //			logger(g_log, "++Lai before Leaffall= %f\n", s->value[LAI]);
 //			logger(g_log, "Biomass foliage = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
 //			logger(g_log, "Biomass fine root = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//			logger(g_log, "foliage reduction rate %f \n", s->value[FOLIAGE_REDUCTION_RATE]);
 //			//logger(g_log, "biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 //
 //			if(s->counter[LEAF_FALL_COUNTER] == 1)
@@ -1528,7 +1527,6 @@ void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer,
 //			logger(g_log, "++Lai before Leaffall= %f\n", s->value[LAI]);
 //			logger(g_log, "Biomass foliage = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
 //			logger(g_log, "Biomass fine root = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//			logger(g_log, "foliage reduction rate %f \n", s->value[FOLIAGE_REDUCTION_RATE]);
 //			//logger(g_log, "biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 //
 //			if(s->counter[LEAF_FALL_COUNTER] == 1)

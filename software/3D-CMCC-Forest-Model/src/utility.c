@@ -9,18 +9,11 @@
 #include "logger.h"
 
 extern logger_t* g_log;
-
-void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int species)
-{	
-	height_t *h;
-	age_t *a;
-	species_t *s;
-
-	h = &c->heights[height];
-	a = &h->ages[age];
-	s = &a->species[species];
-
+void reset_daily_cell_variables(cell_t *const c)
+{
 	logger(g_log, "...resetting cell level daily variables...\n");
+
+	c->cell_cover = 0.;
 
 	/* reset daily radiative variables */
 	c->apar = 0.;
@@ -42,7 +35,6 @@ void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int 
 	c->ppfd_reflected_soil = 0.;
 
 	c->canopy_temp_k = 0.;
-
 
 	/*reset daily carbon variables*/
 	c->daily_gpp = 0.;
@@ -83,7 +75,6 @@ void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int 
 	c->snow_melt = 0.;
 	c->snow_subl = 0.;
 	c->out_flow = 0.;
-
 	c->daily_c_transp = 0.;
 	c->daily_c_int = 0.;
 	c->daily_c_evapo = 0.;
@@ -92,8 +83,27 @@ void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int 
 	c-> daily_soil_latent_heat_flux = 0.;
 	c->daily_latent_heat_flux = 0.;
 	c->daily_sensible_heat_flux = 0.;
+}
 
-	c->cell_cover = 0.;
+void reset_monthly_cell_variables(cell_t *const c)
+{
+
+}
+
+void reset_annual_cell_variables(cell_t *const c)
+{
+
+}
+
+void reset_daily_class_variables(cell_t *const c, int layer, int height, int age, int species)
+{
+	height_t *h;
+	age_t *a;
+	species_t *s;
+
+	h = &c->heights[height];
+	a = &h->ages[age];
+	s = &a->species[species];
 
 	logger(g_log, "...resetting class level daily variables...\n");
 
@@ -186,9 +196,6 @@ void Reset_daily_variables(cell_t *const c, int layer, int height, int age, int 
 			}
 		}
 	}
-
-
-
 }
 
 void Reset_monthly_variables(cell_t *const c, int layer, int height, int age, int species)
@@ -302,7 +309,9 @@ void Reset_annual_variables(cell_t *const c, int layer, int height, int age, int
 			{
 				s->value[PEAK_LAI] = 0.;
 				s->value[MAX_LEAF_C] = 0.;
+
 				/*reset cumulative values*/
+				s->counter[LEAF_FALL_COUNTER] = 0;
 
 				s->counter[VEG_DAYS] = 0;
 				s->value[YEARLY_PHYS_MOD] = 0;

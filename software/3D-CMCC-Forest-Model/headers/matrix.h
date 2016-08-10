@@ -560,8 +560,6 @@ enum {
 	//LPJ MORTALITY FUNCTION
 	AGEMORT,                      //Age probability mortality function
 
-	THERMIC_SUM_FOR_END_VEG,      //thermic sum at the end of leaf fall period
-
 	//NATURAL REGENERATION INDIVIDUAL BIOMASS VALUES FOR SAPLING PASSING TO ADULT
 	AVDBH_SAPLING,
 	LAI_SAPLING,

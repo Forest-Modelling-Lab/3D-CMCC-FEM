@@ -15,7 +15,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 // FIXME
-void Annual_Forest_structure(cell_t* const c)
+void annual_forest_structure(cell_t* const c)
 {
 	//FIXME
 }
@@ -23,29 +23,18 @@ void Annual_Forest_structure(cell_t* const c)
 
 void daily_forest_structure (cell_t *const c)
 {
-	int layer = 0;
-	int height = 0;
-	int age = 0;
-	int species = 0;
-
-
-	double layer_cover;
-	int tree_number;
+	int layer;
+	int height;
+	int age;
+	int species;
 
 	double potential_maximum_crown_diameter,potential_minimum_crown_diameter;
 	double potential_maximum_crown_area, potential_minimum_crown_area;
 	double potential_maximum_density,potential_minimum_density;
 
-	//fixme to remove
-	tree_layer_t *l;
 	height_t *h;
 	age_t *a;
 	species_t *s;
-	l = &c->t_layers[layer];
-	h = &c->heights[height];
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
-
 
 	/* it defines the number of tree height classes in each canopy layer,
 	 * the height class level cell coverage through the DBHDC_EFF function,
@@ -200,7 +189,7 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* check if layer density exceeds potential maximum and minimum density */
+	/* check if layer density exceeds potential maximum OR minimum density */
 	logger(g_log, "check if layer density exceeds potential maximum and minimum density\n\n");
 
 	/* note: this function not check the "real" density but it computes limits in which
@@ -349,8 +338,16 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 						/* Canopy Cover using DBH-DC */
-						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
-						logger(g_log, "Canopy cover DBH-DC class related = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+						if(s->counter[VEG_UNVEG] == 1)
+						{
+
+							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+						}
+						else
+						{
+							s->value[CANOPY_COVER_DBHDC] = 0.0;
+						}
+						logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 					}
 				}
 			}
@@ -380,7 +377,7 @@ void daily_forest_structure (cell_t *const c)
 				}
 			}
 		}
-		logger(g_log, "-layer %d cover = %g %%\n", layer, c->t_layers[layer].layer_cover * 100.0);
+		logger(g_log, "-Canopy cover DBH-DC layer (%d) level = %g %%\n", layer, c->t_layers[layer].layer_cover * 100.0);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -400,8 +397,6 @@ void daily_forest_structure (cell_t *const c)
 		if (c->t_layers[layer].layer_cover >= g_settings->max_layer_cover)
 		{
 			logger(g_log, "crowding competition happens for layer %d\n", layer);
-			layer_cover = c->t_layers[layer].layer_cover;
-			tree_number = c->t_layers[layer].n_trees;
 
 			Crowding_competition_mortality (c, layer);
 			logger(g_log, "Recomputed Layer cover %d = %g %% \n", layer, c->t_layers[layer].layer_cover * 100);
@@ -457,7 +452,7 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* REcheck if layer density exceeds potential maximum and minimum density */
+	/* REcheck if layer density exceeds potential maximum OR minimum density */
 	logger(g_log, "REcheck if layer density exceeds potential maximum and minimum density\n\n");
 
 	/* note: this function not check the "real" density but it computes limits in which
@@ -530,17 +525,37 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 						/* Canopy Cover using DBH-DC */
-						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
-						logger(g_log, "Canopy cover DBH-DC class related = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+						if(s->counter[VEG_UNVEG] == 1)
+						{
+
+							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+						}
+						else
+						{
+							s->value[CANOPY_COVER_DBHDC] = 0.0;
+						}
 					}
 				}
 			}
 		}
 	}
 	logger(g_log, "**************************************\n\n");
+
+	/**************************************************************************************************/
+	/* compute cell cover (cell level) */
+	logger(g_log, "compute cell cover (cell level)\n\n");
+
+	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	{
+		/* assuming that plants tend to occupy the part of the cell not covered by the others */
+		c->cell_cover += c->t_layers[layer].layer_cover;
+	}
+	logger(g_log, "Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
+	logger(g_log, "**************************************\n\n");
+
 }
 
-void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
+void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
 {
 	int height;
 	int age;
@@ -554,12 +569,8 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
-	c->Veg_Counter = 0;
 
-	logger(g_log, "\n\n\n****GET_DAILY_FOREST_STRUCTURE_ROUTINE for cell (%d, %d)****\n", c->x, c->y);
-
-	//assign value for VEG_UNVEG (1 for veg, 0 for Unveg) and compute number of classes in veg period
-
+	logger(g_log, "\n\n\n****DAILY_FOREST_VEG_PERIOD****\n");
 	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
 		for (age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
@@ -568,111 +579,54 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 			{
 				s = &c->heights[height].ages[age].species[species];
 
-				if (day == 0 && month == 0)
-				{
-					s->counter[LEAF_FALL_COUNTER] = 0;
-				}
-
-				/*PHENOLOGY = 0 FOR DECIDUOUS*/
+				/* FOR DECIDUOUS */
 				if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
 				{
-					logger(g_log, "-GET ANNUAL VEGETATIVE DAYS for species %s -\n", s->name);
-					if (g_settings->spatial == 's')
-					{
-						//logger(g_log, "Spatial version \n");
+					/* compute days for leaf fall based on the annual number of veg days */
+					s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
+					logger(g_log, "Days of leaf fall for deciduous = %d day\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
-						//veg period
-						if (meteo_daily->ndvi_lai > 0.1)
+					//currently model can simulate only forests in boreal hemisphere
+					if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
+							(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
+					{
+						s->counter[VEG_UNVEG] = 1;
+						logger(g_log, "%s is in veg period\n", s->name);
+					}
+					else
+					{
+						//check for case 0 of allocation
+						if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 						{
-							s->counter[VEG_UNVEG] = 1;
-							c->Veg_Counter += 1;
-							logger(g_log, "%s is in veg period\n", s->name);
+
+							logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+
+							s->counter[LEAF_FALL_COUNTER] += 1;
+
+							if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
+							{
+								/*days of leaf fall*/
+								s->counter[VEG_UNVEG] = 1;
+							}
+							else
+							{
+								/*outside days of leaf fall*/
+								s->counter[VEG_UNVEG] = 0;
+							}
+
 						}
-						//unveg period
 						else
 						{
 							s->counter[VEG_UNVEG] = 0;
 							logger(g_log, "%s is in un-veg period\n", s->name);
 						}
 					}
-					else
-					{
-
-						/*compute annual days of leaf fall*/
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
-						logger(g_log, "Days of leaf fall for deciduous = %d day\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-						//monthly rate of foliage reduction
-
-						//currently the model considers a linear reduction in leaf fall
-						//it should be a negative sigmoid function
-						//todo: create a sigmoid function
-						s->value[FOLIAGE_REDUCTION_RATE] = 1.0 / (s->counter[DAY_FRAC_FOLIAGE_REMOVE] + 1);
-						logger(g_log, "foliage reduction rate = %g,  = %g%%\n", s->value[FOLIAGE_REDUCTION_RATE], s->value[FOLIAGE_REDUCTION_RATE] * 100);
-
-
-						//todo decidere se utlizzare growthend o mindaylenght
-						//lo stesso approccio deve essere usato anche in Get_Veg_Days func
-						//currently model can simulate only forests in boreal hemisphere
-						if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6)
-								|| (meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
-						{
-							s->counter[VEG_UNVEG] = 1;
-							c->Veg_Counter += 1;
-							//FIXME check if it works (daily)
-							/* we consider that plants tend to occupy the part of the cell not covered by the others */
-							c->cell_cover += s->value[CANOPY_COVER_DBHDC];
-							if(c->cell_cover > 1.0)
-							{
-								c->cell_cover = 1.0;
-							}
-							logger(g_log, "%s is in veg period\n", s->name);
-							logger(g_log, "cell_cover counter = %g\n", c->cell_cover);
-						}
-						else
-						{
-							//check for case 0 of allocation
-							if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
-							{
-
-								logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-
-								s->counter[LEAF_FALL_COUNTER] += 1;
-								//check
-								if(s->counter[LEAF_FALL_COUNTER] == 1)
-								{
-									//assign value of thermic sum
-									s->value[THERMIC_SUM_FOR_END_VEG] = meteo_daily->thermic_sum;
-									//logger(g_log, "thermic_sum END OF VEG = %g °C\n", s->value[THERMIC_SUM_FOR_END_VEG]);
-								}
-
-								//check
-								if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
-								{
-									/*days of leaf fall*/
-									s->counter[VEG_UNVEG] = 1;
-									c->Veg_Counter += 1;
-								}
-								else
-								{
-									/*outside days of leaf fall*/
-									s->counter[VEG_UNVEG] = 0;
-								}
-
-							}
-							else
-							{
-								s->counter[VEG_UNVEG] = 0;
-								logger(g_log, "%s is in un-veg period\n", s->name);
-							}
-						}
-					}
 				}
-				/*PHENOLOGY = 1 FOR EVERGREEN*/
+				/* FOR EVERGREEN */
 				else
 				{
 					s->counter[VEG_UNVEG] = 1;
 					logger(g_log, "Veg period = %d \n", s->counter[VEG_UNVEG]);
-					c->Veg_Counter += 1;
 					logger(g_log, "%s is in veg period\n", s->name);
 				}
 			}
@@ -681,7 +635,7 @@ void Daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 	logger(g_log, "classes in veg period = %d\n", c->Veg_Counter);
 }
 
-void Daily_numbers_of_layers (cell_t *const c)
+void daily_forest_structure_in_veg (cell_t *const c)
 {
 	static int height;
 	static int age;
@@ -689,16 +643,14 @@ void Daily_numbers_of_layers (cell_t *const c)
 	static double current_height;
 	static double previous_height;
 
+	//FIXME STILL USEFULL?????????????????????????????????????????????
+
 	/* determines number of vegetative layer in function of:
 	 *-differences between tree height classes
-	 *-vegetative or un-vegetative period */
+	 *-vegetative or un-vegetative period
+	 * to obtain dominant position for light */
 
-
-	//ALESSIOC
-	//c->daily_layer_number = 0;
-
-	logger(g_log, "\n--GET NUMBER OF DAILY LAYERS (Layer in Veg)--\n");
-
+	logger(g_log, "\n***DAILY FOREST LAYERS IN VEGETATIVE PERIOD***\n");
 
 	qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
 
@@ -737,137 +689,7 @@ void Daily_numbers_of_layers (cell_t *const c)
 	//logger(g_log, "number of vegetative layers = %d\n", c->daily_layer_number);
 }
 
-void Daily_layer_cover(cell_t *const c, const meteo_daily_t *const meteo_daily)
-{
-	static int height;
-	static int age;
-	static int species;
-
-	/* it daily computes the layer coverage based on the vegetative status of each species class*/
-
-	//ALESSIOC
-	//c->layer_cover_dominant = 0;
-	//c->layer_cover_dominated = 0;
-	//c->layer_cover_subdominated = 0;
-
-
-	logger(g_log, "\nDAILY_FOREST_STRUCTURE_ROUTINE\n");
-
-	logger(g_log, "Determine Effective Layer Cover \n");
-
-	for (height = c->heights_count - 1; height >= 0; height -- )
-	{
-		for (age = c->heights[height].ages_count - 1; age >= 0; age --)
-		{
-			for (species = c->heights[height].ages[age].species_count - 1; species >= 0; species -- )
-			{
-				if ( c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-				{
-					/*
-					if (c->daily_layer_number == 3)
-					{
-						switch (c->heights[height].z)
-						{
-						case 2:
-							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							break;
-						case 1:
-							c->layer_cover_dominated += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							break;
-						case 0:
-							c->layer_cover_subdominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							break;
-						}
-					}
-					if (c->daily_layer_number == 2)
-					{
-						switch (c->heights[height].z)
-						{
-						case 1:
-							//logger(g_log, "z = %d\n", c->heights[height].z);
-							c->layer_cover_dominant += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//logger(g_log, "Layer cover in layer 1 = %g %% \n", c->layer_cover_dominant * 100);
-							break;
-						case 0:
-							//logger(g_log, "z = %d\n", c->heights[height].z);
-							c->layer_cover_dominated  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-							//logger(g_log, "Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
-							break;
-						}
-					}
-					else
-					{
-						//logger(g_log, "z = %d\n", c->heights[height].z);
-						c->layer_cover_dominant  += c->heights[height].ages[age].species[species].value[CANOPY_COVER_DBHDC];
-						//logger(g_log, "Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
-					}
-					 */
-				}
-				else
-				{
-					//logger(g_log, "Un-Vegetating layers\n");
-					//logger(g_log, "z = %d\n", c->heights[height].z);
-				}
-			}
-		}
-	}
-
-	//ALESSIOC
-	/*
-	logger(g_log, "Daily layer number = %d\n", c->daily_layer_number);
-
-	if (c->daily_layer_number == 1)
-	{
-		logger(g_log, "Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominant * 100);
-	}
-	if (c->daily_layer_number == 2)
-	{
-		logger(g_log, "Vegetated Layer cover in layer 1 = %g %%\n", c->layer_cover_dominant * 100);
-		logger(g_log, "Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_dominated * 100);
-	}
-	if (c->daily_layer_number > 2)
-	{
-		logger(g_log, "Vegetated Layer cover in layer 2 = %g %%\n", c->layer_cover_dominant * 100);
-		logger(g_log, "Vegetated Layer cover in layer 1 = %g %% \n", c->layer_cover_dominated * 100);
-		logger(g_log, "Vegetated Layer cover in layer 0 = %g %% \n", c->layer_cover_subdominated * 100);
-	}
-	logger(g_log, "*************************************************** \n");
-	 */
-
-}
-
-/*
-void Get_top_layer (cell_t *const c, int heights_count, HEIGHT *heights)
-{
-
-	logger(g_log, " GET_TOP_LAYER_FUNCTION \n");
-	int height;
-
-	assert (heights);
-
-
-
-	for ( height = heights_count - 1; height >= 0; height-- )
-	{
-		logger(g_log, "height dominance = %d \n", c->heights[height].dominance);
-		if (c->heights[height].dominance == 1)
-		{
-			c->heights[height].top_layer = c->heights[height].z ;
-			logger(g_log, "-Top layer and in Dominant Light is layer with z = %d\n", c->heights[height].top_layer);
-			break;
-		}
-		if ( c->heights[height].top_layer == -1)
-		{
-			logger(g_log, "--NO TREES IN VEGETATIVE PERIOD!!!\n");
-			logger(g_log, "**********************************************\n");
-			break;
-		}
-	}
-}
- */
-
-
-void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int species)
+void daily_dominant_light(cell_t *const c, int layer, int height, int age, int species)
 {
 	species_t *s;
 
@@ -911,33 +733,9 @@ void Daily_dominant_Light(cell_t *const c, int layer, int height, int age, int s
 	}
 }
 
-/*
-int Number_of_layers (cell_t *c)
-{
-	// ALESSIOR number_of_layers can be uninitialized
-	int number_of_layers = 0;
-	//compute number of layers
-	if (c->dominant_veg_counter > 0 && c->dominated_veg_counter > 0 && c->subdominated_veg_counter > 0)
-	{
-		number_of_layers = 3;
-		logger(g_log, "THREE LAYERS \n");
-	}
-	else if (c->dominant_veg_counter > 0 && c->dominated_veg_counter > 0 && c->subdominated_veg_counter == 0)
-	{
-		number_of_layers = 2;
-		logger(g_log, "TWO LAYERS \n");
-	}
-	else if (c->dominant_veg_counter == 0 && c->dominated_veg_counter > 0 && c->subdominated_veg_counter == 0)
-	{
-		number_of_layers = 1;
-		logger(g_log, "ONE LAYER \n");
-	}
-	return number_of_layers;
 
-}
- */
 
-void Daily_veg_counter(cell_t *const c, species_t *const s, const int height)
+void daily_veg_counter(cell_t *const c, species_t *const s, const int height)
 {
 	//ALESSIOC
 	/*

@@ -64,28 +64,25 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* check parameters */
 	assert(m);
 
-	/* initialize days of year (each year) */
-	if(day == 0 && month == 0)
-	{
-		m->cells[cell].doy = 1;
-	}
-	/* cumulate days of year (other days) */
-	else
-	{
-		m->cells[cell].doy += 1;
-	}
+	if(day == 0 && month == 0)m->cells[cell].doy = 1;
+	else m->cells[cell].doy += 1;
+
+	/* reset daily variables at cell level */
+	reset_daily_cell_variables (&m->cells[cell]);
 
 	/* annual forest structure (except the first year) */
-	if (day == 0 && month == JANUARY && year != 0) Annual_Forest_structure (&m->cells[cell]);
+	if (day == 0 && month == JANUARY && year != 0) annual_forest_structure (&m->cells[cell]);
 
-	/* daily forest structure (except the first day of the first year) */
-	if (day != 0 && year != 0)daily_forest_structure (&m->cells[cell]);
+	/* daily check for vegetative period */
+	daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
 
+	/* daily forest structure */
+	daily_forest_structure (&m->cells[cell]);
 
-	Daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
-	Daily_numbers_of_layers (&m->cells[cell]);
-	Daily_layer_cover (&m->cells[cell], meteo_daily);
-	Daily_dominant_Light (&m->cells[cell], layer, height, age, species);
+//	/* daily check for vegetative layer */
+//	daily_forest_structure_in_veg (&m->cells[cell]);
+
+	daily_dominant_light (&m->cells[cell], layer, height, age, species);
 
 	logger(g_log, "%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
 	logger(g_log, "-YEAR SIMULATION = %d (%d)\n", year+1, m->cells[cell].years[year].year );
@@ -97,10 +94,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* sort class in ascending way by heights */
 	qsort (m->cells[cell].heights, m->cells[cell].heights_count, sizeof (height_t), sort_by_heights_asc);
-
-	//test
-	/* sort class in ascending way by layers */
-	//qsort (m->cells[cell].t_layers, m->cells[cell].t_layers_count, sizeof (tree_layer_t), sort_by_layers_asc);
 
 	/* loop on each heights starting from highest to lower */
 	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
@@ -139,8 +132,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					/* reset monthly variables */
 					if (day == 0) Reset_monthly_variables (&m->cells[cell], layer, height, age, species);
 
-					/* reset daily cell level variables */
-					Reset_daily_variables(&m->cells[cell], layer, height, age, species);
+					/* reset daily class level variables */
+					reset_daily_class_variables(&m->cells[cell], layer, height, age, species);
 
 					/* check precipitation and compute for snow if needs */
 					Check_prcp (&m->cells[cell], meteo_daily);
@@ -152,7 +145,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					Tree_period (&m->cells[cell], layer, height, age, species);
 
 					/* compute how many classes are in vegetative period */
-					Daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
+					daily_veg_counter (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], height);
 
 					/* print at the beginning of simulation stand data */
 					Print_stand_data (&m->cells[cell], layer, height, age, species);

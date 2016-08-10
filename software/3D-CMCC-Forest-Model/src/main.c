@@ -951,7 +951,7 @@ int main(int argc, char *argv[]) {
 
 					if ( F == matrix->cells[cell].landuse )
 					{
-						/* compute before any other processes annually the days for the growing season */
+						/* compute annually the days for the growing season before any other process  */
 						Veg_Days (&matrix->cells[cell], day, month, year);
 
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
@@ -962,7 +962,6 @@ int main(int argc, char *argv[]) {
 					{
 						/* include other land use */
 					}
-
 				}
 			}
 			for ( month = 0; month < MONTHS_COUNT; ++month )
@@ -978,7 +977,7 @@ int main(int argc, char *argv[]) {
 					{
 						if ( 'f' == g_settings->version )
 						{
-							if (!Tree_model_daily(matrix, cell, day, month, year) )
+							if ( !Tree_model_daily(matrix, cell, day, month, year) )
 							{
 								logger(g_log, "tree model daily failed.");
 							}
@@ -1007,7 +1006,7 @@ int main(int argc, char *argv[]) {
 							//run for BGC version
 						}
 					}
-					else if ( Z == matrix->cells[cell].landuse )
+					else
 					{
 //						if ( ! crop_model_D(matrix, cell, year, month, day, years_of_simulation) ) {
 //							logger(g_log, "crop model failed.");
@@ -1018,10 +1017,6 @@ int main(int argc, char *argv[]) {
 //							//look if put it here or move before tree_model  at the beginning of each month simulation
 //							//	soil_model (matrix, yos, years, month, years_of_simulation);
 //						}
-					}
-					else
-					{
-
 					}
 					logger(g_log, "****************END OF DAY (%d)*******************\n\n\n", day+1);
 
@@ -1155,6 +1150,7 @@ int main(int argc, char *argv[]) {
 			EOY_cumulative_balance_cell_level(&matrix->cells[cell], year, years_of_simulation, cell);
 			logger(g_log, "...%d finished to simulate\n\n\n\n\n\n", matrix->cells[cell].years[year].year);
 		}
+
 		index_vpsat = matrix->cells[cell].years[0].year;
 		free(matrix->cells[cell].years);
 		matrix->cells[cell].years = NULL; /* required */

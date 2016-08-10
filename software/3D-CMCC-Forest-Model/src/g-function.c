@@ -113,8 +113,6 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 	
 	/* compute annual number of vegetative days */
 
-	//logger(g_log, "VEG_DAYS_for year %d\n", year);
-
 	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
 		for (age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )

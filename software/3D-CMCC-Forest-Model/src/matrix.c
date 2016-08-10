@@ -1498,7 +1498,6 @@ void forest_matrix_summary(const matrix_t* const m, const int cell)
 						"----- w tot live = %f tDM/area\n"
 						"----- w tot dead = %f tDM/area\n"
 						"----- lai = %f tDM/area\n",
-
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages[age].value,
 						m->cells[cell].heights[height].ages[age].species[species].name,
@@ -1521,9 +1520,9 @@ void forest_matrix_summary(const matrix_t* const m, const int cell)
 			}
 		}
 	}
-
-	/* compute forest structure */
-	daily_forest_structure (&m->cells[cell]);
+//
+//	/* initialize forest structure */
+//	daily_forest_structure (&m->cells[cell]);
 
 }
 
