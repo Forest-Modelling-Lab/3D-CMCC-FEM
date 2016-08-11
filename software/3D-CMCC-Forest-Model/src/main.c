@@ -99,7 +99,7 @@ static const char banner[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSIO
 
 static char copyright[] =
 							"\n"
-							"This version of 3D-CMCC FEM (v.5.1.1) has been developed by:\n"
+							"This version of 3D-CMCC FEM (v.5.2.2) has been developed by:\n"
 							"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
 							"Alessio Ribeca,\n"
 							"Sergio Marconi [sergio.marconi@cmcc.it]\n"
