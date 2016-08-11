@@ -20,7 +20,7 @@ extern logger_t* g_log;
 
 //FOLLOWING BIOME-BGC
 
-void Nitrogen_stock(species_t *const s)
+void nitrogen_stock(species_t *const s)
 {
 	logger(g_log, "\n**NITROGEN STOCK**\n");
 

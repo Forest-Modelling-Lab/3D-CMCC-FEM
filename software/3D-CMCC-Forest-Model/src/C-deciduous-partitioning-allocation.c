@@ -18,7 +18,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 /* Deciduous carbon allocation routine */
-void Daily_C_Deciduous_Partitioning_Allocation(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
+void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
 {
 	//int i;
 	double  s0Ctem;
