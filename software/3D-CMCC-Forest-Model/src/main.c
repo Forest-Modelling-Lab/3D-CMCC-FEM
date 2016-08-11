@@ -45,6 +45,7 @@
 #include "treemodel_daily.h"
 #include "soil_dndc.h"
 #include "fluxes.h"
+#include "print.h"
 
 #define PROGRAM_VERSION	"5.1.1"
 
@@ -974,6 +975,9 @@ int main(int argc, char *argv[]) {
 				}
 				for ( day = 0; day < days_per_month; ++day )
 				{
+					/* print daily met data */
+					print_daily_met_data (&matrix->cells[cell], day, month, year);
+
 					if ( F == matrix->cells[cell].landuse )
 					{
 						if ( 'f' == g_settings->version )

@@ -80,10 +80,12 @@ void Print_parameters(species_t *const s, const int species_count, const int day
 	}
 }
 
-void print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
+void print_daily_met_data(cell_t *c, const int day, const int month, const int year)
 {
-
 	static int doy;
+
+	meteo_t *met;
+	met = c->years[year].m;
 
 	if (!day && !month)
 	{
@@ -92,8 +94,10 @@ void print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 	doy += 1;
 
 	logger(g_log, "***************\n");
-	logger(g_log, "**Daily MET DATA day %d month %d, year %d**\n", day + 1, month + 1, year + 1);
-	logger(g_log, "-solar_rad = %.2f MJ/m^2/day\n"
+	logger(g_log, "**Daily MET DATA day %d month %d, year %d (yos %d)**\n", day + 1, month + 1, c->years[year].year, year + 1);
+	logger(g_log, "-%d-%d-%d\n", met[month].d[day].n_days, month+1, c->years[year].year);
+	logger(g_log,
+			"-solar_rad = %.2f MJ/m^2/day\n"
 			"-s-wave downward = %.2f W/m2\n"
 			"-atmospheric l-wave downward (computed) = %.2f W/m2\n"
 			"-tavg = %.2f °C\n"
@@ -117,38 +121,38 @@ void print_daily_met_data(const meteo_daily_t *const meteo_daily, const int day,
 			"-ea = %.2f KPa\n"
 			"-air psych = %.2f KPa\n"
 			"-co2 concentration = %.2f ppmv\n"
-			"-DOY = %d\n"
-			,meteo_daily->solar_rad,
-			meteo_daily->solar_rad* MJ_TO_W,
-			meteo_daily->atm_lw_downward_W,
-			meteo_daily->tavg,
-			meteo_daily->tmax,
-			meteo_daily->tmin,
-			meteo_daily->tday,
-			meteo_daily->tnight,
-			meteo_daily->tsoil,
-			meteo_daily->tdew,
-			meteo_daily->rh_f,
-			meteo_daily->vpd,
-			meteo_daily->ts_f,
-			meteo_daily->prcp,
-			meteo_daily->swc,
-			meteo_daily->thermic_sum,
-			meteo_daily->rho_air,
-			meteo_daily->daylength,
-			meteo_daily->windspeed,
-			meteo_daily->air_pressure,
-			meteo_daily->es,
-			meteo_daily->ea,
-			meteo_daily->psych,
+			"-DOY = %d\n",
+			met[month].d[day].solar_rad,
+			met[month].d[day].solar_rad* MJ_TO_W,
+			met[month].d[day].atm_lw_downward_W,
+			met[month].d[day].tavg,
+			met[month].d[day].tmax,
+			met[month].d[day].tmin,
+			met[month].d[day].tday,
+			met[month].d[day].tnight,
+			met[month].d[day].tsoil,
+			met[month].d[day].tdew,
+			met[month].d[day].rh_f,
+			met[month].d[day].vpd,
+			met[month].d[day].ts_f,
+			met[month].d[day].prcp,
+			met[month].d[day].swc,
+			met[month].d[day].thermic_sum,
+			met[month].d[day].rho_air,
+			met[month].d[day].daylength,
+			met[month].d[day].windspeed,
+			met[month].d[day].air_pressure,
+			met[month].d[day].es,
+			met[month].d[day].ea,
+			met[month].d[day].psych,
 			g_settings->co2Conc,
 			doy
 	);
 	if (g_settings->spatial == 's')
 	{
-		logger(g_log, "-lai from NDVI = %f \n", meteo_daily->ndvi_lai);
+		logger(g_log, "-lai from NDVI = %f \n", met[month].d[day].ndvi_lai);
 	}
-	logger(g_log, "***************\n");
+	logger(g_log, "***************\n");getchar();
 }
 /*
 void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)

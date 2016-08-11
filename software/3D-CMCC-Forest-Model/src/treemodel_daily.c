@@ -46,7 +46,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-extern const char *szMonth[MONTHS_COUNT];
+//extern const char *szMonth[MONTHS_COUNT];
 extern int DaysInMonth[];
 
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
@@ -81,14 +81,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/****************************************************************************************************/
 
-	logger(g_log, "******CELL x = %d, y = %d ******\n", m->cells[cell].x, m->cells[cell].y);
-	logger(g_log, "\n\n%d-%d-%d\n", meteo_daily->n_days, month+1, m->cells[cell].years[year].year);
-
 	/* annual forest structure (except the first year) */
 	if( day == 0 && month == JANUARY && year != 0 ) annual_forest_structure (&m->cells[cell]);
-
-	/* print daily met data */
-	print_daily_met_data (meteo_daily, day, month, year);
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period (&m->cells[cell], meteo_daily, day, month);
@@ -112,6 +106,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* loop on each heights starting from highest to lower */
 	for ( height = m->cells[cell].heights_count -1 ; height >= 0; height-- )
 	{
+		/* check if tree height class matches with corresponding layer */
+//		if( layer == m->cells[cell].heights[height].z )
+//		{
+
 		/* loop on each age class */
 		for ( age = m->cells[cell].heights[height].ages_count - 1 ; age >= 0 ; age-- )
 		{
@@ -182,7 +180,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								canopy_temperature (&m->cells[cell], layer, height, age, species, meteo_daily);
 
 								/* daily modifier */
-								Daily_modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
+								modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
 
 								/* nitrogen */
 								Nitrogen_stock (&m->cells[cell].heights[height].ages[age].species[species]);
@@ -267,7 +265,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_temperature (&m->cells[cell], layer, height, age, species, meteo_daily);
 
 							/* daily modifier */
-							Daily_modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
+							modifiers (&m->cells[cell], layer, height, age, species, m->cells[cell].heights[height].ages[age].species[species].management, meteo_daily);
 
 							/* canopy water fluxes block */
 							canopy_evapotranspiration(&m->cells[cell], layer, height, age, species, meteo_daily);
@@ -370,7 +368,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							Biomass_increment_EOY(&m->cells[cell], layer, height, age, species);
 
 							/* print at the end of simulation class level data */
-							Print_stand_data (&m->cells[cell], layer, height, age, species);
+							print_stand_data (&m->cells[cell], layer, height, age, species);
 
 							Water_Use_Efficiency (&m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -464,8 +462,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							m->cells[cell].heights[height].value, m->cells[cell].heights[height].ages[age].value);
 				}
 			}
+//			}
 			logger(g_log, "****************END OF SPECIES CLASS***************\n");
 		}
+//		}
 		logger(g_log, "****************END OF AGE CLASS***************\n");
 	}
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");

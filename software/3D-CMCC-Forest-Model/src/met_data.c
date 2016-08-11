@@ -297,24 +297,18 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 {
 	meteo_t *met;
 	met = c->years[year].m;
-
-	logger(g_log, "\n-CHECK PRECIPITATION-\n");
-
 	if(met[month].d[day].prcp > 0.0)
 	{
 		if (met[month].d[day].tavg > 0.0)
 		{
 			met[month].d[day].rain = met[month].d[day].prcp;
-			logger(g_log, "prcp = rain = %f mm\n", met[month].d[day].rain);
 		}
 		else
 		{
 			met[month].d[day].snow = met[month].d[day].prcp;
-			logger(g_log, "prcp = snow = %f cm\n", met[month].d[day].snow);
 
 			/* add snow to snowpack */
 			c->snow_pack += met[month].d[day].snow;
-			logger(g_log, "snow pack + daily snow= %f cm\n", c->snow_pack);
 		}
 	}
 	else
@@ -327,8 +321,6 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 	/* impose zero value for tsoil in case of snow presence */
 	//todo move to soil when snow melt and subl will go to soil
 	if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
-
-	logger(g_log, "*****************************************\n");
 }
 
 void Day_Length(cell_t *c, const int day, const int month, const int year)

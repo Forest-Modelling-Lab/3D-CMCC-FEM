@@ -8,7 +8,7 @@
 #include "logger.h"
 #include "Penman_Monteith.h"
 
-extern settings_t* g_settings;
+//extern settings_t* g_settings;
 extern logger_t* g_log;
 
 void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
