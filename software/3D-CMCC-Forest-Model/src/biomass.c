@@ -28,7 +28,6 @@ void live_total_wood_age(const age_t *const a, const int species)
 	double t2;
 
 	species_t *s;
-
 	s = &a->species[species];
 
 	// fixme values should be included in species.txt
@@ -61,153 +60,49 @@ void live_total_wood_age(const age_t *const a, const int species)
 
 void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
-	/*CURRENT ANNUAL INCREMENT-CAI*/
+
 	double MassDensity;
-	double dominant_prec_volume;
-	double dominated_prec_volume;
-	double subdominated_prec_volume;
+
+	double single_tree_prev_vol;
+	double single_tree_vol;
+
 
 	age_t *a;
 	species_t *s;
 
 	a = &c->heights[height].ages[age];
-	s = &a->species[species];
+	s = &c->heights[height].ages[age].species[species];
 
-	//in m^3/area/yr
-	//Cai = Volume t1 - Volume t0
-	//Mai = Volume t1 / Age
+	/* in m^3/area/yr */
+	/* Cai = Volume t1 - Volume t0 */
+	/* Mai = Volume t1 / Age */
+
+	/*CURRENT ANNUAL INCREMENT-CAI*/
 
 	logger(g_log, "***CAI & MAI***\n");
 
-	//sergio if prec_volume stands for precedent (year) volume, shouldn't the CAI be quantified before updating prec_volume? in this way it shold alway return ~0, being the product of the same formula expressed with the same quantities
-
 	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (c->heights[height].ages[age].value / s->value[TRHO]));
-	/*STAND VOLUME-(STEM VOLUME)*/
 
-	//new volume is computed using DM biomass
-	s->value[VOLUME] = s->value[STEM_C] * GC_GDM * (1 - s->value[FRACBB]) / MassDensity;
-
-
-	if (g_settings->spatial == 'u')
-	{
-		//ALESSIOC
-		//switch (c->annual_layer_number)
-		// ALESSIOR: mi raccomando ALESSIOC rimuovi la riga qui sotto ( SOLO LA RIGA! )
-		switch ( 0 )
-		{
-		case 3://ALESSIOC CHECK IT!!
-			//if (c->t_layers[layer].z == c->heights[height].z)
-			if( layer == c->heights[height].z )
-			{
-				dominant_prec_volume = s->value[VOLUME];
-				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
-				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
-				logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)a->value;
-				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
-				if (dominant_prec_volume > s->value[VOLUME])
-				{
-					logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-					logger(g_log, "prev_volume - VOLUME = %f\n", dominant_prec_volume - s->value[VOLUME]);
-				}
-			}//ALESSIOC CHECK IT!!
-			// ALESSIOR: LA CONDIZIONE E' IDENTICA A QUELLA SOPRA!!!!!!
-			//else if (c->t_layers[layer].z == c->heights[height].z)
-			else if( layer == c->heights[height].z )
-			{
-				dominated_prec_volume = s->value[VOLUME];
-				logger(g_log, "DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
-				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
-				logger(g_log, "DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)a->value;
-				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
-				if (dominated_prec_volume > s->value[VOLUME])
-				{
-					logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-					logger(g_log, "prev_volume - VOLUME = %f\n", dominated_prec_volume - s->value[VOLUME]);
-				}
-			}
-			else
-			{
-				subdominated_prec_volume = s->value[VOLUME];
-				logger(g_log, "SubDominatedVolume = %f m^3/cell resolution\n", subdominated_prec_volume);
-				s->value[CAI] = s->value[VOLUME] - subdominated_prec_volume;
-				logger(g_log, "SUBDOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)a->value;
-				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
-				if (subdominated_prec_volume > s->value[VOLUME])
-				{
-					logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-					logger(g_log, "prev_volume - VOLUME = %f\n", subdominated_prec_volume - s->value[VOLUME]);
-				}
-			}
-			break;
-		case 2://ALESSIOC CHECK IT!!
-			//if (c->t_layers[layer].z == c->heights[height].z)
-			if( layer == c->heights[height].z )
-			{
-				dominant_prec_volume = s->value[VOLUME];
-				logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
-				s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
-				logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)a->value;
-				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
-				if (dominant_prec_volume > s->value[VOLUME])
-				{
-					logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-					logger(g_log, "prev_volume - VOLUME = %f\n", dominant_prec_volume - s->value[VOLUME]);
-				}
-			}
-			else
-			{
-				dominated_prec_volume = s->value[VOLUME];
-				logger(g_log, "DominatedVolume = %f m^3/cell resolution\n", dominated_prec_volume);
-				s->value[CAI] = s->value[VOLUME] - dominated_prec_volume;
-				logger(g_log, "DOMINATED CAI = %f m^3/area/yr\n", s->value[CAI]);
-				s->value[MAI] = s->value[VOLUME] / (double)a->value;
-				logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr\n", s->value[MAI] );
-				if (dominated_prec_volume > s->value[VOLUME])
-				{
-					logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-					logger(g_log, "prev_volume - VOLUME = %f\n", dominated_prec_volume - s->value[VOLUME]);
-				}
-			}
-
-			break;
-		case 1:
-			/*
-			dominant_prec_volume = s->value[BIOMASS_STEM] * (1 - s->value[FRACBB]) /	MassDensity;
-			logger(g_log, "DominantVolume = %f m^3/cell resolution\n", dominant_prec_volume);
-			s->value[CAI] = s->value[VOLUME] - dominant_prec_volume;
-			logger(g_log, "DOMINANT CAI = %f m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = s->value[VOLUME] / (double)c->t_layers[layer].heights[height].ages[age].value ;
-			logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI] );
-
-			if (dominant_prec_volume > s->value[VOLUME])
-			{
-				logger(g_log, "ERROR IN CAI FUNCTION!!!!\nprev_volume > VOLUME\n");
-				logger(g_log, "prev_volume - VOLUME = %f\n", dominant_prec_volume - s->value[VOLUME]);
-			}
-			 */
-			logger(g_log, "PREVIOUS Volume = %f m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-			logger(g_log, "CURRENT Volume = %f m^3/cell resolution\n", s->value[VOLUME]);
-			s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
-			logger(g_log, "Yearly Stand CAI = %f m^3/area/yr\n", s->value[CAI]);
-			s->value[MAI] = s->value[VOLUME] / (double)a->value;
-			logger(g_log, "Yearly Stand MAI = %f m^3/area/yr \n", s->value[MAI]);
-			break;
-		}
-	}
-	else
-	{
-		logger(g_log, "PREVIOUS Volume = %f m^3/cell resolution\n", s->value[PREVIOUS_VOLUME]);
-		s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
-		s->value[CAI] = s->value[VOLUME] * s->value[PERC] - s->value[PREVIOUS_VOLUME];
-		logger(g_log, "Yearly Stand CAI = %f m^3/area/yr\n", s->value[CAI]);
-		s->value[MAI] = (s->value[VOLUME] * s->value[PERC] )/ (double)a->value ;
-		logger(g_log, "Yearly Stand MAI = %f m^3/area/yr \n", s->value[MAI] );
-	}
+	/* STAND VOLUME-(STEM VOLUME) */
+	/* assign previous volume */
 	s->value[PREVIOUS_VOLUME] = s->value[VOLUME];
+	single_tree_prev_vol = s->value[PREVIOUS_VOLUME] / (int) s->counter[N_TREE];
+
+	/* new volume is computed using DM biomass */
+	s->value[VOLUME] = s->value[STEM_C] * GC_GDM * (1 - s->value[FRACBB]) / MassDensity;
+	single_tree_vol = s->value[VOLUME] / (int) s->counter[N_TREE];;
+
+	/* CAI-Current Annual Increment */
+	s->value[CAI] = s->value[VOLUME] - s->value[PREVIOUS_VOLUME];
+	logger(g_log, "CAI-Current Annual Increment = %f m^3/area/yr\n", s->value[CAI]);
+
+	/* MAI-Mean Annual Increment */
+	s->value[MAI] = s->value[VOLUME] / (double)a->value;
+	logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI]);
+
+	/* check */
+	CHECK_CONDITION(single_tree_vol, > single_tree_prev_vol);
+
 }
 
 void AGB_BGB_biomass(cell_t *const c, const int height, const int age, const int species)
@@ -222,7 +117,6 @@ void AGB_BGB_biomass(cell_t *const c, const int height, const int age, const int
 	logger(g_log, "Yearly Class AGB = %f tC/area year\n", s->value[CLASS_AGB]);
 	s->value[CLASS_BGB] = s->value[TOT_ROOT_C];
 	logger(g_log, "Yearly Class BGB = %f tC/area year\n", s->value[CLASS_BGB]);
-
 
 	logger(g_log, "-for Stand\n");
 	c->agb += s->value[CLASS_AGB] * s->value[PERC];

@@ -368,7 +368,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 									if ( s->management == C) Stool_mortality ( c, layer, height, age, species );
 
-									//Renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
+									//renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
 									AGB_BGB_biomass ( c, height, age, species );
 

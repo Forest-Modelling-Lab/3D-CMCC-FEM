@@ -164,47 +164,8 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 	if (meteo_daily->tsoil > 0)
 	{
 
-		//fixme HOW COMPUTE A CUMULATIVE CANOPY COVER AMONG ALLO CLASSES!!
-		/*following Gerten et al., 2004*/
-		//ALESSIOC
-		//if (c->daily_layer_number != 0)
-		//{
-		//	switch (c->daily_layer_number)
-		//	{
-		//	case 3:
-		//		if (g_settings->spatial == 's')
-		//		{
-		//			//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * meteo_daily->ndvi_lai));
-		//		}
-		//		else
-		//		{
-		//			cc = c->canopy_cover_subdominated;
-		//		}
-		//		break;
-		//	case 2:
-		//		if (g_settings->spatial == 's')
-		//		{
-		//			//Net_Radiation = Net_Radiation_for_dominated * (exp(- s->value[K] * meteo_daily->ndvi_lai));
-		//		}
-		//		else
-		//		{
-		//			cc = c->canopy_cover_dominated;
-		//		}
-		//		break;
-		//	case 1:
-		//		//Net_Radiation = Net_Radiation_for_dominated;
-		//		cc = c->canopy_cover_dominant;
-		//		break;
-		//	}
-		//}
-		//else
-		//{
-		//	//logger(g_log, "ONLY ONE LAYER\n");
-		//	cc = c->canopy_cover_dominant;
-		//}
-
 		//FIXME SHOULD ADD PART OF NET RAD TRASMITTED THORUGH THE CANOPIES
-		//converting W/m^2 in Joule/m^2/day
+		/* converting W/m^2 in Joule/m^2/day */
 		PotEvap = (sat / (sat + gamma )) * (c->net_sw_rad_for_soil * 86400) / meteo_daily->lh_vap_soil;
 		logger(g_log, "Soil Potential Evaporation = %f mm+Kg/day\n", PotEvap);
 		if(PotEvap <0)
@@ -212,17 +173,16 @@ void Soil_evaporation_old(cell_t *const c, const meteo_daily_t *const meteo_dail
 			PotEvap = 0;
 		}
 
-		//ALESSIOC
-		//c->soil_moist_ratio = c->asw / c->max_asw_fc;
-		//logger(g_log, "Soil moisture = %f %\n", c->soil_moist_ratio );
+		c->soil_moist_ratio = c->asw / c->max_asw_fc;
+		logger(g_log, "Soil moisture = %f %\n", c->soil_moist_ratio );
 
 		/*following Gerten et al., 2004 soil evaporation occurs at the simulated cell not covered by vegetation (e.g. 1-cc)*/
-		if(cc>=1)
+		if( cc >= 1 )
 		{
 			cc = 1;
 		}
-		//ALESSIOC
-		//c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
+
+		c->daily_soil_evapo = (PotEvap * EVAPOCOEFF * c->soil_moist_ratio * (1-cc)) + c->snow_subl;
 		logger(g_log, "Daily Soil Evaporation = %fmm/day \n", c->daily_soil_evapo );
 	}
 	else

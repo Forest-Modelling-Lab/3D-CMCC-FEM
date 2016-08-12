@@ -959,7 +959,6 @@ static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
 		return 0;
 }
 /****************************************************************************/
-//ALESSIOC
 static int fill_cell(matrix_t* const m, row_t* const row)
 {
 	int i;
@@ -968,7 +967,7 @@ static int fill_cell(matrix_t* const m, row_t* const row)
 
 	assert(m && row);
 
-	// check position
+	/*  check position */
 	index = -1;
 	for ( i = 0; i < m->cells_count; ++i )
 	{

@@ -74,19 +74,16 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
-//	ALESSIOC
-//	if ( layer == c->heights[height].z )
+//	if (s->value[GAMMA_LIGHT] != -9999)
 //	{
-//		if (s->value[GAMMA_LIGHT] != -9999)
-//		{
-//			s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
-//		}
-//		else
-//		{
-//			s->value[F_LIGHT]= 1.0;
-//		}
-//		logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
+//		s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
 //	}
+//	else
+//	{
+//		s->value[F_LIGHT]= 1.0;
+//	}
+//	logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
+
 
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */

@@ -44,7 +44,6 @@ void daily_forest_structure (cell_t *const c)
 
 	logger(g_log, "\n\n***DAILY_FOREST_STRUCTURE***\n\n");
 
-	//ALESSIOC NEW
 	/**************************************************************************************************/
 	/* compute numbers of height classes for each layer */
 	logger(g_log, "compute numbers of height classes for each layer\n\n");
@@ -551,7 +550,7 @@ void daily_forest_structure (cell_t *const c)
 		c->cell_cover += c->t_layers[layer].layer_cover;
 	}
 	logger(g_log, "Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
-	logger(g_log, "**************************************\n\n");
+	logger(g_log, "**************************************\n\n");getchar();
 
 }
 
@@ -634,138 +633,4 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 	}
 	logger(g_log, "classes in veg period = %d\n", c->Veg_Counter);
 }
-
-void daily_forest_structure_in_veg (cell_t *const c)
-{
-	static int height;
-	static int age;
-	static int species;
-	static double current_height;
-	static double previous_height;
-
-	//FIXME STILL USEFULL?????????????????????????????????????????????
-
-	/* determines number of vegetative layer in function of:
-	 *-differences between tree height classes
-	 *-vegetative or un-vegetative period
-	 * to obtain dominant position for light */
-
-	logger(g_log, "\n***DAILY FOREST LAYERS IN VEGETATIVE PERIOD***\n");
-
-	qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc);
-
-	for ( height = c->heights_count - 1; height >= 0; height-- )
-	{
-		for ( age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
-		{
-			for (species = 0; species < c->heights[height].ages[age].species_count; species++)
-			{
-				current_height = c->heights[height].value;
-
-				if (c->heights_count > 1 )
-				{
-					if (height == c->heights_count -1 && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-					{
-						//ALESSIOC
-						//c->daily_layer_number += 1;
-						previous_height = current_height;
-					}
-					if ((previous_height - current_height ) > g_settings->tree_layer_limit && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-					{
-						//ALESSIOC
-						//c->daily_layer_number += 1;
-						previous_height = current_height;
-					}
-				}
-				if (c->heights_count == 1  && c->heights[height].ages[age].species[species].counter[VEG_UNVEG] == 1)
-				{
-					//ALESSIOC
-					//c->daily_layer_number = 1;
-				}
-			}
-		}
-	}
-	//ALESSIOC
-	//logger(g_log, "number of vegetative layers = %d\n", c->daily_layer_number);
-}
-
-void daily_dominant_light(cell_t *const c, int layer, int height, int age, int species)
-{
-	species_t *s;
-
-	assert(c);
-
-	// FIXME ...height can be -1 !!!
-	s = &c->heights[height].ages[age].species[species];
-
-	/* it computes which canopy layers is in dominant position for light */
-	//ALESSIOC CHECK IT
-	if (c->t_layers[layer].daily_n_layer != 0)
-	{
-		logger(g_log, "-Dominant Light Index Function-\n");
-
-		//highest z value in veg period determines top_layer value
-		for ( height = c->heights_count - 1; height >= 0; height-- )
-		{
-			/* sort by ascending heights */
-			qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
-
-			for ( age = 0; age < c->heights[height].ages_count; age++ )
-			{
-				for ( species = 0; species < c->heights[height].ages[age].species_count; species++ )
-				{
-					if (s->counter[VEG_UNVEG]==1)
-					{
-						c->top_layer = c->heights[height].z;
-					}
-				}
-			}
-		}
-		logger(g_log, "Daily/Monthly Dominant layer is z = %d\n", c->top_layer);
-	}
-}
-
-
-
-void daily_veg_counter(cell_t *const c, species_t *const s, const int height)
-{
-	//ALESSIOC
-	/*
-	switch (c->daily_layer_number)
-	{
-	case 3:
-		if (c->heights[height].z == 2)
-		{
-			c->dominant_veg_counter += 1;
-		}
-		if (c->heights[height].z == 1)
-		{
-			c->dominated_veg_counter += 1;
-		}
-		else
-		{
-			c->subdominated_veg_counter += 1;
-		}
-		break;
-	case 2:
-		if (c->heights[height].z == 1)
-		{
-			c->dominant_veg_counter += 1;
-		}
-		else
-		{
-			c->dominated_veg_counter += 1;
-		}
-		break;
-	case 1:
-		c->dominant_veg_counter += 1;
-		break;
-	}
-	 */
-}
-
-
-
-
-
 

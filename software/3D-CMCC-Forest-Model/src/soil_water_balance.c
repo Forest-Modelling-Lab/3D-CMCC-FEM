@@ -56,27 +56,27 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	/* calculates the outflow flux from the difference between soilwater
 	and maximum soilwater */
 	/* water in excess of saturation to outflow */
-//todo test it
-//	if (c->asw > c->max_asw_sat)
-//	{
-//		logger(g_log, "c->asw = %f\n", c->asw);
-//		c->out_flow = c->asw - c->max_asw_sat;
-//		c->asw -= c->out_flow;
-//		logger(g_log, "c->out_flow = %f\n", c->out_flow);
-//	}
-//	/* slow drainage from saturation to field capacity */
-//	else if (c->asw > c->max_asw_fc)
-//	{
-//		logger(g_log, "c->asw > c->soilw_fc\n");
-//		c->out_flow = 0.5 * (c->asw - c->max_asw_fc);
-//		c->asw -= c->out_flow;
-//		logger(g_log, "c->out_flow = %f\n", c->out_flow);
-//	}
-//	/* otherwise, no outflow */
-//	else
-//	{
-//		c->out_flow = 0.0;
-//	}
+	//todo test it
+	if (c->asw > c->max_asw_sat)
+	{
+		logger(g_log, "c->asw = %f\n", c->asw);
+		c->out_flow = c->asw - c->max_asw_sat;
+		c->asw -= c->out_flow;
+		logger(g_log, "c->out_flow = %f\n", c->out_flow);
+	}
+	/* slow drainage from saturation to field capacity */
+	else if (c->asw > c->max_asw_fc)
+	{
+		logger(g_log, "c->asw > c->soilw_fc\n");
+		c->out_flow = 0.5 * (c->asw - c->max_asw_fc);
+		c->asw -= c->out_flow;
+		logger(g_log, "c->out_flow = %f\n", c->out_flow);
+	}
+	/* otherwise, no outflow */
+	else
+	{
+		c->out_flow = 0.0;
+	}
 
 	/* from BIOME-BGC */
 	/* the following special case prevents evaporation under very
@@ -95,15 +95,14 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		CHECK_CONDITION(c->asw, < 0.0)
 	}
 
-	//ALESSIOC
-	/*
+	//fixme
 	c->swc = (c->asw * 100)/c->max_asw_fc;
 	logger(g_log, "asw = %g\n", c->asw);
 	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
 	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
 
-	// check
+	/* check */
 	CHECK_CONDITION (c->swc, > 100.1);
 	CHECK_CONDITION (c->swc, < 0);
-	*/
+
 }

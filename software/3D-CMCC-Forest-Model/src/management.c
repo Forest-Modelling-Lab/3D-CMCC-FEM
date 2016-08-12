@@ -25,8 +25,6 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 	IndWrc,
 	IndWbb,
 	IndWres;
-	//double BiomRem;
-	//int shoots_number;    //number of shoots produced after coppicing
 
 	tree_layer_t *l;
 	species_t *s;
@@ -46,62 +44,24 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 	printf ("Number of trees removed = ?\n");
 	scanf ("%d", &removed_tree);
 
-	if (removed_tree != 0)
+	if ( removed_tree != 0 )
 	{
-		if (l->n_layers >= 3)
+		if ( c->t_layers_count > 1 )
 		{
+			printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
 
-			while ( 1 )
+			scanf ("%d", &layer_to_remove_tree);
+			printf ("layer choiced = %d \n", layer_to_remove_tree);
+
+			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
 			{
-				puts( "Layer from which remove trees = ?\n"
-						"-2 = dominant\n"
-						"-1 = dominated\n"
-						"-0 = sub-dominated");
-
-				scanf ("%d", &layer_to_remove_tree);
-				printf ("layer choiced = %d \n", layer_to_remove_tree);
-
-				if ( layer_to_remove_tree < 0 || layer_to_remove_tree > 2 )
-				{
-					puts("NO CHOICED VALUE CAN BE ACCEPTED");
-				}
-				else
-				{
-					break;
-				}
+				puts("NO CHOICED VALUE CAN BE ACCEPTED");
 			}
-		}
-		else if (l->n_layers == 2)
-		{
-			while ( 1 )  {
-				puts( "Layer from which remove trees =\n"
-						"-1 = dominant\n"
-						"-0 = dominated");
 
-				scanf ("%d", &layer_to_remove_tree);
-				printf ("layer choiced = %d \n", layer_to_remove_tree);
+//fixme continue..........depending on which layer is chosen
 
-				if ( layer_to_remove_tree < 0 || layer_to_remove_tree > 1 )
-				{
-					puts("NO CHOICED VALUE CAN BE ACCEPTED");
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-		else
-		{
-			layer_to_remove_tree = 0;
-			logger(g_log, "Layer from which remove trees = %d \n", layer_to_remove_tree);
-		}
-
-		//in case of more than one layer
-		//ALESSIOC
+//fixme continue..........
 //
-//		if (layer_to_remove_tree == z)
-//		{
 //			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
 //
 //			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
@@ -125,18 +85,43 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 //			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 //
 //
-//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE  !!!!!!!
+//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
 //			//compute number of shoot produced after coppicing
 //			shoots_number = removed_tree * s->value[AV_SHOOT];
 //			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
+
+		}
+		else
+		{
+
+//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
+//
+//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
+//			logger(g_log, "Number of mother trees after management = %d \n", s->counter[N_TREE] );
+//
+//			//Recompute Biomass
+//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
+//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
+//					s->value[BIOMASS_FOLIAGE_tDM],
+//					s->value[BIOMASS_STEM_tDM],
+//					s->value[BIOMASS_FINE_ROOT_tDM],
+//					s->value[BIOMASS_COARSE_ROOT_tDM]);
+//
+//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
+//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
+//			// Total Biomass at the end
+//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
+//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
 //
 //
-//
-//		}
-//		else
-//		{
-//			logger(g_log, "Layer uncutted \n");
-//		}
+//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
+//			//compute number of shoot produced after coppicing
+//			shoots_number = removed_tree * s->value[AV_SHOOT];
+//			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
+		}
 	}
 }
 
@@ -163,8 +148,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 	IndWrf = s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[N_TREE];
 	//logger(g_log, "Individual Biomass:\nWf = %f\nWs = %f\nWr = %f\n", IndWf, IndWs, IndWr);
 
-
-	//CLEARCUT FOR TIMBER
+	/* CLEARCUT FOR COPPICE */
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
 	logger(g_log, "Layer modelled z = %d \n", layer);
 	logger(g_log, "Numbers of layers = %d \n", l->n_layers);
@@ -173,59 +157,23 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 	printf ("Number of trees removed = ?\n");
 	scanf ("%d", &removed_tree);
 
-	if ( removed_tree != 0)
-	{
-		if (l->n_layers >= 3)
+	if ( removed_tree != 0 )
 		{
-
-			while ( 1 )  {
-				puts( "Layer from which remove trees = ?\n"
-						"-2 = dominant\n"
-						"-1 = dominated\n"
-						"-0 = sub-dominated");
+			if ( c->t_layers_count > 1 )
+			{
+				printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
 
 				scanf ("%d", &layer_to_remove_tree);
 				printf ("layer choiced = %d \n", layer_to_remove_tree);
 
-				if ( layer_to_remove_tree < 0 || layer_to_remove_tree > 2 )
+				if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
 				{
 					puts("NO CHOICED VALUE CAN BE ACCEPTED");
 				}
-				else
-				{
-					break;
-				}
-			}
-		}
-		else if (l->n_layers == 2)
-		{
-			while ( 1 )  {
-				puts( "Layer from which remove trees =\n"
-						"-1 = dominant\n"
-						"-0 = dominated");
 
-				scanf ("%d", &layer_to_remove_tree);
-				printf ("layer choiced = %d \n", layer_to_remove_tree);
+	//fixme continue..........depending on which layer is chosen
 
-				if ( layer_to_remove_tree < 0 || layer_to_remove_tree > 1 )
-				{
-					puts("NO CHOICED VALUE CAN BE ACCEPTED");
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-		else
-		{
-			layer_to_remove_tree = 0;
-			logger(g_log, "Layer from which remove trees = %d \n", layer_to_remove_tree);
-		}
-
-		//ALESSIOC
-//		if (layer_to_remove_tree == z)
-//		{
+//fixme continue..........
 //			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
 //
 //			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
@@ -262,6 +210,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 //		{
 //			logger(g_log, "Layer uncutted \n");
 //		}
+			}
 	}
 }
 
@@ -269,13 +218,13 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 
 void Choose_management(cell_t *const c, const int layer, const int height, const int age, const int species, const int years)
 {
-	tree_layer_t *l;
+	//tree_layer_t *l;
 	species_t *s;
 
-	l = &c->t_layers[layer];
+	//l = &c->t_layers[layer];
 	s = &c->heights[height].ages[age].species[species];
 
-	if (years == 0)
+	if ( !years )
 	{
 		int Manag;
 		printf("END OF FIRST YEAR RUN \n");
@@ -283,9 +232,8 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 		//scanf ("%c",&Manag);
 		//logger(g_log, "Management routine choiced = %c \n", Manag);
 
-
-		//Management
-		if ( s->management == T)
+		/* Management */
+		if ( s->management == T )
 		{
 			logger(g_log, "- Management type = TIMBER\n");
 			printf("SELECT TYPE OF MANAGEMENT: \n"
@@ -297,13 +245,11 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 
 			scanf ("%d",&Manag);
 
-			switch (Manag)
+			switch ( Manag )
 			{
 			case 1 :
 				logger(g_log, "Case CLEARCUT choiced \n");
 
-				//call function
-				//ALESSIOC
 				//Clearcut_Timber_upon_request (s,  years, c->heights[height].z, c->annual_layer_number);
 
 				break;
@@ -311,21 +257,21 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 			case 2 :
 				logger(g_log, "Case ....... choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 
 			case 3 :
 				logger(g_log, "Case .......  choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 
 			case 4 :
 				logger(g_log, "Case .......  choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 
@@ -349,8 +295,6 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 			case 1 :
 				logger(g_log, "Case CLEARCUT choiced \n");
 
-				//call function
-				//ALESSIOC
 				//Clearcut_Coppice (s,  years, c->heights[height].z, c->annual_layer_number);
 
 				break;
@@ -358,21 +302,21 @@ void Choose_management(cell_t *const c, const int layer, const int height, const
 			case 2 :
 				logger(g_log, "Case ....... choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 
 			case 3 :
 				logger(g_log, "Case .......  choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 
 			case 4 :
 				logger(g_log, "Case .......  choiced \n");
 
-				//call function
+				//fixme call function
 
 				break;
 			}

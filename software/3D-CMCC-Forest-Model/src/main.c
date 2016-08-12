@@ -1,7 +1,7 @@
 /* main.c */
 /*
 
-	ALESSIOC TODO :
+	TODO:
 
 	-SIMULAZIONI DA bareground
 	-RENDERE DINAMICO IL TREE_LAYER_LIMIT (all'aumentare del dbh aumenta il TREE_LAYER_LIMIT) see Montgomery & Chazdon, 2001)

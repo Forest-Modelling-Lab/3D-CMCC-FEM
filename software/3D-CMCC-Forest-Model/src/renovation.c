@@ -17,18 +17,20 @@
 extern logger_t* g_log;
 
 
-void Renovation(cell_t *const c, const int layer, const int height, const int age, const int species)
+void Renorenovationvation(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
+
 	height_t *h;
+	tree_layer_t *l;
 	species_t *s;
 
 	h = &c->heights[height];
+	l = &c->t_layers[layer];
 	s = &h->ages[age].species[species];
 
-	//compute light availability for seeds of dominant layer
+	/* compute light availability for seeds of dominant layer */
 
-	//ALESSIOC
-	if (h->z == 0)
+	if (l->z == 0)
 	{
 		//logger(g_log, "Average Yearly Par at Soil Level for renovation = %f molPAR/m^2 month\n", m->cells[cell].av_yearly_par_soil);
 		//convert molPAR/m^2 month into W/m^2 hour

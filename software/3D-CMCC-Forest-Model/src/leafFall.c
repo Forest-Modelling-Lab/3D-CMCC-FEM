@@ -116,7 +116,7 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 //	if(*doy == s->counter[SENESCENCE_DAYONE])
 //	{
 //		logger(g_log, "Senescence day one\n");
-//		//ALESSIOC che è sto MAX_LAI??
+//		//fixme che è sto MAX_LAI??
 //		s->value[MAX_LAI] = s->value[LAI];
 //	}
 //	previousLai = s->value[LAI];
@@ -141,7 +141,7 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 //	CHECK_CONDITION(s->value[FINE_ROOT_C], < 0.0);
 //
 //
-//	//	//ALESSIOC
+//	//	//fixme
 //	//	if(s->value[BIOMASS_FOLIAGE_tDM] > 0.0 || s->value[BIOMASS_FINE_ROOT_tDM] > 0.0)
 //	//	{
 //	//		logger(g_log, "Biomass foliage = %f\n", s->value[BIOMASS_FINE_ROOT_tDM]);

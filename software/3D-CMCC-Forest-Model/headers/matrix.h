@@ -1065,6 +1065,7 @@ typedef struct
 	double soil_b;                                                        /* slope of log(psi) vs log(rwc) (DIM) */
 	double soilw_fc;                                                      /* soil water at field capacity (kgH2O/m2) */
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
+	double swc;
 	
 	double days_since_rain;                                               /* consecutive days without rain */
 	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */
