@@ -9,6 +9,7 @@
 #include "logger.h"
 
 extern logger_t* g_log;
+
 void reset_daily_cell_variables(cell_t *const c)
 {
 	logger(g_log, "...resetting cell level daily variables...\n");
@@ -143,28 +144,58 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_soil_evapo = 0.;
 
 }
-
-void reset_daily_class_variables(cell_t *const c, int layer, int height, int age, int species)
+void reset_daily_layer_variables(cell_t *const c)
 {
+	int layer;
+	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	{
+
+	}
+}
+void reset_monthly_layer_variables(cell_t *const c)
+{
+	int layer;
+	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	{
+
+	}
+}
+void reset_annual_layer_variables(cell_t *const c)
+{
+	int layer;
+	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+	{
+
+	}
+}
+
+void reset_daily_class_variables(cell_t *const c)
+{
+	int height;
+	int age;
+	int species;
+
 	height_t *h;
 	age_t *a;
 	species_t *s;
-
-	h = &c->heights[height];
-	a = &h->ages[age];
-	s = &a->species[species];
 
 	logger(g_log, "...resetting class level daily variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height--)
 	{
+		h = &c->heights[height];
+
 		/* age class level */
 		for (age = h->ages_count - 1; age >= 0; age --)
 		{
+			a = &h->ages[age];
+
 			/* species level */
 			for (species = a->species_count - 1; species >= 0; species --)
 			{
+				s = &a->species[species];
+
 				/* reset daily radiative variables */
 				s->value[PAR] = 0.;
 				s->value[APAR] = 0.;
@@ -247,29 +278,33 @@ void reset_daily_class_variables(cell_t *const c, int layer, int height, int age
 	}
 }
 
-void reset_monthly_class_variables(cell_t *const c, int layer, int height, int age, int species)
+void reset_monthly_class_variables(cell_t *const c)
 {
-	tree_layer_t *l;
+	int height;
+	int age;
+	int species;
+
 	height_t *h;
 	age_t *a;
 	species_t *s;
-
-	h = &c->heights[height];
-	l = &c->t_layers[layer];
-	a = &h->ages[age];	
-	s = &a->species[species];
 
 	logger(g_log, "...resetting class level monthly variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
+		h = &c->heights[height];
+
 		/* age class level */
 		for (age = h->ages_count - 1; age >= 0; age --)
 		{
+			a = &h->ages[age];
+
 			/* species level */
 			for (species = a->species_count - 1; species >= 0; species -- )
 			{
+				s = &a->species[species];
+
 				s->value[MONTHLY_EVAPOTRANSPIRATION] = 0.;
 			}
 		}
@@ -277,26 +312,33 @@ void reset_monthly_class_variables(cell_t *const c, int layer, int height, int a
 }
 
 
-void reset_annual_class_variables(cell_t *const c, int layer, int height, int age, int species)
+void reset_annual_class_variables(cell_t *const c)
 {
+	int height;
+	int age;
+	int species;
+
 	height_t *h;
 	age_t *a;
 	species_t *s;
 
-	h = &c->heights[height];
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
-
 	logger(g_log, "...resetting class level annual variables...\n");
+
 	/* height class level */
 	for (height = c->heights_count - 1; height >= 0; height--)
 	{
+		h = &c->heights[height];
+
 		/* age class level */
 		for (age = h->ages_count - 1; age >= 0; age --)
 		{
+			a = &c->heights[height].ages[age];
+
 			/* species level */
 			for (species = a->species_count - 1; species >= 0; species --)
 			{
+				s = &c->heights[height].ages[age].species[species];
+
 				s->value[PEAK_LAI] = 0.;
 				s->value[MAX_LEAF_C] = 0.;
 
@@ -342,12 +384,10 @@ void reset_annual_class_variables(cell_t *const c, int layer, int height, int ag
 void First_day(cell_t *const c, int layer, int height, int age, int species)
 {
 	height_t *h;
-	tree_layer_t *l;
 	age_t *a;
 	species_t *s;
 
 	h = &c->heights[height];
-	l = &c->t_layers[layer];
 	a = &h->ages[age];
 	s = &a->species[species];
 

@@ -792,6 +792,7 @@ enum {
 
 typedef struct
 {
+	int z;
 	int n_layers;
 	int daily_n_layer;
 	int height_class;          /* number of height class per layer */

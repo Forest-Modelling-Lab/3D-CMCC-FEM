@@ -59,7 +59,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	static int rotation_counter;
 
 	cell_t *c;
-	//	tree_layer_t *l;
+	tree_layer_t *l;
 	height_t *h;
 	age_t *a;
 	species_t *s;
@@ -76,19 +76,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	//FIXME move to meteo_t structure
 	if(day == 0 && month == 0)c->doy = 1;
 	else c->doy += 1;
-
-	/****************************************************************************************************/
-
-	/* reset daily variables at cell level */
-	reset_daily_cell_variables ( c );
-
-	/* reset monthly variables at cell level */
-	if ( !day ) reset_monthly_cell_variables( c );
-
-	/* reset annual variables at cell level */
-	if( !day && !month ) reset_annual_cell_variables( c );
-
-	/****************************************************************************************************/
 
 	/* annual forest structure (except the first year) */
 	if( !day && !month && year != 0 ) annual_forest_structure ( c );
@@ -113,11 +100,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
+		/* assign shortcut */
+		l = &m->cells[cell].t_layers[layer];
+
 		logger(g_log,"*****************************************************************************\n"
-				"*                                                                           *\n"
-				"*                                layer = %d                                  *\n"
-				"*                                                                           *\n"
+				"                                                                             \n"
+				"                                 layer = %d                                  \n"
+				"                                                                             \n"
 				"*****************************************************************************\n", layer);
+		//fixme usefull?
+		l->z = layer;
 
 		/* loop on each heights starting from highest to lower */
 		for ( height = c->heights_count -1 ; height >= 0; --height )
@@ -126,11 +118,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* check if tree height class matches with corresponding cell layer */
-			if( layer == h->z )
+			if( l->z == h->z )
 			{
 				logger(g_log,"*****************************************************************************\n"
-						"*                               height = %g                              *\n"
-						"*****************************************************************************\n", h->value);
+						"                               height = %g                              \n"
+						"*****************************************************************************\n", h->value);getchar();
 
 				/* loop on each age class */
 				for ( age = h->ages_count - 1 ; age >= 0 ; --age )
@@ -139,7 +131,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					a = &m->cells[cell].heights[height].ages[age];
 
 					logger(g_log,"*****************************************************************************\n"
-							"*                                  age = %d                                *\n"
+							"                                   age = %d                                 \n"
 							"*****************************************************************************\n", a->value);
 
 					/* increment age after first year */
@@ -153,7 +145,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 						logger(g_log,"*****************************************************************************\n"
 								"*                              species = %s                         *\n"
-								"*****************************************************************************\n", s->name);getchar();
+								"*****************************************************************************\n", s->name);
 
 						if(s->counter[N_TREE] > 0)
 						{
@@ -167,16 +159,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								annual_minimum_reserve( s );
 
 								/* reset annual class variables */
-								reset_annual_class_variables ( c, layer, height, age, species );
+								reset_annual_class_variables ( c );
 
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 							}
 							/* reset monthly class variables */
-							if ( !day ) reset_monthly_class_variables ( c, layer, height, age, species );
+							if ( !day ) reset_monthly_class_variables ( c );
 
 							/* reset daily class level variables */
-							reset_daily_class_variables( c, layer, height, age, species );
+							reset_daily_class_variables( c );
 
 							/* print at the beginning of simulation stand data */
 							print_stand_data ( c, layer, height, age, species );
@@ -485,7 +477,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						else
 						{
 							logger(g_log, "\n\n**************************************************************\n"
-									"No trees for height %g age %d dbh %g are died!!!!\n"
+									"No trees for height %g age %d species %s dbh %g are died!!!!\n"
 									"**************************************************************\n\n",
 									h->value, a->value, s->name, s->value[AVDBH]);
 						}
@@ -537,7 +529,33 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* CHECK FOR WATER BALANCE CLOSURE */
 	Check_soil_water_balance ( c, meteo_daily );
-	/*******************************************************************************************************/
+
+	/****************************************************************************************************/
+
+	/****************************************************************************************************/
+	/* RESET VARIABLES */
+
+	/* reset daily variables */
+	reset_daily_class_variables ( c );
+	reset_daily_layer_variables ( c );
+	reset_daily_cell_variables ( c );
+
+	/* reset monthly variables */
+	if ( !day )
+	{
+		reset_monthly_class_variables( c );
+		reset_monthly_layer_variables( c );
+		reset_monthly_cell_variables( c );
+
+		if ( !month )
+		{
+			/* reset annual variables */
+			reset_annual_class_variables( c );
+			reset_annual_layer_variables( c );
+			reset_annual_cell_variables( c );
+		}
+	}
+	/****************************************************************************************************/
 
 	c->dos += 1;
 	//todo: soilmodel could stay here or in main.c
