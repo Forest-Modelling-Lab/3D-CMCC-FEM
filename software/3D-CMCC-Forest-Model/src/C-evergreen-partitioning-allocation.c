@@ -79,7 +79,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 	CHECK_CONDITION(fabs(pR_CTEM + pS_CTEM + pF_CTEM), > 1 + 1e-4);
 
-	if (s->management == 0)
+	if ( !s->management )
 	{
 		//logger(g_log, "Management type = TIMBER\n");
 	}
@@ -246,7 +246,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	live_total_wood_age (a, species);
 
 	/* update leaf biomass through turnover */
-	Turnover(s);
+	turnover ( s );
 
 	logger(g_log, "\n-Daily increment to be accounted in carbon pools (after turnover)-\n");
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
@@ -264,14 +264,15 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 	/* allocate daily carbon */
-	C_allocation(s);
+	carbon_allocation ( s );
 
-	Average_tree_biomass (s);
+	/* compute single tree biomass pools */
+	average_tree_biomass (s);
 
 	/* to avoid "jumps" of dbh it has computed only one monthly */
 	if( !day )
 	{
-		Dendrometry(c, height, age, species, year);
+		dendrometry ( c, height, age, species, year );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");
@@ -285,7 +286,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update Leaf Area Index */
-	Daily_lai(s);
+	daily_lai ( s );
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];

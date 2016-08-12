@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+void maintenance_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	/* maintenance respiration routine */
 
@@ -143,15 +143,6 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	c->daily_fine_root_maint_resp += s->value[FINE_ROOT_MAINT_RESP];
 	c->daily_branch_maint_resp += s->value[BRANCH_MAINT_RESP];
 	c->daily_coarse_root_maint_resp += s->value[COARSE_ROOT_MAINT_RESP];
-
-	// ALESSIOC
-	/*
-	i = c->heights[height].z;
-	c->layer_daily_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
-	c->layer_monthly_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
-	c->layer_annual_maint_resp[i] += s->value[TOTAL_MAINT_RESP];
-	*/
-
 	c->daily_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->monthly_maint_resp += s->value[TOTAL_MAINT_RESP];
 	c->annual_maint_resp += s->value[TOTAL_MAINT_RESP];
@@ -159,7 +150,7 @@ void Maintenance_respiration(cell_t *const c, const int layer, const int height,
 	CHECK_CONDITION(s->value[TOTAL_MAINT_RESP], < 0);
 }
 
-void Growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void growth_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -224,7 +215,7 @@ void Growth_respiration(cell_t *const c, const int layer, const int height, cons
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
 }
 
-void Autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];

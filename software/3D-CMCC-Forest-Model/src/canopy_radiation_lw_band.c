@@ -78,7 +78,7 @@ void canopy_radiation_lw_band(cell_t *const c, const int layer, const int height
 	c->soil_long_wave_emitted = EMSOIL * SBC_W * pow(TsoilK, 4.);
 	/***********************************************************************************************************/
 
-	//fixme to be fixed for multilayered canopies
+	//fixme to be fixed for multi-layered stands
 	/* net canopy long wave radiation CLM 4.5 (eq. 4.18) */
 	s->value[NET_LW_RAD] =
 			(2. - LW_emis_canopy_frac * (1.0 - EMSOIL)) *

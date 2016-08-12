@@ -12,9 +12,8 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
+void phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
-	//int i;
 	double Alpha_C;
 	double Epsilon;
 	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
@@ -58,9 +57,8 @@ void Phosynthesis(cell_t *const c, const int layer, const int height, const int 
 //		cell_coverage = s->value[CANOPY_COVER_DBHDC];
 //	}
 
-	//Veg period
-	//fixme
-	//photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
+	//fixme photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
+	/* Veg period */
 	if (s->counter[VEG_UNVEG] == 1 /* && s->value[DAILY_TRANSP] != 0.0*/)
 	{
 		//test without F_CO2
@@ -93,7 +91,7 @@ void Phosynthesis(cell_t *const c, const int layer, const int height, const int 
 		/* GPP */
 		logger(g_log, "Apar for GPP = %f\n", s->value[APAR]);
 
-		//DailyGPP in mol of Carbon
+		/* DailyGPP in mol of C/m^2 */
 		GPPmolC = s->value[APAR] * Alpha_C;
 		GPPmolC_sun = s->value[APAR_SUN]* Alpha_C;
 		GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
@@ -115,7 +113,7 @@ void Phosynthesis(cell_t *const c, const int layer, const int height, const int 
 		s->value[DAILY_GPP_gC] =  s->value[DAILY_POINT_GPP_gC] /* * leaf_cell_cover_eff*/;
 		logger(g_log, "DAILY_GPP_gC = %f gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
 	}
-	else //Un Veg period
+	else /* Un Veg period */
 	{
 		logger(g_log, "Un-vegetative period !! \n");
 		s->value[DAILY_GPP_gC] = 0;
@@ -125,12 +123,6 @@ void Phosynthesis(cell_t *const c, const int layer, const int height, const int 
 
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_POINT_GPP_gC];
 
-	//ALESSIOC
-	//i = c->t_layers[layer].heights[height].z;
-	//c->layer_daily_gpp[i] += s->value[DAILY_GPP_gC];
-	//c->layer_monthly_gpp[i] += s->value[DAILY_GPP_gC];
-	//c->layer_annual_gpp[i] += s->value[DAILY_GPP_gC];
-
 	logger(g_log, "-CELL LEVEL\n");
 	logger(g_log, "-CELL LEVEL Yearly GPP (absolute) = %f gC/m^2 area covered/yr\n", c->daily_gpp);
 	c->daily_gpp += s->value[DAILY_GPP_gC];
@@ -138,9 +130,9 @@ void Phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	c->annual_gpp += s->value[DAILY_GPP_gC];
 
 	logger(g_log, "***************************** ANNUAL GPP *************************** \n");
-
 	logger(g_log, "*********************** CLASS LEVEL ANNUAL GPP ********************** \n");
-	//class level
+
+	/* class level */
 	s->value[YEARLY_POINT_GPP_gC] += s->value[DAILY_GPP_gC];
 	logger(g_log, "-CLASS LEVEL\n");
 	logger(g_log, "-CLASS LEVEL Yearly GPP (absolute) = %f gC/m^2 yr\n", s->value[YEARLY_POINT_GPP_gC]);

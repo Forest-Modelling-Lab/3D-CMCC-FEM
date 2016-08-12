@@ -17,7 +17,7 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 
-void Carbon_assimilation(cell_t *const c, const int layer, const int height, const int age, const int species)
+void carbon_assimilation(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -40,13 +40,15 @@ void Carbon_assimilation(cell_t *const c, const int layer, const int height, con
 	c->annual_npp_tDM += s->value[NPP_tDM];
 	c->annual_npp_gC += s->value[NPP_gC];
 
+	/* class level */
 	logger(g_log, "*********************** CLASS LEVEL ANNUAL NPP ********************** \n");
-	//class level
+
 	s->value[YEARLY_NPP_tDM] += s->value[NPP_tDM];
 	logger(g_log, "-CLASS LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", s->value[YEARLY_NPP_tDM]);
 
+
+	/* cell level */
 	logger(g_log, "*********************** STAND LEVEL ANNUAL NPP ********************** \n");
-	//cell level
 	c->daily_npp_tDM += s->value[NPP_tDM];
 	logger(g_log, "-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->daily_npp_tDM);
 

@@ -9,7 +9,7 @@
 
 extern logger_t* g_log;
 
-void Dendrometry(cell_t *const c, const int height, const int age, const int species, const int year)
+void dendrometry(cell_t *const c, const int height, const int age, const int species, const int year)
 {
 	double oldavDBH;
 	double oldTreeHeight;
@@ -65,14 +65,15 @@ void Dendrometry(cell_t *const c, const int height, const int age, const int spe
 	/*compute Tree Height*/
 	/*using Chapman_Richards Function*/
 
-	//the terms 1.3 in C-R Function is breast height (1.3 m)
-	//CRA, CRB, CRC are species-specific regression coefficients
-	//CRA coefficient is the asymptotic maximum height this coefficient represents the theoretic maximum height obtainable
-	//for a given stand or plot, this parameter could be used to represent maximum tree height. By modifying equation so that CRA changes
-	//as a function of stand age, site index, dominant height, or stand density, equation can be generalized to be more applicable to a wider range of
-	//sites and stand ages, or more regionally applied
-	//CRB represents exponential decay parameter
-	//CRC represents shape parameters
+	/* the terms 1.3 in C-R Function is breast height (1.3 m)
+	CRA, CRB, CRC are species-specific regression coefficients
+	CRA coefficient is the asymptotic maximum height this coefficient represents the theoretic maximum height obtainable
+	for a given stand or plot, this parameter could be used to represent maximum tree height. By modifying equation so that CRA changes
+	as a function of stand age, site index, dominant height, or stand density, equation can be generalised to be more applicable to a wider range of
+	sites and stand ages, or more regionally applied
+	CRB represents exponential decay parameter
+	CRC represents shape parameters */
+
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
 	logger(g_log, "-Tree Height using Chapman-Richard function = %f m\n", h->value);
 

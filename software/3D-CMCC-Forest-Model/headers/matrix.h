@@ -1047,8 +1047,6 @@ typedef struct
 	double daily_coarse_root_aut_resp;                                    /* daily coarse root aut resp at cell level (gC/m2/day) */
 
 	/*water variables*/
-//	double prcp_rain;                                                     /* current amount of precipitation --> to rain (mm/m2) */
-//	double prcp_snow;                                                     /* current amount of precipitation --> to snow (mm/m2) */
 	double wilting_point;                                                 /* volumetric water content at wilting point (mm/m2) */
 	double field_capacity;                                                /* volumetric water content at field capacity (mm/m2) */
 	double sat_hydr_conduct;                                              /* saturated hydraulic conductivity (mm/m2) */
@@ -1059,6 +1057,14 @@ typedef struct
 	double max_asw_fc;                                                    /* max available soil water at field capacity mmKgH2O/m3*/
 	double max_asw_sat;                                                   /* max available soil water at field capacity mmKgH2O/m3*/
 	double psi;                                                           /* water potential of soil and leaves (MPa) */
+	double soil_moist_ratio;                                              /* soil moisture ratio */
+	double vwc;                                                           /* volumetric water content (mm/m2) */
+	double vwc_fc;                                                        /* volumetric water content at field capacity (mm/m2) */
+	double vwc_sat;                                                       /* volumetric water content at saturation (mm/m2) */
+	double psi_sat;                                                       /* soil matric potential (MPa) */
+	double soil_b;                                                        /* slope of log(psi) vs log(rwc) (DIM) */
+	double soilw_fc;                                                      /* soil water at field capacity (kgH2O/m2) */
+	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
 	
 	double days_since_rain;                                               /* consecutive days without rain */
 	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */

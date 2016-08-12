@@ -40,7 +40,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	species_t *s;
 
 	a = &c->heights[height].ages[age];
-	s = &a->species[species];
+	s = &c->heights[height].ages[age].species[species];
 
 	//test
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
@@ -74,19 +74,19 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//FIXME chose which type of light use and differentiate for different layers
 	//following Nolè should be used apar
 	//following Peltioniemi should be used par
-	//ALESSIOC
-	if ( layer == c->heights[height].z )
-	{
-		if (s->value[GAMMA_LIGHT] != -9999)
-		{
-			s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
-		}
-		else
-		{
-			s->value[F_LIGHT]= 1.0;
-		}
-		logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
-	}
+//	ALESSIOC
+//	if ( layer == c->heights[height].z )
+//	{
+//		if (s->value[GAMMA_LIGHT] != -9999)
+//		{
+//			s->value[F_LIGHT]= 1.0/ ((s->value[GAMMA_LIGHT]* s->value[APAR]) +1.0);
+//		}
+//		else
+//		{
+//			s->value[F_LIGHT]= 1.0;
+//		}
+//		logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
+//	}
 
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */
@@ -99,23 +99,23 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 
 
 	/* TEMPERATURE MODIFIER */
-	if (meteo_daily->tday == NO_DATA)
+	if ( meteo_daily->tday == NO_DATA )
 	{
-		if ((meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX]))
+		if ( ( meteo_daily->tavg <= s->value[GROWTHTMIN]) || (meteo_daily->tavg >= s->value[GROWTHTMAX] ) )
 		{
 			s->value[F_T] = 0;
 			logger(g_log, "F_T = 0 \n");
 		}
 		else
 		{
-			s->value[F_T] = ((meteo_daily->tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
-					pow(((s->value[GROWTHTMAX] - meteo_daily->tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
-					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+			s->value[F_T] = ( ( meteo_daily->tavg - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
+					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tavg) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
+					( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
 		}
 	}
 	else
 	{
-		if ((meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX]))
+		if ( ( meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX] ) )
 		{
 			logger(g_log, "tday < 0 > GROWTHTMIN o GROWTHTMAX\n");
 			s->value[F_T] = 0;
@@ -123,9 +123,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 		}
 		else
 		{
-			s->value[F_T] = ((meteo_daily->tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])) *
-					pow(((s->value[GROWTHTMAX] - meteo_daily->tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT])),
-					((s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN])));
+			s->value[F_T] = ( ( meteo_daily->tday - s->value[GROWTHTMIN]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) *
+					pow ( ( ( s->value[GROWTHTMAX] - meteo_daily->tday) / (s->value[GROWTHTMAX] - s->value[GROWTHTOPT] ) ),
+					( ( s->value[GROWTHTMAX] - s->value[GROWTHTOPT]) / (s->value[GROWTHTOPT] - s->value[GROWTHTMIN] ) ) );
 		}
 	}
 	logger(g_log, "fT = %f\n", s->value[F_T]);
@@ -137,7 +137,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
 	/*FROST MODIFIER*/
-	if(meteo_daily->tday < s->value[GROWTHTMIN])
+	if( meteo_daily->tday < s->value[GROWTHTMIN] )
 	{
 		s->value[F_FROST] = 0.0;
 		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
@@ -176,9 +176,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 
 	/* AGE MODIFIER */
 
-	if (a->value != 0)
+	if ( a->value != 0 )
 	{
-		if (s->management == T)
+		if ( s->management == T )
 		{
 			//for TIMBER
 			//AGE FOR TIMBER IS THE EFFECTIVE AGE
@@ -206,16 +206,14 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	logger(g_log, "fNutr = %f\n", s->value[F_NUTR]);
 
 
-	/*SOIL WATER MODIFIER*/
+	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
-	//ALESSIOC
-	//c->soil_moist_ratio = c->asw/c->max_asw_fc;
-	//s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+	c->soil_moist_ratio = c->asw/c->max_asw_fc;
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
 	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	logger(g_log, "ASW = %f mm/m2\n", c->asw);
 	logger(g_log, "Wilting point = %f mm/m2\n", c->wilting_point);
-	//ALESSIOC
-	//logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
+	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
 	logger(g_log, "fSW = %f\n", s->value[F_SW]);
 
 
@@ -223,23 +221,23 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	/*SOIL MATRIC POTENTIAL*/
 
 	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
-	//100 mm H20 m^-2 = 100 kg H20 m^-2
+	/* 100 mm H20 m^-2 = 100 kg H20 m^-2 */
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
 	logger(g_log, "\nBIOME SOIL WATER MODIFIER\n");
 	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
 	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
-	//note:changed from biome
-	//ALESSIOC
-	//c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
-	//logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
-	//logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
-	//logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
-	//logger(g_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
-	//logger(g_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
-	//c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
-	//logger(g_log, "PSI BIOME = %f (MPa)\n", c->psi);
+
+	/* note:changed from biome*/
+	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
+	logger(g_log, "volumetric available soil water  = %f %(vol)\n", c->vwc);
+	logger(g_log, "vwc_fc = %f (DIM)\n", c->vwc_fc);
+	logger(g_log, "vwc_sat = %f (DIM)\n", c->vwc_sat);
+	logger(g_log, "vwc/vwc_sat = %f \n", c->vwc / c->vwc_sat);
+	logger(g_log, "vwc/vwc_fc = %f \n", c->vwc / c->vwc_fc);
+	c->psi = c->psi_sat * pow((c->vwc/c->vwc_sat), c->soil_b);
+	logger(g_log, "PSI BIOME = %f (MPa)\n", c->psi);
 
 	/*no water stress*/
 	if (c->psi > s->value[SWPOPEN])

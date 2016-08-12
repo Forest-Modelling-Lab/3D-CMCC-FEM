@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Turnover(species_t *const s);
+void turnover(species_t *const s);
 
 #endif /* TURNOVER_H_ */

@@ -13,7 +13,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Daily_lai (species_t *const s)
+void daily_lai (species_t *const s)
 {
 	double leaf_c;                             //leaf carbon KgC/m^2
 

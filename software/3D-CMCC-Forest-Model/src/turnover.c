@@ -11,7 +11,7 @@
 
 extern logger_t* g_log;
 
-void Turnover(species_t *const s)
+void turnover(species_t *const s)
 {
 	static double daily_live_wood_turnover_rate;
 	static double daily_leaf_fineroot_turnover_rate;

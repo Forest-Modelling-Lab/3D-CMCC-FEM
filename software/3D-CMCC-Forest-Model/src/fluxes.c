@@ -15,10 +15,10 @@
 
 extern logger_t* g_log;
 
-void Carbon_fluxes (species_t *const s)
+void carbon_fluxes (species_t *const s)
 {
-	//compute carbon balance between photosynthesis and autotrophic respiration
-	//recompute GPP
+	/* compute carbon balance between photosynthesis and autotrophic respiration */
+
 	logger(g_log, "\nC-FLUXES\n");
 
 	s->value[C_FLUX] = s->value[DAILY_GPP_gC] - fabs(s->value[TOTAL_AUT_RESP]);

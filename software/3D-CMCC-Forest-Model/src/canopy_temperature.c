@@ -42,8 +42,6 @@ void canopy_temperature(cell_t *const c, const int layer, const int height, cons
 	/* the function to compute canopy temperature use eq. in Webber et al., 2016
 	 * the resistance parts follows the rationale of BIOME-BGC model 	 */
 
-
-
 	TairK = meteo_daily->tavg + TempAbs;
 
 	/* temperature and pressure correction factor for conductances */

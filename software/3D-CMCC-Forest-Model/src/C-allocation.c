@@ -21,7 +21,7 @@
 
 extern logger_t* g_log;
 
-void C_allocation(species_t *const s)
+void carbon_allocation(species_t *const s)
 {
 	/* it allocates for both deciduous and evergreen daily carbon biomass */
 	logger(g_log, "\n****BIOMASS POOLS UPDATE****\n");

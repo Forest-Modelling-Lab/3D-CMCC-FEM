@@ -18,13 +18,13 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-//FOLLOWING BIOME-BGC
-
 void nitrogen_stock(species_t *const s)
 {
 	logger(g_log, "\n**NITROGEN STOCK**\n");
 
-	/*computing Nitrogen content from tons DM/ha to gC/m^2 and then as in BIOME to gN*/
+	/* BIOME-BGC METHOD */
+
+	/*computing Nitrogen content from tons DM/ha to gC/m^2 and then to gN*/
 	s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LEAVES];
 	logger(g_log, "Leaf nitrogen content = %f gN/m^2\n", s->value[LEAF_NITROGEN]);
 	s->value[FINE_ROOT_NITROGEN] = (s->value[FINE_ROOT_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FINE_ROOTS];

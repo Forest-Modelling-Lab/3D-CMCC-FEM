@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Daily_lai(species_t *const s);
+void daily_lai(species_t *const s);
 
 #endif /* LAI_H_ */

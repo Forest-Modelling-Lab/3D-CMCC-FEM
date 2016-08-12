@@ -86,11 +86,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* daily forest structure */
 	daily_forest_structure ( c );
 
-	//	/* daily check for vegetative layer */
-	//	daily_forest_structure_in_veg (&m->cells[cell]);
-
-	//	/* daily defines which layer is in dominant position for light */
-	//	daily_dominant_light (&m->cells[cell], layer, height, age, species);
 	/***********************************************************************************************/
 
 	/* sort class in ascending way by heights */
@@ -109,7 +104,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 				"*****************************************************************************\n",
 				layer);
 
-		//fixme usefull?
 		l->z = layer;
 
 		/* loop on each heights starting from highest to lower */
@@ -174,10 +168,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* check for adult or sapling age */
 							tree_period ( c, layer, height, age, species);
 
-							//fixme still usefull?????
-							/* compute how many classes are in vegetative period */
-							//daily_veg_counter ( c, s, height );
-
 							/* Loop for adult trees */
 							if ( !s->period )
 							{
@@ -211,21 +201,21 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										canopy_evapotranspiration( c, layer, height, age, species, meteo_daily );
 
 										/* canopy carbon fluxes */
-										Phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
+										phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
 
 										/* respiration */
 										if (!string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
 										{
-											Maintenance_respiration( c, layer, height, age, species, meteo_daily );
-											Growth_respiration( c, layer, height, age, species );
+											maintenance_respiration( c, layer, height, age, species, meteo_daily );
+											growth_respiration( c, layer, height, age, species );
 										}
-										Autotrophic_respiration ( c, layer, height, age, species );
+										autotrophic_respiration ( c, layer, height, age, species );
 
 										/* carbon fluxes */
-										Carbon_fluxes ( s );
+										carbon_fluxes ( s );
 
 										/* C assimilation */
-										Carbon_assimilation( c, layer, height, age, species );
+										carbon_assimilation( c, layer, height, age, species );
 
 										/* C-N-partitioning-allocation */
 										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, year );
@@ -248,21 +238,21 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										nitrogen_stock ( s );
 
 										/* canopy carbon fluxes */
-										Phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
+										phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
 
 										/* respiration */
 										if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 										{
-											Maintenance_respiration ( c, layer, height, age, species, meteo_daily );
-											Growth_respiration ( c, layer, height, age, species );
+											maintenance_respiration ( c, layer, height, age, species, meteo_daily );
+											growth_respiration ( c, layer, height, age, species );
 										}
-										Autotrophic_respiration ( c, layer, height, age, species );
+										autotrophic_respiration ( c, layer, height, age, species );
 
 										/* carbon fluxes */
-										Carbon_fluxes ( s );
+										carbon_fluxes ( s );
 
 										/* C assimilation */
-										Carbon_assimilation( c, layer, height, age, species );
+										carbon_assimilation( c, layer, height, age, species );
 
 										/* C-N-partitioning-allocation */
 										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, year);
@@ -293,7 +283,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									canopy_evapotranspiration ( c, layer, height, age, species, meteo_daily );
 
 									/* canopy carbon fluxes block */
-									Phosynthesis ( c, layer, height, age, species, DaysInMonth[month] );
+									phosynthesis ( c, layer, height, age, species, DaysInMonth[month] );
 
 									/* nitrogen */
 									nitrogen_stock ( s );
@@ -301,16 +291,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/* respiration */
 									if ( !string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
 									{
-										Maintenance_respiration ( c, layer, height, age, species, meteo_daily );
-										Growth_respiration ( c, layer, height, age, species );
+										maintenance_respiration ( c, layer, height, age, species, meteo_daily );
+										growth_respiration ( c, layer, height, age, species );
 									}
-									Autotrophic_respiration ( c, layer, height, age, species );
+									autotrophic_respiration ( c, layer, height, age, species );
 
 									/* carbon fluxes */
-									Carbon_fluxes ( s );
+									carbon_fluxes ( s );
 
 									/* C assimilation */
-									Carbon_assimilation( c, layer, height, age, species );
+									carbon_assimilation( c, layer, height, age, species );
 
 									/* C-N-partitioning-allocation */
 									daily_C_evergreen_partitioning_allocation ( c, layer, height, age, species, meteo_daily, day, year );

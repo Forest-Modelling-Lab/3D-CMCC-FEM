@@ -234,7 +234,7 @@ void AGB_BGB_biomass(cell_t *const c, const int height, const int age, const int
 
 }
 
-void Average_tree_biomass(species_t *const s)
+void average_tree_biomass(species_t *const s)
 {
 	/* compute tree average biomass */
 	s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C]/(double)s->counter[N_TREE])*1000.0;

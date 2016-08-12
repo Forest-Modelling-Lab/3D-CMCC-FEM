@@ -10,6 +10,6 @@
 
 #include "matrix.h"
 
-void C_allocation(species_t *const s);
+void carbon_allocation(species_t *const s);
 
 #endif /*C_ALLOCATION_H_ */

@@ -275,14 +275,15 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	live_total_wood_age (a, species);
 
 	/* allocate daily carbon */
-	C_allocation(s);
+	carbon_allocation ( s );
 
-	Average_tree_biomass(s);
+	/* compute single tree biomass pools */
+	average_tree_biomass ( s );
 
 	/* to avoid "jumps" of dbh it has computed only one monthly */
-	if(day == 0)
+	if( !day )
 	{
-		Dendrometry(c, height, age, species, year);
+		dendrometry ( c, height, age, species, year );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
@@ -296,10 +297,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
 
 	/* update Leaf Area Index */
-	Daily_lai(s);
+	daily_lai ( s );
 
 	/* turnover */
-	Turnover(s);
+	turnover ( s );
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
