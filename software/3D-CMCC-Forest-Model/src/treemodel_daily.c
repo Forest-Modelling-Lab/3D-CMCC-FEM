@@ -91,11 +91,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	//	/* daily defines which layer is in dominant position for light */
 	//	daily_dominant_light (&m->cells[cell], layer, height, age, species);
+	/***********************************************************************************************/
 
 	/* sort class in ascending way by heights */
 	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
-
-	logger(g_log,"number of layers %d\n", c->t_layers_count);
 
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
@@ -105,9 +104,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 		logger(g_log,"*****************************************************************************\n"
 				"                                                                             \n"
-				"                                 layer = %d                                  \n"
+				"                                layer = %d                                 \n"
 				"                                                                             \n"
-				"*****************************************************************************\n", layer);
+				"*****************************************************************************\n",
+				layer);
+
 		//fixme usefull?
 		l->z = layer;
 
@@ -118,7 +119,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* check if tree height class matches with corresponding cell layer */
-			if( l->z == h->z )
+			if( h->z == l->z )
 			{
 				logger(g_log,"*****************************************************************************\n"
 						"                               height = %g                              \n"
@@ -158,17 +159,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
-								/* reset annual class variables */
-								reset_annual_class_variables ( c );
-
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 							}
-							/* reset monthly class variables */
-							if ( !day ) reset_monthly_class_variables ( c );
-
-							/* reset daily class level variables */
-							reset_daily_class_variables( c );
 
 							/* print at the beginning of simulation stand data */
 							print_stand_data ( c, layer, height, age, species );

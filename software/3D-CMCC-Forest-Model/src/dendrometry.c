@@ -17,7 +17,7 @@ void Dendrometry(cell_t *const c, const int height, const int age, const int spe
 	height_t *h;
 	species_t *s;
 
-	h = c->heights;
+	h = &c->heights[height];
 	s = &c->heights[height].ages[age].species[species];
 
 

@@ -50,9 +50,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	age_t *a;
 	species_t *s;
 
-	h = c->heights;
-	a = h[height].ages;
-	s = &a[age].species[species];
+	h = &c->heights[height];
+	a = &c->heights[height].ages[age];
+	s = &c->heights[height].ages[age].species[species];
 
 	old_s0Ctem = s0Ctem = s->value[S0CTEM];
 	old_r0Ctem = r0Ctem = s->value[R0CTEM];
@@ -64,13 +64,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	//every pool except foliage
 
-
-
 	logger(g_log, "\n*ALLOCATION_ROUTINE*\n\n");
-
 	logger(g_log, "Carbon allocation routine for evergreen\n");
-
-	//i = c->t_layers[layer].heights[height].z;
 
 	/* following Arora and Boer 2005 */
 	Light_trasm = exp(- s->value[K] * s->value[LAI]);
@@ -274,7 +269,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	Average_tree_biomass (s);
 
 	/* to avoid "jumps" of dbh it has computed only one monthly */
-	if(day == 0)
+	if( !day )
 	{
 		Dendrometry(c, height, age, species, year);
 	}
