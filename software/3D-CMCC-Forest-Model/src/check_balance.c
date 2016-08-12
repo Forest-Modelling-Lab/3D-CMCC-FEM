@@ -357,7 +357,6 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	{
 		logger(g_log, "...ok Net Short Wave radiation balance at class level\n");
 	}
-
 	/****************************************************************************************************************/
 	/* PPFD balance */
 	/* sum of sources */
