@@ -123,7 +123,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			{
 				logger(g_log,"*****************************************************************************\n"
 						"                               height = %g                              \n"
-						"*****************************************************************************\n", h->value);getchar();
+						"*****************************************************************************\n", h->value);
 
 				/* loop on each age class */
 				for ( age = h->ages_count - 1 ; age >= 0 ; --age )
@@ -150,18 +150,20 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 						if(s->counter[N_TREE] > 0)
 						{
-							/* beginning of simulation (only for first year) */
-							if( !day && !month && !year ) First_day ( c, layer, height, age, species );
-
+							/* note: this is valid only for north hemisphere */
 							/* beginning of simulation (every year included the first one) */
 							if ( !day && !month )
 							{
+								/* beginning of simulation (only for first year) */
+								if ( !year )First_day ( c, layer, height, age, species );
+
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 
 								/* compute annual Maximum LAI */
 								peak_lai( s, day, month, year );
 							}
+							/***************************************************************/
 
 							/* print at the beginning of simulation stand data */
 							print_stand_data ( c, layer, height, age, species );
@@ -174,7 +176,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							//fixme still usefull?????
 							/* compute how many classes are in vegetative period */
-							daily_veg_counter ( c, s, height );
+							//daily_veg_counter ( c, s, height );
 
 							/* Loop for adult trees */
 							if ( !s->period )

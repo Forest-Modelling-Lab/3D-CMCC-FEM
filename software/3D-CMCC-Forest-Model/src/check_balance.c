@@ -33,7 +33,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->par;
 
 	/* sum of sinks */
-	out = c->par_reflected + c->par_reflected_soil;
+	out = c->par_refl + c->par_refl_soil;
 
 	/* sum of current storage */
 	store = c->apar + c->par_for_soil;
@@ -49,8 +49,8 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming par = %g molPAR/m2/day\n", meteo_daily->par);
 		logger(g_log, "\nout\n");
-		logger(g_log, "c->par_reflected = %g molPAR/m2/day\n",c->par_reflected);
-		logger(g_log, "c->par_reflected_soil = %g molPAR/m2/day\n",c->par_reflected_soil);
+		logger(g_log, "c->par_refl = %g molPAR/m2/day\n",c->par_refl);
+		logger(g_log, "c->par_refl_soil = %g molPAR/m2/day\n",c->par_refl_soil);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->apar = %g molPAR/m2/day\n", c->apar);
 		logger(g_log, "c->par_for_soil = %g molPAR/m2/day\n", c->par_for_soil);
@@ -117,7 +117,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->ppfd;
 
 	/* sum of sinks */
-	out = c->ppfd_reflected + c->ppfd_reflected_soil;
+	out = c->ppfd_refl + c->par_refl_soil;
 
 	/* sum of current storage */
 	store = c->ppfd_abs + c->ppfd_for_soil;
@@ -133,8 +133,8 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming PPFD = %g umol/m2/sec\n", meteo_daily->sw_downward_W * RAD2PAR * EPAR);
 		logger(g_log, "\nout\n");
-		logger(g_log, "c->ppfd_reflected = %g umol/m2/sec\n",c->ppfd_reflected);
-		logger(g_log, "c->ppfd_reflected_soil = %g umol/m2/sec\n",c->ppfd_reflected_soil);
+		logger(g_log, "c->ppfd_refl = %g umol/m2/sec\n",c->ppfd_refl);
+		logger(g_log, "c->ppfd_refl_soil = %g umol/m2/sec\n",c->ppfd_refl_soil);
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->ppfd_abs = %g umol/m2/sec\n", c->ppfd_abs);
 		logger(g_log, "c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_for_soil);
@@ -309,7 +309,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	in = s->value[PAR];
 
 	/* sum of sinks */
-	out = /*s->value[REFL_PAR] + */ s->value[TRANSM_PAR];
+	out = /*s->value[PAR_REFL] + */ s->value[TRANSM_PAR];
 
 	/* sum of current storage */
 	store = s->value[APAR_SUN] + s->value[APAR_SHADE];

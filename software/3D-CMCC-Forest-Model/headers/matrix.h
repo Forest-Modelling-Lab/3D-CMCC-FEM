@@ -184,7 +184,7 @@ enum {
 
 	/* PAR */
 	PAR,                        //Photosynthetically Active Radiation molPAR/m^2/day
-	REFL_PAR,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
+	PAR_REFL,                   //Reflected Photosynthetically Active Radiation molPAR/m^2/day OVERALL CANOPY
 	APAR,                       //Absorbed Physiological Active Radiation molPAR/m^2/day
 	APAR_SUN,                   //Absorbed Physiological Active Radiation molPAR/m^2/day for sun leaves
 	APAR_SHADE,                 //Absorbed Physiological Active Radiation molPAR/m^2/day for shaded leaves
@@ -955,6 +955,8 @@ typedef struct
 	double bgb;                                         /* current below ground biomass at cell level (tC/cell) */
 
 	/* radiation variables */
+	double sw_rad_down_MJ;                              /* Downward short wave radiation flux (MJ/m2/day) */
+	double sw_rad_down_W;                               /* Downward short wave radiation flux (W/m2) */
 	double short_wave_radiation_upward_MJ;              /* Upward short wave radiation flux (MJ/m2/day) */
 	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
 	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
@@ -982,17 +984,17 @@ typedef struct
 	double par;                                         /* incoming PAR at cell level (molPAR/m2/day) */
 	double apar;                                        /* cumulated absorbed PAR at cell level (molPAR/m2/day) */
 	double par_transm;                                  /* cumulated transmitted PAR at cell level (molPAR/m2/day) */
-	double par_reflected;                               /* cumulated reflected PAR at cell level (molPAR/m2/day) */
+	double par_refl;                                    /* cumulated reflected PAR at cell level (molPAR/m2/day) */
 	double par_for_soil;                                /* available PAR for soil (molPAR/m2/day) */
-	double par_reflected_soil;                          /* reflected PAR by the soil (molPAR/m2/day) */
+	double par_refl_soil;                               /* reflected PAR by the soil (molPAR/m2/day) */
 	double par_for_establishment;                       /* available PAR for establishment (molPAR/m2/day) */
 
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_abs;                                    /* Absorbed Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
-	double ppfd_reflected;                              /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
+	double ppfd_refl;                                   /* Reflected Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_for_soil;                               /* PPFD available for soil (umol/m2/sec) */
-	double ppfd_reflected_soil;                         /* PPFD reflected by the soil (umol/m2/day) */
+	double ppfd_refl_soil;                              /* PPFD reflected by the soil (umol/m2/day) */
 
 	double canopy_temp;                                 /* daily canopy temperature (°C) */
 	double canopy_temp_k;                               /* daily canopy temperature (K) */

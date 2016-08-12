@@ -201,39 +201,32 @@ void print_stand_data(cell_t* const c, const int layer, const int height, const 
 	logger(g_log, "cell = \n");
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
-	logger(g_log, "* z = %d\n", layer);
+	logger(g_log, "* z (layer) = %d\n", l->z);
+	logger(g_log, "* z (height) = %d\n", h->z);
 	logger(g_log, "-class level data\n");
-	logger(g_log, "- Height = %f m\n", h->value);
+	logger(g_log, "- Height = %g m\n", h->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);
 	logger(g_log, "- Species = %s\n", s->name);
-	logger(g_log, "- DBH = %f\n", s->value[AVDBH]);
+	logger(g_log, "- DBH = %g\n", s->value[AVDBH]);
 	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
-	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-	{
-		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
-	}
-	else
-	{
-		logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
-	}
-	logger(g_log, "- Daily LAI from Model= %f \n", s->value[LAI]);
-	logger(g_log, "- Crown Diameter = %f \n",  s->value[CROWN_DIAMETER_DBHDC_FUNC]);
-	logger(g_log, "- Canopy Cover = %f \n", s->value[CANOPY_COVER_DBHDC]);
-	logger(g_log, "- ASW = %f mm\n", c->asw);
-	logger(g_log, "- Phenology type = %f\n", s->value[PHENOLOGY]);
+	logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
+	logger(g_log, "- Daily LAI from Model = %g \n", s->value[LAI]);
+	logger(g_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+	logger(g_log, "- Canopy Cover = %g \n", s->value[CANOPY_COVER_DBHDC]);
+	logger(g_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
 	logger(g_log, "- Management type = %s\n", s->management ? "C" : "T");
 	logger(g_log, "--Carbon pools in tC\n");
-	logger(g_log, "+ Wf = %f tC/area\n", s->value[LEAF_C]);
-	logger(g_log, "+ Wts = %f tC/area\n", s->value[TOT_STEM_C]);
-	logger(g_log, "+ Ws = %f tC/area\n", s->value[STEM_C]);
-	logger(g_log, "+ Wbb = %f tC/area\n", s->value[BRANCH_C]);
-	logger(g_log, "+ Wrc = %f tC/area\n", s->value[COARSE_ROOT_C]);
-	logger(g_log, "+ Wrf = %f tC/area\n", s->value[FINE_ROOT_C]);
-	logger(g_log, "+ Wr Tot = %f tC/area\n", s->value[TOT_ROOT_C]);
-	logger(g_log, "+ Wres = %f tC/area\n", s->value[RESERVE_C]);
-	logger(g_log, "+ Ws live = %f tC/area\n", s->value[STEM_LIVE_WOOD_C]);
-	logger(g_log, "+ Wrc live = %f tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
-	logger(g_log, "+ wbb live = %f tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	logger(g_log, "+ Wf = %g tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "+ Wts = %g tC/area\n", s->value[TOT_STEM_C]);
+	logger(g_log, "+ Ws = %g tC/area\n", s->value[STEM_C]);
+	logger(g_log, "+ Wbb = %g tC/area\n", s->value[BRANCH_C]);
+	logger(g_log, "+ Wrc = %g tC/area\n", s->value[COARSE_ROOT_C]);
+	logger(g_log, "+ Wrf = %g tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_log, "+ Wr Tot = %g tC/area\n", s->value[TOT_ROOT_C]);
+	logger(g_log, "+ Wres = %g tC/area\n", s->value[RESERVE_C]);
+	logger(g_log, "+ Ws live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
+	logger(g_log, "+ Wrc live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_log, "+ wbb live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
 
 }
 

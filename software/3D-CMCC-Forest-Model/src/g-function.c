@@ -81,8 +81,8 @@ void tree_period(cell_t* const c, const int layer, const int height, const int a
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 	/* Set Tree period */
-	// 0 = adult tree
-	// 1 = young tree
+	/* 0 = adult tree */
+	/* 1 = young tree */
 
 	if ( a->value > s->value[ADULT_AGE])
 	{

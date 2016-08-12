@@ -46,11 +46,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	double npp_to_alloc;
 	double npp_alloc;
 
-	height_t *h;
+	//height_t *h;
 	age_t *a;
 	species_t *s;
 
-	h = &c->heights[height];
+	//h = &c->heights[height];
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 

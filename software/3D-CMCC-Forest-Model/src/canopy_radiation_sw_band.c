@@ -17,16 +17,16 @@
 
 extern logger_t* g_log;
 
-void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int age, const int species, double Light_abs_frac
-		, double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
+void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, const int age, const int species, double Light_abs_frac,
+		double Light_abs_frac_sun, double Light_abs_frac_shade, double Light_refl_par_frac, double Light_refl_sw_rad_canopy_frac)
 {
 	double leaf_cell_cover_eff;       /* effective fraction of leaf cover over the cell (ratio) */
 
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	/* note: This function works at class level computing absorbed transmitted and reflected PAR, NET RADIATION
-	 * and PPFD through different height * classes/layers considering at square meter takes into account coverage,
+	/* note: This function works at layer/class level computing absorbed transmitted and reflected PAR, NET RADIATION
+	 * and PPFD through different height classes/layers considering at square meter takes into account coverage,
 	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
 
 	/* it follows a little bit different rationale compared to BIOME-BGC approach
@@ -70,7 +70,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "Transmitted Par shade = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR_SHADE]);
 	logger(g_log, "Apar total = %g molPAR/m^2 covered/day\n", s->value[APAR]);
 	logger(g_log, "Transmitted Par total = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR]);
-	logger(g_log, "Reflected Par = %g molPAR/m^2 day\n", s->value[REFL_PAR]);
+	logger(g_log, "Reflected Par = %g molPAR/m^2 day\n", s->value[PAR_REFL]);
 
 	/*compute Net Short Wave radiation (W/m^2 covered ) for sun and shaded leaves*/
 	logger(g_log, "\nAVAILABLE Net Short Wave radiation = %g W/m^2 covered\n", s->value[NET_SW_RAD]);
@@ -126,11 +126,15 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	}
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
-	*/
+	 */
 }
 
 void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
+	static int cell_height_class_counter;
+	static int layer_height_class_counter;
+
+
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
 	double Light_refl_sw_rad_canopy_frac;                                                 /* (ratio) fraction of Short Wave radiation reflected from the canopy */
@@ -145,11 +149,15 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	double leaf_cell_cover_eff;                                                           /* (ratio) fraction of square meter covered by leaf over the grid cell */
 
-	static int counter;
 	//fixme move soil albedo into soil.txt file
 	const double soil_albedo = 0.15;                                                      /* (ratio) soil albedo without snow (see MAESPA model) */
 
+	tree_layer_t *l;
+	//height_t *h;
 	species_t *s;
+
+	l = &c->t_layers[layer];
+	//h = &c->heights[height];
 	s = &c->heights[height].ages[age].species[species];
 
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
@@ -159,11 +167,11 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
-	if(s->value[LAI] < 1.0) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
+	if( s->value[LAI] < 1.0 ) leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
 	else leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
 	logger(g_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/***********************************************************************************************************/
@@ -186,7 +194,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	calculated similarly to sw except that albedo is 1/3 for PAR because less
 	PAR is reflected than sw_radiation (Jones 1992)*/
 
-	if(s->value[LAI] >= 1.0)
+	if( s->value[LAI] >= 1.0 )
 	{
 		Light_refl_sw_rad_canopy_frac = s->value[ALBEDO];
 		//		LightReflec_net_rad_sun = s->value[ALBEDO];
@@ -194,6 +202,16 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		Light_refl_par_frac = s->value[ALBEDO]/3.0;
 		//		LightReflec_par_sun = s->value[ALBEDO]/3.0;
 		//		LightReflec_par_shade = s->value[ALBEDO]/3.0;
+	}
+	else if ( !s->value[LAI])
+	{
+		Light_refl_sw_rad_canopy_frac = 0.0;
+		//		LightReflec_net_rad_sun = 0.0;
+		//		LightReflec_net_rad_shade = 0.0;
+		Light_refl_par_frac = 0.0;
+		//		LightReflec_par_sun = 0.0;
+		//		LightReflec_par_shade = 0.0;
+
 	}
 	else
 	{
@@ -218,364 +236,501 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	Light_refl_sw_rad_soil_frac = soil_albedo;
 	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_par_frac);
 
-	/* assign incoming PAR */
-	c->par = meteo_daily->par;
-
-	/* assign incoming PPFD */
-	c->ppfd = meteo_daily->ppfd;
+	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
+	//fixme following MAESPA (Duursma et al.,) and from Campbell&Norman (2000, p. 259) dominated layers should have just shaded leaves
 
 	/* RADIATION */
-	/*if at least one class is in veg period*/
-	if (c->Veg_Counter > 0.0)
+	//ALESSIOC NEW START
+
+	/* first height class in the cell is processed */
+	if( !layer_height_class_counter && !cell_height_class_counter )
 	{
-		/*************************************************************************************************************************************************************************************/
-		/* dominant layer */
-		if(c->heights[height].z == c->heights[height].z)
-		{
-			logger(g_log, "**LIGHT DOMINANT**\n");
-			// ALESSIOC
-			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
+		/* reset temporary values when the first height class in layer is processed */
+		temp_apar = 0.0;
+		temp_par_refl = 0.0;
+		temp_sw_rad_abs = 0.0;
+		temp_sw_rad_refl = 0.0;
+		temp_ppfd_abs = 0.0;
+		temp_ppfd_refl = 0.0;
 
-			/* reset previous day temporary values */
-			//ALESSIOC
-			/*
-			if (c->dominant_veg_counter == 1)
-			{
-				counter = 0;
+		/* assign meteo variables to cell variables */
+		/* assign Shortwave Radiation */
+		c->sw_rad_down_W = meteo_daily->sw_downward_W;
 
-				temp_apar = 0.0;
-				temp_par_refl = 0.0;
-				temp_sw_rad_abs = 0.0;
-				temp_sw_rad_refl = 0.0;
-				temp_ppfd_abs = 0.0;
-				temp_ppfd_refl = 0.0;
-			}
-			*/
+		/* assign incoming PAR */
+		c->par = meteo_daily->par;
 
-			/* increment counter */
-			counter++;
+		/* assign incoming PPFD */
+		c->ppfd = meteo_daily->ppfd;
 
-			/* PAR computation */
-			/* Remove the reflected PAR */
-			s->value[REFL_PAR] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PAR */
-			s->value[PAR] = c->par - s->value[REFL_PAR];
-			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
-
-			/* Net Short Wave Radiation computation */
-			//note: as in BIOME_BGC model considers just SHORT WAVE FLUXES
-			/* Remove the reflected radiation */
-			c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
-			logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
-			/* Net Short Wave radiation */
-			c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
-			logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
-			/* Net Short Wave radiation */
-			s->value[SW_RAD_REFL] = c->short_wave_radiation_upward_W;
-			/*assign to class Net Short Wave Radiation */
-			s->value[NET_SW_RAD] = (meteo_daily->sw_downward_W - s->value[SW_RAD_REFL]);
-			logger(g_log, "Net Short Wave Radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
-			/* assign to cell Net Short Wave Radiation */
-			c->net_sw_rad = s->value[NET_SW_RAD];
-
-			/* PPFD computation */
-			/* Remove the reflected PPFD */
-			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PPFD */
-			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
-			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
-
-			/* compute absorbed and transmitted Par, Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
-					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
-
-			/* update temporary absorbed and reflected PAR for lower layer */
-			temp_apar += s->value[APAR];
-			c->apar += s->value[APAR];
-			temp_par_refl += s->value[REFL_PAR];
-			c->par_reflected += s->value[REFL_PAR];
-
-			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
-			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			temp_sw_rad_refl += s->value[REFL_PAR];
-			c->sw_rad_refl += s->value[SW_RAD_REFL];
-			logger(g_log, "net_radiation_reflected = %g \n", s->value[SW_RAD_REFL] );
-
-			/* update temporary absorbed and transmitted PPFD lower layer */
-			temp_ppfd_abs += s->value[PPFD_ABS];
-			c->ppfd_abs += s->value[PPFD_ABS];
-			temp_ppfd_refl += s->value[PPFD_REFL];
-			c->ppfd_reflected += s->value[PPFD_REFL];
-
-			/* compute PAR Net Short Wave radiation and PPFD for lower layers at the last height class processed */
-			//ALESSIOC
-			//if(counter == c->dominant_veg_counter)
-			//{
-			//	/* compute par for lower layer */
-			//	c->par -= (temp_apar + temp_par_refl);
-
-			//	/* compute Net Short Wave radiation for lower layer */
-			//	c->net_sw_rad -= (temp_sw_rad_abs/* + temp_net_radiation_reflected*/);
-
-			//	/* compute ppfd for lower layer */
-			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
-			//}
-
-			/* assign to soil layer if no other height classes in dominated layer */
-			// ALESSIOC
-			//if(c->height_class_in_layer_dominated_counter == 0)
-			//{
-			//	/* remove reflected part */
-			//	c->par_reflected_soil = c->par * Light_refl_sw_rad_soil_frac;
-			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
-			//	c->ppfd_reflected_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
-
-			//	/* Par Net Short Wave radiation and PPFD for the soil during growing season */
-			//	c->par_for_soil = c->par - c->par_reflected_soil;
-			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
-			//	c->ppfd_for_soil = c->ppfd - c->ppfd_reflected_soil;
-			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
-			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
-			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
-			//}
-		}
-		/*************************************************************************************************************************************************************************************/
-		/* dominated layer */
-		// ALESSIOC: STESSA CONDIZIONE IF!!!!!
-		//else if (c->heights[height].z == c->t_layers[layer].z)
-		else if(c->heights[height].z == c->heights[height].z)
-		{
-			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
-			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
-			logger(g_log, "**LIGHT DOMINATED**\n");
-			// ALESSIOC
-			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominated_counter);
-
-			/* reset previous day temporary values */
-			//ALESSIOC
-			/*
-			if (c->dominant_veg_counter == 1)
-			{
-				counter = 0;
-
-				temp_apar = 0.0;
-				temp_par_refl = 0.0;
-				temp_sw_rad_abs = 0.0;
-				temp_sw_rad_refl = 0.0;
-				temp_ppfd_abs = 0.0;
-				temp_ppfd_refl = 0.0;
-			}
-			*/
-			/* increment counter */
-			counter++;
-
-			/* PAR computation */
-			/* Remove the reflected PAR */
-			s->value[REFL_PAR] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PAR */
-			s->value[PAR] = c->par - s->value[REFL_PAR];
-			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
-
-			/* Net Short Wave Radiation computation */
-			/* Remove the reflected radiation */
-			s->value[SW_RAD_REFL] = c->net_sw_rad *  Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
-			/*assign to class Net Short Wave Radiation */
-			s->value[NET_SW_RAD] = c->net_sw_rad - s->value[SW_RAD_REFL];
-			logger(g_log, "Net Short Wave radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
-
-			/* PPFD computation */
-			/* Remove the reflected PPFD */
-			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PPFD */
-			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
-			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
-
-			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
-								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
-
-			/* update temporary absorbed and reflected PAR for lower layer */
-			temp_apar += s->value[APAR];
-			c->apar += s->value[APAR];
-			temp_par_refl += s->value[REFL_PAR];
-			c->par_reflected += s->value[REFL_PAR];
-
-			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
-			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			temp_sw_rad_refl += s->value[REFL_PAR];
-			c->sw_rad_refl += s->value[SW_RAD_REFL];
-
-			/* update temporary absorbed and transmitted PPFD lower layer */
-			temp_ppfd_abs += s->value[PPFD_ABS];
-			c->ppfd_abs += s->value[PPFD_ABS];
-			temp_ppfd_refl += s->value[PPFD_REFL];
-			c->ppfd_reflected += s->value[PPFD_REFL];
-
-			/* compute PAR for lower layers at the last height class processed */
-			//ALESSIOC
-			//if(counter == c->dominated_veg_counter)
-			//{
-			//	/* compute par for lower layer */
-			//	c->par -= (temp_apar + temp_par_refl);
-
-			//	/* compute Net Short Wave radiation for lower layer */
-			//	c->net_sw_rad -= (temp_sw_rad_abs + temp_sw_rad_refl);
-
-			//	/* compute ppfd for lower layer */
-			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
-			//}
-			/* assign to soil layer if no other height classes in dominated layer */
-			//if(c->height_class_in_layer_subdominated_counter == 0)
-			//{
-			//	/* remove reflected part */
-			//	c->par_reflected_soil = c->par * Light_refl_sw_rad_soil_frac;
-			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
-			//	c->ppfd_reflected_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
-
-			//	/* Par, Net Short Wave radiation and PPFD for the soil during growing season */
-			//	c->par_for_soil = c->par - c->par_reflected_soil;
-			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
-			//	c->ppfd_for_soil = c->ppfd - c->ppfd_reflected_soil;
-			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
-			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
-			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
-			//}
-		}
-		/*******************************************************************************************************************************************************************************/
-		/* sub-dominated layer */
-		else
-		{
-			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
-			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell&Norman (2000, p. 259)
-			logger(g_log, "**LIGHT SUB-DOMINATED**\n");
-			// ALESSIOC
-			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_subdominated_counter);
-
-			/* assign PAR at the first class considering absorbed and transmitted par from above layer and reset previous day temporary values */
-			//ALESSIOC
-			/*
-			if (c->subdominated_veg_counter == 1)
-			{
-				counter = 0;
-
-				temp_apar = 0.0;
-				temp_par_refl = 0.0;
-				temp_sw_rad_abs = 0.0;
-				temp_sw_rad_refl = 0.0;
-				temp_ppfd_abs = 0.0;
-				temp_ppfd_refl = 0.0;
-			}
-			*/
-			counter++;
-
-			/* PAR computation */
-			/* Remove the reflected PAR */
-			s->value[REFL_PAR] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PAR */
-			s->value[PAR] = c->par - s->value[REFL_PAR];
-			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
-
-			/* Net Short Wave Radiation computation */
-			/* Remove the reflected radiation */
-			s->value[SW_RAD_REFL] = c->net_sw_rad * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
-			/*assign to class Net Short Wave Radiation */
-			s->value[NET_SW_RAD] = c->net_sw_rad - s->value[SW_RAD_REFL];
-			logger(g_log, "Net Short Wave radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
-
-			/* PPFD computation */
-			/* Remove the reflected PPFD */
-			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
-			/*assign to class PPFD */
-			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
-			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
-
-			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
-			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
-								Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
-
-			/* update temporary absorbed and reflected PAR for lower layer */
-			temp_apar += s->value[APAR];
-			c->apar += s->value[APAR];
-			temp_par_refl += s->value[REFL_PAR];
-			c->par_reflected += s->value[REFL_PAR];
-
-			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
-			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
-			temp_sw_rad_refl += s->value[REFL_PAR];
-			c->sw_rad_refl += s->value[SW_RAD_REFL];
-
-			/* update temporary absorbed and transmitted PPFD lower layer */
-			temp_ppfd_abs += s->value[PPFD_ABS];
-			c->ppfd_abs += s->value[PPFD_ABS];
-			temp_ppfd_refl += s->value[PPFD_REFL];
-			c->ppfd_reflected += s->value[PPFD_REFL];
-
-			/* compute PAR for lower layers at the last height class processed */
-			//if(counter == c->subdominated_veg_counter)
-			//{
-			//	/* compute par for lower layer */
-			//	c->par -= (temp_apar + temp_par_refl);
-
-			//	/* compute Net Short Wave radiation for lower layer */
-			//	c->net_sw_rad -= (temp_sw_rad_abs + temp_sw_rad_refl);
-
-			//	/* compute ppfd for lower layer */
-			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
-			//}
-
-			/* assign to soil layer if no other height classes in dominated layer */
-			// ALESSIOC
-			//if(c->height_class_in_layer_subdominated_counter == 0)
-			//{
-			//	/* remove reflected part */
-			//	c->par_reflected_soil = c->par * Light_refl_sw_rad_soil_frac;
-			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
-			//	c->ppfd_reflected_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
-
-			//	/* Par, Net Short Wave radiation and PPFD for the soil during growing season */
-			//	c->par_for_soil = c->par - c->par_reflected_soil;
-			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
-			//	c->ppfd_for_soil = c->ppfd - c->ppfd_reflected_soil;
-			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
-			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
-			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
-			//}
-		}
 	}
-	/**********************************************************************************************************************************************************************************/
-	/* outside growing season */
-	else
+
+	/*****************************************************************************************************************/
+
+	/* counters */
+	layer_height_class_counter ++;
+	cell_height_class_counter++;
+
+	/*************************************************************************/
+
+	/* PAR computation */
+	/* Remove the reflected PAR */
+	s->value[PAR_REFL] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
+	/*assign to class PAR */
+	s->value[PAR] = c->par - s->value[PAR_REFL];
+	logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
+
+	/* Net Short Wave Radiation computation */
+	/* Remove the reflected radiation */
+	s->value[SW_RAD_REFL] = c->sw_rad_down_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+	/*assign to class Net Short Wave Radiation */
+	s->value[NET_SW_RAD] = c->net_sw_rad - s->value[SW_RAD_REFL];
+	logger(g_log, "Net Short Wave radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
+
+	/* PPFD computation */
+	/* Remove the reflected PPFD */
+	s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+	/*assign to class PPFD */
+	s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
+	logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
+
+	/*************************************************************************/
+
+	//todo do the same thing for reflected part
+	/* compute absorbed and transmitted Par, Net Short Wave radiation and PPFD class level */
+	canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+			Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+
+	/*************************************************************************/
+
+	/* update temporary absorbed and reflected PAR for lower layer */
+	temp_apar += s->value[APAR];
+	c->apar += s->value[APAR];
+	temp_par_refl += s->value[PAR_REFL];
+	c->par_refl += s->value[PAR_REFL];
+
+	/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
+	temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+	c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+	temp_sw_rad_refl += s->value[PAR_REFL];
+	c->sw_rad_refl += s->value[SW_RAD_REFL];
+
+	/* update temporary absorbed and transmitted PPFD lower layer */
+	temp_ppfd_abs += s->value[PPFD_ABS];
+	c->ppfd_abs += s->value[PPFD_ABS];
+	temp_ppfd_refl += s->value[PPFD_REFL];
+	c->ppfd_refl += s->value[PPFD_REFL];
+
+	/*****************************************************************************************************************/
+
+	/* when matches the last height class in the layer is processed */
+	if ( l->height_class == layer_height_class_counter )
 	{
-		logger(g_log, "\n**LIGHT FOR SOIL LAYER (outside the growing season)**\n");
+		/* compute values for lower layer when last height class in layer is processed */
+		/* compute par for lower layer */
+		c->par -= (temp_apar + temp_par_refl);
 
-		/* Remove the reflected PAR */
-		c->par_reflected_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
+		/* compute Net Short Wave radiation for lower layer */
+		c->net_sw_rad -= (temp_sw_rad_abs/* + temp_net_radiation_reflected*/);
 
-		/* Remove the reflected radiation */
-		c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
-		logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
+		/* compute ppfd for lower layer */
+		c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
 
-		/* Net Short Wave Short Wave radiation */
-		c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
-		logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
+		/* reset temporary values when the last height class in layer is processed */
+		temp_apar = 0.0;
+		temp_par_refl = 0.0;
+		temp_sw_rad_abs = 0.0;
+		temp_sw_rad_refl = 0.0;
+		temp_ppfd_abs = 0.0;
+		temp_ppfd_refl = 0.0;
 
-		c->sw_rad_for_soil_refl = c->short_wave_radiation_upward_W;
-
-		/* Remove the reflected PPFD */
-		c->ppfd_reflected_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
-
-		/* compute radiation absorbed by the soil */
-		/* Par and Net Short Wave radiation for the soil outside growing season (bare soil condition) */
-		c->par_for_soil = meteo_daily->par - c->par_reflected_soil;
-		c->net_sw_rad_for_soil = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
-		c->ppfd_for_soil = meteo_daily->ppfd - c->ppfd_reflected_soil;
-		logger(g_log, "PAR for soil outside growing season = %g \n", c->par_for_soil);
-		logger(g_log, "Net Short Wave radiation for soil outside growing season = %g \n", c->net_sw_rad_for_soil);
-		logger(g_log, "PPFD for soil outside growing season = %g \n", c->ppfd_for_soil);
+		/* reset counter */
+		layer_height_class_counter = 0;
 	}
+
+	/*************************************************************************/
+
+	/* when matches the last height class in the cell is processed */
+	if ( c->heights_count == cell_height_class_counter )
+	{
+		/* compute values for soil layer when last height class in cell is processed */
+		/* remove reflected part */
+		c->par_refl_soil = c->par * Light_refl_sw_rad_soil_frac;
+		c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
+		c->ppfd_refl_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
+
+		/* Par Net Short Wave radiation and PPFD for the soil during growing season */
+		c->par_for_soil = c->par - c->par_refl_soil;
+		c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+		c->ppfd_for_soil = c->ppfd - c->ppfd_refl_soil;
+		logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
+		logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
+		logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
+
+		/* reset counter */
+		cell_height_class_counter = 0;
+	}
+	//ALESSIOC NEW FINISH
+
+
+//
+//	/* assign incoming PAR */
+//	c->par = meteo_daily->par;
+//
+//	/* assign incoming PPFD */
+//	c->ppfd = meteo_daily->ppfd;
+//	/*****************************************************************************************************************************************************************************************/
+//	/*if at least one class is in veg period*/
+//	if (c->Veg_Counter > 0.0)
+//	{
+//		/*************************************************************************************************************************************************************************************/
+//		/* dominant layer */
+//		if(c->heights[height].z == c->heights[height].z)
+//		{
+//			logger(g_log, "**LIGHT DOMINANT**\n");
+//			// ALESSIOC
+//			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominant_counter);
+//
+//			/* reset previous day temporary values */
+//			//ALESSIOC
+//			/*
+//			if (c->dominant_veg_counter == 1)
+//			{
+//				counter = 0;
+//
+//				temp_apar = 0.0;
+//				temp_par_refl = 0.0;
+//				temp_sw_rad_abs = 0.0;
+//				temp_sw_rad_refl = 0.0;
+//				temp_ppfd_abs = 0.0;
+//				temp_ppfd_refl = 0.0;
+//			}
+//			 */
+//
+//			/* increment counter */
+//			counter++;
+//
+//			/* PAR computation */
+//			/* Remove the reflected PAR */
+//			s->value[PAR_REFL] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PAR */
+//			s->value[PAR] = c->par - s->value[PAR_REFL];
+//			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
+//
+//			/* Net Short Wave Radiation computation */
+//			//note: as in BIOME_BGC model considers just SHORT WAVE FLUXES
+//			/* Remove the reflected radiation */
+//			c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+//			logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
+//			/* Net Short Wave radiation */
+//			c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
+//			logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
+//			/* Net Short Wave radiation */
+//			s->value[SW_RAD_REFL] = c->short_wave_radiation_upward_W;
+//			/*assign to class Net Short Wave Radiation */
+//			s->value[NET_SW_RAD] = (meteo_daily->sw_downward_W - s->value[SW_RAD_REFL]);
+//			logger(g_log, "Net Short Wave Radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
+//			/* assign to cell Net Short Wave Radiation */
+//			c->net_sw_rad = s->value[NET_SW_RAD];
+//
+//			/* PPFD computation */
+//			/* Remove the reflected PPFD */
+//			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PPFD */
+//			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
+//			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
+//
+//			/* compute absorbed and transmitted Par, Short Wave radiation and ppfd class level */
+//			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+//					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+//
+//			/* update temporary absorbed and reflected PAR for lower layer */
+//			temp_apar += s->value[APAR];
+//			c->apar += s->value[APAR];
+//			temp_par_refl += s->value[PAR_REFL];
+//			c->par_refl += s->value[PAR_REFL];
+//
+//			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
+//			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			temp_sw_rad_refl += s->value[PAR_REFL];
+//			c->sw_rad_refl += s->value[SW_RAD_REFL];
+//			logger(g_log, "net_radiation_reflected = %g \n", s->value[SW_RAD_REFL] );
+//
+//			/* update temporary absorbed and transmitted PPFD lower layer */
+//			temp_ppfd_abs += s->value[PPFD_ABS];
+//			c->ppfd_abs += s->value[PPFD_ABS];
+//			temp_ppfd_refl += s->value[PPFD_REFL];
+//			c->ppfd_refl += s->value[PPFD_REFL];
+//
+//			/* compute PAR Net Short Wave radiation and PPFD for lower layers at the last height class processed */
+//			//ALESSIOC
+//			//if(counter == c->dominant_veg_counter)
+//			//{
+//			//	/* compute par for lower layer */
+//			//	c->par -= (temp_apar + temp_par_refl);
+//
+//			//	/* compute Net Short Wave radiation for lower layer */
+//			//	c->net_sw_rad -= (temp_sw_rad_abs/* + temp_net_radiation_reflected*/);
+//
+//			//	/* compute ppfd for lower layer */
+//			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
+//			//}
+//
+//			/* assign to soil layer if no other height classes in dominated layer */
+//			// ALESSIOC
+//			//if(c->height_class_in_layer_dominated_counter == 0)
+//			//{
+//			//	/* remove reflected part */
+//			//	c->par_refl_soil = c->par * Light_refl_sw_rad_soil_frac;
+//			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
+//			//	c->ppfd_refl_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
+//
+//			//	/* Par Net Short Wave radiation and PPFD for the soil during growing season */
+//			//	c->par_for_soil = c->par - c->par_refl_soil;
+//			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+//			//	c->ppfd_for_soil = c->ppfd - c->ppfd_refl_soil;
+//			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
+//			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
+//			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
+//			//}
+//		}
+//		/*************************************************************************************************************************************************************************************/
+//		/* dominated layer */
+//		// ALESSIOC: STESSA CONDIZIONE IF!!!!!
+//		//else if (c->heights[height].z == c->t_layers[layer].z)
+//		else if(c->heights[height].z == c->heights[height].z)
+//		{
+//			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
+//			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell & Norman (2000, p. 259)
+//			logger(g_log, "**LIGHT DOMINATED**\n");
+//			// ALESSIOC
+//			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_dominated_counter);
+//
+//			/* reset previous day temporary values */
+//			//ALESSIOC
+//			/*
+//			if (c->dominant_veg_counter == 1)
+//			{
+//				counter = 0;
+//
+//				temp_apar = 0.0;
+//				temp_par_refl = 0.0;
+//				temp_sw_rad_abs = 0.0;
+//				temp_sw_rad_refl = 0.0;
+//				temp_ppfd_abs = 0.0;
+//				temp_ppfd_refl = 0.0;
+//			}
+//			 */
+//			/* increment counter */
+//			counter++;
+//
+//			/* PAR computation */
+//			/* Remove the reflected PAR */
+//			s->value[PAR_REFL] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PAR */
+//			s->value[PAR] = c->par - s->value[PAR_REFL];
+//			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
+//
+//			/* Net Short Wave Radiation computation */
+//			/* Remove the reflected radiation */
+//			s->value[SW_RAD_REFL] = c->net_sw_rad *  Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+//			/*assign to class Net Short Wave Radiation */
+//			s->value[NET_SW_RAD] = c->net_sw_rad - s->value[SW_RAD_REFL];
+//			logger(g_log, "Net Short Wave radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
+//
+//			/* PPFD computation */
+//			/* Remove the reflected PPFD */
+//			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PPFD */
+//			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
+//			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
+//
+//			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
+//			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+//					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+//
+//			/* update temporary absorbed and reflected PAR for lower layer */
+//			temp_apar += s->value[APAR];
+//			c->apar += s->value[APAR];
+//			temp_par_refl += s->value[PAR_REFL];
+//			c->par_refl += s->value[PAR_REFL];
+//
+//			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
+//			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			temp_sw_rad_refl += s->value[PAR_REFL];
+//			c->sw_rad_refl += s->value[SW_RAD_REFL];
+//
+//			/* update temporary absorbed and transmitted PPFD lower layer */
+//			temp_ppfd_abs += s->value[PPFD_ABS];
+//			c->ppfd_abs += s->value[PPFD_ABS];
+//			temp_ppfd_refl += s->value[PPFD_REFL];
+//			c->ppfd_refl += s->value[PPFD_REFL];
+//
+//			/* compute PAR for lower layers at the last height class processed */
+//			//ALESSIOC
+//			//if(counter == c->dominated_veg_counter)
+//			//{
+//			//	/* compute par for lower layer */
+//			//	c->par -= (temp_apar + temp_par_refl);
+//
+//			//	/* compute Net Short Wave radiation for lower layer */
+//			//	c->net_sw_rad -= (temp_sw_rad_abs + temp_sw_rad_refl);
+//
+//			//	/* compute ppfd for lower layer */
+//			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
+//			//}
+//			/* assign to soil layer if no other height classes in dominated layer */
+//			//if(c->height_class_in_layer_subdominated_counter == 0)
+//			//{
+//			//	/* remove reflected part */
+//			//	c->par_refl_soil = c->par * Light_refl_sw_rad_soil_frac;
+//			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
+//			//	c->ppfd_refl_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
+//
+//			//	/* Par, Net Short Wave radiation and PPFD for the soil during growing season */
+//			//	c->par_for_soil = c->par - c->par_refl_soil;
+//			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+//			//	c->ppfd_for_soil = c->ppfd - c->ppfd_refl_soil;
+//			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
+//			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
+//			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
+//			//}
+//		}
+//		/*******************************************************************************************************************************************************************************/
+//		/* sub-dominated layer */
+//		else
+//		{
+//			//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!
+//			//fixme following MAESPA (Duursma et al.,) dominated layers should have just shaded leaves and  from Campbell&Norman (2000, p. 259)
+//			logger(g_log, "**LIGHT SUB-DOMINATED**\n");
+//			// ALESSIOC
+//			//logger(g_log, "Height Classes in Dominant Layer = %d\n", c->height_class_in_layer_subdominated_counter);
+//
+//			/* assign PAR at the first class considering absorbed and transmitted par from above layer and reset previous day temporary values */
+//			//ALESSIOC
+//			/*
+//			if (c->subdominated_veg_counter == 1)
+//			{
+//				counter = 0;
+//
+//				temp_apar = 0.0;
+//				temp_par_refl = 0.0;
+//				temp_sw_rad_abs = 0.0;
+//				temp_sw_rad_refl = 0.0;
+//				temp_ppfd_abs = 0.0;
+//				temp_ppfd_refl = 0.0;
+//			}
+//			 */
+//			counter++;
+//
+//			/* PAR computation */
+//			/* Remove the reflected PAR */
+//			s->value[PAR_REFL] = c->par * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PAR */
+//			s->value[PAR] = c->par - s->value[PAR_REFL];
+//			logger(g_log, "Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
+//
+//			/* Net Short Wave Radiation computation */
+//			/* Remove the reflected radiation */
+//			s->value[SW_RAD_REFL] = c->net_sw_rad * Light_refl_sw_rad_canopy_frac * leaf_cell_cover_eff;
+//			/*assign to class Net Short Wave Radiation */
+//			s->value[NET_SW_RAD] = c->net_sw_rad - s->value[SW_RAD_REFL];
+//			logger(g_log, "Net Short Wave radiation less reflected part = %g W/m2\n", s->value[NET_SW_RAD]);
+//
+//			/* PPFD computation */
+//			/* Remove the reflected PPFD */
+//			s->value[PPFD_REFL] = c->ppfd * Light_refl_par_frac * leaf_cell_cover_eff;
+//			/*assign to class PPFD */
+//			s->value[PPFD] = c->ppfd - s->value[PPFD_REFL];
+//			logger(g_log, "PPFD less reflected part = %g umol/m^2/sec\n", s->value[PPFD]);
+//
+//			/* compute absorbed and transmitted Par, Net Short Wave radiation and ppfd class level */
+//			canopy_sw_band_abs_trans_refl_radiation (c, height, age, species, Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade,
+//					Light_refl_par_frac, Light_refl_sw_rad_canopy_frac);
+//
+//			/* update temporary absorbed and reflected PAR for lower layer */
+//			temp_apar += s->value[APAR];
+//			c->apar += s->value[APAR];
+//			temp_par_refl += s->value[PAR_REFL];
+//			c->par_refl += s->value[PAR_REFL];
+//
+//			/* update temporary absorbed and transmitted Net Short Wave radiation lower layer */
+//			temp_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			c->net_sw_rad_abs += s->value[NET_SW_RAD_ABS];
+//			temp_sw_rad_refl += s->value[PAR_REFL];
+//			c->sw_rad_refl += s->value[SW_RAD_REFL];
+//
+//			/* update temporary absorbed and transmitted PPFD lower layer */
+//			temp_ppfd_abs += s->value[PPFD_ABS];
+//			c->ppfd_abs += s->value[PPFD_ABS];
+//			temp_ppfd_refl += s->value[PPFD_REFL];
+//			c->ppfd_refl += s->value[PPFD_REFL];
+//
+//			/* compute PAR for lower layers at the last height class processed */
+//			//if(counter == c->subdominated_veg_counter)
+//			//{
+//			//	/* compute par for lower layer */
+//			//	c->par -= (temp_apar + temp_par_refl);
+//
+//			//	/* compute Net Short Wave radiation for lower layer */
+//			//	c->net_sw_rad -= (temp_sw_rad_abs + temp_sw_rad_refl);
+//
+//			//	/* compute ppfd for lower layer */
+//			//	c->ppfd -= (temp_ppfd_abs + temp_ppfd_refl);
+//			//}
+//
+//			/* assign to soil layer if no other height classes in dominated layer */
+//			// ALESSIOC
+//			//if(c->height_class_in_layer_subdominated_counter == 0)
+//			//{
+//			//	/* remove reflected part */
+//			//	c->par_refl_soil = c->par * Light_refl_sw_rad_soil_frac;
+//			//	c->sw_rad_for_soil_refl = c->net_sw_rad * Light_refl_sw_rad_soil_frac;
+//			//	c->ppfd_refl_soil = c->ppfd * Light_refl_sw_rad_soil_frac;
+//
+//			//	/* Par, Net Short Wave radiation and PPFD for the soil during growing season */
+//			//	c->par_for_soil = c->par - c->par_refl_soil;
+//			//	c->net_sw_rad_for_soil = c->net_sw_rad - c->sw_rad_for_soil_refl;
+//			//	c->ppfd_for_soil = c->ppfd - c->ppfd_refl_soil;
+//			//	logger(g_log, "PAR for soil during growing season = %g molPAR/m^2/day\n", c->par_for_soil);
+//			//	logger(g_log, "Net Short Wave radiation for soil during growing season = %g W/m2\n", c->net_sw_rad_for_soil);
+//			//	logger(g_log, "PPFD for soil during growing season = %g W/m2\n", c->ppfd_for_soil);
+//			//}
+//		}
+//	}
+//	/**********************************************************************************************************************************************************************************/
+//	/* outside growing season */
+//	else
+//	{
+//		logger(g_log, "\n**LIGHT FOR SOIL LAYER (outside the growing season)**\n");
+//
+//		/* Remove the reflected PAR */
+//		c->par_refl_soil = meteo_daily->par * Light_refl_sw_rad_soil_frac;
+//
+//		/* Remove the reflected radiation */
+//		c->short_wave_radiation_upward_W = meteo_daily->sw_downward_W * Light_refl_sw_rad_soil_frac;
+//		logger(g_log, "Short wave radiation (upward) = %g W/m2\n", c->short_wave_radiation_upward_W);
+//
+//		/* Net Short Wave Short Wave radiation */
+//		c->net_short_wave_radiation_W = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
+//		logger(g_log, "Net Short wave radiation = %g W/m2\n", c->net_short_wave_radiation_W);
+//
+//		c->sw_rad_for_soil_refl = c->short_wave_radiation_upward_W;
+//
+//		/* Remove the reflected PPFD */
+//		c->ppfd_refl_soil = meteo_daily->ppfd * Light_refl_sw_rad_soil_frac;
+//
+//		/* compute radiation absorbed by the soil */
+//		/* Par and Net Short Wave radiation for the soil outside growing season (bare soil condition) */
+//		c->par_for_soil = meteo_daily->par - c->par_refl_soil;
+//		c->net_sw_rad_for_soil = meteo_daily->sw_downward_W - c->short_wave_radiation_upward_W;
+//		c->ppfd_for_soil = meteo_daily->ppfd - c->ppfd_refl_soil;
+//		logger(g_log, "PAR for soil outside growing season = %g \n", c->par_for_soil);
+//		logger(g_log, "Net Short Wave radiation for soil outside growing season = %g \n", c->net_sw_rad_for_soil);
+//		logger(g_log, "PPFD for soil outside growing season = %g \n", c->ppfd_for_soil);
+//	}
 
 	//if(month == 7)getchar();
 }
