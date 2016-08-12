@@ -59,7 +59,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	static int rotation_counter;
 
 	cell_t *c;
-	tree_layer_t *l;
+	//	tree_layer_t *l;
 	height_t *h;
 	age_t *a;
 	species_t *s;
@@ -83,15 +83,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_cell_variables ( c );
 
 	/* reset monthly variables at cell level */
-	if ( day == 0 ) reset_monthly_cell_variables( c );
+	if ( !day ) reset_monthly_cell_variables( c );
 
 	/* reset annual variables at cell level */
-	if( day == 0 && month == JANUARY ) reset_annual_cell_variables( c );
+	if( !day && !month ) reset_annual_cell_variables( c );
 
 	/****************************************************************************************************/
 
 	/* annual forest structure (except the first year) */
-	if( day == 0 && month == JANUARY && year != 0 ) annual_forest_structure ( c );
+	if( !day && !month && year != 0 ) annual_forest_structure ( c );
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period ( c, meteo_daily, day, month );
@@ -108,10 +108,17 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* sort class in ascending way by heights */
 	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
 
-	//fixme check if use it
+	logger(g_log,"number of layers %d\n", c->t_layers_count);
+
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
+		logger(g_log,"*****************************************************************************\n"
+				"*                                                                           *\n"
+				"*                                layer = %d                                  *\n"
+				"*                                                                           *\n"
+				"*****************************************************************************\n", layer);
+
 		/* loop on each heights starting from highest to lower */
 		for ( height = c->heights_count -1 ; height >= 0; --height )
 		{
@@ -121,11 +128,19 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			/* check if tree height class matches with corresponding cell layer */
 			if( layer == h->z )
 			{
+				logger(g_log,"*****************************************************************************\n"
+						"*                               height = %g                              *\n"
+						"*****************************************************************************\n", h->value);
+
 				/* loop on each age class */
 				for ( age = h->ages_count - 1 ; age >= 0 ; --age )
 				{
 					/* assign shortcut */
 					a = &m->cells[cell].heights[height].ages[age];
+
+					logger(g_log,"*****************************************************************************\n"
+							"*                                  age = %d                                *\n"
+							"*****************************************************************************\n", a->value);
 
 					/* increment age after first year */
 					if( !day && !month && year != 0) a->value += 1;
@@ -135,6 +150,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					{
 						/* assign shortcut */
 						s = &m->cells[cell].heights[height].ages[age].species[species];
+
+						logger(g_log,"*****************************************************************************\n"
+								"*                              species = %s                         *\n"
+								"*****************************************************************************\n", s->name);getchar();
 
 						if(s->counter[N_TREE] > 0)
 						{
@@ -387,13 +406,13 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
 
 									/* simulate management */
-									if( !string_compare_i (g_settings->management, "on") && !year )
+									if ( !string_compare_i (g_settings->management, "on") && !year )
 									{
 										rotation_counter = (int)s->value[ROTATION];
 									}
 									else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
 									{
-										if( year == (int)s->value[ROTATION] )
+										if ( year == (int)s->value[ROTATION] )
 										{
 											Clearcut_Timber_without_request ( c, layer, height, age, species, year );
 
