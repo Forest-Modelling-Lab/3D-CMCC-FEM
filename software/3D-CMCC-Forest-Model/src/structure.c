@@ -20,7 +20,6 @@ void annual_forest_structure(cell_t* const c)
 	logger(g_log, "\n\n***ANNUAL_FOREST_STRUCTURE***\n\n");
 }
 
-
 void daily_forest_structure (cell_t *const c)
 {
 	int layer;
