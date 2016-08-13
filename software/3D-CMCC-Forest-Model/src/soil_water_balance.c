@@ -19,32 +19,27 @@ extern logger_t* g_log;
 //fixme  maybe it can be moved to soil_model.c
 void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\n**SOIL WATER BALANCE**\n");
+	logger(g_log, "\n**SOIL-SNOW WATER BALANCE**\n");
 
 	/* water pools */
 	c->old_daily_c_water_stored = c->daily_c_water_stored;
+	c->old_snow_pack = c->snow_pack;
 	c->old_asw = c->asw;
-	//c->old_snow_pack;
 
 	/*update balance*/
 	if( meteo_daily->tavg > 0.0 )
 	{
-		/* add water to soil */
-		if( meteo_daily->rain > 0.0 )
-		{
-			c->asw += meteo_daily->rain + c->snow_melt;
-		}
-		/* remove water from soil */
-		c->asw -= c->daily_c_transp + c->daily_soil_evapo;
+		/* soil water balance */
+		c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo);
+		/* snow pack balance */
+		c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
 	}
 	else
 	{
-		if( meteo_daily->snow > 0.0 )
-		{
-			c->snow_pack += meteo_daily->snow;
-		}
-		/* remove water from soil */
-		c->asw -= c->daily_c_transp + c->daily_soil_evapo;
+		/* soil water balance */
+		c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo);
+		/* snow pack balance */
+		c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
 	}
 	logger(g_log, "asw = %g mm\n", c->asw);
 	logger(g_log, "snow pack = %g mm\n", c->snow_pack);
@@ -104,19 +99,19 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 		c->asw             += c->daily_c_transp;
 		c->daily_soil_evapo = 0.0;
 		c->daily_c_transp   = 0.0;
-
-		/* test again for negative soilwater...should never be true */
-		CHECK_CONDITION(c->asw, < 0.0)
 	}
+
+	CHECK_CONDITION(c->asw, < 0.0);
+	CHECK_CONDITION(c->snow_pack, < 0.0);
 
 	//fixme
 //	c->swc = (c->asw * 100)/c->max_asw_fc;
 //	logger(g_log, "asw = %g\n", c->asw);
 //	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
 //	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
-
-	/* check */
-	CHECK_CONDITION (c->swc, > 100.1);
-	CHECK_CONDITION (c->swc, < 0);
+//
+//	/* check */
+//	CHECK_CONDITION (c->swc, > 100.1);
+//	CHECK_CONDITION (c->swc, < 0);
 
 }

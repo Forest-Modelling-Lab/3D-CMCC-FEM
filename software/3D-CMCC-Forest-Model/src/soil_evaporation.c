@@ -92,7 +92,7 @@ void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	In this case, do not advance the drying curve counter.
 	For rain events that are too small to trigger days_since_rain reset, and which
 	are smaller than dry-day evap, there will be more evaporation than
-	rainfall.  In this case the drying curve counter is advanced. */
+	rainfall. In this case the drying curve counter is advanced. */
 		if (meteo_daily->rain >c->daily_soil_evapo && c->days_since_rain >= 1.0)
 		{
 			c->daily_soil_evapo = meteo_daily->rain * (1.0 - c->cell_cover);

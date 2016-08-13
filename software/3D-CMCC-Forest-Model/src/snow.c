@@ -51,24 +51,14 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 			{
 				/*all snow pack melts*/
 				c->snow_melt = c->snow_pack;
-
-				/*reset snow*/
-				c->snow_pack = 0.0;
 				logger(g_log, "ALL Snow melt!!\n");
 				logger(g_log, "snow melt %f\n", c->snow_melt);
 			}
 			else
 			{
 				/*snow pack melts partially*/
-				c->snow_pack -= c->snow_melt;
-				logger(g_log, "snow_pack %f\n", c->snow_pack);
 				logger(g_log, "a fraction of Snow melts!!\n");
 			}
-			c->snow_to_soil = c->snow_melt;
-			logger(g_log, "snow to soil %f\n", c->snow_to_soil);
-
-			/*check for balance*/
-			logger(g_log, "Snow pack = %f (cm)\n", c->snow_pack);
 		}
 	}
 	else
@@ -86,14 +76,14 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 				logger(g_log, "Snow sublimated = %f mm\n", c->snow_subl);
 
 				/*check for balance*/
-				if (c->snow_subl < c->snow_pack)
+				if (c->snow_subl > c->snow_pack)
 				{
-					c->snow_pack -= c->snow_subl;
+					c->snow_subl = c->snow_pack;
 				}
 				else
 				{
-					c->snow_subl = c->snow_pack;
-					c->snow_pack = 0.0;
+					/*snow pack sublimate partially*/
+					logger(g_log, "a fraction of Snow sublimates!!\n");
 				}
 			}
 			else

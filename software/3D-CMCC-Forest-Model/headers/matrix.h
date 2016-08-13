@@ -1073,7 +1073,6 @@ typedef struct
 	double snow_pack;                                                     /* current amount of snow (Kg/m2) */
 	double snow_melt;                                                     /* current amount of melted snow (mm/m2) */
 	double snow_subl;                                                     /* current amount of sublimated snow (mm/m2) */
-	double snow_to_soil;                                                  /* current amount of water flux due to snow melt (mm/m2) */
 	double old_snow_pack;                                                 /* old amount of snow (Kg/m2) */
 	double out_flow;                                                      /* current amount of water outflow (mm/m2) */
 	double daily_c_int, monthly_c_int, annual_c_int;                      /* daily, monthly and canopy interception at cell level (mm/m2/ ) */

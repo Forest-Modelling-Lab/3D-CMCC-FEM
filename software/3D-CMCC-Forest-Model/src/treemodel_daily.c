@@ -507,7 +507,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	Sensible_heat_flux ( c, meteo_daily );
 
 	/* compute soil water balance */
-	Soil_water_balance ( c, meteo_daily );getchar();
+	Soil_water_balance ( c, meteo_daily );
 
 	/* compute water fluxes */
 	Water_fluxes ( c, meteo_daily );

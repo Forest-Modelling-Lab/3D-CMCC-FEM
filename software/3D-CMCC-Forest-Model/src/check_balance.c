@@ -67,7 +67,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	/*******************************************************************************************************************************************/
 
-	/* NET SHORT WAVE RADIATION RADIATIVE BALANCE */
+	/* SHORT WAVE RADIATION RADIATIVE BALANCE */
 
 	/* sum of sources */
 	in = meteo_daily->sw_downward_W;
@@ -215,60 +215,40 @@ void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	double store;
 	double balance;
 
-	double daily_frac_transp;
-	double daily_frac_evapo;
-	double daily_frac_soil_evapo;
-
-	logger(g_log, "\n*********CHECK CELL WATER BALANCE************\n");
+	logger(g_log, "\n*********CHECK CELL SOIL WATER BALANCE************\n");
 	/* DAILY CHECK ON SOIL POOL-ATMOSPHERE WATER BALANCE */
 	/* it takes into account soil-atmosphere fluxes */
 
 	/* sum of sources (rain + snow) */
-	in = meteo_daily->rain + meteo_daily->snow + c->snow_melt;
+	in = meteo_daily->rain + c->snow_melt;
 
 	/* sum of sinks */
-	//comment: snow_subl is not considered here otherwise it could accounted twice (out and store)
-	out = c->daily_c_transp + /*c->daily_c_evapo + */ c->daily_soil_evapo /*+ c->snow_subl*/ + c->out_flow;
+	out = c->daily_c_transp + c->daily_soil_evapo + c->out_flow;
 
 	/* sum of current storage in soil */
 	//fixme check for daily_c_water_store
-	//fixme change snow with snowpack - old_snowpack
-	store = (c->asw - c->old_asw) + /*(c->daily_c_water_stored - c->old_daily_c_water_stored)*/ + meteo_daily->snow;
+	store = (c->asw - c->old_asw) /* + (c->daily_c_water_stored - c->old_daily_c_water_stored) */;
 
 	/* check soil pool water balance */
 	balance = in - out - store;
 
-	/* check fractions */
-	if(c->daily_et != 0)
-	{
-		daily_frac_transp = (100 * c->daily_c_transp)/c->daily_et;
-		daily_frac_evapo = (100 * c->daily_c_evapo)/c->daily_et;
-		daily_frac_soil_evapo = (100 * c->daily_soil_evapo)/c->daily_et;
-		logger(g_log, "daily_frac_transp = %g %%\n", daily_frac_transp);
-		logger(g_log, "daily_frac_evapo = %g %%\n", daily_frac_evapo);
-		logger(g_log, "daily_frac_soil_evapo = %g %%\n", daily_frac_soil_evapo);
-	}
-
 	logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
 
 	/* check for soil water pool water balance */
-	if (fabs(balance) > 1e-8 )
+	if  (fabs( balance ) > 1e-8 )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "meteo_daily->rain = %g\n", meteo_daily->rain);
-		logger(g_log, "meteo_daily->snow = %g\n", meteo_daily->snow);
+		logger(g_log, "c->snow_melt = %g\n", c->snow_melt);
 		logger(g_log, "\nout\n");
-		logger(g_log, "c->daily_tot_c_transp = %g\n", c->daily_c_transp);
+		logger(g_log, "c->daily_c_transp = %g\n", c->daily_c_transp);
 		logger(g_log, "c->daily_c_evapo = %g\n", c->daily_c_evapo);
 		logger(g_log, "c->soil_evaporation = %g\n", c->daily_soil_evapo);
-		logger(g_log, "c->snow_subl = %g\n", c->snow_subl);
-		logger(g_log, "c->snow_melt = %g\n", c->snow_melt);
 		logger(g_log, "c->out_flow = %g\n", c->out_flow);
 		logger(g_log, "\nstore (as a difference between old and current)\n");
 		logger(g_log, "c->daily_c_water_stored = %g\n", c->daily_c_water_stored);
 		logger(g_log, "delta c->asw = %g\n", (c->asw - c->old_asw));
-		logger(g_log, "c->snow_pack = %g\n", c->snow_pack);
 		logger(g_log, "c->asw = %g\n", c->asw);
 		logger(g_log, "c->old_asw = %g\n", c->old_asw);
 		logger(g_log, "soil water in = %g\n", in);
@@ -281,6 +261,47 @@ void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	else
 	{
 		logger(g_log, "...ok soil water balance\n");
+	}
+
+	logger(g_log, "\n*********CHECK CELL SNOW WATER BALANCE************\n");
+	/* DAILY CHECK ON SNOW POOL-SOIL POOL-ATMOSPHERE WATER BALANCE */
+	/* it takes into account snow-soil-atmosphere fluxes */
+
+	/* sum of sources (rain + snow) */
+	in = meteo_daily->snow;
+
+	/* sum of sinks */
+	out = c->snow_melt + c->snow_subl;
+
+	/* sum of current storage in snow pack */
+	store = c->snow_pack - c->old_snow_pack;
+
+	/* check snow pool water balance */
+	balance = in - out - store;
+
+	logger(g_log, "\nCELL SNOW POOL WATER BALANCE\n");
+
+	/* check for soil water pool water balance */
+	if ( fabs( balance ) > 1e-8 )
+	{
+		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "\nin\n");
+		logger(g_log, "meteo_daily->snow = %g\n", meteo_daily->snow);
+		logger(g_log, "\nout\n");
+		logger(g_log, "c->snow_subl = %g\n", c->snow_subl);
+		logger(g_log, "c->snow_melt = %g\n", c->snow_melt);
+		logger(g_log, "\nstore (as a difference between old and current)\n");
+		logger(g_log, "delta c->asw = %g\n", (c->snow_pack - c->old_snow_pack));
+		logger(g_log, "soil water in = %g\n", in);
+		logger(g_log, "soil water out = %g\n", out);
+		logger(g_log, "soil water store = %g\n", store);
+		logger(g_log, "soil water balance = %g\n", balance);
+		logger(g_log, "...FATAL ERROR IN snow water balance (exit)\n");
+		exit(1);
+	}
+	else
+	{
+		logger(g_log, "...ok snow water balance\n");
 	}
 }
 

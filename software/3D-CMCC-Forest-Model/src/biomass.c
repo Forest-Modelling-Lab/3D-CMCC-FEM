@@ -101,7 +101,7 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 	logger(g_log, "MAI-Mean Annual Increment = %f m^3/area/yr \n", s->value[MAI]);
 
 	/* check */
-	CHECK_CONDITION(single_tree_vol, > single_tree_prev_vol);
+	CHECK_CONDITION(single_tree_vol, < single_tree_prev_vol);
 
 }
 
