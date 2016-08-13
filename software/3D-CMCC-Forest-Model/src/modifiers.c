@@ -46,7 +46,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
 	//double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
 
-	logger(g_log, "\nDAILY_MODIFIERS\n\n");
+	logger(g_log, "\n**DAILY_MODIFIERS**\n\n");
 
 	/* CO2 MODIFIER FROM C-FIX */
 	tairK = meteo_daily->tavg + TempAbs;

@@ -121,7 +121,7 @@ void reset_annual_cell_variables(cell_t *const c)
 {
 	logger(g_log, "...resetting cell level annual variables...\n");
 
-	/*reset cell level variables*/
+	/* reset cell level variables */
 	c->annual_gpp = 0.;
 	c->annual_npp_gC = 0.;
 	c->annual_npp_tDM = 0.;
@@ -149,9 +149,18 @@ void reset_annual_cell_variables(cell_t *const c)
 void reset_daily_layer_variables(cell_t *const c)
 {
 	int layer;
+
+	tree_layer_t *l;
+
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
+		l = &c->t_layers[layer];
 
+		/* reset layer level variables */
+		l->height_class = 0.;
+		l->n_trees = 0.;
+		l->density = 0.;
+		l->layer_cover = 0.;
 	}
 }
 void reset_monthly_layer_variables(cell_t *const c)

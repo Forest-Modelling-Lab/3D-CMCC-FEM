@@ -107,11 +107,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		l = &m->cells[cell].t_layers[layer];
 
 		logger(g_log,"*****************************************************************************\n"
-				"                                                                             \n"
 				"                                layer = %d                                 \n"
-				"                                                                             \n"
-				"*****************************************************************************\n",
-				layer);
+				"*****************************************************************************\n",layer);
 
 		l->z = layer;
 
@@ -125,7 +122,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			if( h->z == l->z )
 			{
 				logger(g_log,"*****************************************************************************\n"
-						"                               height = %g                              \n"
+						"                              height = %g                              \n"
 						"*****************************************************************************\n", h->value);
 
 				/* loop on each age class */
@@ -135,7 +132,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 					a = &m->cells[cell].heights[height].ages[age];
 
 					logger(g_log,"*****************************************************************************\n"
-							"                                   age = %d                                 \n"
+							"                                  age = %d                                 \n"
 							"*****************************************************************************\n", a->value);
 
 					/* increment age after first year */

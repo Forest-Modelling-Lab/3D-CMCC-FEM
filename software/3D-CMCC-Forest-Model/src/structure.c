@@ -33,6 +33,8 @@ void daily_forest_structure (cell_t *const c)
 	double potential_maximum_crown_area, potential_minimum_crown_area;
 	double potential_maximum_density,potential_minimum_density;
 
+	char mortality;                            /* mortality flag, = n (no mortality), = y (mortality) */
+
 	height_t *h;
 	age_t *a;
 	species_t *s;
@@ -390,141 +392,146 @@ void daily_forest_structure (cell_t *const c)
 		{
 			logger(g_log, "crowding competition happens for layer %d\n", layer);
 
+			mortality = 'y';
+
 			Crowding_competition_mortality (c, layer);
-			logger(g_log, "Recomputed Layer cover %d = %g %% \n", layer, c->t_layers[layer].layer_cover * 100);
+
+			/* reset values for layer */
+			c->t_layers[layer].height_class = 0;
+			c->t_layers[layer].n_trees = 0;
+			c->t_layers[layer].density = 0;
 		}
 		else
 		{
 			logger(g_log, "no crowding competition happens for layer %d\n", layer);
-		}
 
-
-		/* reset values for layer */
-		c->t_layers[layer].height_class = 0;
-		c->t_layers[layer].n_trees = 0;
-		c->t_layers[layer].density = 0;
-
-	}
-	logger(g_log, "**************************************\n\n");
-
-	/**************************************************************************************************/
-	/* REcompute numbers of height classes, tree number and density after mortality for each layer */
-	logger(g_log, "REcompute numbers of height classes, tree number and density after mortality for each layer\n\n");
-
-	for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
-	{
-		for ( height = c->heights_count -1; height >= 0 ; --height )
-		{
-			if( layer == c->heights[height].z )
-			{
-				/* recompute number of height classes */
-				c->t_layers[layer].height_class += 1;
-			}
-			for ( age = 0; age < c->heights[height].ages_count ; ++age )
-			{
-				for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
-				{
-					if( layer == c->heights[height].z )
-					{
-						/* recompute number of trees for each layer */
-						c->t_layers[layer].n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
-					}
-				}
-			}
-		}
-
-		/*recompute density for each layer */
-		c->t_layers[layer].density = c->t_layers[layer].n_trees / g_settings->sizeCell;
-
-		logger(g_log, "layer = %d\n", layer);
-		logger(g_log, "-height class(es) = %d\n", c->t_layers[layer].height_class);
-		logger(g_log, "-number of trees = %d\n", c->t_layers[layer].n_trees);
-		logger(g_log, "-density = %g\n", c->t_layers[layer].density);
-	}
-	logger(g_log, "**************************************\n\n");
-
-	/*************************************************************************************************/
-	/* REcheck if layer density exceeds potential maximum OR minimum density */
-	logger(g_log, "REcheck if layer density exceeds potential maximum and minimum density\n\n");
-
-	/* note: this function not check the "real" density but it computes limits in which
-	 * DBHDC function operates */
-
-	for (layer = c->t_layers_count - 1; layer >= 0; --layer )
-	{
-		for ( height = 0; height < c->heights_count ; ++height )
-		{
-			if( layer == c->heights[height].z )
-			{
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
-				{
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
-					{
-						s = &c->heights[height].ages[age].species[species];
-
-						//fixme check it, it considers denmax and denmin using species level values..
-						if(c->t_layers[layer].density > s->value[DENMAX])
-						{
-							c->t_layers[layer].density = s->value[DENMAX];
-							logger(g_log, "recomputed density based on DENMAX\n");
-						}
-						if(c->t_layers[layer].density < s->value[DENMIN])
-						{
-							c->t_layers[layer].density = s->value[DENMIN];
-							logger(g_log, "recomputed density based on DENMIN\n");
-						}
-					}
-				}
-			}
+			mortality = 'n';
 		}
 	}
 	logger(g_log, "**************************************\n\n");
 
 	/**************************************************************************************************/
-	/* REcompute effective crown diameter and crown area and class cover using DBH-DC */
-	logger(g_log, "REcompute effective crown diameter and crown area and class cover using DBH-DC\n\n");
 
-	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	if ( mortality == 'y' )
 	{
-		logger(g_log, "----------------------------------\n");
-		logger(g_log, "layer %d ", layer);
+		/* REcompute numbers of height classes, tree number and density after mortality for each layer */
+		logger(g_log, "REcompute numbers of height classes, tree number and density after mortality for each layer\n\n");
 
-		for ( height = 0; height < c->heights_count ; ++height )
+		for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
 		{
-			if( layer == c->heights[height].z )
+			for ( height = c->heights_count -1; height >= 0 ; --height )
 			{
+				if( layer == c->heights[height].z )
+				{
+					/* recompute number of height classes */
+					c->t_layers[layer].height_class += 1;
+				}
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
 					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 					{
-						h = &c->heights[height];
-						a = &c->heights[height].ages[age];
-						s = &c->heights[height].ages[age].species[species];
+						if( layer == c->heights[height].z )
+						{
+							/* recompute number of trees for each layer */
+							c->t_layers[layer].n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
+						}
+					}
+				}
+			}
 
-						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+			/*recompute density for each layer */
+			c->t_layers[layer].density = c->t_layers[layer].n_trees / g_settings->sizeCell;
 
-						s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-								(c->t_layers[layer].density - s->value[DENMIN]) + s->value[DBHDCMAX]);
-						logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+			logger(g_log, "layer = %d\n", layer);
+			logger(g_log, "-height class(es) = %d\n", c->t_layers[layer].height_class);
+			logger(g_log, "-number of trees = %d\n", c->t_layers[layer].n_trees);
+			logger(g_log, "-density = %g\n", c->t_layers[layer].density);
+		}
+		logger(g_log, "**************************************\n\n");
 
-						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+		/*************************************************************************************************/
+		/* REcheck if layer density exceeds potential maximum OR minimum density */
+		logger(g_log, "REcheck if layer density exceeds potential maximum and minimum density\n\n");
 
-						s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * s->value[DBHDC_EFF];
-						logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+		/* note: this function not check the "real" density but it computes limits in which
+		 * DBHDC function operates */
 
-						/* Crown Area using DBH-DC */
-						s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+		for (layer = c->t_layers_count - 1; layer >= 0; --layer )
+		{
+			for ( height = 0; height < c->heights_count ; ++height )
+			{
+				if( layer == c->heights[height].z )
+				{
+					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						{
+							s = &c->heights[height].ages[age].species[species];
 
-						/* Canopy Cover using DBH-DC */
-						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
-						logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+							//fixme check it, it considers denmax and denmin using species level values..
+							if(c->t_layers[layer].density > s->value[DENMAX])
+							{
+								c->t_layers[layer].density = s->value[DENMAX];
+								logger(g_log, "recomputed density based on DENMAX\n");
+							}
+							if(c->t_layers[layer].density < s->value[DENMIN])
+							{
+								c->t_layers[layer].density = s->value[DENMIN];
+								logger(g_log, "recomputed density based on DENMIN\n");
+							}
+						}
 					}
 				}
 			}
 		}
+		logger(g_log, "**************************************\n\n");
+
+		/**************************************************************************************************/
+		/* REcompute effective crown diameter and crown area and class cover using DBH-DC */
+		logger(g_log, "REcompute effective crown diameter and crown area and class cover using DBH-DC\n\n");
+
+		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		{
+			logger(g_log, "----------------------------------\n");
+			logger(g_log, "layer %d ", layer);
+
+			for ( height = 0; height < c->heights_count ; ++height )
+			{
+				if( layer == c->heights[height].z )
+				{
+					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						{
+							h = &c->heights[height];
+							a = &c->heights[height].ages[age];
+							s = &c->heights[height].ages[age].species[species];
+
+							logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+
+							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
+									(c->t_layers[layer].density - s->value[DENMIN]) + s->value[DBHDCMAX]);
+							logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+
+							logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+
+							s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+							logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+
+							/* Crown Area using DBH-DC */
+							s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
+							logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+
+							/* Canopy Cover using DBH-DC */
+							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+							logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+						}
+					}
+				}
+			}
+		}
+		logger(g_log, "**************************************\n\n");
 	}
-	logger(g_log, "**************************************\n\n");
 
 	/**************************************************************************************************/
 	/* compute cell cover (cell level) */
@@ -535,7 +542,7 @@ void daily_forest_structure (cell_t *const c)
 		/* assuming that plants tend to occupy the part of the cell not covered by the others */
 		c->cell_cover += c->t_layers[layer].layer_cover;
 	}
-	logger(g_log, "Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
+	logger(g_log, "-Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
 	logger(g_log, "**************************************\n\n");
 
 }
