@@ -1385,7 +1385,7 @@ void site_summary(const matrix_t* const m)
 	assert(m);
 
 	/* Site definition */
-	logger(g_log, "***************************************************\n");
+	logger(g_log, "***************************************************\n\n");
 	logger(g_log, "SITE DATASET\n");
 	logger(g_log, "Site Name = %s\n", g_soil_settings->sitename);
 	logger(g_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
@@ -1400,7 +1400,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	assert(m);
 
 	/* Soil definition and initialization */
-	logger(g_log, "***************************************************\n");
+	logger(g_log, "***************************************************\n\n");
 	logger(g_log, "SOIL DATASET\n");
 	logger(g_log, "-Number of soil layers = %d\n", g_settings->soil_layer);
 	logger(g_log, "-Soil depth = %g cm\n", g_soil_settings->values[SOIL_DEPTH]);
@@ -1413,10 +1413,10 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
 	logger(g_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
-	Initialization_soil_data (m->cells);
+	initialization_soil (m->cells);
 }
 
-void forest_matrix_summary(const matrix_t* const m, const int cell)
+void forest_summary(const matrix_t* const m, const int cell)
 {
 	int species;
 	int age;
@@ -1468,14 +1468,21 @@ void forest_matrix_summary(const matrix_t* const m, const int cell)
 		{
 			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 			{
+				/*************FOREST INITIALIZATION DATA***********/
+				/* initialise power function */
+				Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
+
+				/* Initialise pool fraction */
 				Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
 
-				/*************FOREST INITIALIZATION DATA***********/
-				Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
+				/* initialise forest structure */
+				initialization_forest_structure (&m->cells[cell], height, age, species);
 
 				/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 				 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-				Initialization_biomass_data (&m->cells[cell], height, age, species);
+				initialization_forest_biomass (&m->cells[cell], height, age, species);
+
+				/* print class dataset */
 				logger(g_log,
 						"\n\n----- CLASS DATASET-----\n"
 						"----- height = %f\n"
@@ -1519,10 +1526,6 @@ void forest_matrix_summary(const matrix_t* const m, const int cell)
 			}
 		}
 	}
-//
-//	/* initialize forest structure */
-//	daily_forest_structure (&m->cells[cell]);
-
 }
 
 void matrix_free(matrix_t *m)

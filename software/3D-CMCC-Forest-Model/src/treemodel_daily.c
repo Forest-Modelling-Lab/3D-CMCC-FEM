@@ -83,8 +83,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* daily check for vegetative period */
 	daily_check_for_veg_period ( c, meteo_daily, day, month );
 
+
 	/* daily forest structure */
-	daily_forest_structure ( c );
+	if( day != 0 && month != 0 && year != 0 )daily_forest_structure ( c );
 
 	/***********************************************************************************************/
 

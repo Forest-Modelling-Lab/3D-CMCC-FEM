@@ -401,6 +401,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 		/* reset counter */
 		cell_height_class_counter = 0;
-	}getchar();
+	}
 
 }

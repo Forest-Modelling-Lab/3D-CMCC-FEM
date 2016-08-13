@@ -83,21 +83,21 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		t1 = s->value[LEAF_NITROGEN] * mrpern;
 
 		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tday) * (meteo_daily->daylength/24.0));
-		logger(g_log, "daily leaf maintenance respiration = %f gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
+		logger(g_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 		exponent_tnight =  (meteo_daily->tnight - Q10_temp) / 10.0;
 
 		s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
-		logger(g_log, "nightly leaf maintenance respiration = %f gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
+		logger(g_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 		s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
-		logger(g_log, "Total daily leaf maintenance respiration = %f gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
+		logger(g_log, "Total daily leaf maintenance respiration = %g gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 		/* fine roots */
 		exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 		t1 = s->value[FINE_ROOT_NITROGEN] * mrpern;
 		s->value[FINE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
-		logger(g_log, "Fine root maintenance respiration = %f gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
+		logger(g_log, "Fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 	}
 	else
 	{
@@ -112,18 +112,18 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	/*  live stem maintenance respiration */
 	t1 = s->value[STEM_NITROGEN] * mrpern;
 	s->value[STEM_MAINT_RESP] =  t1 * pow(q10, exponent_tavg);
-	logger(g_log, "Stem maintenance respiration = %f gC/m2/day\n", s->value[STEM_MAINT_RESP]);
+	logger(g_log, "Stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
 	//live branch maintenance respiration
 	t1 = s->value[BRANCH_NITROGEN] * mrpern;
 	s->value[BRANCH_MAINT_RESP] = t1 * pow(q10, exponent_tavg);
-	logger(g_log, "Branch maintenance respiration = %f gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
+	logger(g_log, "Branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
 	//live coarse root maintenance respiration
 	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 	t1 = s->value[COARSE_ROOT_NITROGEN] * mrpern;
 	s->value[COARSE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
-	logger(g_log, "Coarse root maintenance respiration = %f gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
+	logger(g_log, "Coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+
@@ -131,12 +131,12 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			s->value[STEM_MAINT_RESP]+
 			s->value[COARSE_ROOT_MAINT_RESP]+
 			s->value[BRANCH_MAINT_RESP];
-	logger(g_log, "TOTAL maintenance respiration = %f gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
+	logger(g_log, "TOTAL maintenance respiration = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	//test 6 July 2016 removing
 	//s->value[TOTAL_MAINT_RESP] *= leaf_cell_cover_eff;
-	//logger(g_log, "TOTAL maintenance respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_MAINT_RESP]);
+	//logger(g_log, "TOTAL maintenance respiration = %g gC/m2 area covered/day\n", s->value[TOTAL_MAINT_RESP]);
 
 	c->daily_leaf_maint_resp += s->value[TOT_DAY_LEAF_MAINT_RESP];
 	c->daily_stem_maint_resp += s->value[STEM_MAINT_RESP];
@@ -201,7 +201,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	///test 6 July 2016 removing
 	//s->value[TOTAL_GROWTH_RESP] *= leaf_cell_cover_eff;
-	//logger(g_log, "TOTAL growth respiration = %f gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);
+	//logger(g_log, "TOTAL growth respiration = %g gC/m2 area covered/day\n", s->value[TOTAL_GROWTH_RESP]);
 
 	c->daily_leaf_growth_resp += s->value[LEAF_GROWTH_RESP];
 	c->daily_stem_growth_resp += s->value[STEM_GROWTH_RESP];
@@ -227,9 +227,9 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		/*compute autotrophic respiration for each classes */
 
 		s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
-		logger(g_log, "TOTAL autotrophic respiration = %f gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
+		logger(g_log, "TOTAL autotrophic respiration = %g gC/m2 ground surface area /day\n", s->value[TOTAL_AUT_RESP]);
 
-		logger(g_log, "TOTAL autotrophic respiration = %f tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
+		logger(g_log, "TOTAL autotrophic respiration = %g tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
 		CHECK_CONDITION(s->value[TOTAL_AUT_RESP], < 0);
 
 		c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
@@ -237,7 +237,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
 		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * g_settings->sizeCell;
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 
 		/* among pools */
 		/* daily */

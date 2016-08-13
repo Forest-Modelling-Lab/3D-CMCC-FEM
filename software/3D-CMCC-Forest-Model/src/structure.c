@@ -337,15 +337,7 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 						/* Canopy Cover using DBH-DC */
-						if(s->counter[VEG_UNVEG] == 1)
-						{
-
-							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
-						}
-						else
-						{
-							s->value[CANOPY_COVER_DBHDC] = 0.0;
-						}
+						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
 						logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 					}
 				}
@@ -524,15 +516,8 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
 
 						/* Canopy Cover using DBH-DC */
-						if(s->counter[VEG_UNVEG] == 1)
-						{
-
-							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
-						}
-						else
-						{
-							s->value[CANOPY_COVER_DBHDC] = 0.0;
-						}
+						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+						logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 					}
 				}
 			}

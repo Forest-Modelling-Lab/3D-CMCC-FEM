@@ -1156,6 +1156,6 @@ void matrix_free(matrix_t *m);
 void simulation_summary(const matrix_t* const m);
 void site_summary(const matrix_t* const m);
 void soil_summary(const matrix_t* const m, const cell_t* const cell);
-void forest_matrix_summary(const matrix_t* const m, const int cell);
+void forest_summary(const matrix_t* const m, const int cell);
 
 #endif /* MATRIX_H_ */

@@ -892,7 +892,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
-		logger(g_log, "***************************************************\n");
+		logger(g_log, "***************************************************\n\n");
 
 		/* general summary on model simulation */
 		simulation_summary(matrix);
@@ -906,9 +906,8 @@ int main(int argc, char *argv[]) {
 		if(F == matrix->cells[cell].landuse)
 		{
 			/* note: this happens just the first day of simulation */
-
 			/* forest summary */
-			forest_matrix_summary(matrix, cell);
+			forest_summary(matrix, cell);
 		}
 		else
 		{
@@ -1017,7 +1016,7 @@ int main(int argc, char *argv[]) {
 						//						else
 						//						{
 						//							puts(msg_ok);
-						//							//look if put it here or move before tree_model  at the beginning of each month simulation
+						//							//look if put it here or move before tree_model at the beginning of each month simulation
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}

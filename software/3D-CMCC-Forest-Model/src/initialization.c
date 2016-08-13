@@ -8,12 +8,19 @@
 #include "settings.h"
 #include "logger.h"
 #include "common.h"
+#include "structure.h"
 
 extern settings_t *g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void Initialization_biomass_data(cell_t *const c, const int height, const int age, const int species)
+void initialization_forest_structure(cell_t *const c, const int height, const int age, const int species)
+{
+	logger(g_log,"INITIALIZE FOREST STRUCTURE\n");
+	daily_forest_structure ( c );
+}
+
+void initialization_forest_biomass(cell_t *const c, const int height, const int age, const int species)
 {
 	height_t *h;
 	age_t *a;
@@ -143,41 +150,41 @@ void Initialization_biomass_data(cell_t *const c, const int height, const int ag
 	/*sapwood calculation*/
 	logger(g_log, "\nSAPWOOD CALCULATION using sapwood area\n");
 	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
-	logger(g_log, "   BASAL AREA = %g m^2\n", s->value[BASAL_AREA]);
+	logger(g_log, "BASAL AREA = %g m^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;
-	logger(g_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
+	logger(g_log, "BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
 	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
-	logger(g_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	logger(g_log, "Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
-	logger(g_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	logger(g_log, "Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
-	logger(g_log, "   SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
+	logger(g_log, "SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
 	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
-	logger(g_log, "   HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
+	logger(g_log, "HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
-	logger(g_log, "   sapwood perc = %g%%\n", s->value[SAPWOOD_PERC]*100);
+	logger(g_log, "sapwood perc = %g%%\n", s->value[SAPWOOD_PERC]*100);
 	s->value[WS_sap_tDM] = (s->value[BIOMASS_STEM_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[STEM_SAPWOOD_C] = (s->value[STEM_C] * s->value[SAPWOOD_PERC]);
-	logger(g_log, "   Sapwood stem biomass = %g tDM class cell \n", s->value[WS_sap_tDM]);
-	logger(g_log, "   Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
+	logger(g_log, "Sapwood stem biomass = %g tDM class cell \n", s->value[WS_sap_tDM]);
+	logger(g_log, "Sapwood stem biomass = %g tC class cell \n", s->value[STEM_SAPWOOD_C]);
 	s->value[WRC_sap_tDM] =  (s->value[BIOMASS_COARSE_ROOT_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[COARSE_ROOT_SAPWOOD_C] =  (s->value[COARSE_ROOT_C] * s->value[SAPWOOD_PERC]);
-	logger(g_log, "   Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap_tDM]);
-	logger(g_log, "   Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
+	logger(g_log, "Sapwood coarse root biomass = %g tDM class cell \n", s->value[WRC_sap_tDM]);
+	logger(g_log, "Sapwood coarse root biomass = %g tC class cell \n", s->value[COARSE_ROOT_SAPWOOD_C]);
 	s->value[WBB_sap_tDM] = (s->value[BIOMASS_BRANCH_tDM] * s->value[SAPWOOD_PERC]);
 	s->value[BRANCH_SAPWOOD_C] = (s->value[BRANCH_C] * s->value[SAPWOOD_PERC]);
-	logger(g_log, "   Sapwood branch and bark biomass = %g tDM class cell \n", s->value[WBB_sap_tDM]);
-	logger(g_log, "   Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
+	logger(g_log, "Sapwood branch and bark biomass = %g tDM class cell \n", s->value[WBB_sap_tDM]);
+	logger(g_log, "Sapwood branch and bark biomass = %g tC class cell \n", s->value[BRANCH_SAPWOOD_C]);
 	s->value[WTOT_sap_tDM] = s->value[WS_sap_tDM] + s->value[WRC_sap_tDM] + s->value[WBB_sap_tDM];
 	s->value[TOT_SAPWOOD_C] = s->value[STEM_SAPWOOD_C] + s->value[COARSE_ROOT_SAPWOOD_C] + s->value[BRANCH_SAPWOOD_C];
-	logger(g_log, "   Total Sapwood biomass = %g tDM class cell \n", s->value[WTOT_sap_tDM]);
-	logger(g_log, "   Total Sapwood biomass per tree = %g tDM tree \n", s->value[WTOT_sap_tDM]/s->counter[N_TREE]);
-	logger(g_log, "   Total Sapwood biomass per tree = %g KgDM tree \n", (s->value[WTOT_sap_tDM]/s->counter[N_TREE])*1000.0);
-	logger(g_log, "   Total Sapwood biomass per tree = %g gDM tree \n", (s->value[WTOT_sap_tDM]/s->counter[N_TREE])*1000000.0);
-	logger(g_log, "   Total Sapwood biomass = %g tC class cell \n", s->value[TOT_SAPWOOD_C]);
-	logger(g_log, "   Total Sapwood biomass per tree = %g tC tree \n", s->value[TOT_SAPWOOD_C]/s->counter[N_TREE]);
-	logger(g_log, "   Total Sapwood biomass per tree = %g KgC tree \n", (s->value[TOT_SAPWOOD_C]/s->counter[N_TREE])*1000.0);
-	logger(g_log, "   Total Sapwood biomass per tree = %g gC tree \n", (s->value[TOT_SAPWOOD_C]/s->counter[N_TREE])*1000000.0);
+	logger(g_log, "Total Sapwood biomass = %g tDM class cell \n", s->value[WTOT_sap_tDM]);
+	logger(g_log, "Total Sapwood biomass per tree = %g tDM tree \n", s->value[WTOT_sap_tDM]/s->counter[N_TREE]);
+	logger(g_log, "Total Sapwood biomass per tree = %g KgDM tree \n", (s->value[WTOT_sap_tDM]/s->counter[N_TREE])*1000.0);
+	logger(g_log, "Total Sapwood biomass per tree = %g gDM tree \n", (s->value[WTOT_sap_tDM]/s->counter[N_TREE])*1000000.0);
+	logger(g_log, "Total Sapwood biomass = %g tC class cell \n", s->value[TOT_SAPWOOD_C]);
+	logger(g_log, "Total Sapwood biomass per tree = %g tC tree \n", s->value[TOT_SAPWOOD_C]/s->counter[N_TREE]);
+	logger(g_log, "Total Sapwood biomass per tree = %g KgC tree \n", (s->value[TOT_SAPWOOD_C]/s->counter[N_TREE])*1000.0);
+	logger(g_log, "Total Sapwood biomass per tree = %g gC tree \n", (s->value[TOT_SAPWOOD_C]/s->counter[N_TREE])*1000000.0);
 
 	/*reserve*/
 	if (s->value[RESERVE_tDM] == 0 || s->value[RESERVE_tDM] == NO_DATA)
@@ -244,11 +251,13 @@ void Initialization_biomass_data(cell_t *const c, const int height, const int ag
 			{
 				/* compute leaf carbon to LAI down-scaled to canopy cover*/
 				s->value[LEAF_C] = (s->value[LAI] / s->value[SLA_AVG]);
-				logger(g_log, "--Leaf carbon  = %g KgC/m2\n", s->value[LEAF_C]);
+				logger(g_log, "--Leaf carbon = %g KgC/m2\n", s->value[LEAF_C]);
+
 				//fixme it should takes into account effective cell coverage
 				/* convert to tons of C and to cell area*/
 				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
-				logger(g_log, "--Leaf carbon  = %g tC/cell size\n", s->value[LEAF_C]);
+				logger(g_log, "--Canopy cover for leaf carbon = %g\n", s->value[CANOPY_COVER_DBHDC]);
+				logger(g_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 
 				/* Calculate projected LAI for sunlit and shaded canopy portions */
 				s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
@@ -262,7 +271,7 @@ void Initialization_biomass_data(cell_t *const c, const int height, const int ag
 	{
 		s->value[LEAF_C] = s->value[BIOMASS_FOLIAGE_tDM]/GC_GDM;
 		logger(g_log, "Ok Leaf biomass..\n");
-		logger(g_log, "---Leaf Biomass from init file  cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
+		logger(g_log, "---Leaf Biomass from init file = %g tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
 		logger(g_log, "---Leaf Biomass from init file = %g tC cell\n", s->value[LEAF_C]);
 	}
 	/* for leaf balance */
@@ -412,10 +421,9 @@ void Initialization_biomass_data(cell_t *const c, const int height, const int ag
 
 	logger(g_log, "***reserves following live tissues DM (not used) BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM] * s->value[SAP_WRES]);
 	logger(g_log, "***reserves following live tissues C (not used) BIOME = %g tC/area\n", s->value[LIVE_WOOD_C] * s->value[SAP_WRES] );
-
 }
 
-void Initialization_soil_data(cell_t *const c)
+void initialization_soil(cell_t *const c)
 {
 	float acoeff;
 	float bcoeff;
