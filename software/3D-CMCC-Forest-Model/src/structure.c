@@ -550,7 +550,7 @@ void daily_forest_structure (cell_t *const c)
 		c->cell_cover += c->t_layers[layer].layer_cover;
 	}
 	logger(g_log, "Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
-	logger(g_log, "**************************************\n\n");getchar();
+	logger(g_log, "**************************************\n\n");
 
 }
 

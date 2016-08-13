@@ -97,9 +97,11 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 	logger(g_log, "**Daily MET DATA day %d month %d, year %d (yos %d)**\n", day + 1, month + 1, c->years[year].year, year + 1);
 	logger(g_log, "-%d-%d-%d\n", met[month].d[day].n_days, month+1, c->years[year].year);
 	logger(g_log,
-			"-solar_rad = %.2f MJ/m^2/day\n"
-			"-s-wave downward = %.2f W/m2\n"
-			"-atmospheric l-wave downward (computed) = %.2f W/m2\n"
+			"-solar_rad = %.3f MJ/m^2/day\n"
+			"-PAR = %.3f molPAR/m^2/day\n"
+			"-s-wave downward = %.3f W/m2\n"
+			"-PPFD = %.3f umolPAR/m^2/sec\n"
+			"-atm l-wave downward (computed) = %.3f W/m2\n"
 			"-tavg = %.2f °C\n"
 			"-tmax = %.2f °C\n"
 			"-tmin = %.2f °C\n"
@@ -123,7 +125,9 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			"-co2 concentration = %.2f ppmv\n"
 			"-DOY = %d\n",
 			met[month].d[day].solar_rad,
+			met[month].d[day].par,
 			met[month].d[day].solar_rad* MJ_TO_W,
+			met[month].d[day].ppfd,
 			met[month].d[day].atm_lw_downward_W,
 			met[month].d[day].tavg,
 			met[month].d[day].tmax,

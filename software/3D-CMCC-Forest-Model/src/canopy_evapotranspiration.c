@@ -203,7 +203,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 			rv = 1.0/gc_e_wv;
 			rh = 1.0/gc_sh;
-			net_rad = s->value[NET_SW_RAD_ABS];
+			net_rad = s->value[SW_RAD_ABS];
 
 			/* call Penman-Monteith function, it returns Potential evaporation in kg/m2/s for evaporation and W/m2 for latent heat*/
 			//fixme use correct  net radiation
@@ -265,7 +265,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rh = 1.0/gl_sh;
 
 				/* note: Net Rad is Short wave flux */
-				net_rad = s->value[NET_SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
+				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 				logger(g_log, "net rad = %g\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */
@@ -279,7 +279,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rh = 1.0/gl_sh;
 
 				/* note: Net Rad is Short wave flux */
-				net_rad = s->value[NET_SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
+				net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 				//fixme use correct net radiation
@@ -319,7 +319,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			rh = 1.0/gl_sh;
 
 			/* note: Net Rad is Short wave flux */
-			net_rad = s->value[NET_SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
+			net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 			logger(g_log, "net rad = %g\n", net_rad);
 
 			/* all day transp */
@@ -338,7 +338,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			rh = 1.0/gl_sh;
 
 			/* note: Net Rad is Short wave flux */
-			net_rad = s->value[NET_SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
+			net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 			logger(g_log, "net rad = %g\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/

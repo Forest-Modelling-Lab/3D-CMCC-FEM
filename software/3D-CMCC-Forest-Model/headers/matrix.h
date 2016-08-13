@@ -129,12 +129,12 @@ enum {
 	AV_SHOOT,                   //Average number of shoots produced after coppicing
 
 	/* ALESSIOR:
-	
+
 		AVDBH deve essere sempre il primo perchè prima di lui ci sono i
 		parametri con i valori CHE NON CAMBIANO MAI (COSTANTI!!!!!)
 
 		oltretutto l'indice AVDBH viene usato in new_class.c
-	*/
+	 */
 
 	AVDBH,                      //Average DBH in cm
 	CROWN_DIAMETER,             //Crown Diameter in m
@@ -194,14 +194,14 @@ enum {
 
 
 	/* short wave */
-	NET_SW_RAD,                 //Short Wave Radiation in W/m2
-	SW_RAD_REFL,               //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
-	NET_SW_RAD_ABS,             //Absorbed Net Short Wave radiation in W/m2
-	NET_SW_RAD_ABS_SUN,         //Absorbed Net Short Wave Radiation W/m2 for sun leaves
-	NET_SW_RAD_ABS_SHADE,       //Absorbed Net Short Wave Radiation W/m2 for shaded leaves
-	NET_SW_RAD_TRANSM,          //Transmitted Net Short Wave Radiation W/m2
-	NET_SW_RAD_TRANSM_SUN,      //Transmitted Net Short Wave Radiation W/m2 for sun leaves
-	NET_SW_RAD_TRANSM_SHADE,    //Transmitted Net Short Wave Radiation W/m2 for shaded leaves
+	SW_RAD,                     //Short Wave Radiation in W/m2
+	SW_RAD_REFL,                //Reflected Short Wave Radiation W/m2 OVERALL CANOPY
+	SW_RAD_ABS,                 //Absorbed Net Short Wave radiation in W/m2
+	SW_RAD_ABS_SUN,             //Absorbed Net Short Wave Radiation W/m2 for sun leaves
+	SW_RAD_ABS_SHADE,           //Absorbed Net Short Wave Radiation W/m2 for shaded leaves
+	SW_RAD_TRANSM,              //Transmitted Net Short Wave Radiation W/m2
+	SW_RAD_TRANSM_SUN,          //Transmitted Net Short Wave Radiation W/m2 for sun leaves
+	SW_RAD_TRANSM_SHADE,        //Transmitted Net Short Wave Radiation W/m2 for shaded leaves
 
 	/* long wave */
 	NET_LW_RAD,                 //Long Wave Radiation in W/m2
@@ -946,7 +946,7 @@ typedef struct
 	int saplings_counter;                               /* number of class as sapling */
 	double cell_cover;                                  /* canopy cover (ratio) */
 	int n_tree;                                         /* number of trees */
-	
+
 	int daily_dead_tree;                                /* daily number of dead tree */
 	double monthly_dead_tree;                           /* monthly number of dead tree */
 	double annual_dead_tree ;                           /* annual number of dead tree */
@@ -955,18 +955,22 @@ typedef struct
 	double bgb;                                         /* current below ground biomass at cell level (tC/cell) */
 
 	/* radiation variables */
+	/* short wave radiation */
 	double sw_rad_down_MJ;                              /* Downward short wave radiation flux (MJ/m2/day) */
 	double sw_rad_down_W;                               /* Downward short wave radiation flux (W/m2) */
 	double short_wave_radiation_upward_MJ;              /* Upward short wave radiation flux (MJ/m2/day) */
 	double short_wave_radiation_upward_W;               /* Upward short wave radiation flux (W/m2) */
-	double net_short_wave_radiation_MJ;                 /* Net short wave radiation flux (MJ/m2/day) */
-	double net_short_wave_radiation_W;                  /* Net short wave radiation flux (W/m2) */
+	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
+	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
+	double sw_rad_abs;                                  /* Short Wave radiation absorbed (W/m2) */
+	double sw_rad_transm;                               /* Short Wave radiation transmitted (W/m2) */
+	double sw_rad_for_soil;                             /* Short Wave radiation incoming to soil level (W/m2) */
+
+	/* long wave radiation */
 	double long_wave_radiation_upward_MJ;               /* Upward long wave radiation flux (MJ/m2/day) */
 	double long_wave_radiation_upward_W;                /* Upward long wave radiation flux (W/m2) */
 	double net_long_wave_radiation_MJ;                  /* Net long wave radiation flux (MJ/m2/day) */
 	double net_long_wave_radiation_W;                   /* Net long wave radiation flux (W/m2) */
-	double short_wave_absorbed;                         /* Total absorbed short wave radiation flux (W/m2) */
-	double short_wave_reflected;                        /* Total reflected short wave radiation flux (W/m2) */
 	double long_wave_absorbed;                          /* Total absorbed long wave wave radiation flux (W/m2) */
 	double long_wave_reflected;                         /* Total reflected long wave radiation flux (W/m2) */
 	double long_wave_emitted;                           /* Total emitted long wave radiation flux (W/m2) */
@@ -974,13 +978,7 @@ typedef struct
 	double net_lw_rad_for_soil;                         /* Net Long Wave radiation to soil level (W/m2) */
 	double net_rad_for_soil;                            /* Net radiation to soil level (W/m2) */
 
-	double sw_rad_refl;                                 /* Short Wave radiation reflected (W/m2) */
-	double sw_rad_for_soil_refl;                        /* Short Wave radiation reflected from soil level (W/m2) */
-	double net_sw_rad;                                  /* Net Short Wave radiation incoming (W/m2) */
-	double net_sw_rad_abs;                              /* Net Short Wave radiation absorbed (W/m2) */
-	double net_sw_rad_transm;                           /* Net Short Wave radiation transmitted (W/m2) */
-	double net_sw_rad_for_soil;                         /* Net Short Wave radiation incoming to soil level (W/m2) */
-
+	/* PAR radiation */
 	double par;                                         /* incoming PAR at cell level (molPAR/m2/day) */
 	double apar;                                        /* cumulated absorbed PAR at cell level (molPAR/m2/day) */
 	double par_transm;                                  /* cumulated transmitted PAR at cell level (molPAR/m2/day) */
@@ -989,6 +987,7 @@ typedef struct
 	double par_refl_soil;                               /* reflected PAR by the soil (molPAR/m2/day) */
 	double par_for_establishment;                       /* available PAR for establishment (molPAR/m2/day) */
 
+	/* PPFD radiation */
 	double ppfd;                                        /* Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_abs;                                    /* Absorbed Photosynthetic photon flux density (umol/m2/sec) */
 	double ppfd_transm;                                 /* Transmitted Photosynthetic photon flux density (umol/m2/sec) */
@@ -1066,7 +1065,7 @@ typedef struct
 	double soilw_fc;                                                      /* soil water at field capacity (kgH2O/m2) */
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
 	double swc;
-	
+
 	double days_since_rain;                                               /* consecutive days without rain */
 	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */
 	double water_to_soil;                                                 /* current water flux water to soil (mm/m2) */
@@ -1089,7 +1088,7 @@ typedef struct
 	double daily_soil_evaporation_watt;                                   /* current daily soil evaporation in watt at cell level (W/m2) */
 	double daily_soil_latent_heat_flux;                                   /* current daily soil latent heat flux  at cell level (W/m2) */
 	double daily_soil_sensible_heat_flux;                                 /* current daily soil sensible heat flux at cell level (W/m2) */
-	
+
 	/*energy balance*/
 	double daily_c_transp_watt;                                           /* daily canopy transpiration at cell level (W/m2) */
 	double daily_c_evapo_watt;                                            /* daily canopy evaporation at cell level (W/m2) */
@@ -1141,7 +1140,7 @@ typedef struct
 
 	/*
 		those variables are referred to cell, they must be same for each layers
-	*/
+	 */
 
 } cell_t;
 

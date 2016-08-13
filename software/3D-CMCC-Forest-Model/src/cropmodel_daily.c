@@ -85,7 +85,7 @@ int crop_model_D(matrix_t *const m, const int _cell, const int year, const int m
 	double extraTerrestrialInsolation;
 	double empiric_param_a;
 	double empiric_param_b;
-	double dailySolarRadiation;					// daily solar radiation (J/m^2/s) it would be in type.h:	m->cells[cell].net_sw_rad
+	double dailySolarRadiation;					// daily solar radiation (J/m^2/s) it would be in type.h:	m->cells[cell].sw_rad
 	double bareGroundAlbedo;						// bare ground albedo
 	double snow;									// snow (cm water) it should be m->met[month].snow
 	// ALESSIOR LAI was already used in types.h...renamed to _LAI

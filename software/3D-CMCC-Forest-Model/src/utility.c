@@ -17,17 +17,19 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->cell_cover = 0.;
 
 	/* reset daily radiative variables */
+	c->par = 0.;
 	c->apar = 0.;
 	c->par_transm = 0.;
 	c->par_refl = 0.;
 	c->par_for_soil = 0.;
 	c->par_refl_soil = 0.;
 
+	c->sw_rad_down_W = 0.;
 	c->sw_rad_refl = 0.;
 	c->sw_rad_for_soil_refl = 0.;
-	c->net_sw_rad_abs = 0.;
-	c->net_sw_rad_transm = 0.;
-	c->net_sw_rad_for_soil = 0.;
+	c->sw_rad_abs = 0.;
+	c->sw_rad_transm = 0.;
+	c->sw_rad_for_soil = 0.;
 
 	c->ppfd_abs = 0.;
 	c->ppfd_transm = 0.;
@@ -204,13 +206,13 @@ void reset_daily_class_variables(cell_t *const c)
 				s->value[TRANSM_PAR] = 0.;
 				s->value[TRANSM_PAR_SUN] = 0.;
 				s->value[TRANSM_PAR_SHADE] = 0.;
-				s->value[NET_SW_RAD] = 0.;
-				s->value[NET_SW_RAD_ABS] = 0.;
-				s->value[NET_SW_RAD_ABS_SUN] = 0.;
-				s->value[NET_SW_RAD_ABS_SHADE] = 0.;
-				s->value[NET_SW_RAD_TRANSM] = 0.;
-				s->value[NET_SW_RAD_TRANSM_SUN] = 0.;
-				s->value[NET_SW_RAD_TRANSM_SHADE] = 0.;
+				s->value[SW_RAD] = 0.;
+				s->value[SW_RAD_ABS] = 0.;
+				s->value[SW_RAD_ABS_SUN] = 0.;
+				s->value[SW_RAD_ABS_SHADE] = 0.;
+				s->value[SW_RAD_TRANSM] = 0.;
+				s->value[SW_RAD_TRANSM_SUN] = 0.;
+				s->value[SW_RAD_TRANSM_SHADE] = 0.;
 				s->value[PPFD] = 0.;
 				s->value[PPFD_ABS] = 0.;
 				s->value[PPFD_ABS_SUN] = 0.;

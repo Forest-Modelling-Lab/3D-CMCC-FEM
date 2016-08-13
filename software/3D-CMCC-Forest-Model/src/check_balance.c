@@ -40,9 +40,10 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	balance = in - out -store;
 
+	logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
+
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL RADIATIVE BALANCE (PAR)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming par = %g molPAR/m2/day\n", meteo_daily->par);
@@ -57,7 +58,6 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "par store = %g molPAR/m2/day\n", store);
 		logger(g_log, "par balance = %g molPAR/m2/day\n",balance);
 		logger(g_log, "...FATAL ERROR IN PAR radiative balance (exit)\n");
-		logger(g_log, "DOY = %d\n", c->doy);
 		exit(1);
 	}
 	else
@@ -76,13 +76,14 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	out = c->sw_rad_refl + c->sw_rad_for_soil_refl;
 
 	/* sum of current storage */
-	store = c->net_sw_rad_abs + c->net_sw_rad_for_soil;
+	store = c->sw_rad_abs + c->sw_rad_for_soil;
 
 	balance = in - out -store;
 
+	logger(g_log, "\nCELL RADIATIVE BALANCE (Short Wave Radiation)\n");
+
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL RADIATIVE BALANCE (Net Radiation)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming radiation = %g W/m2\n", meteo_daily->sw_downward_W);
@@ -90,14 +91,13 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "c->sw_rad_refl = %g W/m2\n",c->sw_rad_refl);
 		logger(g_log, "c->sw_rad_for_soil_refl = %g W/m2\n",c->sw_rad_for_soil_refl);
 		logger(g_log, "\nstore\n");
-		logger(g_log, "c->net_sw_rad_abs = %g W/m2\n", c->net_sw_rad_abs);
-		logger(g_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->net_sw_rad_for_soil);
-		logger(g_log, "radiation in = %g W/m2\n", in);
+		logger(g_log, "c->sw_rad_abs = %g W/m2\n", c->sw_rad_abs);
+		logger(g_log, "c->net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_for_soil);
+		logger(g_log, "\nradiation in = %g W/m2\n", in);
 		logger(g_log, "radiation out = %g W/m2\n", out);
 		logger(g_log, "net radiation store = %g W/m2\n", store);
 		logger(g_log, "radiation balance = %g W/m2\n",balance);
-		logger(g_log, "...FATAL ERROR IN Net Radiation radiative balance (exit)\n");
-		logger(g_log, "DOY = %d\n", c->doy);
+		logger(g_log, "...FATAL ERROR IN Short Wave Radiation radiative balance (exit)\n");
 		exit(1);
 	}
 	else
@@ -112,16 +112,17 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	in = meteo_daily->ppfd;
 
 	/* sum of sinks */
-	out = c->ppfd_refl + c->par_refl_soil;
+	out = c->ppfd_refl + c->ppfd_refl_soil;
 
 	/* sum of current storage */
 	store = c->ppfd_abs + c->ppfd_for_soil;
 
 	balance = in - out -store;
 
+	logger(g_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
+
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "incoming PPFD = %g umol/m2/sec\n", meteo_daily->sw_downward_W * RAD2PAR * EPAR);
@@ -131,12 +132,11 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "\nstore\n");
 		logger(g_log, "c->ppfd_abs = %g umol/m2/sec\n", c->ppfd_abs);
 		logger(g_log, "c->ppfd_for_soil = %g umol/m2/sec\n", c->ppfd_for_soil);
-		logger(g_log, "PPFD in = %g umol/m2/sec\n", in);
+		logger(g_log, "\nPPFD in = %g umol/m2/sec\n", in);
 		logger(g_log, "PPFD out = %g umol/m2/sec\n", out);
 		logger(g_log, "PPFD store = %g umol/m2/sec\n", store);
 		logger(g_log, "PPFD balance = %g umol/m2/sec\n",balance);
 		logger(g_log, "...FATAL ERROR IN PPFD radiative balance (exit)\n");
-		logger(g_log, "DOY = %d\n", c->doy);
 		exit(1);
 	}
 	else
@@ -310,10 +310,11 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
+	logger(g_log, "\nCLASS LEVEL PAR BALANCE\n");
+
 	/* check for PAR balance closure*/
-	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	if ( fabs( balance ) > 1e-8 )
 	{
-		logger(g_log, "\nCLASS LEVEL PAR BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "PAR in = %g\n", in);
 		logger(g_log, "PAR out = %g\n", out);
@@ -329,22 +330,23 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	/****************************************************************************************************************/
 	/* Net Short-Wave radiation balance */
 	/* sum of sources */
-	in = /*s->value[SW_RAD_REFL] + */s->value[NET_SW_RAD];
+	in = /*s->value[SW_RAD_REFL] + */s->value[SW_RAD];
 
 	/* sum of sinks */
 	/* it must take into account the overall transmitted NET_RAD (reflected is yet computed for net radiation) */
-	out = s->value[NET_SW_RAD_TRANSM];
+	out = s->value[SW_RAD_TRANSM];
 
 	/* sum of current storage */
-	store = s->value[NET_SW_RAD_ABS_SUN] + s->value[NET_SW_RAD_ABS_SHADE];
+	store = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
 
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
+	logger(g_log, "\nCLASS LEVEL Net Short Wave BALANCE\n");
+
 	/* check for NET_RAD balance closure*/
-	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	if ( fabs( balance ) > 1e-8 )
 	{
-		logger(g_log, "\nCLASS LEVEL Net Short Wave BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "NET_SW_RAD in = %g\n", in);
 		logger(g_log, "NET_RAD out = %g\n", out);
@@ -363,7 +365,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	in = s->value[PPFD];
 
 	/* sum of sinks */
-	out = /*s->value[PPFD_REFL] + */ s->value[PPFD_TRANSM];
+	out = /* s->value[PPFD_REFL] + */ s->value[PPFD_TRANSM];
 
 	/* sum of current storage */
 	store = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
@@ -371,10 +373,11 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
+	logger(g_log, "\nCLASS LEVEL PPFD BALANCE\n");
+
 	/* check for PPFD balance closure*/
-	if (fabs(balance)> 1e-8  && s->counter[VEG_UNVEG] == 1)
+	if ( fabs( balance ) > 1e-8 )
 	{
-		logger(g_log, "\nCLASS LEVEL PPFD BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "PPFD in = %g\n", in);
 		logger(g_log, "PPFD out = %g\n", out);
@@ -420,11 +423,11 @@ void Check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	/* check carbon pool balance */
 	balance = in - out - store;
 
-	/*******************************************************************************************************************/
+	logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
+
 	/* check for carbon balance closure */
-	if (fabs(balance)> 1e-8)
+	if ( fabs( balance ) > 1e-8 )
 	{
-		logger(g_log, "\nCLASS LEVEL CARBON BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin = %g gC/m2\n", in);
 		logger(g_log, "DAILY_GPP_gC = %g gC/m2\n", s->value[DAILY_GPP_gC]);
@@ -475,11 +478,10 @@ void Check_class_water_balance(cell_t *const c, const int layer, const int heigh
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
-	/*******************************************************************************************************************/
-	/* check for canopy water pool water balance closure (during growing season) */
-	if (fabs(balance)> 1e-8 && s->counter[VEG_UNVEG] == 1)
+	logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
+
+	if ( fabs( balance ) > 1e-8 )
 	{
-		logger(g_log, "\nCLASS LEVEL WATER BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "canopy water in = %g\n", in);
 		logger(g_log, "canopy water out = %g\n", out);
