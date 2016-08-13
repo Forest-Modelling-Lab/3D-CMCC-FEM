@@ -47,7 +47,12 @@ extern settings_t* g_settings;
 extern logger_t* g_log;
 
 //extern const char *szMonth[MONTHS_COUNT];
+
+/* Days in Months */
 extern int DaysInMonth[];
+
+/* Last cumulative days in months */
+extern int MonthLength [];
 
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
@@ -74,8 +79,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	assert(m);
 
 	//FIXME move to meteo_t structure
-	if(day == 0 && month == 0)c->doy = 1;
-	else c->doy += 1;
+	/* compute day of the year */
+	if( !day && !month )c->doy = 1;
+	else ++c->doy;
+	/* compute day of simulation */
+	if(!day && !month && !year)c->dos = 1;
+	else ++c->dos;
 
 	/* print at the beginning of simulation forest class data */
 	print_cell_data ( c );
@@ -86,8 +95,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		annual_forest_structure ( c );
 	}
 
-	/* daily forest structure */
-	if( day != 0 && month != 0 && year != 0 )
+	/* daily forest structure (except the first day, month and year)*/
+	if( c->dos > 1 )
 	{
 		daily_forest_structure ( c );
 	}
@@ -529,33 +538,33 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* reset daily variables */
 	reset_daily_class_variables ( c );
 	reset_daily_layer_variables ( c );
-	reset_daily_cell_variables ( c );
+	reset_daily_cell_variables  ( c );
 
+	//ALESSIOR include leap years
 	/* reset monthly variables */
-	if ( !day )
+	if ( c->doy == MonthLength[month] )
 	{
-		reset_monthly_class_variables( c );
-		reset_monthly_layer_variables( c );
-		reset_monthly_cell_variables( c );
+		reset_monthly_class_variables ( c );
+		reset_monthly_layer_variables ( c );
+		reset_monthly_cell_variables  ( c );
 
-		if ( !month )
+		//ALESSIOR include leap years
+		if ( c->doy == 365 )
 		{
 			/* reset annual variables */
-			reset_annual_class_variables( c );
-			reset_annual_layer_variables( c );
-			reset_annual_cell_variables( c );
+			reset_annual_class_variables ( c );
+			reset_annual_layer_variables ( c );
+			reset_annual_cell_variables  ( c );
 		}
 	}
 	/****************************************************************************************************/
-
-	c->dos += 1;
 	//todo: soilmodel could stay here or in main.c
 	//here is called at the end of all tree height age and species classes loops
 	//todo: move all soil algorithms into soil_model function
 	//soil_model (&m->cells[cell], yos, years, month, years_of_simulation);
 	//N_avl = (Ka * g_soil->values[SOIL_sN) + pN + (Kb * Yearly_Eco_NPP);
 	//logger(g_log, "Nitrogen available = %f g m^-2\n", N_avl);
-	logger(g_log, "****************END OF CELL***************\n");
+	logger(g_log, "******************END OF CELL*********************\n");
 
 	/* ok */
 	return 1;

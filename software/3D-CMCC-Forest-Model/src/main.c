@@ -1023,7 +1023,9 @@ int main(int argc, char *argv[]) {
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}
-					logger(g_log, "****************END OF DAY (%d)*******************\n\n\n", day+1);
+					logger(g_log, "****************END OF DAY (%d)*******************\n", day+1);
+
+					getchar();
 
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count ) {

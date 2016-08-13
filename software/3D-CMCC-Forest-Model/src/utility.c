@@ -152,6 +152,8 @@ void reset_daily_layer_variables(cell_t *const c)
 
 	tree_layer_t *l;
 
+	logger(g_log, "...resetting layer level daily variables...\n");
+
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
 		l = &c->t_layers[layer];

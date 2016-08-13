@@ -303,6 +303,7 @@ void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 	{
 		logger(g_log, "...ok snow water balance\n");
 	}
+	logger(g_log,"*****************************************************\n");
 }
 
 /******************************************************CLASS LEVEL BALANCE CLOSURE*****************************************************/
