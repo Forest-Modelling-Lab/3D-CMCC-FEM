@@ -302,13 +302,12 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 		if (met[month].d[day].tavg > 0.0)
 		{
 			met[month].d[day].rain = met[month].d[day].prcp;
+			met[month].d[day].snow = 0.0;
 		}
 		else
 		{
 			met[month].d[day].snow = met[month].d[day].prcp;
-
-			/* add snow to snowpack */
-			c->snow_pack += met[month].d[day].snow;
+			met[month].d[day].rain = 0.0;
 		}
 	}
 	else
@@ -320,7 +319,7 @@ void Check_prcp(cell_t *c, const int day, const int month, const int year)
 	/* following Lagergren et al., 2006 */
 	/* impose zero value for tsoil in case of snow presence */
 	//todo move to soil when snow melt and subl will go to soil
-	if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
+	//if(c->snow_pack != 0) met[month].d[day].tsoil = 0.0;
 }
 
 void Day_Length(cell_t *c, const int day, const int month, const int year)

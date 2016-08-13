@@ -1074,6 +1074,7 @@ typedef struct
 	double snow_melt;                                                     /* current amount of melted snow (mm/m2) */
 	double snow_subl;                                                     /* current amount of sublimated snow (mm/m2) */
 	double snow_to_soil;                                                  /* current amount of water flux due to snow melt (mm/m2) */
+	double old_snow_pack;                                                 /* old amount of snow (Kg/m2) */
 	double out_flow;                                                      /* current amount of water outflow (mm/m2) */
 	double daily_c_int, monthly_c_int, annual_c_int;                      /* daily, monthly and canopy interception at cell level (mm/m2/ ) */
 	double daily_c_transp, monthly_c_transp, annual_c_transp;             /* daily, monthly and canopy transpiration at cell level (mm/m2/ ) */
@@ -1155,6 +1156,7 @@ matrix_t* matrix_create(const char* const filename);
 void matrix_free(matrix_t *m);
 void simulation_summary(const matrix_t* const m);
 void site_summary(const matrix_t* const m);
+void topo_summary(const matrix_t* const m);
 void soil_summary(const matrix_t* const m, const cell_t* const cell);
 void forest_summary(const matrix_t* const m, const int cell);
 

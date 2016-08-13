@@ -8,32 +8,52 @@
 
 extern logger_t* g_log;
 
-void Allometry_Power_Function(age_t *const a, const int species)
+void allometry_power_function(cell_t *const c)
 {
-	//todo ask to Laura references
-	//this function computes the STEMCONST values using the values reported from ...... ask to Laura
-
+	int height;
+	int age;
+	int species;
 	double MassDensity;
+
+	height_t *h;
+	age_t *a;
 	species_t *s;
 
-	s = &a->species[species];
+	logger(g_log,"\nAllometry Power Function\n");
 
-	MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-	logger(g_log, "-Mass Density = %f\n", MassDensity);
+	for ( height = 0; height < c->heights_count; height++ )
+	{
+		h = &c->heights[height];
 
-	if (s->value[AVDBH] < 9)
-	{
-		s->value[STEMCONST] = pow (e, -1.6381);
+		for ( age = 0; age < h->ages_count; age++ )
+		{
+			a = &c->heights[height].ages[age];
+
+			for ( species = 0; species < a->species_count; species ++)
+			{
+				s = &c->heights[height].ages[age].species[species];
+
+				logger(g_log, "Species = %s\n", s->name);
+
+				MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+				logger(g_log, "-Mass Density = %f\n", MassDensity);
+
+				if (s->value[AVDBH] < 9)
+				{
+					s->value[STEMCONST] = pow (e, -1.6381);
+				}
+				else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
+				{
+					s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+				}
+				else
+				{
+					s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+				}
+				logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
+			}
+		}
 	}
-	else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
-	{
-		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
-	}
-	else
-	{
-		s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
-	}
-	logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
 }
 
 ////not used

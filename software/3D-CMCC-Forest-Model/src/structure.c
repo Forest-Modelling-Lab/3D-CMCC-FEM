@@ -18,6 +18,7 @@ extern logger_t* g_log;
 void annual_forest_structure(cell_t* const c)
 {
 	//FIXME
+	logger(g_log, "\n\n***ANNUAL_FOREST_STRUCTURE***\n\n");
 }
 
 
@@ -554,7 +555,7 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
 
-	logger(g_log, "\n\n\n****DAILY_FOREST_VEG_PERIOD****\n");
+	logger(g_log, "\n****DAILY_FOREST_VEG_PERIOD****\n");
 	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
 		for (age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )

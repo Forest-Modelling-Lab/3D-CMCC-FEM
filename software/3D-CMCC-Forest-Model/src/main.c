@@ -900,6 +900,9 @@ int main(int argc, char *argv[]) {
 		/* summary on site */
 		site_summary(matrix);
 
+		/* summary on topography */
+		topo_summary(matrix);
+
 		/* summary on soil */
 		soil_summary(matrix, matrix->cells);
 
@@ -945,7 +948,7 @@ int main(int argc, char *argv[]) {
 					Dew_temperature(matrix->cells[cell].years[year].m, day, month);
 					Radiation(&matrix->cells[cell], day, month, year);
 					Check_prcp(&matrix->cells[cell], day, month, year);
-					Annual_met_values(&matrix->cells[cell], day, month, year);
+					//Annual_met_values(&matrix->cells[cell], day, month, year);
 					Annual_CO2_concentration(matrix->cells[cell].years[year].m, day, month, year);
 
 					if ( F == matrix->cells[cell].landuse )

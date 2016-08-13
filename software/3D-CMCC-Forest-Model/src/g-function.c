@@ -56,15 +56,38 @@ int sort_by_heights_desc(const void * a, const void * b)
 	}
 }
 
-void Pool_fraction(species_t *const s)
+void carbon_pool_fraction(cell_t *c)
 {
-	s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
-	s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
-	s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
-	s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
+	int height;
+	int age;
+	int species;
+
+	height_t *h;
+	age_t *a;
+	species_t *s;
+
+	for ( height = 0; height < c->heights_count; height++ )
+	{
+		h = &c->heights[height];
+
+		for ( age = 0; age < h->ages_count; age++ )
+		{
+			a = &c->heights[height].ages[age];
+
+			for ( species = 0; species < a->species_count; species ++)
+			{
+				s = &c->heights[height].ages[age].species[species];
+
+				s->value[FINE_ROOT_LEAF_FRAC] = s->value[FINE_ROOT_LEAF] / (s->value[FINE_ROOT_LEAF]+1.0);
+				s->value[STEM_LEAF_FRAC] = s->value[STEM_LEAF] / (s->value[STEM_LEAF]+1.0);
+				s->value[COARSE_ROOT_STEM_FRAC] = s->value[COARSE_ROOT_STEM] / (s->value[COARSE_ROOT_STEM]+1.0);
+				s->value[LIVE_TOTAL_WOOD_FRAC] = s->value[LIVE_TOTAL_WOOD] / (s->value[LIVE_TOTAL_WOOD]+1.0);
+			}
+		}
+	}
 }
 
-void Abscission_DayLength (cell_t * c)
+void Abscission_DayLength (cell_t *c)
 {
 	/*to compute day length for stopping growth*/
 	//from Schwalm and Ek, 2004
@@ -110,7 +133,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 	species_t *s;
 
 	met = c->years[year].m;
-	
+
 	/* compute annual number of vegetative days */
 
 	for (height = c->heights_count - 1; height >= 0; height-- )
@@ -162,7 +185,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 									s->value[LEAF_FALL_FRAC_GROWING]);
 
 						}
-						logger(g_log, "-species_t %s TOTAL VEGETATIVE DAYS = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
+						logger(g_log, "-species %s annual vegetative days = %d \n", s->name, s->counter[DAY_VEG_FOR_LEAF_FALL]);
 					}
 				}
 				else

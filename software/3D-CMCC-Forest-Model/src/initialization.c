@@ -16,7 +16,7 @@ extern soil_settings_t *g_soil_settings;
 
 void initialization_forest_structure(cell_t *const c, const int height, const int age, const int species)
 {
-	logger(g_log,"INITIALIZE FOREST STRUCTURE\n");
+	logger(g_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
 	daily_forest_structure ( c );
 }
 
@@ -30,6 +30,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 
+	logger(g_log,"\n*******INITIALIZE FOREST BIOMASS*******\n");
 	logger(g_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n",
 			h->value, a->value, s->name);
 
@@ -435,6 +436,8 @@ void initialization_soil(cell_t *const c)
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
 
+	logger(g_log,"\nINITIALIZE SOIL\n");
+
 
 	/*soil matric potential*/
 	CHECK_CONDITION(fabs((g_soil_settings->values[SOIL_SAND_PERC] + g_soil_settings->values[SOIL_CLAY_PERC] + g_soil_settings->values[SOIL_SILT_PERC]) -100.0 ), > 1e-4);
@@ -499,7 +502,7 @@ void initialization_soil(cell_t *const c)
 
 	/* soil data from https://www.nrel.colostate.edu/projects/century/soilCalculatorHelp.htm */
 	/* following Saxton et al 1986, 2006, 2008 */
-	logger(g_log, "...computing missing soil data (CENTURY)\n");
+	logger(g_log, "CENTURY soil characteristics\n");
 	acoeff = (float)exp(-4.396 - 0.0715 * g_soil_settings->values[SOIL_CLAY_PERC] - 4.88e-4 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) - 4.285e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2)*g_soil_settings->values[SOIL_CLAY_PERC]);
 	bcoeff = (float)(-3.14 - 0.00222 * pow(g_soil_settings->values[SOIL_CLAY_PERC],2) - 3.484e-5 * pow(g_soil_settings->values[SOIL_SAND_PERC],2) * g_soil_settings->values[SOIL_CLAY_PERC]);
 	sat = (float)(0.332 - 7.251e-4 * g_soil_settings->values[SOIL_SAND_PERC] + 0.1276 * log10(g_soil_settings->values[SOIL_CLAY_PERC]));
@@ -516,29 +519,29 @@ void initialization_soil(cell_t *const c)
 	/* corrections from Steve Del Grosso */
 	/* volumetric percentage wilting point */
 	volumetric_wilting_point += (float)(-0.15 * volumetric_wilting_point);
-	logger(g_log, "*volumetric water content at wilting point (CENTURY) = %g %%(vol)\n", volumetric_wilting_point);
+	logger(g_log, "volumetric water content at wilting point (CENTURY) = %g %%(vol)\n", volumetric_wilting_point);
 	/* (kgH2O/m2) soil water at wilting point */
 	c->wilting_point = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_wilting_point * 1000.0;
-	logger(g_log, "**Wilting point (CENTURY) = %g mm/m2\n", c->wilting_point);
+	logger(g_log, "Wilting point (CENTURY) = %g mm/m2\n", c->wilting_point);
 
 	/* volumetric percentage field capacity */
 	volumetric_field_capacity += (float)(0.07 * volumetric_field_capacity);
-	logger(g_log, "*volumetric water content at field capacity (CENTURY) = %g %%(vol)\n", volumetric_field_capacity);
+	logger(g_log, "volumetric water content at field capacity (CENTURY) = %g %%(vol)\n", volumetric_field_capacity);
 	/* (kgH2O/m2) soil water at field capacity */
 	c->field_capacity = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_field_capacity * 1000.0;
-	logger(g_log, "**Field capacity (CENTURY) = %g mm/m2\n", c->field_capacity);
+	logger(g_log, "Field capacity (CENTURY) = %g mm/m2\n", c->field_capacity);
 
 	/* volumetric percentage saturated hydraulic conductivity */
 	volumetric_saturated_hydraulic_conductivity /= 1500.0;
-	logger(g_log, "*volumetric water content at saturated hydraulic conductance (CENTURY) = %g %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
+	logger(g_log, "volumetric water content at saturated hydraulic conductance (CENTURY) = %g %%(vol)\n", volumetric_saturated_hydraulic_conductivity);
 	//fixme not clear what it is
 	/* (kgH2O/m2) soil water at saturated hydraulic conductivity */
 	c->sat_hydr_conduct = (g_soil_settings->values[SOIL_DEPTH] / 100) * volumetric_saturated_hydraulic_conductivity * 1000.0;
-	logger(g_log, "**Saturated hydraulic conductivity (CENTURY) = %g mm/m2\n", c->sat_hydr_conduct);
+	logger(g_log, "Saturated hydraulic conductivity (CENTURY) = %g mm/m2\n", c->sat_hydr_conduct);
 
 	/* bulk density g/cm3 */
 	c->bulk_density += (-0.08 * c->bulk_density);
-	logger(g_log, "**Bulk density = %g g/cm^3\n", c->bulk_density);
+	logger(g_log, "Bulk density = %g g/cm^3\n", c->bulk_density);
 	logger(g_log, "***************************************************\n\n");
 
 }

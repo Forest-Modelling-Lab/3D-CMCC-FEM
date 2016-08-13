@@ -174,9 +174,10 @@ void Check_carbon_balance(cell_t *const c)
 
 	balance = in - out -store;
 
+	logger(g_log, "\nCELL CARBON POOL BALANCE\n");
+
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL CARBON POOL BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "c->daily_gpp = %g gC/m2/day\n", c->daily_gpp);
@@ -248,10 +249,11 @@ void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 		logger(g_log, "daily_frac_soil_evapo = %g %%\n", daily_frac_soil_evapo);
 	}
 
+	logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
+
 	/* check for soil water pool water balance */
 	if (fabs(balance) > 1e-8 )
 	{
-		logger(g_log, "\nCELL SOIL POOL WATER BALANCE\n");
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
 		logger(g_log, "meteo_daily->rain = %g\n", meteo_daily->rain);
@@ -342,7 +344,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	/* check canopy water pool balance */
 	balance = in - out - store;
 
-	logger(g_log, "\nCLASS LEVEL Net Short Wave BALANCE\n");
+	logger(g_log, "\nCLASS LEVEL Short Wave BALANCE\n");
 
 	/* check for NET_RAD balance closure*/
 	if ( fabs( balance ) > 1e-8 )
@@ -357,7 +359,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 	}
 	else
 	{
-		logger(g_log, "...ok Net Short Wave radiation balance at class level\n");
+		logger(g_log, "...ok Short Wave radiation balance at class level\n");
 	}
 	/****************************************************************************************************************/
 	/* PPFD balance */

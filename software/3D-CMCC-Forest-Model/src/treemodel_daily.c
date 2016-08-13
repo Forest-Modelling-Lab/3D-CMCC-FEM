@@ -77,15 +77,23 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if(day == 0 && month == 0)c->doy = 1;
 	else c->doy += 1;
 
+	/* print at the beginning of simulation forest class data */
+	print_cell_data ( c );
+
 	/* annual forest structure (except the first year) */
-	if( !day && !month && year != 0 ) annual_forest_structure ( c );
+	if( !day && !month && year != 0 )
+	{
+		annual_forest_structure ( c );
+	}
+
+	/* daily forest structure */
+	if( day != 0 && month != 0 && year != 0 )
+	{
+		daily_forest_structure ( c );
+	}
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period ( c, meteo_daily, day, month );
-
-
-	/* daily forest structure */
-	if( day != 0 && month != 0 && year != 0 )daily_forest_structure ( c );
 
 	/***********************************************************************************************/
 
@@ -160,8 +168,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							/***************************************************************/
 
-							/* print at the beginning of simulation stand data */
-							print_stand_data ( c, layer, height, age, species );
+							/* print at the beginning of simulation forest class data */
+							print_forest_class_data ( c, layer, height, age, species );
 
 							/* compute species-specific phenological phase */
 							phenology ( c, layer, height, age, species, meteo_daily, month);
@@ -376,7 +384,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									Biomass_increment_EOY ( c, layer, height, age, species );
 
 									/* print at the end of simulation class level data */
-									print_stand_data ( c, layer, height, age, species );
+									print_forest_class_data ( c, layer, height, age, species );
 
 									Water_Use_Efficiency ( s );
 
@@ -499,7 +507,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	Sensible_heat_flux ( c, meteo_daily );
 
 	/* compute soil water balance */
-	Soil_water_balance ( c, meteo_daily );
+	Soil_water_balance ( c, meteo_daily );getchar();
 
 	/* compute water fluxes */
 	Water_fluxes ( c, meteo_daily );

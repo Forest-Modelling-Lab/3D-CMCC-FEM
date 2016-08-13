@@ -158,37 +158,20 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 	}
 	logger(g_log, "***************\n");
 }
-/*
-void Print_met_daily_data(yos_t *const yos, const int day, const int month, const int years)
+
+void print_cell_data (cell_t *const c)
 {
-	meteo_t *met;
-
-	assert(yos);
-
-	met = yos[years].m;
-	if (g_settings->time == 'd')
-	{
-		logger(g_log, "n_days %10d "
-				"Rg_f %10g "
-				"Tavg %10g "
-				"Tmax %10g "
-				"Tmin %10g "
-				"Precip %10g "
-				"Tday %10g "
-				"Tnight %10g \n",
-				met[month].d[day].n_days,
-				met[month].d[day].solar_rad,
-				met[month].d[day].tavg,
-				met[month].d[day].tmax,
-				met[month].d[day].tmin,
-				met[month].d[day].prcp,
-				met[month].d[day].tday,
-				met[month].d[day].tnight);
-	}
+	/* print at the beginning of simulation stand data */
+	logger(g_log, "******************************************************\n\n");
+	logger(g_log, "cell = \n");
+	logger(g_log, "* x = %d\n", c->x);
+	logger(g_log, "* y = %d\n", c->y);
+	logger(g_log, "* number of layers = %d\n", c->t_layers_count);
+	logger(g_log, "* asw = %g mm\n", c->asw);
+	logger(g_log, "* snow pack = %g cm\n", c->snow_pack);
 
 }
- */
-void print_stand_data(cell_t* const c, const int layer, const int height, const int age, const int species)
+void print_forest_class_data(cell_t* const c, const int layer, const int height, const int age, const int species)
 {
 	tree_layer_t *l;
 	height_t *h;

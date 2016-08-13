@@ -1390,9 +1390,18 @@ void site_summary(const matrix_t* const m)
 	logger(g_log, "Site Name = %s\n", g_soil_settings->sitename);
 	logger(g_log, "Latitude = %f° \n", g_soil_settings->values[SOIL_LAT]);
 	logger(g_log, "Longitude = %f° \n", g_soil_settings->values[SOIL_LON]);
-	logger(g_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
 	if (g_soil_settings->values[SOIL_LAT] > 0) logger(g_log, "North hemisphere\n");
 	else logger(g_log, "South hemisphere\n");
+}
+
+void topo_summary(const matrix_t* const m)
+{
+	assert(m);
+
+	/* Topography definition */
+	logger(g_log, "***************************************************\n\n");
+	logger(g_log, "TOPOGRAPHY DATASET\n");
+	logger(g_log, "Elevation = %g m\n", g_topo->values[TOPO_ELEV]);
 }
 
 void soil_summary(const matrix_t* const m, const cell_t* const cell)
@@ -1413,7 +1422,10 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_log, "-Soil M0 = %g\n", g_soil_settings->values[SOIL_M0]);
 	logger(g_log, "-Soil SN = %g\n", g_soil_settings->values[SOIL_SN]);
 
+	 /* soil initialization */
 	initialization_soil (m->cells);
+
+	logger(g_log, "***************************************************\n\n");
 }
 
 void forest_summary(const matrix_t* const m, const int cell)
@@ -1462,22 +1474,22 @@ void forest_summary(const matrix_t* const m, const int cell)
 		}
 	}
 
+	/*************FOREST INITIALIZATION DATA***********/
+	/* initialise power function */
+	allometry_power_function (&m->cells[cell]);
+
+	/* initialise carbon pool fraction */
+	carbon_pool_fraction (&m->cells[cell]);
+
+	/* initialise forest structure */
+	initialization_forest_structure (&m->cells[cell], height, age, species);
+
 	for ( height = 0; height < m->cells[cell].heights_count; height++ )
 	{
 		for ( age = 0; age < m->cells[cell].heights[height].ages_count; age++ )
 		{
 			for ( species = 0; species < m->cells[cell].heights[height].ages[age].species_count; species ++)
 			{
-				/*************FOREST INITIALIZATION DATA***********/
-				/* initialise power function */
-				Allometry_Power_Function (&m->cells[cell].heights[height].ages[age], species);
-
-				/* Initialise pool fraction */
-				Pool_fraction (&m->cells[cell].heights[height].ages[age].species[species]);
-
-				/* initialise forest structure */
-				initialization_forest_structure (&m->cells[cell], height, age, species);
-
 				/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 				 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
 				initialization_forest_biomass (&m->cells[cell], height, age, species);
