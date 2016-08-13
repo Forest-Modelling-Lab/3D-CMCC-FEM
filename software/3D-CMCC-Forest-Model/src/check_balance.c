@@ -121,7 +121,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 	logger(g_log, "\nCELL RADIATIVE BALANCE (PPFD)\n");
 
-	if (fabs(balance) > 1e-8 )
+	if ( fabs( balance ) > 1e-8 )
 	{
 		logger(g_log, "DOY = %d\n", c->doy);
 		logger(g_log, "\nin\n");
