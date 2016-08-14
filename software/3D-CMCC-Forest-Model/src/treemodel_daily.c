@@ -337,7 +337,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 								/* END OF YEAR */
 
-								if ( ( IS_LEAP_YEAR( year ) && c->doy == 366 ) || c->doy == 365 )
+								if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
 								{
 									logger(g_log, "*****END OF YEAR******\n");
 									/*FRUIT ALLOCATION*/
@@ -428,7 +428,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* functions for saplings */
 							else
 							{
-								if( c->doy == 365 )
+								if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
 								{
 									logger(g_log, "\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 									logger(g_log, "SAPLINGS\n");
@@ -540,15 +540,16 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_layer_variables ( c );
 	reset_daily_cell_variables  ( c );
 
+	//ALESSIOR: is it correct?
 	/* reset monthly variables */
-	if ( ( IS_LEAP_YEAR( year ) && c->doy == (MonthLength[month] + 1 ) ) || (c->doy == (MonthLength[month] ) ) )
+	if ( ( IS_LEAP_YEAR( year ) ? (MonthLength[month] + 1 ) : (MonthLength[month] )) == c->doy )
 	{
 		reset_monthly_class_variables ( c );
 		reset_monthly_layer_variables ( c );
 		reset_monthly_cell_variables  ( c );
 
 		/* reset annual variables */
-		if ( ( IS_LEAP_YEAR( year ) && c->doy == 366) || c->doy == 365 )
+		if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
 		{
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
