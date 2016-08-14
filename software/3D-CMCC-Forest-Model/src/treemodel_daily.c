@@ -336,34 +336,35 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 								/* END OF YEAR */
-								if (day == 30 && month == DECEMBER)
+
+								if ( ( IS_LEAP_YEAR( year ) && c->doy == 366 ) || c->doy == 365 )
 								{
 									logger(g_log, "*****END OF YEAR******\n");
 									/*FRUIT ALLOCATION*/
 									/*
-								if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
-								{
-								Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
-								Seeds_Number_LE = Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-								logger(g_log, "Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
+									if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
+									{
+									Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
+									Seeds_Number_LE = Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+									logger(g_log, "Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
 
-								//Seeds_Number_T = Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-								//logger(g_log, "Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
+									//Seeds_Number_T = Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+									//logger(g_log, "Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
 
-								//FRUIT ESTABLISHMENT
-								if (Yearly_Rain > s->value[MINRAIN])
-								{
-								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-								Establishment_LPJ ( &m->cells[cell],layer, height, age, species);
-								logger(g_log, "Saplings Number from LPJ = %d\n", s->counter[N_TREE_SAP]);
-								}
-								else
-								{
-								logger(g_log, "Yearly Rain = %f\n", Yearly_Rain);
-								logger(g_log, "Minimum Rain for Establishment = %f\n", s->value[MINRAIN]);
-								logger(g_log, "NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
-								}
-								}
+									//FRUIT ESTABLISHMENT
+									if (Yearly_Rain > s->value[MINRAIN])
+									{
+									//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
+									Establishment_LPJ ( &m->cells[cell],layer, height, age, species);
+									logger(g_log, "Saplings Number from LPJ = %d\n", s->counter[N_TREE_SAP]);
+									}
+									else
+									{
+									logger(g_log, "Yearly Rain = %f\n", Yearly_Rain);
+									logger(g_log, "Minimum Rain for Establishment = %f\n", s->value[MINRAIN]);
+									logger(g_log, "NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
+									}
+									}
 									 */
 
 									logger(g_log, "*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
@@ -380,7 +381,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									/*Mortality based on Growth efficiency(LPJ)*/
 									//Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
 
-									if ( s->management == C) Stool_mortality ( c, layer, height, age, species );
+									if ( s->management == C ) Stool_mortality ( c, layer, height, age, species );
 
 									//renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
 
@@ -427,7 +428,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* functions for saplings */
 							else
 							{
-								if( day == 30 && month == DECEMBER )
+								if( c->doy == 365 )
 								{
 									logger(g_log, "\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 									logger(g_log, "SAPLINGS\n");
@@ -539,17 +540,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_layer_variables ( c );
 	reset_daily_cell_variables  ( c );
 
-	//ALESSIOR include leap years
 	/* reset monthly variables */
-	if ( c->doy == MonthLength[month] )
+	if ( ( IS_LEAP_YEAR( year ) && c->doy == (MonthLength[month] + 1 ) ) || (c->doy == (MonthLength[month] ) ) )
 	{
 		reset_monthly_class_variables ( c );
 		reset_monthly_layer_variables ( c );
 		reset_monthly_cell_variables  ( c );
 
-		//ALESSIOR include leap years
 		/* reset annual variables */
-		if ( c->doy == 365 )
+		if ( ( IS_LEAP_YEAR( year ) && c->doy == 366) || c->doy == 365 )
 		{
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );

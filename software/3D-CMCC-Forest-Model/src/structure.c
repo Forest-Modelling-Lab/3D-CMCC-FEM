@@ -27,6 +27,7 @@ void annual_forest_structure(cell_t* const c)
 	/* the model sorts starting from highest tree class */
 	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
 
+	/* compute number of annual layers */
 	logger(g_log, "Number of forest layers\n");
 
 	for ( height = c->heights_count - 1; height >= 0; --height )
@@ -53,6 +54,7 @@ void annual_forest_structure(cell_t* const c)
 
 	logger(g_log, "Number of forest layers = %d\n\n", c->t_layers_count);
 
+	/* assign "z" values to height classes */
 	logger(g_log, "Assign 'z' values");
 
 	for ( height = c->heights_count - 1; height >= 0; --height )
