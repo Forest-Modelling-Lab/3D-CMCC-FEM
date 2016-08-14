@@ -68,7 +68,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	height_t *h;
 	age_t *a;
 	species_t *s;
-
 	meteo_daily_t *meteo_daily;
 
 	/* assign shortcuts */
@@ -79,10 +78,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	assert(m);
 
 	//FIXME move to meteo_t structure
-	/* compute day of the year */
+	/* counter day of the year */
 	if( !day && !month )c->doy = 1;
 	else ++c->doy;
-	/* compute day of simulation */
+	/* counter day of simulation */
 	if(!day && !month && !year)c->dos = 1;
 	else ++c->dos;
 
@@ -161,7 +160,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 						{
 							/* note: this is valid only for north hemisphere */
 							/* beginning of simulation (every year included the first one) */
-							if ( !day && !month )
+							if ( c->doy == 1)
 							{
 								/* beginning of simulation (only for first year) */
 								if ( !year )First_day ( c, layer, height, age, species );
@@ -549,9 +548,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		reset_monthly_cell_variables  ( c );
 
 		//ALESSIOR include leap years
+		/* reset annual variables */
 		if ( c->doy == 365 )
 		{
-			/* reset annual variables */
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
 			reset_annual_cell_variables  ( c );

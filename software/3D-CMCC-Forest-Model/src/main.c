@@ -1025,8 +1025,6 @@ int main(int argc, char *argv[]) {
 					}
 					logger(g_log, "****************END OF DAY (%d)*******************\n", day+1);
 
-					getchar();
-
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count ) {
 						/*
@@ -1116,7 +1114,6 @@ int main(int argc, char *argv[]) {
 							                 , OUTPUT_TYPE_MONTHLY
 					);
 				}
-
 				EOM_cumulative_balance_cell_level(&matrix->cells[cell], year, month, cell);
 			}
 
