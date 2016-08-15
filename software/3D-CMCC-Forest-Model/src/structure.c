@@ -77,8 +77,8 @@ void annual_forest_structure(cell_t* const c)
 			}
 		}
 	}
-	logger(g_log,"******************************************************\n");
 
+	logger(g_log,"******************************************************\n");
 }
 
 void daily_forest_structure (cell_t *const c)
