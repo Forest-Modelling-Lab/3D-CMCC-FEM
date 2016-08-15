@@ -21,7 +21,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int age
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log, "--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
+	logger(g_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
 	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
 
 	/*for deciduous*/

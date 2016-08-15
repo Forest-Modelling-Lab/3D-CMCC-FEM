@@ -1009,7 +1009,7 @@ int main(int argc, char *argv[]) {
 						else
 						{
 							//run for BGC version
-						}
+						}getchar();
 					}
 					else
 					{

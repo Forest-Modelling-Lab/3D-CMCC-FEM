@@ -227,7 +227,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	if (s->value[BIOMASS_FOLIAGE_tDM] == 0.0 || s->value[BIOMASS_FOLIAGE_tDM] == NO_DATA)
 	{
 		/* deciduous */
-		if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+		if ((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2) && c->north == 0)
 		{
 			/* assuming no leaf at 1st of January */
 			s->value[BIOMASS_FOLIAGE_tDM] = 0.0;
@@ -237,15 +237,20 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 		else
 		{
 			logger(g_log, "\nNo Leaf Biomass Data are available for model initialization \n");
-			logger(g_log, "...Generating input Leaf Biomass biomass data from LAI\n");
+			logger(g_log, "...Generating input Leaf Biomass data from LAI\n");
 			//fixme it seems to not have sense
 			/* a very special (and hopefully rare) case in which there'nt data for LAI or LEAF_C */
 			if(!s->value[LAI])
 			{
+				/* really ?? */
+				/*
 				s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
 				logger(g_log, "----Leaf Biomass initialization data  = %g tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
 				logger(g_log, "----Leaf Biomass initialization data  = %g tC cell\n", s->value[LEAF_C]);
+				 */
+				logger(g_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
+				exit(1);
 			}
 			/* otherwise use LAI */
 			else
@@ -256,7 +261,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 
 				//fixme it should takes into account effective cell coverage
 				/* convert to tons of C and to cell area*/
-				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
+				s->value[LEAF_C] /= 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
 				logger(g_log, "--Canopy cover for leaf carbon = %g\n", s->value[CANOPY_COVER_DBHDC]);
 				logger(g_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 
@@ -274,6 +279,28 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 		logger(g_log, "Ok Leaf biomass..\n");
 		logger(g_log, "---Leaf Biomass from init file = %g tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
 		logger(g_log, "---Leaf Biomass from init file = %g tC cell\n", s->value[LEAF_C]);
+
+		/* if no values for LAI are available */
+		if ( !s->value[LAI] )
+		{
+			logger(g_log, "\nNo LAI Data are available for model initialization \n");
+			logger(g_log, "...Generating input LAI data from Leaf Biomass\n");
+
+			logger(g_log, "CANOPY_COVER_DBHDC = %g\n", s->value[CANOPY_COVER_DBHDC]);
+
+			/* Calculate projected LAI for tot and for sunlit and shaded canopy portions*/
+			s->value[LAI] = ((s->value[LEAF_C] * 1000.0) * s->value[SLA_AVG])/(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
+			s->value[LAI_SUN] = 1.0 - exp(-s->value[LAI]);
+			s->value[LAI_SHADE] = s->value[LAI] - s->value[LAI_SUN];
+
+			logger(g_log, "LAI = %f\n", s->value[LAI]);
+			logger(g_log, "LAI SUN = %f\n", s->value[LAI_SUN]);
+			logger(g_log, "LAI SHADE = %f\n", s->value[LAI_SHADE]);
+		}
+		else
+		{
+			logger(g_log, "Ok LAI..\n");
+		}
 	}
 	/* for leaf balance */
 	s->value[OLD_LEAF_C] = s->value[LEAF_C];
@@ -411,17 +438,52 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	logger(g_log, "-Individual total dead biomass = %g KgC\n", s->value[AV_DEAD_WOOD_MASS_KgC]);
 
 	/* compute percentage of live vs total biomass */
-	s->value[TOTAL_WOOD_C] = s->value[STEM_C] + s->value[TOT_ROOT_C] + s->value[BRANCH_C];
+	s->value[TOT_WOOD_C] = s->value[STEM_C] + s->value[TOT_ROOT_C] + s->value[BRANCH_C];
 	s->value[AV_TOT_WOOD_MASS_KgC] = s->value[AV_STEM_MASS_KgC] + s->value[AV_ROOT_MASS_KgC] + s->value[AV_BRANCH_MASS_KgC];
-	logger(g_log, "----Total wood = %g tC/cell\n",s->value[TOTAL_WOOD_C]);
+	logger(g_log, "----Total wood = %g tC/cell\n",s->value[TOT_WOOD_C]);
 	logger(g_log, "----Total wood = %g KgC/tree\n",s->value[AV_TOT_WOOD_MASS_KgC]);
-	logger(g_log, "----Live wood vs total biomass = %g %%\n", (s->value[LIVE_WOOD_C] / s->value[TOTAL_WOOD_C]) * 100.0);
-	logger(g_log, "----Dead wood vs total biomass = %g %%\n", (s->value[DEAD_WOOD_C] / s->value[TOTAL_WOOD_C]) * 100.0);
+	logger(g_log, "----Live wood vs total biomass = %g %%\n", (s->value[LIVE_WOOD_C] / s->value[TOT_WOOD_C]) * 100.0);
+	logger(g_log, "----Dead wood vs total biomass = %g %%\n", (s->value[DEAD_WOOD_C] / s->value[TOT_WOOD_C]) * 100.0);
 	logger(g_log, "----Live wood vs total biomass = %g %%\n", (s->value[AV_LIVE_WOOD_MASS_KgC] / s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 	logger(g_log, "----Dead wood vs total biomass = %g %%\n", (s->value[AV_DEAD_WOOD_MASS_KgC] / s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 
 	logger(g_log, "***reserves following live tissues DM (not used) BIOME = %g tDM/area\n", s->value[BIOMASS_LIVE_WOOD_tDM] * s->value[SAP_WRES]);
 	logger(g_log, "***reserves following live tissues C (not used) BIOME = %g tC/area\n", s->value[LIVE_WOOD_C] * s->value[SAP_WRES] );
+
+
+	/* check that all mandatory variables are initialized */
+	CHECK_CONDITION(h->value, == 0);
+	CHECK_CONDITION(a->value, == 0);
+	CHECK_CONDITION(s->value[AVDBH], == 0);
+	CHECK_CONDITION(s->value[STEM_C], == 0);
+	CHECK_CONDITION(s->value[BRANCH_C], == 0);
+	CHECK_CONDITION(s->value[TOT_STEM_C], == 0);
+	CHECK_CONDITION(s->value[FINE_ROOT_C], == 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_C], == 0);
+	CHECK_CONDITION(s->value[TOT_ROOT_C], == 0);
+	CHECK_CONDITION(s->value[TOT_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[RESERVE_C], == 0);
+	CHECK_CONDITION(s->value[MIN_RESERVE_C], == 0);
+	CHECK_CONDITION(s->value[STEM_SAPWOOD_C], == 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_SAPWOOD_C], == 0);
+	CHECK_CONDITION(s->value[BRANCH_SAPWOOD_C], == 0);
+	CHECK_CONDITION(s->value[TOT_SAPWOOD_C], == 0);
+	CHECK_CONDITION(s->value[STEM_LIVE_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[STEM_DEAD_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_LIVE_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_DEAD_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[BRANCH_LIVE_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[BRANCH_DEAD_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[LIVE_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[DEAD_WOOD_C], == 0);
+	CHECK_CONDITION(s->value[BASAL_AREA], == 0);
+
+	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+	{
+		CHECK_CONDITION(s->value[LAI], == 0);
+		CHECK_CONDITION(s->value[LAI_SUN], == 0);
+		CHECK_CONDITION(s->value[LAI_SHADE], == 0);
+	}
 }
 
 void initialization_soil(cell_t *const c)

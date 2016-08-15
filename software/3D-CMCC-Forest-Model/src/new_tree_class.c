@@ -434,12 +434,12 @@ int Create_new_class(cell_t *const c, const int height, const int age, const int
 	logger(g_log, "-Individual total dead biomass = %f KgC\n", s->value[AV_DEAD_WOOD_MASS_KgC]);
 
 	/* compute percentage of live vs total biomass */
-	s->value[TOTAL_WOOD_C] =s->value[STEM_C] + s->value[TOT_ROOT_C] + s->value[BRANCH_C];
+	s->value[TOT_WOOD_C] =s->value[STEM_C] + s->value[TOT_ROOT_C] + s->value[BRANCH_C];
 	s->value[AV_TOT_WOOD_MASS_KgC] =s->value[AV_STEM_MASS_KgC] +s->value[AV_ROOT_MASS_KgC] +s->value[AV_BRANCH_MASS_KgC];
-	logger(g_log, "----Total wood = %f tC/cell\n",s->value[TOTAL_WOOD_C]);
+	logger(g_log, "----Total wood = %f tC/cell\n",s->value[TOT_WOOD_C]);
 	logger(g_log, "----Total wood = %f KgC/tree\n",s->value[AV_TOT_WOOD_MASS_KgC]);
-	logger(g_log, "----Live wood vs total biomass = %f %%\n", (s->value[LIVE_WOOD_C] /s->value[TOTAL_WOOD_C]) * 100.0);
-	logger(g_log, "----Dead wood vs total biomass = %f %%\n", (s->value[DEAD_WOOD_C] /s->value[TOTAL_WOOD_C]) * 100.0);
+	logger(g_log, "----Live wood vs total biomass = %f %%\n", (s->value[LIVE_WOOD_C] /s->value[TOT_WOOD_C]) * 100.0);
+	logger(g_log, "----Dead wood vs total biomass = %f %%\n", (s->value[DEAD_WOOD_C] /s->value[TOT_WOOD_C]) * 100.0);
 	logger(g_log, "----Live wood vs total biomass = %f %%\n", (s->value[AV_LIVE_WOOD_MASS_KgC] /s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 	logger(g_log, "----Dead wood vs total biomass = %f %%\n", (s->value[AV_DEAD_WOOD_MASS_KgC] /s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 
