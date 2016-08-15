@@ -478,6 +478,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	CHECK_CONDITION(s->value[DEAD_WOOD_C], == 0);
 	CHECK_CONDITION(s->value[BASAL_AREA], == 0);
 
+	/* just for evergreen */
 	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
 	{
 		CHECK_CONDITION(s->value[LAI], == 0);
