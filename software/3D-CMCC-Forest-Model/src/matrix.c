@@ -690,7 +690,6 @@ static const char *sz_species_values[] = {
 		//"Y",                          // Assimilate use efficiency-Respiration rate-GPP/NP
 		//"EPSILONgCMJ",                // = ALPHA * GC_MOL / MOLPAR_MJ = gC/MJ
 
-
 		"K",                          //Extinction coefficient for absorption of PAR by canopy for Quercus cerris L. (A. Cutini, Ann Sci For, 1996)
 		"ALBEDO",
 		"GAMMA_LIGHT",
@@ -757,8 +756,6 @@ static const char *sz_species_values[] = {
 		"FRUIT_PERC",
 		"CONES_LIFE_SPAN",
 
-
-
 		//BIOME ALLOCATION RATIOS
 		"FINE_ROOT_LEAF",	//allocation new fine root C:new leaf (ratio)
 		"STEM_LEAF",		//allocation new stem C:new leaf (ratio)
@@ -766,11 +763,11 @@ static const char *sz_species_values[] = {
 		"LIVE_TOTAL_WOOD",	//allocation new live wood C:new total wood C (ratio)
 
 		//BIOME C:N RATIOS
-		"CN_LEAVES",  //CN of leaves (kgC/kgN)
-		"CN_LITTER",  //CN of leaf litter (kgC/kgN)
-		"CN_FINE_ROOTS",  // CN of fine roots (kgC/kgN)
-		"CN_LIVE_WOODS",  //CN of live woods (kgC/kgN)
-		"CN_DEAD_WOODS",  //CN of dead woods (kgC/kgN)
+		"CN_LEAVES",          //CN of leaves (kgC/kgN)
+		"CN_FALLING_LEAVES",  //CN of leaf litter (kgC/kgN)
+		"CN_FINE_ROOTS",      //CN of fine roots (kgC/kgN)
+		"CN_LIVE_WOODS",      //CN of live woods (kgC/kgN)
+		"CN_DEAD_WOODS",      //CN of dead woods (kgC/kgN)
 
 		//per specie caducifoglie LITTERFALL RATE = 1 !!!!!!!!!!!!!!
 		//LITTERFALL
@@ -779,11 +776,7 @@ static const char *sz_species_values[] = {
 		"LEAF_FALL_FRAC_GROWING",		//proportions of the growing season of leaf fall
 		//ROOT TURNOVER
 		"LEAF_FINEROOT_TURNOVER",             //Average yearly leaves and fine root turnover rate
-		"COARSEROOT_TURNOVER",                  //Average yearly coarse root turnover rate
-		"SAPWOODTTOVER",	              //Average yearly sapwood turnover rate
-		"BRANCHTTOVER",	                  //Average yearly branch turnover rate
 		"LIVE_WOOD_TURNOVER",             //Average yearly live wood turnover rate
-
 
 		//MORTALITY
 		"WSX1000",                    //Max stem mass (kg) per tree at 1000 trees/hectare
@@ -793,7 +786,6 @@ static const char *sz_species_values[] = {
 		"MS",                         //Fraction mean single tree stem biomass lost per dead tree
 
 		//ALLOMETRIC RELATIONSHIPS
-
 		//"DBHDC",                      //dbh (cm)- crown diameter (e) ratio  from cm to meter cm-->m
 		//DBHDC = 20/100
 		"DBHDCMAX",                   //Low Density

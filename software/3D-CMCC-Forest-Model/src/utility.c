@@ -424,10 +424,10 @@ void First_day(cell_t *const c, int layer, int height, int age, int species)
 				c->n_tree += s->counter[N_TREE];
 
 				//fixme move elsewhere
-				s->turnover->FINERTOVER = (int)(365 / s->value[LEAF_FINEROOT_TURNOVER]);
-				s->turnover->COARSERTOVER = (int)(365 / s->value[COARSEROOT_TURNOVER]);
-				s->turnover->STEMTOVER = (int)(365 / s->value[LIVE_WOOD_TURNOVER]);
-				s->turnover->BRANCHTOVER = (int)(365 / s->value[BRANCHTTOVER]);
+//				s->turnover->FINERTOVER = (int)(365 / s->value[LEAF_FINEROOT_TURNOVER]);
+//				s->turnover->COARSERTOVER = (int)(365 / s->value[COARSEROOT_TURNOVER]);
+//				s->turnover->STEMTOVER = (int)(365 / s->value[LIVE_WOOD_TURNOVER]);
+//				s->turnover->BRANCHTOVER = (int)(365 / s->value[BRANCHTTOVER]);
 
 				//fixme move elsewhere
 				/* compute value for volume for next years comparisons (CAI-MAI) */

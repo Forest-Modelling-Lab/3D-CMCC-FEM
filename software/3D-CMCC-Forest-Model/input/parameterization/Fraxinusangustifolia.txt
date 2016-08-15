@@ -77,7 +77,7 @@ LIVE_TOTAL_WOOD ?    //new live C:new total wood (ratio)
 
 //BIOME C:N RATIOS
 CN_LEAVES   ?  //CN of leaves (kgC/kgN) 
-CN_LITTER   ?  //CN of leaf litter (kgC/kgN) 
+CN_FALLING_LEAVES   ?  //CN of leaf litter (kgC/kgN) 
 CN_FINE_ROOTS   ?  // CN of fine roots (kgC/kgN) 
 CN_LIVE_WOODS   ?  //CN of live woods (kgC/kgN)
 CN_DEAD_WOODS   ?  //CN of dead woods (kgC/kgN)
@@ -91,9 +91,6 @@ LEAF_FALL_FRAC_GROWING  ?     //proportions of the growing season of leaf fall
 
 //TURNOVER
 LEAF_FINEROOT_TURNOVER  ?       //Average yearly fine root turnover rate 
-COARSEROOT_TURNOVER   ?    //Average yearly coarse root turnover rate
-SAPWOODTTOVER   ?    //Average yearly sapwood turnover rate 
-BRANCHTTOVER    ?    //Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER  ? //Annual yearly live wood turnover rate 
 
 

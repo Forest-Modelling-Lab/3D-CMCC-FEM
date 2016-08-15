@@ -78,7 +78,7 @@ LIVE_TOTAL_WOOD	0.15	//new live C:new total wood (ratio) for deciduous P. Thornt
 
 //BIOME C:N RATIOS
 CN_LEAVES   25  //CN of leaves (kgC/kgN) for Q. cerris from Chiesi et al., 2007
-CN_LITTER   55  //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
+CN_FALLING_LEAVES   55  //CN of leaf litter (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_FINE_ROOTS   48  // CN of fine roots (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_LIVE_WOODS   48  //CN of live woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
 CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN) for Q. cerris from Chiesi et al., 2007
@@ -91,9 +91,6 @@ LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall
 
 //TURNOVER (values in year)
 LEAF_FINEROOT_TURNOVER	1       //Average yearly fine root turnover rate
-COARSEROOT_TURNOVER	0.03	//Average yearly coarse root turnover rate
-SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate 
-BRANCHTTOVER	0.03	//Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate co
 
 

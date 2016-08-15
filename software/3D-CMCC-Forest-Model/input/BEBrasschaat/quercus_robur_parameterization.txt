@@ -80,7 +80,7 @@ LIVE_TOTAL_WOOD 0.05    //new live C:new total wood ratio for deciduous 0.15 P. 
 
 //BIOME C:N RATIOS
 CN_LEAVES   27.2  //CN of leaves (kgC/kgN)  16.16 for Q. robur from Mollicone et al., 2002, 27.2 Pietsch
-CN_LITTER   64.1  //CN of leaf litter (kgC/kgN) 30 for Q. robur from Mollicone et al., 2002, 64.1 Pietsch
+CN_FALLING_LEAVES   64.1  //CN of leaf litter (kgC/kgN) 30 for Q. robur from Mollicone et al., 2002, 64.1 Pietsch
 CN_FINE_ROOTS   73.5  // CN of fine roots (kgC/kgN) 48 for Q. robur from Mollicone et al., 2002, 73.5 Pietsch
 CN_LIVE_WOODS   73.5  //CN of live woods (kgC/kgN)  73.5 for Q. robur from Pietsch et al., 2005, 50 from Mollicone et al., 2002
 CN_DEAD_WOODS   451  //CN of dead woods (kgC/kgN) for Q. robur from Pietsch et al., 2005
@@ -93,9 +93,6 @@ LEAF_FALL_FRAC_GROWING  0.3     //proportions of the growing season of leaf fall
 
 //TURNOVER
 LEAF_FINEROOT_TURNOVER  1       //Average yearly fine root turnover rate Q. robur from Pietsch et al 2005
-COARSEROOT_TURNOVER   0.03    //Average yearly coarse root turnover rate
-SAPWOODTTOVER   0.025   //Average yearly sapwood turnover rate 
-BRANCHTTOVER    0.01    //Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate 
 
 

@@ -81,7 +81,7 @@ LIVE_TOTAL_WOOD 0.05    //new live C:new total wood (ratio) for coniferous P. Th
 
 //BIOME C:N RATIOS
 CN_LEAVES   33.1  //CN of leaves (kgC/kgN) for P. sylvestris see PIetsch et al 2005  45 from Mollicone et al., 2002
-CN_LITTER   132  //CN of leaf litter (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
+CN_FALLING_LEAVES   132  //CN of leaf litter (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
 CN_FINE_ROOTS   38  // CN of fine roots (kgC/kgN) for P. sylvestris from Mollicone et al., 2002
 CN_LIVE_WOODS   50  //CN of live woods (kgC/kgN)  see PIetsch et al 2005, 58 for P. sylvestris Chiesi for P. pinaster  45 for P. sylvestris from Mollicone et al., 2002
 CN_DEAD_WOODS   1400  //CN of dead woods (kgC/kgN)  check it !!!!!!!!!!!!!!!!!!!!!! for P. pinaster from Chiesi et al., 2007
@@ -99,9 +99,6 @@ LEAF_FINEROOT_TURNOVER  0.18       //Average YEARLY fine root turnover rate
                             //0.061666667 month^-1, 0.74 YR^-1 from Jansenn 2002
                             //0.066666667 month^-1  0.8  YR^-1 from Gill and Jackson 2000
                             //0.18 yr^-1 from Pietsch
-COARSEROOT_TURNOVER   0.02    //deducted from Yuste et al., 2005
-SAPWOODTTOVER   0.0025  //Average yearly sapwood turnover rate 0.025 yr 0.002083333
-BRANCHTTOVER    0.01    //Average yearly branch turnover rate
 LIVE_WOOD_TURNOVER  0.7 //Annual yearly live wood turnover rate
 
 

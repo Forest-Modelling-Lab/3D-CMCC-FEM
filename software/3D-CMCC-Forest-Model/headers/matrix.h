@@ -74,16 +74,13 @@ enum {
 	COARSE_ROOT_STEM,           //allocation new coarse root C:new stem (ratio)
 	LIVE_TOTAL_WOOD,            //new live C:new total wood (ratio)
 	CN_LEAVES,                  //CN of leaves (kgC/kgN)
-	CN_LITTER,                  //CN of leaf litter (kgC/kgN)
+	CN_FALLING_LEAVES,          //CN of falling leaf litter (kgC/kgN)
 	CN_FINE_ROOTS,              //CN of fine roots (kgC/kgN)
 	CN_LIVE_WOODS,              //CN of live woods (kgC/kgN)
 	CN_DEAD_WOODS,              //CN of dead woods (kgC/kgN)
 	BUD_BURST,                  //days of bud burst at the beginning of growing season (only for deciduous)
 	LEAF_FALL_FRAC_GROWING,     //proportions of the growing season of leaf fall
 	LEAF_FINEROOT_TURNOVER,     //Average daily leaves and fine root turnover rate (for evergreen)
-	COARSEROOT_TURNOVER,        //Average daily coarse root turnover rate
-	SAPWOODTTOVER,	            //Average daily sapwood turnover rate
-	BRANCHTTOVER,	            //Average daily branch turnover rate
 	LIVE_WOOD_TURNOVER,         //Average daily live wood turnover rate
 	WSX1000,                    //Max stem mass (kg) per tree at 1000 trees/hectare
 	THINPOWER,                  //Power in self-thinning rule

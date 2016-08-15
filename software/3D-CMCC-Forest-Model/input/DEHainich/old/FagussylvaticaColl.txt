@@ -83,7 +83,7 @@ LIVE_TOTAL_WOOD	0.154	//new live C:new total wood (ratio) 0.15 for deciduous P. 
 
 //BIOME C:N RATIOS
 CN_LEAVES   18.6  //CN of leaves (kgC/kgN) 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli
-CN_LITTER   38  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
+CN_FALLING_LEAVES   38  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   45  // CN of fine roots (kgC/kgN) 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli
 CN_LIVE_WOODS   75  //CN of live woods (kgC/kgN) 48.2 for F. sylvatica from Mollicone et al., 2002 , 375 from Campioli et al., 2013
 CN_DEAD_WOODS   550  //CN of dead woods (kgC/kgN)  for F. sylvatica from Pietsch et al., 2005 112 ettore
@@ -96,10 +96,7 @@ BUD_BURST	10					//days of bud burst at the beginning of growing season (only fo
 LEAF_FALL_FRAC_GROWING	0.2		//proportions of the growing season of leaf fall from Pietsch et al., 2005
 
 //TURNOVER
-LEAF_FINEROOT_TURNOVER	1       //Average yearly fine root turnover rate Rasse et al 2001
-COARSEROOT_TURNOVER	0.02	//Average yearly coarse root turnover rate Rasse et al 2001, 0.05 Bartelink 1998, 0.02 Kurz et al., 1996
-SAPWOODTTOVER	0.01	//Average yearly sapwood turnover rate , 0.01 Bartelink 1998 
-BRANCHTTOVER	0.03	//Average yearly branch turnover rate 0.05 Bartelink 1998 
+LEAF_FINEROOT_TURNOVER	1       //Average yearly fine root turnover rate Rasse et al 2001 
 LIVE_WOOD_TURNOVER	0.7 //Annual yearly live wood turnover rate 
 
 

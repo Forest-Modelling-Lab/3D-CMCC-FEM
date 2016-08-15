@@ -503,6 +503,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* compute soil evaporation */
 	Soil_evaporation ( c, meteo_daily );
 
+	/*******************************************************************************************************/
+
 	/* compute evapotranspiration */
 	Evapotranspiration ( c );
 
