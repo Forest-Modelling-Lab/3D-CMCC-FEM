@@ -16,20 +16,21 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
+extern int MonthLength [];
 
 /* Deciduous carbon allocation routine */
-void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
+void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species,
+		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
-	//int i;
-	double  s0Ctem;
-	double  r0Ctem;
+
+	double s0Ctem;
+	double r0Ctem;
 	double omegaCtem;
 	double pS_CTEM = 0.0;
 	double pR_CTEM = 0.0;
 	double pF_CTEM = 0.0;
 	double Light_trasm;
 	double Perc_fine;
-	//static double frac_to_foliage_fineroot;
 	static double reserve_for_foliage_budburst;
 	static double reserve_for_fine_root_budburst;
 	static double reserve_for_budburst;
@@ -280,10 +281,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* compute single tree biomass pools */
 	average_tree_biomass ( s );
 
-	/* to avoid "jumps" of dbh it has computed only one monthly */
-	if( !day )
+	/* to avoid "jumps" of dbh it has computed once monthly */
+	//ALESSIOR include leap years
+	if( MonthLength[month] == c->doy )
 	{
-		dendrometry ( c, height, age, species, year );
+		dendrometry ( c, height, age, species );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");

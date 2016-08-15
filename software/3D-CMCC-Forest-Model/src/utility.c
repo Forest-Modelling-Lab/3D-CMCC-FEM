@@ -142,6 +142,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_et = 0.;
 	c->annual_latent_heat_flux = 0.;
 	c->annual_sensible_heat_flux = 0.;
+	c->basal_area = 0.;
 	c->agb = 0.;
 	c->bgb = 0.;
 	//c->dead_tree = 0;
@@ -170,18 +171,32 @@ void reset_daily_layer_variables(cell_t *const c)
 void reset_monthly_layer_variables(cell_t *const c)
 {
 	int layer;
-	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
-	{
 
-	}
+	logger(g_log, "...resetting layer level monthly variables...\n");
+
+//	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
+//	{
+//
+//	}
 }
 void reset_annual_layer_variables(cell_t *const c)
 {
 	int layer;
+	int height;
+
+	logger(g_log, "...resetting layer level annual variables...\n");
+
+	c->t_layers_count = 0.;
+
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
 
 	}
+	for ( height = c->heights_count - 1; height >= 0; --height )
+	{
+		c->heights[height].z = 0.;
+	}
+
 }
 
 void reset_daily_class_variables(cell_t *const c)

@@ -24,9 +24,6 @@ void annual_forest_structure(cell_t* const c)
 
 	logger(g_log, "\n***ANNUAL_FOREST_STRUCTURE***\n");
 
-	/* the model sorts starting from highest tree class */
-	qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
-
 	/* compute number of annual layers */
 	logger(g_log, "Number of forest layers\n");
 
@@ -40,7 +37,7 @@ void annual_forest_structure(cell_t* const c)
 			c->t_layers_count = 1;
 		}
 		/* other classes processed */
-		else if ( height < c->heights_count - 1)
+		else
 		{
 			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
 			{
@@ -48,14 +45,17 @@ void annual_forest_structure(cell_t* const c)
 			}
 		}
 	}
+	logger(g_log, "Number of height classes = %d\n", c->heights_count);
+	logger(g_log, "Number of forest layers = %d\n\n", c->t_layers_count);
+
 	/* check */
 	CHECK_CONDITION(+c->t_layers_count, < 1);
 	CHECK_CONDITION(+c->t_layers_count, > c->heights_count);
 
-	logger(g_log, "Number of forest layers = %d\n\n", c->t_layers_count);
+	/*************************************************************************************/
 
 	/* assign "z" values to height classes */
-	logger(g_log, "Assign 'z' values");
+	logger(g_log, "Assign 'z' values\n");
 
 	for ( height = c->heights_count - 1; height >= 0; --height )
 	{
@@ -64,23 +64,19 @@ void annual_forest_structure(cell_t* const c)
 		/* first height class processed */
 		if ( height == c->heights_count - 1 )
 		{
-			c->heights[height].z = c->t_layers_count;
+			c->heights[height].z = c->t_layers_count - 1;
+			logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 		}
 		/* other class processed */
-		else if ( height < c->heights_count - 1)
+		else
 		{
 			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
 			{
-				--c->heights[height].z;
+				c->heights[height].z = c->heights[height + 1].z - 1;
 				logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
 			}
 		}
 	}
-	/* check */
-	CHECK_CONDITION(c->heights[height].z, < 0);
-	CHECK_CONDITION(c->heights[height].z, > c->heights_count);
-	CHECK_CONDITION(c->heights[height].z, != c->t_layers_count);
-
 	logger(g_log,"******************************************************\n");
 
 }

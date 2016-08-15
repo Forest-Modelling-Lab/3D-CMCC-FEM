@@ -50,7 +50,7 @@
 #define PROGRAM_VERSION	"5.1.1"
 
 //Last cumulative days in months
-int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 364};
+int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
 //Days in Months
 int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -953,7 +953,7 @@ int main(int argc, char *argv[]) {
 
 					if ( F == matrix->cells[cell].landuse )
 					{
-						/* compute annually the days for the growing season before any other process  */
+						/* compute annually the days for the growing season before any other process */
 						Veg_Days (&matrix->cells[cell], day, month, year);
 
 						//Marconi 18/06: function used to calculate VPsat from Tsoil following Hashimoto et al., 2011
@@ -1009,7 +1009,7 @@ int main(int argc, char *argv[]) {
 						else
 						{
 							//run for BGC version
-						}getchar();
+						}
 					}
 					else
 					{

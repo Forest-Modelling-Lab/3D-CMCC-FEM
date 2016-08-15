@@ -126,8 +126,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	}
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
-	 */
-	//getchar();
+	*/
 }
 
 void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)

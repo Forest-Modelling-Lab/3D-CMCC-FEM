@@ -5,6 +5,7 @@
 #include <math.h>
 #include <assert.h>
 #include "constants.h"
+#include "common.h"
 #include "cumulative_balance.h"
 #include "settings.h"
 #include "logger.h"
@@ -33,7 +34,6 @@
 #include "C-deciduous-partitioning-allocation.h"
 #include "C-evergreen-partitioning-allocation.h"
 #include "mortality.h"
-#include "common.h"
 #include "biomass.h"
 #include "management.h"
 #include "soil_evaporation.h"
@@ -232,7 +232,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										carbon_assimilation( c, layer, height, age, species );
 
 										/* C-N-partitioning-allocation */
-										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, year );
+										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year );
 									}
 									/*outside growing season*/
 									else
@@ -269,7 +269,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 										carbon_assimilation( c, layer, height, age, species );
 
 										/* C-N-partitioning-allocation */
-										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, year);
+										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year);
 									}
 								}
 								/* loop for evergreen */
@@ -317,7 +317,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 									carbon_assimilation( c, layer, height, age, species );
 
 									/* C-N-partitioning-allocation */
-									daily_C_evergreen_partitioning_allocation ( c, layer, height, age, species, meteo_daily, day, year );
+									daily_C_evergreen_partitioning_allocation ( c, layer, height, age, species, meteo_daily, day, month, year );
 									logger(g_log, "---------------------------------------------------------------------------------\n");
 								}
 
@@ -337,7 +337,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 								/* END OF YEAR */
 
-								if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
+								//FIXME IT DOESN'T WORK ON LEAP YEARS
+								if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
 								{
 									logger(g_log, "*****END OF YEAR******\n");
 									/*FRUIT ALLOCATION*/
@@ -371,7 +372,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 									/*MORTALITY*/
 									//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-									logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+									//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
 									//Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
 									//todo
 									//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
@@ -428,7 +429,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* functions for saplings */
 							else
 							{
-								if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
+								//FIXME IT DOESN'T WORK ON LEAP YEARS
+								if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
 								{
 									logger(g_log, "\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 									logger(g_log, "SAPLINGS\n");
@@ -543,21 +545,61 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_cell_variables  ( c );
 
 	//ALESSIOR: is it correct?
-	/* reset monthly variables */
-	if ( ( IS_LEAP_YEAR( year ) ? (MonthLength[month] + 1 ) : (MonthLength[month] )) == c->doy )
-	{
-		reset_monthly_class_variables ( c );
-		reset_monthly_layer_variables ( c );
-		reset_monthly_cell_variables  ( c );
+//	/* reset monthly variables */
+//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength[month] + 1 ) : (MonthLength[month] )) == c->doy )
+//	{
+//		reset_monthly_class_variables ( c );
+//		reset_monthly_layer_variables ( c );
+//		reset_monthly_cell_variables  ( c );
+//
+//		//ALESSIOR: is it correct?
+//		//fixme in other parts of treemodel there are this "if"
+//		/* reset annual variables */
+//		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+//		{
+//			reset_annual_class_variables ( c );
+//			reset_annual_layer_variables ( c );
+//			reset_annual_cell_variables  ( c );
+//			logger(g_log,"prova\n");
+//		}
+//	}
 
+	if ( IS_LEAP_YEAR( c->years[year].year ) )
+	{
+		/* reset monthly variables */
+		if ( ( MonthLength[month] + 1 ) == c->doy )
+		{
+			reset_monthly_class_variables ( c );
+			reset_monthly_layer_variables ( c );
+			reset_monthly_cell_variables  ( c );
+		}
 		/* reset annual variables */
-		if ( ( IS_LEAP_YEAR( year ) ? 366 : 365) == c->doy )
+		if ( c->doy == 366 )
 		{
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
 			reset_annual_cell_variables  ( c );
 		}
 	}
+	else
+	{
+		logger(g_log,"month = %d doy = %d\n", MonthLength[month], c->doy);
+		/* reset monthly variables */
+		if ( ( MonthLength[month] ) == c->doy )
+		{
+			reset_monthly_class_variables ( c );
+			reset_monthly_layer_variables ( c );
+			reset_monthly_cell_variables  ( c );
+		}
+		/* reset annual variables */
+		if ( c->doy == 365 )
+		{
+			reset_annual_class_variables ( c );
+			reset_annual_layer_variables ( c );
+			reset_annual_cell_variables  ( c );
+		}
+	}
+
 	/****************************************************************************************************/
 	//todo: soilmodel could stay here or in main.c
 	//here is called at the end of all tree height age and species classes loops

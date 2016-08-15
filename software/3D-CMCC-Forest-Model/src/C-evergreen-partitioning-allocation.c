@@ -22,9 +22,11 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
+extern int MonthLength [];
 
 /* Evergreen carbon allocation routine */
-void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int day, const int year)
+void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species,
+		const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
 {
 	double s0Ctem;
 	double r0Ctem;
@@ -111,13 +113,12 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)logger(g_log, "ERROR IN s0Ctem !!! \n");
 
 	}
-	logger(g_log, "LAI = %g \n", s->value[LAI]);
-	logger(g_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
+	logger(g_log,"LAI = %g \n", s->value[LAI]);
+	logger(g_log,"PEAK LAI = %g \n", s->value[PEAK_LAI]);
 	logger(g_log,"PHENOLOGY PHASE (CASE): %d\n", s->phenology_phase);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
-
 
 	switch (s->phenology_phase)
 	{
@@ -269,10 +270,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* compute single tree biomass pools */
 	average_tree_biomass (s);
 
-	/* to avoid "jumps" of dbh it has computed only one monthly */
-	if( !day )
+	/* to avoid "jumps" of dbh it is computed once monthly */
+	//ALESSIOR include leap years
+	if( MonthLength[month] == c->doy )
 	{
-		dendrometry ( c, height, age, species, year );
+		dendrometry ( c, height, age, species );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");

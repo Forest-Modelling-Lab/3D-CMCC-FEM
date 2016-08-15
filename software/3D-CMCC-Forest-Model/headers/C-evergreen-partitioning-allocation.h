@@ -5,6 +5,6 @@
 #include "matrix.h"
 
 void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age,
-		const int species, const meteo_daily_t *const meteo_daily, const int day, const int year);
+		const int species, const meteo_daily_t *const meteo_daily, const int month, const int day, const int year);
 
 #endif /* C_EVERGREEN_PARTITIONING_ALLOCATION_H_ */
