@@ -27,20 +27,13 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	c->old_asw = c->asw;
 
 	/*update balance*/
-	if( meteo_daily->tavg > 0.0 )
-	{
-		/* soil water balance */
-		c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo);
-		/* snow pack balance */
-		c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
-	}
-	else
-	{
-		/* soil water balance */
-		c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo);
-		/* snow pack balance */
-		c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
-	}
+
+	/* soil water balance */
+	c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_int);
+
+	/* snow pack balance */
+	c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
+
 	logger(g_log, "asw = %g mm\n", c->asw);
 	logger(g_log, "snow pack = %g mm\n", c->snow_pack);
 
@@ -62,30 +55,30 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	and maximum soilwater */
 	/* water in excess of saturation to outflow */
 	//todo test it
-//	if (c->asw > c->max_asw_sat)
-//	{
-//		logger(g_log," asw %g > max_asw_sat %g\n", c->asw, c->max_asw_sat);
-//		c->out_flow = c->asw - c->max_asw_sat;
-//		logger(g_log, "out_flow = %g\n", c->out_flow);
-//		logger(g_log, "ATTENTION asw exceeds max_asw_sat!! \n");
-//		c->asw -= c->out_flow;
-//		logger(g_log, "c->out_flow = %g\n", c->out_flow);
-//	}
-//	/* slow drainage from saturation to field capacity */
-//	else if (c->asw > c->max_asw_fc)
-//	{
-//		logger(g_log," asw %g > max_asw_fc %g\n", c->asw, c->max_asw_fc);
-//		c->out_flow = c->asw - c->max_asw_fc;
-//		logger(g_log, "out_flow = %g\n", c->out_flow);
-//		logger(g_log, "ATTENTION asw exceeds max_asw_fc!! \n");
-//		c->asw = c->max_asw_fc;
-//		logger(g_log, "Available soil water = %g\n", c->asw);
-//	}
-//	/* otherwise, no outflow */
-//	else
-//	{
-//		c->out_flow = 0.0;
-//	}
+	//	if (c->asw > c->max_asw_sat)
+	//	{
+	//		logger(g_log," asw %g > max_asw_sat %g\n", c->asw, c->max_asw_sat);
+	//		c->out_flow = c->asw - c->max_asw_sat;
+	//		logger(g_log, "out_flow = %g\n", c->out_flow);
+	//		logger(g_log, "ATTENTION asw exceeds max_asw_sat!! \n");
+	//		c->asw -= c->out_flow;
+	//		logger(g_log, "c->out_flow = %g\n", c->out_flow);
+	//	}
+	//	/* slow drainage from saturation to field capacity */
+	//	else if (c->asw > c->max_asw_fc)
+	//	{
+	//		logger(g_log," asw %g > max_asw_fc %g\n", c->asw, c->max_asw_fc);
+	//		c->out_flow = c->asw - c->max_asw_fc;
+	//		logger(g_log, "out_flow = %g\n", c->out_flow);
+	//		logger(g_log, "ATTENTION asw exceeds max_asw_fc!! \n");
+	//		c->asw = c->max_asw_fc;
+	//		logger(g_log, "Available soil water = %g\n", c->asw);
+	//	}
+	//	/* otherwise, no outflow */
+	//	else
+	//	{
+	//		c->out_flow = 0.0;
+	//	}
 
 	/* from BIOME-BGC */
 	/* the following special case prevents evaporation under very
@@ -105,13 +98,13 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	CHECK_CONDITION(c->snow_pack, < 0.0);
 
 	//fixme
-//	c->swc = (c->asw * 100)/c->max_asw_fc;
-//	logger(g_log, "asw = %g\n", c->asw);
-//	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
-//	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
-//
-//	/* check */
-//	CHECK_CONDITION (c->swc, > 100.1);
-//	CHECK_CONDITION (c->swc, < 0);
+	//	c->swc = (c->asw * 100)/c->max_asw_fc;
+	//	logger(g_log, "asw = %g\n", c->asw);
+	//	logger(g_log, "max_asw_fc = %g\n", c->max_asw_fc);
+	//	logger(g_log, "SWC = %g(%%vol)\n", c->swc);
+	//
+	//	/* check */
+	//	CHECK_CONDITION (c->swc, > 100.1);
+	//	CHECK_CONDITION (c->swc, < 0);
 
 }

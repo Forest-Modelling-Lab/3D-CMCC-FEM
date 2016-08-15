@@ -30,13 +30,12 @@ void carbon_fluxes (species_t *const s)
 //too remove after made water_balance function
 void Water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\nW-FLUXES\n");
-	//todo make it better
-	c->daily_tot_w_flux = c->water_to_soil + meteo_daily->snow - c->water_to_atmosphere - c->out_flow;
-	c->monthly_tot_w_flux += c->daily_tot_w_flux;
-	c->annual_tot_w_flux += c->daily_tot_w_flux;
-
-	logger(g_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
+//	logger(g_log, "\nW-FLUXES\n");
+//	//todo make it better
+//	c->daily_tot_w_flux = c->water_to_soil + meteo_daily->snow - c->water_to_atmosphere - c->out_flow;
+//	c->monthly_tot_w_flux += c->daily_tot_w_flux;
+//	c->annual_tot_w_flux += c->daily_tot_w_flux;
+//	logger(g_log, "Daily_w_flux = %f \n", c->daily_tot_w_flux);
 }
 
 void get_net_ecosystem_exchange(cell_t *const c)

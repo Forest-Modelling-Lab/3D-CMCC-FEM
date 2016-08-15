@@ -107,8 +107,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "\n\n***DAILY_FOREST_STRUCTURE***\n\n");
 
 	/**************************************************************************************************/
-	/* compute numbers of height classes for each layer */
-	logger(g_log, "compute numbers of height classes for each layer\n\n");
+	/* compute numbers of height classes within each layer */
+	logger(g_log, "compute numbers of height classes within each layer\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
 	{
@@ -127,8 +127,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* compute numbers of trees for each layer */
-	logger(g_log, "compute numbers of trees for each layer\n\n");
+	/* compute numbers of trees within each layer */
+	logger(g_log, "compute numbers of trees within each layer\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
@@ -153,8 +153,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* compute density for each layer */
-	logger(g_log, "compute density for each layer\n\n");
+	/* compute density within each layer */
+	logger(g_log, "compute density within each layer\n\n");
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
@@ -165,8 +165,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* compute potential canopy cover for each class (class level) */
-	logger(g_log, "compute potential canopy cover for each class (class level)\n\n");
+	/* compute potential canopy cover within each class (class level) */
+	logger(g_log, "compute potential canopy cover within each class (class level)\n\n");
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
 	for ( height = 0; height < c->heights_count ; ++height )
@@ -299,8 +299,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* compute effective dbh/crown diameter ratio for each class based on layer density (class level) */
-	logger(g_log, "compute effective dbh/crown diameter ratio for each class based on layer density (class level)\n\n");
+	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
+	logger(g_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
@@ -424,8 +424,8 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
-	/* compute layer canopy cover for each layer (layer level) */
-	logger(g_log, "compute layer canopy cover for each layer (layer level)\n\n");
+	/* compute layer canopy cover within each layer (layer level) */
+	logger(g_log, "compute layer canopy cover within each layer (layer level)\n\n");
 
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
@@ -490,8 +490,8 @@ void daily_forest_structure (cell_t *const c)
 
 	if ( mortality == 'y' )
 	{
-		/* REcompute numbers of height classes, tree number and density after mortality for each layer */
-		logger(g_log, "REcompute numbers of height classes, tree number and density after mortality for each layer\n\n");
+		/* REcompute numbers of height classes, tree number and density after mortality within each layer */
+		logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");
 
 		for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
 		{

@@ -19,6 +19,11 @@
 
 extern logger_t* g_log;
 
+void canopy_interception(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
+{
+
+}
+
 void canopy_evapotranspiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	double g_corr;
@@ -44,9 +49,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	double leaf_cell_cover_eff;                                            /* fraction of square meter covered by leaf over the grid cell */
 	static int days_with_canopy_wet;
 
+	double rain;
+
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
-
 
 	/* it mainly follows rationale and algorithms of BIOME-BGC v.4.2 */
 
@@ -95,7 +101,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	
 	/********************************************************************************************************/
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
-	if(meteo_daily->prcp > 0.0 && s->value[LAI]>0.0 && s->value[CANOPY_WATER] == 0.0)
+	if( meteo_daily->prcp > 0.0 && s->value[LAI] > 0.0 && s->value[CANOPY_WATER] == 0.0 )
 	{
 		//double Int_max_snow;                           /*maximum intercepted snow (mm)*/
 
@@ -103,7 +109,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		//Int_max_snow = 4.4 * s->value[LAI];
 
 		/* for rain */
-		if(meteo_daily->rain != 0.0)
+		//ALESSIOC FIXME for multilayer each layer reduce rain interceptable
+		if( meteo_daily->rain != 0.0 )
 		{
 			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];

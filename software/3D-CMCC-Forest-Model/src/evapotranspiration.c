@@ -16,8 +16,8 @@ void Evapotranspiration(cell_t* const c)
 	logger(g_log, "Annual EVAPOTRANSPIRATION = %f \n", c->annual_et);
 
 	/*compute water to atmosphere*/
-	c->water_to_atmosphere = c->daily_et;
-	logger(g_log, "water to atmosphere = %f \n", c->water_to_atmosphere);
+	c->vapour_to_atmosphere = c->daily_et;
+	logger(g_log, "vapour to atmosphere = %f \n", c->vapour_to_atmosphere);
 
 }
 

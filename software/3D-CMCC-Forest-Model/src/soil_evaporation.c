@@ -66,13 +66,14 @@ void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		/* covert to daily total kg/m2 */
 		pot_soil_evap *= (meteo_daily->daylength * 3600.0);
 
+		//ALESSIOC FIXME IT IS NOT THE TOTAL RAIN BUT THAT ARRIVES TO SOIL
 		if (meteo_daily->rain >= pot_soil_evap)
 		{
 			/* reset days-since-rain parameter */
 			c->days_since_rain = 0.0;
 
-			/* soil evaporation proceeds at potential rate  and scaled to cell uncovered*/
-			c->daily_soil_evapo = 0.6 * pot_soil_evap * (1.0 - c->cell_cover);
+			/* soil evaporation proceeds at potential rate */
+			c->daily_soil_evapo = 0.6 * pot_soil_evap;
 		}
 		else
 		{
@@ -84,20 +85,20 @@ void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 			ratio = 0.3/pow(c->days_since_rain,2.0);
 			logger(g_log, "ratio = %f \n", ratio);
 
-			/* calculate evaporation for dry days and scaled to cell uncovered*/
-			c->daily_soil_evapo = ratio * pot_soil_evap * (1.0 - c->cell_cover);
+			/* calculate evaporation for dry days */
+			c->daily_soil_evapo = ratio * pot_soil_evap ;
 		}
 		/* for rain events that are smaller than required to reset days_since_rain
-	counter, but larger than dry-day evaporation, all rain is evaporated.
-	In this case, do not advance the drying curve counter.
-	For rain events that are too small to trigger days_since_rain reset, and which
-	are smaller than dry-day evap, there will be more evaporation than
-	rainfall. In this case the drying curve counter is advanced. */
-		if (meteo_daily->rain >c->daily_soil_evapo && c->days_since_rain >= 1.0)
+			counter, but larger than dry-day evaporation, all rain is evaporated.
+		In this case, do not advance the drying curve counter.
+		For rain events that are too small to trigger days_since_rain reset, and which
+		are smaller than dry-day evap, there will be more evaporation than
+		rainfall. In this case the drying curve counter is advanced. */
+		//ALESSIOC FIXME IT IS NOT THE TOTAL RAIN BUT THAT ARRIVES TO SOIL
+		if (meteo_daily->rain >c->daily_soil_evapo)
 		{
-			c->daily_soil_evapo = meteo_daily->rain * (1.0 - c->cell_cover);
-			c->days_since_rain -= 1.0;
-
+			c->daily_soil_evapo = meteo_daily->rain;
+			--c->days_since_rain;
 		}
 	}
 	else
@@ -138,7 +139,7 @@ void Soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		/*
 		rhr = ???;
 		c->daily_soil_sensible_heat_flux = meteo_daily->rho_air * CP * ((tairK-tsnowK)/rhr);
-		*/
+		 */
 		c->daily_soil_sensible_heat_flux = 0.0;
 	}
 	logger(g_log, "Daily soil_sensible_heat flux = %f W/m^2\n", c->daily_soil_sensible_heat_flux);
