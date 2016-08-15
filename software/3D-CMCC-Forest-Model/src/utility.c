@@ -77,7 +77,8 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->snow_subl = 0.;
 	c->out_flow = 0.;
 	c->daily_c_transp = 0.;
-	c->daily_c_int = 0.;
+	c->daily_c_rain_int = 0.;
+	c->daily_c_snow_int = 0.;
 	c->daily_c_evapo = 0.;
 	c->daily_soil_evapo = 0.;
 	c->daily_c_sensible_heat_flux = 0.;
@@ -104,7 +105,7 @@ void reset_monthly_cell_variables(cell_t *const c)
 	c->monthly_C_flux = 0.;
 	c->monthly_nee = 0.;
 	c->monthly_tot_w_flux = 0.;
-	c->monthly_c_int = 0.;
+	c->monthly_c_rain_int = 0.;
 	c->monthly_c_transp = 0.;
 	c->monthly_c_evapo = 0.;
 	c->monthly_c_water_stored = 0.;
@@ -133,7 +134,7 @@ void reset_annual_cell_variables(cell_t *const c)
 	c->annual_growth_resp = 0.;
 	c->annual_r_eco = 0.;
 	c->annual_het_resp = 0.;
-	c->annual_c_int = 0.;
+	c->annual_c_rain_int = 0.;
 	c->annual_c_transp = 0.;
 	c->annual_c_evapo = 0.;
 	c->annual_c_water_stored = 0.;
@@ -170,7 +171,7 @@ void reset_daily_layer_variables(cell_t *const c)
 }
 void reset_monthly_layer_variables(cell_t *const c)
 {
-	int layer;
+//	int layer;
 
 	logger(g_log, "...resetting layer level monthly variables...\n");
 

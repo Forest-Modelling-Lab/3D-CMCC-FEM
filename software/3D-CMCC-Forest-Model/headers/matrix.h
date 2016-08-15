@@ -1063,6 +1063,8 @@ typedef struct
 	double soilw_sat;                                                     /* soil water at saturation (kgH2O/m2) */
 	double swc;
 
+	double rain;
+	double snow;
 	double days_since_rain;                                               /* consecutive days without rain */
 	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */
 	double rain_to_soil;                                                  /* current rain to soil (mm/m2) */
@@ -1073,7 +1075,8 @@ typedef struct
 	double snow_subl;                                                     /* current amount of sublimated snow (mm/m2) */
 	double old_snow_pack;                                                 /* old amount of snow (Kg/m2) */
 	double out_flow;                                                      /* current amount of water outflow (mm/m2) */
-	double daily_c_int, monthly_c_int, annual_c_int;                      /* daily, monthly and canopy interception at cell level (mm/m2/ ) */
+	double daily_c_rain_int, monthly_c_rain_int, annual_c_rain_int;       /* daily, monthly and canopy rain interception at cell level (mm/m2/ ) */
+	double daily_c_snow_int, monthly_c_snow_int, annual_c_snow_int;       /* daily, monthly and canopy snow interception at cell level (mm/m2/ ) */
 	double daily_c_transp, monthly_c_transp, annual_c_transp;             /* daily, monthly and canopy transpiration at cell level (mm/m2/ ) */
 	double daily_c_evapo, monthly_c_evapo, annual_c_evapo;                /* daily, monthly and canopy evaporation at cell level (mm/m2/ ) */
 	double daily_c_water_stored, monthly_c_water_stored, annual_c_water_stored;/* daily, monthly and canopy water stored at cell level (mm/m2/ ) */

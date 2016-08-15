@@ -134,7 +134,6 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	static int cell_height_class_counter;
 	static int layer_height_class_counter;
 
-
 	double Light_abs_frac, Light_abs_frac_sun, Light_abs_frac_shade;                      /* (ratio) fraction of PAR and Short Wave radiation absorbed */
 	double Light_trasm_frac, Light_trasm_frac_sun, Light_trasm_frac_shade;                /* (ratio) fraction of PAR and Short Wave radiation transmitted */
 	double Light_refl_sw_rad_canopy_frac;                                                 /* (ratio) fraction of Short Wave radiation reflected from the canopy */
@@ -347,7 +346,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 		/* compute par for lower layer */
 		c->par -= (temp_apar + temp_par_refl);
 
-		/* compute Short Wave radiation for lower layer */
+		/* compute Short Wave radiation for lower layesr */
 		c->sw_rad_down_W -= (temp_sw_rad_abs + temp_sw_rad_refl);
 
 		/* compute ppfd for lower layer */

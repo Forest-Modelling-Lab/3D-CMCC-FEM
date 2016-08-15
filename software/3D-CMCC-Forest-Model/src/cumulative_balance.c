@@ -1125,7 +1125,7 @@ void EOD_cumulative_balance_cell_level(cell_t *const c, const int years, const i
 	c->daily_C_flux = 0.0;
 	c->daily_npp_tDM = 0.0;
 	c->daily_npp_gC = 0.0;
-	c->daily_c_int = 0.0;
+	c->daily_c_rain_int = 0.0;
 	c->daily_c_evapo = 0.0;
 	c->daily_c_transp = 0.0;
 	c->daily_c_evapotransp = 0.0;

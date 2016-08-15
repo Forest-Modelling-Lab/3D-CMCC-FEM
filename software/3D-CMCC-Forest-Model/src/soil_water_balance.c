@@ -29,7 +29,7 @@ void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	/*update balance*/
 
 	/* soil water balance */
-	c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_int);
+	c->asw = c->old_asw + (meteo_daily->rain + c->snow_melt) - (c->daily_c_transp + c->daily_soil_evapo + c->daily_c_rain_int);
 
 	/* snow pack balance */
 	c->snow_pack = c->old_snow_pack + meteo_daily->snow - (c->snow_melt + c->snow_subl);
