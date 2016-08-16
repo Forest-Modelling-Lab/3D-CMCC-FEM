@@ -1065,7 +1065,7 @@ typedef struct
 
 	double rain;
 	double snow;
-	double days_since_rain;                                               /* consecutive days without rain */
+	int days_since_rain;                                                  /* consecutive days without rain */
 	double rain_intercepted;                                              /* current amount of intercted rain (mm/m2) */
 	double rain_to_soil;                                                  /* current rain to soil (mm/m2) */
 	double snow_to_soil;                                                  /* current snow to soil (mm/m2) */

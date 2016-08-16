@@ -507,6 +507,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	Soil_evaporation ( c, meteo_daily );
 
 	/*******************************************************************************************************/
+	/* note: computations that involve all classes and are related to the overall cell */
+	/* computations during the last height class processing */
 
 	/* compute evapotranspiration */
 	Evapotranspiration ( c );

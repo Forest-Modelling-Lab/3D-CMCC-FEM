@@ -37,19 +37,16 @@ void daily_lai (species_t *const s)
 
 	/*compute SLA for SUN and SHADED*/
 	if(s->value[LAI_SUN] > 0.0)
-	s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO]))/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell));
+	//s->value[SLA_SUN] = (s->value[LAI_SUN] + (s->value[LAI_SHADE]/s->value[SLA_RATIO]))/(leaf_c /(s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell));
 	logger(g_log, "SLA SUN = %f m^2/KgC\n", s->value[SLA_SUN]);
 	if(s->value[LAI_SHADE] > 0.0)
 	s->value[SLA_SHADE] = s->value[SLA_SUN] * s->value[SLA_RATIO];
-	logger(g_log, "SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
-	logger(g_log, "*****************************\n");
+	//logger(g_log,"SLA SHADE = %f m^2/KgC\n", s->value[SLA_SHADE]);
+	logger(g_log,"*****************************\n");
 
 	CHECK_CONDITION(fabs(s->value[LAI]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SUN]), < 0.0);
 	CHECK_CONDITION(fabs(s->value[LAI_SHADE]), < 0.0);
-	// FIXME
-	//CHECK_CONDITION(fabs(s->value[LAI]), > g_settings->maxlai);
-//	CHECK_CONDITION(s->value[LAI], > s->value[PEAK_LAI])
 }
 
 

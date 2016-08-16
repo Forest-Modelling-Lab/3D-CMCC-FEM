@@ -240,8 +240,9 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 				logger(g_log, "--Leaf carbon = %g KgC/m2\n", s->value[LEAF_C]);
 
 				//fixme it should takes into account effective cell coverage
-				/* convert to tons of C and to cell area*/
-				s->value[LEAF_C] /= 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
+				/* convert to tons of C and to cell area */
+				/* note: it uses canopy cover because computed from LAI */
+				s->value[LEAF_C] = s->value[LEAF_C] / 1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
 				logger(g_log, "--Leaf carbon = %g tC/cell size\n", s->value[LEAF_C]);
 
 				/* Calculate projected LAI for sunlit and shaded canopy portions */
@@ -257,7 +258,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 		s->value[LEAF_C] = s->value[BIOMASS_FOLIAGE_tDM]/GC_GDM;
 		logger(g_log, "Ok Leaf biomass..\n");
 		logger(g_log, "---Leaf Biomass from init file = %g tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-		logger(g_log, "---Leaf Biomass from init file = %g tC cell\n", s->value[LEAF_C]);
+		logger(g_log, "---Leaf Biomass from init file = %f tC cell\n", s->value[LEAF_C]);
 
 		/* if no values for LAI are available */
 		if ( !s->value[LAI] )

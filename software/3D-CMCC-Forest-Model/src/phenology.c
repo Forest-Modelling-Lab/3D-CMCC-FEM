@@ -8,15 +8,19 @@ F * phenology.c
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include "matrix.h"
+#include "settings.h"
+#include "soil_settings.h"
 #include "phenology.h"
 #include "constants.h"
 #include "logger.h"
 
 extern logger_t* g_log;
+extern soil_settings_t *g_soil_settings;
+
 
 void phenology(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily, const int month)
 {
-	static int phenology_counter;
 
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -75,28 +79,30 @@ void phenology(cell_t *const c, const int layer, const int height, const int age
 	/*for evergreen*/
 	else
 	{
-		if(!c->years_count && c->doy == 1) phenology_counter = 0;
 
 		/* a very simplistic way to define a phenological phase for evergreen*/
 		/*just two phase are considered
 		 * shoot elongation
 		 * secondary growth*/
 		/*see Ludeke et al., 1994*/
+
 		/* Beginning of a "growing season" */
-		if (meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] /*&& phenology_counter == 0 *//* && month < JULY */)
+		/* Maximum growth */
+		// old if ( meteo_daily->thermic_sum >= s->value[GROWTHSTART] && s->value[LAI] < s->value[PEAK_LAI] )
+		if ( s->value[LAI] < s->value[PEAK_LAI] &&
+				( ( g_soil_settings->values[SOIL_LAT] > 0 && month < 5 ) ||
+				( g_soil_settings->values[SOIL_LAT] < 0 && month > 11 ) ) )
 		{
-			phenology_counter = 0;//not used
 			s->phenology_phase = 1;
 		}
 		/* Normal growth*/
 		else
 		{
-			phenology_counter = 1;//not used
 			s->phenology_phase = 2;
 		}
 	}
-	logger(g_log, "phenology_counter = %d\n", phenology_counter);
-	logger(g_log, "phenology phase = %d\n LAI = %f\n month = %d\n", s->phenology_phase, s->value[LAI], month);
+	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
+	logger(g_log," LAI = %g\n", s->value[LAI]);
 }
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)

@@ -122,13 +122,14 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
 
-	switch (s->phenology_phase)
+	switch ( s->phenology_phase )
 	{
 	/************************************************************/
+
 	case 1:
 		/*
 		 * this phenological phase happens when:
-		 * - thermic sum > GROWTH_START
+		 * - month < 6 for north hemisphere
 		 * - LAI < PEAK_LAI
 		 * */
 
@@ -182,7 +183,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	case 2:
 		/*
 		 * this phenological phase happens when:
-		 * - thermic sum < GROWTH_START
+		 * - month > 6 for north hemisphere
 		 * - LAI > PEAK_LAI
 		 */
 

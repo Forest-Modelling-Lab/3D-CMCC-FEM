@@ -148,7 +148,6 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 
 void Check_carbon_balance(cell_t *const c)
 {
-
 	double in;
 	double out;
 	double store;
@@ -431,16 +430,16 @@ void Check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	in = s->value[DAILY_GPP_gC];
 
 	/* sum of sinks */
-	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] + s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell;
+	out = s->value[TOTAL_MAINT_RESP] + s->value[TOTAL_GROWTH_RESP] + (s->value[C_TO_LITTER] * 1000000.0 / g_settings->sizeCell);
 
 	/* sum of current storage */
-	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell
-			+ s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
+	store = s->value[C_TO_LEAF] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_STEM] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_FINEROOT] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_COARSEROOT] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_BRANCH] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_RESERVE] * 1000000.0 / g_settings->sizeCell +
+			s->value[C_TO_FRUIT] * 1000000.0 / g_settings->sizeCell;
 
 
 	/* check carbon pool balance */
@@ -467,7 +466,7 @@ void Check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 		logger(g_log, "C_TO_BRANCH = %g gC/m2\n", s->value[C_TO_BRANCH]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "C_TO_FRUIT = %g gC/m2\n", s->value[C_TO_FRUIT]* 1000000.0 / g_settings->sizeCell);
 		logger(g_log, "\nbalance = %g gC/m2\n", balance);
-		logger(g_log, "...FATAL ERROR AT CELL LEVEL carbon balance (exit)\n");
+		logger(g_log, "...FATAL ERROR AT CLASS LEVEL carbon balance (exit)\n");
 		exit(1);
 	}
 	else

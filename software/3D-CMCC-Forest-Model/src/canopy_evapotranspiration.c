@@ -341,7 +341,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_WATER] -= s->value[CANOPY_EVAPO];
 
 				/* check if canopy is wet for too long period */
-				CHECK_CONDITION(days_with_canopy_wet, > 10);
+				//CHECK_CONDITION(days_with_canopy_wet, > 10);
 			}
 			/* all intercepted water evaporated */
 			else
