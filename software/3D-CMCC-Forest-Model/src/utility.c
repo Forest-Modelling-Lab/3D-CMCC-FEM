@@ -193,11 +193,6 @@ void reset_annual_layer_variables(cell_t *const c)
 	{
 
 	}
-	for ( height = c->heights_count - 1; height >= 0; --height )
-	{
-		c->heights[height].z = 0.;
-	}
-
 }
 
 void reset_daily_class_variables(cell_t *const c)
@@ -359,6 +354,8 @@ void reset_annual_class_variables(cell_t *const c)
 	for (height = c->heights_count - 1; height >= 0; height--)
 	{
 		h = &c->heights[height];
+
+		h->z = 0.;
 
 		/* age class level */
 		for (age = h->ages_count - 1; age >= 0; age --)

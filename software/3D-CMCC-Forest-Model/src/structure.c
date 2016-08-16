@@ -29,8 +29,6 @@ void annual_forest_structure(cell_t* const c)
 
 	for ( height = c->heights_count - 1; height >= 0; --height )
 	{
-		assert(! c->heights[height].z);
-
 		/* first height class processed */
 		if ( height == c->heights_count - 1 )
 		{
@@ -59,8 +57,6 @@ void annual_forest_structure(cell_t* const c)
 
 	for ( height = c->heights_count - 1; height >= 0; --height )
 	{
-		assert(! c->heights[height].z);
-
 		/* first height class processed */
 		if ( height == c->heights_count - 1 )
 		{

@@ -444,7 +444,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
 			reset_annual_cell_variables  ( c );
-			logger(g_log,"prova\n");
 		}
 	}
 
