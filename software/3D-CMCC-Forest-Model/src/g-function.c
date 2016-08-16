@@ -145,9 +145,9 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 			{
 				s = &c->heights[height].ages[age].species[species];
 
-				if (g_settings->spatial == 'u')
+				if ( g_settings->spatial == 'u' )
 				{
-					if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
+					if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 					{
 						/* reset 'annual day_veg_for_litterfall_rate'*/
 						if (day == 0 && month == JANUARY)
@@ -181,7 +181,7 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 					/* compute last year day the number of days for leaf fall */
 					if (day == 30 && month == DECEMBER)
 					{
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);

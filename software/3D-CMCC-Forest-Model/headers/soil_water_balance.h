@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily);
+void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily);
 
 #endif /* SOIL_WATER_BALANCE_H_ */

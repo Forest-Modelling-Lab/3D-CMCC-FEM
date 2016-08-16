@@ -102,7 +102,6 @@ void phenology(cell_t *const c, const int layer, const int height, const int age
 		}
 	}
 	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
-
 }
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)

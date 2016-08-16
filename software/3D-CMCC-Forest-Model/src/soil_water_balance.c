@@ -17,7 +17,7 @@
 extern logger_t* g_log;
 
 //fixme  maybe it can be moved to soil_model.c
-void Soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
+void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\n**SOIL-SNOW WATER BALANCE**\n");
 

@@ -28,7 +28,7 @@ void carbon_fluxes (species_t *const s)
 }
 
 //too remove after made water_balance function
-void Water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
+void water_fluxes(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 //	logger(g_log, "\nW-FLUXES\n");
 //	//todo make it better

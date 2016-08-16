@@ -64,12 +64,12 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	}
 
 	logger(g_log, "-Average stem mass = %g kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
-	logger(g_log, "-Old AVDBH = %.10f cm\n", oldavDBH);
-	logger(g_log, "-New Average DBH = %.10f cm\n", s->value[AVDBH]);
+	logger(g_log, "-Old AVDBH = %g cm\n", oldavDBH);
+	logger(g_log, "-New Average DBH = %g cm\n", s->value[AVDBH]);
 
 	/* check */
 	//FIXME
-	//CHECK_CONDITION( oldavDBH , > s->value[AVDBH] );
+	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);
 
 	/*************************************************************************************************************************/
 
@@ -114,7 +114,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	/* check */
 	//FIXME
-	//CHECK_CONDITION( oldTreeHeight, > h->value );
+	//CHECK_CONDITION(oldTreeHeight, > h->value);
 
 	/*************************************************************************************************************************/
 
@@ -148,7 +148,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	/* check */
 	//FIXME
-	//CHECK_CONDITION( oldBasalArea , > s->value[BASAL_AREA] );
+	//CHECK_CONDITION(oldBasalArea, > s->value[BASAL_AREA]);
 	
 }
 void annual_minimum_reserve (species_t *const s)

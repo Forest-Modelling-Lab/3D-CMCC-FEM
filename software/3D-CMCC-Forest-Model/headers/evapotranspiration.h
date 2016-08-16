@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Evapotranspiration(cell_t *const c);
+void evapotranspiration(cell_t *const c);
 
 #endif /* EVAPOTRANSPIRATION_H_ */

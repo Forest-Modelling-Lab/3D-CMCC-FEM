@@ -53,9 +53,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	omegaCtem = s->value[OMEGA_CTEM];
 
 	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
-	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
+	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
-
 
 	logger(g_log, "\n**ALLOCATION_ROUTINE**\n\n");
 	logger(g_log, "Carbon allocation routine for deciduous\n");

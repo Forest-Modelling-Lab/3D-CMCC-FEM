@@ -201,7 +201,7 @@ void update_biomass_after_mortality ()
 
 /*Age mortality function from LPJ*/
 //todo add to log results this function
-void age_mortality (species_t *const s, age_t *const a)
+void Age_Mortality (species_t *const s, age_t *const a)
 {
 
 	static int Dead_trees;
@@ -299,7 +299,7 @@ void Greff_Mortality (species_t *const s)
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-void mortality (species_t *const s, int years)
+void Mortality (species_t *const s, int years)
 // TreeNumber = m->lpCell[index].InitialNTree, Ws = Ws
 // TreeNumber = m->lpCell[index].NTree, Ws = Ws
 {
@@ -416,7 +416,7 @@ void mortality (species_t *const s, int years)
 }
 
 
-void stool_mortality(cell_t *const c, const int layer, const int height, const int age, const int species)
+void Stool_mortality(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	//	species_t *s;
 	//	s = &c->heights[height].ages[age].species[species];

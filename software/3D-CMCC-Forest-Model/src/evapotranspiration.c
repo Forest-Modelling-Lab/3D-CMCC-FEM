@@ -4,7 +4,7 @@
 
 extern logger_t* g_log;
 
-void Evapotranspiration(cell_t* const c)
+void evapotranspiration(cell_t* const c)
 {
 	logger(g_log, "\n**EVAPOTRANSPIRATION_ROUTINE**\n");
 

@@ -67,7 +67,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
 
 	s->value[F_CO2] = v1*v2;
-	logger(g_log, "F_CO2 modifier  = %f\n", s->value[F_CO2]);
+	logger(g_log, "F_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
@@ -127,24 +127,25 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	}
 	logger(g_log, "fT = %f\n", s->value[F_T]);
 
+	/* check */
 	CHECK_CONDITION(s->value[F_T], > 1);
 	CHECK_CONDITION(s->value[F_T], < 0);
 
-	//average yearly f_vpd modifiers
-	s->value[AVERAGE_F_T] += s->value[F_T];
-
 	/*FROST MODIFIER*/
-	//fixme usefull??
-//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
-//	{
-//		s->value[F_FROST] = 0.0;
-//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-//	}
-//	else
-//	{
-//		s->value[F_FROST] = 1.0;
-//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-//	}
+	if( meteo_daily->tday < s->value[GROWTHTMIN] )
+	{
+		s->value[F_FROST] = 0.0;
+		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+	}
+	else
+	{
+		s->value[F_FROST] = 1.0;
+		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+	}
+
+	/* check */
+	CHECK_CONDITION(s->value[F_FROST], > 1);
+	CHECK_CONDITION(s->value[F_FROST], < 0);
 
 	/*VPD MODIFIER*/
 	//logger(g_log, "--RH = %f %%\n", met[month].rh);
@@ -159,11 +160,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * meteo_daily->vpd);
 	logger(g_log, "fVPD = %f\n", s->value[F_VPD]);
-	CHECK_CONDITION(s->value[F_VPD], > 1.0);
-	CHECK_CONDITION(s->value[F_VPD], < 0);
 
-	//average yearly f_vpd modifiers
-	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
+	/* check */
+	CHECK_CONDITION(s->value[F_VPD], > 1);
+	CHECK_CONDITION(s->value[F_VPD], < 0);
 
 	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 	/* vapor pressure deficit multiplier, vpd in Pa */
@@ -179,16 +179,16 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	{
 		if ( s->management == T )
 		{
-			//for TIMBER
-			//AGE FOR TIMBER IS THE EFFECTIVE AGE
+			/* for TIMBER */
+			/* AGE FOR TIMBER IS THE EFFECTIVE AGE */
 			RelAge = (double)a->value / s->value[MAXAGE];
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE]), (double)s->value[NAGE])));
 			logger(g_log, "fAge = %f\n", s->value[F_AGE]);
 		}
 		else
 		{
-			//for SHOOTS
-			//AGE FOR COPPICE IS THE AGE FROM THE COPPICING
+			/* for SHOOTS */
+			/* AGE FOR COPPICE IS THE AGE FROM THE COPPICING */
 			RelAge = (double)a->value / s->value[MAXAGE_S];
 			s->value[F_AGE] = ( 1 / ( 1 + pow ((RelAge / (double)s->value[RAGE_S]), (double)s->value[NAGE_S])));
 			logger(g_log, "fAge = %f\n", s->value[F_AGE]);
@@ -199,26 +199,27 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 		s->value[F_AGE] = 1;
 		logger(g_log, "no data for age F_AGE = 1\n");
 	}
-	CHECK_CONDITION(s->value[F_AGE], > 1.0);
+
+	/* check */
+	CHECK_CONDITION(s->value[F_AGE], > 1);
 	CHECK_CONDITION(s->value[F_AGE], < 0);
 
 	/*SOIL NUTRIENT MODIFIER*/
 	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0])  * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_log, "fNutr = %f\n", s->value[F_NUTR]);
-	CHECK_CONDITION(s->value[F_NUTR], > 1.0);
+
+	/* check */
+	CHECK_CONDITION(s->value[F_NUTR], > 1);
+	CHECK_CONDITION(s->value[F_NUTR], < 0);
 
 
 	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
-	logger(g_log, "ASW = %f mm/m2\n", c->asw);
-
 	c->soil_moist_ratio = c->asw/c->max_asw_fc;
-	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
-
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	logger(g_log, "fSW (3-PG) = %f\n", s->value[F_SW]);
-	//CHECK_CONDITION(s->value[F_SW], > 1.0);
-	//CHECK_CONDITION(s->value[F_SW], < 0);
+	logger(g_log, "ASW = %f mm/m2\n", c->asw);
+	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
+	logger(g_log, "fSW (3-PG)= %f\n", s->value[F_SW]);
 
 
 	/* (MPa) water potential of soil and leaves */
@@ -230,8 +231,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
 	/* volumetric water content */
 	logger(g_log, "\nBIOME SOIL WATER MODIFIER\n");
-	logger(g_log, "SWP_OPEN = %f\n", s->value[SWPOPEN]);
-	logger(g_log, "SWP_CLOSE = %f\n", s->value[SWPCLOSE]);
 
 	/* note:changed from biome*/
 	c->vwc = c->asw / c->max_asw_fc /* /(100.0 * g_soil_settings->values[SOIL_DEPTH])*/;
@@ -261,7 +260,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 
 		/* forced to  0.3 to avoid zero values */
-		//see: Clark et al., 2011 for JULES model impose 0.2
+		/* see: Clark et al., 2011 for JULES model impose 0.2 */
 		s->value[F_PSI] = 0.3;
 		logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
 		//CHECK_CONDITION(counter_water_stress, > 31);
@@ -280,13 +279,11 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	}
 
 	s->value[F_SW] = s->value[F_PSI];
-	logger(g_log, "F_PSI-F_SW (BIOME) = %f\n", s->value[F_PSI]);
-	CHECK_CONDITION(s->value[F_SW], > 1.0);
+	logger(g_log, "F_PSI-F_SW (BIOME)= %f\n", s->value[F_PSI]);
+
+	/* check */
+	CHECK_CONDITION(s->value[F_SW], > 1);
 	CHECK_CONDITION(s->value[F_SW], < 0);
-
-
-	//average yearly f_sw modifiers
-	s->value[AVERAGE_F_SW] += s->value[F_SW];
 
 	/*PHYSIOLOGICAL MODIFIER*/
 	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
@@ -299,11 +296,10 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	{
 		logger(g_log, "PHYSMOD uses F_SW * F_AGE = %f\n", s->value[F_SW] * s->value[F_AGE]);
 	}
-	CHECK_CONDITION(s->value[PHYS_MOD], > 1.0);
-	CHECK_CONDITION(s->value[PHYS_MOD], < 0);
 
-	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
-	//logger(g_log, "Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
+	/* check */
+	CHECK_CONDITION(s->value[PHYS_MOD], > 1);
+	CHECK_CONDITION(s->value[PHYS_MOD], < 0);
 
 
 	/*SOIL DROUGHT MODIFIER*/

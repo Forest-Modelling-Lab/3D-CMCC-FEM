@@ -23,7 +23,7 @@ void Canopy_sensible_heat_fluxes(cell_t *const c, const int layer, const int hei
 	logger(g_log, "\nCANOPY_SENSIBLE_HEAT_ROUTINE\n");
 }
 
-void Latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
+void latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
 
@@ -59,7 +59,7 @@ void Latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 }
 
-void Sensible_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
+void sensible_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	logger(g_log, "\nSENSIBLE_HEAT_ROUTINE\n");
 

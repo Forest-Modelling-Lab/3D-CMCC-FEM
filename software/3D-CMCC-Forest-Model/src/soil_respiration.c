@@ -10,7 +10,7 @@
 #include "soil_respiration.h"
 #include "constants.h"
 
-void Soil_respiration(cell_t *const c)
+void soil_respiration(cell_t *const c)
 {
 	//c->soil_respiration
 }

@@ -17,7 +17,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
+void check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -146,7 +146,7 @@ void Check_radiation_balance (cell_t *const c, const meteo_daily_t *const meteo_
 	/*******************************************************************************************************************************************/
 }
 
-void Check_carbon_balance(cell_t *const c)
+void check_carbon_balance(cell_t *const c)
 {
 	double in;
 	double out;
@@ -206,7 +206,7 @@ void Check_carbon_balance(cell_t *const c)
 
 }
 
-void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
+void check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
 	double in;
 	double out;
@@ -306,7 +306,7 @@ void Check_soil_water_balance(cell_t *const c, const meteo_daily_t *const meteo_
 
 /******************************************************CLASS LEVEL BALANCE CLOSURE*****************************************************/
 
-void Check_class_radiation_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_radiation_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	double in;
 	double out;
@@ -413,7 +413,7 @@ void Check_class_radiation_balance(cell_t *const c, const int layer, const int h
 		logger(g_log, "...ok PPFD balance at class level\n");
 	}
 }
-void Check_class_carbon_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_carbon_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	double in;
 	double out;
@@ -476,7 +476,7 @@ void Check_class_carbon_balance(cell_t *const c, const int layer, const int heig
 	/*******************************************************************************************************************/
 }
 
-void Check_class_water_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
+void check_class_water_balance(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	double in;
 	double out;

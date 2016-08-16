@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Soil_respiration(cell_t *const c);
+void soil_respiration(cell_t *const c);
 
 #endif /* SOIL_RESPIRATION_H_ */
