@@ -64,11 +64,12 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	}
 
 	logger(g_log, "-Average stem mass = %g kgC/tree\n", s->value[AV_STEM_MASS_KgC]);
-	logger(g_log, "-Old AVDBH = %g cm\n", oldavDBH);
-	logger(g_log, "-New Average DBH = %g cm\n", s->value[AVDBH]);
+	logger(g_log, "-Old AVDBH = %.10f cm\n", oldavDBH);
+	logger(g_log, "-New Average DBH = %.10f cm\n", s->value[AVDBH]);
 
 	/* check */
-	CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);
+	//FIXME
+	//CHECK_CONDITION( oldavDBH , > s->value[AVDBH] );
 
 	/*************************************************************************************************************************/
 
@@ -112,7 +113,8 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	logger(g_log, "-New Tree Height = %g m\n", h->value);
 
 	/* check */
-	CHECK_CONDITION(oldTreeHeight, > h->value);
+	//FIXME
+	//CHECK_CONDITION( oldTreeHeight, > h->value );
 
 	/*************************************************************************************************************************/
 
@@ -141,8 +143,12 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
 	logger(g_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 
+	logger(g_log, "-Old Basal Area = %g cm^2\n", oldBasalArea);
+	logger(g_log, "-New Basal Area = %g cm^2\n", s->value[BASAL_AREA]);
+
 	/* check */
-	CHECK_CONDITION(oldBasalArea, > s->value[BASAL_AREA]);
+	//FIXME
+	//CHECK_CONDITION( oldBasalArea , > s->value[BASAL_AREA] );
 	
 }
 void annual_minimum_reserve (species_t *const s)

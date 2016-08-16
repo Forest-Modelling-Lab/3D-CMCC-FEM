@@ -183,236 +183,166 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* check for adult or sapling age */
 							tree_period ( c, layer, height, age, species);
 
-							/* Loop for adult trees */
-							if ( !s->period )
+							if ( s->counter[VEG_UNVEG] == 1 )
 							{
-								/* loop for deciduous */
-								if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
+								logger(g_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+								logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", h->z);
+
+								/* increment vegetative days counter */
+								s->counter[VEG_DAYS] += 1;
+							}
+							else
+							{
+								logger(g_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
+								logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", h->z);
+							}
+
+							/* radiation */
+							canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
+							canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
+							canopy_net_radiation( c, layer, height, age, species );
+
+							/* canopy temperature */
+							canopy_temperature( c, layer, height, age, species, meteo_daily );
+
+							/* daily modifier */
+							modifiers( c, layer, height, age, species, meteo_daily);
+
+							/* nitrogen */
+							nitrogen_stock( s );
+
+							/* canopy water fluxes */
+							canopy_evapotranspiration( c, layer, height, age, species, meteo_daily );
+
+							/* canopy carbon fluxes */
+							phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
+
+							/* respiration */
+							if (!string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
+							{
+								maintenance_respiration( c, layer, height, age, species, meteo_daily );
+								growth_respiration( c, layer, height, age, species );
+							}
+							autotrophic_respiration ( c, layer, height, age, species );
+
+							/* carbon fluxes */
+							carbon_fluxes ( s );
+
+							/* C assimilation */
+							carbon_assimilation( c, layer, height, age, species );
+
+							/* C-N-partitioning-allocation */
+							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
+							{
+								/* deciduous */
+								daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year );
+							}
+							else
+							{
+								/* evergreen */
+								daily_C_evergreen_partitioning_allocation ( c, layer, height, age, species, meteo_daily, day, month, year );
+							}
+
+							/****************************************************************************************************************************************/
+
+							/* check for balance closure at the class level */
+							logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
+
+							/* check for radiative balance closure */
+							Check_class_radiation_balance ( c, layer, height, age, species );
+
+							/* check for carbon balance closure */
+							Check_class_carbon_balance( c, layer, height, age, species );
+
+							/* check for water balance closure */
+							Check_class_water_balance ( c, layer, height, age, species );
+
+							/****************************************************************************************************************************************/
+
+							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
+							/* END OF YEAR */
+
+							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+							{
+								logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+
+								/*FRUIT ALLOCATION*/
+								/*
+								if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
 								{
-									/* within vegetative period for deciduous */
-									if ( s->counter[VEG_UNVEG] == 1 )
-									{
-										logger(g_log, "\n\n*****VEGETATIVE PERIOD FOR %s SPECIES*****\n", s->name );
-										logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", h->z);
+								Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
+								Seeds_Number_LE = Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+								logger(g_log, "Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
 
-										/* increment vegetative days counter */
-										s->counter[VEG_DAYS] += 1;
+								//Seeds_Number_T = Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+								//logger(g_log, "Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
 
-										/* radiation */
-										canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
-										canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
-										canopy_net_radiation( c, layer, height, age, species );
-
-										/* canopy temperature */
-										canopy_temperature( c, layer, height, age, species, meteo_daily );
-
-										/* daily modifier */
-										modifiers( c, layer, height, age, species, meteo_daily);
-
-										/* nitrogen */
-										nitrogen_stock( s );
-
-										/* canopy water fluxes */
-										canopy_evapotranspiration( c, layer, height, age, species, meteo_daily );
-
-										/* canopy carbon fluxes */
-										phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
-
-										/* respiration */
-										if (!string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
-										{
-											maintenance_respiration( c, layer, height, age, species, meteo_daily );
-											growth_respiration( c, layer, height, age, species );
-										}
-										autotrophic_respiration ( c, layer, height, age, species );
-
-										/* carbon fluxes */
-										carbon_fluxes ( s );
-
-										/* C assimilation */
-										carbon_assimilation( c, layer, height, age, species );
-
-										/* C-N-partitioning-allocation */
-										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year );
-									}
-									/*outside growing season*/
-									else
-									{
-										/* assign zero value for LAI */
-										if ( g_settings->spatial == 'u' ) s->value[LAI] = 0;
-
-										/* radiation */
-										canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
-										canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
-										canopy_net_radiation( c, layer, height, age, species );
-
-										/* canopy temperature */
-										canopy_temperature ( c, layer, height, age, species, meteo_daily );
-
-										/* nitrogen */
-										nitrogen_stock ( s );
-
-										/* canopy carbon fluxes */
-										phosynthesis (&m->cells[cell], layer, height, age, species, DaysInMonth[month]);
-
-										/* respiration */
-										if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
-										{
-											maintenance_respiration ( c, layer, height, age, species, meteo_daily );
-											growth_respiration ( c, layer, height, age, species );
-										}
-										autotrophic_respiration ( c, layer, height, age, species );
-
-										/* carbon fluxes */
-										carbon_fluxes ( s );
-
-										/* C assimilation */
-										carbon_assimilation( c, layer, height, age, species );
-
-										/* C-N-partitioning-allocation */
-										daily_C_deciduous_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year);
-									}
+								//FRUIT ESTABLISHMENT
+								if (Yearly_Rain > s->value[MINRAIN])
+								{
+								//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
+								Establishment_LPJ ( &m->cells[cell],layer, height, age, species);
+								logger(g_log, "Saplings Number from LPJ = %d\n", s->counter[N_TREE_SAP]);
 								}
-								/* loop for evergreen */
 								else
 								{
-									logger(g_log, "*****VEGETATIVE PERIOD FOR %s SPECIES *****\n", s->name);
-									logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", h->z);
-
-									/* increment vegetative days counter */
-									s->counter[VEG_DAYS] += 1;
-									logger(g_log, "VEG_DAYS = %d \n", s->counter[VEG_DAYS]);
-
-									/* radiation block */
-									canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
-									canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
-									canopy_net_radiation( c, layer, height, age, species );
-
-									/* canopy temperature */
-									canopy_temperature ( c, layer, height, age, species, meteo_daily );
-
-									/* daily modifier */
-									modifiers ( c, layer, height, age, species, meteo_daily );
-
-									/* canopy water fluxes block */
-									canopy_evapotranspiration ( c, layer, height, age, species, meteo_daily );
-
-									/* canopy carbon fluxes block */
-									phosynthesis ( c, layer, height, age, species, DaysInMonth[month] );
-
-									/* nitrogen */
-									nitrogen_stock ( s );
-
-									/* respiration */
-									if ( !string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
-									{
-										maintenance_respiration ( c, layer, height, age, species, meteo_daily );
-										growth_respiration ( c, layer, height, age, species );
-									}
-									autotrophic_respiration ( c, layer, height, age, species );
-
-									/* carbon fluxes */
-									carbon_fluxes ( s );
-
-									/* C assimilation */
-									carbon_assimilation( c, layer, height, age, species );
-
-									/* C-N-partitioning-allocation */
-									daily_C_evergreen_partitioning_allocation ( c, layer, height, age, species, meteo_daily, day, month, year );
-									logger(g_log, "---------------------------------------------------------------------------------\n");
+								logger(g_log, "Yearly Rain = %f\n", Yearly_Rain);
+								logger(g_log, "Minimum Rain for Establishment = %f\n", s->value[MINRAIN]);
+								logger(g_log, "NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
 								}
+								}
+								*/
 
-								/* check for balance closure at the class level */
-								logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
+								logger(g_log, "*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
 
-								/* check for radiative balance closure */
-								Check_class_radiation_balance ( c, layer, height, age, species );
-
-								/* check for carbon balance closure */
-								Check_class_carbon_balance( c, layer, height, age, species );
-
-								/* check for water balance closure */
-								Check_class_water_balance ( c, layer, height, age, species );
 								/****************************************************************************************************************************************/
 
-								/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
-								/* END OF YEAR */
+								/*MORTALITY*/
 
-								if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+								/* Mortality based on self thinning (3-PG) */
+								//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
+								//if ( s->management == T ) Mortality (c, height, age, species, years);
+								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
+
+								/*Mortality based on tree Age (LPJ)*/
+								//Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
+
+								/****************************************************************************************************************************************/
+
+								/* renovation */
+								//renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
+
+								/* above ground-below ground biomass */
+								agb_bgb_biomass ( c, height, age, species );
+
+								/* annual volume, MAI and CAI */
+								annual_biomass_increment ( c, layer, height, age, species );
+
+								/* print at the end of simulation class level data */
+								print_forest_class_data ( c, layer, height, age, species );
+
+								/* water use efficiency */
+								water_use_efficiency ( s );
+
+								/****************************************************************************************************************************************/
+
+								/* management blocks */
+								//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
+
+								/* simulate management */
+								if ( !string_compare_i (g_settings->management, "on") && !year )
 								{
-									logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
-
-									/*FRUIT ALLOCATION*/
-									/*
-									if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
+									rotation_counter = (int)s->value[ROTATION];
+								}
+								else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
+								{
+									if ( year == (int)s->value[ROTATION] )
 									{
-									Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
-									Seeds_Number_LE = Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-									logger(g_log, "Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
+										clearcut_timber_without_request ( c, layer, height, age, species, year );
 
-									//Seeds_Number_T = Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-									//logger(g_log, "Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
-
-									//FRUIT ESTABLISHMENT
-									if (Yearly_Rain > s->value[MINRAIN])
-									{
-									//decidere se passare numero di semi da LPJ o dall'Equazione Logistica
-									Establishment_LPJ ( &m->cells[cell],layer, height, age, species);
-									logger(g_log, "Saplings Number from LPJ = %d\n", s->counter[N_TREE_SAP]);
-									}
-									else
-									{
-									logger(g_log, "Yearly Rain = %f\n", Yearly_Rain);
-									logger(g_log, "Minimum Rain for Establishment = %f\n", s->value[MINRAIN]);
-									logger(g_log, "NOT ENOUGH RAIN FOR ESTABLISHMENT\n");
-									}
-									}
-									 */
-
-									logger(g_log, "*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*\n");
-
-									/*MORTALITY*/
-									//todo CONTROLLARE E SOMMARE AD OGNI STRATO LA BIOMASSA DI QUELLA SOVRASTANTE
-									//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
-									//Mortality (&m->cells[cell].heights[height].ages[age].species[species], years);
-									//todo
-									//WHEN MORTALITY OCCURs IN MULTILAYERED FOREST, MODEL SHOULD CREATE A NEW CLASS FOR THE DOMINATED LAYER THAT
-									//RECEIVES MORE LIGHT AND THEN GROWTH BETTER SO IT IS A NEW HEIGHT CLASS
-									/*Mortality based on tree Age(LPJ)*/
-									//Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-									/*Mortality based on Growth efficiency(LPJ)*/
-									//Mortality (&m->cells[cell].heights[height].ages[age].species[species]);
-
-									if ( s->management == C ) Stool_mortality ( c, layer, height, age, species );
-
-									//renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
-
-									AGB_BGB_biomass ( c, height, age, species );
-
-									Biomass_increment_EOY ( c, layer, height, age, species );
-
-									/* print at the end of simulation class level data */
-									print_forest_class_data ( c, layer, height, age, species );
-
-									Water_Use_Efficiency ( s );
-
-									/* management blocks */
-									//Choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
-
-									/* simulate management */
-									if ( !string_compare_i (g_settings->management, "on") && !year )
-									{
-										rotation_counter = (int)s->value[ROTATION];
-									}
-									else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
-									{
-										if ( year == (int)s->value[ROTATION] )
-										{
-											Clearcut_Timber_without_request ( c, layer, height, age, species, year );
-
-											/* add multiples */
-											s->value[ROTATION] += rotation_counter;
-											/*
+										/* add multiples */
+										s->value[ROTATION] += rotation_counter;
+										/*
 										if(g_settings->replanted_tree != 0.0)
 										{
 											if ( ! Create_new_class(&m->cells[cell], height, age, species) )
@@ -422,58 +352,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 												exit(1);
 											}
 										}
-											 */
-										}
+										 */
 									}
-								}
-							}
-							/* functions for saplings */
-							else
-							{
-								//FIXME IT DOESN'T WORK ON LEAP YEARS
-								if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
-								{
-									logger(g_log, "\n/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
-									logger(g_log, "SAPLINGS\n");
-									/*
-								 Saplings_counter += 1;
-								 logger(g_log, "-Number of Sapling class in layer 0 = %d\n", Saplings_counter);
-									 */
-									logger(g_log, "Age %d\n", a->value);
-
-									if ( s->value[LIGHT_TOL] == 1)
-									{
-										if (c->par_for_establishment < g_settings->light_estab_very_tolerant)
-										{
-											s->counter[N_TREE_SAP] = 0;
-											logger(g_log, "NO Light for Establishment\n");
-										}
-									}
-									else if ( s->value[LIGHT_TOL] == 2)
-									{
-										if (c->par_for_establishment < g_settings->light_estab_tolerant)
-										{
-											s->counter[N_TREE_SAP] = 0;
-											logger(g_log, "NO Light for Establishment\n");
-										}
-									}
-									else if ( s->value[LIGHT_TOL] == 3)
-									{
-										if (c->par_for_establishment < g_settings->light_estab_intermediate)
-										{
-											s->counter[N_TREE_SAP] = 0;
-											logger(g_log, "NO Light for Establishment\n");
-										}
-									}
-									else
-									{
-										if (c->par_for_establishment < g_settings->light_estab_intolerant)
-										{
-											s->counter[N_TREE_SAP] = 0;
-											logger(g_log, "NO Light for Establishment\n");
-										}
-									}
-									logger(g_log, "/*/*/*/*/*/*/*/*/*/*/*/*/*/*/\n");
 								}
 							}
 						}
@@ -549,7 +429,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	//ALESSIOR: is it correct?
 	/* reset monthly variables */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] + 1 ) : (MonthLength[month] )) == c->doy )
 	{
 		reset_monthly_class_variables ( c );
 		reset_monthly_layer_variables ( c );
@@ -567,40 +447,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		}
 	}
 
-//	if ( IS_LEAP_YEAR( c->years[year].year ) )
-//	{
-//		/* reset monthly variables */
-//		if ( ( MonthLength[month] + 1 ) == c->doy )
-//		{
-//			reset_monthly_class_variables ( c );
-//			reset_monthly_layer_variables ( c );
-//			reset_monthly_cell_variables  ( c );
-//		}
-//		/* reset annual variables */
-//		if ( c->doy == 366 )
-//		{
-//			reset_annual_class_variables ( c );
-//			reset_annual_layer_variables ( c );
-//			reset_annual_cell_variables  ( c );
-//		}
-//	}
-//	else
-//	{
-//		/* reset monthly variables */
-//		if ( ( MonthLength[month] ) == c->doy )
-//		{
-//			reset_monthly_class_variables ( c );
-//			reset_monthly_layer_variables ( c );
-//			reset_monthly_cell_variables  ( c );
-//		}
-//		/* reset annual variables */
-//		if ( c->doy == 365 )
-//		{
-//			reset_annual_class_variables ( c );
-//			reset_annual_layer_variables ( c );
-//			reset_annual_cell_variables  ( c );
-//		}
-//	}
 
 	/****************************************************************************************************/
 	//todo: soilmodel could stay here or in main.c

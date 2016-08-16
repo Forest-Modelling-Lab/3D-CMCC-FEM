@@ -18,7 +18,7 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-int Create_new_class(cell_t *const c, const int height, const int age, const int species)
+int create_new_tree_class(cell_t *const c, const int height, const int age, const int species)
 {
 	int i;
 	int y;

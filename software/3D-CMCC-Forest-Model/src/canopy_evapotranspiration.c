@@ -187,8 +187,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/* assign values of previous day canopy water/snow */
 	/* reset if LAI == 0.0*/
-	if( !s->value[LAI] )
-	{
+	if( !s->value[LAI] || s->counter[VEG_DAYS] == s->counter[DAY_VEG_FOR_LEAF_FALL] )
+	{logger(g_log,"cazzo\n");
 		s->value[OLD_CANOPY_WATER]= 0.0;
 		s->value[CANOPY_WATER] = 0.0;
 		s->value[CANOPY_SNOW] = 0.0;

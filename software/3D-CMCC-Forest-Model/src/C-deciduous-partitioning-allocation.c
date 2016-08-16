@@ -52,10 +52,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	r0Ctem = s->value[R0CTEM];
 	omegaCtem = s->value[OMEGA_CTEM];
 
-	/* in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
+	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 *  to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
-	//i = c->t_layers[layer].heights[height].z;
+
 
 	logger(g_log, "\n**ALLOCATION_ROUTINE**\n\n");
 	logger(g_log, "Carbon allocation routine for deciduous\n");
@@ -122,7 +122,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		logger(g_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 		/* test "This has recently been confirmed by Dyckmans et al. (2000)
-		who  showed  that  only  44%  of  carbon  in  leaves  came  from
+		who showed that only 44% of carbon in leaves came from
 		carbon reserves in beech trees" (Barbaroux et al., 2003) */
 
 		/* following Friedlingstein et al.,1998 and Krinner et al.,2005 during budburst model allocates

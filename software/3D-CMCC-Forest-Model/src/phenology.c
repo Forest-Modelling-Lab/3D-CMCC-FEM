@@ -26,7 +26,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int age
 	s = &c->heights[height].ages[age].species[species];
 
 	logger(g_log, "\n--DAILY PHENOLOGY for SPECIES %s phenology = %.1f--\n", s->name, s->value[PHENOLOGY]);
-	logger(g_log, "LAI = %g\n PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
+	logger(g_log, "-LAI = %g\n-PEAK_LAI = %g\n", s->value[LAI], s->value[PEAK_LAI]);
 
 	/*for deciduous*/
 	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
@@ -102,7 +102,7 @@ void phenology(cell_t *const c, const int layer, const int height, const int age
 		}
 	}
 	logger(g_log, "phenology phase = %d\n", s->phenology_phase);
-	logger(g_log," LAI = %g\n", s->value[LAI]);
+
 }
 
 //void Phenology_phase (species_t *const s, const meteo_t* const met, const int year, const int month, const int day)

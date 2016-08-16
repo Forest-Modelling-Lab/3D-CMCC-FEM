@@ -216,7 +216,7 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 
 
 
-void Choose_management(cell_t *const c, const int layer, const int height, const int age, const int species, const int years)
+void choose_management(cell_t *const c, const int layer, const int height, const int age, const int species, const int years)
 {
 	//tree_layer_t *l;
 	species_t *s;
@@ -395,7 +395,7 @@ void Management (age_t * const a, const int height, const int age, const int spe
 	s->counter[CUT_TREES] = 0;
 }
 
-void Clearcut_Timber_without_request (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
+void clearcut_timber_without_request (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
 {
 	int removed_tree = 0;
 	double IndWf,

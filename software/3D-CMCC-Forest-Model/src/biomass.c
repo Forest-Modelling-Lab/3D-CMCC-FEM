@@ -58,7 +58,7 @@ void live_total_wood_age(const age_t *const a, const int species)
 }
 
 
-void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, const int age, const int species)
+void annual_biomass_increment(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 
 	double MassDensity;
@@ -105,7 +105,7 @@ void Biomass_increment_EOY(cell_t *const c, const int layer, const int height, c
 
 }
 
-void AGB_BGB_biomass(cell_t *const c, const int height, const int age, const int species)
+void agb_bgb_biomass(cell_t *const c, const int height, const int age, const int species)
 {
 
 	species_t *s;

@@ -1,6 +1,7 @@
 /* g-function.c */
 #include <stdio.h>
 #include <math.h>
+#include "common.h"
 #include "soil_settings.h"
 #include "constants.h"
 #include "settings.h"
@@ -168,12 +169,19 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 					}
 					else
 					{
-						s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
+						if ( IS_LEAP_YEAR( c->years[year].year ) )
+						{
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
+						}
+						else
+						{
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
+						}
 					}
 					/* compute last year day the number of days for leaf fall */
 					if (day == 30 && month == DECEMBER)
 					{
-						s->counter[DAY_FRAC_FOLIAGE_REMOVE] =  (int) (s->value[LEAF_FALL_FRAC_GROWING] *
+						s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);
 						s->counter[DAY_FRAC_FINE_ROOT_REMOVE] = (int) (s->value[LEAF_FALL_FRAC_GROWING] *
 								s->counter[DAY_VEG_FOR_LEAF_FALL]);
@@ -203,7 +211,14 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 					}
 					else
 					{
-						s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
+						if ( IS_LEAP_YEAR( c->years[year].year ) )
+						{
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 366;
+						}
+						else
+						{
+							s->counter[DAY_VEG_FOR_LEAF_FALL] = 365;
+						}
 					}
 					if (day == 30 && month == DECEMBER)
 					{

@@ -4,6 +4,6 @@
 
 #include "matrix.h"
 
-void Water_Use_Efficiency(species_t *const s);
+void water_use_efficiency(species_t *const s);
 
 #endif /* WUE_H_ */

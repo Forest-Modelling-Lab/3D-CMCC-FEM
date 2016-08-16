@@ -134,16 +134,17 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	s->value[AVERAGE_F_T] += s->value[F_T];
 
 	/*FROST MODIFIER*/
-	if( meteo_daily->tday < s->value[GROWTHTMIN] )
-	{
-		s->value[F_FROST] = 0.0;
-		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	}
-	else
-	{
-		s->value[F_FROST] = 1.0;
-		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	}
+	//fixme usefull??
+//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
+//	{
+//		s->value[F_FROST] = 0.0;
+//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+//	}
+//	else
+//	{
+//		s->value[F_FROST] = 1.0;
+//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+//	}
 
 	/*VPD MODIFIER*/
 	//logger(g_log, "--RH = %f %%\n", met[month].rh);
@@ -158,6 +159,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//convert also COEFFCOND multiply it for
 	s->value[F_VPD] = exp (- s->value[COEFFCOND] * meteo_daily->vpd);
 	logger(g_log, "fVPD = %f\n", s->value[F_VPD]);
+	CHECK_CONDITION(s->value[F_VPD], > 1.0);
+	CHECK_CONDITION(s->value[F_VPD], < 0);
 
 	//average yearly f_vpd modifiers
 	s->value[AVERAGE_F_VPD] += s->value[F_VPD];
@@ -172,7 +175,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 //		s->value[F_VPD] = (vpd_close - meteo_daily->vpd) / (vpd_close - vpd_open);
 
 	/* AGE MODIFIER */
-
 	if ( a->value != 0 )
 	{
 		if ( s->management == T )
@@ -197,27 +199,32 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 		s->value[F_AGE] = 1;
 		logger(g_log, "no data for age F_AGE = 1\n");
 	}
+	CHECK_CONDITION(s->value[F_AGE], > 1.0);
+	CHECK_CONDITION(s->value[F_AGE], < 0);
 
 	/*SOIL NUTRIENT MODIFIER*/
 	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0])  * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_log, "fNutr = %f\n", s->value[F_NUTR]);
+	CHECK_CONDITION(s->value[F_NUTR], > 1.0);
 
 
 	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
-	c->soil_moist_ratio = c->asw/c->max_asw_fc;
-	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	CHECK_CONDITION(s->value[F_SW], > 1.0);
 	logger(g_log, "ASW = %f mm/m2\n", c->asw);
-	logger(g_log, "Wilting point = %f mm/m2\n", c->wilting_point);
+
+	c->soil_moist_ratio = c->asw/c->max_asw_fc;
 	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
-	logger(g_log, "fSW = %f\n", s->value[F_SW]);
+
+	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
+	logger(g_log, "fSW (3-PG) = %f\n", s->value[F_SW]);
+	//CHECK_CONDITION(s->value[F_SW], > 1.0);
+	//CHECK_CONDITION(s->value[F_SW], < 0);
 
 
 	/* (MPa) water potential of soil and leaves */
 	/*SOIL MATRIC POTENTIAL*/
 
-	/* convert kg/m2 or mm  --> m3/m2 --> m3/m3 */
+	/* convert kg/m2 or mm --> m3/m2 --> m3/m3 */
 	/* 100 mm H20 m^-2 = 100 kg H20 m^-2 */
 	/* calculate the soil pressure-volume coefficients from texture data */
 	/* Uses the multivariate regressions from Cosby et al., 1984 */
@@ -273,7 +280,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	}
 
 	s->value[F_SW] = s->value[F_PSI];
-	logger(g_log, "F_PSI = %f\n", s->value[F_PSI]);
+	logger(g_log, "F_PSI-F_SW (BIOME) = %f\n", s->value[F_PSI]);
+	CHECK_CONDITION(s->value[F_SW], > 1.0);
+	CHECK_CONDITION(s->value[F_SW], < 0);
 
 
 	//average yearly f_sw modifiers
@@ -290,6 +299,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	{
 		logger(g_log, "PHYSMOD uses F_SW * F_AGE = %f\n", s->value[F_SW] * s->value[F_AGE]);
 	}
+	CHECK_CONDITION(s->value[PHYS_MOD], > 1.0);
+	CHECK_CONDITION(s->value[PHYS_MOD], < 0);
 
 	s->value[YEARLY_PHYS_MOD] += s->value[PHYS_MOD];
 	//logger(g_log, "Yearly Physmod = %f\n", s->value[YEARLY_PHYS_MOD]);
