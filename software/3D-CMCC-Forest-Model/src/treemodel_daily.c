@@ -53,6 +53,7 @@ extern int DaysInMonth[];
 
 /* Last cumulative days in months */
 extern int MonthLength [];
+extern int MonthLength_Leap [];
 
 int Tree_model_daily (matrix_t *const m, const int cell, const int day, const int month, const int year)
 {
@@ -337,10 +338,10 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 								/* END OF YEAR */
 
-								//FIXME IT DOESN'T WORK ON LEAP YEARS
 								if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
 								{
-									logger(g_log, "*****END OF YEAR******\n");
+									logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
+
 									/*FRUIT ALLOCATION*/
 									/*
 									if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
@@ -545,60 +546,59 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_cell_variables  ( c );
 
 	//ALESSIOR: is it correct?
-//	/* reset monthly variables */
-//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength[month] + 1 ) : (MonthLength[month] )) == c->doy )
+	/* reset monthly variables */
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+	{
+		reset_monthly_class_variables ( c );
+		reset_monthly_layer_variables ( c );
+		reset_monthly_cell_variables  ( c );
+
+		//ALESSIOR: is it correct?
+		//fixme in other parts of treemodel there are this "if"
+		/* reset annual variables */
+		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+		{
+			reset_annual_class_variables ( c );
+			reset_annual_layer_variables ( c );
+			reset_annual_cell_variables  ( c );
+			logger(g_log,"prova\n");
+		}
+	}
+
+//	if ( IS_LEAP_YEAR( c->years[year].year ) )
 //	{
-//		reset_monthly_class_variables ( c );
-//		reset_monthly_layer_variables ( c );
-//		reset_monthly_cell_variables  ( c );
-//
-//		//ALESSIOR: is it correct?
-//		//fixme in other parts of treemodel there are this "if"
+//		/* reset monthly variables */
+//		if ( ( MonthLength[month] + 1 ) == c->doy )
+//		{
+//			reset_monthly_class_variables ( c );
+//			reset_monthly_layer_variables ( c );
+//			reset_monthly_cell_variables  ( c );
+//		}
 //		/* reset annual variables */
-//		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+//		if ( c->doy == 366 )
 //		{
 //			reset_annual_class_variables ( c );
 //			reset_annual_layer_variables ( c );
 //			reset_annual_cell_variables  ( c );
-//			logger(g_log,"prova\n");
 //		}
 //	}
-
-	if ( IS_LEAP_YEAR( c->years[year].year ) )
-	{
-		/* reset monthly variables */
-		if ( ( MonthLength[month] + 1 ) == c->doy )
-		{
-			reset_monthly_class_variables ( c );
-			reset_monthly_layer_variables ( c );
-			reset_monthly_cell_variables  ( c );
-		}
-		/* reset annual variables */
-		if ( c->doy == 366 )
-		{
-			reset_annual_class_variables ( c );
-			reset_annual_layer_variables ( c );
-			reset_annual_cell_variables  ( c );
-		}
-	}
-	else
-	{
-		logger(g_log,"month = %d doy = %d\n", MonthLength[month], c->doy);
-		/* reset monthly variables */
-		if ( ( MonthLength[month] ) == c->doy )
-		{
-			reset_monthly_class_variables ( c );
-			reset_monthly_layer_variables ( c );
-			reset_monthly_cell_variables  ( c );
-		}
-		/* reset annual variables */
-		if ( c->doy == 365 )
-		{
-			reset_annual_class_variables ( c );
-			reset_annual_layer_variables ( c );
-			reset_annual_cell_variables  ( c );
-		}
-	}
+//	else
+//	{
+//		/* reset monthly variables */
+//		if ( ( MonthLength[month] ) == c->doy )
+//		{
+//			reset_monthly_class_variables ( c );
+//			reset_monthly_layer_variables ( c );
+//			reset_monthly_cell_variables  ( c );
+//		}
+//		/* reset annual variables */
+//		if ( c->doy == 365 )
+//		{
+//			reset_annual_class_variables ( c );
+//			reset_annual_layer_variables ( c );
+//			reset_annual_cell_variables  ( c );
+//		}
+//	}
 
 	/****************************************************************************************************/
 	//todo: soilmodel could stay here or in main.c

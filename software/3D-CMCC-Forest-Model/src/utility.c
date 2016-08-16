@@ -210,7 +210,7 @@ void reset_daily_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "...resetting class level daily variables...\n");
+	logger(g_log, "\n...resetting class level daily variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height--)
@@ -319,7 +319,7 @@ void reset_monthly_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "...resetting class level monthly variables...\n");
+	logger(g_log, "\n...resetting class level monthly variables...\n");
 
 	/* height class level */
 	for ( height = c->heights_count - 1; height >= 0; height-- )
@@ -353,7 +353,7 @@ void reset_annual_class_variables(cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log, "...resetting class level annual variables...\n");
+	logger(g_log, "\n...resetting class level annual variables...\n");
 
 	/* height class level */
 	for (height = c->heights_count - 1; height >= 0; height--)

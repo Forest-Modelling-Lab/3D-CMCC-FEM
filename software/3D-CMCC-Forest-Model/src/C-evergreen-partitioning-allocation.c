@@ -22,7 +22,9 @@
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
+
 extern int MonthLength [];
+extern int MonthLength_Leap [];
 
 /* Evergreen carbon allocation routine */
 void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer, const int height, const int age, const int species,
@@ -271,8 +273,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	average_tree_biomass (s);
 
 	/* to avoid "jumps" of dbh it is computed once monthly */
-	//ALESSIOR include leap years
-	if( MonthLength[month] == c->doy )
+	//ALESSIOR is that correct?
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
 		dendrometry ( c, height, age, species );
 	}

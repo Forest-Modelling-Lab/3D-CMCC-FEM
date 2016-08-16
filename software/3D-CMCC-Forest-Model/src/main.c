@@ -49,8 +49,11 @@
 
 #define PROGRAM_VERSION	"5.1.1"
 
-//Last cumulative days in months
+/* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
+
+/* Last cumulative days in months in Leap years */
+int MonthLength_Leap [] = { 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
 
 //Days in Months
 int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
