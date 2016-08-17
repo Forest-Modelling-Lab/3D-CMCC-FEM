@@ -30,20 +30,20 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
 
 	/* it follows a little bit different rationale compared to BIOME-BGC approach
-	 * in BIOME_BGC:
-	 * apar = par * (1 - (exp(- K * LAI)));
-	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
-	 * apar_shade = apar- apar_sun;
-	 *
-	 * in 3D-CMCC FEM:
-	 * apar_sun = par * (1 - (exp(- K * LAI_SUN)));
-	 * par_transm_sun  = par - apar_sun;
-	 * apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
-	 * apar = apar_sun + apar_shade;
-	 *
-	 * then it consider that an amount of sunlit leaf are not completely outside the canopy
-	 * but there's an exponential decay of absorption also for sunlit foliage	 *
-	 */
+	* in BIOME_BGC:
+	* apar = par * (1 - (exp(- K * LAI)));
+	* apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+	* apar_shade = apar- apar_sun;
+	*
+	* in 3D-CMCC FEM:
+	* apar_sun = par * (1 - (exp(- K * LAI_SUN)));
+	* par_transm_sun  = par - apar_sun;
+	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
+	* apar = apar_sun + apar_shade;
+	*
+	* then it consider that an amount of sunlit leaf are not completely outside the canopy
+	* but there's an exponential decay of absorption also for sunlit foliage	 *
+	*/
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */
@@ -53,8 +53,13 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 
+	/*****************************************************************************************************************/
+
+	/* absorption and transmission */
+	logger(g_log,"Light absorption and transmission\n");
+
 	/*compute APAR (molPAR/m^2 covered/day) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE par = %g molPAR/m^2 covered day\n", s->value[PAR]);
+	logger(g_log, "\nincoming par = %g molPAR/m^2 covered day\n", s->value[PAR]);
 	s->value[APAR_SUN] = s->value[PAR] * Light_abs_frac_sun * leaf_cell_cover_eff;
 	s->value[TRANSM_PAR_SUN] = s->value[PAR] - s->value[APAR_SUN];
 	s->value[APAR_SHADE] = s->value[TRANSM_PAR_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
@@ -73,7 +78,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "Reflected Par = %g molPAR/m^2 day\n", s->value[PAR_REFL]);
 
 	/*compute Short Wave radiation ( W/m^2 covered ) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE Short Wave radiation = %g W/m^2 covered\n", s->value[SW_RAD]);
+	logger(g_log, "\nincoming Short Wave radiation = %g W/m^2 covered\n", s->value[SW_RAD]);
 	s->value[SW_RAD_ABS_SUN] = s->value[SW_RAD] * Light_abs_frac_sun * leaf_cell_cover_eff;
 	s->value[SW_RAD_TRANSM_SUN] = s->value[SW_RAD] - s->value[SW_RAD_ABS_SUN];
 	s->value[SW_RAD_ABS_SHADE] = s->value[SW_RAD_TRANSM_SUN] * Light_abs_frac_shade * leaf_cell_cover_eff;
@@ -91,7 +96,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "Transmitted total = %g W/m^2 covered\n", s->value[SW_RAD_TRANSM]);
 
 	/* compute PPFD (umol/m^2 covered/sec) for sun and shaded leaves*/
-	logger(g_log, "\nAVAILABLE ppfd = %g umol/m2 covered/sec\n", s->value[PPFD]);
+	logger(g_log, "\nincoming ppfd = %g umol/m2 covered/sec\n", s->value[PPFD]);
 	s->value[PPFD_ABS_SUN] = s->value[PPFD] * Light_abs_frac_sun * leaf_cell_cover_eff;
 	s->value[PPFD_TRANSM_SUN] = s->value[PPFD] - s->value[PPFD_ABS_SUN];
 	s->value[PPFD_ABS_SHADE] = s->value[PPFD_TRANSM_SUN] * Light_abs_frac_shade* leaf_cell_cover_eff;
@@ -273,6 +278,9 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/*************************************************************************/
 	/* shared functions among all class/layers */
+
+	/* reflection */
+	logger(g_log,"Light reflection\n");
 
 	/* PAR computation */
 	logger(g_log,"-PAR-\n");

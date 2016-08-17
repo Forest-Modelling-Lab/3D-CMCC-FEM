@@ -1503,11 +1503,14 @@ void forest_summary(const matrix_t* const m, const int cell)
 						"----- branch and bark = %g tC/area\n"
 						"----- reserve = %g tC/area\n"
 						"----- stem live = %g tC/area\n"
+						"----- stem dead = %g tC/area\n"
 						"----- coarse root live = %g tC/area\n"
+						"----- coarse root dead = %g tC/area\n"
 						"----- branch live = %g tC/area\n"
+						"----- branch dead = %g tC/area\n"
 						"----- total live = %g tC/area\n"
 						"----- total dead = %g tC/area\n"
-						"----- lai = %garea\n",
+						"----- lai = %g m2/m2\n",
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages[age].value,
 						m->cells[cell].heights[height].ages[age].species[species].name,
@@ -1522,8 +1525,11 @@ void forest_summary(const matrix_t* const m, const int cell)
 						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[STEM_DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[LAI]);

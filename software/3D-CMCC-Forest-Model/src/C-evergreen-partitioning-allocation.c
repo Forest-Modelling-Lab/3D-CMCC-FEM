@@ -62,26 +62,27 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	old_r0Ctem = r0Ctem = s->value[R0CTEM];
 	omegaCtem = s->value[OMEGA_CTEM];
 
+	Light_trasm = exp(- s->value[K] * s->value[LAI]);
+
 	//Marconi here the allocation of biomass reserve is divided in fineroot and leaves following the
 	//allocation ratio parameter between them. That because
 	//in evergreen we don't have bud burst phenology phase, and indeed there are two phenology phases;
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	//every pool except foliage
 
-	logger(g_log, "\n*ALLOCATION_ROUTINE*\n\n");
-	logger(g_log, "Carbon allocation routine for evergreen\n");
+	logger(g_log, "\n*C-PARTITIONING-ALLOCATION*\n\n");
+	logger(g_log, "Carbon partitioning for evergreen\n");
 
-	/* following Arora and Boer 2005 */
-	Light_trasm = exp(- s->value[K] * s->value[LAI]);
 
-	/* Partitioning ratios from Arora and Boer 2005 */
+	/* partitioning block using CTEM approach (Arora and Boer 2005) */
+	logger(g_log, "*Partitioning ratios*\n");
 	pR_CTEM = (r0Ctem + (omegaCtem * (1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 	pS_CTEM = (s0Ctem + (omegaCtem * (1.0 - Light_trasm))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
-	CHECK_CONDITION(fabs(pR_CTEM + pS_CTEM + pF_CTEM), > 1 + 1e-4);
+	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pF_CTEM ), > 1 + 1e-4 );
 
 	if ( !s->management )
 	{
@@ -115,9 +116,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)logger(g_log, "ERROR IN s0Ctem !!! \n");
 
 	}
-	logger(g_log,"LAI = %g \n", s->value[LAI]);
-	logger(g_log,"PEAK LAI = %g \n", s->value[PEAK_LAI]);
-	logger(g_log,"PHENOLOGY PHASE (CASE): %d\n", s->phenology_phase);
+
+	logger(g_log, "Carbon allocation for evergreen\n");
+	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
+	logger(g_log, "LAI = %f \n", s->value[LAI]);
+	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
@@ -125,7 +128,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	switch ( s->phenology_phase )
 	{
 	/************************************************************/
-
 	case 1:
 		/*
 		 * this phenological phase happens when:

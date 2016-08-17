@@ -22,35 +22,27 @@ void carbon_assimilation(cell_t *const c, const int layer, const int height, con
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	logger (g_log, "\n**C-ASSIMILATION_ROUTINE**\n");
+	logger (g_log, "\n**C-ASSIMILATION**\n");
 
 	/* NPP computation is based on ground surface area */
 	s->value[NPP_gC] = s->value[DAILY_GPP_gC] - s->value[TOTAL_AUT_RESP];
 	s->value[NPP_tC] = s->value[NPP_gC] / 1000000 * g_settings->sizeCell;
-	s->value[NPP_tDM] = ((s->value[NPP_gC] * GC_GDM) / 1000000) * g_settings->sizeCell;
-
-	logger(g_log, "Daily NPP = %f gC/m^2 ground surface area/day\n", s->value[NPP_gC]);
+	logger(g_log, "Daily NPP = %f gC/m^2/day\n", s->value[NPP_gC]);
 	logger(g_log, "Daily NPP = %f tC/area/day\n", s->value[NPP_tC]);
-	logger(g_log, "Daily NPP = %f tDM/area/day\n",  s->value[NPP_tDM]);
-
-	c->daily_npp_tDM += s->value[NPP_tDM];
-	c->daily_npp_gC += s->value[NPP_gC];
-	c->monthly_npp_tDM += s->value[NPP_tDM];
-	c->monthly_npp_gC += s->value[NPP_gC];
-	c->annual_npp_tDM += s->value[NPP_tDM];
-	c->annual_npp_gC += s->value[NPP_gC];
 
 	/* class level */
-	logger(g_log, "*********************** CLASS LEVEL ANNUAL NPP ********************** \n");
-
-	s->value[YEARLY_NPP_tDM] += s->value[NPP_tDM];
-	logger(g_log, "-CLASS LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", s->value[YEARLY_NPP_tDM]);
-
+	s->value[MONTHLY_NPP_gC] += s->value[NPP_gC];
+	s->value[YEARLY_NPP_gC] += s->value[NPP_gC];
+	s->value[MONTHLY_NPP_tC] += s->value[NPP_tC];
+	s->value[YEARLY_NPP_tC] += s->value[NPP_tC];
 
 	/* cell level */
-	logger(g_log, "*********************** STAND LEVEL ANNUAL NPP ********************** \n");
-	c->daily_npp_tDM += s->value[NPP_tDM];
-	logger(g_log, "-CELL LEVEL Yearly NPP (per area covered) = %f tDM/sizecell yr\n", c->daily_npp_tDM);
+	c->daily_npp_gC += s->value[NPP_gC];
+	c->monthly_npp_gC += s->value[NPP_gC];
+	c->annual_npp_gC += s->value[NPP_gC];
+	c->daily_npp_tC += s->value[NPP_tC];
+	c->monthly_npp_tC += s->value[NPP_tC];
+	c->annual_npp_tC += s->value[NPP_tC];
 
 }
 

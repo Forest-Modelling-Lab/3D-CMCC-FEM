@@ -307,20 +307,21 @@ enum {
 
 
 	/*carbon variables*/
+	C_FLUX,
 	DAILY_GPP_gC,               //Daily Gross Primary Production gC/m^2 day
 	MONTHLY_GPP_gC,             //Class Monthly Gross Primary Production gC/m^2 month
-	NPP_tDM,                    //Net Primary Production  tDM/area
-	NPP_gC,                     //Net Primary Production in grams of C
-	NPP_tC,
-	C_FLUX,
-	YEARLY_POINT_GPP_gC,
 	YEARLY_GPP_gC,              //Yearly GPP
-	YEARLY_NPP_tDM,             //Yearly NPP
+	NPP_gC,                     //Net Primary Production in grams of C
+	MONTHLY_NPP_gC,
+	YEARLY_NPP_gC,
+	NPP_tC,
+	MONTHLY_NPP_tC,
+	YEARLY_NPP_tC,
 
 	YEARLY_RAIN,                //Yearly Rain
 
 	/*biomass variables*/
-	//carbon to carbon pools in gC/m2/day
+	/* carbon to carbon pools in gC/m2/day */
 	C_TO_LEAF,
 	C_TO_ROOT,
 	C_TO_FINEROOT,
@@ -998,6 +999,7 @@ typedef struct
 	/*carbon variables*/
 	double daily_gpp, monthly_gpp, annual_gpp;                            /* daily, monthly and annual GPP at cell level (gC/m2/ ) */
 	double daily_npp_gC, monthly_npp_gC, annual_npp_gC;                   /* daily, monthly and annual NPP at cell level (gC/m2/ ) */
+	double daily_npp_tC, monthly_npp_tC, annual_npp_tC;                   /* daily, monthly and annual NPP at cell level (tC/cell/ ) */
 	double daily_npp_tDM, monthly_npp_tDM, annual_npp_tDM;                /* daily, monthly and annual NPP at cell level (tDM/cell/ ) */
 	double daily_aut_resp, monthly_aut_resp, annual_aut_resp;             /* daily, monthly and annual aut resp at cell level (gC/m2/ ) */
 	double daily_aut_resp_tC, monthly_aut_resp_tC, annual_aut_resp_tC;    /* daily, monthly and annual aut resp at cell level (tC/cell/ ) */

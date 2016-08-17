@@ -40,19 +40,20 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	{
 		Alpha_C = (s->value[ALPHA] * /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							 /**s->value[FRAC_DAYTIME_TRANSP] */;
-		logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %g molC/molPAR\n", Alpha_C);
+		logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %g molC/molPAR/m2/day\n", Alpha_C);
 
-		/* convert epsilon from gCMJ^-1 to molCmolPAR^-1 */
+		/* molC/molPAR/m2/day --> gC/MJ/m2/day */
 		Epsilon = Alpha_C * MOLPAR_MJ * GC_MOL;
 	}
 	else
 	{
 		Epsilon = (s->value[EPSILONgCMJ] * /* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							/**s->value[FRAC_DAYTIME_TRANSP] */;
-		logger(g_log, "Epsilon (LUE) = %g gDM/MJ\n", Epsilon);
+		logger(g_log, "Epsilon (LUE) = %g gC/MJ/m2/day\n", Epsilon);
 
+		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
 		Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
-		logger(g_log, "Alpha C = %g molC/molPAR m2/day\n", Alpha_C);
+		logger(g_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);
 	}
 
 	//test 12 May 2016 test
@@ -67,10 +68,10 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
 	GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
 	logger(g_log, "Apar for GPP = %g molPAR/m2/day\n", s->value[APAR]);
-	logger(g_log, "GPPmolC = %g molC/m^2 day\n", GPPmolC);
-	logger(g_log, "GPPmolC_sun = %g molC/m^2 day\n", GPPmolC_sun);
-	logger(g_log, "GPPmolC_shade = %g molC/m^2 day\n", GPPmolC_shaded);
-	logger(g_log, "GPPmolC_tot = %g molC/m^2 day\n", GPPmolC_tot);
+	logger(g_log, "GPPmolC = %g molC/m^2/day\n", GPPmolC);
+	logger(g_log, "GPPmolC_sun = %g molC/m^2/day\n", GPPmolC_sun);
+	logger(g_log, "GPPmolC_shade = %g molC/m^2/day\n", GPPmolC_shaded);
+	logger(g_log, "GPPmolC_tot = %g molC/m^2/day\n", GPPmolC_tot);
 
 	/* check */
 	CHECK_CONDITION( GPPmolC, < 0 );
@@ -78,12 +79,12 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
-	s->value[DAILY_GPP_gC] = GPPmolC_tot * GC_MOL /* * leaf_cell_cover_eff*/;
+	s->value[DAILY_GPP_gC] = GPPmolC_tot * GC_MOL;
 	logger(g_log, "DAILY_GPP_gC = %g gC/m2/day\n", s->value[DAILY_GPP_gC]);
 
 	/* class level */
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_GPP_gC];
-	s->value[YEARLY_POINT_GPP_gC] += s->value[DAILY_GPP_gC];
+	s->value[YEARLY_GPP_gC] += s->value[DAILY_GPP_gC];
 
 	/* cell level */
 	c->daily_gpp += s->value[DAILY_GPP_gC];

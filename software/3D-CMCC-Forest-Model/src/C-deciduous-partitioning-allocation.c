@@ -52,24 +52,24 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	r0Ctem = s->value[R0CTEM];
 	omegaCtem = s->value[OMEGA_CTEM];
 
+	Light_trasm = exp(- s->value[K] * s->value[LAI]);
+
 	/* note: in Biome a constant proportion (50%) (Growth:storage parameter) of NPP that goes to the cpools is allocated
 	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
 
-	logger(g_log, "\n**ALLOCATION_ROUTINE**\n\n");
-	logger(g_log, "Carbon allocation routine for deciduous\n");
+	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n\n");
+	logger(g_log, "Carbon partitioning for deciduous\n");
 
-	/* following Arora and Boer 2005 */
-	Light_trasm = exp(- s->value[K] * s->value[LAI]);
-
-	/* partitioning block using CTEM approach */
-	logger(g_log, "\n*Partitioning ratios*\n");
+	/* partitioning block using CTEM approach (Arora and Boer 2005) */
+	logger(g_log, "*Partitioning ratios*\n");
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Roots CTEM ratio = %f %%\n", pR_CTEM * 100);
 	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
 	logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
 	logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pF_CTEM ), > 1 + 1e-4 );
 
 	//fixme to check it, values are too high for fine root
 	/* fine root vs. coarse root ratio */
@@ -98,10 +98,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-	logger(g_log, "CARBON PARTITIONING-ALLOCATION FOR LAYER %d\n", layer);
 
-	/* it mainly follows Arora V. K., Boer G. J., GCB, 2005 */
-
+	logger(g_log, "*Carbon allocation for deciduous\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);

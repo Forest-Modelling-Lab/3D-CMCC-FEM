@@ -19,12 +19,10 @@ void carbon_fluxes (species_t *const s)
 {
 	/* compute carbon balance between photosynthesis and autotrophic respiration */
 
-	logger(g_log, "\nC-FLUXES\n");
+	logger(g_log, "\n**C-FLUXES**\n");
 
 	s->value[C_FLUX] = s->value[DAILY_GPP_gC] - fabs(s->value[TOTAL_AUT_RESP]);
-	logger(g_log, "c-flux = %f gC m^2 day^-1\n", s->value[C_FLUX]);
-//	logger(g_log, "c-flux = %f tDM ha^-1 day ^-1\n", ((s->value[C_FLUX] * GC_GDM)/1000000) * (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell));
-
+	logger(g_log, "c-flux = %f gC/m2/day\n", s->value[C_FLUX]);
 }
 
 //too remove after made water_balance function

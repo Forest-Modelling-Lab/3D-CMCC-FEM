@@ -248,7 +248,7 @@ void reset_daily_class_variables(cell_t *const c)
 				/* reset daily carbon fluxes */
 				s->value[DAILY_GPP_gC] = 0.;
 				s->value[NPP_gC] = 0.;
-				s->value[NPP_tDM] = 0.;
+				s->value[NPP_tC] = 0.;
 				s->value[C_FLUX] = 0.;
 
 				/* reset daily water fluxes */
@@ -376,8 +376,8 @@ void reset_annual_class_variables(cell_t *const c)
 				s->value[YEARLY_PHYS_MOD] = 0;
 
 				s->value[YEARLY_GPP_gC] = 0;
-				s->value[YEARLY_POINT_GPP_gC] = 0;
-				s->value[YEARLY_NPP_tDM] = 0;
+				s->value[YEARLY_NPP_gC] = 0;
+				s->value[YEARLY_NPP_tC] = 0;
 
 				s->counter[DEAD_STEMS] = 0;
 				s->counter[N_TREE_SAP] = 0;
