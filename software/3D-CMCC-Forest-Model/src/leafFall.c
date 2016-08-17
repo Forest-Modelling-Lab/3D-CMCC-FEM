@@ -33,15 +33,10 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 	{
 		logger(g_log, "First day of Leaf fall\n");
 		logger(g_log, "DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		//Marconi: assumed that fine roots for deciduos species progressively die togheter with leaves
+		//Marconi: assumed that fine roots for deciduous species progressively die together with leaves
 
 		s->value[MAX_LAI] = s->value[LAI];
 		senescenceDayOne = c->doy;
-
-		//		/* assuming linear leaf fall */
-		//		foliage_to_remove = -(s->value[LEAF_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		//		logger(g_log, "daily amount of foliage to remove = %f tC/cell/day\n", foliage_to_remove);
-		//		fineroot_to_remove = -(s->value[FINE_ROOT_C] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
 		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
 		/* compute amount of fine root biomass to retranslocate as reserve */
@@ -67,17 +62,17 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 		logger(g_log, "previousLai = %f\n", previousLai);
 		logger(g_log, "currentLai = %f\n", currentLai);
 
-		CHECK_CONDITION(previousLai, <currentLai);
+		CHECK_CONDITION(previousLai, < currentLai);
 
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
 
 		newBiomass_lai = (currentLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0));
 		foliage_to_remove = previousBiomass_lai - newBiomass_lai;
 		logger(g_log, "foliage_to_remove = %f\n", foliage_to_remove);
+
 		/* a simple linear correlation from leaf carbon to remove and fine root to remove */
 		fine_root_to_remove = (s->value[FINE_ROOT_C]*foliage_to_remove)/s->value[LEAF_C];
 		logger(g_log, "fineroot_to_remove = %f\n", fine_root_to_remove);
-
 
 		s->value[C_TO_LEAF] = -foliage_to_remove ;
 		logger(g_log, "C_TO_LEAF = %f\n", s->value[C_TO_LEAF]);

@@ -98,7 +98,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//I could try to get in instead F_SW the minimum value among F_SW and F_VPD and F_NUTR 2 apr 2012
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
-
 	logger(g_log, "\nCarbon allocation for deciduous\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
@@ -106,6 +105,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
+
+	/* note: none carbon pool is refilled if reserve is lower than minimum
+	reserves have priority before all other pools */
 
 	switch (s->phenology_phase)
 	{
@@ -143,7 +145,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
 		logger(g_log, "daily amount of reserve for foliage  and fine roots budburst %f = tC/cell/day\n", reserve_for_budburst);
 
-		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
 		s->value[C_TO_RESERVE] = npp_to_alloc - reserve_for_budburst;
@@ -153,11 +154,13 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = 0.0;
 
+		/* check */
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
-
+		/**********************************************************************/
 	case 2:
 		logger(g_log, "(LAI == PEAK LAI)\n");
-		logger(g_log, "allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
+
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
 
 		if (npp_to_alloc > 0.0)
@@ -166,6 +169,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 			/* it doesn't need */
 			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
+				logger(g_log, "allocating into the three pools Ws(Ws+Wbb)+Wr(Wrc)+Wreserve\n");
+
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE] = npp_to_alloc * pF_CTEM;
 				s->value[C_TO_FINEROOT] = 0.0;
@@ -177,8 +182,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 				s->value[C_TO_LITTER] = 0.0;
 			}
 			/* it needs */
-			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
+			else
 			{
+				logger(g_log, "allocating into reserve\n");
+
 				/* allocating into c pools */
 				s->value[C_TO_RESERVE] = npp_to_alloc;
 				s->value[C_TO_FINEROOT] = 0.0;
@@ -189,13 +196,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 				s->value[C_TO_FRUIT] = 0.0;
 				s->value[C_TO_LITTER] = 0.0;
 			}
-			else
-			{
-				CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
-			}
 		}
 		else
 		{
+			logger(g_log, "Consuming reserve pool (negative NPP)\n");
+
 			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
@@ -205,6 +210,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_FRUIT] = 0.0;
 			s->value[C_TO_LITTER] = 0.0;
 		}
+
+		/* check */
 		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
 		/**********************************************************************/
@@ -213,11 +220,13 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		logger(g_log, "LEAF FALL\n");
 		logger(g_log, "allocating into W reserve pool\n");
 
-		if (npp_to_alloc > 0.0)
+		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
+			logger(g_log, "allocating into W reserve pool\n");
+
 			//fixme do it also for 0.1
 			/* reproduction only for needle leaf */
-			if (s->value[PHENOLOGY] == 0.2)
+			if (s->value[PHENOLOGY] ? 0.1 : 0.2)
 			{
 				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 				npp_to_alloc -= s->value[C_TO_FRUIT];
@@ -233,10 +242,12 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
 		s->value[C_TO_FRUIT] = 0.0;
-		s->value[C_TO_RESERVE] = s->value[NPP_tC] + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
+		s->value[C_TO_RESERVE] = npp_to_alloc + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
 
-
+		/* check */
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
+		/**********************************************************************/
 	case 0:
 
 		logger(g_log, "Unvegetative period \n");
@@ -248,7 +259,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_LITTER] = 0.0;
 		s->value[C_TO_RESERVE] = npp_to_alloc;
+
+		/* check */
+		CHECK_CONDITION(s->value[RESERVE_C], < 0.0);
 		break;
+		/**********************************************************************/
 	}
 
 	//todo to be checked
