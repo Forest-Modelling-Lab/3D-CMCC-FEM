@@ -47,7 +47,7 @@
 #include "fluxes.h"
 #include "print.h"
 
-#define PROGRAM_VERSION	"5.1.1"
+#define PROGRAM_VERSION	"5.2.2"
 
 /* Last cumulative days in months in non Leap years */
 int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
@@ -55,7 +55,7 @@ int MonthLength [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 /* Last cumulative days in months in Leap years */
 int MonthLength_Leap [] = { 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366};
 
-//Days in Months
+/* Days in Months */
 int DaysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 const char *szMonth[MONTHS_COUNT] = { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY",
@@ -95,6 +95,11 @@ char 	*g_sz_program_path = NULL
 static int years_of_simulation;	// default is none
 
 /* strings */
+static const char banner_debug[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n"
+		"compiled using: "COMPILER"\n"
+		"runned: "__DATE__" at "__TIME__"\n"
+		"--------------------------------------------------------------------------------\n";
+
 static const char banner[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n"
 		"by Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it]\n"
 		"using NetCDF %s\n"
@@ -103,7 +108,7 @@ static const char banner[] = "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSIO
 
 static char copyright[] =
 		"\n"
-		"This version of 3D-CMCC FEM (v.5.2.2) has been developed by:\n"
+		"The 3D-CMCC Forest Ecosystem Model (v.5.2.2) has been developed by:\n"
 		"Alessio Collalti [alessio.collalti@cmcc.it, a.collalti@unitus.it],\n"
 		"Alessio Ribeca,\n"
 		"Sergio Marconi [sergio.marconi@cmcc.it]\n"
@@ -111,14 +116,14 @@ static char copyright[] =
 		"euroMediterranean Center on Climate Changes (CMCC),\n"
 		"IAFES division,\n"
 		"Viale Trieste 120, 01100 - Viterbo, Italy,\n"
-		"and \nUniversity of Tuscia ,\n"
+		"and \n"
+		"University of Tuscia ,\n"
 		"Department for innovation in biological, agro-food and forest systems (DIBAF),\n"
 		"Forest Ecology Lab\n"
 		"\n"
 		"Programmers: Alessio Collalti - Alessio Ribeca - Sergio Marconi - Monia Santini\n"
 		"\n"
-		"\"DISCLAIMER\"\n"
-		"--------------------------------------------------------------------------------\n"
+		"\"DISCLAIMER\"\n\n"
 		"CMCC and University of Tuscia\n"
 		"accepts no responsibility for the use of the 3D_CMCC FEM in\n"
 		"the form supplied or as subsequently modified by third parties.\n"
@@ -127,8 +132,10 @@ static char copyright[] =
 		"Use of this software assumes agreement to this condition of use.\n"
 		"Removal of this statement violates the spirit in which 3D-CMCC FEM,\n"
 		"was released by CMCC-UNITUS.\n"
-		"for more information see Collalti et al., 2014 Ecological Modelling,\n"
-		"Collalti et al., 2016 Geoscientific Model Development\n"
+		"for more information see:\n"
+		"-Collalti et al., 2014 Ecological Modelling,\n"
+		"-Collalti et al., 2016 Geoscientific Model Development\n"
+		"--------------------------------------------------------------------------------\n"
 		;
 
 
@@ -321,9 +328,12 @@ static int log_start(const char* const sitename) {
 	logger(g_log, copyright);
 	logger_enable_std(g_log);
 
+	logger(g_log, banner_debug, netcdf_get_version());
+
 	/* show paths */
 	if ( g_sz_input_path )
-		logger(g_log, msg_input_path, g_sz_input_path);
+	logger(g_log,"\nFILE PATHS\n");
+	logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_log, msg_soil_file, g_sz_soil_file);
 	logger(g_log, msg_topo_path, topo_path);
@@ -407,6 +417,7 @@ static int parse_args(int argc, char *argv[]) {
 	topo_path = NULL;
 	g_sz_settings_file = NULL;
 	g_sz_output_vars_file = NULL;
+
 
 	for ( i = 1; i < argc; ++i ) {
 		if ( argv[i][0] != '-' ) {
@@ -773,7 +784,7 @@ int main(int argc, char *argv[]) {
 
 
 	start_year = -1;
-	logger(g_log, "\n3D-CMCC MODEL START....\n\n\n\n");
+	logger(g_log, "\n3D-CMCC FEM START....\n\n");
 	for ( cell = 0; cell < matrix->cells_count; ++cell )
 	{
 		/* Marconi: the variable i needs to be a for private variable, used to fill the vpsat vector v(365;1) */
