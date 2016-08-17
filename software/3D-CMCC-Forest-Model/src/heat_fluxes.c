@@ -11,7 +11,7 @@ extern logger_t* g_log;
 
 void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\nCANOPY_LATENT_HEAT_ROUTINE\n");
+	logger(g_log, "\n**CANOPY_LATENT_HEAT**\n");
 
 	/* canopy canopy level latent heat fluxes (W/m2) */
 	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * meteo_daily->lh_vap / 86400;
@@ -20,12 +20,12 @@ void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const m
 
 void Canopy_sensible_heat_fluxes(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\nCANOPY_SENSIBLE_HEAT_ROUTINE\n");
+	logger(g_log, "\n**CANOPY SENSIBLE HEAT**\n");
 }
 
 void latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\nLATENT_HEAT_ROUTINE\n");
+	logger(g_log, "\n**CELL LATENT HEAT**\n");
 
 	/*compute latent heat from canopy*/
 	c->daily_c_evapo_watt = c->daily_c_evapo * meteo_daily->lh_vap / 86400.0;
@@ -61,7 +61,7 @@ void latent_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 void sensible_heat_flux (cell_t *const c, const meteo_daily_t *const meteo_daily)
 {
-	logger(g_log, "\nSENSIBLE_HEAT_ROUTINE\n");
+	logger(g_log, "\n**CELL SENSIBLE HEAT**\n");
 
 	c->daily_sensible_heat_flux = c->daily_c_sensible_heat_flux + c->daily_soil_sensible_heat_flux;
 	logger(g_log, "Daily sensible heat flux = %g W/m\n", c->daily_sensible_heat_flux);

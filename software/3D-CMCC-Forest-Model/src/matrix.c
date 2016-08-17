@@ -1489,43 +1489,43 @@ void forest_summary(const matrix_t* const m, const int cell)
 				/* print class dataset */
 				logger(g_log,
 						"\n\n----- CLASS DATASET-----\n"
-						"----- height = %f\n"
-						"----- age = %d\n"
+						"----- height = %g m\n"
+						"----- age = %d cm\n"
 						"----- species = %s\n"
 						"----- n = %d trees\n"
 						"----- n stumps = %d stumps\n"
-						"----- avdbh = %f cm\n"
-						"----- wf = %f tDM/ha\n"
-						"----- wr coarse = %f tDM/area\n"
-						"----- wr fine = %f tDM/area\n"
-						"----- wr tot = %f tDM/area\n"
-						"----- ws = %f tDM/area\n"
-						"----- wbb = %f tDM/area\n"
-						"----- wres = %f tDM/area\n"
-						"----- ws live = %f tDM/area\n"
-						"----- wrc live = %f tDM/area\n"
-						"----- wbb live = %f tDM/area\n"
-						"----- w tot live = %f tDM/area\n"
-						"----- w tot dead = %f tDM/area\n"
-						"----- lai = %f tDM/area\n",
+						"----- avdbh = %g cm\n"
+						"----- leaf = %g tC/ha\n"
+						"----- coarse root = %g tC/area\n"
+						"----- fine root = %g tC/area\n"
+						"----- total root = %g tC/area\n"
+						"----- stem = %g tC/area\n"
+						"----- branch and bark = %g tC/area\n"
+						"----- reserve = %g tC/area\n"
+						"----- stem live = %g tC/area\n"
+						"----- coarse root live = %g tC/area\n"
+						"----- branch live = %g tC/area\n"
+						"----- total live = %g tC/area\n"
+						"----- total dead = %g tC/area\n"
+						"----- lai = %garea\n",
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages[age].value,
 						m->cells[cell].heights[height].ages[age].species[species].name,
 						m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
 						m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
 						m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FOLIAGE_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_FINE_ROOT_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_ROOTS_TOT_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_BRANCH_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_LIVE_WOOD_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_LIVE_WOOD_tDM],
-						m->cells[cell].heights[height].ages[age].species[species].value[BIOMASS_DEAD_WOOD_tDM],
+						m->cells[cell].heights[height].ages[age].species[species].value[LEAF_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[FINE_ROOT_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[TOT_ROOT_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[STEM_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[RESERVE_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[STEM_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
 			}
 		}

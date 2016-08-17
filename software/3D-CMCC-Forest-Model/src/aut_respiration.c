@@ -78,6 +78,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	if (s->counter[VEG_UNVEG] == 1)
 	{
 		/* leaves */
+		/* day time */
 		exponent_tday = (meteo_daily->tday - Q10_temp) / 10.0;
 
 		t1 = s->value[LEAF_NITROGEN] * mrpern;
@@ -85,7 +86,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tday) * (meteo_daily->daylength/24.0));
 		logger(g_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
-		exponent_tnight =  (meteo_daily->tnight - Q10_temp) / 10.0;
+		/* night time */
+		exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
 
 		s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
 		logger(g_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
@@ -107,19 +109,20 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 		s->value[FINE_ROOT_MAINT_RESP] = 0.0;
 	}
 
+	/* all day */
 	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
 
-	/*  live stem maintenance respiration */
+	/* live stem maintenance respiration */
 	t1 = s->value[STEM_NITROGEN] * mrpern;
 	s->value[STEM_MAINT_RESP] =  t1 * pow(q10, exponent_tavg);
 	logger(g_log, "Stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
-	//live branch maintenance respiration
+	/* live branch maintenance respiration */
 	t1 = s->value[BRANCH_NITROGEN] * mrpern;
 	s->value[BRANCH_MAINT_RESP] = t1 * pow(q10, exponent_tavg);
 	logger(g_log, "Branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
-	//live coarse root maintenance respiration
+	/* live coarse root maintenance respiration */
 	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
 	t1 = s->value[COARSE_ROOT_NITROGEN] * mrpern;
 	s->value[COARSE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
@@ -175,7 +178,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 //			leaf_cell_cover_eff = 1.0;
 //		}
 
-	/* values are computed in  gC/m2/day */
+	/* values are computed in gC/m2/day */
 	if (s->value[C_TO_LEAF] > 0.0)s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
 	logger(g_log, "daily leaf growth respiration = %.10f gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
 
@@ -256,7 +259,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		c->monthly_aut_resp += s->value[TOTAL_AUT_RESP];
 		c->monthly_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 		c->annual_aut_resp += s->value[TOTAL_AUT_RESP];
-		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP]  / 1000000 * g_settings->sizeCell;
+		c->annual_aut_resp_tC += s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
 
 	}
 }

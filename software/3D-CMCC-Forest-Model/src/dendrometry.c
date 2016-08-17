@@ -126,7 +126,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	logger(g_log, " BASAL BASAL_AREA_m2 = %g m^2\n", s->value[BASAL_AREA_m2]);
 	s->value[SAPWOOD_AREA] = s->value[SAP_A] * pow (s->value[AVDBH], s->value[SAP_B]);
 	logger(g_log, " SAPWOOD_AREA = %g cm^2\n", s->value[SAPWOOD_AREA]);
-	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] -  s->value[SAPWOOD_AREA];
+	s->value[HEARTWOOD_AREA] = s->value[BASAL_AREA] - s->value[SAPWOOD_AREA];
 	logger(g_log, " HEART_WOOD_AREA = %g cm^2\n", s->value[HEARTWOOD_AREA]);
 	s->value[SAPWOOD_PERC] = (s->value[SAPWOOD_AREA]) / s->value[BASAL_AREA];
 	logger(g_log, " sapwood perc = %g%%\n", s->value[SAPWOOD_PERC]*100);
@@ -141,7 +141,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	s->value[STAND_BASAL_AREA] = s->value[BASAL_AREA] * s->counter[N_TREE];
 	logger(g_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
 	s->value[STAND_BASAL_AREA_m2] = s->value[BASAL_AREA_m2] * s->counter[N_TREE];
-	logger(g_log, " Stand level class basal area = %g cm^2/class cell\n", s->value[STAND_BASAL_AREA]);
+	logger(g_log, " Stand level class basal area (meters) = %g m^2/class cell\n", s->value[STAND_BASAL_AREA_m2]);
 
 	logger(g_log, "-Old Basal Area = %g cm^2\n", oldBasalArea);
 	logger(g_log, "-New Basal Area = %g cm^2\n", s->value[BASAL_AREA]);

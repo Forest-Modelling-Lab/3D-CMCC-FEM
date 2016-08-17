@@ -14,7 +14,6 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-//ALESSIOR CHECK IF CORRECT
 void annual_forest_structure(cell_t* const c)
 {
 	int height;

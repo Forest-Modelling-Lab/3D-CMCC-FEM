@@ -401,8 +401,6 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	logger(g_log, "----Total wood = %g KgC/tree\n",s->value[AV_TOT_WOOD_MASS_KgC]);
 	logger(g_log, "----Live wood vs total biomass = %g %%\n", (s->value[LIVE_WOOD_C] / s->value[TOT_WOOD_C]) * 100.0);
 	logger(g_log, "----Dead wood vs total biomass = %g %%\n", (s->value[DEAD_WOOD_C] / s->value[TOT_WOOD_C]) * 100.0);
-	logger(g_log, "----Live wood vs total biomass = %g %%\n", (s->value[AV_LIVE_WOOD_MASS_KgC] / s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
-	logger(g_log, "----Dead wood vs total biomass = %g %%\n", (s->value[AV_DEAD_WOOD_MASS_KgC] / s->value[AV_TOT_WOOD_MASS_KgC]) * 100.0);
 
 	logger(g_log, "***reserves following live tissues C (not used) BIOME = %g tC/area\n", s->value[LIVE_WOOD_C] * s->value[SAP_WRES] );
 
@@ -456,7 +454,6 @@ void initialization_soil(cell_t *const c)
 	float volumetric_saturated_hydraulic_conductivity;
 
 	logger(g_log,"\nINITIALIZE SOIL\n");
-
 
 	/*soil matric potential*/
 	CHECK_CONDITION(fabs((g_soil_settings->values[SOIL_SAND_PERC] + g_soil_settings->values[SOIL_CLAY_PERC] + g_soil_settings->values[SOIL_SILT_PERC]) -100.0 ), > 1e-4);

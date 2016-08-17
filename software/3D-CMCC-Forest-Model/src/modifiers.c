@@ -46,7 +46,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//double vpd_open = 6; //value from pietsch in Pa a(600) are converted in hPa = 6
 	//double vpd_close = 12; // 12 in taken from Priwitzer et al., 2014 30 from Pietsch in Pa (3000) are converted in hPa = 30
 
-	logger(g_log, "\n**DAILY_MODIFIERS**\n\n");
+	logger(g_log, "\n**DAILY_MODIFIERS**\n");
+
+	/********************************************************************************************/
 
 	/* CO2 MODIFIER FROM C-FIX */
 	tairK = meteo_daily->tavg + TempAbs;
@@ -67,7 +69,9 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	v2 = (KmCO2*(1+(O2CONC/KO2))+refCO2CONC)/(KmCO2*(1+(O2CONC/KO2))+g_settings->co2Conc);
 
 	s->value[F_CO2] = v1*v2;
-	logger(g_log, "F_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
+	logger(g_log, "f_CO2 modifier (C-FIX) = %f\n", s->value[F_CO2]);
+
+	/********************************************************************************************/
 
 	/* LIGHT MODIFIER */
 	/* (Following Makela et al , 2008, Peltioniemi_etal_2012) */
@@ -84,16 +88,17 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 //	}
 //	logger(g_log, "FLight (NOT USED)= %f\n", s->value[F_LIGHT]);
 
-
+	/* LIGHT MODIFIER (BIOME METHOD) */
 	/* following Biome-BGC */
 	/* photosynthetic photon flux density conductance control */
 	/* for sun leaves */
 	s->value[F_LIGHT_SUN] = s->value[PPFD_ABS_SUN] /(PPFD50 + s->value[PPFD_ABS_SUN]);
-	logger(g_log, "F_LIGHT_SUN = %f \n", s->value[F_LIGHT_SUN]);
+	logger(g_log, "f_LIGHT_SUN (BIOME) = %f \n", s->value[F_LIGHT_SUN]);
 	/* for shaded leaves */
 	s->value[F_LIGHT_SHADE] = s->value[PPFD_ABS_SHADE] /(PPFD50 + s->value[PPFD_ABS_SHADE]);
-	logger(g_log, "F_LIGHT_SHADE = %f \n", s->value[F_LIGHT_SHADE]);
+	logger(g_log, "f_LIGHT_SHADE (BIOME) = %f \n", s->value[F_LIGHT_SHADE]);
 
+	/********************************************************************************************/
 
 	/* TEMPERATURE MODIFIER */
 	if ( meteo_daily->tday == NO_DATA )
@@ -114,7 +119,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	{
 		if ( ( meteo_daily->tday <= s->value[GROWTHTMIN]) || (meteo_daily->tday >= s->value[GROWTHTMAX] ) )
 		{
-			logger(g_log, "tday < 0 > GROWTHTMIN o GROWTHTMAX\n");
 			s->value[F_T] = 0;
 			logger(g_log, "F_T = 0 \n");
 		}
@@ -131,21 +135,25 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	CHECK_CONDITION(s->value[F_T], > 1);
 	CHECK_CONDITION(s->value[F_T], < 0);
 
-	/*FROST MODIFIER*/
-	if( meteo_daily->tday < s->value[GROWTHTMIN] )
-	{
-		s->value[F_FROST] = 0.0;
-		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	}
-	else
-	{
-		s->value[F_FROST] = 1.0;
-		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
-	}
+	/********************************************************************************************/
 
-	/* check */
-	CHECK_CONDITION(s->value[F_FROST], > 1);
-	CHECK_CONDITION(s->value[F_FROST], < 0);
+//	/*FROST MODIFIER*/
+//	if( meteo_daily->tday < s->value[GROWTHTMIN] )
+//	{
+//		s->value[F_FROST] = 0.0;
+//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+//	}
+//	else
+//	{
+//		s->value[F_FROST] = 1.0;
+//		logger(g_log, "fFROST - Frost modifier = %f\n", s->value[F_FROST]);
+//	}
+//
+//	/* check */
+//	CHECK_CONDITION(s->value[F_FROST], > 1);
+//	CHECK_CONDITION(s->value[F_FROST], < 0);
+
+	/********************************************************************************************/
 
 	/*VPD MODIFIER*/
 	//logger(g_log, "--RH = %f %%\n", met[month].rh);
@@ -164,6 +172,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	/* check */
 	CHECK_CONDITION(s->value[F_VPD], > 1);
 	CHECK_CONDITION(s->value[F_VPD], < 0);
+
+	/********************************************************************************************/
 
 	//test following biome-bgc it doesn't seems to work properly here (too many higher values for gpp and le
 	/* vapor pressure deficit multiplier, vpd in Pa */
@@ -204,6 +214,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	CHECK_CONDITION(s->value[F_AGE], > 1);
 	CHECK_CONDITION(s->value[F_AGE], < 0);
 
+	/********************************************************************************************/
+
 	/*SOIL NUTRIENT MODIFIER*/
 	s->value[F_NUTR] = 1.0 - ( 1.0- g_soil_settings->values[SOIL_FN0])  * pow ((1.0 - g_soil_settings->values[SOIL_FR]), g_soil_settings->values[SOIL_FNN]);
 	logger(g_log, "fNutr = %f\n", s->value[F_NUTR]);
@@ -212,6 +224,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	CHECK_CONDITION(s->value[F_NUTR], > 1);
 	CHECK_CONDITION(s->value[F_NUTR], < 0);
 
+	/********************************************************************************************/
 
 	/*SOIL WATER MODIFIER (3-PG METHOD)*/
 	//fixme include "dAdjMod" from 3-PG code
@@ -285,6 +298,8 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	CHECK_CONDITION(s->value[F_SW], > 1);
 	CHECK_CONDITION(s->value[F_SW], < 0);
 
+	/********************************************************************************************/
+
 	/*PHYSIOLOGICAL MODIFIER*/
 	s->value[PHYS_MOD] = MIN (s->value[F_VPD], (s->value[F_SW] * s->value[F_AGE]));
 	logger(g_log, "PhysMod = %f\n", s->value[PHYS_MOD]);
@@ -301,6 +316,7 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	CHECK_CONDITION(s->value[PHYS_MOD], > 1);
 	CHECK_CONDITION(s->value[PHYS_MOD], < 0);
 
+	/********************************************************************************************/
 
 	/*SOIL DROUGHT MODIFIER*/
 	//(see Duursma et al., 2008)rev_Angelo

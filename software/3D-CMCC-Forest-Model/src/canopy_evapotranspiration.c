@@ -110,7 +110,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* when matches the last height class in the layer is processed */
 	if ( l->height_class == layer_height_class_counter )
 	{
-		logger(g_log,"\nlast height class in layer processed\n");
+		logger(g_log,"last height class in layer processed\n");
 		logger(g_log,"update rain/snow interception values for lower layer\n");
 
 		/* compute interceptable rain for lower layers */

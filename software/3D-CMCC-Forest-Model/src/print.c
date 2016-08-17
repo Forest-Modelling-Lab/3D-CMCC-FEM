@@ -97,32 +97,34 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 	logger(g_log, "**Daily MET DATA day %d month %d, year %d (yos %d)**\n", day + 1, month + 1, c->years[year].year, year + 1);
 	logger(g_log, "-%d-%d-%d\n", met[month].d[day].n_days, month+1, c->years[year].year);
 	logger(g_log,
-			"-solar_rad = %.3f MJ/m^2/day\n"
-			"-PAR = %.3f molPAR/m^2/day\n"
-			"-s-wave downward = %.3f W/m2\n"
-			"-PPFD = %.3f umolPAR/m^2/sec\n"
-			"-atm l-wave downward (computed) = %.3f W/m2\n"
-			"-tavg = %.2f °C\n"
-			"-tmax = %.2f °C\n"
-			"-tmin = %.2f °C\n"
-			"-tday (computed)= %.2f °C\n"
-			"-tnight (computed)= %.2f °C\n"
-			"-tsoil (computed)= %.2f °C\n"
-			"-tdew (computed)= %.2f °C\n"
-			"-relative humidity = %.2f %%\n"
-			"-vpd = %.2f mbar/hPa\n"
-			"-ts_f (measured)= %.2f °C\n"
-			"-precip = %.2f mm\n"
-			"-swc (computed/measured)= %.2f %%vol\n"
-			"-thermic_sum = %.2f °C\n"
-			"-rho air = %.2f kg/m3\n"
-			"-daylength = %.2f hrs\n"
-			"-wind speed = %.2f m/sec\n"
-			"-air pressure = %.2f Pa\n"
-			"-es = %.2f KPa\n"
-			"-ea = %.2f KPa\n"
-			"-air psych = %.2f KPa\n"
-			"-co2 concentration = %.2f ppmv\n"
+			"-solar_rad = %g MJ/m^2/day\n"
+			"-PAR = %g molPAR/m^2/day\n"
+			"-s-wave downward = %g W/m2\n"
+			"-PPFD = %g umolPAR/m^2/sec\n"
+			"-atm l-wave downward (computed) = %g W/m2\n"
+			"-tavg = %g °C\n"
+			"-tmax = %g °C\n"
+			"-tmin = %g °C\n"
+			"-tday (computed)= %g °C\n"
+			"-tnight (computed)= %g °C\n"
+			"-tsoil (computed)= %g °C\n"
+			"-tdew (computed)= %g °C\n"
+			"-relative humidity = %g %%\n"
+			"-vpd = %g mbar/hPa\n"
+			"-ts_f (measured)= %g °C\n"
+			"-precip = %g mm\n"
+			"-rain = %g mm\n"
+			"-snow = %g cm\n"
+			"-swc (computed/measured)= %g %%vol\n"
+			"-thermic_sum = %g °C\n"
+			"-rho air = %g kg/m3\n"
+			"-daylength = %g hrs\n"
+			"-wind speed = %g m/sec\n"
+			"-air pressure = %g Pa\n"
+			"-es = %g KPa\n"
+			"-ea = %g KPa\n"
+			"-air psych = %g KPa\n"
+			"-co2 concentration = %g ppmv\n"
 			"-DOY = %d\n",
 			met[month].d[day].solar_rad,
 			met[month].d[day].par,
@@ -140,6 +142,8 @@ void print_daily_met_data(cell_t *c, const int day, const int month, const int y
 			met[month].d[day].vpd,
 			met[month].d[day].ts_f,
 			met[month].d[day].prcp,
+			met[month].d[day].rain,
+			met[month].d[day].snow,
 			met[month].d[day].swc,
 			met[month].d[day].thermic_sum,
 			met[month].d[day].rho_air,
@@ -190,11 +194,11 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	logger(g_log, "* y = %d\n", c->y);
 	logger(g_log, "* z (layer) = %d\n", l->z);
 	logger(g_log, "* z (height) = %d\n", h->z);
-	logger(g_log, "- class level data\n");
+	logger(g_log, "--class level data--\n");
 	logger(g_log, "- Height = %g m\n", h->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);
 	logger(g_log, "- Species = %s\n", s->name);
-	logger(g_log, "- DBH = %g\n", s->value[AVDBH]);
+	logger(g_log, "- DBH = %g cm\n", s->value[AVDBH]);
 	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
 	logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	logger(g_log, "- LAI = %g \n", s->value[LAI]);
@@ -202,18 +206,21 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	logger(g_log, "- Canopy Cover = %g \n", s->value[CANOPY_COVER_DBHDC]);
 	logger(g_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
 	logger(g_log, "- Management type = %s\n", s->management ? "C" : "T");
-	logger(g_log, "--Carbon pools in tC\n");
-	logger(g_log, "+ Wf = %g tC/area\n", s->value[LEAF_C]);
-	logger(g_log, "+ Wts = %g tC/area\n", s->value[TOT_STEM_C]);
-	logger(g_log, "+ Ws = %g tC/area\n", s->value[STEM_C]);
-	logger(g_log, "+ Wbb = %g tC/area\n", s->value[BRANCH_C]);
-	logger(g_log, "+ Wrc = %g tC/area\n", s->value[COARSE_ROOT_C]);
-	logger(g_log, "+ Wrf = %g tC/area\n", s->value[FINE_ROOT_C]);
-	logger(g_log, "+ Wr Tot = %g tC/area\n", s->value[TOT_ROOT_C]);
-	logger(g_log, "+ Wres = %g tC/area\n", s->value[RESERVE_C]);
-	logger(g_log, "+ Ws live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
-	logger(g_log, "+ Wrc live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
-	logger(g_log, "+ wbb live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	logger(g_log, "++Carbon pools in tC++\n");
+	logger(g_log, "+ leaf = %g tC/area\n", s->value[LEAF_C]);
+	logger(g_log, "+ stem = %g tC/area\n", s->value[STEM_C]);
+	logger(g_log, "+ branch and bark = %g tC/area\n", s->value[BRANCH_C]);
+	logger(g_log, "+ coarse root = %g tC/area\n", s->value[COARSE_ROOT_C]);
+	logger(g_log, "+ fine root = %g tC/area\n", s->value[FINE_ROOT_C]);
+	logger(g_log, "+ total stem + branch  = %g tC/area\n", s->value[TOT_STEM_C]);
+	logger(g_log, "+ total root = %g tC/area\n", s->value[TOT_ROOT_C]);
+	logger(g_log, "+ reserve = %g tC/area\n", s->value[RESERVE_C]);
+	logger(g_log, "+ stem live = %g tC/area\n", s->value[STEM_LIVE_WOOD_C]);
+	logger(g_log, "+ coarse live = %g tC/area\n", s->value[COARSE_ROOT_LIVE_WOOD_C]);
+	logger(g_log, "+ branch live = %g tC/area\n", s->value[BRANCH_LIVE_WOOD_C]);
+	logger(g_log, "+ stem dead = %g tC/area\n", s->value[STEM_DEAD_WOOD_C]);
+	logger(g_log, "+ coarse dead = %g tC/area\n", s->value[COARSE_ROOT_DEAD_WOOD_C]);
+	logger(g_log, "+ branch dead = %g tC/area\n", s->value[BRANCH_DEAD_WOOD_C]);
 
 }
 
