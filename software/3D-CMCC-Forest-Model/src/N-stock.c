@@ -25,6 +25,31 @@ void nitrogen_stock(species_t *const s)
 	/* BIOME-BGC METHOD */
 
 	/* computing Nitrogen content from tons C/ha to gC/m^2 and then to gN */
+
+	//test
+	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
+
+	/* deciduous */
+	if((s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.1) && s->counter[LEAF_FALL_COUNTER] == 1)
+	{
+		/* outside leaf fall*/
+		if(!s->counter[LEAF_FALL_COUNTER])
+		{
+			s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
+			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
+		}
+		/* during leaf fall */
+		else
+		{
+			s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
+			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);getchar();
+		}
+	}
+	/* evergreen */
+	else
+	{
+
+	}
 	s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LEAVES];
 	logger(g_log, "Leaf nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
 	s->value[FINE_ROOT_NITROGEN] = (s->value[FINE_ROOT_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FINE_ROOTS];
@@ -35,4 +60,6 @@ void nitrogen_stock(species_t *const s)
 	logger(g_log, "Live coarse root nitrogen content = %f gN/m2\n", s->value[COARSE_ROOT_NITROGEN]);
 	s->value[BRANCH_NITROGEN] = (s->value[BRANCH_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
 	logger(g_log, "Live branch nitrogen content = %f gN/m2\n", s->value[BRANCH_NITROGEN]);
+
+
 }

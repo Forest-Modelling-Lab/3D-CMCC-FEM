@@ -201,6 +201,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		{
 			logger(g_log, "Consuming reserve pool (negative NPP)\n");
 
+			/* allocating into c pools */
 			s->value[C_TO_RESERVE] = npp_to_alloc;
 			s->value[C_TO_FINEROOT] = 0.0;
 			s->value[C_TO_COARSEROOT] = 0.0;
@@ -222,7 +223,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
-			logger(g_log, "allocating into W reserve pool\n");
+			logger(g_log, "allocating into fruit pool\n");
 
 			//fixme do it also for 0.1
 			/* reproduction only for needle leaf */
@@ -238,6 +239,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
 		//		s->value[C_TO_LITTER] = ;
+		/* allocating into c pools */
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
@@ -251,6 +253,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	case 0:
 
 		logger(g_log, "Unvegetative period \n");
+
+		/* allocating into c pools */
 		s->value[C_TO_LEAF] = 0.0;
 		s->value[C_TO_FINEROOT] = 0.0;
 		s->value[C_TO_COARSEROOT] = 0.0;
@@ -283,7 +287,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);

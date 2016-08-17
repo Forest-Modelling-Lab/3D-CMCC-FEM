@@ -17,7 +17,7 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 {
 	static double foliage_to_remove;
 	static double fine_root_to_remove;
-	static double fraction_to_retransl = 0.1; //fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013
+	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 	static int senescenceDayOne;
 	double previousLai, currentLai;
 	double previousBiomass_lai, newBiomass_lai;
@@ -25,15 +25,15 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log, "\n**Leaf_fall**\n");
+	logger(g_log, "\n**LEAF FALL**\n");
 
-	logger(g_log, "LEAF_FALL_COUNTER = %d\n", s->counter[LEAF_FALL_COUNTER]);
+	logger(g_log, "Leaf fall counter = %d\n", s->counter[LEAF_FALL_COUNTER]);
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{
 		logger(g_log, "First day of Leaf fall\n");
 		logger(g_log, "DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-		//Marconi: assumed that fine roots for deciduous species progressively die together with leaves
+		/* assuming that fine roots for deciduous species progressively die together with leaves */
 
 		s->value[MAX_LAI] = s->value[LAI];
 		senescenceDayOne = c->doy;
@@ -55,7 +55,6 @@ void Leaf_fall(cell_t *const c, const int height, const int age, const int speci
 
 		previousLai = s->value[LAI];
 
-		//fixme
 		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
 				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
