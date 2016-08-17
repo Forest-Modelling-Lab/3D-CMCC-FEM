@@ -42,10 +42,10 @@ void nitrogen_stock(species_t *const s)
 		else
 		{
 			s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
-			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);getchar();
+			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
 		}
 	}
-	/* evergreen */
+	/* evergreen */ //todo todo todo
 	else
 	{
 

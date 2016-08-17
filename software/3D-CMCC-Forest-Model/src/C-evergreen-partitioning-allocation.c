@@ -267,13 +267,22 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			s->value[C_TO_BRANCH] +
 			s->value[C_TO_LEAF] +
 			s->value[C_TO_FRUIT];
-	//CHECK_CONDITION(fabs(npp_to_alloc - npp_alloc), >1e-4)
 
 	/* update live_total wood fraction based on age */
 	live_total_wood_age (a, species);
 
-	/* update leaf biomass through turnover */
-	turnover ( s );
+	/* allocate daily carbon */
+	carbon_allocation ( s );
+
+	/* compute single tree biomass pools */
+	average_tree_biomass (s);
+
+	/* to avoid "jumps" of dbh it is computed once monthly */
+	//ALESSIOR is that correct?
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
+	{
+		dendrometry ( c, height, age, species );
+	}
 
 	logger(g_log, "\n-Daily increment to be accounted in carbon pools (after turnover)-\n");
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
@@ -290,18 +299,11 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
-	/* allocate daily carbon */
-	carbon_allocation ( s );
+	/* update leaf biomass through turnover */
+	turnover ( s );
 
-	/* compute single tree biomass pools */
-	average_tree_biomass (s);
-
-	/* to avoid "jumps" of dbh it is computed once monthly */
-	//ALESSIOR is that correct?
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
-	{
-		dendrometry ( c, height, age, species );
-	}
+	/* update Leaf Area Index */
+	daily_lai ( s );
 
 	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
@@ -312,9 +314,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
 	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
 	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
-
-	/* update Leaf Area Index */
-	daily_lai ( s );
 
 	/* update class level annual carbon biomass increment in tC/cell/year */
 	s->value[DEL_Y_WTS] += s->value[C_TO_TOT_STEM];
