@@ -27,17 +27,15 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 
 	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
-
 	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
-
 
 	//fixme photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
 
 	//test without F_CO2
 	if (s->value[ALPHA] != NO_DATA)
 	{
-		Alpha_C = (s->value[ALPHA] * /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD] * s->value[F_FROST])
+		Alpha_C = (s->value[ALPHA] * /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							 /**s->value[FRAC_DAYTIME_TRANSP] */;
 		logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %g molC/molPAR\n", Alpha_C);
 
@@ -46,7 +44,7 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	}
 	else
 	{
-		Epsilon = (s->value[EPSILONgCMJ] * /* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD]* s->value[F_FROST])
+		Epsilon = (s->value[EPSILONgCMJ] * /* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							/**s->value[FRAC_DAYTIME_TRANSP] */;
 		logger(g_log, "Epsilon (LUE) = %g gDM/MJ\n", Epsilon);
 
@@ -60,13 +58,12 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	//Alpha_C *= s->value[CANOPY_FRAC_DAY_TRANSP];
 
 	/* GPP */
-	logger(g_log, "Apar for GPP = %g molPAR/m2/day\n", s->value[APAR]);
-
-	/* DailyGPP in mol of C/m^2 */
+	/* Daily GPP in molC/m^2/day */
 	GPPmolC = s->value[APAR] * Alpha_C;
 	GPPmolC_sun = s->value[APAR_SUN]* Alpha_C;
 	GPPmolC_shaded = s->value[APAR_SHADE]* Alpha_C;
 	GPPmolC_tot = GPPmolC_sun + GPPmolC_shaded;
+	logger(g_log, "Apar for GPP = %g molPAR/m2/day\n", s->value[APAR]);
 	logger(g_log, "GPPmolC = %g molC/m^2 day\n", GPPmolC);
 	logger(g_log, "GPPmolC_sun = %g molC/m^2 day\n", GPPmolC_sun);
 	logger(g_log, "GPPmolC_shade = %g molC/m^2 day\n", GPPmolC_shaded);
@@ -74,8 +71,8 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 
 	CHECK_CONDITION(fabs(GPPmolC - GPPmolC_tot), > 1e-4);
 
-	/* Daily GPP in grams of C/m^2 */
-	/* Convert molC into grams */
+	/* Daily GPP in gC/m2/day */
+	/* molC/m2/day --> gC/m2/day */
 	s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;
 	logger(g_log, "DAILY_POINT_GPP_gC = %g gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
 
