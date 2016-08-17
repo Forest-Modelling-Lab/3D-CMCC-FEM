@@ -70,7 +70,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	//the former in which carbon is allocated in fineroot and foliage, the latter in
 	//every pool except foliage
 
-	logger(g_log, "\n*C-PARTITIONING-ALLOCATION*\n\n");
+	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_log, "Carbon partitioning for evergreen\n");
 
 
@@ -117,7 +117,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 
 	}
 
-	logger(g_log, "Carbon allocation for evergreen\n");
+	logger(g_log, "\nCarbon allocation for evergreen\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);

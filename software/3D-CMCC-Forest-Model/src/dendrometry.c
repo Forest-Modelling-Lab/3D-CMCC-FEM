@@ -33,7 +33,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	oldTreeHeight = h->value;
 	oldBasalArea = s->value[BASAL_AREA];
 
-	logger(g_log, "\n**DENDROMETRY_ROUTINE**\n");
+	logger(g_log, "\n**DENDROMETRY**\n");
 	logger(g_log, "\n**Average DBH**\n");
 	logger(g_log, "**Tree Height from CC function**\n");
 	logger(g_log, "**Basal Area**\n");

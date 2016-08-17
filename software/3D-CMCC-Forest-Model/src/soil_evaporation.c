@@ -35,8 +35,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 		with standard conditions assumed to be 20 deg C, 101300 Pa */
 	rcorr = 1.0/(pow((meteo_daily->tday+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure);
 
-	logger(g_log, "\n**SOIL EVAPORATION BIOME**\n");
-	logger(g_log, "snowpack = %g\n", c->snow_pack);
+	logger(g_log, "\n**SOIL EVAPORATION**\n");
 
 	/* soil evaporation if snowpack = 0 */
 	if (c->snow_pack == 0.0)
@@ -57,11 +56,11 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 
 		/* assign net radiation as local variable */
 		net_rad = c->sw_rad_for_soil;
-		logger(g_log, "net_sw_rad_for_soil = %.10f W/m2\n", c->sw_rad_for_soil);
+		logger(g_log, "net_sw_rad_for_soil = %g W/m2\n", c->sw_rad_for_soil);
 
 		/* calculate pot_evap in kg/m2/s */
 		pot_soil_evap = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-		logger(g_log, "Potential soil evaporation = %.10f mm/m2/sec\n", pot_soil_evap);
+		logger(g_log, "Potential soil evaporation = %g mm/m2/sec\n", pot_soil_evap);
 
 		/* covert to daily total kg/m2 */
 		pot_soil_evap *= (meteo_daily->daylength * 3600.0);
@@ -119,7 +118,7 @@ void soil_evaporation(cell_t *const c, const meteo_daily_t *const meteo_daily)
 	//TODO TODO TODO add snow sublimation to soil evaporation!!!!!!!!!!!!!
 
 	logger(g_log, "day(s) since rain = %g day(s)\n", c->days_since_rain);
-	logger(g_log, "Daily Soil Evaporation = %.10f mm/m2/day\n", c->daily_soil_evapo);
+	logger(g_log, "Daily Soil Evaporation = %g mm/m2/day\n", c->daily_soil_evapo);
 	c->monthly_soil_evapo += c->daily_soil_evapo;
 	logger(g_log, "Monthly Soil Evaporation = %g mm/m2/month\n", c->monthly_soil_evapo);
 	c->annual_soil_evapo += c->daily_soil_evapo;

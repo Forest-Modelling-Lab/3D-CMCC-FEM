@@ -16,18 +16,17 @@ extern logger_t* g_log;
 
 double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, const double rv, const double net_rad)
 {
-	double tairK;
-	double delta;
-	double t1,t2,pvs1,pvs2;
-	double rr, rhr;
-	double dt = 0.2;     /* set the temperature offset for slope calculation */
-
-	double evap_or_transp;
+	double tairK;               /* daytime air temperature (K) */
+	double delta;               /* slope of saturation vapour pressure vs Temp curve (Pa/degC) */
+	double t1,t2;               /* t1 and t2 temperature (K)*/
+	double pvs1,pvs2;           /* saturation vapour pressures at t1 and t2 */
+	double rr;                  /* resistance to radiative heat transfer through air (sec/meter) */
+	double rhr;                 /* combined resistance to convective and radiative heat transfer (sec/meter) */
+	double dt = 0.2;            /* set the temperature offset for slope calculation */
+	double evap_or_transp;      /* evaporation or transpiration */
 
     /*
 	Combination equation for determining evaporation and transpiration.
-
-
     INPUTS:
     tday                    (deg C)       air temperature
     air_pressure            (Pa)          air pressure
@@ -50,8 +49,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
     evap_or_transp          (W/m2)        latent heat flux density       (flag=1)
     */
 
-
-
+	/* Penman-Monteith function */
 	logger(g_log, "*Penman-Monteith function*\n");
 
 	/* convert tday Celsius in Kelvin */

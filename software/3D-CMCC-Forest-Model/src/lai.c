@@ -17,7 +17,7 @@ void daily_lai (species_t *const s)
 {
 	double leaf_c;                             //leaf carbon KgC/m^2
 
-	logger(g_log, "\n**daily LAI**\n");
+	logger(g_log, "\n**LEAF AREA INDEX**\n");
 
 	/* convert tC/cell to KgC/m^2 */
 	leaf_c = s->value[LEAF_C] * 1000.0 ;

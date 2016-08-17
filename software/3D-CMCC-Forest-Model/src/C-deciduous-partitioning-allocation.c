@@ -58,7 +58,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	 * to each storage_pool, i.e. each carbon pools receive just a part of NPP (50%) the remaining remain as storage
 	 * and used to maintain trees when NPP is < 0 */
 
-	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n\n");
+	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_log, "Carbon partitioning for deciduous\n");
 
 	/* partitioning block using CTEM approach (Arora and Boer 2005) */
@@ -99,7 +99,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	//reductor = Minimum (s->value[F_SW], s->value[F_VPD], s->value[F_NUTR]);
 
 
-	logger(g_log, "*Carbon allocation for deciduous\n");
+	logger(g_log, "\nCarbon allocation for deciduous\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
 	logger(g_log, "LAI = %f \n", s->value[LAI]);
 	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);

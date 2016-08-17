@@ -17,15 +17,15 @@ void turnover(species_t *const s)
 	static double daily_leaf_fineroot_turnover_rate;
 	static double fraction_to_retransl = 0.1; /* fraction of C to retranslocate (see Bossel et al., 2006 and Campioli et al., 2013 */
 
-	logger(g_log, "\n*DAILY_TURNOVER*\n");
+	logger(g_log, "\n*TURNOVER*\n");
 
 	/* compute rates */
 	/* compute leaf and fine root turnover rate (ratio) */
 	daily_leaf_fineroot_turnover_rate = s->value[LEAF_FINEROOT_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL];
-	logger(g_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
+	//logger(g_log, "Daily leaf fine root turnover rate = %g (ratio)\n", daily_leaf_fineroot_turnover_rate);
 	/* compute live-wood turnover rate (ratio) */
 	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]);
-	logger(g_log, "Daily live-wood turnover rate = %g (ratio)\n", daily_live_wood_turnover_rate);
+	//logger(g_log, "Daily live-wood turnover rate = %g (ratio)\n", daily_live_wood_turnover_rate);
 
 	/*following BIOME_BGC turnover occurs only during growing season */
 	if (s->counter[VEG_UNVEG] == 1)
@@ -91,6 +91,10 @@ void turnover(species_t *const s)
 			s->value[C_FRUIT_TO_LITTER] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
 			logger(g_log, "C_FRUIT_TO_LITTER = %g tC/cell\n", s->value[C_FRUIT_TO_LITTER]);
 		}
+	}
+	else
+	{
+		logger(g_log,"No turnover\n");
 	}
 }
 
