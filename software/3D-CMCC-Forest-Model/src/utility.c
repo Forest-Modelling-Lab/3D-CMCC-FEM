@@ -247,7 +247,6 @@ void reset_daily_class_variables(cell_t *const c)
 
 				/* reset daily carbon fluxes */
 				s->value[DAILY_GPP_gC] = 0.;
-				s->value[DAILY_POINT_GPP_gC] = 0.;
 				s->value[NPP_gC] = 0.;
 				s->value[NPP_tDM] = 0.;
 				s->value[C_FLUX] = 0.;

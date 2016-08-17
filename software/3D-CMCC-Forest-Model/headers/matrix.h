@@ -308,7 +308,6 @@ enum {
 
 	/*carbon variables*/
 	DAILY_GPP_gC,               //Daily Gross Primary Production gC/m^2 day
-	DAILY_POINT_GPP_gC,
 	MONTHLY_GPP_gC,             //Class Monthly Gross Primary Production gC/m^2 month
 	NPP_tDM,                    //Net Primary Production  tDM/area
 	NPP_gC,                     //Net Primary Production in grams of C

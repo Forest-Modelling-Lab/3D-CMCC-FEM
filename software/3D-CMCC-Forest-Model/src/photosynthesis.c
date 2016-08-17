@@ -16,8 +16,11 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 {
 	double Alpha_C;
 	double Epsilon;
-	double GPPmolC, GPPmolC_sun, GPPmolC_shaded, GPPmolC_tot;
-	double leaf_cell_cover_eff;                                                                //fraction of square meter covered by leaf over the gridcell
+	double GPPmolC;
+	double GPPmolC_sun;
+	double GPPmolC_shaded;
+	double GPPmolC_tot;
+	double leaf_cell_cover_eff;          /* fraction of square meter covered by leaf over the gridcell */
 
 
 	species_t *s;
@@ -69,17 +72,14 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	logger(g_log, "GPPmolC_shade = %g molC/m^2 day\n", GPPmolC_shaded);
 	logger(g_log, "GPPmolC_tot = %g molC/m^2 day\n", GPPmolC_tot);
 
-	CHECK_CONDITION(fabs(GPPmolC - GPPmolC_tot), > 1e-4);
+	/* check */
+	CHECK_CONDITION( GPPmolC, < 0 );
+	CHECK_CONDITION( fabs ( GPPmolC - GPPmolC_tot ), > 1e-4 );
 
 	/* Daily GPP in gC/m2/day */
 	/* molC/m2/day --> gC/m2/day */
-	s->value[DAILY_POINT_GPP_gC] = GPPmolC_tot * GC_MOL;
-	logger(g_log, "DAILY_POINT_GPP_gC = %g gC/m2/day \n", s->value[DAILY_POINT_GPP_gC] );
-
-	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
-	//test 5 July 2016 without leaf_cell_cover_eff
-	s->value[DAILY_GPP_gC] = s->value[DAILY_POINT_GPP_gC] /* * leaf_cell_cover_eff*/;
-	logger(g_log, "DAILY_GPP_gC = %g gC/m2 area covered/day\n", s->value[DAILY_GPP_gC]);
+	s->value[DAILY_GPP_gC] = GPPmolC_tot * GC_MOL /* * leaf_cell_cover_eff*/;
+	logger(g_log, "DAILY_GPP_gC = %g gC/m2/day\n", s->value[DAILY_GPP_gC]);
 
 	/* class level */
 	s->value[MONTHLY_GPP_gC] += s->value[DAILY_GPP_gC];
