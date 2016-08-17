@@ -144,6 +144,7 @@ enum {
 	TREE_HEIGHT_LPJ,            //Tree Height in m from LPJ
 	CROWN_AREA_LPJ,             //Crown Area in m^2 from LPJ
 	CROWN_DIAMETER_LPJ,         //Crown Diameter in m from LPJ
+	CANOPY_COVER_LPJ,           //Canopy Cover % of pixel covered from LPJ
 	DBHDC_EFF,                  //Crown Diameter from DBH in function of density
 	PREVIOUS_DBHDC_EFF,         //previous dbhdc value
 	CROWN_DIAMETER_DBHDC_FUNC,  //Crown Diameter in m from DBHDC function
@@ -152,7 +153,6 @@ enum {
 	CANOPY_COVER_DBHDC,
 	CANOPY_COVER_P,             //Canopy Cover from Portoghesi Function % of pixel covered
 	FREE_CANOPY_COVER_P,
-	CANOPY_COVER_LPJ,           //Canopy Cover % of pixel covered from LPJ
 	TREE_HEIGHT_CR,             //Tree Height in m from CHAPMAN-RICHARDS FUNCTION
 	HD_EFF,                     //Effective HD ratio to give to Crowding Competition Function
 	CC_TREE_HEIGHT,             //Tree Height in m from Crowding Competition Function in m
@@ -177,6 +177,7 @@ enum {
 	CAI,                        //Current Annual Increment
 	IND_CAI,                    //Individual Current Annual Increment
 	MAI,                        //Mean Annual Volume Increment (m^3/area year)
+	IND_MAI,                    //Individual Mean Annual Increment
 	STEMCONST,
 
 	/* PAR */
@@ -188,7 +189,6 @@ enum {
 	TRANSM_PAR,                 //Transmitted Photosynthetically Active Radiation molPAR/m^2/day
 	TRANSM_PAR_SUN,             //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from sun leaves
 	TRANSM_PAR_SHADE,           //Transmitted Photosynthetically Active Radiation molPAR/m^2/day from shaded leaves
-
 
 	/* short wave */
 	SW_RAD,                     //Short Wave Radiation in W/m2
@@ -233,12 +233,8 @@ enum {
 	PPFD_TRANSM_SUN,            //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from sun leaves
 	PPFD_TRANSM_SHADE,          //Transmitted Photosynthetic Photon Flux Density umol/m2/sec  from shaded leaves
 
-
-
 	/*modifiers variables*/
 	F_VPD,                      //VPD modifier
-	//ALTER_VPD,                //Alternative VPD
-	//ALTER_F_VPD,              //Alternative VPD Modifier
 	F_LIGHT,                    //LIGHT modifier
 	F_LIGHT_SUN,                //LIGHT modifier for Sun leaves
 	F_LIGHT_SHADE,              //LIGHT modifier for Shaded leaves
@@ -250,7 +246,6 @@ enum {
 	F_DROUGHT,                  //SOIL DROUGHT modifier (see Duursma et al., 2008)
 	F_PSI,                      //SOIL WATER modifier using PSI, see Biome
 	F_CO2,                      //CO2 fert effect
-	F_EVAPO,                    //Evapotranspiration modifier 5 oct 2012
 	PHYS_MOD,                   //Physmod
 	YEARLY_PHYS_MOD,
 	AVERAGE_PHYS_MOD,
@@ -262,11 +257,6 @@ enum {
 	/*water variables*/
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,              //Canopy Boundary Layer conductance (m s-1)
-	MONTH_TRANSP,
-	DAILY_TRANSP,
-	DAILY_TRANSP_W,
-	FRAC_RAIN_INTERC,           //FRACTION OF RAIN INTERCEPTED
-	FRAC_DAYTIME_EVAPO,         //fraction of daytime for evaporation
 	FRAC_DAYTIME_TRANSP,        //fraction of daytime for transpiration (and photosynthesis)
 	RAIN_INTERCEPTED,
 	CANOPY_WATER_STORED,        //residual of canopy water intercepted and not evaporated
@@ -276,7 +266,6 @@ enum {
 	ASW,                        //available soil water per mm/ha
 	WUE,                        //Water use efficiency (gDM/mm)
 
-	//biome's
 	CANOPY_INT,
 	CANOPY_EVAPO,
 	CANOPY_WET,                 //it should'nt be reset every day
@@ -295,16 +284,11 @@ enum {
 	LAI,                        //LAI (m^2/m2)
 	LAI_SUN,
 	LAI_SHADE,
-	ALL_LAI,
 	MAX_LAI,                    //lai at the very first day of senescence: parameter of the sigmoid function
 	PEAK_LAI,                   //PEAK LAI
-	SLA_SUN,
-	SLA_SHADE,
-
 	LEAF_TEMP_K,
 	CANOPY_TEMP_K,
 	CANOPY_TEMP_K_OLD,
-
 
 	/*carbon variables*/
 	C_FLUX,

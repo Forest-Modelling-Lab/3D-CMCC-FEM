@@ -1,4 +1,4 @@
 x,y,Landuse,Age,Species,Management,N,Stool,AvDBH,Height,Wf,Wrc,Wrf,Ws,Wbb,Wres,Lai
-0,0,F,190,Piceaabies,T,99,0,46.00,24.68,6.35,32.66,0,69.09,22.47,0,0
-0,0,F,30,Piceaabies,T,199,0,12.69,10.45,4.16,6.35,0,26.93,8.98,0,0
-0,0,F,20,Piceaabies,T,299,0,12.30,2.46,4.16,6.35,0,26.93,8.98,0,0
+0,0,F,190,Piceaabies,T,99,0,46.00,24.68,0,0,0,0,0,0,5
+0,0,F,30,Piceaabies,T,199,0,12.69,10.45,0,0,0,0,0,0,5
+0,0,F,20,Piceaabies,T,299,0,12.30,2.46,0,0,0,0,0,0,5

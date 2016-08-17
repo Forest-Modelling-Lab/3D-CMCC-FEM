@@ -73,7 +73,6 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "\n**C-PARTITIONING-ALLOCATION**\n");
 	logger(g_log, "Carbon partitioning for evergreen\n");
 
-
 	/* partitioning block using CTEM approach (Arora and Boer 2005) */
 	logger(g_log, "*Partitioning ratios*\n");
 	pR_CTEM = (r0Ctem + (omegaCtem * (1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW])));
@@ -125,6 +124,9 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
 
+	/* note: none carbon pool is refilled if reserve is lower than minimum
+	reserves have priority before all other pools */
+
 	switch ( s->phenology_phase )
 	{
 	/************************************************************/
@@ -156,7 +158,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 				s->value[C_TO_RESERVE] = 0.0;
 			}
 			/* it needs */
-			else if (s->value[RESERVE_C] > 0.0 && s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
+			else if (s->value[RESERVE_C] < s->value[MIN_RESERVE_C])
 			{
 				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
 				s->value[C_TO_LEAF] = 0.0;
@@ -192,26 +194,45 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		/* partitioning */
 		if (npp_to_alloc > 0.0)
 		{
-			logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
-			/* REPRODUCTION ONLY FOR NEEDLE LEAF */
-			if(s->value[PHENOLOGY] == 1.2)
+			/* check if minimum reserve pool needs to be refilled */
+			/* it doesn't need */
+			if(s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 			{
-				//NPP for reproduction
-				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
-				npp_to_alloc -= s->value[C_TO_FRUIT];
-				logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
+				logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
+
+				/* reproduction only for needle leaf */
+				if(s->value[PHENOLOGY] == 1.2)
+				{
+					/* NPP for reproduction */
+					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
+					npp_to_alloc -= s->value[C_TO_FRUIT];
+					logger(g_log, "including Biomass increment into cones = %g tC/area\n", s->value[C_TO_FRUIT]);
+				}
+				else
+				{
+					s->value[C_TO_FRUIT] = 0.0;
+				}
+				s->value[C_TO_LEAF] = 0.0;
+				s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
+				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM);
+				s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
+				s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
+				s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];
 			}
+			/* it needs */
 			else
 			{
+				logger(g_log, "Allocating only into reserve pool (low reserves, positive NPP)\n");
+				s->value[C_TO_RESERVE] = npp_to_alloc;
+				s->value[C_TO_FINEROOT] = 0.0;
+				s->value[C_TO_COARSEROOT] = 0.0;
+				s->value[C_TO_TOT_STEM] = 0.0;
+				s->value[C_TO_STEM] = 0.0;
+				s->value[C_TO_BRANCH] = 0.0;
+				s->value[C_TO_LEAF] = 0.0;
 				s->value[C_TO_FRUIT] = 0.0;
 			}
-			s->value[C_TO_LEAF] = 0.0;
-			s->value[C_TO_COARSEROOT] = npp_to_alloc * pR_CTEM;
-			s->value[C_TO_FINEROOT] = 0.0;
-			s->value[C_TO_RESERVE] = (npp_to_alloc * pF_CTEM);
-			s->value[C_TO_TOT_STEM] = npp_to_alloc * pS_CTEM;
-			s->value[C_TO_STEM] = (npp_to_alloc* pS_CTEM) * (1.0 - s->value[FRACBB]);
-			s->value[C_TO_BRANCH] = (npp_to_alloc * pS_CTEM) * s->value[FRACBB];
 		}
 		else
 		{

@@ -9,13 +9,12 @@
 #include "settings.h"
 #include "logger.h"
 
-extern settings_t* g_settings;
 extern logger_t* g_log;
 
 void phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
 	double Alpha_C;
-	double Epsilon;
+	double Epsilon_C;
 	double GPPmolC;
 	double GPPmolC_sun;
 	double GPPmolC_shaded;
@@ -38,21 +37,23 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	//test without F_CO2
 	if (s->value[ALPHA] != NO_DATA)
 	{
+		/* compute effective light use efficiency */
 		Alpha_C = (s->value[ALPHA] * /* s->value[F_CO2] * */ s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							 /**s->value[FRAC_DAYTIME_TRANSP] */;
-		logger(g_log, "Alpha C (Effective Quantum Canopy Efficiency)= %g molC/molPAR/m2/day\n", Alpha_C);
+		logger(g_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);
 
 		/* molC/molPAR/m2/day --> gC/MJ/m2/day */
-		Epsilon = Alpha_C * MOLPAR_MJ * GC_MOL;
+		Epsilon_C = Alpha_C * MOLPAR_MJ * GC_MOL;
 	}
 	else
 	{
-		Epsilon = (s->value[EPSILONgCMJ] * /* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
+		/* compute effective light use efficiency */
+		Epsilon_C = (s->value[EPSILONgCMJ] * /* s->value[F_CO2] * */s->value[F_NUTR] * s->value[F_T] * s->value[PHYS_MOD])
 							/**s->value[FRAC_DAYTIME_TRANSP] */;
-		logger(g_log, "Epsilon (LUE) = %g gC/MJ/m2/day\n", Epsilon);
+		logger(g_log, "Epsilon C = %g gC/MJ/m2/day\n", Epsilon_C);
 
 		/* gC/MJ/m2/day --> molC/molPAR/m2/day */
-		Alpha_C = Epsilon / (MOLPAR_MJ * GC_MOL);
+		Alpha_C = Epsilon_C / (MOLPAR_MJ * GC_MOL);
 		logger(g_log, "Alpha C = %g molC/molPAR/m2/day\n", Alpha_C);
 	}
 

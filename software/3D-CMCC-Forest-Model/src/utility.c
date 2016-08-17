@@ -183,7 +183,6 @@ void reset_monthly_layer_variables(cell_t *const c)
 void reset_annual_layer_variables(cell_t *const c)
 {
 	int layer;
-	int height;
 
 	logger(g_log, "...resetting layer level annual variables...\n");
 

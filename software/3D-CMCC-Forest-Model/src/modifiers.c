@@ -230,8 +230,6 @@ void modifiers(cell_t *const c, const int layer, const int height, const int age
 	//fixme include "dAdjMod" from 3-PG code
 	c->soil_moist_ratio = c->asw/c->max_asw_fc;
 	s->value[F_SW] = 1.0 / (1.0 + pow(((1.0 - c->soil_moist_ratio) / s->value[SWCONST]), s->value[SWPOWER]));
-	logger(g_log, "ASW = %f mm/m2\n", c->asw);
-	logger(g_log, "moist ratio = %f\n", c->soil_moist_ratio);
 	logger(g_log, "fSW (3-PG)= %f\n", s->value[F_SW]);
 
 
