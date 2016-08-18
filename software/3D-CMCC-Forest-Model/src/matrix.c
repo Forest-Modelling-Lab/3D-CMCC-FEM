@@ -841,7 +841,7 @@ static const char *sz_species_values[] = {
 		//MANAGMENT
 		"ROTATION",
 		"MINAGEMANAG",
-		"MINDBHMANAG",                //Minimum DBH for Managment
+		"MINDBHMANAG",                //Minimum DBH for Management
 		"AV_SHOOT",                   //Average number of shoots produced after coppicing
 };
 

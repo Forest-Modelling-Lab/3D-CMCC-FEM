@@ -43,6 +43,7 @@
 #include "soil_water_balance.h"
 #include "leaf_fall.h"
 #include "settings.h"
+#include "new_forest_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
@@ -63,8 +64,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	static int age;
 	static int species;
 
-	static int rotation_counter;
-
+	/* shortcuts */
 	cell_t *c;
 	tree_layer_t *l;
 	height_t *h;
@@ -174,7 +174,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								peak_lai( s, day, month, year );
 							}
 							/***************************************************************/
-
 							/* print at the beginning of simulation forest class data */
 							print_forest_class_data ( c, layer, height, age, species );
 
@@ -250,7 +249,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/****************************************************************************************************************************************/
-
 							/* check for balance closure at the class level */
 							logger(g_log, "\n**CLASS LEVEL BALANCE**\n");
 
@@ -264,10 +262,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							check_class_water_balance ( c, layer, height, age, species );
 
 							/****************************************************************************************************************************************/
-
-							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 							/* END OF YEAR */
-
 							/* last day of the year */
 							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
 							{
@@ -275,7 +270,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								/*FRUIT ALLOCATION*/
 								/*
-								if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] )
 
 								//FRUIT ESTABLISHMENT
 								if (Yearly_Rain > s->value[MINRAIN])
@@ -293,9 +287,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								}
 								 */
 
-								/****************************************************************************************************************************************/
-
-								/*MORTALITY*/
+								/************************************************************************************************************************************/
+								/* MORTALITY and RENOVATION*/
 
 								/* Mortality based on self thinning (3-PG) */
 								//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
@@ -303,13 +296,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
 
 								/*Mortality based on tree Age (LPJ)*/
-								//Age_Mortality (&m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-
-								/****************************************************************************************************************************************/
+								//Age_Mortality ( a, s);
 
 								/* renovation */
-								//renovation (&m->cells[cell], &m->cells[cell].heights[height], &m->cells[cell].heights[height].ages[age].species[species]);
+								//renovation ( c, layer, height, age, species);
 
+								/************************************************************************************************************************************/
 								/* above ground-below ground biomass */
 								abg_bgb_biomass ( c, height, age, species );
 
@@ -319,40 +311,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/* print at the end of simulation class level data */
 								print_forest_class_data ( c, layer, height, age, species );
 
-								/* water use efficiency */
-								water_use_efficiency ( s );
-
-								/****************************************************************************************************************************************/
-
+								/************************************************************************************************************************************/
 								/* management blocks */
-								//choose_management (&m->cells[cell], &m->cells[cell].heights[height].ages[age].species[species], years, height);
+								forest_management (c, layer, height, age, species, year);
 
-								/* simulate management */
-								if ( !string_compare_i (g_settings->management, "on") && !year )
-								{
-									rotation_counter = (int)s->value[ROTATION];
-								}
-								else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
-								{
-									if ( year == (int)s->value[ROTATION] )
-									{
-										clearcut_timber_without_request ( c, layer, height, age, species, year );
-
-										/* add multiples */
-										s->value[ROTATION] += rotation_counter;
-										/*
-										if(g_settings->replanted_tree != 0.0)
-										{
-											if ( ! Create_new_class(&m->cells[cell], height, age, species) )
-											{
-												logger(g_log, "unable to add new height class!");
-												// DIE !
-												exit(1);
-											}
-										}
-										 */
-									}
-								}
+								/************************************************************************************************************************************/
 							}
 						}
 						else
@@ -372,8 +335,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	logger(g_log, "****************END OF HEIGHT CLASS***************\n");
 
 	/*******************************************************************************************************/
-	/* note: computations that involve all classes and are related to the overall cell */
-	/* computations during the last height class processing */
+	/* SOIL POOL */
 
 	/* compute snow melt, snow sublimation */
 	snow_melt_subl ( c, meteo_daily );
@@ -384,9 +346,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* compute soil evaporation */
 	soil_evaporation ( c, meteo_daily );
 
+	/* compute soil water balance */
+	soil_water_balance ( c, meteo_daily );
+
 	/*******************************************************************************************************/
-	/* note: computations that involve all classes and are related to the overall cell */
-	/* computations during the last height class processing */
+	/* OVERALL CELL */
 
 	/* compute evapotranspiration */
 	evapotranspiration ( c );
@@ -396,9 +360,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	/* compute sensible heat fluxes */
 	sensible_heat_flux ( c, meteo_daily );
-
-	/* compute soil water balance */
-	soil_water_balance ( c, meteo_daily );
 
 	/* compute water fluxes */
 	water_fluxes ( c, meteo_daily );
@@ -425,7 +386,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	reset_daily_layer_variables ( c );
 	reset_daily_cell_variables  ( c );
 
-	//ALESSIOR: is that correct?
 	/* reset monthly variables */
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
 	{
@@ -438,7 +398,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		{
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
-			reset_annual_cell_variables  ( c );getchar();
+			reset_annual_cell_variables  ( c );
 		}
 	}
 

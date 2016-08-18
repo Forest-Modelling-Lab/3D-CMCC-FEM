@@ -17,16 +17,18 @@
 extern logger_t* g_log;
 
 
-void Renorenovationvation(cell_t *const c, const int layer, const int height, const int age, const int species)
+void renovation(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 
-	height_t *h;
 	tree_layer_t *l;
+	height_t *h;
+	age_t *a;
 	species_t *s;
 
-	h = &c->heights[height];
 	l = &c->t_layers[layer];
-	s = &h->ages[age].species[species];
+	h = &c->heights[height];
+	a = &c->heights[height].ages[age];
+	s = &c->heights[height].ages[age].species[species];
 
 	/* compute light availability for seeds of dominant layer */
 

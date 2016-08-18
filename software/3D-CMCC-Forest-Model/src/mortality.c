@@ -201,15 +201,12 @@ void update_biomass_after_mortality ()
 
 /*Age mortality function from LPJ*/
 //todo add to log results this function
-void Age_Mortality (species_t *const s, age_t *const a)
+void Age_Mortality (age_t *const a, species_t *const s)
 {
 
 	static int Dead_trees;
 
-
-
-
-	//Age probability function
+	/* Age probability function */
 	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
 
 

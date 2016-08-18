@@ -15,15 +15,14 @@ void turnover(species_t *const s)
 {
 	static double daily_live_wood_turnover_rate;
 
-
-	logger(g_log, "\n*TURNOVER*\n");
+	logger(g_log, "\n**TURNOVER**\n");
 
 	/* compute live-wood turnover rate (ratio) */
 	daily_live_wood_turnover_rate = (s->value[LIVE_WOOD_TURNOVER]/(int)s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	//logger(g_log, "Daily live-wood turnover rate = %g (ratio)\n", daily_live_wood_turnover_rate);
 
 	/*following BIOME_BGC turnover occurs only during growing season */
-	if (s->counter[VEG_UNVEG] == 1)
+	if ( s->counter[VEG_UNVEG] == 1 )
 	{
 		/* daily stem turnover live to dead wood*/
 		logger(g_log, "\n****Stem turnover****\n");
@@ -44,7 +43,7 @@ void turnover(species_t *const s)
 		logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
 		/* daily fruit turnover */
-		if(s->value[PHENOLOGY] == 1.2 && s->value[FRUIT_C] != 0.0)
+		if( s->value[PHENOLOGY] == 1.2 && s->value[FRUIT_C] != 0.0 )
 		{
 			s->value[C_FRUIT_TO_LITTER] -= (s->value[FRUIT_C] * (1 / s->value[CONES_LIFE_SPAN]));
 			logger(g_log, "C_FRUIT_TO_LITTER = %g tC/cell\n", s->value[C_FRUIT_TO_LITTER]);

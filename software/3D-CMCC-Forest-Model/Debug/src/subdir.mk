@@ -43,6 +43,7 @@ C_SRCS += \
 ../src/mortality.c \
 ../src/mpfit.c \
 ../src/nc.c \
+../src/new_forest_tree_class.c \
 ../src/output.c \
 ../src/peak_lai.c \
 ../src/phenology.c \
@@ -107,6 +108,7 @@ OBJS += \
 ./src/mortality.o \
 ./src/mpfit.o \
 ./src/nc.o \
+./src/new_forest_tree_class.o \
 ./src/output.o \
 ./src/peak_lai.o \
 ./src/phenology.o \
@@ -171,6 +173,7 @@ C_DEPS += \
 ./src/mortality.d \
 ./src/mpfit.d \
 ./src/nc.d \
+./src/new_forest_tree_class.d \
 ./src/output.d \
 ./src/peak_lai.d \
 ./src/phenology.d \

@@ -10,12 +10,54 @@
 #include "settings.h"
 #include "common.h"
 #include "logger.h"
+#include "new_forest_tree_class.h"
 
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
+void forest_management (cell_t *const c, const int layer, const int height, const int age, const int species, const int year)
+{
+	static int rotation_counter;
 
-void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int height, const int age, const int species)
+	species_t *s;
+
+	s = &c->heights[height].ages[age].species[species];
+
+	/* this function handles all other management functions */
+
+	if ( !string_compare_i (g_settings->management, "on") && !year )
+	{
+		rotation_counter = (int)s->value[ROTATION];
+
+		/* if model is set to ask which management */
+		//choose_management ( s , year);
+	}
+	else if ( ! string_compare_i (g_settings->management, "on") && year > 0 )
+	{
+		if ( year == (int)s->value[ROTATION] )
+		{
+			logger(g_log,"**FOREST MANAGEMENT**\n");
+
+			clearcut_timber_without_request ( c, layer, height, age, species, year );
+
+			/* add multiples */
+			s->value[ROTATION] += rotation_counter;
+
+			if(g_settings->replanted_tree != 0.0)
+			{
+				//ALESSIOC ALESSIOR remove toggles when bug will be fixed!!
+//				if ( ! add_new_tree_class( c, height, age, species ) )
+//				{
+//					logger(g_log, "unable to add new height class! (exit)\n");
+//					exit(1);
+//				}
+			}
+		}
+	}
+}
+
+
+void clearcut_timber_upon_request(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	int removed_tree;
 	int layer_to_remove_tree;
@@ -58,74 +100,74 @@ void Clearcut_Timber_upon_request(cell_t *const c, const int layer, const int he
 				puts("NO CHOICED VALUE CAN BE ACCEPTED");
 			}
 
-//fixme continue..........depending on which layer is chosen
+			//fixme continue..........depending on which layer is chosen
 
-//fixme continue..........
-//
-//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
-//
-//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
-//			logger(g_log, "Number of mother trees after management = %d \n", s->counter[N_TREE] );
-//
-//			//Recompute Biomass
-//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
-//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
-//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
-//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
-//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
-//					s->value[BIOMASS_FOLIAGE_tDM],
-//					s->value[BIOMASS_STEM_tDM],
-//					s->value[BIOMASS_FINE_ROOT_tDM],
-//					s->value[BIOMASS_COARSE_ROOT_tDM]);
-//
-//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
-//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
-//			// Total Biomass at the end
-//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
-//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
-//
-//
-//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
-//			//compute number of shoot produced after coppicing
-//			shoots_number = removed_tree * s->value[AV_SHOOT];
-//			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
+			//fixme continue..........
+			//
+			//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
+			//
+			//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
+			//			logger(g_log, "Number of mother trees after management = %d \n", s->counter[N_TREE] );
+			//
+			//			//Recompute Biomass
+			//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+			//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
+			//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
+			//					s->value[BIOMASS_FOLIAGE_tDM],
+			//					s->value[BIOMASS_STEM_tDM],
+			//					s->value[BIOMASS_FINE_ROOT_tDM],
+			//					s->value[BIOMASS_COARSE_ROOT_tDM]);
+			//
+			//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
+			//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
+			//			// Total Biomass at the end
+			//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
+			//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
+			//
+			//
+			//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
+			//			//compute number of shoot produced after coppicing
+			//			shoots_number = removed_tree * s->value[AV_SHOOT];
+			//			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
 
 		}
 		else
 		{
 
-//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
-//
-//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
-//			logger(g_log, "Number of mother trees after management = %d \n", s->counter[N_TREE] );
-//
-//			//Recompute Biomass
-//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
-//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
-//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
-//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
-//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
-//					s->value[BIOMASS_FOLIAGE_tDM],
-//					s->value[BIOMASS_STEM_tDM],
-//					s->value[BIOMASS_FINE_ROOT_tDM],
-//					s->value[BIOMASS_COARSE_ROOT_tDM]);
-//
-//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
-//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
-//			// Total Biomass at the end
-//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
-//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
-//
-//
-//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
-//			//compute number of shoot produced after coppicing
-//			shoots_number = removed_tree * s->value[AV_SHOOT];
-//			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
+			//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
+			//
+			//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
+			//			logger(g_log, "Number of mother trees after management = %d \n", s->counter[N_TREE] );
+			//
+			//			//Recompute Biomass
+			//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+			//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
+			//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrf = %f\nWrc = %f\n",
+			//					s->value[BIOMASS_FOLIAGE_tDM],
+			//					s->value[BIOMASS_STEM_tDM],
+			//					s->value[BIOMASS_FINE_ROOT_tDM],
+			//					s->value[BIOMASS_COARSE_ROOT_tDM]);
+			//
+			//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
+			//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
+			//			// Total Biomass at the end
+			//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
+			//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
+			//
+			//
+			//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE (se pollonifera) !!!!!!!
+			//			//compute number of shoot produced after coppicing
+			//			shoots_number = removed_tree * s->value[AV_SHOOT];
+			//			logger(g_log, "Number of shoots produced after coppicing = %d shoots/ha \n", shoots_number);
 		}
 	}
 }
 
-void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const int age, const int species)
+void clearcut_coppice(cell_t *const c, const int layer, const int height, const int age, const int species)
 {
 	int removed_tree;
 	int layer_to_remove_tree;
@@ -158,72 +200,64 @@ void Clearcut_Coppice(cell_t *const c, const int layer, const int height, const 
 	scanf ("%d", &removed_tree);
 
 	if ( removed_tree != 0 )
+	{
+		if ( c->t_layers_count > 1 )
 		{
-			if ( c->t_layers_count > 1 )
+			printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
+
+			scanf ("%d", &layer_to_remove_tree);
+			printf ("layer choiced = %d \n", layer_to_remove_tree);
+
+			if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
 			{
-				printf("Layer from which of %d layer(s) remove trees = ?\n", c->t_layers_count);
-
-				scanf ("%d", &layer_to_remove_tree);
-				printf ("layer choiced = %d \n", layer_to_remove_tree);
-
-				if ( layer_to_remove_tree == 0 || layer_to_remove_tree > c->t_layers_count )
-				{
-					puts("NO CHOICED VALUE CAN BE ACCEPTED");
-				}
-
-	//fixme continue..........depending on which layer is chosen
-
-//fixme continue..........
-//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
-//
-//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
-//			logger(g_log, "Number of trees after management = %d \n", s->counter[N_TREE] );
-//			logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
-//
-//			//Recompute Biomass
-//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
-//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
-//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
-//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
-//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrc = %f\n Wrf = %f\n",
-//					s->value[BIOMASS_FOLIAGE_tDM],
-//					s->value[BIOMASS_STEM_tDM],
-//					s->value[BIOMASS_COARSE_ROOT_tDM],
-//					s->value[BIOMASS_FINE_ROOT_tDM]);
-//
-//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
-//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
-//			// Total Biomass at the end
-//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
-//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
-//
-//
-//
-//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE DI ETA' = 1 !!!!!!!
-//			//compute number of shoot produced after coppicing
-//			shoots_number = removed_tree * s->value[AV_SHOOT];
-//			logger(g_log, "Number of shoots produced after coppicing = %f shoots/ha \n", shoots_number);
-//
-//
-//		}
-//		else
-//		{
-//			logger(g_log, "Layer uncutted \n");
-//		}
+				puts("NO CHOICED VALUE CAN BE ACCEPTED");
 			}
+
+			//fixme continue..........depending on which layer is chosen
+
+			//fixme continue..........
+			//			logger(g_log, "Number of trees removed = %d trees/ha \n", removed_tree);
+			//
+			//			s->counter[N_TREE] = s->counter[N_TREE] - removed_tree;
+			//			logger(g_log, "Number of trees after management = %d \n", s->counter[N_TREE] );
+			//			logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
+			//
+			//			//Recompute Biomass
+			//			s->value[BIOMASS_FOLIAGE_tDM] = IndWf * s->counter[N_TREE];
+			//			s->value[BIOMASS_STEM_tDM] = IndWs * s->counter[N_TREE];
+			//			s->value[BIOMASS_COARSE_ROOT_tDM] = IndWrc * s->counter[N_TREE];
+			//			s->value[BIOMASS_FINE_ROOT_tDM] = IndWrf * s->counter[N_TREE];
+			//			logger(g_log, "Biomass after management:\nWf = %f\nWs = %f\nWrc = %f\n Wrf = %f\n",
+			//					s->value[BIOMASS_FOLIAGE_tDM],
+			//					s->value[BIOMASS_STEM_tDM],
+			//					s->value[BIOMASS_COARSE_ROOT_tDM],
+			//					s->value[BIOMASS_FINE_ROOT_tDM]);
+			//
+			//			BiomRem = s->value[TOTAL_W] - (s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] /* ??? m->lpCell[index].Wr??*/);
+			//			logger(g_log, "Total Biomass harvested from ecosystem = %f\n", BiomRem);
+			//			// Total Biomass at the end
+			//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_COARSE_ROOT_tDM] + s->value[BIOMASS_FINE_ROOT_tDM] + s->value[BIOMASS_STEM_tDM];
+			//			logger(g_log, "Total 'live' Biomass = %f tDM/ha\n", s->value[TOTAL_W]);
+			//
+			//
+			//
+			//			//DA QUI DEVE NASCERE UNA NUOVA CLASSE DI ETA' = 1 !!!!!!!
+			//			//compute number of shoot produced after coppicing
+			//			shoots_number = removed_tree * s->value[AV_SHOOT];
+			//			logger(g_log, "Number of shoots produced after coppicing = %f shoots/ha \n", shoots_number);
+			//
+			//
+			//		}
+			//		else
+			//		{
+			//			logger(g_log, "Layer uncutted \n");
+			//		}
+		}
 	}
 }
 
-
-
-void choose_management(cell_t *const c, const int layer, const int height, const int age, const int species, const int years)
+void choose_management(species_t *const s, const int years)
 {
-	//tree_layer_t *l;
-	species_t *s;
-
-	//l = &c->t_layers[layer];
-	s = &c->heights[height].ages[age].species[species];
-
 	if ( !years )
 	{
 		int Manag;
@@ -295,7 +329,7 @@ void choose_management(cell_t *const c, const int layer, const int height, const
 			case 1 :
 				logger(g_log, "Case CLEARCUT choiced \n");
 
-				//Clearcut_Coppice (s,  years, c->heights[height].z, c->annual_layer_number);
+				//Clearcut_Coppice (s, years, c->heights[height].z, c->annual_layer_number);
 
 				break;
 
@@ -320,16 +354,12 @@ void choose_management(cell_t *const c, const int layer, const int height, const
 
 				break;
 			}
-
 		}
-
 	}
-
-
 }
 
 
-
+//fixme usefull??
 void Management (age_t * const a, const int height, const int age, const int species, int years)
 {
 
