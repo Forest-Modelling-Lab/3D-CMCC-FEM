@@ -475,9 +475,6 @@ void initialization_soil(cell_t *const c)
 	float acoeff;
 	float bcoeff;
 	float sat;
-
-	double soilw_fc; //maximum volume soil water content in m3/m3
-
 	float volumetric_wilting_point;
 	float volumetric_field_capacity;
 	float volumetric_saturated_hydraulic_conductivity;
@@ -520,7 +517,7 @@ void initialization_soil(cell_t *const c)
 	c->psi_sat = -(exp((1.54 - 0.0095*g_soil_settings->values[SOIL_SAND_PERC] + 0.0063*g_soil_settings->values[SOIL_SILT_PERC])*log(10.0))*9.8e-5); /* ok for schwalm*/
 	logger(g_log, "psi_sat = %g MPa \n", c->psi_sat);
 	/* Clapp-Hornenberger function 1978 (DIM) Soil Field Capacity Volumetric Water Content at field capacity ( = -0.015 MPa) */
-	c->vwc_fc =  c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
+	c->vwc_fc = c->vwc_sat * pow((-0.015/c->psi_sat),(1.0/c->soil_b));
 	logger(g_log, "volumetric water content at field capacity (BIOME) = %g %%(vol) \n", c->vwc_fc);
 
 	/* define maximum soilwater content, for outflow calculation */

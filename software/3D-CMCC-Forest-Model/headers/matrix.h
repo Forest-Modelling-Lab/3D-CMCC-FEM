@@ -529,7 +529,7 @@ enum {
 	BRANCH_AUT_RESP,
 	TOTAL_AUT_RESP,
 
-	/* nitrogen pools */
+	/* nitrogen pools (tN/area) */
 	LEAF_N,
 	LEAF_FALL_N,
 	FINE_ROOT_N,

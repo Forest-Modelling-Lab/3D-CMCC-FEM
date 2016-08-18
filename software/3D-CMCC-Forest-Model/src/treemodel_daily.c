@@ -213,9 +213,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* daily modifier */
 							modifiers( c, layer, height, age, species, meteo_daily);
 
-							/* nitrogen */
-							nitrogen_stock( s );
-
 							/* canopy water fluxes */
 							canopy_evapotranspiration( c, layer, height, age, species, meteo_daily );
 
@@ -235,6 +232,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 							/* C assimilation */
 							carbon_assimilation( c, layer, height, age, species );
+
+							/* nitrogen */
+							nitrogen_stock( s );
 
 							/* C-N-partitioning-allocation */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
