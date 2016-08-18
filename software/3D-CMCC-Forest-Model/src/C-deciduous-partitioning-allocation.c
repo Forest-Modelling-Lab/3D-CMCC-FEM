@@ -7,7 +7,7 @@
 #include "constants.h"
 #include "settings.h"
 #include "logger.h"
-#include "leaffall.h"
+#include "leaf_fall.h"
 #include "biomass.h"
 #include "dendometry.h"
 #include "turnover.h"
@@ -223,19 +223,25 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
 		{
-			logger(g_log, "allocating into fruit pool\n");
-
-			//fixme do it also for 0.1
 			/* reproduction only for needle leaf */
-			if (s->value[PHENOLOGY] ? 0.1 : 0.2)
+			/*
+			if ( ( s->value[PHENOLOGY] ? 0.1 : 0.2 ) && ( a->value > s->value[SEXAGE] ) )
 			{
+				logger(g_log, "allocating into fruit pool\n");
+
 				s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
 				npp_to_alloc -= s->value[C_TO_FRUIT];
 			}
+			*/
+		}
+		else
+		{
+			s->value[C_TO_FRUIT] = 0.0;
 		}
 
-		Leaf_fall(c, height, age, species);
-		/* note: these are computed in Leaf_fall function */
+		/* leaf fall */
+		leaf_fall_deciduous(c, height, age, species);
+		/* note: these are computed in leaf_fall_deciduous function */
 		//		s->value[C_TO_LEAF] = ;
 		//		s->value[C_TO_FINEROOT] = ;
 		//		s->value[C_TO_LITTER] = ;
@@ -243,7 +249,6 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
-		s->value[C_TO_FRUIT] = 0.0;
 		s->value[C_TO_RESERVE] = npp_to_alloc + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
 
 		/* check */

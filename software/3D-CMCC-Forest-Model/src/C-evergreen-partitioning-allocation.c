@@ -14,6 +14,7 @@
 #include "settings.h"
 #include "logger.h"
 #include "lai.h"
+#include "leaf_fall.h"
 #include "turnover.h"
 #include "dendometry.h"
 #include "biomass.h"
@@ -200,8 +201,8 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 			{
 				logger(g_log, "Allocating only into Coarse root, Reserve, Stem and Branch pools (positive NPP)\n");
 
-				/* reproduction only for needle leaf */
-				if(s->value[PHENOLOGY] == 1.2)
+				/* reproduction ONLY for needle leaf */
+				if( ( s->value[PHENOLOGY] == 1.2 ) && ( a->value > s->value[SEXAGE] ) )
 				{
 					/* NPP for reproduction */
 					s->value[C_TO_FRUIT] = npp_to_alloc * s->value[FRUIT_PERC];
@@ -284,7 +285,7 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 		dendrometry ( c, height, age, species );
 	}
 
-	logger(g_log, "\n-Daily increment to be accounted in carbon pools (after turnover)-\n");
+	logger(g_log, "\n-Daily increment in carbon pools-\n");
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
 	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
@@ -299,13 +300,16 @@ void daily_C_evergreen_partitioning_allocation(cell_t *const c, const int layer,
 	logger(g_log, "C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD]);
 	logger(g_log, "C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD = %g tC/cell/day\n", s->value[C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD]);
 
-	/* update leaf biomass through turnover */
+	/* leaf fall */
+	leaf_fall_evergreen(c, height, age, species);
+
+	/* turnover */
 	turnover ( s );
 
 	/* update Leaf Area Index */
 	daily_lai ( s );
 
-	logger(g_log, "\n-Daily increment in carbon pools (after turnover)-\n");
+	logger(g_log, "\n-Daily increment in carbon pools (after leaf fall and turnover)-\n");
 	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
 	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
 	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);

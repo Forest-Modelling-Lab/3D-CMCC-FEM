@@ -41,6 +41,7 @@
 #include "evapotranspiration.h"
 #include "heat_fluxes.h"
 #include "soil_water_balance.h"
+#include "leaf_fall.h"
 #include "settings.h"
 
 extern settings_t* g_settings;
@@ -267,20 +268,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* SHARED FUNCTIONS FOR DECIDUOUS AND EVERGREEN */
 							/* END OF YEAR */
 
-							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+							/* last day of the year */
+							if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
 							{
 								logger(g_log, "*****END OF YEAR %d ******\n", c->years[year].year);
 
 								/*FRUIT ALLOCATION*/
 								/*
-								if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] && (m->cells[cell].heights[height].z == 2 || m->cells[cell].heights[height].z == 1))
-								{
-								Fruit_Allocation_LPJ ( &m->cells[cell].heights[height].ages[age].species[species], m->cells[cell].heights[height].z, years, Yearly_Rain, m->cells[cell].canopy_cover_dominant);
-								Seeds_Number_LE = Fruit_Allocation_Logistic_Equation ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-								logger(g_log, "Seeds Number from Logistic Equation = %d\n", Seeds_Number_LE);
-
-								//Seeds_Number_T = Fruit_Allocation_TREEMIG ( &m->cells[cell].heights[height].ages[age].species[species], &m->cells[cell].heights[height].ages[age]);
-								//logger(g_log, "Seeds Number from TREEMIG = %d\n", Seeds_Number_T);
+								if (m->cells[cell].heights[height].ages[age].value >= s->value[SEXAGE] )
 
 								//FRUIT ESTABLISHMENT
 								if (Yearly_Rain > s->value[MINRAIN])
@@ -432,18 +427,18 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 	//ALESSIOR: is that correct?
 	/* reset monthly variables */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] + 1 ) : (MonthLength[month] )) == c->doy )
+	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
 	{
 		reset_monthly_class_variables ( c );
 		reset_monthly_layer_variables ( c );
 		reset_monthly_cell_variables  ( c );
 
 		/* reset annual variables */
-		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? 366 : 365) == c->doy )
+		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
 		{
 			reset_annual_class_variables ( c );
 			reset_annual_layer_variables ( c );
-			reset_annual_cell_variables  ( c );
+			reset_annual_cell_variables  ( c );getchar();
 		}
 	}
 

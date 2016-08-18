@@ -33,7 +33,7 @@ C_SRCS += \
 ../src/heat_fluxes.c \
 ../src/initialization.c \
 ../src/lai.c \
-../src/leafFall.c \
+../src/leaf_fall.c \
 ../src/logger.c \
 ../src/main.c \
 ../src/management.c \
@@ -97,7 +97,7 @@ OBJS += \
 ./src/heat_fluxes.o \
 ./src/initialization.o \
 ./src/lai.o \
-./src/leafFall.o \
+./src/leaf_fall.o \
 ./src/logger.o \
 ./src/main.o \
 ./src/management.o \
@@ -161,7 +161,7 @@ C_DEPS += \
 ./src/heat_fluxes.d \
 ./src/initialization.d \
 ./src/lai.d \
-./src/leafFall.d \
+./src/leaf_fall.d \
 ./src/logger.d \
 ./src/main.d \
 ./src/management.d \

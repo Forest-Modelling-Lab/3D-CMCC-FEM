@@ -24,7 +24,7 @@ void nitrogen_stock(species_t *const s)
 
 	/* BIOME-BGC METHOD */
 
-	/* computing Nitrogen content from tons C/ha to gC/m^2 and then to gN */
+	/* computing Nitrogen pools from tons C/ha to gC/m^2 and then to gN */
 
 	//test
 	/* as in BIOME-BGC nitrogen content in falling leaves is lower */
@@ -45,7 +45,7 @@ void nitrogen_stock(species_t *const s)
 			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
 		}
 	}
-	/* evergreen */ //todo todo todo
+	/* evergreen */ //ALESSIOC todo todo todo
 	else
 	{
 
