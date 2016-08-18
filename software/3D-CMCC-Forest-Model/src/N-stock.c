@@ -35,14 +35,14 @@ void nitrogen_stock(species_t *const s)
 		/* outside leaf fall*/
 		if(!s->counter[LEAF_FALL_COUNTER])
 		{
-			s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
-			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
+			s->value[LEAF_N] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
+			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
 		}
 		/* during leaf fall */
 		else
 		{
-			s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
-			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
+			s->value[LEAF_N] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FALLING_LEAVES];
+			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
 		}
 	}
 	/* evergreen */ //todo todo todo
@@ -50,16 +50,16 @@ void nitrogen_stock(species_t *const s)
 	{
 
 	}
-	s->value[LEAF_NITROGEN] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LEAVES];
-	logger(g_log, "Leaf nitrogen content = %f gN/m2\n", s->value[LEAF_NITROGEN]);
-	s->value[FINE_ROOT_NITROGEN] = (s->value[FINE_ROOT_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FINE_ROOTS];
-	logger(g_log, "Fine root nitrogen content = %f gN/m2\n", s->value[FINE_ROOT_NITROGEN]);
-	s->value[STEM_NITROGEN] = (s->value[STEM_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
-	logger(g_log, "Live stem nitrogen content = %f gN/m2\n", s->value[STEM_NITROGEN]);
-	s->value[COARSE_ROOT_NITROGEN] = (s->value[COARSE_ROOT_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
-	logger(g_log, "Live coarse root nitrogen content = %f gN/m2\n", s->value[COARSE_ROOT_NITROGEN]);
-	s->value[BRANCH_NITROGEN] = (s->value[BRANCH_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
-	logger(g_log, "Live branch nitrogen content = %f gN/m2\n", s->value[BRANCH_NITROGEN]);
+	s->value[LEAF_N] = (s->value[LEAF_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LEAVES];
+	logger(g_log, "Leaf nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
+	s->value[FINE_ROOT_N] = (s->value[FINE_ROOT_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_FINE_ROOTS];
+	logger(g_log, "Fine root nitrogen content = %f gN/m2\n", s->value[FINE_ROOT_N]);
+	s->value[STEM_N] = (s->value[STEM_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	logger(g_log, "Live stem nitrogen content = %f gN/m2\n", s->value[STEM_N]);
+	s->value[COARSE_ROOT_N] = (s->value[COARSE_ROOT_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	logger(g_log, "Live coarse root nitrogen content = %f gN/m2\n", s->value[COARSE_ROOT_N]);
+	s->value[BRANCH_N] = (s->value[BRANCH_LIVE_WOOD_C] * 1000000.0 /g_settings->sizeCell) / s->value[CN_LIVE_WOODS];
+	logger(g_log, "Live branch nitrogen content = %f gN/m2\n", s->value[BRANCH_N]);
 
 
 }

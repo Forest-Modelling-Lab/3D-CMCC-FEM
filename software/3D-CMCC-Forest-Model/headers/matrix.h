@@ -326,7 +326,7 @@ enum {
 	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,
 
 
-	//carbon biomass pools in tons of C/area
+	/* carbon pools in tons of C/area */
 	LEAF_C,
 	OLD_LEAF_C,
 	MAX_LEAF_C,
@@ -529,12 +529,13 @@ enum {
 	BRANCH_AUT_RESP,
 	TOTAL_AUT_RESP,
 
-	//NITROGEN
-	LEAF_NITROGEN,
-	FINE_ROOT_NITROGEN,
-	COARSE_ROOT_NITROGEN,
-	STEM_NITROGEN,
-	BRANCH_NITROGEN,
+	/* nitrogen pools */
+	LEAF_N,
+	LEAF_FALL_N,
+	FINE_ROOT_N,
+	COARSE_ROOT_N,
+	STEM_N,
+	BRANCH_N,
 
 	//3PG MORTALITY FUNCTION
 	WS_MAX,                       //Maximum stem mass per tree at 1000 trees/ha
