@@ -1484,7 +1484,12 @@ void forest_summary(const matrix_t* const m, const int cell)
 			{
 				/* IF NO BIOMASS INITIALIZATION DATA OR TREE HEIGHTS ARE AVAILABLE FOR STAND
 				 * BUT JUST DENDROMETRIC VARIABLES (i.e. AVDBH, HEIGHT, THESE ARE MANDATORY) */
-				initialization_forest_biomass (&m->cells[cell], height, age, species);
+
+				/* initialise carbon pools */
+				initialization_forest_C_biomass (&m->cells[cell], height, age, species);
+
+				/* initialise nitrogen pools */
+				initialization_forest_N_biomass (&m->cells[cell], height, age, species);
 
 				/* print class dataset */
 				logger(g_log,
@@ -1495,9 +1500,11 @@ void forest_summary(const matrix_t* const m, const int cell)
 						"----- n = %d trees\n"
 						"----- n stumps = %d stumps\n"
 						"----- avdbh = %g cm\n"
+						"----- lai = %g m2/m2\n"
+						"**carbon pools**\n"
 						"----- leaf = %g tC/ha\n"
-						"----- coarse root = %g tC/area\n"
 						"----- fine root = %g tC/area\n"
+						"----- coarse root = %g tC/area\n"
 						"----- total root = %g tC/area\n"
 						"----- stem = %g tC/area\n"
 						"----- branch and bark = %g tC/area\n"
@@ -1510,16 +1517,23 @@ void forest_summary(const matrix_t* const m, const int cell)
 						"----- branch dead = %g tC/area\n"
 						"----- total live = %g tC/area\n"
 						"----- total dead = %g tC/area\n"
-						"----- lai = %g m2/m2\n",
+						"**nitrogen pools**\n"
+						"----- leaf = %g tN/area\n"
+						"----- fine root = %g tN/area\n"
+						"----- coarse root = %g tN/area\n"
+						"----- stem = %g tN/area\n"
+						"----- branch and bark = %g tN/area\n"
+						"--------------------------------\n",
 						m->cells[cell].heights[height].value,
 						m->cells[cell].heights[height].ages[age].value,
 						m->cells[cell].heights[height].ages[age].species[species].name,
 						m->cells[cell].heights[height].ages[age].species[species].counter[N_TREE],
 						m->cells[cell].heights[height].ages[age].species[species].counter[N_STUMP],
 						m->cells[cell].heights[height].ages[age].species[species].value[AVDBH],
+						m->cells[cell].heights[height].ages[age].species[species].value[LAI],
 						m->cells[cell].heights[height].ages[age].species[species].value[LEAF_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[FINE_ROOT_C],
+						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[TOT_ROOT_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[STEM_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_C],
@@ -1532,7 +1546,11 @@ void forest_summary(const matrix_t* const m, const int cell)
 						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_DEAD_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[LIVE_WOOD_C],
 						m->cells[cell].heights[height].ages[age].species[species].value[DEAD_WOOD_C],
-						m->cells[cell].heights[height].ages[age].species[species].value[LAI]);
+						m->cells[cell].heights[height].ages[age].species[species].value[LEAF_N],
+						m->cells[cell].heights[height].ages[age].species[species].value[FINE_ROOT_N],
+						m->cells[cell].heights[height].ages[age].species[species].value[COARSE_ROOT_N],
+						m->cells[cell].heights[height].ages[age].species[species].value[STEM_N],
+						m->cells[cell].heights[height].ages[age].species[species].value[BRANCH_N]);
 			}
 		}
 	}

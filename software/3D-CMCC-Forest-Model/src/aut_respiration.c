@@ -29,6 +29,13 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	double exponent_tsoil;
 	double Q10_temp = 20.0;    /* t_base temperature for respiration, 15°C for Damesin et al., 2001 */
 
+	/* nitrogen pools in gN/m2 */
+	double leaf_N;
+	double fine_root_N;
+	double coarse_root_N;
+	double stem_N;
+	double branch_N;
+
 	species_t *s;
 	s  = &c->heights[height].ages[age].species[species];
 
@@ -53,6 +60,26 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	//
 	//	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
 
+	/* Nitrogen content tN/area --> gN/m2 */
+	leaf_N = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
+	fine_root_N = (s->value[FINE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
+	coarse_root_N = (s->value[COARSE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
+	stem_N = (s->value[STEM_N] * 1000000.0 /g_settings->sizeCell);
+	branch_N = (s->value[BRANCH_N] * 1000000.0 /g_settings->sizeCell);
+
+	/* compute exponents */
+	/* exponent for day time temperature */
+	exponent_tday = (meteo_daily->tday - Q10_temp) / 10.0;
+
+	/* exponent for night time temperature */
+	exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
+
+	/* exponent for daily average temperature */
+	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
+
+	/* exponent for soil temperature */
+	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
+
 	/* maintenance respiration routine */
 
 	/* Uses reference values at 20 deg C and an empirical relationship between
@@ -69,20 +96,17 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	mrpern = 0.218 (kgC/kgN/d)
 	*/
 
-	/* values are computed in gC/m2/day */
+	/* note: values are computed in gC/m2/day */
 
+	/*******************************************************************************************************************/
 	/* Leaf maintenance respiration is calculated separately for day and night */
-	t1 = s->value[LEAF_N] * mrpern;
+	t1 = leaf_N * mrpern;
 
 	/* day time leaf maintenance respiration */
-	exponent_tday = (meteo_daily->tday - Q10_temp) / 10.0;
-
 	s->value[DAILY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tday) * (meteo_daily->daylength/24.0));
 	logger(g_log, "daily leaf maintenance respiration = %g gC/m2/day\n", s->value[DAILY_LEAF_MAINT_RESP]);
 
 	/* night time leaf maintenance respiration */
-	exponent_tnight = (meteo_daily->tnight - Q10_temp) / 10.0;
-
 	s->value[NIGHTLY_LEAF_MAINT_RESP] = (t1 * pow(q10, exponent_tnight) * (1.0 - (meteo_daily->daylength/24.0)));
 	logger(g_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
@@ -90,31 +114,36 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 	logger(g_log, "daily total leaf maintenance respiration = %g gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
+	/*******************************************************************************************************************/
 	/* fine roots maintenance respiration */
-	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
-	t1 = s->value[FINE_ROOT_N] * mrpern;
+	t1 = fine_root_N * mrpern;
+
 	s->value[FINE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
 	logger(g_log, "daily fine root maintenance respiration = %g gC/m2/day\n", s->value[FINE_ROOT_MAINT_RESP]);
 
-	/* all day */
-	exponent_tavg = (meteo_daily->tavg - Q10_temp) / 10.0;
-
+	/*******************************************************************************************************************/
 	/* live stem maintenance respiration */
-	t1 = s->value[STEM_N] * mrpern;
+	t1 = stem_N * mrpern;
+
 	s->value[STEM_MAINT_RESP] = t1 * pow(q10, exponent_tavg);
 	logger(g_log, "daily stem maintenance respiration = %g gC/m2/day\n", s->value[STEM_MAINT_RESP]);
 
+	/*******************************************************************************************************************/
 	/* live branch maintenance respiration */
-	t1 = s->value[BRANCH_N] * mrpern;
+	t1 = branch_N * mrpern;
+
 	s->value[BRANCH_MAINT_RESP] = t1 * pow(q10, exponent_tavg);
 	logger(g_log, "daily branch maintenance respiration = %g gC/m2/day\n", s->value[BRANCH_MAINT_RESP]);
 
+	/*******************************************************************************************************************/
 	/* live coarse root maintenance respiration */
-	exponent_tsoil = (meteo_daily->tsoil - Q10_temp) / 10.0;
-	t1 = s->value[COARSE_ROOT_N] * mrpern;
+	t1 = coarse_root_N * mrpern;
+
+	/* live coarse root maintenance respiration */
 	s->value[COARSE_ROOT_MAINT_RESP] = t1 * pow(q10, exponent_tsoil);
 	logger(g_log, "daily coarse root maintenance respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_MAINT_RESP]);
 
+	/*******************************************************************************************************************/
 	/* COMPUTE TOTAL MAINTENANCE RESPIRATION */
 	s->value[TOTAL_MAINT_RESP]= s->value[TOT_DAY_LEAF_MAINT_RESP]+
 			s->value[FINE_ROOT_MAINT_RESP]+
@@ -123,6 +152,8 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 			s->value[BRANCH_MAINT_RESP];
 	logger(g_log, "daily total maintenance respiration = %g gC/m2/day\n", s->value[TOTAL_MAINT_RESP]);
 
+
+	/*******************************************************************************************************************/
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	//test 6 July 2016 removing
 	//s->value[TOTAL_MAINT_RESP] *= leaf_cell_cover_eff;

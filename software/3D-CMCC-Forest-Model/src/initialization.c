@@ -20,7 +20,7 @@ void initialization_forest_structure(cell_t *const c, const int height, const in
 	daily_forest_structure ( c );
 }
 
-void initialization_forest_biomass(cell_t *const c, const int height, const int age, const int species)
+void initialization_forest_C_biomass(cell_t *const c, const int height, const int age, const int species)
 {
 	height_t *h;
 	age_t *a;
@@ -30,7 +30,7 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 	a = &c->heights[height].ages[age];
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log,"\n*******INITIALIZE FOREST BIOMASS*******\n");
+	logger(g_log,"\n*******INITIALIZE FOREST CARBON BIOMASS*******\n");
 	logger(g_log, "\n\n...checking initial biomass data for height %g, age %d, species %s...\n",
 			h->value, a->value, s->name);
 
@@ -438,6 +438,35 @@ void initialization_forest_biomass(cell_t *const c, const int height, const int 
 		CHECK_CONDITION(s->value[LAI], == 0);
 		CHECK_CONDITION(s->value[LAI_SUN], == 0);
 		CHECK_CONDITION(s->value[LAI_SHADE], == 0);
+	}
+}
+void initialization_forest_N_biomass(cell_t *const c, const int height, const int age, const int species)
+{
+	species_t *s;
+	s = &c->heights[height].ages[age].species[species];
+
+	logger(g_log,"\n*******INITIALIZE FOREST NITROGEN BIOMASS*******\n");
+
+	s->value[LEAF_N] = s->value[LEAF_C] / s->value[CN_LEAVES];
+	logger(g_log, "----Leaf nitrogen content = %g tN/area\n", s->value[LEAF_N]);
+	s->value[FINE_ROOT_N] = s->value[FINE_ROOT_C] / s->value[CN_FINE_ROOTS];
+	logger(g_log, "----Fine root nitrogen content = %g tN/area\n", s->value[FINE_ROOT_N]);
+	s->value[STEM_N] = s->value[STEM_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_log, "----Live stem nitrogen content = %g tN/area\n", s->value[STEM_N]);
+	s->value[COARSE_ROOT_N] = s->value[COARSE_ROOT_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_log, "----Live coarse root nitrogen content = %g tN/area\n", s->value[COARSE_ROOT_N]);
+	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
+	logger(g_log, "----Live branch nitrogen content = %g tN/area\n", s->value[BRANCH_N]);
+
+	/* check that all mandatory variables are initialised */
+	CHECK_CONDITION(s->value[STEM_N], == 0);
+	CHECK_CONDITION(s->value[COARSE_ROOT_N], == 0);
+	CHECK_CONDITION(s->value[BRANCH_N], == 0);
+	/* just for evergreen */
+	if ( s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2 )
+	{
+		CHECK_CONDITION(s->value[LEAF_N], == 0);
+		CHECK_CONDITION(s->value[FINE_ROOT_N], == 0);
 	}
 }
 
