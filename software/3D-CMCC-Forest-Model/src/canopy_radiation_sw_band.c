@@ -52,6 +52,7 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
+	logger(g_log, "single height class canopy cover = %g %%\n", leaf_cell_cover_eff*100.0);
 
 	/*****************************************************************************************************************/
 	/* light reflection, absorption and transmission */
@@ -77,11 +78,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[APAR] = s->value[APAR_SUN] + s->value[APAR_SHADE];
 	s->value[TRANSM_PAR] = s->value[TRANSM_PAR_SHADE];
 
-	/* check */
-	CHECK_CONDITION(s->value[APAR], < 0.);
-	CHECK_CONDITION(s->value[TRANSM_PAR], < 0.);
-	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>1e-4);
-
 	logger(g_log, "-Par incoming = %g molPAR/m^2/day\n", c->par);
 	logger(g_log, "-Par reflected = %g molPAR/m^2/day\n", s->value[PAR_REFL]);
 	logger(g_log, "-Par less reflected part = %g molPAR/m^2/day\n", s->value[PAR]);
@@ -91,6 +87,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "-Transmitted Par shade = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR_SHADE]);
 	logger(g_log, "-Apar total = %g molPAR/m^2 covered/day\n", s->value[APAR]);
 	logger(g_log, "-Transmitted Par total = %g molPAR/m^2 covered/day\n", s->value[TRANSM_PAR]);
+
+	/* check */
+	CHECK_CONDITION(s->value[APAR], < 0.);
+	CHECK_CONDITION(s->value[TRANSM_PAR], < 0.);
+	CHECK_CONDITION(fabs((s->value[APAR] + s->value[TRANSM_PAR])-s->value[PAR]),>1e-4);
 
 	/***********************************************************************************************/
 	/* Short Wave computation (W/m2 covered) */
@@ -112,11 +113,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[SW_RAD_ABS] = s->value[SW_RAD_ABS_SUN] + s->value[SW_RAD_ABS_SHADE];
 	s->value[SW_RAD_TRANSM] = s->value[SW_RAD_TRANSM_SHADE];
 
-	/* check */
-	CHECK_CONDITION(s->value[SW_RAD_ABS], < 0.);
-	CHECK_CONDITION(s->value[SW_RAD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>1e-4);
-
 	logger(g_log, "-Short Wave incoming = %gW/m2\n", c->sw_rad_down_W);
 	logger(g_log, "-Short Wave reflected = %gW/m2\n", s->value[SW_RAD_REFL]);
 	logger(g_log, "-Short Wave radiation less reflected part = %g W/m2\n", s->value[SW_RAD]);
@@ -126,6 +122,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "-Transmitted Short Wave radiation shade = %g W/m^2 covered\n", s->value[SW_RAD_TRANSM_SHADE]);
 	logger(g_log, "-Absorbed total = %g W/m^2 covered\n", s->value[SW_RAD_ABS]);
 	logger(g_log, "-Transmitted total = %g W/m^2 covered\n", s->value[SW_RAD_TRANSM]);
+
+	/* check */
+	CHECK_CONDITION(s->value[SW_RAD_ABS], < 0.);
+	CHECK_CONDITION(s->value[SW_RAD_TRANSM], < 0.);
+	CHECK_CONDITION(fabs((s->value[SW_RAD_ABS] + s->value[SW_RAD_TRANSM])-s->value[SW_RAD]),>1e-4);
 
 	/***********************************************************************************************/
 	/* PPFD computation (umol/m2 covered/sec) */
@@ -147,11 +148,6 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	s->value[PPFD_ABS] = s->value[PPFD_ABS_SUN] + s->value[PPFD_ABS_SHADE];
 	s->value[PPFD_TRANSM] = s->value[PPFD_TRANSM_SHADE];
 
-	/* check */
-	CHECK_CONDITION(s->value[PPFD_ABS], < 0.);
-	CHECK_CONDITION(s->value[PPFD_TRANSM], < 0.);
-	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>1e-4);
-
 	logger(g_log, "-PPFD incoming = %g umol/m2/sec\n", c->ppfd);
 	logger(g_log, "-PPFD reflected = %g umol/m2/sec\n", s->value[PPFD_REFL]);
 	logger(g_log, "-PPFD less reflected part = %g umol/m2/sec\n", s->value[PPFD]);
@@ -162,6 +158,11 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	logger(g_log, "-Absorbed ppfd total = %g umol/m2 covered/sec\n", s->value[PPFD_ABS]);
 	logger(g_log, "-Transmitted ppfd total  = %g umol/m2 covered/sec\n", s->value[PPFD_TRANSM]);
 	logger(g_log, "***********************************\n");
+
+	/* check */
+	CHECK_CONDITION(s->value[PPFD_ABS], < 0.);
+	CHECK_CONDITION(s->value[PPFD_TRANSM], < 0.);
+	CHECK_CONDITION(fabs((s->value[PPFD_ABS] + s->value[PPFD_TRANSM])-s->value[PPFD]),>1e-4);
 
 	/***********************************************************************************************/
 

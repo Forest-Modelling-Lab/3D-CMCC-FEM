@@ -41,25 +41,6 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 
 	logger(g_log, "\n**MAINTENANCE_RESPIRATION**\n");
 
-	//	//fixme in this case when LAI = 0 there's no respiration
-	//		/* compute effective canopy cover */
-	//		if(s->value[LAI] < 1.0)
-	//		{
-	//			/* special case when LAI = < 1.0 */
-	//			leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	//		}
-	//		else
-	//		{
-	//			leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	//		}
-	//		/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	//		if(leaf_cell_cover_eff > 1.0)
-	//		{
-	//			leaf_cell_cover_eff = 1.0;
-	//		}
-	//
-	//	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-
 	/* Nitrogen content tN/area --> gN/m2 */
 	leaf_N = (s->value[LEAF_N] * 1000000.0 /g_settings->sizeCell);
 	fine_root_N = (s->value[FINE_ROOT_N] * 1000000.0 /g_settings->sizeCell);
@@ -244,7 +225,7 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
 }
 
-void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species)
+void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
 {
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -253,6 +234,12 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 	if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 	{
+		/* maintenance respiration */
+		maintenance_respiration( c, layer, height, age, species, meteo_daily );
+
+		/* growth respiration */
+		growth_respiration( c, layer, height, age, species );
+
 		/* COMPUTE TOTAL A RESPIRATION */
 		s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 
@@ -268,6 +255,7 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 		/* COMPUTE TOTAL A RESPIRATION (using fixed ratio)*/
 		s->value[TOTAL_AUT_RESP] = s->value[DAILY_GPP_gC] * g_settings->Fixed_Aut_Resp_rate;
 	}
+
 	logger(g_log, "daily total autotrophic respiration = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
 	logger(g_log, "daily total autotrophic respiration = %g tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
 

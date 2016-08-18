@@ -203,8 +203,11 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* radiation */
+							/* short wave band */
 							canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
+							/* long wave band */
 							canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
+							/* net radiation */
 							canopy_net_radiation( c, layer, height, age, species );
 
 							/* canopy temperature */
@@ -219,13 +222,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* canopy carbon fluxes */
 							phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
 
-							/* respiration */
-							if (!string_compare_i ( g_settings->Prog_Aut_Resp, "on" ) )
-							{
-								maintenance_respiration( c, layer, height, age, species, meteo_daily );
-								growth_respiration( c, layer, height, age, species );
-							}
-							autotrophic_respiration ( c, layer, height, age, species );
+							/* autotrophic respiration */
+							autotrophic_respiration ( c, layer, height, age, species, meteo_daily );
 
 							/* carbon fluxes */
 							carbon_fluxes ( s );

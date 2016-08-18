@@ -19,8 +19,6 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	double GPPmolC_sun;
 	double GPPmolC_shaded;
 	double GPPmolC_tot;
-	double leaf_cell_cover_eff;          /* fraction of square meter covered by leaf over the gridcell */
-
 
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
@@ -28,9 +26,6 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 	logger(g_log, "\n**PHOTOSYNTHESIS**\n");
 
 	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
-
-	leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	if(leaf_cell_cover_eff > 1.0) leaf_cell_cover_eff = 1.0;
 
 	//fixme photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
 

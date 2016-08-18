@@ -18,38 +18,37 @@ void live_total_wood_age(const age_t *const a, const int species)
 	// fixme values should be included in species.txt
 	double max_live_total_ratio;
 	double min_live_total_ratio;
-
-	double min_age = 1; //30;
-
 	double t1;
 	double t2;
+
+	int min_age;;
+	int max_age;
 
 	species_t *s;
 	s = &a->species[species];
 
-	logger(g_log, "*live:total wood age*\n");
+	logger(g_log, "\n*live:total wood ratio based on tree age*\n");
+	logger(g_log, "current age = %d\n", a->value);
 
-	// fixme values should be included in species.txt
+	max_age = s->value[MAXAGE];
+	logger(g_log, "max age = %d\n", max_age);
+
+	//fixme values should be included in species.txt
+	min_age = 25;
+	logger(g_log, "min age = %d\n", min_age);
+
 	max_live_total_ratio = s->value[LIVE_TOTAL_WOOD]; /* for min_age = 1 */
-	min_live_total_ratio = 0.04; /* for max_age = 160 */
+	logger(g_log, "max_live_total_ratio = %g\n", max_live_total_ratio);
 
-	//fixme it should be included in the species.txt files */
-//	/* for deciduous */
-//	if (s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2)
-//	{
-//		max_live_total_ratio = 0.15;
-//	}
-//	/* for evergreen */
-//	else
-//	{
-//		max_live_total_ratio = 0.10;
-//	}
+	//fixme values should be included in species.txt
+	min_live_total_ratio = 0.03; /* for max_age = 160 */
+	logger(g_log, "min_live_total_ratio = %g\n", min_live_total_ratio);
 
 	t1 = max_live_total_ratio - min_live_total_ratio;
-	t2 = s->value[MAXAGE] - min_age;
+	t2 = max_age - min_age;
 
-	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(s->value[MAXAGE] - a->value) + min_live_total_ratio;
-	logger(g_log, "Effective live:total wood fraction based on stand age = %f\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
+	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(max_age - a->value) + min_live_total_ratio;
+	logger(g_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);getchar();
 }
 
 

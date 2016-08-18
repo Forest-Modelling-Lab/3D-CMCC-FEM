@@ -73,30 +73,33 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* compute interception for dry canopy (Lawrence et al., 2006) */
 	if( meteo_daily->prcp > 0.0 && s->value[LAI] > 0.0 && s->value[CANOPY_WATER] == 0.0 )
 	{
-		//double Int_max_snow;                           /*maximum intercepted snow (mm)*/
-
-		/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
-		//Int_max_snow = 4.4 * s->value[LAI];
-
 		/* for rain */
-		//ALESSIOC FIXME for multilayer each layer reduce rain interceptable
 		if( meteo_daily->rain != 0.0 )
 		{
+			logger(g_log, "rain = %g mm/m2/day\n", meteo_daily->rain);
+
 			s->value[CANOPY_INT] = s->value[INT_COEFF] * meteo_daily->rain * (1.0 - exp(-0.5 * s->value[LAI])) * leaf_cell_cover_eff;
 			logger(g_log, "CANOPY_INT = %g mm/m2/day\n", s->value[CANOPY_INT]);
+
 			s->value[CANOPY_WATER] = s->value[CANOPY_INT];
+
 			CHECK_CONDITION(s->value[CANOPY_INT], > meteo_daily->rain);
 		}
 		/* for snow */
 		else
 		{
-			/* see Dewire PhD thesis */
-			//s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * (Int_max_snow - s->value[CANOPY_SNOW]) *
-			//	(1 - exp(-(c->prcp_snow/Int_max_snow))) * leaf_cell_cover_eff;
-			logger(g_log, "CANOPY_INT_SNOW = %g mm/m2/day\n", s->value[CANOPY_INT_SNOW]);
+			/* following Dewire (PhD thesis) and Pomeroy et al., 1998., Hedstrom & Pomeroy, 1998 */
+			double Int_max_snow;                           /* maximum intercepted snow (mm)*/
+
+			logger(g_log, "snow = %g mm/m2/day\n", meteo_daily->snow);
+
+			Int_max_snow = 4.4 * s->value[LAI];
+			s->value[CANOPY_INT_SNOW] = s->value[CANOPY_SNOW] + 0.7 * ( Int_max_snow - s->value[CANOPY_SNOW] ) *
+				(1 - exp( - ( meteo_daily->snow /Int_max_snow ) ) ) * leaf_cell_cover_eff;
 
 			//fixme for now assuming no snow interception
 			s->value[CANOPY_INT_SNOW] = 0.0;
+			logger(g_log, "CANOPY_INT_SNOW = %g mm/m2/day\n", s->value[CANOPY_INT_SNOW]);getchar();
 		}
 	}
 
