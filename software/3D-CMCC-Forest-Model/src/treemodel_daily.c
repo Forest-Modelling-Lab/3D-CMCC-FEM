@@ -233,9 +233,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* C assimilation */
 							carbon_assimilation( c, layer, height, age, species );
 
-							/* nitrogen */
-							nitrogen_stock( s );
-
 							/* C-N-partitioning-allocation */
 							if ( s->value[PHENOLOGY] == 0.1 || s->value[PHENOLOGY] == 0.2 )
 							{
@@ -247,6 +244,9 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 								/*evergreen */
 								daily_C_evergreen_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year );
 							}
+
+							/* nitrogen */
+							nitrogen_stock( s );
 
 							/****************************************************************************************************************************************/
 							/* check for balance closure at the class level */
