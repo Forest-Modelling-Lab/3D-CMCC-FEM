@@ -231,17 +231,22 @@ static void show_usage(void) {
 static int log_start(const char* const sitename) {
 	struct tm* data;
 	time_t rawtime;
-	char buffer[64]; /* should be enough */
-	char buffer_2[16];
+	char buffer[128]; /* should be enough */
+	char buffer_2[32];
 
 	time(&rawtime);
 	data = gmtime(&rawtime);
+
+	//ALESSIOR please it seems to doesn't work
+	strcat(buffer, "_");
+	sprintf(buffer_2, "%s", PROGRAM_VERSION);
 
 	buffer[0] = '\0';
 	if ( sitename && sitename[0] ) {
 		strcat(buffer, "_");
 		strcat(buffer, sitename);
 	}
+
 	strcat(buffer, "_");
 	sprintf(buffer_2, "%c", g_settings->version);
 	strcat(buffer, buffer_2);
