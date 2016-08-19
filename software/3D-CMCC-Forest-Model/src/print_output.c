@@ -480,7 +480,23 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year)
 {
 
-
+	//FIXME this is just an approach
+	//ALESSIOR g_annual_log stampa anche a video e non dovrebbe farlo!
+	/* heading */
+	if ( !year )
+	{
+		logger(g_annual_log, "%s \t%2s", "YEAR", "LC");
+		logger(g_annual_log, "\t%6s \t%8s \t%8s \t%8s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "Y(%)", "ET\n");
+	}
+//	/* values */
+	logger(g_annual_log, "%d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \t%10.4f\n",
+			c->years[year].year,
+			c->t_layers_count,
+			c->annual_gpp,
+			c->annual_aut_resp,
+			c->annual_npp_gC,
+			((c->annual_aut_resp/c->annual_gpp)*100),
+			c->annual_et);
 
 	//check if layer number is changed since last yearly run
 	// ALESSIOC

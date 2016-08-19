@@ -50,7 +50,7 @@ double Penman_Monteith(const meteo_daily_t *const meteo_daily, const double rh, 
     */
 
 	/* Penman-Monteith function */
-	logger(g_log, "*Penman-Monteith function*\n");
+	logger(g_log, "---Penman-Monteith function---\n");
 
 	/* convert tday Celsius in Kelvin */
 	tairK = meteo_daily->tday + TempAbs;
