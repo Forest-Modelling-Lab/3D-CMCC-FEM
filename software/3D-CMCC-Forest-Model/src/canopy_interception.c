@@ -46,7 +46,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 	/* check for the special case in which is allowed to have more 100% of grid cell covered */
 	if( leaf_cell_cover_eff > 1.0 ) leaf_cell_cover_eff = 1.0;
 
-	logger(g_log, "\n**CANOPY INTERCEPTION**\n");
+	logger(g_log, "\n*CANOPY INTERCEPTION*\n");
 
 	/* first height class in the cell is processed */
 	if( !layer_height_class_counter && !cell_height_class_counter )

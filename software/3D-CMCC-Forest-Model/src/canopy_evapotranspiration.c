@@ -84,13 +84,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	/********************************************************************************************************/
 
+	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
+
+	/********************************************************************************************************/
+
 	/* call canopy interception */
 	canopy_interception( c, layer, height, age, species, meteo_daily );
 
 	/********************************************************************************************************/
-
-	logger(g_log, "\n**CANOPY EVAPO-TRANSPIRATION**\n");
-
 	/* temperature and pressure correction factor for conductances */
 	g_corr = pow((meteo_daily->tday+TempAbs)/293.15, 1.75) * 101300/meteo_daily->air_pressure;
 
@@ -207,7 +208,8 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				s->value[CANOPY_TRANSP] = 0.0;
 
 				/* day length limits canopy evaporation */
-				s->value[CANOPY_EVAPO] *= daylength_sec;
+				evapo *= daylength_sec;
+				s->value[CANOPY_EVAPO] = evapo;
 				logger(g_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
 
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
@@ -218,7 +220,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_log, "Canopy water = %g mm\n", s->value[CANOPY_WATER]);
 
 				/* check if canopy is wet for too long period */
-				//CHECK_CONDITION(days_with_canopy_wet, > 10);
+				//CHECK_CONDITION(days_with_canopy_wet, > 30);
 			}
 			/* all intercepted water evaporated */
 			else
@@ -227,7 +229,9 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				days_with_canopy_wet = 0;
 
 				/* all canopy water evaporates */
-				s->value[CANOPY_EVAPO] = s->value[CANOPY_WATER];
+				evapo = s->value[CANOPY_WATER];
+
+				s->value[CANOPY_EVAPO] = evapo;
 				logger(g_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
 
 				/* reset canopy water */
@@ -249,7 +253,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/************************************************************************************/
 				/* calculate transpiration using adjusted day length */
 				/* LAI SUN */
-				logger(g_log, "--Transpiration for LAI sun--\n");
+				logger(g_log, "\n--Transpiration for LAI sun--\n");
 
 				/* for sun canopy fraction */
 				rv = 1.0/gl_t_wv_sun;
@@ -267,7 +271,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				/************************************************************************************/
 				/* calculate transpiration using adjusted day length */
 				/* LAI SHADE */
-				logger(g_log, "--Transpiration for LAI shade--\n");
+				logger(g_log, "\n--Transpiration for LAI shade--\n");
 
 				/* for shaded canopy fraction */
 				rv = 1.0/gl_t_wv_shade;
@@ -293,10 +297,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* considering effective coverage of cell */
 				s->value[CANOPY_TRANSP] *= leaf_cell_cover_eff;
-				logger(g_log, "Canopy transpiration (corrected for coverage) = %g mm/m2/day\n", s->value[CANOPY_TRANSP]);
-
 				s->value[CANOPY_EVAPO_TRANSP] = s->value[CANOPY_EVAPO] + s->value[CANOPY_TRANSP];
-				logger(g_log, "Canopy evapo-transpiration = %g mm\n", s->value[CANOPY_EVAPO_TRANSP]);
 
 			}
 		}
@@ -309,7 +310,10 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		else
 		{
 			/* no canopy evaporation occurs */
-			s->value[CANOPY_EVAPO] = 0.0;
+			evapo = 0.0;
+
+			s->value[CANOPY_EVAPO] = evapo;
+			logger(g_log, "Canopy evaporation = %g mm\n", s->value[CANOPY_EVAPO]);
 
 			logger(g_log, "*CANOPY TRANSPIRATION (Canopy Dry)*\n");
 
@@ -325,7 +329,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/* compute only transpiration */
 
 			/* LAI SUN */
-			logger(g_log, "--Transpiration for LAI sun--\n");
+			logger(g_log, "\n--Transpiration for LAI sun--\n");
 
 			rv = 1.0/gl_t_wv_sun;
 
@@ -342,7 +346,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/************************************************************************************/
 			/* calculate transpiration using adjusted day length */
 			/* LAI SHADE */
-			logger(g_log, "--Transpiration for LAI shade--\n");
+			logger(g_log, "\n--Transpiration for LAI shade--\n");
 
 			rv = 1.0/gl_t_wv_shade;
 
@@ -358,7 +362,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			/************************************************************************************/
 			/* overall canopy */
 			transp = transp_sun + transp_shade;
-			logger(g_log, "transp (sun+shade) = %g mm/m2/day\n", transp);
 
 			/* check for negative values */
 			if(transp < 0.0) transp = 0.0;
@@ -380,6 +383,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 		s->value[CANOPY_EVAPO_TRANSP] = 0.0;
 	}
 
+	logger(g_log,"\n--Overall canopy--\n");
 	logger(g_log, "OLD CANOPY_WATER = %g mm/m2/day\n", s->value[OLD_CANOPY_WATER]);
 	logger(g_log, "CANOPY_WATER = %g mm/m2/day\n", s->value[CANOPY_WATER]);
 	logger(g_log, "CANOPY_EVAPO = %g mm/m2/day\n", s->value[CANOPY_EVAPO]);
