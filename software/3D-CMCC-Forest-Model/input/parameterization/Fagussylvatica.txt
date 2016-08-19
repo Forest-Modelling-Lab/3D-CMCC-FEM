@@ -20,7 +20,7 @@ COEFFCOND   0.06        //Define stomatal responsee to VPD in mbar see Pietsch e
 BLCOND  0.01            //Canopy Boundary Layer conductance see 0.01 for stomatal Pietsch et al., 2005
 MAXCOND 0.006           //Maximum Stomatal Conductance in m/sec 0,005 for Tatarinov et al., 2006, 0.006 Pietsch
 CUTCOND 0.00006         //Cuticul conductance in m/sec for F sylvatica Pietsch et al., 2005
-MAXAGE  200             //Determines rate of "physiological decline" of forest //modified from ettore
+MAXAGE  300             //Determines rate of "physiological decline" of forest //modified from ettore
 RAGE    0.75            //Relative Age to give fAGE = 0.5
 NAGE    10              //Power of relative Age in function for Age
 MAXAGE_S    200         //Determines rate of "physiological decline" of forest

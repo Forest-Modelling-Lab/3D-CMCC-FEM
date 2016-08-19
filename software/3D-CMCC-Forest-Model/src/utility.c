@@ -81,6 +81,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	c->daily_c_snow_int = 0.;
 	c->daily_c_evapo = 0.;
 	c->daily_soil_evapo = 0.;
+	c->daily_c_evapotransp = 0.;
 	c->daily_et = 0.;
 	c->daily_c_sensible_heat_flux = 0.;
 	c->daily_soil_latent_heat_flux = 0.;

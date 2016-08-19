@@ -6,7 +6,7 @@
 #include <assert.h>
 #include "constants.h"
 #include "common.h"
-#include "cumulative_balance.h"
+#include "print_output.h"
 #include "settings.h"
 #include "logger.h"
 #include "matrix.h"
@@ -45,7 +45,7 @@
 #include "settings.h"
 #include "new_forest_tree_class.h"
 
-extern settings_t* g_settings;
+//extern settings_t* g_settings;
 extern logger_t* g_log;
 
 //extern const char *szMonth[MONTHS_COUNT];

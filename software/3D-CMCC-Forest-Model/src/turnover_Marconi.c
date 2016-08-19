@@ -10,8 +10,8 @@
 #include "logger.h"
 #include "common.h"
 
-extern settings_t* g_settings;
-extern logger_t* g_log;
+//extern settings_t* g_settings;
+//extern logger_t* g_log;
 
 
 //void Get_turnover_Marconi (cell_t *c, const int layer, const int height, const int age, const int species, const int DaysInMonth)

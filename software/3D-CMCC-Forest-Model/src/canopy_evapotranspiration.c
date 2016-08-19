@@ -99,7 +99,7 @@ void canopy_interception(cell_t *const c, const int layer, const int height, con
 
 			//fixme for now assuming no snow interception
 			s->value[CANOPY_INT_SNOW] = 0.0;
-			logger(g_log, "CANOPY_INT_SNOW = %g mm/m2/day\n", s->value[CANOPY_INT_SNOW]);getchar();
+			logger(g_log, "CANOPY_INT_SNOW = %g mm/m2/day\n", s->value[CANOPY_INT_SNOW]);
 		}
 	}
 
@@ -240,7 +240,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	//fixme usefull?
 	/* upscaled to coverage */
-	s->value[CANOPY_BLCOND] *= leaf_cell_cover_eff;
+	//s->value[CANOPY_BLCOND] *= leaf_cell_cover_eff;
 
 	/* leaf cuticular conductance corrected for temperature and air pressure */
 	gl_c = s->value[CUTCOND] * g_corr;

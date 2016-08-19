@@ -86,6 +86,7 @@ void soil_water_balance(cell_t *c, const meteo_daily_t *const meteo_daily)
 	/* negative soilwater */
 	if (c->asw < 0.0)
 	{
+		logger(g_log,"WARNING negative values for soil water!!!!!!!!!\n");
 		/* add back the evaporation and transpiration fluxes, and
 		set these fluxes to 0.0 */
 		c->asw             += c->daily_soil_evapo;

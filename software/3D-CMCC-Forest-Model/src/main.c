@@ -27,7 +27,7 @@
 #include <time.h>
 #include "compiler.h"
 #include "soil_settings.h"
-#include "cumulative_balance.h"
+#include "print_output.h"
 #include "common.h"
 #include "constants.h"
 #include "topo.h"
@@ -38,7 +38,6 @@
 #include "yos.h"
 #include "nc.h"
 #include "met_data.h"
-#include "cumulative_balance.h"
 #include "cropmodel_daily.h"
 #include "g-function.h"
 #include "leaf_fall.h"

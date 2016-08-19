@@ -8,7 +8,7 @@ SAND_PERC "40"	//PERCENTAGE OF SAND (0,05 - 2 mm) according to USDA
 SOIL_DEPTH "150" //SOIL DEPTH (cm) Dalsgaard et al., 2011
 
 //SITE NUTRITION
-FR "0.6" //Fertility rating (estimated)
+FR "0.8" //Fertility rating (estimated) 19 aug 2016 was 0.6
 FN0 "0.5" //Value of fNutr when FR = 0
 FNN "0.5" //Power of (1 - FR) in fNutr
 M0 "0.2" //value of 'm' when FR = 0

@@ -24,7 +24,6 @@ C_SRCS += \
 ../src/check_balance.c \
 ../src/common.c \
 ../src/crowding-competition.c \
-../src/cumulative_balance.c \
 ../src/dendrometry.c \
 ../src/establishment.c \
 ../src/evapotranspiration.c \
@@ -49,6 +48,7 @@ C_SRCS += \
 ../src/phenology.c \
 ../src/photosynthesis.c \
 ../src/print.c \
+../src/print_output.c \
 ../src/renovation.c \
 ../src/settings.c \
 ../src/snow.c \
@@ -89,7 +89,6 @@ OBJS += \
 ./src/check_balance.o \
 ./src/common.o \
 ./src/crowding-competition.o \
-./src/cumulative_balance.o \
 ./src/dendrometry.o \
 ./src/establishment.o \
 ./src/evapotranspiration.o \
@@ -114,6 +113,7 @@ OBJS += \
 ./src/phenology.o \
 ./src/photosynthesis.o \
 ./src/print.o \
+./src/print_output.o \
 ./src/renovation.o \
 ./src/settings.o \
 ./src/snow.o \
@@ -154,7 +154,6 @@ C_DEPS += \
 ./src/check_balance.d \
 ./src/common.d \
 ./src/crowding-competition.d \
-./src/cumulative_balance.d \
 ./src/dendrometry.d \
 ./src/establishment.d \
 ./src/evapotranspiration.d \
@@ -179,6 +178,7 @@ C_DEPS += \
 ./src/phenology.d \
 ./src/photosynthesis.d \
 ./src/print.d \
+./src/print_output.d \
 ./src/renovation.d \
 ./src/settings.d \
 ./src/snow.d \

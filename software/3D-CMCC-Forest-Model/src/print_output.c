@@ -1,11 +1,11 @@
 /* cumulative_balance.c */
-#include "cumulative_balance.h"
+#include "print_output.h"
 #include "common.h"
 #include "settings.h"
 #include "logger.h"
 
 extern settings_t* g_settings;
-extern logger_t* g_log;
+//extern logger_t* g_log;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
@@ -20,10 +20,10 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	if ( !day && !month && !year )
 	{
 		logger(g_daily_log, "%s \t%2s \t%s \t%2s", "YEAR", "MONTH", "DAY", "LC");
-		logger(g_daily_log, "\t%6s \t%6s \t%10s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "ET(mm/m2/d) \n");
+		logger(g_daily_log, "\t%6s \t%6s \t%10s \t%8s \t%8s", "GPP(gC/m2)", "AR(gC/m2)", "NPP(gC/m2)", "ET(mm/m2)", "ASW\n");
 	}
 //	/* values */
-	logger(g_daily_log, "%d \t%3d \t%5d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
+	logger(g_daily_log, "%d \t%3d \t%5d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
 			c->years[year].year,
 			month+1,
 			day+1,
@@ -31,7 +31,8 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			c->daily_gpp,
 			c->daily_aut_resp,
 			c->daily_npp_gC,
-			c->daily_et);
+			c->daily_et,
+			c->asw);
 
 
 	//	if (year == 0)
@@ -231,7 +232,24 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, const int year)
 {
-	//	static int previous_layer_number;
+	//FIXME this is just an approach
+	//ALESSIOR g_monthly_log stampa anche a video e non dovrebbe farlo!
+	/* heading */
+	if ( !month && !year )
+	{
+		logger(g_monthly_log, "%s \t%2s \t%2s", "YEAR", "MONTH", "LC");
+		logger(g_monthly_log, "\t%6s \t%8s \t%8s \t%8s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "Y(%)", "ET\n");
+	}
+//	/* values */
+	logger(g_monthly_log, "%d \t%3d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \t%10.4f\n",
+			c->years[year].year,
+			month,
+			c->t_layers_count,
+			c->monthly_gpp,
+			c->monthly_aut_resp,
+			c->monthly_npp_gC,
+			((c->monthly_aut_resp/c->monthly_gpp)*100),
+			c->monthly_et);
 
 	/*if(month == 0 && years == 0)
 	{
@@ -456,41 +474,12 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 		c->layer_monthly_dead_tree[0] = 0;
 	}
 	 */
-	c->monthly_gpp = 0;
-	c->monthly_aut_resp = 0;
-	c->monthly_C_flux = 0;
-	c->monthly_npp_tDM = 0;
-	c->monthly_npp_gC = 0;
-	c->monthly_c_evapotransp = 0;
-	c->monthly_tot_w_flux = 0;
-	c->monthly_dead_tree = 0;
 
-	if (!string_compare_i(g_settings->dndc, "on"))
-	{
-		c->monthly_het_resp = 0;
-		c->monthly_r_eco = 0;
-		c->monthly_nee = 0;
-	}
 }
 
 void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year)
 {
-	//FIXME this is just an approach
-	//ALESSIOR g_annual_log stampa anche a video e non dovrebbe farlo!
-	/* heading */
-	if ( !year )
-	{
-		logger(g_annual_log, "%s \t%2s", "YEAR", "LC");
-		logger(g_annual_log, "\t%6s \t%8s \t%8s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "Y(%)\n");
-	}
-//	/* values */
-	logger(g_annual_log, "%d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
-			c->years[year].year,
-			c->t_layers_count,
-			c->annual_gpp,
-			c->annual_aut_resp,
-			c->annual_npp_gC,
-			((c->annual_aut_resp/c->annual_gpp)*100));
+
 
 
 	//check if layer number is changed since last yearly run

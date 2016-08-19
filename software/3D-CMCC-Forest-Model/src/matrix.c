@@ -22,7 +22,7 @@ extern settings_t* g_settings;
 extern soil_settings_t *g_soil_settings;
 extern topo_t *g_topo;
 extern char *g_sz_program_path;
-extern char *g_sz_input_path;
+//extern char *g_sz_input_path;
 extern char *g_sz_parameterization_path;
 
 /* ---------- dataset stuff ---------- */
@@ -943,13 +943,13 @@ static int layer_add(cell_t* const c)
 }
 
 /****************************************************************************/
-static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
-{
-	if ( g_settings )
-		return g_settings->soil_layer;
-	else
-		return 0;
-}
+//static int fill_cell_from_soils (cell_t *const c, const row_t * const row)
+//{
+//	if ( g_settings )
+//		return g_settings->soil_layer;
+//	else
+//		return 0;
+//}
 /****************************************************************************/
 static int fill_cell(matrix_t* const m, row_t* const row)
 {
