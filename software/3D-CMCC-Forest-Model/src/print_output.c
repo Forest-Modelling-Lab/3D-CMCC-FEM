@@ -242,12 +242,12 @@ void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, c
 	if ( !month && !year )
 	{
 		logger(g_monthly_log, "%s \t%2s \t%2s", "YEAR", "MONTH", "LC");
-		logger(g_monthly_log, "\t%6s \t%8s \t%8s  \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)" "ET\n");
+		logger(g_monthly_log, "\t%6s \t%8s \t%8s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "ET\n");
 	}
 	/* values */
-	logger(g_monthly_log, "%d \t%3d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f\n",
+	logger(g_monthly_log,"%d \t%3d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f\n",
 			c->years[year].year,
-			month+1,
+			month + 1,
 			c->t_layers_count,
 			c->monthly_gpp,
 			c->monthly_aut_resp,
