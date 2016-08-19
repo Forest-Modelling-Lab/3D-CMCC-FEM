@@ -19,11 +19,11 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		logger(g_daily_log, "%s \t%2s \t%2s \t%6s", "YEAR", "MONTH", "DAY", "LC");
-		logger(g_daily_log, "\t%4s \t%6s \t%10s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "ET(mm/m2/d)");
+		logger(g_daily_log, "%s \t%2s \t%s \t%2s", "YEAR", "MONTH", "DAY", "LC");
+		logger(g_daily_log, "\t%6s \t%6s \t%10s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "ET(mm/m2/d) \n");
 	}
-	/* values */
-	logger(g_daily_log, "%d \t%3d \t%4d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f",
+//	/* values */
+	logger(g_daily_log, "%d \t%3d \t%5d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
 			c->years[year].year,
 			month+1,
 			day+1,
@@ -32,6 +32,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 			c->daily_aut_resp,
 			c->daily_npp_gC,
 			c->daily_et);
+
 
 	//	if (year == 0)
 	//	{
@@ -228,14 +229,268 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 }
 
+void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, const int year)
+{
+	//	static int previous_layer_number;
+
+	/*if(month == 0 && years == 0)
+	{
+		logger(g_monthly_log, "Site name = %s\n", g_soil_settings->values[SOIL_sitename);
+		logger(g_monthly_log, "Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",g_settings->version, g_settings->time, g_settings->spatial);
+		logger(g_monthly_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil_settings->values[SOIL_lat, g_soil_settings->values[SOIL_lon );
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
+		}
+		logger(g_monthly_log, "Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
+		logger(g_monthly_log, "Monthly AR = monthly total autotrophic respiration (gC/m2/month)\n");
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "Annual HR = Monthly total heterotrophic respiration (gC/m2/month)\n");
+			logger(g_monthly_log, "Annual Reco = Monthly total ecosystem respiration (gC/m2/month)\n");
+		}
+		logger(g_monthly_log, "Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
+		logger(g_monthly_log, "Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
+		logger(g_monthly_log, "Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
+		logger(g_monthly_log, "Monthly ASW = monthly ASW (at the end of month) (mm)\n");
+		logger(g_monthly_log, "Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
+		logger(g_monthly_log, "Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
+	}*/
+
+	// ALESSIOC
+	/*
+	if (years == 0)
+	{
+		previous_layer_number = c->annual_layer_number;
+	}
+	else
+	{
+		//check if layer number is changed since last yearly run
+		if(previous_layer_number != c->annual_layer_number)
+		{
+			logger(g_monthly_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
+		}
+		previous_layer_number = c->annual_layer_number;
+	}
+
+	if (c->annual_layer_number == 1)
+	{
+		if (month == 0 && years == 0 && cell_index == 0)
+		{
+			logger(g_monthly_log, "%s \t%2s \t%s", "YEAR", "Month", "cell_x");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s", "NEE");
+			}
+			logger(g_monthly_log, "\t%6s \t%10s" ,
+					"GPP (tot)", "AR (tot)");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "LE", "ASW", "Cw", "CC(0)", "DEAD TREE(tot)");
+		}
+		logger(g_monthly_log, "%d \t%2d \t%4d", c->years[years].year, month+1, c->x);
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
+		}
+		logger(g_monthly_log, "\t%10.2f \t%10.2f",
+				c->monthly_gpp,
+				c->monthly_aut_resp);
+
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
+		}
+		//ALESSIOC
+		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
+				c->monthly_C_flux,
+				c->monthly_npp_tDM,
+				c->monthly_npp_gC,
+				c->monthly_c_evapotransp,
+				c->monthly_latent_heat_flux,
+				c->swc,
+				c->monthly_tot_w_flux,
+				c->layer_monthly_cc[0]);
+
+		//reset
+		c->layer_monthly_gpp[0] = 0;
+		c->layer_monthly_aut_resp[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
+		c->layer_annual_c_evapotransp[0] = 0;
+		c->layer_monthly_cc[0] = 0;
+		c->layer_monthly_dead_tree[0] = 0;
+	}
+
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 2)
+	{
+		if (month == 0 && years == 0)
+		{
+			logger(g_monthly_log, "%s \t%2s", "YEAR", "Month");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s", "NEE");
+			}
+			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
+					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		logger(g_monthly_log, "%d \t%2d", c->years[years].year, month+1);
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
+		}
+		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+				c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
+				c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
+
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
+		}
+
+		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
+				c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
+				c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_npp_tDM,
+				c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
+				c->asw,
+				c->monthly_tot_w_flux,
+				c->layer_monthly_cc[1], c->layer_monthly_cc[0],
+				c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
+
+		//reset
+		c->layer_monthly_gpp[1] = 0;
+		c->layer_monthly_aut_resp[1] = 0;
+		c->layer_monthly_c_flux[1] = 0;
+		c->layer_monthly_npp_tDM[1] = 0;
+		c->layer_annual_c_evapotransp[1] = 0;
+		c->layer_monthly_cc[1] = 0;
+		c->layer_monthly_dead_tree[1] = 0;
+
+		c->layer_monthly_gpp[0] = 0;
+		c->layer_monthly_aut_resp[0] = 0;
+		c->layer_monthly_c_flux[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
+		c->layer_annual_c_evapotransp[0] = 0;
+		c->layer_monthly_cc[0] = 0;
+		c->layer_monthly_dead_tree[0] = 0;
+	}
+	//fixme model doesn't log correct value for more then one class within a layer
+	if (c->annual_layer_number == 3)
+	{
+		if (month == 0 && years == 0)
+		{
+			logger(g_monthly_log, "\n%s \t%2s", "YEAR", "Month");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s", "NEE");
+			}
+			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
+					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
+			if (!string_compare_i(g_settings->dndc, "on"))
+			{
+				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
+			}
+			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
+					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
+					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
+					"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
+		}
+		logger(g_monthly_log, "%d \t%2d", c->years[years].year, month+1);
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
+		}
+		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
+				c->layer_monthly_gpp[2], c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
+				c->layer_monthly_aut_resp[2], c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
+
+		if (!string_compare_i(g_settings->dndc, "on"))
+		{
+			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
+		}
+
+		logger(g_monthly_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
+				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
+				c->layer_monthly_c_flux[2],c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
+				c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_npp_tDM,
+				c->layer_annual_c_evapotransp[2],c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
+				c->asw,
+				c->monthly_tot_w_flux,
+				c->layer_monthly_cc[2], c->layer_monthly_cc[1], c->layer_monthly_cc[0],
+				c->layer_monthly_dead_tree[2], c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
+
+		//reset
+		c->layer_monthly_gpp[2] = 0;
+		c->layer_monthly_aut_resp[2] = 0;
+		c->layer_monthly_c_flux[2] = 0;
+		c->layer_monthly_npp_tDM[2] = 0;
+		c->layer_annual_c_evapotransp[2] = 0;
+		c->layer_monthly_cc[2] = 0;
+		c->layer_monthly_dead_tree[2] = 0;
+
+		c->layer_monthly_gpp[1] = 0;
+		c->layer_monthly_aut_resp[1] = 0;
+		c->layer_monthly_c_flux[1] = 0;
+		c->layer_monthly_npp_tDM[1] = 0;
+		c->layer_annual_c_evapotransp[1] = 0;
+		c->layer_monthly_cc[1] = 0;
+		c->layer_monthly_dead_tree[1] = 0;
+
+		c->layer_monthly_gpp[0] = 0;
+		c->layer_monthly_aut_resp[0] = 0;
+		c->layer_monthly_c_flux[0] = 0;
+		c->layer_monthly_npp_tDM[0] = 0;
+		c->layer_annual_c_evapotransp[0] = 0;
+		c->layer_monthly_cc[0] = 0;
+		c->layer_monthly_dead_tree[0] = 0;
+	}
+	 */
+	c->monthly_gpp = 0;
+	c->monthly_aut_resp = 0;
+	c->monthly_C_flux = 0;
+	c->monthly_npp_tDM = 0;
+	c->monthly_npp_gC = 0;
+	c->monthly_c_evapotransp = 0;
+	c->monthly_tot_w_flux = 0;
+	c->monthly_dead_tree = 0;
+
+	if (!string_compare_i(g_settings->dndc, "on"))
+	{
+		c->monthly_het_resp = 0;
+		c->monthly_r_eco = 0;
+		c->monthly_nee = 0;
+	}
+}
+
 void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year)
 {
-	//	static double avg_gpp[3], avg_npp[3], avg_ce[3], avg_gpp_tot, avg_npp_tot, avg_npp_tot_gC, avg_ce_tot;
-	//	static double avg_ar[3], avg_ar_tot;
-	//	static double avg_cf[3], avg_cf_tot;
-	//	static int tot_dead_tree_tot;
-	//
-	//	static int previous_layer_number;
+	//FIXME this is just an approach
+	//ALESSIOR g_annual_log stampa anche a video e non dovrebbe farlo!
+	/* heading */
+	if ( !year )
+	{
+		logger(g_annual_log, "%s \t%2s", "YEAR", "LC");
+		logger(g_annual_log, "\t%6s \t%8s \t%8s \t%8s", "GPP(gC/m2d)", "AR(gC/m2d)", "NPP(gC/m2d)", "Y(%)\n");
+	}
+//	/* values */
+	logger(g_annual_log, "%d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
+			c->years[year].year,
+			c->t_layers_count,
+			c->annual_gpp,
+			c->annual_aut_resp,
+			c->annual_npp_gC,
+			((c->annual_aut_resp/c->annual_gpp)*100));
 
 
 	//check if layer number is changed since last yearly run
@@ -668,252 +923,6 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year)
 		}
 	}*/
 }
-
-void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, const int year)
-{
-	//	static int previous_layer_number;
-
-	/*if(month == 0 && years == 0)
-	{
-		logger(g_monthly_log, "Site name = %s\n", g_soil_settings->values[SOIL_sitename);
-		logger(g_monthly_log, "Monthly summary output from 3D-CMCC version '%c', time '%c', spatial '%c'\n",g_settings->version, g_settings->time, g_settings->spatial);
-		logger(g_monthly_log, "\n\nCell %d, %d, Lat = %f, Long  = %f\n\n\n", c->x, c->y, g_soil_settings->values[SOIL_lat, g_soil_settings->values[SOIL_lon );
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "Monthly NEE = Monthly total net ecosystem exchange (gC/m2/month)\n");
-		}
-		logger(g_monthly_log, "Monthly GPP = monthly total gross primary production (gC/m2/month)\n");
-		logger(g_monthly_log, "Monthly AR = monthly total autotrophic respiration (gC/m2/month)\n");
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "Annual HR = Monthly total heterotrophic respiration (gC/m2/month)\n");
-			logger(g_monthly_log, "Annual Reco = Monthly total ecosystem respiration (gC/m2/month)\n");
-		}
-		logger(g_monthly_log, "Monthly Cf = monthly c-fluxes (gC/m2/month)\n");
-		logger(g_monthly_log, "Monthly NPP = monthly total net primary production (tDM/m2/month)\n");
-		logger(g_monthly_log, "Monthly CE = monthly canopy evapotranspiration(mm/month)\n");
-		logger(g_monthly_log, "Monthly ASW = monthly ASW (at the end of month) (mm)\n");
-		logger(g_monthly_log, "Monthly Cw = monthly w-fluxes (mm/m2/month)\n");
-		logger(g_monthly_log, "Monthly DEAD TREE = monthly dead tree (n tree/cell)\n\n\n");
-	}*/
-
-	// ALESSIOC
-	/*
-	if (years == 0)
-	{
-		previous_layer_number = c->annual_layer_number;
-	}
-	else
-	{
-		//check if layer number is changed since last yearly run
-		if(previous_layer_number != c->annual_layer_number)
-		{
-			logger(g_monthly_log, "\n\nANNUAL_LAYER_NUMBER_IS_CHANGED_SINCE_PREVIOUS_YEAR!!!\n\n");
-		}
-		previous_layer_number = c->annual_layer_number;
-	}
-
-	if (c->annual_layer_number == 1)
-	{
-		if (month == 0 && years == 0 && cell_index == 0)
-		{
-			logger(g_monthly_log, "%s \t%2s \t%s", "YEAR", "Month", "cell_x");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s", "NEE");
-			}
-			logger(g_monthly_log, "\t%6s \t%10s" ,
-					"GPP (tot)", "AR (tot)");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
-			}
-			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf(tot)", "NPP(tot)", "NPPgC", "CE(tot)", "LE", "ASW", "Cw", "CC(0)", "DEAD TREE(tot)");
-		}
-		logger(g_monthly_log, "%d \t%2d \t%4d", c->years[years].year, month+1, c->x);
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
-		}
-		logger(g_monthly_log, "\t%10.2f \t%10.2f",
-				c->monthly_gpp,
-				c->monthly_aut_resp);
-
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%10.2f \t%10.2f", c->monthly_het_resp, c->monthly_r_eco);
-		}
-		//ALESSIOC
-		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f\n",
-				c->monthly_C_flux,
-				c->monthly_npp_tDM,
-				c->monthly_npp_gC,
-				c->monthly_c_evapotransp,
-				c->monthly_latent_heat_flux,
-				c->swc,
-				c->monthly_tot_w_flux,
-				c->layer_monthly_cc[0]);
-
-		//reset		
-		c->layer_monthly_gpp[0] = 0;
-		c->layer_monthly_aut_resp[0] = 0;
-		c->layer_monthly_npp_tDM[0] = 0;
-		c->layer_annual_c_evapotransp[0] = 0;
-		c->layer_monthly_cc[0] = 0;
-		c->layer_monthly_dead_tree[0] = 0;
-	}
-
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 2)
-	{
-		if (month == 0 && years == 0)
-		{
-			logger(g_monthly_log, "%s \t%2s", "YEAR", "Month");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s", "NEE");
-			}
-			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
-					"GPP(1)", "GPP(0)", "GPP(tot)",  "AR(1)", "AR(0)", "AR(tot)");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
-			}
-			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf(1)", "Cf(0)", "Cf(tot)", "NPP(1)", "NPP(0)", "NPP(tot)", "CE(1)",
-					"CE(0)", "CE(tot)", "ASW", "Cw", "CC(1)", "CC(0)", "DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		logger(g_monthly_log, "%d \t%2d", c->years[years].year, month+1);
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
-		}
-		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
-				c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
-				c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
-
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
-		}
-
-		logger(g_monthly_log, "\t%14.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
-				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d\n",
-				c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
-				c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0],c->monthly_npp_tDM,
-				c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
-				c->asw,
-				c->monthly_tot_w_flux,
-				c->layer_monthly_cc[1], c->layer_monthly_cc[0],
-				c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
-
-		//reset
-		c->layer_monthly_gpp[1] = 0;
-		c->layer_monthly_aut_resp[1] = 0;
-		c->layer_monthly_c_flux[1] = 0;
-		c->layer_monthly_npp_tDM[1] = 0;
-		c->layer_annual_c_evapotransp[1] = 0;
-		c->layer_monthly_cc[1] = 0;
-		c->layer_monthly_dead_tree[1] = 0;
-
-		c->layer_monthly_gpp[0] = 0;
-		c->layer_monthly_aut_resp[0] = 0;
-		c->layer_monthly_c_flux[0] = 0;
-		c->layer_monthly_npp_tDM[0] = 0;
-		c->layer_annual_c_evapotransp[0] = 0;
-		c->layer_monthly_cc[0] = 0;
-		c->layer_monthly_dead_tree[0] = 0;
-	}
-	//fixme model doesn't log correct value for more then one class within a layer
-	if (c->annual_layer_number == 3)
-	{
-		if (month == 0 && years == 0)
-		{
-			logger(g_monthly_log, "\n%s \t%2s", "YEAR", "Month");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s", "NEE");
-			}
-			logger(g_monthly_log, "\t%6s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s" ,
-					"GPP(2)","GPP(1)", "GPP(0)", "GPP (tot)", "AR(2)","AR(1)", "AR(0)", "AR(tot)");
-			if (!string_compare_i(g_settings->dndc, "on"))
-			{
-				logger(g_monthly_log, "\t%3s, \t%3s", "HR (tot)", "Reco");
-			}
-			logger(g_monthly_log, "\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s "
-					"\t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s \t%10s\n",
-					"Cf(2)", "Cf(1)", "Cf(0)", "Cf(tot)", "NPP(2)","NPP(1)", "NPP(0)","NPP (tot)", "CE(2)","CE(1)", "CE(0)", "CE(tot)",
-					"ASW", "Cw", "CC(2)", "CC(1)", "CC(0)", "DEAD TREE(2)","DEAD TREE(1)", "DEAD TREE(0)", "DEAD TREE(tot)");
-		}
-		logger(g_monthly_log, "%d \t%2d", c->years[years].year, month+1);
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%6.2f", c->monthly_nee);
-		}
-		logger(g_monthly_log, "\t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f \t%10.2f",
-				c->layer_monthly_gpp[2], c->layer_monthly_gpp[1],c->layer_monthly_gpp[0], c->monthly_gpp,
-				c->layer_monthly_aut_resp[2], c->layer_monthly_aut_resp[1],c->layer_monthly_aut_resp[0], c->monthly_aut_resp);
-
-		if (!string_compare_i(g_settings->dndc, "on"))
-		{
-			logger(g_monthly_log, "\t%10.2f \t%10.2f ", c->monthly_het_resp, c->monthly_r_eco);
-		}
-
-		logger(g_monthly_log, "\t%14.2f  \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f"
-				" \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2f \t%11.2d \t%11.2d \t%11.2d \t%11.2d\n",
-				c->layer_monthly_c_flux[2],c->layer_monthly_c_flux[1], c->layer_monthly_c_flux[0], c->monthly_C_flux,
-				c->layer_monthly_npp_tDM[2], c->layer_monthly_npp_tDM[1], c->layer_monthly_npp_tDM[0], c->monthly_npp_tDM,
-				c->layer_annual_c_evapotransp[2],c->layer_annual_c_evapotransp[1], c->layer_annual_c_evapotransp[0], c->monthly_c_evapotransp,
-				c->asw,
-				c->monthly_tot_w_flux,
-				c->layer_monthly_cc[2], c->layer_monthly_cc[1], c->layer_monthly_cc[0],
-				c->layer_monthly_dead_tree[2], c->layer_monthly_dead_tree[1], c->layer_monthly_dead_tree[0], c->monthly_dead_tree);
-
-		//reset
-		c->layer_monthly_gpp[2] = 0;
-		c->layer_monthly_aut_resp[2] = 0;
-		c->layer_monthly_c_flux[2] = 0;
-		c->layer_monthly_npp_tDM[2] = 0;
-		c->layer_annual_c_evapotransp[2] = 0;
-		c->layer_monthly_cc[2] = 0;
-		c->layer_monthly_dead_tree[2] = 0;
-
-		c->layer_monthly_gpp[1] = 0;
-		c->layer_monthly_aut_resp[1] = 0;
-		c->layer_monthly_c_flux[1] = 0;
-		c->layer_monthly_npp_tDM[1] = 0;
-		c->layer_annual_c_evapotransp[1] = 0;
-		c->layer_monthly_cc[1] = 0;
-		c->layer_monthly_dead_tree[1] = 0;
-
-		c->layer_monthly_gpp[0] = 0;
-		c->layer_monthly_aut_resp[0] = 0;
-		c->layer_monthly_c_flux[0] = 0;
-		c->layer_monthly_npp_tDM[0] = 0;
-		c->layer_annual_c_evapotransp[0] = 0;
-		c->layer_monthly_cc[0] = 0;
-		c->layer_monthly_dead_tree[0] = 0;
-	}
-	 */
-	c->monthly_gpp = 0;
-	c->monthly_aut_resp = 0;
-	c->monthly_C_flux = 0;
-	c->monthly_npp_tDM = 0;
-	c->monthly_npp_gC = 0;
-	c->monthly_c_evapotransp = 0;
-	c->monthly_tot_w_flux = 0;
-	c->monthly_dead_tree = 0;
-
-	if (!string_compare_i(g_settings->dndc, "on"))
-	{
-		c->monthly_het_resp = 0;
-		c->monthly_r_eco = 0;
-		c->monthly_nee = 0;
-	}
-}
-
-
 
 void Get_EOD_soil_balance_cell_level(cell_t *const c, const int year, const int month, const int day)
 {
