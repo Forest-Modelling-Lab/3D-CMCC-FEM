@@ -259,6 +259,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rv = 1.0/gl_t_wv_sun;
 
 				/* note: Net Rad is Short wave flux */
+				//fixme why??????????
 				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));;
 				logger(g_log, "sw rad for evaporation (LAI sun) = %g W/m2\n", net_rad);
 
@@ -277,6 +278,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				rv = 1.0/gl_t_wv_shade;
 
 				/* note: Net Rad is Short wave flux */
+				//fixme why??????????
 				net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);
 				logger(g_log, "sw rad for evaporation (LAI shade) = %g W/m2\n", net_rad);
 
@@ -334,13 +336,14 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			rv = 1.0/gl_t_wv_sun;
 
 			/* note: Net Rad is Short wave flux */
-			net_rad = s->value[SW_RAD_ABS_SUN]/ (1.0 - exp(- s->value[LAI]));
+			//fixme why??????????
+			net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
 			logger(g_log, "sw rad for evaporation (LAI sun ) = %g W/m2\n", net_rad);
 
 			/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat*/
 			//fixme use correct net radiation
 			transp_sun = Penman_Monteith (meteo_daily, rv, rh, net_rad);
-			transp_sun *= daylength_sec * s->value[LAI_SUN] ;
+			transp_sun *= daylength_sec * s->value[LAI_SUN];
 			logger(g_log, "transp_sun = %g mm/m2/day\n", transp_sun);
 
 			/************************************************************************************/
@@ -351,6 +354,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 			rv = 1.0/gl_t_wv_shade;
 
 			/* note: Net Rad is Short wave flux */
+			//fixme why??????????
 			net_rad = s->value[SW_RAD_ABS_SHADE] / (s->value[LAI] - s->value[LAI_SUN]);;
 			logger(g_log, "sw rad for evaporation (LAI shade) = %g W/m2\n", net_rad);
 
