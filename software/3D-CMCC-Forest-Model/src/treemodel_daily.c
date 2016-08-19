@@ -377,28 +377,28 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/****************************************************************************************************/
 
 	/****************************************************************************************************/
-	/* RESET VARIABLES */
-
-	/* reset daily variables */
-	reset_daily_class_variables ( c );
-	reset_daily_layer_variables ( c );
-	reset_daily_cell_variables  ( c );
-
-	/* reset monthly variables */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
-	{
-		reset_monthly_class_variables ( c );
-		reset_monthly_layer_variables ( c );
-		reset_monthly_cell_variables  ( c );
-
-		/* reset annual variables */
-		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
-		{
-			reset_annual_class_variables ( c );
-			reset_annual_layer_variables ( c );
-			reset_annual_cell_variables  ( c );
-		}
-	}
+//	/* RESET VARIABLES */
+//
+//	/* reset daily variables */
+//	reset_daily_class_variables ( c );
+//	reset_daily_layer_variables ( c );
+//	reset_daily_cell_variables  ( c );
+//
+//	/* reset monthly variables */
+//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
+//	{
+//		reset_monthly_class_variables ( c );
+//		reset_monthly_layer_variables ( c );
+//		reset_monthly_cell_variables  ( c );
+//
+//		/* reset annual variables */
+//		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
+//		{
+//			reset_annual_class_variables ( c );
+//			reset_annual_layer_variables ( c );
+//			reset_annual_cell_variables  ( c );
+//		}
+//	}
 
 	/****************************************************************************************************/
 	//todo: soilmodel could stay here or in main.c

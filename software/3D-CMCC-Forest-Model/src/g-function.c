@@ -160,11 +160,6 @@ void Veg_Days(cell_t *const c, const int day, const int month, const int year)
 								|| (met[month].d[day].daylength >= s->value[MINDAYLENGTH] && month >= 6))
 						{
 							s->counter[DAY_VEG_FOR_LEAF_FALL] += 1;
-							if (s->counter[DAY_VEG_FOR_LEAF_FALL] == 1)
-							{
-								logger(g_log, "GDD basis = %d\n", GDD_BASIS);
-								logger(g_log, "species %s First day of growing season day = %d month = %d\n", s->name, day+1, month+1);
-							}
 						}
 					}
 					else

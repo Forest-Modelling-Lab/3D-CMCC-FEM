@@ -48,7 +48,7 @@ void live_total_wood_age(const age_t *const a, const int species)
 	t2 = max_age - min_age;
 
 	s->value[EFF_LIVE_TOTAL_WOOD_FRAC] = (t1/t2)*(max_age - a->value) + min_live_total_ratio;
-	logger(g_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);getchar();
+	logger(g_log, "Effective live:total wood fraction based on stand age = %g\n", s->value[EFF_LIVE_TOTAL_WOOD_FRAC]);
 }
 
 

@@ -40,7 +40,7 @@ OMEGA_CTEM  0.8         //ALLOCATION PARAMETER control the sensitivity of alloca
 S0CTEM  0.1             //PARAMETER CONTROLLING ALLOCATION TO STEM/MINIMUM RATIO TO C TO STEM
 R0CTEM  0.55            //PARAMETER CONTROLLING ALLOCATION TO ROOT/MINIMUM RATIO TO C TO ROOTS
 F0CTEM  0.35            //PARAMETER CONTROLLING ALLOCATION TO FOLIAGE
-RES0CTEM    0.22        //PARAMETER CONTROLLING ALLOCATION TO RESERVE 
+RES0CTEM    0.22        //PARAMETER CONTROLLING ALLOCATION TO RESERVE (not used)
 EPSILON_CTEM    40      //ALLOCATION PARAMETER IN (Kgcm^2)^-0.6
 KAPPA   1.6             //ALLOCATION PARAMETER DIMENSIONLESS
 MIN_R0CTEM  0.1         //MINIMUM RATE TO ROOT AT THE FIRST YEAR AFTER COPPICING
@@ -51,7 +51,7 @@ CONES_LIFE_SPAN 0       //Life span for cones (yr)
 FINE_ROOT_LEAF  0.545   //allocation new fine root C:new leaf (ratio) 1.4 see Mollicone et al 2002, 0.545 see Pietsch et al 2005
 STEM_LEAF   3.8         //allocation new stem C:new leaf (ratio) 3.8 pietsch - 1 see Mollicone et al 2002
 COARSE_ROOT_STEM  0.115 //allocation new coarse root C:new stem (ratio) 0.36 see Mollicone et al 2002
-LIVE_TOTAL_WOOD 0.10    //0.10  Bond Lamberty for dbl  //0.154   //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
+LIVE_TOTAL_WOOD 0.05    //0.10  Bond Lamberty for dbl  //0.154   //new live C:new total wood (ratio) 0.15 for deciduous P. Thornton pers. comm. (about 13%), 0.154 from Pietsch et al., 2015 20% Proportion of living cells in trunks for F. sylvatica from Dufrene et al., 2005, 20.6% Ceschia etal 2002
 CN_LEAVES   26.9        //CN of leaves (kgC/kgN) 27 for Tatarinov et al., 2006 20.3 for F. sylvatica from Mollicone et al., 2002, 19.52 ettore, 18.6 Campioli, 19.67 Guidolotti
 CN_FALLING_LEAVES   44  //CN of leaf litter (kgC/kgN) 38 for F. sylvatica from Mollicone et al., 2002, 
 CN_FINE_ROOTS   47.6    //CN of fine roots (kgC/kgN) 70 for Tatarinov et al., 2006 112 for F. sylvatica from Mollicone et al., 2002, 38.28 ettore, 9., 45 Campioli

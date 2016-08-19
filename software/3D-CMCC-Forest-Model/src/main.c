@@ -46,6 +46,7 @@
 #include "soil_dndc.h"
 #include "fluxes.h"
 #include "print.h"
+#include "utility.h"
 
 #define PROGRAM_VERSION	"5.2.2"
 
@@ -150,7 +151,8 @@ static const char msg_daily_output_file[]		=	"daily output file path = %s\n";
 static const char msg_monthly_output_file[]		=	"monthly output file path = %s\n";
 static const char msg_annual_output_file[]		=	"annual output file path = %s\n";
 static const char msg_soil_output_file[]		=	"soil output file path = %s\n";
-static const char msg_ok[]						=	"ok";
+static const char msg_ok[]						=	"ok ";
+static const char msg_ok_tree_model[]			=	"ok treemodel";
 static const char msg_usage[]					=	"\nusage:\n"
 		"  3D-CMCC Model -i INPUT_DIR -o OUTPUT_FILENAME -d DATASET_FILENAME -m MET_FILE_LIST -s SITE_FILENAME -c SETTINGS_FILENAME [-h]\n"
 		"  required options:\n"
@@ -1002,7 +1004,7 @@ int main(int argc, char *argv[]) {
 							}
 							else
 							{
-								puts(msg_ok);
+								puts(msg_ok_tree_model);
 								/* run for SOIL */
 								//soil_model (matrix, yos, years, month, day, years_of_simulation);
 
@@ -1015,7 +1017,7 @@ int main(int argc, char *argv[]) {
 								}
 								else
 								{
-									logger(g_log, "No soil simulation!!!\n");
+									//logger(g_log, "No soil simulation!!!\n");
 								}
 								get_net_ecosystem_exchange(&matrix->cells[cell]);
 							}
@@ -1037,7 +1039,6 @@ int main(int argc, char *argv[]) {
 						//							//	soil_model (matrix, yos, years, month, years_of_simulation);
 						//						}
 					}
-					logger(g_log, "****************END OF DAY (%d)*******************\n", day+1);
 
 					// save values for put in output netcdf
 					if ( output_vars && output_vars->daily_vars_count ) {
@@ -1087,14 +1088,21 @@ int main(int argc, char *argv[]) {
 								                 , OUTPUT_TYPE_DAILY
 						);
 					}
+					/******************************************************************************/
+					/* print daily output */
+					EOD_print_cumulative_balance_cell_level (&matrix->cells[cell], day, month, year);
 
-					EOD_cumulative_balance_cell_level (&matrix->cells[cell], year, month, day, cell);
-					if ( ! string_compare_i(g_settings->dndc, "on") ) {
-						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
-					}
+					/* reset daily variables once printed */
+					reset_daily_class_variables ( &matrix->cells[cell] );
+					reset_daily_layer_variables ( &matrix->cells[cell] );
+					reset_daily_cell_variables  ( &matrix->cells[cell] );
 
+//					if ( ! string_compare_i(g_settings->dndc, "on") )
+//					{
+//						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
+//					}
+					logger(g_log, "****************END OF DAY (%d)*******************\n", day + 1 );
 				}
-				logger(g_log, "****************END OF MONTH (%d)*******************\n", month+1);
 
 				/* save values for put in output netcdf */
 				if ( output_vars && output_vars->monthly_vars_count ) {
@@ -1128,10 +1136,19 @@ int main(int argc, char *argv[]) {
 							                 , OUTPUT_TYPE_MONTHLY
 					);
 				}
-				EOM_cumulative_balance_cell_level(&matrix->cells[cell], year, month, cell);
-			}
+				/******************************************************************************/
+				/* print monthly output */
+				EOM_print_cumulative_balance_cell_level( &matrix->cells[cell], month, year);
 
-			logger(g_log, "****************END OF YEAR (%d)*******************\n\n", matrix->cells[cell].years[year].year);
+				/* reset monthly variables once printed */
+				if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == matrix->cells[cell].doy )
+				{
+					reset_monthly_class_variables ( &matrix->cells[cell] );
+					reset_monthly_layer_variables ( &matrix->cells[cell] );
+					reset_monthly_cell_variables  ( &matrix->cells[cell] );
+				}
+				logger(g_log, "****************END OF MONTH (%d)*******************\n\n", month + 1 );
+			}
 
 			// save values for put in output netcdf
 			if ( output_vars && output_vars->yearly_vars_count ) {
@@ -1164,9 +1181,18 @@ int main(int argc, char *argv[]) {
 						                 , OUTPUT_TYPE_YEARLY
 				);
 			}
+			/******************************************************************************/
+			/* print annual output */
+			EOY_print_cumulative_balance_cell_level( &matrix->cells[cell], year );
 
-			EOY_cumulative_balance_cell_level(&matrix->cells[cell], year, years_of_simulation, cell);
-			logger(g_log, "...%d finished to simulate\n\n\n\n\n\n", matrix->cells[cell].years[year].year);
+			/* reset annual variables once printed */
+			if ( ( IS_LEAP_YEAR( matrix->cells[cell].years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == matrix->cells[cell].doy )
+			{
+				reset_annual_class_variables ( &matrix->cells[cell] );
+				reset_annual_layer_variables ( &matrix->cells[cell] );
+				reset_annual_cell_variables  ( &matrix->cells[cell] );
+			}
+			logger(g_log, "****************END OF YEAR (%d)*******************\n", matrix->cells[cell].years[year].year );
 		}
 
 		index_vpsat = matrix->cells[cell].years[0].year;
