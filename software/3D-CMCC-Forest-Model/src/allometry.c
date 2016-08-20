@@ -13,7 +13,6 @@ void allometry_power_function(cell_t *const c)
 	int height;
 	int age;
 	int species;
-	double MassDensity;
 
 	height_t *h;
 	age_t *a;
@@ -35,8 +34,8 @@ void allometry_power_function(cell_t *const c)
 
 				logger(g_log, "Species = %s\n", s->name);
 
-				MassDensity = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
-				logger(g_log, "-Mass Density = %f\n", MassDensity);
+				s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
+				logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 
 				if (s->value[AVDBH] < 9)
 				{
@@ -44,11 +43,11 @@ void allometry_power_function(cell_t *const c)
 				}
 				else if (s->value[AVDBH]>9 && s->value[AVDBH]<15)
 				{
-					s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+					s->value[STEMCONST] = pow (e, -3.51+1.27* s->value[MASS_DENSITY]);
 				}
 				else
 				{
-					s->value[STEMCONST] = pow (e, -3.51+1.27*MassDensity);
+					s->value[STEMCONST] = pow (e, -3.51+1.27*s->value[MASS_DENSITY]);
 				}
 				logger(g_log, "-Stem const = %f\n", s->value[STEMCONST]);
 			}

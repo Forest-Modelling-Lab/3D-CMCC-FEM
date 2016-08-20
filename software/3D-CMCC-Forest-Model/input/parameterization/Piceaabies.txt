@@ -1,9 +1,9 @@
 //Picea abies parameterization file
 LIGHT_TOL   3                 //4 = very shade intolerant 3 = shade intolerant 2 = shade tolerant 1 = very shade tolerant
 PHENOLOGY   1.2               //PHENOLOGY 0.1 = deciduous broadleaf, 0.2 = deciduous needle leaf, 1.1 = broad leaf evergreen, 1.2 = needle leaf evergreen 
-ALPHA   0.065                 //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies 0.065 Seidl et al., 2005, 
+ALPHA   0.050                 //Canopy quantum efficiency (molC/molPAR) converted from 1.8 gCMJ for Picea abies 0.065 Seidl et al., 2005, 
 EPSILONgCMJ 1.05              //Light Use Efficiency (gC/molPAR)(used if ALPHA is not available)  
-K   0.51                      //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
+K   0.54                      //Extinction coefficient for absorption of PAR by canopy for Picea abies from Pietsch et al., 2005,  0.54 from MOllicone
 ALBEDO  0.095                 //averaged for P. sylvestris from Breuer et al., 2003
 GAMMA_LIGHT 0.031             //Light parameter for light modifier 0.031 see Bagnara et al., 
 INT_COEFF  0.036              //precip interception coefficient for Picea abies (see Pietsch)
@@ -26,14 +26,14 @@ NAGE    4                     //Power of relative Age in function for Age for Pi
 MAXAGE_S    -9999             //Determines rate of "physiological decline" of forest 
 RAGE_S  0.75                  //Relative Age to give fAGE = 0.5
 NAGE_S  4                     //Power of relative Age in function for Age
-GROWTHTMIN  -5                //Minimum temperature for growth 0 for Picea abies from p.c. Seidl,  -5 perosnal assesment
+GROWTHTMIN  0                 //Minimum temperature for growth 0 for Picea abies from p.c. Seidl, 
 GROWTHTMAX  30                //Maximum temperature for growth 35 for Picea abies from p.c. Seidl 
 GROWTHTOPT  15                //Optimum temperature for growth 17.5 for Picea abies from p.c. Seidl 
 GROWTHSTART 200               //average temperature for starting growth in °C 
 GROWTHEND   0                 //average temperature for ending growth in °C 
 MINDAYLENGTH    0             //minimum day length for deciduous
 SWPOPEN -0.5                  //in KPa for P. sylvestris from Pietsch et al 2005
-SWPCLOSE    -2.2              //in KPa  for P. sylvestris from Pietsch et al 2005
+SWPCLOSE    -2.5              //in KPa  for P. sylvestris from Pietsch et al 2005
 SWCONST 1                     //Costant in Soil Water modifier vs Moist Ratio
 SWPOWER 5                     //Power in Soil Water modifier vs Moist Ratio
 OMEGA_CTEM  0.5               //ALLOCATION PARAMETER control the sensitivity of allocation to changes in water and light availability for Needlleleaf deciduous from Arora et al 2005

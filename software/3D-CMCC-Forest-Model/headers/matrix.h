@@ -169,11 +169,11 @@ enum {
 	BASAL_AREA_m2,              //Basal Area (cm^2/area tree)
 	STAND_BASAL_AREA_m2,
 	CROWN_HEIGHT,               //Crown Height (m)
+	MASS_DENSITY,               //mass density
 	PREVIOUS_VOLUME,            //previous year volume for CAI
 	VOLUME,                     //Stem Volume
 	TOTAL_VOLUME,
 	TREE_VOLUME,                //Single Tree Volume (m^3/area)
-	IND_STEM_VOLUME,            //Individual Stem Volume for Crowding Competition Function
 	CAI,                        //Current Annual Increment
 	IND_CAI,                    //Individual Current Annual Increment
 	MAI,                        //Mean Annual Volume Increment (m^3/area year)
@@ -384,8 +384,6 @@ enum {
 	AV_LIVE_WOOD_MASS_KgC,
 	AV_DEAD_WOOD_MASS_KgC,
 	AV_TOT_WOOD_MASS_KgC,
-
-	MASS_DENSITY,
 
 	//CTEM CARBON
 	//carbon biomass increment
