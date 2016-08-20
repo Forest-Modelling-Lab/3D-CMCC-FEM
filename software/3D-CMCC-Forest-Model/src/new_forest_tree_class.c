@@ -123,7 +123,8 @@ int add_new_tree_class (cell_t *const c, const int height, const int age, const 
 	logger(g_log, "**avdbh sampling = %f\n", s->value[AVDBH]);
 	logger(g_log, "**n tree %d of %s\n", s->counter[N_TREE], s->name);
 
-	//FIXME add initialisation data
+	/* initialise new forest class pools */
+	initialization_forest_C_biomass( c, height, age, species );
 
 	return 1;
 }

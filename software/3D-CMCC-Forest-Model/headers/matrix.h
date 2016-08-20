@@ -324,7 +324,6 @@ enum {
 	C_COARSEROOT_LIVE_WOOD_TO_DEADWOOD,
 	C_BRANCH_LIVE_WOOD_TO_DEAD_WOOD,
 
-
 	/* carbon pools in tons of C/area */
 	LEAF_C,
 	OLD_LEAF_C,
@@ -360,7 +359,6 @@ enum {
 	BRANCH_SAPWOOD_C,
 	BRANCH_HEARTWOOD_C,
 	TOT_SAPWOOD_C,
-
 
 	EFF_LIVE_TOTAL_WOOD_FRAC,
 
@@ -464,7 +462,6 @@ enum {
 	DEL_Y_WRES,                    //Yearly cumulated reserve biomass increment
 	DEL_Y_BB,
 
-
 	//converted biome fraction for allocation
 	FINE_ROOT_LEAF_FRAC,
 	STEM_LEAF_FRAC,
@@ -473,8 +470,6 @@ enum {
 	//FINE/COARSE RATIO
 	FR_CR,                         //FINE-COARSE ROOT RATIO
 	FRACBB,
-
-
 
 	//MONTHLY PHENOLOGY
 	FRAC_MONTH_FOLIAGE_REMOVE,
@@ -565,8 +560,6 @@ enum {
 	BUD_BURST_COUNTER,           /* days of budburst per class */
 	DAY_FRAC_FOLIAGE_REMOVE,     /* days of leaf fall per class */
 	DAY_FRAC_FINE_ROOT_REMOVE,   /* days of "fine root fall" per class */
-
-	//fixme check differences with VEG_DAYS
 	DAY_VEG_FOR_LEAF_FALL,       /* days for leaf fall */
 	LEAF_FALL_COUNTER            /* counter for leaf fall*/,
 	SENESCENCE_DAYONE,  //Sergio's

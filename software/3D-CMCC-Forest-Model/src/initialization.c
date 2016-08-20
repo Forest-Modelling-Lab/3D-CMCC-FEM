@@ -218,17 +218,10 @@ void initialization_forest_C_biomass(cell_t *const c, const int height, const in
 		{
 			logger(g_log, "\nNo Leaf Biomass Data are available for model initialization \n");
 			logger(g_log, "...Generating input Leaf Biomass data from LAI\n");
-			//fixme it seems to not have sense
-			/* a very special (and hopefully rare) case in which there'nt data for LAI or LEAF_C */
+
+			/* check */
 			if(!s->value[LAI])
 			{
-				/* really ?? */
-				/*
-				s->value[BIOMASS_FOLIAGE_tDM] =  s->value[RESERVE_tDM] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				s->value[LEAF_C] =  s->value[RESERVE_C] * (1.0 - s->value[STEM_LEAF_FRAC]);
-				logger(g_log, "----Leaf Biomass initialization data  = %g tDM cell\n", s->value[BIOMASS_FOLIAGE_tDM]);
-				logger(g_log, "----Leaf Biomass initialization data  = %g tC cell\n", s->value[LEAF_C]);
-				 */
 				logger(g_log,"No Leaf Biomass nor LAI values from initialization file (exit)!!!!\n");
 				exit(1);
 			}

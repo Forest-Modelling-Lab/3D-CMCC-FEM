@@ -27,7 +27,9 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 	s->value[MAX_FINE_ROOT_C] =s->value[MAX_LEAF_C] * (1.0 - s->value[FINE_ROOT_LEAF_FRAC]);
 	logger(g_log, "MAX_FINE_ROOT_C = %f tC/area \n", s->value[MAX_LEAF_C]);
 
-	//fixme check compatibility of LAI and leaf biomass with initial data for evergreen
+	/***************************************************************************************************************/
+	/* note: special case for evergreen */
+
 	if ((s->value[PHENOLOGY] == 1.1 || s->value[PHENOLOGY] == 1.2) && ( !day && !month && !years ))
 	{
 		if ((s->value[LAI] > s->value[PEAK_LAI]) || (s->value[LEAF_C] > s->value[MAX_LEAF_C]))

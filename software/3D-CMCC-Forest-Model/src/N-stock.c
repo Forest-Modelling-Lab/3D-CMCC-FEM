@@ -44,7 +44,7 @@ void nitrogen_stock(species_t *const s)
 			logger(g_log, "Leaf falling nitrogen content = %f gN/m2\n", s->value[LEAF_N]);
 		}
 	}
-	/* evergreen */ //ALESSIOC todo todo todo
+	/* evergreen */ //ALESSIOC todo todo todo considering a reduction in leaf nitrogen for falling leaves
 	else
 	{
 

@@ -61,7 +61,6 @@ settings_t* settings_import(const char *const filename) {
 				s->time = *token;
 			break;
 
-			/* ALESSIOC TODO: maybe delete it and changed with plot/regional scale spatial resolution */
 			case 3:
 				s->symmetric_water_competition = *token;
 			break;

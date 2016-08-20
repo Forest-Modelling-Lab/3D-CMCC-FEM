@@ -160,23 +160,6 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
-	//fixme in this case when LAI = 0 there's no respiration
-	//		/* compute effective canopy cover */
-	//		if(s->value[LAI] < 1.0)
-	//		{
-	//			/* special case when LAI = < 1.0 */
-	//			leaf_cell_cover_eff = s->value[LAI] * s->value[CANOPY_COVER_DBHDC];
-	//		}
-	//		else
-	//		{
-	//			leaf_cell_cover_eff = s->value[CANOPY_COVER_DBHDC];
-	//		}
-	//		/* check for the special case in which is allowed to have more 100% of grid cell covered */
-	//		if(leaf_cell_cover_eff > 1.0)
-	//		{
-	//			leaf_cell_cover_eff = 1.0;
-	//		}
-
 	/* values are computed in gC/m2/day */
 	/* leaf growth respiration */
 	s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
