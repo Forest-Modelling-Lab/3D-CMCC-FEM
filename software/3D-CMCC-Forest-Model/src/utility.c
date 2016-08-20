@@ -331,8 +331,6 @@ void reset_monthly_class_variables(cell_t *const c)
 			for (species = a->species_count - 1; species >= 0; species -- )
 			{
 				s = &a->species[species];
-
-				s->value[MONTHLY_EVAPOTRANSPIRATION] = 0.;
 			}
 		}
 	}

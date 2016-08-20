@@ -96,6 +96,8 @@ void annual_tree_increment(cell_t *const c, const int layer, const int height, c
 	s->value[MAI] = s->value[VOLUME] / (double)a->value;
 	logger(g_log, "MAI-Mean Annual Increment = %g m^3/cell/yr \n", s->value[MAI]);
 
+	//ALESSIOC TODO do it at cell level!!
+
 	/* check */
 	CHECK_CONDITION(s->value[TREE_VOLUME], < single_tree_prev_vol);
 

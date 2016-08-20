@@ -157,9 +157,7 @@ enum {
 	HD_EFF,                     //Effective HD ratio to give to Crowding Competition Function
 	CC_TREE_HEIGHT,             //Tree Height in m from Crowding Competition Function in m
 	CC_AVDBH,                   //Average DBH from Crowding Competition Function in cm
-	NUMBER_DENSITY,             //Numbers of Tree per SIZECELL
 	DENSITY,                    //Numbers of Tree per m^2
-	TREE_AREA,                  //Average Available Area per Tree in m^2
 	SAPWOOD_AREA,
 	SAPWOOD_PERC,
 	HEARTWOOD_AREA,
@@ -171,12 +169,9 @@ enum {
 	CROWN_HEIGHT,               //Crown Height (m)
 	MASS_DENSITY,               //mass density
 	VOLUME,                     //Stem Volume
-	TOTAL_VOLUME,
 	TREE_VOLUME,                //Single Tree Volume (m^3/area)
 	CAI,                        //Current Annual Increment
-	IND_CAI,                    //Individual Current Annual Increment
 	MAI,                        //Mean Annual Volume Increment (m^3/area year)
-	IND_MAI,                    //Individual Mean Annual Increment
 	STEMCONST,
 
 	/* PAR */
@@ -257,14 +252,6 @@ enum {
 	CANOPY_CONDUCTANCE,
 	CANOPY_BLCOND,              //Canopy Boundary Layer conductance (m s-1)
 	FRAC_DAYTIME_TRANSP,        //fraction of daytime for transpiration (and photosynthesis)
-	RAIN_INTERCEPTED,
-	CANOPY_WATER_STORED,        //residual of canopy water intercepted and not evaporated
-	CANOPY_EVAPOTRANSPIRATION,
-	CANOPY_EVAPORATION,         //Evaporation (mm)
-	MONTHLY_EVAPOTRANSPIRATION, //for WUE
-	ASW,                        //available soil water per mm/ha
-	WUE,                        //Water use efficiency (gDM/mm)
-
 	CANOPY_INT,
 	CANOPY_EVAPO,
 	CANOPY_WET,                 //it should'nt be reset every day
@@ -300,8 +287,6 @@ enum {
 	NPP_tC,
 	MONTHLY_NPP_tC,
 	YEARLY_NPP_tC,
-
-	YEARLY_RAIN,                //Yearly Rain
 
 	/*biomass variables*/
 	/* carbon to carbon pools in gC/m2/day */
@@ -491,7 +476,6 @@ enum {
 	OLD_BIOMASS_COARSE_ROOT_LIVE_WOOD,
 	OLD_BIOMASS_STEM_BRANCH_LIVE_WOOD,
 	FIRST_DAY_LAI,
-
 
 	/*Maintenance respiration*/
 	DAILY_LEAF_MAINT_RESP,
