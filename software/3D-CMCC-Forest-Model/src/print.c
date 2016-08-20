@@ -193,7 +193,7 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	logger(g_log, "* x = %d\n", c->x);
 	logger(g_log, "* y = %d\n", c->y);
 	logger(g_log, "* z (layer) = %d\n", l->layer_z);
-	logger(g_log, "* z (height) = %d\n", h->z);
+	logger(g_log, "* z (height) = %d\n", h->height_z);
 	logger(g_log, "--class level data--\n");
 	logger(g_log, "- Height = %g m\n", h->value);
 	logger(g_log, "- Class Age = %d years \n", a->value);

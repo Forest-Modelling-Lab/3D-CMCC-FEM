@@ -355,7 +355,7 @@ void reset_annual_class_variables(cell_t *const c)
 	{
 		h = &c->heights[height];
 
-		h->z = 0.;
+		h->height_z = 0.;
 
 		/* age class level */
 		for (age = h->ages_count - 1; age >= 0; age --)

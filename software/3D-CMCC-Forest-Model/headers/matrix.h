@@ -788,10 +788,10 @@ typedef struct
 	int ages_count;
 
 	double value;
-	int z;
-	int layer_coverage;
-	int layer;
-	int dominance;         /* dominance = -1 no trees in veg period, dominance = 1 trees in veg period */
+	int height_z;
+	double height_density;      /* tree density per height class (n_tree/sizecell) */
+	double height_cover;        /* height class cover per height class (n_tree/sizecell) */
+
 } height_t;
 
 typedef struct

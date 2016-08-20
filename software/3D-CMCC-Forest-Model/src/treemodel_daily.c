@@ -129,7 +129,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* check if tree height class matches with corresponding cell layer */
-			if( h->z == l->layer_z )
+			if( h->height_z == l->layer_z )
 			{
 				logger(g_log,"*****************************************************************************\n"
 						"                              height = %g                              \n"
@@ -183,7 +183,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* check for adult or sapling age */
 							tree_period ( c, layer, height, age, species);
 
-							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", h->z);
+							logger(g_log, "--PHYSIOLOGICAL PROCESSES LAYER %d --\n", l->layer_z);
 
 							if ( s->counter[VEG_UNVEG] == 1 )
 							{

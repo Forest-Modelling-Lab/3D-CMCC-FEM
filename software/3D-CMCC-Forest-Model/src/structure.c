@@ -59,16 +59,16 @@ void annual_forest_structure(cell_t* const c)
 		/* first height class processed */
 		if ( height == c->heights_count - 1 )
 		{
-			c->heights[height].z = c->t_layers_count - 1;
-			logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+			c->heights[height].height_z = c->t_layers_count - 1;
+			logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
 		}
 		/* other class processed */
 		else
 		{
 			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
 			{
-				c->heights[height].z = c->heights[height + 1].z - 1;
-				logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].z);
+				c->heights[height].height_z = c->heights[height + 1].height_z - 1;
+				logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
 			}
 		}
 	}
@@ -109,7 +109,7 @@ void daily_forest_structure (cell_t *const c)
 	{
 		for ( height = c->heights_count -1; height >= 0 ; --height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				c->t_layers[layer].layer_n_height_class += 1;
 			}
@@ -129,13 +129,13 @@ void daily_forest_structure (cell_t *const c)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
 					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 					{
-						if( layer == c->heights[height].z )
+						if( layer == c->heights[height].height_z )
 						{
 							c->t_layers[layer].layer_n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
 						}
@@ -267,7 +267,7 @@ void daily_forest_structure (cell_t *const c)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
@@ -304,7 +304,7 @@ void daily_forest_structure (cell_t *const c)
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
@@ -389,7 +389,7 @@ void daily_forest_structure (cell_t *const c)
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
@@ -428,7 +428,7 @@ void daily_forest_structure (cell_t *const c)
 	{
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
-			if( layer == c->heights[height].z )
+			if( layer == c->heights[height].height_z )
 			{
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
@@ -492,7 +492,7 @@ void daily_forest_structure (cell_t *const c)
 		{
 			for ( height = c->heights_count -1; height >= 0 ; --height )
 			{
-				if( layer == c->heights[height].z )
+				if( layer == c->heights[height].height_z )
 				{
 					/* recompute number of height classes */
 					c->t_layers[layer].layer_n_height_class += 1;
@@ -501,7 +501,7 @@ void daily_forest_structure (cell_t *const c)
 				{
 					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 					{
-						if( layer == c->heights[height].z )
+						if( layer == c->heights[height].height_z )
 						{
 							/* recompute number of trees for each layer */
 							c->t_layers[layer].layer_n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
@@ -531,7 +531,7 @@ void daily_forest_structure (cell_t *const c)
 		{
 			for ( height = 0; height < c->heights_count ; ++height )
 			{
-				if( layer == c->heights[height].z )
+				if( layer == c->heights[height].height_z )
 				{
 					for ( age = 0; age < c->heights[height].ages_count ; ++age )
 					{
@@ -567,7 +567,7 @@ void daily_forest_structure (cell_t *const c)
 
 			for ( height = 0; height < c->heights_count ; ++height )
 			{
-				if( layer == c->heights[height].z )
+				if( layer == c->heights[height].height_z )
 				{
 					for ( age = 0; age < c->heights[height].ages_count ; ++age )
 					{
