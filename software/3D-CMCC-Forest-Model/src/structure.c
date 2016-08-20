@@ -608,11 +608,14 @@ void daily_forest_structure (cell_t *const c)
 	}
 
 	/**************************************************************************************************/
-	/* compute cell cover (cell level) */
-	logger(g_log, "compute cell cover (cell level)\n\n");
+	/* compute number of total trees and cell cover (cell level) */
+	logger(g_log, "compute number of total trees and cell cover (cell level)\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
+		/* compute total number of trees per cell */
+		c->cell_n_trees += c->t_layers[layer].layer_n_trees;
+
 		/* assuming that plants tend to occupy the part of the cell not covered by the others */
 		c->cell_cover += c->t_layers[layer].layer_cover;
 	}
@@ -622,6 +625,7 @@ void daily_forest_structure (cell_t *const c)
 	{
 		c->cell_cover = 1;
 	}
+	logger(g_log, "-Number of trees cell level = %d trees/cell\n", c->cell_n_trees);
 	logger(g_log, "-Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
 	logger(g_log, "**************************************\n\n");
 

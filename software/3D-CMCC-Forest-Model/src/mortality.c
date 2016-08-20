@@ -164,7 +164,7 @@ void Crowding_competition_mortality(cell_t *const c, const int layer)
 						//}
 
 						/* update at cell level */
-						c->n_tree -= deadtree;
+						c->cell_n_trees -= deadtree;
 						c->daily_dead_tree += deadtree;
 						c->monthly_dead_tree += deadtree;
 						c->annual_dead_tree += deadtree;

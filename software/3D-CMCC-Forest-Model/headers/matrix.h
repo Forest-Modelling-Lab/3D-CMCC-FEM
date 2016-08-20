@@ -170,7 +170,6 @@ enum {
 	STAND_BASAL_AREA_m2,
 	CROWN_HEIGHT,               //Crown Height (m)
 	MASS_DENSITY,               //mass density
-	PREVIOUS_VOLUME,            //previous year volume for CAI
 	VOLUME,                     //Stem Volume
 	TOTAL_VOLUME,
 	TREE_VOLUME,                //Single Tree Volume (m^3/area)
@@ -919,7 +918,7 @@ typedef struct
 	int top_layer;                                      /* index for dominant layer */
 	int saplings_counter;                               /* number of class as sapling */
 	double cell_cover;                                  /* canopy cover (ratio) */
-	int n_tree;                                         /* number of trees */
+	int cell_n_trees;                                   /* number of trees */
 
 	int daily_dead_tree;                                /* daily number of dead tree */
 	double monthly_dead_tree;                           /* monthly number of dead tree */

@@ -164,9 +164,6 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							/* beginning of simulation (every year included the first one) */
 							if ( c->doy == 1)
 							{
-								/* beginning of simulation (only for first year) */
-								if ( !year )First_day ( c, layer, height, age, species );
-
 								/* compute annual minimum reserve for incoming year */
 								annual_minimum_reserve( s );
 

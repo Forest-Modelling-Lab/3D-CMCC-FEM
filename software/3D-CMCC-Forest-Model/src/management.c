@@ -489,7 +489,7 @@ void clearcut_timber_without_request (cell_t *const c, const int layer, const in
 	logger(g_log, "Total Biomass = %f tC/ha\n", s->value[TOTAL_W]);
 
 	/* update stand trees */
-	c->n_tree -= removed_tree;
+	c->cell_n_trees -= removed_tree;
 	c->annual_dead_tree += removed_tree;
 
 	/* adding coarse and fine root and leaf to litter pool */

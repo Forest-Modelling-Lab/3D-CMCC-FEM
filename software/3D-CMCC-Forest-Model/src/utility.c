@@ -15,6 +15,7 @@ void reset_daily_cell_variables(cell_t *const c)
 	logger(g_log, "...resetting cell level daily variables...\n");
 
 	c->cell_cover = 0.;
+	c->cell_n_trees = 0.;
 
 	/* reset daily radiative variables */
 	c->par = 0.;
@@ -408,48 +409,4 @@ void reset_annual_class_variables(cell_t *const c)
 		}
 	}
 }
-
-void First_day(cell_t *const c, int layer, int height, int age, int species)
-{
-	height_t *h;
-	age_t *a;
-	species_t *s;
-
-	h = &c->heights[height];
-	a = &c->heights[height].ages[age];
-	s = &c->heights[height].ages[age].species[species];
-
-	//fixme maybe useless function in this way, better implement elsewhere
-
-	logger(g_log, "..first day..\n");
-
-	/* height class level */
-	for (height = c->heights_count - 1; height >= 0; height--)
-	{
-		/* age class level */
-		for (age = h->ages_count - 1; age >= 0; age --)
-		{
-			/* species level */
-			for (species = a->species_count - 1; species >= 0; species --)
-			{
-				//fixme move elsewhere
-				/* compute cell level number of trees */
-				c->n_tree += s->counter[N_TREE];
-
-				//fixme move elsewhere
-//				s->turnover->FINERTOVER = (int)(365 / s->value[LEAF_FINEROOT_TURNOVER]);
-//				s->turnover->COARSERTOVER = (int)(365 / s->value[COARSEROOT_TURNOVER]);
-//				s->turnover->STEMTOVER = (int)(365 / s->value[LIVE_WOOD_TURNOVER]);
-//				s->turnover->BRANCHTOVER = (int)(365 / s->value[BRANCHTTOVER]);
-
-				//fixme move elsewhere
-				/* compute value for volume for next years comparisons (CAI-MAI) */
-				s->value[MASS_DENSITY] = s->value[RHOMAX] +	(s->value[RHOMIN] - s->value[RHOMAX]) *	exp(-ln2 * (h->value / s->value[TRHO]));
-				s->value[PREVIOUS_VOLUME] = s->value[STEM_C] * GC_GDM *	(1 - s->value[FRACBB]) / s->value[MASS_DENSITY];
-			}
-		}
-	}
-}
-
-
 
