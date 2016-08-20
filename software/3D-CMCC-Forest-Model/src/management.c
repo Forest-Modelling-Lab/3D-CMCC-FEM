@@ -193,7 +193,7 @@ void clearcut_coppice(cell_t *const c, const int layer, const int height, const 
 	/* CLEARCUT FOR COPPICE */
 	logger(g_log, "CLEARCUT FOR COPPICE FUNCTION \n");
 	logger(g_log, "Layer modelled z = %d \n", layer);
-	logger(g_log, "Numbers of layers = %d \n", l->n_layers);
+	logger(g_log, "Numbers of layers = %d \n", c->t_layers_count);
 	logger(g_log, "Number of stools = %d \n", s->counter[N_STUMP]);
 
 	printf ("Number of trees removed = ?\n");

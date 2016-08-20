@@ -165,9 +165,9 @@ void reset_daily_layer_variables(cell_t *const c)
 		l = &c->t_layers[layer];
 
 		/* reset layer level variables */
-		l->height_class = 0.;
-		l->n_trees = 0.;
-		l->density = 0.;
+		l->layer_n_height_class = 0.;
+		l->layer_n_trees = 0.;
+		l->layer_density = 0.;
 		l->layer_cover = 0.;
 	}
 }

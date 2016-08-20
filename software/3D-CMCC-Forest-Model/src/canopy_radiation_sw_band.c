@@ -30,12 +30,9 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	 * it means that a square meter grid cell * represents overall grid cell (see Duursma and Makela, 2007) */
 
 	/* it follows a little bit different rationale compared to BIOME-BGC approach
-	*
-	* for PAR and short wave they both follows same rationale
-	*
-	* in BIOME_BGC:	*
+	* in BIOME_BGC:
 	* apar = par * (1 - (exp(- K * LAI)));
-	* apar_sun = K * par * (1 - (exp(-LAI_SUN)));
+	* apar_sun = par * (1 - (exp(- K * LAI_SUN)));
 	* apar_shade = apar- apar_sun;
 	*
 	* in 3D-CMCC FEM:
@@ -44,16 +41,8 @@ void canopy_sw_band_abs_trans_refl_radiation(cell_t *const c, const int height, 
 	* apar_shade = par_transm_sun * (1 - (exp(- K * LAI_SHADE)));
 	* apar = apar_sun + apar_shade;
 	*
-	* then it considers that an amount of sunlit leaf are not completely outside the canopy
-	* but there's an exponential decay of absorption also for sunlit leaves
-	*
-	* note: there's a little difference in the two methods that causes a slight overestimation for
-	* 3D-CMCC of about:
-	* -1.2 molPAR/m2/day (with par = 50 molPAR/m2/day)
-	* -7.5 W/m2 (with incoming SW = 300 W/m2)
-	* (with LAI = 5, LAI_SUN = 0.5, LAI_SHADE = 4.5, and K = 0.6)
-	* absorption for sun leaves (and consequently the same amount
-	* is under estimated for shaded leaves) being the total absorbed par and sw the same
+	* then it consider that an amount of sunlit leaf are not completely outside the canopy
+	* but there's an exponential decay of absorption also for sunlit foliage	 *
 	*/
 
 	/* compute effective canopy cover */
@@ -374,7 +363,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 
 	/*****************************************************************************************************************/
 	/* when matches the last height class in the layer is processed */
-	if ( l->height_class == layer_height_class_counter )
+	if ( l->layer_n_height_class == layer_height_class_counter )
 	{
 		logger(g_log,"\nlast height class in layer processed\n");
 		logger(g_log,"update radiation values for lower layer\n");

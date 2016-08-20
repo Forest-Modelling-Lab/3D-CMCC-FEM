@@ -260,7 +260,7 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 				/* note: Net Rad is Short wave flux */
 				//fixme why??????????
-				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));
+				net_rad = s->value[SW_RAD_ABS_SUN] / (1.0 - exp(- s->value[LAI]));;
 				logger(g_log, "sw rad for evaporation (LAI sun) = %g W/m2\n", net_rad);
 
 				/* call Penman-Monteith function, returns e in kg/m2/s for transpiration and W/m2 for latent heat */

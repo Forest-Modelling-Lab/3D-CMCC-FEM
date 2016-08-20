@@ -120,7 +120,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 				"                                layer = %d                                 \n"
 				"*****************************************************************************\n",layer);
 
-		l->z = layer;
+		l->layer_z = layer;
 
 		/* loop on each heights starting from highest to lower */
 		for ( height = c->heights_count -1 ; height >= 0; --height )
@@ -129,7 +129,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 			h = &m->cells[cell].heights[height];
 
 			/* check if tree height class matches with corresponding cell layer */
-			if( h->z == l->z )
+			if( h->z == l->layer_z )
 			{
 				logger(g_log,"*****************************************************************************\n"
 						"                              height = %g                              \n"

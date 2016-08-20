@@ -111,13 +111,13 @@ void daily_forest_structure (cell_t *const c)
 		{
 			if( layer == c->heights[height].z )
 			{
-				c->t_layers[layer].height_class += 1;
+				c->t_layers[layer].layer_n_height_class += 1;
 			}
 		}
-		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->t_layers[layer].height_class);
+		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->t_layers[layer].layer_n_height_class);
 	}
 	/* check */
-	CHECK_CONDITION(c->t_layers[layer].height_class, < 0);
+	CHECK_CONDITION(c->t_layers[layer].layer_n_height_class, < 0);
 
 	logger(g_log, "**************************************\n\n");
 
@@ -137,13 +137,13 @@ void daily_forest_structure (cell_t *const c)
 					{
 						if( layer == c->heights[height].z )
 						{
-							c->t_layers[layer].n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
+							c->t_layers[layer].layer_n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
 						}
 					}
 				}
 			}
 		}
-		logger(g_log, "-layer %d number of trees = %d\n", layer, c->t_layers[layer].n_trees);
+		logger(g_log, "-layer %d number of trees = %d\n", layer, c->t_layers[layer].layer_n_trees);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -153,9 +153,9 @@ void daily_forest_structure (cell_t *const c)
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
-		c->t_layers[layer].density = c->t_layers[layer].n_trees / g_settings->sizeCell;
+		c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
 
-		logger(g_log, "-layer %d density = %g\n", layer, c->t_layers[layer].density);
+		logger(g_log, "-layer %d density = %g\n", layer, c->t_layers[layer].layer_density);
 	}
 	logger(g_log, "**************************************\n\n");
 
@@ -276,14 +276,14 @@ void daily_forest_structure (cell_t *const c)
 						s = &c->heights[height].ages[age].species[species];
 
 						//fixme check it, it considers denmax and denmin using species level values..
-						if(c->t_layers[layer].density > s->value[DENMAX])
+						if(c->t_layers[layer].layer_density > s->value[DENMAX])
 						{
-							c->t_layers[layer].density = s->value[DENMAX];
+							c->t_layers[layer].layer_density = s->value[DENMAX];
 							logger(g_log, "density > DENMAX recomputed density based on DENMAX\n");
 						}
-						if(c->t_layers[layer].density < s->value[DENMIN])
+						if(c->t_layers[layer].layer_density < s->value[DENMIN])
 						{
-							c->t_layers[layer].density = s->value[DENMIN];
+							c->t_layers[layer].layer_density = s->value[DENMIN];
 							logger(g_log, "density < DENMIN recomputed density based on DENMIN\n");
 						}
 					}
@@ -317,7 +317,7 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
 						s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-								(c->t_layers[layer].density - s->value[DENMIN]) + s->value[DBHDCMAX]);
+								(c->t_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 						logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
 						/* check if DBHDCeffective exceeds maximum or minimum values */
@@ -466,9 +466,9 @@ void daily_forest_structure (cell_t *const c)
 			Crowding_competition_mortality (c, layer);
 
 			/* reset values for layer */
-			c->t_layers[layer].height_class = 0;
-			c->t_layers[layer].n_trees = 0;
-			c->t_layers[layer].density = 0;
+			c->t_layers[layer].layer_n_height_class = 0;
+			c->t_layers[layer].layer_n_trees = 0;
+			c->t_layers[layer].layer_density = 0;
 		}
 		else
 		{
@@ -495,7 +495,7 @@ void daily_forest_structure (cell_t *const c)
 				if( layer == c->heights[height].z )
 				{
 					/* recompute number of height classes */
-					c->t_layers[layer].height_class += 1;
+					c->t_layers[layer].layer_n_height_class += 1;
 				}
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
@@ -504,19 +504,19 @@ void daily_forest_structure (cell_t *const c)
 						if( layer == c->heights[height].z )
 						{
 							/* recompute number of trees for each layer */
-							c->t_layers[layer].n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
+							c->t_layers[layer].layer_n_trees += c->heights[height].ages[age].species[species].counter[N_TREE];
 						}
 					}
 				}
 			}
 
 			/*recompute density for each layer */
-			c->t_layers[layer].density = c->t_layers[layer].n_trees / g_settings->sizeCell;
+			c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
 
 			logger(g_log, "-layer = %d\n", layer);
-			logger(g_log, "-height class(es) = %d\n", c->t_layers[layer].height_class);
-			logger(g_log, "-number of trees = %d\n", c->t_layers[layer].n_trees);
-			logger(g_log, "-density = %g\n", c->t_layers[layer].density);
+			logger(g_log, "-height class(es) = %d\n", c->t_layers[layer].layer_n_height_class);
+			logger(g_log, "-number of trees = %d\n", c->t_layers[layer].layer_n_trees);
+			logger(g_log, "-density = %g\n", c->t_layers[layer].layer_density);
 		}
 		logger(g_log, "**************************************\n\n");
 
@@ -539,15 +539,14 @@ void daily_forest_structure (cell_t *const c)
 						{
 							s = &c->heights[height].ages[age].species[species];
 
-							//fixme check it, it considers denmax and denmin using species level values..
-							if(c->t_layers[layer].density > s->value[DENMAX])
+							if(c->t_layers[layer].layer_density > s->value[DENMAX])
 							{
-								c->t_layers[layer].density = s->value[DENMAX];
+								c->t_layers[layer].layer_density = s->value[DENMAX];
 								logger(g_log, "recomputed density based on DENMAX\n");
 							}
-							if(c->t_layers[layer].density < s->value[DENMIN])
+							if(c->t_layers[layer].layer_density < s->value[DENMIN])
 							{
-								c->t_layers[layer].density = s->value[DENMIN];
+								c->t_layers[layer].layer_density = s->value[DENMIN];
 								logger(g_log, "recomputed density based on DENMIN\n");
 							}
 						}
@@ -581,7 +580,7 @@ void daily_forest_structure (cell_t *const c)
 							logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
 							s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
-									(c->t_layers[layer].density - s->value[DENMIN]) + s->value[DBHDCMAX]);
+									(c->t_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 							logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
 							logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);

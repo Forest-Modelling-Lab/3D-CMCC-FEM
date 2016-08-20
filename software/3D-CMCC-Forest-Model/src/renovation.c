@@ -32,7 +32,7 @@ void renovation(cell_t *const c, const int layer, const int height, const int ag
 
 	/* compute light availability for seeds of dominant layer */
 
-	if (l->z == 0)
+	if (l->layer_z == 0)
 	{
 		//logger(g_log, "Average Yearly Par at Soil Level for renovation = %f molPAR/m^2 month\n", m->cells[cell].av_yearly_par_soil);
 		//convert molPAR/m^2 month into W/m^2 hour
