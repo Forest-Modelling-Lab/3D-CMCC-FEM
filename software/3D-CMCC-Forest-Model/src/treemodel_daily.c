@@ -287,7 +287,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 								/* Mortality based on self thinning (3-PG) */
 								//logger(g_log, "Get_Mortality COMMENTATA per bug, REINSERIRE!!!!!!!!!!!!!!!!!\n");
-								//if ( s->management == T ) Mortality (c, height, age, species, years);
+								//if ( s->management == T ) self_thinning_mortality_3PG (c, height, age, species, years);
 								//if ( s->management == C ) stool_mortality ( c, layer, height, age, species );
 
 								/*Mortality based on tree Age (LPJ)*/

@@ -16,25 +16,125 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void Crowding_competition_mortality(cell_t *const c, const int layer)
+int self_pruning ( cell_t *const c, const int layer )
+{
+	int height;
+	int age;
+	int species;
+
+	double perc;
+	double old_crown_area;
+
+	tree_layer_t *l;
+	height_t *h;
+	age_t *a;
+	species_t *s;
+
+	l = &c->t_layers[layer];
+
+	/* SELF-PRUNING function */
+	/*it reduces dbhdc values for lower height class up to dbhdcmin otherwise
+	 * mortality for self-thinning*/
+
+	logger(g_log, "\n\n*****SELF-PRUNING FUNCTION for layer %d*****\n", layer);
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		h = &c->heights[height];
+
+		/* first of all sort by descending height */
+		/* model makes prune before lower height in each later */
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+
+		for ( age = 0; age < h->ages_count ; ++age )
+		{
+			a = &c->heights[height].ages[age];
+
+			for ( species = 0; species < a->species_count; ++species )
+			{
+				s = &c->heights[height].ages[age].species[species];
+
+				logger(g_log, "layer %d height %g\n", layer, h->value);
+
+				/* remove current tree height class canopy cover and recompute until
+				 * lower dbhdcmin is reached */
+				l->layer_cover -= s->value[CANOPY_COVER_DBHDC];
+
+				/* compute possible tree height class canopy cover to satisfy max layer cover */
+				s->value[CANOPY_COVER_DBHDC] = g_settings->max_layer_cover - l->layer_cover;
+
+				/* compute possible crown area for above canopy cover dbhdc */
+				old_crown_area = s->value[CROWN_AREA];
+				s->value[CROWN_AREA] = (s->value[CANOPY_COVER_DBHDC] * 100.0) / s->counter[N_TREE];
+
+				/* compute possible crown diameter for above crown area */
+				s->value[CROWN_DIAMETER]= sqrt(s->value[CROWN_AREA] / Pi ) * 2;
+
+				/* recompute dbhdc for that canopy cover */
+				s->value[DBHDC_EFF] = s->value[CROWN_DIAMETER] / s->value[AVDBH];
+
+				/* check if reduction in dbhdc satisfy max layer cover */
+				if ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+				{
+					/* self-pruning was enough */
+					logger(g_log, "self-pruning was enough");
+
+					/* reduce proportionally to the crown area reduction the amount of branch C pool */
+					/* compute percentage in crown area reduction for self-pruning */
+					perc = (s->value[CROWN_AREA] / old_crown_area) * 100.0;
+
+					/* update branch C pool */
+					s->value[BRANCH_C] *= perc;
+
+					/* update branch N pool */
+					s->value[BRANCH_N] *= perc;
+
+					/* self-pruned branch to litter */
+					s->value[C_TO_LITTER] += s->value[BRANCH_C] * (1 - perc);
+
+					//todo to be tested
+					//return 1;
+					exit(1);
+				}
+				else
+				{
+					//todo to be tested
+					/* self-pruning was not enough */
+					logger(g_log, "self-pruning was not enough");
+					//return 0;
+					exit(1);
+				}
+			}
+		}
+	}
+}
+
+void self_thinning(cell_t *const c, const int layer)
 {
 	int height;
 	int age;
 	int species;
 
 	int deadtree = 0;
-	int oldNstump;
-	int deadstump = 0;
+	//int oldNstump;
+	//int deadstump = 0;
 
 	height_t *h;
 	age_t *a;
 	species_t *s;
 
+	/* "First, large plants suppress small plants.
+	 * The result is a “hierarchy of dominance and suppression” in which the smaller plants
+	 * are at an accumulating disadvantage and finally die".
+	 * Westoby, 1984, Advances in Ecological Research */
+
+	/* This is a sort of self thinning rules not based on biomass but based on canopy cover */
+
 
 	/* the model makes die trees of the lower height class for that layer because
 	it passes through the function sort_by_height_desc the height classes starting from the lowest */
 
-	logger(g_log, "\n\n*****CROWDING COMPETITION MORTALITY FUNCTION for layer %d*****\n", layer);
+	logger(g_log, "\n\n*****SELF THINNING MORTALITY for layer %d*****\n", layer);
 
 	for ( height = c->heights_count - 1; height >= 0; height-- )
 	{
@@ -125,19 +225,20 @@ void Crowding_competition_mortality(cell_t *const c, const int layer)
 								(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree) +
 								(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
 
-//						logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
-//						logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
+						logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
 
+						//ALESSIOR how remove one class??
 						//if(s->counter[N_TREE] == 0)
 						//{
 						//	//delete classes due to mortality
@@ -193,95 +294,6 @@ void Crowding_competition_mortality(cell_t *const c, const int layer)
 
 }
 
-void update_biomass_after_mortality ()
-{
-	//fixme to do
-}
-
-
-/*Age mortality function from LPJ*/
-//todo add to log results this function
-void Age_Mortality (age_t *const a, species_t *const s)
-{
-
-	static int Dead_trees;
-
-	/* Age probability function */
-	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
-
-
-	if ((s->counter[N_TREE] * s->value[AGEMORT]) > 1)
-	{
-		logger(g_log, "**MORTALITY based on Tree Age (LPJ)**\n");
-		logger(g_log, "Age = %d years\n", a->value);
-		logger(g_log, "Age Mortality based on Tree Age (LPJ) = %g\n", s->value[AGEMORT]);
-		Dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
-		logger(g_log, "DEAD TREES = %d\n", Dead_trees);
-		s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
-		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
-		s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
-		//logger(g_log, "Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
-		//logger(g_log, "Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
-		//logger(g_log, "Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM] );
-
-		//----------------Number of trees after mortality---------------------
-
-		s->counter[N_TREE] = s->counter[N_TREE] - Dead_trees;
-		logger(g_log, "Number of Trees  after age mortality = %d trees\n", s->counter[N_TREE]);
-
-		if ( !s->counter[DEAD_STEMS])
-		{
-			s->counter[DEAD_STEMS] = Dead_trees;
-		}
-		else
-		{
-			s->counter[DEAD_STEMS] += Dead_trees;
-		}
-	}
-	else
-	{
-		logger(g_log, "**NO-MORTALITY based on Tree Age (LPJ)**\n");
-	}
-	logger(g_log, "**********************************\n");
-}
-
-
-//from LPJ Growth efficiency mortality
-void Greff_Mortality (species_t *const s)
-{
-	static double greff;
-	static double kmort1 = 0.02; //modified from original version
-	static double kmort2 = 0.3;
-	static double mortgreff;
-	static int GreffDeadTrees;
-
-	logger(g_log, "**MORTALITY based on Growth Efficiency (LPJ)**\n");
-
-	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE_tDM] * s->value[SLA_AVG]));
-	//logger(g_log, "greff from LPJ = %g\n", greff);
-	//logger(g_log, "DEL_TOTAL_W = %g\n", s->value[DEL_TOTAL_W]);
-	//logger(g_log, "WF= %g\n", s->value[BIOMASS_FOLIAGE]);
-
-	mortgreff = kmort1 / (1 + kmort2 * greff);
-	//logger(g_log, "rate mort for greff from LPJ = %g\n", mortgreff);
-
-	GreffDeadTrees = (int)(mortgreff * s->counter[N_TREE]);
-
-	logger(g_log, "Dead trees for greff = %d\n", GreffDeadTrees);
-
-	logger(g_log, "Number of trees before greff mortality = %d trees/ha\n", s->counter[N_TREE]);
-
-	s->counter[N_TREE] -= GreffDeadTrees;
-	logger(g_log, "Number of trees less greff mortality = %d trees/ha\n", s->counter[N_TREE]);
-
-}
-
-
-
-
-//in LPJ se CanCover supera 0.95 vengono uccisi tanti alberi finchè la CanCover non torna al massimo a 0.95
-
-
 /*Self-thinnig mortality function from 3PG*/
 //----------------------------------------------------------------------------//
 //                                                                            //
@@ -296,7 +308,7 @@ void Greff_Mortality (species_t *const s)
 //                                                                            //
 //----------------------------------------------------------------------------//
 
-void Mortality (species_t *const s, int years)
+void self_thinning_mortality_3PG (species_t *const s, int years)
 // TreeNumber = m->lpCell[index].InitialNTree, Ws = Ws
 // TreeNumber = m->lpCell[index].NTree, Ws = Ws
 {
@@ -409,6 +421,88 @@ void Mortality (species_t *const s, int years)
 	logger(g_log, "**********************************\n");
 
 
+
+}
+
+void update_biomass_after_mortality ()
+{
+	//fixme to do
+}
+
+
+/*Age mortality function from LPJ*/
+void Age_Mortality (age_t *const a, species_t *const s)
+{
+
+	static int Dead_trees;
+
+	/* Age probability function */
+	s->value[AGEMORT] = (-(3 * log (0.001)) / (s->value[MAXAGE])) * pow (((double)a->value /s->value[MAXAGE]), 2);
+
+
+	if ((s->counter[N_TREE] * s->value[AGEMORT]) > 1)
+	{
+		logger(g_log, "**MORTALITY based on Tree Age (LPJ)**\n");
+		logger(g_log, "Age = %d years\n", a->value);
+		logger(g_log, "Age Mortality based on Tree Age (LPJ) = %g\n", s->value[AGEMORT]);
+		Dead_trees = (int)(s->counter[N_TREE] * s->value[AGEMORT]);
+		logger(g_log, "DEAD TREES = %d\n", Dead_trees);
+		s->value[BIOMASS_FOLIAGE_tDM] = s->value[BIOMASS_FOLIAGE_tDM] - s->value[MF] * Dead_trees * (s->value[BIOMASS_FOLIAGE_tDM] / s->counter[N_TREE]);
+		s->value[BIOMASS_ROOTS_TOT_tDM] = s->value[BIOMASS_ROOTS_TOT_tDM] - s->value[MR] * Dead_trees * (s->value[BIOMASS_ROOTS_TOT_tDM] / s->counter[N_TREE]);
+		s->value[BIOMASS_STEM_tDM] = s->value[BIOMASS_STEM_tDM] - s->value[MS] * Dead_trees * (s->value[BIOMASS_STEM_tDM] / s->counter[N_TREE]);
+		//logger(g_log, "Wf after dead = %g tDM/ha\n", s->value[BIOMASS_FOLIAGE]);
+		//logger(g_log, "Wr after dead = %g tDM/ha\n", s->value[BIOMASS_ROOTS_TOT]);
+		//logger(g_log, "Ws after dead = %g tDM/ha\n", s->value[BIOMASS_STEM] );
+
+		//----------------Number of trees after mortality---------------------
+
+		s->counter[N_TREE] = s->counter[N_TREE] - Dead_trees;
+		logger(g_log, "Number of Trees  after age mortality = %d trees\n", s->counter[N_TREE]);
+
+		if ( !s->counter[DEAD_STEMS])
+		{
+			s->counter[DEAD_STEMS] = Dead_trees;
+		}
+		else
+		{
+			s->counter[DEAD_STEMS] += Dead_trees;
+		}
+	}
+	else
+	{
+		logger(g_log, "**NO-MORTALITY based on Tree Age (LPJ)**\n");
+	}
+	logger(g_log, "**********************************\n");
+}
+
+
+//from LPJ Growth efficiency mortality
+void Greff_Mortality (species_t *const s)
+{
+	static double greff;
+	static double kmort1 = 0.02; //modified from original version
+	static double kmort2 = 0.3;
+	static double mortgreff;
+	static int GreffDeadTrees;
+
+	logger(g_log, "**MORTALITY based on Growth Efficiency (LPJ)**\n");
+
+	greff = (s->value[DEL_TOTAL_W] / (s->value[BIOMASS_FOLIAGE_tDM] * s->value[SLA_AVG]));
+	//logger(g_log, "greff from LPJ = %g\n", greff);
+	//logger(g_log, "DEL_TOTAL_W = %g\n", s->value[DEL_TOTAL_W]);
+	//logger(g_log, "WF= %g\n", s->value[BIOMASS_FOLIAGE]);
+
+	mortgreff = kmort1 / (1 + kmort2 * greff);
+	//logger(g_log, "rate mort for greff from LPJ = %g\n", mortgreff);
+
+	GreffDeadTrees = (int)(mortgreff * s->counter[N_TREE]);
+
+	logger(g_log, "Dead trees for greff = %d\n", GreffDeadTrees);
+
+	logger(g_log, "Number of trees before greff mortality = %d trees/ha\n", s->counter[N_TREE]);
+
+	s->counter[N_TREE] -= GreffDeadTrees;
+	logger(g_log, "Number of trees less greff mortality = %d trees/ha\n", s->counter[N_TREE]);
 
 }
 
