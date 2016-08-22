@@ -162,19 +162,19 @@ void self_thinning(cell_t *const c, const int layer)
 				if (s->management == T)
 				{
 					/* compute average biomass */
-					s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
-					s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])/1000.0;
+					s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 
 					/* mortality */
 					while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] > 0)
@@ -196,15 +196,15 @@ void self_thinning(cell_t *const c, const int layer)
 							/* mortality for the higher height class */
 							while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].ages[age].species[species].counter[N_TREE] > 0)
 							{
-								--s->counter[N_TREE];
+								s->counter[N_TREE] -= 1;;
 								++deadtree;
 
 								c->heights[height + 1].ages[age].species[species].value[CANOPY_COVER_DBHDC] -=
-										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell;
+										(c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 								/* recompute layer level canopy cover */
 								c->t_layers[layer].layer_cover -=
-										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell;
+										(c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 								/* check */
 								CHECK_CONDITION(s->counter[N_TREE], <= 0);
@@ -212,29 +212,6 @@ void self_thinning(cell_t *const c, const int layer)
 						}
 //						logger(g_log, "Tree Removed %d Tree remaining %d from height class %g species %s dbh %g\n", deadtree, s->counter[N_TREE], h->value, s->name, s->value[AVDBH]);
 //						logger(g_log, "layer %d layer cover = %g %%\n", layer, c->t_layers[layer].layer_cover);
-
-						/* update class biomass */
-						s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree);
-						s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree);
-						s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
-						s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]*1000.0*deadtree);
-						s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree);
-						s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
-						s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree);
-						s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree);
-						s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
-						s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree);
-						s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree);
-						s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree);
-
-						s->value[LITTER_C] += (s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree) +
-								(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree) +
-								(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree) +
-								(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree) +
-								(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree) +
-								(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
-
-
 
 						//ALESSIOR how remove one class??
 						//if(s->counter[N_TREE] == 0)
@@ -267,6 +244,42 @@ void self_thinning(cell_t *const c, const int layer)
 						c->monthly_dead_tree += deadtree;
 						c->annual_dead_tree += deadtree;
 					}
+
+					/* update class biomass */
+					s->value[STEM_C] -= (s->value[AV_STEM_MASS_KgC]/1000.0*deadtree);
+					s->value[LEAF_C] -= (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree);
+					s->value[FINE_ROOT_C] -= (s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree);
+					s->value[COARSE_ROOT_C] -= (s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+					s->value[RESERVE_C] -= (s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree);
+					s->value[BRANCH_C] -= (s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
+					s->value[STEM_LIVE_WOOD_C] -= (s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree);
+					s->value[STEM_DEAD_WOOD_C] -= (s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree);
+					s->value[COARSE_ROOT_LIVE_WOOD_C] -= (s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+					s->value[COARSE_ROOT_DEAD_WOOD_C] -= (s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree);
+					s->value[BRANCH_LIVE_WOOD_C] -= (s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree);
+					s->value[BRANCH_DEAD_WOOD_C] -= (s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree);
+
+					s->value[LITTER_C] += (s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree) +
+							(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree) +
+							(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree) +
+							(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree) +
+							(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree) +
+							(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree);
+
+					/* compute average biomass */
+					s->value[AV_LEAF_MASS_KgC] = (s->value[LEAF_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_STEM_MASS_KgC] = (s->value[STEM_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_ROOT_MASS_KgC] = (s->value[TOT_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_FINE_ROOT_MASS_KgC] = (s->value[FINE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_COARSE_ROOT_MASS_KgC] =(s->value[COARSE_ROOT_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_RESERVE_MASS_KgC] = (s->value[RESERVE_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_BRANCH_MASS_KgC] = (s->value[BRANCH_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_STEM_MASS_KgC] = (s->value[STEM_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_STEM_MASS_KgC] = (s->value[STEM_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_COARSE_ROOT_MASS_KgC] = (s->value[COARSE_ROOT_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_LIVE_BRANCH_MASS_KgC] = (s->value[BRANCH_LIVE_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
+					s->value[AV_DEAD_BRANCH_MASS_KgC] = (s->value[BRANCH_DEAD_WOOD_C] / (double)s->counter[N_TREE])*1000.0;
 				}
 				else
 				{
@@ -280,18 +293,18 @@ void self_thinning(cell_t *const c, const int layer)
 //					}
 //					oldNstump -= s->counter[N_STUMP];
 				}
-				logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
-				logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]/1000.0*deadtree));
+				logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]/1000.0*deadtree));
 			}
 		}
 		logger(g_log, "--Dead tree(s) = %d\n", deadtree);

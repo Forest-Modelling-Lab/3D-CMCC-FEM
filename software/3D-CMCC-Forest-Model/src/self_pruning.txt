@@ -1,0 +1,122 @@
+int self_pruning ( cell_t *const c, const int layer )
+{
+	int height;
+	int age;
+	int species;
+
+	double perc;
+	double old_crown_area;
+
+	tree_layer_t *l;
+	height_t *h;
+	age_t *a;
+	species_t *s;
+
+	l = &c->t_layers[layer];
+
+	/* SELF-PRUNING function */
+	/*it reduces dbhdc values for lower height class up to dbhdcmin otherwise
+	 * mortality for self-thinning*/
+
+	logger(g_log, "\n\n*****SELF-PRUNING FUNCTION for layer %d*****\n", layer);
+
+	for ( height = c->heights_count - 1; height >= 0; height-- )
+	{
+		h = &c->heights[height];
+
+		/* first of all sort by descending height */
+		/* model makes prune before lower height in each later */
+		qsort (c->heights, c->heights_count, sizeof (height_t), sort_by_heights_desc);
+
+		for ( age = 0; age < h->ages_count ; ++age )
+		{
+			a = &c->heights[height].ages[age];
+
+			for ( species = 0; species < a->species_count; ++species )
+			{
+				s = &c->heights[height].ages[age].species[species];
+
+				logger(g_log, "layer %d; layer cover %g, height %g\n", layer, l->layer_cover * 100, h->value);
+				logger(g_log,"DBHDC effective before pruning = %g\n", s->value[DBHDC_EFF]);
+
+				/* compute possible crown area for above canopy cover dbhdc */
+				old_crown_area = s->value[CROWN_AREA_DBHDC];
+				s->value[CROWN_AREA_DBHDC] = (s->value[CANOPY_COVER_DBHDC] * 100.0) / s->counter[N_TREE];
+
+				/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
+				while( l->layer_cover > g_settings->max_layer_cover )
+				{
+					/* reduce DBHDC_EFF */
+					/* note: 0.00005 is an arbitrary value */
+					s->value[DBHDC_EFF] -= 0.00005;
+					logger(g_log,"DBHDC effective during while = %g\n", s->value[DBHDC_EFF]);
+
+					/* recompute crown diameter */
+					s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+
+					/* Crown Area using DBH-DC */
+					s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
+					logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+
+					/* Canopy Cover using DBH-DC */
+					s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
+					logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+
+					/* recompute layer cover */
+					if( c->t_layers[layer].layer_n_height_class == 1)
+					{
+						l->layer_cover = s->value[CANOPY_COVER_DBHDC];
+					}
+					//fixme is not correct for multilayer
+					else
+					{
+						l->layer_cover += s->value[CANOPY_COVER_DBHDC];
+					}
+					logger(g_log, "-layer cover cell level = %g \n", l->layer_cover);
+
+					/* reduce proportionally to the crown area reduction the amount of branch C pool */
+					/* compute percentage in crown area reduction for self-pruning */
+					perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area) * 100.0;
+
+					/* update branch C pool */
+					s->value[BRANCH_C] *= perc;
+
+					/* update branch N pool */
+					s->value[BRANCH_N] *= perc;
+
+					/* self-pruned branch to litter */
+					s->value[C_TO_LITTER] += s->value[BRANCH_C] * (1 - perc);
+
+					//test
+					//update also leaf_C and fine_root_C???
+
+				}
+
+				logger(g_log, "-after pruning-\n");
+				logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+				logger(g_log, "-DBHDC MINIMUM = %g\n", s->value[DBHDCMIN]);
+				logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+				logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+				logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+				logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
+
+				/* check if reduction in dbhdc satisfy max layer cover */
+				if ( l->layer_cover < g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+				{
+					//todo to be tested
+					/* self-pruning was enough */
+					logger(g_log, "self-pruning was enough");
+					return 1;
+				}
+				else
+				{
+					//todo to be tested
+					/* self-pruning was not enough */
+					logger(g_log, "self-pruning was not enough");
+					return 0;
+				}
+			}
+		}
+	}
+}
