@@ -243,14 +243,14 @@ void monthly_forest_structure (cell_t* const c, const int day, const int month, 
 				logger(g_log, "layer cover exceeds max layer cover for layer %d\n", layer);
 
 				//test
-				//			/* first of all it checks if self-pruning is enough */
-				//			/* SELF-PRUNING */
-				//			if ( !self_pruning ( c, layer ))
-				//			{
-				//				/* also self-thinning is necessary */
-				//				/* SELF-THINNING */
-				//				self_thinning (c, layer);
-				//			}
+//				/* first of all it checks if self-pruning is enough */
+//				/* SELF-PRUNING */
+//				if ( !self_pruning ( c, layer ))
+//				{
+//					/* also self-thinning is necessary */
+//					/* SELF-THINNING */
+//					self_thinning (c, layer);
+//				}
 
 				//test if test above is ok remove
 				/* SELF-THINNING */
