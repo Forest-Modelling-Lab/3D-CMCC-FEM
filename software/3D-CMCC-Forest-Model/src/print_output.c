@@ -31,13 +31,12 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 		/* print class level LAI values */
 		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 		{
-			/* heading for layers */
-			logger(g_daily_log,"\t%s", "LAYER");
-
 			for ( height = c->heights_count - 1; height >= 0 ; --height )
 			{
 				if( layer == c->heights[height].height_z )
 				{
+					/* heading for layers */
+					logger(g_daily_log,"\t%s", "-LAYER");
 					logger(g_daily_log,"\t%s", "HEIGHT");
 
 					for ( age = 0; age < c->heights[height].ages_count ; ++age )
@@ -47,15 +46,16 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							/* heading for height class */
 							if( !height )
 								{
-									logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s",
-											"LAI",
+									logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s \t%8s",
+											"LAI-",
 											"GPP(gC/m2)",
 											"AR(gC/m2)",
 											"NPP(gC/m2)",
 											"ET(mm/m2)",
+											"LE(W/m2)",
 											"ASW\n");
 								}
-							else logger(g_daily_log,"\t%2s", "LAI");
+							else logger(g_daily_log,"\t%2s", "LAI-");
 						}
 					}
 				}
@@ -73,12 +73,11 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 	/* print class level LAI values */
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
-		logger(g_daily_log,"\t%5d", layer);
-
 		for ( height = c->heights_count - 1; height >= 0 ; --height )
 		{
 			if( layer == c->heights[height].height_z )
 			{
+				logger(g_daily_log,"\t%6d", layer);
 				logger(g_daily_log,"\t%7.3g", c->heights[height].value);
 
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
@@ -87,15 +86,16 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					{
 						if( !height)
 							{
-								logger(g_daily_log,"\t%3.1g \t%5.2g \t%10.2g \t%10.2g \t%10.2g \t%10g \n",
+								logger(g_daily_log,"\t%2.1g \t%7.4g \t%10.2g \t%10.2g \t%12.2g \t%7.4g \t%11.4g\n",
 										c->heights[height].ages[age].species[species].value[LAI],
 										c->daily_gpp,
 										c->daily_aut_resp,
 										c->daily_npp_gC,
 										c->daily_et,
+										c->daily_latent_heat_flux,
 										c->asw);
 							}
-						else logger(g_daily_log,"\t%3.1g", c->heights[height].ages[age].species[species].value[LAI]);
+						else logger(g_daily_log,"\t%3.4f", c->heights[height].ages[age].species[species].value[LAI]);
 					}
 				}
 			}
