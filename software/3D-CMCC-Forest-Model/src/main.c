@@ -930,7 +930,7 @@ int main(int argc, char *argv[]) {
 		{
 			/* note: this happens just the first day of simulation */
 			/* forest summary */
-			forest_summary(matrix, cell);
+			forest_summary(matrix, cell, day, month, year);
 		}
 		else
 		{

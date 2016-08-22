@@ -234,18 +234,7 @@ void self_thinning(cell_t *const c, const int layer)
 								(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree) +
 								(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
 
-						logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
+
 
 						//ALESSIOR how remove one class??
 						//if(s->counter[N_TREE] == 0)
@@ -274,7 +263,6 @@ void self_thinning(cell_t *const c, const int layer)
 						//}
 
 						/* update at cell level */
-						c->cell_n_trees -= deadtree;
 						c->daily_dead_tree += deadtree;
 						c->monthly_dead_tree += deadtree;
 						c->annual_dead_tree += deadtree;
@@ -292,10 +280,22 @@ void self_thinning(cell_t *const c, const int layer)
 //					}
 //					oldNstump -= s->counter[N_STUMP];
 				}
+				logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
+				logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
 			}
 		}
-
-		logger(g_log, "Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);getchar();
+		logger(g_log, "--Dead tree(s) = %d\n", deadtree);
+		logger(g_log, "--Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);
 	}
 
 	/* reset dead tree */

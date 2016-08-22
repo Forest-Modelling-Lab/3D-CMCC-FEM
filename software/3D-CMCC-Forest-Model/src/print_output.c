@@ -53,7 +53,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 							/* heading for height class */
 							if( !height )
 							{
-								logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s \t%8s \t%8s \t%8s",
+								logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s \t%6s \t%6s \t%10s",
 										"LAI-",
 										"GPP(gC/m2)",
 										"AR(gC/m2)",
@@ -95,7 +95,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 					{
 						if( !height)
 						{
-							logger(g_daily_log,"\t%2.3g \t%7.4g \t%10.2g \t%10.2g \t%12.2g \t%7.4g \t%7d \t%11.4g \t%11.4g\n",
+							logger(g_daily_log,"\t%2.3g \t%7.4g \t%10.2g \t%10.2g \t%12.2g \t%9.4g \t%7d \t%9.4g \t%9.4g\n",
 									c->heights[height].ages[age].species[species].value[LAI],
 									c->daily_gpp,
 									c->daily_aut_resp,

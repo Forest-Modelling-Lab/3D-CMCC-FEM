@@ -14,10 +14,10 @@ extern settings_t *g_settings;
 extern logger_t* g_log;
 extern soil_settings_t *g_soil_settings;
 
-void initialization_forest_structure(cell_t *const c)
+void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year)
 {
 	logger(g_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
-	daily_forest_structure ( c );
+	daily_forest_structure ( c, day, month, year );
 }
 
 void initialization_forest_C_biomass(cell_t *const c, const int height, const int age, const int species)

@@ -78,7 +78,10 @@ void annual_tree_increment(cell_t *const c, const int layer, const int height, c
 	/* STAND VOLUME-(STEM VOLUME) */
 	/* assign previous volume to temporary variables */
 	prev_vol = s->value[VOLUME];
+	logger(g_log, "-previous stand volume = %g m^3/cell\n", prev_vol );
+
 	single_tree_prev_vol = s->value[TREE_VOLUME];
+	logger(g_log, "-previous single tree volume = %g m^3/tree\n", single_tree_prev_vol );
 
 	/* compute current stand level volume */
 	s->value[VOLUME] = ( s->value[STEM_C] * GC_GDM ) / s->value[MASS_DENSITY];

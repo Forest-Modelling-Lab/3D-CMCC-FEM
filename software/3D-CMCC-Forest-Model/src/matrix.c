@@ -1420,7 +1420,7 @@ void soil_summary(const matrix_t* const m, const cell_t* const cell)
 	logger(g_log, "***************************************************\n\n");
 }
 
-void forest_summary(const matrix_t* const m, const int cell)
+void forest_summary(const matrix_t* const m, const int cell, const int day, const int month, const int year)
 {
 	int species;
 	int age;
@@ -1477,7 +1477,7 @@ void forest_summary(const matrix_t* const m, const int cell)
 	carbon_pool_fraction (&m->cells[cell]);
 
 	/* initialise forest structure */
-	initialization_forest_structure (&m->cells[cell]);
+	initialization_forest_structure (&m->cells[cell], day, month, year);
 
 	for ( height = 0; height < m->cells[cell].heights_count; height++ )
 	{

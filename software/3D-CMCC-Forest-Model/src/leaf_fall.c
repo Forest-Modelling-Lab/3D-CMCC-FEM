@@ -28,6 +28,8 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const
 	logger(g_log, "\n**LEAF FALL DECIDUOUS **\n");
 
 	logger(g_log, "Leaf fall counter = %d\n", s->counter[LEAF_FALL_COUNTER]);
+	logger(g_log, "Leaf biomass = %f\n", s->value[LEAF_C]);
+	logger(g_log, "Fine root biomass  = %f\n", s->value[FINE_ROOT_C]);
 
 	if(s->counter[LEAF_FALL_COUNTER] == 1)
 	{

@@ -4,9 +4,11 @@
 
 #include "structure.h"
 
-void annual_forest_structure(cell_t *const);
+void daily_forest_structure (cell_t *const c, const int day, const int month, const int year);
 
-void daily_forest_structure (cell_t *const);
+void monthly_forest_structure (cell_t* const c, const int day, const int month, const int year);
+
+void annual_forest_structure(cell_t *const);
 
 void potential_max_min_canopy_cover (cell_t *const c);
 

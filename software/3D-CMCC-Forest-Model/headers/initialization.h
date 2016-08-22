@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-void initialization_forest_structure(cell_t *const c);
+void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year);
 
 void initialization_forest_C_biomass(cell_t *const c, const int height, const int age, const int species);
 

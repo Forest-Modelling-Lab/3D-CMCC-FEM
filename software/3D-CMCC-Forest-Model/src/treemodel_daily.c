@@ -96,11 +96,15 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		annual_forest_structure ( c );
 	}
 
-	/* daily forest structure (except the first day, month and year)*/
+	/* daily forest structure (except the first day, month and year) */
 	if( c->dos > 1 )
 	{
-		daily_forest_structure ( c );
+		daily_forest_structure ( c, day, month, year );
 	}
+
+	/* monthly forest structure (mortality function 8end of month) */
+	monthly_forest_structure ( c, day, month, year );
+
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period ( c, meteo_daily, day, month );
@@ -371,33 +375,8 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* CHECK FOR WATER BALANCE CLOSURE */
 	check_soil_water_balance ( c, meteo_daily );
 
-	/****************************************************************************************************/
-
-	/****************************************************************************************************/
-//	/* RESET VARIABLES */
-//
-//	/* reset daily variables */
-//	reset_daily_class_variables ( c );
-//	reset_daily_layer_variables ( c );
-//	reset_daily_cell_variables  ( c );
-//
-//	/* reset monthly variables */
-//	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
-//	{
-//		reset_monthly_class_variables ( c );
-//		reset_monthly_layer_variables ( c );
-//		reset_monthly_cell_variables  ( c );
-//
-//		/* reset annual variables */
-//		if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[DECEMBER]) : (MonthLength[DECEMBER] )) == c->doy )
-//		{
-//			reset_annual_class_variables ( c );
-//			reset_annual_layer_variables ( c );
-//			reset_annual_cell_variables  ( c );
-//		}
-//	}
-
-	/****************************************************************************************************/
+	/*******************************************************************************************************/
+	/*******************************************************************************************************/
 	//todo: soilmodel could stay here or in main.c
 	//here is called at the end of all tree height age and species classes loops
 	//todo: move all soil algorithms into soil_model function
