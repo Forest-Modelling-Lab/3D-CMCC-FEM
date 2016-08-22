@@ -161,25 +161,25 @@ void daily_forest_structure (cell_t *const c)
 	logger(g_log, "compute potential canopy cover within each class (class level)\n\n");
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
-	for ( height = 0; height < c->heights_count ; ++height )
-	{
-		for ( age = 0; age < c->heights[height].ages_count ; ++age )
-		{
-			for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
-			{
-				/* computing maximum and minimum potential crown diameter and crown area */
-				/* assuming that at the beginning of simulation forest structure is at "equilibrium" */
-
-				h = &c->heights[height];
-				a = &c->heights[height].ages[age];
-				s = &c->heights[height].ages[age].species[species];
-
-				/* compute potential maximum and minimum canopy cover */
-				potential_max_min_canopy_cover ( s );
-			}
-		}
-	}
-	logger(g_log, "**************************************\n\n");
+	//	for ( height = 0; height < c->heights_count ; ++height )
+	//	{
+	//		for ( age = 0; age < c->heights[height].ages_count ; ++age )
+	//		{
+	//			for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+	//			{
+	//				/* computing maximum and minimum potential crown diameter and crown area */
+	//				/* assuming that at the beginning of simulation forest structure is at "equilibrium" */
+	//
+	//				h = &c->heights[height];
+	//				a = &c->heights[height].ages[age];
+	//				s = &c->heights[height].ages[age].species[species];
+	//
+	//				/* compute potential maximum and minimum canopy cover */
+	//				potential_max_min_canopy_cover ( s );
+	//			}
+	//		}
+	//	}
+	//	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
 	/* check if layer density exceeds potential maximum OR minimum density */
@@ -188,35 +188,36 @@ void daily_forest_structure (cell_t *const c)
 	/* note: this function not check the "real" density but it computes limits in which
 	 * DBHDC function operates */
 
-	for (layer = c->t_layers_count - 1; layer >= 0; --layer )
-	{
-		for ( height = 0; height < c->heights_count ; ++height )
-		{
-			if( layer == c->heights[height].height_z )
-			{
-				for ( age = 0; age < c->heights[height].ages_count ; ++age )
-				{
-					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
-					{
-						s = &c->heights[height].ages[age].species[species];
-
-						//fixme check it, it considers denmax and denmin using species level values..
-						if(c->t_layers[layer].layer_density > s->value[DENMAX])
-						{
-							c->t_layers[layer].layer_density = s->value[DENMAX];
-							logger(g_log, "density > DENMAX recomputed density based on DENMAX\n");
-						}
-						if(c->t_layers[layer].layer_density < s->value[DENMIN])
-						{
-							c->t_layers[layer].layer_density = s->value[DENMIN];
-							logger(g_log, "density < DENMIN recomputed density based on DENMIN\n");
-						}
-					}
-				}
-			}
-		}
-	}
-	logger(g_log, "**************************************\n\n");
+	//FIXME FIXME FIXME USEFULL????
+	//	for (layer = c->t_layers_count - 1; layer >= 0; --layer )
+	//	{
+	//		for ( height = 0; height < c->heights_count ; ++height )
+	//		{
+	//			if( layer == c->heights[height].height_z )
+	//			{
+	//				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+	//				{
+	//					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+	//					{
+	//						s = &c->heights[height].ages[age].species[species];
+	//
+	//						//fixme check it, it considers denmax and denmin using species level values..
+	//						if(c->t_layers[layer].layer_density > s->value[DENMAX])
+	//						{
+	//							c->t_layers[layer].layer_density = s->value[DENMAX];
+	//							logger(g_log, "density > DENMAX recomputed density based on DENMAX\n");
+	//						}
+	//						if(c->t_layers[layer].layer_density < s->value[DENMIN])
+	//						{
+	//							c->t_layers[layer].layer_density = s->value[DENMIN];
+	//							logger(g_log, "density < DENMIN recomputed density based on DENMIN\n");
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	logger(g_log, "**************************************\n\n");
 
 	/*************************************************************************************************/
 	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
@@ -246,24 +247,24 @@ void daily_forest_structure (cell_t *const c)
 						logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
 
-//todo, remove useless
-//						/* check if DBHDCeffective exceeds maximum or minimum values */
-//						if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
-//						{
-//							logger(g_log, "DBHDC effective > DBHDCMAX!!!\n");
-//
-//							s->value[DBHDC_EFF] = s->value[DBHDCMAX];
-//							logger(g_log, "DBHDC effective applied is DBHDCMAX = %g\n", s->value[DBHDC_EFF]);
-//						}
-//						if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
-//						{
-//							logger(g_log, "DBHDC effective < DBHDCMIN!!!\n");
-//							s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-//							logger(g_log, "DBHDC effective applied is DBHDCMIN = %g\n", s->value[DBHDC_EFF]);
-//						}
-//						/* check */
-//						CHECK_CONDITION(s->value[DBHDC_EFF], < s->value[DBHDCMIN]);
-//						CHECK_CONDITION(s->value[DBHDC_EFF], > s->value[DBHDCMAX]);
+						//todo, remove useless
+						//						/* check if DBHDCeffective exceeds maximum or minimum values */
+						//						if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
+						//						{
+						//							logger(g_log, "DBHDC effective > DBHDCMAX!!!\n");
+						//
+						//							s->value[DBHDC_EFF] = s->value[DBHDCMAX];
+						//							logger(g_log, "DBHDC effective applied is DBHDCMAX = %g\n", s->value[DBHDC_EFF]);
+						//						}
+						//						if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
+						//						{
+						//							logger(g_log, "DBHDC effective < DBHDCMIN!!!\n");
+						//							s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+						//							logger(g_log, "DBHDC effective applied is DBHDCMIN = %g\n", s->value[DBHDC_EFF]);
+						//						}
+						//						/* check */
+						//						CHECK_CONDITION(s->value[DBHDC_EFF], < s->value[DBHDCMIN]);
+						//						CHECK_CONDITION(s->value[DBHDC_EFF], > s->value[DBHDCMAX]);
 
 
 
@@ -387,8 +388,8 @@ void daily_forest_structure (cell_t *const c)
 			logger(g_log, "layer cover exceeds max layer cover for layer %d\n", layer);
 
 			//test
-			/* first of all it checks if self-pruning is enough */
-			/* SELF-PRUNING */
+//			/* first of all it checks if self-pruning is enough */
+//			/* SELF-PRUNING */
 //			if ( !self_pruning ( c, layer ))
 //			{
 //				/* also self-thinning is necessary */
@@ -569,82 +570,107 @@ void daily_forest_structure (cell_t *const c)
 
 }
 
-void potential_max_min_canopy_cover (species_t *const s)
+void potential_max_min_canopy_cover (cell_t *const c)
 {
+	int height;
+	int age;
+	int species;
+
 	double pot_max_crown_diameter,pot_min_crown_diameter;
 	double pot_max_crown_area, pot_min_crown_area;
 	double pot_max_density,pot_min_density;
 
-	if (s->value[DBHDCMAX] != -9999 && s->value[DENMIN] != -9999)
+	height_t *h;
+	age_t *a;
+	species_t *s;
+
+	logger(g_log,"\nPotential_max_min_canopy_cover Function\n");
+
+	for ( height = 0; height < c->heights_count; height++ )
 	{
-		logger(g_log,"using DBHDCMAX and DBHDCMIN\n");
-		/* case low density */
-		//logger(g_log, "-in case of low density\n");
+		h = &c->heights[height];
 
-		pot_max_crown_diameter = s->value[DBHDCMAX] * s->value[AVDBH];
-		pot_max_crown_area = pow(((pot_max_crown_diameter)/2),2)*Pi;
-		//logger(g_log, "potential maximum crown area with DBHDCMAX = %g m^2\n", pot_max_crown_area);
+		for ( age = 0; age < h->ages_count; age++ )
+		{
+			a = &c->heights[height].ages[age];
 
-		pot_min_density = g_settings->sizeCell / pot_max_crown_area;
-		//logger(g_log, "number of potential minimum trees with DBHDCMAX = %g\n", pot_min_density);
+			for ( species = 0; species < a->species_count; species ++)
+			{
+				s = &c->heights[height].ages[age].species[species];
 
-		/* case high density */
-		//logger(g_log, "-in case of high density\n");
+				if (s->value[DBHDCMAX] != -9999 && s->value[DENMIN] != -9999)
+				{
+					logger(g_log,"using DBHDCMAX and DBHDCMIN\n");
+					/* case low density */
+					//logger(g_log, "-in case of low density\n");
 
-		pot_min_crown_diameter = s->value[DBHDCMIN] * s->value[AVDBH];
-		pot_min_crown_area = pow(((pot_min_crown_diameter)/2),2)*Pi;
-		//logger(g_log, "potential minimum crown area with DBHDCMIN = %g m^2\n", pot_min_crown_area);
+					pot_max_crown_diameter = s->value[DBHDCMAX] * s->value[AVDBH];
+					pot_max_crown_area = pow(((pot_max_crown_diameter)/2),2)*Pi;
+					logger(g_log, "potential maximum crown area with DBHDCMAX = %g m^2\n", pot_max_crown_area);
 
-		pot_max_density = g_settings->sizeCell /pot_min_crown_area;
-		//logger(g_log, "number of potential maximum trees with DBHDCMIN = %g\n", pot_max_density);
+					pot_min_density = g_settings->sizeCell / pot_max_crown_area;
+					logger(g_log, "number of potential minimum trees with DBHDCMAX = %g\n", pot_min_density);
 
-		s->value[DENMAX] = pot_max_density/g_settings->sizeCell;
-		//logger(g_log, "potential density with dbhdcmax (high density) = %g (%g tree)\n", s->value[DENMAX], s->value[DENMAX] * g_settings->sizeCell);
+					/* case high density */
+					//logger(g_log, "-in case of high density\n");
 
-		s->value[DENMIN] = pot_min_density/g_settings->sizeCell;
-		//logger(g_log, "potential density with dbhdcmin (low density) = %g (%g tree)\n", s->value[DENMIN], s->value[DENMIN] * g_settings->sizeCell);
+					pot_min_crown_diameter = s->value[DBHDCMIN] * s->value[AVDBH];
+					pot_min_crown_area = pow(((pot_min_crown_diameter)/2),2)*Pi;
+					logger(g_log, "potential minimum crown area with DBHDCMIN = %g m^2\n", pot_min_crown_area);
 
-		/* check */
-		CHECK_CONDITION(pot_max_crown_diameter, < pot_min_crown_diameter);
-		CHECK_CONDITION(pot_max_crown_area, < pot_min_crown_area);
-		CHECK_CONDITION(pot_max_density, < pot_min_density);
+					pot_max_density = g_settings->sizeCell /pot_min_crown_area;
+					logger(g_log, "number of potential maximum trees with DBHDCMIN = %g\n", pot_max_density);
+
+					s->value[DENMAX] = pot_max_density/g_settings->sizeCell;
+					logger(g_log, "potential density with dbhdcmax (high density) = %g (%g tree)\n", s->value[DENMAX], s->value[DENMAX] * g_settings->sizeCell);
+
+					s->value[DENMIN] = pot_min_density/g_settings->sizeCell;
+					logger(g_log, "potential density with dbhdcmin (low density) = %g (%g tree)\n", s->value[DENMIN], s->value[DENMIN] * g_settings->sizeCell);
+
+					/* check */
+					CHECK_CONDITION(pot_max_crown_diameter, < pot_min_crown_diameter);
+					CHECK_CONDITION(pot_max_crown_area, < pot_min_crown_area);
+					CHECK_CONDITION(pot_max_density, < pot_min_density);
+				}
+				/* in case no values from parameterization files are given */
+				else
+				{
+					/*compute maximum crown area*/
+					//	//TODO CHECK IF USE IT
+					/*for references and variables see "Forest Mensuration" book 4th edition
+					*B. Husch, T.W. Beers, J.A. Kershaw Jr.
+					*edited by John Wiley & Sons, Inc
+					*and Krajicek, et al., "Crown competition: a measure of density.
+					*For. Sci. 7:36-42
+					*Lhotka and Loewenstein 2008, Can J For Res
+					 */
+					logger(g_log,"without using DBHDCMAX and DBHDCMIN\n");
+
+					pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
+					logger(g_log, "potential_minimum_crown_area = %g m^2\n", pot_min_crown_area);
+
+					pot_min_crown_diameter = 2.0 * sqrt(pot_min_crown_area/Pi);
+					logger(g_log, "potential_minimum_crown_diameter= %g m\n", pot_min_crown_diameter);
+
+					/*recompute DBHDCmax and DENmin from MCA*/
+					/*17 Oct 2013*/
+					s->value[DBHDCMAX] = pot_min_crown_diameter / s->value[AVDBH];
+					logger(g_log, "-recomputed DBHDCMAX = %g \n", s->value[DBHDCMAX]);
+
+					s->value[DENMIN] = 1.0 / pot_min_crown_area;
+					logger(g_log, "-recomputed DENMIN = %g tree/sizecell\n", s->value[DENMIN]);
+				}
+
+				logger(g_log, "DBHDCMAX = %g\n", s->value[DBHDCMAX]);
+				logger(g_log, "DBHDCMIN = %g\n", s->value[DBHDCMIN]);
+				logger(g_log, "DENMAX = %g\n", s->value[DENMAX]);
+				logger(g_log, "DENMIN = %g\n", s->value[DENMIN]);
+
+				CHECK_CONDITION(s->value[DENMAX], < s->value[DENMIN]);
+				CHECK_CONDITION(s->value[DBHDCMAX], < s->value[DBHDCMIN]);
+			}
+		}
 	}
-	/* in case no values from parameterization files are given */
-	else
-	{
-		/*compute maximum crown area*/
-		//	//TODO CHECK IF USE IT
-		/*for references and variables see "Forest Mensuration" book 4th edition
-						  B. Husch, T.W. Beers, J.A. Kershaw Jr.
-						  edited by John Wiley & Sons, Inc
-						  and Krajicek, et al., "Crown competition: a measure of density.
-						  For. Sci. 7:36-42
-						  Lhotka and Loewenstein 2008, Can J For Res
-		 */
-		logger(g_log,"without using DBHDCMAX and DBHDCMIN\n");
-
-		pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
-		logger(g_log, "potential_minimum_crown_area = %g m^2\n", pot_min_crown_area);
-
-		pot_min_crown_diameter = 2.0 * sqrt(pot_min_crown_area/Pi);
-		logger(g_log, "potential_minimum_crown_diameter= %g m\n", pot_min_crown_diameter);
-
-		/*recompute DBHDCmax and DENmin from MCA*/
-		/*17 Oct 2013*/
-		s->value[DBHDCMAX] = pot_min_crown_diameter / s->value[AVDBH];
-		logger(g_log, "-recomputed DBHDCMAX = %g \n", s->value[DBHDCMAX]);
-
-		s->value[DENMIN] = 1.0 / pot_min_crown_area;
-		logger(g_log, "-recomputed DENMIN = %g tree/sizecell\n", s->value[DENMIN]);
-	}
-
-	logger(g_log, "DBHDCMAX = %g\n", s->value[DBHDCMAX]);
-	logger(g_log, "DBHDCMIN = %g\n", s->value[DBHDCMIN]);
-	logger(g_log, "DENMAX = %g\n", s->value[DENMAX]);
-	logger(g_log, "DENMIN = %g\n", s->value[DENMIN]);
-
-	CHECK_CONDITION(s->value[DENMAX], < s->value[DENMIN]);
-	CHECK_CONDITION(s->value[DBHDCMAX], < s->value[DBHDCMIN]);
 }
 
 void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)

@@ -1470,11 +1470,14 @@ void forest_summary(const matrix_t* const m, const int cell)
 	/* initialise power function */
 	allometry_power_function (&m->cells[cell]);
 
+	/* initialise variables for DBHDC function */
+	potential_max_min_canopy_cover ( &m->cells[cell]);
+
 	/* initialise carbon pool fraction */
 	carbon_pool_fraction (&m->cells[cell]);
 
 	/* initialise forest structure */
-	initialization_forest_structure (&m->cells[cell], height, age, species);
+	initialization_forest_structure (&m->cells[cell]);
 
 	for ( height = 0; height < m->cells[cell].heights_count; height++ )
 	{

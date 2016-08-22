@@ -54,30 +54,44 @@ int self_pruning ( cell_t *const c, const int layer )
 			{
 				s = &c->heights[height].ages[age].species[species];
 
-				logger(g_log, "layer %d height %g\n", layer, h->value);
-
-				/* remove current tree height class canopy cover and recompute until
-				 * lower dbhdcmin is reached */
-				l->layer_cover -= s->value[CANOPY_COVER_DBHDC];
-
-				/* compute possible tree height class canopy cover to satisfy max layer cover */
-				s->value[CANOPY_COVER_DBHDC] = g_settings->max_layer_cover - l->layer_cover;
+				logger(g_log, "layer %d; layer cover %g, height %g\n", layer, l->layer_cover * 100, h->value);
+				logger(g_log,"DBHDC effective before pruning = %g\n", s->value[DBHDC_EFF]);
 
 				/* compute possible crown area for above canopy cover dbhdc */
 				old_crown_area = s->value[CROWN_AREA_DBHDC];
 				s->value[CROWN_AREA_DBHDC] = (s->value[CANOPY_COVER_DBHDC] * 100.0) / s->counter[N_TREE];
 
-				/* compute possible crown diameter for above crown area */
-				s->value[CROWN_DIAMETER_DBHDC]= sqrt(s->value[CROWN_AREA_DBHDC] / Pi ) * 2;
-
-				/* recompute dbhdc for that canopy cover */
-				s->value[DBHDC_EFF] = s->value[CROWN_DIAMETER_DBHDC] / s->value[AVDBH];
-
-				/* check if reduction in dbhdc satisfy max layer cover */
-				if ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+				/* until layer cover not reaches lower values than max_layer_cover or DBDCMIN */
+				while( l->layer_cover > g_settings->max_layer_cover )
 				{
-					/* self-pruning was enough */
-					logger(g_log, "self-pruning was enough");
+					/* reduce DBHDC_EFF */
+					/* note: 0.00005 is an arbitrary value */
+					s->value[DBHDC_EFF] -= 0.00005;
+					logger(g_log,"DBHDC effective during while = %g\n", s->value[DBHDC_EFF]);
+
+					/* recompute crown diameter */
+					s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+					logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+
+					/* Crown Area using DBH-DC */
+					s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
+					logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+
+					/* Canopy Cover using DBH-DC */
+					s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
+					logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+
+					/* recompute layer cover */
+					if( c->t_layers[layer].layer_n_height_class == 1)
+					{
+						l->layer_cover = s->value[CANOPY_COVER_DBHDC];
+					}
+					//fixme is not correct for multilayer
+					else
+					{
+						l->layer_cover += s->value[CANOPY_COVER_DBHDC];
+					}
+					logger(g_log, "-layer cover cell level = %g \n", l->layer_cover);
 
 					/* reduce proportionally to the crown area reduction the amount of branch C pool */
 					/* compute percentage in crown area reduction for self-pruning */
@@ -95,9 +109,22 @@ int self_pruning ( cell_t *const c, const int layer )
 					//test
 					//update also leaf_C and fine_root_C???
 
-					//todo to be tested
+				}
 
-					exit(1);
+				logger(g_log, "-after pruning-\n");
+				logger(g_log, "-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+				logger(g_log, "-DBHDC MINIMUM = %g\n", s->value[DBHDCMIN]);
+				logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
+				logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
+				logger(g_log, "-Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
+				logger(g_log, "-layer cover cell level = %g\n", l->layer_cover);
+
+				/* check if reduction in dbhdc satisfy max layer cover */
+				if ( l->layer_cover < g_settings->max_layer_cover && s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
+				{
+					//todo to be tested
+					/* self-pruning was enough */
+					logger(g_log, "self-pruning was enough");
 					return 1;
 				}
 				else
@@ -105,8 +132,6 @@ int self_pruning ( cell_t *const c, const int layer )
 					//todo to be tested
 					/* self-pruning was not enough */
 					logger(g_log, "self-pruning was not enough");
-
-					exit(1);
 					return 0;
 				}
 			}
@@ -234,19 +259,6 @@ void self_thinning(cell_t *const c, const int layer)
 								(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree) +
 								(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree);
 
-						logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
-						logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
-
 						//ALESSIOR how remove one class??
 						//if(s->counter[N_TREE] == 0)
 						//{
@@ -295,7 +307,19 @@ void self_thinning(cell_t *const c, const int layer)
 			}
 		}
 
-		logger(g_log, "Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);getchar();
+		logger(g_log, "LEAF_C removed =%g tC\n",(s->value[AV_LEAF_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "FINE_ROOT_C removed =%g tC\n",(s->value[AV_FINE_ROOT_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "COARSE_ROOT_C removed =%g tC\n",(s->value[AV_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "STEM_C removed =%g tC\n",(s->value[AV_STEM_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "RESERVE_C removed =%g tC\n",(s->value[AV_RESERVE_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "BRANCH_C removed =%g tC\n",(s->value[AV_BRANCH_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "STEM_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_STEM_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "STEM_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_STEM_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "COARSE_ROOT_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "COARSE_ROOT_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_COARSE_ROOT_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "BRANCH_LIVE_WOOD_C removed =%g tC\n",(s->value[AV_LIVE_BRANCH_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "BRANCH_DEAD_WOOD_C removed =%g tC\n",(s->value[AV_DEAD_BRANCH_MASS_KgC]*1000.0*deadtree));
+		logger(g_log, "Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);
 	}
 
 	/* reset dead tree */
