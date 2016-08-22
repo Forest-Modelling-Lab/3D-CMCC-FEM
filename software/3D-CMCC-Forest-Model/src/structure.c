@@ -394,6 +394,7 @@ void daily_forest_structure (cell_t *const c)
 			/* SELF-THINNING */
 			self_thinning (c, layer);
 
+			/* assign char */
 			mortality = 'y';
 
 			/* reset values for layer */
