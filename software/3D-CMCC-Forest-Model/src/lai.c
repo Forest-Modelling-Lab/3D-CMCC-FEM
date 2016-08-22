@@ -17,6 +17,8 @@ void daily_lai (species_t *const s)
 {
 	double leaf_c;                             //leaf carbon KgC/m^2
 
+	/* NOTE: it mainly follows rationale of TREEDYN 3, Bossel, 1996, Ecological Modelling (eq. 30) */
+
 	logger(g_log, "\n**LEAF AREA INDEX**\n");
 
 	/* convert tC/cell to KgC/m^2 */

@@ -92,8 +92,11 @@ int self_pruning ( cell_t *const c, const int layer )
 					/* self-pruned branch to litter */
 					s->value[C_TO_LITTER] += s->value[BRANCH_C] * (1 - perc);
 
+					//test
+					//update also leaf_C and fine_root_C???
+
 					//todo to be tested
-					//return 1;
+					return 1;
 					exit(1);
 				}
 				else
@@ -101,7 +104,7 @@ int self_pruning ( cell_t *const c, const int layer )
 					//todo to be tested
 					/* self-pruning was not enough */
 					logger(g_log, "self-pruning was not enough");
-					//return 0;
+					return 0;
 					exit(1);
 				}
 			}
@@ -128,8 +131,10 @@ void self_thinning(cell_t *const c, const int layer)
 	 * are at an accumulating disadvantage and finally die".
 	 * Westoby, 1984, Advances in Ecological Research */
 
-	/* This is a sort of self thinning rules not based on biomass but based on canopy cover */
+	/* NOTE: it mainly follows rationale of TREEDYN 3 "Crowding Competition mortality function",
+	 * Bossel, 1996, Ecological Modelling (eq. 29) */
 
+	/* This is a sort of self-thinning rules not based on biomass but based on canopy cover */
 
 	/* the model makes die trees of the lower height class for that layer because
 	it passes through the function sort_by_height_desc the height classes starting from the lowest */

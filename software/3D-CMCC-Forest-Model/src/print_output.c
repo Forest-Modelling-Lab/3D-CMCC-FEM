@@ -1,8 +1,10 @@
 /* cumulative_balance.c */
+#include <stdlib.h>
 #include "print_output.h"
 #include "common.h"
 #include "settings.h"
 #include "logger.h"
+#include "g-function.h"
 
 extern settings_t* g_settings;
 //extern logger_t* g_log;
@@ -13,26 +15,96 @@ extern logger_t* g_soil_log;
 
 void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, const int month, const int year, const int years_of_simulation )
 {
+	int layer;
+	int height;
+	int age;
+	int species;
 
 	//FIXME this is just an approach
-	//ALESSIOR g_daily_log stampa anche a video e non dovrebbe farlo!
+
+	//qsort(c->heights, c->heights_count, sizeof(height_t), sort_by_heights_desc);
+
 	/* heading */
 	if ( !day && !month && !year )
 	{
-		logger(g_daily_log, "%s \t%2s \t%s \t%2s", "YEAR", "MONTH", "DAY", "LC");
-		logger(g_daily_log, "\t%6s \t%6s \t%10s \t%8s \t%8s", "GPP(gC/m2)", "AR(gC/m2)", "NPP(gC/m2)", "ET(mm/m2)", "ASW\n");
+		logger(g_daily_log, "%s \t%2s \t%s", "YEAR", "MONTH", "DAY");
+		/* print class level LAI values */
+		for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+		{
+			/* heading for layers */
+			logger(g_daily_log,"\t%s", "LAYER");
+
+			for ( height = c->heights_count - 1; height >= 0 ; --height )
+			{
+				if( layer == c->heights[height].height_z )
+				{
+					logger(g_daily_log,"\t%s", "HEIGHT");
+
+					for ( age = 0; age < c->heights[height].ages_count ; ++age )
+					{
+						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+						{
+							/* heading for height class */
+							if( !height )
+								{
+									logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s",
+											"LAI",
+											"GPP(gC/m2)",
+											"AR(gC/m2)",
+											"NPP(gC/m2)",
+											"ET(mm/m2)",
+											"ASW\n");
+								}
+							else logger(g_daily_log,"\t%2s", "LAI");
+						}
+					}
+				}
+			}
+		}
 	}
-	//	/* values */
-	logger(g_daily_log, "%d \t%3d \t%5d \t%3d \t%10.4f \t%10.4f \t%10.4f \t%10.4f \t%10.4f \n",
+
+
+	/* values */
+	logger(g_daily_log, "%d \t%2d \t%4d",
 			c->years[year].year,
 			month+1,
-			day+1,
-			c->t_layers_count,
-			c->daily_gpp,
-			c->daily_aut_resp,
-			c->daily_npp_gC,
-			c->daily_et,
-			c->asw);
+			day+1);
+
+	/* print class level LAI values */
+	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	{
+		logger(g_daily_log,"\t%5d", layer);
+
+		for ( height = c->heights_count - 1; height >= 0 ; --height )
+		{
+			if( layer == c->heights[height].height_z )
+			{
+				logger(g_daily_log,"\t%7.3g", c->heights[height].value);
+
+				for ( age = 0; age < c->heights[height].ages_count ; ++age )
+				{
+					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
+					{
+						if( !height)
+							{
+								logger(g_daily_log,"\t%3.1g \t%5.2g \t%10.2g \t%10.2g \t%10.2g \t%10g \n",
+										c->heights[height].ages[age].species[species].value[LAI],
+										c->daily_gpp,
+										c->daily_aut_resp,
+										c->daily_npp_gC,
+										c->daily_et,
+										c->asw);
+							}
+						else logger(g_daily_log,"\t%3.1g", c->heights[height].ages[age].species[species].value[LAI]);
+					}
+				}
+			}
+		}
+	}
+	/*
+
+	 */
+
 
 	//ALESSIOR at the end of simulation
 	//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
@@ -237,7 +309,7 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 void EOM_print_cumulative_balance_cell_level(cell_t *const c, const int month, const int year, const int years_of_simulation )
 {
 	//FIXME this is just an approach
-	//ALESSIOR g_monthly_log stampa anche a video e non dovrebbe farlo!
+
 	/* heading */
 	if ( !month && !year )
 	{
@@ -491,7 +563,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	++years_counter;
 
 	//FIXME this is just an approach
-	//ALESSIOR g_annual_log stampa anche a video e non dovrebbe farlo!
+
 	/* heading */
 	if ( !year )
 	{
