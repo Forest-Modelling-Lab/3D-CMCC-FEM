@@ -245,22 +245,28 @@ void daily_forest_structure (cell_t *const c)
 								(c->t_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
 						logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
 
-						/* check if DBHDCeffective exceeds maximum or minimum values */
-						if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
-						{
-							logger(g_log, "DBHDC effective > DBHDCMAX!!!\n");
-							s->value[DBHDC_EFF] = s->value[DBHDCMAX];
-							logger(g_log, "DBHDC effective applied is DBHDCMAX = %g\n", s->value[DBHDC_EFF]);
-						}
-						if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
-						{
-							logger(g_log, "DBHDC effective < DBHDCMIN!!!\n");
-							s->value[DBHDC_EFF] = s->value[DBHDCMIN];
-							logger(g_log, "DBHDC effective applied is DBHDCMIN = %g\n", s->value[DBHDC_EFF]);
-						}
-						/* check */
-						CHECK_CONDITION(s->value[DBHDC_EFF], < s->value[DBHDCMIN]);
-						CHECK_CONDITION(s->value[DBHDC_EFF], > s->value[DBHDCMAX]);
+
+//todo, remove useless
+//						/* check if DBHDCeffective exceeds maximum or minimum values */
+//						if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
+//						{
+//							logger(g_log, "DBHDC effective > DBHDCMAX!!!\n");
+//
+//							s->value[DBHDC_EFF] = s->value[DBHDCMAX];
+//							logger(g_log, "DBHDC effective applied is DBHDCMAX = %g\n", s->value[DBHDC_EFF]);
+//						}
+//						if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
+//						{
+//							logger(g_log, "DBHDC effective < DBHDCMIN!!!\n");
+//							s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+//							logger(g_log, "DBHDC effective applied is DBHDCMIN = %g\n", s->value[DBHDC_EFF]);
+//						}
+//						/* check */
+//						CHECK_CONDITION(s->value[DBHDC_EFF], < s->value[DBHDCMIN]);
+//						CHECK_CONDITION(s->value[DBHDC_EFF], > s->value[DBHDCMAX]);
+
+
+
 					}
 				}
 			}
@@ -326,15 +332,15 @@ void daily_forest_structure (cell_t *const c)
 
 						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
-						s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * s->value[DBHDC_EFF];
-						logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+						s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+						logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
 
 						/* Crown Area using DBH-DC */
-						s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+						s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
+						logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
 
 						/* Canopy Cover using DBH-DC */
-						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+						s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
 						logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 					}
 				}
@@ -517,15 +523,15 @@ void daily_forest_structure (cell_t *const c)
 
 							logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
-							s->value[CROWN_DIAMETER_DBHDC_FUNC] = s->value[AVDBH] * s->value[DBHDC_EFF];
-							logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+							s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
+							logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
 
 							/* Crown Area using DBH-DC */
-							s->value[CROWN_AREA_DBHDC_FUNC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC_FUNC], 2 );
-							logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC_FUNC]);
+							s->value[CROWN_AREA_DBHDC] = ( Pi / 4) * pow (s->value[CROWN_DIAMETER_DBHDC], 2 );
+							logger(g_log, "-Crown Area from DBHDC function = %g m^2\n", s->value[CROWN_AREA_DBHDC]);
 
 							/* Canopy Cover using DBH-DC */
-							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC_FUNC] * s->counter[N_TREE] / g_settings->sizeCell;
+							s->value[CANOPY_COVER_DBHDC] = s->value[CROWN_AREA_DBHDC] * s->counter[N_TREE] / g_settings->sizeCell;
 							logger(g_log, "Canopy cover DBH-DC class level = %g %%\n", s->value[CANOPY_COVER_DBHDC] * 100.0);
 
 							/* check */

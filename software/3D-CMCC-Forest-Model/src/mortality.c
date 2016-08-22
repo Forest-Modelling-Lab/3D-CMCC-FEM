@@ -64,14 +64,14 @@ int self_pruning ( cell_t *const c, const int layer )
 				s->value[CANOPY_COVER_DBHDC] = g_settings->max_layer_cover - l->layer_cover;
 
 				/* compute possible crown area for above canopy cover dbhdc */
-				old_crown_area = s->value[CROWN_AREA];
-				s->value[CROWN_AREA] = (s->value[CANOPY_COVER_DBHDC] * 100.0) / s->counter[N_TREE];
+				old_crown_area = s->value[CROWN_AREA_DBHDC];
+				s->value[CROWN_AREA_DBHDC] = (s->value[CANOPY_COVER_DBHDC] * 100.0) / s->counter[N_TREE];
 
 				/* compute possible crown diameter for above crown area */
-				s->value[CROWN_DIAMETER]= sqrt(s->value[CROWN_AREA] / Pi ) * 2;
+				s->value[CROWN_DIAMETER_DBHDC]= sqrt(s->value[CROWN_AREA_DBHDC] / Pi ) * 2;
 
 				/* recompute dbhdc for that canopy cover */
-				s->value[DBHDC_EFF] = s->value[CROWN_DIAMETER] / s->value[AVDBH];
+				s->value[DBHDC_EFF] = s->value[CROWN_DIAMETER_DBHDC] / s->value[AVDBH];
 
 				/* check if reduction in dbhdc satisfy max layer cover */
 				if ( s->value[DBHDC_EFF] > s->value[DBHDCMIN] )
@@ -81,7 +81,7 @@ int self_pruning ( cell_t *const c, const int layer )
 
 					/* reduce proportionally to the crown area reduction the amount of branch C pool */
 					/* compute percentage in crown area reduction for self-pruning */
-					perc = (s->value[CROWN_AREA] / old_crown_area) * 100.0;
+					perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area) * 100.0;
 
 					/* update branch C pool */
 					s->value[BRANCH_C] *= perc;
@@ -96,16 +96,18 @@ int self_pruning ( cell_t *const c, const int layer )
 					//update also leaf_C and fine_root_C???
 
 					//todo to be tested
-					return 1;
+
 					exit(1);
+					return 1;
 				}
 				else
 				{
 					//todo to be tested
 					/* self-pruning was not enough */
 					logger(g_log, "self-pruning was not enough");
-					return 0;
+
 					exit(1);
+					return 0;
 				}
 			}
 		}
@@ -177,14 +179,14 @@ void self_thinning(cell_t *const c, const int layer)
 					/* mortality */
 					while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && s->counter[N_TREE] > 0)
 					{
-						s->counter[N_TREE] -= 1;
-						deadtree ++;
+						--s->counter[N_TREE];
+						++deadtree;
 
 						/* recompute class level canopy cover */
-						s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC_FUNC] / g_settings->sizeCell);
+						s->value[CANOPY_COVER_DBHDC] -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 						/* recompute layer level canopy cover */
-						c->t_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC_FUNC] / g_settings->sizeCell);
+						c->t_layers[layer].layer_cover -= (s->value[CROWN_AREA_DBHDC] / g_settings->sizeCell);
 
 						//fixme to remove once implemented function below
 						//CHECK_CONDITION(s->counter[N_TREE], > 0);
@@ -194,16 +196,18 @@ void self_thinning(cell_t *const c, const int layer)
 							/* mortality for the higher height class */
 							while (c->t_layers[layer].layer_cover > g_settings->max_layer_cover && c->heights[height + 1].ages[age].species[species].counter[N_TREE] > 0)
 							{
-								c->heights[height + 1].ages[age].species[species].counter[N_TREE] -= 1;
-								deadtree ++;
+								--s->counter[N_TREE];
+								++deadtree;
 
 								c->heights[height + 1].ages[age].species[species].value[CANOPY_COVER_DBHDC] -=
-										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] / g_settings->sizeCell;
+										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell;
 
 								/* recompute layer level canopy cover */
 								c->t_layers[layer].layer_cover -=
-										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC_FUNC] / g_settings->sizeCell;
-								exit(1);
+										c->heights[height + 1].ages[age].species[species].value[CROWN_AREA_DBHDC] / g_settings->sizeCell;
+
+								/* check */
+								CHECK_CONDITION(s->counter[N_TREE], <= 0);
 							}
 						}
 //						logger(g_log, "Tree Removed %d Tree remaining %d from height class %g species %s dbh %g\n", deadtree, s->counter[N_TREE], h->value, s->name, s->value[AVDBH]);
@@ -291,7 +295,7 @@ void self_thinning(cell_t *const c, const int layer)
 			}
 		}
 
-		logger(g_log, "Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);
+		logger(g_log, "Tree remaining for height class %g age %d species %s = %d\n", h->value, a->value, s->name, s->counter[N_TREE]);getchar();
 	}
 
 	/* reset dead tree */

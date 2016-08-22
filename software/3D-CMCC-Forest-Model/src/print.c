@@ -202,7 +202,7 @@ void print_forest_class_data(cell_t* const c, const int layer, const int height,
 	logger(g_log, "- Number of trees = %d trees \n", s->counter[N_TREE]);
 	logger(g_log, "- Vegetative Days =  %d days\n", s->counter[DAY_VEG_FOR_LEAF_FALL]);
 	logger(g_log, "- LAI = %g \n", s->value[LAI]);
-	logger(g_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER_DBHDC_FUNC]);
+	logger(g_log, "- Crown Diameter = %g \n",  s->value[CROWN_DIAMETER_DBHDC]);
 	logger(g_log, "- Canopy Cover = %g \n", s->value[CANOPY_COVER_DBHDC]);
 	logger(g_log, "- Phenology type = %g\n", s->value[PHENOLOGY]);
 	logger(g_log, "- Management type = %s\n", s->management ? "C" : "T");

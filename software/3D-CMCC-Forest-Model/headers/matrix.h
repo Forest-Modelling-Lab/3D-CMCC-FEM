@@ -134,8 +134,6 @@ enum {
 	 */
 
 	AVDBH,                      //Average DBH in cm
-	CROWN_DIAMETER,             //Crown Diameter in m
-	CROWN_AREA,                 //Crown Area in m^2
 	CROWN_RADIUS_SORTIE,        //Crown Radius in m from Sortie Standard
 	CROWN_DIAMETER_SORTIE,      //Crown Diameter in m from Sortie Standard
 	CROWN_AREA_SORTIE,          //Crown Area from Sortie diameter
@@ -147,10 +145,9 @@ enum {
 	CANOPY_COVER_LPJ,           //Canopy Cover % of pixel covered from LPJ
 	DBHDC_EFF,                  //Crown Diameter from DBH in function of density
 	PREVIOUS_DBHDC_EFF,         //previous dbhdc value
-	CROWN_DIAMETER_DBHDC_FUNC,  //Crown Diameter in m from DBHDC function
-	CROWN_AREA_DBHDC_FUNC,      //Crown Area in m^2 from DBHDC function
-	CANOPY_COVER_DBHDC_FUNC,    //Canopy Cover % of pixel covered from DBHDC function
-	CANOPY_COVER_DBHDC,
+	CROWN_DIAMETER_DBHDC,       //Crown Diameter in m from DBHDC function
+	CROWN_AREA_DBHDC,           //Crown Area in m^2 from DBHDC function
+	CANOPY_COVER_DBHDC,         //Canopy Cover % of pixel covered from DBHDC function
 	CANOPY_COVER_P,             //Canopy Cover from Portoghesi Function % of pixel covered
 	FREE_CANOPY_COVER_P,
 	TREE_HEIGHT_CR,             //Tree Height in m from CHAPMAN-RICHARDS FUNCTION

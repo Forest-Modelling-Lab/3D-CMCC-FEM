@@ -68,7 +68,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	logger(g_log, "-New Average DBH = %g cm\n", s->value[AVDBH]);
 
 	/* check */
-	//FIXME
+	//FIXME ALESSIOR
 	//CHECK_CONDITION(oldavDBH, > s->value[AVDBH]);
 
 	/*************************************************************************************************************************/
@@ -113,7 +113,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	logger(g_log, "-New Tree Height = %g m\n", h->value);
 
 	/* check */
-	//FIXME
+	//FIXME ALESSIOR
 	//CHECK_CONDITION(oldTreeHeight, > h->value);
 
 	/*************************************************************************************************************************/
@@ -147,7 +147,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	logger(g_log, "-New Basal Area = %g cm^2\n", s->value[BASAL_AREA]);
 
 	/* check */
-	//FIXME
+	//FIXME ALESSIOR
 	//CHECK_CONDITION(oldBasalArea, > s->value[BASAL_AREA]);
 	
 }

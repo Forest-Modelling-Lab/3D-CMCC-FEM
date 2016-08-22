@@ -18,7 +18,7 @@ void peak_lai(species_t *const s, const int day, const int month, const int year
 
 	logger(g_log, "\n**PEAK LAI**\n");
 
-	s->value[PEAK_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC_FUNC];
+	s->value[PEAK_LAI] = ((s->value[SAPWOOD_AREA] / 10000) * s->value[SAP_LEAF]) / s->value[CROWN_AREA_DBHDC];
 	logger(g_log, "year %d PEAK LAI from Kostner = %f m2/m2\n",years, s->value[PEAK_LAI]);
 
 	s->value[MAX_LEAF_C] = (s->value[PEAK_LAI] / s->value[SLA_AVG]) /1000.0 * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell);
