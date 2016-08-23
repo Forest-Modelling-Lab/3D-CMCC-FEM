@@ -133,7 +133,7 @@ int self_pruning ( cell_t *const c, const int layer )
 	int age;
 	int species;
 
-	double perc;
+	double red_perc;
 	double old_crown_area;
 
 	tree_layer_t *l;
@@ -208,18 +208,18 @@ int self_pruning ( cell_t *const c, const int layer )
 
 				/* reduce proportionally to the crown area reduction the amount of branch and leaf C pool */
 				/* compute percentage in crown area reduction for self-pruning */
-				perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
-				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - perc) * 100 );
+				red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
+				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
 
 				/* update branch C pool */
 				//fixme something should be retranslocated to reserve??
-				s->value[BRANCH_C] *= perc;
+				s->value[BRANCH_C] *= red_perc;
 
 				/* update branch N pool */
-				s->value[BRANCH_N] *= perc;
+				s->value[BRANCH_N] *= red_perc;
 
 				/* self-pruned branch to litter */
-				s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - perc));
+				s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc));
 
 				/* update leaf C pool */
 				//fixme something should be retranslocated to reserve??
