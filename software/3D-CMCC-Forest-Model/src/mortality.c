@@ -254,7 +254,7 @@ int self_pruning ( cell_t *const c, const int layer )
 				{
 					//todo to be tested
 					/* self-pruning was not enough */
-					logger(g_log, "self-pruning was not enough\n");getchar();
+					logger(g_log, "self-pruning was not enough\n");
 					return 0;
 				}
 			}
