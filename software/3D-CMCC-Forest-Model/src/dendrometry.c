@@ -34,11 +34,10 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	oldBasalArea = s->value[BASAL_AREA];
 
 	logger(g_log, "\n**DENDROMETRY**\n");
-	logger(g_log, "\n**Average DBH**\n");
-	logger(g_log, "**Tree Height from CC function**\n");
-	logger(g_log, "**Basal Area**\n");
 
-	/*compute Tree AVDBH*/
+	logger(g_log, "\n**Average DBH**\n");
+
+	/* compute tree AVDBH */
 
 	if (s->value[STEMCONST_P] == NO_DATA && s->value[STEMPOWER_P] == NO_DATA)
 	{
@@ -73,7 +72,7 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	/*************************************************************************************************************************/
 
-	/* compute Tree Height */
+	/* compute tree Height */
 	/* using Chapman_Richards Function */
 
 	/* the terms 1.3 in C-R Function is breast height (1.3 m)
@@ -84,6 +83,8 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 	sites and stand ages, or more regionally applied
 	CRB represents exponential decay parameter
 	CRC represents shape parameters */
+
+	logger(g_log, "\n**Tree Height from CC function**\n");
 
 	h->value = 1.3 + s->value[CRA] * pow (1.0 - exp ( - s->value[CRB] * s->value[AVDBH]) , s->value[CRC]);
 	logger(g_log, "-Tree Height using Chapman-Richard function = %g m\n", h->value);
@@ -118,8 +119,10 @@ void dendrometry(cell_t *const c, const int height, const int age, const int spe
 
 	/*************************************************************************************************************************/
 
-	/* recompute sapwood-heartwood area */
-	logger(g_log, "\nSAPWOOD CALCULATION using sapwood area\n");
+	/* compute Basal Area and sapwood-heartwood area */
+
+	logger(g_log, "\n**Basal Area and sapwood-heartwood area**\n");
+
 	s->value[BASAL_AREA] = ((pow((s->value[AVDBH] / 2.0), 2.0)) * Pi);
 	logger(g_log, " BASAL AREA = %g cm^2\n", s->value[BASAL_AREA]);
 	s->value[BASAL_AREA_m2]= s->value[BASAL_AREA] * 0.0001;

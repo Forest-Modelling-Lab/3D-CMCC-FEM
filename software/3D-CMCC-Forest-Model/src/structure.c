@@ -15,10 +15,6 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-/* Last cumulative days in months */
-extern int MonthLength [];
-extern int MonthLength_Leap [];
-
 void daily_forest_structure (cell_t *const c, const int day, const int month, const int year)
 {
 	int layer;
@@ -219,124 +215,7 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 /*************************************************************************************************************************/
 void monthly_forest_structure (cell_t* const c, const int day, const int month, const int year)
 {
-	int layer;
-	int height;
-	int age;
-	int species;
 
-	char mortality;                            /* mortality flag, = n (no mortality), = y (mortality) */
-
-	species_t *s;
-
-	/* monthly check for self pruning or self thinning (crowding competition) (layer level) */
-	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month]) : (MonthLength[month] )) == c->doy )
-	{
-		logger(g_log, "\n***MONTHLY FOREST STRUCTURE (mortality)***\n");
-
-		logger(g_log, "monthly check for self pruning or self thinning (crowding competition) (layer level)\n\n");
-
-		for (layer = c->t_layers_count - 1; layer >= 0; layer --)
-		{
-			/* check if layer exceeds maximum layer coverage */
-			if (c->t_layers[layer].layer_cover >= g_settings->max_layer_cover)
-			{
-				logger(g_log, "layer cover exceeds max layer cover for layer %d\n", layer);
-
-				//test
-//				/* first of all it checks if self-pruning is enough */
-//				/* SELF-PRUNING */
-//				if ( !self_pruning ( c, layer ))
-//				{
-//					/* also self-thinning is necessary */
-//					/* SELF-THINNING */
-//					self_thinning (c, layer);
-//				}
-
-				//test if test above is ok remove
-				/* SELF-THINNING */
-				self_thinning (c, layer);
-
-				/* assign char */
-				mortality = 'y';
-
-				/* reset values for layer (they are recomputed below)*/
-				c->t_layers[layer].layer_n_height_class = 0;
-				c->t_layers[layer].layer_n_trees = 0;
-				c->t_layers[layer].layer_density = 0;
-				/* reset values for cell (they are recomputed below)*/
-				c->cell_n_trees = 0;
-				c->cell_cover = 0;
-
-			}
-			else
-			{
-				logger(g_log, "no crowding competition happens for layer %d\n", layer);
-
-				mortality = 'n';
-			}
-			/* check */
-			CHECK_CONDITION(c->t_layers[layer].layer_cover , > g_settings->max_layer_cover);
-		}
-		logger(g_log, "**************************************\n\n");
-
-		/**************************************************************************************************/
-		/* check if REcompute numbers of height classes, tree number and density after mortality within each layer */
-		if ( mortality == 'y' )
-		{
-			/* REcompute numbers of height classes, tree number and density after mortality within each layer */
-			logger(g_log, "REcompute numbers of height classes, tree number and density after mortality within each layer\n\n");
-
-			for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
-			{
-				for ( height = c->heights_count -1; height >= 0 ; --height )
-				{
-					if( layer == c->heights[height].height_z )
-					{
-						/* recompute number of height classes */
-						c->t_layers[layer].layer_n_height_class += 1;
-					}
-					for ( age = 0; age < c->heights[height].ages_count ; ++age )
-					{
-						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
-						{
-							s = &c->heights[height].ages[age].species[species];
-
-							if( layer == c->heights[height].height_z )
-							{
-								/* recompute number of trees for each layer */
-								c->t_layers[layer].layer_n_trees += s->counter[N_TREE];
-							}
-						}
-					}
-				}
-
-				/*recompute density for each layer */
-				c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
-
-				logger(g_log, "-layer = %d\n", layer);
-				logger(g_log, "-height class(es) = %d layer \n", c->t_layers[layer].layer_n_height_class);
-				logger(g_log, "-number of trees = %d layer\n", c->t_layers[layer].layer_n_trees);
-				logger(g_log, "-density = %g layer\n", c->t_layers[layer].layer_density);
-			}
-			logger(g_log, "**************************************\n\n");
-
-			/**************************************************************************************************/
-			/* Recompute number of total trees and cell cover (cell level) */
-			logger(g_log, "Recompute number of total trees and cell cover (cell level)\n");
-
-			for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
-			{
-				/* compute total number of trees per cell */
-				c->cell_n_trees += c->t_layers[layer].layer_n_trees;
-
-				/* assuming that plants tend to occupy the part of the cell not covered by the others */
-				c->cell_cover += c->t_layers[layer].layer_cover;
-			}
-			logger(g_log, "-number of trees = %d cell\n", c->cell_n_trees);
-			logger(g_log, "-density = %g cell\n", c->cell_cover);
-			logger(g_log, "**************************************\n\n");
-		}
-	}
 }
 
 /*************************************************************************************************************************/
@@ -376,7 +255,6 @@ void annual_forest_structure(cell_t* const c)
 	CHECK_CONDITION(+c->t_layers_count, > c->heights_count);
 
 	/*************************************************************************************/
-
 	/* assign "z" values to height classes */
 	logger(g_log, "Assign 'z' values\n");
 
@@ -398,8 +276,9 @@ void annual_forest_structure(cell_t* const c)
 			}
 		}
 	}
-
 	logger(g_log,"******************************************************\n");
+
+	/*********************************************************************************************************************/
 }
 
 void potential_max_min_canopy_cover (cell_t *const c)

@@ -37,13 +37,10 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const
 		logger(g_log, "DAYS FOR FOLIAGE and FINE ROOT for_REMOVING = %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 		/* assuming that fine roots for deciduous species progressively die together with leaves */
 
+		/* note: due to reduction during vegetative period for reduction in canopy cover MAX_LAI != PEAK_LAI */
+		/* assign LAI values at the beginning of the sigmoid shape */
 		s->value[MAX_LAI] = s->value[LAI];
 		senescenceDayOne = c->doy;
-
-		/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is daily retranslocated as reserve in the reserve pool */
-		/* compute amount of fine root biomass to retranslocate as reserve */
-//		retransl_leaf_c_to_reserve = (s->value[LEAF_C] * 0.1) / s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-//		retransl_fineroot_c_to_reserve = (s->value[FINE_ROOT_C] * 0.1) /s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 	}
 
 	if(s->counter[LEAF_FALL_COUNTER] < s->counter[DAY_FRAC_FOLIAGE_REMOVE])
@@ -57,12 +54,14 @@ void leaf_fall_deciduous(cell_t *const c, const int height, const int age, const
 
 		previousLai = s->value[LAI];
 
+		/* sigmoid shape drives LAI reduction during leaf fall */
 		currentLai = MAX(0,s->value[MAX_LAI] / (1 + exp(-(s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne -
 				c->doy)/(s->counter[DAY_FRAC_FOLIAGE_REMOVE] / (log(9.0 * s->counter[DAY_FRAC_FOLIAGE_REMOVE]/2.0 + senescenceDayOne) -
 						log(.11111111111))))));
 		logger(g_log, "previousLai = %f\n", previousLai);
 		logger(g_log, "currentLai = %f\n", currentLai);
 
+		/* check */
 		CHECK_CONDITION(previousLai, < currentLai);
 
 		previousBiomass_lai = previousLai * (s->value[CANOPY_COVER_DBHDC] * g_settings->sizeCell) / (s->value[SLA_AVG] * 1000.0);
@@ -162,7 +161,6 @@ void leaf_fall_evergreen (cell_t *const c, const int height, const int age, cons
 //	if(*doy == s->counter[SENESCENCE_DAYONE])
 //	{
 //		logger(g_log, "Senescence day one\n");
-//		//fixme che è sto MAX_LAI??
 //		s->value[MAX_LAI] = s->value[LAI];
 //	}
 //	previousLai = s->value[LAI];

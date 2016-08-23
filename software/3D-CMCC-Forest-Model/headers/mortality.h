@@ -4,6 +4,8 @@
 
 #include "matrix.h"
 
+void layer_self_pruning_thinning ( cell_t *const c, const int layer );
+
 int self_pruning (cell_t *const, const int);
 
 void self_thinning(cell_t *const, const int);

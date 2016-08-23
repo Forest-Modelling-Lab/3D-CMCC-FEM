@@ -103,8 +103,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	}
 
 	/* monthly forest structure (mortality function 8end of month) */
-	monthly_forest_structure ( c, day, month, year );
-
+	//monthly_forest_structure ( c, day, month, year );
 
 	/* daily check for vegetative period */
 	daily_check_for_veg_period ( c, meteo_daily, day, month );
@@ -117,6 +116,12 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	/* loop on each cell layers starting from highest to lower */
 	for ( layer = c->t_layers_count -1 ; layer >= 0; --layer )
 	{
+		/* annual layer cover mortality (self-pruning-thinning) */
+		if( !day && !month && year != 0 )
+		{
+			layer_self_pruning_thinning ( c, layer );
+		}
+
 		/* assign shortcut */
 		l = &m->cells[cell].t_layers[layer];
 

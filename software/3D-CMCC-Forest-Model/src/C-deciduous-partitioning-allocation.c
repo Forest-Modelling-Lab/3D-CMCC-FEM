@@ -64,26 +64,26 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	/* partitioning block using CTEM approach (Arora and Boer 2005) */
 	logger(g_log, "*Partitioning ratios*\n");
 	pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW]))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Roots CTEM ratio = %f %%\n", pR_CTEM * 100);
+	logger(g_log, "Roots CTEM ratio = %g %%\n", pR_CTEM * 100);
 	pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-	logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+	logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 	pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-	logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+	logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 	CHECK_CONDITION( fabs ( pR_CTEM + pS_CTEM + pF_CTEM ), > 1 + 1e-4 );
 
 	//fixme to check it, values are too high for fine root
 	/* fine root vs. coarse root ratio */
 	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+	logger(g_log, "Percentage of fine root against total root = %g %%\n", Perc_fine * 100 );
 
 
 	if (s->counter[VEG_DAYS] == 1)
 	{
 		s->counter[BUD_BURST_COUNTER] = (int)s->value[BUD_BURST];
 		logger(g_log, "First day of budburst\n");
-		logger(g_log, "Days for bud burst = %f\n", s->value[BUD_BURST]);
+		logger(g_log, "Days for bud burst = %g\n", s->value[BUD_BURST]);
 	}
 	if (s->counter[VEG_DAYS] > 1 && s->counter[VEG_DAYS] <= s->value[BUD_BURST])
 	{
@@ -100,8 +100,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 
 	logger(g_log, "\nCarbon allocation for deciduous\n");
 	logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-	logger(g_log, "LAI = %f \n", s->value[LAI]);
-	logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+	logger(g_log, "LAI = %g \n", s->value[LAI]);
+	logger(g_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
 
 	/* assign NPP to local variable */
 	npp_to_alloc = s->value[NPP_tC];
@@ -113,11 +113,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	{
 	/************************************************************/
 	case 1:
-		logger(g_log, "BUDBURST\n");
+		logger(g_log, "\n*BUDBURST*\n");
 		logger(g_log, "Bud burst phase using both reserve pools and npp\n");
+		logger(g_log, "LAI = %g \n", s->value[LAI]);
 		logger(g_log, "Allocating only into foliage and fine root\n");
-		logger(g_log, "LAI = %f \n", s->value[LAI]);
-		logger(g_log, "Tot biomass reserve = %f\n", s->value[RESERVE_C]);
+		logger(g_log, "Tot biomass reserve = %g\n", s->value[RESERVE_C]);
 		logger(g_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 
 		/* test "This has recently been confirmed by Dyckmans et al. (2000)
@@ -134,16 +134,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
 		//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
 		//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-		//logger(g_log, "fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
+		//logger(g_log, "fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
 
 		reserve_for_foliage_budburst = s->value[MAX_LEAF_C] / (s->value[BUD_BURST]+1.0);
-		logger(g_log, "daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
+		logger(g_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
 
 		reserve_for_fine_root_budburst = s->value[MAX_FINE_ROOT_C] / (s->value[BUD_BURST]+1.0);
-		logger(g_log, "daily amount of reserve for foliage budburst %f = tC/cell/day\n", reserve_for_foliage_budburst);
+		logger(g_log, "daily amount of reserve for foliage budburst %g = tC/cell/day\n", reserve_for_foliage_budburst);
 
 		reserve_for_budburst = reserve_for_foliage_budburst + reserve_for_fine_root_budburst;
-		logger(g_log, "daily amount of reserve for foliage  and fine roots budburst %f = tC/cell/day\n", reserve_for_budburst);
+		logger(g_log, "daily amount of reserve for foliage  and fine roots budburst %g = tC/cell/day\n", reserve_for_budburst);
 
 		s->value[C_TO_LEAF] = reserve_for_foliage_budburst;
 		s->value[C_TO_FINEROOT] = reserve_for_fine_root_budburst;
@@ -159,6 +159,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		break;
 		/**********************************************************************/
 	case 2:
+		logger(g_log, "\n*NORMAL GROWTH*\n");
 		logger(g_log, "(LAI == PEAK LAI)\n");
 
 		/*see Barbaroux et al., 2002, Scartazza et al., 2013*/
@@ -217,8 +218,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		break;
 		/**********************************************************************/
 	case 3:
+		logger(g_log, "\n*LEAF FALL*\n");
 		logger(g_log, "(DayLength < MINDAYLENGTH)\n");
-		logger(g_log, "LEAF FALL\n");
 		logger(g_log, "allocating into W reserve pool\n");
 
 		if (npp_to_alloc > 0.0 && s->value[RESERVE_C] >= s->value[MIN_RESERVE_C])
@@ -256,8 +257,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		break;
 		/**********************************************************************/
 	case 0:
-
-		logger(g_log, "Unvegetative period \n");
+		logger(g_log, "\n*DORMANT SEASON*\n");
+		logger(g_log, "consuming reserve pool\n");
 
 		/* allocating into c pools */
 		s->value[C_TO_LEAF] = 0.0;
@@ -303,21 +304,20 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 	average_tree_biomass ( s );
 
 	/* to avoid "jumps" of dbh it has computed once monthly */
-	//ALESSIOR is that correct?
 	if ( ( IS_LEAP_YEAR( c->years[year].year ) ? (MonthLength_Leap[month] ) : (MonthLength[month] )) == c->doy )
 	{
 		dendrometry ( c, height, age, species );
 	}
 
 	logger(g_log, "\n-Daily increment in carbon pools-\n");
-	logger(g_log, "C_TO_LEAF = %f tC/cell/day\n", s->value[C_TO_LEAF]);
-	logger(g_log, "C_TO_FINEROOT = %f tC/cell/day\n", s->value[C_TO_FINEROOT]);
-	logger(g_log, "C_TO_COARSEROOT = %f tC/cell/day\n", s->value[C_TO_COARSEROOT]);
-	logger(g_log, "C_TO_STEM = %f tC/cell/day\n", s->value[C_TO_STEM]);
-	logger(g_log, "C_TO_RESERVE = %f tC/cell/day\n", s->value[C_TO_RESERVE]);
-	logger(g_log, "C_TO_BRANCH = %f tC/cell/day\n", s->value[C_TO_BRANCH]);
-	logger(g_log, "C_TO_FRUIT = %f tC/cell/day\n", s->value[C_TO_FRUIT]);
-	logger(g_log, "C_TO_LITTER = %f tC/cell/day\n", s->value[C_TO_LITTER]);
+	logger(g_log, "C_TO_LEAF = %g tC/cell/day\n", s->value[C_TO_LEAF]);
+	logger(g_log, "C_TO_FINEROOT = %g tC/cell/day\n", s->value[C_TO_FINEROOT]);
+	logger(g_log, "C_TO_COARSEROOT = %g tC/cell/day\n", s->value[C_TO_COARSEROOT]);
+	logger(g_log, "C_TO_STEM = %g tC/cell/day\n", s->value[C_TO_STEM]);
+	logger(g_log, "C_TO_RESERVE = %g tC/cell/day\n", s->value[C_TO_RESERVE]);
+	logger(g_log, "C_TO_BRANCH = %g tC/cell/day\n", s->value[C_TO_BRANCH]);
+	logger(g_log, "C_TO_FRUIT = %g tC/cell/day\n", s->value[C_TO_FRUIT]);
+	logger(g_log, "C_TO_LITTER = %g tC/cell/day\n", s->value[C_TO_LITTER]);
 	logger(g_log, "C_LEAF_TO_RESERVE = %g tC/cell/day\n", s->value[C_LEAF_TO_RESERVE]);
 	logger(g_log, "C_FINEROOT_TO_RESERVE = %g tC/cell/day\n", s->value[C_FINEROOT_TO_RESERVE]);
 	logger(g_log, "C_STEM_LIVEWOOD_TO_DEADWOOD = %g tC/cell/day\n", s->value[C_STEM_LIVEWOOD_TO_DEADWOOD]);
@@ -430,16 +430,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //		s->value[BIOMASS_FRUIT_tDM] = 0;
 //	}
 //	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-//	logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+//	logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 //	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-//	logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+//	logger(g_log, "Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
 //
 //
 //	if (s->counter[VEG_DAYS] == 1)
 //	{
 //		s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
 //		logger(g_log, "First day of budburst\n");
-//		logger(g_log, "Days for bud burst = %f\n", s->value[BUD_BURST]);
+//		logger(g_log, "Days for bud burst = %g\n", s->value[BUD_BURST]);
 //	}
 //	if (s->counter[VEG_DAYS] > 1 && s->counter[VEG_DAYS] <= s->value[BUD_BURST])
 //	{
@@ -497,9 +497,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //
 //
-//			logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
-//			logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
-//			logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION] );
+//			logger(g_log, "min r0 ctem = %g\n",s->value[MIN_R0CTEM] );
+//			logger(g_log, "max s0 ctem = %g\n",s->value[MAX_S0CTEM] );
+//			logger(g_log, "years for conversion = %g\n",s->value[YEARS_FOR_CONVERSION] );
 //
 //
 //			//considering a LINEAR increment
@@ -507,7 +507,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			r0Ctem -= s->value[MIN_R0CTEM];
 //			r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
 //			r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-//			logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
+//			logger(g_log, "new r0_CTEM = %g \n", r0Ctem);
 //
 //			if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
 //			{
@@ -518,7 +518,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
 //			s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
 //			s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-//			logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
+//			logger(g_log, "new s0_CTEM = %g \n", s0Ctem);
 //
 //			if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
 //			{
@@ -526,8 +526,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			}
 //		}
 //		logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-//		logger(g_log, "LAI = %f \n", s->value[LAI]);
-//		logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+//		logger(g_log, "LAI = %g \n", s->value[LAI]);
+//		logger(g_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
 //
 //
 //		switch (s->phenology_phase)
@@ -537,7 +537,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			logger(g_log, "BUDBURST\n");
 //			logger(g_log, "Bud burst phase using both reserve pools and npp\n");
 //			logger(g_log, "Allocating only into foliage\n");
-//			logger(g_log, "LAI = %f \n", s->value[LAI]);
+//			logger(g_log, "LAI = %g \n", s->value[LAI]);
 //
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
@@ -548,8 +548,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
 //			//parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
 //			//frac_to_foliage_fineroot = (s->value[RESERVE]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-//			logger(g_log, "Tot biomass reserve = %f\n", s->value[RESERVE_tDM]);
-//			//logger(g_log, "fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
+//			logger(g_log, "Tot biomass reserve = %g\n", s->value[RESERVE_tDM]);
+//			//logger(g_log, "fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
 //			logger(g_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 //
 //			//			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
@@ -561,7 +561,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//			{
 //			/* +2 is to avoid excees in biomass for foliage */
 //			biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / (s->value[BUD_BURST]+2.0);
-//			logger(g_log, "daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
+//			logger(g_log, "daily amount of biomass for foliage budburst %g\n", biomass_foliage_budburst);
 //			//			}
 //
 //			if (s->value[NPP_tDM] > 0.0)
@@ -603,8 +603,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //			// Total Biomass
 //			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_ROOTS_TOT_tDM] + s->value[RESERVE_tDM] + s->value[BIOMASS_BRANCH_tDM];
-//			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
-//			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
+//			logger(g_log, "Previous Total W = %g tDM/area\n", oldW);
+//			logger(g_log, "Total Biomass = %g tDM/area\n", s->value[TOTAL_W]);
 //
 //			c->daily_leaf_drymatter += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			c->daily_stem_drymatter += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
@@ -622,11 +622,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
 //			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-//			logger(g_log, "Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
+//			logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 //			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-//			logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+//			logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 //			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-//			logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+//			logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 //
 //			/*partitioning*/
 //			if (s->value[NPP_tDM] > 0.0)
@@ -638,7 +638,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //					//NPP for reproduction
 //					s->value[BIOMASS_FRUIT_tDM] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
 //					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT_tDM];
-//					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
+//					logger(g_log, "Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
 //
 //					//reproductive life span
 //					s->value[BIOMASS_FRUIT_tDM] -= (s->value[BIOMASS_FRUIT_tDM] * (1 / s->value[CONES_LIFE_SPAN]));
@@ -679,10 +679,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			logger(g_log, "(DayLength < MINDAYLENGTH)\n");
 //			logger(g_log, "LEAF FALL\n");
 //			logger(g_log, "allocating into W reserve pool\n");
-//			logger(g_log, "++Lai before Leaffall= %f\n", s->value[LAI]);
-//			logger(g_log, "Biomass foliage = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
-//			logger(g_log, "Biomass fine root = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//			//logger(g_log, "biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+//			logger(g_log, "++Lai before Leaffall= %g\n", s->value[LAI]);
+//			logger(g_log, "Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_tDM]);
+//			logger(g_log, "Biomass fine root = %g \n", s->value[BIOMASS_FINE_ROOT_tDM]);
+//			//logger(g_log, "biomass foliage to remove %g \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 //
 //			if(s->counter[LEAF_FALL_COUNTER] == 1)
 //			{
@@ -694,16 +694,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //				/* assuming linear leaf fall */
 //				s->value[DEL_FOLIAGE] = -(s->value[BIOMASS_FOLIAGE_tDM] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//				logger(g_log, "daily amount of foliage to remove = %f\n", s->value[DEL_FOLIAGE]);
+//				logger(g_log, "daily amount of foliage to remove = %g\n", s->value[DEL_FOLIAGE]);
 //				s->value[DEL_ROOTS_FINE]= -(s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//				logger(g_log, "daily amount of fine root to remove = %f\n", s->value[DEL_ROOTS_FINE]);
+//				logger(g_log, "daily amount of fine root to remove = %g\n", s->value[DEL_ROOTS_FINE]);
 //
 //				/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is retranslocated as reserve in the reserve pool */
 //				/* compute amount of fine root biomass to retranslocate as reserve */
 //				s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM] = (s->value[BIOMASS_FOLIAGE_tDM] *0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 //				s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM] = (s->value[BIOMASS_FINE_ROOT_tDM] *0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-//				logger(g_log, "RESERVE_FOLIAGE_TO_RETRANSL = %f\n", s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM]);
-//				logger(g_log, "RESERVE_FINEROOT_TO_RETRANSL = %f\n", s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
+//				logger(g_log, "RESERVE_FOLIAGE_TO_RETRANSL = %g\n", s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM]);
+//				logger(g_log, "RESERVE_FINEROOT_TO_RETRANSL = %g\n", s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
 //
 //			}
 //
@@ -715,7 +715,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //					//NPP for reproduction
 //					s->value[BIOMASS_FRUIT_tDM] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
 //					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT_tDM];
-//					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
+//					logger(g_log, "Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
 //
 //					//reproductive life span
 //					s->value[BIOMASS_FRUIT_tDM] -= (s->value[BIOMASS_FRUIT_tDM] * (1 / s->value[CONES_LIFE_SPAN]));
@@ -802,50 +802,50 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //	/*allocation*/
 //	s->value[BIOMASS_FOLIAGE_tDM] += s->value[DEL_FOLIAGE];
-//	logger(g_log, "Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE_tDM]);
+//	logger(g_log, "Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_tDM]);
 //	s->value[BIOMASS_STEM_tDM] += s->value[DEL_STEMS];
-//	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM_tDM]);
+//	logger(g_log, "Branch and Bark Biomass (Wbb) = %g tDM/area\n", s->value[BIOMASS_STEM_tDM]);
 //	s->value[BIOMASS_BRANCH_tDM] += s->value[DEL_BB];
-//	logger(g_log, "Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH_tDM]);
+//	logger(g_log, "Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_BRANCH_tDM]);
 //	s->value[RESERVE_tDM] +=  s->value[DEL_RESERVE];
-//	logger(g_log, "Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE_tDM]);
+//	logger(g_log, "Reserve Biomass (Wres) = %g tDM/area\n", s->value[RESERVE_tDM]);
 //	s->value[BIOMASS_ROOTS_TOT_tDM] +=  s->value[DEL_ROOTS_TOT];
-//	logger(g_log, "Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+//	logger(g_log, "Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 //	s->value[BIOMASS_FINE_ROOT_tDM] += s->value[DEL_ROOTS_FINE];
-//	logger(g_log, "Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+//	logger(g_log, "Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_FINE_ROOT_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_tDM] += s->value[DEL_ROOTS_COARSE];
-//	logger(g_log, "Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
+//	logger(g_log, "Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
 //	s->value[BIOMASS_TOT_STEM_tDM] += s->value[DEL_TOT_STEM];
-//	logger(g_log, "Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM_tDM]);
+//	logger(g_log, "Total Stem Biomass (Wts)= %g\n", s->value[BIOMASS_TOT_STEM_tDM]);
 //	s->value[BIOMASS_STEM_LIVE_WOOD_tDM] += (s->value[DEL_STEMS] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_DEAD_WOOD_tDM] += s->value[DEL_STEMS]*(1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] += (s->value[DEL_ROOTS_COARSE] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] += s->value[DEL_ROOTS_COARSE] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
-//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
 //
 //	if (fabs((s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]) - s->value[BIOMASS_STEM_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live stem + dead stem = %f\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total stem = %f\n", s->value[BIOMASS_STEM_tDM]);
+//		logger(g_log, "Live stem + dead stem = %g\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total stem = %g\n", s->value[BIOMASS_STEM_tDM]);
 //		exit(1);
 //	}
 //	if (fabs((s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]) - s->value[BIOMASS_COARSE_ROOT_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live coarse + dead coarse = %f\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total coarse = %f\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
+//		logger(g_log, "Live coarse + dead coarse = %g\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total coarse = %g\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
 //		exit(1);
 //	}
 //	if (fabs((s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]) - s->value[BIOMASS_BRANCH_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live branch + dead branch = %f\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total branch = %f\n", s->value[BIOMASS_BRANCH_tDM]);
+//		logger(g_log, "Live branch + dead branch = %g\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total branch = %g\n", s->value[BIOMASS_BRANCH_tDM]);
 //		exit(1);
 //	}
 //
@@ -863,13 +863,13 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //	s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT];
 //	s->value[DEL_Y_BB] += s->value[DEL_BB];
 //
-//	logger(g_log, "delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
-//	logger(g_log, "delta_F %d = %f \n", c->heights[height].z, s->value[DEL_FOLIAGE]);
-//	logger(g_log, "delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
-//	logger(g_log, "delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
-//	logger(g_log, "delta_S %d = %f \n", c->heights[height].z, s->value[DEL_STEMS]);
-//	logger(g_log, "delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
-//	logger(g_log, "delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
+//	logger(g_log, "delta_WTS %d = %g \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
+//	logger(g_log, "delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE]);
+//	logger(g_log, "delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
+//	logger(g_log, "delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
+//	logger(g_log, "delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS]);
+//	logger(g_log, "delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE]);
+//	logger(g_log, "delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 //
 //	c->daily_delta_wts[i] = s->value[DEL_TOT_STEM];
 //	c->daily_delta_ws[i] = s->value[DEL_STEMS];
@@ -963,16 +963,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //	//deriving data from values reported for BIOME-BGC
 //	//fixme see if change with new parameters checked in "Pool_fraction"
 //	s->value[FR_CR] = (s->value[FINE_ROOT_LEAF] / s->value[COARSE_ROOT_STEM]) * (1.0 / s->value[STEM_LEAF]);
-//	//logger(g_log, "Fine/Coarse root ratio = %f\n", s->value[FR_CR] );
+//	//logger(g_log, "Fine/Coarse root ratio = %g\n", s->value[FR_CR] );
 //	Perc_fine = s->value[FR_CR] / (s->value[FR_CR] + 1.0);
-//	//logger(g_log, "Percentage of fine root against total root= %f %%\n", Perc_fine * 100 );
+//	//logger(g_log, "Percentage of fine root against total root= %g %%\n", Perc_fine * 100 );
 //	Perc_coarse = 1- Perc_fine;
 //
 //	if (s->counter[VEG_DAYS] == 1)
 //	{
 //		s->counter[BUD_BURST_COUNTER] = s->value[BUD_BURST];
 //		logger(g_log, "First day of budburst\n");
-//		logger(g_log, "Days for bud burst = %f\n", s->value[BUD_BURST]);
+//		logger(g_log, "Days for bud burst = %g\n", s->value[BUD_BURST]);
 //	}
 //	if (s->counter[VEG_DAYS] > 1 && s->counter[VEG_DAYS] <= s->value[BUD_BURST])
 //	{
@@ -1030,9 +1030,9 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //
 //
-//			logger(g_log, "min r0 ctem = %f\n",s->value[MIN_R0CTEM] );
-//			logger(g_log, "max s0 ctem = %f\n",s->value[MAX_S0CTEM] );
-//			logger(g_log, "years for conversion = %f\n",s->value[YEARS_FOR_CONVERSION] );
+//			logger(g_log, "min r0 ctem = %g\n",s->value[MIN_R0CTEM] );
+//			logger(g_log, "max s0 ctem = %g\n",s->value[MAX_S0CTEM] );
+//			logger(g_log, "years for conversion = %g\n",s->value[YEARS_FOR_CONVERSION] );
 //
 //
 //			//considering a LINEAR increment
@@ -1040,7 +1040,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			r0Ctem -= s->value[MIN_R0CTEM];
 //			r0Ctem_increment = r0Ctem / s->value[YEARS_FOR_CONVERSION];
 //			r0Ctem = s->value[MIN_R0CTEM] + (r0Ctem_increment * s->value[F_AGE]);
-//			logger(g_log, "new r0_CTEM = %f \n", r0Ctem);
+//			logger(g_log, "new r0_CTEM = %g \n", r0Ctem);
 //
 //			if (r0Ctem > old_r0Ctem || r0Ctem < s->value[MIN_R0CTEM])
 //			{
@@ -1051,7 +1051,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			s0Ctem = s->value[MAX_S0CTEM] - s0Ctem;
 //			s0Ctem_increment = s0Ctem / s->value[YEARS_FOR_CONVERSION];
 //			s0Ctem = s->value[MAX_S0CTEM] - (s0Ctem_increment * s->value[F_AGE]);
-//			logger(g_log, "new s0_CTEM = %f \n", s0Ctem);
+//			logger(g_log, "new s0_CTEM = %g \n", s0Ctem);
 //
 //			if (s0Ctem > s->value[MAX_S0CTEM] || s0Ctem < old_s0Ctem)
 //			{
@@ -1059,8 +1059,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			}
 //		}
 //		logger(g_log, "PHENOLOGICAL PHASE = %d\n", s->phenology_phase);
-//		logger(g_log, "LAI = %f \n", s->value[LAI]);
-//		logger(g_log, "PEAK LAI = %f \n", s->value[PEAK_LAI]);
+//		logger(g_log, "LAI = %g \n", s->value[LAI]);
+//		logger(g_log, "PEAK LAI = %g \n", s->value[PEAK_LAI]);
 //
 //
 //		switch (s->phenology_phase)
@@ -1070,7 +1070,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			logger(g_log, "BUDBURST\n");
 //			logger(g_log, "Bud burst phase using both reserve pools and npp\n");
 //			logger(g_log, "Allocating only into foliage\n");
-//			logger(g_log, "LAI = %f \n", s->value[LAI]);
+//			logger(g_log, "LAI = %g \n", s->value[LAI]);
 //
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
@@ -1081,8 +1081,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//frac_to_foliage_fineroot = (s->value[RESERVE]) / s->counter[BUD_BURST_COUNTER];
 //			parameter = 2.0 / pow(s->value[BUD_BURST],2.0);
 //			frac_to_foliage_fineroot = (s->value[RESERVE_tDM]) * parameter * (s->value[BUD_BURST]+1.0 - s->counter[BUD_BURST_COUNTER]);
-//			logger(g_log, "Tot biomass reserve = %f\n", s->value[RESERVE_tDM]);
-//			logger(g_log, "fraction of reserve for foliage and fine root = %f\n", frac_to_foliage_fineroot);
+//			logger(g_log, "Tot biomass reserve = %g\n", s->value[RESERVE_tDM]);
+//			logger(g_log, "fraction of reserve for foliage and fine root = %g\n", frac_to_foliage_fineroot);
 //			logger(g_log, "++Remaining days for bud burst = %d\n", s->counter[BUD_BURST_COUNTER]);
 //
 //			//			if (s->value[MAX_BIOMASS_BUDBURST_tDM] > s->value[RESERVE_tDM])
@@ -1093,11 +1093,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//			else
 //			//			{
 //			//				biomass_tot_budburst = s->value[MAX_BIOMASS_BUDBURST] / s->value[BUD_BURST];
-//			//				logger(g_log, "daily amount of biomass for total budburst %f\n", biomass_tot_budburst);
+//			//				logger(g_log, "daily amount of biomass for total budburst %g\n", biomass_tot_budburst);
 //			biomass_foliage_budburst = s->value[MAX_BIOMASS_FOLIAGE_tDM] / s->value[BUD_BURST];
-//			logger(g_log, "daily amount of biomass for foliage budburst %f\n", biomass_foliage_budburst);
+//			logger(g_log, "daily amount of biomass for foliage budburst %g\n", biomass_foliage_budburst);
 //			//				biomass_fine_root_budburst = s->value[MAX_BIOMASS_FINE_ROOTS] / s->value[BUD_BURST];
-//			//				logger(g_log, "daily amount of biomass for fine root budburst %f\n", biomass_fine_root_budburst);
+//			//				logger(g_log, "daily amount of biomass for fine root budburst %g\n", biomass_fine_root_budburst);
 //
 //			//			}
 //
@@ -1212,35 +1212,35 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //				//
 //				//				/*allocation*/
 //				//				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
-//				//				logger(g_log, "Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
+//				//				logger(g_log, "Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 //				//				s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
-//				//				logger(g_log, "Total Stem Biomass (Wts) = %f\n", s->value[BIOMASS_TOT_STEM]);
+//				//				logger(g_log, "Total Stem Biomass (Wts) = %g\n", s->value[BIOMASS_TOT_STEM]);
 //				//				s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
-//				//				logger(g_log, "Stem Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+//				//				logger(g_log, "Stem Biomass (Wbb) = %g tDM/area\n", s->value[BIOMASS_STEM]);
 //				//				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
-//				//				logger(g_log, "Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
+//				//				logger(g_log, "Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_BRANCH]);
 //				//				s->value[RESERVE] +=  s->value[DEL_RESERVE];
-//				//				logger(g_log, "Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
+//				//				logger(g_log, "Reserve Biomass (Wres) = %g tDM/area\n", s->value[RESERVE]);
 //				//				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 //				//				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
-//				//				logger(g_log, "Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
+//				//				logger(g_log, "Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 //				//				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
-//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
+//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 //				//
 //				//				//check for live and dead tissues
 //				//				s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
-//				//				logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+//				//				logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 //				//				//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//				//				logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+//				//				logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 //				//				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
-//				//				logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+//				//				logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 //				//				s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//				//				logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+//				//				logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 //				//				s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
-//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 //				//				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 //				//
 //				//				/*recompute correct LAI*/
 //				//				Daily_lai (&c->heights[height].ages[age].species[species]);
@@ -1248,8 +1248,8 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //			// Total Biomass
 //			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE_tDM] + s->value[BIOMASS_STEM_tDM] + s->value[BIOMASS_ROOTS_TOT_tDM] + s->value[RESERVE_tDM] + s->value[BIOMASS_BRANCH_tDM];
-//			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
-//			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
+//			logger(g_log, "Previous Total W = %g tDM/area\n", oldW);
+//			logger(g_log, "Total Biomass = %g tDM/area\n", s->value[TOTAL_W]);
 //
 //			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
@@ -1262,7 +1262,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //		case 2:
 //			//			logger(g_log, "(PEAK_Y_LAI * 0.5 < LAI < PEAK_Y_LAI) \n");
-//			//			logger(g_log, "LAI = %f \n", s->value[LAI]);
+//			//			logger(g_log, "LAI = %g \n", s->value[LAI]);
 //			//			logger(g_log, "**Maximum Growth**\n");
 //			//			logger(g_log, "Allocating only into foliage and fine root pools\n");
 //			//
@@ -1312,10 +1312,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//				logger(g_log, "LAI exceeds Peak Lai\n");
 //			//				CHECK_CONDITION(s->value[LAI], < s->value[PEAK_LAI])
 //			//				//				logger(g_log, "PHENOLOGICAL PHASE = 2.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
-//			//				//				logger(g_log, "LAI = %f \n", s->value[LAI]);
+//			//				//				logger(g_log, "LAI = %g \n", s->value[LAI]);
 //			//				//
 //			//				//				logger(g_log, "LAI exceeds Peak Lai\n");
-//			//				//				logger(g_log, "Re-allocating %f leaves exceeding biomass into the three pools Ws+Wr+Wreserve\n", (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]));
+//			//				//				logger(g_log, "Re-allocating %g leaves exceeding biomass into the three pools Ws+Wr+Wreserve\n", (s->value[BIOMASS_FOLIAGE] - s->value[MAX_BIOMASS_FOLIAGE]));
 //			//				//
 //			//				//				/*partitioning*/
 //			//				//				/*re-transfer mass to other pools*/
@@ -1330,43 +1330,43 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//				//
 //			//				//				/*allocation*/
 //			//				//				s->value[BIOMASS_FOLIAGE] += s->value[DEL_FOLIAGE];
-//			//				//				logger(g_log, "Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE]);
+//			//				//				logger(g_log, "Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE]);
 //			//				//				s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
-//			//				//				logger(g_log, "Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
+//			//				//				logger(g_log, "Total Stem Biomass (Wts)= %g\n", s->value[BIOMASS_TOT_STEM]);
 //			//				//				s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
-//			//				//				logger(g_log, "Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+//			//				//				logger(g_log, "Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM]);
 //			//				//				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
-//			//				//				logger(g_log, "Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
+//			//				//				logger(g_log, "Branch and Bark Biomass (Wbb) = %g tDM/area\n", s->value[BIOMASS_BRANCH]);
 //			//				//				s->value[RESERVE] +=  s->value[DEL_RESERVE];
-//			//				//				logger(g_log, "Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
+//			//				//				logger(g_log, "Reserve Biomass (Wres) = %g tDM/area\n", s->value[RESERVE]);
 //			//				//				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-//			//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+//			//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 //			//				//				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
-//			//				//				logger(g_log, "Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
+//			//				//				logger(g_log, "Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 //			//				//				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
-//			//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
+//			//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 //			//				//
 //			//				//				//check for live and dead tissues
 //			//				//				s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 //			//				//				//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 //			//				//				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 //			//				//				s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 //			//				//				s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 //			//				//				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 //			//				//
 //			//				//				//recompute LAI
 //			//				//				Daily_lai (&c->heights[height].ages[age].species[species]);
 //			//			}
 //			//			// Total Biomass
 //			//			s->value[TOTAL_W] = s->value[BIOMASS_FOLIAGE] + s->value[BIOMASS_STEM] + s->value[BIOMASS_ROOTS_TOT] + s->value[RESERVE] + s->value[BIOMASS_BRANCH];
-//			//			logger(g_log, "Previous Total W = %f tDM/area\n", oldW);
-//			//			logger(g_log, "Total Biomass = %f tDM/area\n", s->value[TOTAL_W]);
+//			//			logger(g_log, "Previous Total W = %g tDM/area\n", oldW);
+//			//			logger(g_log, "Total Biomass = %g tDM/area\n", s->value[TOTAL_W]);
 //			//
 //			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
 //			//			c->daily_stem_carbon += s->value[DEL_STEMS]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
@@ -1379,18 +1379,18 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			/************************************************************/
 //		case 3:
 //			//			logger(g_log, "**Normal Growth**\n");
-//			//			logger(g_log, "Day length > %f \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
+//			//			logger(g_log, "Day length > %g \n", /*c->abscission_daylength*/s->value[MINDAYLENGTH] );
 //			//			logger(g_log, "allocating into the three pools Ws+Wr(Wrc+Wrf))+Wf\n");
 //			//
 //			//			s->value[DAILY_DEL_LITTER] = 0;
 //			//
 //			//
 //			//			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-//			//			//logger(g_log, "Roots CTEM ratio layer %d = %f %%\n", z, pR_CTEM * 100);
+//			//			//logger(g_log, "Roots CTEM ratio layer %d = %g %%\n", z, pR_CTEM * 100);
 //			//			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * ( 2.0 - Light_trasm - s->value[F_SW] )));
-//			//			//logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+//			//			//logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 //			//			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-//			//			//logger(g_log, "Foliage CTEM ratio = %f %%\n", pF_CTEM * 100);
+//			//			//logger(g_log, "Foliage CTEM ratio = %g %%\n", pF_CTEM * 100);
 //			//
 //			//			/*partitioning*/
 //			//			if (s->value[NPP] > 0.0)
@@ -1403,7 +1403,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//					s->value[DEL_FRUIT] = s->value[NPP] * s->value[FRUIT_PERC];
 //			//					s->value[NPP] -= s->value[DEL_FRUIT];
 //			//					s->value[BIOMASS_FRUIT] += s->value[DEL_FRUIT];
-//			//					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[DEL_FRUIT]);
+//			//					logger(g_log, "Biomass increment into cones = %g tDM/area\n", s->value[DEL_FRUIT]);
 //			//					//reproductive life span
 //			//					s->value[BIOMASS_FRUIT] -= (s->value[BIOMASS_FRUIT] * (1 / s->value[CONES_LIFE_SPAN]));
 //			//				}
@@ -1440,7 +1440,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//				logger(g_log, "LAI exceeds Peak Lai\n");
 //			//				CHECK_CONDITION(s->value[LAI], < s->value[PEAK_LAI])
 //			//				//				logger(g_log, "PHENOLOGICAL PHASE = 2.1 \n (TOO MUCH BIOMASS INTO FOLIAGE)\n");
-//			//				//				logger(g_log, "LAI = %f \n", s->value[LAI]);
+//			//				//				logger(g_log, "LAI = %g \n", s->value[LAI]);
 //			//				//
 //			//				//				logger(g_log, "LAI exceeds Peak Lai\n");
 //			//				//				logger(g_log, "Re-allocating foliar exceeding biomass into the three pools Ws+Wr+Wreserve\n");
@@ -1458,35 +1458,35 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			//				//
 //			//				//				/*allocation*/
 //			//				//				s->value[BIOMASS_FOLIAGE] = s->value[MAX_BIOMASS_FOLIAGE];
-//			//				//				logger(g_log, "Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+//			//				//				logger(g_log, "Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_STEM]);
 //			//				//				s->value[BIOMASS_TOT_STEM] += s->value[DEL_TOT_STEM];
-//			//				//				logger(g_log, "Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM]);
+//			//				//				logger(g_log, "Total Stem Biomass (Wts)= %g\n", s->value[BIOMASS_TOT_STEM]);
 //			//				//				s->value[BIOMASS_STEM] += s->value[DEL_STEMS];
-//			//				//				logger(g_log, "Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM]);
+//			//				//				logger(g_log, "Branch and Bark Biomass (Wbb) = %g tDM/area\n", s->value[BIOMASS_STEM]);
 //			//				//				s->value[BIOMASS_BRANCH] += s->value[DEL_BB];
-//			//				//				logger(g_log, "Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH]);
+//			//				//				logger(g_log, "Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_BRANCH]);
 //			//				//				s->value[RESERVE] +=  s->value[DEL_RESERVE];
-//			//				//				logger(g_log, "Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE]);
+//			//				//				logger(g_log, "Reserve Biomass (Wres) = %g tDM/area\n", s->value[RESERVE]);
 //			//				//				s->value[BIOMASS_ROOTS_TOT] +=  s->value[DEL_ROOTS_TOT];
-//			//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
+//			//				//				logger(g_log, "Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT]);
 //			//				//				s->value[BIOMASS_ROOTS_FINE] += s->value[DEL_ROOTS_FINE_CTEM];
-//			//				//				logger(g_log, "Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
+//			//				//				logger(g_log, "Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_ROOTS_FINE]);
 //			//				//				s->value[BIOMASS_ROOTS_COARSE] += s->value[DEL_ROOTS_COARSE_CTEM];
-//			//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
+//			//				//				logger(g_log, "Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_ROOTS_COARSE]);
 //			//				//
 //			//				//				//check for live and dead tissues
 //			//				//				s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 //			//				//				//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 //			//				//				s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 //			//				//				s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 //			//				//				s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
-//			//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+//			//				//				logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 //			//				//				s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//			//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+//			//				//				logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 //			//			}
 //			//
 //			//			c->daily_leaf_carbon += s->value[DEL_FOLIAGE]/ GC_GDM * 1000000.0 / (s->value[CANOPY_COVER_DBHDC]* g_settings->sizeCell);
@@ -1506,11 +1506,11 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			s->value[DAILY_DEL_LITTER] = 0;
 //
 //			pR_CTEM = (r0Ctem + (omegaCtem * ( 1.0 - s->value[F_SW] ))) / (1.0 + (omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-//			logger(g_log, "Roots CTEM ratio layer = %f %%\n", pR_CTEM * 100);
+//			logger(g_log, "Roots CTEM ratio layer = %g %%\n", pR_CTEM * 100);
 //			pS_CTEM = (s0Ctem + (omegaCtem * ( 1.0 - Light_trasm))) / (1.0 + ( omegaCtem * (2.0 - Light_trasm - s->value[F_SW])));
-//			logger(g_log, "Stem CTEM ratio = %f %%\n", pS_CTEM * 100);
+//			logger(g_log, "Stem CTEM ratio = %g %%\n", pS_CTEM * 100);
 //			pF_CTEM = (1.0 - pS_CTEM - pR_CTEM);
-//			logger(g_log, "Reserve CTEM ratio = %f %%\n", pF_CTEM * 100);
+//			logger(g_log, "Reserve CTEM ratio = %g %%\n", pF_CTEM * 100);
 //
 //			/*partitioning*/
 //			if (s->value[NPP_tDM] > 0.0)
@@ -1522,7 +1522,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //					//NPP for reproduction
 //					s->value[BIOMASS_FRUIT_tDM] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
 //					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT_tDM];
-//					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
+//					logger(g_log, "Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
 //
 //					//reproductive life span
 //					s->value[BIOMASS_FRUIT_tDM] -= (s->value[BIOMASS_FRUIT_tDM] * (1 / s->value[CONES_LIFE_SPAN]));
@@ -1563,10 +1563,10 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //			logger(g_log, "(DayLength < MINDAYLENGTH)\n");
 //			logger(g_log, "LEAF FALL\n");
 //			logger(g_log, "allocating into W reserve pool\n");
-//			logger(g_log, "++Lai before Leaffall= %f\n", s->value[LAI]);
-//			logger(g_log, "Biomass foliage = %f \n", s->value[BIOMASS_FOLIAGE_tDM]);
-//			logger(g_log, "Biomass fine root = %f \n", s->value[BIOMASS_FINE_ROOT_tDM]);
-//			//logger(g_log, "biomass foliage to remove %f \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
+//			logger(g_log, "++Lai before Leaffall= %g\n", s->value[LAI]);
+//			logger(g_log, "Biomass foliage = %g \n", s->value[BIOMASS_FOLIAGE_tDM]);
+//			logger(g_log, "Biomass fine root = %g \n", s->value[BIOMASS_FINE_ROOT_tDM]);
+//			//logger(g_log, "biomass foliage to remove %g \n", s->value[DAILY_FOLIAGE_BIOMASS_TO_REMOVE]);
 //
 //			if(s->counter[LEAF_FALL_COUNTER] == 1)
 //			{
@@ -1578,16 +1578,16 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //				/* assuming linear leaf fall */
 //				s->value[DEL_FOLIAGE] = -(s->value[BIOMASS_FOLIAGE_tDM] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//				logger(g_log, "daily amount of foliage to remove = %f\n", s->value[DEL_FOLIAGE]);
+//				logger(g_log, "daily amount of foliage to remove = %g\n", s->value[DEL_FOLIAGE]);
 //				s->value[DEL_ROOTS_FINE]= -(s->value[BIOMASS_FINE_ROOT_tDM] / s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-//				logger(g_log, "daily amount of fine root to remove = %f\n", s->value[DEL_ROOTS_FINE]);
+//				logger(g_log, "daily amount of fine root to remove = %g\n", s->value[DEL_ROOTS_FINE]);
 //
 //				/* following Campioli et al., 2013 and Bossel 1996 10% of foliage and fine root biomass is retranslocated as reserve in the reserve pool */
 //				/* compute amount of fine root biomass to retranslocate as reserve */
 //				s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM] = (s->value[BIOMASS_FOLIAGE_tDM] *0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
 //				s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM] = (s->value[BIOMASS_FINE_ROOT_tDM] *0.1) / (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE];
-//				logger(g_log, "RESERVE_FOLIAGE_TO_RETRANSL = %f\n", s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM]);
-//				logger(g_log, "RESERVE_FINEROOT_TO_RETRANSL = %f\n", s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
+//				logger(g_log, "RESERVE_FOLIAGE_TO_RETRANSL = %g\n", s->value[RESERVE_FOLIAGE_TO_RETRANSL_tDM]);
+//				logger(g_log, "RESERVE_FINEROOT_TO_RETRANSL = %g\n", s->value[RESERVE_FINEROOT_TO_RETRANSL_tDM]);
 //
 //			}
 //
@@ -1605,7 +1605,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //					//NPP for reproduction
 //					s->value[BIOMASS_FRUIT_tDM] = s->value[NPP_tDM] * s->value[FRUIT_PERC];
 //					s->value[NPP_tDM] -= s->value[BIOMASS_FRUIT_tDM];
-//					logger(g_log, "Biomass increment into cones = %f tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
+//					logger(g_log, "Biomass increment into cones = %g tDM/area\n", s->value[BIOMASS_FRUIT_tDM]);
 //
 //					//reproductive life span
 //					s->value[BIOMASS_FRUIT_tDM] -= (s->value[BIOMASS_FRUIT_tDM] * (1 / s->value[CONES_LIFE_SPAN]));
@@ -1691,67 +1691,67 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //
 //	/*allocation*/
 //	s->value[BIOMASS_FOLIAGE_tDM] += s->value[DEL_FOLIAGE];
-//	logger(g_log, "Foliage Biomass (Wf) = %f tDM/area\n", s->value[BIOMASS_FOLIAGE_tDM]);
+//	logger(g_log, "Foliage Biomass (Wf) = %g tDM/area\n", s->value[BIOMASS_FOLIAGE_tDM]);
 //	s->value[BIOMASS_STEM_tDM] += s->value[DEL_STEMS];
-//	logger(g_log, "Branch and Bark Biomass (Wbb) = %f tDM/area\n", s->value[BIOMASS_STEM_tDM]);
+//	logger(g_log, "Branch and Bark Biomass (Wbb) = %g tDM/area\n", s->value[BIOMASS_STEM_tDM]);
 //	s->value[BIOMASS_BRANCH_tDM] += s->value[DEL_BB];
-//	logger(g_log, "Branch and Bark Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_BRANCH_tDM]);
+//	logger(g_log, "Branch and Bark Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_BRANCH_tDM]);
 //	s->value[RESERVE_tDM] +=  s->value[DEL_RESERVE];
-//	logger(g_log, "Reserve Biomass (Wres) = %f tDM/area\n", s->value[RESERVE_tDM]);
+//	logger(g_log, "Reserve Biomass (Wres) = %g tDM/area\n", s->value[RESERVE_tDM]);
 //	s->value[BIOMASS_ROOTS_TOT_tDM] +=  s->value[DEL_ROOTS_TOT];
-//	logger(g_log, "Total Root Biomass (Wr TOT) = %f tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
+//	logger(g_log, "Total Root Biomass (Wr TOT) = %g tDM/area\n", s->value[BIOMASS_ROOTS_TOT_tDM]);
 //	s->value[BIOMASS_FINE_ROOT_tDM] += s->value[DEL_ROOTS_FINE];
-//	logger(g_log, "Fine Root Biomass (Wrf) = %f tDM/area\n", s->value[BIOMASS_FINE_ROOT_tDM]);
+//	logger(g_log, "Fine Root Biomass (Wrf) = %g tDM/area\n", s->value[BIOMASS_FINE_ROOT_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_tDM] += s->value[DEL_ROOTS_COARSE];
-//	logger(g_log, "Coarse Root Biomass (Wrc) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
+//	logger(g_log, "Coarse Root Biomass (Wrc) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
 //	s->value[BIOMASS_TOT_STEM_tDM] += s->value[DEL_TOT_STEM];
-//	logger(g_log, "Total Stem Biomass (Wts)= %f\n", s->value[BIOMASS_TOT_STEM_tDM]);
+//	logger(g_log, "Total Stem Biomass (Wts)= %g\n", s->value[BIOMASS_TOT_STEM_tDM]);
 //
 //	Daily_lai (&c->heights[height].ages[age].species[species]);
 //
 //	//check for live and dead tissues
 //	//	s->value[BIOMASS_STEM_LIVE_WOOD] += (s->value[DEL_STEMS] /** s->value[LIVE_TOTAL_WOOD]*/);
-//	//	logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
+//	//	logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD]);
 //	//	//s->value[BIOMASS_STEM_DEAD_WOOD] += (s->value[DEL_STEMS] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//	//	logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
+//	//	logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD]);
 //	//	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** s->value[LIVE_TOTAL_WOOD]*/);
-//	//	logger(g_log, "Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
+//	//	logger(g_log, "Live Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD]);
 //	//	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD] += (s->value[DEL_ROOTS_COARSE_CTEM] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//	//	logger(g_log, "Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
+//	//	logger(g_log, "Dead Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD]);
 //	//	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD] += (s->value[DEL_BB] /** s->value[LIVE_TOTAL_WOOD]*/);
-//	//	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
+//	//	logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD]);
 //	//	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD] += (s->value[DEL_BB] /** (1.0 -s->value[LIVE_TOTAL_WOOD])*/);
-//	//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
+//	//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD]);
 //
 //	s->value[BIOMASS_STEM_LIVE_WOOD_tDM] += (s->value[DEL_STEMS] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_DEAD_WOOD_tDM] += s->value[DEL_STEMS]*(1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Dead Stem Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Stem Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] += (s->value[DEL_ROOTS_COARSE] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM] += s->value[DEL_ROOTS_COARSE] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Dead Coarse Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Coarse Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] += (s->value[DEL_BB] * s->value[LIVE_TOTAL_WOOD_FRAC]);
-//	logger(g_log, "Live Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
+//	logger(g_log, "Live Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM]);
 //	s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM] += (s->value[DEL_BB] * (1.0 -s->value[LIVE_TOTAL_WOOD_FRAC]));
-//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %f tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+//	logger(g_log, "Dead Stem Branch Biomass (Ws) = %g tDM/area\n", s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
 //
 //	if (fabs((s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]) - s->value[BIOMASS_STEM_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live stem + dead stem = %f\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total stem = %f\n", s->value[BIOMASS_STEM_tDM]);
+//		logger(g_log, "Live stem + dead stem = %g\n", s->value[BIOMASS_STEM_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total stem = %g\n", s->value[BIOMASS_STEM_tDM]);
 //		exit(1);
 //	}
 //	if (fabs((s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]) - s->value[BIOMASS_COARSE_ROOT_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live coarse + dead coarse = %f\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total coarse = %f\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
+//		logger(g_log, "Live coarse + dead coarse = %g\n", s->value[BIOMASS_COARSE_ROOT_LIVE_WOOD_tDM] + s->value[BIOMASS_COARSE_ROOT_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total coarse = %g\n", s->value[BIOMASS_COARSE_ROOT_tDM]);
 //		exit(1);
 //	}
 //	if (fabs((s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]) - s->value[BIOMASS_BRANCH_tDM])>1e-4)
 //	{
-//		logger(g_log, "Live branch + dead branch = %f\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
-//		logger(g_log, "Total branch = %f\n", s->value[BIOMASS_BRANCH_tDM]);
+//		logger(g_log, "Live branch + dead branch = %g\n", s->value[BIOMASS_STEM_BRANCH_LIVE_WOOD_tDM] + s->value[BIOMASS_STEM_BRANCH_DEAD_WOOD_tDM]);
+//		logger(g_log, "Total branch = %g\n", s->value[BIOMASS_BRANCH_tDM]);
 //		exit(1);
 //	}
 //
@@ -1766,13 +1766,13 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 //	s->value[DEL_Y_WR] += s->value[DEL_ROOTS_TOT];
 //	s->value[DEL_Y_BB] += s->value[DEL_BB];
 //
-//	logger(g_log, "delta_WTS %d = %f \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
-//	logger(g_log, "delta_F %d = %f \n", c->heights[height].z, s->value[DEL_FOLIAGE]);
-//	logger(g_log, "delta_fR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
-//	logger(g_log, "delta_cR %d = %f \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
-//	logger(g_log, "delta_S %d = %f \n", c->heights[height].z, s->value[DEL_STEMS]);
-//	logger(g_log, "delta_Res %d = %f \n", c->heights[height].z, s->value[DEL_RESERVE]);
-//	logger(g_log, "delta_BB %d = %f \n", c->heights[height].z, s->value[DEL_BB]);
+//	logger(g_log, "delta_WTS %d = %g \n", c->heights[height].z, s->value[DEL_TOT_STEM]);
+//	logger(g_log, "delta_F %d = %g \n", c->heights[height].z, s->value[DEL_FOLIAGE]);
+//	logger(g_log, "delta_fR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_FINE]);
+//	logger(g_log, "delta_cR %d = %g \n", c->heights[height].z, s->value[DEL_ROOTS_COARSE]);
+//	logger(g_log, "delta_S %d = %g \n", c->heights[height].z, s->value[DEL_STEMS]);
+//	logger(g_log, "delta_Res %d = %g \n", c->heights[height].z, s->value[DEL_RESERVE]);
+//	logger(g_log, "delta_BB %d = %g \n", c->heights[height].z, s->value[DEL_BB]);
 //
 //	c->daily_lai[i] = s->value[LAI];
 //

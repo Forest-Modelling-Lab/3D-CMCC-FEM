@@ -60,6 +60,10 @@ void snow_melt_subl(cell_t *const c, meteo_daily_t *meteo_daily)
 				logger(g_log, "a fraction of Snow melts!!\n");
 			}
 		}
+		else
+		{
+			logger(g_log, "NO snow pack to melt\n");
+		}
 	}
 	else
 	{

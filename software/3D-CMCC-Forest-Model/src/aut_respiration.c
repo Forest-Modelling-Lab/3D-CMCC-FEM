@@ -213,8 +213,6 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 	species_t *s;
 	s = &c->heights[height].ages[age].species[species];
 
-	logger(g_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
-
 	if (!string_compare_i(g_settings->Prog_Aut_Resp, "on"))
 	{
 		/* maintenance respiration */
@@ -222,6 +220,8 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 		/* growth respiration */
 		growth_respiration( c, layer, height, age, species );
+
+		logger(g_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
 		/* COMPUTE TOTAL A RESPIRATION */
 		s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
