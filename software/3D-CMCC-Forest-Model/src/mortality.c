@@ -212,7 +212,8 @@ int self_pruning ( cell_t *const c, const int layer )
 				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
 
 				/* update branch C pool */
-				//fixme fixme fixme to re-include
+				//fixme model highly overestimate reduction
+				//because it removes indistinctly coarse branch and fine branch
 				//fixme something should be retranslocated to reserve??
 				//s->value[BRANCH_C] *= red_perc;
 
