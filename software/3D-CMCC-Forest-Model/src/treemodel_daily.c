@@ -209,12 +209,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 
 							/* radiation */
+							/*********************************************************************/
 							/* short wave band */
 							canopy_radiation_sw_band( c, layer, height, age, species, meteo_daily );
 							/* long wave band */
 							canopy_radiation_lw_band( c, layer, height, age, species, meteo_daily );
 							/* net radiation */
 							canopy_net_radiation( c, layer, height, age, species );
+							/**********************************************************************/
 
 							/* canopy temperature */
 							canopy_temperature( c, layer, height, age, species, meteo_daily );
@@ -245,7 +247,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							}
 							else
 							{
-								/*evergreen */
+								/* evergreen */
 								daily_C_evergreen_partitioning_allocation( c, layer, height, age, species, meteo_daily, day, month, year );
 							}
 

@@ -288,7 +288,7 @@ void reset_daily_class_variables(cell_t *const c)
 				s->value[C_LEAF_TO_RESERVE] = 0.;
 				s->value[C_FINEROOT_TO_RESERVE] = 0.;
 
-				/* reset daily maint and growth respiration */
+				/* reset daily maint,growth  and total respiration */
 				s->value[DAILY_LEAF_MAINT_RESP] = 0.;
 				s->value[NIGHTLY_LEAF_MAINT_RESP] = 0.;
 				s->value[TOT_DAY_LEAF_MAINT_RESP] = 0.;
@@ -303,6 +303,12 @@ void reset_daily_class_variables(cell_t *const c)
 				s->value[STEM_GROWTH_RESP] = 0.;
 				s->value[BRANCH_GROWTH_RESP] = 0.;
 				s->value[TOTAL_GROWTH_RESP] = 0.;
+				s->value[LEAF_AUT_RESP] = 0.;
+				s->value[FINE_ROOT_AUT_RESP] = 0.;
+				s->value[STEM_AUT_RESP] = 0.;
+				s->value[BRANCH_AUT_RESP] = 0.;
+				s->value[COARSE_ROOT_AUT_RESP] = 0.;
+				s->value[TOTAL_AUT_RESP] = 0.;
 			}
 		}
 	}
@@ -334,6 +340,14 @@ void reset_monthly_class_variables(cell_t *const c)
 			for (species = a->species_count - 1; species >= 0; species -- )
 			{
 				s = &a->species[species];
+
+				s->value[MONTHLY_LEAF_AUT_RESP] = 0.;
+				s->value[MONTHLY_FINE_ROOT_AUT_RESP] = 0.;
+				s->value[MONTHLY_STEM_AUT_RESP] = 0.;
+				s->value[MONTHLY_COARSE_ROOT_AUT_RESP] = 0.;
+				s->value[MONTHLY_BRANCH_AUT_RESP] = 0.;
+				s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
+				s->value[MONTHLY_CANOPY_EVAPO_TRANSP] = 0.;
 			}
 		}
 	}
@@ -381,6 +395,15 @@ void reset_annual_class_variables(cell_t *const c)
 				s->value[YEARLY_GPP_gC] = 0;
 				s->value[YEARLY_NPP_gC] = 0;
 				s->value[YEARLY_NPP_tC] = 0;
+
+				s->value[YEARLY_LEAF_AUT_RESP] = 0.;
+				s->value[YEARLY_FINE_ROOT_AUT_RESP] = 0.;
+				s->value[YEARLY_STEM_AUT_RESP] = 0.;
+				s->value[YEARLY_COARSE_ROOT_AUT_RESP] = 0.;
+				s->value[YEARLY_BRANCH_AUT_RESP] = 0.;
+				s->value[YEARLY_TOTAL_AUT_RESP] = 0.;
+
+				s->value[YEARLY_CANOPY_EVAPO_TRANSP] = 0.;
 
 				s->counter[DEAD_STEMS] = 0;
 				s->counter[N_TREE_SAP] = 0;

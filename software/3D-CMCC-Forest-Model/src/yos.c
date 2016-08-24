@@ -747,7 +747,21 @@ static int yos_from_arr(double *const values, const int rows_count, const int co
 		else if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN || yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
 		{
 			logger(g_log, "BAD DATA FOR rh = %g in day = %d month = %d year = %d\n", yos[*yos_count-1].m[month].d[day].rh_f, day+1, month+1, year);
-			exit(1);
+
+			//fixme
+			if(yos[*yos_count-1].m[month].d[day].rh_f < RH_RANGE_MIN)
+			{
+				logger(g_log, "forced RH to 0%%\n");
+				yos[*yos_count-1].m[month].d[day].rh_f = 0.0;
+			}
+			if(yos[*yos_count-1].m[month].d[day].rh_f > RH_RANGE_MAX)
+			{
+				logger(g_log, "forced RH to 100%%\n");
+				yos[*yos_count-1].m[month].d[day].rh_f = 100.0;
+			}
+
+			//fixme
+			//exit(1);
 		}
 	}
 	*p_yos = yos;

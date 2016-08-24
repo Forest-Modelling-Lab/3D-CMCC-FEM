@@ -65,5 +65,4 @@ void nitrogen_stock(species_t *const s)
 	s->value[BRANCH_N] = s->value[BRANCH_LIVE_WOOD_C] / s->value[CN_LIVE_WOODS];
 	logger(g_log, "Live branch nitrogen content = %g tN/area\n", s->value[BRANCH_N]);
 
-
 }

@@ -212,14 +212,15 @@ int self_pruning ( cell_t *const c, const int layer )
 				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
 
 				/* update branch C pool */
+				//fixme fixme fixme to re-include
 				//fixme something should be retranslocated to reserve??
-				s->value[BRANCH_C] *= red_perc;
+				//s->value[BRANCH_C] *= red_perc;
 
 				/* update branch N pool */
-				s->value[BRANCH_N] *= red_perc;
+				//s->value[BRANCH_N] *= red_perc;
 
 				/* self-pruned branch to litter */
-				s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc));
+				//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc));
 
 				/* update leaf C pool */
 				//fixme something should be retranslocated to reserve??

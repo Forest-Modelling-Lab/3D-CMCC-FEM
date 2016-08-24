@@ -34,6 +34,7 @@ void live_total_wood_age(const age_t *const a, const int species)
 	logger(g_log, "max age = %d\n", max_age);
 
 	//fixme values should be included in species.txt
+	/* age at which live:total wood ratio is maximum */
 	min_age = 25;
 	logger(g_log, "min age = %d\n", min_age);
 

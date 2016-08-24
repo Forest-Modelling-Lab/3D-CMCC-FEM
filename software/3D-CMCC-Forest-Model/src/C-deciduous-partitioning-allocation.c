@@ -250,6 +250,7 @@ void daily_C_deciduous_partitioning_allocation(cell_t *const c, const int layer,
 		s->value[C_TO_COARSEROOT] = 0.0;
 		s->value[C_TO_STEM] = 0.0;
 		s->value[C_TO_BRANCH] = 0.0;
+		/* including retranslocated C */
 		s->value[C_TO_RESERVE] = npp_to_alloc + s->value[C_LEAF_TO_RESERVE] + s->value[C_FINEROOT_TO_RESERVE];
 
 		/* check */

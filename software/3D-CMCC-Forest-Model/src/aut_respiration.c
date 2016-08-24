@@ -92,7 +92,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	logger(g_log, "nightly leaf maintenance respiration = %g gC/m2/day\n", s->value[NIGHTLY_LEAF_MAINT_RESP]);
 
 	/* total (all day) leaf maintenance respiration */
-	s->value[TOT_DAY_LEAF_MAINT_RESP]= s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
+	s->value[TOT_DAY_LEAF_MAINT_RESP] = s->value[DAILY_LEAF_MAINT_RESP] + s->value[NIGHTLY_LEAF_MAINT_RESP];
 	logger(g_log, "daily total leaf maintenance respiration = %g gC/m2/day\n", s->value[TOT_DAY_LEAF_MAINT_RESP]);
 
 	/*******************************************************************************************************************/
@@ -223,10 +223,28 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 		logger(g_log, "\n**AUTOTROPHIC_RESPIRATION**\n");
 
+		/* class level among pools */
+		s->value[LEAF_AUT_RESP] = s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
+		logger(g_log, "daily leaf autotrophic respiration = %g gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
+
+		s->value[STEM_AUT_RESP] = s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
+		logger(g_log, "daily stem autotrophic respiration = %g gC/m2/day\n", s->value[STEM_AUT_RESP]);
+
+		s->value[BRANCH_AUT_RESP] = s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
+		logger(g_log, "daily branch autotrophic respiration = %g gC/m2/day\n", s->value[BRANCH_AUT_RESP]);
+
+		s->value[FINE_ROOT_AUT_RESP] = s->value[FINE_ROOT_MAINT_RESP] + s->value[FINE_ROOT_GROWTH_RESP];
+		logger(g_log, "daily fine root autotrophic respiration = %g gC/m2/day\n", s->value[FINE_ROOT_AUT_RESP]);
+
+		s->value[COARSE_ROOT_AUT_RESP] = s->value[COARSE_ROOT_MAINT_RESP] + s->value[COARSE_ROOT_GROWTH_RESP];
+		logger(g_log, "daily coarse root autotrophic respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_AUT_RESP]);
+
 		/* COMPUTE TOTAL A RESPIRATION */
 		s->value[TOTAL_AUT_RESP] = s->value[TOTAL_GROWTH_RESP] + s->value[TOTAL_MAINT_RESP];
 
-		/* among pools */
+		/***************************************************************************************/
+
+		/* cell level among pools */
 		c->daily_leaf_aut_resp += s->value[TOT_DAY_LEAF_MAINT_RESP] + s->value[LEAF_GROWTH_RESP];
 		c->daily_stem_aut_resp += s->value[STEM_MAINT_RESP] + s->value[STEM_GROWTH_RESP];
 		c->daily_branch_aut_resp += s->value[BRANCH_MAINT_RESP] + s->value[BRANCH_GROWTH_RESP];
@@ -241,6 +259,20 @@ void autotrophic_respiration(cell_t *const c, const int layer, const int height,
 
 	logger(g_log, "daily total autotrophic respiration = %g gC/m2/day\n", s->value[TOTAL_AUT_RESP]);
 	logger(g_log, "daily total autotrophic respiration = %g tC/cell/day \n", (s->value[TOTAL_AUT_RESP] /1000000.0) * g_settings->sizeCell);
+
+	s->value[MONTHLY_LEAF_AUT_RESP] += s->value[LEAF_AUT_RESP];
+	s->value[MONTHLY_FINE_ROOT_AUT_RESP] += s->value[FINE_ROOT_AUT_RESP];
+	s->value[MONTHLY_STEM_AUT_RESP] += s->value[STEM_AUT_RESP];
+	s->value[MONTHLY_COARSE_ROOT_AUT_RESP] += s->value[COARSE_ROOT_AUT_RESP];
+	s->value[MONTHLY_BRANCH_AUT_RESP] += s->value[BRANCH_AUT_RESP];
+	s->value[MONTHLY_TOTAL_AUT_RESP] += s->value[TOTAL_AUT_RESP];
+
+	s->value[YEARLY_LEAF_AUT_RESP] += s->value[LEAF_AUT_RESP];
+	s->value[YEARLY_FINE_ROOT_AUT_RESP] += s->value[FINE_ROOT_AUT_RESP];
+	s->value[YEARLY_STEM_AUT_RESP] += s->value[STEM_AUT_RESP];
+	s->value[YEARLY_COARSE_ROOT_AUT_RESP] += s->value[COARSE_ROOT_AUT_RESP];
+	s->value[YEARLY_BRANCH_AUT_RESP] += s->value[BRANCH_AUT_RESP];
+	s->value[YEARLY_TOTAL_AUT_RESP] += s->value[TOTAL_AUT_RESP];
 
 	c->daily_aut_resp += s->value[TOTAL_AUT_RESP];
 	c->daily_aut_resp_tC +=  s->value[TOTAL_AUT_RESP] / 1000000 * g_settings->sizeCell;
