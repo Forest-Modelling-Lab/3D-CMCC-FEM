@@ -25,7 +25,6 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 	static int years_counter;
 
-	if (c->doy == 1)
 
 	//FIXME this is just an approach
 
@@ -44,16 +43,23 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 				{
 					/* heading for layers */
 					logger(g_daily_log,"\t%s", "-LAYER");
-					logger(g_daily_log,"\t%s", "HEIGHT");
+
+					/* heading for heights value */
+					logger(g_daily_log,"\t%4s", "HEIGHT");
 
 					for ( age = 0; age < c->heights[height].ages_count ; ++age )
 					{
+						/* heading for ages */
+						logger(g_daily_log,"\t%7s", "AGE");
+
 						for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 						{
-							/* heading for height class */
+							/* heading for species name */
+							logger(g_daily_log,"\t%10s", "SPECIES");
+
 							if( !height )
 							{
-								logger(g_daily_log, "\t%2s \t%6s \t%6s \t%10s \t%8s \t%8s \t%6s \t%6s \t%10s",
+								logger(g_daily_log, "\t%8s \t%6s \t%6s \t%10s \t%8s \t%8s \t%10s \t%6s \t%10s",
 										"LAI-",
 										"GPP(gC/m2)",
 										"AR(gC/m2)",
@@ -91,11 +97,15 @@ void EOD_print_cumulative_balance_cell_level(cell_t *const c, const int day, con
 
 				for ( age = 0; age < c->heights[height].ages_count ; ++age )
 				{
+					logger(g_daily_log,"\t%8d", c->heights[height].ages[age].value);
+
 					for ( species = 0; species < c->heights[height].ages[age].species_count; ++species )
 					{
+						logger(g_daily_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
+
 						if( !height)
 						{
-							logger(g_daily_log,"\t%2.3g \t%7.4g \t%10.2g \t%10.2g \t%12.2g \t%9.4g \t%7d \t%9.4g \t%9.4g\n",
+							logger(g_daily_log,"\t%8.3g \t%7.4g \t%10.2g \t%10.2g \t%12.2g \t%9.4g \t%7d \t%9.4g \t%9.4g\n",
 									c->heights[height].ages[age].species[species].value[LAI],
 									c->daily_gpp,
 									c->daily_aut_resp,

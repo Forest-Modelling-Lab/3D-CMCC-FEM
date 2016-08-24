@@ -11,7 +11,7 @@
 
 extern logger_t* g_log;
 
-void phosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
+void photosynthesis(cell_t *const c, const int layer, const int height, const int age, const int species, const int DaysInMonth)
 {
 	double Alpha_C;
 	double Epsilon_C;
@@ -27,7 +27,7 @@ void phosynthesis(cell_t *const c, const int layer, const int height, const int 
 
 	logger(g_log, "VegUnveg = %d\n", s->counter[VEG_UNVEG]);
 
-	//fixme photosynthesis should occurs only in the fraction of the days in which also daily transp occurs
+	//note: photosynthesis in controlled by transpiration through the F_VPD modifier that also controls transpiration */
 
 	//test without F_CO2
 	if (s->value[ALPHA] != NO_DATA)

@@ -104,10 +104,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 	/* canopy boundary layer conductance */
 	s->value[CANOPY_BLCOND] = gl_bl * s->value[LAI];
 
-	//fixme usefull?
-	/* upscaled to coverage */
-	//s->value[CANOPY_BLCOND] *= leaf_cell_cover_eff;
-
 	/* leaf cuticular conductance corrected for temperature and air pressure */
 	gl_c = s->value[CUTCOND] * g_corr;
 
@@ -161,7 +157,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 
 	if(s->value[LAI]>0.0)
 	{
-		//fixme why for evaporation BIOME uses stomatal conductance??
 		/* if canopy has water */
 		if(s->value[CANOPY_WATER] > 0.0)
 		{
@@ -199,7 +194,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				++days_with_canopy_wet;
 
 				/* adjust daylength for transpiration */
-				//fixme this variable should be used also in photosynthesis
 				transp_daylength_sec = 0.0;
 				s->value[CANOPY_FRAC_DAY_TRANSP] = 0.0;
 				logger(g_log, "transp_daylength_sec = %g\n", s->value[CANOPY_FRAC_DAY_TRANSP]);
@@ -241,7 +235,6 @@ void canopy_evapotranspiration(cell_t *const c, const int layer, const int heigh
 				logger(g_log, "\n*CANOPY TRANSPIRATION (Partial Canopy Wet)*\n");
 
 				/* adjust daylength for transpiration */
-				//fixme this variable should be used also in photosynthesis
 				transp_daylength_sec = daylength_sec - evap_daylength_sec;
 
 				s->value[CANOPY_FRAC_DAY_TRANSP] = transp_daylength_sec / daylength_sec;

@@ -226,7 +226,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 							canopy_evapotranspiration( c, layer, height, age, species, meteo_daily );
 
 							/* canopy carbon fluxes */
-							phosynthesis( c, layer, height, age, species, DaysInMonth[month]);
+							photosynthesis( c, layer, height, age, species, DaysInMonth[month]);
 
 							/* autotrophic respiration */
 							autotrophic_respiration ( c, layer, height, age, species, meteo_daily );
