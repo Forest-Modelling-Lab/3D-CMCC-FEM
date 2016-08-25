@@ -348,6 +348,7 @@ void reset_monthly_class_variables(cell_t *const c)
 				s->value[MONTHLY_BRANCH_AUT_RESP] = 0.;
 				s->value[MONTHLY_TOTAL_AUT_RESP] = 0.;
 				s->value[MONTHLY_CANOPY_EVAPO_TRANSP] = 0.;
+				s->value[MONTHLY_CANOPY_LATENT_HEAT] = 0.;
 			}
 		}
 	}
@@ -404,6 +405,7 @@ void reset_annual_class_variables(cell_t *const c)
 				s->value[YEARLY_TOTAL_AUT_RESP] = 0.;
 
 				s->value[YEARLY_CANOPY_EVAPO_TRANSP] = 0.;
+				s->value[YEARLY_CANOPY_LATENT_HEAT] = 0.;
 
 				s->counter[DEAD_STEMS] = 0;
 				s->counter[N_TREE_SAP] = 0;

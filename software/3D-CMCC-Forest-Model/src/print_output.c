@@ -3,15 +3,25 @@
 #include "print_output.h"
 #include "common.h"
 #include "settings.h"
+#include "soil_settings.h"
 #include "logger.h"
 #include "g-function.h"
 
 extern settings_t* g_settings;
+extern soil_settings_t* g_soil_settings;
 //extern logger_t* g_log;
 extern logger_t* g_daily_log;
 extern logger_t* g_monthly_log;
 extern logger_t* g_annual_log;
 extern logger_t* g_soil_log;
+//extern char *g_sz_input_file;
+//extern char *g_sz_parameterization_file;
+extern char *g_sz_soil_file;
+extern char *g_input_met_file;
+//extern char *g_sz_settings_file;
+//extern char *g_sz_topo_file;
+
+
 
 extern int MonthLength [];
 extern int MonthLength_Leap [];
@@ -221,21 +231,22 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 							logger(g_annual_log,"\t%10s", "SPECIES");
 
 							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 									"GPP",
 									"AR",
 									"NPP",
-									"Y(%)",
+									"NPE",
 									"LAI",
 									"AVDBH",
 									"Ntree",
-									"ET",
+									"CET",
+									"CLE",
 									"WRes",
 									"WS",
 									"WSL",
 									"WSD",
-									"WL",
-									"WFR",
+									"PWL",
+									"PWFR",
 									"WCR",
 									"WCRL",
 									"WCRD",
@@ -248,14 +259,36 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 									"CRAR",
 									"BBAR");
 						}
+						if(c->heights[height].ages[age].species_count > 0)logger(g_annual_log,"\t%10s", "*");
 					}
+					if(c->heights[height].ages_count > 0)logger(g_annual_log,"\t%10s", "**");
 				}
+				if(c->t_layers[layer].layer_n_height_class > 0)logger(g_annual_log,"\t%10s", "***");
 			}
+			if(c->t_layers_count > 0)logger(g_annual_log,"\t%10s", "***");
 		}
 		/************************************************************************/
 
-		/* heading variables at cell level */
-		logger(g_annual_log,"\t%10s", "ASW\n");
+		/* heading variables at cell level only if there's more than one layer */
+		if( c->heights_count > 0 )
+		{
+			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
+					"***",
+					"gpp",
+					"npp",
+					"ar",
+					"npe");
+		}
+		/* heading variables at cell level also if there's more than one layer */
+		else
+		{
+			logger(g_annual_log,"\t%10s", "***");
+		}
+		/* heading variables only at cell level */
+		logger(g_annual_log,"\t%10s \t%10s \t%10s",
+				"et",
+				"le",
+				"asw\n");
 
 		/************************************************************************/
 	}
@@ -294,7 +327,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 						logger(g_annual_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
 
 						/* print variables at layer-class level */
-						logger(g_annual_log,"\t%6.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3d \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f"
+						logger(g_annual_log,"\t%6.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3d \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f"
 								"\t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f",
 								s->value[YEARLY_GPP_gC],
 								s->value[YEARLY_TOTAL_AUT_RESP],
@@ -304,12 +337,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s->value[AVDBH],
 								s->counter[N_TREE],
 								s->value[YEARLY_CANOPY_EVAPO_TRANSP],
+								s->value[YEARLY_CANOPY_LATENT_HEAT],
 								s->value[RESERVE_C],
 								s->value[STEM_C],
 								s->value[STEM_LIVE_WOOD_C],
 								s->value[STEM_DEAD_WOOD_C],
-								s->value[LEAF_C],
-								s->value[FINE_ROOT_C],
+								s->value[MAX_LEAF_C],
+								s->value[MAX_FINE_ROOT_C],
 								s->value[COARSE_ROOT_C],
 								s->value[COARSE_ROOT_LIVE_WOOD_C],
 								s->value[COARSE_ROOT_DEAD_WOOD_C],
@@ -322,20 +356,56 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s->value[YEARLY_COARSE_ROOT_AUT_RESP],
 								s->value[YEARLY_BRANCH_AUT_RESP]);
 					}
+					if(c->heights[height].ages[age].species_count > 0)logger(g_annual_log,"\t%10s", "*");
 				}
+				if(c->heights[height].ages_count > 0)logger(g_annual_log,"\t%10s", "**");
 			}
+			if(c->t_layers[layer].layer_n_height_class > 0)logger(g_annual_log,"\t%10s", "***");
 		}
-		/************************************************************************/
-
-		/* printing variables at cell level */
-		logger(g_annual_log, "\t%3.2f\n", c->asw);
-
-		/************************************************************************/
+		if(c->t_layers_count > 0)
+		{
+			logger(g_annual_log,"\t%10s", "****");
+		}
 	}
-//
+	/************************************************************************/
 
-//
-//
+//	/* printing variables at cell level */
+//	logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f\n",
+//			c->annual_gpp,
+//			c->annual_npp_gC,
+//			c->annual_aut_resp,
+//			(c->annual_aut_resp/c->annual_gpp)*100.0,
+//			c->annual_et,
+//			c->annual_latent_heat_flux,
+//			c->asw);
+
+	/* printing variables at cell level only if there's more than one layer */
+	if( c->heights_count > 0 )
+	{
+		logger(g_annual_log, "\t%4s \t%3.2f \t%3.2f \t%3.2f \t%3.2f",
+				"***",
+				c->annual_gpp,
+				c->annual_npp_gC,
+				c->annual_aut_resp,
+				(c->annual_aut_resp/c->annual_gpp)*100.0);
+	}
+	/* printing variables at cell level also if there's more than one layer */
+	else
+	{
+		logger(g_annual_log,"\t%10s", "***");
+	}
+	/* printing variables only at cell level */
+	logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f\n",
+			c->annual_et,
+			c->annual_latent_heat_flux,
+			c->asw);
+
+
+	/************************************************************************/
+	//
+
+	//
+	//
 	//	/* heading */
 	//	if ( !year )
 	//	{
@@ -359,6 +429,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	{
 		//ALESSIOR
 		//logger(g_annual_log, "\n3D-CMCC Forest Ecosystem Model v."PROGRAM_VERSION"\n");
+		logger(g_annual_log, "\n\nSites: %s\n", g_soil_settings->sitename);
+		//logger(g_annual_log, "input file = %s\n", );
+		//logger(g_annual_log, "parameterization file= %s\n", );
+		logger(g_annual_log, "soil file = %s\n", g_sz_soil_file);
+		//logger(g_annual_log, "topo path = %s\n", );
+		logger(g_annual_log, "met path = %s\n", g_input_met_file);
+		//logger(g_annual_log, "settings path = %s\n", );
 		logger(g_annual_log, "\nrunned: "__DATE__" at "__TIME__"\n");
 	}
 }

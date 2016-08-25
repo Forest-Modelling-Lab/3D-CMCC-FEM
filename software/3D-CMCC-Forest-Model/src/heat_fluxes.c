@@ -16,6 +16,9 @@ void Canopy_latent_heat_fluxes (species_t *const s, const meteo_daily_t *const m
 	/* canopy canopy level latent heat fluxes (W/m2) */
 	s->value[CANOPY_LATENT_HEAT] = s->value[CANOPY_EVAPO_TRANSP] * meteo_daily->lh_vap / 86400;
 	logger(g_log, "CANOPY LATENT HEAT FLUX = %g W/m2\n", s->value[CANOPY_LATENT_HEAT]);
+
+	s->value[MONTHLY_CANOPY_LATENT_HEAT] += s->value[CANOPY_LATENT_HEAT];
+	s->value[YEARLY_CANOPY_LATENT_HEAT] += s->value[CANOPY_LATENT_HEAT];
 }
 
 void Canopy_sensible_heat_fluxes(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)

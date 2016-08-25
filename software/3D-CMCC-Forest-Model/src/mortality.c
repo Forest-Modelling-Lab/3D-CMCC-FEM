@@ -211,6 +211,7 @@ int self_pruning ( cell_t *const c, const int layer )
 				red_perc = (s->value[CROWN_AREA_DBHDC] / old_crown_area);
 				logger(g_log, "percentage of reduction in crown area = %g %%\n", (1 - red_perc) * 100 );
 
+				/***************************************************************/
 				/* update branch C pool */
 				//fixme model highly overestimate reduction
 				//because it removes indistinctly coarse branch and fine branch
@@ -220,9 +221,16 @@ int self_pruning ( cell_t *const c, const int layer )
 				/* update branch N pool */
 				//s->value[BRANCH_N] *= red_perc;
 
-				/* self-pruned branch to litter */
-				//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc));
+				/***************************************************************/
+				/* update coarse root C pool */
+				//fixme something should be retranslocated to reserve??
+				//s->value[COARSE_ROOT_C] *= red_perc;
 
+				/* update coarse root N pool */
+				//s->value[COARSE_ROOT_N] *= red_perc;
+;
+
+				/***************************************************************/
 				/* update leaf C pool */
 				//fixme something should be retranslocated to reserve??
 				//s->value[LEAF_C] *= perc;
@@ -230,8 +238,13 @@ int self_pruning ( cell_t *const c, const int layer )
 				/* update leaf N pool */
 				//s->value[LEAF_N] *= perc;
 
-				/* self-pruned branch and leaf to litter */
-				//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - perc)) + (s->value[LEAF_C] * (1 - perc));
+				/***************************************************************/
+				/* self-pruned C biomass to litter */
+				//s->value[LITTER_C] += (s->value[BRANCH_C] * (1 - red_perc)) +
+				//		(s->value[COARSE_ROOT_C] * (1 - red_perc)) +
+				//		(s->value[LEAF_C] * (1 - red_perc));
+
+				/***************************************************************/
 
 				/* summary after pruning */
 				logger(g_log, "-after pruning-\n");
