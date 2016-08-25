@@ -265,7 +265,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 				}
 				if(c->t_layers[layer].layer_n_height_class > 0)logger(g_annual_log,"\t%10s", "***");
 			}
-			if(c->t_layers_count > 0)logger(g_annual_log,"\t%10s", "***");
+			if(c->t_layers_count > 0)logger(g_annual_log,"\t%10s", "****");
 		}
 		/************************************************************************/
 
@@ -282,7 +282,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 		/* heading variables at cell level also if there's more than one layer */
 		else
 		{
-			logger(g_annual_log,"\t%10s", "***");
+			logger(g_annual_log,"\t%10s", "*****");
 		}
 		/* heading variables only at cell level */
 		logger(g_annual_log,"\t%10s \t%10s \t%10s",
@@ -392,7 +392,7 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 	/* printing variables at cell level also if there's more than one layer */
 	else
 	{
-		logger(g_annual_log,"\t%10s", "***");
+		logger(g_annual_log,"\t%10s", "*****");
 	}
 	/* printing variables only at cell level */
 	logger(g_annual_log, "\t%3.2f \t%3.2f \t%3.2f\n",
