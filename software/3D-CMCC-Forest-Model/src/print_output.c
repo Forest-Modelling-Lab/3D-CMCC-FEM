@@ -230,14 +230,16 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 							/* heading for species name */
 							logger(g_annual_log,"\t%10s", "SPECIES");
 
-							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
-									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
+							logger(g_annual_log,"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s"
+									"\t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s \t%4s",
 									"GPP",
 									"AR",
 									"NPP",
-									"NPE",
+									"Y(%)",
 									"LAI",
 									"AVDBH",
+									"CC",
+									"DBHDC",
 									"Ntree",
 									"CET",
 									"CLE",
@@ -259,25 +261,25 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 									"CRAR",
 									"BBAR");
 						}
-						if(c->heights[height].ages[age].species_count > 0)logger(g_annual_log,"\t%10s", "*");
+						if ( c->heights[height].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
 					}
-					if(c->heights[height].ages_count > 0)logger(g_annual_log,"\t%10s", "**");
+					if ( c->heights[height].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
 				}
-				if(c->t_layers[layer].layer_n_height_class > 0)logger(g_annual_log,"\t%10s", "***");
+				if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "***");
 			}
-			if(c->t_layers_count > 0)logger(g_annual_log,"\t%10s", "****");
+			if ( c->t_layers_count > 1 ) logger(g_annual_log,"\t%10s", "****");
 		}
 		/************************************************************************/
 
 		/* heading variables at cell level only if there's more than one layer */
-		if( c->heights_count > 0 )
+		if( c->heights_count > 1 )
 		{
 			logger(g_annual_log,"\t%10s \t%10s \t%10s \t%10s \t%10s",
 					"***",
 					"gpp",
 					"npp",
 					"ar",
-					"npe");
+					"y(%)");
 		}
 		/* heading variables at cell level also if there's more than one layer */
 		else
@@ -327,14 +329,16 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 						logger(g_annual_log,"\t%8.3s", c->heights[height].ages[age].species[species].name);
 
 						/* print variables at layer-class level */
-						logger(g_annual_log,"\t%6.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3d \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f"
-								"\t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f \t%3.2f",
+						logger(g_annual_log,"\t%6.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3d \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f"
+								"\t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 								s->value[YEARLY_GPP_gC],
 								s->value[YEARLY_TOTAL_AUT_RESP],
 								s->value[YEARLY_NPP_gC],
 								s->value[YEARLY_TOTAL_AUT_RESP]/s->value[YEARLY_GPP_gC]*100,
 								s->value[PEAK_LAI],
 								s->value[AVDBH],
+								s->value[CANOPY_COVER_DBHDC],
+								s->value[DBHDC_EFF],
 								s->counter[N_TREE],
 								s->value[YEARLY_CANOPY_EVAPO_TRANSP],
 								s->value[YEARLY_CANOPY_LATENT_HEAT],
@@ -356,13 +360,13 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 								s->value[YEARLY_COARSE_ROOT_AUT_RESP],
 								s->value[YEARLY_BRANCH_AUT_RESP]);
 					}
-					if(c->heights[height].ages[age].species_count > 0)logger(g_annual_log,"\t%10s", "*");
+					if ( c->heights[height].ages[age].species_count > 1 ) logger(g_annual_log,"\t%10s", "*");
 				}
-				if(c->heights[height].ages_count > 0)logger(g_annual_log,"\t%10s", "**");
+				if ( c->heights[height].ages_count > 1 ) logger(g_annual_log,"\t%10s", "**");
 			}
-			if(c->t_layers[layer].layer_n_height_class > 0)logger(g_annual_log,"\t%10s", "***");
+			if ( c->t_layers[layer].layer_n_height_class > 1 ) logger(g_annual_log,"\t%10s", "***");
 		}
-		if(c->t_layers_count > 0)
+		if ( c->t_layers_count > 1 )
 		{
 			logger(g_annual_log,"\t%10s", "****");
 		}
@@ -380,9 +384,9 @@ void EOY_print_cumulative_balance_cell_level(cell_t *const c, const int year, co
 //			c->asw);
 
 	/* printing variables at cell level only if there's more than one layer */
-	if( c->heights_count > 0 )
+	if( c->heights_count > 1 )
 	{
-		logger(g_annual_log, "\t%4s \t%3.2f \t%3.2f \t%3.2f \t%3.2f",
+		logger(g_annual_log, "\t%4s \t%3.4f \t%3.4f \t%3.4f \t%3.4f",
 				"***",
 				c->annual_gpp,
 				c->annual_npp_gC,

@@ -281,18 +281,18 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	}
 
 	logger(g_log, "*Fractions of light absorbed, transmitted and reflected*\n\n");
-	logger(g_log, "Light_abs_frac_sun = %g %%\n", Light_abs_frac_sun);
-	logger(g_log, "LightTrasm_sun = %g %%\n\n", Light_trasm_frac_sun);
-	logger(g_log, "Light_abs_frac_shade = %g %%\n", Light_abs_frac_shade);
-	logger(g_log, "LightTrasm_sun = %g %%\n\n", Light_trasm_frac_shade);
-	logger(g_log, "Light_abs_frac (sun+shaded) = %g %%\n", Light_abs_frac);
-	logger(g_log, "LightTrasm (sun+shaded)= %g %%\n\n", Light_trasm_frac);
-	logger(g_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_rad_canopy_frac);
-	logger(g_log, "LightReflec_par = %g %%\n\n", Light_refl_par_frac);
+	logger(g_log, "Light_abs_frac_sun = %g %%\n", Light_abs_frac_sun * 100);
+	logger(g_log, "LightTrasm_sun = %g %%\n\n", Light_trasm_frac_sun * 100);
+	logger(g_log, "Light_abs_frac_shade = %g %%\n", Light_abs_frac_shade * 100);
+	logger(g_log, "LightTrasm_sun = %g %%\n\n", Light_trasm_frac_shade * 100);
+	logger(g_log, "Light_abs_frac (sun+shaded) = %g %%\n", Light_abs_frac * 100);
+	logger(g_log, "LightTrasm (sun+shaded)= %g %%\n\n", Light_trasm_frac * 100);
+	logger(g_log, "Light_refl_sw_rad_canopy_frac = %g %%\n", Light_refl_sw_rad_canopy_frac * 100);
+	logger(g_log, "LightReflec_par = %g %%\n\n", Light_refl_par_frac * 100);
 
 	/* fraction of light reflected by the soil */
 	Light_refl_sw_rad_soil_frac = soil_albedo;
-	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac);
+	logger(g_log, "LightReflec_soil = %g %%\n", Light_refl_sw_rad_soil_frac * 100);
 	logger(g_log, "******************************************************\n");
 
 	//fixme set that if gapcover is bigger then 0.5 albedo should be considered also in dominated layer!!!!

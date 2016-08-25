@@ -12,7 +12,7 @@ typedef enum {
 } e_landuse;
 
 typedef enum {
-	T		/* timber */
+	T		/* timber */ //fixme change with H (high forest)
 	, C		/* coppice */
 } e_management;
 
@@ -20,7 +20,7 @@ enum {
 	/*valori relativi alla specie*/
 	/* !!!!! NON SPOSTARE !!!!!!*/
 	/* serve questo ordine per l'importazione, vedere species_values dentro matrix.c */
-	LIGHT_TOL,
+	LIGHT_TOL,                  //4 = very shade intolerant (cc = 90%), 3 = shade intolerant (cc = 100%), 2 = shade tolerant (cc = 110%), 1 = very shade tolerant (cc = 120%)
 	PHENOLOGY,                  //PHENOLOGY 0=deciduous, 1=evergreen
 	ALPHA,                      //Canopy quantum efficiency (molC/molPAR)
 	EPSILONgCMJ,                //Light Use Efficiency  (gC/MJ)(used if ALPHA is not available)

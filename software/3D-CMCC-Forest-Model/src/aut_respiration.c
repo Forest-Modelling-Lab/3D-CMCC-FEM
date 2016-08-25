@@ -75,7 +75,7 @@ void maintenance_respiration(cell_t *const c, const int layer, const int height,
 	From Ryan's figures and regressions equations, the maintenance respiration
 	in kgC/day per kg of tissue N is:
 	mrpern = 0.218 (kgC/kgN/d)
-	*/
+	 */
 
 	/* note: values are computed in gC/m2/day */
 
@@ -160,26 +160,36 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	logger(g_log, "\n**GROWTH_RESPIRATION**\n");
 
+	/* note: values of C increments are referred to the C increments of the day before */
+
+	/* to avoid negative values during retranslocation */
 	/* values are computed in gC/m2/day */
-	/* leaf growth respiration */
-	s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
-	logger(g_log, "daily leaf growth respiration = %g gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
+	if ( s->value[C_TO_LEAF] > 0)
+	{
+		/* leaf growth respiration */
+		s->value[LEAF_GROWTH_RESP] = (s->value[C_TO_LEAF] * 1000000.0/g_settings->sizeCell) * GRPERC;
+	}
+	if ( s->value[C_TO_FINEROOT] > 0)
+	{
+		/* fine root growth respiration */
+		s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* GRPERC;
+	}
+	if ( s->value[C_TO_STEM] > 0)
+	{
+		/* stem growth respiration */
+		s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	}
+	if ( s->value[C_TO_COARSEROOT] > 0)
+	{
+		/* coarse root respiration */
+		s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	}
+	if ( s->value[C_TO_BRANCH] > 0)
+	{
+		/* branch and bark growth respiration */
+		s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* GRPERC;
+	}
 
-	/* fine root growth respiration */
-	s->value[FINE_ROOT_GROWTH_RESP] = (s->value[C_TO_FINEROOT] *1000000.0/(g_settings->sizeCell))* GRPERC;
-	logger(g_log, "daily fine root growth respiration = %g gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
-
-	/* stem growth respiration */
-	s->value[STEM_GROWTH_RESP] = (s->value[C_TO_STEM] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-	logger(g_log, "daily stem growth respiration = %g gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
-
-	/* coarse root respiration */
-	s->value[COARSE_ROOT_GROWTH_RESP] = (s->value[C_TO_COARSEROOT] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-	logger(g_log, "daily coarse root growth respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
-
-	/* branch and bark growth respiration */
-	s->value[BRANCH_GROWTH_RESP] = (s->value[C_TO_BRANCH] * 1000000.0/(g_settings->sizeCell))* GRPERC;
-	logger(g_log, "daily branch growth respiration = %g gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 
 	/* COMPUTE TOTAL GROWTH RESPIRATION */
 	s->value[TOTAL_GROWTH_RESP] = s->value[LEAF_GROWTH_RESP] +
@@ -187,7 +197,14 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 			s->value[STEM_GROWTH_RESP] +
 			s->value[COARSE_ROOT_GROWTH_RESP] +
 			s->value[BRANCH_GROWTH_RESP];
+
+	logger(g_log, "daily leaf growth respiration = %g gC/m2/day\n", s->value[LEAF_GROWTH_RESP]);
+	logger(g_log, "daily fine root growth respiration = %g gC/m2/day\n", s->value[FINE_ROOT_GROWTH_RESP]);
+	logger(g_log, "daily stem growth respiration = %g gC/m2/day\n", s->value[STEM_GROWTH_RESP]);
+	logger(g_log, "daily coarse root growth respiration = %g gC/m2/day\n", s->value[COARSE_ROOT_GROWTH_RESP]);
+	logger(g_log, "daily branch growth respiration = %g gC/m2/day\n", s->value[BRANCH_GROWTH_RESP]);
 	logger(g_log, "daily total growth respiration = %g gC/m2/day\n", s->value[TOTAL_GROWTH_RESP]);
+
 
 	/* it converts value of GPP gC/m2/day in gC/m2 area covered/day */
 	///test 6 July 2016 removing
@@ -206,6 +223,21 @@ void growth_respiration(cell_t *const c, const int layer, const int height, cons
 
 	/* check */
 	CHECK_CONDITION(s->value[TOTAL_GROWTH_RESP], < 0);
+
+	/* reset previous day carbon increments among pools */
+	/* note: THESE VARIABLES MUST BE RESETTED HERE!!! */
+	s->value[C_TO_LEAF] = 0.;
+	s->value[C_TO_ROOT] = 0.;
+	s->value[C_TO_FINEROOT] = 0.;
+	s->value[C_TO_COARSEROOT] = 0.;
+	s->value[C_TO_TOT_STEM] = 0.;
+	s->value[C_TO_STEM] = 0.;
+	s->value[C_TO_BRANCH] = 0.;
+	s->value[C_TO_RESERVE] = 0.;
+	s->value[C_TO_FRUIT] = 0.;
+	s->value[C_TO_LITTER] = 0.;
+	s->value[C_LEAF_TO_RESERVE] = 0.;
+	s->value[C_FINEROOT_TO_RESERVE] = 0.;
 }
 
 void autotrophic_respiration(cell_t *const c, const int layer, const int height, const int age, const int species, const meteo_daily_t *const meteo_daily)
