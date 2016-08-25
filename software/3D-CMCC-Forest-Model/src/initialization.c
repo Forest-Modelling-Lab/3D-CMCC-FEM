@@ -16,8 +16,13 @@ extern soil_settings_t *g_soil_settings;
 
 void initialization_forest_structure(cell_t *const c, const int day, const int month, const int year)
 {
+	meteo_daily_t *meteo_daily;
+
+	/* assign shortcuts */
+	meteo_daily = &c->years[year].m[month].d[day];
+
 	logger(g_log,"\n*******INITIALIZE FOREST STRUCTURE*******\n");
-	daily_forest_structure ( c, day, month, year );
+	forest_structure ( c, meteo_daily, day, month, year );
 }
 
 void initialization_forest_C_biomass(cell_t *const c, const int height, const int age, const int species)

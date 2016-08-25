@@ -15,7 +15,18 @@
 extern settings_t* g_settings;
 extern logger_t* g_log;
 
-void daily_forest_structure (cell_t *const c, const int day, const int month, const int year)
+void forest_structure (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month, const int year)
+{
+	logger(g_log, "day %d month %d\n", day, month);
+	if ( !day && !month)
+	{
+		annual_forest_structure ( c );
+
+		layer_self_pruning_thinning ( c );
+	}
+}
+/*************************************************************************************************************************/
+void annual_forest_structure(cell_t* const c)
 {
 	int layer;
 	int height;
@@ -26,17 +37,86 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 	age_t *a;
 	species_t *s;
 
-	/* it defines the number of tree height classes in each canopy layer,
-	 * the height class level cell coverage through the DBHDC_EFF function,
-	 * the density of each layer and then the current tree mortality based on it
-	 * on a daily basis
-	 */
+	/* this function compute annually the number of forest layers
+	 * comparing the tree height values of all tree height classes */
 
-	logger(g_log, "\n\n***DAILY FOREST STRUCTURE***\n\n");
+	logger(g_log, "\n***ANNUAL FOREST STRUCTURE***\n");
 
-	/**************************************************************************************************/
+	/* reset values */
+	/* note: do no remove from here */
+	//fixme very porcata
+	c->t_layers_count = 0;
+	c->cell_n_trees = 0;
+	c->cell_cover = 0;
+
+	/* compute number of annual layers */
+	logger(g_log, "*compute number of annual forest layers*\n\n");
+
+	/* sort by descending height class*/
+	qsort ( c->heights, c->heights_count, sizeof (height_t), sort_by_heights_asc );
+
+	for ( height = c->heights_count - 1; height >= 0; --height )
+	{
+		/* first height class processed */
+		if ( height == c->heights_count - 1 )
+		{
+			c->t_layers_count = 1;
+		}
+		/* other classes processed */
+		else
+		{
+			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
+			{
+				++c->t_layers_count;
+			}
+		}
+	}
+	logger(g_log, "-Number of height classes = %d cell\n", c->heights_count);
+	logger(g_log, "-Number of layers = %d cell\n\n", c->t_layers_count);
+	logger(g_log,"***********************************\n");
+
+	/*************************************************************************************/
+	/* reset values */
+	/* note: do no remove from here */
+	//fixme very porcata
+	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
+	{
+		c->t_layers[layer].layer_n_height_class = 0;
+		c->t_layers[layer].layer_n_trees = 0;
+		c->t_layers[layer].layer_density = 0;
+		c->t_layers[layer].layer_cover = 0;
+	}
+
+	/* check */
+	CHECK_CONDITION(+c->t_layers_count, < 1);
+	CHECK_CONDITION(+c->t_layers_count, > c->heights_count);
+
+	/*************************************************************************************/
+	/* assign "z" values to height classes */
+	logger(g_log, "*assign 'z' values*\n\n");
+
+	for ( height = c->heights_count - 1; height >= 0; --height )
+	{
+		/* first height class processed */
+		if ( height == c->heights_count - 1 )
+		{
+			c->heights[height].height_z = c->t_layers_count - 1;
+		}
+		/* other class processed */
+		else
+		{
+			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
+			{
+				c->heights[height].height_z = c->heights[height + 1].height_z - 1;
+			}
+		}
+		logger(g_log, "-height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
+	}
+	logger(g_log,"***********************************\n");
+
+	/*************************************************************************************/
 	/* compute numbers of height classes within each layer */
-	logger(g_log, "compute numbers of height classes within each layer\n\n");
+	logger(g_log, "*compute numbers of height classes within each layer*\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0 ; --layer )
 	{
@@ -44,19 +124,19 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 		{
 			if( layer == c->heights[height].height_z )
 			{
-				c->t_layers[layer].layer_n_height_class += 1;
+				++c->t_layers[layer].layer_n_height_class;
 			}
 		}
 		logger(g_log, "-layer %d height class(es) = %d\n", layer, c->t_layers[layer].layer_n_height_class);
 	}
+	logger(g_log, "**************************************\n\n");
+
 	/* check */
 	CHECK_CONDITION(c->t_layers[layer].layer_n_height_class, < 0);
 
-	logger(g_log, "**************************************\n\n");
-
-	/*************************************************************************************************/
+	/*************************************************************************************/
 	/* compute numbers of trees within each layer */
-	logger(g_log, "compute numbers of trees within each layer\n\n");
+	logger(g_log, "*compute numbers of trees within each layer*\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
@@ -80,26 +160,26 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 	}
 	logger(g_log, "**************************************\n\n");
 
-	/*************************************************************************************************/
+	/*************************************************************************************/
 	/* compute density within each layer */
-	logger(g_log, "compute density within each layer\n\n");
+	logger(g_log, "*compute density within each layer*\n\n");
 
 	for (layer = c->t_layers_count - 1; layer >= 0; layer --)
 	{
 		c->t_layers[layer].layer_density = c->t_layers[layer].layer_n_trees / g_settings->sizeCell;
 
-		logger(g_log, "-layer %d density = %g\n", layer, c->t_layers[layer].layer_density);
+		logger(g_log, "-layer %d density = %g layer\n", layer, c->t_layers[layer].layer_density);
 	}
 	logger(g_log, "**************************************\n\n");
 
-	/*************************************************************************************************/
+	/*************************************************************************************/
 	/* compute effective dbh/crown diameter ratio within each class based on layer density (class level) */
 	logger(g_log, "compute effective dbh/crown diameter ratio within each class based on layer density (class level)\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
 		logger(g_log, "----------------------------------\n");
-		logger(g_log, "layer %d ", layer);
+		logger(g_log, "-layer %d ", layer);
 
 		for ( height = 0; height < c->heights_count ; ++height )
 		{
@@ -113,20 +193,40 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 						a = &c->heights[height].ages[age];
 						s = &c->heights[height].ages[age].species[species];
 
-						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+						logger(g_log,"-height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
 						s->value[DBHDC_EFF] = ((s->value[DBHDCMIN] - s->value[DBHDCMAX]) / (s->value[DENMAX] - s->value[DENMIN]) *
 								(c->t_layers[layer].layer_density - s->value[DENMIN]) + s->value[DBHDCMAX]);
-						logger(g_log,"DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+												logger(g_log,"-DENMAX = %g\n", s->value[DENMAX]);
+												logger(g_log,"-DENMIN = %g\n", s->value[DENMIN]);
+												logger(g_log,"-DBHDCMAX = %g\n", s->value[DBHDCMAX]);
+												logger(g_log,"-DBHDCMIN = %g\n", s->value[DBHDCMIN]);
+												logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+
+						/* check */
+						if (s->value[DBHDC_EFF] > s->value[DBHDCMAX])
+						{
+							logger(g_log,"-DBHDC effective > DBHDCMAX\n");
+							s->value[DBHDC_EFF] = s->value[DBHDCMAX];
+							logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+						}
+						if (s->value[DBHDC_EFF] < s->value[DBHDCMIN])
+						{
+							logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+							logger(g_log,"-DBHDC effective < DBHDCMIN\n");
+							s->value[DBHDC_EFF] = s->value[DBHDCMIN];
+							logger(g_log,"-DBHDC effective = %g\n", s->value[DBHDC_EFF]);
+						}
 					}
 				}
 			}
 		}
 	}
+	logger(g_log, "**************************************\n\n");
 
-	/*************************************************************************************************/
+	/*************************************************************************************/
 	/* compute effective crown diameter and crown area and class cover using DBH-DC */
-	logger(g_log, "compute effective crown diameter and crown area and class cover using DBH-DC\n\n");
+	logger(g_log, "*compute effective crown diameter and crown area and class cover using DBH-DC*\n\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
@@ -145,7 +245,7 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 						a = &c->heights[height].ages[age];
 						s = &c->heights[height].ages[age].species[species];
 
-						logger(g_log,"height = %g age = %d species = %s\n", h->value, a->value, s->name);
+						logger(g_log,"-height = %g age = %d species = %s\n", h->value, a->value, s->name);
 
 						s->value[CROWN_DIAMETER_DBHDC] = s->value[AVDBH] * s->value[DBHDC_EFF];
 						logger(g_log, "-Crown Diameter from DBHDC function  = %g m\n", s->value[CROWN_DIAMETER_DBHDC]);
@@ -164,9 +264,9 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 	}
 	logger(g_log, "**************************************\n\n");
 
-	/*************************************************************************************************/
+	/*************************************************************************************/
 	/* compute layer canopy cover within each layer (layer level) */
-	logger(g_log, "compute layer canopy cover within each layer (layer level)\n\n");
+	logger(g_log, "*compute layer canopy cover within each layer (layer level)*\n\n");
 
 	//todo: control if with a drastic tree number reduction (e.g. management) there's a unrealistic strong variation in DBHDCeffective
 
@@ -190,9 +290,9 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 	}
 	logger(g_log, "**************************************\n");
 
-	/**************************************************************************************************/
+	/*************************************************************************************/
 	/* compute daily overall cell cover (cell level) */
-	logger(g_log, "daily overall cell cover (cell level))\n");
+	logger(g_log, "*daily overall cell cover (cell level))*\n");
 
 	for ( layer = c->t_layers_count - 1; layer >= 0; --layer )
 	{
@@ -209,78 +309,9 @@ void daily_forest_structure (cell_t *const c, const int day, const int month, co
 	}
 	logger(g_log, "-Number of trees cell level = %d trees/cell\n", c->cell_n_trees);
 	logger(g_log, "-Canopy cover DBH-DC cell level = %g %%\n", c->cell_cover * 100.0);
-	logger(g_log, "**************************************\n\n");
-
+	logger(g_log, "**************************************\n");
 }
 /*************************************************************************************************************************/
-void monthly_forest_structure (cell_t* const c, const int day, const int month, const int year)
-{
-
-}
-
-/*************************************************************************************************************************/
-void annual_forest_structure(cell_t* const c)
-{
-	int height;
-
-	/* this function compute annually the number of forest layers
-	 * comparing the tree height values of all tree height classes */
-
-	logger(g_log, "\n***ANNUAL FOREST STRUCTURE***\n");
-
-	/* compute number of annual layers */
-	logger(g_log, "Number of forest layers\n");
-
-	for ( height = c->heights_count - 1; height >= 0; --height )
-	{
-		/* first height class processed */
-		if ( height == c->heights_count - 1 )
-		{
-			c->t_layers_count = 1;
-		}
-		/* other classes processed */
-		else
-		{
-			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
-			{
-				++c->t_layers_count;
-			}
-		}
-	}
-	logger(g_log, "Number of height classes = %d\n", c->heights_count);
-	logger(g_log, "Number of forest layers = %d\n\n", c->t_layers_count);
-
-	/* check */
-	CHECK_CONDITION(+c->t_layers_count, < 1);
-	CHECK_CONDITION(+c->t_layers_count, > c->heights_count);
-
-	/*************************************************************************************/
-	/* assign "z" values to height classes */
-	logger(g_log, "Assign 'z' values\n");
-
-	for ( height = c->heights_count - 1; height >= 0; --height )
-	{
-		/* first height class processed */
-		if ( height == c->heights_count - 1 )
-		{
-			c->heights[height].height_z = c->t_layers_count - 1;
-			logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
-		}
-		/* other class processed */
-		else
-		{
-			if ( ( c->heights[height + 1].value - c->heights[height].value ) > g_settings->tree_layer_limit )
-			{
-				c->heights[height].height_z = c->heights[height + 1].height_z - 1;
-				logger(g_log, "height = %g, z = %d\n", c->heights[height].value, c->heights[height].height_z);
-			}
-		}
-	}
-	logger(g_log,"******************************************************\n");
-
-	/*********************************************************************************************************************/
-}
-
 void potential_max_min_canopy_cover (cell_t *const c)
 {
 	int height;
@@ -295,7 +326,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 	age_t *a;
 	species_t *s;
 
-	logger(g_log,"\nPotential_max_min_canopy_cover Function\n");
+	logger(g_log,"\n*Potential_max_min_canopy_cover Function*\n");
 
 	for ( height = 0; height < c->heights_count; height++ )
 	{
@@ -313,20 +344,20 @@ void potential_max_min_canopy_cover (cell_t *const c)
 				{
 					logger(g_log,"using DBHDCMAX and DBHDCMIN\n");
 					/* case low density */
-					//logger(g_log, "-in case of low density\n");
+					logger(g_log, "-in case of low density\n");
 
 					pot_max_crown_diameter = s->value[DBHDCMAX] * s->value[AVDBH];
-					pot_max_crown_area = pow(((pot_max_crown_diameter)/2),2)*Pi;
+					pot_max_crown_area = ( Pi / 4) * pow (pot_max_crown_diameter, 2 );
 					logger(g_log, "potential maximum crown area with DBHDCMAX = %g m^2\n", pot_max_crown_area);
 
 					pot_min_density = g_settings->sizeCell / pot_max_crown_area;
 					logger(g_log, "number of potential minimum trees with DBHDCMAX = %g\n", pot_min_density);
 
 					/* case high density */
-					//logger(g_log, "-in case of high density\n");
+					logger(g_log, "-in case of high density\n");
 
 					pot_min_crown_diameter = s->value[DBHDCMIN] * s->value[AVDBH];
-					pot_min_crown_area = pow(((pot_min_crown_diameter)/2),2)*Pi;
+					pot_min_crown_area = ( Pi / 4) * pow (pot_min_crown_diameter, 2 );;
 					logger(g_log, "potential minimum crown area with DBHDCMIN = %g m^2\n", pot_min_crown_area);
 
 					pot_max_density = g_settings->sizeCell /pot_min_crown_area;
@@ -346,7 +377,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 				/* in case no values from parameterization files are given */
 				else
 				{
-					/*compute maximum crown area*/
+					/* compute maximum crown area */
 					//	//TODO CHECK IF USE IT
 					/*for references and variables see "Forest Mensuration" book 4th edition
 					 *B. Husch, T.W. Beers, J.A. Kershaw Jr.
@@ -357,13 +388,14 @@ void potential_max_min_canopy_cover (cell_t *const c)
 					 */
 					logger(g_log,"without using DBHDCMAX and DBHDCMIN\n");
 
-					pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 * s->value[AVDBH] + (3.345241 *	pow(s->value[AVDBH], 2.0))));
+					pot_min_crown_area = ((100.0*Pi)/(4*g_settings->sizeCell)) * (9.7344 + (11.48612 *
+							s->value[AVDBH] + (3.345241 * pow(s->value[AVDBH], 2.0))));
 					logger(g_log, "potential_minimum_crown_area = %g m^2\n", pot_min_crown_area);
 
 					pot_min_crown_diameter = 2.0 * sqrt(pot_min_crown_area/Pi);
 					logger(g_log, "potential_minimum_crown_diameter= %g m\n", pot_min_crown_diameter);
 
-					/*recompute DBHDCmax and DENmin from MCA*/
+					/* recompute DBHDCMAX and DENMIN from MCA */
 					/*17 Oct 2013*/
 					s->value[DBHDCMAX] = pot_min_crown_diameter / s->value[AVDBH];
 					logger(g_log, "-recomputed DBHDCMAX = %g \n", s->value[DBHDCMAX]);
@@ -384,7 +416,7 @@ void potential_max_min_canopy_cover (cell_t *const c)
 	}
 }
 
-void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
+void prephenology (cell_t *const c, const meteo_daily_t *const meteo_daily, const int day, const int month)
 {
 	int height;
 	int age;
@@ -399,7 +431,7 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 	/*VEG_UNVEG = 1 for veg period, = 0 for Un-Veg period*/
 
 
-	logger(g_log, "\n****DAILY_FOREST_VEG_PERIOD****\n");
+	logger(g_log, "*prephenology*\n");
 	for (height = c->heights_count - 1; height >= 0; height-- )
 	{
 		for (age = c->heights[height].ages_count - 1 ; age >= 0 ; age-- )
@@ -413,23 +445,20 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 				{
 					/* compute days for leaf fall based on the annual number of veg days */
 					s->counter[DAY_FRAC_FOLIAGE_REMOVE] = (int)(s->value[LEAF_FALL_FRAC_GROWING] * s->counter[DAY_VEG_FOR_LEAF_FALL]);
-					logger(g_log, "Days of leaf fall for deciduous = %d day\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
+					logger(g_log, "-days of leaf fall for %s = %d day\n", c->heights[height].ages[age].species[species].name, s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
 
 					//currently model can simulate only forests in boreal hemisphere
 					if ((meteo_daily->thermic_sum >= s->value[GROWTHSTART] && month <= 6) ||
 							(meteo_daily->daylength >= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0))
 					{
 						s->counter[VEG_UNVEG] = 1;
-						logger(g_log, "%s is in veg period\n", s->name);
+						logger(g_log, "-%s is in veg period\n", s->name);
 					}
 					else
 					{
 						//check for case 0 of allocation
 						if (meteo_daily->daylength <= s->value[MINDAYLENGTH] && month >= 6 && c->north == 0 )
 						{
-
-							logger(g_log, "DAY_FRAC_FOLIAGE_REMOVE %d\n", s->counter[DAY_FRAC_FOLIAGE_REMOVE]);
-
 							s->counter[LEAF_FALL_COUNTER] += 1;
 
 							if(s->counter[LEAF_FALL_COUNTER]  <= (int)s->counter[DAY_FRAC_FOLIAGE_REMOVE])
@@ -447,7 +476,7 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 						else
 						{
 							s->counter[VEG_UNVEG] = 0;
-							logger(g_log, "%s is in un-veg period\n", s->name);
+							logger(g_log, "-%s is in un-veg period\n", s->name);
 						}
 					}
 				}
@@ -455,12 +484,11 @@ void daily_check_for_veg_period (cell_t *const c, const meteo_daily_t *const met
 				else
 				{
 					s->counter[VEG_UNVEG] = 1;
-					logger(g_log, "Veg period = %d \n", s->counter[VEG_UNVEG]);
-					logger(g_log, "%s is in veg period\n", s->name);
+					logger(g_log, "-%s is in veg period\n", s->name);
 				}
 			}
 		}
 	}
-	logger(g_log, "classes in veg period = %d\n", c->Veg_Counter);
+	logger(g_log, "**************************************\n");
 }
 

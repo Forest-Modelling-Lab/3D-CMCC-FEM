@@ -34,6 +34,8 @@ void allometry_power_function(cell_t *const c)
 
 				logger(g_log, "Species = %s\n", s->name);
 
+				logger(g_log, "Age = %d\n", a->value);
+
 				s->value[MASS_DENSITY] = s->value[RHOMAX] + (s->value[RHOMIN] - s->value[RHOMAX]) * exp(-ln2 * (a->value / s->value[TRHO]));
 				logger(g_log, "-Mass Density = %g\n", s->value[MASS_DENSITY]);
 

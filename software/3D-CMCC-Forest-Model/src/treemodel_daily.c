@@ -87,26 +87,14 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 	if(!day && !month && !year)c->dos = 1;
 	else ++c->dos;
 
-	/* print at the beginning of simulation forest class data */
+	/* print cell data */
 	print_cell_data ( c );
 
-	/* annual forest structure (except the first year) */
-	if( !day && !month && year != 0 )
-	{
-		annual_forest_structure ( c );
-	}
+	/* forest structure */
+	forest_structure ( c, meteo_daily, day, month, year );
 
-	/* daily forest structure (except the first day, month and year) */
-	if( c->dos > 1 )
-	{
-		daily_forest_structure ( c, day, month, year );
-	}
-
-	/* monthly forest structure (mortality function 8end of month) */
-	//monthly_forest_structure ( c, day, month, year );
-
-	/* daily check for vegetative period */
-	daily_check_for_veg_period ( c, meteo_daily, day, month );
+	/* prephenology */
+	prephenology ( c, meteo_daily, day, month );
 
 	/***********************************************************************************************/
 
@@ -119,7 +107,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 		/* annual layer cover mortality (self-pruning-thinning) */
 		if( !day && !month && year != 0 )
 		{
-			layer_self_pruning_thinning ( c, layer );
+			//layer_self_pruning_thinning ( c, layer );
 		}
 
 		/* assign shortcut */
@@ -169,6 +157,7 @@ int Tree_model_daily (matrix_t *const m, const int cell, const int day, const in
 
 						if(s->counter[N_TREE] > 0)
 						{
+							//todo move into forest structure
 							/* note: this is valid only for north hemisphere */
 							/* beginning of simulation (every year included the first one) */
 							if ( c->doy == 1)

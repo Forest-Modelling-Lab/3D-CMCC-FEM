@@ -220,7 +220,7 @@ void canopy_radiation_sw_band(cell_t *const c, const int layer, const int height
 	//following Ritchie et al., 1998 and Hydi et al., (submitted)
 	//double actual_albedo;
 
-	logger(g_log, "\n**SHORT WAVE BAND RADIATION ROUTINE**\n");
+	logger(g_log, "\n**SHORT WAVE BAND RADIATION**\n");
 
 	/* compute effective canopy cover */
 	/* special case when LAI = < 1.0 */

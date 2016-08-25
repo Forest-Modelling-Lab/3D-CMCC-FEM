@@ -338,7 +338,7 @@ static int log_start(const char* const sitename) {
 
 	/* show paths */
 	if ( g_sz_input_path )
-	logger(g_log,"\nFILE PATHS\n");
+		logger(g_log,"\nFILE PATHS\n");
 	logger(g_log, msg_input_path, g_sz_input_path);
 	logger(g_log, msg_parameterization_path, g_sz_parameterization_path);
 	logger(g_log, msg_soil_file, g_sz_soil_file);
@@ -914,29 +914,6 @@ int main(int argc, char *argv[]) {
 		logger(g_log, "Total years_of_simulation = %d\n", years_of_simulation);
 		logger(g_log, "***************************************************\n\n");
 
-		/* general summary on model simulation */
-		simulation_summary(matrix);
-
-		/* summary on site */
-		site_summary(matrix);
-
-		/* summary on topography */
-		topo_summary(matrix);
-
-		/* summary on soil */
-		soil_summary(matrix, matrix->cells);
-
-		if(F == matrix->cells[cell].landuse)
-		{
-			/* note: this happens just the first day of simulation */
-			/* forest summary */
-			forest_summary(matrix, cell, day, month, year);
-		}
-		else
-		{
-			/* include summary for other land uses */
-		}
-
 		for ( year = 0; year < years_of_simulation; ++year )
 		{
 			/* ALESSIOR for handling leap years */
@@ -953,6 +930,32 @@ int main(int argc, char *argv[]) {
 
 				for ( day = 0; day < days_per_month; ++day )
 				{
+					if( !day && !month && !year)
+					{
+						/* general summary on model simulation */
+						simulation_summary(matrix);
+
+						/* summary on site */
+						site_summary(matrix);
+
+						/* summary on topography */
+						topo_summary(matrix);
+
+						/* summary on soil */
+						soil_summary(matrix, matrix->cells);
+
+						if( F == matrix->cells[cell].landuse )
+						{
+							/* note: this happens just the first day of simulation */
+							/* forest summary */
+							forest_summary(matrix, cell, day, month, year);
+						}
+						else
+						{
+							/* include summary for other land uses */
+						}
+					}
+
 					/* compute daily climate variables not coming from met data */
 					Avg_temperature(matrix->cells[cell].years[year].m, day, month);
 					Daylight_avg_temperature(matrix->cells[cell].years[year].m, day, month);
@@ -1101,10 +1104,10 @@ int main(int argc, char *argv[]) {
 					reset_daily_layer_variables ( &matrix->cells[cell] );
 					reset_daily_cell_variables  ( &matrix->cells[cell] );
 
-//					if ( ! string_compare_i(g_settings->dndc, "on") )
-//					{
-//						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
-//					}
+					//					if ( ! string_compare_i(g_settings->dndc, "on") )
+					//					{
+					//						Get_EOD_soil_balance_cell_level (&matrix->cells[cell], year, month, day);
+					//					}
 					logger(g_log, "****************END OF DAY (%d)*******************\n", day + 1 );
 				}
 
